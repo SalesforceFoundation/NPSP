@@ -275,9 +275,11 @@ private with sharing class PMT_PaymentCreator_TEST {
             AccountId = acct.id,
             CloseDate = date.today(), 
             Amount = 1,
-            StageName = UTIL_UnitTestData_TEST.getOpenStage(),
-            RecordtypeId = rtIdGift
+            StageName = UTIL_UnitTestData_TEST.getOpenStage()
         );
+        if (rtIdGift != null)
+            opp.RecordtypeId = rtIdGift;
+        
         Test.startTest();
         insert opp;
         Test.stopTest();
