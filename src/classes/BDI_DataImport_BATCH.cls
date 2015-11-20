@@ -1464,8 +1464,8 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                 cPropSet--;
             } 
                 
-            if (di.Donation_Stage__c == null) {
-                di.Donation_Stage__c = UTIL_UnitTestData_TEST.getClosedWonStage();
+            if (di.Donation_Stage__c == null && defaultClosedWonStage != '') {
+                di.Donation_Stage__c = defaultClosedWonStage;
                 cPropSet--;
             }
 
@@ -1512,6 +1512,22 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         
         // now deal with any payment child records
         updatePayments();      
+    }
+    
+    // finds a valid Close Won Opportunity Stage
+    private static string defaultClosedWonStage {
+        get {	
+            if (defaultClosedWonStage == null){
+                List<OpportunityStage> listStg = [select masterlabel from opportunitystage where isActive = true and iswon = true];
+                if (listStg.size() > 0) {
+                    defaultClosedWonStage = listStg[0].masterlabel;
+                } else {
+                    defaultClosedWonStage = '';
+                }
+            }
+            return defaultClosedWonStage;
+        }
+        set;
     }
     
     // method to update any fields on payment objects created for the Data Import opportunities.
