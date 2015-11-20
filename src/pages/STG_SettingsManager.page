@@ -305,6 +305,7 @@
                             <li class="subitem" id="idPanelRelNav"><a href="#" onclick="ShowPanel('idPanelRel');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRelationships}</a></li>
                             <li class="subitem" id="idPanelRelReciprocalNav"><a href="#" onclick="ShowPanel('idPanelRelReciprocal');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRelReciprocal}</a></li>
                             <li class="subitem" id="idPanelRelAutoNav"><a href="#" onclick="ShowPanel('idPanelRelAuto');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRelAutoCreate}</a></li>
+                            <li class="subitem" id="idPanelAssocReciprocalNav"><a href="#" onclick="ShowPanel('idPanelAssocReciprocal');return false;" class="nav-item sub-nav-item">{!$Label.stgNavAssocReciprocal}</a></li>
                         </ul>
                         
                         <li class="header" id="idPanelDonationsNav"><a class="nav-item nav-section-title">{!$Label.stgNavDonations}<span class="caret"></span></a></li>
@@ -434,6 +435,10 @@
             
             <div class="panel noborder" id="idPanelRelAuto" style="display:none" >
                 <apex:include pageName="STG_PanelRelAuto" />
+            </div>
+
+            <div class="panel noborder" id="idPanelAssocReciprocal" style="display:none" >
+                <apex:include pageName="STG_PanelAssocReciprocal" />
             </div>
             
             <div class="panel noborder" id="idPanelBDE" style="display:none" >

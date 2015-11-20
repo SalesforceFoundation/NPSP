@@ -71,6 +71,7 @@ public class ACCT_AccountMerge_TDTM extends TDTM_Runnable {
     /*******************************************************************************************************
     * @description After an Account Merge, call this Future routine to perform assorted fixups that need to
     * occur which include:
+    *   - remove Account Associations that now reference the same account as both source and target
     *   - update the Account name and greetings (for Household Accounts)
     *   - recalculate Household Soft Credit OCRs (for Household Accounts)
     *   - recalculate Opportunity rollups (for Household and One2One Accounts)
@@ -82,6 +83,11 @@ public class ACCT_AccountMerge_TDTM extends TDTM_Runnable {
     @Future    
     private static void handleAccountMergeFixupsFuture(list<ID> listAccountId) {
         
+        DMLWrapper dmlWrapper = ACCT_AccountAssociations_TDTM.deleteOrphanedAccountAssociations(listAccountId);
+        if (dmlWrapper.objectsToDelete.size() > 0) {
+            delete dmlWrapper.objectsToDelete;
+        }
+
         // figure out which of type of accounts we are dealing with
         list<ID> listHHId = new list<ID>();
         list<ID> listOne2OneId = new list<ID>();

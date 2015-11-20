@@ -1,0 +1,56 @@
+<apex:page controller="STG_PanelAssocReciprocal_CTRL" >
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavRelationships}" pageLabel="{!$Label.stgNavAssocReciprocal}" />
+    <p>{!$Label.stgReciprocalAssocationsDescription}</p>
+
+    <apex:form id="form" styleClass="form-horizontal stgForm">  
+        <apex:pageMessages id="pageMessages"/>
+        <apex:pageBlock mode="maindetail">
+            <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="button-block">
+                <apex:commandButton value="{!$Label.stgBtnNewAssocReciprocal}" action="{!newAssocLookup}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
+            </apex:outputPanel>
+
+            <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="inline-form-block">
+            <section>
+                <h3 class="section-header" >{!$Label.stgLabelNewAssocReciprocal}</h3>
+                <div class="form-group">
+                    <apex:outputLabel value="{!$ObjectType.Reciprocal_Account_Association_Types__c.Fields.Name.Label}" for="tbxN" styleClass="col-sm-4 control-label" />
+                    <div class="col-sm-8 form-control-column">
+                        <apex:inputField value="{!aNew.Name}" rendered="{!isEditMode}" required="false" id="tbxN" styleClass="form-control" />
+                    </div>
+                    <div class="col-sm-offset-4 col-sm-8 help-block">
+                        <apex:outputText value="{!$Label.stgHelpAssocReciprocalName}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <apex:outputLabel value="{!$ObjectType.Reciprocal_Account_Association_Types__c.Fields.Reciprocal_Type__c.Label}" for="tbxM" styleClass="col-sm-4 control-label" />
+                    <div class="col-sm-8 form-control-column">
+                        <apex:inputField value="{!aNew.Reciprocal_Type__c}" rendered="{!isEditMode}" required="false" id="tbxM" styleClass="form-control" />
+                    </div>
+                    <div class="col-sm-offset-4 col-sm-8 help-block">
+                        <apex:outputText value="{!$Label.stgHelpAssocReciprocalType}" />
+                    </div>
+                </div>
+            </section>
+            <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="button-block">
+                <apex:commandButton value="{!$Label.stgBtnCreateAssocLookup}" action="{!createAssocLookup}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
+                <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelAssocLookup}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />
+            </apex:outputPanel>
+
+            </apex:outputPanel>
+            
+            <apex:pageBlockTable value="{!listAssocLookup}" var="a" >
+                <apex:column headerValue="{!$Label.stgLabelActionColumn}" styleClass="actionColumn" style="text-align:center;" >
+                    <apex:commandLink action="{!deleteAssocLookup}"
+                        title="{!$Label.stgLinkDelete} {!a.Name}"
+                        styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" 
+                        onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
+                        <apex:param assignTo="{!assocIdDelete}" name="idDeleteRl" value="{!a.Id}" /> 
+                    </apex:commandLink>
+                </apex:column>
+                <apex:column value="{!a.Name}" /> 
+                <apex:column value="{!a.Reciprocal_Type__c}" />
+            </apex:pageBlockTable> 
+ 
+        </apex:pageBlock> 
+    </apex:form>
+</apex:page>

@@ -2,6 +2,8 @@
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Cumulus</fullName>
     <types>
+        <members>ACCT_AccountAssociations_TDTM</members>
+        <members>ACCT_AccountAssociations_TEST</members>
         <members>ACCT_AccountMerge_TDTM</members>
         <members>ACCT_AccountMerge_TEST</members>
         <members>ACCT_Accounts_TDTM</members>
@@ -151,6 +153,7 @@
         <members>STG_PanelAffiliations_CTRL</members>
         <members>STG_PanelAlloBatch_CTRL</members>
         <members>STG_PanelAllocations_CTRL</members>
+        <members>STG_PanelAssocReciprocal_CTRL</members>
         <members>STG_PanelBDE_CTRL</members>
         <members>STG_PanelContactRoles_CTRL</members>
         <members>STG_PanelContacts_CTRL</members>
@@ -250,6 +253,7 @@
         <members>STG_PanelAffiliations</members>
         <members>STG_PanelAlloBatch</members>
         <members>STG_PanelAllocations</members>
+        <members>STG_PanelAssocReciprocal</members>
         <members>STG_PanelBDE</members>
         <members>STG_PanelContactRoles</members>
         <members>STG_PanelContacts</members>
@@ -279,6 +283,7 @@
     </types>
     <types>
         <members>TDTM_Account</members>
+        <members>TDTM_Account_Association</members>
         <members>TDTM_Address</members>
         <members>TDTM_Affiliation</members>
         <members>TDTM_Allocation</members>
@@ -317,6 +322,14 @@
         <members>Account.Membership_Span__c</members>
         <members>Account.Membership_Status__c</members>
         <members>Account.Number_of_Household_Members__c</members>
+        <members>Account_Association__c.Account__c</members>
+        <members>Account_Association__c.Associated_Account__c</members>
+        <members>Account_Association__c.Description__c</members>
+        <members>Account_Association__c.End_Date__c</members>
+        <members>Account_Association__c.Reciprocal_Association__c</members>
+        <members>Account_Association__c.Start_Date__c</members>
+        <members>Account_Association__c.Status__c</members>
+        <members>Account_Association__c.Type__c</members>
         <members>Addr_Verification_Settings__c.Address_Verification_Endpoint__c</members>
         <members>Addr_Verification_Settings__c.Auth_ID__c</members>
         <members>Addr_Verification_Settings__c.Auth_Token__c</members>
@@ -545,6 +558,7 @@
         <members>Opportunity_Naming_Settings__c.Date_Format__c</members>
         <members>Opportunity_Naming_Settings__c.Opportunity_Name_Format__c</members>
         <members>Opportunity_Naming_Settings__c.Opportunity_Record_Types__c</members>
+        <members>Reciprocal_Account_Association_Types__c.Reciprocal_Type__c</members>
         <members>Schedulable__c.Active__c</members>
         <members>Schedulable__c.Class_Name__c</members>
         <members>Schedulable__c.Frequency__c</members>
@@ -851,6 +865,7 @@
         <members>sendAcknowledgmentSucceeded</members>
         <members>stgBtnCancel</members>
         <members>stgBtnClearErrorLog</members>
+        <members>stgBtnCreateAssocLookup</members>
         <members>stgBtnCreateAutoRel</members>
         <members>stgBtnCreateMapping</members>
         <members>stgBtnCreateRDPeriod</members>
@@ -859,6 +874,7 @@
         <members>stgBtnCreateUDR</members>
         <members>stgBtnEdit</members>
         <members>stgBtnHHAutoName</members>
+        <members>stgBtnNewAssocReciprocal</members>
         <members>stgBtnNewAutoRel</members>
         <members>stgBtnNewONS</members>
         <members>stgBtnNewPaymentMap</members>
@@ -879,6 +895,8 @@
         <members>stgHelpAccountModel</members>
         <members>stgHelpAlloFiscalYearRollups</members>
         <members>stgHelpAlloNDayValue</members>
+        <members>stgHelpAssocReciprocalName</members>
+        <members>stgHelpAssocReciprocalType</members>
         <members>stgHelpAutoAffil</members>
         <members>stgHelpAutoRelCampaignRT</members>
         <members>stgHelpAutoRelField</members>
@@ -1006,6 +1024,7 @@
         <members>stgLabelHHSettings</members>
         <members>stgLabelLeadSettings</members>
         <members>stgLabelMembershipSettings</members>
+        <members>stgLabelNewAssocReciprocal</members>
         <members>stgLabelNewAutoRel</members>
         <members>stgLabelNewPaymentMapping</members>
         <members>stgLabelNewRDFieldMap</members>
@@ -1050,6 +1069,7 @@
         <members>stgNavAddressVerification</members>
         <members>stgNavAffiliations</members>
         <members>stgNavAllocations</members>
+        <members>stgNavAssocReciprocal</members>
         <members>stgNavBDE</members>
         <members>stgNavConnections</members>
         <members>stgNavContactRoles</members>
@@ -1077,6 +1097,7 @@
         <members>stgNavSystem</members>
         <members>stgNavTriggerConfig</members>
         <members>stgNavUserDefinedRollups</members>
+        <members>stgReciprocalAssocationsDescription</members>
         <members>stgValidationHHAccountHHRules</members>
         <name>CustomLabel</name>
     </types>
@@ -1085,6 +1106,7 @@
         <name>CustomLabels</name>
     </types>
     <types>
+        <members>Account_Association__c</members>
         <members>Addr_Verification_Settings__c</members>
         <members>Address_Verification_Settings__c</members>
         <members>Address__c</members>
@@ -1101,6 +1123,7 @@
         <members>Grant_Deadline__c</members>
         <members>Household_Naming_Settings__c</members>
         <members>Opportunity_Naming_Settings__c</members>
+        <members>Reciprocal_Account_Association_Types__c</members>
         <members>Schedulable__c</members>
         <members>Trigger_Handler__c</members>
         <name>CustomObject</name>
@@ -1146,6 +1169,7 @@
     <types>
         <members>Account-Household Layout</members>
         <members>Account-Organization Layout</members>
+        <members>Account_Association__c-Account Association Layout</members>
         <members>Address__c-Address Layout</members>
         <members>Allocation__c-Allocation Layout</members>
         <members>Batch__c-Batch Layout</members>
@@ -1168,6 +1192,7 @@
         <name>Letterhead</name>
     </types>
     <types>
+        <members>Account_Association__c.All</members>
         <members>Batch__c.All</members>
         <members>Batch__c.Completed_Batches</members>
         <members>Batch__c.Open_Batches</members>
@@ -1215,6 +1240,10 @@
     <types>
         <members>CumulusStaticResources</members>
         <name>StaticResource</name>
+    </types>
+    <types>
+        <members>Account_Association__c.Reflexive_Account_Association</members>
+        <name>ValidationRule</name>
     </types>
     <types>
         <members>Account.Manage_Household</members>

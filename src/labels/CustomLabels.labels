@@ -2278,6 +2278,14 @@
         <value>Clear Error Log</value>
     </labels>
     <labels>
+        <fullName>stgBtnCreateAssocLookup</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnCreateAssocLookup</shortDescription>
+        <value>Create Reciprocal Association</value>
+    </labels>
+    <labels>
         <fullName>stgBtnCreateAutoRel</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -2340,6 +2348,14 @@
         <protected>false</protected>
         <shortDescription>stgBtnHHAutoName</shortDescription>
         <value>Refresh All Household Names</value>
+    </labels>
+    <labels>
+        <fullName>stgBtnNewAssocReciprocal</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnNewAssocReciprocal</shortDescription>
+        <value>New Reciprocal Association</value>
     </labels>
     <labels>
         <fullName>stgBtnNewAutoRel</fullName>
@@ -2500,6 +2516,22 @@
         <protected>false</protected>
         <shortDescription>stgHelpAlloNDayValue</shortDescription>
         <value>Provide a value for &apos;N day&apos; rollups, where &apos;N&apos; is the number of days from today into the past. This value defaults to rollup over the past 365 days.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpAssocReciprocalName</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpAssocReciprocalName</shortDescription>
+        <value>The Name of the Account Association Type</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpAssocReciprocalType</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpAssocReciprocalType</shortDescription>
+        <value>The value used for the reciprocal association type.</value>
     </labels>
     <labels>
         <fullName>stgHelpAutoAffil</fullName>
@@ -3566,6 +3598,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Membership Settings</value>
     </labels>
     <labels>
+        <fullName>stgLabelNewAssocReciprocal</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelNewAssocReciprocal</shortDescription>
+        <value>New Reciprocal Association</value>
+    </labels>
+    <labels>
         <fullName>stgLabelNewAutoRel</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -3918,6 +3958,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>GAU Allocations</value>
     </labels>
     <labels>
+        <fullName>stgNavAssocReciprocal</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavAssocReciprocal</shortDescription>
+        <value>Account Associations</value>
+    </labels>
+    <labels>
         <fullName>stgNavBDE</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -4132,6 +4180,16 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgNavUserDefinedRollups</shortDescription>
         <value>User Defined Rollups</value>
+    </labels>
+    <labels>
+        <fullName>stgReciprocalAssocationsDescription</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgReciprocalAssocationsDescription</shortDescription>
+        <value>These settings allow you to configure types of reciprocal associations between accounts. For example, if Account A is related to Account B as a customer, then Account B is related to Account A as a vendor. You can specify the Type value for the Name, and then what the reciprocal value should be.
+
+(NOTE: You may need to add the Type to your Account Association object to make it available for use. You can do so by going to: Setup|Customize|Create|Objects Click on &apos;Account Association&apos;, &apos;Type&apos;, and then &apos;New&apos; under the &apos;Picklist Values&apos; list.)</value>
     </labels>
     <labels>
         <fullName>stgValidationHHAccountHHRules</fullName>

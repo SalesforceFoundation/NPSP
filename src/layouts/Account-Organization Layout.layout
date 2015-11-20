@@ -309,6 +309,15 @@
         <relatedList>npe5__Affiliation__c.npe5__Organization__c</relatedList>
     </relatedLists>
     <relatedLists>
+        <fields>NAME</fields>
+        <fields>Associated_Account__c</fields>
+        <fields>Status__c</fields>
+        <fields>Type__c</fields>
+        <fields>Start_Date__c</fields>
+        <fields>End_Date__c</fields>
+        <relatedList>Account_Association__c.Account__c</relatedList>
+    </relatedLists>
+    <relatedLists>
         <customButtons>npe01__New_Organization_Donation</customButtons>
         <excludeButtons>New</excludeButtons>
         <fields>OPPORTUNITY.NAME</fields>
@@ -365,7 +374,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00ho00000063Yfs</masterLabel>
+        <masterLabel>00h610000020F6r</masterLabel>
         <sizeX>1</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>

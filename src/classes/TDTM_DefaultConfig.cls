@@ -146,7 +146,7 @@ public without sharing class TDTM_DefaultConfig {
         // Account Management on Account
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
               Class__c = 'ACCT_Accounts_TDTM', Load_Order__c = 1, Object__c = 'Account',
-              Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterUpdate'));
+              Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterUpdate;AfterDelete'));
 
         // Account Merge on Account
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
@@ -242,6 +242,11 @@ public without sharing class TDTM_DefaultConfig {
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
               Class__c = 'CON_ContactMerge_TDTM', Load_Order__c = 2, Object__c = 'Contact',
               Trigger_Action__c = 'AfterDelete'));
+
+        // Reciprocal Account Associations
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+              Class__c = 'ACCT_AccountAssociations_TDTM', Load_Order__c = 1,
+              Object__c = 'Account_Association__c', Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete'));
 
         return handlers;
     }

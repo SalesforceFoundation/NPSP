@@ -93,6 +93,13 @@ public class ACCT_Accounts_TDTM extends TDTM_Runnable {
         if (listHHNew.size() > 0)
             HH_HouseholdNaming.handleHHNameUpdates(listHHNew, listHHOld, triggerAction, objResult);
 
-        return null;
+        DmlWrapper dmlWrapper = new DmlWrapper();
+
+        // after account deletion, delete any orphaned account associations
+        if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
+            dmlWrapper = ACCT_AccountAssociations_TDTM.deleteOrphanedAccountAssociations(null);
+        }
+
+        return dmlWrapper;
     }
 }
