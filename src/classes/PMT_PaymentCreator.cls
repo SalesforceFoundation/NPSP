@@ -301,7 +301,6 @@ public with sharing class PMT_PaymentCreator {
      * @param closedStageName The name of an opportunity stage that corresponds to Closed/Won to transition to if all payments are determined to be received
      * @return void
      */
-    @TestVisible
     private void closeOpportunityIfAllPaymentsReceived(Opportunity oldOpp, Opportunity newOpp, String closedStageName) {
         Boolean amountUpdated = (oldOpp.Amount != newOpp.Amount);
         Boolean paymentAmountReceivedUpdated = (oldOpp.npe01__Payments_Made__c != newOpp.npe01__Payments_Made__c);
