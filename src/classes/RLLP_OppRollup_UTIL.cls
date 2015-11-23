@@ -1,5 +1,5 @@
 /*  
-    Copyright (c) 2012, Salesforce.com Foundation
+    Copyright (c) 2012, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
   
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation 
+* @author Salesforce.org 
 * @date 2012 (2.4) 
 * @description set of utility methods and values used in opportunity rollups
 */
@@ -759,35 +759,60 @@ public without sharing class RLLP_OppRollup_UTIL {
         }       
         return ContactNDaySoftCreditQuery;
     }
-    
+
     /****************************************/
-     
-    /*** Utility Methods ***/    
-    
-    public static integer getCurrentFY() {        
-        if (fiscal_year == null){
-            Organization orgInfo = [SELECT FiscalYearStartMonth, UsesStartDateAsFiscalYearName
-                                    FROM Organization
-                                    WHERE id=:Userinfo.getOrganizationId()];
-            Date today = system.today();
-            
-            if (today.month() >= orgInfo.FiscalYearStartMonth){
-                if (orgInfo.UsesStartDateAsFiscalYearName){
-                    fiscal_year = today.year();
-                } 
-                else{
-                    fiscal_year = today.year() + 1;
-                }
-            }
-            else{
-                if (orgInfo.UsesStartDateAsFiscalYearName){
-                    fiscal_year = today.year() - 1;
-                }
-                else{
-                    fiscal_year = today.year();
-                }
-            }
-        }               
-    return fiscal_year;
+
+    /*** Utility Methods ***/
+
+    /**
+     * @description Return the fiscal year for the current date according to the current org settings
+     * @return Integer (the fiscal year)
+     */
+    public static Integer getCurrentFY() {
+        if (fiscal_year == null) {
+            Organization orgInfo = [
+                SELECT
+                    FiscalYearStartMonth,
+                    UsesStartDateAsFiscalYearName
+                FROM Organization
+                WHERE Id = :UserInfo.getOrganizationId()
+            ];
+
+            fiscal_year = getFiscalYearForDate(
+                Date.today(),
+                orgInfo.FiscalYearStartMonth,
+                orgInfo.UsesStartDateAsFiscalYearName
+            );
+        }
+
+        return fiscal_year;
+    }
+
+    /**
+     * @description Determine the fiscal year for the given date, fiscal year start month, and whether the fiscal year name is based on the start month or end month
+     * @param targetDate The date for which the fiscal year will be determined
+     * @param fiscalYearStartMonth The month, as an Integer (Jan=1), that the fiscal year starts (see Fiscal Year org settings)
+     * @param usesStartDateAsFiscalYearName If true, then the fiscal year is determined by the year of the starting month of the fiscal year, otherwise the fiscal year is determined by the end month in the fiscal year (see Fiscal Year org settings)
+     * @return Integer (the fiscal year)
+     */
+    public static Integer getFiscalYearForDate(Date targetDate, Integer fiscalYearStartMonth, Boolean usesStartDateAsFiscalYearName) {
+        Date fiscalYearStartDate = Date.newInstance(
+            targetDate.year(),
+            fiscalYearStartMonth,
+            1
+        );
+
+        Date fiscalYearEndDate = fiscalYearStartDate.addYears(1).addDays(-1);
+
+        if (targetDate < fiscalYearStartDate) {
+            fiscalYearStartDate = fiscalYearStartDate.addYears(-1);
+            fiscalYearEndDate = fiscalYearEndDate.addYears(-1);
+        }
+
+        if (usesStartDateAsFiscalYearName) {
+            return fiscalYearStartDate.year();
+        } else {
+            return fiscalYearEndDate.year();
+        }
     }
 }

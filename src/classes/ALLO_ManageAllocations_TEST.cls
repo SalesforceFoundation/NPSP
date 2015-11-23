@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
 * @group Allocations
 * @group-content ../../ApexDocContent/Allocations.htm
@@ -94,7 +94,9 @@ private class ALLO_ManageAllocations_TEST {
         ctrl.listAllo[0].General_Accounting_Unit__c = gau.id;
         ctrl.rowNumber = 1;
         ctrl.delRow();
+        Test.startTest();
         ctrl.saveClose();
+        Test.stopTest();
 
         list<Allocation__c> queryAllo = [SELECT Id, Percent__c, Amount__c FROM Allocation__c WHERE Opportunity__c=:opp.id];
         system.assertEquals(1,queryAllo.size(),'The single allocation should be saved.');
@@ -141,7 +143,9 @@ private class ALLO_ManageAllocations_TEST {
 
         ctrl.listAllo[1].Amount__c = 5;
         ctrl.listAllo[1].General_Accounting_Unit__c = campaigngau.id;
+        Test.startTest();
         ctrl.saveClose();
+        Test.stopTest();
 
         list<Allocation__c> queryAllo = [SELECT Id, Percent__c, Amount__c FROM Allocation__c WHERE Campaign__c=:cam.id];
         system.assertEquals(2,queryAllo.size(),'2 allocations should be saved, one original allocation should be deleted.');
@@ -194,7 +198,9 @@ private class ALLO_ManageAllocations_TEST {
 
         ctrl.listAllo[1].Amount__c = 5;
         ctrl.listAllo[1].General_Accounting_Unit__c = gau.id;
+        Test.startTest();
         ctrl.saveClose();
+        Test.stopTest();
 
         list<Allocation__c> queryAllo = [SELECT Id, Percent__c, Amount__c FROM Allocation__c WHERE Recurring_Donation__c=:rd.id];
         system.assertEquals(2,queryAllo.size(),'2 allocations should be saved, one original allocation should be deleted.');

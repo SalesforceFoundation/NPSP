@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014 Salesforce.com Foundation
+    Copyright (c) 2014 Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
 * @description Batch class for the Batch Data Importer.
 *
@@ -198,6 +198,8 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             importCampaigns();
 
             importOpportunities();
+
+            importCampaignMembers();
 
             // update final status for each DI
             for (DataImport__c di: listDI) {
@@ -561,7 +563,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             }
         }
         
-        string strSoql = 'Select Id, Firstname, Lastname, AccountId, ';
+        string strSoql = 'Select Id, Firstname, Lastname, AccountId, Account.npe01__SYSTEM_AccountType__c, ';
         if (isCustomIDInContactMatchRules)
             strSoql += diSettings.Contact_Custom_Unique_ID__c + ', ';        
         strSoql += ' Email, npe01__AlternateEmail__c, npe01__HomeEmail__c, npe01__WorkEmail__c ';
@@ -605,6 +607,10 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             list<string> listDiKey = listDIKeyC1(di);
             //system.debug('****DJH listDiKey: ' + listDiKey);
             if (con != null) {
+                if (con.Id != null && con.AccountId != null && con.Account.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
+                    LogBDIError(di, label.bdiErrorNonHHAccountContact, 'Contact1ImportStatus__c');
+                    continue;
+                }
                 di.Contact1Imported__c = con.id;
                 di.Contact1ImportStatus__c = label.bdiMatched;
                 // remember all the existing household accounts, so we can query for and add "looser" keys for c2
@@ -626,7 +632,8 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                     
         // before we process c2's, we want to add some "looser" keys
         // for any c2's to match against existing household members just by firstname
-        list<Contact> listHHContacts = [select Firstname, Lastname, AccountId from Contact where AccountId in :setHHId];
+        list<Contact> listHHContacts = [select Id, Firstname, Lastname, AccountId, Account.npe01__SYSTEM_AccountType__c 
+            from Contact where AccountId in :setHHId];
         for (Contact con : listHHContacts) {
             mapDIKeyToContact.put(con.Firstname + '|' + con.AccountId, con); 
         } 
@@ -639,6 +646,10 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             Contact con = ContactFromDi(di, 2);
             list<string> listDiKey = listDiKeyC2(di);
             if (con != null) {
+                if (con.Id != null && con.AccountId != null && con.Account.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
+                    LogBDIError(di, label.bdiErrorNonHHAccountContact, 'Contact2ImportStatus__c');
+                    continue;
+                }
                 di.Contact2Imported__c = con.id;
                 di.Contact2ImportStatus__c = label.bdiMatched;
             } else if (listDiKey.size() > 0) {
@@ -1264,6 +1275,9 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
 
         // update each DI with its new home address
         for (DataImport__c di: listDI) {
+            // skip di's that already have an error
+            if (di.Status__c == label.bdiFailed)
+               continue;
             if (di.HomeAddressImported__c == null) {
                 Address__c addr = mapDIIdToAddr.get(di.Id);
                 if (addr != null && addr.Id != null) {
@@ -1403,6 +1417,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                 }                
                 opp.npe01__Contact_Id_for_Role__c = con.Id;
                 opp.Primary_Contact__c = con.Id;
+                opp.Primary_Contact_Campaign_Member_Status__c = di.Campaign_Member_Status__c;
                 opp.AccountId = con.AccountId;
                 strOppName = con.Firstname + ' ' + con.Lastname;
             } else if (di.Donation_Donor__c == 'Account1') {
@@ -1449,8 +1464,8 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                 cPropSet--;
             } 
                 
-            if (di.Donation_Stage__c == null) {
-                di.Donation_Stage__c = UTIL_UnitTestData_TEST.getClosedWonStage();
+            if (di.Donation_Stage__c == null && defaultClosedWonStage != '') {
+                di.Donation_Stage__c = defaultClosedWonStage;
                 cPropSet--;
             }
 
@@ -1460,7 +1475,9 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                     cPropSet++;
                 }
             }
-            if (cPropSet > 0) {
+            // unfortunately, if there are checkbox fields that we copied, we can't tell the difference
+            // between null or false, so looking at cPropSet isn't good enough!  let's also look for an account specified.
+            if (cPropSet > 0 && opp.AccountId != null) {
                 mapDIIdToOpp.put(di.Id, opp);
                 listOppInsert.add(opp);
                 listDIInsert.add(di);  
@@ -1495,6 +1512,22 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         
         // now deal with any payment child records
         updatePayments();      
+    }
+    
+    // finds a valid Close Won Opportunity Stage
+    private static string defaultClosedWonStage {
+        get {	
+            if (defaultClosedWonStage == null){
+                List<OpportunityStage> listStg = [select masterlabel from opportunitystage where isActive = true and iswon = true];
+                if (listStg.size() > 0) {
+                    defaultClosedWonStage = listStg[0].masterlabel;
+                } else {
+                    defaultClosedWonStage = '';
+                }
+            }
+            return defaultClosedWonStage;
+        }
+        set;
     }
     
     // method to update any fields on payment objects created for the Data Import opportunities.
@@ -1598,4 +1631,40 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             
     }
 
+    //********************************************* CAMPAIGN MEMBERS ************************************************
+    // method to create an new CAMPAIGN MEMBERS for imported Contacts and Campaigns
+    private void importCampaignMembers() {
+        list<string> newCmContactIds = new list<string>();
+        list<string> listCampaignIds = new list<string>();
+        list<string> listCmStatues = new list<string>();
+        // loop over the dis contacts and find existing cms or new cms to create (if they have a campaign)
+        for (DataImport__c di : listDI) {
+            // skip that already have an error
+            if (di.Status__c == label.bdiFailed)
+                continue;
+            // only create CMs here for rows that don't have an opportunity
+            if (di.Donation_Campaign_Name__c != null && di.DonationImported__c == null) {
+                // assume errors would have already been thrown
+                Id idCmp = mapStrNameToCampaignId.get(di.Donation_Campaign_Name__c);
+                string diStatus = String.isBlank(di.Campaign_Member_Status__c) ? Label.campaignMemberStatusDefault : di.Campaign_Member_Status__c;
+
+                if (di.Contact1Imported__c != null) {
+                    newCmContactIds.add(di.Contact1Imported__c);
+                    listCampaignIds.add(idCmp); // current campaign for row
+                    listCmStatues.add(diStatus);
+                }
+                if (di.Contact2Imported__c != null) {
+                    newCmContactIds.add(di.Contact2Imported__c);
+                    listCampaignIds.add(idCmp); // current campaign for row
+                    listCmStatues.add(diStatus);
+                }
+            }
+        }
+
+        // return DML wrapper for new CMs
+        TDTM_Runnable.DMLWrapper newCmWrapper = CON_AddToCampaign.CreateCampaignMembers(newCmContactIds,listCampaignIds,listCmStatues);
+
+        // process dmls for CMs
+        TDTM_TriggerHandler.processDML(newCmWrapper);
+    }
 }

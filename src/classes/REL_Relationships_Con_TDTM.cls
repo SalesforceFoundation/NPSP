@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2013, Salesforce.com Foundation
+    Copyright (c) 2013, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,11 +28,11 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @description Implements relationships behavior 
 */
 public class REL_Relationships_Con_TDTM extends TDTM_Runnable {
-	
+    
 
     /*******************************************************************************************************
     * @description Trigger Handler on Contact that handles relationship autocreation and gender change.
@@ -42,7 +42,7 @@ public class REL_Relationships_Con_TDTM extends TDTM_Runnable {
     * @param objResult the describe for Contacts 
     * @return dmlWrapper Any relationships that need DML.
     ********************************************************************************************************/
-	public override DmlWrapper run(List<SObject> newList, List<SObject> oldList, 
+    public override DmlWrapper run(List<SObject> newList, List<SObject> oldList, 
     TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
         //Casting them to contacts, since this class should be run only for contacts
@@ -145,8 +145,10 @@ public class REL_Relationships_Con_TDTM extends TDTM_Runnable {
         // The Contacts primary Relationships have already been cascade deleted in Contact After Delete context
         // Using ALL ROWS returns them in the query used to gather the mirror Relationships to be deleted 
         for (npe4__Relationship__c r : [Select Id, npe4__ReciprocalRelationship__c from npe4__Relationship__c 
-            where npe4__ReciprocalRelationship__c!=null AND npe4__Contact__c in :contacts.keySet() ALL ROWS]){
-            relationshipsToDelete.add(new npe4__Relationship__c(Id = r.npe4__ReciprocalRelationship__c));
+            where npe4__Contact__c in :contacts.keySet() ALL ROWS]){
+            if (r.npe4__ReciprocalRelationship__c!=null) {
+                relationshipsToDelete.add(new npe4__Relationship__c(Id = r.npe4__ReciprocalRelationship__c));
+            }
         }
         if ( relationshipsToDelete.size() > 0 ) {
             dmlWrapper.objectsToDelete.addAll(relationshipsToDelete);

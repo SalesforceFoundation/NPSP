@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009, Salesforce.com Foundation
+    Copyright (c) 2009, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2011 (2.3)
 * @group Households
 * @description test class for Household naming functionality.
@@ -323,7 +323,6 @@ public class HH_HouseholdNaming_TEST {
 
         
         //test various re-orderings of names
-        Test.startTest();
         
         HH_HouseholdNaming hn = new HH_HouseholdNaming();
         
@@ -372,10 +371,13 @@ public class HH_HouseholdNaming_TEST {
         con0.npo02__Household_Naming_Order__c = null;
         con1.npo02__Household_Naming_Order__c = 2;
         
+        // system limit profiling around this smaller scope of work.
+        Test.startTest();
         update con0;
         update con1;
         
         hn.UpdateNames(new list<Id>{hh.id});
+        Test.stopTest();
         
         hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c from npo02__Household__c where id = :hh.id LIMIT 1][0];
         
@@ -383,7 +385,6 @@ public class HH_HouseholdNaming_TEST {
         system.assertequals('Jim ' + system.label.npo02.HouseholdNameConnector  + ' Joe Test ' + system.label.npo02.HouseholdNameConnector + ' John Jones', hh.npo02__Formal_greeting__c);
         system.assertequals('Jim, Joe ' + system.label.npo02.HouseholdNameConnector + ' John', hh.npo02__Informal_greeting__c);
         
-        Test.stopTest();
         
     }  
 

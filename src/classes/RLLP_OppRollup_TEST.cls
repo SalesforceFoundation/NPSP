@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009, Salesforce.com Foundation
+    Copyright (c) 2009, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.  
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2011
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups.htm
@@ -1669,7 +1669,88 @@ public with sharing class RLLP_OppRollup_TEST {
     static testMethod void testFYUtility(){
         if (strTestOnly != '*' && strTestOnly != 'testFYUtility') return;
         integer fy = RLLP_OppRollup_UTIL.getCurrentFY();
-        system.assert(fy != null);      
+        system.assert(fy != null);
+    }
+
+    /**
+     * @description For a given date, test to see if fiscal year is correctly calculated based on all combinations of org fiscal year settings
+     */
+    static testMethod void testGetFiscalYearForDate() {
+        if (strTestOnly != '*' && strTestOnly != 'testGetFiscalYearForDate') return;
+
+        Date targetDate = Date.newInstance(2014, 10, 1);
+
+        // Target date is in fiscal year Jan 2014 through Dec 2014, year comes from start
+        System.assertEquals(2014, RLLP_OppRollup_UTIL.getFiscalYearForDate(targetDate, 1, true));
+
+        // Target date is in fiscal year Jan 2014 through Dec 2014, year comes from end
+        System.assertEquals(2014, RLLP_OppRollup_UTIL.getFiscalYearForDate(targetDate, 1, false));
+
+        // Target date is in fiscal year Feb 2014 through Jan 2015, year comes from start
+        System.assertEquals(2014, RLLP_OppRollup_UTIL.getFiscalYearForDate(targetDate, 2, true));
+
+        // Target date is in fiscal year Feb 2014 through Jan 2015, year comes from end
+        System.assertEquals(2015, RLLP_OppRollup_UTIL.getFiscalYearForDate(targetDate, 2, false));
+
+        // Target date is in fiscal year March 2014 through Feb 2015, year comes from start
+        System.assertEquals(2014, RLLP_OppRollup_UTIL.getFiscalYearForDate(targetDate, 3, true));
+
+        // Target date is in fiscal year March 2014 through Feb 2015, year comes from end
+        System.assertEquals(2015, RLLP_OppRollup_UTIL.getFiscalYearForDate(targetDate, 3, false));
+
+        // Target date is in fiscal year April 2014 through March 2015, year comes from start
+        System.assertEquals(2014, RLLP_OppRollup_UTIL.getFiscalYearForDate(targetDate, 4, true));
+
+        // Target date is in fiscal year April 2014 through March 2015, year comes from end
+        System.assertEquals(2015, RLLP_OppRollup_UTIL.getFiscalYearForDate(targetDate, 4, false));
+
+        // Target date is in fiscal year May 2014 through April 2015, year comes from start
+        System.assertEquals(2014, RLLP_OppRollup_UTIL.getFiscalYearForDate(targetDate, 5, true));
+
+        // Target date is in fiscal year May 2014 through April 2015, year comes from end
+        System.assertEquals(2015, RLLP_OppRollup_UTIL.getFiscalYearForDate(targetDate, 5, false));
+
+        // Target date is in fiscal year June 2014 through May 2015, year comes from start
+        System.assertEquals(2014, RLLP_OppRollup_UTIL.getFiscalYearForDate(targetDate, 6, true));
+
+        // Target date is in fiscal year June 2014 through May 2015, year comes from end
+        System.assertEquals(2015, RLLP_OppRollup_UTIL.getFiscalYearForDate(targetDate, 6, false));
+
+        // Target date is in fiscal year July 2014 through June 2015, year comes from start
+        System.assertEquals(2014, RLLP_OppRollup_UTIL.getFiscalYearForDate(targetDate, 7, true));
+
+        // Target date is in fiscal year July 2014 through June 2015, year comes from end
+        System.assertEquals(2015, RLLP_OppRollup_UTIL.getFiscalYearForDate(targetDate, 7, false));
+
+        // Target date is in fiscal year August 2014 through July 2015, year comes from start
+        System.assertEquals(2014, RLLP_OppRollup_UTIL.getFiscalYearForDate(targetDate, 8, true));
+
+        // Target date is in fiscal year August 2014 through July 2015, year comes from end
+        System.assertEquals(2015, RLLP_OppRollup_UTIL.getFiscalYearForDate(targetDate, 8, false));
+
+        // Target date is in fiscal year September 2014 through August 2015, year comes from start
+        System.assertEquals(2014, RLLP_OppRollup_UTIL.getFiscalYearForDate(targetDate, 9, true));
+
+        // Target date is in fiscal year September 2014 through August 2015, year comes from end
+        System.assertEquals(2015, RLLP_OppRollup_UTIL.getFiscalYearForDate(targetDate, 9, false));
+
+        // Target date is in fiscal year October 2014 through September 2015, year comes from start
+        System.assertEquals(2014, RLLP_OppRollup_UTIL.getFiscalYearForDate(targetDate, 10, true));
+
+        // Target date is in fiscal year October 2014 through September 2015, year comes from end
+        System.assertEquals(2015, RLLP_OppRollup_UTIL.getFiscalYearForDate(targetDate, 10, false));
+
+        // Target date is in fiscal year November 2013 through October 2014, year comes from start
+        System.assertEquals(2013, RLLP_OppRollup_UTIL.getFiscalYearForDate(targetDate, 11, true));
+
+        // Target date is in fiscal year November 2013 through October 2014, year comes from end
+        System.assertEquals(2014, RLLP_OppRollup_UTIL.getFiscalYearForDate(targetDate, 11, false));
+
+        // Target date is in fiscal year December 2013 through November 2014, year comes from start
+        System.assertEquals(2013, RLLP_OppRollup_UTIL.getFiscalYearForDate(targetDate, 12, true));
+
+        // Target date is in fiscal year December 2013 through November 2014, year comes from end
+        System.assertEquals(2014, RLLP_OppRollup_UTIL.getFiscalYearForDate(targetDate, 12, false));
     }
 
     static testMethod void testUDRChangeBehaviorOne2One(){

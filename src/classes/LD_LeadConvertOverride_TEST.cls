@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009, Salesforce.com Foundation
+    Copyright (c) 2009, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
 
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2011 (2.x)
 * @group Lead Conversion
 * @description Tests for the lead conversion override page and logic
@@ -98,7 +98,9 @@ private class LD_LeadConvertOverride_TEST {
         // this selects the "New" option in the Contact box
         ext.strConId = 'NEW_CONTACT';
         ext.strAccountId = 'AUTO';
+        Test.startTest();
         ext.convertLeadNow();
+        Test.stopTest();
 
         Contact[] convertedContacts = [select id, firstname, lastname,Account.npe01__Systemisindividual__c, Account.Name from Contact where lastname = :leadLastName];
         //one contact should have been created
@@ -181,7 +183,9 @@ private class LD_LeadConvertOverride_TEST {
         // this selects the Merge to <contact> option in the Contact box
         ext.strConId = c.id;
         ext.strAccountId = 'AUTO';
+        Test.startTest();
         ext.convertLeadNow();
+        Test.stopTest();
 
         Contact[] convertedContacts = [select id, firstname, lastname,Account.npe01__Systemisindividual__c from Contact where lastname = :CAO_Constants.CONTACT_LASTNAME_FOR_TESTS];
         lead[] unconvertedLeads = [select id, firstname, lastname from lead where lastname = :CAO_Constants.CONTACT_LASTNAME_FOR_TESTS and isconverted = false];
@@ -247,7 +251,9 @@ private class LD_LeadConvertOverride_TEST {
         ext.strConId = 'NEW_CONTACT';
         ext.strAccountId = 'NEW';
         ext.strAfflAccountID = 'NEW'; 
+        Test.startTest();
         ext.convertLeadNow();
+        Test.stopTest();
 
         Contact[] convertedContacts = [select id, firstname, lastname, Account.npe01__Systemisindividual__c, Account.Name from Contact where lastname = :CAO_Constants.CONTACT_LASTNAME_FOR_TESTS];
         lead[] unconvertedLeads = [select id, firstname, lastname from lead where lastname = :CAO_Constants.CONTACT_LASTNAME_FOR_TESTS and isconverted = false];
@@ -318,7 +324,9 @@ private class LD_LeadConvertOverride_TEST {
         // this selects the "New" option in the Contact box
         ext.strConId = 'NEW_CONTACT';
         ext.strAccountId = acc.Id;
+        Test.startTest();
         ext.convertLeadNow();
+        Test.stopTest();
 
         Contact[] convertedContacts = [select id, firstname, lastname, Account.npe01__Systemisindividual__c, Account.Name from Contact where lastname = :CAO_Constants.CONTACT_LASTNAME_FOR_TESTS];
         lead[] unconvertedLeads = [select id, firstname, lastname from lead where lastname = :CAO_Constants.CONTACT_LASTNAME_FOR_TESTS and isconverted = false];
@@ -391,7 +399,9 @@ private class LD_LeadConvertOverride_TEST {
         ext.strConId = 'NEW_CONTACT';
         ext.strAccountId = 'AUTO';
         ext.strAfflAccountId = acc.Id;
+        Test.startTest();
         ext.convertLeadNow();
+        Test.stopTest();
 
         Contact[] convertedContacts = [select id, firstname, lastname, Account.npe01__Systemisindividual__c, Account.Name from Contact where lastname = :CAO_Constants.CONTACT_LASTNAME_FOR_TESTS];
         lead[] unconvertedLeads = [select id, firstname, lastname from lead where lastname = :CAO_Constants.CONTACT_LASTNAME_FOR_TESTS and isconverted = false];
@@ -459,7 +469,9 @@ private class LD_LeadConvertOverride_TEST {
         // this selects the "New" option in the Contact box
         ext.strConId = 'NEW_CONTACT';
         ext.strAccountId = 'AUTO';
+        Test.startTest();
         ext.convertLeadNow();
+        Test.stopTest();
 
         Contact[] convertedContacts = [select id, firstname, lastname, npo02__Household__c, Account.npe01__Systemisindividual__c from Contact where lastname = :CAO_Constants.CONTACT_LASTNAME_FOR_TESTS];
         lead[] unconvertedLeads = [select id, firstname, lastname from lead where lastname = :CAO_Constants.CONTACT_LASTNAME_FOR_TESTS and isconverted = false];
@@ -612,7 +624,9 @@ private class LD_LeadConvertOverride_TEST {
         // this selects the "New" option in the Contact box
         ext.strConId = 'NEW_CONTACT';
         ext.strAccountId = 'AUTO';
+        Test.startTest();
         ext.convertLeadNow();
+        Test.stopTest();
 
         Contact[] convertedContacts = [select id, firstname, lastname,Account.npe01__Systemisindividual__c, Account.Name,
             MailingStreet, MailingCity, MailingState, MailingPostalCode, Current_Address__c from Contact where lastname = :leadLastName];
@@ -703,7 +717,9 @@ private class LD_LeadConvertOverride_TEST {
         ext.strAccountId = 'AUTO';
         ext.OppName = 'Test Opp';
         ext.doNotCreateOpp = false;
+        Test.startTest();
         ext.convertLeadNow();
+        Test.stopTest();
 
         Contact[] convertedContacts = [select id, firstname, lastname,Account.npe01__Systemisindividual__c, Account.Name from Contact where lastname = :leadLastName];
         //one contact should have been created

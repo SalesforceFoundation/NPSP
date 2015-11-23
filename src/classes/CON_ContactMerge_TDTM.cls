@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2015 Salesforce.com Foundation
+    Copyright (c) 2015 Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2015
 *
 * @group ContactMerge
@@ -148,6 +148,8 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
         for (integer i = 0; i < listContactIdLoser.size(); i++) {
         	if (listAccountIdLoser[i] != null) {
                 Account accLoser = mapAccountIdAccountLoser.get(listAccountIdLoser[i]);
+                if (accLoser == null)
+                    continue;
                 if (accLoser.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE)
                     listAccIdHH.add(accLoser.Id); 
                 if (accLoser.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE || 

@@ -273,6 +273,16 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Campaign_Member_Status__c</fullName>
+        <externalId>false</externalId>
+        <label>Campaign Member Status</label>
+        <length>40</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Contact1ImportStatus__c</fullName>
         <externalId>false</externalId>
         <label>Contact1 Import Status</label>
@@ -687,7 +697,7 @@
     <fields>
         <fullName>Donation_Campaign_Name__c</fullName>
         <externalId>false</externalId>
-        <label>Donation Campaign Name</label>
+        <label>Campaign Name</label>
         <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>

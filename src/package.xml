@@ -58,6 +58,7 @@
         <members>CONV_Account_Conversion_BATCH_TEST</members>
         <members>CONV_Account_Conversion_CTRL</members>
         <members>CONV_Account_Conversion_CTRL_TEST</members>
+        <members>CON_AddToCampaign</members>
         <members>CON_ChangeAccount_TEST</members>
         <members>CON_ContactMerge</members>
         <members>CON_ContactMergeTDTM_TEST</members>
@@ -97,6 +98,8 @@
         <members>HH_ProcessControl</members>
         <members>LD_LeadConvertOverride_CTRL</members>
         <members>LD_LeadConvertOverride_TEST</members>
+        <members>OPP_CampaignMember_TDTM</members>
+        <members>OPP_CampaignMember_TEST</members>
         <members>OPP_INaming</members>
         <members>OPP_MatchingDonationsBTN_CTRL</members>
         <members>OPP_MatchingDonationsBTN_TEST</members>
@@ -417,6 +420,7 @@
         <members>DataImport__c.Account2_Website__c</members>
         <members>DataImport__c.Account2_Zip_Postal_Code__c</members>
         <members>DataImport__c.ApexJobId__c</members>
+        <members>DataImport__c.Campaign_Member_Status__c</members>
         <members>DataImport__c.Contact1ImportStatus__c</members>
         <members>DataImport__c.Contact1Imported__c</members>
         <members>DataImport__c.Contact1_Alternate_Email__c</members>
@@ -537,6 +541,7 @@
         <members>Opportunity.Is_Grant_Renewal__c</members>
         <members>Opportunity.Next_Grant_Deadline_Due_Date__c</members>
         <members>Opportunity.Previous_Grant_Opportunity__c</members>
+        <members>Opportunity.Primary_Contact_Campaign_Member_Status__c</members>
         <members>Opportunity.Primary_Contact__c</members>
         <members>Opportunity.Recurring_Donation_Installment_Name__c</members>
         <members>Opportunity.Recurring_Donation_Installment_Number__c</members>
@@ -600,7 +605,56 @@
         <members>Address_Not_Found</members>
         <members>Address_StateCountry_Invalid_Error</members>
         <members>Address_Verification_Limit</members>
+        <members>CampaignMemberStatusOmit</members>
+        <members>CONV_Accept_Risk</members>
+        <members>CONV_Account_Field</members>
+        <members>CONV_Account_Field_For_Old_HH_ID</members>
+        <members>CONV_Activities_Reparented</members>
+        <members>CONV_Address_Overrides_Set</members>
+        <members>CONV_Addresses_Mapped</members>
+        <members>CONV_All_Backed_Up</members>
+        <members>CONV_All_Households_Selected</members>
+        <members>CONV_All_Required_Removed</members>
+        <members>CONV_All_Triggers_Disabled</members>
+        <members>CONV_All_Users_Logged_Out</members>
+        <members>CONV_All_WFR_Disabled</members>
+        <members>CONV_Batching_Explanation</members>
+        <members>CONV_Begin</members>
+        <members>CONV_Cancel</members>
+        <members>CONV_Configuration_Options</members>
+        <members>CONV_Contacts_Attached</members>
+        <members>CONV_Conversion_Process</members>
+        <members>CONV_Fundamental_Changes</members>
+        <members>CONV_Important_Info_Header</members>
+        <members>CONV_Local_Expert</members>
+        <members>CONV_Master_Address_Set</members>
+        <members>CONV_New_Affiliations</members>
+        <members>CONV_New_Households_Created</members>
+        <members>CONV_Non_NPSP_Apps</members>
+        <members>CONV_Old_Household_Objects</members>
+        <members>CONV_Only_Household_Contacts</members>
+        <members>CONV_Opportunities_Reparented</members>
+        <members>CONV_Original_HH_Id</members>
+        <members>CONV_Page_Description</members>
+        <members>CONV_Page_Title</members>
+        <members>CONV_Permanent_Change</members>
+        <members>CONV_Primary_Contacts_Set</members>
+        <members>CONV_Proceed</members>
+        <members>CONV_Record_Ownership_Transferred</members>
+        <members>CONV_Reload</members>
+        <members>CONV_Selected_Field_Bad</members>
+        <members>CONV_Selected_Field_Verification_Failure</members>
+        <members>CONV_Tested_in_Sandbox</members>
+        <members>CONV_Triggers_Reenabled</members>
+        <members>CONV_Warning</members>
+        <members>CONV_What_This_Tool_Does</members>
         <members>HiddenForSecurity</members>
+        <members>REL_Create_New_Relationship</members>
+        <members>REL_Former</members>
+        <members>REL_No_Relationships</members>
+        <members>REL_RECenter</members>
+        <members>REL_Return_to_Contact</members>
+        <members>REL_View_Contact_Record</members>
         <members>RecurringDonationAccountAndContactError</members>
         <members>Saved</members>
         <members>Settings_not_Saved</members>
@@ -663,7 +717,9 @@
         <members>bdiErrorInvalidDonor</members>
         <members>bdiErrorInvalidLastname</members>
         <members>bdiErrorInvalidOppRTName</members>
+        <members>bdiErrorNonHHAccountContact</members>
         <members>bdiFailed</members>
+        <members>bdiHouseholdModelRequired</members>
         <members>bdiIgnored</members>
         <members>bdiImported</members>
         <members>bdiMatched</members>
@@ -675,6 +731,9 @@
         <members>bdiStatusProcessed</members>
         <members>bdiStatusProcessing</members>
         <members>bdiTime</members>
+        <members>campaignMemberStatusDefault</members>
+        <members>campaignMemberStatusNonResponded</members>
+        <members>campaignMemberStatusResponded</members>
         <members>conMergeErrNoPersonAccounts</members>
         <members>flsError</members>
         <members>healthButtonRun</members>

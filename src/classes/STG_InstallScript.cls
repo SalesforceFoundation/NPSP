@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
 
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
 * @group Settings
 * @description Install Script for the NPSP package. 
@@ -223,14 +223,14 @@ global without sharing class STG_InstallScript implements InstallHandler {
             userEmail = UTIL_Namespace.sandboxEmailToRealEmail(userEmail);
             Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
             mail.setUseSignature(false);
-            mail.setReplyTo('donotreply@salesforcefoundation.org');
+            mail.setReplyTo('donotreply@salesforce.org');
             mail.setSenderDisplayName('Nonprofit Starter Pack');
             mail.setSubject('NPSP Install Errors');
             String bodyString = Label.stgInstallScriptError;
             bodyString += '\n\n==========================. \n\n Error message: \n' + e.getMessage() + '\n\n'
             + 'Error stack trace: \n' + e.getStackTraceString();
             mail.setPlainTextBody(bodyString);      
-            mail.setToAddresses(new String[]{'errors@salesforcefoundation.org', userEmail});
+            mail.setToAddresses(new String[]{'errors@salesforce.org', userEmail});
             Messaging.sendEmail(new Messaging.SingleEmailMessage[]{mail});
         } catch(Exception e2) {
             //Nothing to do here, as we don't want the install script to fail because emails could not be sent.

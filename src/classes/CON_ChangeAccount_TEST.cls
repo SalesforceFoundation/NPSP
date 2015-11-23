@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009, Salesforce.com Foundation
+    Copyright (c) 2009, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2015
 * @description Tests for Moving a Contact from one Account to another Account
 * @group ContactMerge
@@ -383,6 +383,7 @@ public with sharing class CON_ChangeAccount_TEST {
         
         // move the first contact in the first account to the other account.
         con.AccountId = ADDR_Addresses_TEST.listAccT[1].Id;
+        Test.startTest();
         update con;
         Test.stopTest();
 

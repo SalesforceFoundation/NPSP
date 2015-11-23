@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2015, Salesforce.com Foundation
+    Copyright (c) 2015, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
 
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2015
 * @group Contacts
 * @group-content ../../ApexDocContent/Contacts.htm
@@ -56,7 +56,9 @@ private class CON_DoNotContact_TEST {
         queryCon[0].Deceased__c = true;
         //verify that checking both in one transaction won't change behavior
         queryCon[0].Do_Not_Contact__c = true;
+        Test.startTest();
         update queryCon[0];
+        Test.stopTest();
 
         queryCon = [SELECT Id, HasOptedOutOfEmail, DoNotCall, npo02__Naming_Exclusions__c FROM Contact WHERE Id = :con.id];
         system.assert(queryCon[0].npo02__Naming_Exclusions__c.contains('Household__c.Name'), 'Naming Exclusions field should include Household Name.');
@@ -88,8 +90,10 @@ private class CON_DoNotContact_TEST {
         system.assert(!queryCon[0].HasOptedOutOfEmail, 'Contact should not be opted out of email.');
 
         queryCon[0].Do_Not_Contact__c = true;
+        Test.startTest();
         update queryCon[0];
-
+        Test.stopTest();
+        
         queryCon = [SELECT Id, HasOptedOutOfEmail, DoNotCall, npo02__Naming_Exclusions__c FROM Contact WHERE Id = :con.id];
         system.assert(queryCon[0].DoNotCall, 'Contact should be opted out of phone calls.');
         system.assert(queryCon[0].HasOptedOutOfEmail, 'Contact should be opted out of email.');

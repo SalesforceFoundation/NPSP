@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
 
@@ -417,17 +417,7 @@ public with sharing class ERR_Handler_TEST {
         if (strTestOnly != '*' && strTestOnly != 'testInactiveUserEmailBehavior') return;
 
         String un = System.now().getTime() + '@testerson.com';
-        Profile p = [SELECT Id FROM Profile WHERE Name='Standard User'];
-        UserRole r = [SELECT Id FROM UserRole WHERE Name='COO'];
-        User u; 
-        System.runAs ( new User(Id = UserInfo.getUserId()) ) { 
-            u = new User(alias = 'jsmith', email='jsmith@acme.com', 
-                emailencodingkey='UTF-8', lastname='Smith', 
-                languagelocalekey='en_US', 
-                localesidkey='en_US', profileid = p.Id, userroleid = r.Id,
-                timezonesidkey='America/Los_Angeles', 
-                username=un, isActive = false);
-            insert u;}
+        User u = UTIL_UnitTestData_TEST.createNewInactiveUserForTests(un);
 
         UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(Error_Notifications_On__c = true, 
             Error_Notifications_To__c = u.Id, Store_Errors_On__c = true));

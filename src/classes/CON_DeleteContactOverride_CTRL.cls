@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
 
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2015
 * @group Contacts
 * @group-content ../../ApexDocContent/Contacts.htm
@@ -63,11 +63,11 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     public pageReference processDelete() {
         Contact queryContact = [SELECT Id, AccountId, Account.npe01__SYSTEMIsIndividual__c FROM Contact WHERE Id = :conId];
         string accId = queryContact.AccountId;
-        integer contactsInHousehold = [SELECT Count(id) FROM Contact WHERE AccountId = :accId].size();
+        list<Contact> contactsInHousehold = [SELECT id FROM Contact WHERE AccountId = :accId];
 
         //This contact is alone in a system account, delete the system account and allow the cascading
         //delete to remove the contact
-        if (contactsInHousehold==1 && queryContact.Account.npe01__SYSTEMIsIndividual__c) {
+        if (contactsInHousehold.size()==1 && queryContact.Account.npe01__SYSTEMIsIndividual__c) {
             Account accForDelete = new Account(id=accId);
             delete accForDelete;
 
