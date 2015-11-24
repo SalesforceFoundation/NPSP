@@ -192,7 +192,7 @@ public without sharing class TDTM_DefaultConfig {
         // Payments on Opportunity
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
               Class__c = 'PMT_Payment_TDTM', Load_Order__c = 1, Object__c = 'Opportunity',
-              Trigger_Action__c = 'AfterInsert;AfterUpdate'));
+              Trigger_Action__c = 'BeforeUpdate;AfterInsert;AfterUpdate'));
 
         // OpportunityContactRoles on Opportunity
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,

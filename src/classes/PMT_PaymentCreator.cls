@@ -99,7 +99,20 @@ public with sharing class PMT_PaymentCreator {
             // CurrencyIsoCode doesn't exist in non-multi-currency orgs
             SObjectField OppCurrencyField = Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode');
             SObjectField PaymentCurrencyField = Schema.sObjectType.npe01__OppPayment__c.fields.getMap().get('CurrencyIsoCode');    
-                        
+
+            if (TDTM_Runnable.Action.BeforeUpdate == ta) {
+                if (!String.isEmpty(ContactSettings.Payments_Auto_Close_Stage_Name__c)) {
+                    String closedStageName = ContactSettings.Payments_Auto_Close_Stage_Name__c;
+                    for (Opportunity opp : newOppsMap.values()) {
+                        closeOpportunityIfAllPaymentsReceived(
+                            oldOppsMap.get(opp.Id),
+                            opp,
+                            closedStageName
+                        );
+                    }
+                }
+            }
+
             //SOQL for Updated Opps and Related Payments.  Queries for known fields and field in custom Payment Field Mappings.
             if (ta == TDTM_Runnable.Action.AfterUpdate){
                 String soqlStatement = '';
@@ -276,6 +289,34 @@ public with sharing class PMT_PaymentCreator {
                 if (!paymentsToInsert.isEmpty())
                     dmlWrapper.objectsToInsert.addAll((list<SObject>)paymentsToInsert);
             }
+        }
+    }
+
+    /**
+     * @description Close an opportunity if all payments have been received.
+     * This will update the StageName of newOpp, in place, if "all payments
+     * received" conditions are satisfied.
+     * @param oldOpp The opportunity before being updated
+     * @param newOpp The opportunity after being updated
+     * @param closedStageName The name of an opportunity stage that corresponds to Closed/Won to transition to if all payments are determined to be received
+     * @return void
+     */
+    private void closeOpportunityIfAllPaymentsReceived(Opportunity oldOpp, Opportunity newOpp, String closedStageName) {
+        Boolean amountUpdated = (oldOpp.Amount != newOpp.Amount);
+        Boolean paymentAmountReceivedUpdated = (oldOpp.npe01__Payments_Made__c != newOpp.npe01__Payments_Made__c);
+        Boolean amountPositive = (newOpp.Amount > 0);
+        Boolean isNotAndWasNotClosed = (!oldOpp.IsClosed && !newOpp.IsClosed);
+        Boolean amountEqualPaymentReceived = (newOpp.Amount == newOpp.npe01__Payments_Made__c);
+        Boolean stageNameSpecified = !String.isEmpty(closedStageName);
+
+        if (
+            (amountUpdated || paymentAmountReceivedUpdated)
+            && amountPositive
+            && isNotAndWasNotClosed
+            && amountEqualPaymentReceived
+            && stageNameSpecified
+        ) {
+            newOpp.StageName = closedStageName;
         }
     }
 }

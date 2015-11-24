@@ -35,6 +35,18 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>Payments_Auto_Close_Stage_Name__c</fullName>
+        <description>Opportunity stage for when opportunity has been fully paid</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Choose the stage that an opportunity should be automatically transitioned to when the total payment amount is equal to the opportunity amount.  If no stage is selected, then opportunities will not be transitioned automatically when payments are complete.</inlineHelpText>
+        <label>Opportunity Stage for When Fully Paid</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Simple_Address_Change_Treated_as_Update__c</fullName>
         <defaultValue>false</defaultValue>
         <description>If checked, changes to a single Contact or Account address field update the existing Address, rather than creating a new Address.</description>
