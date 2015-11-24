@@ -33,7 +33,7 @@
 * @group Payments
 * @description Controls the creation of payment objects from Opportunity trigger
 */
-public with sharing class PMT_PaymentCreator {
+public class PMT_PaymentCreator {
 
     /*******************************************************************************************************
     * @description map of Opportunity to Payment field mappings, validated to only contain mappings that
