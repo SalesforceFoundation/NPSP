@@ -174,4 +174,342 @@ private with sharing class PMT_PaymentCreator_TEST {
 
     }
 
+    private static testMethod void testOpportunityWillAutoClosefterAllPaymentsReceived() {
+        String closedWonStage = UTIL_UnitTestData_TEST.getClosedWonStage();
+        String openStage = UTIL_UnitTestData_TEST.getOpenStage();
+
+        if (String.isEmpty(closedWonStage) || String.isEmpty(openStage)) {
+            System.debug(
+                System.LoggingLevel.ERROR,
+                'Organization settings do not contain the necessary opportunity stages to run this test. Not running test.'
+            );
+            return;
+        }
+
+        UTIL_CustomSettingsFacade.getContactsSettings().Payments_Auto_Close_Stage_Name__c = closedWonStage;
+
+        OpportunityHelper oh = new OpportunityHelper(openStage);
+        oh.refresh();
+
+        List<npe01__OppPayment__c> payments = oh.getPayments();
+
+        System.assertEquals(1, payments.size());
+        System.assertEquals(oh.opp.Amount, payments.get(0).npe01__Payment_Amount__c);
+        System.assertEquals(openStage, oh.opp.StageName);
+
+        payments.get(0).npe01__Paid__c = true;
+
+        Test.startTest();
+
+        update payments;
+
+        Test.stopTest();
+
+        oh.refresh();
+
+        System.assertEquals(oh.opp.Amount, oh.opp.npe01__Payments_Made__c);
+        System.assertEquals(closedWonStage, oh.opp.StageName);
+    }
+
+    private static testMethod void testOpportunityWillAutoCloseIfAmountUpdatedToMatchPayments() {
+        String closedWonStage = UTIL_UnitTestData_TEST.getClosedWonStage();
+        String openStage = UTIL_UnitTestData_TEST.getOpenStage();
+
+        if (String.isEmpty(closedWonStage) || String.isEmpty(openStage)) {
+            System.debug(
+                System.LoggingLevel.ERROR,
+                'Organization settings do not contain the necessary opportunity stages to run this test. Not running test.'
+            );
+            return;
+        }
+
+        UTIL_CustomSettingsFacade.getContactsSettings().Payments_Auto_Close_Stage_Name__c = closedWonStage;
+
+        OpportunityHelper oh = new OpportunityHelper(openStage);
+        oh.refresh();
+
+        oh.deletePayments();
+        oh.setPayments(new List<npe01__OppPayment__c>{
+            new npe01__OppPayment__c(
+                npe01__Paid__c = true,
+                npe01__Payment_Amount__c = 250
+            ),
+            new npe01__OppPayment__c(
+                npe01__Paid__c = false,
+                npe01__Payment_Amount__c = 250
+            )
+        });
+        oh.refresh();
+
+        System.assertEquals(500, oh.opp.Amount);
+        System.assertEquals(250, oh.opp.npe01__Payments_Made__c);
+        System.assertEquals(openStage, oh.opp.StageName);
+
+        Test.startTest();
+
+        oh.opp.Amount = 250;
+        update oh.opp;
+
+        Test.stopTest();
+
+        oh.refresh();
+
+        System.assertEquals(250, oh.opp.Amount);
+        System.assertEquals(oh.opp.Amount, oh.opp.npe01__Payments_Made__c);
+        System.assertEquals(closedWonStage, oh.opp.StageName);
+    }
+
+    private static testMethod void testOpportunityWillNotAutoCloseIfNotAllPaymentsReceived() {
+        String closedWonStage = UTIL_UnitTestData_TEST.getClosedWonStage();
+        String openStage = UTIL_UnitTestData_TEST.getOpenStage();
+
+        if (String.isEmpty(closedWonStage) || String.isEmpty(openStage)) {
+            System.debug(
+                System.LoggingLevel.ERROR,
+                'Organization settings do not contain the necessary opportunity stages to run this test. Not running test.'
+            );
+            return;
+        }
+
+        UTIL_CustomSettingsFacade.getContactsSettings().Payments_Auto_Close_Stage_Name__c = closedWonStage;
+
+        OpportunityHelper oh = new OpportunityHelper(openStage);
+        oh.refresh();
+
+        oh.deletePayments();
+        oh.setPayments(new List<npe01__OppPayment__c>{
+            new npe01__OppPayment__c(
+                npe01__Paid__c = false,
+                npe01__Payment_Amount__c = 250
+            ),
+            new npe01__OppPayment__c(
+                npe01__Paid__c = false,
+                npe01__Payment_Amount__c = 250
+            )
+        });
+        oh.refresh();
+
+        System.assertEquals(500, oh.opp.Amount);
+        System.assertEquals(0, oh.opp.npe01__Payments_Made__c);
+        System.assertEquals(openStage, oh.opp.StageName);
+
+        Test.startTest();
+
+        oh.getPayments().get(0).npe01__Paid__c = true;
+        update oh.getPayments();
+
+        Test.stopTest();
+
+        oh.refresh();
+
+        System.assertEquals(500, oh.opp.Amount);
+        System.assertEquals(250, oh.opp.npe01__Payments_Made__c);
+        System.assertEquals(openStage, oh.opp.StageName);
+    }
+
+    private static testMethod void testOpportunityWillNotAutoCloseIfNoStageNameSet() {
+        String openStage = UTIL_UnitTestData_TEST.getOpenStage();
+
+        if (String.isEmpty(openStage)) {
+            System.debug(
+                System.LoggingLevel.ERROR,
+                'Organization settings do not contain the necessary opportunity stages to run this test. Not running test.'
+            );
+            return;
+        }
+
+        UTIL_CustomSettingsFacade.getContactsSettings().Payments_Auto_Close_Stage_Name__c = '';
+
+        OpportunityHelper oh = new OpportunityHelper(openStage);
+        oh.refresh();
+
+        List<npe01__OppPayment__c> payments = oh.getPayments();
+
+        System.assertEquals(1, payments.size());
+        System.assertEquals(oh.opp.Amount, payments.get(0).npe01__Payment_Amount__c);
+        System.assertEquals(openStage, oh.opp.StageName);
+
+        payments.get(0).npe01__Paid__c = true;
+
+        Test.startTest();
+
+        update payments;
+
+        Test.stopTest();
+
+        oh.refresh();
+
+        System.assertEquals(oh.opp.Amount, oh.opp.npe01__Payments_Made__c);
+        System.assertEquals(openStage, oh.opp.StageName);
+    }
+
+    private static testMethod void testOpportunityWillNotAutoCloseIfAlreadyClosed() {
+        String closedWonStage = UTIL_UnitTestData_TEST.getClosedWonStage();
+        String openStage = UTIL_UnitTestData_TEST.getOpenStage();
+        String closedLostStage = UTIL_UnitTestData_TEST.getClosedLostStage();
+
+        if (String.isEmpty(closedWonStage) || String.isEmpty(openStage) || String.isEmpty(closedLostStage)) {
+            System.debug(
+                System.LoggingLevel.ERROR,
+                'Organization settings do not contain the necessary opportunity stages to run this test. Not running test.'
+            );
+            return;
+        }
+
+        UTIL_CustomSettingsFacade.getContactsSettings().Payments_Auto_Close_Stage_Name__c = closedWonStage;
+
+        OpportunityHelper oh = new OpportunityHelper(openStage);
+        oh.refresh();
+
+        oh.deletePayments();
+        oh.setPayments(new List<npe01__OppPayment__c>{
+            new npe01__OppPayment__c(
+                npe01__Paid__c = true,
+                npe01__Payment_Amount__c = 250
+            ),
+            new npe01__OppPayment__c(
+                npe01__Paid__c = false,
+                npe01__Payment_Amount__c = 250
+            )
+        });
+        oh.refresh();
+
+        System.assertEquals(500, oh.opp.Amount);
+        System.assertEquals(250, oh.opp.npe01__Payments_Made__c);
+        System.assertEquals(openStage, oh.opp.StageName);
+
+        Test.startTest();
+
+        oh.opp.Amount = 250;
+        oh.opp.StageName = closedLostStage;
+        update oh.opp;
+
+        Test.stopTest();
+
+        oh.refresh();
+
+        System.assertEquals(250, oh.opp.Amount);
+        System.assertEquals(oh.opp.Amount, oh.opp.npe01__Payments_Made__c);
+        System.assertEquals(closedLostStage, oh.opp.StageName);
+    }
+
+    private static testMethod void testOpportunityWillNotAutoCloseIfAllPaymentsWrittenOff() {
+        String closedWonStage = UTIL_UnitTestData_TEST.getClosedWonStage();
+        String openStage = UTIL_UnitTestData_TEST.getOpenStage();
+
+        if (String.isEmpty(closedWonStage) || String.isEmpty(openStage)) {
+            System.debug(
+                System.LoggingLevel.ERROR,
+                'Organization settings do not contain the necessary opportunity stages to run this test. Not running test.'
+            );
+            return;
+        }
+
+        UTIL_CustomSettingsFacade.getContactsSettings().Payments_Auto_Close_Stage_Name__c = closedWonStage;
+
+        OpportunityHelper oh = new OpportunityHelper(openStage);
+        oh.refresh();
+
+        List<npe01__OppPayment__c> payments = oh.getPayments();
+
+        System.assertEquals(1, payments.size());
+        System.assertEquals(oh.opp.Amount, payments.get(0).npe01__Payment_Amount__c);
+        System.assertEquals(0, oh.opp.npe01__Payments_Made__c);
+        System.assertEquals(openStage, oh.opp.StageName);
+
+        payments.get(0).npe01__Written_Off__c = true;
+
+        Test.startTest();
+
+        update payments;
+
+        Test.stopTest();
+
+        oh.refresh();
+
+        System.assertEquals(0, oh.opp.npe01__Payments_Made__c);
+        System.assertEquals(openStage, oh.opp.StageName);
+    }
+
+    private static testMethod void testOpportunityWillNotAutoCloseClosesIfAmountSetToZero() {
+        String closedWonStage = UTIL_UnitTestData_TEST.getClosedWonStage();
+        String openStage = UTIL_UnitTestData_TEST.getOpenStage();
+
+        if (String.isEmpty(closedWonStage) || String.isEmpty(openStage)) {
+            System.debug(
+                System.LoggingLevel.ERROR,
+                'Organization settings do not contain the necessary opportunity stages to run this test. Not running test.'
+            );
+            return;
+        }
+
+        UTIL_CustomSettingsFacade.getContactsSettings().Payments_Auto_Close_Stage_Name__c = closedWonStage;
+
+        OpportunityHelper oh = new OpportunityHelper(openStage);
+        oh.refresh();
+
+        oh.deletePayments();
+        oh.refresh();
+
+        System.assertEquals(0, oh.getPayments().size());
+        System.assertEquals(openStage, oh.opp.StageName);
+
+        Test.startTest();
+
+        oh.opp.Amount = 0;
+        update oh.opp;
+
+        Test.stopTest();
+
+        oh.refresh();
+
+        System.assertEquals(0, oh.opp.Amount);
+        System.assertEquals(oh.opp.Amount, oh.opp.npe01__Payments_Made__c);
+        System.assertEquals(openStage, oh.opp.StageName);
+    }
+
+    class OpportunityHelper {
+        public Opportunity opp;
+        public OpportunityHelper(String initialStageName) {
+            opp = new Opportunity(
+                Name = 'Test Opportunity',
+                Amount = 500,
+                CloseDate = Date.today(),
+                StageName = initialStageName
+            );
+            insert opp;
+        }
+        public void refresh() {
+            opp = [
+                SELECT
+                    Name,
+                    Amount,
+                    StageName,
+                    IsClosed,
+                    IsWon,
+                    npe01__Number_Of_Payments__c,
+                    npe01__Payments_Made__c,
+                    (
+                        SELECT
+                            npe01__Paid__c,
+                            npe01__Payment_Amount__c
+                        FROM npe01__OppPayment__r
+                    )
+                FROM Opportunity
+                WHERE Id = :this.opp.Id
+            ];
+        }
+        public List<npe01__OppPayment__c> getPayments() {
+            return opp.npe01__OppPayment__r;
+        }
+        public void deletePayments() {
+            delete getPayments();
+        }
+        public void setPayments(List<npe01__OppPayment__c> payments) {
+            for (npe01__OppPayment__c payment : payments) {
+                payment.npe01__Opportunity__c = opp.Id;
+            }
+            upsert payments;
+        }
+    }
 }

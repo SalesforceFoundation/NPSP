@@ -27,6 +27,18 @@
                     <apex:outputText value="{!$Label.stgHelpMaxPayments}" />
                 </div>
             </div>
+            <div class="form-group">
+                <apex:outputlabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Payments_Auto_Close_Stage_Name__c.Label}" for="slCS" styleClass="col-sm-4 control-label" />
+                <div class="col-sm-8 form-control-column">
+                    <apex:outputField value="{!stgService.stgCon.Payments_Auto_Close_Stage_Name__c}" rendered="{!isReadOnlyMode}" />
+                    <apex:selectList value="{!stgService.stgCon.Payments_Auto_Close_Stage_Name__c}" size="1" rendered="{!isEditMode}" id="slCS" styleClass="form-control">
+                        <apex:selectOptions value="{!opportunityClosedWonStages}" />
+                    </apex:selectList>
+                </div>
+                <div class="col-sm-offset-4 col-sm-8 help-block">
+                    <apex:outputText value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Payments_Auto_Close_Stage_Name__c.InlineHelpText}" />
+                </div>
+            </div>
             
             <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="button-block">
                 <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
