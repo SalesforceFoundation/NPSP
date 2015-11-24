@@ -167,6 +167,7 @@
         <members>STG_PanelOppNaming_CTRL</members>
         <members>STG_PanelOppRollups_CTRL</members>
         <members>STG_PanelOpps_CTRL</members>
+        <members>STG_PanelOpps_TEST</members>
         <members>STG_PanelPaymentMapping_CTRL</members>
         <members>STG_PanelRDBatch_CTRL</members>
         <members>STG_PanelRDCustomFieldMapping_CTRL</members>
@@ -564,6 +565,7 @@
         <members>npe01__Contacts_And_Orgs_Settings__c.Household_Account_Addresses_Disabled__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Max_Payments__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Organizational_Account_Addresses_Enabled__c</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.Payments_Auto_Close_Stage_Name__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Simple_Address_Change_Treated_as_Update__c</members>
         <members>npe01__OppPayment__c.Payment_Acknowledged_Date__c</members>
         <members>npe01__OppPayment__c.Payment_Acknowledgment_Status__c</members>
@@ -809,6 +811,9 @@
         <members>healthLabelTriggerHandlersValid</members>
         <members>healthLabelUDFValid</members>
         <members>healthLabelWarning</members>
+        <members>healthPaymentAutoCloseStageInvalid</members>
+        <members>healthPaymentAutoCloseStageMustBeActiveClosedWonOrBlank</members>
+        <members>healthPaymentAutoCloseStageValid</members>
         <members>healthSolutionAccOne2OneNoContacts</members>
         <members>healthSolutionAccountRTIssue</members>
         <members>healthSolutionAutoRelFieldsMissing</members>

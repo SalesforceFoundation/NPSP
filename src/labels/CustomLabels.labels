@@ -1862,6 +1862,30 @@
         <value>Warning</value>
     </labels>
     <labels>
+        <fullName>healthPaymentAutoCloseStageInvalid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthPaymentAutoCloseStageInvalid</shortDescription>
+        <value>The selected opportunity stage to be transitioned to when all payments are paid must be an active Closed/Won stage.</value>
+    </labels>
+    <labels>
+        <fullName>healthPaymentAutoCloseStageMustBeActiveClosedWonOrBlank</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthPaymentAutoCloseStageMustBeActiveClosedWonOrBlank</shortDescription>
+        <value>Either do not select an opportunity stage (thus disabling the feature) or update the setting to use an active Closed/Won opportunity stage.</value>
+    </labels>
+    <labels>
+        <fullName>healthPaymentAutoCloseStageValid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthPaymentAutoCloseStageValid</shortDescription>
+        <value>Either no opportunity stage was selected for transitioning to when all payments are received, or the selected stage is an active Closed/Won stage.</value>
+    </labels>
+    <labels>
         <fullName>healthSolutionAccOne2OneNoContacts</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
