@@ -43,6 +43,7 @@
                 </div>
                 <div class="col-sm-offset-4 col-sm-8 help-block">
                     <apex:outputText value="{!$Label.stgHelpOppTypesNoPayments}" />
+                </div>
             </div>
             <div class="form-group">
                 <apex:outputlabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Payments_Auto_Close_Stage_Name__c.Label}" for="slCS" styleClass="col-sm-4 control-label" />
