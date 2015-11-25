@@ -564,6 +564,8 @@
         <members>Trigger_Handler__c.User_Managed__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Household_Account_Addresses_Disabled__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Max_Payments__c</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.Opp_RecTypes_Excluded_for_Payments__c</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.Opp_Types_Excluded_for_Payments__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Organizational_Account_Addresses_Enabled__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Payments_Auto_Close_Stage_Name__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Simple_Address_Change_Treated_as_Update__c</members>
@@ -991,6 +993,8 @@
         <members>stgHelpOppNamingDateFormat</members>
         <members>stgHelpOppNamingFormat</members>
         <members>stgHelpOppNamingRecTypes</members>
+        <members>stgHelpOppRecTypesNoPayments</members>
+        <members>stgHelpOppTypesNoPayments</members>
         <members>stgHelpOrgAccountAddressMgmt</members>
         <members>stgHelpOverrunCount</members>
         <members>stgHelpPaymentMapOppField</members>
