@@ -174,6 +174,123 @@ private with sharing class PMT_PaymentCreator_TEST {
 
     }
 
+    /*********************************************************************************************************
+    * @description
+    operation:
+        create an Opp whose Type value is NOT excluded in settings from creating payments
+    verify:
+        no payment created
+    **********************************************************************************************************/            
+    static testMethod void createOppWithTypeNotExcluded() {
+        if (strTestOnly != '*' && strTestOnly != 'createOppWithTypeNotExcluded') return;
+        
+        npe01__Contacts_And_Orgs_Settings__c PaymentsSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true, Opp_Types_Excluded_for_Payments__c='NO-PAYMENT'));
+        
+        // create test data
+        Account acct = new Account (
+            Name='Test Account'
+        );
+        insert acct;
+
+        Opportunity opp = new Opportunity (
+            Name='Test Opp',
+            AccountId = acct.id,
+            CloseDate = date.today(), 
+            Amount = 1,
+            StageName = UTIL_UnitTestData_TEST.getOpenStage(),
+            Type = 'YES-PAYMENT'
+        );
+        Test.startTest();
+        insert opp;
+        Test.stopTest();
+
+        list<npe01__OppPayment__c> opmtAll = [select id, npe01__payment_method__c, npe01__payment_amount__c, npe01__paid__c, npe01__written_off__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp.Id];
+        system.assertEquals(1, opmtAll.size());
+    }
+
+    /*********************************************************************************************************
+    * @description
+    operation:
+        create an Opp whose Type value is excluded in settings from creating payments
+    verify:
+        no payment created
+    **********************************************************************************************************/            
+    static testMethod void createOppWithTypeExcluded() {
+        if (strTestOnly != '*' && strTestOnly != 'createOppWithTypeExcluded') return;
+        
+        npe01__Contacts_And_Orgs_Settings__c PaymentsSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true, Opp_Types_Excluded_for_Payments__c='NO-PAYMENT'));
+        
+        // create test data
+        Account acct = new Account (
+            Name='Test Account'
+        );
+        insert acct;
+
+        Opportunity opp = new Opportunity (
+            Name='Test Opp',
+            AccountId = acct.id,
+            CloseDate = date.today(), 
+            Amount = 1,
+            StageName = UTIL_UnitTestData_TEST.getOpenStage(),
+            Type = 'NO-PAYMENT'
+        );
+        Test.startTest();
+        insert opp;
+        Test.stopTest();
+
+        list<npe01__OppPayment__c> opmtAll = [select id, npe01__payment_method__c, npe01__payment_amount__c, npe01__paid__c, npe01__written_off__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp.Id];
+        system.assertEquals(0, opmtAll.size());
+    }
+
+    /*********************************************************************************************************
+    * @description
+    operation:
+        create an Opp whose RecordType is excluded in settings from creating payments
+    verify:
+        no payment created
+    **********************************************************************************************************/            
+    static testMethod void createOppWithRecordTypeExcluded() {
+        if (strTestOnly != '*' && strTestOnly != 'createOppWithRecordTypeExcluded') return;
+        
+        // see if this org has any record types we can use!
+        string strGift = UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity');
+        Id rtIdGift = null;
+        if (strGift != null && strGift != '' && UTIL_RecordTypes.isRecordTypeActive('Opportunity', strGift)) {
+            rtIdGift = UTIL_RecordTypes.GetRecordTypeId('Opportunity', strGift);
+        }
+        
+        npe01__Contacts_And_Orgs_Settings__c PaymentsSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true, Opp_RecTypes_Excluded_for_Payments__c=strGift));
+        
+        // create test data
+        Account acct = new Account (
+            Name='Test Account'
+        );
+        insert acct;
+
+        Opportunity opp = new Opportunity (
+            Name='Test Opp',
+            AccountId = acct.id,
+            CloseDate = date.today(), 
+            Amount = 1,
+            StageName = UTIL_UnitTestData_TEST.getOpenStage()
+        );
+        if (rtIdGift != null)
+            opp.RecordtypeId = rtIdGift;
+        
+        Test.startTest();
+        insert opp;
+        Test.stopTest();
+
+        list<npe01__OppPayment__c> opmtAll = [select id, npe01__payment_method__c, npe01__payment_amount__c, npe01__paid__c, npe01__written_off__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp.Id];
+        if (rtIdGift != null)
+            system.assertEquals(0, opmtAll.size());
+        else
+            system.assertEquals(1, opmtAll.size());
+    }
+    
     private static testMethod void testOpportunityWillAutoClosefterAllPaymentsReceived() {
         String closedWonStage = UTIL_UnitTestData_TEST.getClosedWonStage();
         String openStage = UTIL_UnitTestData_TEST.getOpenStage();

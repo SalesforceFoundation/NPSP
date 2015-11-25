@@ -3334,6 +3334,22 @@ IMPORTANT: Both of these fields must have the same data type.</value>
         <value>The opportunity record type(s) to which you want to apply this opportunity name. Control or Command click to select more than one record type. &quot;None&quot; applies the new naming to ALL record types.</value>
     </labels>
     <labels>
+        <fullName>stgHelpOppRecTypesNoPayments</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpOppRecTypesNoPayments</shortDescription>
+        <value>Names of Opportunity Record Types to exclude from creating Payments.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpOppTypesNoPayments</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpOppTypesNoPayments</shortDescription>
+        <value>Values for the Opportunity Type field to exclude from creating Payments.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpOrgAccountAddressMgmt</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

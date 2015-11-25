@@ -75,6 +75,58 @@ public with sharing class PMT_PaymentCreator {
         }
         set;
     }
+    
+    /*******************************************************************************************************
+    * @description set of Opportunity Recordtype Id's to not create Payments for.
+    */ 
+    private static set<id> setOppRecordTypeIdNoPayment {
+        get {
+            if (setOppRecordTypeIdNoPayment == null) {
+                string strProp = UTIL_CustomSettingsFacade.getContactsSettings().Opp_RecTypes_Excluded_for_Payments__c;
+                if (strProp != null) {
+                    set<string> setStr = new set<string>(strProp.split(';'));    
+                    setOppRecordTypeIdNoPayment = UTIL_RecordTypes.GetRecordTypeIdSet('Opportunity', setStr);
+                } else {
+                    setOppRecordTypeIdNoPayment = new set<Id>();
+                }
+            }
+            return setOppRecordTypeIdNoPayment;
+        }
+        set;
+    }
+
+    /*******************************************************************************************************
+    * @description set of Opportunity Type values to not create Payments for.
+    */ 
+    private static set<string> setOppTypeNoPayment {
+        get {
+            if (setOppTypeNoPayment == null) {
+                string strProp = UTIL_CustomSettingsFacade.getContactsSettings().Opp_Types_Excluded_for_Payments__c;
+                if (strProp != null) {
+                    setOppTypeNoPayment = new set<string>(strProp.split(';'));    
+                } else {
+                    setOppTypeNoPayment = new set<string>();
+                }
+            }
+            return setOppTypeNoPayment;
+        }
+        set;
+    }
+
+    /*******************************************************************************************************
+    * @description specifies whether Payments should be excluded for the Opportunity
+    * @param opp the Opportunity to test.
+    * @return boolean true if Payments excluded for the Opportunity
+    */ 
+    private static boolean isNoPaymentForOpp(Opportunity opp) {
+        if (opp.npe01__Do_Not_Automatically_Create_Payment__c)
+            return true;
+        if (setOppTypeNoPayment.contains(opp.Type))
+            return true;
+        if (setOppRecordTypeIdNoPayment.contains((id)opp.get('RecordTypeId')))
+            return true;
+        return false;
+    }    
                 
     /*******************************************************************************************************
     * @description Constructor that gets called by the PMT_Payment_TDTM trigger handler.
@@ -99,6 +151,7 @@ public with sharing class PMT_PaymentCreator {
             // CurrencyIsoCode doesn't exist in non-multi-currency orgs
             SObjectField OppCurrencyField = Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode');
             SObjectField PaymentCurrencyField = Schema.sObjectType.npe01__OppPayment__c.fields.getMap().get('CurrencyIsoCode');    
+            SObjectField OppRecordTypeId = Schema.sObjectType.Opportunity.fields.getMap().get('RecordTypeId');
 
             if (TDTM_Runnable.Action.BeforeUpdate == ta) {
                 if (!String.isEmpty(ContactSettings.Payments_Auto_Close_Stage_Name__c)) {
@@ -116,7 +169,9 @@ public with sharing class PMT_PaymentCreator {
             //SOQL for Updated Opps and Related Payments.  Queries for known fields and field in custom Payment Field Mappings.
             if (ta == TDTM_Runnable.Action.AfterUpdate){
                 String soqlStatement = '';
-                soqlStatement += 'select id, CloseDate, Amount, isClosed, isWon, npe01__Do_Not_Automatically_Create_Payment__c, ';
+                soqlStatement += 'select id, CloseDate, Amount, isClosed, isWon, npe01__Do_Not_Automatically_Create_Payment__c, Type, ';
+                if (OppRecordTypeId != null)
+                    soqlStatement += 'RecordTypeId, ';
                 for (string s : paymentMappings.keyset()) {
                     npe01__Payment_Field_Mapping_Settings__c pfms = paymentMappings.get(s);
                     if (!soqlStatement.contains(pfms.npe01__Opportunity_Field__c)) {               
@@ -142,9 +197,13 @@ public with sharing class PMT_PaymentCreator {
             //IF Trigger is Insert, Create a new Payment
             if( ta == TDTM_Runnable.Action.AfterInsert){
                 for (Opportunity thisOpp : newOpps){
+                    
+                    if (isNoPaymentForOpp(thisOpp))
+                        continue;
+                        
                     // if opp is closed won with no payments scheduled or made, add an automatic payment
                         if ( /*(thisOpp.IsClosed && thisOpp.IsWon) && */
-                                        thisOpp.amount > 0 && thisOpp.npe01__payments_made__c == 0 && thisOpp.npe01__Number_of_Payments__c == 0 && !thisOpp.npe01__Do_Not_Automatically_Create_Payment__c) {
+                                        thisOpp.amount > 0 && thisOpp.npe01__payments_made__c == 0 && thisOpp.npe01__Number_of_Payments__c == 0) {
                                 npe01__oppPayment__c op = new npe01__oppPayment__c(
                                     npe01__opportunity__c = thisOpp.id
                                 );
@@ -258,7 +317,8 @@ public with sharing class PMT_PaymentCreator {
                     }
                     
                     // we may need to add payments if the open opp amount has been changed from $0
-                    else if (thisOpp.Amount != 0 && thisOpp.Amount != null && (oldOpp.Amount == 0 || oldOpp.Amount == null ) && !thisOpp.isClosed && !thisOpp.npe01__Do_Not_Automatically_Create_Payment__c){
+                    else if (thisOpp.Amount != 0 && thisOpp.Amount != null && (oldOpp.Amount == 0 || oldOpp.Amount == null ) 
+                        && !thisOpp.isClosed && !isNoPaymentForOpp(thisOpp)){
                         npe01__oppPayment__c op = new npe01__oppPayment__c(
                             npe01__opportunity__c = thisOpp.id,
                             npe01__Paid__c = false,
