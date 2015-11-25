@@ -33,7 +33,7 @@
 * @group Account Model Converter
 * @description Account model conversion utility main class. This class holds all conversion logic
 */
-global with sharing class CONV_Account_Conversion_BATCH implements Database.Batchable<SObject>{
+global class CONV_Account_Conversion_BATCH implements Database.Batchable<SObject>{
 
     /*******************************************************************************************************
     * @description Query string set in the constructor
