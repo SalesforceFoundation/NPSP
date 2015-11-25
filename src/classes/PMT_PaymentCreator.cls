@@ -119,6 +119,8 @@ public with sharing class PMT_PaymentCreator {
     * @return boolean true if Payments excluded for the Opportunity
     */ 
     private static boolean isNoPaymentForOpp(Opportunity opp) {
+        if (opp.npe01__Do_Not_Automatically_Create_Payment__c)
+            return true;
         if (setOppTypeNoPayment.contains(opp.Type))
             return true;
         if (setOppRecordTypeIdNoPayment.contains((id)opp.get('RecordTypeId')))
@@ -201,7 +203,7 @@ public with sharing class PMT_PaymentCreator {
                         
                     // if opp is closed won with no payments scheduled or made, add an automatic payment
                         if ( /*(thisOpp.IsClosed && thisOpp.IsWon) && */
-                                        thisOpp.amount > 0 && thisOpp.npe01__payments_made__c == 0 && thisOpp.npe01__Number_of_Payments__c == 0 && !thisOpp.npe01__Do_Not_Automatically_Create_Payment__c) {
+                                        thisOpp.amount > 0 && thisOpp.npe01__payments_made__c == 0 && thisOpp.npe01__Number_of_Payments__c == 0) {
                                 npe01__oppPayment__c op = new npe01__oppPayment__c(
                                     npe01__opportunity__c = thisOpp.id
                                 );
@@ -316,7 +318,7 @@ public with sharing class PMT_PaymentCreator {
                     
                     // we may need to add payments if the open opp amount has been changed from $0
                     else if (thisOpp.Amount != 0 && thisOpp.Amount != null && (oldOpp.Amount == 0 || oldOpp.Amount == null ) 
-                        && !thisOpp.isClosed && !thisOpp.npe01__Do_Not_Automatically_Create_Payment__c && !isNoPaymentForOpp(thisOpp)){
+                        && !thisOpp.isClosed && !isNoPaymentForOpp(thisOpp)){
                         npe01__oppPayment__c op = new npe01__oppPayment__c(
                             npe01__opportunity__c = thisOpp.id,
                             npe01__Paid__c = false,
