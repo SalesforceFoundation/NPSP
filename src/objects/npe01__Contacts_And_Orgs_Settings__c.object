@@ -25,6 +25,30 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Opp_RecTypes_Excluded_for_Payments__c</fullName>
+        <description>Names of Opportunity Record Types to exclude from creating Payments</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Names of Opportunity Record Types to exclude from creating Payments</inlineHelpText>
+        <label>Opp RecTypes Excluded for Payments</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Opp_Types_Excluded_for_Payments__c</fullName>
+        <description>Values for the Opportunity Type field to exclude from creating Payments.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Values for the Opportunity Type field to exclude from creating Payments.</inlineHelpText>
+        <label>Opp Types Excluded for Payments</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Organizational_Account_Addresses_Enabled__c</fullName>
         <defaultValue>false</defaultValue>
         <description>Enables Address management for Organizational Accounts when selected.</description>

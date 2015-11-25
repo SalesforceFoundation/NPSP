@@ -28,6 +28,24 @@
                 </div>
             </div>
             <div class="form-group">
+                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Opp_RecTypes_Excluded_for_Payments__c.Label}" for="idDBMS" styleClass="col-sm-4 control-label" />
+                <div class="col-sm-8 form-control-column">
+                    <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgCon}" fieldname="Opp_RecTypes_Excluded_for_Payments__c" listSO="{!listSOOppRecTypes}" inEditMode="{!isEditMode}" />
+                </div>
+                <div class="col-sm-offset-4 col-sm-8 help-block">
+                    <apex:outputText value="{!$Label.stgHelpOppRecTypesNoPayments}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Opp_Types_Excluded_for_Payments__c.Label}" for="idDBMS" styleClass="col-sm-4 control-label" />
+                <div class="col-sm-8 form-control-column">
+                    <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgCon}" fieldname="Opp_Types_Excluded_for_Payments__c" listSO="{!listSOOppTypes}" inEditMode="{!isEditMode}" />
+                </div>
+                <div class="col-sm-offset-4 col-sm-8 help-block">
+                    <apex:outputText value="{!$Label.stgHelpOppTypesNoPayments}" />
+                </div>
+            </div>
+            <div class="form-group">
                 <apex:outputlabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Payments_Auto_Close_Stage_Name__c.Label}" for="slCS" styleClass="col-sm-4 control-label" />
                 <div class="col-sm-8 form-control-column">
                     <apex:outputField value="{!stgService.stgCon.Payments_Auto_Close_Stage_Name__c}" rendered="{!isReadOnlyMode}" />
