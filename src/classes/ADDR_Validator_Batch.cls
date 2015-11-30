@@ -32,7 +32,7 @@
 * @date 2014
 * @description Batch class for SmartyStreets address verification. It looks for all populated addresses and updates them if the setting is turned on.
 */
-public with sharing class ADDR_Validator_Batch implements Database.Batchable<sObject>, Database.AllowsCallouts {
+public class ADDR_Validator_Batch implements Database.Batchable<sObject>, Database.AllowsCallouts {
 
     private String query;
     

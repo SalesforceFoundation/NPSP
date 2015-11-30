@@ -35,7 +35,7 @@
 * @group-content ../../ApexDocContent/API.htm
 * @description API class that exposes NPSP version number.
 */
-global with sharing class UTIL_Version_API {
+global class UTIL_Version_API {
     global version requestVersion() {
         return System.requestVersion();
     }
