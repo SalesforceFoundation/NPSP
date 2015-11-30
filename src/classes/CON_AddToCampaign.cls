@@ -33,7 +33,7 @@
 * @group Contact
 * @description Creates or updates campaign members.
 */
-public with sharing class CON_AddToCampaign {
+public class CON_AddToCampaign {
     
     /*@description Map containing existing Campaign Members*/
     private static map<string, CampaignMember> MAPCampaignMembers;

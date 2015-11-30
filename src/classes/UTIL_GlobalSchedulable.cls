@@ -33,7 +33,7 @@
 * @description Global Schedulable for the NPSP package. This will be the only
 * schedulable that exists in the package.
 */
-public with sharing class UTIL_GlobalSchedulable implements Schedulable {
+public class UTIL_GlobalSchedulable implements Schedulable {
 
     public static String jobName = 'NPSP Global Scheduler';
     
