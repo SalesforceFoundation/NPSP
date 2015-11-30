@@ -167,8 +167,8 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         if(oppAccChoices == null) {
             oppAccChoices = new List<SelectOption>();
             
-            oppAccChoices.add(new SelectOption('CON_ACC', 'Contact Account'));
-            oppAccChoices.add(new SelectOption('AFF_ACC', 'Affiliated Account'));
+            oppAccChoices.add(new SelectOption('CON_ACC', label.leadConvertContactAccount));
+            oppAccChoices.add(new SelectOption('AFF_ACC', label.leadConvertAffiliatedAccount));
         }
         return oppAccChoices;
     }
@@ -458,10 +458,20 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 AFFL_Affiliations_TDTM.hasRunForAccounts = false;
                 AFFL_Affiliations_TDTM.createNonDupeAffiliation(l, lcr.getContactId(), afflAccId, true); 
             }
-            // set the Opportunity Account to the Primary Affiliation based on strOppAccChoice
-            if(!lc.isDoNotCreateOpportunity() && strOppAccChoice == 'AFF_ACC') {
-                Opportunity opp = new Opportunity(Id = lcr.getOpportunityId(), AccountId = afflAccId);
-                update opp;
+            
+            //// Opportunity Cleanup 
+            if(!lc.isDoNotCreateOpportunity()) {
+            	Opportunity convertedOpp = new Opportunity(Id = lcr.getOpportunityId());
+            
+            	// Set the (a/o 3.45) Opportunity Primary Contact to the converted contact
+            	convertedOpp.Primary_Contact__c = lcr.getContactId();
+            
+            	// set the Opportunity Account to the Primary Affiliation based on strOppAccChoice
+            	if(strOppAccChoice == 'AFF_ACC') {
+                	convertedOpp.AccountId = afflAccId;
+            	}
+            
+            	update convertedOpp;
             }
             
 	        // redirect

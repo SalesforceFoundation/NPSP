@@ -659,25 +659,25 @@ private class LD_LeadConvertOverride_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Runs newLead_Conversion_Test with the 1x1 account model and verify Opp OCR's correct.
+    * @description Runs newLead_Conversion_Test with the 1x1 account model and verify Opp OCRs and Primary Contact are correct.
     */
     static testMethod void newLeadConversion_TestOne2OneOppOCR(){
         newLeadConversion_TestOppOCR(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     /*******************************************************************************************************
-    * @description Runs newLead_Conversion_Test with the Household account model and verify Opp OCR's correct.
+    * @description Runs newLead_Conversion_Test with the Household account model and verify Opp OCRs and Primary Contact are correct.
     */
     static testMethod void newLeadConversion_TestHHAccountOppOCR(){
         newLeadConversion_TestOppOCR(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     /*******************************************************************************************************
-    * @description Runs newLead_Conversion_Test with the Individual account model and verify Opp OCR's correct.
+    * @description Runs newLead_Conversion_Test with the Individual account model and verify Opp OCRs and Primary Contact are correct.
     */
     static testMethod void newLeadConversion_TestBucketAccountOppOCR(){
         newLeadConversion_TestOppOCR(CAO_Constants.BUCKET_PROCESSOR);
     }
     /*******************************************************************************************************
-    * @description Runs Lead Conversion with a new Contact selection for the conversion and verify Opp OCR's correct.
+    * @description Runs Lead Conversion with a new Contact selection for the conversion and verify Opp OCRs and Primary Contact are correct.
     */
     public static void newLeadConversion_TestOppOCR(string strProcessor) {
         if (strTestOnly != '*' && strTestOnly != 'newLeadConversion_TestOppOCR') return;
@@ -738,7 +738,7 @@ private class LD_LeadConvertOverride_TEST {
         }
         
         // verify Opp 
-        list<Opportunity> listOpp = [select Id, AccountId, Name from Opportunity];
+        list<Opportunity> listOpp = [select Id, AccountId, Name, Primary_Contact__c from Opportunity];
         system.assertEquals(1, listOpp.size());
         system.assertEquals(ext.OppName, listOpp[0].Name);        
 
@@ -746,28 +746,31 @@ private class LD_LeadConvertOverride_TEST {
         list<OpportunityContactRole> listOCR = [select Id, OpportunityId, ContactId, Role, IsPrimary from OpportunityContactRole];
         system.assertEquals(1, listOCR.size());        
         system.assertEquals(true, listOCR[0].IsPrimary);
+        
+        // verify Primary Contact
+        system.assertEquals(convertedContacts[0].Id, listOpp[0].Primary_Contact__c);
     }
 
     /*******************************************************************************************************
-    * @description Runs mergeLeadConversion_TestOppOCR with the 1x1 account model and verify Opp OCR's correct.
+    * @description Runs mergeLeadConversion_TestOppOCR with the 1x1 account model and verify Opp OCRs and Primary Contact are correct.
     */
     static testMethod void mergeLeadConversion_TestOne2OneOppOCR(){
         mergeLeadConversion_TestOppOCR(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     /*******************************************************************************************************
-    * @description Runs mergeLeadConversion_TestOppOCR with the Household account model and verify Opp OCR's correct.
+    * @description Runs mergeLeadConversion_TestOppOCR with the Household account model and verify  Opp OCRs and Primary Contact are correct.
     */
     static testMethod void mergeLeadConversion_TestHHAccountOppOCR(){
         mergeLeadConversion_TestOppOCR(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     /*******************************************************************************************************
-    * @description Runs mergeLeadConversion_TestOppOCR with the Individual account model and verify Opp OCR's correct.
+    * @description Runs mergeLeadConversion_TestOppOCR with the Individual account model and verify Opp OCRs and Primary Contact are correct.
     */
     static testMethod void mergeLeadConversion_TestBucketAccountOppOCR(){
         mergeLeadConversion_TestOppOCR(CAO_Constants.BUCKET_PROCESSOR);
     }
     /*******************************************************************************************************
-    * @description Runs Lead Conversion with a merge to existing Contact selection for the conversion and verify Opp OCR's correct.
+    * @description Runs Lead Conversion with a merge to existing Contact selection for the conversion and verify Opp OCRs and Primary Contact are correct.
     */
     public static void mergeLeadConversion_TestOppOCR(string strProcessor) {
         if (strTestOnly != '*' && strTestOnly != 'mergeLeadConversion_TestOppOCR') return;
@@ -837,7 +840,7 @@ private class LD_LeadConvertOverride_TEST {
         }
         
         // verify Opp 
-        list<Opportunity> listOpp = [select Id, AccountId, Name from Opportunity];
+        list<Opportunity> listOpp = [select Id, AccountId, Name, Primary_Contact__c from Opportunity];
         system.assertEquals(1, listOpp.size());
         system.assertEquals(ext.OppName, listOpp[0].Name);        
 
@@ -845,5 +848,8 @@ private class LD_LeadConvertOverride_TEST {
         list<OpportunityContactRole> listOCR = [select Id, OpportunityId, ContactId, Role, IsPrimary from OpportunityContactRole];
         system.assertEquals(1, listOCR.size());        
         system.assertEquals(true, listOCR[0].IsPrimary);
+        
+        // verify Primary Contact
+        system.assertEquals(convertedContacts[0].Id, listOpp[0].Primary_Contact__c);
     }
 }

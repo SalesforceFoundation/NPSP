@@ -865,12 +865,14 @@
         <members>leadConvertAffilationName</members>
         <members>leadConvertAffiliateExistingAccount</members>
         <members>leadConvertAffiliateNewAccount</members>
+        <members>leadConvertAffiliatedAccount</members>
         <members>leadConvertAttachBucketAccount</members>
         <members>leadConvertAttachExistingAccount</members>
         <members>leadConvertAutocreateHHAccount</members>
         <members>leadConvertAutocreateOne2OneAccount</members>
         <members>leadConvertBtnCancel</members>
         <members>leadConvertBtnConvert</members>
+        <members>leadConvertContactAccount</members>
         <members>leadConvertCreateAccount</members>
         <members>leadConvertCreateNewContact</members>
         <members>leadConvertMergeExistingContact</members>
