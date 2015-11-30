@@ -35,7 +35,7 @@
 * @group-content ../../ApexDocContent/API.htm
 * @description API class that exposes the TDTM (Table-Driven Trigger Management) configuration.
 */
-global with sharing class TDTM_Config_API {
+global class TDTM_Config_API {
 
     /*******************************************************************************************************
     * @description Returns the default TDTM configuration. 

@@ -33,7 +33,7 @@
 * @group Address Management
 * @description Supports the automatic scheduling of Seasonal Address updates  
 */ 
-public with sharing class ADDR_Seasonal_SCHED implements Database.Batchable<SObject>, UTIL_MasterSchedulableHelper.UTIL_IRecurring {
+public class ADDR_Seasonal_SCHED implements Database.Batchable<SObject>, UTIL_MasterSchedulableHelper.UTIL_IRecurring {
 
     /*******************************************************************************************************
     * @description holds the soql string that queries all Addresses in the current month and day

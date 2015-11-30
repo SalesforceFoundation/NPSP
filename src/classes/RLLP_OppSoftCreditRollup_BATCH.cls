@@ -32,7 +32,7 @@
 * @date 2014
 * @description Batch class for opportunity soft credit rollups. 
 */
-public with sharing class RLLP_OppSoftCreditRollup_BATCH implements Database.Batchable<SObject>, UTIL_MasterSchedulableHelper.UTIL_IRecurring {
+public class RLLP_OppSoftCreditRollup_BATCH implements Database.Batchable<SObject>, UTIL_MasterSchedulableHelper.UTIL_IRecurring {
 		    
 	public Boolean executeReturnStatus() {
         if(UTIL_JobScheduler.canRunBatch()) {

@@ -35,7 +35,7 @@
 * is deprecated and should not be used.
 * @group Utilities
 */
-public with sharing class UTIL_MasterSchedulable implements Schedulable {
+public class UTIL_MasterSchedulable implements Schedulable {
 
     /*******************************************************************************************************
     * @description Runs the class, as scheduled.
