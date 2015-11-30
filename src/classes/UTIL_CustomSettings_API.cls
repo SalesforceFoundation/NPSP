@@ -35,7 +35,7 @@
 * @group-content ../../ApexDocContent/API.htm
 * @description API class that exposes the Custom Settings configuration.
 */
-global with sharing class UTIL_CustomSettings_API {
+global class UTIL_CustomSettings_API {
 
     /*******************************************************************************************************
     * @description Returns the default Contacts and Orgs settings. 
