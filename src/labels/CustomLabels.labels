@@ -1606,6 +1606,14 @@
         <value>One or more of the Opportunity Rollup, Recurring Donation, and Seasonal Address jobs are missing from the Schedulable__c object.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsTriggerHandlerDuplicate</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsTriggerHandlerDuplicate</shortDescription>
+        <value>Trigger Handler {0} on object {1} with the same Handler fields is repeated multiple times and will affect NPSP behavior.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsTriggerHandlerMismatch</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>

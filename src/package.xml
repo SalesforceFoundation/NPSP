@@ -781,6 +781,7 @@
         <members>healthDetailsSaveAcctFailed</members>
         <members>healthDetailsSaveOppsFailed</members>
         <members>healthDetailsScheduleJobs</members>
+        <members>healthDetailsTriggerHandlerDuplicate</members>
         <members>healthDetailsTriggerHandlerMismatch</members>
         <members>healthDetailsTriggerHandlerMissing</members>
         <members>healthDetailsUDFBadDatatypes</members>

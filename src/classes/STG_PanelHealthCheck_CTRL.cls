@@ -33,7 +33,7 @@
 * @group Settings
 * @description Controller for the Health Check wizard
 */
-public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
+public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
 
     /*********************************************************************************************************
     * @description The panel's constructor 
@@ -593,6 +593,7 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
             
             for (Trigger_Handler__c defaultHandler : listHandlersDefault) {
                 Boolean alreadyExists = false;
+                integer cExactMatch = 0;
                 for (Trigger_Handler__c existingHandler : listHandlersCurrent) {
                     if (defaultHandler.Class__c == existingHandler.Class__c && defaultHandler.Object__c == existingHandler.Object__c) {
                         alreadyExists = true;
@@ -606,13 +607,18 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
                             strInfo += '<li>';
                             strInfo += string.format(label.healthDetailsTriggerHandlerMismatch, new string[]{defaultHandler.Class__c, defaultHandler.Object__c});
                             strInfo += '</li>';
+                        } else {
+                            cExactMatch++;
                         }
-                        break;
                     }
                 }
                 if (!alreadyExists) {
                     strInfo += '<li>';
                     strInfo += string.format(label.healthDetailsTriggerHandlerMissing, new string[]{defaultHandler.Class__c, defaultHandler.Object__c});
+                    strInfo += '</li>';
+                } else if (cExactMatch > 1) {
+                    strInfo += '<li>';
+                    strInfo += string.format(label.healthDetailsTriggerHandlerDuplicate, new string[]{defaultHandler.Class__c, defaultHandler.Object__c});
                     strInfo += '</li>';
                 }
             }    
