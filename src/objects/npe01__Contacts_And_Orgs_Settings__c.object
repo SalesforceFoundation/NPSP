@@ -25,6 +25,30 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Opp_RecTypes_Excluded_for_Payments__c</fullName>
+        <description>Names of Opportunity Record Types to exclude from creating Payments</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Names of Opportunity Record Types to exclude from creating Payments</inlineHelpText>
+        <label>Opp RecTypes Excluded for Payments</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Opp_Types_Excluded_for_Payments__c</fullName>
+        <description>Values for the Opportunity Type field to exclude from creating Payments.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Values for the Opportunity Type field to exclude from creating Payments.</inlineHelpText>
+        <label>Opp Types Excluded for Payments</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Organizational_Account_Addresses_Enabled__c</fullName>
         <defaultValue>false</defaultValue>
         <description>Enables Address management for Organizational Accounts when selected.</description>
@@ -33,6 +57,18 @@
         <label>Organizational Account Addresses Enabled</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Payments_Auto_Close_Stage_Name__c</fullName>
+        <description>Opportunity stage for when opportunity has been fully paid</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Choose the stage that an opportunity should be automatically transitioned to when the total payment amount is equal to the opportunity amount.  If no stage is selected, then opportunities will not be transitioned automatically when payments are complete.</inlineHelpText>
+        <label>Opportunity Stage for When Fully Paid</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Simple_Address_Change_Treated_as_Update__c</fullName>
