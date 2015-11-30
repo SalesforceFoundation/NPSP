@@ -34,7 +34,7 @@
 * @group-content ../../ApexDocContent/Rollups.htm
 * @description Batch class for contact account rollups. 
 */
-public with sharing class RLLP_OppContactRollup_BATCH implements Database.Batchable<SObject>, UTIL_MasterSchedulableHelper.UTIL_IRecurring {
+public class RLLP_OppContactRollup_BATCH implements Database.Batchable<SObject>, UTIL_MasterSchedulableHelper.UTIL_IRecurring {
     	
     /*******************************************************************************************************
     * @description Implementation of UTIL_MasterSchedulableHelper.UTIL_IRecurring, to allow nightly 

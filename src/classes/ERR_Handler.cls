@@ -36,7 +36,7 @@
 * @group ErrorHandling
 * @group-content ../../ApexDocContent/ErrorHandling.htm
 */
-public with sharing class ERR_Handler {
+public class ERR_Handler {
     
     /*******************************************************************************************************
     * @description Inner class that groups the result of processing the result of multiple DML operations performed

@@ -33,7 +33,7 @@
 * @group Utilities
 * @description The UTIL_JobScheduler class is deprecated.
 */
-public with sharing class UTIL_JobScheduler {
+public class UTIL_JobScheduler {
     
     /*******************************************************************************************************
     * @description Schedules a class that implements the Schedulable interface, if it's not already scheduled.

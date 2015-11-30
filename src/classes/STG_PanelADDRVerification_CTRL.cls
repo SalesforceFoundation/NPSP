@@ -198,11 +198,15 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
         for(ApexClass c : classes) {
             Type classType = Type.forName(c.NamespacePrefix, c.Name);
             if(classType != null) {
-	            Object classInstance = classType.newInstance();
-	            if(classInstance instanceof ADDR_IValidator) {
-	                validators.add(new SelectOption(c.Name, ((ADDR_IValidator)classInstance).getServiceName()));
-	                servicesURLMap.put(((ADDR_IValidator)classInstance).getServiceName(), ((ADDR_IValidator)classInstance).getDefaultURL());
-	            }
+                try {
+		            Object classInstance = classType.newInstance();
+		            if(classInstance instanceof ADDR_IValidator) {
+		                validators.add(new SelectOption(c.Name, ((ADDR_IValidator)classInstance).getServiceName()));
+		                servicesURLMap.put(((ADDR_IValidator)classInstance).getServiceName(), ((ADDR_IValidator)classInstance).getDefaultURL());
+		            }
+                } catch(exception ex) {
+                    // just ignore this class and continue.
+                }
             }
         }         
     }
