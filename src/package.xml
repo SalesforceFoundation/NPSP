@@ -13,6 +13,7 @@
         <members>ADDR_Account_TDTM</members>
         <members>ADDR_Addresses_TDTM</members>
         <members>ADDR_Addresses_TEST</members>
+        <members>ADDR_Addresses_TEST2</members>
         <members>ADDR_Cicero_TEST</members>
         <members>ADDR_Cicero_Validator</members>
         <members>ADDR_Contact_TDTM</members>
@@ -53,6 +54,7 @@
         <members>BDI_DataImport_BATCH</members>
         <members>BDI_DataImport_CTRL</members>
         <members>BDI_DataImport_TEST</members>
+        <members>BDI_DataImport_TEST2</members>
         <members>CAO_Constants</members>
         <members>CONV_Account_Conversion_BATCH</members>
         <members>CONV_Account_Conversion_BATCH_TEST</members>
@@ -62,9 +64,11 @@
         <members>CON_ChangeAccount_TEST</members>
         <members>CON_ContactMerge</members>
         <members>CON_ContactMergeTDTM_TEST</members>
+        <members>CON_ContactMergeTDTM_TEST2</members>
         <members>CON_ContactMerge_CTRL</members>
         <members>CON_ContactMerge_TDTM</members>
         <members>CON_ContactMerge_TEST</members>
+        <members>CON_ContactMerge_TEST2</members>
         <members>CON_DeleteContactOverride_CTRL</members>
         <members>CON_DeleteContactOverride_TEST</members>
         <members>CON_DoNotContact_TDTM</members>
@@ -128,6 +132,7 @@
         <members>RD_RecurringDonations_Opp_TDTM</members>
         <members>RD_RecurringDonations_TDTM</members>
         <members>RD_RecurringDonations_TEST</members>
+        <members>RD_RecurringDonations_TEST2</members>
         <members>REL_ProcessControl</members>
         <members>REL_RelationshipsViewer_CTRL</members>
         <members>REL_Relationships_Cm_TDTM</members>
