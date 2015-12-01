@@ -783,8 +783,10 @@
         <members>healthDetailsPaymentMappingBadDataTypes</members>
         <members>healthDetailsRDFieldsBadDatatypes</members>
         <members>healthDetailsRelReciprocalInvalid</members>
+        <members>healthDetailsSaveAcctFailed</members>
         <members>healthDetailsSaveOppsFailed</members>
         <members>healthDetailsScheduleJobs</members>
+        <members>healthDetailsTriggerHandlerDuplicate</members>
         <members>healthDetailsTriggerHandlerMismatch</members>
         <members>healthDetailsTriggerHandlerMissing</members>
         <members>healthDetailsUDFBadDatatypes</members>
@@ -822,12 +824,14 @@
         <members>healthPaymentAutoCloseStageMustBeActiveClosedWonOrBlank</members>
         <members>healthPaymentAutoCloseStageValid</members>
         <members>healthSolutionAccOne2OneNoContacts</members>
+        <members>healthSolutionAccountModel</members>
         <members>healthSolutionAccountRTIssue</members>
         <members>healthSolutionAutoRelFieldsMissing</members>
         <members>healthSolutionAutoRelInvalidCMField</members>
         <members>healthSolutionAutoRelInvalidContactField</members>
         <members>healthSolutionAutoRelInvalidLookupField</members>
         <members>healthSolutionBadRDField</members>
+        <members>healthSolutionContactData</members>
         <members>healthSolutionEditSetting</members>
         <members>healthSolutionHHAccNoContacts</members>
         <members>healthSolutionHHObjNoContacts</members>
@@ -1294,6 +1298,19 @@
         <members>GoogleAPI</members>
         <members>SmartyStreets</members>
         <name>RemoteSiteSetting</name>
+    </types>
+    <types>
+        <members>NPSP_Health_Check</members>
+        <members>NPSP_Health_Check/Contacts_Without_Accounts</members>
+        <members>NPSP_Health_Check/Empty_Household_Accounts</members>
+        <members>NPSP_Health_Check/Empty_Household_Objects</members>
+        <members>NPSP_Health_Check/Individual_Contacts_by_Account_Type</members>
+        <members>NPSP_Health_Check/Opportunities_with_Primary_Contact_Roles</members>
+        <name>Report</name>
+    </types>
+    <types>
+        <members>Contacts_Only</members>
+        <name>ReportType</name>
     </types>
     <types>
         <members>CumulusStaticResources</members>

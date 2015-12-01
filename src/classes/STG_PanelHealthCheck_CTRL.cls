@@ -33,7 +33,7 @@
 * @group Settings
 * @description Controller for the Health Check wizard
 */
-public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
+public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
 
     /*********************************************************************************************************
     * @description The panel's constructor 
@@ -240,7 +240,8 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
 	        strInfo += '<BR/>' + CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE + ': ' + cOne2One + (cOne2One == 9999 ? '+' : '');
 	        strInfo += '<BR/>' + CAO_Constants.HH_ACCOUNT_TYPE + ': ' + cHH + (cHH == 9999 ? '+' : '');        
 	        
-	        createDR(Label.healthLabelAccountModelData, isMixedAccs ? statusError : statusSuccess,  isMixedAccs ? strInfo : null, isMixedAccs ? null : strInfo);        
+	        createDR(Label.healthLabelAccountModelData, isMixedAccs ? statusError : statusSuccess,  isMixedAccs ? strInfo : null, 
+	           isMixedAccs ? label.healthSolutionAccountModel : strInfo);        
     	} catch (exception ex) {
             createDR(Label.healthLabelAccountModelData, statusError,  ex.getMessage(), null);            		
     	}    
@@ -292,7 +293,8 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     	try {
 	        integer cContact = [select Count() from Contact where AccountId = null limit 9999];   
 	        if (cContact > 0) {
-	            createDR(Label.healthLabelContactData, statusError, string.format(Label.healthDetailsContactData, new string[]{string.valueOf(cContact)}), null);                	
+	            createDR(Label.healthLabelContactData, statusError, 
+	               string.format(Label.healthDetailsContactData, new string[]{string.valueOf(cContact)}), label.healthSolutionContactData);                	
 	        } else {
 	            createDR(Label.healthLabelContactData, statusSuccess, null, null); 
 	        }  
@@ -527,13 +529,17 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
 	        for (Schedulable__c schedClass : schedClasses) {
 	            Type classType = Type.forName(schedClass.Class_Name__c);
 	            if (classType != null) {
-	                Object instance = classType.newInstance();
-	                if (instance != null) {
-	                    if (instance instanceof UTIL_MasterSchedulableHelper.UTIL_IRecurring) {
-	                        // this entry is good!
-	                        continue;
-	                    }
-	                }
+	                try {
+		                Object instance = classType.newInstance();
+		                if (instance != null) {
+		                    if (instance instanceof UTIL_MasterSchedulableHelper.UTIL_IRecurring) {
+		                        // this entry is good!
+		                        continue;
+		                    }
+		                }
+	                } catch (exception ex) {
+		                // fall thru to log error
+		            }
 	            }
 	            isValidAll = false;
 	            createDR(Label.healthLabelScheduler, statusError, 
@@ -587,6 +593,7 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
             
             for (Trigger_Handler__c defaultHandler : listHandlersDefault) {
                 Boolean alreadyExists = false;
+                integer cExactMatch = 0;
                 for (Trigger_Handler__c existingHandler : listHandlersCurrent) {
                     if (defaultHandler.Class__c == existingHandler.Class__c && defaultHandler.Object__c == existingHandler.Object__c) {
                         alreadyExists = true;
@@ -600,13 +607,18 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
                             strInfo += '<li>';
                             strInfo += string.format(label.healthDetailsTriggerHandlerMismatch, new string[]{defaultHandler.Class__c, defaultHandler.Object__c});
                             strInfo += '</li>';
+                        } else {
+                            cExactMatch++;
                         }
-                        break;
                     }
                 }
                 if (!alreadyExists) {
                     strInfo += '<li>';
                     strInfo += string.format(label.healthDetailsTriggerHandlerMissing, new string[]{defaultHandler.Class__c, defaultHandler.Object__c});
+                    strInfo += '</li>';
+                } else if (cExactMatch > 1) {
+                    strInfo += '<li>';
+                    strInfo += string.format(label.healthDetailsTriggerHandlerDuplicate, new string[]{defaultHandler.Class__c, defaultHandler.Object__c});
                     strInfo += '</li>';
                 }
             }    
