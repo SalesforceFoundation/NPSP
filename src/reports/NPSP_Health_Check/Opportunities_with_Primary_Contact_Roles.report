@@ -29,10 +29,10 @@
     </filter>
     <format>Summary</format>
     <groupingsDown>
-        <aggregateType>RowCount</aggregateType>
+        <aggregateType>Sum</aggregateType>
         <dateGranularity>Day</dateGranularity>
         <field>OPPORTUNITY_ID</field>
-        <sortByName>RowCount</sortByName>
+        <sortByName>PRIMARY</sortByName>
         <sortOrder>Desc</sortOrder>
         <sortType>Aggregate</sortType>
     </groupingsDown>
