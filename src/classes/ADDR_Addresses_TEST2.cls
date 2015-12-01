@@ -55,18 +55,45 @@ public with sharing class ADDR_Addresses_TEST2 {
     /*********************************************************************************************************
     * @description The list of created test Contacts.
     */
-    public static list<Contact> listConT;
+    private static list<Contact> listConT;
 
     /*********************************************************************************************************
     * @description The list of created test Accounts.
     */
-    public static list<Account> listAccT;            
+    private static list<Account> listAccT;            
 
     /*********************************************************************************************************
     * @description The list of created test Addresses.
     */
-    public static list<Address__c> listAddrT;
+    private static list<Address__c> listAddrT;
 
+    /*********************************************************************************************************
+    * @description
+    * utility to set up common test data for the Address tests.
+    *    - this will create & insert N household Accounts, each with M contacts
+    *    - also will create a Default Addresses for each HH Account
+    *    - will also setup the default Account Processor to be HH Accounts
+    * @param cHHT the number of Household Accounts to create
+    * @param cConT the number of Contacts to create per Household
+    * @return  void
+    **********************************************************************************************************/
+    private static void createHHTestData(integer cHHT, integer cConT) {
+        ADDR_Addresses_TEST.createHHTestData(cHHT, cConT);
+        listConT = ADDR_Addresses_TEST.listConT;
+        listAccT = ADDR_Addresses_TEST.listAccT;
+        listAddrT = ADDR_Addresses_TEST.listAddrT;
+    }
+
+    /*********************************************************************************************************
+    * @description Initializes (but not inserts) N new Address objects.
+    * @param cAddr the number of Address objects to create
+    * @return  void
+    **********************************************************************************************************/
+    private static void initTestAddr(integer cAddr) {
+        ADDR_Addresses_TEST.initTestAddr(cAddr);
+        listAddrT = ADDR_Addresses_TEST.listAddrT;
+    }
+    
     /*********************************************************************************************************
     @description
         update seasonal addresses to current, on HH w/ existing default addresses  
@@ -78,10 +105,10 @@ public with sharing class ADDR_Addresses_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'updateSeasonalAddr') return;
         
         // this creates a default Address for each HH
-        ADDR_Addresses_TEST.createHHTestData(cHH, cCon);
+        createHHTestData(cHH, cCon);
         
         // create additional seasonal addresses not current
-        ADDR_Addresses_TEST.initTestAddr(cHH);
+        initTestAddr(cHH);
         for (integer i = 0; i < cHH; i++) {
             listAddrT[i].Household_Account__c = listAccT[i].Id;
             listAddrT[i].Default_Address__c = false;
@@ -138,10 +165,10 @@ public with sharing class ADDR_Addresses_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'deleteSeasonalAddr') return;
         
         // this creates a default Address for each HH
-        ADDR_Addresses_TEST.createHHTestData(cHH, cCon);
+        createHHTestData(cHH, cCon);
         
         // create additional seasonal addresses current
-        ADDR_Addresses_TEST.initTestAddr(cHH);
+        initTestAddr(cHH);
         for (integer i = 0; i < cHH; i++) {
             listAddrT[i].Household_Account__c = listAccT[i].Id;
             listAddrT[i].Default_Address__c = false;
@@ -199,10 +226,10 @@ public with sharing class ADDR_Addresses_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'insertSeasonalAddrWithOverlap') return;
         
         // this creates a default Address for each HH
-        ADDR_Addresses_TEST.createHHTestData(cHH, cCon);
+        createHHTestData(cHH, cCon);
         
         // create additional seasonal addresses not current
-        ADDR_Addresses_TEST.initTestAddr(cHH * 2);
+        initTestAddr(cHH * 2);
         for (integer i = 0; i < cHH * 2; i++) {
             integer iacc = i < cHH ? i : i-cHH;
             if (math.mod(i, 2) == 0) {
@@ -356,10 +383,10 @@ public with sharing class ADDR_Addresses_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'insertSeasonalAddrOverlapExisting') return;
         
         // this creates a default Address for each HH
-        ADDR_Addresses_TEST.createHHTestData(cHH, cCon);
+        createHHTestData(cHH, cCon);
         
         // create additional seasonal addresses not current
-        ADDR_Addresses_TEST.initTestAddr(cHH);
+        initTestAddr(cHH);
         Date dtTest = Date.newInstance(system.today().year(), 6, 1);
         for (integer i = 0; i < cHH; i++) {
             listAddrT[i].Household_Account__c = listAccT[i].Id;
@@ -375,7 +402,7 @@ public with sharing class ADDR_Addresses_TEST2 {
         insert listAddrT;
         
         // create additional seasonal addresses that overlap existing seasonal addresses
-        ADDR_Addresses_TEST.initTestAddr(cHH);
+        initTestAddr(cHH);
         for (integer i = 0; i < cHH; i++) {
             listAddrT[i].Household_Account__c = listAccT[i].Id;
             listAddrT[i].Seasonal_Start_Month__c = string.valueOf(dtTest.addMonths(2).month());
@@ -409,10 +436,10 @@ public with sharing class ADDR_Addresses_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'insertPartialSeasonalAddr') return;
         
         // this creates a default Address for each HH
-        ADDR_Addresses_TEST.createHHTestData(cHH, cCon);
+        createHHTestData(cHH, cCon);
         
         // create additional seasonal addresses not current
-        ADDR_Addresses_TEST.initTestAddr(cHH);
+        initTestAddr(cHH);
         for (integer i = 0; i < cHH; i++) {
             listAddrT[i].Household_Account__c = listAccT[i].Id;
             listAddrT[i].Seasonal_Start_Month__c = string.valueOf(system.today().addMonths(1).month());
@@ -445,10 +472,10 @@ public with sharing class ADDR_Addresses_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'scheduleSeasonalAddrUpdate') return;
         
         // this creates a default Address for each HH
-        ADDR_Addresses_TEST.createHHTestData(cHH, cCon);
+        createHHTestData(cHH, cCon);
         
         // create additional addresses
-        ADDR_Addresses_TEST.initTestAddr(cHH);
+        initTestAddr(cHH);
         for (integer i = 0; i < cHH; i++) {
             listAddrT[i].Household_Account__c = listAccT[i].Id;
             listAddrT[i].Default_Address__c = false;
@@ -506,7 +533,7 @@ public with sharing class ADDR_Addresses_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'newDupeAccountAddr') return;
         
         // this creates a default Address for each HH
-        ADDR_Addresses_TEST.createHHTestData(cHH, cCon);
+        createHHTestData(cHH, cCon);
 
         // create additional addresses thru the account.
         for (integer i = 0; i < cHH; i++) {
@@ -536,7 +563,7 @@ public with sharing class ADDR_Addresses_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'newDupeContactAddr') return;
         
         // this creates a default Address for each HH
-        ADDR_Addresses_TEST.createHHTestData(cHH, cCon);
+        createHHTestData(cHH, cCon);
 
         // create additional addresses thru the contact.
         for (integer i = 0; i < cHH; i++) {
@@ -569,10 +596,10 @@ public with sharing class ADDR_Addresses_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'newDupeAccountAddrNonDefault') return;
         
         // this creates a default Address for each HH
-        ADDR_Addresses_TEST.createHHTestData(cHH, cCon);
+        createHHTestData(cHH, cCon);
 
          // create additional non-default addresses
-        ADDR_Addresses_TEST.initTestAddr(cHH);
+        initTestAddr(cHH);
         for (integer i = 0; i < cHH; i++) {
             listAddrT[i].Household_Account__c = listAccT[i].Id;
             listAddrT[i].Default_Address__c = false;
@@ -631,10 +658,10 @@ public with sharing class ADDR_Addresses_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'newDupeContactAddrNonDefault') return;
         
         // this creates a default Address for each HH
-        ADDR_Addresses_TEST.createHHTestData(cHH, cCon);
+        createHHTestData(cHH, cCon);
 
          // create additional non-default addresses
-        ADDR_Addresses_TEST.initTestAddr(cHH);
+        initTestAddr(cHH);
         for (integer i = 0; i < cHH; i++) {
             listAddrT[i].Household_Account__c = listAccT[i].Id;
             listAddrT[i].Default_Address__c = false;
@@ -696,10 +723,10 @@ public with sharing class ADDR_Addresses_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'updateConAddrWithOverride') return;
         
         // this creates a default Address for each HH
-        ADDR_Addresses_TEST.createHHTestData(cHH, cCon);
+        createHHTestData(cHH, cCon);
 
         // create additional addresses
-        ADDR_Addresses_TEST.initTestAddr(cHH);
+        initTestAddr(cHH);
         for (integer i = 0; i < cHH; i++) {
             listAddrT[i].Household_Account__c = listAccT[i].Id;
             listAddrT[i].Default_Address__c = false;
@@ -783,10 +810,10 @@ public with sharing class ADDR_Addresses_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'updateConAddrWithExternalOverride') return;
         
         // this creates a default Address for each HH
-        ADDR_Addresses_TEST.createHHTestData(cHH, cCon);
+        createHHTestData(cHH, cCon);
 
         // create additional addresses
-        ADDR_Addresses_TEST.initTestAddr(cHH);
+        initTestAddr(cHH);
         for (integer i = 0; i < cHH; i++) {
             listAddrT[i].Household_Account__c = listAccT[i].Id;
             listAddrT[i].Default_Address__c = false;
@@ -860,7 +887,7 @@ public with sharing class ADDR_Addresses_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'insertConWithNoAddrToExistingHH') return;
         
         // this creates a default Address for each HH
-        ADDR_Addresses_TEST.createHHTestData(cHH, cCon);
+        createHHTestData(cHH, cCon);
         
         // insert new contacts to the HH without any addresses
         list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cHH);
@@ -895,7 +922,7 @@ public with sharing class ADDR_Addresses_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'insertConWithAddrToExistingHH') return;
         
         // this creates a default Address for each HH
-        ADDR_Addresses_TEST.createHHTestData(cHH, cCon);
+        createHHTestData(cHH, cCon);
         
         // insert new contacts to the HH with new addresses
         list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cHH);
@@ -940,7 +967,7 @@ public with sharing class ADDR_Addresses_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'insertConWithDefaultAddrToExistingHH') return;
         
         // this creates a default Address for each HH
-        ADDR_Addresses_TEST.createHHTestData(cHH, cCon);
+        createHHTestData(cHH, cCon);
         
         // reload accounts to get their default addresses
         listAccT = [select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude from Account];
@@ -1032,10 +1059,10 @@ public with sharing class ADDR_Addresses_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'insertNewDefaultMultilineStreetAddr') return;
         
         // this creates a default Address for each HH
-        ADDR_Addresses_TEST.createHHTestData(cHH, cCon);
+        createHHTestData(cHH, cCon);
         
         // create additional addresses
-        ADDR_Addresses_TEST.initTestAddr(cHH);
+        initTestAddr(cHH);
         for (integer i = 0; i < cHH; i++) {
             listAddrT[i].Household_Account__c = listAccT[i].Id;
             listAddrT[i].Default_Address__c = true;
@@ -1075,7 +1102,7 @@ public with sharing class ADDR_Addresses_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'updateAccMultilineStreetAddr') return;
         
         // this creates a default Address for each HH
-        ADDR_Addresses_TEST.createHHTestData(cHH, cCon);
+        createHHTestData(cHH, cCon);
 
         // modify some of the account addresses directly
         for (integer i = 0; i < cHH; i++) {
@@ -1125,7 +1152,7 @@ public with sharing class ADDR_Addresses_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'updateAccMultilineStreetAddrNL') return;
         
         // this creates a default Address for each HH
-        ADDR_Addresses_TEST.createHHTestData(cHH, cCon);
+        createHHTestData(cHH, cCon);
 
         // modify some of the account addresses directly
         for (integer i = 0; i < cHH; i++) {
@@ -1293,7 +1320,7 @@ public with sharing class ADDR_Addresses_TEST2 {
         insert listCon;
 
          // create addresses for the accounts
-        ADDR_Addresses_TEST.initTestAddr(cAcc);
+        initTestAddr(cAcc);
         for (integer i = 0; i < cAcc; i++) {
             listAddrT[i].Household_Account__c = listAcc[i].Id;
             listAddrT[i].Default_Address__c = true;
@@ -1386,7 +1413,7 @@ public with sharing class ADDR_Addresses_TEST2 {
         ));
                 
         // this creates a default Address for each HH
-        ADDR_Addresses_TEST.createHHTestData(cHH, cCon);
+        createHHTestData(cHH, cCon);
 
         // clear some of the contact addresses directly
         list<Contact> listCon = new list<Contact>();
@@ -1445,7 +1472,7 @@ public with sharing class ADDR_Addresses_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'setConAddrOverrideAndLookupOnNewContact') return;
         
         // this creates a default Address for each HH
-        ADDR_Addresses_TEST.createHHTestData(cHH, cCon);
+        createHHTestData(cHH, cCon);
         
         Contact con = new Contact();
         con.lastname = 'test';
