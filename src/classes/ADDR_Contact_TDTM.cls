@@ -130,7 +130,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             	// *,*,*,D     if no override, refill from Default Address, else update/new address object    
             	//
             	// simplifying this to some precedence rules:
-            	//     - if Account changes && no override, refill from Default Address
+            	//     - if Account changes && no override && no MailingAddress field changes, refill from Default Address
             	//     - if CurrentAddress changes to a new non-null value, refill to it.
             	//     - if MailingAddress field changes, update/new address object
                 //     - if isAddressOverride changes to false, refill from Default Address
@@ -140,7 +140,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             	// new highest priority! if Account changes... 
                 if (conOld != null && con.AccountId != conOld.AccountId) {
                     // if no override, refill from the Default Address
-            	    if (!con.is_Address_Override__c) {
+            	    if (!con.is_Address_Override__c && !isContactAddressChanged(con, conOld)) {
                         listConAddrReset.add(con);
             	    } else { // create a new address on the account
                         listConCreateAddr.add(con);                    
