@@ -293,7 +293,7 @@ public with sharing class CON_ChangeAccount_TEST {
         list<Contact> listConDst = UTIL_UnitTestData_TEST.listConT;        
         
         // move the first contact in the first account to the other account.
-        Contact conSrc = listConSrc[0];
+        Contact conSrc = new Contact(Id=listConSrc[0].Id);
         conSrc.AccountId = accDst.Id;
         TDTM_DefaultConfig.stopTestDataInit();
         Test.startTest();
