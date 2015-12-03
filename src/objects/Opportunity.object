@@ -611,6 +611,86 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>Matching_Gift_Account__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Matching Gift Account</label>
+        <lookupFilter>
+            <active>true</active>
+            <filterItems>
+                <field>Account.Matching_Gift_Company__c</field>
+                <operation>equals</operation>
+                <value>True</value>
+            </filterItems>
+            <infoMessage>Matching Gift Companies</infoMessage>
+            <isOptional>true</isOptional>
+        </lookupFilter>
+        <referenceTo>Account</referenceTo>
+        <relationshipLabel>Opportunities</relationshipLabel>
+        <relationshipName>Opportunities</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Matching_Gift_Employer__c</fullName>
+        <externalId>false</externalId>
+        <label>Matching Gift Employer</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Matching_Gift_Status__c</fullName>
+        <externalId>false</externalId>
+        <label>Matching Gift Status</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Potential</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Submitted</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Received</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Matching_Gift__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Matching Gift</label>
+        <lookupFilter>
+            <active>true</active>
+            <filterItems>
+                <field>Opportunity.Account.Matching_Gift_Company__c</field>
+                <operation>equals</operation>
+                <value>True</value>
+            </filterItems>
+            <infoMessage>Opportunities from Matching Gift Companies</infoMessage>
+            <isOptional>true</isOptional>
+        </lookupFilter>
+        <referenceTo>Opportunity</referenceTo>
+        <relationshipLabel>Opportunities (Matching Gift)</relationshipLabel>
+        <relationshipName>MatchingGiftOpportunities</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
         <fullName>Next_Grant_Deadline_Due_Date__c</fullName>
         <description>The NPSP updates this field automatically based on the next Grant Deadline record.</description>
         <externalId>false</externalId>
