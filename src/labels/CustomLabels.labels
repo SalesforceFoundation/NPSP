@@ -1582,6 +1582,14 @@
         <value>Reciprocal Relationship {0} should have a value in at least one of the fields for Male, Female, or Neutral.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsSaveAcctFailed</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsSaveAcctFailed</shortDescription>
+        <value>Unable to create new Account.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsSaveOppsFailed</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -1596,6 +1604,14 @@
         <protected>false</protected>
         <shortDescription>healthDetailsScheduleJobs</shortDescription>
         <value>One or more of the Opportunity Rollup, Recurring Donation, and Seasonal Address jobs are missing from the Schedulable__c object.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsTriggerHandlerDuplicate</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsTriggerHandlerDuplicate</shortDescription>
+        <value>Trigger Handler {0} on object {1} with the same Handler fields is repeated multiple times and will affect NPSP behavior.</value>
     </labels>
     <labels>
         <fullName>healthDetailsTriggerHandlerMismatch</fullName>
@@ -1894,6 +1910,14 @@
         <value>Consider deleting these unused One-to-One Accounts to save space.</value>
     </labels>
     <labels>
+        <fullName>healthSolutionAccountModel</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionAccountModel</shortDescription>
+        <value>All of your individual Contacts should use the same Account Model. View these Contacts by running the &lt;b&gt;Individual Contacts by Account Type&lt;/b&gt; report in the NPSP Health Check reports folder.</value>
+    </labels>
+    <labels>
         <fullName>healthSolutionAccountRTIssue</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -1941,6 +1965,14 @@
         <value>On the NPSP Settings tab, click {0} | {1}, and add the missing Recurring Donation field, or delete the Recurring Donation Field Mapping record.</value>
     </labels>
     <labels>
+        <fullName>healthSolutionContactData</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionContactData</shortDescription>
+        <value>View these Contacts by running the &lt;b&gt;Contacts without Accounts&lt;/b&gt; report in the NPSP Health Check reports folder.</value>
+    </labels>
+    <labels>
         <fullName>healthSolutionEditSetting</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -1954,7 +1986,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionHHAccNoContacts</shortDescription>
-        <value>Consider deleting these unused Household Accounts to save space.</value>
+        <value>Consider deleting these unused Household Accounts to save space. View these Household Accounts by running the &lt;b&gt;Empty Household Accounts&lt;/b&gt; report in the NPSP Health Check reports folder</value>
     </labels>
     <labels>
         <fullName>healthSolutionHHObjNoContacts</fullName>
@@ -1962,7 +1994,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionHHObjNoContacts</shortDescription>
-        <value>Consider deleting these unused Household objects to save space. If you have completed a conversion to the Household Account model and no longer need the data on the Household object records they can be deleted.</value>
+        <value>Consider deleting these unused Household objects to save space. If you have completed a conversion to the Household Account model and no longer need the data on the Household object records they can be deleted.  View these Household objects by running the &lt;b&gt;Empty Household Objects&lt;/b&gt; report in the NPSP Health Check reports folder.</value>
     </labels>
     <labels>
         <fullName>healthSolutionInvalidFiscalYears</fullName>
@@ -2050,7 +2082,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionOCRDupPrimary</shortDescription>
-        <value>Having multiple OpportunityContactRoles marked Primary can cause Opportunity rollups, such as Total Gifts, to be incorrectly calculated.  Use a report to find the Opportunities with mulitple Primary OpportunityContactRoles.</value>
+        <value>Having multiple OpportunityContactRoles marked Primary can cause Opportunity rollups, such as Total Gifts, to be incorrectly calculated.  View these Opportunities by running the &lt;b&gt;Opportunities with Primary Contact Roles&lt;/b&gt; report in the NPSP Health Check reports folder, and looking at the records with 2 or more Primary Contact Roles.</value>
     </labels>
     <labels>
         <fullName>healthSolutionOCRException</fullName>
@@ -2097,7 +2129,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionSaveOppsFailed</shortDescription>
-        <value>Make sure you have no Validation Rules, Required Fields, or Workflow Rules that would prevent an Opportunity from being saved.</value>
+        <value>Make sure you have no Validation Rules, Required Fields, or Workflow Rules that would prevent an Opportunity or Account from being saved.</value>
     </labels>
     <labels>
         <fullName>healthSolutionScheduleJobs</fullName>

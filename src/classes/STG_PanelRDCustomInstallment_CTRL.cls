@@ -205,8 +205,12 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
             
         // create a test account and test opportunity
         Account acc = new Account(name='test account');
-        insert acc;
-        
+        try {
+            insert acc;
+        } catch (exception ex) {
+            ctrl.createDR(label.stgNavDonations, STG_PanelHealthCheck_CTRL.statusError, label.healthDetailsSaveAcctFailed + ' ' + ex.getMessage(), label.healthSolutionSaveOppsFailed);
+            return;                            
+        }
         Opportunity testOpp = new Opportunity();
         testOpp.AccountID = acc.id;
         testOpp.Amount = 100;
