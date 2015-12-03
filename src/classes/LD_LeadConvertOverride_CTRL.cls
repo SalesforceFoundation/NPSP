@@ -264,8 +264,10 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
 
         // get the lead
-        l = [select id, name, firstname, lastname, company, email, title, ownerId from lead
-            where id = : controller.getId()];
+        l = [select id, name, firstname, lastname, company, email, title, ownerId, 
+             		CompanyStreet__c, CompanyCity__c, CompanyState__c, CompanyPostalCode__c, CompanyCountry__c
+             from lead
+             where id = : controller.getId()];
 
         // dummy contact allows owner selection - use contact as always accessible if user has lead conversion rights
         dummyCon = new Contact(
@@ -443,11 +445,19 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             // if we created a new company account, affiliate to it.
             if (strAccountId == 'NEW')
                 strAfflAccountId = lcr.getAccountId();
+
                 
             // handle the optional Affiliation to a new or existing Account.
             ID afflAccId = null;
             if (strAfflAccountId == 'NEW') {
-                Account acc = new Account(name=l.Company);
+                Account acc = new Account(
+                    name = l.Company, 
+                    BillingStreet = l.CompanyStreet__c, 
+                    BillingCity = l.CompanyCity__c,
+                    BillingState = l.CompanyState__c,
+                    BillingPostalCode = l.CompanyPostalCode__c,
+                    BillingCountry = l.CompanyCountry__c
+                );
                 insert acc;
                 afflAccId = acc.Id;
             } else if (strAfflAccountId != null && strAfflAccountId != '') {
