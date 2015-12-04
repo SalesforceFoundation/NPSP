@@ -3244,6 +3244,14 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <value>Specifies whether to create an Opportunity during Lead conversion.</value>
     </labels>
     <labels>
+        <fullName>stgHelpMatchedDonorRole</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpMatchedDonorRole</shortDescription>
+        <value>Select the Contact Role for Matched Donors.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpMaxPayments</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

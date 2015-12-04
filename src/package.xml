@@ -1019,6 +1019,7 @@
         <members>stgHelpIGFormat</members>
         <members>stgHelpINamingClass</members>
         <members>stgHelpLeadConvert</members>
+        <members>stgHelpMatchedDonorRole</members>
         <members>stgHelpMaxPayments</members>
         <members>stgHelpMembershipGracePeriod</members>
         <members>stgHelpMembershipRT</members>
