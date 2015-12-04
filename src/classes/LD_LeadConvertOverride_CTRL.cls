@@ -445,8 +445,18 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             // if we created a new company account, affiliate to it.
             if (strAccountId == 'NEW')
                 strAfflAccountId = lcr.getAccountId();
-
-                
+            
+            // if we created a new company acct and the Lead had a company address, set the new acct's address
+            if (strAccountId == 'NEW' && !String.isBlank(l.CompanyStreet__c)) {
+            	update new Account(
+                    Id=lcr.getAccountId(),
+                    BillingStreet = l.CompanyStreet__c, 
+                    BillingCity = l.CompanyCity__c,
+                    BillingState = l.CompanyState__c,
+                    BillingPostalCode = l.CompanyPostalCode__c,
+                    BillingCountry = l.CompanyCountry__c
+                );
+            }   
             // handle the optional Affiliation to a new or existing Account.
             ID afflAccId = null;
             if (strAfflAccountId == 'NEW') {
