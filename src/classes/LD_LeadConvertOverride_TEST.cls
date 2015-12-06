@@ -937,4 +937,45 @@ private class LD_LeadConvertOverride_TEST {
         system.assertEquals(1, listOpp.size());
         system.assertEquals(aff.npe5__Organization__c , listOpp[0].AccountId);        
     }
+    
+    /*******************************************************************************************************
+    * @description Runs lead conversion to create a company and test Lead.CompanyAddress bhvr
+    */
+    public testmethod static void convertComapnyLead_Test() {
+        Lead l = new Lead();
+        l.FirstName = 'Test';
+        l.LastName = 'TestContact';
+        l.Company = 'TestContact Company';
+        l.Street = '123 ABC';
+        l.City = 'Bellevue';
+        l.PostalCode = '98005';
+        l.CompanyStreet__c = '112 Company St';
+        l.CompanyCity__c = 'Home Town';
+        l.CompanyState__c = 'WA';
+        l.CompanyPostalCode__c = '98122';
+        insert l;
+        
+        Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride'));
+        system.currentPageReference().getParameters().put('id', l.id);
+
+        //pass contact into the controller
+        ApexPages.StandardController sc = new ApexPages.standardController(l);
+
+        //pass the controller into the extension
+        LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc);
+
+        // fill the lists (for coverage)
+        System.assertEquals(2, ext.getOppAccChoices().size());
+
+        // this selects the "New" option in the Contact box
+        ext.strConId = 'NEW_CONTACT';
+        ext.strAccountId = 'NEW';
+        ext.doNotCreateOpp = true;
+        Test.startTest();
+        ext.convertLeadNow();
+        Test.stopTest();
+        
+        Account result = [SELECT Id,Name,BillingStreet FROM Account LIMIT 1][0];
+        System.assertEquals(l.CompanyStreet__c,result.BillingStreet);
+    }
 }
