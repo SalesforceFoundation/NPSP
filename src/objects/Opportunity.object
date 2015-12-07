@@ -615,16 +615,6 @@
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
         <label>Matching Gift Account</label>
-        <lookupFilter>
-            <active>true</active>
-            <filterItems>
-                <field>Account.Matching_Gift_Company__c</field>
-                <operation>equals</operation>
-                <value>True</value>
-            </filterItems>
-            <infoMessage>Matching Gift Companies</infoMessage>
-            <isOptional>true</isOptional>
-        </lookupFilter>
         <referenceTo>Account</referenceTo>
         <relationshipLabel>Opportunities</relationshipLabel>
         <relationshipName>Opportunities</relationshipName>
@@ -672,16 +662,6 @@
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
         <label>Matching Gift</label>
-        <lookupFilter>
-            <active>true</active>
-            <filterItems>
-                <field>Opportunity.Account.Matching_Gift_Company__c</field>
-                <operation>equals</operation>
-                <value>True</value>
-            </filterItems>
-            <infoMessage>Opportunities from Matching Gift Companies</infoMessage>
-            <isOptional>true</isOptional>
-        </lookupFilter>
         <referenceTo>Opportunity</referenceTo>
         <relationshipLabel>Opportunities (Matching Gift)</relationshipLabel>
         <relationshipName>MatchingGiftOpportunities</relationshipName>
