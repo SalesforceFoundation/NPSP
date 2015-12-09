@@ -13,7 +13,7 @@
         <aggregateTypes>Sum</aggregateTypes>
         <field>Account.npe01__SYSTEMIsIndividual__c</field>
     </columns>
-    <description>Lists Contacts grouped by their system Account Type</description>
+    <description>Lists Contacts grouped by their system Account Type.  Details are hidden to avoid data limits.  Check the group you want to see details on and click the Drill Down button.</description>
     <filter>
         <criteriaItems>
             <column>Account.npe01__SYSTEM_AccountType__c</column>
@@ -37,7 +37,7 @@
     </params>
     <reportType>ContactList</reportType>
     <scope>organization</scope>
-    <showDetails>true</showDetails>
+    <showDetails>false</showDetails>
     <timeFrameFilter>
         <dateColumn>CREATED_DATE</dateColumn>
         <interval>INTERVAL_CUSTOM</interval>
