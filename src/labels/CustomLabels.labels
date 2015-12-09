@@ -2636,6 +2636,86 @@
         <value>You are preparing to writeoff {0} Payment(s) totaling {1}.</value>
     </labels>
     <labels>
+        <fullName>pscBtnSearch</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscBtnSearch</shortDescription>
+        <value>Search</value>
+    </labels>
+    <labels>
+        <fullName>pscCloseDateEnd</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscCloseDateEnd</shortDescription>
+        <value>Close Date End</value>
+    </labels>
+    <labels>
+        <fullName>pscCloseDateStart</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscCloseDateStart</shortDescription>
+        <value>Close Date Start</value>
+    </labels>
+    <labels>
+        <fullName>pscFindMatchedGiftsPageBlock</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscFindMatchedGiftsPageBlock</shortDescription>
+        <value>Select opportunities for this Matching Gift</value>
+    </labels>
+    <labels>
+        <fullName>pscFindMatchedGiftsSectionHeader</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscFindMatchedGiftsSectionHeader</shortDescription>
+        <value>Find Matched Gifts</value>
+    </labels>
+    <labels>
+        <fullName>pscFindMoreGifts</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscFindMoreGifts</shortDescription>
+        <value>Find More Gifts</value>
+    </labels>
+    <labels>
+        <fullName>pscSelectCbxTitle</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscSelectCbxTitle</shortDescription>
+        <value>Select</value>
+    </labels>
+    <labels>
+        <fullName>pscTotalMatchingGift</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscTotalMatchingGift</shortDescription>
+        <value>Total Matching Gift:</value>
+    </labels>
+    <labels>
+        <fullName>pscTotalSelected</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscTotalSelected</shortDescription>
+        <value>Total Selected:</value>
+    </labels>
+    <labels>
+        <fullName>pscTotalUnaccounted</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscTotalUnaccounted</shortDescription>
+        <value>Total Unaccounted:</value>
+    </labels>
+    <labels>
         <fullName>sendAcknowledgmentFailedStatus</fullName>
         <categories>Send Acknowledgment button</categories>
         <language>en_US</language>

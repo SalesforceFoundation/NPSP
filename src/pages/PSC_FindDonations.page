@@ -1,0 +1,66 @@
+<apex:page standardController="Opportunity" extensions="PSC_FindDonations_CTRL">
+    <apex:form >
+        <apex:sectionHeader title="{!$Label.pscFindMatchedGiftsSectionHeader}" subtitle="{!opp.Name}"/>
+        <apex:pageBlock title="{!$Label.pscFindMatchedGiftsPageBlock}">
+            <apex:pageMessages />
+            <apex:pageBlockButtons >
+                <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancel}"/>
+                <apex:commandButton value="{!$Label.stgBtnSave}" action="{!saveAndClose}"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection columns="3">
+                <apex:outputPanel >
+                    <apex:outputLabel for="total">{!$Label.pscTotalMatchingGift}</apex:outputLabel>&nbsp;<apex:outputField value="{!opp.Amount}" id="total"/>
+                </apex:outputPanel>    
+                <apex:outputPanel >
+                    <apex:outputLabel for="totalSelected">{!$Label.pscTotalSelected}</apex:outputLabel>&nbsp;<apex:outputText value="${0, number,###,###,###,###0.00}" id="totalSelected"><apex:param value="{!totalSelected}"/></apex:outputText>  
+                </apex:outputPanel>   
+                <apex:outputPanel >
+                    <apex:outputLabel for="totalUn">{!$Label.pscTotalUnaccounted}</apex:outputLabel>&nbsp;<apex:outputText value="${0, number,###,###,###,###0.00}" id="totalUn"><apex:param value="{!opp.Amount-totalSelected}"/></apex:outputText>  
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockTable value="{!potentialGifts}" var="g">
+                    <apex:column headerValue="{!$Label.pscSelectCbxTitle}">
+                        <apex:inputCheckbox value="{!selection[g.Id]}">
+                            <apex:actionSupport action="{!refresh}" event="onchange" rerender="totalSelected, totalUn" />
+                        </apex:inputCheckbox>
+                    </apex:column>
+                    <apex:column headerValue="{!$ObjectType.Opportunity.Fields.Name.Label}" value="{!g.Name}"/>
+                    <apex:column headerValue="{!$ObjectType.Account.Label}" value="{!g.Account.Name}"/>
+                    <apex:column headerValue="{!$ObjectType.Opportunity.Fields.Primary_Contact__c.Label}" value="{!g.Primary_Contact__c}"/>
+                    <apex:column headerValue="{!$ObjectType.Opportunity.Fields.Amount.Label}" value="{!g.Amount}"/>
+                    <apex:column headerValue="{!$ObjectType.Opportunity.Fields.CloseDate.Label}" value="{!g.CloseDate}"/>
+                    <!--<apex:column headerValue="Debug" value="{!g.Matching_Gift__c}"/>-->
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            <apex:outputPanel id="search">
+                <apex:pageBlockSection columns="1">
+                    <apex:commandButton action="{!showSearchSection}" reRender="search" value="{!$Label.pscFindMoreGifts}" rendered="{!!showSearchSection}"/>
+                </apex:pageBlockSection>
+                <apex:outputPanel rendered="{!showSearchSection}" >
+                <apex:pageBlockSection title="{!$Label.pscFindMoreGifts}" columns="2" collapsible="false">
+                    <apex:inputField value="{!searchFieldsWrapper.AccountId}" label="{!$ObjectType.Account.Label}" />
+                    <apex:inputField value="{!searchFieldsWrapper.ReportsToId}" label="{!$ObjectType.Opportunity.Fields.Primary_Contact__c.Label}" />
+                    <apex:inputField value="{!searchFieldsWrapper.First_Soft_Credit_Date__c}" label="{!$Label.pscCloseDateStart}" />
+                    <apex:inputField value="{!searchFieldsWrapper.Last_Soft_Credit_Date__c}" label="{!$Label.pscCloseDateEnd}" />
+                    <apex:inputField value="{!searchFieldsWrapper.First_Soft_Credit_Amount__c}" label="{!$ObjectType.Opportunity.Fields.Amount.Label}" />
+                </apex:pageBlockSection>
+                <apex:commandButton action="{!searchMore}" value="{!$Label.pscBtnSearch}" style="display: block; margin-bottom: 2em;" />
+                <apex:pageBlockTable value="{!potentialGifts2}" var="g">
+                    <apex:column headerValue="{!$Label.pscSelectCbxTitle}">
+                        <apex:inputCheckbox value="{!selection[g.Id]}">
+                            <apex:actionSupport action="{!refresh}" event="onchange" reRender="totalSelected, totalUn" />
+                        </apex:inputCheckbox>
+                    </apex:column>
+                    <apex:column headerValue="{!$ObjectType.Opportunity.Fields.Name.Label}" value="{!g.Name}"/>
+                    <apex:column headerValue="{!$ObjectType.Account.Label}" value="{!g.Account.Name}"/>
+                    <apex:column headerValue="{!$ObjectType.Opportunity.Fields.Primary_Contact__c.Label}" value="{!g.Primary_Contact__c}"/>
+                    <apex:column headerValue="{!$ObjectType.Opportunity.Fields.Amount.Label}" value="{!g.Amount}"/>
+                    <apex:column headerValue="{!$ObjectType.Opportunity.Fields.CloseDate.Label}" value="{!g.CloseDate}"/>
+                    <!--<apex:column headerValue="Debug" value="{!g.Matching_Gift__c}"/>-->
+                </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:outputPanel>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

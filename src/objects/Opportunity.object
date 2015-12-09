@@ -663,8 +663,8 @@
         <externalId>false</externalId>
         <label>Matching Gift</label>
         <referenceTo>Opportunity</referenceTo>
-        <relationshipLabel>Opportunities (Matching Gift)</relationshipLabel>
-        <relationshipName>MatchingGiftOpportunities</relationshipName>
+        <relationshipLabel>Matched Gifts</relationshipLabel>
+        <relationshipName>MatchedGifts</relationshipName>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
@@ -824,6 +824,17 @@ ISBLANK(npe03__Recurring_Donation__c),
         <page>OPP_SendAcknowledgmentBTN</page>
         <protected>false</protected>
         <requireRowSelection>true</requireRowSelection>
+    </webLinks>
+    <webLinks>
+        <fullName>Find_Matched_Gifts</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Find Matched Gifts</masterLabel>
+        <openType>sidebar</openType>
+        <page>PSC_FindDonations</page>
+        <protected>false</protected>
     </webLinks>
     <webLinks>
         <fullName>Refresh_Name</fullName>
