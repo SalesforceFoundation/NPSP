@@ -123,6 +123,8 @@
         <members>PMT_PaymentWizard_CTRL</members>
         <members>PMT_PaymentWizard_TEST</members>
         <members>PMT_Payment_TDTM</members>
+        <members>PSC_FindDonations_CTRL</members>
+        <members>PSC_FindDonations_TEST</members>
         <members>RD_AddDonationsBTN_CTRL</members>
         <members>RD_BulkTests_TEST</members>
         <members>RD_InstallScript_BATCH</members>
@@ -253,6 +255,7 @@
         <members>OPP_OpportunityNamingBTN</members>
         <members>OPP_SendAcknowledgmentBTN</members>
         <members>PMT_PaymentWizard</members>
+        <members>PSC_FindDonations</members>
         <members>RD_AddDonationsBTN</members>
         <members>REL_RelationshipsViewer</members>
         <members>STG_PanelAddrVerification</members>
@@ -947,6 +950,16 @@
         <members>pmtWizardWarning</members>
         <members>pmtWizardWriteoffDate</members>
         <members>pmtWizardWriteoffMessage</members>
+        <members>pscBtnSearch</members>
+        <members>pscCloseDateEnd</members>
+        <members>pscCloseDateStart</members>
+        <members>pscFindMatchedGiftsPageBlock</members>
+        <members>pscFindMatchedGiftsSectionHeader</members>
+        <members>pscFindMoreGifts</members>
+        <members>pscSelectCbxTitle</members>
+        <members>pscTotalMatchingGift</members>
+        <members>pscTotalSelected</members>
+        <members>pscTotalUnaccounted</members>
         <members>sendAcknowledgmentFailedStatus</members>
         <members>sendAcknowledgmentFailureReasons</members>
         <members>sendAcknowledgmentFireStatus</members>
@@ -1272,6 +1285,7 @@
         <members>Grant_Deadline__c-Grant Deadline Layout</members>
         <members>Opportunity-Donation Layout</members>
         <members>Opportunity-Grant Layout</members>
+        <members>Opportunity-Matching Gift</members>
         <members>Opportunity-Membership Layout</members>
         <members>Partial_Soft_Credit__c-Partial Soft Credit Layout</members>
         <members>Schedulable__c-Schedulable Layout</members>
@@ -1362,6 +1376,7 @@
         <members>General_Accounting_Unit__c.Recalculate_Rollups</members>
         <members>Opportunity.Email_Acknowledgment</members>
         <members>Opportunity.Email_Acknowledgments</members>
+        <members>Opportunity.Find_Matched_Gifts</members>
         <members>Opportunity.Refresh_Name</members>
         <name>WebLink</name>
     </types>
