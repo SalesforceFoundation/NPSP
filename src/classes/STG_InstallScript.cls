@@ -189,7 +189,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
         }    
         if(handlersToInsert.size() > 0) insert handlersToInsert;
         if(handlersToUpdate.size() > 0) update handlersToUpdate;
-        if(handlersToDelete.size() > 0) delete handlersToUpdate;
+        if(handlersToDelete.size() > 0) delete handlersToDelete;
     }
     
     private static void deactivateMatchingTdtm(Map<String, String> npspToCumulusMap, Map<String, Boolean> existingTriggerConfig) {
