@@ -163,11 +163,21 @@ global without sharing class STG_InstallScript implements InstallHandler {
         List<Trigger_Handler__c> handlersToInsert = new List<Trigger_Handler__c>();
         List<Trigger_Handler__c> handlersToUpdate = new List<Trigger_Handler__c>();
         List<Trigger_Handler__c> handlersToDelete = new List<Trigger_Handler__c>();
+
+        //First, find handlers to add them for deletion and remove them from the list
+        Integer i = 0;
+        while(i < existingHandlers.size()) {
+            if (TDTM_DefaultConfig.deletedClasses.contains(existingHandlers[i].Class__c)) {
+                handlersToDelete.add(existingHandlers[i]);
+                existingHandlers.remove(i);
+            } else {
+                i++;
+            }
+        }
         
         //Insert those that are in the list of default handlers but aren't in the database
         for(Trigger_Handler__c defaultHandler : defaultHandlers) {
             Boolean alreadyExists = false;
-            Boolean needsUpdate = false;
             for(Trigger_Handler__c existingHandler : existingHandlers) {
                 if(defaultHandler.Class__c == existingHandler.Class__c && defaultHandler.Object__c == existingHandler.Object__c) {
                     alreadyExists = true;
@@ -180,9 +190,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
                         handlersToUpdate.add(existingHandler);
                     }
                     break;
-                } else if (TDTM_DefaultConfig.deletedClasses.contains(existingHandler.Class__c)) {
-                    handlersToDelete.add(existingHandler);
-                }
+                } 
             }
             if(!alreadyExists)
                 handlersToInsert.add(defaultHandler); 
