@@ -145,7 +145,8 @@
         <members>RLLP_OppAccRollup_BATCH</members>
         <members>RLLP_OppContactRollup_BATCH</members>
         <members>RLLP_OppHouseholdRollup_BATCH</members>
-        <members>RLLP_OppPartialSoftCreditRollup_BATCH</members>
+        <members>RLLP_OppPartialSoftCreditRollup</members>
+        <members>RLLP_OppPartialSoftCreditRollup_TEST</members>
         <members>RLLP_OppRollup</members>
         <members>RLLP_OppRollupBATCH_TEST</members>
         <members>RLLP_OppRollup_TDTM</members>

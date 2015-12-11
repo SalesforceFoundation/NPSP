@@ -202,7 +202,7 @@ private class RLLP_OppRollupBATCH_TEST {
         }
         insert oppPartialRoles;
         
-        RLLP_OppPartialSoftCreditRollup_BATCH batch = new RLLP_OppPartialSoftCreditRollup_BATCH();
+        RLLP_OppSoftCreditRollup_BATCH batch = new RLLP_OppSoftCreditRollup_BATCH();
         
         Test.startTest();
         Database.executeBatch(batch);
@@ -218,91 +218,4 @@ private class RLLP_OppRollupBATCH_TEST {
         system.assertEquals(1, contact18.Number_of_Soft_Credits_This_Year__c);
     }
     
-    /*******************************************************************************************************
-    * @description test data for Soft Credit and Partial Soft Credit tests
-    */ 
-    private static void createPSCData(integer cContact, integer cOpp, integer Amount) {
-        
-        // create some Contacts in Household Accounts
-        list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cContact);
-        insert listCon;
-        listCon = [select Id, Firstname,Lastname, AccountId from Contact];
-        system.assertEquals(cContact, listCon.size());
-        
-        // create cOpp Opportunities for each Contact
-        list<Opportunity> listOpp = new list<Opportunity>();
-        for (integer i = 0; i < cOpp; i++) {
-            listOpp.addAll(UTIL_UnitTestData_TEST.OppsForContactWithAccountList (listCon, null,             
-                UTIL_UnitTestData_TEST.getClosedWonStage(), system.Today(), Amount, null, null));
-        } 
-        insert listOpp;
-        system.assertEquals(cContact * cOpp, listOpp.size());
-        
-        // primary OCR's automatically created
-        list<OpportunityContactRole> listOCR = [select Id, ContactId, OpportunityId, Role, IsPrimary from OpportunityContactRole];
-        system.assertEquals(listOpp.size(), listOCR.size());
-
-        // change them to Soft Credit OCR's
-        for (OpportunityContactRole ocr : listOCR) {
-            ocr.Role = 'Soft Credit';        
-            ocr.IsPrimary = false;
-        }
-        update listOCR;
-        
-        // create our Partial Soft Credits
-        list<Partial_Soft_Credit__c> listPSC = new list<Partial_Soft_Credit__c>();
-        for (OpportunityContactRole ocr : listOCR) {
-            listPSC.add(new Partial_Soft_Credit__c(
-                Contact__c = ocr.ContactId,
-                Opportunity__c = ocr.OpportunityId,
-                Role_Name__c = ocr.Role,
-                Contact_Role_ID__c = ocr.Id,
-                Amount__c = Amount/2                
-                ));
-        }
-        insert listPSC;
-    }
-    
-    static testmethod void testCurrentSoftCreditRollups() {
-        createPSCData(20, 10, 100);
-        RLLP_OppSoftCreditRollup_BATCH batch = new RLLP_OppSoftCreditRollup_BATCH();
-        
-        Test.startTest();
-        Database.executeBatch(batch);
-        Test.stopTest();
-        UTIL_Debug.debugWithInfo('DJH: testCurrentSoftCreditRollups');
-        
-        // verify results
-        list<Contact> listCon = [select Id, Lastname, npo02__Soft_Credit_This_Year__c, npo02__Soft_Credit_Total__c,
-            Number_of_Soft_Credits_This_Year__c, Number_of_Soft_Credits__c from Contact];
-        system.assertEquals(20, listCon.size());
-        for (Contact con : listCon) {
-            system.assertEquals(1000, con.npo02__Soft_Credit_This_Year__c);
-            system.assertEquals(1000, con.npo02__Soft_Credit_Total__c);
-            //system.assertEquals(10, con.Number_of_Soft_Credits_This_Year__c);
-            //system.assertEquals(10, con.Number_of_Soft_Credits__c);
-        }       
-    }
-
-    static testmethod void testPartialSoftCreditRollups() {
-        createPSCData(20, 10, 100);
-        RLLP_OppPartialSoftCreditRollup_BATCH batch = new RLLP_OppPartialSoftCreditRollup_BATCH();
-        
-        Test.startTest();
-        Database.executeBatch(batch);
-        Test.stopTest();
-        UTIL_Debug.debugWithInfo('DJH: testPartialSoftCreditRollups');
-        
-        // verify results
-        list<Contact> listCon = [select Id, Lastname, npo02__Soft_Credit_This_Year__c, npo02__Soft_Credit_Total__c,
-            Number_of_Soft_Credits_This_Year__c, Number_of_Soft_Credits__c from Contact];
-        system.assertEquals(20, listCon.size());
-        for (Contact con : listCon) {
-            system.assertEquals(500, con.npo02__Soft_Credit_This_Year__c);
-            system.assertEquals(500, con.npo02__Soft_Credit_Total__c);
-            system.assertEquals(10, con.Number_of_Soft_Credits_This_Year__c);
-            system.assertEquals(10, con.Number_of_Soft_Credits__c);
-        }
-        
-    }
 }
