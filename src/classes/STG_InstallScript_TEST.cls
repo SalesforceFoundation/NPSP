@@ -66,6 +66,25 @@ public with sharing class STG_InstallScript_TEST {
         //Verify all settings created
         verifyAllSettingsCreated();
     }
+
+    /** Tests that deleted class trigger handlers get deleted **/
+    public static testmethod void deletedHandlers() {
+        if (strTestOnly != '*' && strTestOnly != 'deletedHandlers') return;
+        
+        //Create some of the default settings
+        createSomeDefaultSettings();
+
+        // HH Object contact trigger support
+        insert new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'OPP_OpportunityNaming_TDTM', Load_Order__c = 0, Object__c = 'Opportunity', 
+              Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete');        
+
+        //Run the install script               
+        Test.testInstall(new STG_InstallScript(), null);
+        
+        //Verify all settings created
+        verifyAllSettingsCreated();
+    }
     
     public testmethod static void push() {
         if (strTestOnly != '*' && strTestOnly != 'push') return;
@@ -115,7 +134,7 @@ public with sharing class STG_InstallScript_TEST {
         afterScriptConfig.sort();
         defaultConfig.sort();
         
-        System.assertEquals(afterScriptConfig.size(), defaultConfig.size());
+        System.assertEquals(defaultConfig.size(), afterScriptConfig.size(), 'Number of created trigger handlers should match the number of handlers in TDTM_DefaultConfig.');
         for(Integer i = 0; i < defaultConfig.size(); i++) {
             System.assertEquals(afterScriptConfig[i].Class__c, defaultConfig[i].Class__c);
             System.assertEquals(afterScriptConfig[i].Load_Order__c, defaultConfig[i].Load_Order__c);
