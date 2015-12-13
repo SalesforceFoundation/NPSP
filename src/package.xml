@@ -567,8 +567,10 @@
         <members>Trigger_Handler__c.Object__c</members>
         <members>Trigger_Handler__c.Trigger_Action__c</members>
         <members>Trigger_Handler__c.User_Managed__c</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.Honoree_Opportunity_Contact_Role__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Household_Account_Addresses_Disabled__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Max_Payments__c</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.Notification_Recipient_Opp_Contact_Role__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Opp_RecTypes_Excluded_for_Payments__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Opp_Types_Excluded_for_Payments__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Organizational_Account_Addresses_Enabled__c</members>
@@ -614,7 +616,6 @@
         <members>Address_Not_Found</members>
         <members>Address_StateCountry_Invalid_Error</members>
         <members>Address_Verification_Limit</members>
-        <members>CampaignMemberStatusOmit</members>
         <members>CONV_Accept_Risk</members>
         <members>CONV_Account_Field</members>
         <members>CONV_Account_Field_For_Old_HH_ID</members>
@@ -657,6 +658,7 @@
         <members>CONV_Triggers_Reenabled</members>
         <members>CONV_Warning</members>
         <members>CONV_What_This_Tool_Does</members>
+        <members>CampaignMemberStatusOmit</members>
         <members>HiddenForSecurity</members>
         <members>REL_Create_New_Relationship</members>
         <members>REL_Former</members>
@@ -1081,6 +1083,8 @@
         <members>stgLabelHHOCR</members>
         <members>stgLabelHHObject</members>
         <members>stgLabelHHSettings</members>
+        <members>stgLabelHonoreeNotificationHelpText</members>
+        <members>stgLabelHonoreeNotificationOCR</members>
         <members>stgLabelLeadSettings</members>
         <members>stgLabelMembershipSettings</members>
         <members>stgLabelNewAutoRel</members>

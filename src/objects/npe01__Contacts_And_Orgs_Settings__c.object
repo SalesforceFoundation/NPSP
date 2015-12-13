@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
+        <fullName>Honoree_Opportunity_Contact_Role__c</fullName>
+        <description>Populating this setting will auto-create a soft credit contact role for opportunities with an honoree contact. Leaving this field blank will disable automatic contact role creation for the honoree.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Populating this setting will auto-create a soft credit contact role for opportunities with an honoree contact. Leaving this field blank will disable automatic contact role creation for the honoree.</inlineHelpText>
+        <label>Honoree Opportunity Contact Role</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Household_Account_Addresses_Disabled__c</fullName>
         <defaultValue>false</defaultValue>
         <description>Disables Address management for Household Accounts when selected.</description>
@@ -22,6 +34,18 @@
         <scale>0</scale>
         <trackTrending>false</trackTrending>
         <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Notification_Recipient_Opp_Contact_Role__c</fullName>
+        <description>Populating this setting will auto-create a soft credit contact role for opportunities with a notification recipient contact. Leaving this field blank will disable automatic contact role creation for the notification recipient.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Populating this setting will auto-create a soft credit contact role for opportunities with a notification recipient contact. Leaving this field blank will disable automatic contact role creation for the notification recipient.</inlineHelpText>
+        <label>Notification Recipient Opp Contact Role</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
         <unique>false</unique>
     </fields>
     <fields>

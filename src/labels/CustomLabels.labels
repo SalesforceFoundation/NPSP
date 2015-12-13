@@ -276,14 +276,6 @@
         <value>You cannot verify more than 100 addresses at a time.</value>
     </labels>
     <labels>
-        <fullName>CampaignMemberStatusOmit</fullName>
-        <categories>Opportunity, Campaign Member</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>CampaignMemberStatusOmit</shortDescription>
-        <value>omit</value>
-    </labels>
-    <labels>
         <fullName>CONV_Accept_Risk</fullName>
         <language>en_US</language>
         <protected>false</protected>
@@ -576,6 +568,14 @@
         <protected>false</protected>
         <shortDescription>What This Tool Does</shortDescription>
         <value>What This Tool Does</value>
+    </labels>
+    <labels>
+        <fullName>CampaignMemberStatusOmit</fullName>
+        <categories>Opportunity, Campaign Member</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>CampaignMemberStatusOmit</shortDescription>
+        <value>omit</value>
     </labels>
     <labels>
         <fullName>HiddenForSecurity</fullName>
@@ -3897,7 +3897,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgLabelAutoContactRoles</shortDescription>
-        <value>Automatic Contact Roles</value>
+        <value>Automatic Primary Contact Role</value>
     </labels>
     <labels>
         <fullName>stgLabelBDESettings</fullName>
@@ -4010,6 +4010,22 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgLabelHHSettings</shortDescription>
         <value>Household Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelHonoreeNotificationHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelHonoreeNotificationHelpText</shortDescription>
+        <value>Create automatic Opportunity Contact Roles for Honoree and Notification Recipient contacts</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelHonoreeNotificationOCR</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelHonoreeNotificationOCR</shortDescription>
+        <value>Honoree and Notification Recipient Opportunity Contact Roles</value>
     </labels>
     <labels>
         <fullName>stgLabelLeadSettings</fullName>
