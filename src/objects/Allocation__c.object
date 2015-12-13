@@ -158,12 +158,11 @@
         <fullName>Manage_Allocations</fullName>
         <availability>online</availability>
         <displayType>massActionButton</displayType>
-        <encodingKey>UTF-8</encodingKey>
-        <linkType>url</linkType>
+        <linkType>page</linkType>
         <masterLabel>Manage Allocations</masterLabel>
         <openType>replace</openType>
+        <page>ALLO_ManageAllocations</page>
         <protected>false</protected>
         <requireRowSelection>false</requireRowSelection>
-        <url>/apex/npsp__ALLO_ManageAllocations?{!IF(Opportunity.Id!=null,&apos;opp&apos;,IF(Campaign.Id!=null,&apos;cam&apos;,&apos;rd&apos;))}={!Campaign.Id}{!Opportunity.Id}{!npe03__Recurring_Donation__c.Id}</url>
     </webLinks>
 </CustomObject>
