@@ -305,12 +305,11 @@
         <availability>online</availability>
         <description>This button recalculates Allocations rollups for a single General Accounting Unit</description>
         <displayType>button</displayType>
-        <encodingKey>UTF-8</encodingKey>
         <height>600</height>
-        <linkType>url</linkType>
+        <linkType>page</linkType>
         <masterLabel>Recalculate Rollups</masterLabel>
         <openType>sidebar</openType>
+        <page>ALLO_RollupBTN</page>
         <protected>false</protected>
-        <url>/apex/npsp__ALLO_RollupBTN?id={!General_Accounting_Unit__c.Id}</url>
     </webLinks>
 </CustomObject>
