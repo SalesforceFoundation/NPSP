@@ -39,7 +39,7 @@ private class OPP_OpportunityContactRoles_TEST {
     * @description if you only want to run one test in this class, fill in its name here.
     * if you want to run all tests, then use '*'
     */
-    private static string strTestOnly = 'honoreeNotificationUpdate';
+    private static string strTestOnly = '*';
  
     /*******************************************************************************************************
     * @description Test creation or upate of contact role.
@@ -373,9 +373,10 @@ private class OPP_OpportunityContactRoles_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Updates an opportunity with Honoree and Notification Recipient contacts. Notification 
-    * recipient is the same as the donor. Verifies that contact role is created for the honoree, but that
-    * no duplicate role is created for the donor/notification recipient.
+    * @description Updates an opportunity with Honoree and Notification Recipient contacts. Honoree is 
+    * updated from one contact to another. Notification recipient is the same as the donor. Verifies that 
+    * contact role deleted for first honoree, and created for the second honoree, but that no duplicate role
+    * is created for the donor/notification recipient.
     */
     static testMethod void honoreeNotificationUpdate(){
         if (strTestOnly != '*' && strTestOnly != 'honoreeNotificationUpdate') return;
@@ -389,16 +390,28 @@ private class OPP_OpportunityContactRoles_TEST {
             )
         );
 
-        list<contact> testCons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(2);
+        list<contact> testCons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(3);
         insert testCons;
 
         Opportunity opp1 = new Opportunity(
             Name = 'Test',
             Primary_Contact__c = testCons[0].id,
+            Honoree_Contact__c = testCons[2].id,
             CloseDate = date.today(),
             StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
         );
         insert opp1;
+
+        list<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp1.id ORDER BY ContactId];
+        system.assertEquals(2,queryOCR.size(), 'Two Opportunity Contact Roles should be created.');
+
+        system.assertEquals(testCons[0].id,queryOCR[0].ContactId, 'First OCR is for primary contact.');
+        system.assertEquals(true,queryOCR[0].isPrimary, 'Primary OCR is marked primary.');
+        system.assertEquals(donorRoleforTest,queryOCR[0].Role, 'Primary OCR has the correct role.');
+
+        system.assertEquals(testCons[2].id,queryOCR[1].ContactId, 'Second OCR is for honoree contact.');
+        system.assertEquals(false,queryOCR[1].isPrimary, 'Honoree OCR is not marked primary.');
+        system.assertEquals(HonoreeRoleforTest,queryOCR[1].Role, 'Honoree OCR has the correct role.');
 
         opp1.Honoree_Contact__c = testCons[1].id;
         opp1.Notification_Recipient_Contact__c = testCons[0].id;
@@ -407,7 +420,7 @@ private class OPP_OpportunityContactRoles_TEST {
         update opp1;
         Test.stopTest();
 
-        list<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp1.id ORDER BY ContactId];
+        queryOCR = [SELECT Id, ContactId, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp1.id ORDER BY ContactId];
         system.assertEquals(2,queryOCR.size(), 'Two Opportunity Contact Roles should be created.');
         
         system.assertEquals(testCons[0].id,queryOCR[0].ContactId, 'First OCR is for primary contact.');
