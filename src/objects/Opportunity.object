@@ -600,6 +600,21 @@
         <type>Url</type>
     </fields>
     <fields>
+        <fullName>Honoree_Contact__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>The existing Contact record of the honoree for this donation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The existing Contact record of the honoree for this donation.</inlineHelpText>
+        <label>Honoree Contact</label>
+        <referenceTo>Contact</referenceTo>
+        <relationshipLabel>Opportunities (Honoree Contact)</relationshipLabel>
+        <relationshipName>Honoree_Opportunities</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
         <fullName>Is_Grant_Renewal__c</fullName>
         <defaultValue>false</defaultValue>
         <description>If selected, indicates that the grant is a renewal of a previous grant.</description>
@@ -631,6 +646,21 @@
         <summaryOperation>min</summaryOperation>
         <trackTrending>false</trackTrending>
         <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Notification_Recipient_Contact__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>The existing Contact record of the person to be notified for this donation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The existing Contact record of the person to be notified for this donation.</inlineHelpText>
+        <label>Notification Recipient Contact</label>
+        <referenceTo>Contact</referenceTo>
+        <relationshipLabel>Opportunities (Notification Recipient)</relationshipLabel>
+        <relationshipName>Notification_Opportunities</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
     </fields>
     <fields>
         <fullName>Previous_Grant_Opportunity__c</fullName>

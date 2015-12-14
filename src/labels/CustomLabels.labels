@@ -3897,7 +3897,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgLabelAutoContactRoles</shortDescription>
-        <value>Automatic Primary Contact Role</value>
+        <value>Automatic Contact Roles</value>
     </labels>
     <labels>
         <fullName>stgLabelBDESettings</fullName>
