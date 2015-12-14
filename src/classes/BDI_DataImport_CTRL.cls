@@ -34,6 +34,9 @@
 */
 
 public with sharing class BDI_DataImport_CTRL {
+    public boolean userCanEditSettings {get {
+        return UTIL_CustomSettingsFacade.userCanEditDataImportSettings;
+    }}
 	
 	public BDI_DataImport_CTRL() {
 		batchRunning = false;
@@ -95,8 +98,10 @@ public with sharing class BDI_DataImport_CTRL {
     }
     
     public PageReference importData() {
-    	if(!Test.isRunningTest())
-    	   upsert diSettings;
+        if(!Test.isRunningTest() && this.userCanEditSettings){
+            system.debug('attempting upsert');
+            upsert diSettings;
+        }
     	dtStart = system.now();
         apexJobId = BDI_DataImport_API.importData();
         if(apexJobId != null)
