@@ -99,7 +99,6 @@ public with sharing class BDI_DataImport_CTRL {
     
     public PageReference importData() {
         if(!Test.isRunningTest() && this.userCanEditSettings){
-            system.debug('attempting upsert');
             upsert diSettings;
         }
     	dtStart = system.now();
