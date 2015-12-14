@@ -276,14 +276,6 @@
         <value>You cannot verify more than 100 addresses at a time.</value>
     </labels>
     <labels>
-        <fullName>CampaignMemberStatusOmit</fullName>
-        <categories>Opportunity, Campaign Member</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>CampaignMemberStatusOmit</shortDescription>
-        <value>omit</value>
-    </labels>
-    <labels>
         <fullName>CONV_Accept_Risk</fullName>
         <language>en_US</language>
         <protected>false</protected>
@@ -576,6 +568,14 @@
         <protected>false</protected>
         <shortDescription>What This Tool Does</shortDescription>
         <value>What This Tool Does</value>
+    </labels>
+    <labels>
+        <fullName>CampaignMemberStatusOmit</fullName>
+        <categories>Opportunity, Campaign Member</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>CampaignMemberStatusOmit</shortDescription>
+        <value>omit</value>
     </labels>
     <labels>
         <fullName>HiddenForSecurity</fullName>
@@ -4098,6 +4098,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgLabelOppBatchProgress</shortDescription>
         <value>Rollup Donations Batch Progress</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelOppCampMembers</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOppCampMembers</shortDescription>
+        <value>Auto Campaign Members</value>
     </labels>
     <labels>
         <fullName>stgLabelOppNamingRefreshTitle</fullName>

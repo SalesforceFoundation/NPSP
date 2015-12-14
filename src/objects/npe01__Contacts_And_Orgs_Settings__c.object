@@ -1,6 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
+        <fullName>Automatic_Campaign_Member_Management__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Automatically creates a campaign member when an opportunity associated with a primary contact and a primary campaign source is created, or marked as closed/won.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Automatically creates a campaign member when an opportunity associated with a primary contact and a primary campaign source is created, or marked as closed/won.</inlineHelpText>
+        <label>Automatic Campaign Member Management</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Campaign_Member_Non_Responded_Status__c</fullName>
+        <description>The automatic campaign member status for open or closed/lost opportunities with a primary campaign source. If left blank, the campaign&apos;s first non-responded status will be chosen.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The automatic campaign member status for open or closed/lost opportunities with a primary campaign source. If left blank, the campaign&apos;s first non-responded status will be chosen.</inlineHelpText>
+        <label>Campaign Member Non Responded Status</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Campaign_Member_Responded_Status__c</fullName>
+        <description>The default campaign member status for closed/won opportunities with a primary campaign source. If left blank, the first responded status will be chosen.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The default campaign member status for closed/won opportunities with a primary campaign source. If left blank, the first responded status will be chosen.</inlineHelpText>
+        <label>Campaign Member Responded Status</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Household_Account_Addresses_Disabled__c</fullName>
         <defaultValue>false</defaultValue>
         <description>Disables Address management for Household Accounts when selected.</description>

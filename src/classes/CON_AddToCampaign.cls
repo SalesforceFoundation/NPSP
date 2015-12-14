@@ -124,11 +124,14 @@ public class CON_AddToCampaign {
                         }
                     }
                 }
-                if(!match && !isSpecialStatus(cmsCompare)) {
+                //create a campaign member status
+                //if this is a special status, only create a status if we have a setting
+                //create as responded if for the "responded" special status, otherwise default to non-responded
+                if(!match && (!isSpecialStatus(cmsCompare) || getSetting(cmsCompare) != cmsCompare)) {
                     sortOrderMax ++;
                     listStatusForInsert.add(new CampaignMemberStatus(campaignId = cIdCompare,
-                                                                Label = cmsCompare,
-                                                                HasResponded = false,
+                                                                Label = getSetting(cmsCompare),
+                                                                HasResponded = cmsCompare == Label.campaignMemberStatusResponded,
                                                                 SortOrder = sortOrderMax));
                 }
             }
@@ -178,10 +181,14 @@ public class CON_AddToCampaign {
     private static string getStatus(id CampaignId, string status) {
 
         if (isSpecialStatus(status)) {
+            //if we have a setting for a special status, use that
+            if (getSetting(status) != status)
+                return getSetting(status);
+            
             //if this is a special status but our campaign doesn't have any statuses, return a blank status
             if(!MAPcampaignMemberStatuses.containsKey(CampaignId))
                 return null;
-            
+
             //return the appropriate value for the special status key
             for(CampaignMemberStatus cms : MAPcampaignMemberStatuses.get(CampaignId)) {
                 if ((status == Label.campaignMemberStatusDefault && cms.IsDefault) ||
@@ -192,6 +199,20 @@ public class CON_AddToCampaign {
                 }
             }
         }
+        return status;
+    }
+
+    /*******************************************************************************************************
+    * @description Checks if this status has a setting to replace it.
+    * @param Status The status.
+    * @return string The replacement status from the setting, or the given status if no replacement is found.
+    ********************************************************************************************************/
+    private static string getSetting(string status) {
+        if (status == Label.campaignMemberStatusResponded && !string.isBlank(UTIL_CustomSettingsFacade.getContactsSettings().Campaign_Member_Responded_Status__c))
+            return UTIL_CustomSettingsFacade.getContactsSettings().Campaign_Member_Responded_Status__c;
+        if (status == Label.campaignMemberStatusNonResponded && !string.isBlank(UTIL_CustomSettingsFacade.getContactsSettings().Campaign_Member_Non_Responded_Status__c))
+            return UTIL_CustomSettingsFacade.getContactsSettings().Campaign_Member_Non_Responded_Status__c;
+
         return status;
     }
 
