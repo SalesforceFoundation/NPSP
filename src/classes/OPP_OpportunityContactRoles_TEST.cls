@@ -42,11 +42,11 @@ private class OPP_OpportunityContactRoles_TEST {
     private static string strTestOnly = '*';
  
     /*******************************************************************************************************
-    * @description Test creation or upate of contact role.
+    * @description Role values to use in settings.
     */    
-    private static String donorRoleforTest = 'Donor';
-    private static String HonoreeRoleforTest = 'Honoree';
-    private static String NotificationRecipientRoleforTest = 'Notification Recipient';
+    private static string donorRoleforTest = 'Donor';
+    private static string HonoreeRoleforTest = 'Honoree';
+    private static string NotificationRecipientRoleforTest = 'Notification Recipient';
 
     /*******************************************************************************************************
     * @description Test creation or upate of contact role.
@@ -297,7 +297,8 @@ private class OPP_OpportunityContactRoles_TEST {
 
     /*******************************************************************************************************
     * @description Leaves Honoree and Notification Recipient contact role settings blank. Adds contacts for 
-    * Honoree and Notification recipient contacts. Verifies no contact roles are created.
+    * Honoree and Notification recipient contacts. Verifies Name fields updated when blank, verifies no
+    * contact roles are created.
     */
     static testMethod void honoreeNotificationBlankSettings(){
         if (strTestOnly != '*' && strTestOnly != 'honoreeNotificationBlankSettings') return;
@@ -305,20 +306,26 @@ private class OPP_OpportunityContactRoles_TEST {
         list<contact> testCons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(3);
         insert testCons;
 
-        Opportunity opp1 = new Opportunity(
+        Opportunity opp = new Opportunity(
             Name = 'Test',
             Primary_Contact__c = testCons[0].id,
             Honoree_Contact__c = testCons[1].id,
             Notification_Recipient_Contact__c = testCons[2].id,
+            Notification_Recipient_Name__c = 'do not overwrite me',
             CloseDate = date.today(),
             StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
         );
 
         Test.startTest();
-        insert opp1;
+        insert opp;
         Test.stopTest();
 
-        list<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp1.id];
+        list<Contact> queryCon = [SELECT Id, Name FROM Contact WHERE Id IN :testCons];
+        list<Opportunity> queryOpp = [SELECT Id, Notification_Recipient_Name__c, Honoree_Name__c FROM Opportunity WHERE Id = :opp.id];
+        system.assertEquals(queryCon[1].Name, queryOpp[0].Honoree_Name__c, 'Honoree Name should be populated.');
+        system.assertEquals('do not overwrite me', queryOpp[0].Notification_Recipient_Name__c, 'Notifcation Recipient Name should not be overwritten.');
+
+        list<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp.id];
         system.assertEquals(1,queryOCR.size(), 'Only one Opportunity Contact Role should be created.');
         system.assertEquals(testCons[0].id, queryOCR[0].ContactId, 'Contact role should be for contact designated as primary.');
         system.assertEquals(true, queryOCR[0].isPrimary, 'Contact role marked primary.');
@@ -343,7 +350,7 @@ private class OPP_OpportunityContactRoles_TEST {
         list<contact> testCons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(3);
         insert testCons;
 
-        Opportunity opp1 = new Opportunity(
+        Opportunity opp = new Opportunity(
             Name = 'Test',
             Primary_Contact__c = testCons[0].id,
             Honoree_Contact__c = testCons[1].id,
@@ -353,10 +360,15 @@ private class OPP_OpportunityContactRoles_TEST {
         );
 
         Test.startTest();
-        insert opp1;
+        insert opp;
         Test.stopTest();
 
-        list<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp1.id ORDER BY ContactId];
+        list<Contact> queryCon = [SELECT Id, Name FROM Contact WHERE Id IN :testCons];
+        list<Opportunity> queryOpp = [SELECT Id, Notification_Recipient_Name__c, Honoree_Name__c FROM Opportunity WHERE Id = :opp.id];
+        system.assertEquals(queryCon[1].Name, queryOpp[0].Honoree_Name__c, 'Honoree Name should be populated.');
+        system.assertEquals(queryCon[2].Name, queryOpp[0].Notification_Recipient_Name__c, 'Notifcation Recipient Name should be populated.');
+
+        list<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp.id ORDER BY ContactId];
         system.assertEquals(3,queryOCR.size(), 'Three Opportunity Contact Roles should be created.');
         
         system.assertEquals(testCons[0].id,queryOCR[0].ContactId, 'First OCR is for primary contact.');
@@ -393,16 +405,20 @@ private class OPP_OpportunityContactRoles_TEST {
         list<contact> testCons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(3);
         insert testCons;
 
-        Opportunity opp1 = new Opportunity(
+        Opportunity opp = new Opportunity(
             Name = 'Test',
             Primary_Contact__c = testCons[0].id,
             Honoree_Contact__c = testCons[2].id,
             CloseDate = date.today(),
             StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
         );
-        insert opp1;
+        insert opp;
 
-        list<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp1.id ORDER BY ContactId];
+        list<Contact> queryCon = [SELECT Id, Name FROM Contact WHERE Id IN :testCons];
+        list<Opportunity> queryOpp = [SELECT Id, Notification_Recipient_Name__c, Honoree_Name__c FROM Opportunity WHERE Id = :opp.id];
+        system.assertEquals(queryCon[2].Name, queryOpp[0].Honoree_Name__c, 'Honoree Name should be populated.');
+
+        list<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp.id ORDER BY ContactId];
         system.assertEquals(2,queryOCR.size(), 'Two Opportunity Contact Roles should be created.');
 
         system.assertEquals(testCons[0].id,queryOCR[0].ContactId, 'First OCR is for primary contact.');
@@ -413,14 +429,18 @@ private class OPP_OpportunityContactRoles_TEST {
         system.assertEquals(false,queryOCR[1].isPrimary, 'Honoree OCR is not marked primary.');
         system.assertEquals(HonoreeRoleforTest,queryOCR[1].Role, 'Honoree OCR has the correct role.');
 
-        opp1.Honoree_Contact__c = testCons[1].id;
-        opp1.Notification_Recipient_Contact__c = testCons[0].id;
+        opp.Honoree_Contact__c = testCons[1].id;
+        opp.Notification_Recipient_Contact__c = testCons[0].id;
 
         Test.startTest();
-        update opp1;
+        update opp;
         Test.stopTest();
 
-        queryOCR = [SELECT Id, ContactId, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp1.id ORDER BY ContactId];
+        queryOpp = [SELECT Id, Notification_Recipient_Name__c, Honoree_Name__c FROM Opportunity WHERE Id = :opp.id];
+        system.assertEquals(queryCon[1].Name, queryOpp[0].Honoree_Name__c, 'Honoree Name should be populated.');
+        system.assertEquals(queryCon[0].Name, queryOpp[0].Notification_Recipient_Name__c, 'Notifcation Recipient Name should be populated.');
+
+        queryOCR = [SELECT Id, ContactId, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp.id ORDER BY ContactId];
         system.assertEquals(2,queryOCR.size(), 'Two Opportunity Contact Roles should be created.');
         
         system.assertEquals(testCons[0].id,queryOCR[0].ContactId, 'First OCR is for primary contact.');

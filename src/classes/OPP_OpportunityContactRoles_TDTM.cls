@@ -53,7 +53,11 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
             
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
             setOpportunityAccountField((list<Opportunity>) newlist);
-        
+            updateHonoreeNotificationFields((list<Opportunity>) newlist, null);
+
+        } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            updateHonoreeNotificationFields((list<Opportunity>) newlist, (list<Opportunity>) oldlist);
+
         } else if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
             upsertContactRolesAfterInsert((list<Opportunity>) newlist);
             updateOpportunityNames((list<Opportunity>) newList);            
@@ -138,6 +142,53 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                 }            
             }
         }       
+    }
+
+    /*******************************************************************************************************
+    * @description Detects changes in the opportunity Honoree Contact, and Notification Recipient Contact 
+    * fields and updates Honoree Name and Notification Recipient Name fields.
+    * @param listOpps List of opportunities from trigger.new
+    * @param listOldOpps List of opportunities from trigger.old
+    ********************************************************************************************************/
+    private static void updateHonoreeNotificationFields(list<Opportunity> listOpps, list<Opportunity> listOldOpps) {
+        map<id,Contact> mapConIdContact = new map<id,Contact>();
+        list<String> listFields = new list<string>{'Honoree_Contact__c','Notification_Recipient_Contact__c'};
+
+        for (integer i=0; i<listOpps.size(); i++) {
+            Opportunity newOpp = listOpps[i];
+            Opportunity oldOpp = listOldOpps!=null && !listOldOpps.IsEmpty() ? listOldOpps[i] : new Opportunity();
+            for (string field : listFields) {
+                if (newOpp.get(field) != oldOpp.get(field)) {
+                    if (newOpp.get(field)!=null)
+                        mapConIdContact.put((id)newOpp.get(field), null);
+                    if (oldOpp.get(field)!=null)
+                        mapConIdContact.put((id)oldOpp.get(field), null);
+                }
+            }
+        }
+
+        if (!mapConIdContact.isEmpty()) {
+            mapConIdContact = new map<id,Contact>([SELECT Id, Name, MailingAddress FROM Contact WHERE Id IN :mapConIdContact.keySet()]);
+            for (integer i=0; i<listOpps.size(); i++) {
+                Opportunity newOpp = listOpps[i];
+                Opportunity oldOpp = listOldOpps!=null && !listOldOpps.IsEmpty() ? listOldOpps[i] : new Opportunity();
+
+                for (string field : listFields) {
+                    if (newOpp.get(field) != oldOpp.get(field)) {
+                        //get the text name field
+                        string nameField = field.replace('Contact','Name');
+                        
+                        string oldName;
+                        if (oldOpp.get(field)!=null)
+                            oldName = mapConIdContact.get((id)oldOpp.get(field)).Name;
+                        //only overwrite the name field if it's blank, or if we've switched contacts and it contained the old name
+                        if (newOpp.get(nameField) == null || newOpp.get(nameField) == oldName) {
+                            newOpp.put(nameField, mapConIdContact.get((id)newOpp.get(field)).Name);
+                        }
+                    }
+                }
+            }            
+        }
     }
 
     /*******************************************************************************************************
