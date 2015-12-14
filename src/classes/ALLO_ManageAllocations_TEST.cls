@@ -77,8 +77,10 @@ private class ALLO_ManageAllocations_TEST {
 
         PageReference pageRef = Page.ALLO_ManageAllocations;
         Test.setCurrentPage(pageRef);
-        ApexPages.currentPage().getParameters().put('opp', opp.id);
-        ALLO_ManageAllocations_CTRL ctrl = new ALLO_ManageAllocations_CTRL();
+        ApexPages.currentPage().getParameters().put('id', opp.id);
+        ALLO_ManageAllocations_CTRL ctrl = new ALLO_ManageAllocations_CTRL(
+            new ApexPages.StandardSetController(new List<Allocation__c>())
+        );
 
         system.assertEquals(1,ctrl.listAllo.size(),'The list of allocations should have a single empty allocation.');
         system.assertEquals(null,ctrl.listAllo[0].id,'The allocation should have no Id.');
@@ -127,8 +129,10 @@ private class ALLO_ManageAllocations_TEST {
 
         PageReference pageRef = Page.ALLO_ManageAllocations;
         Test.setCurrentPage(pageRef);
-        ApexPages.currentPage().getParameters().put('cam', cam.id);
-        ALLO_ManageAllocations_CTRL ctrl = new ALLO_ManageAllocations_CTRL();
+        ApexPages.currentPage().getParameters().put('id', cam.id);
+        ALLO_ManageAllocations_CTRL ctrl = new ALLO_ManageAllocations_CTRL(
+            new ApexPages.StandardSetController(new List<Allocation__c>())
+        );
 
         system.assertEquals(2,ctrl.listAllo.size(),'The list of allocations should have two current campaign allocations.');
 
@@ -182,8 +186,10 @@ private class ALLO_ManageAllocations_TEST {
 
         PageReference pageRef = Page.ALLO_ManageAllocations;
         Test.setCurrentPage(pageRef);
-        ApexPages.currentPage().getParameters().put('rd', rd.id);
-        ALLO_ManageAllocations_CTRL ctrl = new ALLO_ManageAllocations_CTRL();
+        ApexPages.currentPage().getParameters().put('id', rd.id);
+        ALLO_ManageAllocations_CTRL ctrl = new ALLO_ManageAllocations_CTRL(
+            new ApexPages.StandardSetController(new List<Allocation__c>())
+        );
 
         system.assertEquals(2,ctrl.listAllo.size(),'The list of allocations should have two current campaign allocations.');
 
