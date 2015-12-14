@@ -119,6 +119,7 @@
         <members>OPP_SendAcknowledgmentBTN_CTRL</members>
         <members>OPP_SendAcknowledgmentBTN_TEST</members>
         <members>PMT_PaymentCreator</members>
+        <members>PMT_PaymentCreator_BATCH</members>
         <members>PMT_PaymentCreator_TEST</members>
         <members>PMT_PaymentWizard_CTRL</members>
         <members>PMT_PaymentWizard_TEST</members>
@@ -614,7 +615,6 @@
         <members>Address_Not_Found</members>
         <members>Address_StateCountry_Invalid_Error</members>
         <members>Address_Verification_Limit</members>
-        <members>CampaignMemberStatusOmit</members>
         <members>CONV_Accept_Risk</members>
         <members>CONV_Account_Field</members>
         <members>CONV_Account_Field_For_Old_HH_ID</members>
@@ -657,6 +657,7 @@
         <members>CONV_Triggers_Reenabled</members>
         <members>CONV_Warning</members>
         <members>CONV_What_This_Tool_Does</members>
+        <members>CampaignMemberStatusOmit</members>
         <members>HiddenForSecurity</members>
         <members>REL_Create_New_Relationship</members>
         <members>REL_Former</members>
@@ -972,6 +973,7 @@
         <members>stgHelpChatterGroup</members>
         <members>stgHelpCiceroAddrVerification</members>
         <members>stgHelpContactRTExcluded</members>
+        <members>stgHelpCreateMissingPayments</members>
         <members>stgHelpDefaultAllocationsEnabled</members>
         <members>stgHelpDefaultGAU</members>
         <members>stgHelpDisableHHAccountAddr</members>
@@ -1073,6 +1075,7 @@
         <members>stgLabelAutoContactRoles</members>
         <members>stgLabelBDESettings</members>
         <members>stgLabelBatchStatus</members>
+        <members>stgLabelCreateMissingPayments</members>
         <members>stgLabelCurrentUDR</members>
         <members>stgLabelDoNotRename</members>
         <members>stgLabelErrorNotify</members>
