@@ -1534,6 +1534,14 @@
         <value>The NPSP_Campaign_Household_Mailing_List report is missing which is used by the Household Mailing List button.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsMissingOppPayments</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsMissingOppPayments</shortDescription>
+        <value>{0} Opportunities that should have Payments, were found that have no Payment.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsNothingScheduled</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -1758,6 +1766,14 @@
         <value>Last run: {0}</value>
     </labels>
     <labels>
+        <fullName>healthLabelNoMissingOppPayments</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelNoMissingOppPayments</shortDescription>
+        <value>No Opportunities were found with missing expected Payments.</value>
+    </labels>
+    <labels>
         <fullName>healthLabelNone</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -1772,6 +1788,14 @@
         <protected>false</protected>
         <shortDescription>healthLabelOCRCheck</shortDescription>
         <value>Opportunity Contact Roles</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelOppPayments</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelOppPayments</shortDescription>
+        <value>Opportunity Payments</value>
     </labels>
     <labels>
         <fullName>healthLabelPassed</fullName>
@@ -2067,6 +2091,14 @@
         <protected>false</protected>
         <shortDescription>healthSolutionMailingListReportMissing</shortDescription>
         <value>Create a report based on Campaigns with Contacts, where Member Status does not contain Duplicate.  Then specify this report on the {0} &gt; {1} tab in NPSP Settings.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionMissingOppPayments</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionMissingOppPayments</shortDescription>
+        <value>View these Opportunities by running the &lt;b&gt;Opportunities without Payments&lt;/b&gt; report in the NPSP Health Check reports folder.  Note that you should add filter criteria on the report for any Type and Recordtype Exclusions for Payments specified in NPSP Settings.</value>
     </labels>
     <labels>
         <fullName>healthSolutionNothingScheduled</fullName>
