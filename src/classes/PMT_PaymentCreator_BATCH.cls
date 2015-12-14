@@ -55,7 +55,7 @@ public class PMT_PaymentCreator_BATCH implements Database.Batchable<sObject> {
             query += ', ' + field;
 
         query += ' FROM Opportunity WHERE npe01__Number_of_Payments__c = 0 AND Amount > 0 AND npe01__Do_Not_Automatically_Create_Payment__c = false';
-        query += ' AND RecordTypeID NOT IN :setOppRecordTypeIdNoPayment AND Type NOT IN :setOppTypeNoPayment';
+        query += ' AND (IsWon=TRUE OR IsClosed=FALSE) AND RecordTypeID NOT IN :setOppRecordTypeIdNoPayment AND Type NOT IN :setOppTypeNoPayment';
     }
 
     /** @description Batch process start method.*/
