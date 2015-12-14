@@ -4105,7 +4105,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgLabelOppCampMembers</shortDescription>
-        <value>Auto Campaign Members</value>
+        <value>Campaign Members</value>
     </labels>
     <labels>
         <fullName>stgLabelOppNamingRefreshTitle</fullName>
