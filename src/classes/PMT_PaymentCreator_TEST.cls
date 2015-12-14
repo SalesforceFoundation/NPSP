@@ -675,6 +675,13 @@ private with sharing class PMT_PaymentCreator_TEST {
             StageName = UTIL_UnitTestData_TEST.getOpenStage()
         ));
         testOppList.add(new Opportunity (
+            Name='No payment: Closed Lost',
+            AccountId = acct.id,
+            Amount = 36,
+            CloseDate = date.today(), 
+            StageName = UTIL_UnitTestData_TEST.getClosedLostStage()
+        ));
+        testOppList.add(new Opportunity (
             Name='No payment: Zero amount',
             AccountId = acct.id,
             Amount = 0,
