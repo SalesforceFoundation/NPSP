@@ -554,6 +554,7 @@
         <members>Opportunity.Recurring_Donation_Installment_Name__c</members>
         <members>Opportunity.Recurring_Donation_Installment_Number__c</members>
         <members>Opportunity.Requested_Amount__c</members>
+        <members>Opportunity.Tribute_Type__c</members>
         <members>Opportunity_Naming_Settings__c.Attribution__c</members>
         <members>Opportunity_Naming_Settings__c.Date_Format__c</members>
         <members>Opportunity_Naming_Settings__c.Opportunity_Name_Format__c</members>

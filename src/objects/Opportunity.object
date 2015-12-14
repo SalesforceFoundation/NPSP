@@ -753,6 +753,27 @@ ISBLANK(npe03__Recurring_Donation__c),
         <trackTrending>false</trackTrending>
         <type>Currency</type>
     </fields>
+    <fields>
+        <fullName>Tribute_Type__c</fullName>
+        <description>Indicates whether the gift is in honor or memory of an individual.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Indicates whether the gift is in honor or memory of an individual.</inlineHelpText>
+        <label>Acknowledgment Status</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Honor</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Memorial</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
     <listViews>
         <fullName>To_Be_Acknowledged</fullName>
         <columns>OPPORTUNITY.NAME</columns>
