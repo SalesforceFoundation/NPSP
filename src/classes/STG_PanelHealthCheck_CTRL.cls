@@ -181,6 +181,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         ERR_Notifier.verifyErrorSettings(this);
         verifyOppContactRoles();
         verifyTriggerHandlers();
+        verifyNoMissingOppPayments();
         
         DateTime dtEnd = system.now();
         double msec = dtEnd.getTime() - dtStart.getTime();
@@ -632,4 +633,32 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
             createDR(Label.healthLabelTriggerHandlerCheck, statusError, ex.getMessage(), null);                   
         }    
     }
+    
+    /*********************************************************************************************************
+    * @description Verifies that there are no Opportunities that 
+    */
+    private void verifyNoMissingOppPayments() {
+        try {
+            set<string> setOppTypeNoPayment = PMT_PaymentCreator.setOppTypeNoPayment;
+            set<id> setOppRecordTypeIdNoPayment = PMT_PaymentCreator.setOppRecordTypeIdNoPayment;
+            string soql = 'select count() from Opportunity where npe01__Number_of_Payments__c = 0 and Amount > 0 ' +
+                ' and (isWon = true or isClosed = false) ' +
+                ' and  Type not in :setOppTypeNoPayment ';
+
+            SObjectField OppRecordTypeId = Schema.sObjectType.Opportunity.fields.getMap().get('RecordTypeId');
+            if (OppRecordTypeId != null)
+                soql += ' and RecordTypeId not in :setOppRecordTypeIdNoPayment ';
+                     
+            integer cMissing = database.countQuery(soql);
+            if (cMissing > 0) {
+                createDR(Label.healthLabelOppPayments, statusWarning, string.format(Label.healthDetailsMissingOppPayments, new string[]{string.valueOf(cMissing)}), label.healthSolutionMissingOppPayments);
+            } else {
+                createDR(Label.healthLabelOppPayments, statusSuccess, null, label.healthLabelNoMissingOppPayments);
+            }            
+        } catch (exception ex) {
+            createDR(Label.healthLabelOppPayments, statusError, ex.getMessage(), null);                   
+        }    
+        
+    }
+    
 }
