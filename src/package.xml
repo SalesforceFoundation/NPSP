@@ -166,6 +166,7 @@
         <members>STG_PanelERR_CTRL</members>
         <members>STG_PanelErrorLog_CTRL</members>
         <members>STG_PanelHealthCheck_CTRL</members>
+        <members>STG_PanelHealthCheck_TEST</members>
         <members>STG_PanelHouseholds_CTRL</members>
         <members>STG_PanelLeads_CTRL</members>
         <members>STG_PanelMembership_CTRL</members>

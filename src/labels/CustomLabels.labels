@@ -1539,7 +1539,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthDetailsMissingOppPayments</shortDescription>
-        <value>{0} Opportunities that should have Payments, were found that have no Payment.</value>
+        <value>{0} Opportunities that should have Payments are missing those Payments.</value>
     </labels>
     <labels>
         <fullName>healthDetailsNothingScheduled</fullName>
@@ -1771,7 +1771,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthLabelNoMissingOppPayments</shortDescription>
-        <value>No Opportunities were found with missing expected Payments.</value>
+        <value>All Opportunities with Payments have expected Payments.</value>
     </labels>
     <labels>
         <fullName>healthLabelNone</fullName>
@@ -2098,7 +2098,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionMissingOppPayments</shortDescription>
-        <value>View these Opportunities by running the &lt;b&gt;Opportunities without Payments&lt;/b&gt; report in the NPSP Health Check reports folder.  Note that you should add filter criteria on the report for any Type and Recordtype Exclusions for Payments specified in NPSP Settings.</value>
+        <value>View these Opportunities by running the &lt;b&gt;Opportunities without Payments&lt;/b&gt; report in the NPSP Health Check reports folder.  Note that you should add filter criteria on the report for any Opportunity Types and Opportunity RecTypes you&apos;ve excluded in NPSP Payments Settings.</value>
     </labels>
     <labels>
         <fullName>healthSolutionNothingScheduled</fullName>
