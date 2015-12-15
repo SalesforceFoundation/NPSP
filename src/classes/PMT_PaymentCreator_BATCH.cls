@@ -72,7 +72,6 @@ public class PMT_PaymentCreator_BATCH implements Database.Batchable<sObject> {
 
     /** @description Batch process start method.*/
     public Database.QueryLocator start(Database.BatchableContext BC) {
-        system.debug('njjc' + query);
         return Database.getQueryLocator(query);
     }
 
