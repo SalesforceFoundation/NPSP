@@ -638,6 +638,8 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     * @description Verifies that there are no Opportunities that 
     */
     public void verifyNoMissingOppPayments() {
+        if (!UTIL_CustomSettingsFacade.getContactsSettings().npe01__Payments_Enabled__c)
+            return;
         try {
             set<string> setOppTypeNoPayment = PMT_PaymentCreator.setOppTypeNoPayment;
             set<id> setOppRecordTypeIdNoPayment = PMT_PaymentCreator.setOppRecordTypeIdNoPayment;
