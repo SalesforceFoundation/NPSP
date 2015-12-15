@@ -119,6 +119,7 @@
         <members>OPP_SendAcknowledgmentBTN_CTRL</members>
         <members>OPP_SendAcknowledgmentBTN_TEST</members>
         <members>PMT_PaymentCreator</members>
+        <members>PMT_PaymentCreator_BATCH</members>
         <members>PMT_PaymentCreator_TEST</members>
         <members>PMT_PaymentWizard_CTRL</members>
         <members>PMT_PaymentWizard_TEST</members>
@@ -165,6 +166,7 @@
         <members>STG_PanelERR_CTRL</members>
         <members>STG_PanelErrorLog_CTRL</members>
         <members>STG_PanelHealthCheck_CTRL</members>
+        <members>STG_PanelHealthCheck_TEST</members>
         <members>STG_PanelHouseholds_CTRL</members>
         <members>STG_PanelLeads_CTRL</members>
         <members>STG_PanelMembership_CTRL</members>
@@ -782,6 +784,7 @@
         <members>healthDetailsInvalidRecordtypeName</members>
         <members>healthDetailsInvalidScheduledJob</members>
         <members>healthDetailsMailingListReportMissing</members>
+        <members>healthDetailsMissingOppPayments</members>
         <members>healthDetailsNothingScheduled</members>
         <members>healthDetailsOCRDupPrimary</members>
         <members>healthDetailsOCRDupPrimaryValid</members>
@@ -810,8 +813,10 @@
         <members>healthLabelHHObjData</members>
         <members>healthLabelIntro</members>
         <members>healthLabelLastRun</members>
+        <members>healthLabelNoMissingOppPayments</members>
         <members>healthLabelNone</members>
         <members>healthLabelOCRCheck</members>
+        <members>healthLabelOppPayments</members>
         <members>healthLabelPassed</members>
         <members>healthLabelPaymentMappingsValid</members>
         <members>healthLabelRDOppsValid</members>
@@ -849,6 +854,7 @@
         <members>healthSolutionInvalidScheduledJob</members>
         <members>healthSolutionInvalidUDFObjectField</members>
         <members>healthSolutionMailingListReportMissing</members>
+        <members>healthSolutionMissingOppPayments</members>
         <members>healthSolutionNothingScheduled</members>
         <members>healthSolutionOCRDupPrimary</members>
         <members>healthSolutionOCRException</members>
@@ -973,6 +979,7 @@
         <members>stgHelpChatterGroup</members>
         <members>stgHelpCiceroAddrVerification</members>
         <members>stgHelpContactRTExcluded</members>
+        <members>stgHelpCreateMissingPayments</members>
         <members>stgHelpDefaultAllocationsEnabled</members>
         <members>stgHelpDefaultGAU</members>
         <members>stgHelpDisableHHAccountAddr</members>
@@ -1074,6 +1081,7 @@
         <members>stgLabelAutoContactRoles</members>
         <members>stgLabelBDESettings</members>
         <members>stgLabelBatchStatus</members>
+        <members>stgLabelCreateMissingPayments</members>
         <members>stgLabelCurrentUDR</members>
         <members>stgLabelDoNotRename</members>
         <members>stgLabelErrorNotify</members>
@@ -1312,6 +1320,7 @@
         <members>NPSP_Health_Check/Empty_Household_Objects</members>
         <members>NPSP_Health_Check/Individual_Contacts_by_Account_Type</members>
         <members>NPSP_Health_Check/Opportunities_with_Primary_Contact_Roles</members>
+        <members>NPSP_Health_Check/Opportunities_without_Payments</members>
         <name>Report</name>
     </types>
     <types>
