@@ -33,7 +33,6 @@
 * @group Payments
 * @description tests for the PaymentCreator class 
 */
-
 @isTest
 private with sharing class PMT_PaymentCreator_TEST {
 
@@ -628,5 +627,125 @@ private with sharing class PMT_PaymentCreator_TEST {
             }
             upsert payments;
         }
+    }
+    /*********************************************************************************************************
+    * @description
+    operation:
+        Create a number of opportunities without payment records, run batch payment creation process.
+    verify:
+        Excluded opps don't get payments.
+        Included opps payments are created correctly.
+    **********************************************************************************************************/            
+    static testMethod void testBatchPaymentCreation() {
+        if (strTestOnly != '*' && strTestOnly != 'testBatchPaymentCreation') return;
+        
+        string strGift = UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity');
+        Id rtIdGift = null;
+        if (strGift != null && strGift != '' && UTIL_RecordTypes.isRecordTypeActive('Opportunity', strGift)) {
+            rtIdGift = UTIL_RecordTypes.GetRecordTypeId('Opportunity', strGift);
+        }
+        
+        npe01__Contacts_And_Orgs_Settings__c PaymentsSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c (
+                npe01__Payments_Enabled__c= true, 
+                Opp_RecTypes_Excluded_for_Payments__c=strGift,
+                Opp_Types_Excluded_for_Payments__c='NO-PAYMENT'
+            )
+        );
+
+        //create a Payment Field Mapping
+        npe01__Payment_Field_Mapping_Settings__c pfmNew = new npe01__Payment_Field_Mapping_Settings__c(
+            npe01__Opportunity_Field__c = 'Name',
+            npe01__Payment_Field__c = 'npe01__Custom_Payment_Field__c',
+            Name = 'test field mapping'
+        );
+        insert pfmNew;
+        
+        //create test data
+        Account acct = new Account (
+            Name='Test Account'
+        );
+        insert acct;
+
+        list<Opportunity> testOppList = new list<Opportunity>();
+        testOppList.add(new Opportunity (
+            Name='Paid Payment',
+            AccountId = acct.id,
+            Amount = 8,
+            CloseDate = date.today(), 
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
+        ));
+        testOppList.add(new Opportunity (
+            Name='Unpaid Payment',
+            AccountId = acct.id,
+            Amount = 36,
+            CloseDate = date.today(), 
+            StageName = UTIL_UnitTestData_TEST.getOpenStage()
+        ));
+        testOppList.add(new Opportunity (
+            Name='No payment: Closed Lost',
+            AccountId = acct.id,
+            Amount = 36,
+            CloseDate = date.today(), 
+            StageName = UTIL_UnitTestData_TEST.getClosedLostStage()
+        ));
+        testOppList.add(new Opportunity (
+            Name='No payment: Zero amount',
+            AccountId = acct.id,
+            Amount = 0,
+            CloseDate = date.today(), 
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
+        ));
+        testOppList.add(new Opportunity (
+            Name='No payment: Excluded type',
+            AccountId = acct.id,
+            Amount = 1,
+            CloseDate = date.today(), 
+            Type = 'NO-PAYMENT',
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
+        ));
+        testOppList.add(new Opportunity (
+            Name='No payment: npe01__Do_Not_Automatically_Create_Payment__c',
+            AccountId = acct.id,
+            Amount = 2,
+            CloseDate = date.today(), 
+            npe01__Do_Not_Automatically_Create_Payment__c = true,
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
+        ));
+        Opportunity opp = new Opportunity (
+            Name='No pmt:rectype',
+            AccountId = acct.id,
+            Amount = 3,
+            CloseDate = date.today(), 
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
+        );
+        if (rtIdGift != null)
+            opp.RecordtypeId = rtIdGift;
+        testOppList.add(opp);
+
+        //disable TDTM so payments aren't created
+        TDTM_TriggerHandler.disableTDTM = true;
+        insert(testOppList);
+        TDTM_TriggerHandler.disableTDTM = false;
+
+        list<npe01__OppPayment__c> queryPmt = [select id,npe01__paid__c, npe01__payment_amount__c from npe01__OppPayment__c WHERE npe01__opportunity__c IN :testOppList];
+        system.assertEquals(0, queryPmt.size(), 'No payments should be created as triggers are disabled.');
+
+        test.startTest();
+        id batchProcessId = database.executeBatch(new PMT_PaymentCreator_BATCH(), 200);
+        test.stopTest();
+
+        queryPmt = [select id, npe01__paid__c, npe01__payment_amount__c, npe01__Custom_Payment_Field__c from npe01__OppPayment__c WHERE npe01__opportunity__c IN :testOppList ORDER BY npe01__opportunity__c];
+
+        if (rtIdGift != null) {
+            system.assertEquals(2, queryPmt.size(), 'Two payments should be created by the batch process.');
+        } else {
+            system.assertEquals(3, queryPmt.size(), 'Three payments should be created by the batch process if opp record type is not available for filtering.');
+        }
+
+        system.assertEquals(true, queryPmt[0].npe01__Paid__c, 'Payment for closed/won opportunity should be marked paid.');
+        system.assertEquals('Paid Payment', queryPmt[0].npe01__Custom_Payment_Field__c, 'Custom field mapping should be copied over.');
+        system.assertEquals(false, queryPmt[1].npe01__Paid__c, 'Payment for open opportunity should not be marked paid.');
+        system.assertEquals('Unpaid Payment', queryPmt[1].npe01__Custom_Payment_Field__c, 'Custom field mapping should be copied over.');
     }
 }
