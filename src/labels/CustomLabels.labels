@@ -276,14 +276,6 @@
         <value>You cannot verify more than 100 addresses at a time.</value>
     </labels>
     <labels>
-        <fullName>CampaignMemberStatusOmit</fullName>
-        <categories>Opportunity, Campaign Member</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>CampaignMemberStatusOmit</shortDescription>
-        <value>omit</value>
-    </labels>
-    <labels>
         <fullName>CONV_Accept_Risk</fullName>
         <language>en_US</language>
         <protected>false</protected>
@@ -576,6 +568,14 @@
         <protected>false</protected>
         <shortDescription>What This Tool Does</shortDescription>
         <value>What This Tool Does</value>
+    </labels>
+    <labels>
+        <fullName>CampaignMemberStatusOmit</fullName>
+        <categories>Opportunity, Campaign Member</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>CampaignMemberStatusOmit</shortDescription>
+        <value>omit</value>
     </labels>
     <labels>
         <fullName>HiddenForSecurity</fullName>
@@ -1534,6 +1534,14 @@
         <value>The NPSP_Campaign_Household_Mailing_List report is missing which is used by the Household Mailing List button.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsMissingOppPayments</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsMissingOppPayments</shortDescription>
+        <value>{0} Opportunities that should have Payments are missing those Payments.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsNothingScheduled</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -1758,6 +1766,14 @@
         <value>Last run: {0}</value>
     </labels>
     <labels>
+        <fullName>healthLabelNoMissingOppPayments</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelNoMissingOppPayments</shortDescription>
+        <value>All Opportunities with Payments have expected Payments.</value>
+    </labels>
+    <labels>
         <fullName>healthLabelNone</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -1772,6 +1788,14 @@
         <protected>false</protected>
         <shortDescription>healthLabelOCRCheck</shortDescription>
         <value>Opportunity Contact Roles</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelOppPayments</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelOppPayments</shortDescription>
+        <value>Opportunity Payments</value>
     </labels>
     <labels>
         <fullName>healthLabelPassed</fullName>
@@ -2067,6 +2091,14 @@
         <protected>false</protected>
         <shortDescription>healthSolutionMailingListReportMissing</shortDescription>
         <value>Create a report based on Campaigns with Contacts, where Member Status does not contain Duplicate.  Then specify this report on the {0} &gt; {1} tab in NPSP Settings.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionMissingOppPayments</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionMissingOppPayments</shortDescription>
+        <value>View these Opportunities by running the &lt;b&gt;Opportunities without Payments&lt;/b&gt; report in the NPSP Health Check reports folder.  Note that you should add filter criteria on the report for any Opportunity Types and Opportunity RecTypes you&apos;ve excluded in NPSP Payments Settings. You can create them using the Create Missing Payments button on NPSP Settings &gt; Donations &gt; Payments.</value>
     </labels>
     <labels>
         <fullName>healthSolutionNothingScheduled</fullName>
@@ -3088,6 +3120,32 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <value>Contact Record Types excluded from Household Opportunity Contact Role creation</value>
     </labels>
     <labels>
+        <fullName>stgHelpCreateMissingPayments</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpCreateMissingPayments</shortDescription>
+        <value>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate batch payment creation. Salesforce will create a payment for each Opportunity without Payments that: 
+&lt;ul&gt; 
+&lt;li&gt;has an amount greater than zero&lt;/li&gt; 
+&lt;li&gt;is not marked Do Not Automatically Create Payment&lt;/li&gt; 
+&lt;li&gt;is not excluded in the above settings&lt;/li&gt; 
+&lt;/ul&gt; 
+
+&lt;b&gt;This is an irreversible process.&lt;/b&gt; 
+Before starting this process, we recommend disabling the following when they affect Payments: 
+&lt;br/&gt; 
+&lt;ul&gt; 
+&lt;li&gt;Custom Validation Rules&lt;/li&gt; 
+&lt;li&gt;Workflow Rules&lt;/li&gt; 
+&lt;li&gt;Process Builder&lt;/li&gt; 
+&lt;li&gt;Visual Workflows&lt;/li&gt; 
+&lt;li&gt;Custom Triggers&lt;/li&gt; 
+&lt;/ul&gt; 
+&lt;br/&gt; 
+Once the process is 100% complete, you can safely leave or refresh this page.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpDefaultAllocationsEnabled</fullName>
         <categories>Allocation, Settings</categories>
         <language>en_US</language>
@@ -3914,6 +3972,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgLabelBatchStatus</shortDescription>
         <value>Batch Status</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelCreateMissingPayments</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelCreateMissingPayments</shortDescription>
+        <value>Create Missing Payments</value>
     </labels>
     <labels>
         <fullName>stgLabelCurrentUDR</fullName>
