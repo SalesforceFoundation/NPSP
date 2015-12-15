@@ -29,7 +29,7 @@
     </columns>
     <description>Opportunities that have no Payments.  You must add filter criteria for any Type or Recordtype Exclusions you have set in NPSP Settings.</description>
     <filter>
-        <booleanFilter>1 AND 2 AND (3 or 4)</booleanFilter>
+        <booleanFilter>1 AND 2 AND 3 AND (4 or 5)</booleanFilter>
         <criteriaItems>
             <column>Opportunity.npe01__Number_of_Payments__c</column>
             <operator>equals</operator>
@@ -38,6 +38,11 @@
         <criteriaItems>
             <column>AMOUNT</column>
             <operator>greaterThan</operator>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.npe01__Do_Not_Automatically_Create_Payment__c</column>
+            <operator>equals</operator>
             <value>0</value>
         </criteriaItems>
         <criteriaItems>
