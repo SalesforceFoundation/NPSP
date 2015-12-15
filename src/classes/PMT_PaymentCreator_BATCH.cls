@@ -44,22 +44,35 @@ public class PMT_PaymentCreator_BATCH implements Database.Batchable<sObject> {
 
     /** @description The batch process constructor; creates opportunity query for opportunities that might need payments.*/
     public PMT_PaymentCreator_BATCH() {
-        set<string> queryFields = new set<string>{'Type','RecordTypeID','Amount','CloseDate','npe01__Payments_Made__c','npe01__Number_of_Payments__c','npe01__Do_Not_Automatically_Create_Payment__c','IsClosed','IsWon'};
+        set<string> queryFields = new set<string>{'Type','Amount','CloseDate','npe01__Payments_Made__c','npe01__Number_of_Payments__c','npe01__Do_Not_Automatically_Create_Payment__c','IsClosed','IsWon'};
 
-        //add multicurrency field if it exists
-        if (Schema.sObjectType.Opportunity.fields.getMap().containsKey('CurrencyIsoCode'))
+        //add record type and multicurrency fields if they exist
+        if (UTIL_Describe.isValidField('Opportunity','RecordTypeId'))
+            queryFields.add('RecordTypeID');
+        if (UTIL_Describe.isValidField('Opportunity','CurrencyIsoCode'))
             queryFields.add('CurrencyIsoCode');
 
+        //add payment mapping fields
+        for (npe01__Payment_Field_Mapping_Settings__c pfms : PMT_PaymentCreator.paymentMappings.values()) {
+            queryFields.add(pfms.npe01__Opportunity_Field__c);
+        }
+
+        //build query
         query = 'SELECT Id';
         for (string field : queryFields)
             query += ', ' + field;
 
         query += ' FROM Opportunity WHERE npe01__Number_of_Payments__c = 0 AND Amount > 0 AND npe01__Do_Not_Automatically_Create_Payment__c = false';
-        query += ' AND (IsWon=TRUE OR IsClosed=FALSE) AND RecordTypeID NOT IN :setOppRecordTypeIdNoPayment AND Type NOT IN :setOppTypeNoPayment';
+        query += ' AND (IsWon=TRUE OR IsClosed=FALSE) AND Type NOT IN :setOppTypeNoPayment';
+
+        //filter record type id only if the field exists
+        if (UTIL_Describe.isValidField('Opportunity','RecordTypeId'))
+            query +=' AND RecordTypeID NOT IN :setOppRecordTypeIdNoPayment ';
     }
 
     /** @description Batch process start method.*/
     public Database.QueryLocator start(Database.BatchableContext BC) {
+        system.debug('njjc' + query);
         return Database.getQueryLocator(query);
     }
 
