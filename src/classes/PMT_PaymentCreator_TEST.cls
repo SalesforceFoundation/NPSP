@@ -713,7 +713,7 @@ private with sharing class PMT_PaymentCreator_TEST {
             StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
         ));
         Opportunity opp = new Opportunity (
-            Name='No payment: Excluded record type, if possible',
+            Name='No pmt:rectype',
             AccountId = acct.id,
             Amount = 3,
             CloseDate = date.today(), 
