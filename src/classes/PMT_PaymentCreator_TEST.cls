@@ -652,8 +652,16 @@ private with sharing class PMT_PaymentCreator_TEST {
                 Opp_Types_Excluded_for_Payments__c='NO-PAYMENT'
             )
         );
+
+        //create a Payment Field Mapping
+        npe01__Payment_Field_Mapping_Settings__c pfmNew = new npe01__Payment_Field_Mapping_Settings__c(
+            npe01__Opportunity_Field__c = 'Name',
+            npe01__Payment_Field__c = 'npe01__Custom_Payment_Field__c',
+            Name = 'test field mapping'
+        );
+        insert pfmNew;
         
-        // create test data
+        //create test data
         Account acct = new Account (
             Name='Test Account'
         );
@@ -727,16 +735,17 @@ private with sharing class PMT_PaymentCreator_TEST {
         id batchProcessId = database.executeBatch(new PMT_PaymentCreator_BATCH(), 200);
         test.stopTest();
 
-        queryPmt = [select id,npe01__paid__c, npe01__payment_amount__c from npe01__OppPayment__c WHERE npe01__opportunity__c IN :testOppList ORDER BY npe01__opportunity__c];
+        queryPmt = [select id, npe01__paid__c, npe01__payment_amount__c, npe01__Custom_Payment_Field__c from npe01__OppPayment__c WHERE npe01__opportunity__c IN :testOppList ORDER BY npe01__opportunity__c];
 
         if (rtIdGift != null) {
             system.assertEquals(2, queryPmt.size(), 'Two payments should be created by the batch process.');
-            system.assertEquals(true, queryPmt[0].npe01__Paid__c, 'Payment for closed/won opportunity should be marked paid.');
-            system.assertEquals(false, queryPmt[1].npe01__Paid__c, 'Payment for open opportunity should not be marked paid.');
         } else {
-            system.assertEquals(3, queryPmt.size(), 'Three payments should be created by the batch process if opp record type is not available.');
-            system.assertEquals(true, queryPmt[0].npe01__Paid__c, 'Payment for closed/won opportunity should be marked paid.');
-            system.assertEquals(false, queryPmt[1].npe01__Paid__c, 'Payment for open opportunity should not be marked paid.');
+            system.assertEquals(3, queryPmt.size(), 'Three payments should be created by the batch process if opp record type is not available for filtering.');
         }
+
+        system.assertEquals(true, queryPmt[0].npe01__Paid__c, 'Payment for closed/won opportunity should be marked paid.');
+        system.assertEquals('Paid Payment', queryPmt[0].npe01__Custom_Payment_Field__c, 'Custom field mapping should be copied over.');
+        system.assertEquals(false, queryPmt[1].npe01__Paid__c, 'Payment for open opportunity should not be marked paid.');
+        system.assertEquals('Unpaid Payment', queryPmt[1].npe01__Custom_Payment_Field__c, 'Custom field mapping should be copied over.');
     }
 }
