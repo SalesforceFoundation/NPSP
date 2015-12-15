@@ -52,7 +52,7 @@ private class OPP_CampaignMember_TEST {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c(
                 Automatic_Campaign_Member_Management__c=true, 
-                npe01__Account_Processor__c=CAO_Constants.ONE_TO_ONE_PROCESSOR
+                npe01__Account_Processor__c=CAO_Constants.HH_ACCOUNT_PROCESSOR
             )
         );
 
@@ -96,7 +96,7 @@ private class OPP_CampaignMember_TEST {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c(
                 Automatic_Campaign_Member_Management__c=true, 
-                npe01__Account_Processor__c=CAO_Constants.ONE_TO_ONE_PROCESSOR
+                npe01__Account_Processor__c=CAO_Constants.HH_ACCOUNT_PROCESSOR
             )
         );
 
@@ -138,13 +138,13 @@ private class OPP_CampaignMember_TEST {
     * campaign member's status was created as responded.
     */
     @isTest static void updateStatus() {
-        if (strTestOnly != '*' && strTestOnly != 'createMemberResponded') return;
+        if (strTestOnly != '*' && strTestOnly != 'updateStatus') return;
 
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c(
                 Automatic_Campaign_Member_Management__c=true, 
                 Campaign_Member_Responded_Status__c = 'NewTestStatus', 
-                npe01__Account_Processor__c=CAO_Constants.ONE_TO_ONE_PROCESSOR
+                npe01__Account_Processor__c=CAO_Constants.HH_ACCOUNT_PROCESSOR
             )
         );
 
@@ -160,8 +160,6 @@ private class OPP_CampaignMember_TEST {
         list<campaignmember> querycm = [SELECT Id, HasResponded FROM CampaignMember WHERE contactId=:con.id AND campaignId=:cam.id];
         system.assertEquals(1, querycm.size(), 'A campaign member should be created.');
         system.assertEquals(false, querycm[0].HasResponded, 'Member should have a default non responded status.');
-
-        //insert new CampaignMemberStatus(campaignId = cam.id, Label = 'Responded', HasResponded = true, SortOrder = 6);
 
         Opportunity opp = new Opportunity(
             Name = 'foo',
@@ -183,6 +181,56 @@ private class OPP_CampaignMember_TEST {
     }
 
     /*********************************************************************************************************
+    * @description Creates setting for responded campaign members. Creates a status in a campaign that matches
+    * that setting. Inserts a new closed/won opportunity with a primary campaign source and primary contact. 
+    * Verifies campaign member's status was used, but not created a second time for that campaign.
+    */
+    @isTest static void settingUsesExistingStatus() {
+        if (strTestOnly != '*' && strTestOnly != 'settingUsesExistingStatus') return;
+
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c(
+                Automatic_Campaign_Member_Management__c=true, 
+                Campaign_Member_Responded_Status__c = 'NewTestStatus', 
+                npe01__Account_Processor__c=CAO_Constants.HH_ACCOUNT_PROCESSOR
+            )
+        );
+
+        Contact con = new Contact(LastName='foo');
+        insert con;
+
+        Campaign cam = new Campaign(Name='foo');
+        insert cam;
+
+        list<CampaignMemberStatus> listCMSForInsert = new list<CampaignMemberStatus>();
+        listCMSForInsert.add(new CampaignMemberStatus(campaignId = cam.id, Label = 'Responded', SortOrder = 5, hasResponded=true));
+        listCMSForInsert.add(new CampaignMemberStatus(campaignId = cam.id, Label = 'NewTestStatus', SortOrder = 10, hasResponded=false));
+        insert listCMSForInsert;
+
+        Opportunity opp = new Opportunity(
+            Name = 'foo',
+            Primary_Contact__c = con.id,
+            CloseDate = system.today(),
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            Amount = 8,
+            CampaignId=cam.id
+        );
+
+        test.startTest();
+        insert opp;
+        test.stopTest();
+
+        list<campaignmemberstatus> querycmstatus = [SELECT id, Label, hasResponded, SortOrder FROM CampaignMemberStatus WHERE Label='NewTestStatus'];
+        system.assertEquals(1,querycmstatus.size(),'Only one campaign member status should exist for this status.');
+        system.assertEquals(false,querycmstatus[0].hasResponded,'Campaign Member Status should not be marked responded as it was created.');
+
+        list<CampaignMember> querycm = [SELECT Id, Status, HasResponded FROM CampaignMember WHERE contactId=:con.id AND campaignId=:cam.id];
+        system.assertEquals(1, querycm.size(), 'A campaign member should still exist.');
+        system.assertEquals('NewTestStatus', querycm[0].Status, 'Status should be created per the npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Responded_Status__c setting.');
+        system.assertEquals(false, querycm[0].HasResponded, 'Campaign member should have a non-responded status since it was already created that way.');
+    }
+
+    /*********************************************************************************************************
     * @description Inserts a new open opportunity with a primary campaign source. Verifies a campaign member 
     * is created and that the first non responded status was given.
     */
@@ -193,7 +241,7 @@ private class OPP_CampaignMember_TEST {
             new npe01__Contacts_And_Orgs_Settings__c(
                 Automatic_Campaign_Member_Management__c=true, 
                 Campaign_Member_Non_Responded_Status__c = 'TestNonRespondedStatus', 
-                npe01__Account_Processor__c=CAO_Constants.ONE_TO_ONE_PROCESSOR
+                npe01__Account_Processor__c=CAO_Constants.HH_ACCOUNT_PROCESSOR
             )
         );
         
@@ -237,7 +285,7 @@ private class OPP_CampaignMember_TEST {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c(
                 Automatic_Campaign_Member_Management__c=true, 
-                npe01__Account_Processor__c=CAO_Constants.ONE_TO_ONE_PROCESSOR
+                npe01__Account_Processor__c=CAO_Constants.HH_ACCOUNT_PROCESSOR
             )
         );
         
@@ -280,7 +328,7 @@ private class OPP_CampaignMember_TEST {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c(
                 Automatic_Campaign_Member_Management__c=true, 
-                npe01__Account_Processor__c=CAO_Constants.ONE_TO_ONE_PROCESSOR
+                npe01__Account_Processor__c=CAO_Constants.HH_ACCOUNT_PROCESSOR
             )
         );
 
@@ -318,7 +366,7 @@ private class OPP_CampaignMember_TEST {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c(
                 Automatic_Campaign_Member_Management__c=false, 
-                npe01__Account_Processor__c=CAO_Constants.ONE_TO_ONE_PROCESSOR
+                npe01__Account_Processor__c=CAO_Constants.HH_ACCOUNT_PROCESSOR
             )
         );
 
@@ -356,7 +404,7 @@ private class OPP_CampaignMember_TEST {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c(
                 Automatic_Campaign_Member_Management__c=true, 
-                npe01__Account_Processor__c=CAO_Constants.ONE_TO_ONE_PROCESSOR
+                npe01__Account_Processor__c=CAO_Constants.HH_ACCOUNT_PROCESSOR
             )
         );
 
