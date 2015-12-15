@@ -645,6 +645,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
             set<id> setOppRecordTypeIdNoPayment = PMT_PaymentCreator.setOppRecordTypeIdNoPayment;
             string soql = 'select count() from Opportunity where npe01__Number_of_Payments__c = 0 and Amount > 0 ' +
                 ' and (isWon = true or isClosed = false) ' +
+                ' and npe01__Do_Not_Automatically_Create_Payment__c = false ' +
                 ' and  Type not in :setOppTypeNoPayment ';
 
             SObjectField OppRecordTypeId = Schema.sObjectType.Opportunity.fields.getMap().get('RecordTypeId');
