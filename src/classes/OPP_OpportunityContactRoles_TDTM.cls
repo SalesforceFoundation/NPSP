@@ -201,6 +201,9 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         
         Map<Id, OpportunityContactRole> mapOppIdPrimaryOCR = new map<Id, OpportunityContactRole>();
 
+        //primary contact OCRs need to be inserted for opportunity naming code that runs after this
+        list<OpportunityContactRole> listPrimaryOCRForInsert = new list<OpportunityContactRole>();
+
         //Get existing primary contact roles for the trigger opps. 
         for (OpportunityContactRole ocr : [SELECT OpportunityId, ContactId, Role, IsPrimary FROM OpportunityContactRole WHERE IsPrimary = true and OpportunityId IN :listOpp]) {
             mapOppIdPrimaryOCR.put(ocr.OpportunityId, ocr);
@@ -230,14 +233,14 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
             //we don't have a primary contact role for this record, create one
             } else {
                 if(opp.Primary_Contact__c != null) {
-                    dmlWrapper.objectsToInsert.add(getOCR(opp,'Primary_Contact__c'));
+                    listPrimaryOCRForInsert.add(getOCR(opp,'Primary_Contact__c'));
                 //if primary contact is null, still try using the contact id for role field
                 //this is done for integrations that populate the npe01__Contact_Id_for_Role__c
                 //after our beforeinsert trigger copied it to the primary contact field
                 } else if (opp.npe01__Contact_Id_for_Role__c != null) {
                     try {
                         clonedOpp.Primary_Contact__c = opp.npe01__Contact_Id_for_Role__c;
-                        dmlWrapper.objectsToUpdate.add(getOCR(clonedOpp,'Primary_Contact__c'));
+                        listPrimaryOCRForInsert.add(getOCR(clonedOpp,'Primary_Contact__c'));
                     } catch (Exception ex) {
                         opp.addError(Label.npe01.Opportunity_Contact_Role_Error_Bad_Contact_Id);
                     }
@@ -252,6 +255,9 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                 dmlWrapper.objectsToInsert.add(getOCR(clonedOpp, 'Notification_Recipient_Contact__c'));
             }
         }
+
+        if (!listPrimaryOCRForInsert.isEmpty())
+            insert listPrimaryOCRForInsert;
     }
 
     /*******************************************************************************************************
