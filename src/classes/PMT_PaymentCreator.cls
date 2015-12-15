@@ -79,7 +79,7 @@ public class PMT_PaymentCreator {
     /*******************************************************************************************************
     * @description set of Opportunity Recordtype Id's to not create Payments for.
     */ 
-    private static set<id> setOppRecordTypeIdNoPayment {
+    public static set<id> setOppRecordTypeIdNoPayment {
         get {
             if (setOppRecordTypeIdNoPayment == null) {
                 string strProp = UTIL_CustomSettingsFacade.getContactsSettings().Opp_RecTypes_Excluded_for_Payments__c;
@@ -98,7 +98,7 @@ public class PMT_PaymentCreator {
     /*******************************************************************************************************
     * @description set of Opportunity Type values to not create Payments for.
     */ 
-    private static set<string> setOppTypeNoPayment {
+    public static set<string> setOppTypeNoPayment {
         get {
             if (setOppTypeNoPayment == null) {
                 string strProp = UTIL_CustomSettingsFacade.getContactsSettings().Opp_Types_Excluded_for_Payments__c;
