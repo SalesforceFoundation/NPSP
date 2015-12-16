@@ -101,7 +101,7 @@
             </div>
         </apex:outputPanel>
 
-        <apex:outputPanel styleClass="container" layout="block" rendered="{!NOT(batchRunning)}" >
+        <apex:outputPanel styleClass="container" layout="block" rendered="{!AND(NOT(batchRunning),userCanEditSettings)}" >
             <div class="row">
                 <div class="col-md-12">
                     <div class="panel panel-default">
