@@ -102,6 +102,8 @@
         <members>HH_ProcessControl</members>
         <members>LD_LeadConvertOverride_CTRL</members>
         <members>LD_LeadConvertOverride_TEST</members>
+        <members>MTCH_FindGifts_CTRL</members>
+        <members>MTCH_FindGifts_TEST</members>
         <members>OPP_CampaignMember_TDTM</members>
         <members>OPP_CampaignMember_TEST</members>
         <members>OPP_INaming</members>
@@ -253,6 +255,7 @@
         <members>HH_ManageHHAccount</members>
         <members>HH_ManageHousehold</members>
         <members>LD_LeadConvertOverride</members>
+        <members>MTCH_FindGifts</members>
         <members>NPSP_Resources</members>
         <members>OPP_MatchingDonationsBTN</members>
         <members>OPP_OpportunityNamingBTN</members>
@@ -935,6 +938,16 @@
         <members>leadConvertSendEmail</members>
         <members>leadConvertStatus</members>
         <members>leadConvertViewContactError</members>
+        <members>mtchBtnSearch</members>
+        <members>mtchCloseDateEnd</members>
+        <members>mtchCloseDateStart</members>
+        <members>mtchFindMatchedGiftsPageBlock</members>
+        <members>mtchFindMatchedGiftsSectionHeader</members>
+        <members>mtchFindMoreGifts</members>
+        <members>mtchSelectCbxTitle</members>
+        <members>mtchTotalMatchingGift</members>
+        <members>mtchTotalSelected</members>
+        <members>mtchTotalUnaccounted</members>
         <members>oppInstallmentsOf</members>
         <members>oppNamingBoth</members>
         <members>oppNamingIndividual</members>
