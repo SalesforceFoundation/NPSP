@@ -171,6 +171,7 @@
         <members>STG_PanelLeads_CTRL</members>
         <members>STG_PanelMembership_CTRL</members>
         <members>STG_PanelOppBatch_CTRL</members>
+        <members>STG_PanelOppCampaignMembers_CTRL</members>
         <members>STG_PanelOppNaming_CTRL</members>
         <members>STG_PanelOppRollups_CTRL</members>
         <members>STG_PanelOpps_CTRL</members>
@@ -272,6 +273,7 @@
         <members>STG_PanelLeads</members>
         <members>STG_PanelMembership</members>
         <members>STG_PanelOppBatch</members>
+        <members>STG_PanelOppCampaignMembers</members>
         <members>STG_PanelOppNaming</members>
         <members>STG_PanelOppRollups</members>
         <members>STG_PanelOpps</members>
@@ -569,6 +571,9 @@
         <members>Trigger_Handler__c.Object__c</members>
         <members>Trigger_Handler__c.Trigger_Action__c</members>
         <members>Trigger_Handler__c.User_Managed__c</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.Automatic_Campaign_Member_Management__c</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Non_Responded_Status__c</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Responded_Status__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Household_Account_Addresses_Disabled__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Max_Payments__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Opp_RecTypes_Excluded_for_Payments__c</members>
@@ -1100,6 +1105,7 @@
         <members>stgLabelNone</members>
         <members>stgLabelONS</members>
         <members>stgLabelOppBatchProgress</members>
+        <members>stgLabelOppCampMembers</members>
         <members>stgLabelOppNamingRefreshTitle</members>
         <members>stgLabelOppNamingSettings</members>
         <members>stgLabelOppPrimaryContactTitle</members>

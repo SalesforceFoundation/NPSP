@@ -316,6 +316,7 @@
                             <li class="subitem" id="idPanelAllocationsNav"><a href="#" onclick="ShowPanel('idPanelAllocations');return false;" class="nav-item sub-nav-item">{!$Label.stgNavAllocations}</a></li>
                             <li class="subitem" id="idPanelOppRollupNav"><a href="#" onclick="ShowPanel('idPanelOppRollup');return false;" class="nav-item sub-nav-item">{!$Label.stgNavDonorStatistics}</a></li>
                             <li class="subitem" id="idPanelConRoleNav"><a href="#" onclick="ShowPanel('idPanelConRole');return false;" class="nav-item sub-nav-item">{!$Label.stgNavContactRoles}</a></li>
+                            <li class="subitem" id="idPanelOppCampaignMembersNav"><a href="#" onclick="ShowPanel('idPanelOppCampaignMembers');return false;" class="nav-item sub-nav-item">{!$Label.stgLabelOppCampMembers}</a></li>
                             <li class="subitem" id="idPanelBDENav"><a href="#" onclick="ShowPanel('idPanelBDE');return false;" class="nav-item sub-nav-item">{!$Label.stgNavBDE}</a></li>
                             <li class="subitem" id="idPanelOppBatchNav"><a href="#" onclick="ShowPanel('idPanelOppBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRollupBatch}</a></li>
                             <li class="subitem" id="idPanelAlloBatchNav"><a href="#" onclick="ShowPanel('idPanelAlloBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRollupAlloBatch}</a></li>
@@ -363,7 +364,11 @@
             <div class="panel noborder" id="idPanelConRole" style="display:none" >
                 <apex:include pageName="STG_PanelContactRoles" />
             </div>
-            
+
+            <div class="panel noborder" id="idPanelOppCampaignMembers" style="display:none" >
+                <apex:include pageName="STG_PanelOppCampaignMembers" />
+            </div>
+
             <div class="panel noborder" id="idPanelLeads" style="display:none" >
                 <apex:include pageName="STG_PanelLeads" />
             </div>
