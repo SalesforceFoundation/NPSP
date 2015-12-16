@@ -19,7 +19,7 @@
         <aggregateTypes>Sum</aggregateTypes>
         <field>PRIMARY</field>
     </columns>
-    <description>Opportunities sorted by their number of primary contact roles.  Any that have 2 or more Primary Contact Roles should be fixed to only have 1 Primary Contact Role.</description>
+    <description>Opportunities sorted by their number of primary contact roles.  Any that have 2 or more Primary Contact Roles should be fixed to only have 1 Primary Contact Role.  Filters by last 90 days to avoid data limits.  Change the filter to check for other dates.</description>
     <filter>
         <criteriaItems>
             <column>PRIMARY</column>
@@ -39,7 +39,7 @@
     <name>Opportunities with Primary Contact Roles</name>
     <params>
         <name>include</name>
-        <value>open</value>
+        <value>all</value>
     </params>
     <params>
         <name>co</name>
@@ -50,6 +50,6 @@
     <showDetails>true</showDetails>
     <timeFrameFilter>
         <dateColumn>CLOSE_DATE</dateColumn>
-        <interval>INTERVAL_CUSTOM</interval>
+        <interval>INTERVAL_LAST90</interval>
     </timeFrameFilter>
 </Report>
