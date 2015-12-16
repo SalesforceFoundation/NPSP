@@ -833,7 +833,7 @@ ISBLANK(npe03__Recurring_Donation__c),
         <linkType>page</linkType>
         <masterLabel>Find Matched Gifts</masterLabel>
         <openType>sidebar</openType>
-        <page>PSC_FindDonations</page>
+        <page>MTCH_FindGifts</page>
         <protected>false</protected>
     </webLinks>
     <webLinks>
