@@ -639,19 +639,25 @@ private with sharing class PMT_PaymentCreator_TEST {
     static testMethod void testBatchPaymentCreation() {
         if (strTestOnly != '*' && strTestOnly != 'testBatchPaymentCreation') return;
         
-        string strGift = UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity');
+        npe01__Contacts_And_Orgs_Settings__c consSettings = new npe01__Contacts_And_Orgs_Settings__c (
+            npe01__Payments_Enabled__c= true, 
+            Opp_Types_Excluded_for_Payments__c='NO-PAYMENT'
+        );
+        
         Id rtIdGift = null;
-        if (strGift != null && strGift != '' && UTIL_RecordTypes.isRecordTypeActive('Opportunity', strGift)) {
-            rtIdGift = UTIL_RecordTypes.GetRecordTypeId('Opportunity', strGift);
+        
+        //only attempt a recordtype exclusion if we have a record type that isn't default
+        for (string recTypeName : new list<string>{UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity'),UTIL_RecordTypes.getrecordTypeNameForMembershipTests('Opportunity')}) {
+            if (!string.isBlank(recTypeName) && 
+                UTIL_RecordTypes.isRecordTypeActive('Opportunity', recTypeName) && 
+                !UTIL_RecordTypes.isRecordTypeDefault('Opportunity', recTypeName)) {
+
+                rtIdGift = UTIL_RecordTypes.GetRecordTypeId('Opportunity', recTypeName);
+                consSettings.Opp_RecTypes_Excluded_for_Payments__c=recTypeName;
+            }
         }
         
-        npe01__Contacts_And_Orgs_Settings__c PaymentsSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-            new npe01__Contacts_And_Orgs_Settings__c (
-                npe01__Payments_Enabled__c= true, 
-                Opp_RecTypes_Excluded_for_Payments__c=strGift,
-                Opp_Types_Excluded_for_Payments__c='NO-PAYMENT'
-            )
-        );
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(consSettings);
 
         //create a Payment Field Mapping
         npe01__Payment_Field_Mapping_Settings__c pfmNew = new npe01__Payment_Field_Mapping_Settings__c(
