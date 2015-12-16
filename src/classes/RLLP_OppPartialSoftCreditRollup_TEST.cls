@@ -154,4 +154,107 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
         }
         
     }
+
+    /*******************************************************************************************************
+    * @description tests all of the summary fields supported for  Soft Credit rollups.
+    * @return void
+    */ 
+    static testmethod void testPartialSoftCreditRollupsAllStats() {
+        
+        Contact con = new Contact(lastname='Testy');
+        insert con;
+        con = [select Id, lastname, AccountId from Contact];
+        
+        list<Opportunity> listOpp = new list<Opportunity>();
+        String stage = UTIL_UnitTestData_TEST.getClosedWonStage();
+        Date dt = system.Today();
+        listOpp.add(new Opportunity(name='01', CloseDate=dt.addYears(-5), Amount=100, Primary_Contact__c=con.Id, StageName=stage));
+        listOpp.add(new Opportunity(name='02', CloseDate=dt.addYears(-4), Amount=100, Primary_Contact__c=con.Id, StageName=stage));
+        listOpp.add(new Opportunity(name='03', CloseDate=dt.addYears(-3), Amount=100, Primary_Contact__c=con.Id, StageName=stage));
+        listOpp.add(new Opportunity(name='04', CloseDate=dt.addYears(-2), Amount=100, Primary_Contact__c=con.Id, StageName=stage));
+        listOpp.add(new Opportunity(name='05', CloseDate=dt.addYears(-2), Amount=100, Primary_Contact__c=con.Id, StageName=stage));
+        listOpp.add(new Opportunity(name='06', CloseDate=dt.addYears(-1), Amount=100, Primary_Contact__c=con.Id, StageName=stage));
+        listOpp.add(new Opportunity(name='07', CloseDate=dt.addYears(-1), Amount=100, Primary_Contact__c=con.Id, StageName=stage));
+        listOpp.add(new Opportunity(name='08', CloseDate=dt.addYears(+0), Amount=100, Primary_Contact__c=con.Id, StageName=stage));
+        // set a future opp still in this year.
+        Date dtTomorrow = dt;
+        if (dt.dayOfYear() < 364)
+            dtTomorrow = dt.addDays(1);
+        listOpp.add(new Opportunity(name='09', CloseDate=dtTomorrow, Amount=100, Primary_Contact__c=con.Id, StageName=stage));
+        listOpp.add(new Opportunity(name='10', CloseDate=dt.addYears(+1), Amount=100, Primary_Contact__c=con.Id, StageName=stage));
+        listOpp.add(new Opportunity(name='11', CloseDate=dt.addYears(+1), Amount=100, Primary_Contact__c=con.Id, StageName=stage));
+        insert listOpp;
+        
+        // primary OCR's automatically created
+        list<OpportunityContactRole> listOCR = [select Id, ContactId, OpportunityId, Role, IsPrimary from OpportunityContactRole];
+        system.assertEquals(listOpp.size(), listOCR.size());
+
+        // change them to Soft Credit OCR's
+        for (OpportunityContactRole ocr : listOCR) {
+            ocr.Role = 'Soft Credit';        
+            ocr.IsPrimary = false;
+        }
+        update listOCR;
+        
+        // create our Partial Soft Credits
+        list<Partial_Soft_Credit__c> listPSC = new list<Partial_Soft_Credit__c>();
+        for (OpportunityContactRole ocr : listOCR) {
+            listPSC.add(new Partial_Soft_Credit__c(
+                Contact__c = ocr.ContactId,
+                Opportunity__c = ocr.OpportunityId,
+                Role_Name__c = ocr.Role,
+                Contact_Role_ID__c = ocr.Id,
+                Amount__c = 10                
+                ));
+        }
+        insert listPSC;
+        
+        // run our Partial Soft Credit Rollups
+        RLLP_OppRollup rllp = new RLLP_OppRollup();
+        RLLP_OppRollup_UTIL util = new RLLP_OppRollup_UTIL();        
+        listCon = (list<Contact>)Database.query(util.buildContactQuery());
+        system.assertEquals(1, listCon.size());
+
+        Test.startTest();
+        rllp.rollupSoftCreditsWithPartialSupport(listCon);
+        Test.stopTest();
+        
+        // verify results
+        con = [select Id, 
+               First_Soft_Credit_Amount__c,
+               First_Soft_Credit_Date__c,
+               Largest_Soft_Credit_Amount__c,
+               Largest_Soft_Credit_Date__c,
+               Last_Soft_Credit_Amount__c,
+               Last_Soft_Credit_Date__c,                                                                              
+               npo02__Soft_Credit_Total__c,
+               Number_of_Soft_Credits__c,
+               npo02__Soft_Credit_This_Year__c,
+               Number_of_Soft_Credits_This_Year__c,
+               npo02__Soft_Credit_Last_Year__c,
+               Number_of_Soft_Credits_Last_Year__c,
+               npo02__Soft_Credit_Two_Years_Ago__c,
+               Number_of_Soft_Credits_Two_Years_Ago__c,
+               Soft_Credit_Last_N_Days__c,
+               Number_of_Soft_Credits_Last_N_Days__c
+                from Contact];
+                
+        system.assertEquals(10, con.First_Soft_Credit_Amount__c);
+        system.assertEquals(dt.addYears(-5), con.First_Soft_Credit_Date__c);
+        system.assertEquals(10, con.Largest_Soft_Credit_Amount__c);
+        system.assertEquals(dt.addYears(-5), con.Largest_Soft_Credit_Date__c);
+        system.assertEquals(10, con.Last_Soft_Credit_Amount__c);
+        system.assertEquals(dt.addYears(+1), con.Last_Soft_Credit_Date__c);
+        system.assertEquals(110, con.npo02__Soft_Credit_Total__c);
+        system.assertEquals(11, con.Number_of_Soft_Credits__c);
+        system.assertEquals(20, con.npo02__Soft_Credit_This_Year__c);
+        system.assertEquals(2, con.Number_of_Soft_Credits_This_Year__c);
+        system.assertEquals(20, con.npo02__Soft_Credit_Last_Year__c);
+        system.assertEquals(2, con.Number_of_Soft_Credits_Last_Year__c);
+        system.assertEquals(20, con.npo02__Soft_Credit_Two_Years_Ago__c);
+        system.assertEquals(2, con.Number_of_Soft_Credits_Two_Years_Ago__c);
+        system.assertEquals(60, con.Soft_Credit_Last_N_Days__c);
+        system.assertEquals(6, con.Number_of_Soft_Credits_Last_N_Days__c);
+
+    }
 }
