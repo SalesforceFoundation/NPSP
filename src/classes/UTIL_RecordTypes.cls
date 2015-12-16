@@ -87,7 +87,24 @@ public class UTIL_RecordTypes {
         } else {
             return false;
         }
-        
+    }
+
+    /*******************************************************************************************************
+    * @description Determines whether a record type is default for the current profile.
+    * @param objectName The name of the Object.
+    * @param  recordTypeName The name of the Record Type.
+    * @return Boolean Whether this record type is default for the current profile.
+    */
+    public static boolean isRecordTypeDefault(string objectName, String recordTypeName) {
+        if (!recordTypesByName.containsKey(objectName)) 
+            fillMapsForObject(objectName);
+
+        Map<String, Schema.RecordTypeInfo> rtMap = recordTypesByName.get(objectName);
+        if (rtMap != null && rtMap.containsKey(recordTypeName)) {
+            return rtMap.get(recordTypeName).isDefaultRecordTypeMapping();
+        } else {
+            return false;
+        }
     }
 
     /*******************************************************************************************************
@@ -135,6 +152,7 @@ public class UTIL_RecordTypes {
                 membershiprecordTypeNameForTests = recordTypesList[1].getName();            
             }
         }
+        
         return membershiprecordTypeNameForTests;
     }
         
