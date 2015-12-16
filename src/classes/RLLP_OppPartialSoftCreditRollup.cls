@@ -218,7 +218,7 @@ public class RLLP_OppPartialSoftCreditRollup {
             }
             
             // current year Soft Credit
-            else if (oppDate >= currentYearStart && oppDate <= Date.Today()) {
+            else if (oppDate >= currentYearStart && oppDate < currentYearStart.addYears(+1)) {
                 c.Number_of_Soft_Credits_This_Year__c++;
                 c.npo02__Soft_Credit_This_Year__c += amount;
             }
