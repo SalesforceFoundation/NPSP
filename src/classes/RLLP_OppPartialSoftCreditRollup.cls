@@ -28,12 +28,12 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /*
- * @author Tomas "Bobby" Hnizdil
+ * @author Tomas "Bobby" Hnizdil, Saleforce.org
  * @date 8/22/2013
  * @group Opportunity
  * @description class to update soft credit rollup fields on Contact with values from OpportunityContactRole and Partial_Soft_Credit__c records
  *
- * This code has been contributed by KELL Partners
+ * This code has been contributed by KELL Partners, and further modified and enhanced by Salesforce.org.
  */
 public class RLLP_OppPartialSoftCreditRollup {
     
@@ -41,9 +41,10 @@ public class RLLP_OppPartialSoftCreditRollup {
     * @description calculates the Soft Credit statistics for the specified contacts.  Takes into account 
     * both OpportunityContactRoles and Partial_Soft_Credits
     * @param scope The list of contacts to process
+    * @return void
     */ 
     public static void rollupPartialSoftCredits(List<Contact> scope) {
-        // since called by RLLP_OppRollups, we an assume RLLP_OppRollup_UTIL is set up.
+        // since called by RLLP_OppRollups, we can assume RLLP_OppRollup_UTIL is set up.
         // RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
         
         Date currentYearStart;
@@ -152,6 +153,7 @@ public class RLLP_OppPartialSoftCreditRollup {
     * @param c The Contact
     * @param psc The Partial Soft Credit
     * @param currentYearStart The date that current year starts (to take into account fiscal years)
+    * @return Contact The updated Contact record
     */ 
     private static Contact countPartialSoftCredits(Contact c, Partial_Soft_Credit__c psc, Date currentYearStart) {
         decimal amount = psc.Amount__c != null ? psc.Amount__c : 0;
@@ -163,6 +165,7 @@ public class RLLP_OppPartialSoftCreditRollup {
     * @param c The Contact
     * @param ocr The OpportunityContactRole
     * @param currentYearStart The date that current year starts (to take into account fiscal years)
+    * @return Contact The updated Contact record
     */ 
     private static Contact countOpportunityContactRoles(Contact c, OpportunityContactRole ocr, Date currentYearStart) {
         decimal amount = ocr.Opportunity.Amount != null ? ocr.Opportunity.Amount : 0;
@@ -175,6 +178,7 @@ public class RLLP_OppPartialSoftCreditRollup {
     * @param amount The Amount to credit
     * @param oppDate The CloseDate of the Opp
     * @param currentYearStart The date that current year starts (to take into account fiscal years)
+    * @return Contact The updated Contact record
     */ 
     private static Contact countSoftCreditsSharedLogic(Contact c, decimal amount, Date oppDate, Date currentYearStart) {
         // calculate amounts into correct currency if needed
