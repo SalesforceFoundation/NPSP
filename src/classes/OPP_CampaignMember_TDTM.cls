@@ -60,6 +60,9 @@ public class OPP_CampaignMember_TDTM extends TDTM_Runnable {
 
         if (hasRun)
             return dmlWrapper;
+
+        if (!UTIL_CustomSettingsFacade.getContactsSettings().Automatic_Campaign_Member_Management__c)
+            return dmlWrapper;
             
         for (integer i=0; i<newlist.size(); i++) {
 
