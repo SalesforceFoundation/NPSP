@@ -44,7 +44,15 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
     static integer amountTest = 100;
     static list<Contact> listCon;
     
-    private static void createPSCData(integer cContact, integer cOpp, integer Amount) {
+    /*******************************************************************************************************
+    * @description create test data for Soft Credit and Partial Soft Credit tests. This includes Household
+    * Contacts, Opportunities, OCRs, and Partial Soft Credits.
+    * @param cContact The number of Contacts to create
+    * @param cOpp The number of Opportunities per Contact to create
+    * @param amount The amount to make each Opportunity.  Partial soft credits will be made for amount/2.
+    * @return void
+    */ 
+    private static void createPSCData(integer cContact, integer cOpp, integer amount) {
         
         // create some Contacts in Household Accounts
         listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cContact);
@@ -56,7 +64,7 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
         list<Opportunity> listOpp = new list<Opportunity>();
         for (integer i = 0; i < cOpp; i++) {
             listOpp.addAll(UTIL_UnitTestData_TEST.OppsForContactWithAccountList (listCon, null,             
-                UTIL_UnitTestData_TEST.getClosedWonStage(), system.Today(), Amount, null, null));
+                UTIL_UnitTestData_TEST.getClosedWonStage(), system.Today(), amount, null, null));
         } 
         insert listOpp;
         system.assertEquals(cContact * cOpp, listOpp.size());
@@ -80,13 +88,17 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
                 Opportunity__c = ocr.OpportunityId,
                 Role_Name__c = ocr.Role,
                 Contact_Role_ID__c = ocr.Id,
-                Amount__c = Amount/2                
+                Amount__c = amount/2                
                 ));
         }
         insert listPSC;
     }
 
-    static testmethod void testCurrentSoftCreditRollups() {
+    /*******************************************************************************************************
+    * @description tests the original NPSP Soft Credit rollups for OCR's (not Partial Soft Credits)
+    * @return void
+    */ 
+    static testmethod void testOLDSoftCreditRollups() {
         createPSCData(cContactTest, cOppTest, amountTest);
         
         RLLP_OppRollup rllp = new RLLP_OppRollup();
@@ -107,11 +119,15 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
         for (Contact con : listCon) {
             system.assertEquals(cOppTest * amountTest, con.npo02__Soft_Credit_This_Year__c);
             system.assertEquals(cOppTest * amountTest, con.npo02__Soft_Credit_Total__c);
-            //system.assertEquals(10, con.Number_of_Soft_Credits_This_Year__c);
-            //system.assertEquals(10, con.Number_of_Soft_Credits__c);
+            system.assertEquals(null, con.Number_of_Soft_Credits_This_Year__c);
+            system.assertEquals(null, con.Number_of_Soft_Credits__c);
         }       
     }
 
+    /*******************************************************************************************************
+    * @description tests the new NPSP Soft Credit rollups for OCR's and Partial Soft Credits.
+    * @return void
+    */ 
     static testmethod void testPartialSoftCreditRollups() {
         createPSCData(cContactTest, cOppTest, amountTest);
 
