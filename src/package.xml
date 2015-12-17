@@ -104,6 +104,8 @@
         <members>LD_LeadConvertOverride_TEST</members>
         <members>MTCH_FindGifts_CTRL</members>
         <members>MTCH_FindGifts_TEST</members>
+        <members>MTCH_Opportunity_TDTM</members>
+        <members>MTCH_Opportunity_TEST</members>
         <members>OPP_CampaignMember_TDTM</members>
         <members>OPP_CampaignMember_TEST</members>
         <members>OPP_INaming</members>

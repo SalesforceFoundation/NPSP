@@ -40,16 +40,17 @@ public with sharing class MTCH_FindGifts_TEST {
     /*******************************************************************************************************
     * @description test data for all tests
     */ 
-    static Account accMG;
-    static integer cItem = 10;
-    static list<Contact> listCon;
-    static list<Opportunity> listOpp;
-    static Opportunity oppMG;
+    public static Account accMG;
+    public static integer cItem = 10;
+    public static list<Contact> listCon;
+    public static list<Opportunity> listOpp;
+    public static Opportunity oppMG;
         
     /*******************************************************************************************************
     * @description initialize test data for all tests
+    * @param isMGClosedWon whether the Matching Gift should be created as Closed Won or Open.
     */ 
-    static void initTestData() {
+    public static void initTestData(boolean isMGClosedWon) {
         
         // create a matching gift company
         accMG = new Account(name='matching gift company');
@@ -75,8 +76,10 @@ public with sharing class MTCH_FindGifts_TEST {
         insert listOpp;
         
         // create the Matching Gift Opp
-        oppMG = new Opportunity(Name='Matching Gift Opp', AccountId=accMG.Id, Amount=1000, 
-            StageName=UTIL_UnitTestData_TEST.getClosedWonStage(), CloseDate=system.Today());  
+        String stage = UTIL_UnitTestData_TEST.getOpenStage();
+        if (isMGClosedWon)
+            stage = UTIL_UnitTestData_TEST.getClosedWonStage();
+        oppMG = new Opportunity(Name='Matching Gift Opp', AccountId=accMG.Id, Amount=1000, StageName=stage, CloseDate=system.Today());  
         insert oppMG;   
     }
 
@@ -108,7 +111,7 @@ public with sharing class MTCH_FindGifts_TEST {
     * verify OCR and PSC created
     */ 
     static testmethod void testCreateMatches() {
-        initTestData();
+        initTestData(true);
         Test.setCurrentPage(Page.MTCH_FindGifts);
         MTCH_FindGifts_CTRL ctrl = new MTCH_FindGifts_CTRL(new ApexPages.StandardController(oppMG));
         system.assertEquals(cItem/2, ctrl.potentialGifts.size());
@@ -134,7 +137,7 @@ public with sharing class MTCH_FindGifts_TEST {
     * verify OCR and PSC deleted
     */ 
     static testmethod void testUnmatchMatches() {
-        initTestData();
+        initTestData(true);
         createMatchesWithTestData();
         Test.setCurrentPage(Page.MTCH_FindGifts);
         MTCH_FindGifts_CTRL ctrl = new MTCH_FindGifts_CTRL(new ApexPages.StandardController(oppMG));
@@ -161,7 +164,7 @@ public with sharing class MTCH_FindGifts_TEST {
     * verify OCR and PSC created
     */ 
     static testmethod void testCreateSearchedMatches() {
-        initTestData();
+        initTestData(true);
         Test.setCurrentPage(Page.MTCH_FindGifts);
         MTCH_FindGifts_CTRL ctrl = new MTCH_FindGifts_CTRL(new ApexPages.StandardController(oppMG));
         system.assertEquals(cItem/2, ctrl.potentialGifts.size());
