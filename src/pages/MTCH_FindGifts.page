@@ -38,7 +38,9 @@
                     <apex:commandButton action="{!showSearchSection}" reRender="search" value="{!$Label.mtchFindMoreGifts}" rendered="{!!showSearchSection}"/>
                 </apex:pageBlockSection>
                 <apex:outputPanel rendered="{!showSearchSection}" >
-                <apex:pageBlockSection title="{!$Label.mtchFindMoreGifts}" columns="2" collapsible="false">
+                <apex:pageBlockSection title="{!$Label.mtchFindMoreGifts}" columns="2" collapsible="false" />
+                    <div><p>{!$Label.mtchFindMoreGiftsInfo}</p><p/></div>                                            
+                <apex:pageBlockSection columns="2" collapsible="false">
                     <apex:inputField value="{!searchFieldsWrapper.AccountId}" label="{!$ObjectType.Account.Label}" />
                     <apex:inputField value="{!searchFieldsWrapper.ReportsToId}" label="{!$ObjectType.Opportunity.Fields.Primary_Contact__c.Label}" />
                     <apex:inputField value="{!searchFieldsWrapper.First_Soft_Credit_Date__c}" label="{!$Label.mtchCloseDateStart}" />

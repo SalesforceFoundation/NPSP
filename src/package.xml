@@ -946,6 +946,7 @@
         <members>mtchFindMatchedGiftsPageBlock</members>
         <members>mtchFindMatchedGiftsSectionHeader</members>
         <members>mtchFindMoreGifts</members>
+        <members>mtchFindMoreGiftsInfo</members>
         <members>mtchSelectCbxTitle</members>
         <members>mtchTotalMatchingGift</members>
         <members>mtchTotalSelected</members>

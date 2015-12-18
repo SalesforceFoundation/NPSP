@@ -2516,6 +2516,14 @@
         <value>Find More Gifts</value>
     </labels>
     <labels>
+        <fullName>mtchFindMoreGiftsInfo</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>mtchFindMoreGiftsInfo</shortDescription>
+        <value>Fill in one or more filters, and then click on Search.</value>
+    </labels>
+    <labels>
         <fullName>mtchSelectCbxTitle</fullName>
         <categories>Find Matched Gifts</categories>
         <language>en_US</language>
