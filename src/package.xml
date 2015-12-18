@@ -128,6 +128,7 @@
         <members>PMT_PaymentWizard_CTRL</members>
         <members>PMT_PaymentWizard_TEST</members>
         <members>PMT_Payment_TDTM</members>
+        <members>PSC_PartialSoftCredit_TDTM</members>
         <members>RD_AddDonationsBTN_CTRL</members>
         <members>RD_BulkTests_TEST</members>
         <members>RD_InstallScript_BATCH</members>
@@ -308,6 +309,7 @@
         <members>TDTM_HouseholdObject</members>
         <members>TDTM_Lead</members>
         <members>TDTM_Opportunity</members>
+        <members>TDTM_PartialSoftCredit</members>
         <members>TDTM_RecurringDonation</members>
         <members>TDTM_Relationship</members>
         <name>ApexTrigger</name>

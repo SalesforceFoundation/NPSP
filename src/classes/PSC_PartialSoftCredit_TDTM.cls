@@ -1,0 +1,111 @@
+/*
+    Copyright (c) 2015 Salesforce.org
+    All rights reserved.
+    
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+    
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Salesforce.org nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+ 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    POSSIBILITY OF SUCH DAMAGE.
+*/
+/**
+* @author Salesforce.org
+* @date 2015
+* @group Opportunities
+* @description Trigger Handler on Partial Soft Credit for PSC management 
+*/
+public class PSC_PartialSoftCredit_TDTM extends TDTM_Runnable {
+
+    /*******************************************************************************************************
+    * @description Trigger Handler on Partial Soft Credit that handles PSC sychronization with OCR's.
+    * @param listNew the list of PSCs from trigger new. 
+    * @param listOld the list of PSCs from trigger old. 
+    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
+    * @param objResult the describe for PSC 
+    * @return dmlWrapper.  
+    ********************************************************************************************************/
+    public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
+        TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+
+        // BEFORE INSERT
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
+            matchOrCreateOCRs(listNew);
+            return null;                
+        }
+         
+        return null;
+    }
+
+
+    /*******************************************************************************************************
+    * @description For the PSCs find their matching OCRs, or create them if not found, and store their Id
+    * back in the PSCs.
+    * @param listPSC the list of PSCs from trigger new. 
+    * @return void.  
+    ********************************************************************************************************/
+    private void matchOrCreateOCRs(list<Partial_Soft_Credit__c> listPSC) {
+    
+        // collect all our Opps and Contacts referenced by the PSC's
+        set<Id> setOppId = new set<Id>();
+        set<Id> setConId = new set<Id>();
+        for (Partial_Soft_Credit__c psc : listPSC) { 
+            setOppId.add(psc.Opportunity__c);
+            setConId.add(psc.Contact__c);
+        }
+
+        // create a map of all OCR's for the Opps in question
+        // our map will use conId-oppId as its key
+        map<String, OpportunityContactRole> mapConIdOppIdToOCR = new map<String, OpportunityContactRole>();
+        for (OpportunityContactRole ocr : [select Id, ContactId, OpportunityId, Role, IsPrimary from OpportunityContactRole 
+                where ContactId in :setConId and OpportunityId in :setOppId]) {
+            mapConIdOppIdToOCR.put(ocr.ContactId + '-' + ocr.OpportunityId, ocr);        
+        }
+            
+        // now go thru all our new PSC's, see if we find an existing OCR to use, otherwise create a new OCR
+        list<OpportunityContactRole> listOCRNew = new list<OpportunityContactRole>();
+        for (Partial_Soft_Credit__c psc : listPSC) {
+            OpportunityContactRole ocr = mapConIdOppIdToOCR.get(psc.Contact__c + '-' + psc.Opportunity__c);
+            if (ocr == null) {
+                ocr = new OpportunityContactRole(OpportunityId=psc.Opportunity__c, ContactId=psc.Contact__c, Role=psc.Role_Name__c);
+                listOCRNew.add(ocr);
+            }
+        } 
+        
+        // now we must create the new OCR's so we can then store their Id back in the PSC's
+        insert listOCRNew;
+        
+        // add these new OCR's to our OCR map
+        for (OpportunityContactRole ocr : listOCRNew) {
+            mapConIdOppIdToOCR.put(ocr.ContactId + '-' + ocr.OpportunityId, ocr);        
+        }
+         
+        // now set the matching OCR in each PSC
+        for (Partial_Soft_Credit__c psc : listPSC) {
+            OpportunityContactRole ocr = mapConIdOppIdToOCR.get(psc.Contact__c + '-' + psc.Opportunity__c);
+            if (ocr != null) {
+                psc.Contact_Role_ID__c = ocr.Id;
+            }
+        }
+        
+        // we explicitly do not update the PSC's, since we know this is called from Before triggers!     
+    }
+}
