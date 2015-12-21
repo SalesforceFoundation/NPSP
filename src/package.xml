@@ -129,6 +129,7 @@
         <members>PMT_PaymentWizard_TEST</members>
         <members>PMT_Payment_TDTM</members>
         <members>PSC_PartialSoftCredit_TDTM</members>
+        <members>PSC_PartialSoftCredit_TEST</members>
         <members>RD_AddDonationsBTN_CTRL</members>
         <members>RD_BulkTests_TEST</members>
         <members>RD_InstallScript_BATCH</members>

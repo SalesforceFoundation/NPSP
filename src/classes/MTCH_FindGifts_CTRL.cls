@@ -154,11 +154,13 @@ public with sharing class MTCH_FindGifts_CTRL {
                         Role_Name__c = role,
                         Opportunity__c = opp.Id
                     ));
+                    /* now that PSC trigger handlers creates OCRs if needed, no need to create them here.
                     roles.add(new OpportunityContactRole(
                         ContactId = o.OpportunityContactRoles[0].ContactId,
                         OpportunityId = opp.Id,
                         Role = role
                     ));
+                    */
                 }
             }
             if (!selection.get(o.Id) && o.Matching_Gift__c != null){
@@ -185,6 +187,7 @@ public with sharing class MTCH_FindGifts_CTRL {
         }
         try {
             update allPotentialGifts;
+            /* now that PSC trigger handlers creates OCRs if needed, no need to create them here.
             if (roles.size() > 0){
                 insert roles;
                 for (Integer i = 0; i < roles.size(); i++){
@@ -192,6 +195,9 @@ public with sharing class MTCH_FindGifts_CTRL {
                 }
                 insert softCredits;
             }
+            */
+            if (softCredits.size() > 0)
+                insert softCredits;
             if (listPSCDelete.size() > 0)
                delete listPSCDelete;
             if (listOCRDelete.size() > 0)

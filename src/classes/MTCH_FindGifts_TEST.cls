@@ -97,12 +97,14 @@ public with sharing class MTCH_FindGifts_TEST {
         update listOpp;
         
         string role = UTIL_CustomSettingsFacade.getHouseholdsSettings().Matched_Donor_Role__c;
+        /* now that PSC trigger handlers creates OCRs if needed, no need to create them here.
         listOCR.add(new OpportunityContactRole(OpportunityId=oppMG.Id, ContactId=listCon[0].Id, Role=role));
         listOCR.add(new OpportunityContactRole(OpportunityId=oppMG.Id, ContactId=listCon[2].Id, Role=role));
         insert listOCR;
+        */
 
-        listPSC.add(new Partial_Soft_Credit__c(Opportunity__c=oppMG.Id, Contact__c=listCon[0].Id, Contact_Role_ID__c=listOCR[0].Id, Role_Name__c=role, Amount__c=100));
-        listPSC.add(new Partial_Soft_Credit__c(Opportunity__c=oppMG.Id, Contact__c=listCon[2].Id, Contact_Role_ID__c=listOCR[1].Id, Role_Name__c=role, Amount__c=100));
+        listPSC.add(new Partial_Soft_Credit__c(Opportunity__c=oppMG.Id, Contact__c=listCon[0].Id, /* Contact_Role_ID__c=listOCR[0].Id, */ Role_Name__c=role, Amount__c=100));
+        listPSC.add(new Partial_Soft_Credit__c(Opportunity__c=oppMG.Id, Contact__c=listCon[2].Id, /* Contact_Role_ID__c=listOCR[1].Id, */ Role_Name__c=role, Amount__c=100));
         insert listPSC;
     }
     

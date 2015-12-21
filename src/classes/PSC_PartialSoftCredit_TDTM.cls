@@ -51,6 +51,12 @@ public class PSC_PartialSoftCredit_TDTM extends TDTM_Runnable {
             matchOrCreateOCRs(listNew);
             return null;                
         }
+        // BEFORE UPDATE
+        else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            DMLWrapper dmlWrapper = new DmlWrapper();
+            doRoleUpdates(listNew, listOld, dmlWrapper);
+            return dmlWrapper;
+        }
          
         return null;
     }
@@ -108,4 +114,43 @@ public class PSC_PartialSoftCredit_TDTM extends TDTM_Runnable {
         
         // we explicitly do not update the PSC's, since we know this is called from Before triggers!     
     }
+
+    /*******************************************************************************************************
+    * @description For the PSCs allow any Role changes, and propagate to their matching OCR if it previously
+    * had the same Role. 
+    * @param listPSCNew the list of PSCs from trigger new. 
+    * @param listPSCOld the list of PSCs from trigger old.
+    * @param dmlWrapper to hold any OCR changes 
+    * @return void.  
+    ********************************************************************************************************/
+    private void doRoleUpdates(list<Partial_Soft_Credit__c> listPSCNew, list<Partial_Soft_Credit__c> listPSCOld, DmlWrapper dmlWrapper) {
+        map<Id, integer> mapOCRIdToPSCIndex = new map<Id, integer>();
+        
+        for (integer i = 0; i < listPSCNew.size(); i++) {
+            Partial_Soft_Credit__c pscNew = listPSCNew[i];
+            Partial_Soft_Credit__c pscOld = listPSCOld[i];
+            
+            // track RoleName changes to potentially update the associated OCR
+            if (pscNew.Role_Name__c != pscOld.Role_Name__c && pscNew.Contact_Role_ID__c != null) {
+                mapOCRIdToPSCIndex.put(pscNew.Contact_Role_ID__c, i);
+            }    
+        }
+        
+        // now update RoleNames if any changed.
+        if (mapOCRIdToPSCIndex.size() > 0) {
+            set<Id> setOCRId = mapOCRIdToPSCIndex.keySet();
+            list<OpportunityContactRole> listOCR = [select Id, Role from OpportunityContactRole where Id in :setOCRId];
+            for (OpportunityContactRole ocr : listOCR) {
+                integer i = mapOCRIdTOPSCIndex.get(ocr.Id);
+                if (i != null) {
+                    if (ocr.Role == listPscOld[i].Role_Name__c) {
+                        ocr.Role = listPscNew[i].Role_Name__c;
+                        dmlWrapper.objectsToUpdate.add(ocr);
+                    }
+                }
+            }
+        }
+    }
+
+
 }
