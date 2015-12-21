@@ -2,6 +2,7 @@
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
         <fullName>Honoree_Opportunity_Contact_Role__c</fullName>
+        <defaultValue>false</defaultValue>
         <description>Populating this setting will auto-create a soft credit contact role for opportunities with an honoree contact. Leaving this field blank will disable automatic contact role creation for the honoree.</description>
         <externalId>false</externalId>
         <inlineHelpText>Populating this setting will auto-create a soft credit contact role for opportunities with an honoree contact. Leaving this field blank will disable automatic contact role creation for the honoree.</inlineHelpText>
