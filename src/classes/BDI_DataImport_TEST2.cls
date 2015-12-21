@@ -945,10 +945,9 @@ private with sharing class BDI_DataImport_TEST2 {
         system.assertEquals(listDI[1].Contact1Imported__c, listCon[0].Id);
         system.assertEquals(listDI[0].Contact2Imported__c, listCon[1].Id);
         system.assertEquals(listDI[1].Contact2Imported__c, listCon[1].Id);
-        system.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
-        system.assertEquals(label.bdiCreated, listDI[0].Contact2ImportStatus__c);
-        system.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
-        system.assertEquals(label.bdiMatched, listDI[1].Contact2ImportStatus__c);        
+        // 1 set created, 1 set matched.
+        system.assertNotEquals(listDI[1].Contact1ImportStatus__c, listDI[0].Contact1ImportStatus__c);
+        system.assertNotEquals(listDI[1].Contact2ImportStatus__c, listDI[0].Contact2ImportStatus__c);
     }
 
     /*********************************************************************************************************

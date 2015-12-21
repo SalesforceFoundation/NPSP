@@ -614,6 +614,9 @@ public without sharing class UTIL_CustomSettingsFacade {
         contactsSettings.npe01__Payments_Enabled__c = mySettings.npe01__Payments_Enabled__c;
         contactsSettings.Opp_RecTypes_Excluded_for_Payments__c = mySettings.Opp_RecTypes_Excluded_for_Payments__c;
         contactsSettings.Opp_Types_Excluded_for_Payments__c = mySettings.Opp_Types_Excluded_for_Payments__c;
+        contactsSettings.Automatic_Campaign_Member_Management__c = mySettings.Automatic_Campaign_Member_Management__c;
+        contactsSettings.Campaign_Member_Responded_Status__c = mySettings.Campaign_Member_Responded_Status__c;
+        contactsSettings.Campaign_Member_Non_Responded_Status__c = mySettings.Campaign_Member_Non_Responded_Status__c;
         contactsSettings.Organizational_Account_Addresses_Enabled__c = mySettings.Organizational_Account_Addresses_Enabled__c;
         contactsSettings.Simple_Address_Change_Treated_as_Update__c = mySettings.Simple_Address_Change_Treated_as_Update__c;
         contactsSettings.Household_Account_Addresses_Disabled__c = mySettings.Household_Account_Addresses_Disabled__c;
