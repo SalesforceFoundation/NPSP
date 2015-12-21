@@ -118,18 +118,27 @@ public class CON_AddToCampaign {
                         if(sortOrderMax < cms.SortOrder)
                             sortOrderMax = cms.SortOrder;
                             
-                        if(cmsCompare == cms.Label) {
+                        if(getStatusReplacementFromSetting(cmsCompare) == cms.Label) {
                             match = true;
                             break;
                         }
                     }
                 }
-                if(!match && !isSpecialStatus(cmsCompare)) {
+                //create a campaign member status
+                //if this is a special status, only create a status if we have a setting
+                if(!match && (!isSpecialStatus(cmsCompare) || hasStatusReplacement(cmsCompare))) {
                     sortOrderMax ++;
-                    listStatusForInsert.add(new CampaignMemberStatus(campaignId = cIdCompare,
-                                                                Label = cmsCompare,
-                                                                HasResponded = false,
-                                                                SortOrder = sortOrderMax));
+                    //use a responded status only if this is a special responded status, otherwise default to non-responded
+                    boolean isResponded = cmsCompare == Label.campaignMemberStatusResponded;
+
+                    listStatusForInsert.add(
+                        new CampaignMemberStatus(
+                            campaignId = cIdCompare,
+                            Label = getStatusReplacementFromSetting(cmsCompare),
+                            HasResponded = isResponded,
+                            SortOrder = sortOrderMax
+                        )
+                    );
                 }
             }
         }
@@ -178,10 +187,14 @@ public class CON_AddToCampaign {
     private static string getStatus(id CampaignId, string status) {
 
         if (isSpecialStatus(status)) {
+            //if we have a setting for a special status, use that
+            if (hasStatusReplacement(status))
+                return getStatusReplacementFromSetting(status);
+            
             //if this is a special status but our campaign doesn't have any statuses, return a blank status
             if(!MAPcampaignMemberStatuses.containsKey(CampaignId))
                 return null;
-            
+
             //return the appropriate value for the special status key
             for(CampaignMemberStatus cms : MAPcampaignMemberStatuses.get(CampaignId)) {
                 if ((status == Label.campaignMemberStatusDefault && cms.IsDefault) ||
@@ -196,7 +209,30 @@ public class CON_AddToCampaign {
     }
 
     /*******************************************************************************************************
-    * @description Checks if a status is a special status key
+    * @description Gets the replacement setting for a status if one exists, otherwise returns the status.
+    * @param Status The status.
+    * @return string The replacement status from the setting, or the given status if no replacement is found.
+    ********************************************************************************************************/
+    private static string getStatusReplacementFromSetting(string status) {
+        if (status == Label.campaignMemberStatusResponded && !string.isBlank(UTIL_CustomSettingsFacade.getContactsSettings().Campaign_Member_Responded_Status__c))
+            return UTIL_CustomSettingsFacade.getContactsSettings().Campaign_Member_Responded_Status__c;
+        if (status == Label.campaignMemberStatusNonResponded && !string.isBlank(UTIL_CustomSettingsFacade.getContactsSettings().Campaign_Member_Non_Responded_Status__c))
+            return UTIL_CustomSettingsFacade.getContactsSettings().Campaign_Member_Non_Responded_Status__c;
+
+        return status;
+    }
+
+    /*******************************************************************************************************
+    * @description Checks if this status has a setting to replace it.
+    * @param Status The status.
+    * @return Boolean Whether this status has a replacement setting.
+    ********************************************************************************************************/
+    private static boolean hasStatusReplacement(string status) {
+        return (status != getStatusReplacementFromSetting(status));
+    }
+
+    /*******************************************************************************************************
+    * @description Checks if a status is a special status key.
     * @param Status The status.
     * @return string Whether this status is a special status key.
     ********************************************************************************************************/
