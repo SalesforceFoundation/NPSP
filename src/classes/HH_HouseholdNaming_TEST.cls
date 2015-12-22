@@ -153,6 +153,62 @@ public class HH_HouseholdNaming_TEST {
         
     }
     
+    public static testMethod void HouseholdNamingActionTest(){
+      if (strTestOnly != '*' && strTestOnly != 'HouseholdNamingActionTest') return;
+      //settings
+      npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+                new npo02__Households_Settings__c (
+                    npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                    npo02__Advanced_Household_Naming__c = true,
+                    npo02__Always_Rollup_to_Primary_Contact__c = false,
+                    npo02__Enable_Opp_Rollup_Triggers__c = true,
+                    npo02__Excluded_Account_Opp_Rectypes__c = null,
+                    npo02__Excluded_Account_Opp_Types__c = null,
+                    npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                    npo02__Excluded_Contact_Opp_Types__c = null                    
+                ));
+                
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,
+                npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
+                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+            ));
+        
+        integer i;
+        
+        list<Contact> insertlist = new list<Contact>();
+        for (i = 0; i < 20; i++){
+            Contact c = new Contact(LastName = 'LastName' + i, FirstName = 'FirstName' + i, Salutation = 'Mr.');
+            if (i == 1){
+                c.npo02__Naming_Exclusions__c = 'Household Name';
+            }
+            
+            insertlist.add(c);
+        }       
+                
+        insert insertlist;
+        list<id> householdids = new list<id>();
+        
+        list<Contact> clist = [select npo02__Naming_Exclusions__c, npo02__Household__r.id, npo02__Household__r.Name, npo02__Household__r.npo02__Informal_Greeting__c, npo02__Household__r.npo02__Formal_Greeting__c from Contact where id IN :insertlist limit 2000];
+        
+        for (Contact c : clist){
+            if (c.npo02__household__r.id != null)
+              householdids.add(c.npo02__household__r.id);          
+        }
+        system.assert(householdids.size() > 0);
+        
+        test.starttest();         
+        HH_HouseholdNaming_Action.renameHouseholds(householdids);
+        test.stoptest();
+        //test a single member household, lastname, firstname, householdname:
+        Contact con = [select npo02__Household__r.Name, npo02__Household__r.npo02__Informal_Greeting__c, npo02__Household__r.npo02__Formal_Greeting__c from Contact where FirstName = 'FirstName0'];
+        system.assertEquals('LastName0 ' +  system.label.npo02.DefaultHouseholdName, con.npo02__household__r.Name);  
+        system.assertEquals('FirstName0',con.npo02__household__r.npo02__Informal_Greeting__c);
+        system.assertEquals('Mr. FirstName0 LastName0', con.npo02__household__r.npo02__Formal_Greeting__c);
+        
+    }
+
+    
     /*********************************************************************************************************
     * @description tests updating and Household object's contact names
     */

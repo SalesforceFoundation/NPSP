@@ -27,6 +27,10 @@
                 <behavior>Edit</behavior>
                 <field>npo02__Informal_Greeting__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Rename_Me__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
