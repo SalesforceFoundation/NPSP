@@ -3,7 +3,7 @@
 * @date 2015 (12.25)
 * @group Opportunity
 * @group-content ../../ApexDocContent/Opportunity.htm
-* @description Provides an action to generate Opportunitu names for lists of opps
+* @description Provides an action to generate Opportunity names for lists of opps
 */
 global class OPP_OpportunityNaming_Action {
     /*******************************************************************************************************
@@ -13,7 +13,7 @@ global class OPP_OpportunityNaming_Action {
     */
 
 	@InvocableMethod(label='Rename Opportunities' description='Runs automatic opportunity naming for the selected opportunity IDs.')
-  	global static void renameHouseholds(List<ID> oppIds) {
+  	global static void renameOpportunities(List<ID> oppIds) {
     	Savepoint sp = Database.setSavepoint();
         try {
             List<Opportunity> oppsToUpdate = [SELECT Id FROM Opportunity WHERE Id IN :oppIds];
