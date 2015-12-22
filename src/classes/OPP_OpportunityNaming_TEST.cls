@@ -119,6 +119,63 @@ private class OPP_OpportunityNaming_TEST
     }
 
     /*******************************************************************************************************
+    * @description Creates an opportunity name setting and an opportunity, verifies name is calculated and
+    * dates with a blank naming scheme use a default international format.
+    * Modifies the value of a field and runs the invocable action, verifies rename happened correctly.
+    ********************************************************************************************************/
+    @isTest
+    static void testAction() {
+        if (strTestOnly != '*' && strTestOnly != 'testAction') return;
+
+        Opportunity_Naming_Settings__c ons = new Opportunity_Naming_Settings__c(
+            Name = 'foo',
+            Opportunity_Name_Format__c = '{!Account.Name} {!Contact.Name} {!CloseDate} {!RecordType.Name}',
+            Attribution__c = Label.oppNamingBoth
+        );
+        if (hasActiveRecType())
+            ons.Opportunity_Record_Types__c = UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity');
+        insert ons;
+
+        Account acc = new Account(Name='accname');
+        insert acc;
+
+        Contact con = new Contact(LastName='conname');
+        insert con;
+
+        Opportunity opp = new Opportunity(
+            AccountId = acc.id,
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            Name='temp',
+            Amount=8,
+            CloseDate = Date.newInstance(2000, 1, 1),
+            Primary_Contact__c = con.id
+        );
+        if (hasActiveRecType())
+            opp.RecordTypeId = UTIL_RecordTypes.GetRecordTypeId('Opportunity', UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity'));
+        insert opp;
+
+        list<Opportunity> queryOpp = [SELECT Name FROM Opportunity WHERE Id = :opp.id];
+        string oppName = 'accname conname 2000.01.01';
+        if (hasActiveRecType())
+            oppname += ' ' + UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity');
+        system.assertEquals(oppName, queryOpp[0].Name, 'The name should be calculated based on the setting.');
+
+        acc.Name = 'newname';
+        update acc;
+
+		Test.startTest();
+        OPP_OpportunityNaming_Action.renameOpportunities(new List<Id>{opp.Id});
+        Test.stopTest();
+
+        queryOpp = [SELECT Name FROM Opportunity WHERE Id = :opp.id];
+        oppname = 'newname conname 2000.01.01';
+        if (hasActiveRecType())
+            oppname += ' ' + UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity');
+        system.assertEquals(oppName, queryOpp[0].Name, 'The name should be recalculated after running the Invocable Method`.');
+
+    }
+
+    /*******************************************************************************************************
     * @description Creates an opportunity name setting and an opportunity with a missing field and related
     * object. Verifies name is still calculated correctly with blanks instead of missing fields/objects.
     ********************************************************************************************************/
