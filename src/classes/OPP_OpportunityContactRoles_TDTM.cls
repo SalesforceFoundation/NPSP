@@ -324,7 +324,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                 }
                 //finally, manage the notification, if it has changed and it's not the same as either contact already dealt with
                 if (needsManageOCR(newOpp, oldOpp, 'Notification_Recipient_Contact__c')) {
-                    manageOtherOCR(newOpp,oldOpp,mapOppIdMapConIdOCR.get(newOpp.id), 'Notification_Recipient_Contact__c');
+                    manageOtherOCR(newOpp, oldOpp, mapOppIdMapConIdOCR.get(newOpp.id), 'Notification_Recipient_Contact__c');
                 }
             }
         }
@@ -344,7 +344,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
 
         //if we have a primary OCR, separate it from the list
         OpportunityContactRole primaryOCR;
-        for (OpportunityContactRole ocr : mapConIdOCR.values()) {
+        if (mapConIdOCR!=null) for (OpportunityContactRole ocr : mapConIdOCR.values()) {
             if (ocr.isPrimary) {
                 primaryOCR = ocr;
                 mapConIdOCR.remove(ocr.ContactId);
@@ -373,7 +373,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
 
             //if we have an existing OCR for the primary contact
             //update it with the old contact or delete it
-            if (mapConIdOCR.containsKey(idNewPrimaryCon)) {
+            if (mapConIdOCR!=null && mapConIdOCR.containsKey(idNewPrimaryCon)) {
                 OpportunityContactRole newConOCR = mapConIdOCR.get(idNewPrimaryCon);
                 if (idOldCon != null) {
                     newConOCR.ContactId=idOldCon;
