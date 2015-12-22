@@ -10,7 +10,7 @@
 
 	        <section>
 	            <h3 class="section-header">{!$Label.stgLabelAutoContactRoles}</h3>            
-	            <p class="section-help">{!$Label.npe01__Contacts_Settings_Contact_Roles_Help_Text}</p>
+	            <p class="section-help">{!$Label.101A0000003GsW4}</p>
 	            <div class="form-group">
 	                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Opportunity_Contact_Role_Default_role__c.Label}" for="slOCRDR" styleClass="col-sm-4 control-label" />
 	                <div class="col-sm-8 form-control-column">
@@ -56,7 +56,7 @@
             </section>
 	 		<section>
 	            <h3 class="section-header">{!$Label.stgLabelHHOCR}</h3>            
-	            <p class="section-help">{!$Label.npo02__Household_Contact_Roles_Help_Text}</p>
+	            <p class="section-help">{!$Label.1011500000638r2}</p>
                 <div class="form-group">
                     <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Contact_Roles_On__c.Label}" for="cbxHCRO" styleClass="col-sm-4 control-label" />
                     <div class="col-sm-8 form-control-column">
