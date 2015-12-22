@@ -25,6 +25,10 @@
                 <behavior>Edit</behavior>
                 <field>npe01__One2OneContact__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Rename_Me__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>

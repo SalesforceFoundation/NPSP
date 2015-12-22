@@ -197,7 +197,6 @@ public class HH_HouseholdNaming_TEST {
         }
         system.assert(householdids.size() > 0);
         
-        //use future to prevent the before HH trigger from firing    
         test.starttest();         
         HH_HouseholdNaming_Action.renameHouseholds(householdids);
         test.stoptest();
