@@ -3910,6 +3910,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Affiliations Settings</value>
     </labels>
     <labels>
+        <fullName>stgLabelAllRecordTypes</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelAllRecordTypes</shortDescription>
+        <value>- all record types -</value>
+    </labels>
+    <labels>
         <fullName>stgLabelAlloBatchProgress</fullName>
         <categories>Allocation, Settings</categories>
         <language>en_US</language>
@@ -3980,6 +3988,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgLabelCurrentUDR</shortDescription>
         <value>Current User Defined Rollups</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelDoNotRename</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelDoNotRename</shortDescription>
+        <value>- do not rename -</value>
     </labels>
     <labels>
         <fullName>stgLabelErrorNotify</fullName>

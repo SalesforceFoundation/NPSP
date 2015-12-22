@@ -1,6 +1,6 @@
 <apex:page controller="STG_PanelContacts_CTRL" >
     <c:STG_PageHeader sectionLabel="{!$Label.stgNavPeople}" pageLabel="{!$Label.stgNavAccountModel}" />
-    <p>{!$Label.101A0000003GsW3}</p>
+    <p>{!$Label.npe01__Contacts_Settings_Account_Model_Help_Text}</p>
         
     <apex:form id="form" styleClass="form-horizontal">
         <apex:pageMessages id="pageMessages"/>

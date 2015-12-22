@@ -1,6 +1,6 @@
 <apex:page controller="STG_PanelUserRollup_CTRL" >
     <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavUserDefinedRollups}" />
-    <p>{!$Label.1011500000638mS}</p>
+    <p>{!$Label.npo02__UDRDescription}</p>
 
     <apex:form id="form" styleClass="form-horizontal">  
         <apex:pageMessages id="pageMessages"/>

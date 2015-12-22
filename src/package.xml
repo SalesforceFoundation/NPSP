@@ -86,6 +86,7 @@
         <members>HH_CampaignDedupe_BATCH</members>
         <members>HH_HHObject_TDTM</members>
         <members>HH_HouseholdNaming</members>
+        <members>HH_HouseholdNaming_Action</members>
         <members>HH_HouseholdNaming_BATCH</members>
         <members>HH_HouseholdNaming_TEST</members>
         <members>HH_Households</members>
@@ -1073,6 +1074,7 @@
         <members>stgLabelActionColumn</members>
         <members>stgLabelAddressVerification</members>
         <members>stgLabelAfflSettings</members>
+        <members>stgLabelAllRecordTypes</members>
         <members>stgLabelAlloBatchProgress</members>
         <members>stgLabelAllocationsRollupSettings</members>
         <members>stgLabelAllocationsSettings</members>
@@ -1082,6 +1084,7 @@
         <members>stgLabelBatchStatus</members>
         <members>stgLabelCreateMissingPayments</members>
         <members>stgLabelCurrentUDR</members>
+        <members>stgLabelDoNotRename</members>
         <members>stgLabelErrorNotify</members>
         <members>stgLabelExamplesFGFormat</members>
         <members>stgLabelExamplesHHNameFOrmat</members>
