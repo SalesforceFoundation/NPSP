@@ -154,7 +154,7 @@ public class HH_HouseholdNaming_TEST {
     }
     
     public static testMethod void HouseholdNamingActionTest(){
-      if (strTestOnly != '*' && strTestOnly != 'HouseholdNamingTest') return;
+      if (strTestOnly != '*' && strTestOnly != 'HouseholdNamingActionTest') return;
       //settings
       npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
