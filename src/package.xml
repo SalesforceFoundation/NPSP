@@ -128,6 +128,8 @@
         <members>PMT_PaymentWizard_CTRL</members>
         <members>PMT_PaymentWizard_TEST</members>
         <members>PMT_Payment_TDTM</members>
+        <members>PSC_ManageSoftCredits_CTRL</members>
+        <members>PSC_ManageSoftCredits_TEST</members>
         <members>PSC_PartialSoftCredit_TDTM</members>
         <members>PSC_PartialSoftCredit_TEST</members>
         <members>RD_AddDonationsBTN_CTRL</members>
@@ -265,6 +267,7 @@
         <members>OPP_OpportunityNamingBTN</members>
         <members>OPP_SendAcknowledgmentBTN</members>
         <members>PMT_PaymentWizard</members>
+        <members>PSC_ManageSoftCredits</members>
         <members>RD_AddDonationsBTN</members>
         <members>REL_RelationshipsViewer</members>
         <members>STG_PanelAddrVerification</members>
@@ -979,6 +982,20 @@
         <members>pmtWizardWarning</members>
         <members>pmtWizardWriteoffDate</members>
         <members>pmtWizardWriteoffMessage</members>
+        <members>pscManageSoftCreditsAdd</members>
+        <members>pscManageSoftCreditsAmount</members>
+        <members>pscManageSoftCreditsAmountOrPercent</members>
+        <members>pscManageSoftCreditsDirections</members>
+        <members>pscManageSoftCreditsFull</members>
+        <members>pscManageSoftCreditsOppAmount</members>
+        <members>pscManageSoftCreditsPSCAmount</members>
+        <members>pscManageSoftCreditsPartial</members>
+        <members>pscManageSoftCreditsPercent</members>
+        <members>pscManageSoftCreditsRestrictions</members>
+        <members>pscManageSoftCreditsTitle</members>
+        <members>pscManageSoftCreditsType</members>
+        <members>pscManageSoftCreditsUnaccounted</members>
+        <members>pscManageSoftCreditsValidateTotals</members>
         <members>sendAcknowledgmentFailedStatus</members>
         <members>sendAcknowledgmentFailureReasons</members>
         <members>sendAcknowledgmentFireStatus</members>
@@ -1400,6 +1417,7 @@
         <members>Opportunity.Email_Acknowledgment</members>
         <members>Opportunity.Email_Acknowledgments</members>
         <members>Opportunity.Find_Matched_Gifts</members>
+        <members>Opportunity.Manage_Soft_Credits</members>
         <members>Opportunity.Refresh_Name</members>
         <name>WebLink</name>
     </types>

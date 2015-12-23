@@ -2756,6 +2756,118 @@
         <value>You are preparing to writeoff {0} Payment(s) totaling {1}.</value>
     </labels>
     <labels>
+        <fullName>pscManageSoftCreditsAdd</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsAdd</shortDescription>
+        <value>Add another soft credit</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsAmount</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsAmount</shortDescription>
+        <value>Amount</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsAmountOrPercent</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsAmountOrPercent</shortDescription>
+        <value>Amount or Percent</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsDirections</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsDirections</shortDescription>
+        <value>Select Contacts to get Soft Credit</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsFull</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsFull</shortDescription>
+        <value>Full</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsOppAmount</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsOppAmount</shortDescription>
+        <value>Total Amount:</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsPSCAmount</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsPSCAmount</shortDescription>
+        <value>Soft Credit Amount:</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsPartial</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsPartial</shortDescription>
+        <value>Partial</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsPercent</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsPercent</shortDescription>
+        <value>Percent</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsRestrictions</fullName>
+        <categories>Manage Soft Creditds</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsRestrictions</shortDescription>
+        <value>Soft Credit Restrictions</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsTitle</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsTitle</shortDescription>
+        <value>Manage Soft Credits</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsType</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsType</shortDescription>
+        <value>Type</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsUnaccounted</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsUnaccounted</shortDescription>
+        <value>Total Unaccounted:</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsValidateTotals</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsValidateTotals</shortDescription>
+        <value>Total Must Reconcile to Opportunity</value>
+    </labels>
+    <labels>
         <fullName>sendAcknowledgmentFailedStatus</fullName>
         <categories>Send Acknowledgment button</categories>
         <language>en_US</language>

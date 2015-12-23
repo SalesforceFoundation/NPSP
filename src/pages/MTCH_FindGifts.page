@@ -4,8 +4,8 @@
         <apex:pageBlock title="{!$Label.mtchFindMatchedGiftsPageBlock}">
             <apex:pageMessages />
             <apex:pageBlockButtons >
-                <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancel}"/>
                 <apex:commandButton value="{!$Label.stgBtnSave}" action="{!saveAndClose}"/>
+                <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancel}"/>
             </apex:pageBlockButtons>
             <apex:pageBlockSection columns="3">
                 <apex:outputPanel >

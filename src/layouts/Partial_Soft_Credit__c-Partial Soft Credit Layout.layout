@@ -19,10 +19,6 @@
                 <behavior>Required</behavior>
                 <field>Opportunity__c</field>
             </layoutItems>
-            <layoutItems>
-                <behavior>Required</behavior>
-                <field>Contact_Role_ID__c</field>
-            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
