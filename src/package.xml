@@ -987,6 +987,7 @@
         <members>pscManageSoftCreditsAmountOrPercent</members>
         <members>pscManageSoftCreditsDirections</members>
         <members>pscManageSoftCreditsFull</members>
+        <members>pscManageSoftCreditsInvalidContact</members>
         <members>pscManageSoftCreditsOppAmount</members>
         <members>pscManageSoftCreditsPSCAmount</members>
         <members>pscManageSoftCreditsPartial</members>
