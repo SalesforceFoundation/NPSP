@@ -984,6 +984,7 @@
         <members>pmtWizardWriteoffMessage</members>
         <members>pscManageSoftCreditsAdd</members>
         <members>pscManageSoftCreditsAmount</members>
+        <members>pscManageSoftCreditsAmountMissing</members>
         <members>pscManageSoftCreditsAmountOrPercent</members>
         <members>pscManageSoftCreditsDirections</members>
         <members>pscManageSoftCreditsFull</members>
@@ -992,6 +993,7 @@
         <members>pscManageSoftCreditsPSCAmount</members>
         <members>pscManageSoftCreditsPartial</members>
         <members>pscManageSoftCreditsPercent</members>
+        <members>pscManageSoftCreditsReconcileFail</members>
         <members>pscManageSoftCreditsRestrictions</members>
         <members>pscManageSoftCreditsTitle</members>
         <members>pscManageSoftCreditsType</members>

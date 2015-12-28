@@ -2772,6 +2772,14 @@
         <value>Amount</value>
     </labels>
     <labels>
+        <fullName>pscManageSoftCreditsAmountMissing</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsAmountMissing</shortDescription>
+        <value>Please enter a soft credit amount for all entries.</value>
+    </labels>
+    <labels>
         <fullName>pscManageSoftCreditsAmountOrPercent</fullName>
         <categories>Manage Soft Credits</categories>
         <language>en_US</language>
@@ -2794,6 +2802,14 @@
         <protected>false</protected>
         <shortDescription>pscManageSoftCreditsFull</shortDescription>
         <value>Full</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsInvalidContact</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsInvalidContact</shortDescription>
+        <value>{0} is the Primary Contact for this Opportunity. You cannot add Soft Credit to this Contact.</value>
     </labels>
     <labels>
         <fullName>pscManageSoftCreditsOppAmount</fullName>
@@ -2826,6 +2842,14 @@
         <protected>false</protected>
         <shortDescription>pscManageSoftCreditsPercent</shortDescription>
         <value>Percent</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsReconcileFail</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsReconcileFail</shortDescription>
+        <value>Total soft credit amount must equal the opportunity amount.</value>
     </labels>
     <labels>
         <fullName>pscManageSoftCreditsRestrictions</fullName>
