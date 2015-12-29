@@ -39,7 +39,7 @@ private class OPP_OpportunityContactRoles_TEST {
     * @description if you only want to run one test in this class, fill in its name here.
     * if you want to run all tests, then use '*'
     */
-    private static string strTestOnly = 'avoidDuplicateCRs';
+    private static string strTestOnly = '*';
  
     /*******************************************************************************************************
     * @description Role values to use in settings.
