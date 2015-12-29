@@ -209,9 +209,9 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
             list<id> c2HId = contactIdToHouseholdId.values();
             // query all contacts in all the Households
             if (recordTypesOnCons)
-                householdContacts = database.query('select id, npo02__Household__c, RecordTypeId, AccountId, Account.npe01__SYSTEM_AccountType__c from Contact where npo02__Household__c IN :c2HId or AccountId in :c2HId');
+                householdContacts = database.query('select id, npo02__Household__c, RecordTypeId, AccountId, Account.npe01__SYSTEM_AccountType__c from Contact where Deceased__c=FALSE AND (npo02__Household__c IN :c2HId or AccountId in :c2HId)');
             else
-                householdContacts = database.query('select id, npo02__Household__c, AccountId, Account.npe01__SYSTEM_AccountType__c from Contact where npo02__Household__c IN :c2HId or AccountId in :c2HId');
+                householdContacts = database.query('select id, npo02__Household__c, AccountId, Account.npe01__SYSTEM_AccountType__c from Contact where Deceased__c=FALSE AND (npo02__Household__c IN :c2HId or AccountId in :c2HId)');
             //UTIL_Debug.debug('DJH***** householdContacts: ' + householdContacts);
                                  
             // create a map of Household Id to list of member contacts
