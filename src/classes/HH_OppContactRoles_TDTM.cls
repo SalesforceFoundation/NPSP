@@ -146,24 +146,26 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
             // query for OppConRoles where primary=true and OppID in arg set
             // query changed to also include Role = default role, because Contact Merge scenarios were clearing isPrimary (not by our code)!
             map<String,Id> contactOppToContactRole = new map<String,Id>();
-            OpportunityContactRole[] conRoles = [select Id,OpportunityId, ContactId From OpportunityContactRole 
-                WHERE (IsPrimary = true OR Role = :ContactsSettings.npe01__Opportunity_Contact_Role_Default_role__c) 
-                AND Opportunity.Id IN :oppsForContactRoles.values() ];
+            OpportunityContactRole[] conRoles = [select Id, OpportunityId, ContactId, Role, isPrimary From OpportunityContactRole 
+                WHERE OpportunityId IN :oppsForContactRoles.values() ];
             //UTIL_Debug.debug('DJH***** existing conRoles: ' + conRoles);
             
             String uniqueConRole = '';
             // now loop through the results and build the map
             for (OpportunityContactRole thisCR : conRoles) {
-                contactIds.add(thisCR.ContactId);
-                if (contactIdToOpps.get(thisCR.ContactId) == null)
-                    contactIdToOpps.put(thisCR.ContactId, new List<Opportunity>());
-                contactIdToOpps.get(thisCR.ContactId).add(oppsForContactRoles.get(thisCR.OpportunityId));    
                 uniqueConRole = string.valueOf(thisCR.OpportunityId) + string.valueOf(thisCR.ContactId);
                 contactOppToContactRole.put(uniqueConRole , thisCR.Id);
                 
-                // now remove any Primary_Contact__c or npe01__One2OneContact__c that may conflict with the primary ocr already created
-                oppsForContactRoles.get(thisCR.OpportunityId).Primary_Contact__c = null;
-                oppsForContactRoles.get(thisCR.OpportunityId).account.npe01__One2OneContact__c = null;
+                if (thisCR.isPrimary || thisCR.Role == ContactsSettings.npe01__Opportunity_Contact_Role_Default_role__c) {
+                    contactIds.add(thisCR.ContactId);
+                    if (contactIdToOpps.get(thisCR.ContactId) == null)
+                        contactIdToOpps.put(thisCR.ContactId, new List<Opportunity>());
+                    contactIdToOpps.get(thisCR.ContactId).add(oppsForContactRoles.get(thisCR.OpportunityId));    
+                    
+                    // now remove any Primary_Contact__c or npe01__One2OneContact__c that may conflict with the primary ocr already created
+                    oppsForContactRoles.get(thisCR.OpportunityId).Primary_Contact__c = null;
+                    oppsForContactRoles.get(thisCR.OpportunityId).account.npe01__One2OneContact__c = null;
+                }
             }
 
             // loop throught the Opportunities
@@ -188,8 +190,6 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
                 else if (contactIdToOpps.get(thisOpp.Primary_Contact__c) != null) 
                     contactIdToOpps.get(thisOpp.Primary_Contact__c).add(thisOpp);                                            
             }            
-            
-        
 
             // map for contacts to their households because we can't get a query with Opp Id, Contact Id, and Household Id
             map<Id,Id> contactIdToHouseholdId = new map<Id,Id>();
@@ -242,9 +242,9 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
                         // loop through all households members
                         for (Contact householdMember : householdIdToContact.get(contactIdToHouseholdId.get(thisContactId))) {
                             
+                            uniqueConRole = string.valueOf(thisOpp.Id) + string.valueOf(householdMember.Id);
                             // different role for primary donor
                             if (thisContactId == householdMember.Id) {
-                                uniqueConRole = string.valueOf(thisOpp.Id) + string.valueOf(householdMember.Id);
                                 if (contactOppToContactRole.get(uniqueConRole) != null) {
                                     OpportunityContactRole thisRole = new OpportunityContactRole(id=contactOppToContactRole.get(uniqueConRole));
                                     thisRole.Role = ContactsSettings.npe01__Opportunity_Contact_Role_Default_role__c;
@@ -263,7 +263,8 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
                                 if (recordTypesOnCons && conRecordTypesToExclude.contains((id)householdMember.get('RecordTypeId'))) {
                                    // backwards, but prevents having to query for a RecordTypeId that may or may not be there...
                                                                                             
-                                } else {
+                                //only create contact role if we don't have one for this contact/opportunity
+                                } else if (!contactOppToContactRole.containsKey(uniqueConRole)){
                                     OpportunityContactRole thisRole = new OpportunityContactRole();
                                     thisRole.OpportunityId = thisOpp.Id;
                                     thisRole.ContactId = householdMember.Id;

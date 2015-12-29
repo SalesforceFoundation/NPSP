@@ -39,7 +39,7 @@ private class OPP_OpportunityContactRoles_TEST {
     * @description if you only want to run one test in this class, fill in its name here.
     * if you want to run all tests, then use '*'
     */
-    private static string strTestOnly = '*';
+    private static string strTestOnly = 'avoidDuplicateCRs';
  
     /*******************************************************************************************************
     * @description Role values to use in settings.
@@ -450,5 +450,75 @@ private class OPP_OpportunityContactRoles_TEST {
         system.assertEquals(testCons[1].id,queryOCR[1].ContactId, 'Second OCR is for honoree contact.');
         system.assertEquals(false,queryOCR[1].isPrimary, 'Honoree OCR is not marked primary.');
         system.assertEquals(HonoreeRoleforTest,queryOCR[1].Role, 'Honoree OCR has the correct role.');
+    }
+
+    /*******************************************************************************************************
+    * @description Verifies that contact roles for household members aren't created as duplicates to contact
+    * roles
+    */
+    static testMethod void avoidDuplicateCRs(){
+        if (strTestOnly != '*' && strTestOnly != 'avoidDuplicateCRs') return;
+        
+        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c(
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                npe01__Opportunity_Contact_Role_Default_role__c = donorRoleforTest,
+                Honoree_Opportunity_Contact_Role__c = HonoreeRoleforTest, 
+                Notification_Recipient_Opp_Contact_Role__c = NotificationRecipientRoleforTest
+            )
+        );
+
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (
+                npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR,
+                npo02__Household_Contact_Roles_On__c = true,
+                npo02__Household_Member_Contact_Role__c='Household Member'
+            )
+        );
+
+        Contact primaryCon = UTIL_UnitTestData_TEST.getContact();
+        insert primaryCon;
+
+        list<Contact> queryCon = [select AccountId from Contact where Id = :primaryCon.id];
+        Id hhAccountId = queryCon[0].AccountId;
+
+        list<contact> householdMembers = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(2);
+        householdMembers[0].AccountId = hhAccountId;
+        householdMembers[1].AccountId = hhAccountId;
+        insert householdMembers;
+
+        queryCon = [SELECT Id, AccountId, Name FROM Contact WHERE Id IN :householdMembers OR Id = :primaryCon.id];
+        for (integer i=0; i<queryCon.size(); i++)
+            system.assertEquals(hhAccountId, queryCon[i].AccountId, 'Contacts should be in the same household.');
+
+        Opportunity opp = new Opportunity(
+            Name = 'Test',
+            Primary_Contact__c = primaryCon.id,
+            Honoree_Contact__c = householdMembers[0].id,
+            CloseDate = date.today(),
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
+        );
+
+        Test.startTest();
+        insert opp;
+        Test.stopTest();
+
+        list<Opportunity> queryOpp = [SELECT Id, Notification_Recipient_Name__c, Honoree_Name__c FROM Opportunity WHERE Id = :opp.id];
+        system.assertEquals(queryCon[1].Name, queryOpp[0].Honoree_Name__c, 'Honoree Name should be populated.');
+
+        list<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp.id ORDER BY ContactId];
+        system.assertEquals(3,queryOCR.size(), 'Three Opportunity Contact Roles should be created.');
+        
+        system.assertEquals(primaryCon.id,queryOCR[0].ContactId, 'First OCR is for primary contact.' + queryOCR[0]);
+        system.assertEquals(true,queryOCR[0].isPrimary, 'Primary OCR is marked primary.' + queryOCR[0]);
+        system.assertEquals(donorRoleforTest,queryOCR[0].Role, 'Primary OCR has the correct role.' + queryOCR[0]);
+
+        system.assertEquals(householdMembers[0].id,queryOCR[1].ContactId, 'Second OCR is for honoree contact.');
+        system.assertEquals(false,queryOCR[1].isPrimary, 'Honoree OCR is not marked primary.');
+        system.assertEquals(HonoreeRoleforTest,queryOCR[1].Role, 'Honoree OCR has the correct role.');
+
+        system.assertEquals(householdMembers[1].id,queryOCR[2].ContactId, 'Third OCR is for household member contact.');
+        system.assertEquals(false,queryOCR[2].isPrimary, 'Household member OCR is not marked primary.');
+        system.assertEquals('Household Member',queryOCR[2].Role, 'Household member OCR has the correct role.');
     }
 }
