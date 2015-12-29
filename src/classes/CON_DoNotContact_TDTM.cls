@@ -36,6 +36,8 @@
 */
 public class CON_DoNotContact_TDTM extends TDTM_Runnable {
     
+    private DmlWrapper dmlWrapper = new DmlWrapper();
+
     /*******************************************************************************************************
     * @description Handles deceased and do not contact fields.
     * @param listNew the list of Accounts from trigger new. 
@@ -47,15 +49,46 @@ public class CON_DoNotContact_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
+        set<id> setAccountIds = new set<id>();
+        map<id,Account> mapAccountIdAccounts = new map<id,Account>();
+
+        //can't bind a query to a constant from another class, so we're duplicating it here.
+        string HH_ACCOUNT_TYPE = CAO_Constants.HH_ACCOUNT_TYPE;
+
+        for (integer i=0; i<newlist.size();i++) {
+            Contact con = (Contact)newlist[i];
+            if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
+                if(con.Deceased__c && con.AccountID!=null) {
+                    setAccountIds.add(con.AccountId);
+                }
+            } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+                Contact oldCon = (Contact)oldlist[i];
+                if (con.Deceased__c != oldCon.Deceased__c && con.AccountId!=null) {
+                    setAccountIds.add(con.AccountId);
+                }
+            }
+        }
+
+        if (!setAccountIds.isEmpty()) {
+            string queryAccountsContacts = 'SELECT Id, npe01__One2OneContact__c, ';
+            queryAccountsContacts += '(SELECT Id FROM Contacts WHERE Deceased__c=false AND Id NOT IN :newlist ORDER BY npo02__TotalOppAmount__c DESC, CreatedDate ASC)';
+            queryAccountsContacts += 'FROM Account WHERE Id IN :setAccountIds AND npe01__SYSTEM_AccountType__c = :HH_ACCOUNT_TYPE';
+            mapAccountIdAccounts = new map<id,Account>((list<Account>)database.query(queryAccountsContacts));
+        }
+
         for (integer i=0; i<newlist.size();i++) {
 
             Contact con = (Contact)newlist[i];
+            Account acc = null;
+            if (con.AccountId!=null && mapAccountIdAccounts.containsKey(con.AccountId))
+                acc = mapAccountIdAccounts.get(con.AccountId);
             
             if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-                if (con.Deceased__c)
-                    markContactDeceased(con);
-                else if (con.Do_Not_Contact__c)
+                if (con.Deceased__c) {
+                    markContactDeceased(con, acc);
+                } else if (con.Do_Not_Contact__c) {
                     markContactDoNotContact(con);
+                }
             }
             
             if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
@@ -64,25 +97,45 @@ public class CON_DoNotContact_TDTM extends TDTM_Runnable {
                 //deceased and do not contact: updates related fields for both checking and unchecking the box.
                 //prefers deceased as the deceased already marks the Do Not Contact fields, in case the user changes both values.
                 if (con.Deceased__c != oldCon.Deceased__c)
-                    markContactDeceased(con);
+                    markContactDeceased(con, acc);
                 else if (con.Do_Not_Contact__c != oldCon.Do_Not_Contact__c)
                     markContactDoNotContact(con);
             }
         }
         
-        return new DmlWrapper();
+        return dmlWrapper;
 	}
     
     /*******************************************************************************************************
-    * @description Toggles additional Contact fields as necessary when a contact is flagged as deceased. 
+    * @description Sets Do Not Contact and related fields when a contact is flagged as deceased. Removes from
+    * Household name if there are other non-deceased members in the household.
     * @param con The Contact record.
-    * @return void.  
     ********************************************************************************************************/
-    public void markContactDeceased(Contact con) {
+    public void markContactDeceased(Contact con, Account acc) {
 
         con.Do_Not_Contact__c = con.Deceased__c;
         markContactDoNotContact(con);
 
+        if (acc!=null && con.Deceased__c) {
+            list<Contact> contacts = (list<Contact>)acc.Contacts;
+            //if there are non-deceased members of the household
+            //Exclude from household name and update household's primary contact
+            if (!contacts.isEmpty()) {
+                excludeFromHHNaming(con);
+                if (con.Id != null && acc.npe01__One2OneContact__c == con.id) {
+                    acc.npe01__One2OneContact__c = contacts[0].id;
+                    dmlWrapper.objectsToUpdate.add(acc);
+                }
+            }
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Toggles Contact household naming fields based on a contact's deceased flag. 
+    * @param con The Contact record.
+    * @return void.  
+    ********************************************************************************************************/
+    public void excludeFromHHNaming(Contact con){
         con.Exclude_from_Household_Name__c = con.Deceased__c;
         con.Exclude_from_Household_Formal_Greeting__c = con.Deceased__c;
         con.Exclude_from_Household_Informal_Greeting__c = con.Deceased__c;
@@ -90,16 +143,14 @@ public class CON_DoNotContact_TDTM extends TDTM_Runnable {
         HH_Households_TDTM.copyNamingExclusionsFromCheckboxes(con);
     }
 
+
 	/*******************************************************************************************************
     * @description Toggles additional Contact fields as necessary when a contact is flagged as "do not contact". 
     * @param con The Contact record.
     * @return void.  
     ********************************************************************************************************/
     public void markContactDoNotContact(Contact con) {
-
         con.HasOptedOutOfEmail = con.Do_Not_Contact__c;
         con.DoNotCall = con.Do_Not_Contact__c;
-
     }
-
 }
