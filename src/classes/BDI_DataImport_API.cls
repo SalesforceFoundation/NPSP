@@ -37,11 +37,6 @@
 global with sharing class BDI_DataImport_API {
 
      private class BDIException extends Exception {}
-    
-	public static boolean userCanEditSettings {get {
-        return Data_Import_Settings__c.SobjectType.getDescribe().isUpdateable();
-    }}
-
      
     /*******************************************************************************************************
     * @description Imports all DataImport records that have not been previously imported. Their status is changed
@@ -49,14 +44,14 @@ global with sharing class BDI_DataImport_API {
     * @return ID The ID of the batch job that performs the data import.
     */
     global static ID importData() {
-    	Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-    	Boolean batchRunning = false;
-    	Id apexJobId;
-    	try {
-    	    // ensure we are in the household account model!
-    	    if (!CAO_Constants.isHHAccountModel())
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        Boolean batchRunning = false;
+        Id apexJobId;
+        try {
+            // ensure we are in the household account model!
+            if (!CAO_Constants.isHHAccountModel())
                 throw(new BDIException(Label.bdiHouseholdModelRequired));
-    	    
+            
             // validate settings
             if (diSettings.Contact_Custom_Unique_ID__c != null) {
                 // make sure c1 and c2 have the appropriately named field
@@ -83,7 +78,7 @@ global with sharing class BDI_DataImport_API {
             
             // save any settings changes.
             try {
-            	upsert diSettings;
+                upsert diSettings;
             } catch (Exception ex) {
                 // this is a complete hack to work around the bug
                 // https://github.com/SalesforceFoundation/Cumulus/issues/1094
@@ -93,7 +88,7 @@ global with sharing class BDI_DataImport_API {
                 // custom setting instance.  The workaround is to catch the upsert failing, and
                 // just clear the Id and do an insert.
                 diSettings.Id = null;
-            	insert diSettings;
+                insert diSettings;
             }
             
             batchRunning = true;
