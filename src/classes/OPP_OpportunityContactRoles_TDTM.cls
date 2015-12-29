@@ -168,7 +168,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         }
 
         if (!mapConIdContact.isEmpty()) {
-            mapConIdContact = new map<id,Contact>([SELECT Id, Name, MailingAddress FROM Contact WHERE Id IN :mapConIdContact.keySet()]);
+            mapConIdContact = new map<id,Contact>([SELECT Id, Name FROM Contact WHERE Id IN :mapConIdContact.keySet()]);
             for (integer i=0; i<listOpps.size(); i++) {
                 Opportunity newOpp = listOpps[i];
                 Opportunity oldOpp = listOldOpps!=null && !listOldOpps.IsEmpty() ? listOldOpps[i] : new Opportunity();
@@ -210,7 +210,6 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         }
 
         for (Opportunity opp : listOpp) {
-            id idPrimaryContact = opp.Primary_Contact__c;
             //cloned opportunity is necessary in order to modify the Primary Contact lookup and update the record in the trigger set
             Opportunity clonedOpp = opp.clone(true,true,false,true);
 
@@ -227,7 +226,8 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                 //if our primary contact lookup doesn't match the primary OCR, we'll need to fix the opportunity
                 if (opp.Primary_Contact__c != ocr.ContactId) {
                     //create new opportunity record to allow DML on current trigger set
-                    clonedOpp.Primary_Contact__c = opp.npe01__Contact_Id_for_Role__c;
+                    clonedOpp.Primary_Contact__c = ocr.ContactId;
+                    clonedOpp.npe01__Contact_Id_for_Role__c = ocr.ContactId;
                     dmlWrapper.objectsToUpdate.add(clonedOpp);
                 }
             //we don't have a primary contact role for this record, create one
@@ -352,7 +352,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         }
         //primary contact is blanked out 
         if (idNewPrimaryCon == null) {
-            //if we have an extant primary OCR, delete it
+            //if we have an existing primary OCR, delete it
             if (primaryOCR != null)
                 dmlWrapper.objectsToDelete.add(primaryOCR);
 
@@ -371,19 +371,17 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                 }
             }
 
-            //if we have an existing OCR for the primary contact
-            //update it with the old contact or delete it
+            //if we have an existing hh member OCR for the primary contact
+            //and the old contact doesn't have an OCR, update the hh member OCR with the old contact
+            //otherwise, delete it
             if (mapConIdOCR!=null && mapConIdOCR.containsKey(idNewPrimaryCon)) {
                 OpportunityContactRole newConOCR = mapConIdOCR.get(idNewPrimaryCon);
-                if (idOldCon != null) {
+                string hhMemberRole = UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Household_Member_Contact_Role__c;
+                
+                if (newConOCR.Role == hhMemberRole && idOldCon != null && !mapConIdOCR.containsKey(idOldCon)) {
                     newConOCR.ContactId=idOldCon;
                     dmlWrapper.objectsToUpdate.add((SObject)newConOCR);
-                    
-                    //if we already have a non-primary contact role for idOldCon,
-                    //delete it to avoid duplicates
-                    if (mapConIdOCR.containsKey(idOldCon))
-                        dmlWrapper.objectsToDelete.add((SObject)newConOCR);
-
+                
                 //no old contact to switch with, just delete the new contact's old OCR
                 } else {
                     dmlWrapper.objectsToDelete.add((SObject)newConOCR);
