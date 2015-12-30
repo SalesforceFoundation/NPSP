@@ -548,14 +548,22 @@
         <members>Opportunity.Grant_Period_Start_Date__c</members>
         <members>Opportunity.Grant_Program_Area_s__c</members>
         <members>Opportunity.Grant_Requirements_Website__c</members>
+        <members>Opportunity.Honoree_Contact__c</members>
+        <members>Opportunity.Honoree_Name__c</members>
         <members>Opportunity.Is_Grant_Renewal__c</members>
         <members>Opportunity.Next_Grant_Deadline_Due_Date__c</members>
+        <members>Opportunity.Notification_Message__c</members>
+        <members>Opportunity.Notification_Preference__c</members>
+        <members>Opportunity.Notification_Recipient_Contact__c</members>
+        <members>Opportunity.Notification_Recipient_Information__c</members>
+        <members>Opportunity.Notification_Recipient_Name__c</members>
         <members>Opportunity.Previous_Grant_Opportunity__c</members>
         <members>Opportunity.Primary_Contact_Campaign_Member_Status__c</members>
         <members>Opportunity.Primary_Contact__c</members>
         <members>Opportunity.Recurring_Donation_Installment_Name__c</members>
         <members>Opportunity.Recurring_Donation_Installment_Number__c</members>
         <members>Opportunity.Requested_Amount__c</members>
+        <members>Opportunity.Tribute_Type__c</members>
         <members>Opportunity_Naming_Settings__c.Attribution__c</members>
         <members>Opportunity_Naming_Settings__c.Date_Format__c</members>
         <members>Opportunity_Naming_Settings__c.Opportunity_Name_Format__c</members>
@@ -571,11 +579,13 @@
         <members>Trigger_Handler__c.Object__c</members>
         <members>Trigger_Handler__c.Trigger_Action__c</members>
         <members>Trigger_Handler__c.User_Managed__c</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.Honoree_Opportunity_Contact_Role__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Automatic_Campaign_Member_Management__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Non_Responded_Status__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Responded_Status__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Household_Account_Addresses_Disabled__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Max_Payments__c</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.Notification_Recipient_Opp_Contact_Role__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Opp_RecTypes_Excluded_for_Payments__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Opp_Types_Excluded_for_Payments__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Organizational_Account_Addresses_Enabled__c</members>
@@ -1094,6 +1104,8 @@
         <members>stgLabelHHOCR</members>
         <members>stgLabelHHObject</members>
         <members>stgLabelHHSettings</members>
+        <members>stgLabelHonoreeNotificationHelpText</members>
+        <members>stgLabelHonoreeNotificationOCR</members>
         <members>stgLabelLeadSettings</members>
         <members>stgLabelMembershipSettings</members>
         <members>stgLabelNewAutoRel</members>

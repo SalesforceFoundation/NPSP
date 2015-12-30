@@ -8,21 +8,20 @@
                 <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
             </apex:outputPanel>
 
-	        <section>
-	            <h3 class="section-header">{!$Label.stgLabelAutoContactRoles}</h3>            
-	            <p class="section-help">{!$Label.npe01__Contacts_Settings_Contact_Roles_Help_Text}</p>
-	            <div class="form-group">
-	                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Opportunity_Contact_Role_Default_role__c.Label}" for="slOCRDR" styleClass="col-sm-4 control-label" />
-	                <div class="col-sm-8 form-control-column">
-		                <apex:outputField value="{!stgService.stgCon.npe01__Opportunity_Contact_Role_Default_role__c}" rendered="{!isReadOnlyMode}" />
-		                <apex:selectList value="{!stgService.stgCon.npe01__Opportunity_Contact_Role_Default_role__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slOCRDR" styleClass="form-control" >
-		                    <apex:selectOptions value="{!listSOContactRoles}"/>
-		                </apex:selectList>
-	                </div>
-	                <div class="col-sm-offset-4 col-sm-8 help-block">
-	                    <apex:outputText value="{!$Label.stgHelpOCRDefaultRole}" />
-	                </div>
-	            </div>
+            <section>
+                <h3 class="section-header">{!$Label.stgLabelAutoContactRoles}</h3>
+                <div class="form-group">
+                    <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Opportunity_Contact_Role_Default_role__c.Label}" for="slOCRDR" styleClass="col-sm-4 control-label" />
+                    <div class="col-sm-8 form-control-column">
+                        <apex:outputField value="{!stgService.stgCon.npe01__Opportunity_Contact_Role_Default_role__c}" rendered="{!isReadOnlyMode}" />
+                        <apex:selectList value="{!stgService.stgCon.npe01__Opportunity_Contact_Role_Default_role__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slOCRDR" styleClass="form-control" >
+                            <apex:selectOptions value="{!listSOContactRoles}"/>
+                        </apex:selectList>
+                    </div>
+                    <div class="col-sm-offset-4 col-sm-8 help-block">
+                        <apex:outputText value="{!$Label.stgHelpOCRDefaultRole}" />
+                    </div>
+                </div>
                 <div class="form-group">
                     <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Always_Rollup_to_Primary_Contact__c.Label}" for="cbxARPC" styleClass="col-sm-4 control-label" />
                     <div class="col-sm-8 form-control-column">
@@ -32,7 +31,7 @@
                         <apex:outputText value="{!$Label.stgHelpRollupPrimaryContact}" />
                     </div>
                 </div>
-	        </section>
+            </section>
             <section>
                 <h3 class="section-header" >{!$Label.stgLabelSoftCredit}</h3>
                 <div class="form-group">
@@ -54,9 +53,9 @@
                     </div>
                 </div>
             </section>
-	 		<section>
-	            <h3 class="section-header">{!$Label.stgLabelHHOCR}</h3>            
-	            <p class="section-help">{!$Label.npo02__Household_Contact_Roles_Help_Text}</p>
+            <section>
+                <h3 class="section-header">{!$Label.stgLabelHHOCR}</h3>            
+                <p class="section-help">{!$Label.npo02__Household_Contact_Roles_Help_Text}</p>
                 <div class="form-group">
                     <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Contact_Roles_On__c.Label}" for="cbxHCRO" styleClass="col-sm-4 control-label" />
                     <div class="col-sm-8 form-control-column">
@@ -69,11 +68,11 @@
                 <div class="form-group">
                     <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Member_Contact_Role__c.Label}" for="slHMCR" styleClass="col-sm-4 control-label" />
                     <div class="col-sm-8 form-control-column">
-	                    <apex:outputField value="{!stgService.stgHH.npo02__Household_Member_Contact_Role__c}" rendered="{!isReadOnlyMode}" />
-	                    <apex:selectList value="{!stgService.stgHH.npo02__Household_Member_Contact_Role__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slHMCR" styleClass="form-control" >
-	                        <apex:selectOptions value="{!listSOOppContactRoles}"/>
-	                    </apex:selectList>
-	                </div>
+                        <apex:outputField value="{!stgService.stgHH.npo02__Household_Member_Contact_Role__c}" rendered="{!isReadOnlyMode}" />
+                        <apex:selectList value="{!stgService.stgHH.npo02__Household_Member_Contact_Role__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slHMCR" styleClass="form-control" >
+                            <apex:selectOptions value="{!listSOOppContactRoles}"/>
+                        </apex:selectList>
+                    </div>
                     <div class="col-sm-offset-4 col-sm-8 help-block">
                         <apex:outputText value="{!$Label.stgHelpOCRRoleForHH}" />
                     </div>
@@ -85,6 +84,35 @@
                     </div>
                     <div class="col-sm-offset-4 col-sm-8 help-block">
                         <apex:outputText value="{!$Label.stgHelpContactRTExcluded}" />
+                    </div>
+                </div>
+            </section>
+            <!-- Honoree and Notification Recipient Contact Roles -->
+            <section>
+                <h3 class="section-header">{!$Label.stgLabelHonoreeNotificationOCR}</h3>            
+                <p class="section-help">{!$Label.stgLabelHonoreeNotificationHelpText}</p>
+                <div class="form-group">
+                    <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Honoree_Opportunity_Contact_Role__c.Label}" for="slHonoreeRole" styleClass="col-sm-4 control-label" />
+                    <div class="col-sm-8 form-control-column">
+                        <apex:outputField value="{!stgService.stgCon.Honoree_Opportunity_Contact_Role__c}" rendered="{!isReadOnlyMode}" />
+                        <apex:selectList value="{!stgService.stgCon.Honoree_Opportunity_Contact_Role__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slHonoreeRole" styleClass="form-control" >
+                            <apex:selectOptions value="{!listSOOppContactRoles}"/>
+                        </apex:selectList>
+                    </div>
+                    <div class="col-sm-offset-4 col-sm-8 help-block">
+                        <apex:outputText value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Honoree_Opportunity_Contact_Role__c.inlineHelpText}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Notification_Recipient_Opp_Contact_Role__c.Label}" for="slNotificationRecipientRole" styleClass="col-sm-4 control-label" />
+                    <div class="col-sm-8 form-control-column">
+                        <apex:outputField value="{!stgService.stgCon.Notification_Recipient_Opp_Contact_Role__c}" rendered="{!isReadOnlyMode}" />
+                        <apex:selectList value="{!stgService.stgCon.Notification_Recipient_Opp_Contact_Role__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slNotificationRecipientRole" styleClass="form-control" >
+                            <apex:selectOptions value="{!listSOOppContactRoles}"/>
+                        </apex:selectList>
+                    </div>
+                    <div class="col-sm-offset-4 col-sm-8 help-block">
+                        <apex:outputText value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Notification_Recipient_Opp_Contact_Role__c.inlineHelpText}" />
                     </div>
                 </div>
             </section>

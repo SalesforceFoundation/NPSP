@@ -621,6 +621,8 @@ public without sharing class UTIL_CustomSettingsFacade {
         contactsSettings.Simple_Address_Change_Treated_as_Update__c = mySettings.Simple_Address_Change_Treated_as_Update__c;
         contactsSettings.Household_Account_Addresses_Disabled__c = mySettings.Household_Account_Addresses_Disabled__c;
         contactsSettings.Payments_Auto_Close_Stage_Name__c = mySettings.Payments_Auto_Close_Stage_Name__c;
+        contactsSettings.Honoree_Opportunity_Contact_Role__c = mySettings.Honoree_Opportunity_Contact_Role__c;
+        contactsSettings.Notification_Recipient_Opp_Contact_Role__c = mySettings.Notification_Recipient_Opp_Contact_Role__c;
         orgContactsSettings = contactsSettings;
         return contactsSettings;
     }
