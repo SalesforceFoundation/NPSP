@@ -136,7 +136,7 @@ public class TDTM_TriggerHandler {
             // changes system behavior.
             if (Test.isRunningTest() && !suppressDebugAssertAfterErrorLogging) {
                 UTIL_Debug.debug('****Stack trace: ' + e.getStackTraceString());
-                system.assertEquals(null, e.getMessage()); 
+                system.assertEquals(null, e.getMessage(), e.getStackTraceString()); 
             }
         }
     }

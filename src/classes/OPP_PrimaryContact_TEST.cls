@@ -139,9 +139,9 @@ public with sharing class OPP_PrimaryContact_TEST {
 
     }
 
-    //test existing non primary ocr on update
     /*******************************************************************************************************
-    * @description Bulk creates opportunities with Primary Contact set, verifies Contact Roles are created.
+    * @description Update an opportunity primary contact to a contact with an existing ocr. Verify that the
+    * old OCR is deleted.
     ********************************************************************************************************/
     static testMethod void testExistingConRoles() {
         if (strTestOnly != '*' && strTestOnly != 'testExistingConRoles') return;
@@ -175,9 +175,8 @@ public with sharing class OPP_PrimaryContact_TEST {
         Test.stopTest();
 
         queryOCR = [SELECT Id, ContactId, IsPrimary FROM OpportunityContactRole WHERE OpportunityId = :opp.id ORDER BY IsPrimary DESC];
-        system.assertEquals(2,queryOCR.size(), 'Two OCRs should exist.');
+        system.assertEquals(1,queryOCR.size(), 'Two OCRs should exist.');
         system.assertEquals(conList[1].id, queryOCR[0].ContactId, 'Contact 0 should be primary.');
-        system.assertEquals(conList[0].id, queryOCR[1].ContactId, 'Contact 1 should be still have a non primary contact role.');
 
     }
 }
