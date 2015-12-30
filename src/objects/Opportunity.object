@@ -600,6 +600,34 @@
         <type>Url</type>
     </fields>
     <fields>
+        <fullName>Honoree_Contact__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>The existing Contact record of the honoree for this donation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The existing Contact record of the honoree for this donation.</inlineHelpText>
+        <label>Honoree Contact</label>
+        <referenceTo>Contact</referenceTo>
+        <relationshipLabel>Opportunities (Honoree Contact)</relationshipLabel>
+        <relationshipName>Honoree_Opportunities</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Honoree_Name__c</fullName>
+        <description>The honoree name as provided by the donor. If this field is left blank, and the Honoree Contact field contains a value, Salesforce automatically populates this field with that value.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The honoree name as provided by the donor. If this field is left blank, and the Honoree Contact field contains a value, Salesforce automatically populates this field with that value.</inlineHelpText>
+        <label>Honoree Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Is_Grant_Renewal__c</fullName>
         <defaultValue>false</defaultValue>
         <description>If selected, indicates that the grant is a renewal of a previous grant.</description>
@@ -631,6 +659,85 @@
         <summaryOperation>min</summaryOperation>
         <trackTrending>false</trackTrending>
         <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Notification_Message__c</fullName>
+        <description>A personalized message for the notification recipient.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>A personalized message for the notification recipient.</inlineHelpText>
+        <label>Notification Message</label>
+        <length>32768</length>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Notification_Preference__c</fullName>
+        <description>How the notification recipient should be notified.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>How the notification recipient should be notified.</inlineHelpText>
+        <label>Notification Preference</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Email</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Postal Mail</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Phone</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Do Not Notify</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Notification_Recipient_Contact__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>The existing Contact record of the person to be notified for this donation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The existing Contact record of the person to be notified for this donation.</inlineHelpText>
+        <label>Notification Recipient Contact</label>
+        <referenceTo>Contact</referenceTo>
+        <relationshipLabel>Opportunities (Notification Recipient)</relationshipLabel>
+        <relationshipName>Notification_Opportunities</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Notification_Recipient_Information__c</fullName>
+        <description>The contact information (as provided by the donor) for the notification recipient.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The contact information (as provided by the donor) for the notification recipient.</inlineHelpText>
+        <label>Notification Recipient Information</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Notification_Recipient_Name__c</fullName>
+        <description>The name (as provided by the donor) of the person who should be notified about this gift. If this field is left blank and the Notification Recipient Contact field contains a value, Salesforce automatically populates this field with that value.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The name (as provided by the donor) of the person who should be notified about this gift. If this field is left blank and the Notification Recipient Contact field contains a value, Salesforce automatically populates this field with that value.</inlineHelpText>
+        <label>Notification Recipient Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Previous_Grant_Opportunity__c</fullName>
@@ -722,6 +829,27 @@ ISBLANK(npe03__Recurring_Donation__c),
         <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Tribute_Type__c</fullName>
+        <description>Indicates whether the gift is in honor or memory of an individual.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Indicates whether the gift is in honor or memory of an individual.</inlineHelpText>
+        <label>Tribute Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Honor</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Memorial</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
     </fields>
     <listViews>
         <fullName>To_Be_Acknowledged</fullName>
