@@ -36,7 +36,7 @@
 public with sharing class BDI_DataImport_CTRL {
     public boolean userCanEditSettings {
         get {
-            return UTIL_CustomSettingsFacade.userCanEditDataImportSettings;
+            return Data_Import_Settings__c.SobjectType.getDescribe().isUpdateable();
         }
     }
     
