@@ -4078,6 +4078,22 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Household Settings</value>
     </labels>
     <labels>
+        <fullName>stgLabelHonoreeNotificationHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelHonoreeNotificationHelpText</shortDescription>
+        <value>Create automatic Opportunity Contact Roles for Honoree and Notification Recipient contacts</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelHonoreeNotificationOCR</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelHonoreeNotificationOCR</shortDescription>
+        <value>Honoree and Notification Recipient Opportunity Contact Roles</value>
+    </labels>
+    <labels>
         <fullName>stgLabelLeadSettings</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
