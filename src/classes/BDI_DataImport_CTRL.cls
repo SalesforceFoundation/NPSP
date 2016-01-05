@@ -34,19 +34,24 @@
 */
 
 public with sharing class BDI_DataImport_CTRL {
-	
-	public BDI_DataImport_CTRL() {
-		batchRunning = false;
-		apexJobId = null;
-		dtStart = null;
-	}
+    public boolean userCanEditSettings {
+        get {
+            return Data_Import_Settings__c.SobjectType.getDescribe().isUpdateable();
+        }
+    }
+    
+    public BDI_DataImport_CTRL() {
+        batchRunning = false;
+        apexJobId = null;
+        dtStart = null;
+    }
 
     public PageReference actionImportOrDelete() {        
         String strAction = ApexPages.currentPage().getParameters().get('action');
         if (strAction == 'deleteImported') {
             return deleteImportedDIRecords();    
         } else if (strAction == 'deleteAll') {
-            return deleteAllDIRecords();	
+            return deleteAllDIRecords();    
         }
         // else we load up the DataImport page.  
         
@@ -63,11 +68,11 @@ public with sharing class BDI_DataImport_CTRL {
     
     public PageReference deleteImportedDIRecords() {
         delete [select Id from DataImport__c where Status__c = :label.bdiImported limit 10000];
-        return (close());    	
+        return (close());       
     }
     
     public PageReference deleteAllDIRecords() {
-    	delete [select Id from DataImport__c limit 10000];
+        delete [select Id from DataImport__c limit 10000];
         return (close());
     }
     
@@ -77,10 +82,10 @@ public with sharing class BDI_DataImport_CTRL {
     
     public Data_Import_Settings__c diSettings {
         get {
-        	if (diSettings == null) {
+            if (diSettings == null) {
                 diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-        	}
-        	return diSettings;
+            }
+            return diSettings;
         }
         private set;
     }
@@ -95,9 +100,10 @@ public with sharing class BDI_DataImport_CTRL {
     }
     
     public PageReference importData() {
-    	if(!Test.isRunningTest())
-    	   upsert diSettings;
-    	dtStart = system.now();
+        if (!Test.isRunningTest() && this.userCanEditSettings){
+            upsert diSettings;
+        }
+        dtStart = system.now();
         apexJobId = BDI_DataImport_API.importData();
         if(apexJobId != null)
             batchRunning = true;
@@ -117,10 +123,10 @@ public with sharing class BDI_DataImport_CTRL {
     }
     
     public string strBatchStatus {
-    	get {
-    		string strLabel = (aaj.Status == 'Processing' ? label.bdiStatusProcessing : label.bdiStatusProcessed);
-    		return string.format(strLabel, new string[]{string.valueOf(aaj.JobItemsProcessed), string.valueOf(aaj.TotalJobItems)});
-    	}
+        get {
+            string strLabel = (aaj.Status == 'Processing' ? label.bdiStatusProcessing : label.bdiStatusProcessed);
+            return string.format(strLabel, new string[]{string.valueOf(aaj.JobItemsProcessed), string.valueOf(aaj.TotalJobItems)});
+        }
     }
     
     public integer crecProcessed { 
@@ -174,42 +180,42 @@ public with sharing class BDI_DataImport_CTRL {
     public integer percentComplete {
         get {
             if (aaj != null) {
-	            //Determine the percent complete based on the number of batches complete
-	            if (aaj.status == 'Completed') {
-	                percentComplete = 100;
-	            } else if (aaj.status == 'Queued') {
-	                percentComplete = 5;
-	            } else if (aaj.status == 'Preparing') {
-	                percentComplete = 10;
-	            } else if (aaj.TotalJobItems == 0) {
-	                //A little check here as we don't want to divide by 0.
-	                percentComplete = 5;
-	            } else {
-	            	decimal dec = decimal.valueOf(aaj.JobItemsProcessed) / decimal.valueOf(aaj.TotalJobItems);
-	                percentComplete = (dec * 100.0).intValue();
-	                //don't let it go backwards from preparing/queued
-	                if (percentComplete == 0 || percentComplete == null)
-	                    percentComplete = 10;
-	            }
+                //Determine the percent complete based on the number of batches complete
+                if (aaj.status == 'Completed') {
+                    percentComplete = 100;
+                } else if (aaj.status == 'Queued') {
+                    percentComplete = 5;
+                } else if (aaj.status == 'Preparing') {
+                    percentComplete = 10;
+                } else if (aaj.TotalJobItems == 0) {
+                    //A little check here as we don't want to divide by 0.
+                    percentComplete = 5;
+                } else {
+                    decimal dec = decimal.valueOf(aaj.JobItemsProcessed) / decimal.valueOf(aaj.TotalJobItems);
+                    percentComplete = (dec * 100.0).intValue();
+                    //don't let it go backwards from preparing/queued
+                    if (percentComplete == 0 || percentComplete == null)
+                        percentComplete = 10;
+                }
                 return percentComplete;
             } else {
                 return 0;
-            }	
+            }   
         }
         private set;
     }
 
     public string strTimeSpent {
         get {
-        	if (dtStart != null && !isBatchJobCompleted) {
-        		DateTime dt = DateTime.newInstance(system.Now().getTime() - dtStart.getTime());
-        		strTimeSpent = dt.format('m:ss');
-        		return strTimeSpent;
-        	} else if (isBatchJobCompleted) {
-        		return strTimeSpent;
-        	} else {
+            if (dtStart != null && !isBatchJobCompleted) {
+                DateTime dt = DateTime.newInstance(system.Now().getTime() - dtStart.getTime());
+                strTimeSpent = dt.format('m:ss');
+                return strTimeSpent;
+            } else if (isBatchJobCompleted) {
+                return strTimeSpent;
+            } else {
                 return null;
-        	}
+            }
         }
         private set;
     }
@@ -225,13 +231,13 @@ public with sharing class BDI_DataImport_CTRL {
                 for (Schema.DescribeFieldResult dfr : mapNameToDfr.values()) {
                     //only allow custom fields that have no namespace
                     if (dfr.isCustom() && dfr.getName().countMatches('__') == 1) {
-                    	Schema.Displaytype dt = dfr.getType();
-                    	// only strings and numbers
-                    	if (dt == Schema.DisplayType.String ||
-                    	   dt == Schema.DisplayType.Integer ||
-                    	   dt == Schema.DisplayType.Double) {
+                        Schema.Displaytype dt = dfr.getType();
+                        // only strings and numbers
+                        if (dt == Schema.DisplayType.String ||
+                           dt == Schema.DisplayType.Integer ||
+                           dt == Schema.DisplayType.Double) {
                            listSOContactUniqueID.add(new SelectOption(dfr.getName(), dfr.getLabel()));
-                    	} 
+                        } 
                     }               
                 }
             }               
