@@ -35,7 +35,7 @@
 * Needs to be "without sharing" so that the Install Script can run it.
 */
 public without sharing class UTIL_CustomSettingsFacade {
-
+    
     //storing user-level custom settings in-memory to avoid trying to isert/update them 
     //twice and thus trigger the "duplicate OwnerId" error
     static npe01__Contacts_And_Orgs_Settings__c contactsSettings;
@@ -449,8 +449,9 @@ public without sharing class UTIL_CustomSettingsFacade {
             orgDataImportSettings = Data_Import_Settings__c.getOrgDefaults();
             if (orgDataImportSettings.Id == null) {
                 configDataImportSettings(orgDataImportSettings);
-                if(!Test.isRunningTest())
+                if(!Test.isRunningTest()) {
                     upsert orgDataImportSettings;
+                }
             }
         }
         return orgDataImportSettings;
