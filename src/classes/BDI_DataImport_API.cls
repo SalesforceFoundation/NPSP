@@ -44,14 +44,14 @@ global with sharing class BDI_DataImport_API {
     * @return ID The ID of the batch job that performs the data import.
     */
     global static ID importData() {
-    	Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-    	Boolean batchRunning = false;
-    	Id apexJobId;
-    	try {
-    	    // ensure we are in the household account model!
-    	    if (!CAO_Constants.isHHAccountModel())
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        Boolean batchRunning = false;
+        Id apexJobId;
+        try {
+            // ensure we are in the household account model!
+            if (!CAO_Constants.isHHAccountModel())
                 throw(new BDIException(Label.bdiHouseholdModelRequired));
-    	    
+            
             // validate settings
             if (diSettings.Contact_Custom_Unique_ID__c != null) {
                 // make sure c1 and c2 have the appropriately named field
@@ -74,6 +74,7 @@ global with sharing class BDI_DataImport_API {
                             'Account2_' + diSettings.Account_Custom_Unique_ID__c})));
                 }
             }
+            
             
             // save any settings changes.
             try {
