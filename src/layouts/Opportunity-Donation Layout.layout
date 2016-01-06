@@ -131,7 +131,7 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Matching_Gift__c</field>
-            <layoutItems>
+            </layoutItems>
         </layoutColumns>
         <label>Tribute Information</label>
         <layoutColumns>
