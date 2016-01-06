@@ -39,8 +39,8 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
     /*******************************************************************************************************
     * @description test data for Soft Credit and Partial Soft Credit tests
     */ 
-    static integer cContactTest = 40;
-    static integer cOppTest = 30;
+    static integer cContactTest = 10;
+    static integer cOppTest = 10;
     static integer amountTest = 100;
     static list<Contact> listCon;
     
