@@ -4,6 +4,11 @@
     <packageVersions>
         <majorNumber>3</majorNumber>
         <minorNumber>0</minorNumber>
+        <namespace>npe4</namespace>
+    </packageVersions>
+    <packageVersions>
+        <majorNumber>3</majorNumber>
+        <minorNumber>0</minorNumber>
         <namespace>npe5</namespace>
     </packageVersions>
     <packageVersions>
