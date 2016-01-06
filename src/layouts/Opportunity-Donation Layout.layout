@@ -133,6 +133,12 @@
                 <field>Matching_Gift__c</field>
             </layoutItems>
         </layoutColumns>
+        <style>TwoColumnsLeftToRight</style>
+    </layoutSections>
+    <layoutSections>
+        <customLabel>true</customLabel>
+        <detailHeading>true</detailHeading>
+        <editHeading>true</editHeading>
         <label>Tribute Information</label>
         <layoutColumns>
             <layoutItems>
