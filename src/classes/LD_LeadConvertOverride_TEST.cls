@@ -890,6 +890,10 @@ private class LD_LeadConvertOverride_TEST {
         l.FirstName = leadFirstName;
         l.LastName = leadLastName;
         l.Company = companyName;
+        l.CompanyStreet__c = '112 Company St';
+        l.CompanyCity__c = 'Home Town';
+        l.CompanyState__c = 'WA';
+        l.CompanyPostalCode__c = '98122';
         insert l;
 
         system.currentPageReference().getParameters().put('id', l.id);
@@ -914,10 +918,12 @@ private class LD_LeadConvertOverride_TEST {
         ext.convertLeadNow();
         Test.stopTest();
 
-        Contact[] convertedContacts = [select id, firstname, lastname,Account.npe01__Systemisindividual__c, Account.Name from Contact where lastname = :leadLastName];
+        Contact[] convertedContacts = [select id, firstname, lastname,Account.npe01__Systemisindividual__c, Account.Name, Primary_Affiliation__c, Primary_Affiliation__r.BillingStreet from Contact where lastname = :leadLastName];
         //one contact should have been created
         system.assertEquals(1,convertedContacts.size());
         system.assertEquals(true,convertedContacts[0].Account.npe01__Systemisindividual__c);
+        system.assertNotEquals(null, convertedContacts[0].Primary_Affiliation__c);
+        system.assertEquals('112 Company St', convertedContacts[0].Primary_Affiliation__r.BillingStreet);
 
         String accountName = convertedContacts[0].FirstName + ' ' + convertedContacts[0].lastname;
         if (CAO_Constants.isOneToOne()) {
@@ -932,6 +938,7 @@ private class LD_LeadConvertOverride_TEST {
         
         // verify Opp Affiliation
 		npe5__Affiliation__c  aff = [select npe5__Organization__c  from npe5__Affiliation__c LIMIT 1][0];
+        system.assertNotEquals(null, aff, 'Affiliation should be created.');
 
         list<Opportunity> listOpp = [select Id, AccountId, Name, Primary_Contact__c from Opportunity];
         system.assertEquals(1, listOpp.size());
