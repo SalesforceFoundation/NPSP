@@ -2524,6 +2524,14 @@
         <value>Remove Paid Payments</value>
     </labels>
     <labels>
+        <fullName>pmtWizardClosedLost</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardClosedLost</shortDescription>
+        <value>NOTE: This opportunity is marked closed lost. To create payments, first edit the opportunity record and change the stage to an open or closed won stage.</value>
+    </labels>
+    <labels>
         <fullName>pmtWizardCreateSchedule</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
