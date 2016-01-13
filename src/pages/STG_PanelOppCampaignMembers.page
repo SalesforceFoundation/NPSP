@@ -19,7 +19,7 @@
             <div class="form-group">
                 <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Campaign_Member_Responded_Status__c.Label}" for="txtCMRS" styleClass="col-sm-4 control-label" />
                 <div class="col-sm-8 form-control-column">
-                    <apex:outputText value="{!stgService.stgCon.Campaign_Member_Non_Responded_Status__c}" rendered="{!isReadOnlyMode}" />
+                    <apex:outputText value="{!stgService.stgCon.Campaign_Member_Responded_Status__c}" rendered="{!isReadOnlyMode}" />
                     <apex:inputText value="{!stgService.stgCon.Campaign_Member_Responded_Status__c}" rendered="{!isEditMode}" id="txtCMRS" />
                  </div>
                 <div class="col-sm-offset-4 col-sm-8 help-block">
