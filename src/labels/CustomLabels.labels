@@ -2748,6 +2748,14 @@
         <value>Acknowledged</value>
     </labels>
     <labels>
+        <fullName>stgAddrMustChooseClass</fullName>
+        <categories>Settings, address</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgAddrMustChooseClass</shortDescription>
+        <value>You must choose a verification service in order to enable automatic verification.</value>
+    </labels>
+    <labels>
         <fullName>stgBtnCancel</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
