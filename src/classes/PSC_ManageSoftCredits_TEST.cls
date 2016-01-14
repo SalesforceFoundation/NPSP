@@ -339,7 +339,7 @@ public with sharing class PSC_ManageSoftCredits_TEST {
       
         // test amount > opp.amount
         ctrl.softCredits[0].partial.Amount__c = opp.Amount + 100;
-        ctrl.checkTotalAllocatedAmount = true;
+        ctrl.allowTooManySoftCredits = false;
         system.assertEquals(null, ctrl.save());
           
         // hit a few remaining code paths
