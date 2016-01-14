@@ -2788,14 +2788,6 @@
         <value>Amount or Percent</value>
     </labels>
     <labels>
-        <fullName>pscManageSoftCreditsDirections</fullName>
-        <categories>Manage Soft Credits</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>pscManageSoftCreditsDirections</shortDescription>
-        <value>Select Contacts to get Soft Credit</value>
-    </labels>
-    <labels>
         <fullName>pscManageSoftCreditsFull</fullName>
         <categories>Manage Soft Credits</categories>
         <language>en_US</language>
@@ -2812,12 +2804,20 @@
         <value>{0} is the Primary Contact for this Opportunity. You cannot add Soft Credit to this Contact.</value>
     </labels>
     <labels>
+        <fullName>pscManageSoftCreditsNoRoles</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsNoRoles</shortDescription>
+        <value>You have no Roles specified as Soft Credit Roles.  Under NPSP Settings, Donations, Contact Roles, you need to add the appropriate Roles to the Soft Credit Roles setting.</value>
+    </labels>
+    <labels>
         <fullName>pscManageSoftCreditsOppAmount</fullName>
         <categories>Manage Soft Credits</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>pscManageSoftCreditsOppAmount</shortDescription>
-        <value>Total Amount:</value>
+        <value>Total Amount</value>
     </labels>
     <labels>
         <fullName>pscManageSoftCreditsPSCAmount</fullName>
@@ -2825,7 +2825,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>pscManageSoftCreditsPSCAmount</shortDescription>
-        <value>Soft Credit Amount:</value>
+        <value>Soft Credit Amount</value>
     </labels>
     <labels>
         <fullName>pscManageSoftCreditsPartial</fullName>
@@ -2844,12 +2844,20 @@
         <value>Percent</value>
     </labels>
     <labels>
+        <fullName>pscManageSoftCreditsPrimaryDonor</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsPrimaryDonor</shortDescription>
+        <value>Primary Donor</value>
+    </labels>
+    <labels>
         <fullName>pscManageSoftCreditsReconcileFail</fullName>
         <categories>Manage Soft Credits</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>pscManageSoftCreditsReconcileFail</shortDescription>
-        <value>Total soft credit amount must equal the opportunity amount.</value>
+        <value>Total Soft Credit Amount must less than or equal to the Opportunity Amount.</value>
     </labels>
     <labels>
         <fullName>pscManageSoftCreditsRestrictions</fullName>
@@ -2858,6 +2866,14 @@
         <protected>false</protected>
         <shortDescription>pscManageSoftCreditsRestrictions</shortDescription>
         <value>Soft Credit Restrictions</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsRoleMissing</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsRoleMissing</shortDescription>
+        <value>You must specify a Role Name for all Soft Credits.</value>
     </labels>
     <labels>
         <fullName>pscManageSoftCreditsTitle</fullName>
@@ -2881,7 +2897,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>pscManageSoftCreditsUnaccounted</shortDescription>
-        <value>Total Unaccounted:</value>
+        <value>Total Unaccounted</value>
     </labels>
     <labels>
         <fullName>pscManageSoftCreditsValidateTotals</fullName>
@@ -2889,7 +2905,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>pscManageSoftCreditsValidateTotals</shortDescription>
-        <value>Total Must Reconcile to Opportunity</value>
+        <value>Allow Soft Credit Amount more than Total Amount</value>
     </labels>
     <labels>
         <fullName>sendAcknowledgmentFailedStatus</fullName>

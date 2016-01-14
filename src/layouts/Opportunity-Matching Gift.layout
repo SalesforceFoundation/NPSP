@@ -205,12 +205,12 @@
         <relatedList>RelatedContactRoleList</relatedList>
     </relatedLists>
     <relatedLists>
-        <fields>Contact.CNTC_FIRST_NAME</fields>
-        <fields>Contact.NAME</fields>
+        <customButtons>Manage_Soft_Credits</customButtons>
+        <excludeButtons>New</excludeButtons>
+        <fields>Contact_Name__c</fields>
         <fields>Account.ACC_NAME</fields>
-        <fields>Amount__c</fields>
         <fields>Role_Name__c</fields>
-        <fields>Contact_Role_ID__c</fields>
+        <fields>Amount__c</fields>
         <relatedList>Partial_Soft_Credit__c.Opportunity__c</relatedList>
     </relatedLists>
     <relatedLists>

@@ -1,102 +1,157 @@
-<apex:page standardController="Opportunity" extensions="PSC_ManageSoftCredits_CTRL" showHeader="true">
+<apex:page standardController="Opportunity" extensions="PSC_ManageSoftCredits_CTRL" showHeader="true" standardStylesheets="false" >
+    <apex:stylesheet value="{!URLFOR($Resource.SLDS, 'assets/styles/salesforce-lightning-design-system-vf.css')}" />
+
+    <style>
+        html body.sfdcBody {
+            padding: 0;
+            background-color: #f4f6f9; // shade theme color
+        }
+    </style>
+    
+    <script>
+        // for Winter '16, a trusted way to figure out whether in Lighting Experience or Classic Aloha.
+        // In Spring '16, this can be replaced with an official method provided.
+        function isLightningExperienceOrSalesforce1() {
+            return((typeof sforce != 'undefined') && sforce && (!!sforce.one));
+        }
+        
+        // return the correct URL for the Opportunities home page based on LEX vs. Classic
+        function urlOpportunityHome() {
+            if (isLightningExperienceOrSalesforce1())
+                sforce.one.navigateToURL('one.app#/sObject/Opportunity/home');
+            else
+                window.location.assign('/006/o');
+        }
+    </script>
+    
     <apex:form >
-        <apex:actionFunction name="refresh" action="{!refresh}" reRender="totalSelected, totalUn" />
-        <apex:sectionHeader title="{!$Label.pscManageSoftCreditsTitle}" subtitle="{!opp.Name}"/>
-        <apex:pageMessages />
-        <apex:pageBlock title="{!$Label.pscManageSoftCreditsDirections}">
-            <apex:pageBlockButtons >
-                <apex:commandButton action="{!save}" value="{!$Label.stgBtnSave}" />
-                <apex:commandButton action="{!cancel}" value="{!$Label.stgBtnCancel}" />
-            </apex:pageBlockButtons>
-            <div style="float: right; border: 1px solid black; padding: .5em; margin-bottom: .5em;">
-                <strong>{!$Label.pscManageSoftCreditsRestrictions}</strong><br />
-                <apex:selectRadio value="{!amount_percentage}">
-                    <apex:selectOption itemValue="true" itemLabel="{!$Label.pscManageSoftCreditsAmount}" />
-                    <apex:selectOption itemValue="false" itemLabel="{!$Label.pscManageSoftCreditsPercent}" />
-                    <apex:actionSupport action="{!checkFullAndPartialCredit}" event="onchange" reRender="amountField, totalSelected, totalUn" />
-                </apex:selectRadio>
-                <apex:inputCheckbox value="{!checkTotalAllocatedAmount}" id="checkTotalAllocatedAmount" />
-                <apex:outputLabel for="checkTotalAllocatedAmount" value="{!$Label.pscManageSoftCreditsValidateTotals}" />
+      <div class="slds">
+    
+        <!-- PAGE HEADER -->
+        <div class="slds-page-header" role="banner">
+            <div class="slds-grid">
+                <div class="slds-col">
+                    <nav role="navigation">
+                        <p id="bread-crumb-label" class="slds-assistive-text">You are here:</p>
+                        <ol class="slds-breadcrumb slds-list--horizontal" aria-labelledby="bread-crumb-label">
+                            <li class="slds-list__item slds-text-heading--label"><a class="slds-type-focus" href="javascript:urlOpportunityHome();" >{!$ObjectType.Opportunity.LabelPlural}</a></li>
+                            <li class="slds-list__item slds-text-heading--label"><a class="slds-type-focus" href="/{!opp.Id}">{!opp.Name}</a></li>
+                        </ol>
+                    </nav>              
+                    <h1 class="slds-text-heading--medium slds-p-top-medium">{!$Label.pscManageSoftCreditsTitle}</h1>
+                    <p class="slds-text-body--small slds-m-top--x-small">{!numberOfSoftCredits} items</p>
+                </div>        
+
+                <div class="slds-col slds-no-flex slds-align-middle">
+                    <div class="slds-button-group" role="group">
+                        <apex:commandButton styleClass="slds-button slds-button--neutral" action="{!save}" value="{!$Label.stgBtnSave}" />
+                        <apex:commandButton styleClass="slds-button slds-button--neutral" action="{!cancel}" value="{!$Label.stgBtnCancel}" />
+                    </div>
+                </div>
             </div>
-            <div style="float: left;">
-            <p>
-            <apex:outputText value="{!$ObjectType.Account.Label}: " /><a href="/{!opp.AccountId}"><apex:outputText value="{!opp.Account.Name}" /></a>
-            </p><br />
-            <apex:panelGrid columns="3">
-                <apex:outputPanel style="display: block; width: 200px;" id="total">
-<!--                    <apex:outputPanel rendered="{!amount_percentage}">-->
-                        <apex:outputText value="{!$Label.pscManageSoftCreditsOppAmount}" />&nbsp;
-                        <apex:outputField value="{!opp.Amount}" />
-<!--                    </apex:outputPanel>
-                    <apex:outputPanel rendered="{!NOT(amount_percentage)}">
-                        <apex:outputText value="Total Matching Gift:" />&nbsp;
-                        <apex:outputText value="100%" />
-                    </apex:outputPanel>-->
-                </apex:outputPanel>    
-                <apex:outputPanel style="display: block; width: 200px;" id="totalSelected">
+        </div>
+        <!-- /PAGE HEADER -->
+        
+        <apex:actionFunction name="refresh" action="{!refresh}" reRender="totalSelected, totalUn" />
+        <apex:pageMessages />
+        
+        <!-- outer div of body below header -->
+        <div class="myBodyContent">
+        
+            <!-- SUMMARY INFO PANEL -->
+            <div class="slds-grid slds-p-around--medium slds-p-bottom--large slds-theme--default">            
+                <div class="slds-col slds-align-middle" id="account">
+                    <label class="slds-form-element__label" for="lnkAccount">{!$Label.pscManageSoftCreditsPrimaryDonor}</label><br/>
+                    <a id="lnkAccount" href="/{!PrimaryContactId}"><apex:outputText value="{!PrimaryContactName}" /></a>
+                </div>                                            
+                <div class="slds-col slds-align-middle" id="total">
+                    <label class="slds-form-element__label" for="txtOppAmount">{!$Label.pscManageSoftCreditsOppAmount}</label><br/>
+                    <apex:outputField id="txtOppAmount" value="{!opp.Amount}" />
+                </div>    
+                <apex:outputPanel styleClass="slds-col slds-align-middle" id="totalSelected">
                     <apex:outputPanel rendered="{!amount_percentage}">
-                        <apex:outputText value="{!$Label.pscManageSoftCreditsPSCAmount}" />&nbsp;
-                        <apex:outputText value="${0, number,###,###,###,##0.00}"><apex:param value="{!totalSoftCreditAmount}" /></apex:outputText>
+                        <label class="slds-form-element__label" for="txtPSCAmountPercent">{!$Label.pscManageSoftCreditsPSCAmount}</label><br/>
+                        <apex:outputText id="txtPSCAmountPercent" value="${0, number,###,###,###,##0.00}"><apex:param value="{!totalSoftCreditAmount}" /></apex:outputText>
                     </apex:outputPanel>
                     <apex:outputPanel rendered="{!NOT(amount_percentage)}">
-                        <apex:outputText value="{!$Label.pscManageSoftCreditsPSCAmount}" />&nbsp;
-                        <apex:outputText value="{0, number,0.00%}"><apex:param value="{!IF(AND(NOT(ISBLANK(opp.Amount)), opp.Amount > 0), totalSoftCreditAmount/opp.Amount, 0)}" /></apex:outputText>
+                        <label class="slds-form-element__label" for="txtPSCAmount">{!$Label.pscManageSoftCreditsPSCAmount}</label><br/>
+                        <apex:outputText id="txtPSCAmount" value="{0, number,0.00%}"><apex:param value="{!IF(AND(NOT(ISBLANK(opp.Amount)), opp.Amount > 0), totalSoftCreditAmount/opp.Amount, 0)}" /></apex:outputText>
                     </apex:outputPanel>
                 </apex:outputPanel>   
-                <apex:outputPanel style="display: block; width: 200px;" id="totalUn">
+                <apex:outputPanel styleClass="slds-col slds-align-middle" id="totalUn">
                     <apex:outputPanel rendered="{!amount_percentage}">
-                        <apex:outputText value="{!$Label.pscManageSoftCreditsUnaccounted}" />&nbsp;
-                        <apex:outputText value="${0, number,###,###,###,##0.00}"><apex:param value="{!opp.Amount-totalSoftCreditAmount}" /></apex:outputText>  
+                        <label class="slds-form-element__label" for="txtUnaccountedPercent">{!$Label.pscManageSoftCreditsUnaccounted}</label><br/>
+                        <apex:outputText id="txtUnaccountedPercent" value="${0, number,###,###,###,##0.00}"><apex:param value="{!opp.Amount-totalSoftCreditAmount}" /></apex:outputText>  
                     </apex:outputPanel>
                     <apex:outputPanel rendered="{!NOT(amount_percentage)}">
-                        <apex:outputText value="{!$Label.pscManageSoftCreditsUnaccounted}" />&nbsp;
-                        <apex:outputText value="{0, number,0.00%}"><apex:param value="{!IF(AND(NOT(ISBLANK(opp.Amount)), opp.Amount > 0), (opp.Amount-totalSoftCreditAmount)/opp.Amount, 0)}" /></apex:outputText>
+                        <label class="slds-form-element__label" for="txtUnaccounted">{!$Label.pscManageSoftCreditsUnaccounted}</label><br/>
+                        <apex:outputText id="txtUnaccounted" value="{0, number,0.00%}"><apex:param value="{!IF(AND(NOT(ISBLANK(opp.Amount)), opp.Amount > 0), (opp.Amount-totalSoftCreditAmount)/opp.Amount, 0)}" /></apex:outputText>
                     </apex:outputPanel>
                 </apex:outputPanel>
-            </apex:panelGrid>
-            </div>
+                <div class="slds-col slds-no-flex slds-align-middle slds-box slds-theme--default">
+                    <p class="slds-text-heading--label slds-p-bottom--x-small">{!$Label.pscManageSoftCreditsRestrictions}</p>
+                    <apex:selectRadio value="{!amount_percentage}">
+                        <apex:selectOption itemValue="true" itemLabel="{!$Label.pscManageSoftCreditsAmount}" />
+                        <apex:selectOption itemValue="false" itemLabel="{!$Label.pscManageSoftCreditsPercent}" />
+                        <apex:actionSupport action="{!checkFullAndPartialCredit}" event="onchange" reRender="amountField, totalSelected, totalUn" />
+                    </apex:selectRadio>
+                    <apex:inputCheckbox value="{!allowTooManySoftCredits}" id="allowTooManySoftCredits" />
+                    <apex:outputLabel for="allowTooManySoftCredits" value=" {!$Label.pscManageSoftCreditsValidateTotals}" />
+                </div>
+            </div> <!-- slds-grid -->
+            <!-- /SUMMARY INFO PANEL -->
+            
+            <!-- PSC TABLE -->
             <apex:outputPanel id="tablePanel">
-            <table style="width: 100%; border: 1px solid black;">
-                <tr>
-                    <th style="width: 25%;">{!$ObjectType.Partial_Soft_Credit__c.Fields.Contact__c.Label}</th>
-                    <th style="width: 25%;">{!$ObjectType.Partial_Soft_Credit__c.Fields.Role_Name__c.Label}</th>
-                    <th style="width: 25%;">{!$Label.pscManageSoftCreditsType}</th>
-                    <th style="width: 25%;">{!$Label.pscManageSoftCreditsAmountOrPercent}</th>
-                </tr>
-                <apex:repeat value="{!softCredits}" var="credit">
-                <tr>
-                    <td style="vertical-align:middle;">
-                        <apex:inputField value="{!credit.contactRole.ContactId}" required="false">
-                            <apex:actionSupport action="{!refresh}" event="onchange" rerender="totalSelected, totalUn" />
-                        </apex:inputField>
-                    </td>
-                    <td style="vertical-align:middle;">
-                        <apex:selectList value="{!credit.contactRole.Role}" size="1">
-                            <apex:selectOption itemValue="" itemLabel="{!$Label.stgLabelNone}" />
-                            <apex:selectOptions value="{!contactRoles}" />
-                        </apex:selectList>
-                    </td>
-                    <td style="vertical-align:middle;">
-                        <apex:selectRadio value="{!credit.fullCredit}">
-                            <apex:selectOption itemValue="true" itemLabel="{!$Label.pscManageSoftCreditsFull}" />
-                            <apex:selectOption itemValue="false" itemLabel="{!$Label.pscManageSoftCreditsPartial}" />
-                            <apex:actionSupport action="{!checkFullCredit}" event="onchange" oncomplete="refresh();" reRender="amountField" />
-                        </apex:selectRadio>
-                    </td>
-                    <td style="vertical-align:middle;">
-                        <apex:outputPanel id="amountField">
-                            <apex:inputField value="{!credit.partial.Amount__c}" rendered="{!NOT(credit.fullCredit)}">
-                                <apex:actionSupport action="{!refresh}" event="onchange" reRender="totalSelected, totalUn" />
+                <table class="slds-table slds-table--bordered">
+                    <thead><tr class="slds-text-heading--label">
+                        <th>{!$ObjectType.Partial_Soft_Credit__c.Fields.Contact__c.Label}</th>
+                        <th>{!$ObjectType.Partial_Soft_Credit__c.Fields.Role_Name__c.Label}</th>
+                        <th style="text-align:center">{!$Label.pscManageSoftCreditsType}</th>
+                        <th>{!$Label.pscManageSoftCreditsAmountOrPercent}</th>
+                    </tr></thead>
+                    <tbody>
+                    <apex:repeat value="{!softCredits}" var="credit">
+                    <tr>
+                        <td style="vertical-align:middle;">
+                            <apex:inputField value="{!credit.contactRole.ContactId}" required="false">
+                                <apex:actionSupport action="{!refresh}" event="onchange" rerender="totalSelected, totalUn" />
                             </apex:inputField>
-                            <apex:outputText value="{!credit.partial.Amount__c}" rendered="{!credit.fullCredit}" />
-                        </apex:outputPanel>
-                    </td>
-                </tr>
-                </apex:repeat>
-            </table>
+                        </td>
+                        <td style="vertical-align:middle;">
+                            <div class="slds-form-element__control">
+                            <apex:selectList styleClass="slds-input"  value="{!credit.contactRole.Role}" size="1">
+                                <apex:selectOption itemValue="" itemLabel="{!$Label.stgLabelNone}" />
+                                <apex:selectOptions value="{!contactRoles}" />
+                            </apex:selectList>
+                            </div>
+                        </td>
+                        <td style="vertical-align:middle;">
+                            <apex:selectRadio border="0" html-rules="none" value="{!credit.fullCredit}">
+                                <apex:selectOption itemValue="true" itemLabel="{!$Label.pscManageSoftCreditsFull}" />
+                                <apex:selectOption itemValue="false" itemLabel="{!$Label.pscManageSoftCreditsPartial}" />
+                                <apex:actionSupport action="{!checkFullCredit}" event="onchange" oncomplete="refresh();" reRender="amountField" />
+                            </apex:selectRadio>
+                        </td>
+                        <td style="vertical-align:middle;">
+                            <apex:outputPanel id="amountField">
+                                <apex:inputField value="{!credit.partial.Amount__c}" rendered="{!NOT(credit.fullCredit)}">
+                                    <apex:actionSupport action="{!refresh}" event="onchange" reRender="totalSelected, totalUn" />
+                                </apex:inputField>
+                                <apex:outputText value="{!credit.partial.Amount__c}" rendered="{!credit.fullCredit}" />
+                            </apex:outputPanel>
+                        </td>
+                    </tr>
+                    </apex:repeat>
+                    </tbody>
+                </table>
             </apex:outputPanel>
-            <p/>
-            <apex:commandLink action="{!addAnotherSoftCredit}" value="{!$Label.pscManageSoftCreditsAdd}" reRender="tablePanel" />
-        </apex:pageBlock>
+            <!-- /PSC TABLE -->
+            
+            <div class="slds-p-around--medium">
+                <apex:commandLink action="{!addAnotherSoftCredit}" value="{!$Label.pscManageSoftCreditsAdd}" reRender="tablePanel" />
+            </div>
+        </div> <!-- myBodyContent -->
+      </div> <!-- slds -->
     </apex:form>
 </apex:page>

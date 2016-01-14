@@ -124,6 +124,8 @@
                 <behavior>Edit</behavior>
                 <field>Matching_Gift_Account__c</field>
             </layoutItems>
+        </layoutColumns>
+        <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Matching_Gift_Status__c</field>
@@ -155,6 +157,12 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
+                <field>Notification_Message__c</field>
+            </layoutItems>
+        </layoutColumns>
+        <layoutColumns>
+            <layoutItems>
+                <behavior>Edit</behavior>
                 <field>Notification_Preference__c</field>
             </layoutItems>
             <layoutItems>
@@ -168,10 +176,6 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Notification_Recipient_Information__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>Notification_Message__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
@@ -269,6 +273,15 @@
     </relatedContent>
     <relatedLists>
         <relatedList>RelatedContactRoleList</relatedList>
+    </relatedLists>
+    <relatedLists>
+        <customButtons>Manage_Soft_Credits</customButtons>
+        <excludeButtons>New</excludeButtons>
+        <fields>Contact_Name__c</fields>
+        <fields>Account.ACC_NAME</fields>
+        <fields>Role_Name__c</fields>
+        <fields>Amount__c</fields>
+        <relatedList>Partial_Soft_Credit__c.Opportunity__c</relatedList>
     </relatedLists>
     <relatedLists>
         <customButtons>npe01__Schedule_Payments</customButtons>

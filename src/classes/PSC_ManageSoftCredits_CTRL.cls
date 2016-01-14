@@ -37,9 +37,19 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
 
     public Opportunity opp {get; set;}
     public boolean amount_percentage {get; set;} // true = amount, false = percentage
-    public boolean checkTotalAllocatedAmount {get; set;}
+    public boolean allowTooManySoftCredits {get; set;}
     public List<SoftCredit> softCredits {get; set;}
     public List<SelectOption> contactRoles {get; private set;}
+    
+    /*******************************************************************************************************
+    * @description returns the number of soft credits
+    * @return number of soft credits
+    */
+    public integer numberOfSoftCredits {
+        get {
+            return softCredits == null ? 0 : softCredits.size();
+        }
+    }
 
     /*******************************************************************************************************
     * @description constructor for the page
@@ -47,30 +57,79 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
     * @return nothing
     */ 
     public PSC_ManageSoftCredits_CTRL(ApexPages.StandardController controller) {
-        opp = [SELECT Id, Name, Amount, AccountId, Account.Name FROM Opportunity WHERE Id = :controller.getRecord().Id];
+        opp = [SELECT Id, Name, Amount, AccountId, Account.Name, npe01__Is_Opp_From_Individual__c, Primary_Contact__c, Primary_Contact__r.Name
+            FROM Opportunity WHERE Id = :controller.getRecord().Id];
         amount_percentage = true;
-        checkTotalAllocatedAmount = false;
+        allowTooManySoftCredits = false;
+        
+        // this page wants to display just the Soft Credit OCRs and PSCs.
+        // since the PSC lookup to an OCR is really just a text field,
+        // we can't assume the lookup is valid, and we must also deal with
+        // the lookup pointing at an OCR that we wouldn't normally include
+        // (such as the primary ocr or a non-soft credit ocr).  Here are the cases
+        // we must handle for a PSC's Contact_Role_ID__c lookup:
+        //  - valid soft credit ocr
+        //  - valid ocr, but it doesn't use a soft credit role
+        //  - the primary ocr
+        //  - an invalid ocr Id (ie, the ocr was deleted out from under the psc)
+        //  - null for the ocr Id
         
         Map<Id, SoftCredit> ocrs = new Map<Id, SoftCredit>();
         softCredits = new List<SoftCredit>();
-        for (OpportunityContactRole ocr : [SELECT Id, ContactId, Role, Opportunity.Amount 
-                                           FROM OpportunityContactRole WHERE OpportunityId = :opp.Id AND IsPrimary != true]) {
-            SoftCredit sc = new SoftCredit(ocr);
-            softCredits.add(sc);
-            ocrs.put(ocr.Id, sc);
-        }
+        set<String> softCreditRoles = new set<String>();
+        if (UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Soft_Credit_Roles__c != null)
+            softCreditRoles = new set<String>(UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Soft_Credit_Roles__c.split(';'));
+        
+        // get all OCR's for the Opp
+        map<Id, OpportunityContactRole> mapIdToOCR = new map<Id, OpportunityContactRole>([SELECT Id, ContactId, Role, 
+            IsPrimary, Opportunity.Amount FROM OpportunityContactRole WHERE OpportunityId = :opp.Id]);
+            
+        // get all PSC's for the Opp
         for (Partial_Soft_Credit__c psc : [SELECT Id, Opportunity__c, Contact__c, Amount__c, Role_Name__c, Contact_Role_ID__c
-                                           FROM Partial_Soft_Credit__c WHERE Opportunity__c = :opp.Id AND Contact_Role_ID__c IN :ocrs.keySet()]) {
-            ocrs.get(psc.Contact_Role_ID__c).partial = psc;
-            ocrs.get(psc.Contact_Role_ID__c).fullCredit = false;
+                FROM Partial_Soft_Credit__c WHERE Opportunity__c = :opp.Id]) {
+                    
+            // find its related OCR
+            OpportunityContactRole ocr = mapIdToOCR.get(psc.Contact_Role_ID__c);
+            
+            // handle invalid ocr's
+            if (ocr == null) {
+                psc.Contact_Role_ID__c = null;
+                ocr = new OpportunityContactRole(
+                    OpportunityId = opp.Id, 
+                    ContactId = psc.Contact__c,
+                    Role = psc.Role_Name__c);
+            } 
+            
+            // create our soft credit
+            SoftCredit sc = new SoftCredit(ocr);
+            sc.partial = psc;
+            sc.fullCredit = false;
+            softCredits.add(sc);
+            
+            // track which ocr's have been used by removing them from the map
+            if (ocr.Id != null)
+                mapIdToOCR.remove(ocr.Id);
         }
         
+        // now deal with any remaining OCR's that didn't have a PSC, but are soft credits
+        for (OpportunityContactRole ocr : mapIdToOCR.values()) {
+            if (ocr.Role != null && softCreditRoles.contains(ocr.Role))
+                softCredits.add(new SoftCredit(ocr));
+        }
+        
+        // get the list of Soft Credit Roles to put in our picklist
         contactRoles = new List<SelectOption>();
         for (Schema.PicklistEntry pe : OpportunityContactRole.Role.getDescribe().getPicklistValues()) {
-            if (pe.getValue() != UTIL_CustomSettingsFacade.getContactsSettings().npe01__Opportunity_Contact_Role_Default_role__c) {
+            if (pe.getValue() != UTIL_CustomSettingsFacade.getContactsSettings().npe01__Opportunity_Contact_Role_Default_role__c &&
+                (softCreditRoles.contains(pe.getValue()) || softCreditRoles.contains(pe.getLabel()))) {
                 contactRoles.add(new SelectOption(pe.getLabel(), pe.getValue()));
             }
         }
+        
+        // warn user if no soft credit roles identified
+        if (softCreditRoles.isEmpty())
+            Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, Label.pscManageSoftCreditsNoRoles));
+        
     }
     
     /*******************************************************************************************************
@@ -97,38 +156,47 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
                 } else if (sc.partial.Amount__c == null) {
                     Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, Label.pscManageSoftCreditsAmountMissing));
                     return null;
+                } else if (sc.contactRole.Role == null) {
+                    Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, Label.pscManageSoftCreditsRoleMissing));
+                    return null;
                 }
                 
                 if (sc.fullCredit || sc.partial.Amount__c == opp.Amount) {
                     if (sc.partial.Id != null) toDelete.add(sc.partial);
                     toUpsertContactRoles.add(sc.contactRole);
                 } else {
-                    if (sc.partial.Contact__c == null) sc.partial.Contact__c = sc.contactRole.ContactId;
+                    if (sc.partial.Contact__c == null) 
+                        sc.partial.Contact__c = sc.contactRole.ContactId;
                     else if (sc.partial.Contact__c != sc.contactRole.ContactId) {
                         toDelete.add(sc.partial);
                         sc.partial = new Partial_Soft_Credit__c(Contact__c = sc.contactRole.ContactId, Amount__c = sc.partial.Amount__c);
                     }
-                    if (sc.partial.Opportunity__c == null) sc.partial.Opportunity__c = sc.contactRole.OpportunityId;
+                    if (sc.partial.Opportunity__c == null) 
+                        sc.partial.Opportunity__c = sc.contactRole.OpportunityId;
                     sc.partial.Role_Name__c = sc.contactRole.Role;
                     toUpsertContactRoles.add(sc.contactRole);
                     upsertedSoftCredits.add(sc);
                 }
             } else {
-                if (sc.partial.Id != null) toDelete.add(sc.partial);
-                if (sc.contactRole.Id != null) toDelete.add(sc.contactRole);
+                if (sc.partial.Id != null) 
+                    toDelete.add(sc.partial);
+                if (sc.contactRole.Id != null && !sc.contactRole.IsPrimary) 
+                    toDelete.add(sc.contactRole);
             }
         }
-        if (checkTotalAllocatedAmount && getTotalSoftCreditAmount() > opp.Amount) {
+        if (!allowTooManySoftCredits && getTotalSoftCreditAmount() > opp.Amount) {
             Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, Label.pscManageSoftCreditsReconcileFail));
             return null;
         }
         
         try {
             delete toDelete;
-            upsert toUpsertContactRoles;
+            // let the PSC trigger do the updating/sycn with OCRs
+            //upsert toUpsertContactRoles;
             for (SoftCredit sc : upsertedSoftCredits) {
                 sc.partial.Contact_Role_ID__c = sc.contactRole.Id;
-                if (!amount_percentage) sc.partial.Amount__c = convertPercentageToAmount(sc.partial.Amount__c);
+                if (!amount_percentage) 
+                    sc.partial.Amount__c = convertPercentageToAmount(sc.partial.Amount__c);
                 toUpsertPartialCredits.add(sc.partial);
             }
             upsert toUpsertPartialCredits;
@@ -149,6 +217,30 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
         return null;
     }
     
+    /*******************************************************************************************************
+    * @description the Id of the Primary Contact or Account, depending on whether its an org gift or not.
+    */ 
+    public string PrimaryContactId {
+        get {
+            if (opp.npe01__Is_Opp_From_Individual__c == 'true' && opp.Primary_Contact__c != null)
+                return opp.Primary_Contact__c;
+            else
+                return opp.AccountId;
+        }
+    }
+    
+    /*******************************************************************************************************
+    * @description the Name of the Primary Contact or Account, depending on whether its an org gift or not.
+    */ 
+    public string PrimaryContactName {
+        get {
+            if (opp.npe01__Is_Opp_From_Individual__c == 'true' && opp.Primary_Contact__c != null)
+                return opp.Primary_Contact__r.Name;
+            else
+                return opp.Account.Name;
+        }
+    }
+
     /*******************************************************************************************************
     * @description actionMethod for the Cancel button
     * @return the Opportunity's detail page
@@ -245,4 +337,5 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
             this.fullCredit = ocr.Id != null;
         }
     }
+    
 }

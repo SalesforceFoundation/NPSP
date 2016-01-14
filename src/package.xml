@@ -608,6 +608,7 @@
         <members>Opportunity_Naming_Settings__c.Opportunity_Name_Format__c</members>
         <members>Opportunity_Naming_Settings__c.Opportunity_Record_Types__c</members>
         <members>Partial_Soft_Credit__c.Amount__c</members>
+        <members>Partial_Soft_Credit__c.Contact_Name__c</members>
         <members>Partial_Soft_Credit__c.Contact_Role_ID__c</members>
         <members>Partial_Soft_Credit__c.Contact__c</members>
         <members>Partial_Soft_Credit__c.Opportunity__c</members>
@@ -996,15 +997,17 @@
         <members>pscManageSoftCreditsAmount</members>
         <members>pscManageSoftCreditsAmountMissing</members>
         <members>pscManageSoftCreditsAmountOrPercent</members>
-        <members>pscManageSoftCreditsDirections</members>
         <members>pscManageSoftCreditsFull</members>
         <members>pscManageSoftCreditsInvalidContact</members>
+        <members>pscManageSoftCreditsNoRoles</members>
         <members>pscManageSoftCreditsOppAmount</members>
         <members>pscManageSoftCreditsPSCAmount</members>
         <members>pscManageSoftCreditsPartial</members>
         <members>pscManageSoftCreditsPercent</members>
+        <members>pscManageSoftCreditsPrimaryDonor</members>
         <members>pscManageSoftCreditsReconcileFail</members>
         <members>pscManageSoftCreditsRestrictions</members>
+        <members>pscManageSoftCreditsRoleMissing</members>
         <members>pscManageSoftCreditsTitle</members>
         <members>pscManageSoftCreditsType</members>
         <members>pscManageSoftCreditsUnaccounted</members>
@@ -1418,6 +1421,7 @@
     </types>
     <types>
         <members>CumulusStaticResources</members>
+        <members>SLDS</members>
         <name>StaticResource</name>
     </types>
     <types>
@@ -1434,6 +1438,7 @@
         <members>Opportunity.Find_Matched_Gifts</members>
         <members>Opportunity.Manage_Soft_Credits</members>
         <members>Opportunity.Refresh_Name</members>
+        <members>Partial_Soft_Credit__c.Manage_Soft_Credits</members>
         <name>WebLink</name>
     </types>
     <types>

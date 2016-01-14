@@ -64,6 +64,16 @@
         <type>Currency</type>
     </fields>
     <fields>
+        <fullName>Contact_Name__c</fullName>
+        <externalId>false</externalId>
+        <formula>HYPERLINK(&apos;/&apos; + Contact__c,Contact__r.FirstName + &apos; &apos; + Contact__r.LastName, &apos;_self&apos;)</formula>
+        <label>Contact Name</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Contact_Role_ID__c</fullName>
         <caseSensitive>true</caseSensitive>
         <externalId>false</externalId>
@@ -117,6 +127,25 @@
         <type>AutoNumber</type>
     </nameField>
     <pluralLabel>Partial Soft Credits</pluralLabel>
-    <searchLayouts/>
+    <searchLayouts>
+        <searchFilterFields>Contact__c</searchFilterFields>
+        <searchFilterFields>Opportunity__c</searchFilterFields>
+        <searchFilterFields>Role_Name__c</searchFilterFields>
+        <searchFilterFields>Amount__c</searchFilterFields>
+        <searchFilterFields>NAME</searchFilterFields>
+    </searchLayouts>
     <sharingModel>ControlledByParent</sharingModel>
+    <webLinks>
+        <fullName>Manage_Soft_Credits</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <height>600</height>
+        <linkType>url</linkType>
+        <masterLabel>Manage Soft Credits</masterLabel>
+        <openType>sidebar</openType>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+        <url>/apex/npsp__PSC_ManageSoftCredits?id={!Opportunity.Id}</url>
+    </webLinks>
 </CustomObject>
