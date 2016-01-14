@@ -701,6 +701,7 @@
         <members>alloBatchDefaultInfo</members>
         <members>alloBtnCancel</members>
         <members>alloBtnSaveAndClose</members>
+        <members>alloCantAllocateNothing</members>
         <members>alloDefaultGAUMissing</members>
         <members>alloDefaultNotPercent</members>
         <members>alloDeleteRow</members>
