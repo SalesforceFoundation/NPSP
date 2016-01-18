@@ -97,10 +97,15 @@ public with sharing class PSC_ManageSoftCredits_TEST {
         Test.setCurrentPage(Page.PSC_ManageSoftCredits);
         PSC_ManageSoftCredits_CTRL ctrl = new PSC_ManageSoftCredits_CTRL(new ApexPages.StandardController(opp));
         system.assertEquals(0, ctrl.softCredits.size());
+        system.assertEquals(0, ctrl.numberOfSoftCredits);
+        system.assertEquals(acc.Id, ctrl.PrimaryContactId);
+        system.assertEquals(acc.Name, ctrl.PrimaryContactName);
+        
         ctrl.addAnotherSoftCredit();
         ctrl.addAnotherSoftCredit();
         ctrl.addAnotherSoftCredit();
         system.assertEquals(3, ctrl.softCredits.size());
+        system.assertEquals(3, ctrl.numberOfSoftCredits);
         ctrl.softCredits[0].contactRole.ContactId = listCon[0].Id;
         ctrl.softCredits[0].contactRole.Role = 'Soft Credit';
         ctrl.softCredits[0].partial.Amount__c = 100;
@@ -144,20 +149,24 @@ public with sharing class PSC_ManageSoftCredits_TEST {
         ctrl.addAnotherSoftCredit();
         system.assertEquals(3, ctrl.softCredits.size());
         
+        
         // switch to percents
         ctrl.amount_percentage = true;
-        
+
         ctrl.softCredits[0].contactRole.ContactId = listCon[0].Id;
         ctrl.softCredits[0].contactRole.Role = 'Soft Credit';
         ctrl.softCredits[0].partial.Amount__c = 10;
+        ctrl.softCredits[0].fullCredit = false;
 
         ctrl.softCredits[1].contactRole.ContactId = listCon[1].Id;
         ctrl.softCredits[1].contactRole.Role = 'Soft Credit';
         ctrl.softCredits[1].partial.Amount__c = 20;
+        ctrl.softCredits[1].fullCredit = false;
 
         ctrl.softCredits[2].contactRole.ContactId = listCon[2].Id;
         ctrl.softCredits[2].contactRole.Role = 'Soft Credit';
         ctrl.softCredits[2].partial.Amount__c = 30;
+        ctrl.softCredits[2].fullCredit = false;
         
         // update amounts
         ctrl.checkFullAndPartialCredit();
@@ -177,6 +186,13 @@ public with sharing class PSC_ManageSoftCredits_TEST {
         
         list<OpportunityContactRole> listOCR = [select Id, ContactId, OpportunityId, Role from OpportunityContactRole];
         system.assertEquals(3, listOCR.size());        
+
+        // switch back from percents
+        ctrl.amount_percentage = false;
+        ctrl.checkFullAndPartialCredit();
+        system.assertEquals(600, ctrl.getTotalSoftCreditAmount());
+        system.assertNotEquals(null, ctrl.save());
+        
     }
 
     /*******************************************************************************************************
@@ -221,6 +237,44 @@ public with sharing class PSC_ManageSoftCredits_TEST {
         system.assertEquals(cPSCExisting + 3, listOCR.size());        
     }
 
+    /*******************************************************************************************************
+    * @description handle loading PSC's with invalid OCR id's
+    */ 
+    static testmethod void loadInvalidPSCs() {
+        initTestData(true); // creates cPSCExisting PSCs!
+
+        // set the PSC's OCR lookups to invalid values
+        list<Partial_Soft_Credit__c> listPSC = [select Id, Contact__c, Opportunity__c, Amount__c, Role_Name__c, 
+            Contact_Role_ID__c from Partial_Soft_Credit__c];
+        system.assertEquals(cPSCExisting, listPSC.size());
+        listPSC[0].Contact_Role_ID__c = opp.Id; // a bogus OCR id, but a valid Id for type checking!
+        listPSC[1].Contact_Role_ID__c = null;
+        update listPSC;
+
+        Test.setCurrentPage(Page.PSC_ManageSoftCredits);
+        PSC_ManageSoftCredits_CTRL ctrl = new PSC_ManageSoftCredits_CTRL(new ApexPages.StandardController(opp));
+        system.assertEquals(cPSCExisting + 2, ctrl.softCredits.size());
+    }
+    
+    /*******************************************************************************************************
+    * @description handle loading Soft Credit OCR's with no PSC's
+    */ 
+    static testmethod void loadSoftCreditOCRs() {
+        initTestData(false);
+        
+        // create Soft Credit OCR
+        OpportunityContactRole ocr = new OpportunityContactRole(
+            ContactId = listCon[0].Id, 
+            OpportunityId = opp.Id,
+            Role = 'Soft Credit',
+            IsPrimary = false);
+        insert ocr; 
+
+        Test.setCurrentPage(Page.PSC_ManageSoftCredits);
+        PSC_ManageSoftCredits_CTRL ctrl = new PSC_ManageSoftCredits_CTRL(new ApexPages.StandardController(opp));
+        system.assertEquals(1, ctrl.softCredits.size());
+    }
+    
     /*******************************************************************************************************
     * @description change some Soft Credits to full credits on an Opp with existing PSCs.
     * verify PSC's deleted, OCR's remain
@@ -339,7 +393,15 @@ public with sharing class PSC_ManageSoftCredits_TEST {
         ctrl.softCredits[0].partial.Amount__c = null;
         system.assertEquals(null, ctrl.save());
       
+        // test Role not filled in
+        ctrl.softCredits[0].contactRole.ContactId = listCon[1].Id;
+        ctrl.softCredits[0].contactRole.Role = null;
+        ctrl.softCredits[0].partial.Amount__c = 100;
+        system.assertEquals(null, ctrl.save());
+
         // test amount > opp.amount
+        ctrl.softCredits[0].contactRole.ContactId = listCon[1].Id;
+        ctrl.softCredits[0].contactRole.Role = 'Soft Credit';
         ctrl.softCredits[0].partial.Amount__c = opp.Amount + 100;
         ctrl.allowTooManySoftCredits = false;
         system.assertEquals(null, ctrl.save());
@@ -348,5 +410,29 @@ public with sharing class PSC_ManageSoftCredits_TEST {
         ctrl.refresh();
         system.assertNotEquals(null, ctrl.cancel());
     }
-    
+ 
+    /*******************************************************************************************************
+    * @description test handling of no Soft Credit Roles in NPSP Settings
+    * verify errors detected and reported
+    */ 
+    static testmethod void testNoSoftCreditRoles() {
+        initTestData(false); // no existing PSCs
+        
+        // create a primary donor OCR on the opp
+        OpportunityContactRole ocrPrimary = new OpportunityContactRole(
+            ContactId = listCon[0].Id,
+            OpportunityId = opp.Id,
+            Role = 'Donor',
+            IsPrimary = true
+            );
+        insert ocrPrimary;
+
+        UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Soft_Credit_Roles__c = null;    
+        
+        Test.setCurrentPage(Page.PSC_ManageSoftCredits);
+        PSC_ManageSoftCredits_CTRL ctrl = new PSC_ManageSoftCredits_CTRL(new ApexPages.StandardController(opp));
+        system.assertEquals(0, ctrl.softCredits.size());
+        
+        system.assertNotEquals(0, ApexPages.getMessages().size());
+    }
 }
