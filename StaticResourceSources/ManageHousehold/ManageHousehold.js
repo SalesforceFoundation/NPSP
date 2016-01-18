@@ -51,51 +51,50 @@
   });
 
 
-      /* Autocomplete contact search box for adding existing contacts to HH */
+  /* Autocomplete contact search box for adding existing contacts to HH */
 
-      $('#hhSearch-input').autocomplete({
-        minLength: 1,
-        position: { my: "right top", at: "right bottom", collision: "none" },
-        source: function(request, response) {
-          var searchStr = request.term.toLowerCase();
-        pgController.findContacts(searchStr,gwManageHH.jsonState, function(result, event) {
-                if (event.type == 'exception') {
-                  alert(event.message);
-                } else {
-                  if (result != null) {
-                    response($.map(result, function(item) {
-                      return {label: item.Name, value: item.Id, contact:item};
-                    }));
-                  }
-                }
-          });
-        },
-        select: function (event, ui) {
-          $(this).val(ui.item.label);
-          return false;
-        }
-      });
-
-
-    $('#hhSearch-input').data('ui-autocomplete')._renderItem = function( ul, item ) {
-            var address = gwManageHH.addressStringify(item.contact);
-
-            var linode = $( '<li class="hhSearch-item"></li>' ).data( "item.autocomplete", item ).append( '<span class="hhSearch-item-name">' + item.label + '</span><span class="hhSearch-item-address">'+address+'</span>' );
-
-            // If the contact is in a household add a visual indicator
-            if (item.contact[fldNmNpsp('HHId__c')] != null) {
-              linode.find('.hhSearch-item-address').after('<span class="hhSearch-item-hh">' + gwManageHH.lblExistingHH + '</span>');
+  $('#hhSearch-input').autocomplete({
+    minLength: 1,
+    position: { my: "right top", at: "right bottom", collision: "none" },
+    source: function(request, response) {
+      var searchStr = request.term.toLowerCase();
+    pgController.findContacts(searchStr,gwManageHH.jsonState, function(result, event) {
+            if (event.type == 'exception') {
+              alert(event.message);
+            } else {
+              if (result) {
+                response($.map(result, function(item) {
+                  return {label: item.Name, value: item.Id, contact:item};
+                }));
+              }
             }
+      });
+    },
+    select: function (event, ui) {
+      $(this).val(ui.item.label);
+      return false;
+    }
+  });
 
-            // insert add button
-            linode.append('<button class="gwPreventUI gwButton hhSearch-item-add">' + gwManageHH.lblAdd + '</button>');
-            linode.find('.hhSearch-item-add').button();
 
-            // insert icon
-            linode.prepend('<div class="hhCard-icon">Contact</div>');
+  $('#hhSearch-input').data('ui-autocomplete')._renderItem = function( ul, item ) {
+    var address = gwManageHH.addressStringify(item.contact);
 
-          return linode.appendTo(ul);
-      };
+    var linode = $( '<li class="hhSearch-item"></li>' ).data( "item.autocomplete", item ).append( '<span class="hhSearch-item-name">' + item.label + '</span><span class="hhSearch-item-address">'+address+'</span>' );
+
+    // If the contact is in a household add a visual indicator
+    if (item.contact[fldNmNpsp('HHId__c')]) {
+      linode.find('.hhSearch-item-address').after('<span class="hhSearch-item-hh">' + gwManageHH.lblExistingHH + '</span>');
+    }
+
+    // insert add button
+    linode.append('<button class="gwPreventUI gwButton hhSearch-item-add">' + gwManageHH.lblAdd + '</button>');
+    linode.find('.hhSearch-item-add').button();
+
+    // insert icon
+    linode.prepend('<div class="hhCard-icon">Contact</div>');
+      return linode.appendTo(ul);
+    };
 
     // setup search item add buttons
     $('.hhSearch-item-add').live('click', gwManageHH.dialogAddMember);
@@ -110,7 +109,7 @@
             $(this).val('');
           }
         } else if (event.type == 'focusout') {
-          if (v == '') {
+          if (v === '') {
             $(this).val(ht);
           }
         }
@@ -196,13 +195,13 @@
           var isNew = card.hasClass('hhCard-new');
           if (!isNew) {
             var cid = card.attr('id');
-            var name = gwManageHH.state.activeContacts[cid]['Name'];
+            var name = gwManageHH.state.activeContacts[cid].Name;
 
             // if the contact being removed is the primary contact,
             // we need to clear out the primary contact field if it is present
             // on the form.
             var ctrl = $('.sfField-npe01__One2OneContact__c');
-            if (ctrl != null && ctrl.val() == name) {
+            if (ctrl && ctrl.val() === name) {
                       ctrl.val('');
                   }
 
@@ -251,19 +250,19 @@
 
     var namingExclusions = contact[fldNm('Naming_Exclusions__c')];
 
-    if (namingExclusions != null && namingExclusions.indexOf('Name') != -1) {
+    if (namingExclusions && namingExclusions.indexOf('Name') != -1) {
       card.find('.hh-name-exclude').find('input').attr('checked','checked');
     } else {
       card.find('.hh-name-exclude').find('input').removeAttr('checked');
     }
 
-    if (namingExclusions != null && namingExclusions.indexOf('Formal_Greeting__c') != -1) {
+    if (namingExclusions && namingExclusions.indexOf('Formal_Greeting__c') != -1) {
       card.find('.hh-formal-exclude').find('input').attr('checked','checked');
     } else {
       card.find('.hh-formal-exclude').find('input').removeAttr('checked');
     }
 
-    if (namingExclusions != null && namingExclusions.indexOf('Informal_Greeting__c') != -1) {
+    if (namingExclusions && namingExclusions.indexOf('Informal_Greeting__c') != -1) {
       card.find('.hh-informal-exclude').find('input').attr('checked','checked');
     } else {
       card.find('.hh-informal-exclude').find('input').removeAttr('checked');
@@ -294,7 +293,7 @@
 
     // Blingify it
     card.animate({opacity: 1.0}, 500);
-  }
+  };
 
   gwManageHH.updateCard = function (contact) {
 
@@ -312,24 +311,24 @@
 
     var namingExclusions = contact[fldNm('Naming_Exclusions__c')];
 
-    if (namingExclusions != null && namingExclusions.indexOf('Name') != -1) {
+    if (namingExclusions && namingExclusions.indexOf('Name') != -1) {
       card.find('.hh-name-exclude').find('input').attr('checked','checked');
     } else {
       card.find('.hh-name-exclude').find('input').removeAttr('checked');
     }
 
-    if (namingExclusions != null && namingExclusions.indexOf('Formal_Greeting__c') != -1) {
+    if (namingExclusions && namingExclusions.indexOf('Formal_Greeting__c') != -1) {
       card.find('.hh-formal-exclude').find('input').attr('checked','checked');
     } else {
       card.find('.hh-formal-exclude').find('input').removeAttr('checked');
     }
 
-    if (namingExclusions != null && namingExclusions.indexOf('Informal_Greeting__c') != -1) {
+    if (namingExclusions && namingExclusions.indexOf('Informal_Greeting__c') != -1) {
       card.find('.hh-informal-exclude').find('input').attr('checked','checked');
     } else {
       card.find('.hh-informal-exclude').find('input').removeAttr('checked');
     }
-  }
+  };
   gwManageHH.addNewContact = function () {
     var card = $(gwManageHH.cardPrototype);
 
@@ -386,7 +385,7 @@
       var nm = obj.attr('name');
 
       contact[nm] = obj.val();
-      if (contact.LastName == '' || contact.LastName == gwManageHH.lblContactLastName) {
+      if (contact.LastName === '' || contact.LastName == gwManageHH.lblContactLastName) {
         hhcard.find('.hhCard-error').text(gwManageHH.lblContactLastNameRqd);
       } else {
         hhcard.find('.hhCard-error').text('');
@@ -398,7 +397,7 @@
     });
 
     $('div.hhMembers').append(card);
-  }
+  };
 
   gwManageHH.updateState = function (state) {
     // First set the state variables
@@ -416,12 +415,13 @@
 
     // Controls
     gwManageHH.renderControls(true);
-  }
+  };
+
   gwManageHH.dialogAddMember = function(event) {
     var linode = $(this).closest('.hhSearch-item');
     var contact = linode.data('item.autocomplete').contact;
 
-    if (contact[fldNmNpsp('HHId__c')] != null) {
+    if (contact[fldNmNpsp('HHId__c')]) {
       var dialog = $('#dialog-addmember');
       dialog.data('contact',contact);
 
@@ -452,16 +452,16 @@
       $(this).fadeOut();
       gwManageHH.addMember(contact.Id, false);
     }
-  }
+  };
 
   gwManageHH.dialogChangeAddress = function (event) {
 
     var state = gwManageHH.state;
     var dialog = $('#dialog-changeaddress');
-    var displayAddresses = new Array();
+    var displayAddresses = [];
 
     if (state.viableAddresses != {}) {
-      var addrs = new Array();
+      var addrs = [];
       // Get viable addresses if there are any and build an array of address strings
       for (var address in state.viableAddresses) {
         addrs.push(state.viableAddresses[address]);
@@ -475,7 +475,7 @@
 
         adItem.data('cid',this.AddressKey);
 
-        if (state.activeAddressKey != null && this.AddressKey == state.activeAddressKey) adItem.addClass('selected');
+        if (state.activeAddressKey && this.AddressKey == state.activeAddressKey) adItem.addClass('selected');
 
         adItem.bind('mouseover mouseout click', function(event) {
             switch (event.type) {
@@ -517,7 +517,7 @@
 
             var cid = $('#hhExistingAddress li.selected').data('cid');
 
-            if (cid != undefined) {
+            if (cid) {
               var addr = state.viableAddresses[cid];
 
               state.activeAddressKey = addr.AddressKey;
@@ -552,11 +552,11 @@
       headerSelected: "ui-icon-circle-check"
     };
 
-    if(state.activeAddressKey == null)
+    if(!state.activeAddressKey)
       dialog.find('.gwAccordion').accordion({height: 350, icons: icons, active : 1});
     else
       dialog.find('.gwAccordion').accordion({height: 350, icons: icons});
-  }
+  };
 
   gwManageHH.addMember = function (cid, wHH) {
 
@@ -568,7 +568,7 @@
         if (event.type == 'exception') {
           $('.gwNotifications').gwNotify(event.message, {type:'alert'});
         } else {
-          if (result != null) {
+          if (result) {
             gwManageHH.updateState(result);
             if (gwManageHH.jsonState != gwManageHH.originalState) $('.gwNotifications').gwNotify(gwManageHH.lblChangesNotSaved, {type:'info'});
             }
@@ -576,21 +576,21 @@
         $('.gwPreventUI').gwsetui('enable');
     }, {escape:false});
 
-  }
+  };
 
   gwManageHH.setInsertContacts = function () {
     var state = gwManageHH.state;
     var cards = $('.hhCard-new');
 
-    state.insertContacts = new Array();
+    state.insertContacts = [];
     cards.each(function () {
       var obj = $(this);
       var contact = obj.data('contact');
-      if (contact.LastName != '' && contact.LastName != 'Last Name') {
+      if (contact.LastName !== '' && contact.LastName != 'Last Name') {
         state.insertContacts.push(contact);
       }
     });
-  }
+  };
 
   gwManageHH.removeMember = function (cid) {
 
@@ -603,7 +603,7 @@
         if (event.type == 'exception') {
           $('.gwNotifications').gwNotify(event.message, {type:'alert'});
         } else {
-          if (result != null) {
+          if (result) {
             gwManageHH.updateState(result);
             if (gwManageHH.jsonState != gwManageHH.originalState) $('.gwNotifications').gwNotify(gwManageHH.lblChangesNotSaved, {type:'info'});
             }
@@ -611,7 +611,7 @@
         $('.gwPreventUI').gwsetui('enable');
     }, {escape:false});
 
-  }
+  };
 
   gwManageHH.setNameExclusion = function (cid, ex) {
 
@@ -620,7 +620,7 @@
     gwManageHH.jsonState = JSON.stringify(gwManageHH.state);
 
     gwManageHH.setNaming();
-  }
+  };
 
   /* Takes the values entered in the UI in relation to household naming and passes them to the remoteaction
   endpoint for the state to be updated */
@@ -644,14 +644,14 @@
       if (event.type == 'exception') {
           $('.gwNotifications').gwNotify(event.message, {type:'alert'});
         } else {
-          if (result != null) {
+          if (result) {
             gwManageHH.updateState(result);
             if (gwManageHH.jsonState != gwManageHH.originalState) $('.gwNotifications').gwNotify(gwManageHH.lblChangesNotSaved, {type:'info'});
             }
         }
         $('.gwPreventUI').gwsetui('enable');
     }, {escape: false});
-  }
+  };
 
   gwManageHH.saveHousehold = function () {
 
@@ -659,13 +659,13 @@
 
     $('.gwPreventUI').gwsetui('disable');
 
-    var newHH = gwManageHH.state.hh.Id == null;
+    var newHH = gwManageHH.state.hh.Id === null || gwManageHH.state.hh.Id === undefined;
 
     pgController.remoteSave(gwManageHH.jsonState, function(result, event) {
       if (event.type == 'exception') {
           $('.gwNotifications').gwNotify(event.message, {type:'alert'});
         } else {
-          if (result != null) {
+          if (result) {
             gwManageHH.updateState(result);
             gwManageHH.originalState = JSON.stringify(gwManageHH.state);
 
@@ -679,29 +679,29 @@
         }
         $('.gwPreventUI').gwsetui('enable');
     }, {escape: false});
-  }
+  };
 
 
   gwManageHH.renderMembers = function() {
 
     var members = gwManageHH.getHHMembers();
-    var cids = new Array();
+    var cids = [];
 
     //sort members by household naming order
       //members.sort(function(a,b){return a[fldNm('Household_Naming_Order__c')] === null ? 1 : b[fldNm('Household_Naming_Order__c')] === null ? -1 : (a[fldNm('Household_Naming_Order__c')] > b[fldNm('Household_Naming_Order__c')]) ? 1 : ((b[fldNm('Household_Naming_Order__c')] > a[fldNm('Household_Naming_Order__c')]) ? -1 : 0);} );
 
       // sort members by household naming order; contacts without naming order will be sorted by creation date.
       members.sort(function(a,b) {
-          if (a[fldNm('Household_Naming_Order__c')] == null && b[fldNm('Household_Naming_Order__c')] == null) {
+          if (!a[fldNm('Household_Naming_Order__c')] && !b[fldNm('Household_Naming_Order__c')]) {
               if (a.CreatedDate > b.CreatedDate)
                   return 1;
               if (a.CreatedDate < b.CreatedDate)
                   return -1;
               return 0;
           }
-          if (a[fldNm('Household_Naming_Order__c')] == null)
+          if (!a[fldNm('Household_Naming_Order__c')])
               return 1;
-          if (b[fldNm('Household_Naming_Order__c')] == null)
+          if (!b[fldNm('Household_Naming_Order__c')])
               return -1;
           if (a[fldNm('Household_Naming_Order__c')] > b[fldNm('Household_Naming_Order__c')])
               return 1;
@@ -730,9 +730,9 @@
 
       // Check to see if the address is different from the active address
           var ct = gwManageHH.state.activeContacts[cid];
-          if (ct != null && ct[fldNmNpsp('is_Address_Override__c')]) {
+          if (ct && ct[fldNmNpsp('is_Address_Override__c')]) {
               $(this).find('.hhCard-details-address').addClass('gwAddressOverride');
-       } else if(gwManageHH.state.useAddress == false || gwManageHH.compareAddress(cid) === true) {
+       } else if(gwManageHH.state.useAddress === false || gwManageHH.compareAddress(cid) === true) {
         $(this).find('.hhCard-details-address').removeClass('gwModified');
       } else {
         $(this).find('.hhCard-details-address').addClass('gwModified');
@@ -749,7 +749,7 @@
     } else {
       $('.hhMembers-none').removeClass('gwHidden');
     }
-  }
+  };
 
   gwManageHH.compareAddress = function (cid) {
     var state, contact, activeCon, newAddress, oldAddress;
@@ -757,7 +757,7 @@
     state = gwManageHH.state;
     contact = state.activeContacts[cid];
 
-    if (contact != null && contact != undefined && (state.activeAddressKey != null || state.useAddress == true)) {
+    if (contact && (state.activeAddressKey || state.useAddress === true)) {
       if (state.useAddress === true) {
         activeCon = {
           MailingStreet: state.activeStreet,
@@ -765,7 +765,7 @@
           MailingState: state.activeState,
           MailingPostalCode: state.activePostalCode,
           MailingCountry: state.activeCountry
-          }
+          };
       } else {
         activeCon = state.viableAddresses[state.activeAddressKey];
       }
@@ -776,7 +776,7 @@
       return newAddress == oldAddress;
     }
     return true;
-  }
+  };
 
   gwManageHH.renderNaming = function () {
     var state = gwManageHH.state;
@@ -786,7 +786,7 @@
     $('.sfField-Formal_Greeting__c').val(state.hhFormalGreeting);
     $('.sfField-Informal_Greeting__c').val(state.hhInformalGreeting);
 
-    if (state.autoName == true) {
+    if (state.autoName === true) {
 
       $('#hhAutoName').attr('checked','checked');
 
@@ -803,7 +803,7 @@
 
     }
 
-    if (state.autoFormalGreeting == true) {
+    if (state.autoFormalGreeting === true) {
       $('#hhAutoFormalGreeting').attr('checked','checked');
 
       $('#hhFormalGreeting').val(state.hhFormalGreeting);
@@ -818,7 +818,7 @@
       customNaming += 'Formal_Greeting__c;';
     }
 
-    if (state.autoInformalGreeting == true) {
+    if (state.autoInformalGreeting === true) {
       $('#hhAutoInformalGreeting').attr('checked','checked');
 
       $('#hhInformalGreeting').val(state.hhInformalGreeting);
@@ -834,7 +834,7 @@
     }
 
     $('.sfField-SYSTEM_CUSTOM_NAMING__c').val(customNaming);
-  }
+  };
 
   gwManageHH.renderControls = function (enabled) {
     var hasContacts = $('.hhCard').length > 0;
@@ -854,11 +854,11 @@
       inpts.css('opacity','0.5');
       inpts.val('Saving ...');
     }
-  }
+  };
 
   gwManageHH.getHHMembers = function() {
 
-    var members = new Array();
+    var members = [];
     var state = gwManageHH.state;
 
     var cmap = state.activeContacts;
@@ -867,7 +867,7 @@
       members.push(cmap[id]);
     }
     return members;
-  }
+  };
 
   gwManageHH.renderAddress = function () {
 
@@ -883,14 +883,14 @@
 
     var addr;
 
-    if (state.activeAddressKey == null) {
+    if (state.activeAddressKey) {
       addr = {
         MailingStreet: state.activeStreet,
         MailingCity: state.activeCity,
         MailingState: state.activeState,
         MailingPostalCode: state.activePostalCode,
         MailingCountry: state.activeCountry
-      }
+      };
     } else {
       addr = state.viableAddresses[state.activeAddressKey];
     }
@@ -903,7 +903,7 @@
     addString = gwManageHH.addressStringify(addr);
 
     //now use the useAddess flag to determine if address saved to contacts (always saved to household)
-    if (state.useAddress == true)
+    if (state.useAddress === true)
       $('#hhCopyAddressToContacts').attr('checked','checked');
     else
       $('#hhCopyAddressToContacts').removeAttr('checked');
@@ -911,42 +911,42 @@
     adnode.html(addString);
     prnode.fadeIn(200);
 
-  }
+  };
 
   gwManageHH.addressStringify = function(contact) {
 
-    var address = new String();
+    var address = '';
 
     if (contact[fldNmNpsp('is_Address_Override__c')]) {
        address = 'using Address Override: <br/>';
     }
 
-    if (contact.MailingStreet != null && contact.MailingStreet != '') {
+    if (contact.MailingStreet && contact.MailingStreet !== '') {
       var strt = contact.MailingStreet.replace(/(\r\n|\n|\r)/gm, '<br />');
       address += strt;
-      if (contact.MailingCity != null ||
-          contact.MailingState != null ||
-          contact.MailingPostalCode != null ||
-          contact.MailingCountry != null) {
+      if (contact.MailingCity ||
+          contact.MailingState ||
+          contact.MailingPostalCode ||
+          contact.MailingCountry) {
         address += '<br />';
       }
     }
-    if (contact.MailingCity != null && contact.MailingCity != '') {
+    if (contact.MailingCity && contact.MailingCity !== '') {
       address += contact.MailingCity + '<br />';
       //address += contact.MailingState != null && contact.MailingState != '' ? ', ' : '';
     }
-    if (contact.MailingState != null && contact.MailingState != '') {
+    if (contact.MailingState && contact.MailingState !== '') {
       address += contact.MailingState + '<br />';
     }
-    if (contact.MailingPostalCode != null && contact.MailingPostalCode != '') {
+    if (contact.MailingPostalCode && contact.MailingPostalCode !== '') {
       address += contact.MailingPostalCode + '<br />';
     }
-    if (contact.MailingCountry != null && contact.MailingCountry != '') {
+    if (contact.MailingCountry && contact.MailingCountry !== '') {
       address += contact.MailingCountry;
     }
 
     return address;
-  }
+  };
 
   $.fn.gwNotify = function (message, options) {
 
@@ -956,9 +956,9 @@
 
     cur_msg = obj.find('p.gwNotify-message').length > 0 ? obj.find('p.gwNotify-message').text() : '';
 
-    if (cur_msg === message && message != '') return obj;
+    if (cur_msg === message && message !== '') return obj;
 
-    if (message == undefined || message == '') {
+    if (message === undefined || message === '') {
       obj.fadeOut(200, function() {
         obj.find('p.gwNotify-message').text('');
       });
@@ -1005,7 +1005,7 @@
     });
 
     return obj;
-  }
+  };
 
   $.fn.gwsetui = function (options) {
 
@@ -1043,6 +1043,6 @@
 
       }
     });
-  }
+  };
 
 })(jQuery.noConflict());
