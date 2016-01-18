@@ -253,7 +253,7 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
     */
     public static void verifyRDMappings(STG_PanelHealthCheck_CTRL ctrl) {
         
-        map<string, npe03__Custom_Field_Mapping__c> mapRDCustomField = npe03__Custom_Field_Mapping__c.getAll();
+        map<string, npe03__Custom_Field_Mapping__c> mapRDCustomField = UTIL_ListCustomSettingsFacade.getMapCustomFieldMappings();
         string strSetting = Schema.Sobjecttype.npe03__Custom_Field_Mapping__c.getLabel(); 
         boolean isValid = true;
         

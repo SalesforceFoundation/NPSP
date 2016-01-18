@@ -124,7 +124,7 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
         get {
             if (listRelLookup == null) {
                 
-                map<string, npe4__Relationship_Lookup__c> mapRL = npe4__Relationship_Lookup__c.getAll();
+                map<string, npe4__Relationship_Lookup__c> mapRL = UTIL_ListCustomSettingsFacade.getMapRelationshipLookupSettings();
                 
 	            // Sort them by name
 	            list<string> rlNames = new list<string>();
@@ -148,7 +148,7 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
     */
     public static void verifyRelLookups(STG_PanelHealthCheck_CTRL ctrl) {
         
-        map<string, npe4__Relationship_Lookup__c> mapRL = npe4__Relationship_Lookup__c.getAll();
+        map<string, npe4__Relationship_Lookup__c> mapRL = UTIL_ListCustomSettingsFacade.getMapRelationshipLookupSettings();
         //string strSetting = Schema.Sobjecttype.npe4__Relationship_Lookup__c.getLabel(); 
         boolean isValid = true;
         boolean isValidAll = true;

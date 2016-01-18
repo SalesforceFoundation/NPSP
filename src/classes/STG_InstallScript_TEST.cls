@@ -313,7 +313,7 @@ public with sharing class STG_InstallScript_TEST {
         System.assertEquals(90, npe03Settings.npe03__Update_Check_Interval__c);
         System.assertEquals([select id from RecordType where sobjecttype = 'Opportunity' limit 1].id, npe03Settings.npe03__Record_Type__c);
         
-        System.assertEquals('List Settings', npe04Settings.npe4__Reciprocal_Method__c);
+        System.assertEquals('List Setting', npe04Settings.npe4__Reciprocal_Method__c);
         
         System.assertEquals(true, npe05Settings.npe5__Automatic_Affiliation_Creation_Turned_On__c);
         

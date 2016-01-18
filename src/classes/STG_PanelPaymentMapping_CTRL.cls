@@ -163,7 +163,7 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
     */
     public static void verifyPaymentMappings(STG_PanelHealthCheck_CTRL ctrl) {
         
-        map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappings = npe01__Payment_Field_Mapping_Settings__c.getAll();
+        map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappings = UTIL_ListCustomSettingsFacade.getMapPaymentFieldMappingSettings();
         string strSetting = Schema.Sobjecttype.npe01__Payment_Field_Mapping_Settings__c.getLabel(); 
         boolean isValid = true;
         boolean isValidAll = true;
@@ -288,7 +288,7 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
    
         Try {
 	        isEditMode = false;
-	        map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappings = npe01__Payment_Field_Mapping_Settings__c.getAll();
+	        map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappings = UTIL_ListCustomSettingsFacade.getMapPaymentFieldMappingSettings();
 	        	        
 	        // make sure we have a unique name
 	        integer nameNumber;
