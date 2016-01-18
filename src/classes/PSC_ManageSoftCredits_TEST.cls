@@ -235,6 +235,7 @@ public with sharing class PSC_ManageSoftCredits_TEST {
             ctrl.softCredits[i].fullCredit = true;
         ctrl.checkFullCredit();
         ctrl.checkFullAndPartialCredit();
+        ctrl.allowTooManySoftCredits = true;
         
         Test.startTest();
         system.assertNotEquals(null, ctrl.save());
@@ -300,7 +301,8 @@ public with sharing class PSC_ManageSoftCredits_TEST {
         system.assertEquals(600, amount);
 
         list<OpportunityContactRole> listOCR = [select Id, ContactId, OpportunityId, Role from OpportunityContactRole];
-        system.assertEquals(cPSCExisting, listOCR.size());        
+        // changing the partial's Contact does not delete the original OCR.
+        system.assertEquals(cPSCExisting+1, listOCR.size());        
     }
 
     /*******************************************************************************************************
