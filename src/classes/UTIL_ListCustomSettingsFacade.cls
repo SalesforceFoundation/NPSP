@@ -99,7 +99,7 @@ public with sharing class UTIL_ListCustomSettingsFacade {
     **/
     public static Map<String,npe4__Relationship_Auto_Create__c> getMapRelationshipAutoCreateSettings() {
         if(mapRelationshipAutoCreateSettings == null) {
-            mapRelationshipAutoCreateSettings = UTIL_ListCustomSettingsFacade.getMapRelationshipAutoCreateSettings();
+            mapRelationshipAutoCreateSettings = npe4__Relationship_Auto_Create__c.getAll();
         }
         return mapRelationshipAutoCreateSettings;
     }
