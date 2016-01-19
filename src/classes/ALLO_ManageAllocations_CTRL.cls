@@ -80,8 +80,12 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             parentId = String.escapeSingleQuotes(params.get('opp'));
             opp = [SELECT Id, Name, Amount FROM Opportunity WHERE Id = :parentId];
             //only Opportunities have parent amounts and enforce being below this amount
-            if (opp.Amount!=null) 
+            if (opp.Amount!=null) {
                 parentAmount = opp.Amount;
+            }
+            if (parentAmount==0) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Warning, Label.alloCantAllocateNothing));
+            }
         } else if (params.containsKey('cam')) {
             parentId = String.escapeSingleQuotes(params.get('cam'));
             cam = [SELECT Id, Name FROM Campaign WHERE Id = :parentId];
