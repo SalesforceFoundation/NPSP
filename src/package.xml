@@ -960,10 +960,11 @@
         <members>mtchBtnSearch</members>
         <members>mtchCloseDateEnd</members>
         <members>mtchCloseDateStart</members>
-        <members>mtchFindMatchedGiftsPageBlock</members>
         <members>mtchFindMatchedGiftsSectionHeader</members>
         <members>mtchFindMoreGifts</members>
         <members>mtchFindMoreGiftsInfo</members>
+        <members>mtchItems</members>
+        <members>mtchSearchCriteriaEmpty</members>
         <members>mtchSelectCbxTitle</members>
         <members>mtchTotalMatchingGift</members>
         <members>mtchTotalSelected</members>

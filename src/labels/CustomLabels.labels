@@ -2492,14 +2492,6 @@
         <value>Close Date Start</value>
     </labels>
     <labels>
-        <fullName>mtchFindMatchedGiftsPageBlock</fullName>
-        <categories>Find Matched Gifts</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>mtchFindMatchedGiftsPageBlock</shortDescription>
-        <value>Select opportunities for this Matching Gift</value>
-    </labels>
-    <labels>
         <fullName>mtchFindMatchedGiftsSectionHeader</fullName>
         <categories>Find Matched Gifts</categories>
         <language>en_US</language>
@@ -2524,6 +2516,22 @@
         <value>Fill in one or more filters, and then click on Search.</value>
     </labels>
     <labels>
+        <fullName>mtchItems</fullName>
+        <categories>Find Matching Gifts, Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>mtchItems</shortDescription>
+        <value>{0} items</value>
+    </labels>
+    <labels>
+        <fullName>mtchSearchCriteriaEmpty</fullName>
+        <categories>Find Matching Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>mtchSearchCriteriaEmpty</shortDescription>
+        <value>Please specify one or more filters in order to search.</value>
+    </labels>
+    <labels>
         <fullName>mtchSelectCbxTitle</fullName>
         <categories>Find Matched Gifts</categories>
         <language>en_US</language>
@@ -2537,7 +2545,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>mtchTotalMatchingGift</shortDescription>
-        <value>Total Matching Gift:</value>
+        <value>Total Matching Gift</value>
     </labels>
     <labels>
         <fullName>mtchTotalSelected</fullName>
@@ -2545,7 +2553,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>mtchTotalSelected</shortDescription>
-        <value>Total Selected:</value>
+        <value>Total Selected</value>
     </labels>
     <labels>
         <fullName>mtchTotalUnaccounted</fullName>
@@ -2553,7 +2561,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>mtchTotalUnaccounted</shortDescription>
-        <value>Total Unaccounted:</value>
+        <value>Total Unaccounted</value>
     </labels>
     <labels>
         <fullName>oppInstallmentsOf</fullName>

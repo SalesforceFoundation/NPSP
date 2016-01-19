@@ -1,6 +1,12 @@
 <apex:page standardController="Opportunity" extensions="MTCH_FindGifts_CTRL" standardStylesheets="false">
     <apex:stylesheet value="{!URLFOR($Resource.SLDS, 'assets/styles/salesforce-lightning-design-system-vf.css')}" />
 
+    <style>
+        html body.sfdcBody {
+            padding: 0;
+        }
+    </style>
+
     <script>
         // for Winter '16, a trusted way to figure out whether in Lighting Experience or Classic Aloha.
         // In Spring '16, this can be replaced with an official method provided.
@@ -137,7 +143,7 @@
                                     <div class="slds-form-element">
                                         <label class="slds-form-element__label" >&nbsp;</label>
                                         <div class="slds-form-element__control">
-                                            <apex:commandButton action="{!searchMore}" value="{!$Label.mtchBtnSearch}" />
+                                            <apex:commandButton styleClass="slds-button slds-button--neutral" action="{!searchMore}" value="{!$Label.mtchBtnSearch}" />
                                         </div>
                                     </div>
                                 </div>
