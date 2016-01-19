@@ -791,6 +791,14 @@
         <value>Save &amp; Close</value>
     </labels>
     <labels>
+        <fullName>alloCantAllocateNothing</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>alloCantAllocateNothing</shortDescription>
+        <value>You can only create allocations for opportunities with a positive amount.</value>
+    </labels>
+    <labels>
         <fullName>alloDefaultGAUMissing</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>
