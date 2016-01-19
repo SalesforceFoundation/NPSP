@@ -539,6 +539,11 @@
         <members>Household_Naming_Settings__c.Name_Connector__c</members>
         <members>Household_Naming_Settings__c.Name_Overrun__c</members>
         <members>Lead.Batch__c</members>
+        <members>Lead.CompanyCity__c</members>
+        <members>Lead.CompanyCountry__c</members>
+        <members>Lead.CompanyPostalCode__c</members>
+        <members>Lead.CompanyState__c</members>
+        <members>Lead.CompanyStreet__c</members>
         <members>Opportunity.Acknowledgment_Date__c</members>
         <members>Opportunity.Acknowledgment_Status__c</members>
         <members>Opportunity.Batch__c</members>
@@ -895,12 +900,14 @@
         <members>leadConvertAffilationName</members>
         <members>leadConvertAffiliateExistingAccount</members>
         <members>leadConvertAffiliateNewAccount</members>
+        <members>leadConvertAffiliatedAccount</members>
         <members>leadConvertAttachBucketAccount</members>
         <members>leadConvertAttachExistingAccount</members>
         <members>leadConvertAutocreateHHAccount</members>
         <members>leadConvertAutocreateOne2OneAccount</members>
         <members>leadConvertBtnCancel</members>
         <members>leadConvertBtnConvert</members>
+        <members>leadConvertContactAccount</members>
         <members>leadConvertCreateAccount</members>
         <members>leadConvertCreateNewContact</members>
         <members>leadConvertMergeExistingContact</members>
