@@ -791,6 +791,14 @@
         <value>Save &amp; Close</value>
     </labels>
     <labels>
+        <fullName>alloCantAllocateNothing</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>alloCantAllocateNothing</shortDescription>
+        <value>You can only create allocations for opportunities with a positive amount.</value>
+    </labels>
+    <labels>
         <fullName>alloDefaultGAUMissing</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>
@@ -2340,6 +2348,14 @@
         <value>Affiliate with New Account:</value>
     </labels>
     <labels>
+        <fullName>leadConvertAffiliatedAccount</fullName>
+        <categories>Lead Convert</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertAffiliatedAccount</shortDescription>
+        <value>Affiliated Account</value>
+    </labels>
+    <labels>
         <fullName>leadConvertAttachBucketAccount</fullName>
         <categories>Lead Converter</categories>
         <language>en_US</language>
@@ -2386,6 +2402,14 @@
         <protected>false</protected>
         <shortDescription>leadConvertBtnConvert</shortDescription>
         <value>Convert</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertContactAccount</fullName>
+        <categories>Lead Convert</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertContactAccount</shortDescription>
+        <value>Contact Account</value>
     </labels>
     <labels>
         <fullName>leadConvertCreateAccount</fullName>
@@ -2618,6 +2642,14 @@
         <protected>false</protected>
         <shortDescription>pmtWizardBtnRemovePaidPayments</shortDescription>
         <value>Remove Paid Payments</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardClosedLost</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardClosedLost</shortDescription>
+        <value>NOTE: This opportunity is marked closed lost. To create payments, first edit the opportunity record and change the stage to an open or closed won stage.</value>
     </labels>
     <labels>
         <fullName>pmtWizardCreateSchedule</fullName>
@@ -2986,6 +3018,14 @@
         <protected>false</protected>
         <shortDescription>sendAcknowledgmentSucceeded</shortDescription>
         <value>Acknowledged</value>
+    </labels>
+    <labels>
+        <fullName>stgAddrMustChooseClass</fullName>
+        <categories>Settings, address</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgAddrMustChooseClass</shortDescription>
+        <value>You must choose a verification service in order to enable automatic verification.</value>
     </labels>
     <labels>
         <fullName>stgBtnCancel</fullName>

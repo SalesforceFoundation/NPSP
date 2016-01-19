@@ -72,6 +72,12 @@
                     </apex:outputPanel>
                 </apex:pageBlockSectionItem>
                 <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Opportunity.Label} {!$ObjectType.Account.Label}" />
+                    <apex:selectList value="{!strOppAccChoice}" size="1" >
+                        <apex:selectOptions value="{!oppAccChoices}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
                     <apex:outputLabel value="{!$Label.leadConvertStatus}"/>
                     <apex:selectList value="{!leadConvStatus}" size="1">
                         <apex:selectOptions value="{!lcStatuses}"/>

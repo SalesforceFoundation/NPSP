@@ -383,7 +383,7 @@ public class UTIL_UnitTestData_TEST {
             WHERE Id = :returnedUser.Id
         ];
 
-        System.assertEquals(randomUsername, queriedUser.Username);
+        System.assert(randomUsername.equalsIgnoreCase(queriedUser.Username));
         System.assertEquals('COO', queriedUser.UserRole.Name);
     }
 
@@ -404,8 +404,8 @@ public class UTIL_UnitTestData_TEST {
             WHERE Id = :returnedUser.Id
         ];
 
-        System.assertEquals(randomUsername, queriedUser.Username);
-        System.assertEquals(randomRoleName, queriedUser.UserRole.Name);
+        System.assert(randomUsername.equalsIgnoreCase(queriedUser.Username));
+        System.assert(randomRoleName.equalsIgnoreCase(queriedUser.UserRole.Name));
     }
 
     private static testMethod void testCreateNewInactiveUserForTests() {
