@@ -4,6 +4,7 @@
     <style>
         html body.sfdcBody {
             padding: 0;
+            background-color: #f4f6f9; // shade theme color
         }
     </style>
 
