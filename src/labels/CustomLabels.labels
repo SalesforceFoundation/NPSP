@@ -2540,6 +2540,14 @@
         <value>Remove Paid Payments</value>
     </labels>
     <labels>
+        <fullName>pmtWizardClosedLost</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardClosedLost</shortDescription>
+        <value>NOTE: This opportunity is marked closed lost. To create payments, first edit the opportunity record and change the stage to an open or closed won stage.</value>
+    </labels>
+    <labels>
         <fullName>pmtWizardCreateSchedule</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
@@ -2754,6 +2762,14 @@
         <protected>false</protected>
         <shortDescription>sendAcknowledgmentSucceeded</shortDescription>
         <value>Acknowledged</value>
+    </labels>
+    <labels>
+        <fullName>stgAddrMustChooseClass</fullName>
+        <categories>Settings, address</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgAddrMustChooseClass</shortDescription>
+        <value>You must choose a verification service in order to enable automatic verification.</value>
     </labels>
     <labels>
         <fullName>stgBtnCancel</fullName>

@@ -9,11 +9,12 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
     </script>
     
     <apex:pageMessages />
-    
+    <!-- Payments Disabled -->
     <apex:outputPanel rendered="{!AND(NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == false)}">
         <apex:pageBlock title="{!$Label.pmtWizardPaymentsDisabledTitle}" >{!$Label.pmtWizardPaymentsDisabled}&nbsp;<apex:outputLink value="/apex/npsp__STG_SettingsManager">{!$Label.lblNPSPSettings}</apex:outputLink></apex:pageBlock>
     </apex:outputPanel>
     
+    <!-- Opportunity Info -->
     <apex:outputPanel rendered="{!AND(NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true, isScheduleWizard == true)}">
         <apex:sectionHeader title="{!$ObjectType.npe01__OppPayment__c.LabelPlural}" subtitle="{!$Label.pmtWizardSubtitle}"/>
         <apex:pageBlock title="{!$Label.pmtWizardSectionTitle}">
@@ -33,14 +34,22 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
         </apex:pageBlock>
      
     <apex:form >
-        <apex:pageBlock title="{!$Label.pmtWizardWarning}" rendered="{!AND(NOT(ISNULL(CurrentOpp)),NOT(haveAmount))}">
+        <!-- No unpaid amount warning -->
+        <apex:pageBlock title="{!$Label.pmtWizardWarning}" rendered="{!AND(NOT(ISNULL(CurrentOpp)),NOT(haveAmount), NOT(isClosedLost))}">
             {!$Label.pmtWizardNoUnpaidAmount}&nbsp;&nbsp;
             <apex:outputLink value="{!'/' + currentOpp.id}">{!currentOpp.Name}</apex:outputLink>
         <div style="text-align: center;">        
         <apex:commandButton action="{!RemovePaidPayments}" value="{!$Label.pmtWizardBtnRemovePaidPayments}"/></div>
         </apex:pageBlock>
+
+        <!-- Closed/Lost warning -->
+        <apex:pageBlock title="{!$Label.pmtWizardWarning}" rendered="{!isClosedLost}">
+            {!$Label.pmtWizardClosedLost}&nbsp;&nbsp;
+            <apex:outputLink value="{!'/' + currentOpp.id}">{!currentOpp.Name}</apex:outputLink>
+        </apex:pageBlock>
         
-        <apex:pageBlock title="{!$Label.pmtWizardCreateSchedule}" rendered="{!OR(haveAmount, removePaidPayments)}">
+        <!-- Create payment schedule -->
+        <apex:pageBlock title="{!$Label.pmtWizardCreateSchedule}" rendered="{!AND(NOT(isClosedLost), OR(haveAmount, removePaidPayments))}">
             <apex:pageBlockSection id="pmtGrid" columns="1">
                 <apex:pageBlockSectionItem >       
                     <apex:outputLabel value="{!$Label.pmtWizardNumberOfPayments}" />
@@ -75,10 +84,9 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
             <div style="text-align: center;">
             <apex:commandButton action="{!calculate}" value="{!$Label.pmtWizardBtnCalcPayments}"/></div>
         </apex:pageBlock>
-    </apex:form>
 
-    <apex:form >
-        <apex:pageBlock title="{!$Label.pmtWizardToBeCreated}" mode="edit" rendered="{!OR(haveAmount, removePaidPayments)}">
+        <!-- Show Payments to be Created -->
+        <apex:pageBlock title="{!$Label.pmtWizardToBeCreated}" mode="edit" rendered="{!AND(NOT(isClosedLost), payments.size>0, OR(haveAmount, removePaidPayments))}">
             <apex:pageBlockTable id="theTable" value="{!payments}" var="p" style="margin-bottom:12px;"> 
                 <apex:column >
                     <apex:facet name="header">{!$Label.pmtWizardPaymentNumber}</apex:facet>
