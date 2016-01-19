@@ -245,7 +245,7 @@
                 window.initOrReload();
             </script>
             <div class="btn-toolbar">
-                    <apex:commandButton styleClass="btn btn-primary btn-sm" value="{!$Label.alloBtnSaveAndClose}" id="saveCloseBTN" action="{!saveClose}" immediate="false"/>
+                    <apex:commandButton styleClass="btn btn-primary btn-sm" value="{!$Label.alloBtnSaveAndClose}" id="saveCloseBTN" action="{!saveClose}" immediate="false" disabled="{!opp<>null&&parentAmount==0}"/>
                     <apex:commandButton styleClass="btn btn-default btn-sm" value="{!$Label.alloBtnCancel}" id="cancelBTN" action="{!cancel}" immediate="true"/>
             </div>
         </div>
