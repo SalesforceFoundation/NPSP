@@ -21,6 +21,23 @@
             else
                 window.location.assign('/006/o');
         }
+        
+        // show or hide the modal search popup
+        function showOrHideSearchPopup(isShow) {
+            var divPopup = document.getElementById('searchPopup');
+            var divBackdrop = document.getElementById("searchBackdrop");
+            
+            if (divPopup == null || divBackdrop == null)
+                return;
+            
+            if (isShow) {
+                divBackdrop.className += ' slds-backdrop--open';
+                divPopup.className += ' slds-fade-in-open';
+            } else {
+                divPopup.className = divPopup.className.replace(' slds-fade-in-open', '');            
+                divBackdrop.className = divBackdrop.className.replace(' slds-backdrop--open', '');
+            }
+        }
     </script>
     
     <apex:form >
@@ -52,11 +69,10 @@
             </div>
         </div>
         <!-- /PAGE HEADER -->
-      
-    
+
         <apex:pageMessages />
 
-        <!-- outer div of body below header -->
+        <!-- PAGE CONTENT -->
         <div class="myBodyContent">
 
             <!-- SUMMARY INFO PANEL -->
@@ -77,54 +93,50 @@
             <!-- /SUMMARY INFO PANEL -->
             
             <!-- DATA TABLE -->
-            <apex:outputPanel id="tablePanel">
-                <table class="slds-table slds-table--bordered">
-                    <thead>
-                        <tr class="slds-text-heading--label">
-                            <th>{!$Label.mtchSelectCbxTitle}</th>
-                            <th>{!$ObjectType.Opportunity.Fields.Name.Label}</th>
-                            <th>{!$ObjectType.Account.Label}</th>
-                            <th>{!$ObjectType.Opportunity.Fields.Primary_Contact__c.Label}</th>
-                            <th>{!$ObjectType.Opportunity.Fields.Amount.Label}</th>
-                            <th>{!$ObjectType.Opportunity.Fields.CloseDate.Label}</th>
+            <table class="slds-table slds-table--bordered">
+                <thead>
+                    <tr class="slds-text-heading--label">
+                        <th>{!$Label.mtchSelectCbxTitle}</th>
+                        <th>{!$ObjectType.Opportunity.Fields.Name.Label}</th>
+                        <th>{!$ObjectType.Account.Label}</th>
+                        <th>{!$ObjectType.Opportunity.Fields.Primary_Contact__c.Label}</th>
+                        <th>{!$ObjectType.Opportunity.Fields.Amount.Label}</th>
+                        <th>{!$ObjectType.Opportunity.Fields.CloseDate.Label}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <apex:repeat value="{!potentialGifts}" var="g">
+                        <tr>
+                            <td>
+                                <apex:inputCheckbox value="{!selection[g.Id]}">
+                                    <apex:actionSupport action="{!refresh}" event="onchange" rerender="totalSelected, totalUn" />
+                                </apex:inputCheckbox>
+                            </td>
+                            <td><apex:outputLink value="/{!g.Id}">{!g.Name}</apex:outputLink></td>
+                            <td><apex:outputField value="{!g.Account.Name}" /></td>
+                            <td><apex:outputField value="{!g.Primary_Contact__c}" /></td>
+                            <td><apex:outputField value="{!g.Amount}" /></td>
+                            <td><apex:outputField value="{!g.CloseDate}" /></td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <apex:repeat value="{!potentialGifts}" var="g">
-                            <tr>
-                                <td style="vertical-align:middle;">
-                                    <apex:inputCheckbox value="{!selection[g.Id]}">
-                                        <apex:actionSupport action="{!refresh}" event="onchange" rerender="totalSelected, totalUn" />
-                                    </apex:inputCheckbox>
-                                </td>
-                                <td style="vertical-align:middle;">
-                                    <apex:outputField value="{!g.Name}" />
-                                </td>
-                                <td style="vertical-align:middle;">
-                                    <apex:outputField value="{!g.Account.Name}" />
-                                </td>
-                                <td style="vertical-align:middle;">
-                                    <apex:outputField value="{!g.Primary_Contact__c}" />
-                                </td>
-                                <td style="vertical-align:middle;">
-                                    <apex:outputField value="{!g.Amount}" />
-                                </td>
-                                <td style="vertical-align:middle;">
-                                    <apex:outputField value="{!g.CloseDate}" />
-                                </td>
-                            </tr>
-                        </apex:repeat>
-                    </tbody>
-                </table>
-            </apex:outputPanel>
+                    </apex:repeat>
+                </tbody>
+            </table>
             <!-- /DATA TABLE -->
             
-            <!-- SEARCH BOX -->
-            <apex:outputPanel id="search">
-              <div class="slds-box slds-theme--shade slds-m-around--medium">
-                <apex:commandLink action="{!showSearchSection}" reRender="search" value="{!$Label.mtchFindMoreGifts}" rendered="{!!showSearchSection}"/>
-                    <apex:outputPanel rendered="{!showSearchSection}" >
-                        <div><p>{!$Label.mtchFindMoreGiftsInfo}</p><p/></div>                                            
+            <div class="slds-p-around--medium">
+                <a href="javascript:showOrHideSearchPopup(true);" >{!$Label.mtchFindMoreGifts}</a>
+            </div>
+
+            <!-- SEARCH POPUP -->
+            <div id="searchPopup" aria-hidden="false" role="dialog" class="slds-modal">
+                <div class="slds-modal__container">
+                    
+                    <div class="slds-modal__header">
+                        <h2 class="slds-text-heading--medium">{!$Label.mtchFindMoreGifts}</h2>
+                        <p>{!$Label.mtchFindMoreGiftsInfo}</p>                                            
+                    </div>
+                    
+                    <div class="slds-modal__content">
                         <div class="slds-grid">
                             <div class="slds-col">
                                 <div class="slds-form--stacked">
@@ -141,9 +153,9 @@
                                         </div>
                                     </div>
                                     <div class="slds-form-element">
-                                        <label class="slds-form-element__label" >&nbsp;</label>
+                                        <label class="slds-form-element__label" for="txtAmount">{!$ObjectType.Opportunity.Fields.Amount.Label}</label>
                                         <div class="slds-form-element__control">
-                                            <apex:commandButton styleClass="slds-button slds-button--neutral" action="{!searchMore}" value="{!$Label.mtchBtnSearch}" />
+                                            <apex:inputField id="txtAmount" value="{!searchFieldsWrapper.First_Soft_Credit_Amount__c}" />
                                         </div>
                                     </div>
                                 </div>
@@ -163,41 +175,20 @@
                                             <apex:inputField id="txtCloseDateEnd" value="{!searchFieldsWrapper.Last_Soft_Credit_Date__c}" />
                                         </div>
                                     </div>
-                                    <div class="slds-form-element">
-                                        <label class="slds-form-element__label" for="txtAmount">{!$ObjectType.Opportunity.Fields.Amount.Label}</label>
-                                        <div class="slds-form-element__control">
-                                            <apex:inputField id="txtAmount" value="{!searchFieldsWrapper.First_Soft_Credit_Amount__c}" />
-                                        </div>
-                                    </div>
                               </div>
                           </div>
                         </div> <!-- /slds-grid -->
-                    </apex:outputPanel> <!-- /showSearchSection -->
-                </div> <!-- /slds-box -->
-            </apex:outputPanel>
-            <!-- /SEARCH BOX -->
-
-<!--   NO MORE HAVE TWO LISTS!!!!                             
-                
-<apex:pageBlock>                
-                <apex:outputPanel rendered="{!showSearchSection}" >
-                    <apex:outputPanel rendered="{!showSearchSection}" >
-                <apex:pageBlockTable value="{!potentialGifts2}" var="g">
-                    <apex:column headerValue="{!$Label.mtchSelectCbxTitle}">
-                        <apex:inputCheckbox value="{!selection[g.Id]}">
-                            <apex:actionSupport action="{!refresh}" event="onchange" reRender="totalSelected, totalUn" />
-                        </apex:inputCheckbox>
-                    </apex:column>
-                    <apex:column headerValue="{!$ObjectType.Opportunity.Fields.Name.Label}" value="{!g.Name}"/>
-                    <apex:column headerValue="{!$ObjectType.Account.Label}" value="{!g.Account.Name}"/>
-                    <apex:column headerValue="{!$ObjectType.Opportunity.Fields.Primary_Contact__c.Label}" value="{!g.Primary_Contact__c}"/>
-                    <apex:column headerValue="{!$ObjectType.Opportunity.Fields.Amount.Label}" value="{!g.Amount}"/>
-                    <apex:column headerValue="{!$ObjectType.Opportunity.Fields.CloseDate.Label}" value="{!g.CloseDate}"/>
-                </apex:pageBlockTable>
-                </apex:outputPanel>
-            </apex:outputPanel>
-</apex:pageBlock>        
--->
+                    </div> <!-- /slds-modal__content -->
+                    <div class="slds-modal__footer">
+                        <div class="slds-x-small-buttons--horizontal">
+                            <button class="slds-button slds-button--neutral" onclick="showOrHideSearchPopup(false);return false;">{!$Label.stgBtnCancel}</button>
+                            <apex:commandButton styleClass="slds-button slds-button--neutral slds-button--brand" action="{!searchMore}" value="{!$Label.mtchBtnSearch}" />
+                        </div>
+                    </div>
+                </div> <!-- /slds-modal__container -->
+            </div> <!-- /slds-modal -->
+            <div id="searchBackdrop" class="slds-backdrop"></div>
+            <!-- /SEARCH POPUP -->
 
         </div> <!--  /myBodyContent -->
       </div> <!-- /slds -->
