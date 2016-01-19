@@ -291,9 +291,8 @@ button.hhCard-delete {
 
 .hhAddress {
 	margin-top: 1em;
-	width: 50%;
-	min-width: 420px;
-	max-width: 500px;
+	width: 500px;
+
 }
 .hhAddress-title {
 	color: #666;
@@ -303,28 +302,31 @@ button.hhCard-delete {
 .hhAddress-content {
 	background-color: #fff;
 	border: 2px solid #ccc;
-	padding: 0.8em 200px 0.8em 1em;
+	padding: 10px;
 	border-radius: 8px;
 	position: relative;
 	min-height: 2em;
 }
 .hhAddress-details {
 	border-right: 1px solid #d8d8d8;
-	padding: 0 6em 0 0;
+	padding: 5px 10px;
 	position: relative;
 	min-height: 2em;
+	display: table-cell;
+	min-width: 260px;
 }
 .hhAddress-change {
 	position: absolute;
 	right: 1em;
-	top: 0;
+	top: 5px;
 }
 .hhAddress-help {
-	display: block;
-	width: 190px;
-	position: absolute;
-	right: 0;
-	top: 0;
+	display: table-cell;
+	width: 240px;
+	padding: 5px 10px;
+}
+.hhAddress-help > p {
+	margin: 0;
 }
 .hh-name-exclude .hh-formal-exclude .hh-informal-exclude {
 	margin-top: 0.4em;
