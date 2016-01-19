@@ -98,6 +98,15 @@ public with sharing class MTCH_FindGifts_CTRL {
     }
     
     /*******************************************************************************************************
+    * @description the number of Opps displayed
+    */ 
+    public integer numberOfOpps {
+        get {
+            return potentialGifts == null ? 0 : potentialGifts.size();
+        }
+    }
+    
+    /*******************************************************************************************************
     * @description adds up the amount of all selected opps matched or to be matched.
     * @return Double the total amount
     */ 
@@ -105,7 +114,7 @@ public with sharing class MTCH_FindGifts_CTRL {
         Double totalSelected = 0;
         List<Opportunity> allPotentialGifts = new List<Opportunity>();
         allPotentialGifts.addAll(potentialGifts);
-        allPotentialGifts.addAll(potentialGifts2);
+        //allPotentialGifts.addAll(potentialGifts2);
         
         for (Opportunity o : allPotentialGifts){
             if (selection.get(o.Id) && /*o.Matching_Gift__c == opp.Id && */ o.Amount != null){
@@ -128,7 +137,7 @@ public with sharing class MTCH_FindGifts_CTRL {
         
         List<Opportunity> allPotentialGifts = new List<Opportunity>();
         allPotentialGifts.addAll(potentialGifts);
-        allPotentialGifts.addAll(potentialGifts2);
+        //allPotentialGifts.addAll(potentialGifts2);
         List<OpportunityContactRole> roles = new List<OpportunityContactRole>();
         List<Partial_Soft_Credit__c> softCredits = new List<Partial_Soft_Credit__c>();
         List<OpportunityContactRole> listOCRDelete = new List<OpportunityContactRole>();
@@ -239,9 +248,20 @@ public with sharing class MTCH_FindGifts_CTRL {
     
     /*******************************************************************************************************
     * @description tells the page to query based on the search fields, and display the results
-    * @return void
+    * @return null
     */ 
-    public void searchMore() {    
+    public PageReference searchMore() {    
+        
+        if (searchFieldsWrapper.AccountId == null &&
+            searchFieldsWrapper.ReportsToId == null &&
+            searchFieldsWrapper.First_Soft_Credit_Amount__c == null &&
+            searchFieldsWrapper.First_Soft_Credit_Date__c == null &&
+            searchFieldsWrapper.Last_Soft_Credit_Date__c == null) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, Label.mtchSearchCriteriaEmpty));
+                return null;
+        }
+        
+        
         String query = 'SELECT Id, Name, AccountId, Account.Name, Primary_Contact__c, Primary_Contact__r.Name, Amount, CloseDate, Matching_Gift__c ,'+
                             '  (SELECT Id, ContactId FROM OpportunityContactRoles WHERE IsPrimary = true AND IsDeleted = false) ' +
                             'FROM Opportunity ' +
@@ -263,5 +283,10 @@ public with sharing class MTCH_FindGifts_CTRL {
                 selection.put(o.Id, false);
             }
         }
+        
+        // now rather than displaying in a seperate list, let's just add them to our first list!
+        potentialGifts.addAll(potentialGifts2);
+        
+        return null;
     }
 }

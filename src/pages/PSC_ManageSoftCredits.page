@@ -39,7 +39,9 @@
                         </ol>
                     </nav>              
                     <h1 class="slds-text-heading--medium slds-p-top-medium">{!$Label.pscManageSoftCreditsTitle}</h1>
-                    <p class="slds-text-body--small slds-m-top--x-small">{!numberOfSoftCredits} items</p>
+                    <p class="slds-text-body--small slds-m-top--x-small">
+                        <apex:outputText value="{!$Label.mtchItems}"><apex:param value="{!numberOfSoftCredits}" /></apex:outputText>
+                    </p>
                 </div>        
 
                 <div class="slds-col slds-no-flex slds-align-middle">
