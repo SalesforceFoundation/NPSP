@@ -176,7 +176,7 @@ public with sharing class MTCH_FindGifts_TEST {
         ctrl.showSearchSection();
         ctrl.searchFieldsWrapper.First_Soft_Credit_Amount__c = 100;
         ctrl.searchMore();
-        system.assertEquals(cItem/2, ctrl.potentialGifts2.size());
+        system.assertEquals(cItem, ctrl.potentialGifts.size());
         system.assertEquals(cItem, ctrl.selection.size());
 
         // select from the searched opps

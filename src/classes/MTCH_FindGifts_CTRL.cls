@@ -94,7 +94,6 @@ public with sharing class MTCH_FindGifts_CTRL {
         }
         
         searchFieldsWrapper = new Contact();
-        potentialGifts2 = new List<Opportunity>();
     }
     
     /*******************************************************************************************************
@@ -112,11 +111,8 @@ public with sharing class MTCH_FindGifts_CTRL {
     */ 
     public Double getTotalSelected(){
         Double totalSelected = 0;
-        List<Opportunity> allPotentialGifts = new List<Opportunity>();
-        allPotentialGifts.addAll(potentialGifts);
-        //allPotentialGifts.addAll(potentialGifts2);
         
-        for (Opportunity o : allPotentialGifts){
+        for (Opportunity o : potentialGifts){
             if (selection.get(o.Id) && /*o.Matching_Gift__c == opp.Id && */ o.Amount != null){
                 totalSelected += o.Amount;
             }
@@ -135,9 +131,6 @@ public with sharing class MTCH_FindGifts_CTRL {
             return false;
         }*/
         
-        List<Opportunity> allPotentialGifts = new List<Opportunity>();
-        allPotentialGifts.addAll(potentialGifts);
-        //allPotentialGifts.addAll(potentialGifts2);
         List<OpportunityContactRole> roles = new List<OpportunityContactRole>();
         List<Partial_Soft_Credit__c> softCredits = new List<Partial_Soft_Credit__c>();
         List<OpportunityContactRole> listOCRDelete = new List<OpportunityContactRole>();
@@ -147,7 +140,7 @@ public with sharing class MTCH_FindGifts_CTRL {
         list<Partial_Soft_Credit__c> listPSCExisting = [select Id, Contact__c, Opportunity__c, Role_Name__c, Contact_Role_ID__c 
             from Partial_Soft_Credit__c where Opportunity__c = :opp.Id];
         
-        for (Opportunity o : allPotentialGifts){
+        for (Opportunity o : potentialGifts){
             if (selection.get(o.Id) && o.Matching_Gift__c == null){
                 if (closedWonStages.contains(opp.StageName))
                     o.Matching_Gift_Status__c = 'Received'; 
@@ -195,7 +188,7 @@ public with sharing class MTCH_FindGifts_CTRL {
             }
         }
         try {
-            update allPotentialGifts;
+            update potentialGifts;
             /* now that PSC trigger handlers creates OCRs if needed, no need to create them here.
             if (roles.size() > 0){
                 insert roles;
@@ -260,8 +253,7 @@ public with sharing class MTCH_FindGifts_CTRL {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, Label.mtchSearchCriteriaEmpty));
                 return null;
         }
-        
-        
+                
         String query = 'SELECT Id, Name, AccountId, Account.Name, Primary_Contact__c, Primary_Contact__r.Name, Amount, CloseDate, Matching_Gift__c ,'+
                             '  (SELECT Id, ContactId FROM OpportunityContactRoles WHERE IsPrimary = true AND IsDeleted = false) ' +
                             'FROM Opportunity ' +
@@ -275,7 +267,7 @@ public with sharing class MTCH_FindGifts_CTRL {
                             'AND Id NOT IN :potentialGifts ' +
                             'AND Id != \'' + opp.Id + '\' ' +
                             'ORDER BY Name';
-        potentialGifts2 = Database.query(query);
+        list<Opportunity> potentialGifts2 = Database.query(query);
         for (Opportunity o : potentialGifts2){
             if (o.Matching_Gift__c == opp.Id){
                 selection.put(o.Id, true);
