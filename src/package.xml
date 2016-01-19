@@ -112,7 +112,6 @@
         <members>OPP_OpportunityNaming</members>
         <members>OPP_OpportunityNamingBTN_CTRL</members>
         <members>OPP_OpportunityNaming_BATCH</members>
-        <members>OPP_OpportunityNaming_TDTM</members>
         <members>OPP_OpportunityNaming_TEST</members>
         <members>OPP_PrimaryContact_BATCH</members>
         <members>OPP_PrimaryContact_TEST</members>
@@ -206,9 +205,6 @@
         <members>UTIL_Debug</members>
         <members>UTIL_Describe</members>
         <members>UTIL_Describe_TEST</members>
-        <members>UTIL_GlobalSchedulable</members>
-        <members>UTIL_GlobalSchedulable_TEST</members>
-        <members>UTIL_IScheduled</members>
         <members>UTIL_JobProgress_CTRL</members>
         <members>UTIL_JobProgress_CTRL_TEST</members>
         <members>UTIL_JobScheduler</members>
@@ -706,6 +702,7 @@
         <members>alloBatchDefaultInfo</members>
         <members>alloBtnCancel</members>
         <members>alloBtnSaveAndClose</members>
+        <members>alloCantAllocateNothing</members>
         <members>alloDefaultGAUMissing</members>
         <members>alloDefaultNotPercent</members>
         <members>alloDeleteRow</members>
