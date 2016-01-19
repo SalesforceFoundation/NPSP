@@ -218,12 +218,9 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     public override PageReference saveSettings() {
 
         //if the user has blanked out the implementing class, disable verification and save settings
-        if (string.isBlank(addrVerifSettings.Class__c)) {
-            addrVerifSettings.Enable_Automatic_Verification__c = false;
-            if(!Test.isRunningTest())
-                upsert addrVerifSettings;
-            setValidatorSelection(addrVerifSettings.Class__c);
-            return super.saveSettings();
+        if (string.isBlank(addrVerifSettings.Class__c) && addrVerifSettings.Enable_Automatic_Verification__c == true) {
+            apiSettingsErrorMessage = Label.Settings_not_Saved + ': ' + Label.stgAddrMustChooseClass;
+            return null;
         }
 
         try {
