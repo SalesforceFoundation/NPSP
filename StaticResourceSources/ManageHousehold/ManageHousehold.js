@@ -474,6 +474,7 @@
   }
 
   gwManageHH.dialogChangeAddress = function(event) {
+    event.preventDefault();
 
     var state = gwManageHH.state;
     var dialog = $('#dialog-changeaddress');
