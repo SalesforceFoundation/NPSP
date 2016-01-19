@@ -64,6 +64,13 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     public string strAfflAccountId { get; set; }
     
     /*******************************************************************************************************
+    * @description Determines the account that the created Opportunity will be related to. 
+    * 'CON_ACC' -> Contact.AccountId
+    * 'AFF_ACC' -> Contact.Primary_Affiliation__c  
+    */
+    public string strOppAccChoice { get; set; }
+    
+    /*******************************************************************************************************
     * @description Contains the value of the converted-into Contact
     */
     public string strConId { get; set; }
@@ -95,6 +102,11 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     * @description List of possible matching Contacts
     */
     public list<selectOption> conList;
+    
+    /*******************************************************************************************************
+    * @description List of possible Opportunity Account
+    */
+    public list<selectOption> oppAccChoices;
 
     /*******************************************************************************************************
     * @description Settings for the main Contacts & Organizations pacakge (npe01)
@@ -149,6 +161,16 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         }
       }
       return conList;
+    }
+    
+    public List<SelectOption> getOppAccChoices() {
+        if(oppAccChoices == null) {
+            oppAccChoices = new List<SelectOption>();
+            
+            oppAccChoices.add(new SelectOption('CON_ACC', label.leadConvertContactAccount));
+            oppAccChoices.add(new SelectOption('AFF_ACC', label.leadConvertAffiliatedAccount));
+        }
+        return oppAccChoices;
     }
 
     /*******************************************************************************************************
@@ -242,8 +264,10 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
 
         // get the lead
-        l = [select id, name, firstname, lastname, company, email, title, ownerId from lead
-            where id = : controller.getId()];
+        l = [select id, name, firstname, lastname, company, email, title, ownerId, 
+             		CompanyStreet__c, CompanyCity__c, CompanyState__c, CompanyPostalCode__c, CompanyCountry__c
+             from lead
+             where id = : controller.getId()];
 
         // dummy contact allows owner selection - use contact as always accessible if user has lead conversion rights
         dummyCon = new Contact(
@@ -421,11 +445,32 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             // if we created a new company account, affiliate to it.
             if (strAccountId == 'NEW')
                 strAfflAccountId = lcr.getAccountId();
-                
+            
+            Address__c tempAddr = new Address__c(
+                MailingStreet__c = l.CompanyStreet__c,
+                MailingCity__c = l.CompanyCity__c,
+                MailingState__c = l.CompanyState__c,
+                MailingPostalCode__c = l.CompanyPostalCode__c,
+                MailingCountry__c = l.CompanyCountry__c
+            );
+
+            // if we created a new company acct and the Lead had a company address, set the new acct's address
+            if (strAccountId == 'NEW' && !String.isBlank(l.CompanyStreet__c)) {
+            	Account acc = new Account(
+                    Id=lcr.getAccountId()
+                );
+                //copy address from temporary address__c record, handles state and country picklists if enabled
+                ADDR_Addresses_TDTM.copyAddressAddrSObj(tempAddr,acc,'Billing',null);
+                update acc;
+            }   
             // handle the optional Affiliation to a new or existing Account.
             ID afflAccId = null;
             if (strAfflAccountId == 'NEW') {
-                Account acc = new Account(name=l.Company);
+                Account acc = new Account(
+                    name = l.Company
+                );
+                //copy address from temporary address__c record, handles state and country picklists if enabled
+                ADDR_Addresses_TDTM.copyAddressAddrSObj(tempAddr,acc,'Billing',null);
                 insert acc;
                 afflAccId = acc.Id;
             } else if (strAfflAccountId != null && strAfflAccountId != '') {
@@ -436,6 +481,22 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 AFFL_Affiliations_TDTM.hasRunForAccounts = false;
                 AFFL_Affiliations_TDTM.createNonDupeAffiliation(l, lcr.getContactId(), afflAccId, true); 
             }
+            
+            //// Opportunity Cleanup 
+            if(!lc.isDoNotCreateOpportunity()) {
+            	Opportunity convertedOpp = new Opportunity(Id = lcr.getOpportunityId());
+            
+            	// Set the (a/o 3.45) Opportunity Primary Contact to the converted contact
+            	convertedOpp.Primary_Contact__c = lcr.getContactId();
+            
+            	// set the Opportunity Account to the Primary Affiliation based on strOppAccChoice
+            	if(strOppAccChoice == 'AFF_ACC') {
+                	convertedOpp.AccountId = afflAccId;
+            	}
+            
+            	update convertedOpp;
+            }
+            
 	        // redirect
             return new PageReference('/' + lcr.getContactId());
     	} catch (exception e) {
