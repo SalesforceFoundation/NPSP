@@ -67,6 +67,11 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @description is this the Schedule Payments wizard
     */ 
     public boolean isScheduleWizard{get; set;}    
+
+    /*******************************************************************************************************
+    * @description is this opportunity in a closed/lost stage
+    */ 
+    public boolean isClosedLost{get; set;}
     
     /*******************************************************************************************************
     * @description list of new payments to be created
@@ -161,7 +166,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
         String id = ApexPages.currentPage().getParameters().get('id');
         
         // requery the Opportunity for all fields that we need.
-        String query = 'select name, amount, stagename, npe01__payments_made__c, npe01__amount_outstanding__c, description, closedate, npe01__Number_of_Payments__c';
+        String query = 'select name, amount, stagename, npe01__payments_made__c, npe01__amount_outstanding__c, description, closedate, npe01__Number_of_Payments__c, isClosed, isWon';
         // add any opportunity fields from payment field mappings
         for (string s : PMT_PaymentCreator.paymentMappings.keyset()) {
             npe01__Payment_Field_Mapping_Settings__c pfms = PMT_PaymentCreator.paymentMappings.get(s);
@@ -180,6 +185,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
         } else {
             currentOpp = o[0];
             haveAmount = (currentOpp.npe01__amount_outstanding__c > 0);
+            isClosedLost = currentOpp.isClosed && !currentOpp.isWon;
             samplePayment = new npe01__OppPayment__c();
             samplePayment.npe01__Scheduled_Date__c = system.today();
             numberOfPayments = 12;
