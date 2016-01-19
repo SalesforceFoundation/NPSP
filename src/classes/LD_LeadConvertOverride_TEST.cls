@@ -876,7 +876,7 @@ private class LD_LeadConvertOverride_TEST {
     * @description Runs Lead Conversion with a new Contact selection for the conversion and verify Opp created for affiliation.
     */
     public static void newLeadConversion_TestOppAFF(string strProcessor) {
-        if (strTestOnly != '*' && strTestOnly != 'newLeadConversion_TestOppOCR') return;
+        if (strTestOnly != '*' && strTestOnly != 'newLeadConversion_TestOppAFF') return;
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
@@ -894,6 +894,7 @@ private class LD_LeadConvertOverride_TEST {
         l.CompanyCity__c = 'Home Town';
         l.CompanyState__c = 'WA';
         l.CompanyPostalCode__c = '98122';
+        l.CompanyCountry__c = 'United States';
         insert l;
 
         system.currentPageReference().getParameters().put('id', l.id);
@@ -948,7 +949,9 @@ private class LD_LeadConvertOverride_TEST {
     /*******************************************************************************************************
     * @description Runs lead conversion to create a company and test Lead.CompanyAddress bhvr
     */
-    public testmethod static void convertComapnyLead_Test() {
+    public testmethod static void convertCompanyLead_Test() {
+        if (strTestOnly != '*' && strTestOnly != 'convertCompanyLead_Test') return;
+
         Lead l = new Lead();
         l.FirstName = 'Test';
         l.LastName = 'TestContact';
@@ -960,6 +963,7 @@ private class LD_LeadConvertOverride_TEST {
         l.CompanyCity__c = 'Home Town';
         l.CompanyState__c = 'WA';
         l.CompanyPostalCode__c = '98122';
+        l.CompanyCountry__c = 'United States';
         insert l;
         
         Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride'));

@@ -446,28 +446,31 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             if (strAccountId == 'NEW')
                 strAfflAccountId = lcr.getAccountId();
             
+            Address__c tempAddr = new Address__c(
+                MailingStreet__c = l.CompanyStreet__c,
+                MailingCity__c = l.CompanyCity__c,
+                MailingState__c = l.CompanyState__c,
+                MailingPostalCode__c = l.CompanyPostalCode__c,
+                MailingCountry__c = l.CompanyCountry__c
+            );
+
             // if we created a new company acct and the Lead had a company address, set the new acct's address
             if (strAccountId == 'NEW' && !String.isBlank(l.CompanyStreet__c)) {
-            	update new Account(
-                    Id=lcr.getAccountId(),
-                    BillingStreet = l.CompanyStreet__c, 
-                    BillingCity = l.CompanyCity__c,
-                    BillingState = l.CompanyState__c,
-                    BillingPostalCode = l.CompanyPostalCode__c,
-                    BillingCountry = l.CompanyCountry__c
+            	Account acc = new Account(
+                    Id=lcr.getAccountId()
                 );
+                //copy address from temporary address__c record, handles state and country picklists if enabled
+                ADDR_Addresses_TDTM.copyAddressAddrSObj(tempAddr,acc,'Billing',null);
+                update acc;
             }   
             // handle the optional Affiliation to a new or existing Account.
             ID afflAccId = null;
             if (strAfflAccountId == 'NEW') {
                 Account acc = new Account(
-                    name = l.Company, 
-                    BillingStreet = l.CompanyStreet__c, 
-                    BillingCity = l.CompanyCity__c,
-                    BillingState = l.CompanyState__c,
-                    BillingPostalCode = l.CompanyPostalCode__c,
-                    BillingCountry = l.CompanyCountry__c
+                    name = l.Company
                 );
+                //copy address from temporary address__c record, handles state and country picklists if enabled
+                ADDR_Addresses_TDTM.copyAddressAddrSObj(tempAddr,acc,'Billing',null);
                 insert acc;
                 afflAccId = acc.Id;
             } else if (strAfflAccountId != null && strAfflAccountId != '') {
