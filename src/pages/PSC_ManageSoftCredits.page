@@ -115,12 +115,12 @@
                     <tbody>
                     <apex:repeat value="{!softCredits}" var="credit">
                     <tr>
-                        <td style="vertical-align:middle;">
+                        <td>
                             <apex:inputField value="{!credit.contactRole.ContactId}" required="false">
                                 <apex:actionSupport action="{!refresh}" event="onchange" rerender="totalSelected, totalUn" />
                             </apex:inputField>
                         </td>
-                        <td style="vertical-align:middle;">
+                        <td>
                             <div class="slds-form-element__control">
                             <apex:selectList styleClass="slds-input"  value="{!credit.contactRole.Role}" size="1">
                                 <apex:selectOption itemValue="" itemLabel="{!$Label.stgLabelNone}" />
@@ -128,14 +128,14 @@
                             </apex:selectList>
                             </div>
                         </td>
-                        <td style="vertical-align:middle;">
+                        <td>
                             <apex:selectRadio border="0" html-rules="none" value="{!credit.fullCredit}">
                                 <apex:selectOption itemValue="true" itemLabel="{!$Label.pscManageSoftCreditsFull}" />
                                 <apex:selectOption itemValue="false" itemLabel="{!$Label.pscManageSoftCreditsPartial}" />
                                 <apex:actionSupport action="{!checkFullCredit}" event="onchange" oncomplete="refresh();" reRender="amountField" />
                             </apex:selectRadio>
                         </td>
-                        <td style="vertical-align:middle;">
+                        <td>
                             <apex:outputPanel id="amountField">
                                 <apex:inputField value="{!credit.partial.Amount__c}" rendered="{!NOT(credit.fullCredit)}">
                                     <apex:actionSupport action="{!refresh}" event="onchange" reRender="totalSelected, totalUn" />
