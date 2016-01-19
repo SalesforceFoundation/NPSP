@@ -2340,6 +2340,14 @@
         <value>Affiliate with New Account:</value>
     </labels>
     <labels>
+        <fullName>leadConvertAffiliatedAccount</fullName>
+        <categories>Lead Convert</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertAffiliatedAccount</shortDescription>
+        <value>Affiliated Account</value>
+    </labels>
+    <labels>
         <fullName>leadConvertAttachBucketAccount</fullName>
         <categories>Lead Converter</categories>
         <language>en_US</language>
@@ -2386,6 +2394,14 @@
         <protected>false</protected>
         <shortDescription>leadConvertBtnConvert</shortDescription>
         <value>Convert</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertContactAccount</fullName>
+        <categories>Lead Convert</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertContactAccount</shortDescription>
+        <value>Contact Account</value>
     </labels>
     <labels>
         <fullName>leadConvertCreateAccount</fullName>
