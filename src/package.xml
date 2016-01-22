@@ -1348,6 +1348,7 @@
     </types>
     <types>
         <members>CumulusStaticResources</members>
+        <members>SLDS</members>
         <name>StaticResource</name>
     </types>
     <types>

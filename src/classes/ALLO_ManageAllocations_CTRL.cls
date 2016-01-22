@@ -37,7 +37,7 @@
 public with sharing class ALLO_ManageAllocations_CTRL {
 
     /** @description The current list of allocations we're managing, as displayed on the page.*/
-	public list<Allocation__c> listAllo {get;set;}
+    public list<Allocation__c> listAllo {get;set;}
     /** @description If defaults are enabled, the default allocation is here, and not in listAllo. */
     public Allocation__c defaultAllo {get;set;}
 
@@ -65,6 +65,11 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     /** @description The allocations settings object. */
     public static Allocations_Settings__c settings {get;set;}
 
+    /** @description The page title based on which type of allocation we're using. */
+    public static string pageTitle {get;set;}
+    /** @description The name of the object we're adding allocations to. */
+    public static string objectName {get;set;}
+
     /** @description Row number sent back by page for add and delete row methods.*/
     public integer rowNumber {get;set;}
 
@@ -79,6 +84,10 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         if (params.containsKey('opp')) {
             parentId = String.escapeSingleQuotes(params.get('opp'));
             opp = [SELECT Id, Name, Amount FROM Opportunity WHERE Id = :parentId];
+
+            pageTitle = Label.alloManageOppAllocations;
+            objectName = opp.Name;
+
             //only Opportunities have parent amounts and enforce being below this amount
             if (opp.Amount!=null) {
                 parentAmount = opp.Amount;
@@ -89,9 +98,15 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         } else if (params.containsKey('cam')) {
             parentId = String.escapeSingleQuotes(params.get('cam'));
             cam = [SELECT Id, Name FROM Campaign WHERE Id = :parentId];
+
+            pageTitle = Label.alloManageCampaignAllocations;
+            objectName = cam.Name;
         } else if (params.containsKey('rd')) {
             parentId = string.escapeSingleQuotes(params.get('rd'));
             rd = [SELECT Id, Name FROM npe03__Recurring_Donation__c WHERE Id = :parentId];
+
+            pageTitle = Label.alloManageOppAllocations;
+            objectName = rd.Name;
         }
 
         defaultAllo = new Allocation__c();
