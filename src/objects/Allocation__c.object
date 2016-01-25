@@ -44,6 +44,7 @@
         <actionName>View</actionName>
         <type>Default</type>
     </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
     <enableActivities>false</enableActivities>
@@ -124,9 +125,9 @@
         <externalId>false</externalId>
         <inlineHelpText>Percent of opportunity amount to allocate to this general accounting unit. Modifying an opportunity amount of a percent based allocation will modify the allocation amount.</inlineHelpText>
         <label>Percent</label>
-        <precision>3</precision>
+        <precision>5</precision>
         <required>false</required>
-        <scale>0</scale>
+        <scale>2</scale>
         <trackTrending>false</trackTrending>
         <type>Percent</type>
     </fields>

@@ -63,20 +63,32 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     /** @description The amount of the parent opportunity, if these are opportunity allocations.*/
     public decimal parentAmount {get;set;}
     /** @description The allocations settings object. */
-    public static Allocations_Settings__c settings {get;set;}
+    public Allocations_Settings__c settings {
+        get {
+            if (settings==null) {
+                settings = UTIL_CustomSettingsFacade.getAllocationsSettings();
+            }
+            return settings;
+        }
+        set;
+    }
 
     /** @description The page title based on which type of allocation we're using. */
-    public static string pageTitle {get;set;}
+    public string pageTitle {get;set;}
     /** @description The name of the object we're adding allocations to. */
-    public static string objectName {get;set;}
+    public string objectName {get;set;}
+    /** @description The key prefix for the object, for navigation. */
+    public string keyPrefix {get;set;}
+    /** @description The API name of the object. */
+    public string objectAPIName {get;set;}
+    /** @description The API name of the object. */
+    public string objectLabelPlural {get;set;}
 
     /** @description Row number sent back by page for add and delete row methods.*/
     public integer rowNumber {get;set;}
 
     /** Constructor queries for the parent object and the allocations, and fills out attributes.*/
     public ALLO_ManageAllocations_CTRL() {
-
-        settings = UTIL_CustomSettingsFacade.getAllocationsSettings();
 
         map<string,string> params = ApexPages.currentPage().getParameters();
         parentAmount = 0;        
@@ -87,6 +99,8 @@ public with sharing class ALLO_ManageAllocations_CTRL {
 
             pageTitle = Label.alloManageOppAllocations;
             objectName = opp.Name;
+
+            populateObjectParameters(Opportunity.sObjectType.getDescribe());
 
             //only Opportunities have parent amounts and enforce being below this amount
             if (opp.Amount!=null) {
@@ -101,12 +115,17 @@ public with sharing class ALLO_ManageAllocations_CTRL {
 
             pageTitle = Label.alloManageCampaignAllocations;
             objectName = cam.Name;
+
+            populateObjectParameters(Campaign.sObjectType.getDescribe());
+
         } else if (params.containsKey('rd')) {
             parentId = string.escapeSingleQuotes(params.get('rd'));
             rd = [SELECT Id, Name FROM npe03__Recurring_Donation__c WHERE Id = :parentId];
 
-            pageTitle = Label.alloManageOppAllocations;
+            pageTitle = Label.alloManageRecurringDonationAllocations;
             objectName = rd.Name;
+
+            populateObjectParameters(npe03__Recurring_Donation__c.sObjectType.getDescribe());
         }
 
         defaultAllo = new Allocation__c();
@@ -127,6 +146,12 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             addRow();
     }
 
+    private void populateObjectParameters(Schema.DescribeSObjectResult sa) {
+        keyPrefix = sa.getKeyPrefix();
+        objectAPIName = sa.getName();
+        objectLabelPlural = sa.getLabelPlural();
+    }
+
     /** @description Adds an empty row to the bottom of the list and refreshes the page.*/
     public pageReference addRow() {
         Allocation__c allo = new Allocation__c();
@@ -143,6 +168,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             listAllo.add(allo);
         else
             listAllo.add(rowNumber+1, allo);
+
         return null;
     }
 
@@ -189,6 +215,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             return source;
         } catch (Exception e) {
             ApexPages.addMessages(e);
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Warning, ''+listAllo));
             return null;
         }
     }
