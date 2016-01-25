@@ -112,7 +112,6 @@
         <members>OPP_OpportunityNaming</members>
         <members>OPP_OpportunityNamingBTN_CTRL</members>
         <members>OPP_OpportunityNaming_BATCH</members>
-        <members>OPP_OpportunityNaming_TDTM</members>
         <members>OPP_OpportunityNaming_TEST</members>
         <members>OPP_PrimaryContact_BATCH</members>
         <members>OPP_PrimaryContact_TEST</members>
@@ -206,8 +205,6 @@
         <members>UTIL_Debug</members>
         <members>UTIL_Describe</members>
         <members>UTIL_Describe_TEST</members>
-        <members>UTIL_GlobalSchedulable</members>
-        <members>UTIL_GlobalSchedulable_TEST</members>
         <members>UTIL_IScheduled</members>
         <members>UTIL_JobProgress_CTRL</members>
         <members>UTIL_JobProgress_CTRL_TEST</members>
@@ -539,6 +536,11 @@
         <members>Household_Naming_Settings__c.Name_Connector__c</members>
         <members>Household_Naming_Settings__c.Name_Overrun__c</members>
         <members>Lead.Batch__c</members>
+        <members>Lead.CompanyCity__c</members>
+        <members>Lead.CompanyCountry__c</members>
+        <members>Lead.CompanyPostalCode__c</members>
+        <members>Lead.CompanyState__c</members>
+        <members>Lead.CompanyStreet__c</members>
         <members>Opportunity.Acknowledgment_Date__c</members>
         <members>Opportunity.Acknowledgment_Status__c</members>
         <members>Opportunity.Batch__c</members>
@@ -701,6 +703,7 @@
         <members>alloBatchDefaultInfo</members>
         <members>alloBtnCancel</members>
         <members>alloBtnSaveAndClose</members>
+        <members>alloCantAllocateNothing</members>
         <members>alloDefaultGAUMissing</members>
         <members>alloDefaultNotPercent</members>
         <members>alloDeleteRow</members>
@@ -895,12 +898,14 @@
         <members>leadConvertAffilationName</members>
         <members>leadConvertAffiliateExistingAccount</members>
         <members>leadConvertAffiliateNewAccount</members>
+        <members>leadConvertAffiliatedAccount</members>
         <members>leadConvertAttachBucketAccount</members>
         <members>leadConvertAttachExistingAccount</members>
         <members>leadConvertAutocreateHHAccount</members>
         <members>leadConvertAutocreateOne2OneAccount</members>
         <members>leadConvertBtnCancel</members>
         <members>leadConvertBtnConvert</members>
+        <members>leadConvertContactAccount</members>
         <members>leadConvertCreateAccount</members>
         <members>leadConvertCreateNewContact</members>
         <members>leadConvertMergeExistingContact</members>
@@ -918,6 +923,7 @@
         <members>pmtWizardBtnCalcPayments</members>
         <members>pmtWizardBtnCreatePayments</members>
         <members>pmtWizardBtnRemovePaidPayments</members>
+        <members>pmtWizardClosedLost</members>
         <members>pmtWizardCreateSchedule</members>
         <members>pmtWizardFirstPaymentDate</members>
         <members>pmtWizardInterval</members>
@@ -945,6 +951,7 @@
         <members>sendAcknowledgmentPageTitle</members>
         <members>sendAcknowledgmentReturnLinkLabel</members>
         <members>sendAcknowledgmentSucceeded</members>
+        <members>stgAddrMustChooseClass</members>
         <members>stgBtnCancel</members>
         <members>stgBtnClearErrorLog</members>
         <members>stgBtnCreateAutoRel</members>

@@ -458,4 +458,52 @@
         <trackFeedHistory>false</trackFeedHistory>
         <type>Lookup</type>
     </fields>
+    <fields>
+        <fullName>CompanyCity__c</fullName>
+        <externalId>false</externalId>
+        <label>Company City</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CompanyCountry__c</fullName>
+        <externalId>false</externalId>
+        <label>Company Country</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CompanyPostalCode__c</fullName>
+        <externalId>false</externalId>
+        <label>Company Zip/Postal Code</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CompanyState__c</fullName>
+        <externalId>false</externalId>
+        <label>Company State/Province</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CompanyStreet__c</fullName>
+        <externalId>false</externalId>
+        <label>Company Street</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>TextArea</type>
+    </fields>
 </CustomObject>
