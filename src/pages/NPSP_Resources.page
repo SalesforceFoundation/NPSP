@@ -12,8 +12,8 @@
   <body>
     <div class="bootstrap">
 
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
+    <!-- Top heading for a primary marketing message or call to action -->
+    <div>
     
       <div class="container">
        <div class="row"><h1>Welcome to Salesforce and the Nonprofit Starter Pack!</h1></div>
@@ -54,23 +54,23 @@
                 </div>
                 
                 <div class="media" style="margin-bottom:60px;">
-                    <div class="pull-left"><a href="https://powerofus.force.com/servlet/fileField?retURL=%2Farticles%2FResource%2FNonprofit-Starter-Pack-Workbook%3Fpopup%3Dfalse&entityId=ka080000000DPGdAAO&field=File__Body__s" target="_blank"><img class="media-object" height="100" width="130" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/workbook.png')}" alt="NPSP Workbook"/>
+                    <div class="pull-left"><a href="https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-3-Documentation" target="_blank"><img class="media-object" height="100" width="130" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/workbook.png')}" alt="NPSP Starter Pack Documentation"/>
     </a>
                     </div>
   
                     <div class="media-body">
-                    <h4 class="media-heading">Nonprofit Starter Pack (NPSP) Workbook</h4>
-                    <p>The tutorials in <a href="https://powerofus.force.com/servlet/fileField?retURL=%2Farticles%2FResource%2FNonprofit-Starter-Pack-Workbook%3Fpopup%3Dfalse&entityId=ka080000000DPGdAAO&field=File__Body__s" title="NPSP Workbook" target="_blank">this workbook</a> take you through some common Nonprofit Starter Pack workflows to manage donors and donations.</p>
+                    <h4 class="media-heading">Nonprofit Starter Pack Documentation</h4>
+                        <p>Consult our full set of <a href="https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-3-Documentation" title="Nonprofit Starter Pack Documentation" target="_blank">Nonprofit Starter Pack Documentation</a>, including the <a href="https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-Workbook" title="NPSP Getting Started Workbook" target="_blank">NPSP Getting Started Workbook</a>.</p>
                     </div>
                 </div>
 
                 <div class="media" style="margin-bottom:40px;">
-                    <div class="pull-left"><a href="https://powerofus.force.com/servlet/fileField?retURL=%2Farticles%2FResource%2FNPSP-Administrators-Guide-to-Importing-Donor-Data&entityId=ka080000000DMSTAA4&field=File__Body__s" target="_blank">
+                    <div class="pull-left"><a href="https://powerofus.force.com/articles/Resource/NPSP-Administrators-Guide-to-Importing-Donor-Data" target="_blank">
       <img class="media-object" height="100" width="130" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/workbook.png')}"/></a>
                     </div>
                     <div class="media-body">
                     <h4 class="media-heading">NPSP Admin Guide to Importing Donor Data</h4>
-                    <p>This <a href="https://powerofus.force.com/servlet/fileField?retURL=%2Farticles%2FResource%2FNPSP-Administrators-Guide-to-Importing-Donor-Data&entityId=ka080000000DMSTAA4&field=File__Body__s" title="NPSP Data Workbook" target="_blank">guide</a> is intended to help administrators use the NPSP Data Import tool to transfer existing data into Salesforce.</p>
+                    <p>This <a href="https://powerofus.force.com/articles/Resource/NPSP-Administrators-Guide-to-Importing-Donor-Data" title="NPSP Data Workbook" target="_blank">guide</a> is intended to help administrators use the NPSP Data Import tool to transfer existing data into Salesforce.</p>
                     </div>
                     </div>
          <!--ENDGet Started: NPSP--> 
