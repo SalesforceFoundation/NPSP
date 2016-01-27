@@ -88,13 +88,12 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     public integer rowNumber {get;set;}
 
     /** Constructor queries for the parent object and the allocations, and fills out attributes.*/
-    public ALLO_ManageAllocations_CTRL() {
+    public ALLO_ManageAllocations_CTRL(ApexPages.StandardSetController ssc) {
 
-        map<string,string> params = ApexPages.currentPage().getParameters();
-        parentAmount = 0;        
-        
-        if (params.containsKey('opp')) {
-            parentId = String.escapeSingleQuotes(params.get('opp'));
+        parentId = (id)String.escapeSingleQuotes(ApexPages.currentPage().getParameters().get('id'));
+        parentAmount = 0;
+
+        if (parentId.getSObjectType() == Opportunity.sObjectType) {
             opp = [SELECT Id, Name, Amount FROM Opportunity WHERE Id = :parentId];
 
             pageTitle = Label.alloManageOppAllocations;
@@ -109,8 +108,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             if (parentAmount==0) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Warning, Label.alloCantAllocateNothing));
             }
-        } else if (params.containsKey('cam')) {
-            parentId = String.escapeSingleQuotes(params.get('cam'));
+        } else if (parentId.getSObjectType() == Campaign.sObjectType) {
             cam = [SELECT Id, Name FROM Campaign WHERE Id = :parentId];
 
             pageTitle = Label.alloManageCampaignAllocations;
@@ -118,8 +116,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
 
             populateObjectParameters(Campaign.sObjectType.getDescribe());
 
-        } else if (params.containsKey('rd')) {
-            parentId = string.escapeSingleQuotes(params.get('rd'));
+        } else if (parentId.getSObjectType() == npe03__Recurring_Donation__c.sObjectType) {
             rd = [SELECT Id, Name FROM npe03__Recurring_Donation__c WHERE Id = :parentId];
 
             pageTitle = Label.alloManageRecurringDonationAllocations;
