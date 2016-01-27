@@ -87,10 +87,10 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     /** @description Row number sent back by page for add and delete row methods.*/
     public integer rowNumber {get;set;}
 
-    /** Constructor queries for the parent object and the allocations, and fills out attributes.*/
+    /** @description Constructor queries for the parent object and the allocations, and fills out attributes.*/
     public ALLO_ManageAllocations_CTRL(ApexPages.StandardSetController ssc) {
 
-        parentId = (id)String.escapeSingleQuotes(ApexPages.currentPage().getParameters().get('id'));
+        parentId = ApexPages.currentPage().getParameters().get('id');
         parentAmount = 0;
 
         if (parentId.getSObjectType() == Opportunity.sObjectType) {
@@ -99,7 +99,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             pageTitle = Label.alloManageOppAllocations;
             objectName = opp.Name;
 
-            populateObjectParameters(Opportunity.sObjectType.getDescribe());
+            populateObjectParameters(Opportunity.sObjectType);
 
             //only Opportunities have parent amounts and enforce being below this amount
             if (opp.Amount!=null) {
@@ -114,7 +114,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             pageTitle = Label.alloManageCampaignAllocations;
             objectName = cam.Name;
 
-            populateObjectParameters(Campaign.sObjectType.getDescribe());
+            populateObjectParameters(Campaign.sObjectType);
 
         } else if (parentId.getSObjectType() == npe03__Recurring_Donation__c.sObjectType) {
             rd = [SELECT Id, Name FROM npe03__Recurring_Donation__c WHERE Id = :parentId];
@@ -122,7 +122,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             pageTitle = Label.alloManageRecurringDonationAllocations;
             objectName = rd.Name;
 
-            populateObjectParameters(npe03__Recurring_Donation__c.sObjectType.getDescribe());
+            populateObjectParameters(npe03__Recurring_Donation__c.sObjectType);
         }
 
         defaultAllo = new Allocation__c();
@@ -143,10 +143,12 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             addRow();
     }
 
-    private void populateObjectParameters(Schema.DescribeSObjectResult sa) {
-        keyPrefix = sa.getKeyPrefix();
-        objectAPIName = sa.getName();
-        objectLabelPlural = sa.getLabelPlural();
+    /** @description Adds an empty row to the bottom of the list and refreshes the page.*/
+    private void populateObjectParameters(Schema.sObjectType st) {
+        DescribeSObjectResult describe = st.getDescribe();
+        keyPrefix = describe.getKeyPrefix();
+        objectAPIName = describe.getName();
+        objectLabelPlural = describe.getLabelPlural();
     }
 
     /** @description Adds an empty row to the bottom of the list and refreshes the page.*/
