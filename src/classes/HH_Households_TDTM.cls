@@ -98,6 +98,8 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
             
                 	   
             npo02__Households_Settings__c currentHouseholdsSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+            HH_INaming iNaming = new HH_NameSpec();
+            Set<String> hhNamingFields = iNaming.setHouseholdNameFieldsOnContact();
             List<Contact> householdInserts = new List<Contact>();
             List<Contact> contactEvaluations = new List<Contact>();
             List<Contact> householdDeletes = new List<Contact>();
@@ -170,17 +172,16 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                     else if (c.npo02__household__c == null && currentHouseholdsSettings.npo02__Household_Rules__c == HH_Households.ALL_INDIVIDUALS_PROCESSOR)
                         contactEvaluations.add(c);
                     
-                    if (newcmap.get(c.id).Salutation != oldcmap.get(c.id).Salutation)
-                        householdnameupdates.add(c.npo02__household__c);
-                    else if (newcmap.get(c.id).FirstName != oldcmap.get(c.id).Firstname )
-                        householdnameupdates.add(c.npo02__household__c);
-                    else if (newcmap.get(c.id).LastName != oldcmap.get(c.id).LastName)
-                        householdnameupdates.add(c.npo02__household__c);    
+                    for(String fieldName : hhNamingFields) {
+                        if (String.valueOf(newcmap.get(c.id).get(fieldName)) != String.valueOf(oldcmap.get(c.id).get(fieldName))) {
+                            householdnameupdates.add(c.npo02__household__c);
+                        }
+                    }
                     
                     //if they've changed households, we need to query the old
                     //household to see if anybody is left, if so, send it for renaming
                     //if not, delete it.
-                    else if (newcmap.get(c.id).npo02__household__c != oldcmap.get(c.id).npo02__household__c){
+                    if (newcmap.get(c.id).npo02__household__c != oldcmap.get(c.id).npo02__household__c){
                         householdnameupdates.add(c.npo02__household__c);
                         setHHIdToRollup.add(c.npo02__household__c);
                         if (oldHouseholdSize.get(oldcmap.get(c.id).npo02__household__c) > 0){
