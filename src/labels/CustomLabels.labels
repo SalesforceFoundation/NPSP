@@ -2897,7 +2897,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>pscManageSoftCreditsReconcileFail</shortDescription>
-        <value>Total Soft Credit Amount must less than or equal to the Opportunity Amount.</value>
+        <value>Total Soft Credit Amount must be less than or equal to the Opportunity Amount.  Check &apos;Allow Soft Credit Amount more than Total Amount&apos; to override.</value>
     </labels>
     <labels>
         <fullName>pscManageSoftCreditsRestrictions</fullName>
