@@ -162,6 +162,7 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
                 }
                 
                 if (sc.fullCredit || sc.partial.Amount__c == opp.Amount) {
+                    sc.fullCredit = true; // to prevent the full amount case from creating a new psc!
                     if (sc.partial.Id != null) toDelete.add(sc.partial);
                     toUpsertContactRoles.add(sc.contactRole);
                 } else {
@@ -191,8 +192,7 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
         
         try {
             delete toDelete;
-            // let the PSC trigger do the updating/sycn with OCRs
-            //upsert toUpsertContactRoles;
+            upsert toUpsertContactRoles;
             for (SoftCredit sc : upsertedSoftCredits) {
                 sc.partial.Contact_Role_ID__c = sc.contactRole.Id;
                 if (!amount_percentage) 

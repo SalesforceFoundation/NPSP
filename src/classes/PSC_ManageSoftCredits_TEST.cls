@@ -303,6 +303,46 @@ public with sharing class PSC_ManageSoftCredits_TEST {
     }
     
     /*******************************************************************************************************
+    * @description make some Soft Credits be full credits on an Opp with existing PSCs.
+    * verify PSC's not there, OCR's created
+    */ 
+    static testmethod void makeNewPSCsFullCredits() {
+        initTestData(false); // no existing PSCs
+        Test.setCurrentPage(Page.PSC_ManageSoftCredits);
+        PSC_ManageSoftCredits_CTRL ctrl = new PSC_ManageSoftCredits_CTRL(new ApexPages.StandardController(opp));
+        system.assertEquals(0, ctrl.softCredits.size());        
+        system.assertEquals(0 * 100 , ctrl.getTotalSoftCreditAmount());
+        system.assertEquals(true, ctrl.amount_percentage);  // amount mode, not percent mode.
+
+        // create new soft credits that are full.
+        ctrl.addAnotherSoftCredit();
+        ctrl.addAnotherSoftCredit();
+        system.assertEquals(2, ctrl.softCredits.size());
+        system.assertEquals(2, ctrl.numberOfSoftCredits);
+        ctrl.softCredits[0].contactRole.ContactId = listCon[0].Id;
+        ctrl.softCredits[0].contactRole.Role = 'Soft Credit';
+        ctrl.softCredits[0].partial.Amount__c = opp.Amount;  // full amount should not create a PSC
+
+        ctrl.softCredits[1].contactRole.ContactId = listCon[1].Id;
+        ctrl.softCredits[1].contactRole.Role = 'Soft Credit';
+        ctrl.softCredits[1].fullCredit = true;
+
+        ctrl.checkFullCredit();
+        ctrl.checkFullAndPartialCredit();
+        ctrl.allowTooManySoftCredits = true;
+        
+        Test.startTest();
+        system.assertNotEquals(null, ctrl.save());
+        Test.stopTest();
+        
+        list<Partial_Soft_Credit__c> listPSC = [select Id, Contact__c, Opportunity__c, Amount__c, Role_Name__c from Partial_Soft_Credit__c];
+        system.assertEquals(0, listPSC.size());
+        
+        list<OpportunityContactRole> listOCR = [select Id, ContactId, OpportunityId, Role from OpportunityContactRole];
+        system.assertEquals(2, listOCR.size());        
+    }
+    
+    /*******************************************************************************************************
     * @description delete some existing PSCs by clearing their contactId.
     * verify PSC's deleted, OCR's deleted
     */ 
@@ -355,8 +395,7 @@ public with sharing class PSC_ManageSoftCredits_TEST {
         system.assertEquals(600, amount);
 
         list<OpportunityContactRole> listOCR = [select Id, ContactId, OpportunityId, Role from OpportunityContactRole];
-        // changing the partial's Contact does not delete the original OCR.
-        system.assertEquals(cPSCExisting+1, listOCR.size());        
+        system.assertEquals(cPSCExisting, listOCR.size());        
     }
 
     /*******************************************************************************************************
