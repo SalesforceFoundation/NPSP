@@ -328,9 +328,8 @@ public with sharing class PSC_ManageSoftCredits_TEST {
         ctrl.softCredits[1].fullCredit = true;
 
         ctrl.checkFullCredit();
-        ctrl.checkFullAndPartialCredit();
         ctrl.allowTooManySoftCredits = true;
-        
+                
         Test.startTest();
         system.assertNotEquals(null, ctrl.save());
         Test.stopTest();

@@ -163,7 +163,8 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
                 
                 if (sc.fullCredit || sc.partial.Amount__c == opp.Amount) {
                     sc.fullCredit = true; // to prevent the full amount case from creating a new psc!
-                    if (sc.partial.Id != null) toDelete.add(sc.partial);
+                    if (sc.partial.Id != null) 
+                        toDelete.add(sc.partial);
                     toUpsertContactRoles.add(sc.contactRole);
                 } else {
                     if (sc.partial.Contact__c == null) 
@@ -194,6 +195,9 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
             delete toDelete;
             upsert toUpsertContactRoles;
             for (SoftCredit sc : upsertedSoftCredits) {
+                // full credits should not create a PSC
+                if (sc.fullCredit)
+                    continue;
                 sc.partial.Contact_Role_ID__c = sc.contactRole.Id;
                 if (!amount_percentage) 
                     sc.partial.Amount__c = convertPercentageToAmount(sc.partial.Amount__c);
