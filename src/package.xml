@@ -345,8 +345,8 @@
         <members>Account.Matching_Gift_Company__c</members>
         <members>Account.Matching_Gift_Email__c</members>
         <members>Account.Matching_Gift_Info_Updated__c</members>
+        <members>Account.Matching_Gift_Percent__c</members>
         <members>Account.Matching_Gift_Phone__c</members>
-        <members>Account.Matching_Gift_Ratio__c</members>
         <members>Account.Matching_Gift_Request_Deadline__c</members>
         <members>Account.Membership_Span__c</members>
         <members>Account.Membership_Status__c</members>
@@ -1350,7 +1350,7 @@
         <members>Grant_Deadline__c-Grant Deadline Layout</members>
         <members>Opportunity-Donation Layout</members>
         <members>Opportunity-Grant Layout</members>
-        <members>Opportunity-Matching Gift</members>
+        <members>Opportunity-Matching Gift Layout</members>
         <members>Opportunity-Membership Layout</members>
         <members>Partial_Soft_Credit__c-Partial Soft Credit Layout</members>
         <members>Schedulable__c-Schedulable Layout</members>
