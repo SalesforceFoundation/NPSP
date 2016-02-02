@@ -4,25 +4,27 @@
     <style>
         html body.sfdcBody {
             padding: 0;
-            background-color: #f4f6f9; // shade theme color
         }
+
+        input.lookupInput {
+            background-color: white;
+            background-image: none;
+            color: #16325c;
+            border: 1px solid #d8dde6;
+            border-radius: 4px;
+            width: 100%;
+            -webkit-transition: border 0.1s linear, background-color 0.1s linear;
+            transition: border 0.1s linear, background-color 0.1s linear;
+            display: inline-block;
+            padding: 0 16px 0 12px;
+            line-height: 34px;
+            min-height: calc(34px + 2px);
+            line-height: normal;
+            margin-right: -30px;
+        }        
     </style>
 
-    <script>
-        // for Winter '16, a trusted way to figure out whether in Lighting Experience or Classic Aloha.
-        // In Spring '16, this can be replaced with an official method provided.
-        function isLightningExperienceOrSalesforce1() {
-            return((typeof sforce != 'undefined') && sforce && (!!sforce.one));
-        }
-        
-        // return the correct URL for the Opportunities home page based on LEX vs. Classic
-        function urlOpportunityHome() {
-            if (isLightningExperienceOrSalesforce1())
-                sforce.one.navigateToURL('one.app#/sObject/Opportunity/home');
-            else
-                window.location.assign('/006/o');
-        }
-        
+    <script>        
         // show or hide the modal search popup
         function showOrHideSearchPopup(isShow) {
             var divPopup = document.getElementById('searchPopup');
@@ -51,7 +53,7 @@
                     <nav role="navigation">
                         <p id="bread-crumb-label" class="slds-assistive-text">You are here:</p>
                         <ol class="slds-breadcrumb slds-list--horizontal" aria-labelledby="bread-crumb-label">
-                            <li class="slds-list__item slds-text-heading--label"><a class="slds-type-focus" href="javascript:urlOpportunityHome();" >{!$ObjectType.Opportunity.LabelPlural}</a></li>
+                            <li class="slds-list__item slds-text-heading--label"><a class="slds-type-focus" href="{!URLFOR($Action.Opportunity.Tab, $ObjectType.Opportunity)}" >{!$ObjectType.Opportunity.LabelPlural}</a></li>
                             <li class="slds-list__item slds-text-heading--label"><a class="slds-type-focus" href="/{!opp.Id}">{!opp.Name}</a></li>
                         </ol>
                     </nav>              
@@ -81,6 +83,10 @@
                 <div class="slds-col slds-align-middle">
                     <label class="slds-form-element__label" for="txtOppAmount">{!$Label.mtchTotalMatchingGift}</label><br/>
                     <apex:outputField id="txtOppAmount" value="{!opp.Amount}" />
+                </div>    
+                <div class="slds-col slds-align-middle">
+                    <label class="slds-form-element__label" for="txtMatchPercent">{!$ObjectType.Account.Fields.Matching_Gift_Percent__c.Label}</label><br/>
+                    <apex:outputText value="{0,number,0}%" id="txtMatchPercent"> <apex:param value="{!matchingGiftPercent}" /></apex:outputText>
                 </div>    
                 <div styleClass="slds-col slds-align-middle">
                     <label class="slds-form-element__label" for="totalSelected">{!$Label.mtchTotalSelected}</label><br/>
@@ -139,41 +145,45 @@
                     
                     <div class="slds-modal__content">
                         <div class="slds-grid">
-                            <div class="slds-col">
+                            <div class="slds-col--padded-medium">
                                 <div class="slds-form--stacked">
                                     <div class="slds-form-element">
                                         <label class="slds-form-element__label" for="txtAccountId">{!$ObjectType.Account.Label}</label>
                                         <div class="slds-form-element__control">
-                                            <apex:inputField id="txtAccountId" value="{!searchFieldsWrapper.AccountId}" />
+                                            <apex:inputField styleClass="lookupInput slds-input--small" id="txtAccountId" value="{!searchFieldsWrapper.AccountId}" />
                                         </div>
                                     </div>
                                     <div class="slds-form-element">
                                         <label class="slds-form-element__label" for="txtReportToId">{!$ObjectType.Opportunity.Fields.Primary_Contact__c.Label}</label>
                                         <div class="slds-form-element__control">
-                                            <apex:inputField id="txtReportToId" value="{!searchFieldsWrapper.ReportsToId}" />
+                                            <apex:inputField styleClass="lookupInput slds-input--small" id="txtReportToId" value="{!searchFieldsWrapper.ReportsToId}" />
                                         </div>
                                     </div>
                                     <div class="slds-form-element">
                                         <label class="slds-form-element__label" for="txtAmount">{!$ObjectType.Opportunity.Fields.Amount.Label}</label>
                                         <div class="slds-form-element__control">
-                                            <apex:inputField id="txtAmount" value="{!searchFieldsWrapper.First_Soft_Credit_Amount__c}" />
+                                            <apex:inputField styleClass="slds-input slds-input--small" id="txtAmount" value="{!searchFieldsWrapper.First_Soft_Credit_Amount__c}" />
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="slds-col">
+                            <div class="slds-col--padded-medium">
                                 <div class="slds-form--stacked">
                                     <div class="slds-form-element">
                                         <label class="slds-form-element__label" for="txtCloseDateStart">{!$Label.mtchCloseDateStart}</label>
                                         <div class="slds-form-element__control">
-                                            <apex:inputField id="txtCloseDateStart" value="{!searchFieldsWrapper.First_Soft_Credit_Date__c}" />
+                                            <div>
+                                                <apex:inputField styleClass="slds-input slds-input--small" id="txtCloseDateStart" value="{!searchFieldsWrapper.First_Soft_Credit_Date__c}" />
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="slds-form-element">
                                         <label class="slds-form-element__label" for="txtCloseDateEnd">{!$Label.mtchCloseDateEnd}</label>
                                         <div class="slds-form-element__control">
-                                            <apex:inputField id="txtCloseDateEnd" value="{!searchFieldsWrapper.Last_Soft_Credit_Date__c}" />
+                                            <div>
+                                                <apex:inputField styleClass="slds-input slds-input--small" id="txtCloseDateEnd" value="{!searchFieldsWrapper.Last_Soft_Credit_Date__c}" />
+                                            </div>
                                         </div>
                                     </div>
                               </div>

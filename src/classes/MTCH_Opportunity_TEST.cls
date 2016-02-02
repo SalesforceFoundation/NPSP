@@ -41,7 +41,7 @@ public with sharing class MTCH_Opportunity_TEST {
     * @description make a Matching Gift ClosedWon, and make sure its matched gifts are updated
     */ 
     static testmethod void testCreateMatches() {
-        MTCH_FindGifts_TEST.initTestData(false);
+        MTCH_FindGifts_TEST.initTestData(false, 100);
         Opportunity oppMG = MTCH_FindGifts_TEST.oppMG;
         system.assertNotEquals(null, oppMG);
         

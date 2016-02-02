@@ -39,6 +39,9 @@ public with sharing class MTCH_FindGifts_CTRL {
     /* @description the Opportunity of the Matching Gift */
     public Opportunity opp {get; set;}
     
+    /* @description the matching gift percentage the account for the matching gift provides */
+    public double matchingGiftPercent {get; private set;}
+    
     /* @description the list of potential opportunities in the top section of the page */
     public List<Opportunity> potentialGifts {get; private set;}
 
@@ -73,12 +76,16 @@ public with sharing class MTCH_FindGifts_CTRL {
     * @return void
     */ 
     private void init(){
-        opp = [SELECT Id, Name, AccountId, Account.Name, Amount, StageName FROM Opportunity WHERE Id = :opp.Id];
+        opp = [SELECT Id, Name, AccountId, Account.Name, Amount, StageName, Account.Matching_Gift_Percent__c FROM Opportunity WHERE Id = :opp.Id];
+        matchingGiftPercent = opp.Account.Matching_Gift_Percent__c == null ? 100 : opp.Account.Matching_Gift_Percent__c;
+        
         closedWonStages = new Set<String>();
         for (OpportunityStage s : [SELECT MasterLabel FROM OpportunityStage WHERE IsClosed = true AND IsWon = true]){
             closedWonStages.add(s.MasterLabel);
         }
-        potentialGifts = [SELECT Id, Name, AccountId, Account.Name, Primary_Contact__c, Primary_Contact__r.Name, Amount, CloseDate, Matching_Gift__c, Matching_Gift_Account__c,
+        
+        potentialGifts = [SELECT Id, Name, AccountId, Account.Name, Primary_Contact__c, Primary_Contact__r.Name, Amount, CloseDate, 
+                                Matching_Gift__c, Matching_Gift_Account__c, Matching_Gift_Account__r.Matching_Gift_Percent__c,
                                 (SELECT Id, ContactId FROM OpportunityContactRoles WHERE IsPrimary = true AND IsDeleted = false)
                         FROM Opportunity 
                         WHERE (Matching_Gift__c = null AND StageName IN :closedWonStages AND Account.Name = :opp.Account.Name AND (Matching_Gift_Status__c = 'Potential' or Matching_Gift_Status__c = 'Submitted')) 
@@ -106,15 +113,15 @@ public with sharing class MTCH_FindGifts_CTRL {
     }
     
     /*******************************************************************************************************
-    * @description adds up the amount of all selected opps matched or to be matched.
+    * @description adds up the amount of all selected opps matched or to be matched, based on matching percent.
     * @return Double the total amount
     */ 
     public Double getTotalSelected(){
         Double totalSelected = 0;
         
         for (Opportunity o : potentialGifts){
-            if (selection.get(o.Id) && /*o.Matching_Gift__c == opp.Id && */ o.Amount != null){
-                totalSelected += o.Amount;
+            if (selection.get(o.Id) && o.Amount != null){
+                totalSelected += (matchingGiftPercent/100 * o.Amount);
             }
         }
         return totalSelected;
@@ -151,18 +158,12 @@ public with sharing class MTCH_FindGifts_CTRL {
                 if (!o.OpportunityContactRoles.isEmpty()){
                     string role = UTIL_CustomSettingsFacade.getHouseholdsSettings().Matched_Donor_Role__c;
                     softCredits.add(new Partial_Soft_Credit__c(
-                        Amount__c = o.Amount,
+                        Amount__c = o.Amount * matchingGiftPercent/100,
                         Contact__c = o.OpportunityContactRoles[0].ContactId,
                         Role_Name__c = role,
                         Opportunity__c = opp.Id
                     ));
-                    /* now that PSC trigger handlers creates OCRs if needed, no need to create them here.
-                    roles.add(new OpportunityContactRole(
-                        ContactId = o.OpportunityContactRoles[0].ContactId,
-                        OpportunityId = opp.Id,
-                        Role = role
-                    ));
-                    */
+                    // now that PSC trigger handlers creates OCRs if needed, no need to create them here. 
                 }
             }
             if (!selection.get(o.Id) && o.Matching_Gift__c != null){
@@ -170,11 +171,11 @@ public with sharing class MTCH_FindGifts_CTRL {
                 o.Matching_Gift__c = null;
                 // remove existing partial soft credit...? How to identify them?
                 // how about if there is only 1 psc on the opp for this unmatched opp's primary contact, remove it.
-                if (listPSCExisting != null && o.Primary_Contact__c != null) {
+                if (listPSCExisting != null && !o.OpportunityContactRoles.isEmpty()) {
                     Partial_Soft_Credit__c pscDel;
                     integer cPsc = 0;
                     for (Partial_Soft_Credit__c psc : listPSCExisting) {
-                        if (psc.Contact__c == o.Primary_Contact__c) {
+                        if (psc.Contact__c == o.OpportunityContactRoles[0].ContactId) {
                             cPsc++;
                             pscDel = psc;
                         }
@@ -189,15 +190,6 @@ public with sharing class MTCH_FindGifts_CTRL {
         }
         try {
             update potentialGifts;
-            /* now that PSC trigger handlers creates OCRs if needed, no need to create them here.
-            if (roles.size() > 0){
-                insert roles;
-                for (Integer i = 0; i < roles.size(); i++){
-                    softCredits[i].Contact_Role_ID__c = roles[i].Id;
-                }
-                insert softCredits;
-            }
-            */
             if (softCredits.size() > 0)
                 insert softCredits;
             if (listPSCDelete.size() > 0)

@@ -50,10 +50,10 @@ public with sharing class MTCH_FindGifts_TEST {
     * @description initialize test data for all tests
     * @param isMGClosedWon whether the Matching Gift should be created as Closed Won or Open.
     */ 
-    public static void initTestData(boolean isMGClosedWon) {
+    public static void initTestData(boolean isMGClosedWon, double matchingGiftPercent) {
         
         // create a matching gift company
-        accMG = new Account(name='matching gift company');
+        accMG = new Account(name='matching gift company', Matching_Gift_Percent__c = matchingGiftPercent);
         insert accMG;
         
         // create some Contacts in Household Accounts
@@ -113,7 +113,7 @@ public with sharing class MTCH_FindGifts_TEST {
     * verify OCR and PSC created
     */ 
     static testmethod void testCreateMatches() {
-        initTestData(true);
+        initTestData(true, 100);
         Test.setCurrentPage(Page.MTCH_FindGifts);
         MTCH_FindGifts_CTRL ctrl = new MTCH_FindGifts_CTRL(new ApexPages.StandardController(oppMG));
         system.assertEquals(cItem/2, ctrl.potentialGifts.size());
@@ -135,11 +135,37 @@ public with sharing class MTCH_FindGifts_TEST {
     }
 
     /*******************************************************************************************************
+    * @description match some existing Opps to the Matching Gift with a Matching Gift Percent < 100
+    * verify OCR and PSC created
+    */ 
+    static testmethod void testCreateMatchesPercent() {
+        initTestData(true, 50);
+        Test.setCurrentPage(Page.MTCH_FindGifts);
+        MTCH_FindGifts_CTRL ctrl = new MTCH_FindGifts_CTRL(new ApexPages.StandardController(oppMG));
+        system.assertEquals(cItem/2, ctrl.potentialGifts.size());
+        system.assertEquals(cItem/2, ctrl.selection.size());
+        system.assertEquals(false, ctrl.selection.get(listOpp[0].Id));
+        system.assertEquals(false, ctrl.selection.get(listOpp[2].Id));
+        system.assertEquals(0, ctrl.getTotalSelected());
+        ctrl.selection.put(listOpp[0].Id, true);    
+        ctrl.selection.put(listOpp[2].Id, true);
+        system.assertEquals(100, ctrl.getTotalSelected());
+        system.assertEquals(0, [select count() from Partial_Soft_Credit__c]);
+        test.startTest();
+        system.assertNotEquals(null, ctrl.saveAndClose());
+        test.stopTest();
+        system.assertEquals(2, [select count() from Partial_Soft_Credit__c]);
+        system.assertEquals(2, [select count() from OpportunityContactRole where OpportunityId = :oppMG.Id]);
+        system.assertEquals(2, [select count() from Opportunity where Matching_Gift_Status__c = 'Received']);
+        system.assertEquals(2, [select count() from Opportunity where Matching_Gift__c = :oppMG.Id]);
+    }
+
+    /*******************************************************************************************************
     * @description unmatch some existing Opps to the Matching Gift
     * verify OCR and PSC deleted
     */ 
     static testmethod void testUnmatchMatches() {
-        initTestData(true);
+        initTestData(true, 100);
         createMatchesWithTestData();
         Test.setCurrentPage(Page.MTCH_FindGifts);
         MTCH_FindGifts_CTRL ctrl = new MTCH_FindGifts_CTRL(new ApexPages.StandardController(oppMG));
@@ -166,7 +192,7 @@ public with sharing class MTCH_FindGifts_TEST {
     * verify OCR and PSC created
     */ 
     static testmethod void testCreateSearchedMatches() {
-        initTestData(true);
+        initTestData(true, 100);
         Test.setCurrentPage(Page.MTCH_FindGifts);
         MTCH_FindGifts_CTRL ctrl = new MTCH_FindGifts_CTRL(new ApexPages.StandardController(oppMG));
         system.assertEquals(cItem/2, ctrl.potentialGifts.size());

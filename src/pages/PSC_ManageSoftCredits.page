@@ -4,25 +4,25 @@
     <style>
         html body.sfdcBody {
             padding: 0;
-            background-color: #f4f6f9; // shade theme color
-        }
-    </style>
-    
-    <script>
-        // for Winter '16, a trusted way to figure out whether in Lighting Experience or Classic Aloha.
-        // In Spring '16, this can be replaced with an official method provided.
-        function isLightningExperienceOrSalesforce1() {
-            return((typeof sforce != 'undefined') && sforce && (!!sforce.one));
         }
         
-        // return the correct URL for the Opportunities home page based on LEX vs. Classic
-        function urlOpportunityHome() {
-            if (isLightningExperienceOrSalesforce1())
-                sforce.one.navigateToURL('one.app#/sObject/Opportunity/home');
-            else
-                window.location.assign('/006/o');
-        }
-    </script>
+        input.lookupInput {
+            background-color: white;
+            background-image: none;
+            color: #16325c;
+            border: 1px solid #d8dde6;
+            border-radius: 4px;
+            width: 100%;
+            -webkit-transition: border 0.1s linear, background-color 0.1s linear;
+            transition: border 0.1s linear, background-color 0.1s linear;
+            display: inline-block;
+            padding: 0 16px 0 12px;
+            line-height: 34px;
+            min-height: calc(34px + 2px);
+            line-height: normal;
+            margin-right: -30px;
+        }        
+    </style>
     
     <apex:form >
       <div class="slds">
@@ -34,7 +34,7 @@
                     <nav role="navigation">
                         <p id="bread-crumb-label" class="slds-assistive-text">You are here:</p>
                         <ol class="slds-breadcrumb slds-list--horizontal" aria-labelledby="bread-crumb-label">
-                            <li class="slds-list__item slds-text-heading--label"><a class="slds-type-focus" href="javascript:urlOpportunityHome();" >{!$ObjectType.Opportunity.LabelPlural}</a></li>
+                            <li class="slds-list__item slds-text-heading--label"><a class="slds-type-focus" href="{!URLFOR($Action.Opportunity.Tab, $ObjectType.Opportunity)}" >{!$ObjectType.Opportunity.LabelPlural}</a></li>
                             <li class="slds-list__item slds-text-heading--label"><a class="slds-type-focus" href="/{!opp.Id}">{!opp.Name}</a></li>
                         </ol>
                     </nav>              
@@ -71,28 +71,28 @@
                     <apex:outputField id="txtOppAmount" value="{!opp.Amount}" />
                 </div>    
                 <apex:outputPanel styleClass="slds-col slds-align-middle" id="totalSelected">
-                    <apex:outputPanel rendered="{!amount_percentage}">
+                    <apex:outputPanel rendered="{!isAmount}">
                         <label class="slds-form-element__label" for="txtPSCAmountPercent">{!$Label.pscManageSoftCreditsPSCAmount}</label><br/>
                         <apex:outputText id="txtPSCAmountPercent" value="${0, number,###,###,###,##0.00}"><apex:param value="{!totalSoftCreditAmount}" /></apex:outputText>
                     </apex:outputPanel>
-                    <apex:outputPanel rendered="{!NOT(amount_percentage)}">
+                    <apex:outputPanel rendered="{!NOT(isAmount)}">
                         <label class="slds-form-element__label" for="txtPSCAmount">{!$Label.pscManageSoftCreditsPSCAmount}</label><br/>
                         <apex:outputText id="txtPSCAmount" value="{0, number,0.00%}"><apex:param value="{!IF(AND(NOT(ISBLANK(opp.Amount)), opp.Amount > 0), totalSoftCreditAmount/opp.Amount, 0)}" /></apex:outputText>
                     </apex:outputPanel>
                 </apex:outputPanel>   
                 <apex:outputPanel styleClass="slds-col slds-align-middle" id="totalUn">
-                    <apex:outputPanel rendered="{!amount_percentage}">
+                    <apex:outputPanel rendered="{!isAmount}">
                         <label class="slds-form-element__label" for="txtUnaccountedPercent">{!$Label.pscManageSoftCreditsUnaccounted}</label><br/>
                         <apex:outputText id="txtUnaccountedPercent" value="${0, number,###,###,###,##0.00}"><apex:param value="{!opp.Amount-totalSoftCreditAmount}" /></apex:outputText>  
                     </apex:outputPanel>
-                    <apex:outputPanel rendered="{!NOT(amount_percentage)}">
+                    <apex:outputPanel rendered="{!NOT(isAmount)}">
                         <label class="slds-form-element__label" for="txtUnaccounted">{!$Label.pscManageSoftCreditsUnaccounted}</label><br/>
                         <apex:outputText id="txtUnaccounted" value="{0, number,0.00%}"><apex:param value="{!IF(AND(NOT(ISBLANK(opp.Amount)), opp.Amount > 0), (opp.Amount-totalSoftCreditAmount)/opp.Amount, 0)}" /></apex:outputText>
                     </apex:outputPanel>
                 </apex:outputPanel>
                 <div class="slds-col slds-no-flex slds-align-middle slds-box slds-theme--default">
                     <p class="slds-text-heading--label slds-p-bottom--x-small">{!$Label.pscManageSoftCreditsRestrictions}</p>
-                    <apex:selectRadio value="{!amount_percentage}">
+                    <apex:selectRadio value="{!isAmount}">
                         <apex:selectOption itemValue="true" itemLabel="{!$Label.pscManageSoftCreditsAmount}" />
                         <apex:selectOption itemValue="false" itemLabel="{!$Label.pscManageSoftCreditsPercent}" />
                         <apex:actionSupport action="{!checkFullAndPartialCredit}" event="onchange" reRender="amountField, totalSelected, totalUn" />
@@ -116,16 +116,16 @@
                     <apex:repeat value="{!softCredits}" var="credit">
                     <tr>
                         <td>
-                            <apex:inputField value="{!credit.contactRole.ContactId}" required="false">
+                            <apex:inputField styleClass="lookupInput slds-input--small" value="{!credit.contactRole.ContactId}" required="false">
                                 <apex:actionSupport action="{!refresh}" event="onchange" rerender="totalSelected, totalUn" />
                             </apex:inputField>
                         </td>
                         <td>
-                            <div class="slds-form-element__control">
-                            <apex:selectList styleClass="slds-input"  value="{!credit.contactRole.Role}" size="1">
-                                <apex:selectOption itemValue="" itemLabel="{!$Label.stgLabelNone}" />
-                                <apex:selectOptions value="{!contactRoles}" />
-                            </apex:selectList>
+                            <div class="slds-form-element__control slds-select_container">
+                                <apex:selectList styleClass="slds-select" value="{!credit.contactRole.Role}" size="1">
+                                    <apex:selectOption itemValue="" itemLabel="{!$Label.stgLabelNone}" />
+                                    <apex:selectOptions value="{!contactRoles}" />
+                                </apex:selectList>
                             </div>
                         </td>
                         <td>
@@ -137,10 +137,10 @@
                         </td>
                         <td>
                             <apex:outputPanel id="amountField">
-                                <apex:inputField value="{!credit.partial.Amount__c}" rendered="{!NOT(credit.fullCredit)}">
+                                <apex:inputField styleClass="slds-input slds-input--small" value="{!credit.partial.Amount__c}" rendered="{!NOT(credit.fullCredit)}">
                                     <apex:actionSupport action="{!refresh}" event="onchange" reRender="totalSelected, totalUn" />
                                 </apex:inputField>
-                                <apex:outputText value="{!credit.partial.Amount__c}" rendered="{!credit.fullCredit}" />
+                                <apex:outputText styleClass="slds-form-element__static" value="{!credit.partial.Amount__c}" rendered="{!credit.fullCredit}" />
                             </apex:outputPanel>
                         </td>
                     </tr>
