@@ -151,7 +151,7 @@ public with sharing class PSC_ManageSoftCredits_TEST {
         
         
         // switch to percents
-        ctrl.amount_percentage = true;
+        ctrl.isAmount = true;
 
         ctrl.softCredits[0].contactRole.ContactId = listCon[0].Id;
         ctrl.softCredits[0].contactRole.Role = 'Soft Credit';
@@ -188,7 +188,7 @@ public with sharing class PSC_ManageSoftCredits_TEST {
         system.assertEquals(3, listOCR.size());        
 
         // switch back from percents
-        ctrl.amount_percentage = false;
+        ctrl.isAmount = false;
         ctrl.checkFullAndPartialCredit();
         system.assertEquals(600, ctrl.getTotalSoftCreditAmount());
         system.assertNotEquals(null, ctrl.save());
@@ -312,7 +312,7 @@ public with sharing class PSC_ManageSoftCredits_TEST {
         PSC_ManageSoftCredits_CTRL ctrl = new PSC_ManageSoftCredits_CTRL(new ApexPages.StandardController(opp));
         system.assertEquals(0, ctrl.softCredits.size());        
         system.assertEquals(0 * 100 , ctrl.getTotalSoftCreditAmount());
-        system.assertEquals(true, ctrl.amount_percentage);  // amount mode, not percent mode.
+        system.assertEquals(true, ctrl.isAmount);  // amount mode, not percent mode.
 
         // create new soft credits that are full.
         ctrl.addAnotherSoftCredit();
