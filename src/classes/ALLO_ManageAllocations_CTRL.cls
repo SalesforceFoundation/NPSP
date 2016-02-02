@@ -186,6 +186,8 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         list<Allocation__c> listAlloForInsert = new list<Allocation__c>();
         list<Allocation__c> listAlloForUpdate = new list<Allocation__c>();
         pageReference source = new pageReference('/'+parentId);
+        source.setRedirect(true);
+        source.getParameters().put('t',''+(System.currentTimeMillis()));
 
         //split into insert and update cases so we can reset recursion flags for each operation
         for (Allocation__c allo : listAllo) {
@@ -214,7 +216,6 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             return source;
         } catch (Exception e) {
             ApexPages.addMessages(e);
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Warning, ''+listAllo));
             return null;
         }
     }
