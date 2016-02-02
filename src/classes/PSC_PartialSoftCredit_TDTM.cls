@@ -37,6 +37,12 @@ public class PSC_PartialSoftCredit_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
     * @description Trigger Handler on Partial Soft Credit that handles PSC sychronization with OCR's.
+    * The scenarios to support are:
+    *   Before Insert - match an existing OCR to the PSC, or create a new OCR if not found.
+    *   Before Update - if RoleName changes, update its associated OCR's role.
+    *   Note that we don't need to worry about Contact__c or Opportunity__c changing on the PSC, because
+    *   those master-detail fields are not reparentable.
+    *
     * @param listNew the list of PSCs from trigger new. 
     * @param listOld the list of PSCs from trigger old. 
     * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
