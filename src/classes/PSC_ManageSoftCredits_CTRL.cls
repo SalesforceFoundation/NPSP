@@ -36,7 +36,7 @@
 public with sharing class PSC_ManageSoftCredits_CTRL {
 
     public Opportunity opp {get; set;}
-    public boolean amount_percentage {get; set;} // true = amount, false = percentage
+    public boolean isAmount {get; set;} // true = amount, false = percentage
     public boolean allowTooManySoftCredits {get; set;}
     public List<SoftCredit> softCredits {get; set;}
     public List<SelectOption> contactRoles {get; private set;}
@@ -59,7 +59,7 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
     public PSC_ManageSoftCredits_CTRL(ApexPages.StandardController controller) {
         opp = [SELECT Id, Name, Amount, AccountId, Account.Name, npe01__Is_Opp_From_Individual__c, Primary_Contact__c, Primary_Contact__r.Name
             FROM Opportunity WHERE Id = :controller.getRecord().Id];
-        amount_percentage = true;
+        isAmount = true;
         allowTooManySoftCredits = false;
         
         // this page wants to display just the Soft Credit OCRs and PSCs.
@@ -137,8 +137,6 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
     * @return the Opportunity's detail page if success, or null if any error encountered.
     */ 
     public PageReference save() {
-        String ocrKeyPrefix = OpportunityContactRole.SObjectType.getDescribe().getKeyPrefix();
-        String pscKeyPrefix = Partial_Soft_Credit__c.SObjectType.getDescribe().getKeyPrefix();
         Map<Id, String> donors = new Map<Id, String>(); // Contact Id, Contact Name
         for (OpportunityContactRole ocr : [SELECT Id, ContactId, Contact.Name FROM OpportunityContactRole WHERE OpportunityId = :opp.Id AND IsPrimary = true]) {
             donors.put(ocr.ContactId, ocr.Contact.Name);
@@ -199,13 +197,13 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
                 if (sc.fullCredit)
                     continue;
                 sc.partial.Contact_Role_ID__c = sc.contactRole.Id;
-                if (!amount_percentage) 
+                if (!isAmount) 
                     sc.partial.Amount__c = convertPercentageToAmount(sc.partial.Amount__c);
                 toUpsertPartialCredits.add(sc.partial);
             }
             upsert toUpsertPartialCredits;
             
-            if (!amount_percentage) {
+            if (!isAmount) {
                 for (SoftCredit sc : upsertedSoftCredits) {
                     sc.partial.Amount__c = convertPercentageToAmount(sc.partial.Amount__c);
                 }
@@ -266,7 +264,7 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
     public void checkFullCredit() {
         for (SoftCredit sc : softCredits) {
             if (sc.fullCredit) {
-                sc.partial.Amount__c = amount_percentage ? opp.Amount : 100;
+                sc.partial.Amount__c = isAmount ? opp.Amount : 100;
             }
         }
     }
@@ -278,9 +276,9 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
     public void checkFullAndPartialCredit() {
         for (SoftCredit sc : softCredits) {
             if (sc.fullCredit) {
-                sc.partial.Amount__c = amount_percentage ? opp.Amount : 100;
+                sc.partial.Amount__c = isAmount ? opp.Amount : 100;
             } else {
-                sc.partial.Amount__c = amount_percentage ? convertPercentageToAmount(sc.partial.Amount__c) : convertAmountToPercentage(sc.partial.Amount__c);
+                sc.partial.Amount__c = isAmount ? convertPercentageToAmount(sc.partial.Amount__c) : convertAmountToPercentage(sc.partial.Amount__c);
             }
         }
     }
@@ -324,7 +322,7 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
                 total += sc.partial.Amount__c != null ? sc.partial.Amount__c : 0;
             }
         }
-        return amount_percentage ? total : (total/100) * opp.Amount;
+        return isAmount ? total : (total/100) * opp.Amount;
     }
     
     /*******************************************************************************************************

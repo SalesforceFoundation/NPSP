@@ -242,7 +242,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Matching_Gift_Ratio__c</field>
+                <field>Matching_Gift_Percent__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
