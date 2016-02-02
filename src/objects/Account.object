@@ -899,22 +899,22 @@
         <type>Date</type>
     </fields>
     <fields>
+        <fullName>Matching_Gift_Percent__c</fullName>
+        <externalId>false</externalId>
+        <label>Matching Gift Percent</label>
+        <precision>5</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Percent</type>
+    </fields>
+    <fields>
         <fullName>Matching_Gift_Phone__c</fullName>
         <externalId>false</externalId>
         <label>Matching Gift Phone</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
         <type>Phone</type>
-    </fields>
-    <fields>
-        <fullName>Matching_Gift_Ratio__c</fullName>
-        <externalId>false</externalId>
-        <label>Matching Gift Ratio</label>
-        <length>255</length>
-        <required>false</required>
-        <trackFeedHistory>false</trackFeedHistory>
-        <type>Text</type>
-        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Matching_Gift_Request_Deadline__c</fullName>
