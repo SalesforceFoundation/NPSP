@@ -102,6 +102,10 @@
         <members>HH_ProcessControl</members>
         <members>LD_LeadConvertOverride_CTRL</members>
         <members>LD_LeadConvertOverride_TEST</members>
+        <members>MTCH_FindGifts_CTRL</members>
+        <members>MTCH_FindGifts_TEST</members>
+        <members>MTCH_Opportunity_TDTM</members>
+        <members>MTCH_Opportunity_TEST</members>
         <members>OPP_CampaignMember_TDTM</members>
         <members>OPP_CampaignMember_TEST</members>
         <members>OPP_INaming</members>
@@ -123,6 +127,10 @@
         <members>PMT_PaymentWizard_CTRL</members>
         <members>PMT_PaymentWizard_TEST</members>
         <members>PMT_Payment_TDTM</members>
+        <members>PSC_ManageSoftCredits_CTRL</members>
+        <members>PSC_ManageSoftCredits_TEST</members>
+        <members>PSC_PartialSoftCredit_TDTM</members>
+        <members>PSC_PartialSoftCredit_TEST</members>
         <members>RD_AddDonationsBTN_CTRL</members>
         <members>RD_BulkTests_TEST</members>
         <members>RD_InstallScript_BATCH</members>
@@ -143,6 +151,8 @@
         <members>RLLP_OppAccRollup_BATCH</members>
         <members>RLLP_OppContactRollup_BATCH</members>
         <members>RLLP_OppHouseholdRollup_BATCH</members>
+        <members>RLLP_OppPartialSoftCreditRollup</members>
+        <members>RLLP_OppPartialSoftCreditRollup_TEST</members>
         <members>RLLP_OppRollup</members>
         <members>RLLP_OppRollupBATCH_TEST</members>
         <members>RLLP_OppRollup_TDTM</members>
@@ -248,11 +258,13 @@
         <members>HH_ManageHHAccount</members>
         <members>HH_ManageHousehold</members>
         <members>LD_LeadConvertOverride</members>
+        <members>MTCH_FindGifts</members>
         <members>NPSP_Resources</members>
         <members>OPP_MatchingDonationsBTN</members>
         <members>OPP_OpportunityNamingBTN</members>
         <members>OPP_SendAcknowledgmentBTN</members>
         <members>PMT_PaymentWizard</members>
+        <members>PSC_ManageSoftCredits</members>
         <members>RD_AddDonationsBTN</members>
         <members>REL_RelationshipsViewer</members>
         <members>STG_PanelAddrVerification</members>
@@ -298,6 +310,7 @@
         <members>TDTM_HouseholdObject</members>
         <members>TDTM_Lead</members>
         <members>TDTM_Opportunity</members>
+        <members>TDTM_PartialSoftCredit</members>
         <members>TDTM_RecurringDonation</members>
         <members>TDTM_Relationship</members>
         <name>ApexTrigger</name>
@@ -324,6 +337,17 @@
         <members>Account.Batch__c</members>
         <members>Account.Funding_Focus__c</members>
         <members>Account.Grantmaker__c</members>
+        <members>Account.Matching_Gift_Administrator_Name__c</members>
+        <members>Account.Matching_Gift_Amount_Max__c</members>
+        <members>Account.Matching_Gift_Amount_Min__c</members>
+        <members>Account.Matching_Gift_Annual_Employee_Max__c</members>
+        <members>Account.Matching_Gift_Comments__c</members>
+        <members>Account.Matching_Gift_Company__c</members>
+        <members>Account.Matching_Gift_Email__c</members>
+        <members>Account.Matching_Gift_Info_Updated__c</members>
+        <members>Account.Matching_Gift_Percent__c</members>
+        <members>Account.Matching_Gift_Phone__c</members>
+        <members>Account.Matching_Gift_Request_Deadline__c</members>
         <members>Account.Membership_Span__c</members>
         <members>Account.Membership_Status__c</members>
         <members>Account.Number_of_Household_Members__c</members>
@@ -401,7 +425,18 @@
         <members>Contact.Exclude_from_Household_Formal_Greeting__c</members>
         <members>Contact.Exclude_from_Household_Informal_Greeting__c</members>
         <members>Contact.Exclude_from_Household_Name__c</members>
+        <members>Contact.First_Soft_Credit_Amount__c</members>
+        <members>Contact.First_Soft_Credit_Date__c</members>
         <members>Contact.HHId__c</members>
+        <members>Contact.Largest_Soft_Credit_Amount__c</members>
+        <members>Contact.Largest_Soft_Credit_Date__c</members>
+        <members>Contact.Last_Soft_Credit_Amount__c</members>
+        <members>Contact.Last_Soft_Credit_Date__c</members>
+        <members>Contact.Number_of_Soft_Credits_Last_N_Days__c</members>
+        <members>Contact.Number_of_Soft_Credits_Last_Year__c</members>
+        <members>Contact.Number_of_Soft_Credits_This_Year__c</members>
+        <members>Contact.Number_of_Soft_Credits_Two_Years_Ago__c</members>
+        <members>Contact.Number_of_Soft_Credits__c</members>
         <members>Contact.Primary_Affiliation__c</members>
         <members>Contact.Primary_Contact__c</members>
         <members>Contact.Soft_Credit_Last_N_Days__c</members>
@@ -553,6 +588,10 @@
         <members>Opportunity.Honoree_Contact__c</members>
         <members>Opportunity.Honoree_Name__c</members>
         <members>Opportunity.Is_Grant_Renewal__c</members>
+        <members>Opportunity.Matching_Gift_Account__c</members>
+        <members>Opportunity.Matching_Gift_Employer__c</members>
+        <members>Opportunity.Matching_Gift_Status__c</members>
+        <members>Opportunity.Matching_Gift__c</members>
         <members>Opportunity.Next_Grant_Deadline_Due_Date__c</members>
         <members>Opportunity.Notification_Message__c</members>
         <members>Opportunity.Notification_Preference__c</members>
@@ -570,6 +609,12 @@
         <members>Opportunity_Naming_Settings__c.Date_Format__c</members>
         <members>Opportunity_Naming_Settings__c.Opportunity_Name_Format__c</members>
         <members>Opportunity_Naming_Settings__c.Opportunity_Record_Types__c</members>
+        <members>Partial_Soft_Credit__c.Amount__c</members>
+        <members>Partial_Soft_Credit__c.Contact_Name__c</members>
+        <members>Partial_Soft_Credit__c.Contact_Role_ID__c</members>
+        <members>Partial_Soft_Credit__c.Contact__c</members>
+        <members>Partial_Soft_Credit__c.Opportunity__c</members>
+        <members>Partial_Soft_Credit__c.Role_Name__c</members>
         <members>Schedulable__c.Active__c</members>
         <members>Schedulable__c.Class_Name__c</members>
         <members>Schedulable__c.Frequency__c</members>
@@ -596,6 +641,7 @@
         <members>npe01__OppPayment__c.Payment_Acknowledged_Date__c</members>
         <members>npe01__OppPayment__c.Payment_Acknowledgment_Status__c</members>
         <members>npo02__Household__c.Number_of_Household_Members__c</members>
+        <members>npo02__Households_Settings__c.Matched_Donor_Role__c</members>
         <name>CustomField</name>
     </types>
     <types>
@@ -916,6 +962,18 @@
         <members>leadConvertSendEmail</members>
         <members>leadConvertStatus</members>
         <members>leadConvertViewContactError</members>
+        <members>mtchBtnSearch</members>
+        <members>mtchCloseDateEnd</members>
+        <members>mtchCloseDateStart</members>
+        <members>mtchFindMatchedGiftsSectionHeader</members>
+        <members>mtchFindMoreGifts</members>
+        <members>mtchFindMoreGiftsInfo</members>
+        <members>mtchItems</members>
+        <members>mtchSearchCriteriaEmpty</members>
+        <members>mtchSelectCbxTitle</members>
+        <members>mtchTotalMatchingGift</members>
+        <members>mtchTotalSelected</members>
+        <members>mtchTotalUnaccounted</members>
         <members>oppInstallmentsOf</members>
         <members>oppNamingBoth</members>
         <members>oppNamingIndividual</members>
@@ -942,6 +1000,25 @@
         <members>pmtWizardWarning</members>
         <members>pmtWizardWriteoffDate</members>
         <members>pmtWizardWriteoffMessage</members>
+        <members>pscManageSoftCreditsAdd</members>
+        <members>pscManageSoftCreditsAmount</members>
+        <members>pscManageSoftCreditsAmountMissing</members>
+        <members>pscManageSoftCreditsAmountOrPercent</members>
+        <members>pscManageSoftCreditsFull</members>
+        <members>pscManageSoftCreditsInvalidContact</members>
+        <members>pscManageSoftCreditsNoRoles</members>
+        <members>pscManageSoftCreditsOppAmount</members>
+        <members>pscManageSoftCreditsPSCAmount</members>
+        <members>pscManageSoftCreditsPartial</members>
+        <members>pscManageSoftCreditsPercent</members>
+        <members>pscManageSoftCreditsPrimaryDonor</members>
+        <members>pscManageSoftCreditsReconcileFail</members>
+        <members>pscManageSoftCreditsRestrictions</members>
+        <members>pscManageSoftCreditsRoleMissing</members>
+        <members>pscManageSoftCreditsTitle</members>
+        <members>pscManageSoftCreditsType</members>
+        <members>pscManageSoftCreditsUnaccounted</members>
+        <members>pscManageSoftCreditsValidateTotals</members>
         <members>sendAcknowledgmentFailedStatus</members>
         <members>sendAcknowledgmentFailureReasons</members>
         <members>sendAcknowledgmentFireStatus</members>
@@ -1016,6 +1093,7 @@
         <members>stgHelpIGFormat</members>
         <members>stgHelpINamingClass</members>
         <members>stgHelpLeadConvert</members>
+        <members>stgHelpMatchedDonorRole</members>
         <members>stgHelpMaxPayments</members>
         <members>stgHelpMembershipGracePeriod</members>
         <members>stgHelpMembershipRT</members>
@@ -1214,6 +1292,7 @@
         <members>Lead</members>
         <members>Opportunity</members>
         <members>Opportunity_Naming_Settings__c</members>
+        <members>Partial_Soft_Credit__c</members>
         <members>Schedulable__c</members>
         <members>Trigger_Handler__c</members>
         <name>CustomObject</name>
@@ -1271,7 +1350,9 @@
         <members>Grant_Deadline__c-Grant Deadline Layout</members>
         <members>Opportunity-Donation Layout</members>
         <members>Opportunity-Grant Layout</members>
+        <members>Opportunity-Matching Gift Layout</members>
         <members>Opportunity-Membership Layout</members>
+        <members>Partial_Soft_Credit__c-Partial Soft Credit Layout</members>
         <members>Schedulable__c-Schedulable Layout</members>
         <members>Trigger_Handler__c-Trigger Handler Layout</members>
         <name>Layout</name>
@@ -1348,6 +1429,7 @@
     </types>
     <types>
         <members>CumulusStaticResources</members>
+        <members>SLDS</members>
         <name>StaticResource</name>
     </types>
     <types>
@@ -1361,7 +1443,10 @@
         <members>General_Accounting_Unit__c.Recalculate_Rollups</members>
         <members>Opportunity.Email_Acknowledgment</members>
         <members>Opportunity.Email_Acknowledgments</members>
+        <members>Opportunity.Find_Matched_Gifts</members>
+        <members>Opportunity.Manage_Soft_Credits</members>
         <members>Opportunity.Refresh_Name</members>
+        <members>Partial_Soft_Credit__c.Manage_Soft_Credits</members>
         <name>WebLink</name>
     </types>
     <types>

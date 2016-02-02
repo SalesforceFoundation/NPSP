@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customButtons>Manage_Soft_Credits</customButtons>
     <excludeButtons>Submit</excludeButtons>
     <layoutSections>
         <customLabel>true</customLabel>
@@ -212,6 +213,15 @@
         <relatedList>RelatedContactRoleList</relatedList>
     </relatedLists>
     <relatedLists>
+        <customButtons>Manage_Soft_Credits</customButtons>
+        <excludeButtons>New</excludeButtons>
+        <fields>Contact_Name__c</fields>
+        <fields>Account.ACC_NAME</fields>
+        <fields>Role_Name__c</fields>
+        <fields>Amount__c</fields>
+        <relatedList>Partial_Soft_Credit__c.Opportunity__c</relatedList>
+    </relatedLists>
+    <relatedLists>
         <fields>NAME</fields>
         <fields>npe01__Payment_Amount__c</fields>
         <fields>npe01__Payment_Date__c</fields>
@@ -261,7 +271,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00hF000000YjFp8</masterLabel>
+        <masterLabel>00hj0000000haxZ</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>

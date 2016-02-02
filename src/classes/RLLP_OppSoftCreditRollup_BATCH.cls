@@ -59,7 +59,7 @@ public class RLLP_OppSoftCreditRollup_BATCH implements Database.Batchable<SObjec
         // but if we were to log it, and then propagate the exception, the transaction will 
         // get rolled back, and the logging will be erased!
         RLLP_OppRollup oppRoller = new RLLP_OppRollup();
-        oppRoller.RollupSoftCredits(new Map<id, Contact>((List<Contact>)result));
+        oppRoller.RollupSoftCreditsWithPartialSupport(result);
     }
 
     public void finish(Database.BatchableContext bc) {}
