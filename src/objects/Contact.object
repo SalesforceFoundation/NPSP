@@ -1601,6 +1601,24 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>First_Soft_Credit_Amount__c</fullName>
+        <externalId>false</externalId>
+        <label>First Soft Credit Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>First_Soft_Credit_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>First Soft Credit Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
         <fullName>HHId__c</fullName>
         <externalId>false</externalId>
         <formula>if(Account.npe01__SYSTEM_AccountType__c==&apos;Household Account&apos;,CASESAFEID(AccountId),CASESAFEID(npo02__Household__c))</formula>
@@ -1608,6 +1626,97 @@
         <label>HHId</label>
         <required>false</required>
         <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Largest_Soft_Credit_Amount__c</fullName>
+        <externalId>false</externalId>
+        <label>Largest Soft Credit Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Largest_Soft_Credit_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>Largest Soft Credit Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Last_Soft_Credit_Amount__c</fullName>
+        <externalId>false</externalId>
+        <label>Last Soft Credit Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Last_Soft_Credit_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>Last Soft Credit Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Number_of_Soft_Credits_Last_N_Days__c</fullName>
+        <externalId>false</externalId>
+        <label>Number of Soft Credits Last N Days</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Number_of_Soft_Credits_Last_Year__c</fullName>
+        <externalId>false</externalId>
+        <label>Number of Soft Credits Last Year</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Number_of_Soft_Credits_This_Year__c</fullName>
+        <externalId>false</externalId>
+        <label>Number of Soft Credits This Year</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Number_of_Soft_Credits_Two_Years_Ago__c</fullName>
+        <externalId>false</externalId>
+        <label>Number of Soft Credits Two Years Ago</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Number_of_Soft_Credits__c</fullName>
+        <externalId>false</externalId>
+        <label>Number of Soft Credits</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Number</type>
         <unique>false</unique>
     </fields>
     <fields>

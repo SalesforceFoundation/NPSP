@@ -702,7 +702,17 @@ public without sharing class RLLP_OppRollup {
     * @param cmap A map of contact IDs to contacts.
     * @return void This method does updates directly and returns nothing.
     ********************************************************************************************************/
-    public void rollupSoftCredits(map<id, Contact> cmap){      
+    public void rollupSoftCreditsWithPartialSupport(list<Contact> listCon) {
+        RLLP_OppPartialSoftCreditRollup.rollupPartialSoftCredits(listCon);      
+    }
+    
+    /*******************************************************************************************************
+    * @description Runs opportunity soft credit rollups for contacts. 
+    * NO LONGER USED SINCE DOES NOT SUPPORT PARTIAL SOFT CREDITS.  Can be removed once we are done testing.
+    * @param cmap A map of contact IDs to contacts.
+    * @return void This method does updates directly and returns nothing.
+    ********************************************************************************************************/
+    public void rollupSoftCreditsOLDNoPartialSupport(map<id, Contact> cmap){      
         //arg used by multi currency for rollup field currencies
         map<Id,Opportunity> opptyCurrencies;
         // copy the contacts to a zeroed out version

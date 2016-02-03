@@ -2,6 +2,7 @@
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
     <customButtons>npe01__Matching_Donation</customButtons>
     <customButtons>Refresh_Name</customButtons>
+    <customButtons>Manage_Soft_Credits</customButtons>
     <excludeButtons>Submit</excludeButtons>
     <layoutSections>
         <customLabel>true</customLabel>
@@ -231,6 +232,15 @@
         <relatedList>RelatedContactRoleList</relatedList>
     </relatedLists>
     <relatedLists>
+        <customButtons>Manage_Soft_Credits</customButtons>
+        <excludeButtons>New</excludeButtons>
+        <fields>Contact_Name__c</fields>
+        <fields>Account.ACC_NAME</fields>
+        <fields>Role_Name__c</fields>
+        <fields>Amount__c</fields>
+        <relatedList>Partial_Soft_Credit__c.Opportunity__c</relatedList>
+    </relatedLists>
+    <relatedLists>
         <customButtons>npe01__Schedule_Payments</customButtons>
         <customButtons>npe01__Writeoff_Payments</customButtons>
         <fields>NAME</fields>
@@ -300,7 +310,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00ho00000064Ct3</masterLabel>
+        <masterLabel>00hj0000003mJ2k</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>
