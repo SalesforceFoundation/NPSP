@@ -66,7 +66,8 @@
                             <apex:selectOptions value="{!conList}"/>
                             <apex:actionSupport rerender="pbEdit" event="onchange"/>
                         </apex:selectList>
-
+                    </div>
+                    <div>
                         <span class="slds-form-element__help">
                             <a href="javascript:viewLink();" title="View (New Window)">View</a>
                                <script type="text/javascript">
@@ -84,14 +85,14 @@
                 </div>
             </div>
 
-            <apex:outputText rendered="{!NOT(isSpecialAccount)}">
+            <apex:outputText rendered="{!NOT(isSpecialAccount) && (strConId == null || strConId=='' || strConId=='NEW_CONTACT')}">
                 <div class="slds-form-element">
                     <label class="slds-form-element__label">
                         <apex:outputText value="{!$Label.leadConvertAccountName}"/>
                     </label>
                     <div class="slds-form-element__control">
                         <div class="slds-select_container">
-                            <apex:selectList value="{!strAccountId}" size="1" rendered="{!strConId == null || strConId=='' || strConId=='NEW_CONTACT'}" styleClass="slds-select">
+                            <apex:selectList value="{!strAccountId}" size="1" styleClass="slds-select">
                                 <apex:selectOptions value="{!listSOAccounts}"/>
                             </apex:selectList>
                         </div>
