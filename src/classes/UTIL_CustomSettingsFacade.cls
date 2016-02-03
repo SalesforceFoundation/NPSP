@@ -519,7 +519,8 @@ public without sharing class UTIL_CustomSettingsFacade {
         hs.npo02__Household_OCR_Excluded_Recordtypes__c = null;
         hs.npo02__Household_Creation_Excluded_Recordtypes__c = null;
         hs.npo02__Enable_Soft_Credit_Rollups__c = true;
-        hs.npo02__Soft_Credit_Roles__c = 'Soft Credit;Household Member';
+        hs.npo02__Soft_Credit_Roles__c = 'Matched Donor;Soft Credit;Household Member';
+        hs.Matched_Donor_Role__c = 'Matched Donor';
         hs.npo02__Household_Contact_Roles_On__c = true;
                 
         // new HH Account model overrides having HH objects
@@ -654,6 +655,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         householdsSettings.npo02__Advanced_Household_Naming__c = mySettings.npo02__Advanced_Household_Naming__c;
         householdsSettings.npo02__Enable_Soft_Credit_Rollups__c = mySettings.npo02__Enable_Soft_Credit_Rollups__c;
         householdsSettings.npo02__Soft_Credit_Roles__c = mySettings.npo02__Soft_Credit_Roles__c;
+        householdsSettings.Matched_Donor_Role__c = mySettings.Matched_Donor_Role__c;
         householdsSettings.npo02__Household_OCR_Excluded_Recordtypes__c = mySettings.npo02__Household_OCR_Excluded_Recordtypes__c; 
         householdsSettings.npo02__Household_Creation_Excluded_Recordtypes__c = mySettings.npo02__Household_Creation_Excluded_Recordtypes__c;
         householdsSettings.npo02__Household_Mailing_List_ID__c = mySettings.npo02__Household_Mailing_List_ID__c;
