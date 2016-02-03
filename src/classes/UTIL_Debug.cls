@@ -75,6 +75,7 @@ public class UTIL_Debug {
                 ' Heap:' + Limits.getHeapSize() + '/' + Limits.getLimitHeapSize() +
                 ' CPU:' + Limits.getCpuTime() + '/' + Limits.getLimitCpuTime() + 
                 ' Query:' + Limits.getQueries() + '/' + Limits.getLimitQueries() + 
+                ' Qrows: ' + Limits.getQueryRows() + '/' + Limits.getLimitQueryRows() +
                 ' Rows:' + Limits.getDMLRows() + '/' + Limits.getLimitDMLRows()
             );
         }
