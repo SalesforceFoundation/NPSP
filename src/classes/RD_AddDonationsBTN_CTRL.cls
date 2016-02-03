@@ -35,27 +35,15 @@
 */
 public with sharing class RD_AddDonationsBTN_CTRL {
 
-    /*******************************************************************************************************
-    * @description Holds the URL of the page that called this button controller
-    */ 
-    public string returnURL{get; set;}
-
-
-    /*******************************************************************************************************
-    * @description Holds the RD class which does the real work to support recurring donations
-    */ 
-    public npe03__Recurring_Donation__c RecurringDonation{get; set;}    
+    @TestVisible
+    private ApexPages.StandardController sc;
     
     /*******************************************************************************************************
     * @description Class constructor
     * @param controller The StandardController to the Recurring Donation 
     */ 
-    public RD_AddDonationsBTN_CTRL(ApexPages.StandardController controller){
-        //set the return URL
-        RecurringDonation = (npe03__Recurring_Donation__c)Controller.getRecord();
-        PageReference pageRef = new PageReference('/' + RecurringDonation.id);
-        returnurl = pageref.getUrl();
-        
+    public RD_AddDonationsBTN_CTRL(ApexPages.StandardController sc){
+        this.sc = sc;
     }
     
     /*******************************************************************************************************
@@ -65,13 +53,13 @@ public with sharing class RD_AddDonationsBTN_CTRL {
     public PageReference buttonClick(){
         Savepoint sp = Database.setSavepoint();
         try {
-            system.assert(RecurringDonation != null);        
+            system.assert(sc.getId() != null);
 	        string qString = RD_RecurringDonations.strQueryRDNoWhere();
-            qString += ' where id = \'' + RecurringDonation.id + '\'';
-	        RecurringDonation = (npe03__Recurring_Donation__c)database.query(qString);
+            qString += ' where id = \'' + sc.getId() + '\'';
+	        npe03__Recurring_Donation__c RecurringDonation = (npe03__Recurring_Donation__c)database.query(qString);
 	        RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new list<npe03__Recurring_Donation__c>{RecurringDonation});
 	        
-	        PageReference pageRef = new PageReference(returnurl);
+	        PageReference pageRef = sc.view();
 	        pageRef.setRedirect(true);
 	        return pageRef;
         

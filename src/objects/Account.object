@@ -826,7 +826,9 @@
     </fields>
     <fields>
         <fullName>Matching_Gift_Administrator_Name__c</fullName>
+        <description>The name of the company&apos;s matching gift administrator.</description>
         <externalId>false</externalId>
+        <inlineHelpText>The name of the company&apos;s matching gift administrator.</inlineHelpText>
         <label>Matching Gift Administrator Name</label>
         <length>255</length>
         <required>false</required>
@@ -836,7 +838,9 @@
     </fields>
     <fields>
         <fullName>Matching_Gift_Amount_Max__c</fullName>
+        <description>The maximum amount the company will match on any single gift.</description>
         <externalId>false</externalId>
+        <inlineHelpText>The maximum amount the company will match on any single gift.</inlineHelpText>
         <label>Matching Gift Amount Max</label>
         <precision>18</precision>
         <required>false</required>
@@ -846,7 +850,9 @@
     </fields>
     <fields>
         <fullName>Matching_Gift_Amount_Min__c</fullName>
+        <description>The smallest gift the company will match.</description>
         <externalId>false</externalId>
+        <inlineHelpText>The smallest gift the company will match.</inlineHelpText>
         <label>Matching Gift Amount Min</label>
         <precision>18</precision>
         <required>false</required>
@@ -856,7 +862,9 @@
     </fields>
     <fields>
         <fullName>Matching_Gift_Annual_Employee_Max__c</fullName>
+        <description>The maximum amount the company will match each year for an employee.</description>
         <externalId>false</externalId>
+        <inlineHelpText>The maximum amount the company will match each year for an employee.</inlineHelpText>
         <label>Matching Gift Annual Employee Max</label>
         <precision>18</precision>
         <required>false</required>
@@ -866,7 +874,9 @@
     </fields>
     <fields>
         <fullName>Matching_Gift_Comments__c</fullName>
+        <description>Additional notes about the company&apos;s matching gift program.</description>
         <externalId>false</externalId>
+        <inlineHelpText>Additional notes about the company&apos;s matching gift program.</inlineHelpText>
         <label>Matching Gift Comments</label>
         <length>32768</length>
         <trackFeedHistory>false</trackFeedHistory>
@@ -876,14 +886,18 @@
     <fields>
         <fullName>Matching_Gift_Company__c</fullName>
         <defaultValue>false</defaultValue>
+        <description>Is this a company that offers matching gifts?</description>
         <externalId>false</externalId>
+        <inlineHelpText>Is this a company that offers matching gifts?</inlineHelpText>
         <label>Matching Gift Company</label>
         <trackFeedHistory>false</trackFeedHistory>
         <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>Matching_Gift_Email__c</fullName>
+        <description>Email of the company&apos;s matching gift administrator.</description>
         <externalId>false</externalId>
+        <inlineHelpText>Email of the company&apos;s matching gift administrator.</inlineHelpText>
         <label>Matching Gift Email</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
@@ -892,7 +906,9 @@
     </fields>
     <fields>
         <fullName>Matching_Gift_Info_Updated__c</fullName>
+        <description>The date when the matching gift information was last updated.</description>
         <externalId>false</externalId>
+        <inlineHelpText>The date when the matching gift information was last updated.</inlineHelpText>
         <label>Matching Gift Info Updated</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
@@ -900,7 +916,9 @@
     </fields>
     <fields>
         <fullName>Matching_Gift_Percent__c</fullName>
+        <description>The portion of a gift the company will match.</description>
         <externalId>false</externalId>
+        <inlineHelpText>The portion of a gift the company will match.</inlineHelpText>
         <label>Matching Gift Percent</label>
         <precision>5</precision>
         <required>false</required>
@@ -910,7 +928,9 @@
     </fields>
     <fields>
         <fullName>Matching_Gift_Phone__c</fullName>
+        <description>Phone for the matching gift administration office.</description>
         <externalId>false</externalId>
+        <inlineHelpText>Phone for the matching gift administration office.</inlineHelpText>
         <label>Matching Gift Phone</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
@@ -918,7 +938,9 @@
     </fields>
     <fields>
         <fullName>Matching_Gift_Request_Deadline__c</fullName>
+        <description>Any restrictions on how old gifts can be to be eligible for matching.</description>
         <externalId>false</externalId>
+        <inlineHelpText>Any restrictions on how old gifts can be to be eligible for matching.</inlineHelpText>
         <label>Matching Gift Request Deadline</label>
         <length>255</length>
         <required>false</required>
