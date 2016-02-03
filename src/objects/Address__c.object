@@ -775,17 +775,11 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <availability>online</availability>
         <description>Verify the current address record.</description>
         <displayType>button</displayType>
-        <linkType>javascript</linkType>
+        <height>600</height>
+        <linkType>page</linkType>
         <masterLabel>Verify Address</masterLabel>
-        <openType>onClickJavaScript</openType>
+        <openType>sidebar</openType>
+        <page>ADDR_ValidatorBTN</page>
         <protected>false</protected>
-        <url>{!requireScript(&quot;/soap/ajax/20.0/connection.js&quot;)} 
-{!requireScript(&quot;/soap/ajax/20.0/apex.js&quot;)}
-try {
-  sforce.apex.execute(&apos;npsp.ADDR_Validator_REST&apos;, &apos;verifyRecord&apos;, {addressId : &apos;{!Address__c.Id}&apos;});
-} catch(exception) {
-  sforce.apex.execute(&apos;ADDR_Validator_REST&apos;, &apos;verifyRecord&apos;, {addressId : &apos;{!Address__c.Id}&apos;});
-}
-window.location.reload();</url>
     </webLinks>
 </CustomObject>
