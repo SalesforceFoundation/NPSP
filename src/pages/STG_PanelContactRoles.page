@@ -52,6 +52,18 @@
                         <apex:outputText value="{!$Label.stgHelpSoftCreditRoles}" />
                     </div>
                 </div>
+                <div class="form-group">
+                    <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.Matched_Donor_Role__c.Label}" for="idDBMS" styleClass="col-sm-4 control-label" />
+                    <div class="col-sm-8 form-control-column">
+                        <apex:outputField value="{!stgService.stgHH.Matched_Donor_Role__c}" rendered="{!isReadOnlyMode}" />
+                        <apex:selectList value="{!stgService.stgHH.Matched_Donor_Role__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slMDR" styleClass="form-control" >
+                            <apex:selectOptions value="{!listSOContactRoles}"/>
+                        </apex:selectList>
+                    </div>
+                    <div class="col-sm-offset-4 col-sm-8 help-block">
+                        <apex:outputText value="{!$Label.stgHelpMatchedDonorRole}" />
+                    </div>
+                </div>
             </section>
             <section>
                 <h3 class="section-header">{!$Label.stgLabelHHOCR}</h3>            

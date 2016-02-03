@@ -2492,6 +2492,102 @@
         <value>You can only view existing contacts.</value>
     </labels>
     <labels>
+        <fullName>mtchBtnSearch</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>mtchBtnSearch</shortDescription>
+        <value>Search</value>
+    </labels>
+    <labels>
+        <fullName>mtchCloseDateEnd</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>mtchCloseDateEnd</shortDescription>
+        <value>Close Date End</value>
+    </labels>
+    <labels>
+        <fullName>mtchCloseDateStart</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>mtchCloseDateStart</shortDescription>
+        <value>Close Date Start</value>
+    </labels>
+    <labels>
+        <fullName>mtchFindMatchedGiftsSectionHeader</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>mtchFindMatchedGiftsSectionHeader</shortDescription>
+        <value>Find Matched Gifts</value>
+    </labels>
+    <labels>
+        <fullName>mtchFindMoreGifts</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>mtchFindMoreGifts</shortDescription>
+        <value>Find More Gifts</value>
+    </labels>
+    <labels>
+        <fullName>mtchFindMoreGiftsInfo</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>mtchFindMoreGiftsInfo</shortDescription>
+        <value>Fill in one or more filters, and then click on Search.</value>
+    </labels>
+    <labels>
+        <fullName>mtchItems</fullName>
+        <categories>Find Matching Gifts, Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>mtchItems</shortDescription>
+        <value>{0} items</value>
+    </labels>
+    <labels>
+        <fullName>mtchSearchCriteriaEmpty</fullName>
+        <categories>Find Matching Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>mtchSearchCriteriaEmpty</shortDescription>
+        <value>Please specify one or more filters in order to search.</value>
+    </labels>
+    <labels>
+        <fullName>mtchSelectCbxTitle</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>mtchSelectCbxTitle</shortDescription>
+        <value>Select</value>
+    </labels>
+    <labels>
+        <fullName>mtchTotalMatchingGift</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>mtchTotalMatchingGift</shortDescription>
+        <value>Total Matching Gift</value>
+    </labels>
+    <labels>
+        <fullName>mtchTotalSelected</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>mtchTotalSelected</shortDescription>
+        <value>Total Selected</value>
+    </labels>
+    <labels>
+        <fullName>mtchTotalUnaccounted</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>mtchTotalUnaccounted</shortDescription>
+        <value>Total Unaccounted</value>
+    </labels>
+    <labels>
         <fullName>oppInstallmentsOf</fullName>
         <categories>OppNaming</categories>
         <language>en_US</language>
@@ -2698,6 +2794,158 @@
         <protected>false</protected>
         <shortDescription>pmtWizardWriteoffMessage</shortDescription>
         <value>You are preparing to writeoff {0} Payment(s) totaling {1}.</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsAdd</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsAdd</shortDescription>
+        <value>Add another soft credit</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsAmount</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsAmount</shortDescription>
+        <value>Amount</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsAmountMissing</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsAmountMissing</shortDescription>
+        <value>Please enter a soft credit amount for all entries.</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsAmountOrPercent</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsAmountOrPercent</shortDescription>
+        <value>Amount or Percent</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsFull</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsFull</shortDescription>
+        <value>Full</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsInvalidContact</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsInvalidContact</shortDescription>
+        <value>{0} is the Primary Contact for this Opportunity. You cannot add Soft Credit to this Contact.</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsNoRoles</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsNoRoles</shortDescription>
+        <value>You have no Roles specified as Soft Credit Roles.  Under NPSP Settings, Donations, Contact Roles, you need to add the appropriate Roles to the Soft Credit Roles setting.</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsOppAmount</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsOppAmount</shortDescription>
+        <value>Total Amount</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsPSCAmount</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsPSCAmount</shortDescription>
+        <value>Soft Credit Amount</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsPartial</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsPartial</shortDescription>
+        <value>Partial</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsPercent</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsPercent</shortDescription>
+        <value>Percent</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsPrimaryDonor</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsPrimaryDonor</shortDescription>
+        <value>Primary Donor</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsReconcileFail</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsReconcileFail</shortDescription>
+        <value>Total Soft Credit Amount must be less than or equal to the Opportunity Amount.  Check &apos;Allow Soft Credit Amount more than Total Amount&apos; to override.</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsRestrictions</fullName>
+        <categories>Manage Soft Creditds</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsRestrictions</shortDescription>
+        <value>Soft Credit Restrictions</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsRoleMissing</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsRoleMissing</shortDescription>
+        <value>You must specify a Role Name for all Soft Credits.</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsTitle</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsTitle</shortDescription>
+        <value>Manage Soft Credits</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsType</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsType</shortDescription>
+        <value>Type</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsUnaccounted</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsUnaccounted</shortDescription>
+        <value>Total Unaccounted</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsValidateTotals</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsValidateTotals</shortDescription>
+        <value>Allow Soft Credit Amount more than Total Amount</value>
     </labels>
     <labels>
         <fullName>sendAcknowledgmentFailedStatus</fullName>
@@ -3340,6 +3588,14 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <protected>false</protected>
         <shortDescription>stgHelpLeadConvert</shortDescription>
         <value>Specifies whether to create an Opportunity during Lead conversion.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpMatchedDonorRole</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpMatchedDonorRole</shortDescription>
+        <value>Select the Contact Role for Matched Donors.</value>
     </labels>
     <labels>
         <fullName>stgHelpMaxPayments</fullName>

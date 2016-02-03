@@ -128,6 +128,12 @@ public without sharing class RLLP_OppRollup_UTIL {
                                                         'npo02__AverageAmount__c', 'npo02__LargestAmount__c', 'npo02__SmallestAmount__c', 
                                                         'npo02__Soft_Credit_Two_Years_Ago__c', 'npo02__Soft_Credit_Total__c', 'Soft_Credit_Last_N_Days__c',
                                                         'npo02__Soft_Credit_Last_Year__c', 'npo02__Best_Gift_Year__c', 'npo02__Best_Gift_Year_Total__c',
+                                                        'First_Soft_Credit_Amount__c', 'First_Soft_Credit_Date__c', 
+                                                        'Largest_Soft_Credit_Amount__c', 'Largest_Soft_Credit_Date__c',
+                                                        'Last_Soft_Credit_Amount__c', 'Last_Soft_Credit_Date__c',
+                                                        'Number_of_Soft_Credits__c', 'Number_of_Soft_Credits_Last_N_Days__c',
+                                                        'Number_of_Soft_Credits_Last_Year__c', 'Number_of_Soft_Credits_This_Year__c', 
+                                                        'Number_of_Soft_Credits_Two_Years_Ago__c', 'Soft_Credit_Last_N_Days__c',                                                     
                                                         'npo02__Household__c', 'npo02__Soft_Credit_This_Year__c'
                                                         };
     

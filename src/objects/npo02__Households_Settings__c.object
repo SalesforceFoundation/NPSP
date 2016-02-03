@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>Matched_Donor_Role__c</fullName>
+        <description>The Role given to the Contacts whose should receive Soft Credit for a Matching Gift.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The Role given to the Contacts whose should receive Soft Credit for a Matching Gift.</inlineHelpText>
+        <label>Matched Donor Role</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+</CustomObject>

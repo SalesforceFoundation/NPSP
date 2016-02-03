@@ -825,6 +825,108 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>Matching_Gift_Administrator_Name__c</fullName>
+        <externalId>false</externalId>
+        <label>Matching Gift Administrator Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Matching_Gift_Amount_Max__c</fullName>
+        <externalId>false</externalId>
+        <label>Matching Gift Amount Max</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Matching_Gift_Amount_Min__c</fullName>
+        <externalId>false</externalId>
+        <label>Matching Gift Amount Min</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Matching_Gift_Annual_Employee_Max__c</fullName>
+        <externalId>false</externalId>
+        <label>Matching Gift Annual Employee Max</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Matching_Gift_Comments__c</fullName>
+        <externalId>false</externalId>
+        <label>Matching Gift Comments</label>
+        <length>32768</length>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Matching_Gift_Company__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Matching Gift Company</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Matching_Gift_Email__c</fullName>
+        <externalId>false</externalId>
+        <label>Matching Gift Email</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Email</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Matching_Gift_Info_Updated__c</fullName>
+        <externalId>false</externalId>
+        <label>Matching Gift Info Updated</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Matching_Gift_Percent__c</fullName>
+        <externalId>false</externalId>
+        <label>Matching Gift Percent</label>
+        <precision>5</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>Matching_Gift_Phone__c</fullName>
+        <externalId>false</externalId>
+        <label>Matching Gift Phone</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Phone</type>
+    </fields>
+    <fields>
+        <fullName>Matching_Gift_Request_Deadline__c</fullName>
+        <externalId>false</externalId>
+        <label>Matching Gift Request Deadline</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Membership_Span__c</fullName>
         <description>Formula: The number of years for which this Household has had a Member.</description>
         <externalId>false</externalId>
