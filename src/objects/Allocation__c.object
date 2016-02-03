@@ -124,9 +124,9 @@
         <externalId>false</externalId>
         <inlineHelpText>Percent of opportunity amount to allocate to this general accounting unit. Modifying an opportunity amount of a percent based allocation will modify the allocation amount.</inlineHelpText>
         <label>Percent</label>
-        <precision>3</precision>
+        <precision>5</precision>
         <required>false</required>
-        <scale>0</scale>
+        <scale>2</scale>
         <trackTrending>false</trackTrending>
         <type>Percent</type>
     </fields>
@@ -158,12 +158,11 @@
         <fullName>Manage_Allocations</fullName>
         <availability>online</availability>
         <displayType>massActionButton</displayType>
-        <encodingKey>UTF-8</encodingKey>
-        <linkType>url</linkType>
+        <linkType>page</linkType>
         <masterLabel>Manage Allocations</masterLabel>
         <openType>replace</openType>
+        <page>ALLO_ManageAllocations</page>
         <protected>false</protected>
         <requireRowSelection>false</requireRowSelection>
-        <url>/apex/npsp__ALLO_ManageAllocations?{!IF(Opportunity.Id!=null,&apos;opp&apos;,IF(Campaign.Id!=null,&apos;cam&apos;,&apos;rd&apos;))}={!Campaign.Id}{!Opportunity.Id}{!npe03__Recurring_Donation__c.Id}</url>
     </webLinks>
 </CustomObject>
