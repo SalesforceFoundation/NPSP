@@ -1602,7 +1602,9 @@
     </fields>
     <fields>
         <fullName>First_Soft_Credit_Amount__c</fullName>
+        <description>The amount of the earliest soft credit.</description>
         <externalId>false</externalId>
+        <inlineHelpText>The amount of the earliest soft credit.</inlineHelpText>
         <label>First Soft Credit Amount</label>
         <precision>18</precision>
         <required>false</required>
@@ -1612,7 +1614,9 @@
     </fields>
     <fields>
         <fullName>First_Soft_Credit_Date__c</fullName>
+        <description>The date of the earliest soft credit.</description>
         <externalId>false</externalId>
+        <inlineHelpText>The date of the earliest soft credit.</inlineHelpText>
         <label>First Soft Credit Date</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
@@ -1630,7 +1634,9 @@
     </fields>
     <fields>
         <fullName>Largest_Soft_Credit_Amount__c</fullName>
+        <description>The amount of the largest soft credit.</description>
         <externalId>false</externalId>
+        <inlineHelpText>The amount of the largest soft credit.</inlineHelpText>
         <label>Largest Soft Credit Amount</label>
         <precision>18</precision>
         <required>false</required>
@@ -1640,7 +1646,9 @@
     </fields>
     <fields>
         <fullName>Largest_Soft_Credit_Date__c</fullName>
+        <description>The date of the largest soft credit.</description>
         <externalId>false</externalId>
+        <inlineHelpText>The date of the largest soft credit.</inlineHelpText>
         <label>Largest Soft Credit Date</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
@@ -1648,7 +1656,9 @@
     </fields>
     <fields>
         <fullName>Last_Soft_Credit_Amount__c</fullName>
+        <description>The amount of the most recent soft credit.</description>
         <externalId>false</externalId>
+        <inlineHelpText>The amount of the most recent soft credit.</inlineHelpText>
         <label>Last Soft Credit Amount</label>
         <precision>18</precision>
         <required>false</required>
@@ -1658,7 +1668,9 @@
     </fields>
     <fields>
         <fullName>Last_Soft_Credit_Date__c</fullName>
+        <description>The date of the most recent soft credit.</description>
         <externalId>false</externalId>
+        <inlineHelpText>The date of the most recent soft credit.</inlineHelpText>
         <label>Last Soft Credit Date</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
@@ -1666,7 +1678,9 @@
     </fields>
     <fields>
         <fullName>Number_of_Soft_Credits_Last_N_Days__c</fullName>
+        <description>The number of soft credits, closed in the last number of days defined in NPSP Settings.</description>
         <externalId>false</externalId>
+        <inlineHelpText>The number of soft credits, closed in the last number of days defined in NPSP Settings.</inlineHelpText>
         <label>Number of Soft Credits Last N Days</label>
         <precision>18</precision>
         <required>false</required>
@@ -1677,7 +1691,9 @@
     </fields>
     <fields>
         <fullName>Number_of_Soft_Credits_Last_Year__c</fullName>
+        <description>The number of soft credits last year.</description>
         <externalId>false</externalId>
+        <inlineHelpText>The number of soft credits last year.</inlineHelpText>
         <label>Number of Soft Credits Last Year</label>
         <precision>18</precision>
         <required>false</required>
@@ -1688,7 +1704,9 @@
     </fields>
     <fields>
         <fullName>Number_of_Soft_Credits_This_Year__c</fullName>
+        <description>The number of soft credits this year.</description>
         <externalId>false</externalId>
+        <inlineHelpText>The number of soft credits this year.</inlineHelpText>
         <label>Number of Soft Credits This Year</label>
         <precision>18</precision>
         <required>false</required>
@@ -1699,7 +1717,9 @@
     </fields>
     <fields>
         <fullName>Number_of_Soft_Credits_Two_Years_Ago__c</fullName>
+        <description>The number of soft credits 2 years ago.</description>
         <externalId>false</externalId>
+        <inlineHelpText>The number of soft credits 2 years ago.</inlineHelpText>
         <label>Number of Soft Credits Two Years Ago</label>
         <precision>18</precision>
         <required>false</required>
@@ -1710,7 +1730,9 @@
     </fields>
     <fields>
         <fullName>Number_of_Soft_Credits__c</fullName>
+        <description>The number of soft credits.</description>
         <externalId>false</externalId>
+        <inlineHelpText>The number of soft credits.</inlineHelpText>
         <label>Number of Soft Credits</label>
         <precision>18</precision>
         <required>false</required>
@@ -1744,8 +1766,9 @@
     <fields>
         <fullName>Soft_Credit_Last_N_Days__c</fullName>
         <defaultValue>0</defaultValue>
+        <description>The total amount of Soft Credit, closed in the last number of days defined in NPSP Settings.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The total amount of Soft Credit, closed in the last number of days defined in Household Settings.</inlineHelpText>
+        <inlineHelpText>The total amount of Soft Credit, closed in the last number of days defined in NPSP Settings.</inlineHelpText>
         <label>Soft Credit Last N Days</label>
         <precision>16</precision>
         <required>false</required>
