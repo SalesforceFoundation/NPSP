@@ -1,6 +1,6 @@
 <apex:page standardController="Lead" extensions="LD_LeadConvertOverride_CTRL" title="{!$Label.leadConvertPageTitle} {!Lead.Name}" standardStylesheets="false">
 
-    <apex:stylesheet value="{!URLFOR($Resource.salesforcelightningdesignsystem0121, 'assets/styles/salesforce-lightning-design-system-vf.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.SLDS, 'assets/styles/salesforce-lightning-design-system-vf.css')}"/>
 
     <style type="text/css">
         input.lookupInput {
