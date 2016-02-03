@@ -868,7 +868,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         
         ApexPages.StandardController scc = new ApexPages.StandardController(r1);
         RD_AddDonationsBTN_CTRL rdadb = new RD_AddDonationsBTN_CTRL(scc);
-        system.assertEquals(r1.id, rdadb.RecurringDonation.id);
+        system.assertEquals(r1.id, rdadb.sc.getId());
         rdadb.buttonClick();    
     }    
 

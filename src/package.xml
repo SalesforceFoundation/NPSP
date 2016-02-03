@@ -247,6 +247,7 @@
     <types>
         <members>ACCT_ViewOverride</members>
         <members>ADDR_CopyAddrHHObjBTN</members>
+        <members>ADDR_ValidatorBTN</members>
         <members>ALLO_ManageAllocations</members>
         <members>ALLO_RollupBTN</members>
         <members>BDE_BatchEntry</members>

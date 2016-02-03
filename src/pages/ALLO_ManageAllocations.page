@@ -1,45 +1,27 @@
-<apex:page controller="ALLO_ManageAllocations_CTRL" title="Manage Allocations" tabStyle="Allocation__c" showHeader="true" sidebar="true" standardStylesheets="false" cache="false" >
+<apex:page standardController="Allocation__c" recordSetVar="allocations" extensions="ALLO_ManageAllocations_CTRL" title="Manage Allocations" tabStyle="Allocation__c" showHeader="true" sidebar="true" standardStylesheets="false" cache="false" >
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
-    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/js/bootstrap.min.js')}" />
-    <apex:styleSheet value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/css/bootstrap-namespaced.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.SLDS, 'assets/styles/salesforce-lightning-design-system-vf.css')}" />
 
-    <!--<apex:stylesheet value="https://developer.salesforce.org/bootstrap-sf1/dist/css/bootstrap.css" />-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
-        .bootstrap .jumbotron {
-            padding: 10px;
-            font-size: 15px;
-        }
-        .input-group {
-            text-align: right;
+        html body.sfdcBody {
+            padding: 0;
         }
         input.lookupInput {
-            display: inline-block;
-            height: 34px;
-            padding: 6px 12px;
-            font-size: 14px;
-            line-height: 1.428571429;
-            color: #555555;
-            background-color: #ffffff;
+            background-color: white;
             background-image: none;
-            border: 1px solid #cccccc;
+            color: #16325c;
+            border: 1px solid #d8dde6;
             border-radius: 4px;
-            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-            -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
-            transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
-        }
-        table.allocation-table {
-            max-width: 640px;
-        }
-        .bootstrap .form-control-column {
-            margin-top: 7px;
-        }
-        .subhead a {
-            color: black;
-        }
-        .subhead small {
-            color: black;
+            width: 100%;
+            -webkit-transition: border 0.1s linear, background-color 0.1s linear;
+            transition: border 0.1s linear, background-color 0.1s linear;
+            display: inline-block;
+            padding: 0 16px 0 12px;
+            line-height: 34px;
+            min-height: calc(34px + 2px);
+            line-height: normal;
+            margin-right: -30px;
         }
     </style>
     <script type="text/javascript">
@@ -52,7 +34,17 @@
         var dollarSign = '{!$Label.npe01__DefaultContactTransactionCurrency}';
         var defaultEnabled = {!Settings.Default_Allocations_Enabled__c};
 
-        //$(document).on("ready",document,function(){})
+        function isLightningExperienceOrSalesforce1() {
+            return((typeof sforce != 'undefined') && sforce && (!!sforce.one));
+        }
+
+        function urlHome() {
+            if (isLightningExperienceOrSalesforce1()) {
+                sforce.one.navigateToURL('one.app#/sObject/{!objectAPIName}/home');
+            } else {
+                window.location.assign('/{!keyPrefix}/o');
+            }
+        }
 
         //adds all amount fields together
         var calcAmount = function() {
@@ -142,33 +134,53 @@
         //bind functions to window that are needed in the page
         window.initOrReload = initOrReload;
         window.changePercent = changePercent;
-
+        window.urlHome = urlHome;
     })(jQuery);
 
     </script>
-    <apex:form id="theForm" styleClass="bootstrap">
-        <apex:outputPanel rendered="{!opp<>null}">
-        <h4 class="subhead">{!$Label.alloManageOppAllocations}</h4><h3 class="subhead"><apex:outputLink value="/{!opp.id}" >{!opp.Name}</apex:outputLink>&nbsp;-&nbsp;<apex:outputField value="{!opp.amount}"/></h3>
-        </apex:outputPanel>
-        <apex:outputPanel rendered="{!cam<>null}">
-        <h4>{!$Label.alloManageCampaignAllocations}&nbsp;<apex:outputLink value="/{!cam.id}" >{!cam.Name}</apex:outputLink></h4>
-        </apex:outputPanel>
-        <apex:outputPanel rendered="{!rd<>null}">
-        <h4>{!$Label.alloManageRecurringDonationAllocations}&nbsp;<apex:outputLink value="/{!opp.id}" >{!rd.Name}</apex:outputLink></h4>
-        </apex:outputPanel>
-        <div> 
-            <apex:pageMessages id="messages"/>
-        </div>
-        <div>
-            <div class="table-responsive">
-                <table class="allocation-table table table-condensed" >
+    <apex:form id="theForm">
+        <div class="slds">
+            <!-- PAGE HEADER -->
+            <div class="slds-page-header" role="banner">
+                <div class="slds-grid">
+                    <div class="slds-col">
+                        <nav role="navigation">
+                            <p id="bread-crumb-label" class="slds-assistive-text">You are here:</p>
+                            <ol class="slds-breadcrumb slds-list--horizontal" aria-labelledby="bread-crumb-label">
+                                <li class="slds-list__item slds-text-heading--label">
+                                    <a class="slds-type-focus" href="javascript:window.urlHome();">{!objectLabelPlural}</a>
+                                </li>
+                                <li class="slds-list__item slds-text-heading--label">
+                                    <a class="slds-type-focus" href="/{!parentId}">
+                                        {!objectName}<apex:outputText rendered="{!parentAmount<>0}" value=" - {0,number,currency}"><apex:param value="{!parentAmount}"/></apex:outputText>
+                                    </a>
+                                </li>
+                            </ol>
+                        </nav>              
+                        <h1 class="slds-text-heading--medium slds-p-top-medium">{!pageTitle}</h1>
+                        <p class="slds-text-body--small slds-m-top--x-small"><apex:outputField value="{!opp.amount}" rendered="opp<>null"/></p>
+                    </div>        
+
+                    <div class="slds-col slds-no-flex slds-align-middle">
+                        <div class="slds-button-group" role="group">
+                            <apex:commandButton styleClass="slds-button slds-button--neutral" action="{!saveClose}" value="{!$Label.alloBtnSaveAndClose}" immediate="false" disabled="{!opp<>null&&parentAmount==0}"/>
+                            <apex:commandButton styleClass="slds-button slds-button--neutral" action="{!cancel}" value="{!$Label.alloBtnCancel}"  immediate="true"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div> 
+                <apex:pageMessages id="messages"/>
+            </div>
+            <div>
+                <table class="allocation-table slds-table slds-table--bordered" >
                     <thead>
-                        <tr class="active">
-                            <th></th>
-                            <th>{!$ObjectType.Allocation__c.Fields.General_Accounting_Unit__c.Label}</th>
-                            <th width="250px">{!$ObjectType.Allocation__c.Fields.Amount__c.Label}</th>
-                            <th width="130px">{!$ObjectType.Allocation__c.Fields.Percent__c.Label}</th>
-                            <th></th>
+                        <tr class="slds-text-heading--label">
+                            <th scope="col" width="155px"></th>
+                            <th scope="col"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.General_Accounting_Unit__c.Label}</span></th>
+                            <th scope="col" width="250px"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.Amount__c.Label}</span></th>
+                            <th scope="col" width="130px"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.Percent__c.Label}</span></th>
+                            <th scope="col" width="161px"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -176,41 +188,47 @@
                         <apex:repeat var="allo" value="{!listAllo}" >
                             <tr>
                                 <td>
-                                    <div class="btn-toolbar">
-                                        <apex:commandButton styleClass="btn btn-sm btn-danger" value="{!$Label.alloDeleteRow}" id="delRowBTN" title="{!$Label.alloDeleteRow}" action="{!delRow}" reRender="theForm" immediate="true">
-                                            <span class="sr-only">Delete Row {!cnt}</span>
+                                    <div class="slds-form-element">
+                                        <apex:commandButton styleClass="slds-button slds-button--destructive" value="{!$Label.alloDeleteRow}" id="delRowBTN" title="{!$Label.alloDeleteRow}" action="{!delRow}" reRender="theForm" immediate="true">
+                                            <span class="slds-form-element__label slds-assistive-text">Delete Row {!cnt}</span>
                                             <apex:param name="rowForDel" value="{!cnt}" assignTo="{!rowNumber}"/>
                                         </apex:commandButton>
                                     </div>
                                 </td>
                                 <td>
-                                        <label for="alloInputGAU{!cnt}" class="sr-only">{!$ObjectType.Allocation__c.Fields.General_Accounting_Unit__c.Label} {!cnt}</label>
-                                        <div id="alloInputGAU{!cnt}">
-                                            <apex:inputField styleClass="lookupInput" value="{!Allo.General_Accounting_Unit__c}"/>
-                                        </div>
-                                </td>
-                                <td>
-                                    <div class="input-group">
-                                        <label for="alloInputAmount{!cnt}" class="sr-only">{!$ObjectType.Allocation__c.Fields.Amount__c.Label} {!cnt}</label>
-                                        <span class="input-group-addon">{!$Label.npe01__DefaultContactTransactionCurrency}</span>
-                                        <div id="alloInputAmount{!cnt}">
-                                            <apex:inputField styleClass="form-control alloAmount amount{!cnt}" onkeyup="window.initOrReload()"  value="{!Allo.Amount__c}"/>
+                                    <div class="slds-form-element">
+                                        <label for="alloInputGAU{!cnt}" class="slds-form-element__label slds-assistive-text">{!$ObjectType.Allocation__c.Fields.General_Accounting_Unit__c.Label} {!cnt}</label>
+                                        <div id="alloInputGAU{!cnt}" >
+                                            <apex:inputField value="{!Allo.General_Accounting_Unit__c}" styleClass="lookupInput"/>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="input-group">
-                                        <label for="alloInputPercent{!cnt}" class="sr-only">{!$ObjectType.Allocation__c.Fields.Percent__c.Label} {!cnt}</label>
-                                        <div id="alloInputPercent{!cnt}">
-                                            <apex:inputField styleClass="form-control alloPercent percent{!cnt}" onkeyup="window.changePercent({!cnt})" value="{!Allo.Percent__c}"/>
+                                    <div class="slds-form-element">
+                                        <label for="alloInputAmount{!cnt}" class="slds-form-element__label slds-assistive-text">{!$ObjectType.Allocation__c.Fields.Amount__c.Label} {!cnt}</label>
+                                        <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon">
+                                            <span class="slds-input__icon">&nbsp;{!$Label.npe01__DefaultContactTransactionCurrency}</span>
+                                            <div id="alloInputAmount{!cnt}">
+                                                <apex:inputField styleClass="slds-input alloAmount amount{!cnt}" onkeyup="window.initOrReload()"  value="{!Allo.Amount__c}"/>
+                                            </div>
                                         </div>
-                                        <span class="input-group-addon">%</span>
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="btn-toolbar">
-                                        <apex:commandButton styleClass="btn btn-sm btn-info" value="{!$Label.alloAddRow}" id="addRowBTN" title="{!$Label.alloAddRow}" action="{!addRow}" reRender="theForm" immediate="true">
-                                            <span class="sr-only">{!$Label.alloAddRowAtPosition} {!cnt}</span>
+                                    <div class="slds-form-element">
+                                        <label for="alloInputPercent{!cnt}" class="slds-form-element__label slds-assistive-text">{!$ObjectType.Allocation__c.Fields.Percent__c.Label} {!cnt}</label>
+                                        <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--right">
+                                            <div id="alloInputPercent{!cnt}">
+                                                <apex:inputField styleClass="slds-input alloPercent percent{!cnt}" onkeyup="window.changePercent({!cnt})" value="{!Allo.Percent__c}"/>
+                                            </div>
+                                            <span class="slds-input__icon">%</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="slds-form-element">
+                                        <apex:commandButton styleClass="slds-button slds-button--neutral" value="{!$Label.alloAddRow}" id="addRowBTN" title="{!$Label.alloAddRow}" action="{!addRow}" reRender="theForm" immediate="true">
+                                            <span class="slds-form-element__label slds-assistive-text">{!$Label.alloAddRowAtPosition} {!cnt}</span>
                                             <apex:param name="rowForNew" value="{!cnt}" assignTo="{!rowNumber}"/>
                                         </apex:commandButton>
                                     </div>
@@ -232,21 +250,17 @@
                                 <div id="totalPercent"></div>
                             </td>
                             <td>
-                                <apex:commandButton styleClass="btn btn-sm btn-info" value="{!$Label.alloAddRow}" id="addRowBTN" title="{!$Label.alloAddRow}" action="{!addRow}" reRender="theForm" immediate="true" rendered="{!listAlloSize==0}">
-                                    <span class="sr-only">{!$Label.alloAddRowAtPosition} {!cnt}</span>
+                                <apex:commandButton styleClass="slds-button slds-button--neutral slds-button--small" value="{!$Label.alloAddRow}" id="addRowBTN" title="{!$Label.alloAddRow}" action="{!addRow}" reRender="theForm" immediate="true" rendered="{!listAlloSize==0}">
+                                    <span class="slds-form-element__label slds-assistive-text">{!$Label.alloAddRowAtPosition} {!cnt}</span>
                                     <apex:param name="rowForNew" value="{!cnt}" assignTo="{!rowNumber}"/>
                                 </apex:commandButton>
                             </td>
                         </tr>
                    </tbody>
                 </table>
-            </div>
-            <script>
-                window.initOrReload();
-            </script>
-            <div class="btn-toolbar">
-                    <apex:commandButton styleClass="btn btn-primary btn-sm" value="{!$Label.alloBtnSaveAndClose}" id="saveCloseBTN" action="{!saveClose}" immediate="false" disabled="{!opp<>null&&parentAmount==0}"/>
-                    <apex:commandButton styleClass="btn btn-default btn-sm" value="{!$Label.alloBtnCancel}" id="cancelBTN" action="{!cancel}" immediate="true"/>
+                <script>
+                    window.initOrReload();
+                </script>
             </div>
         </div>
     </apex:form>
