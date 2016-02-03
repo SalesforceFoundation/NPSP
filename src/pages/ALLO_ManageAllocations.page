@@ -6,7 +6,6 @@
     <style>
         html body.sfdcBody {
             padding: 0;
-            background-color: #f4f6f9; // shade theme color
         }
         input.lookupInput {
             background-color: white;
@@ -164,8 +163,8 @@
 
                     <div class="slds-col slds-no-flex slds-align-middle">
                         <div class="slds-button-group" role="group">
-                            <apex:commandButton styleClass="slds-button slds-button--neutral" action="{!saveClose}" value="{!$Label.alloBtnSaveAndClose}" immediate="true" disabled="{!opp<>null&&parentAmount==0}"/>
-                            <apex:commandButton styleClass="slds-button slds-button--neutral" action="{!cancel}" value="{!$Label.alloBtnCancel}"  immediate="false"/>
+                            <apex:commandButton styleClass="slds-button slds-button--neutral" action="{!saveClose}" value="{!$Label.alloBtnSaveAndClose}" immediate="false" disabled="{!opp<>null&&parentAmount==0}"/>
+                            <apex:commandButton styleClass="slds-button slds-button--neutral" action="{!cancel}" value="{!$Label.alloBtnCancel}"  immediate="true"/>
                         </div>
                     </div>
                 </div>
