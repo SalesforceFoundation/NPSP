@@ -35,8 +35,24 @@
 */
 public with sharing class ADDR_Validator {
 
-    //get verification settings
+    /** @description Gets verification settings.*/
     private static Addr_Verification_Settings__c settings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
+
+    /** @description Controller for verify address button, does nothing.*/
+    public ADDR_Validator(ApexPages.StandardController standardController) {}
+
+    /** @description Action method for verify address button, verifies address.*/
+    public PageReference verifyAddressButton() {
+        id addrId = ApexPages.currentPage().getParameters().get('id');
+        if (addrId != null) {
+            set<id> setAddrId = new Set<Id>{addrId};
+            verifyRecords(setAddrId);
+            
+            PageReference pageRef = new PageReference('/' + addrId);
+            pageRef.setRedirect(true);
+            return pageRef;
+        } else return null;
+    }
 
     /*******************************************************************************************************
     * @description Verifies a set of address records in a future.
