@@ -599,6 +599,7 @@ private with sharing class BDI_DataImport_TEST2 {
         listDI = [select Account1_Name__c, Status__c, Contact1Imported__c, Contact1ImportStatus__c, Contact1_Lastname__c from DataImport__c order by Account1_Name__c];        
         system.assertEquals(5, listDI.size());
         for (integer i = 0; i < listDI.size(); i++) {
+            system.debug('****DJH DI-' + i + ' ' + listDI[i]);
             if (listDI[i].Account1_Name__c == 'a2') {
                 system.assertEquals(label.bdiErrorInvalidLastname, listDI[i].Contact1ImportStatus__c);                
                 system.assertEquals(label.bdiFailed, listDI[i].Status__c);                
