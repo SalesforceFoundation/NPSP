@@ -1,1 +1,1 @@
-<apex:page controller="ALLO_RollupBTN_CTRL" action="{!buttonClick}" />
+<apex:page standardController="General_Accounting_Unit__c" extensions="ALLO_RollupBTN_CTRL" action="{!buttonClick}" />
