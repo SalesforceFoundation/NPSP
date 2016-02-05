@@ -1,7 +1,6 @@
 <apex:component controller="UTIL_JobProgress_CTRL" selfClosing="true">
-    // @todo move these libraries to CumulusStaticResources
-    <apex:includeScript value="{!URLFOR($Resource.transparency)}"/>
-    <apex:includeScript value="{!URLFOR($Resource.moment)}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.SLDS, 'transparency/transparency.min.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.SLDS, 'moment/moment.min.js')}"/>
     <apex:stylesheet value="{!URLFOR($Resource.SLDS, 'assets/styles/salesforce-lightning-design-system-vf.css')}"/>
 
     <apex:attribute name="cNumberOfJobs" type="Integer" assignTo="{!numberOfJobs}" default="20" description="The number of batch jobs to display in the table."/>
