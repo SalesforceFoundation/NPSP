@@ -1,0 +1,1 @@
+<apex:page standardController="Address__c" extensions="ADDR_Validator" action="{!verifyAddressButton}"/>

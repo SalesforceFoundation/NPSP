@@ -85,8 +85,7 @@ private with sharing class ALLO_Rollup_TEST {
         PageReference pageRef = Page.ALLO_RollupBTN;
     	Test.setCurrentPage(pageRef);
 
-    	ALLO_RollupBTN_CTRL ctrl = new ALLO_RollupBTN_CTRL();
-    	ApexPages.currentPage().getParameters().put('id', gau.id);
+    	ALLO_RollupBTN_CTRL ctrl = new ALLO_RollupBTN_CTRL(new ApexPages.StandardController(gau));
 
     	ctrl.buttonClick();
 
