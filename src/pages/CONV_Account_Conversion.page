@@ -1,13 +1,8 @@
 <apex:page controller="CONV_Account_Conversion_CTRL" title="Account Model Conversion Utility" tabStyle="npo02__Household__c" showHeader="true" sidebar="false" action="{!runCheck}">
-    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/modal.js')}"/>
     <apex:stylesheet value="{!URLFOR($Resource.SLDS, 'assets/styles/salesforce-lightning-design-system-vf.css')}"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- @todo -->
-    <!--
-        <apex:pageMessages />
-    -->
+    <c:UTIL_PageMessages id="pageMessages"/>
 
     <div class="slds" id="all_content">
 
@@ -181,15 +176,9 @@
             </div>
         </div>
 
-        <apex:form >
-            <apex:actionFunction name="runconvert" action="{!convert}" oncomplete="renderResults()"/>
-        </apex:form>
+        <c:UTIL_JobProgressLightning id="jobProgress" eventTargetId="{!$Component.jobProgress}" strBatchComponentLabel="{!$Label.CONV_Conversion_Process}" cNumberOfJobs="1" startPolling="False" stopPollingOnComplete="True" pollingDelay="1000" html-class="slds-hide"/>
 
-        <apex:outputPanel id="batchpanel">
-            <c:UTIL_JobProgressLightning id="jobProgress" eventTargetId="{!$Component.jobProgress}" strBatchComponentLabel="{!$Label.CONV_Conversion_Process}" cNumberOfJobs="1" startPolling="True" stopPollingOnComplete="True"/>
-        </apex:outputPanel>
-
-    </div><!-- close class slds-->
+    </div>
 
     <div class="slds">
         <div id="warning_modal" tabindex="-1" aria-hidden="true" aria-labelledby="warning_modal_heading" role="dialog" class="slds-modal">
@@ -208,7 +197,7 @@
                 <div class="slds-modal__footer">
                     <div class="slds-x-small-buttons--horizontal">
                         <button class="slds-button slds-button--neutral" data-dismiss="modal" data-target="warning_modal">{!$Label.CONV_Cancel}</button>
-                        <button class="slds-button slds-button--neutral slds-button--brand" data-dismiss="modal" data-target="warning_modal">{!$Label.CONV_Proceed}</button>
+                        <button id="warning_modal_proceed_button" class="slds-button slds-button--neutral slds-button--brand" data-dismiss="modal" data-target="warning_modal">{!$Label.CONV_Proceed}</button>
                     </div>
                 </div>
             </div>
@@ -216,63 +205,64 @@
         <div class="slds-backdrop" tabindex="-1"></div>
     </div>
 
+    <apex:form >
+        <apex:actionFunction name="convert" action="{!convert}" reRender="pageMessages" oncomplete="afterConvert()"/>
+    </apex:form>
+
     <script type="text/javascript">
-    var jobProgressComponent = document.getElementById('{!$Component.jobProgress}');
+        var conversionButtonElement = document.getElementById('conversionBTN');
 
-    if (jobProgressComponent) {
-        jobProgressComponent.addEventListener('complete', function (e) {
-            // @todo -- react to all jobs being completed
-            console.log('in complete listener');
-            console.log(e.detail);
-        });
-    }
+        function disableConversionUntilAllWarningsChecked() {
+            var totalNumberOfWarnings = document.querySelectorAll('input[type="checkbox"]').length;
+            var numberOfCheckedWarnings = document.querySelectorAll('input[type="checkbox"]:checked').length;
 
-    var j$ = jQuery.noConflict();
-
-    function renderResults() {
-        console.log('in renderResults');
-    }
-
-    j$(document).ready(function(){
-        // @debug Don't disable because it's annoying to check all those boxes
-        //j$('#conversionBTN').attr('disabled', 'disabled');
-
-        j$("input[type='checkbox']").click(function() {
-            if (j$("input[type='checkbox']:checked").length == j$("input[type='checkbox']").length && !{!runCheckErrorState})
-                j$('#conversionBTN').removeAttr('disabled');
-            // @debug Don't disable because it's annoying to check all those boxes
-            //else
-            //j$('#conversionBTN').attr('disabled', 'disabled');
-        });
-
-        /*
-        j$("#warning_modal_proceed_button").on("click", function() {
-            // @todo add proper handler to proceed button
-            callConversion();
-        });
-        */
-    });
-
-    function callConversion(){
-        // @todo -- use visualforce remoting instead of actionFunction
-        runconvert();
-    }
-
-    function verifyHHIdField(){
-        var selectedField = j$("[name$='HHId']").val();
-        if (selectedField != ''){
-            Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.CONV_Account_Conversion_CTRL.verifyFieldTypeForIds}',selectedField,function(result, event){
-                if(event.status){
-                    if (!result){
-                        alert("{!$Label.CONV_Selected_Field_Bad}");
-                        j$("[name$='HHId']").val('-None-');
-                    }
-                }
-                else{
-                    alert("{!$Label.CONV_Selected_Field_Verification_Failure}");
-                }
-            });
+            if (numberOfCheckedWarnings == totalNumberOfWarnings) {
+                conversionButtonElement.disabled = false;
+            } else {
+                conversionButtonElement.disabled = true;
+            }
         }
-    }
+
+        var runCheckErrorState = {!runCheckErrorState};
+
+        if (!runCheckErrorState) {
+            disableConversionUntilAllWarningsChecked();
+
+            Array.prototype.forEach.call(
+                document.querySelectorAll('input[type="checkbox"]'),
+                function (el) {
+                    el.addEventListener('click', disableConversionUntilAllWarningsChecked);
+                }
+            );
+        }
+
+        document.getElementById('warning_modal_proceed_button').addEventListener('click', convert);
+
+        function afterConvert() {
+            var jobProgressComponent = document.getElementById('{!$Component.jobProgress}');
+            document.getElementById('warning_content').setAttribute('class', 'slds-hide');
+            jobProgressComponent.setAttribute('class', 'slds-show');
+            jobProgressComponent.dispatchEvent(new Event('start'));
+        }
+
+        function verifyHHIdField(){
+            var selectElement = document.querySelector('[name$="HHId"]');
+            var selectedField = selectElement.value;
+            if (selectedField != '') {
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.CONV_Account_Conversion_CTRL.verifyFieldTypeForIds}',
+                    selectedField,
+                    function (result, event) {
+                    if (event.status) {
+                        if (!result) {
+                            alert("{!$Label.CONV_Selected_Field_Bad}");
+                            selectElement.value = '-None-';
+                        }
+                    } else {
+                        alert("{!$Label.CONV_Selected_Field_Verification_Failure}");
+                    }
+                });
+            }
+        }
     </script>
 </apex:page>
