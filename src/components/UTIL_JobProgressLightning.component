@@ -1,12 +1,13 @@
 <apex:component controller="UTIL_JobProgress_CTRL" selfClosing="true">
-    <apex:stylesheet value="{!URLFOR($Resource.SLDS, 'transparency/transparency.min.js')}"/>
-    <apex:stylesheet value="{!URLFOR($Resource.SLDS, 'moment/moment.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, 'transparency/transparency.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, 'moment/moment.min.js')}"/>
     <apex:stylesheet value="{!URLFOR($Resource.SLDS, 'assets/styles/salesforce-lightning-design-system-vf.css')}"/>
 
     <apex:attribute name="cNumberOfJobs" type="Integer" assignTo="{!numberOfJobs}" default="20" description="The number of batch jobs to display in the table."/>
     <apex:attribute name="strBatchComponentLabel" type="String" assignTo="{!batchComponentLabel}" default="Batch Apex Jobs" description="The label of the progress bar section."/>
     <apex:attribute name="startPolling" type="Boolean" default="True" description="Whether the component should begin polling for jobs as soon as it loads"/>
     <apex:attribute name="stopPollingOnComplete" type="Boolean" default="False" description="Whether the component should stop polling once all queried jobs are complete"/>
+    <apex:attribute name="pollingDelay" type="Integer" default="5000" description="How long (in ms) to delay between polling for job progress"/>
     <apex:attribute name="eventTargetId" type="String" description="The id of the DOM Element to use for events"/>
 
     <style type="text/css">
@@ -92,7 +93,7 @@
                                     <p class="slds-truncate"><span class="jobItemsProcessed"></span> of <span class="totalJobItems"></span> batches processed</p>
                                 </dd>
                                 <dt class="slds-dl--horizontal__label slds-medium-size--2-of-12 completedDateContainer">
-                                    <p class="slds-truncate">Completed On:</p>
+                                    <p class="slds-truncate">Completed:</p>
                                 </dt>
                                 <dd class="slds-dl--horizontal__detail slds-tile__meta slds-medium-size--10-of-12 completedDateContainer">
                                     <p class="slds-truncate completedDate"></p>
@@ -115,7 +116,7 @@
     <script>
     (function () {
 
-        var pollingDelay = 5000;
+        var pollingDelay = {!pollingDelay};
         var refreshInterval;
         var eventTarget;
 
@@ -188,7 +189,7 @@
                 '{!$RemoteAction.UTIL_JobProgress_CTRL.getBatchJobsStatus}',
                 {!numberOfJobs},
                 function (result, event) {
-                    checkIfDone(result);
+                    sendProgressEvents(result);
                     var jobsListContainer = document.getElementById('jobsListContainer');
                     var jobsListContent = Transparency.render(jobsListTemplate.cloneNode(true), result, directives);
                     jobsListContainer.replaceChild(jobsListContent, jobsListContainer.firstElementChild);
@@ -205,7 +206,7 @@
             window.clearInterval(refreshInterval);
         }
 
-        function checkIfDone(results) {
+        function sendProgressEvents(results) {
             var stats = {
                 "allDone": true,
                 "abortedCount": 0,
@@ -231,9 +232,15 @@
             }
 
             if (eventTarget) {
-                var completeEvent = document.createEvent('CustomEvent');
-                completeEvent.initCustomEvent('complete', false, false, stats);
-                eventTarget.dispatchEvent(completeEvent);
+                var progressEvent = document.createEvent('CustomEvent');
+                progressEvent.initCustomEvent('progress', false, false, stats);
+                eventTarget.dispatchEvent(progressEvent);
+
+                if (stats.allDone) {
+                    var completeEvent = document.createEvent('CustomEvent');
+                    completeEvent.initCustomEvent('complete', false, false, stats);
+                    eventTarget.dispatchEvent(completeEvent);
+                }
             }
         }
 

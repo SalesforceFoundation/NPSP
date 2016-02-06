@@ -1,0 +1,23 @@
+<apex:component controller="UTIL_PageMessages_CTRL" selfClosing="true">
+    <apex:stylesheet value="{!URLFOR($Resource.SLDS, 'assets/styles/salesforce-lightning-design-system-vf.css')}"/>
+
+    <style type="text/css">
+        #page_messages .slds-notify--toast {
+            display: block;
+        }
+    </style>
+
+    <div class="slds" id="page_messages">
+        <apex:repeat value="{!pageMessages}" var="m">
+            <div role="alert" class="slds-notify slds-notify--toast slds-theme--{!m.severityTheme}">
+                <div class="slds-assistive-text severity">{!m.severity}</div>
+                <div class="notify__content">
+                    <h2 class="slds-text-heading--small">{!m.summary}</h2>
+                    <apex:outputText rendered="{!AND(NOT(ISBLANK(m.detail)), NOT(m.summary == m.detail))}">
+                        <p class="slds-m-top--medium">{!m.detail}</p>
+                    </apex:outputText>
+                </div>
+            </div>
+        </apex:repeat>
+    </div>
+</apex:component>

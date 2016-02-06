@@ -206,6 +206,7 @@ public with sharing class UTIL_JobProgress_CTRL {
          * @param job The AsyncApexJob to gather data from
          */
         public BatchJobStatus(AsyncApexJob job) {
+            className = job.ApexClass.Name;
             createdByName = job.CreatedBy.Name;
             createdDate = job.CreatedDate;
             status = job.Status;
