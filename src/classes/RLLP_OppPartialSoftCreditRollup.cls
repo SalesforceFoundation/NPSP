@@ -103,6 +103,10 @@ public class RLLP_OppPartialSoftCreditRollup {
                                        Number_of_Soft_Credits_Last_N_Days__c = 0
                                        );
             
+            if (RLLP_OppRollup_UTIL.isMultiCurrency()) {
+                newC.put('CurrencyIsoCode', c.get('CurrencyIsoCode'));
+            }
+            
             Set<String> ocrIds = new Set<String>();
             if (partialSoftCredits.containsKey(c.Id)) {
                 for (Partial_Soft_Credit__c psc : partialSoftCredits.get(c.Id)) {
