@@ -86,8 +86,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             map<Id, Contact> mapContactIdContactOwnerChange = new map<Id, Contact>();
             map<Id, Id> mapContactIdAccountIdOldMoveOpps = new map<Id, Id>();
             map<Id, Id> mapContactIdAccountIdNewMoveOpps = new map<Id, Id>();
-            HH_INaming iNaming = new HH_NameSpec();
-            Set<String> hhNamingFields = iNaming.setHouseholdNameFieldsOnContact();
+            Set<String> hhNamingFields = HH_HouseholdNaming.iNaming.setHouseholdNameFieldsOnContact();
 
             
             if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {                    
@@ -107,10 +106,10 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                     strSoql += 'MailingCountryCode, MailingStateCode, OtherCountryCode, OtherStateCode, ';
                 
                 if (hhNamingFields.size() > 0) {
-                  for (String hhNameField : hhNamingFields) {
-                    if (!strSoql.containsIgnoreCase(hhNameField))
-                      strSoql += hhNameField + ',';
-                  }
+                    for (String hhNameField : hhNamingFields) {
+                        if (!strSoql.containsIgnoreCase(hhNameField))
+                            strSoql += hhNameField + ',';
+                    }
                 }
 
                 strSoql += 'Phone, Fax from Contact where Id IN :contacts';
@@ -268,8 +267,9 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                             }
                                                                                  
                            // HH Account didn't change, but it still might need renaming
-                        } else if (c.npe01__Organization_Type__c == CAO_Constants.HH_ACCOUNT_TYPE && needsHHAccountRename(hhNamingFields, c, oldContacts[i])) {
-                           listAccountIdHHToRename.add(c.AccountId);    
+                        } else if (c.npe01__Organization_Type__c == CAO_Constants.HH_ACCOUNT_TYPE && 
+                                needsHHAccountRename(hhNamingFields, c, oldContacts[i])) {
+                            listAccountIdHHToRename.add(c.AccountId);    
                         }  
                         
                         // check for ownership changes
@@ -778,26 +778,25 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     * @param conOld the old version of the Contact
     * @return boolean
     */
-    private boolean needsHHAccountRename(Set<String> hhNamingFields,Contact conNew, Contact conOld) {
-        if(conNew == null && conOld != null)
+    private boolean needsHHAccountRename(Set<String> hhNamingFields, Contact conNew, Contact conOld) {
+        if (conNew == null && conOld != null)
             return true;
-        if(conNew != null && conOld == null)
+        if (conNew != null && conOld == null)
             return true;
-        if(conNew.FirstName == null) conNew.FirstName = '';
-        if(conNew.LastName == null) conNew.LastName = '';
-        // Get any fields being used in household naming so we can check if they've changed
-        Boolean needsRename = false;
+        if (conNew.FirstName == null) conNew.FirstName = '';
+        if (conNew.LastName == null) conNew.LastName = '';
+        
+        // check all household naming fields for changes
         for(String fieldName : hhNamingFields) {
             if (String.valueOf(conNew.get(fieldName)) != String.valueOf(conOld.get(fieldName))) {
-                system.debug(fieldName + 'is different');
-                needsRename = true;
+                return true;
             }
         }
         if (conNew.npo02__Household_Naming_Order__c != conOld.npo02__Household_Naming_Order__c ||
-                conNew.npo02__Naming_Exclusions__c != conOld.npo02__Naming_Exclusions__c) {
-                needsRename = true ;
+            conNew.npo02__Naming_Exclusions__c != conOld.npo02__Naming_Exclusions__c) {
+            return true;
         }
-        return needsRename;
+        return false;
     }
     
     /*******************************************************************************************************

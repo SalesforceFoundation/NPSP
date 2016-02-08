@@ -32,12 +32,14 @@
 * @date 2011 (2.0)
 * @group Households
 * @group-content ../../ApexDocContent/Households.htm
-* @description Trigger Handler on Contact to deal with managing Households (Accounts and Objects)
+* @description Trigger Handler on Contact to deal with managing Households (Objects), and naming exclusions
+* on contact.
 */
 public without sharing class HH_Households_TDTM extends TDTM_Runnable {
           	
     /*******************************************************************************************************
-    * @description Trigger Handler on Contacts that handles managing Households
+    * @description Trigger Handler on Contacts that handles managing Households (Objects) and naming exclusions
+    * on contact.
     * @param listNew List of Contacts from trigger new. 
     * @param listOld List of Contacts from trigger old. 
     * @param triggerAction Which trigger event (BeforeInsert, AfterInsert, etc.). 
@@ -98,8 +100,6 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
             
                 	   
             npo02__Households_Settings__c currentHouseholdsSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
-            HH_INaming iNaming = new HH_NameSpec();
-            Set<String> hhNamingFields = iNaming.setHouseholdNameFieldsOnContact();
             List<Contact> householdInserts = new List<Contact>();
             List<Contact> contactEvaluations = new List<Contact>();
             List<Contact> householdDeletes = new List<Contact>();
@@ -141,6 +141,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                 }            
             }
          
+            Set<String> hhNamingFields = null;  // defer creating until needed.
             Integer i = 0;
             for(Contact c : contacts) {
                 //AFTER INSERT - NOTE: naming has to be handled inside othe household inserts, 
@@ -172,12 +173,18 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                     else if (c.npo02__household__c == null && currentHouseholdsSettings.npo02__Household_Rules__c == HH_Households.ALL_INDIVIDUALS_PROCESSOR)
                         contactEvaluations.add(c);
                     
-                    for(String fieldName : hhNamingFields) {
-                        if (String.valueOf(newcmap.get(c.id).get(fieldName)) != String.valueOf(oldcmap.get(c.id).get(fieldName))) {
-                            householdnameupdates.add(c.npo02__household__c);
+                    if (c.npo02__household__c != null) {
+                        if (hhNamingFields == null)
+                            hhNamingFields = HH_HouseholdNaming.iNaming.setHouseholdNameFieldsOnContact();
+                            
+                        for (String fieldName : hhNamingFields) {
+                            if (String.valueOf(newcmap.get(c.id).get(fieldName)) != String.valueOf(oldcmap.get(c.id).get(fieldName))) {
+                                householdnameupdates.add(c.npo02__household__c);
+                                break;
+                            }
                         }
                     }
-                    
+                                        
                     //if they've changed households, we need to query the old
                     //household to see if anybody is left, if so, send it for renaming
                     //if not, delete it.
@@ -261,7 +268,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
     * @param con The Contact 
     * @return void
     ********************************************************************************************************/
-    public static void copyNamingExclusionsFromMSP(Contact con) {
+    private static void copyNamingExclusionsFromMSP(Contact con) {
         con.Exclude_from_Household_Name__c = con.npo02__Naming_Exclusions__c.contains('Household__c.Name');
         con.Exclude_from_Household_Formal_Greeting__c = con.npo02__Naming_Exclusions__c.contains('Household__c.Formal_Greeting__c');
         con.Exclude_from_Household_Informal_Greeting__c = con.npo02__Naming_Exclusions__c.contains('Household__c.Informal_Greeting__c');
@@ -272,7 +279,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
     * @param con The Contact 
     * @return void
     ********************************************************************************************************/
-    public static void copyNamingExclusionsFromCheckboxes(Contact con) {
+    private static void copyNamingExclusionsFromCheckboxes(Contact con) {
         string mspValue = '';
         
         if (con.Exclude_from_Household_Name__c)
@@ -457,7 +464,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
     * @param dmlWrapper On return, holds the Households to delete.    
     * @return void
     ********************************************************************************************************/
-        public static void deleteHousehold(Contact[] contacts, DmlWrapper dmlWrapper){
+    public static void deleteHousehold(Contact[] contacts, DmlWrapper dmlWrapper){
             
         list<SObject> householdDeletes = new list<SObject>();
         map<Id,Integer> householdCountMap = new map<Id,Integer>();
