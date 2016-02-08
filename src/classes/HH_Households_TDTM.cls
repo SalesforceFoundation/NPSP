@@ -268,7 +268,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
     * @param con The Contact 
     * @return void
     ********************************************************************************************************/
-    private static void copyNamingExclusionsFromMSP(Contact con) {
+    public static void copyNamingExclusionsFromMSP(Contact con) {
         con.Exclude_from_Household_Name__c = con.npo02__Naming_Exclusions__c.contains('Household__c.Name');
         con.Exclude_from_Household_Formal_Greeting__c = con.npo02__Naming_Exclusions__c.contains('Household__c.Formal_Greeting__c');
         con.Exclude_from_Household_Informal_Greeting__c = con.npo02__Naming_Exclusions__c.contains('Household__c.Informal_Greeting__c');
@@ -279,7 +279,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
     * @param con The Contact 
     * @return void
     ********************************************************************************************************/
-    private static void copyNamingExclusionsFromCheckboxes(Contact con) {
+    public static void copyNamingExclusionsFromCheckboxes(Contact con) {
         string mspValue = '';
         
         if (con.Exclude_from_Household_Name__c)
