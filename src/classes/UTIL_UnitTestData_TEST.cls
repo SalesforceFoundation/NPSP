@@ -113,9 +113,15 @@ public class UTIL_UnitTestData_TEST {
                 npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
                 OtherCity = 'Seattle'
             );
+            //since we're running rollup code on a manually created contacts in RLLP_OppRollup_TEST, we have to manually set currency field in multicurrency
+            if (RLLP_OppRollup_UTIL.isMultiCurrency()) {
+                newCon.put(RLLP_OppRollup_UTIL.mcFieldValues.get('Contact'), RLLP_OppRollup_UTIL.currCorporate);
+            }
+
             ContactsToAdd.add (newCon);
         }
         
+
         // testing doing the insert in the calling code - will maybe reinstate this
         //insert ContactsToAdd;
         
