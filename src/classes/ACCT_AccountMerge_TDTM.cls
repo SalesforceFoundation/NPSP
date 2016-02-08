@@ -54,15 +54,21 @@ public class ACCT_AccountMerge_TDTM extends TDTM_Runnable {
         if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
             set<ID> setMergeWinner = new set<ID>();
         
-	        for (SObject so : listOld) {
-	            Account acc = (Account)so;
+            for (SObject so : listOld) {
+                Account acc = (Account)so;
                 if (acc != null && acc.MasterRecordId != null)
                     setMergeWinner.add(acc.MasterRecordId);
             }
             
-	        // deal with any fixups that need to occur due to Account Merges
-	        if (setMergeWinner.size() > 0)
-	            handleAccountMergeFixupsFuture(new list<ID>(setMergeWinner));
+            // deal with any fixups that need to occur due to Account Merges
+            if (setMergeWinner.size() > 0) {
+                if(System.isFuture() || System.isBatch()) {
+                    handleAccountMergeFixups(new List<Id>(setMergeWinner));
+                }
+                else {
+                    handleAccountMergeFixupsFuture(new List<Id>(setMergeWinner));
+                }
+            }
         }        
         
         return null; 
@@ -80,8 +86,11 @@ public class ACCT_AccountMerge_TDTM extends TDTM_Runnable {
     * @return null
     ********************************************************************************************************/
     @Future    
-    private static void handleAccountMergeFixupsFuture(list<ID> listAccountId) {
-        
+    private static void handleAccountMergeFixupsFuture(List<Id> listAccountId) {
+            handleAccountMergeFixups(listAccountId);
+    }
+
+    private static void handleAccountMergeFixups(List<Id> listAccountId) {
         // figure out which of type of accounts we are dealing with
         list<ID> listHHId = new list<ID>();
         list<ID> listOne2OneId = new list<ID>();
