@@ -204,6 +204,51 @@ public with sharing class BDI_DataImport_TEST {
 
     /*********************************************************************************************************
     operation:
+        import matching contacts within multiple di records in the same batch 
+    verify:
+        only two contacts created
+        only 1 household account created
+    **********************************************************************************************************/            
+    static testMethod void TwoDIDuplicateNewContactsDifferentOrder() {
+        if (strTestOnly != '*' && strTestOnly != 'TwoDIDuplicateNewContactsDifferentOrder') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(newDI('c1', 'C1', 'c2', 'C2'));
+        listDI.add(newDI('c2', 'C2'));
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name, AccountId from Contact order by Lastname];
+        system.assertEquals(2, listCon.size());
+        system.assertEquals('c1 C1', listCon[0].Name);
+        system.assertEquals('c2 C2', listCon[1].Name);
+        
+        // verify only one household account
+        list<Account> listAcc = [select Id, Name from Account];
+        system.assertEquals(1, listAcc.size());
+        system.assertEquals(listAcc[0].Id, listCon[0].AccountId);
+        system.assertEquals(listAcc[0].Id, listCon[1].AccountId);
+
+        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c, 
+            Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Name];
+        system.assertEquals(2, listDI.size());
+        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
+        system.assertEquals(listDI[1].Contact1Imported__c, listCon[1].Id);
+        system.assertNotEquals(null, listDI[0].HouseholdAccountImported__c);
+        system.assertNotEquals(null, listDI[1].HouseholdAccountImported__c);
+        system.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiCreated, listDI[1].Contact1ImportStatus__c);        
+        system.assertEquals(label.bdiMatched, listDI[0].Contact2ImportStatus__c);        
+    }
+
+    /*********************************************************************************************************
+    operation:
         import existing contacts within the same di record 
     verify:
         two contacts matched

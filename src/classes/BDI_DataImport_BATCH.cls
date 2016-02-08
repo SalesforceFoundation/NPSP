@@ -203,15 +203,26 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
 
             // update final status for each DI
             for (DataImport__c di: listDI) {
-            	if (di.Status__c == null)
+                if (di.Status__c == null)
                     di.Status__c = label.bdiImported;
                 di.ImportedDate__c = system.now();
                 di.ApexJobId__c = bc.getJobId();
+                
+                // because a contact might be first imported in C1 location, but then moved to another 
+                // household since it later shows up in C2, location, we can't be assured that the
+                // contact's original household account is the same (and valid). Thus we must fixup
+                // all Household Account Id lookups in our di records.
+                Contact c1 = ContactFromDi(di, 1);
+                if (c1 != null)
+                    di.HouseholdAccountImported__c = c1.AccountId;
             }
             
+            //UTIL_Debug.debug('****DJH final update to listDI: ' + listDI);
             update listDI;
 	
 	    } catch (Exception e) {
+	        //UTIL_Debug.debug('****DJH Exception ' + e);
+	        
             // we should only hit this exception if a truly unexpected runtime
             // error occurs.  not even database updates/inserts should get here,
             // since we now handle all database updates/inserts using the flavor
@@ -367,7 +378,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             if (Test.isRunningTest() && con.LastName != null && con.LastName.startsWith('FailTest'))
                 con.LastName = null;
         }
-        //upsert listConUpsert;
+        //UTIL_Debug.debug('****DJH about to upsert c1s: ' + listConUpsert);
         list<Database.UpsertResult> listUR = database.upsert(listConUpsert, false);
         for (integer i = 0; i < listUR.size(); i++) {
             Database.UpsertResult ur = listUR[i];
@@ -443,7 +454,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             if (Test.isRunningTest() && con.LastName != null && con.LastName.startsWith('FailTest'))
                 con.LastName = null;
         }
-        //upsert listConUpsert;
+        //UTIL_Debug.debug('****DJH about to upsert c2s: ' + listConUpsert);
         listUR = database.upsert(listConUpsert, false);
         for (integer i = 0; i < listUR.size(); i++) {
             Database.UpsertResult ur = listUR[i];
