@@ -316,7 +316,11 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
                     
                     // make sure they have permissions to modify the target field
                     // we can't do this in all tests, because many profiles won't have FLS set for all our new fields!
-                    if (!Test.isRunningTest() || failFieldLevelSecurity) {
+                    // also they may have enabled "Set Audit Fields upon Record Creation", which doesn't seem to change the
+                    // describe results!
+                    if (strField != 'CreatedDate' && 
+                        strField != 'LastModifiedDate' &&
+                        (!Test.isRunningTest() || failFieldLevelSecurity)) {
                         dfr = UTIL_Describe.getFieldDescribe(strBaseObj, strField);
                         if (failFieldLevelSecurity)
                             dfr = null;
