@@ -47,11 +47,8 @@ public with sharing class PSC_Opportunity_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        system.debug('njjc we made it 1');
-        
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate && userInfo.isMultiCurrencyOrganization()) {
             DMLWrapper dmlWrapper = new DmlWrapper();
-            system.debug('njjc we made it 2');
             
             dmlWrapper.objectsToUpdate.addAll((list<sObject>)updatePartialSoftCreditCurrencyFromParent(listNew, listOld));
 
@@ -63,8 +60,7 @@ public with sharing class PSC_Opportunity_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description For any given list of allocation parent objects, (Opportunity, Campaign, or Recurring 
-    * Donation,) queries for child allocations and updates currency to match parent.
+    * @description For any given list of opportunities, makes child PSCs match the opportunity's currency.
     * @param listNew The list of opportunities from trigger new. 
     * @param listOld The list of opportunities from trigger old. 
     * @return list<Partial_Soft_Credit__c> Partial soft credits with modified currency that need updating via DML.
@@ -84,14 +80,13 @@ public with sharing class PSC_Opportunity_TDTM extends TDTM_Runnable {
         //can't put mapOppIdToISO.keySet() in dynamic soql query, so creating new set to hold the IDs
         set<id> oppIds = mapOppIdToISO.keySet();
 
-        //query all allocations associated with the parents, update their ISO code and their amount if needed 
+        //query all PSCs associated with these opps, update their ISO code
         for (Partial_Soft_Credit__c psc : database.query('SELECT Id, Opportunity__c, CurrencyIsoCode FROM Partial_Soft_Credit__c WHERE Opportunity__c IN :oppIds')) {
             string oppCurrency = mapOppIdToISO.get(psc.Opportunity__c);
 
             psc.put('CurrencyIsoCode', oppCurrency);
             results.add(psc);
         }
-        system.debug('njjc results' + results);
 
         return results;
     }

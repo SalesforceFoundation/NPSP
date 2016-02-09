@@ -362,7 +362,6 @@ private class PMT_PaymentWizard_TEST {
             stagename = closedWonStage()
         );
         insert opp1;
-        list<opportunity> queryopp = [select id, currencyisocode from opportunity where id=:opp1.id];
         
         npe01__OppPayment__c[] opmtUpdate = [select id,npe01__paid__c, npe01__payment_amount__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp1.Id];
         opmtUpdate[0].npe01__payment_amount__c = 50;
