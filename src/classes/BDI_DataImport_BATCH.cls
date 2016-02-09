@@ -1219,13 +1219,13 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             MailingPostalCode__c from Address__c where Household_Account__c in :setHHId];
         map<String, Id> mapHHAddrKeyToId = new map<String, Id>();
         for (Address__c addr : listAddrExisting) {
-            mapHHAddrKeyToId.put(addr.Household_Account__c + addr.MailingStreet__c + addr.MailingCity__c + 
-                addr.MailingState__c + addr.MailingPostalCode__c, addr.Id);
+            mapHHAddrKeyToId.put(strKeyOfAddr(addr), addr.Id);
         }        
         
         map<string, string> mapDIFieldToAddrField = mapFieldsForDIObject('Address', UTIL_Namespace.StrTokenNSPrefix('Address__c'), listStrDataImportFields);
         list<Address__c> listAddrInsert = new list<Address__c>();
         list<DataImport__c> listDIInsert = new list<DataImport__c>();
+        map<String, Address__c> mapHHAddrKeyToAddrNew = new map<String, Address__c>();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
             if (di.Status__c == label.bdiFailed)
@@ -1251,14 +1251,21 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
 	            }
             	
             	// check to see if we already have this address in this hh.
-            	ID idAddr = mapHHAddrKeyToId.get(addr.Household_Account__c + addr.MailingStreet__c + addr.MailingCity__c + addr.MailingState__c + addr.MailingPostalCode__c);
+            	ID idAddr = mapHHAddrKeyToId.get(strKeyOfAddr(addr));
             	if (idAddr != null) {
             	   di.HomeAddressImported__c = idAddr;
             	   di.HomeAddressImportStatus__c = label.bdiMatched;
             	} else {
+            	    // see if we are already creating this new address
+            	    Address__c addrNew = mapHHAddrKeyToAddrNew.get(strKeyOfAddr(addr));
+            	    if (addrNew != null) {
+            	        addr = addrNew;
+            	    } else {
+                        mapHHAddrKeyToAddrNew.put(strKeyOfAddr(addr), addr);            	        
+                        listAddrInsert.add(addr);
+                        listDIInsert.add(di);
+            	    }
                     mapDIIdToAddr.put(di.Id, addr);
-                    listAddrInsert.add(addr);
-                    listDIInsert.add(di);
             	}
             }
             if (Test.isRunningTest() && addr.MailingCity__c != null && addr.MailingCity__c.startsWith('FailTest')) {
@@ -1301,6 +1308,11 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
                 }
             }
         }
+    }
+
+    // returns the unique address key for the given address    
+    private static string strKeyOfAddr(Address__c addr) {
+        return addr.Household_Account__c + addr.MailingStreet__c + addr.MailingCity__c + addr.MailingState__c + addr.MailingPostalCode__c;
     }
 
     /*******************************************************************************************************

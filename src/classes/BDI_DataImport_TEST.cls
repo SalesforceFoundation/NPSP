@@ -616,6 +616,87 @@ public with sharing class BDI_DataImport_TEST {
     
     /*********************************************************************************************************
     operation:
+        import duplicate contacts with duplicate home addresses 
+    verify:
+        no duplicate address objects created
+        contacts' mailing address set
+        hh accounts' billing address set
+    **********************************************************************************************************/            
+    static testMethod void ManyDISameHomeAddresses() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDIHomeAddresses') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(newDI('c1', 'C1', 'c2', 'C2'));
+        listDI.add(newDI('c1', 'C1'));
+        listDI.add(newDI('c1', 'C1'));
+        listDI.add(newDI('c2', 'C2'));
+        listDI.add(newDI('c2', 'C2'));
+
+        // add same address to all
+        for (DataImport__c di : listDI) {        
+            di.Home_Street__c = '123 45th St NE';
+            di.Home_City__c = 'Seattle';
+            di.Home_State_Province__c = 'Washington';
+            di.Home_Zip_Postal_Code__c = '98052';
+            di.Home_Country__c = 'United States';
+        }
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name, AccountId, MailingStreet, MailingCity, MailingState, 
+            MailingPostalCode, MailingCountry from Contact order by Lastname];
+        system.assertEquals(2, listCon.size());
+        for (Contact con : listCon) {        
+            system.assertEquals(listDI[0].Home_Street__c, con.MailingStreet);
+            system.assertEquals(listDI[0].Home_City__c, con.MailingCity);
+            system.assertEquals(listDI[0].Home_State_Province__c, con.MailingState);
+            system.assertEquals(listDI[0].Home_Zip_Postal_Code__c, con.MailingPostalCode);
+            system.assertEquals(listDI[0].Home_Country__c, con.MailingCountry);
+        }
+        
+        list<Address__c> listAddr = [select Id, Household_Account__c, MailingStreet__c, MailingCity__c, MailingState__c, 
+            MailingPostalCode__c, MailingCountry__c from Address__c order by MailingCity__c]; 
+        system.assertEquals(1, listAddr.size());
+        system.assertEquals(listDI[0].Home_Street__c, listAddr[0].MailingStreet__c);
+        system.assertEquals(listDI[0].Home_City__c, listAddr[0].MailingCity__c);
+        system.assertEquals(listDI[0].Home_State_Province__c, listAddr[0].MailingState__c);
+        system.assertEquals(listDI[0].Home_Zip_Postal_Code__c, listAddr[0].MailingPostalCode__c);
+        system.assertEquals(listDI[0].Home_Country__c, listAddr[0].MailingCountry__c);
+        
+        list<Account> listAcc = [select Id, Name, BillingStreet, BillingCity, BillingState, 
+            BillingPostalCode, BillingCountry from Account order by Name];
+        system.assertEquals(1, listAcc.size());
+        system.assertEquals(listDI[0].Home_Street__c, listAcc[0].BillingStreet);
+        system.assertEquals(listDI[0].Home_City__c, listAcc[0].BillingCity);
+        system.assertEquals(listDI[0].Home_State_Province__c, listAcc[0].BillingState);
+        system.assertEquals(listDI[0].Home_Zip_Postal_Code__c, listAcc[0].BillingPostalCode);
+        system.assertEquals(listDI[0].Home_Country__c, listAcc[0].BillingCountry);                
+
+        listDI = [select HomeAddressImported__c, HomeAddressImportStatus__c from DataImport__c order by Name];
+        system.assertEquals(5, listDI.size());
+        integer cCreated = 0;
+        integer cMatched = 0;
+        for (DataImport__c di : listDI) {
+            system.assertEquals(di.HomeAddressImported__c, listAddr[0].Id);
+            if (di.HomeAddressImportStatus__c == label.bdiCreated)
+                cCreated++; 
+            else if (di.HomeAddressImportStatus__c == label.bdiMatched)
+                cMatched++; 
+        }
+        // we didn't have an easy way to track the specific DI record that caused the addr to be created vs matched
+        // in these duplicate (but new) scenarios, so we will live with marking them all as created.
+        system.assertEquals(5, cCreated);
+        system.assertEquals(0, cMatched);
+    }
+
+    /*********************************************************************************************************
+    operation:
         import contacts with home addresses, while address management is disabled
     verify:
         address objects NOT created
