@@ -73,7 +73,7 @@
                 <apex:outputPanel styleClass="slds-col slds-align-middle" id="totalSelected">
                     <apex:outputPanel rendered="{!isAmount}">
                         <label class="slds-form-element__label" for="txtPSCAmountPercent">{!$Label.pscManageSoftCreditsPSCAmount}</label><br/>
-                        <apex:outputText id="txtPSCAmountPercent" value="${0, number,###,###,###,##0.00}"><apex:param value="{!totalSoftCreditAmount}" /></apex:outputText>
+                        <apex:outputText id="txtPSCAmountPercent" value="{0,number,currency}"><apex:param value="{!totalSoftCreditAmount}" /></apex:outputText>
                     </apex:outputPanel>
                     <apex:outputPanel rendered="{!NOT(isAmount)}">
                         <label class="slds-form-element__label" for="txtPSCAmount">{!$Label.pscManageSoftCreditsPSCAmount}</label><br/>
@@ -83,7 +83,7 @@
                 <apex:outputPanel styleClass="slds-col slds-align-middle" id="totalUn">
                     <apex:outputPanel rendered="{!isAmount}">
                         <label class="slds-form-element__label" for="txtUnaccountedPercent">{!$Label.pscManageSoftCreditsUnaccounted}</label><br/>
-                        <apex:outputText id="txtUnaccountedPercent" value="${0, number,###,###,###,##0.00}"><apex:param value="{!opp.Amount-totalSoftCreditAmount}" /></apex:outputText>  
+                        <apex:outputText id="txtUnaccountedPercent" value="{0,number,currency}"><apex:param value="{!opp.Amount-totalSoftCreditAmount}" /></apex:outputText>  
                     </apex:outputPanel>
                     <apex:outputPanel rendered="{!NOT(isAmount)}">
                         <label class="slds-form-element__label" for="txtUnaccounted">{!$Label.pscManageSoftCreditsUnaccounted}</label><br/>
