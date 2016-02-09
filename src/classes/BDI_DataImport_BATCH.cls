@@ -212,9 +212,13 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
                 // household since it later shows up in C2, location, we can't be assured that the
                 // contact's original household account is the same (and valid). Thus we must fixup
                 // all Household Account Id lookups in our di records.
-                Contact c1 = ContactFromDi(di, 1);
-                if (c1 != null)
-                    di.HouseholdAccountImported__c = c1.AccountId;
+                if (di.Status__c == label.bdiImported) {
+                    Contact c1 = ContactFromDi(di, 1);
+                    if (c1 != null)
+                        di.HouseholdAccountImported__c = c1.AccountId;
+                } else {
+                    di.HouseholdAccountImported__c = null;                    
+                }
             }
             
             //UTIL_Debug.debug('****DJH final update to listDI: ' + listDI);
