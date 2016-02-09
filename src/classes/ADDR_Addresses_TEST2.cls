@@ -1425,8 +1425,8 @@ public with sharing class ADDR_Addresses_TEST2 {
             con.MailingState = null;
             con.MailingCountry = null;
 	        if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
-	            con.MailingStateCode = null;
-	            con.MailingCountryCode = null;
+	            con.put('MailingStateCode', null);
+	            con.put('MailingCountryCode', null);
 	        }                
             listCon.add(con);
         }
