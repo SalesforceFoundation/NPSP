@@ -44,15 +44,15 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
     /*******************************************************************************************************
     * @description temporary Opp to hold the current Total Soft Credit Amount and currency
     */
-    public Opportunity oppTotalSoftCreditAmount {
+    public Opportunity oppTotalSoftCredit {
         get {
-            if (oppTotalSoftCreditAmount == null) {
-                oppTotalSoftCreditAmount = new Opportunity();
+            if (oppTotalSoftCredit == null) {
+                oppTotalSoftCredit = new Opportunity();
                 if (userInfo.isMultiCurrencyOrganization()) 
-                    oppTotalSoftCreditAmount.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
+                    oppTotalSoftCredit.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
             }
-            oppTotalSoftCreditAmount.Amount = getTotalSoftCreditAmount();
-            return oppTotalSoftCreditAmount;
+            oppTotalSoftCredit.Amount = getTotalSoftCreditAmount();
+            return oppTotalSoftCredit;
         }
         private set;
     }
@@ -67,7 +67,7 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
                 if (userInfo.isMultiCurrencyOrganization()) 
                     oppTotalUnaccounted.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
             }
-            oppTotalUnaccounted.Amount = opp.Amount - oppTotalSoftCreditAmount.Amount;
+            oppTotalUnaccounted.Amount = opp.Amount - oppTotalSoftCredit.Amount;
             return oppTotalUnaccounted;
         }
         private set;
