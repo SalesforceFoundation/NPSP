@@ -948,7 +948,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiComplete</shortDescription>
-        <value>- Completed</value>
+        <value>Completed</value>
     </labels>
     <labels>
         <fullName>bdiCompleteWithErrors</fullName>
@@ -956,7 +956,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiCompleteWithErrors</shortDescription>
-        <value>- Errors</value>
+        <value>Errors</value>
     </labels>
     <labels>
         <fullName>bdiContactCustomIdError</fullName>
