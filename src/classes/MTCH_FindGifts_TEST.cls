@@ -120,10 +120,10 @@ public with sharing class MTCH_FindGifts_TEST {
         system.assertEquals(cItem/2, ctrl.selection.size());
         system.assertEquals(false, ctrl.selection.get(listOpp[0].Id));
         system.assertEquals(false, ctrl.selection.get(listOpp[2].Id));
-        system.assertEquals(0, ctrl.getTotalSelected());
+        system.assertEquals(0, ctrl.oppTotalSelected.Amount);
         ctrl.selection.put(listOpp[0].Id, true);    
         ctrl.selection.put(listOpp[2].Id, true);
-        system.assertEquals(200, ctrl.getTotalSelected());
+        system.assertEquals(200, ctrl.oppTotalSelected.Amount);
         system.assertEquals(0, [select count() from Partial_Soft_Credit__c]);
         test.startTest();
         system.assertNotEquals(null, ctrl.saveAndClose());
@@ -146,10 +146,10 @@ public with sharing class MTCH_FindGifts_TEST {
         system.assertEquals(cItem/2, ctrl.selection.size());
         system.assertEquals(false, ctrl.selection.get(listOpp[0].Id));
         system.assertEquals(false, ctrl.selection.get(listOpp[2].Id));
-        system.assertEquals(0, ctrl.getTotalSelected());
+        system.assertEquals(0, ctrl.oppTotalSelected.Amount);
         ctrl.selection.put(listOpp[0].Id, true);    
         ctrl.selection.put(listOpp[2].Id, true);
-        system.assertEquals(100, ctrl.getTotalSelected());
+        system.assertEquals(100, ctrl.oppTotalSelected.Amount);
         system.assertEquals(0, [select count() from Partial_Soft_Credit__c]);
         test.startTest();
         system.assertNotEquals(null, ctrl.saveAndClose());
@@ -173,10 +173,10 @@ public with sharing class MTCH_FindGifts_TEST {
         system.assertEquals(cItem/2, ctrl.selection.size());
         system.assertEquals(true, ctrl.selection.get(listOpp[0].Id));
         system.assertEquals(true, ctrl.selection.get(listOpp[2].Id));
-        system.assertEquals(200, ctrl.getTotalSelected());
+        system.assertEquals(200, ctrl.oppTotalSelected.Amount);
         ctrl.selection.put(listOpp[0].Id, false);    
         ctrl.selection.put(listOpp[2].Id, false);
-        system.assertEquals(0, ctrl.getTotalSelected());
+        system.assertEquals(0, ctrl.oppTotalSelected.Amount);
         system.assertEquals(2, [select count() from Partial_Soft_Credit__c]);
         test.startTest();
         system.assertNotEquals(null, ctrl.saveAndClose());
@@ -208,10 +208,10 @@ public with sharing class MTCH_FindGifts_TEST {
         // select from the searched opps
         system.assertEquals(false, ctrl.selection.get(listOpp[5].Id));
         system.assertEquals(false, ctrl.selection.get(listOpp[6].Id));
-        system.assertEquals(0, ctrl.getTotalSelected());
+        system.assertEquals(0, ctrl.oppTotalSelected.Amount);
         ctrl.selection.put(listOpp[5].Id, true);    
         ctrl.selection.put(listOpp[6].Id, true);
-        system.assertEquals(200, ctrl.getTotalSelected());
+        system.assertEquals(200, ctrl.oppTotalSelected.Amount);
         system.assertEquals(0, [select count() from Partial_Soft_Credit__c]);
         test.startTest();
         system.assertNotEquals(null, ctrl.saveAndClose());
