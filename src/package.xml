@@ -240,6 +240,7 @@
         <members>STG_DataBoundMultiSelect</members>
         <members>STG_PageHeader</members>
         <members>UTIL_JobProgress</members>
+        <members>UTIL_JobProgressLightning</members>
         <members>UTIL_SoqlListView</members>
         <members>UTIL_Typeahead</members>
         <name>ApexComponent</name>
