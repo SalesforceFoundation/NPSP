@@ -572,6 +572,7 @@ public with sharing class CON_ContactMerge_CTRL {
         } catch (exception ex) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, ex.getMessage()));         
         }
+        step = 2;
         return null;
     }
     
