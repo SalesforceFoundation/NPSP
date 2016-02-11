@@ -49,7 +49,10 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             strComma = ', ';
         }
         strSoql += ' FROM ' + UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
-        strSoql += ' WHERE Status__c <> \'' + label.bdiImported + '\' ';        
+        strSoql += ' WHERE Status__c <> \'' + label.bdiImported + '\' ';   
+        // this ensures consistency for our test code, but also should
+        // help users figure out import problems by importing in a consistent order.
+        strSoql += ' ORDER BY Name ';                   
     }
     
     public Database.QueryLocator start(Database.BatchableContext bc) {
