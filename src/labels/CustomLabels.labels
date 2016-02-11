@@ -2828,6 +2828,14 @@
         <value>Amount or Percent</value>
     </labels>
     <labels>
+        <fullName>pscManageSoftCreditsCantChangeCurrency</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsCantChangeCurrency</shortDescription>
+        <value>You can&apos;t modify partial soft credit currencies directly. A partial soft credit&apos;s currency is updated when the parent opportunity&apos;s currency is modified.</value>
+    </labels>
+    <labels>
         <fullName>pscManageSoftCreditsFull</fullName>
         <categories>Manage Soft Credits</categories>
         <language>en_US</language>
