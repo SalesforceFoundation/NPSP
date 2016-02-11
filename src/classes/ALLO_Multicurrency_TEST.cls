@@ -245,6 +245,7 @@ public class ALLO_Multicurrency_TEST {
         opp.put('CurrencyIsoCode', nonDefaultCurrencyType.get('IsoCode'));
         insert opp;
 
+
         list<Allocation__c>  queryAllo = [SELECT Id, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c];
         system.assertEquals(0,queryAllo.size(), 'No default allocation should be created.');
 
@@ -252,7 +253,8 @@ public class ALLO_Multicurrency_TEST {
         id batchProcessId = database.executeBatch(new ALLO_MakeDefaultAllocations_BATCH());
         Test.stopTest();
 
-        list<Allocation__c> alloQuery = database.query('SELECT Id, Amount__c, CurrencyIsoCode FROM Allocation__c WHERE Opportunity__c = :opp.id');
+        id oppId = opp.id;
+        list<Allocation__c> alloQuery = database.query('SELECT Id, Amount__c, CurrencyIsoCode FROM Allocation__c WHERE Opportunity__c = :oppid');
         system.assertEquals(1,alloQuery.size(), 'A default allocation should be created.');
         system.assertEquals(nonDefaultCurrencyType.get('IsoCode'),alloQuery[0].get('CurrencyIsoCode'),'Allocation should inherit the parent Opportunity currency code.');
         
