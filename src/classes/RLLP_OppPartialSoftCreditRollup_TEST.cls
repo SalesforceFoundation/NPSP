@@ -36,6 +36,12 @@
 @isTest
 private class RLLP_OppPartialSoftCreditRollup_TEST {
 
+    /*********************************************************************************************************
+    * @description If you only want to run a single test in this class, fill in its name here.
+    * If you want to run all tests, then use '*'
+    */
+    private static string strTestOnly = '*';
+
     /*******************************************************************************************************
     * @description test data for Soft Credit and Partial Soft Credit tests
     */ 
@@ -99,6 +105,7 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
     * @return void
     */ 
     static testmethod void testOLDSoftCreditRollups() {
+        if (strTestOnly != '*' && strTestOnly != 'testOLDSoftCreditRollups') return;
         createPSCData(cContactTest, cOppTest, amountTest);
         
         RLLP_OppRollup rllp = new RLLP_OppRollup();
@@ -129,6 +136,7 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
     * @return void
     */ 
     static testmethod void testPartialSoftCreditRollups() {
+        if (strTestOnly != '*' && strTestOnly != 'testPartialSoftCreditRollups') return;
         createPSCData(cContactTest, cOppTest, amountTest);
 
         RLLP_OppRollup rllp = new RLLP_OppRollup();
@@ -160,6 +168,7 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
     * @return void
     */ 
     static testmethod void testPartialSoftCreditRollupsAllStats() {
+        if (strTestOnly != '*' && strTestOnly != 'testPartialSoftCreditRollupsAllStats') return;
         
         Contact con = new Contact(lastname='Testy');
         insert con;
@@ -256,5 +265,119 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
         system.assertEquals(60, con.Soft_Credit_Last_N_Days__c);
         system.assertEquals(6, con.Number_of_Soft_Credits_Last_N_Days__c);
 
+    }
+
+    /*******************************************************************************************************
+    * @description Tests the NPSP Soft Credit rollups in multicurrency enabled orgs.
+    * @return void
+    */ 
+    static testmethod void testMulticurrencyPartialSoftCreditRollups() {
+        if (strTestOnly != '*' && strTestOnly != 'testMulticurrencyPartialSoftCreditRollups') return;
+        //only run test in multicurrency orgs
+        if (!RLLP_OppRollup_UTIL.isMultiCurrency())
+            return;
+
+        sObject nonDefaultCurrencyType;
+        sObject defaultCurrencyType;
+        
+        for (sObject ct : database.query('select IsoCode, ConversionRate, IsCorporate from CurrencyType')) {
+            if ((boolean)ct.get('IsCorporate')) 
+                defaultCurrencyType = ct;
+            else
+                nonDefaultCurrencyType = ct;
+        }
+
+        //if we don't have a non default currency, we can't run our test
+        if (nonDefaultCurrencyType==null)
+            return;
+
+        // create a Contact
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        insert con;
+        
+        // create cOpp Opportunities for this Contact
+        list<Opportunity> listOpp = new list<Opportunity>();
+        for (integer i = 0; i < 4; i++) {
+            //make half our opps of non-default currency
+            string isoCode = math.mod(i,2)==0 ? (string)defaultCurrencyType.get('IsoCode') : (string)nonDefaultCurrencyType.get('IsoCode');
+
+            Opportunity opp = new Opportunity(Name = 'foo', Amount = 10, Primary_Contact__c = con.id, CloseDate = system.Today(), StageName = UTIL_UnitTestData_TEST.getClosedWonStage());
+            opp.put('CurrencyIsoCode', isoCode);
+            listOpp.add(opp);
+        } 
+        insert listOpp;
+        
+        // primary OCR's automatically created
+        list<OpportunityContactRole> listOCR = [select Id, ContactId, OpportunityId, Role, IsPrimary from OpportunityContactRole];
+        system.assertEquals(listOpp.size(), listOCR.size());
+
+        // change them to Soft Credit OCR's
+        for (OpportunityContactRole ocr : listOCR) {
+            ocr.Role = 'Soft Credit';
+            ocr.IsPrimary = false;
+        }
+        update listOCR;
+        
+        // create our Partial Soft Credits
+        list<Partial_Soft_Credit__c> listPSC = new list<Partial_Soft_Credit__c>();
+        for (OpportunityContactRole ocr : listOCR) {
+            listPSC.add(new Partial_Soft_Credit__c(
+                Contact__c = ocr.ContactId,
+                Opportunity__c = ocr.OpportunityId,
+                Role_Name__c = ocr.Role,
+                Contact_Role_ID__c = ocr.Id,
+                Amount__c = 5
+            ));
+        }
+        insert listPSC;
+
+        //verify currency iso code was correctly transfered to PSCs
+        list<Partial_Soft_Credit__c> queryPSC = database.query('SELECT Id, CurrencyIsoCode, Opportunity__r.CurrencyIsoCode FROM Partial_Soft_Credit__c WHERE Id IN: listPSC');
+        for (Partial_Soft_Credit__c psc : queryPSC)
+            system.assertEquals(psc.get('CurrencyIsoCode'), psc.getSObject('Opportunity__r').get('CurrencyIsoCode'), 'Currency ISO codes should match the opportunity iso code.');
+
+        RLLP_OppRollup rllp = new RLLP_OppRollup();
+        RLLP_OppRollup_UTIL util = new RLLP_OppRollup_UTIL();        
+        id conid = con.id;
+        listCon = (list<Contact>)Database.query(util.buildContactQuery() + ' where id = :conid');
+
+        Test.startTest();
+        UTIL_Debug.debugWithInfo('DJH: testPartialSoftCreditRollups pre ');
+        rllp.rollupSoftCreditsWithPartialSupport(listCon);
+        UTIL_Debug.debugWithInfo('DJH: testPartialSoftCreditRollups post ');
+        Test.stopTest();
+        UTIL_Debug.debugWithInfo('DJH: testPartialSoftCreditRollups after stopTest');
+        
+        // verify results
+        listCon = [select Id, Lastname, npo02__Soft_Credit_This_Year__c, npo02__Soft_Credit_Total__c,
+            Number_of_Soft_Credits_This_Year__c, Number_of_Soft_Credits__c from Contact];
+        system.assertEquals(1, listCon.size());
+        
+        decimal convertedAmount = 2 * RLLP_OppRollup_UTIL.convertCurrency((string)nonDefaultCurrencyType.get('IsoCode'), (string)defaultCurrencyType.get('IsoCode'), 5);
+
+        system.assertEquals(10+convertedAmount, listCon[0].npo02__Soft_Credit_This_Year__c);
+        system.assertEquals(10+convertedAmount, listCon[0].npo02__Soft_Credit_Total__c);
+        system.assertEquals(4, listCon[0].Number_of_Soft_Credits_This_Year__c);
+        system.assertEquals(4, listCon[0].Number_of_Soft_Credits__c);
+
+        //update opportunity with default currency to non-default currency, verify PSC currency is updated
+        listOpp[0].put('CurrencyIsoCode', nonDefaultCurrencyType.get('IsoCode'));
+        update listOpp[0];
+
+        id oppid = listOpp[0].id;
+        queryPSC = database.query('SELECT Id, CurrencyIsoCode FROM Partial_Soft_Credit__c WHERE Opportunity__c = :oppid');
+        system.assertEquals(nonDefaultCurrencyType.get('IsoCode'), queryPSC[0].get('CurrencyIsoCode'), 'Currency ISO code should match the opportunity iso code.');
+
+        //try to change PSC currency after resetting flag, verify that the operation is blocked
+        queryPSC[0].put('CurrencyIsoCode', defaultCurrencyType.get('IsoCode'));
+        PSC_PartialSoftCredit_TDTM.blockCurrencyChange = true;
+        
+        Exception ex = null;
+        try {
+            update queryPSC[0];
+        } catch (Exception e) {
+            ex = e;
+        }
+        system.assertNotEquals(null,ex,'An exception should be caught.');
     }
 }
