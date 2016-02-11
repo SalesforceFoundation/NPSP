@@ -401,6 +401,48 @@ private with sharing class BDI_DataImport_TEST2 {
 
    /*********************************************************************************************************
     operation:
+        import existing contacts within multiple di records in the same batch, using Custom Unique Id matching
+    verify:
+        all contacts matched
+    **********************************************************************************************************/            
+    static testMethod void ManyDIUniqueIdNotMatchingExistingContacts() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdNotMatchingExistingContacts') return;
+            
+         // existing contacts
+        list<Contact> listConExisting = new list<Contact>();
+        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@c1.com', Title='ID1'));
+        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@c1.com', Title='ID2'));
+        insert listConExisting;
+ 
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@c1.com', Contact1_Title__c='ID3'));
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@c1.com', Contact1_Title__c='ID4'));
+        insert listDI;
+        
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        // for testing, we need to use an existing contact field that exists on both Contact and the DI.
+        diSettings.Contact_Custom_Unique_ID__c = 'Title';
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name, Email, Title from Contact order by Title];
+        system.assertEquals(4, listCon.size());
+        
+        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Contact1_Title__c];
+        system.assertEquals(2, listDI.size());
+        system.assertEquals(listDI[0].Contact1Imported__c, listCon[2].Id);
+        system.assertEquals(listDI[1].Contact1Imported__c, listCon[3].Id);
+        system.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiCreated, listDI[1].Contact1ImportStatus__c);        
+    }
+
+   /*********************************************************************************************************
+    operation:
         import new contacts within multiple di records in the same batch, using Custom Unique Id matching
     verify:
         all contacts created, since unique Id's provided
@@ -467,14 +509,50 @@ private with sharing class BDI_DataImport_TEST2 {
     
         // verify expected results
         list<Account> listAcc = [select Id, Name, Website from Account];
+        system.assertEquals(3, listAcc.size());
+        
+        listDI = [select Account1Imported__c, Account1ImportStatus__c, Account1_Name__c, Account2Imported__c, Account2ImportStatus__c from DataImport__c order by Account1_Website__c];
+        system.assertEquals(2, listDI.size());
+        system.assertEquals(listDI[0].Account1Imported__c, listAccExisting[0].Id);
+        system.assertEquals(listDI[0].Account1_Name__c, listAcc[0].Name);
+        system.assertNotEquals(listDI[1].Account1Imported__c, listAccExisting[1].Id);
+        system.assertEquals(label.bdiMatched, listDI[0].Account1ImportStatus__c);
+        system.assertEquals(label.bdiCreated, listDI[1].Account1ImportStatus__c);        
+    }
+
+   /*********************************************************************************************************
+    operation:
+        import new accounts within multiple di records in the same batch, using Custom Unique Id matching
+    verify:
+        all accounts matched
+    **********************************************************************************************************/            
+    static testMethod void ManyDIUniqueIdNewAccounts() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdNewAccounts') return;
+            
+ 
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Website__c='a1.com'));
+        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Website__c='z.com'));
+        insert listDI;
+        
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        // for testing, we need to use an existing account field that exists on both Account and the DI.
+        diSettings.Account_Custom_Unique_ID__c = 'Website';
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Account> listAcc = [select Id, Name, Website from Account];
         system.assertEquals(2, listAcc.size());
         
         listDI = [select Account1Imported__c, Account1ImportStatus__c, Account2Imported__c, Account2ImportStatus__c from DataImport__c order by Account1_Website__c];
         system.assertEquals(2, listDI.size());
-        system.assertEquals(listDI[0].Account1Imported__c, listAccExisting[0].Id);
-        system.assertEquals(listDI[1].Account1Imported__c, listAccExisting[1].Id);
-        system.assertEquals(label.bdiMatched, listDI[0].Account1ImportStatus__c);
-        system.assertEquals(label.bdiMatched, listDI[1].Account1ImportStatus__c);        
+        system.assertEquals(label.bdiCreated, listDI[0].Account1ImportStatus__c);
+        system.assertEquals(label.bdiCreated, listDI[1].Account1ImportStatus__c);        
     }
 
     /*********************************************************************************************************
