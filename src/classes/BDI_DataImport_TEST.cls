@@ -1151,4 +1151,42 @@ public with sharing class BDI_DataImport_TEST {
         system.assertEquals(label.bdiImported, listDI[0].Status__c);        
         system.assertEquals(label.bdiFailed, listDI[1].Status__c);        
     }
+
+    /*********************************************************************************************************
+    operation:
+        import different contacts within multiple di records in the same batch setting Household fields
+    verify:
+        two contacts created
+    **********************************************************************************************************/            
+    static testMethod void TwoDITwoNewContactsHouseholdFields() {
+        if (strTestOnly != '*' && strTestOnly != 'TwoDITwoNewContactsHouseholdFields') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Contact1_Lastname__c = 'c1', Household_Phone__c = '425-111-2222'));
+        listDI.add(new DataImport__c(Contact1_Lastname__c = 'c2', Household_Phone__c = '425-111-2222'));
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name, AccountId, Account.Phone from Contact order by Lastname];
+        system.assertEquals(2, listCon.size());
+        system.assertNotEquals(listCon[1].Name, listCon[0].Name);
+        system.assertEquals(listDI[0].Household_Phone__c, listCon[0].Account.Phone);
+        system.assertEquals(listDI[1].Household_Phone__c, listCon[1].Account.Phone);
+        
+        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c, 
+            Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Contact1Imported__c];
+        system.assertEquals(2, listDI.size());
+        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
+        system.assertEquals(listDI[1].Contact1Imported__c, listCon[1].Id);
+        system.assertNotEquals(null, listDI[0].HouseholdAccountImported__c);
+        system.assertNotEquals(null, listDI[1].HouseholdAccountImported__c);
+        system.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiCreated, listDI[1].Contact1ImportStatus__c);        
+    }
 }

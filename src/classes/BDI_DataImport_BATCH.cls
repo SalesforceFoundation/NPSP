@@ -191,6 +191,8 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
 
             importContactsAndHouseholds();
             
+            importHouseholdAccountFields();
+            
             importAccounts();
             
             importAddresses();
@@ -481,6 +483,57 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         }
     }
 
+    /*******************************************************************************************************
+    * @description Imports any custom fields specified for Household Accounts
+    * @return void
+    */
+    private void importHouseholdAccountFields() {
+        
+        // get our mapping of household custom fields
+        map<string, string> mapDIFieldToHHField = mapFieldsForDIObject('Household', 'Account', listStrDataImportFields);
+        
+        // bail out if no custom fields
+        if (mapDIFieldToHHField.size() == 0)
+            return;
+        
+        // holds the Households that need updating
+        list<Account> listAccHHUpdate = new list<Account>();
+        set<Id> setHHIdUpdate = new set<Id>();
+        list<DataImport__c> listDIUpdate = new list<DataImport__c>();
+        
+        for (DataImport__c di : listDI) {
+            // skip di's that already have an error
+            if (di.Status__c == label.bdiFailed)
+               continue;
+            if (di.HouseholdAccountImported__c == null)
+                continue;
+            
+            boolean isModified = false;
+            Account accHH = new Account(Id=di.HouseholdAccountImported__c);                
+            for (string strDIField : mapDIFieldToHHField.keySet()) {
+                if (di.get(strDIField) != null) {
+                    accHH.put(mapDIFieldToHHField.get(strDIField), di.get(strDIField));
+                    isModified = true;
+                }
+            }
+                        
+            if (isModified && setHHIdUpdate.add(accHH.Id)) {
+                listAccHHUpdate.add(accHH);
+                listDIUpdate.add(di);
+            }
+            
+        }
+        
+        //UTIL_Debug.debug('****DJH about to upsert household Accounts: ' + listAccHHUpdate);
+        list<Database.UpsertResult> listUR = database.upsert(listAccHHUpdate, false);
+        for (integer i = 0; i < listUR.size(); i++) {
+            Database.UpsertResult ur = listUR[i];
+            if (!ur.isSuccess()) {
+                LogBDIError(listDIUpdate[i], ur.getErrors()[0].getMessage(), null);
+            }
+        }        
+    }
+    
     // for every di with C1 or C2 data, make sure they have a lastname
     private void verifyContactData() {    
         for (DataImport__c di: listDI) {
