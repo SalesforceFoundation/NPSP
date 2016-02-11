@@ -36,6 +36,12 @@
 @isTest
 private class PMT_PaymentWizard_TEST {
 
+    /*********************************************************************************************************
+    * @description If you only want to run a single test in this class, fill in its name here.
+    * If you want to run all tests, then use '*'
+    */
+    private static string strTestOnly = '*';
+
     /***  TEST METHODS ***/
     @isTest
     public static string closedWonStage(){      
@@ -49,9 +55,8 @@ private class PMT_PaymentWizard_TEST {
         return closedWonStage;      
     }     
     
-
-    
     public static testMethod void test_paymentsEnabled_WriteOff() {
+        if (strTestOnly != '*' && strTestOnly != 'test_paymentsEnabled_WriteOff') return;
         
         npe01__Contacts_And_Orgs_Settings__c PaymentsSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true));
         
@@ -126,6 +131,7 @@ private class PMT_PaymentWizard_TEST {
     }
     
     public static testMethod void test_PageElementsMonthly() {
+        if (strTestOnly != '*' && strTestOnly != 'test_PageElementsMonthly') return;
         
         // create test data
         Account acct = new Account (
@@ -192,6 +198,7 @@ private class PMT_PaymentWizard_TEST {
     }
     
     public static testMethod void test_PageElementsWeekly() {
+        if (strTestOnly != '*' && strTestOnly != 'test_PageElementsWeekly') return;
                
         // create test data
         Account acct = new Account (
@@ -247,6 +254,7 @@ private class PMT_PaymentWizard_TEST {
     }
     
     public static testMethod void test_PageElementsYearly() {
+        if (strTestOnly != '*' && strTestOnly != 'test_PageElementsYearly') return;
         
         // create test data
         Account acct = new Account (
@@ -301,6 +309,7 @@ private class PMT_PaymentWizard_TEST {
     }
     
     public static testMethod void test_nullOpps() {
+        if (strTestOnly != '*' && strTestOnly != 'test_nullOpps') return;
     
         // create the page 
         PageReference pageRef=Page.PMT_PaymentWizard; 
@@ -321,6 +330,7 @@ private class PMT_PaymentWizard_TEST {
     }
     
     public static testMethod void test_publicGetters() {
+        if (strTestOnly != '*' && strTestOnly != 'test_publicGetters') return;
         
         // instantiate the controller
         PMT_PaymentWizard_CTRL controller=new PMT_PaymentWizard_CTRL();
@@ -335,6 +345,7 @@ private class PMT_PaymentWizard_TEST {
 
 
     public static testMethod void test_RemovePaidPayments() {
+        if (strTestOnly != '*' && strTestOnly != 'test_RemovePaidPayments') return;
         
         npe01__Contacts_And_Orgs_Settings__c PaymentsSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true));
         
@@ -411,6 +422,7 @@ private class PMT_PaymentWizard_TEST {
         payment mappings correctly applied from Opportunity to each Payment
     **********************************************************************************************************/            
     public static testMethod void test_PaymentMappingsApplied() {
+        if (strTestOnly != '*' && strTestOnly != 'test_PaymentMappingsApplied') return;
         
         // create our Payment Field Mapping
         npe01__Payment_Field_Mapping_Settings__c pfmNew = new npe01__Payment_Field_Mapping_Settings__c();
