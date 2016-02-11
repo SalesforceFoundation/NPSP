@@ -129,6 +129,7 @@
         <members>PMT_Payment_TDTM</members>
         <members>PSC_ManageSoftCredits_CTRL</members>
         <members>PSC_ManageSoftCredits_TEST</members>
+        <members>PSC_Opportunity_TDTM</members>
         <members>PSC_PartialSoftCredit_TDTM</members>
         <members>PSC_PartialSoftCredit_TEST</members>
         <members>RD_AddDonationsBTN_CTRL</members>
@@ -1005,6 +1006,7 @@
         <members>pscManageSoftCreditsAmount</members>
         <members>pscManageSoftCreditsAmountMissing</members>
         <members>pscManageSoftCreditsAmountOrPercent</members>
+        <members>pscManageSoftCreditsCantChangeCurrency</members>
         <members>pscManageSoftCreditsFull</members>
         <members>pscManageSoftCreditsInvalidContact</members>
         <members>pscManageSoftCreditsNoRoles</members>

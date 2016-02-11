@@ -118,7 +118,7 @@ public with sharing class PSC_ManageSoftCredits_TEST {
         ctrl.softCredits[2].contactRole.Role = 'Soft Credit';
         ctrl.softCredits[2].partial.Amount__c = 300;
         
-        system.assertEquals(600, ctrl.getTotalSoftCreditAmount());
+        system.assertEquals(600, ctrl.oppTotalSoftCredit.Amount);
         Test.startTest();
         system.assertNotEquals(null, ctrl.save());
         Test.stopTest();
@@ -171,7 +171,7 @@ public with sharing class PSC_ManageSoftCredits_TEST {
         // update amounts
         ctrl.checkFullAndPartialCredit();
         
-        system.assertEquals(600, ctrl.getTotalSoftCreditAmount());
+        system.assertEquals(600, ctrl.oppTotalSoftCredit.Amount);
         Test.startTest();
         system.assertNotEquals(null, ctrl.save());
         Test.stopTest();
@@ -190,7 +190,7 @@ public with sharing class PSC_ManageSoftCredits_TEST {
         // switch back from percents
         ctrl.isAmount = false;
         ctrl.checkFullAndPartialCredit();
-        system.assertEquals(600, ctrl.getTotalSoftCreditAmount());
+        system.assertEquals(600, ctrl.oppTotalSoftCredit.Amount);
         system.assertNotEquals(null, ctrl.save());
         
     }
@@ -220,7 +220,7 @@ public with sharing class PSC_ManageSoftCredits_TEST {
         ctrl.softCredits[cPSCExisting + 2].contactRole.Role = 'Soft Credit';
         ctrl.softCredits[cPSCExisting + 2].partial.Amount__c = 300;
         
-        system.assertEquals(cPSCExisting * 100 + 600, ctrl.getTotalSoftCreditAmount());
+        system.assertEquals(cPSCExisting * 100 + 600, ctrl.oppTotalSoftCredit.Amount);
         Test.startTest();
         system.assertNotEquals(null, ctrl.save());
         Test.stopTest();
@@ -284,7 +284,7 @@ public with sharing class PSC_ManageSoftCredits_TEST {
         Test.setCurrentPage(Page.PSC_ManageSoftCredits);
         PSC_ManageSoftCredits_CTRL ctrl = new PSC_ManageSoftCredits_CTRL(new ApexPages.StandardController(opp));
         system.assertEquals(cPSCExisting, ctrl.softCredits.size());        
-        system.assertEquals(cPSCExisting * 100 , ctrl.getTotalSoftCreditAmount());
+        system.assertEquals(cPSCExisting * 100 , ctrl.oppTotalSoftCredit.Amount);
         for (integer i = 0; i < cPSCExisting; i++)
             ctrl.softCredits[i].fullCredit = true;
         ctrl.checkFullCredit();
@@ -311,7 +311,7 @@ public with sharing class PSC_ManageSoftCredits_TEST {
         Test.setCurrentPage(Page.PSC_ManageSoftCredits);
         PSC_ManageSoftCredits_CTRL ctrl = new PSC_ManageSoftCredits_CTRL(new ApexPages.StandardController(opp));
         system.assertEquals(0, ctrl.softCredits.size());        
-        system.assertEquals(0 * 100 , ctrl.getTotalSoftCreditAmount());
+        system.assertEquals(0 * 100 , ctrl.oppTotalSoftCredit.Amount);
         system.assertEquals(true, ctrl.isAmount);  // amount mode, not percent mode.
 
         // create new soft credits that are full.
@@ -350,7 +350,7 @@ public with sharing class PSC_ManageSoftCredits_TEST {
         Test.setCurrentPage(Page.PSC_ManageSoftCredits);
         PSC_ManageSoftCredits_CTRL ctrl = new PSC_ManageSoftCredits_CTRL(new ApexPages.StandardController(opp));
         system.assertEquals(cPSCExisting, ctrl.softCredits.size());        
-        system.assertEquals(cPSCExisting * 100 , ctrl.getTotalSoftCreditAmount());
+        system.assertEquals(cPSCExisting * 100 , ctrl.oppTotalSoftCredit.Amount);
         for (integer i = 0; i < cPSCExisting; i++)
             ctrl.softCredits[i].contactRole.ContactId = null;
         
@@ -374,7 +374,7 @@ public with sharing class PSC_ManageSoftCredits_TEST {
         Test.setCurrentPage(Page.PSC_ManageSoftCredits);
         PSC_ManageSoftCredits_CTRL ctrl = new PSC_ManageSoftCredits_CTRL(new ApexPages.StandardController(opp));
         system.assertEquals(cPSCExisting, ctrl.softCredits.size());        
-        system.assertEquals(cPSCExisting * 100 , ctrl.getTotalSoftCreditAmount());
+        system.assertEquals(cPSCExisting * 100 , ctrl.oppTotalSoftCredit.Amount);
         system.assert(cPSCExisting >= 2);
         // change to a different contact
         ctrl.softCredits[0].contactRole.ContactId = listCon[cPSCExisting + 0].Id;

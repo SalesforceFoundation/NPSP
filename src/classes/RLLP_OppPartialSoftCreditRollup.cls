@@ -55,20 +55,29 @@ public class RLLP_OppPartialSoftCreditRollup {
         } else {
             currentYearStart = Date.newInstance(Date.Today().Year(), 1, 1);
         }
-    
+
+        //need a local variable for dynamic soql variable binding
+        set<string> softCreditRoles = RLLP_OppRollup_UTIL.softCreditRoles;
+        string ocrQuery = 'SELECT Id, ContactId, Opportunity.CloseDate, Opportunity.Amount';
+        string pscQuery = 'SELECT Id, Contact__c, Opportunity__r.CloseDate, Amount__c, Contact_Role_ID__c';
+
+        if (RLLP_OppRollup_UTIL.isMultiCurrency()) {
+            ocrQuery += ', Opportunity.CurrencyIsoCode';
+            pscQuery += ', CurrencyIsoCode';
+        }
+
+        ocrQuery += ' FROM OpportunityContactRole WHERE ContactId IN :scope AND Opportunity.isWon=true AND Role IN :softCreditRoles';
+        pscQuery += ' FROM Partial_Soft_Credit__c WHERE Contact__c IN :scope AND Opportunity__r.isWon=true AND Role_Name__c IN :softCreditRoles';
+
         Map<Id, List<OpportunityContactRole>> opportunityContactRoles = new Map<Id, List<OpportunityContactRole>>();
-        for (OpportunityContactRole ocr : [SELECT Id, ContactId, Opportunity.CloseDate, Opportunity.Amount 
-                FROM OpportunityContactRole 
-                WHERE ContactId IN :scope AND Opportunity.isWon=true AND Role IN :RLLP_OppRollup_UTIL.softCreditRoles]) {
+        for (OpportunityContactRole ocr : database.query(ocrQuery)) {
             if (!opportunityContactRoles.containsKey(ocr.ContactId)) 
                 opportunityContactRoles.put(ocr.ContactId, new List<OpportunityContactRole>());
             opportunityContactRoles.get(ocr.ContactId).add(ocr);
         }
         
         Map<Id, List<Partial_Soft_Credit__c>> partialSoftCredits = new Map<Id, List<Partial_Soft_Credit__c>>();
-        for (Partial_Soft_Credit__c psr : [SELECT Id, Contact__c, Opportunity__r.CloseDate, Amount__c, Contact_Role_ID__c 
-                FROM Partial_Soft_Credit__c 
-                WHERE Contact__c IN :scope AND Opportunity__r.isWon=true AND Role_Name__c IN :RLLP_OppRollup_UTIL.softCreditRoles]) {
+        for (Partial_Soft_Credit__c psr : database.query(pscQuery)) {
             if (!partialSoftCredits.containsKey(psr.Contact__c)) 
                 partialSoftCredits.put(psr.Contact__c, new List<Partial_Soft_Credit__c>());
             partialSoftCredits.get(psr.Contact__c).add(psr);
@@ -102,6 +111,10 @@ public class RLLP_OppPartialSoftCreditRollup {
                                        Soft_Credit_Last_N_Days__c = 0,
                                        Number_of_Soft_Credits_Last_N_Days__c = 0
                                        );
+            
+            if (RLLP_OppRollup_UTIL.isMultiCurrency()) {
+                newC.put('CurrencyIsoCode', c.get('CurrencyIsoCode'));
+            }
             
             Set<String> ocrIds = new Set<String>();
             if (partialSoftCredits.containsKey(c.Id)) {
@@ -157,7 +170,8 @@ public class RLLP_OppPartialSoftCreditRollup {
     */ 
     private static Contact countPartialSoftCredits(Contact c, Partial_Soft_Credit__c psc, Date currentYearStart) {
         decimal amount = psc.Amount__c != null ? psc.Amount__c : 0;
-        return countSoftCreditsSharedLogic(c, amount, psc.Opportunity__r.CloseDate, currentYearStart);
+        string pscCurrencyIsoCode = RLLP_OppRollup_UTIL.isMultiCurrency() ? (string)psc.get('CurrencyIsoCode') : '';
+        return countSoftCreditsSharedLogic(c, amount, pscCurrencyIsoCode, psc.Opportunity__r.CloseDate, currentYearStart);
     }
 
     /*******************************************************************************************************
@@ -169,21 +183,23 @@ public class RLLP_OppPartialSoftCreditRollup {
     */ 
     private static Contact countOpportunityContactRoles(Contact c, OpportunityContactRole ocr, Date currentYearStart) {
         decimal amount = ocr.Opportunity.Amount != null ? ocr.Opportunity.Amount : 0;
-        return countSoftCreditsSharedLogic(c, amount, ocr.Opportunity.CloseDate, currentYearStart);
+        string oppCurrencyIsoCode = RLLP_OppRollup_UTIL.isMultiCurrency() ? (string)ocr.Opportunity.get('CurrencyIsoCode') : '';
+        return countSoftCreditsSharedLogic(c, amount, oppCurrencyIsoCode, ocr.Opportunity.CloseDate, currentYearStart);
     }       
 
     /*******************************************************************************************************
     * @description updates the Soft Credit statistics for the specified credit information
     * @param c The Contact
     * @param amount The Amount to credit
+    * @param string currencyIsoCode The currency code of the amount to credit, if multicurrency is enabled.
     * @param oppDate The CloseDate of the Opp
     * @param currentYearStart The date that current year starts (to take into account fiscal years)
     * @return Contact The updated Contact record
     */ 
-    private static Contact countSoftCreditsSharedLogic(Contact c, decimal amount, Date oppDate, Date currentYearStart) {
+    private static Contact countSoftCreditsSharedLogic(Contact c, decimal amount, string currencyIsoCode, Date oppDate, Date currentYearStart) {
         // calculate amounts into correct currency if needed
         if (RLLP_OppRollup_UTIL.isMultiCurrency())
-           amount = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)c.get('CurrencyIsoCode'), amount);
+           amount = RLLP_OppRollup_UTIL.convertCurrency(currencyIsoCode, (string)c.get('CurrencyIsoCode'), amount);
                 
         if (oppDate != null) {
             
@@ -236,5 +252,4 @@ public class RLLP_OppPartialSoftCreditRollup {
         c.npo02__Soft_Credit_Total__c += amount;
         return c;
     }
-    
 }
