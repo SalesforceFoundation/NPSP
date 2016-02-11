@@ -641,7 +641,9 @@
     <fields>
         <fullName>Matching_Gift_Account__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
+        <description>The account of the company who will match this gift.</description>
         <externalId>false</externalId>
+        <inlineHelpText>The account of the company who will match this gift.</inlineHelpText>
         <label>Matching Gift Account</label>
         <referenceTo>Account</referenceTo>
         <relationshipLabel>Opportunities</relationshipLabel>
@@ -653,7 +655,9 @@
     </fields>
     <fields>
         <fullName>Matching_Gift_Employer__c</fullName>
+        <description>The name of the company who will match this gift.</description>
         <externalId>false</externalId>
+        <inlineHelpText>The name of the company who will match this gift.</inlineHelpText>
         <label>Matching Gift Employer</label>
         <length>255</length>
         <required>false</required>
@@ -664,7 +668,9 @@
     </fields>
     <fields>
         <fullName>Matching_Gift_Status__c</fullName>
+        <description>The status of this gift being matched.</description>
         <externalId>false</externalId>
+        <inlineHelpText>The status of this gift being matched.</inlineHelpText>
         <label>Matching Gift Status</label>
         <picklist>
             <picklistValues>
@@ -688,7 +694,9 @@
     <fields>
         <fullName>Matching_Gift__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
+        <description>The employer&apos;s matching gift for this employee&apos;s gift.</description>
         <externalId>false</externalId>
+        <inlineHelpText>The employer&apos;s matching gift for this employee&apos;s gift.</inlineHelpText>
         <label>Matching Gift</label>
         <referenceTo>Opportunity</referenceTo>
         <relationshipLabel>Matched Gifts</relationshipLabel>
