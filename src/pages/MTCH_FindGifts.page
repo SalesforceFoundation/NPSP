@@ -90,11 +90,11 @@
                 </div>    
                 <div styleClass="slds-col slds-align-middle">
                     <label class="slds-form-element__label" for="totalSelected">{!$Label.mtchTotalSelected}</label><br/>
-                    <apex:outputText value="${0, number,###,###,###,###0.00}" id="totalSelected"><apex:param value="{!totalSelected}"/></apex:outputText>
+                    <apex:outputField id="totalSelected" value="{!oppTotalSelected.Amount}"/>
                 </div>   
                 <div styleClass="slds-col slds-align-middle">
                     <label class="slds-form-element__label" for="totalUn">{!$Label.mtchTotalUnaccounted}</label><br/>
-                    <apex:outputText value="${0, number,###,###,###,###0.00}" id="totalUn"><apex:param value="{!opp.Amount-totalSelected}"/></apex:outputText>
+                    <apex:outputField id="totalUn" value="{!oppTotalUnaccounted.Amount}"/>
                 </div>   
             </div> <!-- slds-grid -->
             <!-- /SUMMARY INFO PANEL -->
