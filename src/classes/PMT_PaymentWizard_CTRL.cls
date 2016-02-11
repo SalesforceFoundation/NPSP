@@ -164,22 +164,8 @@ public with sharing class PMT_PaymentWizard_CTRL {
     */ 
     public void SetupPaymentWizard() {
         String id = ApexPages.currentPage().getParameters().get('id');
-        
-        // requery the Opportunity for all fields that we need.
-        String query = 'select name, amount, stagename, npe01__payments_made__c, npe01__amount_outstanding__c, description, closedate, npe01__Number_of_Payments__c, isClosed, isWon';
-        // add any opportunity fields from payment field mappings
-        for (string s : PMT_PaymentCreator.paymentMappings.keyset()) {
-            npe01__Payment_Field_Mapping_Settings__c pfms = PMT_PaymentCreator.paymentMappings.get(s);
-            if (!query.contains(pfms.npe01__Opportunity_Field__c.toLowerCase())) {               
-                query += ', ' + pfms.npe01__Opportunity_Field__c;
-            }   
-        }       
-        //if currencyiso field exists add it to query for use later
-        if(Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode') != null)
-            query = query + ',CurrencyIsoCode';
-            
-        query += ' from Opportunity where id = :id';
-        opportunity[] o = Database.query(query);
+
+        opportunity[] o = Database.query(makeOppQuery() + ' WHERE id = :id');
         if (o.isEmpty()) {
             haveAmount = false;
         } else {
@@ -199,7 +185,10 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @return void
     */ 
     public void PaymentWriteoffWizard() {
-        opportunity[] o = [select name, amount, stagename, npe01__payments_made__c, npe01__amount_outstanding__c, description, closedate, npe01__Number_of_Payments__c from Opportunity where id =:ApexPages.currentPage().getParameters().get('id')];
+        String id = ApexPages.currentPage().getParameters().get('id');
+
+        opportunity[] o = Database.query(makeOppQuery() + ' WHERE id = :id');
+
         if (o.isEmpty()) {
             haveAmount = false;
         } else {
@@ -215,6 +204,28 @@ public with sharing class PMT_PaymentWizard_CTRL {
             writeoffPayment.npe01__Opportunity__c = currentOpp.Id;
             writeoffPayment.npe01__Payment_Date__c = system.today();
         }
+    }
+
+    /*******************************************************************************************************
+    * @description Creates an opportunity query with payment mapping and currency fields, filtered on id paramter.
+    * @return string An opportunity query string.
+    */ 
+    public string makeOppQuery() {
+        // requery the Opportunity for all fields that we need.
+        String query = 'SELECT name, amount, stagename, npe01__payments_made__c, npe01__amount_outstanding__c, description, closedate, npe01__Number_of_Payments__c, isClosed, isWon';
+        // add any opportunity fields from payment field mappings
+        for (string s : PMT_PaymentCreator.paymentMappings.keyset()) {
+            npe01__Payment_Field_Mapping_Settings__c pfms = PMT_PaymentCreator.paymentMappings.get(s);
+            if (!query.contains(pfms.npe01__Opportunity_Field__c.toLowerCase())) {               
+                query += ', ' + pfms.npe01__Opportunity_Field__c;
+            }   
+        }       
+        //if currencyiso field exists add it to query for use later
+        if(Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode') != null)
+            query = query + ',CurrencyIsoCode';
+            
+        query += ' FROM Opportunity';
+        return query;
     }
     
     /*******************************************************************************************************

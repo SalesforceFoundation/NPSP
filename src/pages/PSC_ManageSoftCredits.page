@@ -73,21 +73,21 @@
                 <apex:outputPanel styleClass="slds-col slds-align-middle" id="totalSelected">
                     <apex:outputPanel rendered="{!isAmount}">
                         <label class="slds-form-element__label" for="txtPSCAmountPercent">{!$Label.pscManageSoftCreditsPSCAmount}</label><br/>
-                        <apex:outputText id="txtPSCAmountPercent" value="${0, number,###,###,###,##0.00}"><apex:param value="{!totalSoftCreditAmount}" /></apex:outputText>
+                        <apex:outputField id="txtPSCAmountPercent" value="{!oppTotalSoftCredit.Amount}" />
                     </apex:outputPanel>
                     <apex:outputPanel rendered="{!NOT(isAmount)}">
                         <label class="slds-form-element__label" for="txtPSCAmount">{!$Label.pscManageSoftCreditsPSCAmount}</label><br/>
-                        <apex:outputText id="txtPSCAmount" value="{0, number,0.00%}"><apex:param value="{!IF(AND(NOT(ISBLANK(opp.Amount)), opp.Amount > 0), totalSoftCreditAmount/opp.Amount, 0)}" /></apex:outputText>
+                        <apex:outputText id="txtPSCAmount" value="{0, number,0.00%}"><apex:param value="{!IF(AND(NOT(ISBLANK(opp.Amount)), opp.Amount > 0), oppTotalSoftCredit.Amount/opp.Amount, 0)}" /></apex:outputText>
                     </apex:outputPanel>
                 </apex:outputPanel>   
                 <apex:outputPanel styleClass="slds-col slds-align-middle" id="totalUn">
                     <apex:outputPanel rendered="{!isAmount}">
-                        <label class="slds-form-element__label" for="txtUnaccountedPercent">{!$Label.pscManageSoftCreditsUnaccounted}</label><br/>
-                        <apex:outputText id="txtUnaccountedPercent" value="${0, number,###,###,###,##0.00}"><apex:param value="{!opp.Amount-totalSoftCreditAmount}" /></apex:outputText>  
+                        <label class="slds-form-element__label" for="txtUnaccounted">{!$Label.pscManageSoftCreditsUnaccounted}</label><br/>
+                        <apex:outputField id="txtUnaccounted" value="{!oppTotalUnaccounted.Amount}" />  
                     </apex:outputPanel>
                     <apex:outputPanel rendered="{!NOT(isAmount)}">
-                        <label class="slds-form-element__label" for="txtUnaccounted">{!$Label.pscManageSoftCreditsUnaccounted}</label><br/>
-                        <apex:outputText id="txtUnaccounted" value="{0, number,0.00%}"><apex:param value="{!IF(AND(NOT(ISBLANK(opp.Amount)), opp.Amount > 0), (opp.Amount-totalSoftCreditAmount)/opp.Amount, 0)}" /></apex:outputText>
+                        <label class="slds-form-element__label" for="txtUnaccountedPercent">{!$Label.pscManageSoftCreditsUnaccounted}</label><br/>
+                        <apex:outputText id="txtUnaccountedPercent" value="{0, number,0.00%}"><apex:param value="{!IF(AND(NOT(ISBLANK(opp.Amount)), opp.Amount > 0), (opp.Amount-oppTotalSoftCredit.Amount)/opp.Amount, 0)}" /></apex:outputText>
                     </apex:outputPanel>
                 </apex:outputPanel>
                 <div class="slds-col slds-no-flex slds-align-middle slds-box slds-theme--default">

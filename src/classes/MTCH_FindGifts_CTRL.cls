@@ -113,10 +113,42 @@ public with sharing class MTCH_FindGifts_CTRL {
     }
     
     /*******************************************************************************************************
+    * @description temporary Opp to hold the current Total Selected Amount and currency
+    */
+    public Opportunity oppTotalSelected {
+        get {
+            if (oppTotalSelected == null) {
+                oppTotalSelected = new Opportunity();
+                if (userInfo.isMultiCurrencyOrganization()) 
+                    oppTotalSelected.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
+            }
+            oppTotalSelected.Amount = getTotalSelected();
+            return oppTotalSelected;
+        }
+        private set;
+    }
+    
+    /*******************************************************************************************************
+    * @description temporary Opp to hold the current Unaccounted Amount and currency
+    */
+    public Opportunity oppTotalUnaccounted {
+        get {
+            if (oppTotalUnaccounted == null) {
+                oppTotalUnaccounted = new Opportunity();
+                if (userInfo.isMultiCurrencyOrganization()) 
+                    oppTotalUnaccounted.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
+            }
+            oppTotalUnaccounted.Amount = opp.Amount - oppTotalSelected.Amount;
+            return oppTotalUnaccounted;
+        }
+        private set;
+    }
+    
+    /*******************************************************************************************************
     * @description adds up the amount of all selected opps matched or to be matched, based on matching percent.
     * @return Double the total amount
     */ 
-    public Double getTotalSelected(){
+    private Double getTotalSelected(){
         Double totalSelected = 0;
         
         for (Opportunity o : potentialGifts){

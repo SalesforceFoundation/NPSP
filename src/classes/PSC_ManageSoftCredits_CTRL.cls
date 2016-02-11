@@ -42,6 +42,38 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
     public List<SelectOption> contactRoles {get; private set;}
     
     /*******************************************************************************************************
+    * @description temporary Opp to hold the current Total Soft Credit Amount and currency
+    */
+    public Opportunity oppTotalSoftCredit {
+        get {
+            if (oppTotalSoftCredit == null) {
+                oppTotalSoftCredit = new Opportunity();
+                if (userInfo.isMultiCurrencyOrganization()) 
+                    oppTotalSoftCredit.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
+            }
+            oppTotalSoftCredit.Amount = getTotalSoftCreditAmount();
+            return oppTotalSoftCredit;
+        }
+        private set;
+    }
+    
+    /*******************************************************************************************************
+    * @description temporary Opp to hold the current Unaccounted Amount and currency
+    */
+    public Opportunity oppTotalUnaccounted {
+        get {
+            if (oppTotalUnaccounted == null) {
+                oppTotalUnaccounted = new Opportunity();
+                if (userInfo.isMultiCurrencyOrganization()) 
+                    oppTotalUnaccounted.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
+            }
+            oppTotalUnaccounted.Amount = opp.Amount - oppTotalSoftCredit.Amount;
+            return oppTotalUnaccounted;
+        }
+        private set;
+    }
+    
+    /*******************************************************************************************************
     * @description returns the number of soft credits
     * @return number of soft credits
     */
@@ -315,7 +347,7 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
     * @description gets the total amount of all soft credits
     * @return void
     */ 
-    public Double getTotalSoftCreditAmount() {
+    private Double getTotalSoftCreditAmount() {
         Double total = 0;
         for (SoftCredit sc : softCredits) {
             if (sc.contactRole.ContactId != null) {
