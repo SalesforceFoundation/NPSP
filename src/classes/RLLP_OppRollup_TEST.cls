@@ -270,6 +270,12 @@ public with sharing class RLLP_OppRollup_TEST {
                 npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
                 npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
             ) };
+
+            //since we're running rollup code on a manually created contact, we have to manually set currency field in multicurrency
+            if (RLLP_OppRollup_UTIL.isMultiCurrency()) {
+                TestCons[0].put(RLLP_OppRollup_UTIL.mcFieldValues.get('Contact'), RLLP_OppRollup_UTIL.currCorporate);
+            }
+
             insert TestCons;
 
             // create new opps
@@ -362,6 +368,12 @@ public with sharing class RLLP_OppRollup_TEST {
                 npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
                 npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
             ) };
+
+            //since we're running rollup code on a manually created contact, we have to manually set currency field in multicurrency
+            if (RLLP_OppRollup_UTIL.isMultiCurrency()) {
+                TestCons[0].put(RLLP_OppRollup_UTIL.mcFieldValues.get('Contact'), RLLP_OppRollup_UTIL.currCorporate);
+            }
+ 
             insert TestCons;
 
             // create new opps
@@ -455,6 +467,12 @@ public with sharing class RLLP_OppRollup_TEST {
                 npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
                 npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
             ) };
+
+            //since we're running rollup code on a manually created contact, we have to manually set currency field in multicurrency
+            if (RLLP_OppRollup_UTIL.isMultiCurrency()) {
+                TestCons[0].put(RLLP_OppRollup_UTIL.mcFieldValues.get('Contact'), RLLP_OppRollup_UTIL.currCorporate);
+            }
+ 
             insert TestCons;
 
             // create new opps
