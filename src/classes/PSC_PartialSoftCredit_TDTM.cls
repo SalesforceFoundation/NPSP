@@ -35,6 +35,9 @@
 */
 public class PSC_PartialSoftCredit_TDTM extends TDTM_Runnable {
 
+    /** @Description Allows PSC_Opportunity_TDTM to modify PSC currency while blocking user requests to change currency.*/
+    public static boolean blockCurrencyChange = true;
+
     /*******************************************************************************************************
     * @description Trigger Handler on Partial Soft Credit that handles PSC sychronization with OCR's.
     * The scenarios to support are:
@@ -82,6 +85,15 @@ public class PSC_PartialSoftCredit_TDTM extends TDTM_Runnable {
         for (Partial_Soft_Credit__c psc : listPSC) { 
             setOppId.add(psc.Opportunity__c);
             setConId.add(psc.Contact__c);
+        }
+
+        //copy opportunity currency if multicurrency is enabled
+        if (userInfo.isMultiCurrencyOrganization()) {
+            string oppQuery = 'SELECT Id, CurrencyIsoCode FROM Opportunity WHERE Id IN :setOppId';
+            map<id, Opportunity> mapOppIdOpp = new map<id, Opportunity>((list<Opportunity>) database.query(oppQuery));
+            
+            for (Partial_Soft_Credit__c psc : listPSC)
+                psc.put('CurrencyIsoCode', mapOppIdOpp.get(psc.Opportunity__c).get('CurrencyIsoCode'));
         }
 
         // create a map of all OCR's for the Opps in question
@@ -140,6 +152,11 @@ public class PSC_PartialSoftCredit_TDTM extends TDTM_Runnable {
             if (pscNew.Role_Name__c != pscOld.Role_Name__c && pscNew.Contact_Role_ID__c != null) {
                 mapOCRIdToPSCIndex.put(pscNew.Contact_Role_ID__c, i);
             }    
+        
+            // don't allow manually changing the PSC currency: it must be changed through the parent opportunity
+            if (userInfo.isMultiCurrencyOrganization() && pscNew.get('CurrencyIsoCode') != pscOld.get('CurrencyIsoCode') && blockCurrencyChange) {
+                pscNew.addError(Label.pscManageSoftCreditsCantChangeCurrency);
+            }
         }
         
         // now update RoleNames if any changed.
@@ -157,6 +174,4 @@ public class PSC_PartialSoftCredit_TDTM extends TDTM_Runnable {
             }
         }
     }
-
-
 }
