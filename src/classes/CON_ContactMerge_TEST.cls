@@ -109,7 +109,7 @@ public class CON_ContactMerge_TEST {
         ApexPages.Message m = ApexPages.getMessages()[0];
         System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
         System.assertEquals(label.npe01.Contact_Merge_Error_Too_Few_Contacts, m.getDetail());
-        System.assertEquals(1, controller.step); // We should still be on step 1
+        System.assertEquals(2, controller.step); // We are on step 2 "select contacts"
         
         controller.search();
         controller.searchResults[0].selected = true;
@@ -120,7 +120,7 @@ public class CON_ContactMerge_TEST {
         
         Test.stopTest(); 
         
-        System.assertEquals(2, controller.step); // We are on to next step now
+        System.assertEquals(3, controller.step); // We are now on step 3, "choose winning contact"
         
         List<CON_ContactMerge_CTRL.FieldRow> fieldRows = controller.fieldRows;
         
@@ -201,7 +201,7 @@ public class CON_ContactMerge_TEST {
         ApexPages.Message m = ApexPages.getMessages()[0];
         System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
         System.assertEquals(label.npe01.Contact_Merge_Error_Query_Failed + ' ' + label.npe01.Contact_Merge_Error_please_retry, m.getDetail());
-        System.assertEquals(1, controller.step); // We should still be on step 1
+        System.assertEquals(2, controller.step); // We are on step 2 "select contacts"
         
         Test.stopTest(); 
     }
