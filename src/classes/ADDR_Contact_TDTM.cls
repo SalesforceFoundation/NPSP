@@ -310,6 +310,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             (con1.MailingCountry == null || ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) &&
             // only test StateCode if picklists enabled.
             (!ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled || con1.get('MailingStateCode') == null);
+        //UTIL_Debug.debug('****DJH: isContactAddressEmpty:' + isEmpty + ' ' + con1);
         return isEmpty;   
            
     }
