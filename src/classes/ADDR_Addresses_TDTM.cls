@@ -1005,6 +1005,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             sobjDst.put(strFieldPrefixDst + 'StateCode', sobjSrc.get(strFieldPrefixSrc + 'StateCode'));
             sobjDst.put(strFieldPrefixDst + 'CountryCode', sobjSrc.get(strFieldPrefixSrc + 'CountryCode'));
         }    
+        //UTIL_Debug.debug('****DJH: copyAddressStdSObj: ' + sobjSrc + ' ' + sobjDst);
     }
 
     /*******************************************************************************************************
@@ -1046,6 +1047,8 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         // if specified, also include Address Type
         if (strAddrType != null) 
             addr.Address_Type__c = strAddrType;
+            
+        //UTIL_Debug.debug('****DJH: copyAddressStdSobjAddr: ' + sobjSrc + ' ' + addr);
     }
 
     /*******************************************************************************************************
@@ -1079,6 +1082,9 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                     // allow the invalid country to be placed in the country field, so Salesforce will generate the error.
                     sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
                 }
+            } else { // MailingCountry = null
+                sobjDst.put(strFieldPrefix + 'CountryCode', null);
+                sobjDst.put(strFieldPrefix + 'Country', null);                
             }
             if (addr.MailingState__c != null) {             
                 if (validStatesByLabel.containsKey(addr.MailingState__c)) {
@@ -1089,11 +1095,16 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                 	// so we will just try to save any state that isn't a label as a code.
                 	sobjDst.put(strFieldPrefix + 'StateCode', addr.MailingState__c.toUpperCase());
                 }
+            } else { // MailingState = null
+                sobjDst.put(strFieldPrefix + 'StateCode', null);
+                sobjDst.put(strFieldPrefix + 'State', null);                
             }
         }
         
         if (strFieldAddrType != null)
             sobjDst.put(strFieldAddrType, addr.Address_Type__c);
+
+        //UTIL_Debug.debug('****DJH: copyAddressAddrSObj: ' + addr + ' ' + sobjDst);
     }
 
     /*******************************************************************************************************
