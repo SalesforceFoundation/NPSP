@@ -36,13 +36,13 @@
 public with sharing class UTIL_ListCustomSettingsFacade {
 
     //list settings
-    static Map<String,npe03__Custom_Field_Mapping__c> mapCustomFieldMappings;
-    static Map<String,npe03__Custom_Installment_Settings__c> mapCustomInstallmentSettings;
-    static Map<String,Opportunity_Naming_Settings__c> mapOppNamingSettings;
-    static Map<String,npe01__Payment_Field_Mapping_Settings__c> mapPaymentFieldMappingSettings;
-    static Map<String,npe4__Relationship_Auto_Create__c> mapRelationshipAutoCreateSettings;
-    static Map<String,npe4__Relationship_Lookup__c> mapRelationshipLookupSettings;
-    static Map<String,npo02__User_Rollup_Field_Settings__c> mapUserRollupFieldSettings;
+    public static Map<String,npe03__Custom_Field_Mapping__c> mapCustomFieldMappings;
+    public static Map<String,npe03__Custom_Installment_Settings__c> mapCustomInstallmentSettings;
+    public static Map<String,Opportunity_Naming_Settings__c> mapOppNamingSettings;
+    public static Map<String,npe01__Payment_Field_Mapping_Settings__c> mapPaymentFieldMappingSettings;
+    public static Map<String,npe4__Relationship_Auto_Create__c> mapRelationshipAutoCreateSettings;
+    public static Map<String,npe4__Relationship_Lookup__c> mapRelationshipLookupSettings;
+    public static Map<String,npo02__User_Rollup_Field_Settings__c> mapUserRollupFieldSettings;
 
     /*******************************************************************************************************
     * @description Retrieves the existing Custom Field Mapping list setting, for mapping recurring donations

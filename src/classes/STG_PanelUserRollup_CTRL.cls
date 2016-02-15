@@ -84,7 +84,7 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
     		}
             return udrList;
     	}
-    	private set;
+    	set;
     }
     
     /*********************************************************************************************************

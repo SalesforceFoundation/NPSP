@@ -83,7 +83,7 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
         	acNew.Name = 'AutoCreateRel-' + system.now();
             insert acNew;
             isEditMode = false;
-            listRelAutoCreate = null;
+            resetRelAutoSettings();
             acNew = null;
         } catch(Exception e) {
             Database.rollback(sp);
@@ -109,6 +109,14 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
     public string acIdDelete { get; set; }
 
     /*********************************************************************************************************
+    * @description Resets relationship auto create settings so that they are reloaded and the cached version isn't used.
+    */
+    public void resetRelAutoSettings() {
+        UTIL_ListCustomSettingsFacade.mapRelationshipAutoCreateSettings = null;
+        listRelAutoCreate = null;
+    }
+
+    /*********************************************************************************************************
     * @description Action Method for deleting an existing ac. 
     * @return null
     */
@@ -120,7 +128,7 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
                 npe4__Relationship_Auto_Create__c ac = new npe4__Relationship_Auto_Create__c(Id = acIdDelete);
                 delete ac;
                 // force reload.
-                listRelAutoCreate = null;
+                resetRelAutoSettings();
             }
         } catch(Exception e) {
             Database.rollback(sp);

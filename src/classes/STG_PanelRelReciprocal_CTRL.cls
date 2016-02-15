@@ -70,7 +70,7 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
         try {
             insert rlNew;
             isEditMode = false;
-            listRelLookup = null;
+            resetRelLookupSettings();
             rlNew = null;
         } catch(Exception e) {
             Database.rollback(sp);
@@ -88,6 +88,14 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
         isEditMode = false;
         rlNew = null;
         return null;
+    }
+
+    /*********************************************************************************************************
+    * @description Resets relationship lookup settings so that they are reloaded and the cached version isn't used.
+    */
+    public void resetRelLookupSettings() {
+        UTIL_ListCustomSettingsFacade.mapRelationshipLookupSettings = null;
+        listRelLookup = null;
     }
     
     /*********************************************************************************************************
@@ -107,7 +115,7 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
                 npe4__Relationship_Lookup__c rl = new npe4__Relationship_Lookup__c(Id = rlIdDelete);
                 delete rl;
                 // force reload.
-                listRelLookup = null;
+                resetRelLookupSettings();
             }
         } catch(Exception e) {
             Database.rollback(sp);
