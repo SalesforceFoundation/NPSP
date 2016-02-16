@@ -32,12 +32,14 @@
 * @date 2011 (2.0)
 * @group Households
 * @group-content ../../ApexDocContent/Households.htm
-* @description Trigger Handler on Contact to deal with managing Households (Accounts and Objects)
+* @description Trigger Handler on Contact to deal with managing Households (Objects), and naming exclusions
+* on contact.
 */
 public without sharing class HH_Households_TDTM extends TDTM_Runnable {
           	
     /*******************************************************************************************************
-    * @description Trigger Handler on Contacts that handles managing Households
+    * @description Trigger Handler on Contacts that handles managing Households (Objects) and naming exclusions
+    * on contact.
     * @param listNew List of Contacts from trigger new. 
     * @param listOld List of Contacts from trigger old. 
     * @param triggerAction Which trigger event (BeforeInsert, AfterInsert, etc.). 
@@ -139,6 +141,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                 }            
             }
          
+            Set<String> hhNamingFields = null;  // defer creating until needed.
             Integer i = 0;
             for(Contact c : contacts) {
                 //AFTER INSERT - NOTE: naming has to be handled inside othe household inserts, 
@@ -170,17 +173,22 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                     else if (c.npo02__household__c == null && currentHouseholdsSettings.npo02__Household_Rules__c == HH_Households.ALL_INDIVIDUALS_PROCESSOR)
                         contactEvaluations.add(c);
                     
-                    if (newcmap.get(c.id).Salutation != oldcmap.get(c.id).Salutation)
-                        householdnameupdates.add(c.npo02__household__c);
-                    else if (newcmap.get(c.id).FirstName != oldcmap.get(c.id).Firstname )
-                        householdnameupdates.add(c.npo02__household__c);
-                    else if (newcmap.get(c.id).LastName != oldcmap.get(c.id).LastName)
-                        householdnameupdates.add(c.npo02__household__c);    
-                    
+                    if (c.npo02__household__c != null) {
+                        if (hhNamingFields == null)
+                            hhNamingFields = HH_HouseholdNaming.iNaming.setHouseholdNameFieldsOnContact();
+                            
+                        for (String fieldName : hhNamingFields) {
+                            if (String.valueOf(newcmap.get(c.id).get(fieldName)) != String.valueOf(oldcmap.get(c.id).get(fieldName))) {
+                                householdnameupdates.add(c.npo02__household__c);
+                                break;
+                            }
+                        }
+                    }
+                                        
                     //if they've changed households, we need to query the old
                     //household to see if anybody is left, if so, send it for renaming
                     //if not, delete it.
-                    else if (newcmap.get(c.id).npo02__household__c != oldcmap.get(c.id).npo02__household__c){
+                    if (newcmap.get(c.id).npo02__household__c != oldcmap.get(c.id).npo02__household__c){
                         householdnameupdates.add(c.npo02__household__c);
                         setHHIdToRollup.add(c.npo02__household__c);
                         if (oldHouseholdSize.get(oldcmap.get(c.id).npo02__household__c) > 0){
@@ -456,7 +464,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
     * @param dmlWrapper On return, holds the Households to delete.    
     * @return void
     ********************************************************************************************************/
-        public static void deleteHousehold(Contact[] contacts, DmlWrapper dmlWrapper){
+    public static void deleteHousehold(Contact[] contacts, DmlWrapper dmlWrapper){
             
         list<SObject> householdDeletes = new list<SObject>();
         map<Id,Integer> householdCountMap = new map<Id,Integer>();
