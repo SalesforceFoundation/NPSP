@@ -97,7 +97,7 @@ public class UTIL_PageMessages_CTRL {
          */
         public String getSeverityTheme() {
             if (MessageSeverity.CONFIRM == severity) {
-                return 'info';
+                return 'success';
             } else if (MessageSeverity.ERROR == severity) {
                 return 'error';
             } else if (MessageSeverity.FATAL == severity) {
@@ -108,6 +108,28 @@ public class UTIL_PageMessages_CTRL {
                 return 'warning';
             } else {
                 return 'info';
+            }
+        }
+
+        /**
+         * @description A helper method for use in Visualforce pages that
+         * translates MessageSeverity enums into localized text labels
+         *
+         * @return string
+         */
+        public String getSeverityLabel() {
+            if (MessageSeverity.CONFIRM == severity) {
+                return Label.PageMessagesConfirm;
+            } else if (MessageSeverity.ERROR == severity) {
+                return Label.PageMessagesError;
+            } else if (MessageSeverity.FATAL == severity) {
+                return Label.PageMessagesFatal;
+            } else if (MessageSeverity.INFO == severity) {
+                return '';
+            } else if (MessageSeverity.WARNING == severity) {
+                return Label.PageMessagesWarning;
+            } else {
+                return '';
             }
         }
     }
