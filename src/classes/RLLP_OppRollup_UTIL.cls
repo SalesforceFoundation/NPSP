@@ -208,7 +208,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     
     public static void setupUserRollupVars(){
         if (objectRollupFieldMap == null){
-            urfsMap = npo02__User_Rollup_Field_Settings__c.getAll().clone();
+            urfsMap = UTIL_ListCustomSettingsFacade.getMapUserRollupFieldSettings().clone();
             objectRollupFieldMap = new map<string, string>();
         
             //build the object delineated query string for use later
