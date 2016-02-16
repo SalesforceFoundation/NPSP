@@ -92,7 +92,7 @@ public class RD_RecurringDonations {
     /*******************************************************************************************************
     * @description holds the current custom field mappings used when creating opps for the RD.
     */ 
-    public static map<string, npe03__Custom_Field_Mapping__c> customFieldMappingSettings = npe03__Custom_Field_Mapping__c.getAll();
+    public static map<string, npe03__Custom_Field_Mapping__c> customFieldMappingSettings = UTIL_ListCustomSettingsFacade.getMapCustomFieldMappings();
     
     /*******************************************************************************************************
     * @description holds the RD's CurrencyIsoCode field that is enabled in multicurrency organizations.
@@ -1197,7 +1197,7 @@ public class RD_RecurringDonations {
             }while (CalcDate.day() != 15 && CalcDate.day() != 1);
         }        
         else{
-            map<string, npe03__Custom_Installment_Settings__c> cisMap = npe03__Custom_Installment_Settings__c.getAll();
+            map<string, npe03__Custom_Installment_Settings__c> cisMap = UTIL_ListCustomSettingsFacade.getMapCustomInstallmentSettings();
             //handle custom installment types           
             if (cisMap.containsKey(InstallmentType)){
                 npe03__Custom_Installment_Settings__c c = cisMap.get(InstallmentType);
