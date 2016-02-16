@@ -78,8 +78,7 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
         	fmNew.Name = 'FieldMapping-' + system.now();
             insert fmNew;
             isEditMode = false;
-            STG_Panel.stgService.listRDCustomFieldMapping = null;
-            listRDCustomFieldMapping = null;
+            resetFieldMappingSettings();
             fmNew = null;
         } catch(Exception e) {
             Database.rollback(sp);
@@ -139,8 +138,7 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
                 npe03__Custom_Field_Mapping__c fm = new npe03__Custom_Field_Mapping__c(Id = fmIdDelete);
                 delete fm;
                 // force reload.
-                STG_Panel.stgService.listRDCustomFieldMapping = null;
-                listRDCustomFieldMapping = null;
+                resetFieldMappingSettings();
             }
         } catch(Exception e) {
             Database.rollback(sp);
@@ -148,6 +146,15 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
         }
         return null;
+    }
+
+    /*********************************************************************************************************
+    * @description Resets RD custom field mappings so that they are reloaded and the cached version isn't used.
+    */
+    public void resetFieldMappingSettings() {
+        UTIL_ListCustomSettingsFacade.mapCustomFieldMappings = null;
+        STG_Panel.stgService.listRDCustomFieldMapping = null;
+        listRDCustomFieldMapping = null;
     }
 
     /*********************************************************************************************************
@@ -253,7 +260,7 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
     */
     public static void verifyRDMappings(STG_PanelHealthCheck_CTRL ctrl) {
         
-        map<string, npe03__Custom_Field_Mapping__c> mapRDCustomField = npe03__Custom_Field_Mapping__c.getAll();
+        map<string, npe03__Custom_Field_Mapping__c> mapRDCustomField = UTIL_ListCustomSettingsFacade.getMapCustomFieldMappings();
         string strSetting = Schema.Sobjecttype.npe03__Custom_Field_Mapping__c.getLabel(); 
         boolean isValid = true;
         
