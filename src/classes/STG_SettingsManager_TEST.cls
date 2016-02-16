@@ -683,11 +683,15 @@ public with sharing class STG_SettingsManager_TEST {
         panel.activeUDR.save();
         system.assertEquals(false, panel.isEditMode);
         system.assertNotEquals(null, panel.udrlist);
+        panel.udrList = null;
+        UTIL_ListCustomSettingsFacade.mapUserRollupFieldSettings = null;
         system.assertEquals(1, panel.udrlist.size());
         panel.startBuild();
         system.assertNotEquals(null, panel.getTargetFields());
         panel.activeUDR = panel.udrlist[0];
         panel.activeUDR.deleteMe();
+        panel.udrList = null;
+        UTIL_ListCustomSettingsFacade.mapUserRollupFieldSettings = null;
         system.assertNotEquals(null, panel.udrlist);
         system.assertEquals(0, panel.udrlist.size());  
         
@@ -743,6 +747,10 @@ public with sharing class STG_SettingsManager_TEST {
         //run through the loop with a newly inserted UDR
         targetFieldList = controller.getTargetFields();
         
+        //blank out settings so they are queried again
+        controller.udrList = null;
+        UTIL_ListCustomSettingsFacade.mapUserRollupFieldSettings = null;
+
         //existing invalid rollups will cause test failure
         system.assertEquals(controller.activeUDR.getisValid(), true);
         list<STG_PanelUserRollup_CTRL.UDR> udrlist = controller.udrList;

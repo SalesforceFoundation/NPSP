@@ -154,7 +154,7 @@ public with sharing class STG_SettingsService {
     	get {
     		if (mapRDCustomField == null) {
 			    mapRDCustomField = new map<string, npe03__Custom_Field_Mapping__c>();
-			    mapRDCustomField = npe03__Custom_Field_Mapping__c.getAll();
+			    mapRDCustomField = UTIL_ListCustomSettingsFacade.getMapCustomFieldMappings();
     		} 
             return mapRDCustomField;    	   
     	}
@@ -168,7 +168,7 @@ public with sharing class STG_SettingsService {
         get {
             if (listRDCustomInstallment == null) {
                 listRDCustomInstallment = new list<npe03__Custom_Installment_Settings__c>();
-                listRDCustomInstallment = npe03__Custom_Installment_Settings__c.getAll().values();
+                listRDCustomInstallment = UTIL_ListCustomSettingsFacade.getMapCustomInstallmentSettings().values();
             } 
             return listRDCustomInstallment;           
         }
@@ -182,7 +182,7 @@ public with sharing class STG_SettingsService {
         get {
             if (listRDCustomFieldMapping == null) {
                 listRDCustomFieldMapping = new list<npe03__Custom_Field_Mapping__c>();
-                listRDCustomFieldMapping = npe03__Custom_Field_Mapping__c.getAll().values();
+                listRDCustomFieldMapping = UTIL_ListCustomSettingsFacade.getMapCustomFieldMappings().values();
             } 
             return listRDCustomFieldMapping;           
         }
@@ -196,7 +196,7 @@ public with sharing class STG_SettingsService {
         get {
             if (listPMTFieldMapping == null) {
                 listPMTFieldMapping = new list<npe01__Payment_Field_Mapping_Settings__c>();
-                listPMTFieldMapping = npe01__Payment_Field_Mapping_Settings__c.getAll().values();
+                listPMTFieldMapping = UTIL_ListCustomSettingsFacade.getMapPaymentFieldMappingSettings().values();
             } 
             return listPMTFieldMapping;           
         }

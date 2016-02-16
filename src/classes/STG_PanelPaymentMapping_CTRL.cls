@@ -100,7 +100,7 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
             Schema.DisplayType oppType = mapFieldTypes.get(pfmNew.npe01__Opportunity_Field__c);  
             for (string s : targetTokenMap.keyset()){
                 if (s.contains('__c') && UTIL_Describe.isValidField('npe01__OppPayment__c', s)) {
-			        Schema.DescribeFieldResult f = UTIL_Describe.getFieldDescribe('npe01__OppPayment__c', s);     
+                    Schema.DescribeFieldResult f = UTIL_Describe.getFieldDescribe('npe01__OppPayment__c', s);     
 
                     // disallow formula fields and autonums
                     if (f.isCalculated() || f.isAutoNumber())
@@ -135,10 +135,10 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
     public list<SelectOption> getSourceFields() {
         
         if (sourcefields.isEmpty()) {
-	        
-	        // sets of strings are case sensitive, so use lower case in our set for the contains() against knownopptyFields.
-	        set<string> knownOpptyFields = new set<string>{'amount', 'closedate', 'expectedrevenue', 
-	            'probability', 'totalopportunityquantity', 'npe01__membership_start_date__c', 'npe01__membership_end_date__c'};
+            
+            // sets of strings are case sensitive, so use lower case in our set for the contains() against knownopptyFields.
+            set<string> knownOpptyFields = new set<string>{'amount', 'closedate', 'expectedrevenue', 
+                'probability', 'totalopportunityquantity', 'npe01__membership_start_date__c', 'npe01__membership_end_date__c'};
                                
             map<String, Schema.SObjectField> oppFieldTokenList = Schema.SObjectType.Opportunity.fields.getMap(); 
            
@@ -163,7 +163,7 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
     */
     public static void verifyPaymentMappings(STG_PanelHealthCheck_CTRL ctrl) {
         
-        map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappings = npe01__Payment_Field_Mapping_Settings__c.getAll();
+        map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappings = UTIL_ListCustomSettingsFacade.getMapPaymentFieldMappingSettings();
         string strSetting = Schema.Sobjecttype.npe01__Payment_Field_Mapping_Settings__c.getLabel(); 
         boolean isValid = true;
         boolean isValidAll = true;
@@ -177,11 +177,11 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
             //check source field
             opportunityField = Schema.sObjectType.Opportunity.fields.getMap().get(pfms.npe01__Opportunity_Field__c);
             if (opportunityField == null) {
-            	isValid = false;
-	            ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
-	                string.format(label.healthDetailsInvalidOppField, new string[]{pfms.npe01__Opportunity_Field__c}), 
-	                string.format(label.healthSolutionInvalidOppField, new string[]{label.stgNavDonations, label.stgNavPaymentMappings}));
-            }            	
+                isValid = false;
+                ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
+                    string.format(label.healthDetailsInvalidOppField, new string[]{pfms.npe01__Opportunity_Field__c}), 
+                    string.format(label.healthSolutionInvalidOppField, new string[]{label.stgNavDonations, label.stgNavPaymentMappings}));
+            }               
                       
             //check target fields            
             paymentField = Schema.sObjectType.npe01__OppPayment__c.fields.getMap().get(pfms.npe01__Payment_Field__c);
@@ -198,11 +198,11 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
                 Schema.Displaytype dtPmt = UTIL_Describe.getFieldDisplaytype('npe01__OppPayment__c', pfms.npe01__Payment_Field__c);
                 Schema.Displaytype dtOpp = UTIL_Describe.getFieldDisplaytype('Opportunity', pfms.npe01__Opportunity_Field__c);
                 if (!UTIL_Describe.canDisplaytypesCopy(dtOpp, dtPmt)) { 
-	                isValid = false;
-	                ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
-	                    string.format(label.healthDetailsPaymentMappingBadDataTypes, new string[]{pfms.npe01__Payment_Field__c, pfms.npe01__Opportunity_Field__c}), 
+                    isValid = false;
+                    ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
+                        string.format(label.healthDetailsPaymentMappingBadDataTypes, new string[]{pfms.npe01__Payment_Field__c, pfms.npe01__Opportunity_Field__c}), 
                         string.format(label.healthSolutionPaymentMappingBadDataTypes, new string[]{label.stgNavDonations, label.stgNavPaymentMappings}));
-	            }               
+                }               
             }
             
             if (!isValid) 
@@ -233,14 +233,13 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
     * @return null 
     */
     public PageReference deletePfm() {
-    	STG_SettingsManager_CTRL.idPanelCurrent = idPanel();    	
-    	if (pfmIdDelete != null) {
-    	   npe01__Payment_Field_Mapping_Settings__c pfm = new npe01__Payment_Field_Mapping_Settings__c(Id = pfmIdDelete);
-    	   delete pfm;
-    	   // force reload.
-    	   STG_Panel.stgService.listPMTFieldMapping = null;
-    	   listPMTFieldMapping = null;
-    	}
+        STG_SettingsManager_CTRL.idPanelCurrent = idPanel();        
+        if (pfmIdDelete != null) {
+           npe01__Payment_Field_Mapping_Settings__c pfm = new npe01__Payment_Field_Mapping_Settings__c(Id = pfmIdDelete);
+           delete pfm;
+           // force reload.
+           resetFieldMappingSettings();
+        }
         return null;
     }
     
@@ -248,23 +247,23 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
     * @description The Payment Field Mapping Settings object
     */
     public npe01__Payment_Field_Mapping_Settings__c pfmNew {
-    	get {
-    		if (pfmNew == null) pfmNew = new npe01__Payment_Field_Mapping_Settings__c();
-    		return pfmNew;
-    	}
-    	private set;
+        get {
+            if (pfmNew == null) pfmNew = new npe01__Payment_Field_Mapping_Settings__c();
+            return pfmNew;
+        }
+        private set;
     }
     
     /*********************************************************************************************************
     * @description Whether all required fields are set in order to create a new Payment Mapping 
     */
     public boolean isPfmNewValid {
-    	get {
-	    	return pfmNew != null &&
-	    	   pfmNew.npe01__Opportunity_Field__c != null &&
-	    	   pfmNew.npe01__Payment_Field__c != null &&
-	    	   pfmNew.npe01__Payment_Field__c != strNoValidField;
-    	}
+        get {
+            return pfmNew != null &&
+               pfmNew.npe01__Opportunity_Field__c != null &&
+               pfmNew.npe01__Payment_Field__c != null &&
+               pfmNew.npe01__Payment_Field__c != strNoValidField;
+        }
     }
     
     /*********************************************************************************************************
@@ -272,8 +271,8 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
     * @return null 
     */
     public PageReference newPfm() {
-    	isEditMode = true;
-    	return null;
+        isEditMode = true;
+        return null;
     }
     
     /*********************************************************************************************************
@@ -287,29 +286,37 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
         }
    
         Try {
-	        isEditMode = false;
-	        map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappings = npe01__Payment_Field_Mapping_Settings__c.getAll();
-	        	        
-	        // make sure we have a unique name
-	        integer nameNumber;
-	        for (nameNumber = paymentMappings.size(); ; nameNumber++) {
-	        	if (paymentMappings.get('CustomMapping' + nameNumber) == null)
-	        	  break;
-	        }    
+            isEditMode = false;
+            map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappings = UTIL_ListCustomSettingsFacade.getMapPaymentFieldMappingSettings();
+                        
+            // make sure we have a unique name
+            integer nameNumber;
+            for (nameNumber = paymentMappings.size(); ; nameNumber++) {
+                if (paymentMappings.get('CustomMapping' + nameNumber) == null)
+                  break;
+            }    
             pfmNew.Name = 'CustomMapping' + nameNumber;   
-	        
-	        insert pfmNew;
-	        pfmNew = null;
-	        STG_Panel.stgService.listPMTFieldMapping = null;
-	        listPMTFieldMapping = null;
-	    } catch(Exception e) {
+            
+            insert pfmNew;
+            pfmNew = null;
+            resetFieldMappingSettings();
+        } catch(Exception e) {
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
-  	        showMsg('An unhandled exception has occurred. Please try again.',ApexPages.Severity.FATAL);
-	        showMsg('Exception type' + e, ApexPages.Severity.INFO);            
+            showMsg('An unhandled exception has occurred. Please try again.',ApexPages.Severity.FATAL);
+            showMsg('Exception type' + e, ApexPages.Severity.INFO);            
         }
-    	return null;
+        return null;
     }
-   
+
+    /*********************************************************************************************************
+    * @description Resets payment field mappings so that they are reloaded and the cached version isn't used.
+    */
+    public void resetFieldMappingSettings() {
+        UTIL_ListCustomSettingsFacade.mapPaymentFieldMappingSettings = null;
+        STG_Panel.stgService.listPMTFieldMapping = null;
+        listPMTFieldMapping = null;
+    }
+
     /*********************************************************************************************************
     * @description Action Method to update target fields after the source field has been chosen
     * @return null 
@@ -327,7 +334,7 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
     public list<npe01__Payment_Field_Mapping_Settings__c> listPMTFieldMapping {
         get {
             if (listPMTFieldMapping == null) {
-            	listPMTFieldMapping = new list<npe01__Payment_Field_Mapping_Settings__c>();
+                listPMTFieldMapping = new list<npe01__Payment_Field_Mapping_Settings__c>();
                 for (npe01__Payment_Field_Mapping_Settings__c pfm : STG_Panel.stgService.listPMTFieldMapping) {
                     string strOppField = UTIL_Describe.getFieldLabelSafe('Opportunity', pfm.npe01__Opportunity_Field__c);
                     string strPmtField = UTIL_Describe.getFieldLabelSafe('npe01__OppPayment__c', pfm.npe01__Payment_Field__c);
@@ -335,7 +342,7 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
                     pfm2.Id = pfm.Id;
                     pfm2.npe01__Opportunity_Field__c = strOppField;
                     pfm2.npe01__Payment_Field__c = strPmtField;
-                    listPMTFieldMapping.add(pfm2);                                   	
+                    listPMTFieldMapping.add(pfm2);                                      
                 }                
             } 
             return listPMTFieldMapping;           

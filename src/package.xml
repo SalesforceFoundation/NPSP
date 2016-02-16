@@ -221,6 +221,7 @@
         <members>UTIL_JobProgress_CTRL_TEST</members>
         <members>UTIL_JobScheduler</members>
         <members>UTIL_JobScheduler_TEST</members>
+        <members>UTIL_ListCustomSettingsFacade</members>
         <members>UTIL_MasterSchedulable</members>
         <members>UTIL_MasterSchedulableHelper</members>
         <members>UTIL_MasterSchedulable_TEST</members>
