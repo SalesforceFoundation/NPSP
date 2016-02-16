@@ -174,7 +174,7 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
     * @description Fills the mapOppNameSettings map with record type and attribution info and all settings.
     ********************************************************************************************************/
     public static void fillOppNameSettings() {
-        listOppNamingSettings = Opportunity_Naming_Settings__c.getAll().clone().values();
+        listOppNamingSettings = UTIL_ListCustomSettingsFacade.getMapOppNamingSettings().clone().values();
         mapOppNameSettings = new map<string,Opportunity_Naming_Settings__c>();
         for (Opportunity_Naming_Settings__c ons : listOppNamingSettings) {
 

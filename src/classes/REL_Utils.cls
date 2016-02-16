@@ -37,7 +37,7 @@ public with sharing class REL_Utils {
     private static Map<String, npe4__Relationship_Auto_Create__c> AutoCreateMap;
     public static Map<String, npe4__Relationship_Auto_Create__c> getAutoCreateMap() {
         if(AutoCreateMap == null){
-            AutoCreateMap = npe4__Relationship_Auto_Create__c.getAll();
+            AutoCreateMap = UTIL_ListCustomSettingsFacade.getMapRelationshipAutoCreateSettings();
         }
         return AutoCreateMap;
     }

@@ -212,6 +212,8 @@ private class OPP_OpportunityNaming_TEST
 
         //inserting settings after the fact so opps aren't named prematurely
         insert onsList;
+        //blank out cached version so the inserted setting takes effect
+        UTIL_ListCustomSettingsFacade.mapOppNamingSettings = null;
 
         //verify opps haven't been renamed yet
         list<Opportunity> queryOpp = [SELECT Name FROM Opportunity WHERE Id IN :listOpp];
