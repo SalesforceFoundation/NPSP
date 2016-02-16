@@ -86,6 +86,8 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             map<Id, Contact> mapContactIdContactOwnerChange = new map<Id, Contact>();
             map<Id, Id> mapContactIdAccountIdOldMoveOpps = new map<Id, Id>();
             map<Id, Id> mapContactIdAccountIdNewMoveOpps = new map<Id, Id>();
+            Set<String> hhNamingFields = HH_HouseholdNaming.iNaming.setHouseholdNameFieldsOnContact();
+
             
             if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {                    
                 // need to query account fields we need to look at
@@ -102,6 +104,14 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                     'OtherStreet, OtherCity, OtherState, OtherPostalCode, OtherCountry, OtherLatitude, OtherLongitude, '; 
                 if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled)
                     strSoql += 'MailingCountryCode, MailingStateCode, OtherCountryCode, OtherStateCode, ';
+                
+                if (hhNamingFields.size() > 0) {
+                    for (String hhNameField : hhNamingFields) {
+                        if (!strSoql.containsIgnoreCase(hhNameField))
+                            strSoql += hhNameField + ',';
+                    }
+                }
+
                 strSoql += 'Phone, Fax from Contact where Id IN :contacts';
                 contacts = database.query(strSoql);
             }        
@@ -257,8 +267,9 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                             }
                                                                                  
                            // HH Account didn't change, but it still might need renaming
-                        } else if (c.npe01__Organization_Type__c == CAO_Constants.HH_ACCOUNT_TYPE && needsHHAccountRename(c, oldContacts[i])) {
-                           listAccountIdHHToRename.add(c.AccountId);    
+                        } else if (c.npe01__Organization_Type__c == CAO_Constants.HH_ACCOUNT_TYPE && 
+                                needsHHAccountRename(hhNamingFields, c, oldContacts[i])) {
+                            listAccountIdHHToRename.add(c.AccountId);    
                         }  
                         
                         // check for ownership changes
@@ -761,25 +772,32 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     }
  
     /*******************************************************************************************************
-    * @description returns whether changes in the contact require a rename of a HH Account 
+    * @description returns whether changes in the contact require a rename of a HH Account
+    * @param hhNamingFields the set of fields used in the namespec
     * @param conNew the new version of the Contact
     * @param conOld the old version of the Contact
     * @return boolean
-    */ 
-    private boolean needsHHAccountRename(Contact conNew, Contact conOld) {          
-        if(conNew == null && conOld != null)
+    */
+    private boolean needsHHAccountRename(Set<String> hhNamingFields, Contact conNew, Contact conOld) {
+        if (conNew == null && conOld != null)
             return true;
-        if(conNew != null && conOld == null)
+        if (conNew != null && conOld == null)
             return true;
-        if(conNew.FirstName == null) conNew.FirstName = '';
-        if(conNew.LastName == null) conNew.LastName = '';
+        if (conNew.FirstName == null) conNew.FirstName = '';
+        if (conNew.LastName == null) conNew.LastName = '';
         
-        return (!conNew.Firstname.equals(conOld.Firstname) ||
-                !conNew.Lastname.equals(conOld.Lastname) ||
-                conNew.Salutation != conOld.Salutation ||
-                conNew.npo02__Household_Naming_Order__c != conOld.npo02__Household_Naming_Order__c ||
-                conNew.npo02__Naming_Exclusions__c != conOld.npo02__Naming_Exclusions__c);
-    }   
+        // check all household naming fields for changes
+        for(String fieldName : hhNamingFields) {
+            if (String.valueOf(conNew.get(fieldName)) != String.valueOf(conOld.get(fieldName))) {
+                return true;
+            }
+        }
+        if (conNew.npo02__Household_Naming_Order__c != conOld.npo02__Household_Naming_Order__c ||
+            conNew.npo02__Naming_Exclusions__c != conOld.npo02__Naming_Exclusions__c) {
+            return true;
+        }
+        return false;
+    }
     
     /*******************************************************************************************************
     * @description returns whether changes in the contact require an address change in the HH Account 

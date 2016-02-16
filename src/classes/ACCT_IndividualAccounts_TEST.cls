@@ -130,6 +130,52 @@ private class ACCT_IndividualAccounts_TEST {
     	System.assertEquals(2, numOfAccs);
     }
     
+    private static testMethod void insertHHAccountContactTitleForRename() {
+        if (strTestOnly != '*' && strTestOnly != 'insertHHAccountContactTitleForRename') return;
+        insertContactTitleForRename(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }
+    private static void insertContactTitleForRename(string strProcessor) {
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+
+        Household_Naming_Settings__c hhNamingSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdNamingSettingsForTests(
+        	new Household_Naming_Settings__c(
+                Household_Name_Format__c = '{!LastName} Household',
+        		Formal_Greeting_Format__c = '{!{!Title} {!FirstName}} {!LastName}',
+                Informal_Greeting_Format__c = '{!{!FirstName}}',
+        		Name_Connector__c = label.npo02.HouseholdNameConnector,
+       			Name_Overrun__c = label.npo02.HouseholdNameOverrun,
+        		Contact_Overrun_Count__c = 9,
+        		Implementing_Class__c = 'HH_NameSpec'
+            )
+        );
+
+        CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+
+        Contact con = new Contact(
+            FirstName='Jack',
+            LastName='Ruby',
+            Title = 'Doctor',
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS,
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        Test.startTest();
+        insert con;
+        Test.stopTest();
+
+        Contact[] insertedContacts = [Select Account.npo02__Formal_Greeting__c, FirstName, LastName, AccountId  from Contact where id=:con.id];
+        system.assertEquals('Doctor Jack Ruby', insertedContacts[0].Account.npo02__Formal_Greeting__c);
+
+        con.Title = 'Hard Worker';
+        update con;
+
+        Contact[] updatedContacts = [Select Account.npo02__Formal_Greeting__c, FirstName, LastName, AccountId  from Contact where id=:con.id];
+        system.assertEquals('Hard Worker Jack Ruby', updatedContacts[0].Account.npo02__Formal_Greeting__c);
+    }
+
+    
     /*********************************************************************************************************
     * @description Create a contact, and change it to private, against all three account models.  
     */
