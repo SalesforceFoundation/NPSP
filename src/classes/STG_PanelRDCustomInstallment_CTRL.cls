@@ -70,7 +70,7 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
         try {
 	        insert ciNew;
             isEditMode = false;
-	        STG_Panel.stgService.listRDCustomInstallment = null;
+	        resetCustomInstallmentSettings();
 	        ciNew = null;
 	        string strPostSaveMessage = 'After saving the Installment Period record, you will also need to add your Installment Period Name to the Recurring Donation\'s Installment Period picklist. To edit the picklist, go to Setup, Create, Objects, then select Recurring Donations. Click on the Installment Period picklist, and then edit the picklist values.';
 	        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, strPostSaveMessage));
@@ -93,6 +93,14 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
     }
     
     /*********************************************************************************************************
+    * @description Resets custom installment settings so that they are reloaded and the cached version isn't used.
+    */
+    public void resetCustomInstallmentSettings() {
+        UTIL_ListCustomSettingsFacade.mapCustomInstallmentSettings = null;
+        STG_Panel.stgService.listRDCustomInstallment = null;
+    }
+
+    /*********************************************************************************************************
     * @description string to hold the Id of an existing ci to delete 
     */
     public string ciIdDelete { get; set; }
@@ -109,7 +117,7 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
                 npe03__Custom_Installment_Settings__c ci = new npe03__Custom_Installment_Settings__c(Id = ciIdDelete);
 	            delete ci;
 	            // force reload.
-	            STG_Panel.stgService.listRDCustomInstallment = null;
+	            resetCustomInstallmentSettings();
                 string strPostSaveMessage = 'After deleting the Installment Period record, you will also need to remove your Installment Period Name from the Recurring Donation\'s Installment Period picklist. To edit the picklist, go to Setup, Create, Objects, then select Recurring Donations. Click on the Installment Period picklist, and then edit the picklist values.  You will also need to update any open Recurring Donations that were using the Installment Period to use a new Installment Period value, and you will need to refresh the Recurring Donation\'s Opportunities.';
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, strPostSaveMessage));
 	        }

@@ -62,7 +62,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     static Household_Naming_Settings__c orgHouseholdNamingSettings;
     static Allocations_Settings__c orgAllocationsSettings;
     static Data_Import_Settings__c orgDataImportSettings;
-    
+
     /*******************************************************************************************************
     * @description Returns the default Contacts and Orgs settings. 
     * @return npe01__Contacts_And_Orgs_Settings__c Custom settings record for Contacts and Orgs configuration. 
@@ -546,7 +546,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
 
     private static void configRelationshipsSettings(npe4__Relationship_Settings__c rs) {
-        rs.npe4__Reciprocal_Method__c = 'List Settings';
+        rs.npe4__Reciprocal_Method__c = 'List Setting';
     }
     
     private static void configAffiliationsSettings(npe5__Affiliations_Settings__c afs) {
