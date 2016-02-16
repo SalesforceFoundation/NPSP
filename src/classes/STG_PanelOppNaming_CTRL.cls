@@ -52,7 +52,7 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
     public map<string,Opportunity_Naming_Settings__c> mapOppNameSettings {
         get {
             if (mapOppNameSettings==null)
-                mapOppNameSettings = Opportunity_Naming_Settings__c.getAll();
+                mapOppNameSettings = UTIL_ListCustomSettingsFacade.getMapOppNamingSettings();
             return mapOppNameSettings;
         }
         set;
@@ -99,7 +99,7 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
     */
     public PageReference delONS() {
         delete mapOppNameSettings.get(currentONSName);
-        mapOppNameSettings = Opportunity_Naming_Settings__c.getAll();
+        mapOppNameSettings = UTIL_ListCustomSettingsFacade.getMapOppNamingSettings();
         return null;
     }
 
@@ -133,7 +133,7 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
     public PageReference saveONS() {
         if (isValidNameFormats()) {
             upsert currentONS;
-            mapOppNameSettings = Opportunity_Naming_Settings__c.getAll();
+            mapOppNameSettings = UTIL_ListCustomSettingsFacade.getMapOppNamingSettings();
             super.cancelEdit();
         }
         return null;
