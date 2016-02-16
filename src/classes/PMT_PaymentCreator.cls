@@ -43,8 +43,8 @@ public class PMT_PaymentCreator {
         get {
             if (paymentMappings == null) {
                 //load custom field mapping settings - if they exist        
-                map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappingsAll = npe01__Payment_Field_Mapping_Settings__c.getAll().clone();
-                paymentMappings = npe01__Payment_Field_Mapping_Settings__c.getAll().clone();
+                map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappingsAll = UTIL_ListCustomSettingsFacade.getMapPaymentFieldMappingSettings().clone();
+                paymentMappings = UTIL_ListCustomSettingsFacade.getMapPaymentFieldMappingSettings().clone();
             
                 for (string s : paymentMappingsAll.keySet()){
                     npe01__Payment_Field_Mapping_Settings__c pfms = paymentMappingsAll.get(s); 
