@@ -757,4 +757,27 @@ public without sharing class UTIL_CustomSettingsFacade {
         orgRecurringDonationsSettings = recurringDonationsSettings;
         return recurringDonationsSettings;
     }
+    
+    /*******************************************************************************************************
+    * @description Creates instance of settings to use in tests. It does not insert it, but all other methods will see these settings
+    * as the configured settings.
+    * @parameter mySettings Settings instance with the values to set.
+    * @return Household_Naming_Settings__c The configured settings.
+    **/
+    public static Household_Naming_Settings__c getHouseholdNamingSettingsForTests(Household_Naming_Settings__c mySettings) {
+      if(householdNamingSettings == null)
+        householdNamingSettings = new Household_Naming_Settings__c();
+
+      householdNamingSettings.Household_Name_Format__c = mySettings.Household_Name_Format__c;
+      householdNamingSettings.Formal_Greeting_Format__c = mySettings.Formal_Greeting_Format__c;
+      householdNamingSettings.Informal_Greeting_Format__c = mySettings.Informal_Greeting_Format__c;
+      householdNamingSettings.Name_Connector__c = mySettings.Name_Connector__c;
+      householdNamingSettings.Name_Overrun__c = mySettings.Name_Overrun__c;
+      householdNamingSettings.Contact_Overrun_Count__c = mySettings.Contact_Overrun_Count__c;
+      householdNamingSettings.Implementing_Class__c = mySettings.Implementing_Class__c;
+
+      orgHouseholdNamingSettings = householdNamingSettings;
+      return householdNamingSettings;
+    }
+
 }
