@@ -256,7 +256,7 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
         integer counter = 0;            
             
         if (rs.npe4__Reciprocal_Method__c == 'List Setting'){            
-            map<string, npe4__Relationship_Lookup__c> rlMap = npe4__Relationship_Lookup__c.getAll().clone();
+            map<string, npe4__Relationship_Lookup__c> rlMap = UTIL_ListCustomSettingsFacade.getMapRelationshipLookupSettings().clone();
         
             //remove inactive values
             for (string s : rlMap.keySet()){

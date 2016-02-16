@@ -75,7 +75,7 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
     public list<UDR> udrList {
     	get {
     		if (udrList == null) {
-		        list<npo02__User_Rollup_Field_Settings__c> thisList = npo02__User_Rollup_Field_Settings__c.getAll().values(); 
+		        list<npo02__User_Rollup_Field_Settings__c> thisList = UTIL_ListCustomSettingsFacade.getMapUserRollupFieldSettings().values(); 
 		        udrList = new list<UDR>();
 		        for (npo02__User_Rollup_Field_Settings__c udr : thisList) {
 		            udrList.add(new UDR(udr, this));
@@ -84,7 +84,7 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
     		}
             return udrList;
     	}
-    	private set;
+    	set;
     }
     
     /*********************************************************************************************************
@@ -164,7 +164,7 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
 	        map<string, Schema.Sobjectfield> targetTokenMap = new map<string, Schema.Sobjectfield>();        
 	        //need to load current settings to not allow the user to point to the same target field
 	        //twice
-	        map<string, npo02__User_Rollup_Field_Settings__c> currentURFSMap = npo02__User_Rollup_Field_Settings__c.getAll();
+	        map<string, npo02__User_Rollup_Field_Settings__c> currentURFSMap = UTIL_ListCustomSettingsFacade.getMapUserRollupFieldSettings();
 	        set<string> currentTargetFieldSet = new set<string>();
 	        for (string s : currentURFSMap.keySet()){
 	            if (currentURFSMap.get(s).npo02__Object_Name__c == activeUDR.TargetObject && currentURFSMap.get(s).npo02__Target_Field__c != activeUDR.TargetField) {
@@ -309,7 +309,7 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
         boolean isValid = true;
         boolean isValidAll = true;
         
-        map<string, npo02__User_Rollup_Field_Settings__c> userRollups = npo02__User_Rollup_Field_Settings__c.getAll(); 
+        map<string, npo02__User_Rollup_Field_Settings__c> userRollups = UTIL_ListCustomSettingsFacade.getMapUserRollupFieldSettings(); 
         string strSetting = Schema.Sobjecttype.npo02__User_Rollup_Field_Settings__c.getLabel(); 
     
         for (string s : userRollups.keySet()) {
