@@ -329,7 +329,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
                 newOpp.put('RecordTypeId',rtid);
             }
 
-        map<string, npo02__User_Rollup_Field_Settings__c> urfsMap = npo02__User_Rollup_Field_Settings__c.getAll();
+        map<string, npo02__User_Rollup_Field_Settings__c> urfsMap = UTIL_ListCustomSettingsFacade.getMapUserRollupFieldSettings();
         system.assertEquals(3, urfsMap.keySet().size());                    
 
         Test.StartTest();
@@ -856,7 +856,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
                 newOpp.put('RecordTypeId',rtid);
             }
 
-        map<string, npo02__User_Rollup_Field_Settings__c> urfsMap = npo02__User_Rollup_Field_Settings__c.getAll();
+        map<string, npo02__User_Rollup_Field_Settings__c> urfsMap = UTIL_ListCustomSettingsFacade.getMapUserRollupFieldSettings();
         system.assertEquals(1, urfsMap.keySet().size());
 
         insert newOpp;
