@@ -204,6 +204,51 @@ public with sharing class BDI_DataImport_TEST {
 
     /*********************************************************************************************************
     operation:
+        import matching contacts within multiple di records in the same batch 
+    verify:
+        only two contacts created
+        only 1 household account created
+    **********************************************************************************************************/            
+    static testMethod void TwoDIDuplicateNewContactsDifferentOrder() {
+        if (strTestOnly != '*' && strTestOnly != 'TwoDIDuplicateNewContactsDifferentOrder') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(newDI('c1', 'C1', 'c2', 'C2'));
+        listDI.add(newDI('c2', 'C2'));
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name, AccountId from Contact order by Lastname];
+        system.assertEquals(2, listCon.size());
+        system.assertEquals('c1 C1', listCon[0].Name);
+        system.assertEquals('c2 C2', listCon[1].Name);
+        
+        // verify only one household account
+        list<Account> listAcc = [select Id, Name from Account];
+        system.assertEquals(1, listAcc.size());
+        system.assertEquals(listAcc[0].Id, listCon[0].AccountId);
+        system.assertEquals(listAcc[0].Id, listCon[1].AccountId);
+
+        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c, 
+            Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Name];
+        system.assertEquals(2, listDI.size());
+        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
+        system.assertEquals(listDI[1].Contact1Imported__c, listCon[1].Id);
+        system.assertNotEquals(null, listDI[0].HouseholdAccountImported__c);
+        system.assertNotEquals(null, listDI[1].HouseholdAccountImported__c);
+        system.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiCreated, listDI[1].Contact1ImportStatus__c);        
+        system.assertEquals(label.bdiMatched, listDI[0].Contact2ImportStatus__c);        
+    }
+
+    /*********************************************************************************************************
+    operation:
         import existing contacts within the same di record 
     verify:
         two contacts matched
@@ -569,6 +614,87 @@ public with sharing class BDI_DataImport_TEST {
         system.assertEquals(label.bdiCreated, listDI[1].HomeAddressImportStatus__c);        
     }
     
+    /*********************************************************************************************************
+    operation:
+        import duplicate contacts with duplicate home addresses 
+    verify:
+        no duplicate address objects created
+        contacts' mailing address set
+        hh accounts' billing address set
+    **********************************************************************************************************/            
+    static testMethod void ManyDISameHomeAddresses() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDIHomeAddresses') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(newDI('c1', 'C1', 'c2', 'C2'));
+        listDI.add(newDI('c1', 'C1'));
+        listDI.add(newDI('c1', 'C1'));
+        listDI.add(newDI('c2', 'C2'));
+        listDI.add(newDI('c2', 'C2'));
+
+        // add same address to all
+        for (DataImport__c di : listDI) {        
+            di.Home_Street__c = '123 45th St NE';
+            di.Home_City__c = 'Seattle';
+            di.Home_State_Province__c = 'Washington';
+            di.Home_Zip_Postal_Code__c = '98052';
+            di.Home_Country__c = 'United States';
+        }
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name, AccountId, MailingStreet, MailingCity, MailingState, 
+            MailingPostalCode, MailingCountry from Contact order by Lastname];
+        system.assertEquals(2, listCon.size());
+        for (Contact con : listCon) {        
+            system.assertEquals(listDI[0].Home_Street__c, con.MailingStreet);
+            system.assertEquals(listDI[0].Home_City__c, con.MailingCity);
+            system.assertEquals(listDI[0].Home_State_Province__c, con.MailingState);
+            system.assertEquals(listDI[0].Home_Zip_Postal_Code__c, con.MailingPostalCode);
+            system.assertEquals(listDI[0].Home_Country__c, con.MailingCountry);
+        }
+        
+        list<Address__c> listAddr = [select Id, Household_Account__c, MailingStreet__c, MailingCity__c, MailingState__c, 
+            MailingPostalCode__c, MailingCountry__c from Address__c order by MailingCity__c]; 
+        system.assertEquals(1, listAddr.size());
+        system.assertEquals(listDI[0].Home_Street__c, listAddr[0].MailingStreet__c);
+        system.assertEquals(listDI[0].Home_City__c, listAddr[0].MailingCity__c);
+        system.assertEquals(listDI[0].Home_State_Province__c, listAddr[0].MailingState__c);
+        system.assertEquals(listDI[0].Home_Zip_Postal_Code__c, listAddr[0].MailingPostalCode__c);
+        system.assertEquals(listDI[0].Home_Country__c, listAddr[0].MailingCountry__c);
+        
+        list<Account> listAcc = [select Id, Name, BillingStreet, BillingCity, BillingState, 
+            BillingPostalCode, BillingCountry from Account order by Name];
+        system.assertEquals(1, listAcc.size());
+        system.assertEquals(listDI[0].Home_Street__c, listAcc[0].BillingStreet);
+        system.assertEquals(listDI[0].Home_City__c, listAcc[0].BillingCity);
+        system.assertEquals(listDI[0].Home_State_Province__c, listAcc[0].BillingState);
+        system.assertEquals(listDI[0].Home_Zip_Postal_Code__c, listAcc[0].BillingPostalCode);
+        system.assertEquals(listDI[0].Home_Country__c, listAcc[0].BillingCountry);                
+
+        listDI = [select HomeAddressImported__c, HomeAddressImportStatus__c from DataImport__c order by Name];
+        system.assertEquals(5, listDI.size());
+        integer cCreated = 0;
+        integer cMatched = 0;
+        for (DataImport__c di : listDI) {
+            system.assertEquals(di.HomeAddressImported__c, listAddr[0].Id);
+            if (di.HomeAddressImportStatus__c == label.bdiCreated)
+                cCreated++; 
+            else if (di.HomeAddressImportStatus__c == label.bdiMatched)
+                cMatched++; 
+        }
+        // we didn't have an easy way to track the specific DI record that caused the addr to be created vs matched
+        // in these duplicate (but new) scenarios, so we will live with marking them all as created.
+        system.assertEquals(5, cCreated);
+        system.assertEquals(0, cMatched);
+    }
+
     /*********************************************************************************************************
     operation:
         import contacts with home addresses, while address management is disabled
@@ -1024,5 +1150,43 @@ public with sharing class BDI_DataImport_TEST {
         system.assertEquals(label.bdiErrorInvalidDonor, listDI[1].DonationImportStatus__c);
         system.assertEquals(label.bdiImported, listDI[0].Status__c);        
         system.assertEquals(label.bdiFailed, listDI[1].Status__c);        
+    }
+
+    /*********************************************************************************************************
+    operation:
+        import different contacts within multiple di records in the same batch setting Household fields
+    verify:
+        two contacts created
+    **********************************************************************************************************/            
+    static testMethod void TwoDITwoNewContactsHouseholdFields() {
+        if (strTestOnly != '*' && strTestOnly != 'TwoDITwoNewContactsHouseholdFields') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Contact1_Lastname__c = 'c1', Household_Phone__c = '425-111-2222'));
+        listDI.add(new DataImport__c(Contact1_Lastname__c = 'c2', Household_Phone__c = '425-111-2222'));
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name, AccountId, Account.Phone from Contact order by Lastname];
+        system.assertEquals(2, listCon.size());
+        system.assertNotEquals(listCon[1].Name, listCon[0].Name);
+        system.assertEquals(listDI[0].Household_Phone__c, listCon[0].Account.Phone);
+        system.assertEquals(listDI[1].Household_Phone__c, listCon[1].Account.Phone);
+        
+        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c, 
+            Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Contact1Imported__c];
+        system.assertEquals(2, listDI.size());
+        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
+        system.assertEquals(listDI[1].Contact1Imported__c, listCon[1].Id);
+        system.assertNotEquals(null, listDI[0].HouseholdAccountImported__c);
+        system.assertNotEquals(null, listDI[1].HouseholdAccountImported__c);
+        system.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiCreated, listDI[1].Contact1ImportStatus__c);        
     }
 }
