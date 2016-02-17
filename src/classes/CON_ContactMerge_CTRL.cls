@@ -530,7 +530,18 @@ public with sharing class CON_ContactMerge_CTRL {
             'npo02__Soft_Credit_Last_Year__c',
             'npo02__Soft_Credit_This_Year__c',
             'npo02__Soft_Credit_Total__c',
-            'npo02__Soft_Credit_Two_Years_Ago__c'
+            'npo02__Soft_Credit_Two_Years_Ago__c',
+            'First_Soft_Credit_Amount__c',
+            'First_Soft_Credit_Date__c',
+            'Largest_Soft_Credit_Amount__c',
+            'Largest_Soft_Credit_Date__c',
+            'Last_Soft_Credit_Amount__c',
+            'Last_Soft_Credit_Date__c',
+            'Number_of_Soft_Credits__c',
+            'Number_of_Soft_Credits_Last_N_Days__c',
+            'Number_of_Soft_Credits_Last_Year__c',
+            'Number_of_Soft_Credits_This_Year__c',
+            'Number_of_Soft_Credits_Two_Years_Ago__c'
         };
 
         for (string strF : listStrField) {
@@ -550,7 +561,8 @@ public with sharing class CON_ContactMerge_CTRL {
         list<string> listStrField = new list<string>{
             'npe01__SystemAccountProcessor__c',
             'npo02__SystemHouseholdProcessor__c',
-            'npe01__SystemIsIndividual__c'
+            'npe01__SystemIsIndividual__c',
+            'Current_Address__c'
         };
 
         for (string strF : listStrField) {
