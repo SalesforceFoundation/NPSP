@@ -245,6 +245,8 @@
         <members>UTIL_JobProgress</members>
         <members>UTIL_JobProgressLightning</members>
         <members>UTIL_PageMessages</members>
+        <members>UTIL_JobProgressLightning</members>
+        <members>UTIL_PageMessages</members>
         <members>UTIL_SoqlListView</members>
         <members>UTIL_Typeahead</members>
         <name>ApexComponent</name>
