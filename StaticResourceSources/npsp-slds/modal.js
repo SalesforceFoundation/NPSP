@@ -106,21 +106,25 @@
 
         var el = event.target;
 
-        if (elementMatches(el, 'a')) {
-            event.preventDefault();
-        }
+        var isModalAction = false;
 
-        if (elementMatches(el, '[data-toggle="modal"]')) {
+        if (elementMatches(el, '[data-toggle="modal"], [data-toggle="modal"] *')) {
             var modalId = el.getAttribute('data-target') || '';
             if (!modalId) return;
+            isModalAction = true;
             lastFocusedElement = el;
             openModal(modalId);
         }
 
-        if (elementMatches(el, '[data-dismiss="modal"]')) {
+        if (elementMatches(el, '[data-dismiss="modal"], [data-dismiss="modal"] *')) {
             var modalId = el.getAttribute('data-target') || '';
             if (!modalId) return;
+            isModalAction = true;
             closeModal(modalId);
+        }
+
+        if (isModalAction && elementMatches(el, 'a')) {
+            event.preventDefault();
         }
     }, false);
 
