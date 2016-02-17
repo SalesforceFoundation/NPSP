@@ -85,7 +85,17 @@ gwManageHH.originalState = JSON.stringify({!originalState});
 
 <div class="gwNotifications gwHidden"> </div>
 
-
+<apex:form >
+<div class="gwControls">
+<div class="gwSection-content">
+    
+    <input class="gwPreventUI btn gwControls-save" name="topSave" value="{!$Label.site.save}" type="submit" />
+    
+    <apex:commandButton rendered="{!hhA.id != null}" styleClass="gwPreventUI" action="{!deleteHH}" value="{!$Label.npo02__Delete}" />
+    <apex:commandButton styleClass="gwPreventUI" action="{!cancel}" value="{!$Label.site.cancel}" />
+    
+</div>
+</div>
 
 <div class="gwSection">
 <div class="gwSection-header">
@@ -139,7 +149,7 @@ gwManageHH.originalState = JSON.stringify({!originalState});
     </div>
 </div>
 
-<apex:form >
+
 <!-- inputText so that the javascript can write back to the multiselect field -->
 <apex:inputText value="{!hhA.npo02__SYSTEM_CUSTOM_NAMING__c}" styleClass="gwHidden sfField sfField-SYSTEM_CUSTOM_NAMING__c" />
 <apex:inputField value="{!hhA.Name}" styleClass="gwHidden sfField sfField-Name" />
