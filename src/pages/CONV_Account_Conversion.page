@@ -1,266 +1,293 @@
-<apex:page controller="CONV_Account_Conversion_CTRL" title="Account Model Conversion Utility" tabStyle="npo02__Household__c" showHeader="true" sidebar="false" action="{!runCheck}">
-    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
-    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/js/bootstrap.min.js')}" />
-    <apex:styleSheet value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/css/bootstrap-namespaced.css')}" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<apex:page controller="CONV_Account_Conversion_CTRL"
+    title="Account Model Conversion Utility"
+    tabStyle="npo02__Household__c"
+    showHeader="true"
+    sidebar="false"
+    standardStylesheets="false"
+    action="{!runCheck}">
 
-<script type="text/javascript">
-    var j$ = jQuery.noConflict();
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/modal.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.SLDS, 'assets/styles/salesforce-lightning-design-system-vf.css')}"/>
 
-    //add some show handlers
-    jQuery(function(j$) {
-        var _oldShow = j$.fn.show;
-        j$.fn.show = function(speed, oldCallback) {
-            return j$(this).each(function() {
-                var obj = j$(this), newCallback = function() {
-                    if (j$.isFunction(oldCallback)) {
-                        oldCallback.apply(obj);
-                    }
-                    obj.trigger('afterShow');
-                };
-                obj.trigger('beforeShow');
-                _oldShow.apply(obj, [speed, newCallback]);
-            });
+    <style type="text/css">
+        html body.sfdcBody {
+            padding: 0px;
         }
-    });
+    </style>
 
-    j$(document).ready(function(){
-        j$('#conversionBTN').attr('disabled', 'disabled');
-        j$("input[type='checkbox']").click(function() {
-            if (j$("input[type='checkbox']:checked").length == j$("input[type='checkbox']").length && !{!runCheckErrorState})
-                j$('#conversionBTN').removeAttr('disabled');
-            else
-                j$('#conversionBTN').attr('disabled', 'disabled');
-        });
-        j$("#convertBTN").bind("click",function(){
-            //hide buttons
-            j$("#conversionBTN").hide();
-            //hide panels
-            j$(".panel").hide();
-            //render outputpanel
-            j$("#progresspanel").removeClass('hide');
-            //call conversion
-            callConversion();
-        });
-     
-     //   j$("#progresspanel").bind("beforeShow", function() {
-     //       j$("div[class^='message']").hide();
-     //   })
-    });
+    <div class="slds">
 
-    function callConversion(){
-        runconvert() ;
-    }
+        <div id="all_content">
 
-    function renderResults(){
-        j$("div[class^='message']").hide();
-    }
-
-    function refreshPage(){location.reload(true);}
-
-    function verifyHHIdField(){
-        var selectedField = j$("[name$='HHId']").val();
-            if (selectedField != ''){
-                Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.CONV_Account_Conversion_CTRL.verifyFieldTypeForIds}',selectedField,function(result, event){
-                if(event.status){
-                    if (!result){
-                        alert("{!$Label.CONV_Selected_Field_Bad}");
-                        j$("[name$='HHId']").val('-None-');
-                    }
-                }
-                else{
-                    alert("{!$Label.CONV_Selected_Field_Verification_Failure}");
-                }
-            });
-        }
-    }
-</script>
-
-<style>
-    body{
-        margin:0px;
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    }
-    .bootstrap3 h1, .bootstrap3 h2, .bootstrap3 h3, .bootstrap3 h4{
-        font-family: Vagrolight,Arial,Helvetica,sans-serif;
-    }
-    .bootstrap3 p{
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    }
-    .bootstrap .jumbotron{
-        background-color: #f0f1f2;
-        margin-bottom:0px;
-    }
-    .bootstrap .container .jumbotron {
-        padding: 20px;
-    }
-    .bootstrap .container {
-        padding-top: 10px;
-    }
-    /* Customize container */
-    @media (min-width: 768px) {}
-    .bootstrap .panel .list-group .list-group-item {
-        border-width: 0;
-        padding: 5px 0px 5px 0px;
-    }
-    ul.err li {
-        list-style-type: none;
-        color: #cc0000;
-        font-weight: bold; 
-    }
-    label {
-        display: block;
-    }
-    .bootstrap input{
-        top: -1px;
-    }
-    .bootstrap input[type="checkbox"]{
-        margin-right:10px;
-    }
-</style>
-
-<apex:pageMessages />
-    <div class="bootstrap" >
-        <apex:form >
-        <!-- HEADER -->
-        <div class="container">
-            <div class="jumbotron">
-                <div class="row">
-                    <div class="col-sm-8 col-xs-12" >
-                        <h3>{!$Label.CONV_Page_Title}</h3>
-                        <h4>{!$Label.CONV_Page_Description}</h4>
+            <div class="slds-page-header slds-m-bottom--large" role="banner">
+                <div class="slds-media slds-media--center slds-media--responsive">
+                    <div class="slds-media__body">
+                        <h3 class="slds-text-heading--medium slds-m-bottom--large">{!$Label.CONV_Page_Title}</h3>
+                        <p>{!$Label.CONV_Page_Description}</p>
                     </div>
-                    <div class="col-sm-4 col-xs-12" >
-                        <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/NPSP_Logo_Small.png')}" class="img-rounded img-responsive" />
+                    <div class="slds-media__figure slds-media__figure--reverse">
+                        <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/NPSP_Logo_Small_Cropped.png')}" class="img-rounded img-responsive" style="height: 75px" alt="NPSP Logo"/>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="container" >
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="panel panel-default">
-                        <!-- Default panel contents -->
-                        <div class="panel-heading"><h3 class="panel-title">{!$Label.CONV_Important_Info_Header}</h3></div>
-                        <div class="panel-body">
-                        <p>{!$Label.CONV_Permanent_Change}</p>
-                            <label for="check-users-logged-out"><input type="checkbox" id="check-users-logged-out"/>{!$Label.CONV_All_Users_Logged_Out}</label>
-                            <label for="check-data-backedup"><input type="checkbox" id="check-data-backedup"/>{!$Label.CONV_All_Backed_Up}</label>
-                            <label for="check-sandbox-first"><input type="checkbox" id="check-sandbox-first"/>{!$Label.CONV_Tested_in_Sandbox}</label>
-                            <label for="check-inactiveuser"><input type="checkbox" id="check-inactiveuser"/>{!$Label.CONV_Record_Ownership_Transferred}</label>
-                            <label for="check-wf-validation"><input type="checkbox" id="check-wf-validation"/>{!$Label.CONV_All_WFR_Disabled}</label>
-                            <label for="check-required-fields"><input type="checkbox" id="check-required-fields"/>{!$Label.CONV_All_Required_Removed}</label>
-                            <label for="check-households"><input type="checkbox" id="check-households"/>{!$Label.CONV_Only_Household_Contacts}</label>
-                            <label for="check-apps"><input type="checkbox" id="check-apps"/>{!$Label.CONV_Non_NPSP_Apps}</label>
-                            <label for="check-consult"><input type="checkbox" id="check-consult"/>{!$Label.CONV_Local_Expert}</label>
-                            <label for="check-risk"><input type="checkbox" id="check-risk"/>{!$Label.CONV_Accept_Risk}</label>
+            <c:UTIL_PageMessages id="pageMessages" html-class="slds-grid slds-m-horizontal--xx-large"/>
+
+            <div id="warning_content" class="slds-m-top--medium">
+                <div class="slds-grid slds-m-bottom--large">
+                    <div class="slds-col slds-size--1-of-2 slds-p-right--x-large slds-p-left--xx-large slds-col-rule--right">
+                        <h3 class="slds-text-heading--small slds-m-bottom--medium">
+                            {!$Label.CONV_Important_Info_Header}
+                        </h3>
+
+                        <p class="slds-m-bottom--large">
+                            {!$Label.CONV_Permanent_Change}
+                        </p>
+
+                        <div>
+                            <form>
+                                <div class="slds-form-element">
+                                    <label class="slds-checkbox" for="check-users-logged-out">
+                                        <input name="checkbox" type="checkbox" id="check-users-logged-out" />
+                                        <span class="slds-checkbox--faux"></span>
+                                        <span class="slds-form-element__label">{!$Label.CONV_All_Users_Logged_Out}</span>
+                                    </label>
+                                </div>
+
+                                <div class="slds-form-element">
+                                    <label class="slds-checkbox" for="check-data-backedup">
+                                        <input name="checkbox" type="checkbox" id="check-data-backedup" />
+                                        <span class="slds-checkbox--faux"></span>
+                                        <span class="slds-form-element__label">{!$Label.CONV_All_Backed_Up}</span>
+                                    </label>
+                                </div>
+
+                                <div class="slds-form-element">
+                                    <label class="slds-checkbox" for="check-sandbox-first">
+                                        <input name="checkbox" type="checkbox" id="check-sandbox-first" />
+                                        <span class="slds-checkbox--faux"></span>
+                                        <span class="slds-form-element__label">{!$Label.CONV_Tested_in_Sandbox}</span>
+                                    </label>
+                                </div>
+
+                                <div class="slds-form-element">
+                                    <label class="slds-checkbox" for="check-inactiveuser">
+                                        <input name="checkbox" type="checkbox" id="check-inactiveuser" />
+                                        <span class="slds-checkbox--faux"></span>
+                                        <span class="slds-form-element__label">{!$Label.CONV_Record_Ownership_Transferred}</span>
+                                    </label>
+                                </div>
+
+                                <div class="slds-form-element">
+                                    <label class="slds-checkbox" for="check-wf-validation">
+                                        <input name="checkbox" type="checkbox" id="check-wf-validation" />
+                                        <span class="slds-checkbox--faux"></span>
+                                        <span class="slds-form-element__label">{!$Label.CONV_All_WFR_Disabled}</span>
+                                    </label>
+                                </div>
+
+                                <div class="slds-form-element">
+                                    <label class="slds-checkbox" for="check-required-fields">
+                                        <input name="checkbox" type="checkbox" id="check-required-fields" />
+                                        <span class="slds-checkbox--faux"></span>
+                                        <span class="slds-form-element__label">{!$Label.CONV_All_Required_Removed}</span>
+                                    </label>
+                                </div>
+
+                                <div class="slds-form-element">
+                                    <label class="slds-checkbox" for="check-households">
+                                        <input name="checkbox" type="checkbox" id="check-households" />
+                                        <span class="slds-checkbox--faux"></span>
+                                        <span class="slds-form-element__label">{!$Label.CONV_Only_Household_Contacts}</span>
+                                    </label>
+                                </div>
+
+                                <div class="slds-form-element">
+                                    <label class="slds-checkbox" for="check-apps">
+                                        <input name="checkbox" type="checkbox" id="check-apps" />
+                                        <span class="slds-checkbox--faux"></span>
+                                        <span class="slds-form-element__label">{!$Label.CONV_Non_NPSP_Apps}</span>
+                                    </label>
+                                </div>
+
+                                <div class="slds-form-element">
+                                    <label class="slds-checkbox" for="check-consult">
+                                        <input name="checkbox" type="checkbox" id="check-consult" />
+                                        <span class="slds-checkbox--faux"></span>
+                                        <span class="slds-form-element__label">{!$Label.CONV_Local_Expert}</span>
+                                    </label>
+                                </div>
+
+                                <div class="slds-form-element">
+                                    <label class="slds-checkbox" for="check-risk">
+                                        <input name="checkbox" type="checkbox" id="check-risk" />
+                                        <span class="slds-checkbox--faux"></span>
+                                        <span class="slds-form-element__label">{!$Label.CONV_Accept_Risk}</span>
+                                    </label>
+                                </div>
+
+                            </form>
                         </div>
+                    </div>
+
+                    <div class="slds-col slds-size--1-of-2 slds-p-left--x-large slds-p-right--xx-large">
+                        <h3 class="slds-text-heading--small slds-m-bottom--medium">
+                            {!$Label.CONV_What_This_Tool_Does}
+                        </h3>
+
+                        <p class="slds-m-bottom--large">
+                            {!$Label.CONV_Batching_Explanation}
+                        </p>
+
+                        <ul class="slds-list--dotted">
+                            <li>{!$Label.CONV_All_Triggers_Disabled}</li>
+                            <li>{!$Label.CONV_All_Households_Selected}</li>
+                            <li>{!$Label.CONV_New_Households_Created}</li>
+                            <li>{!$Label.CONV_Old_Household_Objects}</li>
+                            <li>{!$Label.CONV_New_Affiliations}</li>
+                            <li>{!$Label.CONV_Contacts_Attached}</li>
+                            <li>{!$Label.CONV_Opportunities_Reparented}</li>
+                            <li>{!$Label.CONV_Activities_Reparented}</li>
+                            <li>{!$Label.CONV_Addresses_Mapped}</li>
+                            <li>{!$Label.CONV_Master_Address_Set}</li>
+                            <li>{!$Label.CONV_Address_Overrides_Set}</li>
+                            <li>{!$Label.CONV_Primary_Contacts_Set}</li>
+                            <li><apex:outputText value="{!$Label.CONV_Triggers_Reenabled}" escape="false"/></li>
+                        </ul>
                     </div>
                 </div>
 
-                <div class="col-md-6">
-                    <div class="panel panel-default">
-                        <!-- Default panel contents -->
-                        <div class="panel-heading"><h3 class="panel-title">{!$Label.CONV_What_This_Tool_Does}</h3></div>
-                        <div class="panel-body">
-                            <p>{!$Label.CONV_Batching_Explanation}</p>
-                            <ul>
-                                <li>{!$Label.CONV_All_Triggers_Disabled}</li>
-                                <li>{!$Label.CONV_All_Households_Selected}</li>
-                                <li>{!$Label.CONV_New_Households_Created}</li>
-                                <li>{!$Label.CONV_Old_Household_Objects}</li>
-                                <li>{!$Label.CONV_New_Affiliations}</li>
-                                <li>{!$Label.CONV_Contacts_Attached}</li>
-                                <li>{!$Label.CONV_Opportunities_Reparented}</li>
-                                <li>{!$Label.CONV_Activities_Reparented}</li>
-                                <li>{!$Label.CONV_Addresses_Mapped}</li>
-                                <li>{!$Label.CONV_Master_Address_Set}</li>
-                                <li>{!$Label.CONV_Address_Overrides_Set}</li>
-                                <li>{!$Label.CONV_Primary_Contacts_Set}</li>
-                                <li><apex:outputText value="{!$Label.CONV_Triggers_Reenabled}" escape="false"/></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                <div class="slds-grid slds-m-bottom--large">
+                    <div class="slds-col slds-size--1-of-1 slds-m-horizontal--xx-large slds-col-rule--top">
+                        <h3 class="slds-text-heading--small slds-m-vertical--medium">
+                            {!$Label.CONV_Configuration_Options}
+                        </h3>
 
-        <div class="container" >
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="panel panel-default">
-                        <!-- Default panel contents -->
-                        <div class="panel-heading"><h3 class="panel-title">{!$Label.CONV_Configuration_Options}</h3></div>
-                        <div class="panel-body">
-                            <p>{!$Label.CONV_Original_HH_Id}</p>
-                            <apex:outputlabel for="HHId" value="{!$Label.CONV_Account_Field}" style="padding: 5px 5px 5px 5px;"/>
-                            <apex:selectList id="HHId" onchange="verifyHHIdField();" title="{!$Label.CONV_Account_Field_For_Old_HH_ID}" value="{!accountHouseholdIdField}" multiselect="false" size="1">
-                                <apex:selectOptions value="{!targetAccountFields}" />
-                            </apex:selectList>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                        <p class="slds-m-bottom--medium">
+                            {!$Label.CONV_Original_HH_Id}
+                        </p>
 
-        <apex:outputpanel rendered="{!NOT(ISNULL(apexjob))}" layout="block" id="resultspanelwrapper">
-            <div class="container hide" id="resultspanel">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="panel {!IF(apexjob.NumberOfErrors > 0, 'panel-warning', 'panel-success')}" id="resultpaneldefault">
-                            <div class="panel-heading"><h3 class="panel-title">{!apexjob.Status}: {!IF(apexjob.NumberOfErrors > 0, '{!$Label.CONV_Batch_Failure}', '{!$Label.CONV_Success}')}</h3></div>
-                            <div class="panel-body">
-                                 Completed on {!apexjob.CompletedDate}<br/>
-                                 {!apexjob.TotalJobItems} of {!apexjob.JobItemsProcessed} batches were processed<br/>
-                                 {!IF(apexjob.NumberOfErrors > 0, ' ' & TEXT(apexjob.NumberOfErrors) & ' {!$Label.CONV_Check_Batch}', '')}<br/><br/>
-                                 {!IF(ISBLANK(apexjob.ExtendedStatus), '', '{!$Label.CONV_First_Error} ' + apexjob.ExtendedStatus)}<br/> 
-                                 <div class="text-center" style="{!IF(apexjob.NumberOfErrors > 0, '', 'display: none;')}"> 
-                                    <button type="button" class="btn btn-warning btn-lg" onclick="refreshPage()" id="reloadBTN">
-                                        <span class="glyphicon glyphicon-refresh"></span> {!$Label.CONV_Reload}
-                                    </button>
+                        <apex:form >
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label" for="HHId">
+                                    {!$Label.CONV_Account_Field}
+                                </label>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-select_container">
+                                        <apex:selectList id="HHId" styleClass="slds-select" onchange="verifyHHIdField();" title="{!$Label.CONV_Account_Field_For_Old_HH_ID}" value="{!accountHouseholdIdField}" multiselect="false" size="1">
+                                            <apex:selectOptions value="{!targetAccountFields}" />
+                                        </apex:selectList>
+                                    </div>
                                 </div>
                             </div>
+
+                            <div class="slds-form-element slds-m-top--large">
+                                <button type="button" class="slds-button slds-button--brand" data-toggle="modal" data-target="warning_modal" id="conversionBTN">
+                                    {!$Label.CONV_Begin}
+                                </button>
+                            </div>
+                        </apex:form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slds-container--large slds-container--center">
+                <c:UTIL_JobProgressLightning id="jobProgress"
+                    eventTargetId="{!$Component.jobProgress}"
+                    strBatchComponentLabel="{!$Label.CONV_Conversion_Process}"
+                    cNumberOfJobs="1"
+                    startPolling="False"
+                    stopPollingOnComplete="True"
+                    pollingDelay="1000"
+                    html-class="slds-hide"/>
+            </div>
+
+        </div>
+
+        <div class="slds">
+            <div id="warning_modal" tabindex="-1" aria-hidden="true" aria-labelledby="warning_modal_heading" role="dialog" class="slds-modal">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__header">
+                        <h2 id="warning_modal_heading" class="slds-text-heading--medium">{!$Label.CONV_Warning}</h2>
+                        <button class="slds-button slds-button--icon-inverse slds-modal__close" data-dismiss="modal" data-target="warning_modal">
+                            <svg aria-hidden="true" class="slds-button__icon slds-button__icon--large" data-dismiss="modal" data-target="warning_modal" viewBox="0 0 24 24">
+                                <path  data-dismiss="modal" data-target="warning_modal" d="M14.6 11.9l6-6c.3-.3.3-.7 0-1l-.9-1c-.3-.3-.7-.3-1 0L12.6 10c-.1.2-.4.2-.6 0L6 3.9c-.3-.3-.7-.3-1 0l-1 .9c-.3.3-.3.7 0 1l6.1 6.1c.1.1.1.4 0 .6L4 18.6c-.3.3-.3.7 0 1l.9.9c.3.3.7.3 1 0l6.1-6c.2-.2.5-.2.6 0l6.1 6c.3.3.7.3 1 0l.9-.9c.3-.3.3-.7 0-1l-6-6c-.2-.2-.2-.5 0-.7z"/>
+                            </svg>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                    </div>
+                    <div class="slds-modal__content">
+                        <p>
+                            {!$Label.CONV_Fundamental_Changes}
+                        </p>
+                    </div>
+                    <div class="slds-modal__footer">
+                        <div class="slds-x-small-buttons--horizontal">
+                            <button class="slds-button slds-button--neutral" data-dismiss="modal" data-target="warning_modal">{!$Label.CONV_Cancel}</button>
+                            <button id="warning_modal_proceed_button" class="slds-button slds-button--neutral slds-button--brand" data-dismiss="modal" data-target="warning_modal">{!$Label.CONV_Proceed}</button>
                         </div>
                     </div>
                 </div>
             </div>
-        </apex:outputpanel>
+            <div class="slds-backdrop" tabindex="-1"></div>
+        </div>
 
-        <div class="container hide" id="progresspanel">
-            <div class="row">
-                <apex:actionFunction name="runconvert" action="{!convert}" reRender="batchpanel, resultspanelwrapper" oncomplete="renderResults()"/>
-                <apex:outputPanel id="batchpanel">
-                    <c:UTIL_JobProgress strBatchComponentLabel="{!$Label.CONV_Conversion_Process}" cNumberOfJobs="1" />
-                </apex:outputPanel>
-            </div>
-        </div>
-    </apex:form>
+        <apex:form >
+            <apex:actionFunction name="convert" action="{!convert}" reRender="pageMessages" oncomplete="afterConvert()"/>
+        </apex:form>
 
-    <div class="container">
-        <div class="text-center"> 
-            <button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#basicModal" id="conversionBTN">
-                <span class="glyphicon glyphicon-exclamation-sign"></span> {!$Label.CONV_Begin }
-            </button>
-        </div>
-        <!-------- MODAL  ------>
-        <div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title" id="myModalLabel">{!$Label.CONV_Warning}</h4>
-                    </div>
-                    <div class="modal-body">
-                        <h5>{!$Label.CONV_Fundamental_Changes}</h5>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">{!$Label.CONV_Cancel}</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="convertBTN" >{!$Label.CONV_Proceed}</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-------- / MODAL  ------>
+        <script type="text/javascript">
+            var conversionButtonElement = document.getElementById('conversionBTN');
+
+            var runCheckErrorState = {!runCheckErrorState};
+
+            function disableConversionUntilAllWarningsChecked() {
+                var totalNumberOfWarnings = document.querySelectorAll('input[type="checkbox"]').length;
+                var numberOfCheckedWarnings = document.querySelectorAll('input[type="checkbox"]:checked').length;
+
+                if (numberOfCheckedWarnings == totalNumberOfWarnings && !runCheckErrorState) {
+                    conversionButtonElement.disabled = false;
+                } else {
+                    conversionButtonElement.disabled = true;
+                }
+            }
+
+            disableConversionUntilAllWarningsChecked();
+
+            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            for (var i = 0; i < checkboxes.length; ++i) {
+                var el = checkboxes[i];
+                el.addEventListener('click', disableConversionUntilAllWarningsChecked);
+            }
+
+            document.getElementById('warning_modal_proceed_button').addEventListener('click', convert);
+
+            function afterConvert() {
+                var jobProgressComponent = document.getElementById('{!$Component.jobProgress}');
+                document.getElementById('warning_content').setAttribute('class', 'slds-hide');
+                jobProgressComponent.setAttribute('class', 'slds-show');
+                jobProgressComponent.dispatchEvent(new Event('start'));
+            }
+
+            function verifyHHIdField(){
+                var selectElement = document.querySelector('[name$="HHId"]');
+                var selectedField = selectElement.value;
+                if (selectedField != '') {
+                    Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.CONV_Account_Conversion_CTRL.verifyFieldTypeForIds}',
+                        selectedField,
+                        function (result, event) {
+                        if (event.status) {
+                            if (!result) {
+                                alert("{!$Label.CONV_Selected_Field_Bad}");
+                                selectElement.value = '-None-';
+                            }
+                        } else {
+                            alert("{!$Label.CONV_Selected_Field_Verification_Failure}");
+                        }
+                    });
+                }
+            }
+        </script>
     </div>
-</div><!-- close class bootstrap-->
 </apex:page>
