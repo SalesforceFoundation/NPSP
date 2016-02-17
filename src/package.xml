@@ -243,6 +243,7 @@
         <members>STG_DataBoundMultiSelect</members>
         <members>STG_PageHeader</members>
         <members>UTIL_JobProgress</members>
+        <members>UTIL_JobProgressLightning</members>
         <members>UTIL_PageMessages</members>
         <members>UTIL_JobProgressLightning</members>
         <members>UTIL_PageMessages</members>
