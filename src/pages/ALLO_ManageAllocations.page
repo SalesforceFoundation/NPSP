@@ -163,8 +163,8 @@
 
                     <div class="slds-col slds-no-flex slds-align-middle">
                         <div class="slds-button-group" role="group">
-                            <apex:commandButton styleClass="slds-button slds-button--neutral" action="{!saveClose}" value="{!$Label.alloBtnSaveAndClose}" immediate="false" disabled="{!opp<>null&&parentAmount==0}"/>
-                            <apex:commandButton styleClass="slds-button slds-button--neutral" action="{!cancel}" value="{!$Label.alloBtnCancel}"  immediate="true"/>
+                            <apex:commandButton id="saveCloseBTN" styleClass="slds-button slds-button--neutral" action="{!saveClose}" value="{!$Label.alloBtnSaveAndClose}" immediate="false" disabled="{!opp<>null&&parentAmount==0}"/>
+                            <apex:commandButton id="cancelBTN" styleClass="slds-button slds-button--neutral" action="{!cancel}" value="{!$Label.alloBtnCancel}"  immediate="true"/>
                         </div>
                     </div>
                 </div>
@@ -173,7 +173,7 @@
                 <apex:pageMessages id="messages"/>
             </div>
             <div>
-                <table class="allocation-table slds-table slds-table--bordered" >
+                <table class="slds-table slds-table--bordered" >
                     <thead>
                         <tr class="slds-text-heading--label">
                             <th scope="col" width="155px"></th>
