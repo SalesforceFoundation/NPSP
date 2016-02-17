@@ -928,6 +928,15 @@
         <type>Lookup</type>
     </fields>
     <fields>
+        <fullName>Household_Phone__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Household.Phone</inlineHelpText>
+        <label>Household Phone</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Phone</type>
+    </fields>
+    <fields>
         <fullName>ImportedDate__c</fullName>
         <description>When the Data Import record was successfully imported.</description>
         <externalId>false</externalId>

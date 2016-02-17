@@ -522,6 +522,7 @@
         <members>DataImport__c.Home_Street__c</members>
         <members>DataImport__c.Home_Zip_Postal_Code__c</members>
         <members>DataImport__c.HouseholdAccountImported__c</members>
+        <members>DataImport__c.Household_Phone__c</members>
         <members>DataImport__c.ImportedDate__c</members>
         <members>DataImport__c.Payment_Check_Reference_Number__c</members>
         <members>DataImport__c.Payment_Method__c</members>
