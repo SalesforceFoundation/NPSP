@@ -227,6 +227,7 @@
         <members>UTIL_MasterSchedulable_TEST</members>
         <members>UTIL_Namespace</members>
         <members>UTIL_Namespace_TEST</members>
+        <members>UTIL_PageMessages_CTRL</members>
         <members>UTIL_RecordTypes</members>
         <members>UTIL_RecordTypes_API</members>
         <members>UTIL_RecordTypes_TEST</members>
@@ -242,6 +243,7 @@
         <members>STG_DataBoundMultiSelect</members>
         <members>STG_PageHeader</members>
         <members>UTIL_JobProgress</members>
+        <members>UTIL_PageMessages</members>
         <members>UTIL_SoqlListView</members>
         <members>UTIL_Typeahead</members>
         <name>ApexComponent</name>
@@ -727,6 +729,10 @@
         <members>CONV_What_This_Tool_Does</members>
         <members>CampaignMemberStatusOmit</members>
         <members>HiddenForSecurity</members>
+        <members>PageMessagesConfirm</members>
+        <members>PageMessagesError</members>
+        <members>PageMessagesFatal</members>
+        <members>PageMessagesWarning</members>
         <members>REL_Create_New_Relationship</members>
         <members>REL_Former</members>
         <members>REL_No_Relationships</members>

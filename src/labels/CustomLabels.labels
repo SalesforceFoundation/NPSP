@@ -586,6 +586,38 @@
         <value>Hidden for security</value>
     </labels>
     <labels>
+        <fullName>PageMessagesConfirm</fullName>
+        <categories>PageMessages</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Confirm</shortDescription>
+        <value>Success</value>
+    </labels>
+    <labels>
+        <fullName>PageMessagesError</fullName>
+        <categories>PageMessages</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error</shortDescription>
+        <value>Error</value>
+    </labels>
+    <labels>
+        <fullName>PageMessagesFatal</fullName>
+        <categories>PageMessages</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Fatal</shortDescription>
+        <value>Error</value>
+    </labels>
+    <labels>
+        <fullName>PageMessagesWarning</fullName>
+        <categories>PageMessages</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning</shortDescription>
+        <value>Warning</value>
+    </labels>
+    <labels>
         <fullName>REL_Create_New_Relationship</fullName>
         <categories>Relationships, relationship-viewer</categories>
         <language>en_US</language>
@@ -948,7 +980,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiComplete</shortDescription>
-        <value>- Completed</value>
+        <value>Completed</value>
     </labels>
     <labels>
         <fullName>bdiCompleteWithErrors</fullName>
@@ -956,7 +988,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiCompleteWithErrors</shortDescription>
-        <value>- Errors</value>
+        <value>Errors</value>
     </labels>
     <labels>
         <fullName>bdiContactCustomIdError</fullName>
