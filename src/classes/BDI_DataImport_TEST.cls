@@ -623,7 +623,7 @@ public with sharing class BDI_DataImport_TEST {
         hh accounts' billing address set
     **********************************************************************************************************/            
     static testMethod void ManyDISameHomeAddresses() {
-        if (strTestOnly != '*' && strTestOnly != 'ManyDIHomeAddresses') return;
+        if (strTestOnly != '*' && strTestOnly != 'ManyDISameHomeAddresses') return;
             
         list<DataImport__c> listDI = new list<DataImport__c>();
         listDI.add(newDI('c1', 'C1', 'c2', 'C2'));
