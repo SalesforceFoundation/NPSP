@@ -975,6 +975,17 @@ ISBLANK(npe03__Recurring_Donation__c),
         <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
+        <picklistValues>
+            <picklist>In_Kind_Type__c</picklist>
+            <values>
+                <fullName>Goods</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Services</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
     </fields>
     <listViews>
         <fullName>To_Be_Acknowledged</fullName>
@@ -994,17 +1005,6 @@ ISBLANK(npe03__Recurring_Donation__c),
         <label>To Be Acknowledged</label>
         <language>en_US</language>
     </listViews>
-        <picklistValues>
-            <picklist>In_Kind_Type__c</picklist>
-            <values>
-                <fullName>Goods</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Services</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
     <webLinks>
         <fullName>Email_Acknowledgment</fullName>
         <availability>online</availability>
