@@ -521,6 +521,13 @@
         <value>All record ownership has been transferred from any inactive users.</value>
     </labels>
     <labels>
+        <fullName>CONV_Reload</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Reload</shortDescription>
+        <value>Reload the Converter</value>
+    </labels>
+    <labels>
         <fullName>CONV_Selected_Field_Bad</fullName>
         <language>en_US</language>
         <protected>false</protected>
