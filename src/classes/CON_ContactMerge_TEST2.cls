@@ -365,8 +365,8 @@ private class CON_ContactMerge_TEST2 {
         
         CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(ssc);
         
-        //check we ended up on step 2 of the merge
-        system.assertEquals(2, controller.step); 
+        //check we ended up on step 3 ("choose winning contact") of the merge
+        system.assertEquals(3, controller.step); 
         
         //check 2 records selected
         system.assertEquals(2, controller.selectedRecordsCount);
@@ -398,8 +398,8 @@ private class CON_ContactMerge_TEST2 {
         
         CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
         
-        //check we ended up on step 1 of the merge
-        system.assertEquals(1, controller.step); 
+        //check that after searching we ended up on step 2 ("select contacts") of the merge
+        system.assertEquals(2, controller.step); 
         
         //check the 2 records already retrieved in search results
         system.assertEquals(2, controller.searchResults.size());
@@ -423,8 +423,8 @@ private class CON_ContactMerge_TEST2 {
         
         CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
         
-        //check we ended up on step 2 of the merge
-        system.assertEquals(2, controller.step); 
+        //check we ended up on step 3 (choose winning contact) of the merge
+        system.assertEquals(3, controller.step); 
         
         //check 2 records selected
         system.assertEquals(2, controller.selectedRecordsCount);
@@ -456,7 +456,7 @@ private class CON_ContactMerge_TEST2 {
         
         CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
         
-        //check we ended up on step 1 of the merge
+        //check we ended up on step 1 (search for contacts) of the merge
         system.assertEquals(1, controller.step); 
         
         //check error message logged to the page
@@ -501,7 +501,7 @@ private class CON_ContactMerge_TEST2 {
         
         CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
         
-        //check we ended up on step 1 of the merge
+        //check we ended up on step 1 (search for contacts) of the merge
         system.assertEquals(1, controller.step); 
         
         CON_ContactMerge_TEST.selectMasterRecord(controller, pa1.id);
