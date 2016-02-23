@@ -386,8 +386,8 @@ public with sharing class CON_ContactMerge_CTRL {
         fieldRows.add(createdByRow);
         fieldRows.add(lastModifiedByRow);
         
-        // If everything looks good go to next step
-        this.step++;
+        // If everything looks good go to "choose winning contact" step
+        this.step = 3;
         
     }
 
@@ -567,6 +567,7 @@ public with sharing class CON_ContactMerge_CTRL {
     public PageReference search() {
         Try {           
             if(searchText != null && searchText.length()>0){
+                step = 2;
                 this.searchResults = wrapSOSLResults(mySOSL());
             }
         } catch (exception ex) {
