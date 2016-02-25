@@ -587,6 +587,7 @@
         <members>Opportunity.Acknowledgment_Date__c</members>
         <members>Opportunity.Acknowledgment_Status__c</members>
         <members>Opportunity.Batch__c</members>
+        <members>Opportunity.Fair_Market_Value__c</members>
         <members>Opportunity.Grant_Contract_Date__c</members>
         <members>Opportunity.Grant_Contract_Number__c</members>
         <members>Opportunity.Grant_Period_End_Date__c</members>
@@ -595,6 +596,9 @@
         <members>Opportunity.Grant_Requirements_Website__c</members>
         <members>Opportunity.Honoree_Contact__c</members>
         <members>Opportunity.Honoree_Name__c</members>
+        <members>Opportunity.In_Kind_Description__c</members>
+        <members>Opportunity.In_Kind_Donor_Declared_Value__c</members>
+        <members>Opportunity.In_Kind_Type__c</members>
         <members>Opportunity.Is_Grant_Renewal__c</members>
         <members>Opportunity.Matching_Gift_Account__c</members>
         <members>Opportunity.Matching_Gift_Employer__c</members>
@@ -1363,6 +1367,7 @@
         <members>Grant_Deadline__c-Grant Deadline Layout</members>
         <members>Opportunity-Donation Layout</members>
         <members>Opportunity-Grant Layout</members>
+        <members>Opportunity-In-Kind Gift Layout</members>
         <members>Opportunity-Matching Gift Layout</members>
         <members>Opportunity-Membership Layout</members>
         <members>Partial_Soft_Credit__c-Partial Soft Credit Layout</members>
@@ -1473,9 +1478,11 @@
     <types>
         <members>Opportunity.Opportunity_AcknowledgmentStatus_Update</members>
         <members>Opportunity.Opportunity_Acknowledgment_Date_Update</members>
+        <members>Opportunity.Opportunity_Copy_FMV_to_Amount</members>
         <name>WorkflowFieldUpdate</name>
     </types>
     <types>
+        <members>Opportunity.Opportunity Copy FMV to Amount</members>
         <members>Opportunity.Opportunity Email Acknowledgment</members>
         <name>WorkflowRule</name>
     </types>
