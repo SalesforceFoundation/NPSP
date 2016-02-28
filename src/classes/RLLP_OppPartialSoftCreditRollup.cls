@@ -58,7 +58,7 @@ public class RLLP_OppPartialSoftCreditRollup {
 
         //need a local variable for dynamic soql variable binding
         set<string> softCreditRoles = RLLP_OppRollup_UTIL.softCreditRoles;
-        string ocrQuery = 'SELECT Id, ContactId, Opportunity.CloseDate, Opportunity.Amount';
+        string ocrQuery = 'SELECT Id, ContactId, Opportunity.CloseDate, Opportunity.Amount, OpportunityId';
         string pscQuery = 'SELECT Id, Contact__c, Opportunity__r.CloseDate, Amount__c, Contact_Role_ID__c';
 
         if (RLLP_OppRollup_UTIL.isMultiCurrency()) {
@@ -84,8 +84,7 @@ public class RLLP_OppPartialSoftCreditRollup {
         }
     
         List<Contact> toUpdate = new List<Contact>();
-        for (SObject o : scope) {
-            Contact c = (Contact) o;
+        for (Contact c : scope) {
             Contact newC = new Contact(Id = c.Id,
                                        First_Soft_Credit_Amount__c = 0,
                                        First_Soft_Credit_Date__c = null,
@@ -116,18 +115,21 @@ public class RLLP_OppPartialSoftCreditRollup {
                 newC.put('CurrencyIsoCode', c.get('CurrencyIsoCode'));
             }
             
-            Set<String> ocrIds = new Set<String>();
+            Set<Id> ocrForPSCIds = new Set<Id>();
             if (partialSoftCredits.containsKey(c.Id)) {
                 for (Partial_Soft_Credit__c psc : partialSoftCredits.get(c.Id)) {
                     newC = countPartialSoftCredits(newC, psc, currentYearStart);
-                    ocrIds.add(psc.Contact_Role_ID__c);
+                    ocrForPSCIds.add(psc.Contact_Role_ID__c);
                 }
             }
             
+            Set<Id> processedOpportunityIds = new Set<Id>();
             if (opportunityContactRoles.containsKey(c.Id)) {
                 for (OpportunityContactRole ocr : opportunityContactRoles.get(c.Id)) {
-                    if (ocrIds.contains(ocr.Id)) continue; // partial soft credit
+                    if(ocrForPSCIds.contains(ocr.Id)) continue; // partial soft credit
+                    if(processedOpportunityIds.contains(ocr.OpportunityId)) continue;
                     newC = countOpportunityContactRoles(newC, ocr, currentYearStart);
+                    processedOpportunityIds.add(ocr.OpportunityId);
                 }
             }
             
