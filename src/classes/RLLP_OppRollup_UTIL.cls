@@ -58,7 +58,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     //exchangerate store
     static map<string, decimal> exchangeRates = new map<string,decimal>();
     //corporate currency
-    static string currCorporate; 
+    public static string currCorporate; 
     
     /*** User Rollups ***/
     //map of object and rollup field 
@@ -208,7 +208,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     
     public static void setupUserRollupVars(){
         if (objectRollupFieldMap == null){
-            urfsMap = npo02__User_Rollup_Field_Settings__c.getAll().clone();
+            urfsMap = UTIL_ListCustomSettingsFacade.getMapUserRollupFieldSettings().clone();
             objectRollupFieldMap = new map<string, string>();
         
             //build the object delineated query string for use later

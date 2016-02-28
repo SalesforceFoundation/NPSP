@@ -380,8 +380,6 @@ private with sharing class BDI_DataImport_TEST2 {
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         // for testing, we need to use an existing contact field that exists on both Contact and the DI.
         diSettings.Contact_Custom_Unique_ID__c = 'Title';
-        if(!Test.isRunningTest())
-            upsert diSettings;
           
         //run batch data import
         Test.StartTest();
@@ -399,6 +397,141 @@ private with sharing class BDI_DataImport_TEST2 {
         system.assertEquals(listDI[1].Contact1Imported__c, listConExisting[1].Id);
         system.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
         system.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
+    }
+
+   /*********************************************************************************************************
+    operation:
+        import existing contacts within multiple di records in the same batch, using Custom Unique Id matching
+    verify:
+        all contacts matched
+    **********************************************************************************************************/            
+    static testMethod void ManyDIUniqueIdNotMatchingExistingContacts() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdNotMatchingExistingContacts') return;
+            
+         // existing contacts
+        list<Contact> listConExisting = new list<Contact>();
+        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@c1.com', Title='ID1'));
+        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@c1.com', Title='ID2'));
+        insert listConExisting;
+ 
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@c1.com', Contact1_Title__c='ID3'));
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@c1.com', Contact1_Title__c='ID4'));
+        insert listDI;
+        
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        // for testing, we need to use an existing contact field that exists on both Contact and the DI.
+        diSettings.Contact_Custom_Unique_ID__c = 'Title';
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name, Email, Title from Contact order by Title];
+        system.assertEquals(4, listCon.size());
+        
+        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Contact1_Title__c];
+        system.assertEquals(2, listDI.size());
+        system.assertEquals(listDI[0].Contact1Imported__c, listCon[2].Id);
+        system.assertEquals(listDI[1].Contact1Imported__c, listCon[3].Id);
+        system.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiCreated, listDI[1].Contact1ImportStatus__c);        
+    }
+
+   /*********************************************************************************************************
+    operation:
+        import new contacts within multiple di records in the same batch, using Custom Unique Id matching
+    verify:
+        all contacts created, since unique Id's provided
+    **********************************************************************************************************/            
+    static testMethod void ManyDIUniqueIdNewContacts() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdNewContacts') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@c1.com', Contact1_Title__c='ID1'));
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@c1.com', Contact1_Title__c='ID2'));
+        insert listDI;
+        
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        // for testing, we need to use an existing contact field that exists on both Contact and the DI.
+        diSettings.Contact_Custom_Unique_ID__c = 'Title';
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results.
+        list<Contact> listCon = [select Id, Name, Email, Title from Contact order by Title];
+        system.assertEquals(2, listCon.size());
+        
+        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Contact1_Title__c];
+        system.assertEquals(2, listDI.size());
+        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
+        system.assertEquals(listDI[1].Contact1Imported__c, listCon[1].Id);
+        system.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiCreated, listDI[1].Contact1ImportStatus__c);        
+    }
+
+   /*********************************************************************************************************
+    operation:
+        import existing & new contacts within multiple di records in the same batch, using Custom Unique Id matching
+    verify:
+        all contacts matched
+    **********************************************************************************************************/            
+    static testMethod void ManyDIUniqueIdMatchingNewAndExistingContacts() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdMatchingNewAndExistingContacts') return;
+            
+         // existing contacts
+        list<Contact> listConExisting = new list<Contact>();
+        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@foo.com', Title='id1'));
+        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@foo.com', Title='id2'));
+        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@foo.com', Title=null));
+        listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@foo.com', Title='id4'));
+        insert listConExisting;
+ 
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com', Contact1_Title__c='id1'));
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com', Contact1_Title__c='id3'));
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com', Contact1_Title__c=null));
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c2', Contact1_Lastname__c='C2', Contact1_Personal_Email__c='c2@foo.com', Contact1_Title__c=null));
+        insert listDI;
+        
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        // for testing, we need to use an existing contact field that exists on both Contact and the DI.
+        diSettings.Contact_Custom_Unique_ID__c = 'Title';
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name, Email, Title from Contact order by Title NULLS LAST, Lastname NULLS LAST]; // id1, id2, id3, id4, null (c1), null (c2)
+        system.assertEquals(6, listCon.size());
+        system.debug('****DJH: listCon ' + listCon);
+        
+        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, Contact2Imported__c, Contact2ImportStatus__c from DataImport__c 
+            order by Contact1_Title__c NULLS LAST, Contact1_Lastname__c NULLS LAST];
+        system.assertEquals(4, listDI.size());
+        system.debug('****DJH: listDI ' + listDI);
+
+        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
+        system.assertEquals(listDI[0].Contact1ImportStatus__c, label.bdiMatched);
+
+        system.assertEquals(listDI[1].Contact1Imported__c, listCon[2].Id);
+        system.assertEquals(listDI[1].Contact1ImportStatus__c, label.bdiCreated);
+
+        system.assertEquals(listDI[2].Contact1Imported__c, listCon[4].Id);
+        system.assertEquals(listDI[2].Contact1ImportStatus__c, label.bdiMatched);        
+
+        system.assertEquals(listDI[3].Contact1Imported__c, listCon[5].Id);
+        system.assertEquals(listDI[3].Contact1ImportStatus__c, label.bdiCreated);        
     }
 
    /*********************************************************************************************************
@@ -424,8 +557,44 @@ private with sharing class BDI_DataImport_TEST2 {
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         // for testing, we need to use an existing account field that exists on both Account and the DI.
         diSettings.Account_Custom_Unique_ID__c = 'Website';
-        if(!Test.isRunningTest())
-            upsert diSettings;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Account> listAcc = [select Id, Name, Website from Account];
+        system.assertEquals(3, listAcc.size());
+        
+        listDI = [select Account1Imported__c, Account1ImportStatus__c, Account1_Name__c, Account2Imported__c, Account2ImportStatus__c from DataImport__c order by Account1_Website__c];
+        system.assertEquals(2, listDI.size());
+        system.assertEquals(listDI[0].Account1Imported__c, listAccExisting[0].Id);
+        system.assertEquals(listDI[0].Account1_Name__c, listAcc[0].Name);
+        system.assertNotEquals(listDI[1].Account1Imported__c, listAccExisting[1].Id);
+        system.assertEquals(label.bdiMatched, listDI[0].Account1ImportStatus__c);
+        system.assertEquals(label.bdiCreated, listDI[1].Account1ImportStatus__c);        
+    }
+
+   /*********************************************************************************************************
+    operation:
+        import new accounts within multiple di records in the same batch, using Custom Unique Id matching
+    verify:
+        all accounts matched
+    **********************************************************************************************************/            
+    static testMethod void ManyDIUniqueIdNewAccounts() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdNewAccounts') return;
+            
+ 
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Website__c='a1.com'));
+        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Website__c='z.com'));
+        insert listDI;
+        
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        // for testing, we need to use an existing account field that exists on both Account and the DI.
+        diSettings.Account_Custom_Unique_ID__c = 'Website';
           
         //run batch data import
         Test.StartTest();
@@ -439,10 +608,64 @@ private with sharing class BDI_DataImport_TEST2 {
         
         listDI = [select Account1Imported__c, Account1ImportStatus__c, Account2Imported__c, Account2ImportStatus__c from DataImport__c order by Account1_Website__c];
         system.assertEquals(2, listDI.size());
-        system.assertEquals(listDI[0].Account1Imported__c, listAccExisting[0].Id);
-        system.assertEquals(listDI[1].Account1Imported__c, listAccExisting[1].Id);
-        system.assertEquals(label.bdiMatched, listDI[0].Account1ImportStatus__c);
-        system.assertEquals(label.bdiMatched, listDI[1].Account1ImportStatus__c);        
+        system.assertEquals(label.bdiCreated, listDI[0].Account1ImportStatus__c);
+        system.assertEquals(label.bdiCreated, listDI[1].Account1ImportStatus__c);        
+    }
+
+   /*********************************************************************************************************
+    operation:
+        import existing accounts within multiple di records in the same batch, using Custom Unique Id matching
+    verify:
+        all accounts matched
+    **********************************************************************************************************/            
+    static testMethod void ManyDIUniqueIdMatchingNewAndExistingAccounts() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdMatchingNewAndExistingAccounts') return;
+            
+         // existing Accounts
+        list<Account> listAccExisting = new list<Account>();
+        listAccExisting.add(new Account(Name='a1', website='id1.com'));
+        listAccExisting.add(new Account(Name='a1', website='id2.com'));
+        listAccExisting.add(new Account(Name='a1', website=null));
+        listAccExisting.add(new Account(Name='a2', website='id4.com'));
+        insert listAccExisting;
+ 
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Website__c='id1.com'));
+        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Website__c='id3.com'));
+        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Website__c=null));
+        listDI.add(new DataImport__c(Account1_Name__c='a2', Account1_Website__c=null));
+        insert listDI;
+        
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        // for testing, we need to use an existing account field that exists on both Account and the DI.
+        diSettings.Account_Custom_Unique_ID__c = 'Website';
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Account> listAcc = [select Id, Name, Website from Account order by Website NULLS LAST, Name]; // id1, id2, id3, id4, null (a1), null (a2)
+        system.debug('****DJH: listAcc ' + listAcc);
+        system.assertEquals(6, listAcc.size());
+        
+        listDI = [select Account1Imported__c, Account1ImportStatus__c, Account1_Name__c from DataImport__c order by Account1_Website__c NULLS LAST, Account1_Name__c];
+        system.debug('****DJH: listDI ' + listDI);
+        system.assertEquals(4, listDI.size());
+        
+        system.assertEquals(listDI[0].Account1Imported__c, listAcc[0].Id);
+        system.assertEquals(listDI[0].Account1ImportStatus__c, label.bdiMatched);
+
+        system.assertEquals(listDI[1].Account1Imported__c, listAcc[2].Id);
+        system.assertEquals(listDI[1].Account1ImportStatus__c, label.bdiCreated);
+
+        system.assertEquals(listDI[2].Account1Imported__c, listAcc[4].Id);
+        system.assertEquals(listDI[2].Account1ImportStatus__c, label.bdiMatched);
+
+        system.assertEquals(listDI[3].Account1Imported__c, listAcc[5].Id);
+        system.assertEquals(listDI[3].Account1ImportStatus__c, label.bdiCreated);
     }
 
     /*********************************************************************************************************
@@ -583,8 +806,6 @@ private with sharing class BDI_DataImport_TEST2 {
           
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         diSettings.Contact_Matching_Rule__c = strRule;
-        if(!Test.isRunningTest())
-            upsert diSettings;
  
         //run batch data import
         Test.StartTest();
