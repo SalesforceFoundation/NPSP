@@ -126,8 +126,8 @@ public class RLLP_OppPartialSoftCreditRollup {
             Set<Id> processedOpportunityIds = new Set<Id>();
             if (opportunityContactRoles.containsKey(c.Id)) {
                 for (OpportunityContactRole ocr : opportunityContactRoles.get(c.Id)) {
-                    if(ocrForPSCIds.contains(ocr.Id)) continue; // partial soft credit
-                    if(processedOpportunityIds.contains(ocr.OpportunityId)) continue;
+                    if (ocrForPSCIds.contains(ocr.Id)) continue; // partial soft credit
+                    if (processedOpportunityIds.contains(ocr.OpportunityId)) continue;
                     newC = countOpportunityContactRoles(newC, ocr, currentYearStart);
                     processedOpportunityIds.add(ocr.OpportunityId);
                 }
