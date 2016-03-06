@@ -534,6 +534,19 @@
         <type>Lookup</type>
     </fields>
     <fields>
+        <fullName>Fair_Market_Value__c</fullName>
+        <description>The Fair Market Value of an In-Kind gift.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The Fair Market Value of an In-Kind gift.</inlineHelpText>
+        <label>Fair Market Value</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
         <fullName>Grant_Contract_Date__c</fullName>
         <description>The date of the grant&apos;s inception, according to the document or contract sent by the grant-making organization.</description>
         <externalId>false</externalId>
@@ -626,6 +639,50 @@
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>In_Kind_Description__c</fullName>
+        <description>Holds any rich text description of the In-Kind Gift, including pictures.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Holds any rich text description of the In-Kind Gift, including pictures.</inlineHelpText>
+        <label>In-Kind Description</label>
+        <length>32768</length>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Html</type>
+        <visibleLines>10</visibleLines>
+    </fields>
+    <fields>
+        <fullName>In_Kind_Donor_Declared_Value__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Checked if the donor provided the Fair Market Value for this In-Kind gift.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Checked if the donor provided the Fair Market Value for this In-Kind gift.</inlineHelpText>
+        <label>In-Kind Donor Declared Value</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>In_Kind_Type__c</fullName>
+        <description>The type of In-Kind gift.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The type of In-Kind gift.</inlineHelpText>
+        <label>In-Kind Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Goods</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Services</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
     </fields>
     <fields>
         <fullName>Is_Grant_Renewal__c</fullName>

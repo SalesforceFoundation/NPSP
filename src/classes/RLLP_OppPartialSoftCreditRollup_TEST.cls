@@ -170,6 +170,11 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
     static testmethod void testPartialSoftCreditRollupsAllStats() {
         if (strTestOnly != '*' && strTestOnly != 'testPartialSoftCreditRollupsAllStats') return;
         
+        // to deal with leap years, need to make N a little larger!
+        npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings(); 
+        hs.npo02__Rollup_N_Day_Value__c = 366;
+        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(hs);
+        
         Contact con = new Contact(lastname='Testy');
         insert con;
         con = [select Id, lastname, AccountId from Contact];

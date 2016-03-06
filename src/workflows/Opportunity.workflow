@@ -31,6 +31,36 @@
         <operation>Formula</operation>
         <protected>false</protected>
     </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Opportunity_Copy_FMV_to_Amount</fullName>
+        <description>Copy the Opportunities Fair Market Value field to the Amount field.</description>
+        <field>Amount</field>
+        <formula>Fair_Market_Value__c</formula>
+        <name>Opportunity Copy FMV to Amount</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <rules>
+        <fullName>Opportunity Copy FMV to Amount</fullName>
+        <actions>
+            <name>Opportunity_Copy_FMV_to_Amount</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>false</active>
+        <criteriaItems>
+            <field>Opportunity.Amount</field>
+            <operation>equals</operation>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Fair_Market_Value__c</field>
+            <operation>notEqual</operation>
+            <value>0</value>
+        </criteriaItems>
+        <description>Enable this rule if you would like the Fair Market Value copied to the Amount, if the Amount is blank.</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
     <rules>
         <fullName>Opportunity Email Acknowledgment</fullName>
         <actions>
