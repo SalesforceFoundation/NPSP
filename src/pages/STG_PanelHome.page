@@ -18,7 +18,7 @@
 
     <div class="slds">
         <!-- HEADER -->
-        <div class="slds-m-around--large slds-p-bottom--large slds-col-rule--bottom">
+        <div class="slds-m-around--x-large slds-p-bottom--large slds-col-rule--bottom">
             <div class="slds-media slds-media--center slds-media--responsive">
                 <div class="slds-media__body">
                     <h3 class="slds-text-heading--large slds-m-bottom--large">Nonprofit Starter Pack Application Settings</h3>

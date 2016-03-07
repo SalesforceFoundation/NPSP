@@ -115,7 +115,7 @@
 
 </style>
 
-    <apex:form id="form" styleClass="slds-m-around--medium">
+    <apex:form id="form" styleClass="slds-m-around--x-large">
         <div class="slds-grid">
             <div class="slds-col slds-size--1-of-1">
                 <h1 class="slds-text-heading--medium slds-p-top-medium">{!$Label.stgNavPeople} - {!$Label.stgLabelHHSettings}</h1>
@@ -253,16 +253,14 @@
             </div>
         </div>
 
-        <apex:outputText rendered="{!isEditMode}">
+        <apex:outputText rendered="{!isEditMode}" styleClass="slds-p-around--xx-large">
             <div class="slds-card">
-                <div class="slds-card__header">
-                    <h2 class="slds-text-heading--small">{!$Label.stgHHNameRefreshTitle}</h2>
+                <div class="slds-card__header slds-grid">
+                    <h2 class="slds-text-heading--small slds-col">{!$Label.stgHHNameRefreshTitle}</h2>
+                    <apex:commandbutton value="{!$Label.stgBtnHHAutoName}" status="statusLoad" action="{!activateHouseholdNaming}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-col slds-button slds-button--small slds-button--destructive"/>
                 </div>
-                <div class="slds-card__body" style="padding:15px;">
+                <div class="slds-card__body slds-text-body--small slds-p-around--medium">
                     <apex:outputText value="{!$Label.stgHelpBtnHHNaming}" escape="false" styleClass="slds-list--dotted" />
-                    <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
-                        <apex:commandbutton value="{!$Label.stgBtnHHAutoName}" status="statusLoad" action="{!activateHouseholdNaming}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--destructive"/>
-                    </div>
                 </div>
             </div>
         </apex:outputText>
