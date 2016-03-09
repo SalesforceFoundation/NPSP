@@ -4814,6 +4814,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Batch Data Entry</value>
     </labels>
     <labels>
+        <fullName>stgNavBulkProcesses</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavBulkProcesses</shortDescription>
+        <value>Bulk Data Processes</value>
+    </labels>
+    <labels>
         <fullName>stgNavConnections</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

@@ -116,6 +116,7 @@
         <members>OPP_OpportunityNaming</members>
         <members>OPP_OpportunityNamingBTN_CTRL</members>
         <members>OPP_OpportunityNaming_BATCH</members>
+        <members>OPP_OpportunityNaming_TDTM</members>
         <members>OPP_OpportunityNaming_TEST</members>
         <members>OPP_PrimaryContact_BATCH</members>
         <members>OPP_PrimaryContact_TEST</members>
@@ -194,7 +195,9 @@
         <members>STG_PanelRelAuto_CTRL</members>
         <members>STG_PanelRelReciprocal_CTRL</members>
         <members>STG_PanelRel_CTRL</members>
+        <members>STG_PanelRenameHouseholds_CTRL</members>
         <members>STG_PanelTDTM_CTRL</members>
+        <members>STG_PanelUpdatePrimaryContact_CTRL</members>
         <members>STG_PanelUserRollup_CTRL</members>
         <members>STG_SettingsManager_CTRL</members>
         <members>STG_SettingsManager_TEST</members>
@@ -216,6 +219,8 @@
         <members>UTIL_Debug</members>
         <members>UTIL_Describe</members>
         <members>UTIL_Describe_TEST</members>
+        <members>UTIL_GlobalSchedulable</members>
+        <members>UTIL_GlobalSchedulable_TEST</members>
         <members>UTIL_IScheduled</members>
         <members>UTIL_JobProgress_CTRL</members>
         <members>UTIL_JobProgress_CTRL_TEST</members>
@@ -243,7 +248,6 @@
         <members>STG_DataBoundMultiSelect</members>
         <members>STG_PageHeader</members>
         <members>UTIL_JobProgress</members>
-        <members>UTIL_PageMessages</members>
         <members>UTIL_JobProgressLightning</members>
         <members>UTIL_PageMessages</members>
         <members>UTIL_SoqlListView</members>
@@ -301,7 +305,9 @@
         <members>STG_PanelRel</members>
         <members>STG_PanelRelAuto</members>
         <members>STG_PanelRelReciprocal</members>
+        <members>STG_PanelRenameHouseholds</members>
         <members>STG_PanelTDTM</members>
+        <members>STG_PanelUpdatePrimaryContact</members>
         <members>STG_PanelUserRollup</members>
         <members>STG_SettingsManager</members>
         <name>ApexPage</name>
@@ -1256,6 +1262,7 @@
         <members>stgNavAffiliations</members>
         <members>stgNavAllocations</members>
         <members>stgNavBDE</members>
+        <members>stgNavBulkProcesses</members>
         <members>stgNavConnections</members>
         <members>stgNavContactRoles</members>
         <members>stgNavContacts</members>

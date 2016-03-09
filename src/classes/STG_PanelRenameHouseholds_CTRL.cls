@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.org
+    Copyright (c) 2016, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -29,21 +29,28 @@
 */
 /**
 * @author Salesforce.org
-* @date 2014
+* @date 2016
 * @group Settings
-* @description Controller for the Contact Roles panel.
+* @description Controller for the Batch Rename Households panel.
 */
-public with sharing class STG_PanelContactRoles_CTRL extends STG_Panel {
+public with sharing class STG_PanelRenameHouseholds_CTRL extends STG_Panel { 
+
+    public STG_PanelRenameHouseholds_CTRL() {
+        isRunningBatch = false;
+    }
     
-    /*********************************************************************************************************
-    * @description Returns the string Id of the Contact Roles panel. 
-    */
-    public override string idPanel() { return 'idPanelConRoles'; }
+    public override string idPanel() { return 'idPanelRefreshHouseholdNames'; }
     
     public boolean isRunningBatch { get; set; }
+    
+    public PageReference runBatch() {
+        boolean isActivation = (UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c == false);
+                
+        STG_Panel.stgService.stgHH.npo02__Advanced_Household_Naming__c = true;
+        
+        isRunningBatch = true;
+        HH_HouseholdNaming.refreshAllHouseholdNaming(isActivation);
+        return null;
+    }
 
-    /*********************************************************************************************************
-    * @description The panel's constructor 
-    */
-    public STG_PanelContactRoles_CTRL() {}
 }

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.org
+    Copyright (c) 2016, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -29,21 +29,28 @@
 */
 /**
 * @author Salesforce.org
-* @date 2014
+* @date 2016
 * @group Settings
-* @description Controller for the Contact Roles panel.
+* @description Controller for the Batch Rename Households panel.
 */
-public with sharing class STG_PanelContactRoles_CTRL extends STG_Panel {
+public with sharing class STG_PanelUpdatePrimaryContact_CTRL extends STG_Panel { 
+
+    public STG_PanelUpdatePrimaryContact_CTRL() {
+        isRunningBatch = false;
+    }
     
-    /*********************************************************************************************************
-    * @description Returns the string Id of the Contact Roles panel. 
-    */
-    public override string idPanel() { return 'idPanelConRoles'; }
+    public override string idPanel() { return 'idPanelUpdatePrimaryContact'; }
     
     public boolean isRunningBatch { get; set; }
-
+    
     /*********************************************************************************************************
-    * @description The panel's constructor 
+    * @description Action Method to run batch update opportunity primary contact.
+    * @return null 
     */
-    public STG_PanelContactRoles_CTRL() {}
+    public PageReference runBatch() {
+        isRunningBatch = true;
+        OPP_PrimaryContact_BATCH batch = new OPP_PrimaryContact_BATCH();
+        id batchProcessId = database.executeBatch(batch, 200);
+        return null;
+    }
 }

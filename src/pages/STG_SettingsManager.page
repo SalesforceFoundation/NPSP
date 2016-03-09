@@ -326,8 +326,6 @@
                                 <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelConRoleNav"><a href="#" onclick="ShowPanel('idPanelConRole');return false;" class="nav-item sub-nav-item">{!$Label.stgNavContactRoles}</a></li>
                                 <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelOppCampaignMembersNav"><a href="#" onclick="ShowPanel('idPanelOppCampaignMembers');return false;" class="nav-item sub-nav-item">{!$Label.stgLabelOppCampMembers}</a></li>
                                 <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelBDENav"><a href="#" onclick="ShowPanel('idPanelBDE');return false;" class="nav-item sub-nav-item">{!$Label.stgNavBDE}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelOppBatchNav"><a href="#" onclick="ShowPanel('idPanelOppBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRollupBatch}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelAlloBatchNav"><a href="#" onclick="ShowPanel('idPanelAlloBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRollupAlloBatch}</a></li>
                                 <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelUserRollupNav"><a href="#" onclick="ShowPanel('idPanelUserRollup');return false;" class="nav-item sub-nav-item">{!$Label.stgNavUserDefinedRollups}</a></li>
                             </ul>
 
@@ -347,6 +345,22 @@
                                 <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRDBatchNav"><a href="#" onclick="ShowPanel('idPanelRDBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRDBatch}</a></li>
                             </ul>
 
+                            <div class="slds-tree__branch slds-tree__item" id="idPanelBulkProcesses">
+                                <button class="slds-button slds-button--icon-bare slds-m-right--x-small chevronright">
+                                    <svg aria-hidden="true" class="slds-button__icon slds-button__icon--small" viewBox="0 0 24 24"><path d="{!pathChevronRight}"/></svg>
+                                </button>
+                                <button class="slds-button slds-button--icon-bare slds-m-right--x-small chevrondown">
+                                    <svg aria-hidden="true" class="slds-button__icon slds-button__icon--small" viewBox="0 0 24 24"><path d="{!pathChevronDown}"/></svg>
+                                </button>
+                                <a id="tree4-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavBulkProcesses}</a>
+                            </div>
+                            <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree4-node0-link">
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelOppBatchNav"><a href="#" onclick="ShowPanel('idPanelOppBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRollupBatch}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelAlloBatchNav"><a href="#" onclick="ShowPanel('idPanelAlloBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRollupAlloBatch}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRefreshHouseholdNamesNav"><a href="#" onclick="ShowPanel('idPanelRefreshHouseholdNames');return false;" class="nav-item sub-nav-item">{!$Label.stgHHNameRefreshTitle}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelUpdatePrimaryContactNav"><a href="#" onclick="ShowPanel('idPanelUpdatePrimaryContact');return false;" class="nav-item sub-nav-item">{!$Label.stgLabelOppPrimaryContactTitle}</a></li>
+                            </ul>
+
                             <div class="slds-tree__branch slds-tree__item" id="idPanelSystemNav">
                                 <button class="slds-button slds-button--icon-bare slds-m-right--x-small chevronright">
                                     <svg aria-hidden="true" class="slds-button__icon slds-button__icon--small" viewBox="0 0 24 24"><path d="{!pathChevronRight}"/></svg>
@@ -354,9 +368,9 @@
                                 <button class="slds-button slds-button--icon-bare slds-m-right--x-small chevrondown">
                                     <svg aria-hidden="true" class="slds-button__icon slds-button__icon--small" viewBox="0 0 24 24"><path d="{!pathChevronDown}"/></svg>
                                 </button>
-                                <a id="tree4-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavSystem}</a>
+                                <a id="tree5-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavSystem}</a>
                             </div>
-                            <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree4-node0-link">
+                            <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree5-node0-link">
                                 <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelHealthCheckNav"><a href="#" onclick="ShowPanel('idPanelHealthCheck');return false;" class="nav-item sub-nav-item">{!$Label.stgNavHealthCheck}</a></li>
                                 <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelErrorLogNav"><a href="#" onclick="ShowPanel('idPanelErrorLog');return false;" class="nav-item sub-nav-item">{!$Label.stgNavErrorLog}</a></li>
                                 <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelErrorNotifNav"><a href="#" onclick="ShowPanel('idPanelErrorNotif');return false;" class="nav-item sub-nav-item">{!$Label.stgNavErrorNotify}</a></li>
@@ -395,7 +409,7 @@
             <div class="panel noborder" id="idPanelConRole" style="display:none" >
                 <apex:include pageName="STG_PanelContactRoles" />
             </div>
-<!--
+
             <div class="panel noborder" id="idPanelOppCampaignMembers" style="display:none" >
                 <apex:include pageName="STG_PanelOppCampaignMembers" />
             </div>
@@ -476,6 +490,14 @@
                 <apex:include pageName="STG_PanelUserRollup" />
             </div>
 
+            <div class="panel noborder" id="idPanelUpdatePrimaryContact" style="display:none" >
+                <apex:include pageName="STG_PanelUpdatePrimaryContact" />
+            </div>
+
+            <div class="panel noborder" id="idPanelRefreshHouseholdNames" style="display:none" >
+                <apex:include pageName="STG_PanelRenameHouseholds" />
+            </div>
+
             <div class="panel noborder" id="idPanelErrorLog" style="display:none" >
                 <apex:include pageName="STG_PanelErrorLog" />
             </div>
@@ -491,7 +513,6 @@
             <div class="panel noborder" id="idPanelHealthCheck" style="display:none" >
                 <apex:include pageName="STG_PanelHealthCheck" />
             </div>
-            -->
         </div>
     </div>
 </div>

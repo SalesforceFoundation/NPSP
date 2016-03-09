@@ -1,0 +1,27 @@
+<apex:page controller="STG_PanelUpdatePrimaryContact_CTRL" >
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavBulkProcesses}" pageLabel="{!$Label.stgLabelOppPrimaryContactTitle}" />
+    <p>{!$Label.stgHelpBtnHHNaming}</p>
+
+    <apex:form id="form" styleClass="slds-m-around-x-large">
+        <apex:outputText styleClass="slds-p-around--xx-large">
+            <div class="slds-card">
+                <div class="slds-card__header slds-grid">
+                    <h2 class="slds-text-heading--small slds-col">{!$Label.stgLabelOppUpdatePrimaryContact}</h2>
+                    <apex:commandbutton value="{!$Label.stgBtnRefreshPrimaryContacts}" status="statusLoad" action="{!runBatch}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-col slds-button slds-button--small slds-button--destructive"/>
+                </div>
+                <div class="slds-card__body slds-text-body--small slds-p-around--medium">
+                    <apex:outputText value="{!$Label.stgHelpPrimaryContactBatch}" escape="false" styleClass="slds-list--dotted" />
+                </div>
+            </div>
+        </apex:outputText>
+        <apex:outputPanel styleClass="slds-container--large slds-container--center" rendered="{!isRunningBatch}">
+            <c:UTIL_JobProgressLightning id="jobProgress"
+                eventTargetId="{!$Component.jobProgress}"
+                strBatchComponentLabel="{!$Label.stgLabelOppPrimaryContactTitle}"
+                cNumberOfJobs="1"
+                startPolling="False"
+                stopPollingOnComplete="True"
+                pollingDelay="1000"/>
+        </apex:outputPanel>
+    </apex:form>
+</apex:page>
