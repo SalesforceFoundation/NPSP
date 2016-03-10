@@ -35,20 +35,34 @@
 */
 public with sharing class STG_PanelRenameHouseholds_CTRL extends STG_Panel { 
 
+    /*********************************************************************************************************
+    * @description The panel's constructor.
+    */
     public STG_PanelRenameHouseholds_CTRL() {
         isRunningBatch = false;
     }
-    
+
+    /*********************************************************************************************************
+    * @description Returns the string Id of the refresh household names panel. 
+    */
     public override string idPanel() { return 'idPanelRefreshHouseholdNames'; }
-    
+
+    /*********************************************************************************************************
+    * @description Whether we are currently running the batch process 
+    */
     public boolean isRunningBatch { get; set; }
     
+    /*********************************************************************************************************
+    * @description Action Method to run the Refresh Household Names batch process
+    * @return null
+    */
     public PageReference runBatch() {
         boolean isActivation = (UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c == false);
                 
         STG_Panel.stgService.stgHH.npo02__Advanced_Household_Naming__c = true;
-        
         isRunningBatch = true;
+        super.saveSettings();
+
         HH_HouseholdNaming.refreshAllHouseholdNaming(isActivation);
         return null;
     }

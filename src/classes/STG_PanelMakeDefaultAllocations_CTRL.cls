@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.org
+    Copyright (c) 2016, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -29,19 +29,37 @@
 */
 /**
 * @author Salesforce.org
-* @date 2014
+* @date 2016
 * @group Settings
-* @description Controller for the Contact Roles panel.
+* @description Controller for the Batch Make Default Allocations panel.
 */
-public with sharing class STG_PanelContactRoles_CTRL extends STG_Panel {
-    
-    /*********************************************************************************************************
-    * @description Returns the string Id of the Contact Roles panel. 
-    */
-    public override string idPanel() { return 'idPanelConRoles'; }
+public with sharing class STG_PanelMakeDefaultAllocations_CTRL extends STG_Panel { 
 
     /*********************************************************************************************************
-    * @description The panel's constructor 
+    * @description The panel's constructor.
     */
-    public STG_PanelContactRoles_CTRL() {}
+    public STG_PanelMakeDefaultAllocations_CTRL() {
+        isRunningBatch = false;
+    }
+    
+    /*********************************************************************************************************
+    * @description Returns the string Id of the Make Default Allocations panel. 
+    */
+    public override string idPanel() { return 'idPanelMakeDefaultAllocations'; }
+    
+    /*********************************************************************************************************
+    * @description Whether we are currently running the batch process 
+    */
+    public boolean isRunningBatch { get; set; }
+    
+    /*********************************************************************************************************
+    * @description Action Method to run the Batch Make Default Allocations
+    * @return null
+    */
+    public PageReference runBatch() {
+        // run batch rollup
+        isRunningBatch = true;
+        id batchProcessId = database.executeBatch(new ALLO_MakeDefaultAllocations_BATCH());
+        return null;
+    }
 }
