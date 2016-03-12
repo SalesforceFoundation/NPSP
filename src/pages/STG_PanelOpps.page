@@ -47,7 +47,7 @@
                     <apex:outputText styleClass="slds-form-element__help" value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Payments_Auto_Close_Stage_Name__c.InlineHelpText}" />
                 </div>
             </div>
-
+        </div>
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
             <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="slds-button-group">
                 <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />

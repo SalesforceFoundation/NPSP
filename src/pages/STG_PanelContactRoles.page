@@ -27,6 +27,7 @@
                     <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRollupPrimaryContact}" />
                 </div>
             </div>
+        </div>
         <div class="slds-section-title--divider" >{!$Label.stgLabelSoftCredit}</div>
         <div class="slds-form--horizontal">
             <div class="slds-form-element">
