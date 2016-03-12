@@ -1,12 +1,9 @@
 <apex:page controller="STG_PanelContacts_CTRL" >
-    <!--div class="slds-page-header" role="banner">
-        <h1 class="slds-text-heading--medium slds-p-top-medium"><c:STG_PageHeader sectionLabel="{!$Label.stgNavPeople}" pageLabel="{!$Label.stgNavAccountModel}" /></h1>
-        <p class="slds-text-body--small slds-m-top--x-small">{!$Label.npe01__Contacts_Settings_Account_Model_Help_Text}</p>
-    </div-->        
     <apex:form id="form" styleClass="slds-m-around--x-large">
+        <c:STG_PageHeader sectionLabel="{!$Label.stgNavPeople}" pageLabel="{!$Label.stgNavAccountModel}" />
+        
         <div class="slds-grid">
             <div class="slds-col slds-size--1-of-1 slds-p-around--x-large">
-                <h1 class="slds-text-heading--medium slds-p-top-medium">{!$Label.stgNavPeople} - {!$Label.stgNavAccountModel}</h1>
                 <p class="slds-text-body--small slds-m-top--x-small">{!$Label.npe01__Contacts_Settings_Account_Model_Help_Text}</p>
             </div>        
         </div>

@@ -116,11 +116,7 @@
 </style>
 
     <apex:form id="form" styleClass="slds-m-around--x-large">
-        <div class="slds-grid">
-            <div class="slds-col slds-size--1-of-1">
-                <h1 class="slds-text-heading--medium slds-p-top-medium">{!$Label.stgNavPeople} - {!$Label.stgLabelHHSettings}</h1>
-            </div>
-        </div>
+        <c:STG_PageHeader sectionLabel="{!$Label.stgNavPeople}" pageLabel="{!$Label.stgLabelHHSettings}" />
         <c:UTIL_PageMessages />
     
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
