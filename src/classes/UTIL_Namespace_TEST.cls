@@ -99,5 +99,7 @@ public with sharing class UTIL_Namespace_TEST {
         str = Label.stgHelpRDFieldMapOppField;
         str = Label.stgHelpRDFieldMapRDField;
         str = Label.CONV_Reload;
+        str = Label.stgLabelOppUpdatePrimaryContact;
+        str = Label.stgHelpNoUDR;
     }
 }

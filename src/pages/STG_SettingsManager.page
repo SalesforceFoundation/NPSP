@@ -271,8 +271,7 @@
     <div class="slds-grid">
         <div class="sidebar slds-col slds-small-size--1-of-1 slds-medium-size--3-of-12 slds-large-size--3-of-12 slds-p-top--large">
             <div class="slds-tree-container" role="application">
-            <h4 class="slds-text-heading--label slds-tree__item" id="treeheading"><a href="#" onclick="ShowPanel('idPanelHome');return false;" class="nav-item">{!$Label.stgNPSPSettingsTitle}</a></h4>
-                <div class="slds-tree-container" >
+                <div class="slds-text-heading--small slds-tree__item" id="treeheading"><a href="#" onclick="ShowPanel('idPanelHome');return false;" class="slds-grow">{!$Label.stgNPSPSettingsTitle}</a></div>
                     <nav role="navigation">
                         <ul id="mynavbar" class="slds-tree slds-list--vertical slds-has-block-links-space" role="tree" aria-labelledby="treeheading" aria-activedescendant="tree0-node0" >
                             <!-- People -->
@@ -286,10 +285,10 @@
                                 <a id="tree0-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavPeople}</a>
                             </div>
                             <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree0-node0-link">
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelConNav"><a href="#" onclick="ShowPanel('idPanelCon');return false;" class="nav-item sub-nav-item">{!$Label.stgNavAccountModel}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelHHNav"><a href="#" onclick="ShowPanel('idPanelHH');return false;" class="nav-item sub-nav-item">{!$Label.stgNavHouseholds}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelADDRVerifNav"><a href="#" onclick="ShowPanel('idPanelADDR');return false;" class="nav-item sub-nav-item">{!$Label.stgNavAddressVerification}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelLeadsNav"><a href="#" onclick="ShowPanel('idPanelLeads');return false;" class="nav-item sub-nav-item">{!$Label.stgNavLeads}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelConNav"><a href="#" onclick="ShowPanel('idPanelCon');return false;" class="slds-grow">{!$Label.stgNavAccountModel}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelHHNav"><a href="#" onclick="ShowPanel('idPanelHH');return false;" class="slds-grow">{!$Label.stgNavHouseholds}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelADDRNav"><a href="#" onclick="ShowPanel('idPanelADDR');return false;" class="slds-grow">{!$Label.stgNavAddressVerification}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelLeadsNav"><a href="#" onclick="ShowPanel('idPanelLeads');return false;" class="slds-grow">{!$Label.stgNavLeads}</a></li>
                             </ul>
                             <!-- Relationships -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelConnectionsNav">
@@ -302,10 +301,10 @@
                                 <a id="tree1-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavRelationships}</a>
                             </div>
                             <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree1-node0-link">
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelAfflNav"><a href="#" onclick="ShowPanel('idPanelAffl');return false;" class="nav-item sub-nav-item">{!$Label.stgNavAffiliations}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRelNav"><a href="#" onclick="ShowPanel('idPanelRel');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRelationships}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRelReciprocalNav"><a href="#" onclick="ShowPanel('idPanelRelReciprocal');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRelReciprocal}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRelAutoNav"><a href="#" onclick="ShowPanel('idPanelRelAuto');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRelAutoCreate}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelAfflNav"><a href="#" onclick="ShowPanel('idPanelAffl');return false;" class="slds-grow">{!$Label.stgNavAffiliations}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRelNav"><a href="#" onclick="ShowPanel('idPanelRel');return false;" class="slds-grow">{!$Label.stgNavRelationships}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRelReciprocalNav"><a href="#" onclick="ShowPanel('idPanelRelReciprocal');return false;" class="slds-grow">{!$Label.stgNavRelReciprocal}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRelAutoNav"><a href="#" onclick="ShowPanel('idPanelRelAuto');return false;" class="slds-grow">{!$Label.stgNavRelAutoCreate}</a></li>
                             </ul>
                             <!-- Donations -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelDonationsNav">
@@ -318,16 +317,16 @@
                                 <a id="tree2-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavDonations}</a>
                             </div>
                             <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree2-node0-link">
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelOppNamingNav"><a href="#" onclick="ShowPanel('idPanelOppNaming');return false;" class="nav-item sub-nav-item">{!$Label.stgLabelOppNamingSettings}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelMembershipNav"><a href="#" onclick="ShowPanel('idPanelMembership');return false;" class="nav-item sub-nav-item">{!$Label.stgNavMembership}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelOppNav"><a href="#" onclick="ShowPanel('idPanelOpp');return false;" class="nav-item sub-nav-item">{!$Label.stgNavPayments}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelPaymentMappingNav"><a href="#" onclick="ShowPanel('idPanelPaymentMapping');return false;" class="nav-item sub-nav-item">{!$Label.stgNavPaymentMappings}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelAllocationsNav"><a href="#" onclick="ShowPanel('idPanelAllocations');return false;" class="nav-item sub-nav-item">{!$Label.stgNavAllocations}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelOppRollupNav"><a href="#" onclick="ShowPanel('idPanelOppRollup');return false;" class="nav-item sub-nav-item">{!$Label.stgNavDonorStatistics}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelConRoleNav"><a href="#" onclick="ShowPanel('idPanelConRole');return false;" class="nav-item sub-nav-item">{!$Label.stgNavContactRoles}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelOppCampaignMembersNav"><a href="#" onclick="ShowPanel('idPanelOppCampaignMembers');return false;" class="nav-item sub-nav-item">{!$Label.stgLabelOppCampMembers}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelBDENav"><a href="#" onclick="ShowPanel('idPanelBDE');return false;" class="nav-item sub-nav-item">{!$Label.stgNavBDE}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelUserRollupNav"><a href="#" onclick="ShowPanel('idPanelUserRollup');return false;" class="nav-item sub-nav-item">{!$Label.stgNavUserDefinedRollups}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelOppNamingNav"><a href="#" onclick="ShowPanel('idPanelOppNaming');return false;" class="slds-grow">{!$Label.stgLabelOppNamingSettings}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelMembershipNav"><a href="#" onclick="ShowPanel('idPanelMembership');return false;" class="slds-grow">{!$Label.stgNavMembership}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelOppNav"><a href="#" onclick="ShowPanel('idPanelOpp');return false;" class="slds-grow">{!$Label.stgNavPayments}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelPaymentMappingNav"><a href="#" onclick="ShowPanel('idPanelPaymentMapping');return false;" class="slds-grow">{!$Label.stgNavPaymentMappings}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelAllocationsNav"><a href="#" onclick="ShowPanel('idPanelAllocations');return false;" class="slds-grow">{!$Label.stgNavAllocations}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelOppRollupNav"><a href="#" onclick="ShowPanel('idPanelOppRollup');return false;" class="slds-grow">{!$Label.stgNavDonorStatistics}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelConRoleNav"><a href="#" onclick="ShowPanel('idPanelConRole');return false;" class="slds-grow">{!$Label.stgNavContactRoles}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelOppCampaignMembersNav"><a href="#" onclick="ShowPanel('idPanelOppCampaignMembers');return false;" class="slds-grow">{!$Label.stgLabelOppCampMembers}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelBDENav"><a href="#" onclick="ShowPanel('idPanelBDE');return false;" class="slds-grow">{!$Label.stgNavBDE}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelUserRollupNav"><a href="#" onclick="ShowPanel('idPanelUserRollup');return false;" class="slds-grow">{!$Label.stgNavUserDefinedRollups}</a></li>
                             </ul>
                             <!-- Recurring Donations -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelRecDonationsNav">
@@ -340,9 +339,9 @@
                                 <a id="tree3-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavRecurringDonations}</a>
                             </div>
                             <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree3-node0-link">
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRDNav"><a href="#" onclick="ShowPanel('idPanelRD');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRecurringDonations}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRDInstPdNav"><a href="#" onclick="ShowPanel('idPanelRDInstPd');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRDInstallmentPeriods}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRDFieldMapNav"><a href="#" onclick="ShowPanel('idPanelRDFieldMap');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRDFieldMap}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRDNav"><a href="#" onclick="ShowPanel('idPanelRD');return false;" class="slds-grow">{!$Label.stgNavRecurringDonations}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRDInstPdNav"><a href="#" onclick="ShowPanel('idPanelRDInstPd');return false;" class="slds-grow">{!$Label.stgNavRDInstallmentPeriods}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRDFieldMapNav"><a href="#" onclick="ShowPanel('idPanelRDFieldMap');return false;" class="slds-grow">{!$Label.stgNavRDFieldMap}</a></li>
                             </ul>
                             <!-- Bulk Data Processes -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelBulkProcesses">
@@ -355,14 +354,14 @@
                                 <a id="tree4-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavBulkProcesses}</a>
                             </div>
                             <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree4-node0-link">
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelOppBatchNav"><a href="#" onclick="ShowPanel('idPanelOppBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRollupBatch}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelAlloBatchNav"><a href="#" onclick="ShowPanel('idPanelAlloBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRollupAlloBatch}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelMakeDefaultAllocationsNav"><a href="#" onclick="ShowPanel('idPanelMakeDefaultAllocations');return false;" class="nav-item sub-nav-item">{!$Label.alloBatchCreateDefault}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelCreatePaymentsNav"><a href="#" onclick="ShowPanel('idPanelCreatePayments');return false;" class="nav-item sub-nav-item">{!$Label.stgLabelCreateMissingPayments}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRefreshHouseholdNamesNav"><a href="#" onclick="ShowPanel('idPanelRefreshHouseholdNames');return false;" class="nav-item sub-nav-item">{!$Label.stgHHNameRefreshTitle}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelOppNamingBatchNav"><a href="#" onclick="ShowPanel('idPanelOppNamingBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgLabelOppNamingRefreshTitle}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelUpdatePrimaryContactNav"><a href="#" onclick="ShowPanel('idPanelUpdatePrimaryContact');return false;" class="nav-item sub-nav-item">{!$Label.stgLabelOppPrimaryContactTitle}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRDBatchNav"><a href="#" onclick="ShowPanel('idPanelRDBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRDBatch}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelOppBatchNav"><a href="#" onclick="ShowPanel('idPanelOppBatch');return false;" class="slds-grow">{!$Label.stgNavRollupBatch}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelAlloBatchNav"><a href="#" onclick="ShowPanel('idPanelAlloBatch');return false;" class="slds-grow">{!$Label.stgNavRollupAlloBatch}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelMakeDefaultAllocationsNav"><a href="#" onclick="ShowPanel('idPanelMakeDefaultAllocations');return false;" class="slds-grow">{!$Label.alloBatchCreateDefault}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelCreatePaymentsNav"><a href="#" onclick="ShowPanel('idPanelCreatePayments');return false;" class="slds-grow">{!$Label.stgLabelCreateMissingPayments}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRefreshHouseholdNamesNav"><a href="#" onclick="ShowPanel('idPanelRefreshHouseholdNames');return false;" class="slds-grow">{!$Label.stgHHNameRefreshTitle}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelOppNamingBatchNav"><a href="#" onclick="ShowPanel('idPanelOppNamingBatch');return false;" class="slds-grow">{!$Label.stgLabelOppNamingRefreshTitle}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelUpdatePrimaryContactNav"><a href="#" onclick="ShowPanel('idPanelUpdatePrimaryContact');return false;" class="slds-grow">{!$Label.stgLabelOppPrimaryContactTitle}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRDBatchNav"><a href="#" onclick="ShowPanel('idPanelRDBatch');return false;" class="slds-grow">{!$Label.stgNavRDBatch}</a></li>
                             </ul>
                             <!-- System Tools -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelSystemNav">
@@ -375,167 +374,166 @@
                                 <a id="tree5-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavSystem}</a>
                             </div>
                             <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree5-node0-link">
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelHealthCheckNav"><a href="#" onclick="ShowPanel('idPanelHealthCheck');return false;" class="nav-item sub-nav-item">{!$Label.stgNavHealthCheck}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelErrorLogNav"><a href="#" onclick="ShowPanel('idPanelErrorLog');return false;" class="nav-item sub-nav-item">{!$Label.stgNavErrorLog}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelErrorNotifNav"><a href="#" onclick="ShowPanel('idPanelErrorNotif');return false;" class="nav-item sub-nav-item">{!$Label.stgNavErrorNotify}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelTDTMNav"><a href="#" onclick="ShowPanel('idPanelTDTM');return false;" class="nav-item sub-nav-item">{!$Label.stgNavTriggerConfig}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelHealthCheckNav"><a href="#" onclick="ShowPanel('idPanelHealthCheck');return false;" class="slds-grow">{!$Label.stgNavHealthCheck}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelErrorLogNav"><a href="#" onclick="ShowPanel('idPanelErrorLog');return false;" class="slds-grow">{!$Label.stgNavErrorLog}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelErrorNotifNav"><a href="#" onclick="ShowPanel('idPanelErrorNotif');return false;" class="slds-grow">{!$Label.stgNavErrorNotify}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelTDTMNav"><a href="#" onclick="ShowPanel('idPanelTDTM');return false;" class="slds-grow">{!$Label.stgNavTriggerConfig}</a></li>
                             </ul>
                         </ul>
                     </nav>
                 </div>
             </div>
-        </div>
-        <div class="content slds-col slds-small-size--1-of-1 slds-medium-size--9-of-12 slds-large-size--9-of-12" >
-            <apex:actionStatus id="statusLoad"
-                onstart="document.getElementById('divLoading').style.display = 'block';"
-                onstop="document.getElementById('divLoading').style.display = 'none';" />
-            <div class="slds-spinner--large clsLoading" id="divLoading" style="display:none" >
-                <img src="{!URLFOR($Resource.SLDS, '/assets/images/spinners/slds_spinner_brand.gif')}" alt="{!$Label.labelMessageLoading}" />
-                <span class="loadingText" style="vertical-align: middle;" >{!$Label.labelMessageLoading}</span>
-            </div>
+            <div class="content slds-col slds-small-size--1-of-1 slds-medium-size--9-of-12 slds-large-size--9-of-12" >
+                <apex:actionStatus id="statusLoad"
+                    onstart="document.getElementById('divLoading').style.display = 'block';"
+                    onstop="document.getElementById('divLoading').style.display = 'none';" />
+                <div class="slds-spinner--large clsLoading" id="divLoading" style="display:none" >
+                    <img src="{!URLFOR($Resource.SLDS, '/assets/images/spinners/slds_spinner_brand.gif')}" alt="{!$Label.labelMessageLoading}" />
+                    <span class="loadingText" style="vertical-align: middle;" >{!$Label.labelMessageLoading}</span>
+                </div>
 
-            <div class="panel noborder" id="idPanelHome" style="display:none" >
-                <apex:include pageName="STG_PanelHome" />
-            </div>
+                <div class="panel noborder" id="idPanelHome" style="display:none" >
+                    <apex:include pageName="STG_PanelHome" />
+                </div>
 
-            <!-- People -->
-            <div class="panel noborder" id="idPanelCon" style="display:none" >
-                <apex:include pageName="STG_PanelContacts" />
-            </div>
+                <!-- People -->
+                <div class="panel noborder" id="idPanelCon" style="display:none" >
+                    <apex:include pageName="STG_PanelContacts" />
+                </div>
 
-            <div class="panel noborder" id="idPanelHH" style="display:none" >
-                <apex:include pageName="STG_PanelHouseholds" />
-            </div>
+                <div class="panel noborder" id="idPanelHH" style="display:none" >
+                    <apex:include pageName="STG_PanelHouseholds" />
+                </div>
 
-            <div class="panel noborder" id="idPanelADDR" style="display:none" >
-                <apex:include pageName="STG_PanelAddrVerification" />
-            </div>
+                <div class="panel noborder" id="idPanelADDR" style="display:none" >
+                    <apex:include pageName="STG_PanelAddrVerification" />
+                </div>
 
-            <div class="panel noborder" id="idPanelLeads" style="display:none" >
-                <apex:include pageName="STG_PanelLeads" />
-            </div>
+                <div class="panel noborder" id="idPanelLeads" style="display:none" >
+                    <apex:include pageName="STG_PanelLeads" />
+                </div>
 
-            <!-- Relationships -->
-            <div class="panel noborder" id="idPanelAffl" style="display:none" >
-                <apex:include pageName="STG_PanelAffiliations" />
-            </div>
+                <!-- Relationships -->
+                <div class="panel noborder" id="idPanelAffl" style="display:none" >
+                    <apex:include pageName="STG_PanelAffiliations" />
+                </div>
 
-            <div class="panel noborder" id="idPanelRel" style="display:none" >
-                <apex:include pageName="STG_PanelRel" />
-            </div>
+                <div class="panel noborder" id="idPanelRel" style="display:none" >
+                    <apex:include pageName="STG_PanelRel" />
+                </div>
 
-            <div class="panel noborder" id="idPanelRelReciprocal" style="display:none" >
-                <apex:include pageName="STG_PanelRelReciprocal" />
-            </div>
+                <div class="panel noborder" id="idPanelRelReciprocal" style="display:none" >
+                    <apex:include pageName="STG_PanelRelReciprocal" />
+                </div>
 
-            <div class="panel noborder" id="idPanelRelAuto" style="display:none" >
-                <apex:include pageName="STG_PanelRelAuto" />
-            </div>
+                <div class="panel noborder" id="idPanelRelAuto" style="display:none" >
+                    <apex:include pageName="STG_PanelRelAuto" />
+                </div>
 
-            <!-- Donations -->
-            <div class="panel noborder" id="idPanelOppNaming" style="display:none" >
-                <apex:include pageName="STG_PanelOppNaming" />
-            </div>
+                <!-- Donations -->
+                <div class="panel noborder" id="idPanelOppNaming" style="display:none" >
+                    <apex:include pageName="STG_PanelOppNaming" />
+                </div>
 
-            <div class="panel noborder" id="idPanelMembership" style="display:none" >
-                <apex:include pageName="STG_PanelMembership" />
-            </div>
+                <div class="panel noborder" id="idPanelMembership" style="display:none" >
+                    <apex:include pageName="STG_PanelMembership" />
+                </div>
 
-            <div class="panel noborder" id="idPanelOpp" style="display:none" >
-                <apex:include pageName="STG_PanelOpps" />
-            </div>
-            
-            <div class="panel noborder" id="idPanelPaymentMapping" style="display:none" >
-                <apex:include pageName="STG_PanelPaymentMapping" />
-            </div>
-      
-            <div class="panel noborder" id="idPanelAllocations" style="display:none" >
-                <apex:include pageName="STG_PanelAllocations" />
-            </div>
+                <div class="panel noborder" id="idPanelOpp" style="display:none" >
+                    <apex:include pageName="STG_PanelOpps" />
+                </div>
+                
+                <div class="panel noborder" id="idPanelPaymentMapping" style="display:none" >
+                    <apex:include pageName="STG_PanelPaymentMapping" />
+                </div>
+          
+                <div class="panel noborder" id="idPanelAllocations" style="display:none" >
+                    <apex:include pageName="STG_PanelAllocations" />
+                </div>
 
-            <div class="panel noborder" id="idPanelOppRollup" style="display:none" >
-                <apex:include pageName="STG_PanelOppRollups" />
-            </div>
+                <div class="panel noborder" id="idPanelOppRollup" style="display:none" >
+                    <apex:include pageName="STG_PanelOppRollups" />
+                </div>
 
-            <div class="panel noborder" id="idPanelConRole" style="display:none" >
-                <apex:include pageName="STG_PanelContactRoles" />
-            </div>
+                <div class="panel noborder" id="idPanelConRole" style="display:none" >
+                    <apex:include pageName="STG_PanelContactRoles" />
+                </div>
 
-            <div class="panel noborder" id="idPanelOppCampaignMembers" style="display:none" >
-                <apex:include pageName="STG_PanelOppCampaignMembers" />
-            </div>
+                <div class="panel noborder" id="idPanelOppCampaignMembers" style="display:none" >
+                    <apex:include pageName="STG_PanelOppCampaignMembers" />
+                </div>
 
-            <div class="panel noborder" id="idPanelBDE" style="display:none" >
-                <apex:include pageName="STG_PanelBDE" />
-            </div>
+                <div class="panel noborder" id="idPanelBDE" style="display:none" >
+                    <apex:include pageName="STG_PanelBDE" />
+                </div>
 
-            <div class="panel noborder" id="idPanelUserRollup" style="display:none" >
-                <apex:include pageName="STG_PanelUserRollup" />
-            </div>
+                <div class="panel noborder" id="idPanelUserRollup" style="display:none" >
+                    <apex:include pageName="STG_PanelUserRollup" />
+                </div>
 
-            <!-- Recurring Donations -->
-            <div class="panel noborder" id="idPanelRD" style="display:none" >
-                <apex:include pageName="STG_PanelRD" />
-            </div>
+                <!-- Recurring Donations -->
+                <div class="panel noborder" id="idPanelRD" style="display:none" >
+                    <apex:include pageName="STG_PanelRD" />
+                </div>
 
-            <div class="panel noborder" id="idPanelRDInstPd" style="display:none" >
-                <apex:include pageName="STG_PanelRDCustomInstallment" />
-            </div>
+                <div class="panel noborder" id="idPanelRDInstPd" style="display:none" >
+                    <apex:include pageName="STG_PanelRDCustomInstallment" />
+                </div>
 
-            <div class="panel noborder" id="idPanelRDFieldMap" style="display:none" >
-                <apex:include pageName="STG_PanelRDCustomFieldMapping" />
-            </div>
+                <div class="panel noborder" id="idPanelRDFieldMap" style="display:none" >
+                    <apex:include pageName="STG_PanelRDCustomFieldMapping" />
+                </div>
 
-            <!-- Bulk Data Processes -->
-            <div class="panel noborder" id="idPanelOppBatch" style="display:none" >
-                <apex:include pageName="STG_PanelOppBatch" />
-            </div>
+                <!-- Bulk Data Processes -->
+                <div class="panel noborder" id="idPanelOppBatch" style="display:none" >
+                    <apex:include pageName="STG_PanelOppBatch" />
+                </div>
 
-            <div class="panel noborder" id="idPanelAlloBatch" style="display:none" >
-                <apex:include pageName="STG_PanelAlloBatch" />
-            </div>
+                <div class="panel noborder" id="idPanelAlloBatch" style="display:none" >
+                    <apex:include pageName="STG_PanelAlloBatch" />
+                </div>
 
-            <div class="panel noborder" id="idPanelMakeDefaultAllocations" style="display:none" >
-                <apex:include pageName="STG_PanelMakeDefaultAllocations" />
-            </div>
+                <div class="panel noborder" id="idPanelMakeDefaultAllocations" style="display:none" >
+                    <apex:include pageName="STG_PanelMakeDefaultAllocations" />
+                </div>
 
-            <div class="panel noborder" id="idPanelCreatePayments" style="display:none" >
-                <apex:include pageName="STG_PanelCreatePayments" />
-            </div>
+                <div class="panel noborder" id="idPanelCreatePayments" style="display:none" >
+                    <apex:include pageName="STG_PanelCreatePayments" />
+                </div>
 
-            <div class="panel noborder" id="idPanelRefreshHouseholdNames" style="display:none" >
-                <apex:include pageName="STG_PanelRenameHouseholds" />
-            </div>
+                <div class="panel noborder" id="idPanelRefreshHouseholdNames" style="display:none" >
+                    <apex:include pageName="STG_PanelRenameHouseholds" />
+                </div>
 
-            <div class="panel noborder" id="idPanelOppNamingBatch" style="display:none" >
-                <apex:include pageName="STG_PanelOppNamingBatch" />
-            </div>
+                <div class="panel noborder" id="idPanelOppNamingBatch" style="display:none" >
+                    <apex:include pageName="STG_PanelOppNamingBatch" />
+                </div>
 
-            <div class="panel noborder" id="idPanelUpdatePrimaryContact" style="display:none" >
-                <apex:include pageName="STG_PanelUpdatePrimaryContact" />
-            </div>
+                <div class="panel noborder" id="idPanelUpdatePrimaryContact" style="display:none" >
+                    <apex:include pageName="STG_PanelUpdatePrimaryContact" />
+                </div>
 
-            <div class="panel noborder" id="idPanelRDBatch" style="display:none" >
-                <apex:include pageName="STG_PanelRDBatch" />
-            </div>
+                <div class="panel noborder" id="idPanelRDBatch" style="display:none" >
+                    <apex:include pageName="STG_PanelRDBatch" />
+                </div>
 
-            <!-- System Tools -->
-            <div class="panel noborder" id="idPanelHealthCheck" style="display:none" >
-                <apex:include pageName="STG_PanelHealthCheck" />
-            </div>
+                <!-- System Tools -->
+                <div class="panel noborder" id="idPanelHealthCheck" style="display:none" >
+                    <apex:include pageName="STG_PanelHealthCheck" />
+                </div>
 
-            <div class="panel noborder" id="idPanelErrorLog" style="display:none" >
-                <apex:include pageName="STG_PanelErrorLog" />
-            </div>
+                <div class="panel noborder" id="idPanelErrorLog" style="display:none" >
+                    <apex:include pageName="STG_PanelErrorLog" />
+                </div>
 
-            <div class="panel noborder" id="idPanelErrorNotif" style="display:none" >
-                <apex:include pageName="STG_PanelERR" />
-            </div>
+                <div class="panel noborder" id="idPanelErrorNotif" style="display:none" >
+                    <apex:include pageName="STG_PanelERR" />
+                </div>
 
-            <div class="panel noborder" id="idPanelTDTM" style="display:none" >
-                <apex:include pageName="STG_PanelTDTM" />
+                <div class="panel noborder" id="idPanelTDTM" style="display:none" >
+                    <apex:include pageName="STG_PanelTDTM" />
+                </div>
             </div>
         </div>
     </div>
-</div>
 </apex:page>
