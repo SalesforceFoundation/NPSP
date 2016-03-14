@@ -80,29 +80,29 @@
                             <dl class="slds-dl--horizontal slds-text-body--small">
                                 <div class="slds-x-small-show-only">
                                     <dt class="slds-dl--horizontal__label slds-medium-size--2-of-12 slds-x-small-show-only">
-                                        <p class="slds-truncate">Status:</p>
+                                        <span class="slds-truncate">Status:</span>
                                     </dt>
                                     <dd class="slds-dl--horizontal__detail slds-tile__meta slds-medium-size--10-of-12 slds-x-small-show-only">
-                                        <p class="slds-truncate status"></p>
+                                        <span class="slds-truncate status"></span>
                                     </dd>
                                 </div>
                                 <dt class="slds-dl--horizontal__label slds-medium-size--2-of-12">
-                                    <p class="slds-truncate">Progress:</p>
+                                    <span class="slds-truncate">Progress:</span>
                                 </dt>
                                 <dd class="slds-dl--horizontal__detail slds-tile__meta slds-medium-size--10-of-12">
-                                    <p class="slds-truncate"><span class="jobItemsProcessed"></span> of <span class="totalJobItems"></span> batches processed</p>
+                                    <span class="slds-truncate"><span class="jobItemsProcessed"></span> of <span class="totalJobItems"></span> batches processed</span>
                                 </dd>
                                 <dt class="slds-dl--horizontal__label slds-medium-size--2-of-12 completedDateContainer">
-                                    <p class="slds-truncate">Completed:</p>
+                                    <span class="slds-truncate">Completed:</span>
                                 </dt>
                                 <dd class="slds-dl--horizontal__detail slds-tile__meta slds-medium-size--10-of-12 completedDateContainer">
-                                    <p class="slds-truncate completedDate"></p>
+                                    <span class="slds-truncate completedDate"></span>
                                 </dd>
                                 <dt class="slds-dl--horizontal__label slds-medium-size--2-of-12 extendedStatusContainer">
-                                    <p class="slds-truncate">Extended Status:</p>
+                                    <span class="slds-truncate">Extended Status:</span>
                                 </dt>
                                 <dd class="slds-dl--horizontal__detail slds-tile__meta slds-medium-size--10-of-12 extendedStatusContainer">
-                                    <p class="slds-truncate extendedStatus"></p>
+                                    <span class="slds-truncate extendedStatus"></span>
                                 </dd>
                             </dl>
                         </div>
