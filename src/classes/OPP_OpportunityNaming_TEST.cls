@@ -221,7 +221,7 @@ private class OPP_OpportunityNaming_TEST
             system.assert(thisopp.name.contains('Test'));
 
         test.startTest();
-        STG_PanelOppNaming_CTRL ctrl = new STG_PanelOppNaming_CTRL();
+        STG_PanelOppNamingBatch_CTRL ctrl = new STG_PanelOppNamingBatch_CTRL();
         ctrl.runBatch();
         test.stopTest();
 
