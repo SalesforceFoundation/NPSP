@@ -358,6 +358,7 @@
                                 <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelOppBatchNav"><a href="#" onclick="ShowPanel('idPanelOppBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRollupBatch}</a></li>
                                 <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelAlloBatchNav"><a href="#" onclick="ShowPanel('idPanelAlloBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRollupAlloBatch}</a></li>
                                 <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelMakeDefaultAllocationsNav"><a href="#" onclick="ShowPanel('idPanelMakeDefaultAllocations');return false;" class="nav-item sub-nav-item">{!$Label.alloBatchCreateDefault}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelCreatePaymentsNav"><a href="#" onclick="ShowPanel('idPanelCreatePayments');return false;" class="nav-item sub-nav-item">{!$Label.stgLabelCreateMissingPayments}</a></li>
                                 <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRefreshHouseholdNamesNav"><a href="#" onclick="ShowPanel('idPanelRefreshHouseholdNames');return false;" class="nav-item sub-nav-item">{!$Label.stgHHNameRefreshTitle}</a></li>
                                 <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelOppNamingBatchNav"><a href="#" onclick="ShowPanel('idPanelOppNamingBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgLabelOppNamingRefreshTitle}</a></li>
                                 <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelUpdatePrimaryContactNav"><a href="#" onclick="ShowPanel('idPanelUpdatePrimaryContact');return false;" class="nav-item sub-nav-item">{!$Label.stgLabelOppPrimaryContactTitle}</a></li>
@@ -496,6 +497,10 @@
 
             <div class="panel noborder" id="idPanelMakeDefaultAllocations" style="display:none" >
                 <apex:include pageName="STG_PanelMakeDefaultAllocations" />
+            </div>
+
+            <div class="panel noborder" id="idPanelCreatePayments" style="display:none" >
+                <apex:include pageName="STG_PanelCreatePayments" />
             </div>
 
             <div class="panel noborder" id="idPanelRefreshHouseholdNames" style="display:none" >
