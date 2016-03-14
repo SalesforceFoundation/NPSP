@@ -209,7 +209,7 @@
         z-index: 99;
         position: fixed;
         top: 45%;
-        left: 40%;
+        left: 45%;
         width: 80px;
         height: 80px;
     }
@@ -275,6 +275,7 @@
                 <div class="slds-tree-container" >
                     <nav role="navigation">
                         <ul id="mynavbar" class="slds-tree slds-list--vertical slds-has-block-links-space" role="tree" aria-labelledby="treeheading" aria-activedescendant="tree0-node0" >
+                            <!-- People -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelConHomeNav">
                                 <button class="slds-button slds-button--icon-bare slds-m-right--x-small chevronright">
                                     <svg aria-hidden="true" class="slds-button__icon slds-button__icon--small" viewBox="0 0 24 24"><path d="{!pathChevronRight}"/></svg>
@@ -290,7 +291,7 @@
                                 <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelADDRVerifNav"><a href="#" onclick="ShowPanel('idPanelADDR');return false;" class="nav-item sub-nav-item">{!$Label.stgNavAddressVerification}</a></li>
                                 <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelLeadsNav"><a href="#" onclick="ShowPanel('idPanelLeads');return false;" class="nav-item sub-nav-item">{!$Label.stgNavLeads}</a></li>
                             </ul>
-
+                            <!-- Relationships -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelConnectionsNav">
                                 <button class="slds-button slds-button--icon-bare slds-m-right--x-small chevronright">
                                     <svg aria-hidden="true" class="slds-button__icon slds-button__icon--small" viewBox="0 0 24 24"><path d="{!pathChevronRight}"/></svg>
@@ -306,7 +307,7 @@
                                 <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRelReciprocalNav"><a href="#" onclick="ShowPanel('idPanelRelReciprocal');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRelReciprocal}</a></li>
                                 <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRelAutoNav"><a href="#" onclick="ShowPanel('idPanelRelAuto');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRelAutoCreate}</a></li>
                             </ul>
-
+                            <!-- Donations -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelDonationsNav">
                                 <button class="slds-button slds-button--icon-bare slds-m-right--x-small chevronright">
                                     <svg aria-hidden="true" class="slds-button__icon slds-button__icon--small" viewBox="0 0 24 24"><path d="{!pathChevronRight}"/></svg>
@@ -328,7 +329,7 @@
                                 <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelBDENav"><a href="#" onclick="ShowPanel('idPanelBDE');return false;" class="nav-item sub-nav-item">{!$Label.stgNavBDE}</a></li>
                                 <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelUserRollupNav"><a href="#" onclick="ShowPanel('idPanelUserRollup');return false;" class="nav-item sub-nav-item">{!$Label.stgNavUserDefinedRollups}</a></li>
                             </ul>
-
+                            <!-- Recurring Donations -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelRecDonationsNav">
                                 <button class="slds-button slds-button--icon-bare slds-m-right--x-small chevronright">
                                     <svg aria-hidden="true" class="slds-button__icon slds-button__icon--small" viewBox="0 0 24 24"><path d="{!pathChevronRight}"/></svg>
@@ -342,9 +343,8 @@
                                 <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRDNav"><a href="#" onclick="ShowPanel('idPanelRD');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRecurringDonations}</a></li>
                                 <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRDInstPdNav"><a href="#" onclick="ShowPanel('idPanelRDInstPd');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRDInstallmentPeriods}</a></li>
                                 <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRDFieldMapNav"><a href="#" onclick="ShowPanel('idPanelRDFieldMap');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRDFieldMap}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRDBatchNav"><a href="#" onclick="ShowPanel('idPanelRDBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRDBatch}</a></li>
                             </ul>
-
+                            <!-- Bulk Data Processes -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelBulkProcesses">
                                 <button class="slds-button slds-button--icon-bare slds-m-right--x-small chevronright">
                                     <svg aria-hidden="true" class="slds-button__icon slds-button__icon--small" viewBox="0 0 24 24"><path d="{!pathChevronRight}"/></svg>
@@ -357,10 +357,13 @@
                             <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree4-node0-link">
                                 <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelOppBatchNav"><a href="#" onclick="ShowPanel('idPanelOppBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRollupBatch}</a></li>
                                 <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelAlloBatchNav"><a href="#" onclick="ShowPanel('idPanelAlloBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRollupAlloBatch}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelMakeDefaultAllocationsNav"><a href="#" onclick="ShowPanel('idPanelMakeDefaultAllocations');return false;" class="nav-item sub-nav-item">{!$Label.alloBatchCreateDefault}</a></li>
                                 <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRefreshHouseholdNamesNav"><a href="#" onclick="ShowPanel('idPanelRefreshHouseholdNames');return false;" class="nav-item sub-nav-item">{!$Label.stgHHNameRefreshTitle}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelOppNamingBatchNav"><a href="#" onclick="ShowPanel('idPanelOppNamingBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgLabelOppNamingRefreshTitle}</a></li>
                                 <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelUpdatePrimaryContactNav"><a href="#" onclick="ShowPanel('idPanelUpdatePrimaryContact');return false;" class="nav-item sub-nav-item">{!$Label.stgLabelOppPrimaryContactTitle}</a></li>
+                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRDBatchNav"><a href="#" onclick="ShowPanel('idPanelRDBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRDBatch}</a></li>
                             </ul>
-
+                            <!-- System Tools -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelSystemNav">
                                 <button class="slds-button slds-button--icon-bare slds-m-right--x-small chevronright">
                                     <svg aria-hidden="true" class="slds-button__icon slds-button__icon--small" viewBox="0 0 24 24"><path d="{!pathChevronRight}"/></svg>
@@ -394,6 +397,7 @@
                 <apex:include pageName="STG_PanelHome" />
             </div>
 
+            <!-- People -->
             <div class="panel noborder" id="idPanelCon" style="display:none" >
                 <apex:include pageName="STG_PanelContacts" />
             </div>
@@ -406,64 +410,13 @@
                 <apex:include pageName="STG_PanelAddrVerification" />
             </div>
 
-            <div class="panel noborder" id="idPanelConRole" style="display:none" >
-                <apex:include pageName="STG_PanelContactRoles" />
-            </div>
-
-            <div class="panel noborder" id="idPanelOppCampaignMembers" style="display:none" >
-                <apex:include pageName="STG_PanelOppCampaignMembers" />
-            </div>
-
             <div class="panel noborder" id="idPanelLeads" style="display:none" >
                 <apex:include pageName="STG_PanelLeads" />
             </div>
 
+            <!-- Relationships -->
             <div class="panel noborder" id="idPanelAffl" style="display:none" >
                 <apex:include pageName="STG_PanelAffiliations" />
-            </div>
-
-            <div class="panel noborder" id="idPanelMembership" style="display:none" >
-                <apex:include pageName="STG_PanelMembership" />
-            </div>
-
-            <div class="panel noborder" id="idPanelAllocations" style="display:none" >
-                <apex:include pageName="STG_PanelAllocations" />
-            </div>
-
-            <div class="panel noborder" id="idPanelAlloBatch" style="display:none" >
-                <apex:include pageName="STG_PanelAlloBatch" />
-            </div>
-
-            <div class="panel noborder" id="idPanelOppNaming" style="display:none" >
-                <apex:include pageName="STG_PanelOppNaming" />
-            </div>
-
-            <div class="panel noborder" id="idPanelOpp" style="display:none" >
-                <apex:include pageName="STG_PanelOpps" />
-            </div>
-
-            <div class="panel noborder" id="idPanelOppRollup" style="display:none" >
-                <apex:include pageName="STG_PanelOppRollups" />
-            </div>
-
-            <div class="panel noborder" id="idPanelOppBatch" style="display:none" >
-                <apex:include pageName="STG_PanelOppBatch" />
-            </div>
-
-            <div class="panel noborder" id="idPanelRD" style="display:none" >
-                <apex:include pageName="STG_PanelRD" />
-            </div>
-
-            <div class="panel noborder" id="idPanelRDBatch" style="display:none" >
-                <apex:include pageName="STG_PanelRDBatch" />
-            </div>
-
-            <div class="panel noborder" id="idPanelRDInstPd" style="display:none" >
-                <apex:include pageName="STG_PanelRDCustomInstallment" />
-            </div>
-
-            <div class="panel noborder" id="idPanelRDFieldMap" style="display:none" >
-                <apex:include pageName="STG_PanelRDCustomFieldMapping" />
             </div>
 
             <div class="panel noborder" id="idPanelRel" style="display:none" >
@@ -478,40 +431,104 @@
                 <apex:include pageName="STG_PanelRelAuto" />
             </div>
 
-            <div class="panel noborder" id="idPanelBDE" style="display:none" >
-                <apex:include pageName="STG_PanelBDE" />
+            <!-- Donations -->
+            <div class="panel noborder" id="idPanelOppNaming" style="display:none" >
+                <apex:include pageName="STG_PanelOppNaming" />
             </div>
 
+            <div class="panel noborder" id="idPanelMembership" style="display:none" >
+                <apex:include pageName="STG_PanelMembership" />
+            </div>
+
+            <div class="panel noborder" id="idPanelOpp" style="display:none" >
+                <apex:include pageName="STG_PanelOpps" />
+            </div>
+            
             <div class="panel noborder" id="idPanelPaymentMapping" style="display:none" >
                 <apex:include pageName="STG_PanelPaymentMapping" />
+            </div>
+      
+            <div class="panel noborder" id="idPanelAllocations" style="display:none" >
+                <apex:include pageName="STG_PanelAllocations" />
+            </div>
+
+            <div class="panel noborder" id="idPanelOppRollup" style="display:none" >
+                <apex:include pageName="STG_PanelOppRollups" />
+            </div>
+
+            <div class="panel noborder" id="idPanelConRole" style="display:none" >
+                <apex:include pageName="STG_PanelContactRoles" />
+            </div>
+
+            <div class="panel noborder" id="idPanelOppCampaignMembers" style="display:none" >
+                <apex:include pageName="STG_PanelOppCampaignMembers" />
+            </div>
+
+            <div class="panel noborder" id="idPanelBDE" style="display:none" >
+                <apex:include pageName="STG_PanelBDE" />
             </div>
 
             <div class="panel noborder" id="idPanelUserRollup" style="display:none" >
                 <apex:include pageName="STG_PanelUserRollup" />
             </div>
 
-            <div class="panel noborder" id="idPanelUpdatePrimaryContact" style="display:none" >
-                <apex:include pageName="STG_PanelUpdatePrimaryContact" />
+            <!-- Recurring Donations -->
+            <div class="panel noborder" id="idPanelRD" style="display:none" >
+                <apex:include pageName="STG_PanelRD" />
+            </div>
+
+            <div class="panel noborder" id="idPanelRDInstPd" style="display:none" >
+                <apex:include pageName="STG_PanelRDCustomInstallment" />
+            </div>
+
+            <div class="panel noborder" id="idPanelRDFieldMap" style="display:none" >
+                <apex:include pageName="STG_PanelRDCustomFieldMapping" />
+            </div>
+
+            <!-- Bulk Data Processes -->
+            <div class="panel noborder" id="idPanelOppBatch" style="display:none" >
+                <apex:include pageName="STG_PanelOppBatch" />
+            </div>
+
+            <div class="panel noborder" id="idPanelAlloBatch" style="display:none" >
+                <apex:include pageName="STG_PanelAlloBatch" />
+            </div>
+
+            <div class="panel noborder" id="idPanelMakeDefaultAllocations" style="display:none" >
+                <apex:include pageName="STG_PanelMakeDefaultAllocations" />
             </div>
 
             <div class="panel noborder" id="idPanelRefreshHouseholdNames" style="display:none" >
                 <apex:include pageName="STG_PanelRenameHouseholds" />
             </div>
 
-            <div class="panel noborder" id="idPanelErrorLog" style="display:none" >
-                <apex:include pageName="STG_PanelErrorLog" />
+            <div class="panel noborder" id="idPanelOppNamingBatch" style="display:none" >
+                <apex:include pageName="STG_PanelOppNamingBatch" />
             </div>
 
-            <div class="panel noborder" id="idPanelTDTM" style="display:none" >
-                <apex:include pageName="STG_PanelTDTM" />
+            <div class="panel noborder" id="idPanelUpdatePrimaryContact" style="display:none" >
+                <apex:include pageName="STG_PanelUpdatePrimaryContact" />
+            </div>
+
+            <div class="panel noborder" id="idPanelRDBatch" style="display:none" >
+                <apex:include pageName="STG_PanelRDBatch" />
+            </div>
+
+            <!-- System Tools -->
+            <div class="panel noborder" id="idPanelHealthCheck" style="display:none" >
+                <apex:include pageName="STG_PanelHealthCheck" />
+            </div>
+
+            <div class="panel noborder" id="idPanelErrorLog" style="display:none" >
+                <apex:include pageName="STG_PanelErrorLog" />
             </div>
 
             <div class="panel noborder" id="idPanelErrorNotif" style="display:none" >
                 <apex:include pageName="STG_PanelERR" />
             </div>
 
-            <div class="panel noborder" id="idPanelHealthCheck" style="display:none" >
-                <apex:include pageName="STG_PanelHealthCheck" />
+            <div class="panel noborder" id="idPanelTDTM" style="display:none" >
+                <apex:include pageName="STG_PanelTDTM" />
             </div>
         </div>
     </div>

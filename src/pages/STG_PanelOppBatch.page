@@ -1,8 +1,8 @@
 <apex:page controller="STG_PanelOppBatch_CTRL" >
     <c:STG_PageHeader sectionLabel="{!$Label.stgNavBulkProcesses}" pageLabel="{!$Label.stgNavRollupBatch}" />
-	<p>{!$Label.stgHelpBatchOppRollup}</p>
+    <p>{!$Label.stgHelpBatchOppRollup}</p>
 
-    <apex:form id="form" styleClass="slds-form--horizontal">
+    <apex:form id="form" styleClass="slds-m-around--x-large">
         <c:UTIL_PageMessages />
         <apex:pageBlock id="pbRelBatch" mode="maindetail">
             <div class="slds-button-group">

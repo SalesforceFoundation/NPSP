@@ -1,21 +1,17 @@
 <apex:page controller="STG_PanelContacts_CTRL" >
     <apex:form id="form" styleClass="slds-m-around--x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavPeople}" pageLabel="{!$Label.stgNavAccountModel}" />
-        
         <div class="slds-grid">
-            <div class="slds-col slds-size--1-of-1 slds-p-around--x-large">
+            <div class="slds-col slds-size--1-of-1 slds-m-around--medium">
                 <p class="slds-text-body--small slds-m-top--x-small">{!$Label.npe01__Contacts_Settings_Account_Model_Help_Text}</p>
             </div>        
         </div>
-        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
+        <c:UTIL_PageMessages />
+        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
             <apex:commandButton value="{!$Label.stgBtnEdit}" rendered="{!isReadOnlyMode}" status="statusLoad" action="{!editSettings}" immediate="true" rerender="form" styleClass="slds-button slds-button--neutral" />
         </div>
-        <div class="slds-section-title--divider">
-            {!$Label.CONV_Configuration_Options}
-        </div>
-        <c:UTIL_PageMessages />
-        <div class="slds-form--horizontal">
-                
+        <div class="slds-section-title--divider">{!$Label.CONV_Configuration_Options}</div>
+        <div class="slds-form--horizontal slds-m-around--large">
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Account_Processor__c.Label}" for="slAP" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
@@ -46,11 +42,9 @@
                     <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpOneToOneRTID}" />
                 </div>
             </div>
-            <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
-                <apex:outputPanel rendered="{!isEditMode}" styleClass="slds-button-group">
-                    <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--neutral" />
-                    <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--neutral" />
-                </apex:outputPanel>
+            <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
+                <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--neutral" />
+                <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--neutral" />
             </div>
         </div>
     </apex:form>

@@ -17,16 +17,14 @@
             margin-right: -30px;
         }
     </style>
-    <apex:form id="form" styleClass="slds-m-around-x-large">
+    <apex:form id="form" styleClass="slds-m-around--x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavAllocations}" />
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
-            <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="slds-button-group">
-                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
-            </apex:outputPanel>
+            <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
         </div>
         <c:UTIL_PageMessages />
         <div class="slds-section-title--divider" >{!$Label.stgLabelAllocationsRollupSettings}</div>
-        <div class="form-horizontal">
+        <div class="slds-form--horizontal">
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Excluded_Opp_RecTypes__c.Label}" for="idDBMS" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
@@ -58,7 +56,7 @@
             </div>
         </div>
         <div class="slds-section-title--divider" >{!$Label.stgLabelAllocationsSettings}</div>
-        <div class="form-horizontal">
+        <div class="slds-form--horizontal">
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Default_Allocations_Enabled__c.Label}" for="cbxDAE" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
@@ -76,10 +74,8 @@
             </div>
         </div>
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
-            <div class="slds-button-group">
-                <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
-                <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
-            </div>
+            <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+            <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
         </div>
     </apex:form>
 </apex:page>

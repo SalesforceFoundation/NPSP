@@ -48,22 +48,25 @@
             });
         });
     </script>
-
+    <style>
+        div.slds-text-body--small ol {
+            list-style: initial;
+            list-style-type: decimal;
+        }
+    </style>
     <apex:form id="form" styleClass="slds-m-around--x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavPeople}" pageLabel="{!$Label.stgLabelAddressVerification}" />
         <c:UTIL_PageMessages />
     
-        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
-            <apex:commandButton id="EditNotif" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true"
-                                    rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" styleClass="slds-button slds-button--small slds-button--neutral"
-                                    oncomplete="hideUnusedElements()"/>
+        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
+            <apex:commandButton id="EditNotif" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" styleClass="slds-button slds-button--small slds-button--neutral" oncomplete="hideUnusedElements()"/>
         </div>
 
-        <apex:outputPanel layout="block" id="fields">
+        <apex:outputPanel id="fields">
             <div class="slds-section-title--divider">
                 {!$Label.addrGeneralSettings}
             </div>
-            <div class="slds-form--horizontal slds-p-around--large">
+            <div class="slds-form--horizontal slds-m-around--large">
                 <div class="slds-form-element">
                     <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Household_Account_Addresses_Disabled__c.Label}" for="cbxDHAA" styleClass="slds-form-element__label" />
                     <div class="slds-form-element__control">
@@ -98,10 +101,11 @@
             <div class="slds-section-title--divider">
                 {!$Label.Addr_Settings_API_Title}
             </div>
-            <p class="slds-text-body--small slds-p-around--large"><apex:outputText value="{!$Label.Addr_Settings_Intro_Body1}" escape="false" /></p>
-            <p class="slds-text-body--small slds-p-around--large"><apex:outputText escape="false" value="{!$Label.Addr_Settings_Intro_Body2}" styleClass="slds-list--ordered"/></p>
-            
-            <div class="slds-form--horizontal slds-p-around--large">
+            <div class="slds-text-body--small slds-m-around--large">
+                <p><apex:outputText value="{!$Label.Addr_Settings_Intro_Body1}" escape="false" /></p>
+                <p><apex:outputText value="{!$Label.Addr_Settings_Intro_Body2}" escape="false" styleClass="slds-list--ordered" /></p>
+            </div>
+            <div class="slds-form--horizontal slds-m-around--large">
                 <div class="slds-form-element">
                     <apex:outputLabel value="{!$ObjectType.Addr_Verification_Settings__c.fields.Enable_Automatic_Verification__c.Label}" for="iEnable_Automatic_Verification__c"
                                         styleClass="slds-form-element__label" />
@@ -184,41 +188,38 @@
         </apex:outputPanel>
         </div>
 
-        <br/>
-            <div class="slds-p-around--large">
-                <div id="iBatchVerifyDiv">
-                    <div class="slds-card">
-                        <div class="slds-card__header">
-                            <h3 class="slds-text-heading--small">{!$Label.Addr_Verification_Batch_Title}</h3>
-                        </div>
-                        <div class="slds-card__body slds-text-body--small slds-p-around--medium">
-                            <apex:outputText escape="false" value="{!$Label.Addr_Verification_Batch_Body}" />
-                            <apex:outputText id="validatorBatchHelpText" escape="false" value="{!validatorBatchHelpText}" />
-                            <div class="slds-form--horizontal">
-                                <div class="slds-form-element">
-                                    <apex:outputLabel value="{!$Label.Addr_Skip_Verified}" for="iAddr_Skip_Verified" styleClass="slds-form-element__label"/>
-                                    <div class="slds-form-element__control">
-                                        <apex:inputCheckbox value="{!skipPreviouslyVerifiedObjects}" id="iAddr_Skip_Verified" styleClass="slds-checkbox"/>
-                                    </div>
-                                </div>
+        <div class="slds-m-around--large" id="iBatchVerifyDiv">
+            <div class="slds-card">
+                <div class="slds-card__header">
+                    <h3 class="slds-text-heading--small">{!$Label.Addr_Verification_Batch_Title}</h3>
+                </div>
+                <div class="slds-card__body slds-text-body--small slds-p-around--medium">
+                    <apex:outputText escape="false" value="{!$Label.Addr_Verification_Batch_Body}" />
+                    <div class="slds-form--horizontal slds-m-around--large">
+                        <div class="slds-form-element">
+                            <apex:outputLabel value="{!$Label.Addr_Skip_Verified}" for="iAddr_Skip_Verified" styleClass="slds-form-element__label"/>
+                            <div class="slds-form-element__control">
+                                <apex:inputCheckbox value="{!skipPreviouslyVerifiedObjects}" id="iAddr_Skip_Verified" styleClass="slds-checkbox"/>
+                                <apex:outputText id="validatorBatchHelpText" escape="false" value="{!validatorBatchHelpText}" styleClass="slds-form-element__help" />
                             </div>
-                            <div style="text-align:center; margin-top: 15px;">
-                                <apex:commandButton id="batchVerify" action="{!batchVerify}" rerender="batchVerifyResult" value="Verify All Addresses" disabled="{!NOT batchVerifEnabled}" styleClass="slds-button slds-button--small slds-button--neutral"/>
-                            </div>
-                            <apex:outputPanel id="batchVerifyResult">
-                                <apex:outputPanel rendered="{!NOT(ISNULL(batchVerifyMessage))}">
-                                    <h4>{!$Label.Addr_Verification_Batch_Status}</h4>
-                                    <p>
-                                        <apex:outputText value="{!batchVerifyMessage}" />
-                                    </p>
-                                    <apex:outputPanel rendered="{!isRunningBatch}">
-                                       <c:UTIL_JobProgress strBatchComponentLabel="{!batchVerifyMessage}" cNumberOfJobs="1" bRerenderOnComplete="true" />
-                                    </apex:outputPanel>
-                                </apex:outputPanel>
-                            </apex:outputPanel>
                         </div>
                     </div>
+                    <div style="text-align:center; margin-top: 15px;">
+                        <apex:commandButton id="batchVerify" action="{!batchVerify}" rerender="batchVerifyResult" value="Verify All Addresses" disabled="{!NOT batchVerifEnabled}" styleClass="slds-button slds-button--small slds-button--neutral"/>
+                    </div>
+                    <apex:outputPanel id="batchVerifyResult">
+                        <apex:outputPanel rendered="{!NOT(ISNULL(batchVerifyMessage))}">
+                            <h4>{!$Label.Addr_Verification_Batch_Status}</h4>
+                            <p>
+                                <apex:outputText value="{!batchVerifyMessage}" />
+                            </p>
+                            <apex:outputPanel rendered="{!isRunningBatch}">
+                               <c:UTIL_JobProgress strBatchComponentLabel="{!batchVerifyMessage}" cNumberOfJobs="1" bRerenderOnComplete="true" />
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+                    </apex:outputPanel>
                 </div>
             </div>
+        </div>
     </apex:form>
 </apex:page>

@@ -1,13 +1,11 @@
 <apex:page controller="STG_PanelBDE_CTRL" >
-    <apex:form id="form" styleClass="slds-m-around-x-large">
+    <apex:form id="form" styleClass="slds-m-around--x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavBDE}" />
         <c:UTIL_PageMessages />
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
-            <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="slds-button-group">
-                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
-            </apex:outputPanel>
+            <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
         </div>
-        <div class="slds-form--horizontal">
+        <div class="slds-form--horizontal slds-m-around--large">
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.Batch_Data_Entry_Settings__c.Fields.Opportunity_Naming__c.Label}" for="cbxONC" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
@@ -24,10 +22,8 @@
             </div>
         </div>
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
-            <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="slds-button-group">
-                <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
-                <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
-            </apex:outputPanel>
+            <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" immediate="false" rendered="{!isEditMode}" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+            <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" immediate="true" rendered="{!isEditMode}" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
         </div>
     </apex:form>
 </apex:page>

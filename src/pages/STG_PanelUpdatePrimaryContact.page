@@ -2,7 +2,7 @@
     <c:STG_PageHeader sectionLabel="{!$Label.stgNavBulkProcesses}" pageLabel="{!$Label.stgLabelOppPrimaryContactTitle}" />
     <p>{!$Label.stgHelpBtnHHNaming}</p>
 
-    <apex:form id="form" styleClass="slds-m-around-x-large">
+    <apex:form id="form" styleClass="slds-m-around--x-large">
         <apex:outputText styleClass="slds-p-around--xx-large">
             <div class="slds-card">
                 <div class="slds-card__header slds-grid">

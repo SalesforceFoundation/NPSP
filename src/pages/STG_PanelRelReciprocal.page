@@ -1,76 +1,77 @@
 <apex:page controller="STG_PanelRelReciprocal_CTRL" >
-    <c:STG_PageHeader sectionLabel="{!$Label.stgNavRelationships}" pageLabel="{!$Label.stgNavRelReciprocal}" />
-    <p>{!$Label.npe4__RelationshipsLookupDescription}</p>
-
-    <apex:form id="form" styleClass="form-horizontal stgForm">  
-        <apex:pageMessages id="pageMessages"/>
-        <apex:pageBlock mode="maindetail">
-            <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="button-block">
-                <apex:commandButton value="{!$Label.stgBtnNewRelReciprocal}" action="{!newRelLookup}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
-            </apex:outputPanel>
-
-            <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="inline-form-block">
-            <section>
-                <h3 class="section-header" >{!$Label.stgLabelNewRelReciprocal}</h3>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Lookup__c.Fields.Name.Label}" for="tbxN" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <apex:inputField value="{!rlNew.Name}" rendered="{!isEditMode}" required="false" id="tbxN" styleClass="form-control" />
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpRelReciprocalName}" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Lookup__c.Fields.npe4__Male__c.Label}" for="tbxM" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <apex:inputField value="{!rlNew.npe4__Male__c}" rendered="{!isEditMode}" required="false" id="tbxM" styleClass="form-control" />
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpRelReciprocalMale}" />
+    <apex:form id="form" styleClass="slds-m-around--x-large">
+        <c:STG_PageHeader sectionLabel="{!$Label.stgNavRelationships}" pageLabel="{!$Label.stgNavRelReciprocal}" />
+        <div class="slds-grid">
+            <div class="slds-col slds-size--1-of-1 slds-m-around--medium">
+                <p class="slds-text-body--small slds-m-top--x-small">{!$Label.npe4__RelationshipsLookupDescription}</p>
+            </div>        
+        </div>
+        <c:UTIL_PageMessages />
+        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
+            <apex:commandButton value="{!$Label.stgBtnNewRelReciprocal}" action="{!newRelLookup}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+        </div>
+        <apex:outputPanel rendered="{!isEditMode}">
+            <div class="slds-section-title--divider" >{!$Label.stgLabelNewRelReciprocal}</div>
+            <div class="slds-form--horizontal slds-m-around--large">
+                <div class="slds-form-element">
+                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Lookup__c.Fields.Name.Label}" for="tbxN" styleClass="slds-form-element__label" />
+                    <div class="slds-form-element__control">
+                        <apex:inputField value="{!rlNew.Name}" rendered="{!isEditMode}" required="false" id="tbxN" styleClass="slds-input" />
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRelReciprocalName}" />
                     </div>
                 </div>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Lookup__c.Fields.npe4__Female__c.Label}" for="tbxF" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <apex:inputField value="{!rlNew.npe4__Female__c}" rendered="{!isEditMode}" required="false" id="tbxF" styleClass="form-control" />
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpRelReciprocalFemale}" />
+                <div class="slds-form-element">
+                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Lookup__c.Fields.npe4__Male__c.Label}" for="tbxM" styleClass="slds-form-element__label" />
+                    <div class="slds-form-element__control">
+                        <apex:inputField value="{!rlNew.npe4__Male__c}" rendered="{!isEditMode}" required="false" id="tbxM" styleClass="slds-input" />
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRelReciprocalMale}" />
                     </div>
                 </div>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Lookup__c.Fields.npe4__Neutral__c.Label}" for="tbxNe" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <apex:inputField value="{!rlNew.npe4__Neutral__c}" rendered="{!isEditMode}" required="false" id="tbxNe" styleClass="form-control" />
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpRelReciprocalNeutral}" />
+                <div class="slds-form-element">
+                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Lookup__c.Fields.npe4__Female__c.Label}" for="tbxF" styleClass="slds-form-element__label" />
+                    <div class="slds-form-element__control">
+                        <apex:inputField value="{!rlNew.npe4__Female__c}" rendered="{!isEditMode}" required="false" id="tbxF" styleClass="slds-input" />
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRelReciprocalFemale}" />
                     </div>
                 </div>
-            </section>
-            <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="button-block">
-                <apex:commandButton value="{!$Label.stgBtnCreateRelReciprocal}" action="{!createRelLookup}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
-                <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelRelLookup}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />
-            </apex:outputPanel>
-
-            </apex:outputPanel>
-            
-            <apex:pageBlockTable value="{!listRelLookup}" var="rl" >
-                <apex:column headerValue="{!$Label.stgLabelActionColumn}" styleClass="actionColumn" style="text-align:center;" >
-                    <apex:commandLink action="{!deleteRl}" 
-                        title="{!$Label.stgLinkDelete} {!rl.Name}"                                                    
-                        styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" 
-                        onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
-                        <apex:param assignTo="{!rlIdDelete}" name="idDeleteRl" value="{!rl.Id}" /> 
-                    </apex:commandLink>
-                </apex:column>
-                <apex:column value="{!rl.Name}" /> 
-                <apex:column value="{!rl.npe4__Male__c}" />
-                <apex:column value="{!rl.npe4__Female__c}" />
-                <apex:column value="{!rl.npe4__Neutral__c}" />
-            </apex:pageBlockTable> 
- 
-        </apex:pageBlock> 
+                <div class="slds-form-element">
+                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Lookup__c.Fields.npe4__Neutral__c.Label}" for="tbxNe" styleClass="slds-form-element__label" />
+                    <div class="slds-form-element__control">
+                        <apex:inputField value="{!rlNew.npe4__Neutral__c}" rendered="{!isEditMode}" required="false" id="tbxNe" styleClass="slds-input" />
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRelReciprocalNeutral}" />
+                    </div>
+                </div>
+                <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
+                    <apex:commandButton value="{!$Label.stgBtnCreateRelReciprocal}" action="{!createRelLookup}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+                    <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelRelLookup}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+                </div>
+            </div>
+        </apex:outputPanel>
+        <table class="slds-table slds-table--bordered" >
+            <thead>
+                <tr class="slds-text-heading--label">
+                    <th scope="col"><label class="slds-truncate">{!$Label.stgLabelActionColumn}</label></th>
+                    <th scope="col"><label class="slds-truncate">{!$ObjectType.npe4__Relationship_Lookup__c.Fields.Name.Label}</label></th>
+                    <th scope="col"><label class="slds-truncate">{!$ObjectType.npe4__Relationship_Lookup__c.Fields.npe4__Male__c.Label}</label></th>
+                    <th scope="col"><label class="slds-truncate">{!$ObjectType.npe4__Relationship_Lookup__c.Fields.npe4__Female__c.Label}</label></th>
+                    <th scope="col"><label class="slds-truncate">{!$ObjectType.npe4__Relationship_Lookup__c.Fields.npe4__Neutral__c.Label}</label></th>
+                </tr>
+            </thead>
+            <tbody>
+                <apex:repeat var="rl" value="{!listRelLookup}" >
+                    <tr>
+                        <td>
+                            <apex:commandLink action="{!deleteRl}" title="{!$Label.stgLinkDelete} {!rl.Name}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
+                                <apex:param assignTo="{!rlIdDelete}" name="idDeleteRl" value="{!rl.Id}" />
+                            </apex:commandLink>
+                        </td>
+                        <td><apex:outputField value="{!rl.Name}" styleClass="slds-form-element__static" /></td>
+                        <td><apex:outputField value="{!rl.npe4__Male__c}" styleClass="slds-form-element__static" /></td>
+                        <td><apex:outputField value="{!rl.npe4__Female__c}" styleClass="slds-form-element__static" /></td>
+                        <td><apex:outputField value="{!rl.npe4__Neutral__c}" styleClass="slds-form-element__static" /></td>
+                    </tr>
+                </apex:repeat>
+           </tbody>
+        </table>
     </apex:form>
 </apex:page>
