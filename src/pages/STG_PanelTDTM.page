@@ -65,6 +65,7 @@
                         <th scope="col"><label class="slds-truncate">{!$ObjectType.Trigger_Handler__c.Fields.Trigger_Action__c.Label}</label></th>
                         <th scope="col"><label class="slds-truncate">{!$ObjectType.Trigger_Handler__c.Fields.Active__c.Label}</label></th>
                         <th scope="col"><label class="slds-truncate">{!$ObjectType.Trigger_Handler__c.Fields.Asynchronous__c.Label}</label></th>
+                        <th scope="col"><label class="slds-truncate">{!$ObjectType.Trigger_Handler__c.Fields.Load_Order__c.Label}</label></th>
                         <th scope="col"><label class="slds-truncate">{!$ObjectType.Trigger_Handler__c.Fields.User_Managed__c.Label}</label></th>
                     </tr>
                 </thead>
