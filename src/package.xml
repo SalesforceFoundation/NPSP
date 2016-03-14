@@ -173,6 +173,7 @@
         <members>STG_PanelBDE_CTRL</members>
         <members>STG_PanelContactRoles_CTRL</members>
         <members>STG_PanelContacts_CTRL</members>
+        <members>STG_PanelCreatePayments_CTRL</members>
         <members>STG_PanelERR_CTRL</members>
         <members>STG_PanelErrorLog_CTRL</members>
         <members>STG_PanelHealthCheck_CTRL</members>
@@ -284,6 +285,7 @@
         <members>STG_PanelBDE</members>
         <members>STG_PanelContactRoles</members>
         <members>STG_PanelContacts</members>
+        <members>STG_PanelCreatePayments</members>
         <members>STG_PanelERR</members>
         <members>STG_PanelErrorLog</members>
         <members>STG_PanelHealthCheck</members>
