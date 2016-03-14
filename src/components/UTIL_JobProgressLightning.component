@@ -244,7 +244,7 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
+        function init() {
             eventTarget = document.getElementById('{!eventTargetId}');
 
             if (eventTarget) {
@@ -266,7 +266,13 @@
             if ({!IF(startPolling, 'true', 'false')}) {
                 startPolling(pollingDelay);
             }
-        });
+        }
+
+        if ('loading' !== document.readyState) {
+            init();
+        } else {
+            document.addEventListener('DOMContentLoaded', init);
+        }
     })();
     </script>
 </apex:component>
