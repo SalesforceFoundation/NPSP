@@ -39,8 +39,8 @@
             </h4>
         </apex:outputPanel>
         <apex:outputPanel rendered="{!hasResults}">
-            <div>
-                <span style="position:relative;left:30px;" class="slds-text-body--small">
+            <div class="slds-m-around--small">
+                <span style="position:relative;" class="slds-text-body--small">
                     <input type="checkbox" onclick="ShowHidePassed();" checked="" id="cbxShowHide" /><label for="cbxShowHide">&nbsp;{!$Label.healthLabelShowPassedTests}&nbsp;</label>
                 </span>
                 <span style="float:right;">
