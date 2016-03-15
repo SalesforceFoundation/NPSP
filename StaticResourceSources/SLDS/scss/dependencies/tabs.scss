@@ -1,4 +1,4 @@
-/* Lightning Design System 0.12.1 */
+// Lightning Design System 1.0.0
 // Copyright (c) 2015, salesforce.com, inc. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -29,7 +29,6 @@
   overflow: hidden;
 }
 
-
 @mixin tabs-link {
   @include truncate;
   display: block;
@@ -39,4 +38,9 @@
   &:focus {
     outline: 0;
   }
+}
+
+@mixin tab-focus {
+  color: $color-text-tab-label-selected;
+  box-shadow: $color-text-tab-label-selected 0 ($border-width-thin * -1) 0 inset;
 }

@@ -1,5 +1,5 @@
 # Lightning Design System 
-# Version: 0.12.1 
+# Version: 1.0.0 
 
 Welcome to the [Salesforce Lightning Design System](https://www.lightningdesignsystem.com) brought to you by [Salesforce UX](https://twitter.com/salesforceux).
 
@@ -24,5 +24,5 @@ Welcome to the [Salesforce Lightning Design System](https://www.lightningdesigns
     - (This directory also includes minified versions of all the CSS files.)
 * scss/ - the Sass source for the Lightning Design System CSS
 * swatches/
-  - slds.ase
-  - slds.clr - adobe and ios swatch formats, respectively. See [https://helpx.adobe.com/photoshop/using/customizing-color-pickers-swatches.html](https://helpx.adobe.com/photoshop/using/customizing-color-pickers-swatches.html)
+  - salesforce-lightning-design-system.ase
+  - salesforce-lightning-design-system.clr - adobe and ios swatch formats, respectively. See [https://helpx.adobe.com/photoshop/using/customizing-color-pickers-swatches.html](https://helpx.adobe.com/photoshop/using/customizing-color-pickers-swatches.html)

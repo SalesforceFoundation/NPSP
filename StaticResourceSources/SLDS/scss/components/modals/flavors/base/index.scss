@@ -1,4 +1,4 @@
-/* Lightning Design System 0.12.1 */
+// Lightning Design System 1.0.0
 // Copyright (c) 2015, salesforce.com, inc. All rights reserved.
 
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -20,7 +20,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: $z-index-modal + 1;
+  z-index: ($z-index-modal + 1);
 
   &__container {
     position: relative;
@@ -74,7 +74,6 @@
   }
 
   &__content {
-    padding: $spacing-medium;
     overflow: hidden {
       y: auto;
     }
@@ -85,6 +84,14 @@
     border-radius: $border-radius-medium;
     padding: $spacing-medium;
     background-color: $color-background;
+
+    @include mq-medium-max {
+
+      .#{$css-prefix}button {
+        width: 100%;
+        margin: $spacing-xxx-small 0;
+      }
+    }
   }
 
   &__footer {
@@ -99,13 +106,17 @@
     background-color: $color-background;
     text-align: right;
     box-shadow: $shadow-drop-down;
+
+    &--directional .#{$css-prefix}button:first-child {
+      float: left;
+    }
   }
 
   &__close {
     @include square($square-icon-large-boundary);
     position: absolute;
     top: -$square-icon-large-boundary;
-    right: -(($square-icon-large-boundary - $square-icon-large-content) / 2);
+    right: ((($square-icon-large-boundary - $square-icon-large-content) / 2) * -1);
   }
 }
 
@@ -130,10 +141,20 @@
   }
 }
 
+.#{$css-prefix}modal--large .#{$css-prefix}modal__container {
+
+  // TODO: We'll want to readdress this to do the .99 thing
+  @include mq-medium-min {
+    width: 90%;
+    max-width: none;
+    min-width: 40rem; // TODO: Tokenize
+  }
+}
+
 // old class
 .#{$css-prefix}modal-backdrop {
 
-  @include deprecate("0.20.0") {
+  @include deprecate('4.0.0') {
     @include backdrop;
   }
 }

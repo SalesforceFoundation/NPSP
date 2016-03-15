@@ -1,4 +1,4 @@
-/* Lightning Design System 0.12.1 */
+// Lightning Design System 1.0.0
 // Copyright (c) 2015, salesforce.com, inc. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -21,16 +21,18 @@
   $scoped-root:     'html' !default;
   $scoped-body:     'body' !default;
 
-
-
-  #{$scoped-selector} * {
-    &,
-    &:before,
-    &:after {
+  #{$scoped-selector} {
+    *,
+    *:before,
+    *:after {
       box-sizing: border-box;
     }
 
-    @include placeholder;
+    ::placeholder {
+      color: $color-text-placeholder;
+      font-weight: $font-weight-regular;
+      font-size: $font-size-medium;
+    }
   }
 
   @if $globals != null {
@@ -41,6 +43,7 @@
   ::selection {
     background: $color-background-highlight;
     text-shadow: none;
+    color: $color-text-default;
   }
 
 
@@ -97,7 +100,7 @@
   a {
     color: $color-text-link;
     text-decoration: none;
-    transition: color .1s linear;
+    transition: color 0.1s linear;
 
     &:hover,
     &:focus {
@@ -114,7 +117,10 @@
     }
   }
 
-
+  a,
+  button {
+    cursor: pointer;
+  }
 
   b,
   strong,
@@ -170,48 +176,5 @@
   img {
     max-width: 100%;
     height: auto;
-  }
-}
-
-/// Output code only until $app-version reaches $version
-/// and signal its deprecation to developers
-///
-/// @require $app-version
-/// @param {String} $version - Semver-like version (e.g. '0.20.0')
-@mixin deprecate($version) {
-
-  @if type-of($version) != string {
-    @error 'The parameter passed to deprecate() must be a String. Good: deprecate(\'0.1.0\') / Bad: deprecate(0.1.0).';
-  }
-
-  @if & {
-    $parent: &;
-    @if $debug == true {
-      @warn '#{$parent} deprecated in version #{$version}. Current version: #{$app-version}';
-    }
-  }
-
-  @if _d-version-major($version) > _d-version-major($app-version) {
-    @content;
-  }
-
-  @else {
-
-    @if _d-version-major($version) == _d-version-major($app-version) {
-
-      @if _d-version-minor($version) > _d-version-minor($app-version) {
-        @content;
-      }
-
-      @else {
-
-        @if _d-version-minor($version) == _d-version-minor($app-version) {
-
-          @if _d-version-patch($version) > _d-version-patch($app-version) {
-            @content;
-          }
-        }
-      }
-    }
   }
 }
