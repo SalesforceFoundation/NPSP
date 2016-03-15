@@ -1,4 +1,6 @@
-/* Lightning Design System 0.12.1 */
+// Lightning Design System 1.0.0
+// scss-lint:disable SpaceAfterComma
+
 @include font-face(Light,                 $font-weight-setting: $font-weight-light);
 @include font-face(LightItalic,   italic, $font-weight-light);
 @include font-face(Regular,               $font-weight-setting: $font-weight-regular);

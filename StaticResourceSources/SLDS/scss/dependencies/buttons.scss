@@ -1,4 +1,4 @@
-/* Lightning Design System 0.12.1 */
+// Lightning Design System 1.0.0
 @mixin button {
   padding: {
     left: $spacing-medium;
@@ -56,52 +56,12 @@
 
   &:hover,
   &:focus {
-    background-color: #A61A14; //$color-background-destructive-hover;
+    background-color: #a61a14; //$color-background-destructive-hover;
     color: $color-text-inverse;
   }
 
   &:active {
     background-color: #870500; //$color-background-button-destructive-active;
     border-color: #870500; //$color-border-destructive-active;
-  }
-}
-
-@mixin button-party($size-modifier, $size) {
-  $max-delimiter: 'max-';
-
-  @media (min-width: $size) {
-    .#{$css-prefix}#{$size-modifier} {
-      &-button--stacked + .#{$css-prefix}#{$size-modifier}-button--stacked,
-      &-buttons--stacked .#{$css-prefix}button + .#{$css-prefix}button {
-        display: block;
-        margin: {
-          top: $spacing-x-small;
-          left: 0;
-        }
-      }
-
-      &-button--horizontal + .#{$css-prefix}#{$size-modifier}-button--horizontal,
-      &-buttons--horizontal .#{$css-prefix}button + .#{$css-prefix}button {
-        margin-left: $spacing-x-small;
-      }
-    }
-  }
-
-  @media (max-width: $size) {
-    .#{$css-prefix}#{$max-delimiter}#{$size-modifier} {
-      &-button--stacked + .#{$css-prefix}#{$max-delimiter}#{$size-modifier}-button--stacked,
-      &-buttons--stacked .#{$css-prefix}button + .#{$css-prefix}button {
-        display: block;
-        margin: {
-          top: $spacing-x-small;
-          left: 0;
-        }
-      }
-
-      &-button--horizontal + .#{$css-prefix}#{$max-delimiter}#{$size-modifier}-button--horizontal,
-      &-buttons--horizontal .#{$css-prefix}button + .#{$css-prefix}button {
-        margin-left: $spacing-x-small;
-      }
-    }
   }
 }
