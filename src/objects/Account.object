@@ -438,16 +438,6 @@
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
-            <field>Jigsaw</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>JigsawCompanyId</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
             <field>npo02__LargestAmount__c</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
