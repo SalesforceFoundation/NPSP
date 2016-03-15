@@ -269,7 +269,7 @@
 
 <div class="slds">
     <div class="slds-grid">
-        <div class="sidebar slds-col slds-small-size--1-of-1 slds-medium-size--3-of-12 slds-large-size--3-of-12 slds-p-top--large">
+        <div class="sidebar slds-col slds-small-size--1-of-1 slds-medium-size--3-of-12 slds-large-size--3-of-12 slds-p-top--large slds-col-rule--right">
             <div class="slds-tree-container" role="application">
                 <div class="slds-text-heading--small slds-tree__item" id="treeheading"><a href="#" onclick="ShowPanel('idPanelHome');return false;" class="slds-grow">{!$Label.stgNPSPSettingsTitle}</a></div>
                     <nav role="navigation">
@@ -285,10 +285,10 @@
                                 <a id="tree0-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavPeople}</a>
                             </div>
                             <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree0-node0-link">
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelConNav"><a href="#" onclick="ShowPanel('idPanelCon');return false;" class="slds-grow">{!$Label.stgNavAccountModel}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelHHNav"><a href="#" onclick="ShowPanel('idPanelHH');return false;" class="slds-grow">{!$Label.stgNavHouseholds}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelADDRNav"><a href="#" onclick="ShowPanel('idPanelADDR');return false;" class="slds-grow">{!$Label.stgNavAddressVerification}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelLeadsNav"><a href="#" onclick="ShowPanel('idPanelLeads');return false;" class="slds-grow">{!$Label.stgNavLeads}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelConNav"><a href="#" onclick="ShowPanel('idPanelCon');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavAccountModel}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelHHNav"><a href="#" onclick="ShowPanel('idPanelHH');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavHouseholds}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelADDRNav"><a href="#" onclick="ShowPanel('idPanelADDR');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavAddressVerification}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelLeadsNav"><a href="#" onclick="ShowPanel('idPanelLeads');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavLeads}</a></li>
                             </ul>
                             <!-- Relationships -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelConnectionsNav">
@@ -301,10 +301,10 @@
                                 <a id="tree1-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavRelationships}</a>
                             </div>
                             <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree1-node0-link">
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelAfflNav"><a href="#" onclick="ShowPanel('idPanelAffl');return false;" class="slds-grow">{!$Label.stgNavAffiliations}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRelNav"><a href="#" onclick="ShowPanel('idPanelRel');return false;" class="slds-grow">{!$Label.stgNavRelationships}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRelReciprocalNav"><a href="#" onclick="ShowPanel('idPanelRelReciprocal');return false;" class="slds-grow">{!$Label.stgNavRelReciprocal}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRelAutoNav"><a href="#" onclick="ShowPanel('idPanelRelAuto');return false;" class="slds-grow">{!$Label.stgNavRelAutoCreate}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelAfflNav"><a href="#" onclick="ShowPanel('idPanelAffl');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavAffiliations}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRelNav"><a href="#" onclick="ShowPanel('idPanelRel');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavRelationships}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRelReciprocalNav"><a href="#" onclick="ShowPanel('idPanelRelReciprocal');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavRelReciprocal}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRelAutoNav"><a href="#" onclick="ShowPanel('idPanelRelAuto');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavRelAutoCreate}</a></li>
                             </ul>
                             <!-- Donations -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelDonationsNav">
@@ -317,16 +317,16 @@
                                 <a id="tree2-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavDonations}</a>
                             </div>
                             <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree2-node0-link">
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelOppNamingNav"><a href="#" onclick="ShowPanel('idPanelOppNaming');return false;" class="slds-grow">{!$Label.stgLabelOppNamingSettings}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelMembershipNav"><a href="#" onclick="ShowPanel('idPanelMembership');return false;" class="slds-grow">{!$Label.stgNavMembership}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelOppNav"><a href="#" onclick="ShowPanel('idPanelOpp');return false;" class="slds-grow">{!$Label.stgNavPayments}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelPaymentMappingNav"><a href="#" onclick="ShowPanel('idPanelPaymentMapping');return false;" class="slds-grow">{!$Label.stgNavPaymentMappings}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelAllocationsNav"><a href="#" onclick="ShowPanel('idPanelAllocations');return false;" class="slds-grow">{!$Label.stgNavAllocations}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelOppRollupNav"><a href="#" onclick="ShowPanel('idPanelOppRollup');return false;" class="slds-grow">{!$Label.stgNavDonorStatistics}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelConRoleNav"><a href="#" onclick="ShowPanel('idPanelConRole');return false;" class="slds-grow">{!$Label.stgNavContactRoles}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelOppCampaignMembersNav"><a href="#" onclick="ShowPanel('idPanelOppCampaignMembers');return false;" class="slds-grow">{!$Label.stgLabelOppCampMembers}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelBDENav"><a href="#" onclick="ShowPanel('idPanelBDE');return false;" class="slds-grow">{!$Label.stgNavBDE}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelUserRollupNav"><a href="#" onclick="ShowPanel('idPanelUserRollup');return false;" class="slds-grow">{!$Label.stgNavUserDefinedRollups}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelOppNamingNav"><a href="#" onclick="ShowPanel('idPanelOppNaming');return false;" class="slds-grow slds-m-left--large">{!$Label.stgLabelOppNamingSettings}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelMembershipNav"><a href="#" onclick="ShowPanel('idPanelMembership');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavMembership}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelOppNav"><a href="#" onclick="ShowPanel('idPanelOpp');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavPayments}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelPaymentMappingNav"><a href="#" onclick="ShowPanel('idPanelPaymentMapping');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavPaymentMappings}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelAllocationsNav"><a href="#" onclick="ShowPanel('idPanelAllocations');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavAllocations}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelOppRollupNav"><a href="#" onclick="ShowPanel('idPanelOppRollup');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavDonorStatistics}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelConRoleNav"><a href="#" onclick="ShowPanel('idPanelConRole');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavContactRoles}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelOppCampaignMembersNav"><a href="#" onclick="ShowPanel('idPanelOppCampaignMembers');return false;" class="slds-grow slds-m-left--large">{!$Label.stgLabelOppCampMembers}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelBDENav"><a href="#" onclick="ShowPanel('idPanelBDE');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavBDE}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelUserRollupNav"><a href="#" onclick="ShowPanel('idPanelUserRollup');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavUserDefinedRollups}</a></li>
                             </ul>
                             <!-- Recurring Donations -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelRecDonationsNav">
@@ -339,9 +339,9 @@
                                 <a id="tree3-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavRecurringDonations}</a>
                             </div>
                             <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree3-node0-link">
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRDNav"><a href="#" onclick="ShowPanel('idPanelRD');return false;" class="slds-grow">{!$Label.stgNavRecurringDonations}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRDInstPdNav"><a href="#" onclick="ShowPanel('idPanelRDInstPd');return false;" class="slds-grow">{!$Label.stgNavRDInstallmentPeriods}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRDFieldMapNav"><a href="#" onclick="ShowPanel('idPanelRDFieldMap');return false;" class="slds-grow">{!$Label.stgNavRDFieldMap}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRDNav"><a href="#" onclick="ShowPanel('idPanelRD');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavRecurringDonations}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRDInstPdNav"><a href="#" onclick="ShowPanel('idPanelRDInstPd');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavRDInstallmentPeriods}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRDFieldMapNav"><a href="#" onclick="ShowPanel('idPanelRDFieldMap');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavRDFieldMap}</a></li>
                             </ul>
                             <!-- Bulk Data Processes -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelBulkProcesses">
@@ -354,14 +354,14 @@
                                 <a id="tree4-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavBulkProcesses}</a>
                             </div>
                             <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree4-node0-link">
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelOppBatchNav"><a href="#" onclick="ShowPanel('idPanelOppBatch');return false;" class="slds-grow">{!$Label.stgNavRollupBatch}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelAlloBatchNav"><a href="#" onclick="ShowPanel('idPanelAlloBatch');return false;" class="slds-grow">{!$Label.stgNavRollupAlloBatch}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelMakeDefaultAllocationsNav"><a href="#" onclick="ShowPanel('idPanelMakeDefaultAllocations');return false;" class="slds-grow">{!$Label.alloBatchCreateDefault}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelCreatePaymentsNav"><a href="#" onclick="ShowPanel('idPanelCreatePayments');return false;" class="slds-grow">{!$Label.stgLabelCreateMissingPayments}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRefreshHouseholdNamesNav"><a href="#" onclick="ShowPanel('idPanelRefreshHouseholdNames');return false;" class="slds-grow">{!$Label.stgHHNameRefreshTitle}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelOppNamingBatchNav"><a href="#" onclick="ShowPanel('idPanelOppNamingBatch');return false;" class="slds-grow">{!$Label.stgLabelOppNamingRefreshTitle}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelUpdatePrimaryContactNav"><a href="#" onclick="ShowPanel('idPanelUpdatePrimaryContact');return false;" class="slds-grow">{!$Label.stgLabelOppPrimaryContactTitle}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelRDBatchNav"><a href="#" onclick="ShowPanel('idPanelRDBatch');return false;" class="slds-grow">{!$Label.stgNavRDBatch}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelOppBatchNav"><a href="#" onclick="ShowPanel('idPanelOppBatch');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavRollupBatch}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelAlloBatchNav"><a href="#" onclick="ShowPanel('idPanelAlloBatch');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavRollupAlloBatch}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelMakeDefaultAllocationsNav"><a href="#" onclick="ShowPanel('idPanelMakeDefaultAllocations');return false;" class="slds-grow slds-m-left--large">{!$Label.alloBatchCreateDefault}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelCreatePaymentsNav"><a href="#" onclick="ShowPanel('idPanelCreatePayments');return false;" class="slds-grow slds-m-left--large">{!$Label.stgLabelCreateMissingPayments}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRefreshHouseholdNamesNav"><a href="#" onclick="ShowPanel('idPanelRefreshHouseholdNames');return false;" class="slds-grow slds-m-left--large">{!$Label.stgHHNameRefreshTitle}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelOppNamingBatchNav"><a href="#" onclick="ShowPanel('idPanelOppNamingBatch');return false;" class="slds-grow slds-m-left--large">{!$Label.stgLabelOppNamingRefreshTitle}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelUpdatePrimaryContactNav"><a href="#" onclick="ShowPanel('idPanelUpdatePrimaryContact');return false;" class="slds-grow slds-m-left--large">{!$Label.stgLabelOppPrimaryContactTitle}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRDBatchNav"><a href="#" onclick="ShowPanel('idPanelRDBatch');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavRDBatch}</a></li>
                             </ul>
                             <!-- System Tools -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelSystemNav">
@@ -374,10 +374,10 @@
                                 <a id="tree5-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavSystem}</a>
                             </div>
                             <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree5-node0-link">
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelHealthCheckNav"><a href="#" onclick="ShowPanel('idPanelHealthCheck');return false;" class="slds-grow">{!$Label.stgNavHealthCheck}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelErrorLogNav"><a href="#" onclick="ShowPanel('idPanelErrorLog');return false;" class="slds-grow">{!$Label.stgNavErrorLog}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelErrorNotifNav"><a href="#" onclick="ShowPanel('idPanelErrorNotif');return false;" class="slds-grow">{!$Label.stgNavErrorNotify}</a></li>
-                                <li class="slds-tree__item slds-m-left--large" role="treeitem" aria-level="2" id="idPanelTDTMNav"><a href="#" onclick="ShowPanel('idPanelTDTM');return false;" class="slds-grow">{!$Label.stgNavTriggerConfig}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelHealthCheckNav"><a href="#" onclick="ShowPanel('idPanelHealthCheck');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavHealthCheck}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelErrorLogNav"><a href="#" onclick="ShowPanel('idPanelErrorLog');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavErrorLog}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelErrorNotifNav"><a href="#" onclick="ShowPanel('idPanelErrorNotif');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavErrorNotify}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelTDTMNav"><a href="#" onclick="ShowPanel('idPanelTDTM');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavTriggerConfig}</a></li>
                             </ul>
                         </ul>
                     </nav>
