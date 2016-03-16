@@ -31,7 +31,7 @@
 * @author Salesforce.org
 * @date 2016
 * @group Settings
-* @description Controller for the Batch Rename Households panel.
+* @description Controller for the Batch Update Primary Contact panel.
 */
 public with sharing class STG_PanelUpdatePrimaryContact_CTRL extends STG_Panel { 
 

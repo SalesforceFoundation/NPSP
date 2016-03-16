@@ -1,29 +1,9 @@
 <apex:page standardController="Allocation__c" recordSetVar="allocations" extensions="ALLO_ManageAllocations_CTRL" title="Manage Allocations" tabStyle="Allocation__c" showHeader="true" sidebar="true" standardStylesheets="false" cache="false" >
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
     <apex:stylesheet value="{!URLFOR($Resource.SLDS, 'assets/styles/salesforce-lightning-design-system-vf.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-        html body.sfdcBody {
-            padding: 0;
-        }
-        input.lookupInput {
-            background-color: white;
-            background-image: none;
-            color: #16325c;
-            border: 1px solid #d8dde6;
-            border-radius: 4px;
-            width: 100%;
-            -webkit-transition: border 0.1s linear, background-color 0.1s linear;
-            transition: border 0.1s linear, background-color 0.1s linear;
-            display: inline-block;
-            padding: 0 16px 0 12px;
-            line-height: 34px;
-            min-height: calc(34px + 2px);
-            line-height: normal;
-            margin-right: -30px;
-        }
-    </style>
     <script type="text/javascript">
     (function($) {
 

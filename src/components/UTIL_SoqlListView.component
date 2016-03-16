@@ -27,7 +27,7 @@
     <apex:attribute name="SoqlListViewConsumer" type="UTIL_iSoqlListViewConsumer" assignTo="{!pageController}" required="true"  
         description="the controller of the page" />
 
-    <apex:outputPanel id="panelData" styleClass="slds-m-around--small">
+    <apex:outputPanel id="panelData">
         
         <apex:actionStatus id="statusLoad" onstart="document.getElementById('divLoading').style.display='inline';" onstop="document.getElementById('divLoading').style.display='none';" />
         <div class="loading clsLoading" id="divLoading" style="display:none" >
@@ -37,8 +37,8 @@
           </p>
         </div>                                                                          
         
-        <div class="PagerUI">
-            <table width="100%" >
+        <div class="slds-m-around--small">
+            <table class="PagerUI" >
                 <tr>
                     <td style="vertical-align:middle;">
                         <apex:panelGrid columns="10" > 
@@ -69,9 +69,8 @@
                         </apex:commandLink>&nbsp;
                     </td>
                 </tr>
-            </table>            
-        </div> 
-            <table class="slds-table slds-table--bordered" >
+            </table>
+            <table style="table-layout:fixed; width:100%" class="slds-table slds-table--bordered slds-no-row-hover" >
                 <thead>
                     <tr class="slds-text-heading--label">
                         <apex:outputText rendered="{!showCheckboxes}">
@@ -90,10 +89,9 @@
                             </label>
                             <span class="slds-assistive-text">Sort</span>
                         </th>
-                        <th scope="col"><label class="slds-truncate">{!$ObjectType.npe03__Custom_Field_Mapping__c.Fields.npe03__Recurring_Donation_Field__c.Label}</label></th>
                         <apex:repeat value="{!pageController.strFields}" var="f" > 
                             <apex:outputText rendered="{!f != pageController.strNameField}" >
-                                <th>
+                                <th style="max-width: 10%">
                                     <apex:outputText value="{!$ObjectType.Error__c.Fields[f].Label}" rendered="{!!$ObjectType.Error__c.Fields[f].filterable}" />
                                     <apex:commandLink action="{!SortItem}" rerender="panelData" status="statusLoad" value="{!$ObjectType.Error__c.Fields[f].Label}" rendered="{!$ObjectType.Error__c.Fields[f].filterable}" >
                                         <apex:param assignTo="{!SortItemField}" name="SortItemField" value="{!f}" />
@@ -113,14 +111,14 @@
                                     <apex:inputCheckbox value="{!item.checked}" styleClass="slds-checkbox cbxSLVObj" />
                                 </td>
                             </apex:outputText>
-                            <td>
+                            <td class="slds-text-body--small">
                                 <apex:outputLink value="/{!item.sobj['id']}" >
                                     <apex:outputField value="{!item.sobj[pageController.strNameField]}" />
                                 </apex:outputLink>
                             </td>
                             <apex:repeat value="{!pageController.strFields}" var="f2" > 
                                 <apex:outputText rendered="{!f2 != pageController.strNameField}" >
-                                    <td>
+                                    <td class="slds-cell-wrap slds-text-body--small">
                                         <apex:outputText value="{!item.err[f2]}" />
                                     </td>
                                 </apex:outputText>
@@ -129,64 +127,64 @@
                     </apex:repeat>
                </tbody>
             </table>
+            <!--<apex:pageBlockTable value="{!listSLVObj}" var="item" rows="{!cRecordsPerPage}" >  
 
-        <!--<apex:pageBlockTable value="{!listSLVObj}" var="item" rows="{!cRecordsPerPage}" >  
-
-            <apex:column rendered="{!showCheckboxes}" >
-                <apex:facet name="header"> 
-                    <input type="checkbox" name="cbxContactAll" id="cbxAll" onchange="CheckAllSLVObj(this.checked);" />
-                </apex:facet>
-                <apex:inputCheckbox value="{!item.checked}" styleClass="slds-checkbox cbxSLVObj" />
-            </apex:column>          
-
-            <apex:column >
-                <apex:outputLink value="/{!item.sobj['id']}" ><apex:outputField value="{!item.sobj[pageController.strNameField]}" /></apex:outputLink>
-                <apex:facet name="header"> 
-                    <apex:commandLink action="{!SortItem}" rerender="panelData" status="statusLoad" value="{!$ObjectType.Error__c.Fields[pageController.strNameField].Label}" >
-                        <apex:param assignTo="{!SortItemField}" name="SortItemField" value="{!pageController.strNameField}" />
-                        <apex:outputText style="font-size:1.0em;font-weight:bold;font-family:symbol" 
-                            value="{!IF(SortItemField=pageController.strNameField, IF(SortItemAsc, ' ↑' , ' ↓'), '')}" escape="false" />
-                    </apex:commandLink>
-                </apex:facet>                    
-            </apex:column>          
-
-            <apex:repeat value="{!pageController.strFields}" var="f" > 
-                <apex:column value="{!item.err[f]}" rendered="{!f != pageController.strNameField}" >
+                <apex:column rendered="{!showCheckboxes}" >
                     <apex:facet name="header"> 
-                        <apex:outputPanel > 
-                            <apex:outputText value="{!$ObjectType.Error__c.Fields[f].Label}" 
-                                rendered="{!!$ObjectType.Error__c.Fields[f].filterable}" />
-                            <apex:commandLink action="{!SortItem}" rerender="panelData" status="statusLoad" value="{!$ObjectType.Error__c.Fields[f].Label}" 
-                                rendered="{!$ObjectType.Error__c.Fields[f].filterable}" >
-                                <apex:param assignTo="{!SortItemField}" name="SortItemField" value="{!f}" />
-                                <apex:outputText style="font-size:1.0em;font-weight:bold;font-family:symbol" 
-                                    value="{!IF(SortItemField=f, IF(SortItemAsc, ' ↑' , ' ↓'), '')}" escape="false" />
-                            </apex:commandLink>
-                        </apex:outputPanel>
-                    </apex:facet> 
-                </apex:column> 
-            </apex:repeat>         
-                            
-        </apex:pageBlockTable> -->
-        <div class="PagerUI">
-            <apex:panelGrid columns="12" > 
-                <apex:outputText value="" />
-                <apex:commandLink action="{!setCon.first}" rerender="panelData" status="statusLoad" >{!$Label.labelListViewFirst}</apex:commandlink>
-                <apex:outputText value=" | " />
-                <apex:commandLink action="{!setCon.previous}" rerender="panelData" status="statusLoad" rendered="{!setCon.HasPrevious}">{!$Label.labelListViewPrevious}</apex:commandlink> 
-                <apex:outputText rendered="{!setCon.HasPrevious}" value=" | " />
-                <apex:commandLink action="{!setCon.next}" rerender="panelData" status="statusLoad" rendered="{!setCon.HasNext}">{!$Label.labelListViewNext}</apex:commandlink>
-                <apex:outputText rendered="{!setCon.HasNext}" value=" | " />
-                <apex:commandLink action="{!setCon.last}" rerender="panelData" status="statusLoad" >{!$Label.labelListViewLast}</apex:commandlink>
-                <apex:outputText value="" />
-                <apex:outputText value="{!$Label.labelListViewPageInfo}" escape="false" >
-                    <apex:param value="{!setCon.PageNumber}" />
-                    <apex:param value="{!NumberOfPages}" />
-                    <apex:param value="{!NumberOfItems}" />
-                </apex:outputText> 
-                <apex:outputText value="" />
-                <apex:commandLink action="{!showMoreRecordsPerPage}" rerender="panelData" status="statusLoad" >{!$Label.labelShowMore}</apex:commandlink>                   
-            </apex:panelGrid> 
-        </div>      
+                        <input type="checkbox" name="cbxContactAll" id="cbxAll" onchange="CheckAllSLVObj(this.checked);" />
+                    </apex:facet>
+                    <apex:inputCheckbox value="{!item.checked}" styleClass="slds-checkbox cbxSLVObj" />
+                </apex:column>          
+
+                <apex:column >
+                    <apex:outputLink value="/{!item.sobj['id']}" ><apex:outputField value="{!item.sobj[pageController.strNameField]}" /></apex:outputLink>
+                    <apex:facet name="header"> 
+                        <apex:commandLink action="{!SortItem}" rerender="panelData" status="statusLoad" value="{!$ObjectType.Error__c.Fields[pageController.strNameField].Label}" >
+                            <apex:param assignTo="{!SortItemField}" name="SortItemField" value="{!pageController.strNameField}" />
+                            <apex:outputText style="font-size:1.0em;font-weight:bold;font-family:symbol" 
+                                value="{!IF(SortItemField=pageController.strNameField, IF(SortItemAsc, ' ↑' , ' ↓'), '')}" escape="false" />
+                        </apex:commandLink>
+                    </apex:facet>                    
+                </apex:column>          
+
+                <apex:repeat value="{!pageController.strFields}" var="f" > 
+                    <apex:column value="{!item.err[f]}" rendered="{!f != pageController.strNameField}" >
+                        <apex:facet name="header"> 
+                            <apex:outputPanel > 
+                                <apex:outputText value="{!$ObjectType.Error__c.Fields[f].Label}" 
+                                    rendered="{!!$ObjectType.Error__c.Fields[f].filterable}" />
+                                <apex:commandLink action="{!SortItem}" rerender="panelData" status="statusLoad" value="{!$ObjectType.Error__c.Fields[f].Label}" 
+                                    rendered="{!$ObjectType.Error__c.Fields[f].filterable}" >
+                                    <apex:param assignTo="{!SortItemField}" name="SortItemField" value="{!f}" />
+                                    <apex:outputText style="font-size:1.0em;font-weight:bold;font-family:symbol" 
+                                        value="{!IF(SortItemField=f, IF(SortItemAsc, ' ↑' , ' ↓'), '')}" escape="false" />
+                                </apex:commandLink>
+                            </apex:outputPanel>
+                        </apex:facet> 
+                    </apex:column> 
+                </apex:repeat>         
+                                
+            </apex:pageBlockTable> -->
+            <div class="PagerUI">
+                <apex:panelGrid columns="12" > 
+                    <apex:outputText value="" />
+                    <apex:commandLink action="{!setCon.first}" rerender="panelData" status="statusLoad" >{!$Label.labelListViewFirst}</apex:commandlink>
+                    <apex:outputText value=" | " />
+                    <apex:commandLink action="{!setCon.previous}" rerender="panelData" status="statusLoad" rendered="{!setCon.HasPrevious}">{!$Label.labelListViewPrevious}</apex:commandlink> 
+                    <apex:outputText rendered="{!setCon.HasPrevious}" value=" | " />
+                    <apex:commandLink action="{!setCon.next}" rerender="panelData" status="statusLoad" rendered="{!setCon.HasNext}">{!$Label.labelListViewNext}</apex:commandlink>
+                    <apex:outputText rendered="{!setCon.HasNext}" value=" | " />
+                    <apex:commandLink action="{!setCon.last}" rerender="panelData" status="statusLoad" >{!$Label.labelListViewLast}</apex:commandlink>
+                    <apex:outputText value="" />
+                    <apex:outputText value="{!$Label.labelListViewPageInfo}" escape="false" >
+                        <apex:param value="{!setCon.PageNumber}" />
+                        <apex:param value="{!NumberOfPages}" />
+                        <apex:param value="{!NumberOfItems}" />
+                    </apex:outputText> 
+                    <apex:outputText value="" />
+                    <apex:commandLink action="{!showMoreRecordsPerPage}" rerender="panelData" status="statusLoad" >{!$Label.labelShowMore}</apex:commandlink>                   
+                </apex:panelGrid> 
+            </div>
+        </div>
     </apex:outputPanel>
 </apex:component>
