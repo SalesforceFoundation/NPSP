@@ -1,5 +1,5 @@
 html body.sfdcBody {
-    padding: 0;
+    padding: 0 !important;
 }
 input.lookupInput {
     background-color: white;
