@@ -80,8 +80,8 @@
 <apex:variable var="pathChevronRight" value="M8.3 2l9.5 9.5c.3.3.3.7 0 1L8.3 22c-.3.2-.8.2-1.1 0l-1-1c-.2-.3-.2-.8 0-1.1l7.6-7.4c.2-.3.2-.7 0-1L6.3 4.1C6 3.8 6 3.3 6.3 3l1-1c.3-.2.7-.2 1 0z"/>
 <apex:variable var="pathChevronDown" value="M22 8.2l-9.5 9.6c-.3.2-.7.2-1 0L2 8.2c-.2-.3-.2-.7 0-1l1-1c.3-.3.8-.3 1.1 0l7.4 7.5c.3.3.7.3 1 0l7.4-7.5c.3-.2.8-.2 1.1 0l1 1c.2.3.2.7 0 1z"/>
 
-<div class="slds">
-    <div class="slds-grid slds-grid--frame">
+<div style="max-width: 100%;" class="slds">
+    <div class="slds-grid">
         <div class="sidebar slds-col slds-small-size--1-of-1 slds-medium-size--3-of-12 slds-large-size--3-of-12 slds-p-top--large slds-col-rule--right">
             <div class="slds-tree-container" role="application">
                 <div class="slds-text-heading--small slds-tree__item" id="treeheading"><a href="#" onclick="ShowPanel('idPanelHome');return false;" class="slds-grow">{!$Label.stgNPSPSettingsTitle}</a></div>
