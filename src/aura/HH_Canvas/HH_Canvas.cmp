@@ -1,0 +1,21 @@
+<aura:component controller="HH_Canvas_CTRL" >
+    <aura:attribute name="hhId" type="String" />
+    <aura:attribute name="hh" type="Account" />
+    <aura:attribute name="listCon" type="Contact[]" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <h1>Household Canvas</h1>
+    <h2>hhId is {!v.hhId}</h2>
+    <h3>hh is {!v.hh}</h3>
+    <h4>hh.Name is {!v.hh.Name}</h4>
+
+    <aura:iteration items="{!v.listCon}" var="con">
+		<ul class="slds-list--horizontal slds-has-cards--space has-selections">
+    		<li class="slds-list__item">        
+	    		<c:HH_ContactCard contact="{!con}" />
+            </li>
+        </ul>
+    </aura:iteration>
+	
+</aura:component>

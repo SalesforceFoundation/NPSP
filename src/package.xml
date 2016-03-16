@@ -84,6 +84,7 @@
         <members>HH_CampaignDedupeBTN_CTRL</members>
         <members>HH_CampaignDedupeBTN_TEST</members>
         <members>HH_CampaignDedupe_BATCH</members>
+        <members>HH_Canvas_CTRL</members>
         <members>HH_HHObject_TDTM</members>
         <members>HH_HouseholdNaming</members>
         <members>HH_HouseholdNaming_BATCH</members>
@@ -93,6 +94,7 @@
         <members>HH_Households_TEST</members>
         <members>HH_INaming</members>
         <members>HH_ManageHHAccount_TEST</members>
+        <members>HH_ManageHH_CTRL</members>
         <members>HH_ManageHousehold_EXT</members>
         <members>HH_ManageHousehold_TEST</members>
         <members>HH_NameSpec</members>
@@ -262,6 +264,7 @@
         <members>CON_ContactMerge</members>
         <members>CON_DeleteContactOverride</members>
         <members>HH_CampaignDedupeBTN</members>
+        <members>HH_ManageHH</members>
         <members>HH_ManageHHAccount</members>
         <members>HH_ManageHousehold</members>
         <members>LD_LeadConvertOverride</members>
@@ -321,6 +324,14 @@
         <members>TDTM_RecurringDonation</members>
         <members>TDTM_Relationship</members>
         <name>ApexTrigger</name>
+    </types>
+    <types>
+        <members>HHContainer</members>
+        <members>HH_Canvas</members>
+        <members>HH_ContactCard</members>
+        <members>ManageHHApp</members>
+        <members>svg</members>
+        <name>AuraDefinitionBundle</name>
     </types>
     <types>
         <members>Account.Account_Compact_Layout</members>

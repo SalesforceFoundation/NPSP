@@ -1,0 +1,18 @@
+<aura:component >
+	<aura:attribute name="contact" type="Contact"/>
+
+    <div class="slds-tile slds-tile--board">
+        <p class="slds-tile__title slds-truncate">
+          <div class="slds-media slds-media--center slds-has-flexi-truncate">
+            <div class="slds-media__figure">
+              <c:svg class="slds-icon slds-icon-standard-contact slds-icon--small"
+                 xlinkHref="/resource/SLDS/assets/icons/standard-sprite/svg/symbols.svg#contact" />
+            </div>
+            <div class="slds-media__body">
+              <a href="#">{!v.contact.FirstName} {!v.contact.LastName}</a>
+            </div>
+          </div>
+        </p>
+    </div> <!-- slds-tile -->
+	
+</aura:component>
