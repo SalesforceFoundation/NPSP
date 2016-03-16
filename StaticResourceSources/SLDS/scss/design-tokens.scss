@@ -1,4 +1,4 @@
-/* Lightning Design System 0.12.1 */
+// Lightning Design System 1.0.0
 // Copyright (c) 2015, salesforce.com, inc. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -8,6 +8,47 @@
 
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+// The Sass importer needs the extension to be explicit when multiple files have the same name
+// scss-lint:disable ImportPath
+
+$font-size-small: 0.75rem !default;
+$font-size-medium: 0.875rem !default;
+$font-size-large: 1.125rem !default;
+$line-height-text: 1.5 !default;
+$width-stage-left-collapsed: 4rem !default;
+$width-stage-left-expanded: 15rem !default;
+$height-header: 3.75rem !default;
+$square-icon-medium: 2rem !default;
+$color-background-path-complete: rgb(75, 202, 129) !default;
+$color-background-path-complete-hover: rgb(4, 132, 75) !default;
+$color-background-path-current: rgb(0, 112, 210) !default;
+$color-background-path-current-hover: rgb(0, 95, 178) !default;
+$color-background-path-incomplete: rgb(224, 229, 238) !default;
+$color-background-path-incomplete-hover: rgb(216, 221, 230) !default;
+$color-background-path-lost: rgb(194, 57, 52) !default;
+$color-background-guidance: rgb(0, 0, 0) !default;
+$color-border-path-divider: rgb(255, 255, 255) !default;
+$line-height-salespath: 1.5rem !default;
+$duration-slide: 0.25s !default;
+$height-sales-path: 2rem !default;
+$width-stage-left: 88% !default;
+$height-footer: 3.75rem !default;
+$height-header: 2.75rem !default;
+$height-input: 1.875rem !default;
+$height-overflow-start: 144px !default;
+$max-height-action-overflow-menu: 628px !default;
+$max-height-card-media: 144px !default;
+$max-height-header-brand: 32px !default;
+$max-width-action-bar: 600px !default;
+$max-width-action-bar-item: 120px !default;
+$max-width-action-bar-with-labels: 320px !default;
+$max-width-action-overflow-menu: 512px !default;
+$max-width-header-brand: 156px !default;
+$square-record-anchor-pic: 3rem !default;
+$square-tappable: 2.75rem !default;
+$flex-master-panel: 7 !default;
+$square-tooltip: 1.25rem !default;
+$flex-detail-panel: 3 !default;
 $elevation-3-below: -3 !default;
 $elevation-0: 0 !default;
 $elevation-2: 2 !default;
@@ -36,7 +77,7 @@ $color-background-alt-inverse: rgb(22, 50, 92) !default;
 $color-background-row-hover: rgb(244, 246, 249) !default;
 $color-background-row-active: rgb(238, 241, 246) !default;
 $color-background-row-selected: rgb(240, 248, 252) !default;
-$color-background-row-new: rgb(250, 255, 189) !default;
+$color-background-row-new: rgb(217, 255, 223) !default;
 $color-background-inverse: rgb(6, 28, 63) !default;
 $color-background-anchor: rgb(244, 246, 249) !default;
 $color-background-browser: rgb(84, 105, 141) !default;
@@ -56,6 +97,7 @@ $color-background-notification-new: rgb(240, 248, 252) !default;
 $color-background-org-switcher-arrow: rgb(6, 28, 63) !default;
 $color-background-payload: rgb(244, 246, 249) !default;
 $color-background-shade: rgb(224, 229, 238) !default;
+$color-background-shade-dark: rgb(216, 221, 230) !default;
 $color-background-stencil: rgb(238, 241, 246) !default;
 $color-background-stencil-alt: rgb(224, 229, 238) !default;
 $color-background-temp-modal: rgba(126, 140, 153, 0.8) !default;
@@ -65,6 +107,7 @@ $color-background-scrollbar: rgb(224, 229, 238) !default;
 $color-background-scrollbar-track: rgb(168, 183, 199) !default;
 $color-brand: rgb(21, 137, 238) !default;
 $color-brand-dark: rgb(0, 112, 210) !default;
+$color-brand-darker: rgb(0, 95, 178) !default;
 $border-width-thin: 1px !default;
 $border-width-thick: 2px !default;
 $border-radius-small: .125rem !default;
@@ -73,10 +116,21 @@ $border-radius-large: .5rem !default;
 $border-radius-pill: 15rem !default;
 $border-radius-circle: 50% !default;
 $color-border: rgb(216, 221, 230) !default;
-$color-border-brand: rgb(0, 112, 210) !default;
+$color-border-brand: rgb(21, 137, 238) !default;
+$color-border-brand-dark: rgb(0, 112, 210) !default;
+$color-border-customer: rgb(255, 154, 60) !default;
+$color-border-destructive: rgb(194, 57, 52) !default;
+$color-border-destructive-hover: rgb(166, 26, 20) !default;
+$color-border-destructive-active: rgb(135, 5, 0) !default;
+$color-border-info: rgb(84, 105, 141) !default;
 $color-border-error: rgb(194, 57, 52) !default;
+$color-border-error-alt: rgb(234, 130, 136) !default;
+$color-border-error-dark: rgb(234, 130, 136) !default;
+$color-border-offline: rgb(68, 68, 68) !default;
 $color-border-success: rgb(75, 202, 129) !default;
+$color-border-success-dark: rgb(4, 132, 75) !default;
 $color-border-warning: rgb(255, 183, 93) !default;
+$color-border-inverse: rgb(6, 28, 63) !default;
 $color-border-tab-selected: rgb(0, 112, 210) !default;
 $color-border-separator: rgb(244, 246, 249) !default;
 $color-border-separator-alt: rgb(216, 221, 230) !default;
@@ -103,6 +157,7 @@ $color-text-button-inverse: rgb(224, 229, 238) !default;
 $color-text-button-inverse-disabled: rgba(255, 255, 255, 0.15) !default;
 $color-text-icon-default: rgb(84, 105, 141) !default;
 $color-text-icon-default-hint: rgb(159, 170, 181) !default;
+$color-text-icon-default-hint-borderless: rgb(224, 229, 238) !default;
 $color-text-icon-default-hover: rgb(0, 112, 210) !default;
 $color-text-icon-default-active: rgb(0, 57, 107) !default;
 $color-text-icon-default-disabled: rgb(216, 221, 230) !default;
@@ -134,9 +189,6 @@ $color-border-button-brand-disabled: rgba(0, 0, 0, 0) !default;
 $color-border-button-default: rgb(216, 221, 230) !default;
 $color-border-button-inverse-disabled: rgba(255, 255, 255, 0.15) !default;
 $font-family: 'Salesforce Sans', Arial, sans-serif !default;
-$font-family-body: 'SalesforceSans-Regular', Arial, sans-serif !default;
-$font-family-light: 'SalesforceSans-Light', Arial, sans-serif !default;
-$font-family-strong: 'SalesforceSans-Bold', Arial, sans-serif !default;
 $font-weight-light: 300 !default;
 $font-weight-regular: 400 !default;
 $font-weight-bold: 700 !default;
@@ -151,7 +203,7 @@ $line-height-text: 1.375 !default;
 $line-height-reset: 1 !default;
 $line-height-tab: 3rem !default;
 $line-height-button: 2.125rem !default;
-$line-height-button-small: 1.875rem !default;
+$line-height-button-small: 1.75rem !default;
 $color-background-input: rgb(255, 255, 255) !default;
 $color-background-input-active: rgb(255, 255, 255) !default;
 $color-background-input-checkbox: rgb(255, 255, 255) !default;
@@ -164,19 +216,27 @@ $color-background-pill: rgb(255, 255, 255) !default;
 $color-text-label: rgb(84, 105, 141) !default;
 $color-text-placeholder: rgb(84, 105, 141) !default;
 $color-text-placeholder-inverse: rgb(224, 229, 238) !default;
-$color-text-required: rgb(212, 80, 76) !default;
+$color-text-required: rgb(194, 57, 52) !default;
 $color-text-pill: rgb(0, 112, 210) !default;
 $color-border-input: rgb(216, 221, 230) !default;
 $color-border-input-active: rgb(21, 137, 238) !default;
 $color-border-input-disabled: rgb(168, 183, 199) !default;
 $color-border-input-checkbox-selected-checkmark: rgb(255, 255, 255) !default;
+$color-background-destructive: rgb(194, 57, 52) !default;
+$color-background-destructive-hover: rgb(166, 26, 20) !default;
+$color-background-destructive-active: rgb(135, 5, 0) !default;
+$color-background-info: rgb(84, 105, 141) !default;
 $color-background-error: rgb(212, 80, 76) !default;
+$color-background-error-dark: rgb(194, 57, 52) !default;
 $color-background-error-alt: rgb(234, 130, 136) !default;
+$color-background-offline: rgb(68, 68, 68) !default;
 $color-background-success: rgb(75, 202, 129) !default;
+$color-background-success-dark: rgb(4, 132, 75) !default;
 $color-background-toast: rgb(84, 105, 141) !default;
 $color-background-toast-success: rgb(4, 132, 75) !default;
 $color-background-toast-error: rgb(194, 57, 52) !default;
 $color-background-warning: rgb(255, 183, 93) !default;
+$opacity-5: 0.5 !default;
 $shadow-action-overflow-footer: 0 -2px 4px #F4F6F9 !default;
 $shadow-overlay: 0 -2px 4px rgba(0,0,0,.07) !default;
 $shadow-drag: 0px 2px 4px 0px rgba(0,0,0,.4) !default;
@@ -208,6 +268,7 @@ $square-icon-small-content: .75rem !default;
 $square-icon-x-small-boundary: 1.25rem !default;
 $square-icon-x-small-content: .5rem !default;
 $square-icon-large: 3.125rem !default;
+$spacing-none: 0 !default;
 $spacing-xxx-small: 0.125rem !default;
 $spacing-xx-small: 0.25rem !default;
 $spacing-x-small: 0.5rem !default;
@@ -217,6 +278,7 @@ $spacing-large: 1.5rem !default;
 $spacing-x-large: 2rem !default;
 $color-text-action-label: rgb(84, 105, 141) !default;
 $color-text-action-label-active: rgb(22, 50, 92) !default;
+$color-text-brand: rgb(21, 137, 238) !default;
 $color-text-browser: rgb(255, 255, 255) !default;
 $color-text-browser-active: rgba(0, 0, 0, 0.4) !default;
 $color-text-customer: rgb(255, 154, 60) !default;
@@ -294,7 +356,7 @@ $force-base-map: (
   "color-background-row-hover": (rgb(244, 246, 249)),
   "color-background-row-active": (rgb(238, 241, 246)),
   "color-background-row-selected": (rgb(240, 248, 252)),
-  "color-background-row-new": (rgb(250, 255, 189)),
+  "color-background-row-new": (rgb(217, 255, 223)),
   "color-background-inverse": (rgb(6, 28, 63)),
   "color-background-anchor": (rgb(244, 246, 249)),
   "color-background-browser": (rgb(84, 105, 141)),
@@ -314,6 +376,7 @@ $force-base-map: (
   "color-background-org-switcher-arrow": (rgb(6, 28, 63)),
   "color-background-payload": (rgb(244, 246, 249)),
   "color-background-shade": (rgb(224, 229, 238)),
+  "color-background-shade-dark": (rgb(216, 221, 230)),
   "color-background-stencil": (rgb(238, 241, 246)),
   "color-background-stencil-alt": (rgb(224, 229, 238)),
   "color-background-temp-modal": (rgba(126, 140, 153, 0.8)),
@@ -323,6 +386,7 @@ $force-base-map: (
   "color-background-scrollbar-track": (rgb(168, 183, 199)),
   "color-brand": (rgb(21, 137, 238)),
   "color-brand-dark": (rgb(0, 112, 210)),
+  "color-brand-darker": (rgb(0, 95, 178)),
   "border-width-thin": (1px),
   "border-width-thick": (2px),
   "border-radius-small": (.125rem),
@@ -331,10 +395,21 @@ $force-base-map: (
   "border-radius-pill": (15rem),
   "border-radius-circle": (50%),
   "color-border": (rgb(216, 221, 230)),
-  "color-border-brand": (rgb(0, 112, 210)),
+  "color-border-brand": (rgb(21, 137, 238)),
+  "color-border-brand-dark": (rgb(0, 112, 210)),
+  "color-border-customer": (rgb(255, 154, 60)),
+  "color-border-destructive": (rgb(194, 57, 52)),
+  "color-border-destructive-hover": (rgb(166, 26, 20)),
+  "color-border-destructive-active": (rgb(135, 5, 0)),
+  "color-border-info": (rgb(84, 105, 141)),
   "color-border-error": (rgb(194, 57, 52)),
+  "color-border-error-alt": (rgb(234, 130, 136)),
+  "color-border-error-dark": (rgb(234, 130, 136)),
+  "color-border-offline": (rgb(68, 68, 68)),
   "color-border-success": (rgb(75, 202, 129)),
+  "color-border-success-dark": (rgb(4, 132, 75)),
   "color-border-warning": (rgb(255, 183, 93)),
+  "color-border-inverse": (rgb(6, 28, 63)),
   "color-border-tab-selected": (rgb(0, 112, 210)),
   "color-border-separator": (rgb(244, 246, 249)),
   "color-border-separator-alt": (rgb(216, 221, 230)),
@@ -361,6 +436,7 @@ $force-base-map: (
   "color-text-button-inverse-disabled": (rgba(255, 255, 255, 0.15)),
   "color-text-icon-default": (rgb(84, 105, 141)),
   "color-text-icon-default-hint": (rgb(159, 170, 181)),
+  "color-text-icon-default-hint-borderless": (rgb(224, 229, 238)),
   "color-text-icon-default-hover": (rgb(0, 112, 210)),
   "color-text-icon-default-active": (rgb(0, 57, 107)),
   "color-text-icon-default-disabled": (rgb(216, 221, 230)),
@@ -392,9 +468,6 @@ $force-base-map: (
   "color-border-button-default": (rgb(216, 221, 230)),
   "color-border-button-inverse-disabled": (rgba(255, 255, 255, 0.15)),
   "font-family": ('Salesforce Sans', Arial, sans-serif),
-  "font-family-body": ('SalesforceSans-Regular', Arial, sans-serif),
-  "font-family-light": ('SalesforceSans-Light', Arial, sans-serif),
-  "font-family-strong": ('SalesforceSans-Bold', Arial, sans-serif),
   "font-weight-light": (300),
   "font-weight-regular": (400),
   "font-weight-bold": (700),
@@ -409,7 +482,7 @@ $force-base-map: (
   "line-height-reset": (1),
   "line-height-tab": (3rem),
   "line-height-button": (2.125rem),
-  "line-height-button-small": (1.875rem),
+  "line-height-button-small": (1.75rem),
   "color-background-input": (rgb(255, 255, 255)),
   "color-background-input-active": (rgb(255, 255, 255)),
   "color-background-input-checkbox": (rgb(255, 255, 255)),
@@ -422,19 +495,27 @@ $force-base-map: (
   "color-text-label": (rgb(84, 105, 141)),
   "color-text-placeholder": (rgb(84, 105, 141)),
   "color-text-placeholder-inverse": (rgb(224, 229, 238)),
-  "color-text-required": (rgb(212, 80, 76)),
+  "color-text-required": (rgb(194, 57, 52)),
   "color-text-pill": (rgb(0, 112, 210)),
   "color-border-input": (rgb(216, 221, 230)),
   "color-border-input-active": (rgb(21, 137, 238)),
   "color-border-input-disabled": (rgb(168, 183, 199)),
   "color-border-input-checkbox-selected-checkmark": (rgb(255, 255, 255)),
+  "color-background-destructive": (rgb(194, 57, 52)),
+  "color-background-destructive-hover": (rgb(166, 26, 20)),
+  "color-background-destructive-active": (rgb(135, 5, 0)),
+  "color-background-info": (rgb(84, 105, 141)),
   "color-background-error": (rgb(212, 80, 76)),
+  "color-background-error-dark": (rgb(194, 57, 52)),
   "color-background-error-alt": (rgb(234, 130, 136)),
+  "color-background-offline": (rgb(68, 68, 68)),
   "color-background-success": (rgb(75, 202, 129)),
+  "color-background-success-dark": (rgb(4, 132, 75)),
   "color-background-toast": (rgb(84, 105, 141)),
   "color-background-toast-success": (rgb(4, 132, 75)),
   "color-background-toast-error": (rgb(194, 57, 52)),
   "color-background-warning": (rgb(255, 183, 93)),
+  "opacity-5": (0.5),
   "shadow-action-overflow-footer": (0 -2px 4px #F4F6F9),
   "shadow-overlay": (0 -2px 4px rgba(0,0,0,.07)),
   "shadow-drag": (0px 2px 4px 0px rgba(0,0,0,.4)),
@@ -466,6 +547,7 @@ $force-base-map: (
   "square-icon-x-small-boundary": (1.25rem),
   "square-icon-x-small-content": (.5rem),
   "square-icon-large": (3.125rem),
+  "spacing-none": (0),
   "spacing-xxx-small": (0.125rem),
   "spacing-xx-small": (0.25rem),
   "spacing-x-small": (0.5rem),
@@ -475,6 +557,7 @@ $force-base-map: (
   "spacing-x-large": (2rem),
   "color-text-action-label": (rgb(84, 105, 141)),
   "color-text-action-label-active": (rgb(22, 50, 92)),
+  "color-text-brand": (rgb(21, 137, 238)),
   "color-text-browser": (rgb(255, 255, 255)),
   "color-text-browser-active": (rgba(0, 0, 0, 0.4)),
   "color-text-customer": (rgb(255, 154, 60)),
@@ -524,35 +607,24 @@ $force-base-map: (
   "z-index-default": (1),
   "z-index-deepdive": (-99999)
 );
-$font-size-small: 0.75rem;
-$font-size-medium: 0.875rem;
-$font-size-large: 1.125rem;
-$line-height-text: 1.5;
-$width-stage-left-collapsed: 4rem;
-$width-stage-left-expanded: 15rem;
-$height-header: 3.75rem;
-$square-icon-medium: 2rem;
-$duration-slide: 0.25s !default;
-$width-stage-left: 88% !default;
-$height-footer: 3.75rem !default;
-$height-header: 2.75rem !default;
-$height-input: 1.875rem !default;
-$height-overflow-start: 144px !default;
-$max-height-action-overflow-menu: 628px !default;
-$max-height-card-media: 144px !default;
-$max-height-header-brand: 32px !default;
-$max-width-action-bar: 600px !default;
-$max-width-action-bar-item: 120px !default;
-$max-width-action-bar-with-labels: 320px !default;
-$max-width-action-overflow-menu: 512px !default;
-$max-width-header-brand: 156px !default;
-$square-record-anchor-pic: 3rem !default;
-$square-tappable: 2.75rem !default;
-$flex-master-panel: 7 !default;
-$square-tooltip: 1.25rem !default;
-$flex-detail-panel: 3 !default;
+$action-change-owner: rgb(84, 105, 141) !default;
+$action-share: rgb(84, 105, 141) !default;
+$action-info: rgb(84, 105, 141) !default;
+$action-upload: rgb(84, 105, 141) !default;
+$action-change-record-type: rgb(84, 105, 141) !default;
+$action-check: rgb(84, 105, 141) !default;
+$action-download: rgb(84, 105, 141) !default;
+$action-edit-relationship: rgb(84, 105, 141) !default;
+$action-freeze-user: rgb(84, 105, 141) !default;
+$action-manage-perm-sets: rgb(84, 105, 141) !default;
+$action-password-unlock: rgb(84, 105, 141) !default;
+$action-refresh: rgb(84, 105, 141) !default;
+$action-remove: rgb(84, 105, 141) !default;
+$action-reset-password: rgb(84, 105, 141) !default;
+$action-user-activation: rgb(84, 105, 141) !default;
+$action-add-contact: rgb(160, 148, 237) !default;
 $action-approval: rgb(0, 198, 183) !default;
-$action-canvasapp: rgb(129, 153, 175) !default;
+$action-canvas: rgb(129, 153, 175) !default;
 $action-goal: rgb(86, 170, 223) !default;
 $action-opportunity-competitor: rgb(252, 185, 91) !default;
 $action-opportunity-line-item: rgb(252, 185, 91) !default;
@@ -569,8 +641,9 @@ $action-follow: rgb(49, 185, 248) !default;
 $action-following: rgb(125, 207, 100) !default;
 $action-join-group: rgb(119, 158, 242) !default;
 $action-leave-group: rgb(243, 158, 88) !default;
-$action-edit-group: rgb(52, 190, 205) !default;
+$action-edit-groups: rgb(52, 190, 205) !default;
 $action-share-post: rgb(101, 202, 228) !default;
+$action-user: rgb(101, 202, 228) !default;
 $action-share-file: rgb(186, 172, 147) !default;
 $action-new-task: rgb(75, 192, 118) !default;
 $action-new-contact: rgb(160, 148, 237) !default;
@@ -590,7 +663,7 @@ $action-sort: rgb(250, 185, 165) !default;
 $action-description: rgb(125, 195, 125) !default;
 $action-defer: rgb(239, 126, 173) !default;
 $action-update: rgb(129, 180, 214) !default;
-$action-log-this-event: rgb(248, 98, 104) !default;
+$action-log-this-event: rgb(235, 112, 146) !default;
 $action-email: rgb(149, 174, 197) !default;
 $action-dial-in: rgb(139, 154, 227) !default;
 $action-map: rgb(118, 198, 238) !default;
@@ -607,13 +680,15 @@ $action-dropbox: rgb(82, 174, 249) !default;
 $action-evernote: rgb(134, 200, 111) !default;
 $action-docusign: rgb(80, 128, 219) !default;
 $action-more: rgb(98, 183, 237) !default;
-$action-notebook: rgb(200, 113, 214) !default;
+$action-notebook: rgb(230, 212, 120) !default;
+$action-new-notebook: rgb(230, 212, 120) !default;
 $action-preview: rgb(127, 141, 225) !default;
 $action-priority: rgb(251, 180, 57) !default;
 $action-default-custom-object: rgb(129, 153, 175) !default;
 $action-new-custom-object: rgb(167, 212, 77) !default;
 $action-lead-convert: rgb(248, 137, 98) !default;
 $action-new-account: rgb(127, 141, 225) !default;
+$action-new-person-account: rgb(127, 141, 225) !default;
 $action-new-campaign: rgb(244, 151, 86) !default;
 $action-new-group: rgb(131, 182, 255) !default;
 $action-update-status: rgb(30, 199, 190) !default;
@@ -721,6 +796,7 @@ $action-apex: rgb(105, 110, 113) !default;
 $action-flow: rgb(0, 121, 188) !default;
 $action-announcement: rgb(254, 143, 96) !default;
 $action-record: rgb(125, 195, 125) !default;
+$action-log-event: rgb(108, 161, 233) !default;
 $custom-1: rgb(255, 123, 132) !default;
 $custom-2: rgb(207, 208, 92) !default;
 $custom-3: rgb(236, 180, 108) !default;
@@ -822,8 +898,18 @@ $custom-98: rgb(225, 190, 92) !default;
 $custom-99: rgb(240, 133, 110) !default;
 $custom-100: rgb(225, 93, 118) !default;
 $log-a-call: rgb(72, 195, 204) !default;
+$document: rgb(186, 172, 147) !default;
+$environment-hub: rgb(84, 105, 141) !default;
+$flow: rgb(84, 105, 141) !default;
+$sossession: rgb(84, 105, 141) !default;
+$process: rgb(84, 105, 141) !default;
+$news: rgb(127, 141, 225) !default;
+$home: rgb(239, 126, 173) !default;
 $account: rgb(127, 141, 225) !default;
-$social-post: rgb(234, 116, 162) !default;
+$apps-admin: rgb(152, 149, 238) !default;
+$announcement: rgb(98, 183, 237) !default;
+$person-account: rgb(127, 141, 225) !default;
+$social: rgb(234, 116, 162) !default;
 $campaign-members: rgb(244, 151, 86) !default;
 $article: rgb(242, 207, 91) !default;
 $answer-public: rgb(242, 207, 91) !default;
@@ -838,17 +924,22 @@ $apps: rgb(60, 151, 221) !default;
 $user: rgb(52, 190, 205) !default;
 $evernote: rgb(134, 200, 111) !default;
 $coaching: rgb(246, 117, 148) !default;
-$connected-apps-admins: rgb(152, 149, 238) !default;
+$connected-apps: rgb(152, 149, 238) !default;
 $drafts: rgb(108, 161, 233) !default;
 $email: rgb(149, 174, 197) !default;
+$email-iq: rgb(160, 148, 237) !default;
 $endorsement: rgb(139, 154, 227) !default;
 $event: rgb(235, 112, 146) !default;
 $dropbox: rgb(82, 174, 249) !default;
 $concur: rgb(76, 195, 199) !default;
 $email-chatter: rgb(242, 207, 91) !default;
 $case-transcript: rgb(242, 207, 91) !default;
+$case-email: rgb(242, 207, 91) !default;
+$case-log-a-call: rgb(242, 207, 91) !default;
 $case-comment: rgb(242, 207, 91) !default;
 $case-change-status: rgb(242, 207, 91) !default;
+$work-order: rgb(80, 227, 194) !default;
+$work-order-item: rgb(51, 168, 220) !default;
 $client: rgb(0, 210, 190) !default;
 $contract: rgb(110, 192, 110) !default;
 $dashboard: rgb(239, 110, 100) !default;
@@ -860,12 +951,14 @@ $canvas: rgb(129, 153, 175) !default;
 $contact: rgb(160, 148, 237) !default;
 $portal: rgb(174, 199, 112) !default;
 $product: rgb(183, 129, 211) !default;
+$pricebook: rgb(183, 129, 211) !default;
 $feed: rgb(98, 183, 237) !default;
 $feedback: rgb(109, 161, 234) !default;
 $file: rgb(186, 172, 147) !default;
 $goals: rgb(86, 170, 223) !default;
 $groups: rgb(119, 158, 242) !default;
 $household: rgb(0, 175, 160) !default;
+$hierarchy: rgb(52, 190, 205) !default;
 $insights: rgb(236, 148, 237) !default;
 $investment-account: rgb(75, 192, 118) !default;
 $performance: rgb(248, 177, 86) !default;
@@ -874,7 +967,8 @@ $metrics: rgb(86, 170, 223) !default;
 $note: rgb(230, 212, 120) !default;
 $lead: rgb(248, 137, 98) !default;
 $opportunity: rgb(252, 185, 91) !default;
-$log-a-call-chatter: rgb(242, 207, 91) !default;
+$call: rgb(242, 207, 91) !default;
+$call-history: rgb(242, 207, 91) !default;
 $orders: rgb(118, 158, 217) !default;
 $post: rgb(101, 202, 228) !default;
 $poll: rgb(105, 155, 225) !default;
@@ -893,17 +987,35 @@ $scan-card: rgb(243, 158, 88) !default;
 $report: rgb(46, 203, 190) !default;
 $quotes: rgb(136, 198, 81) !default;
 $task: rgb(75, 192, 118) !default;
+$task-2: rgb(75, 192, 118) !default;
 $team-member: rgb(242, 207, 91) !default;
 $thanks: rgb(233, 105, 110) !default;
+$reward: rgb(233, 105, 110) !default;
 $thanks-loading: rgb(184, 195, 206) !default;
 $today: rgb(239, 126, 173) !default;
 $topic: rgb(86, 170, 223) !default;
 $unmatched: rgb(98, 183, 237) !default;
 $marketing-actions: rgb(107, 189, 110) !default;
-$marketing-resources: rgb(0, 0, 0) !default;
+$folder: rgb(139, 154, 227) !default;
 $bg-actions-map: (
+  "action-change-owner": (rgb(84, 105, 141)),
+  "action-share": (rgb(84, 105, 141)),
+  "action-info": (rgb(84, 105, 141)),
+  "action-upload": (rgb(84, 105, 141)),
+  "action-change-record-type": (rgb(84, 105, 141)),
+  "action-check": (rgb(84, 105, 141)),
+  "action-download": (rgb(84, 105, 141)),
+  "action-edit-relationship": (rgb(84, 105, 141)),
+  "action-freeze-user": (rgb(84, 105, 141)),
+  "action-manage-perm-sets": (rgb(84, 105, 141)),
+  "action-password-unlock": (rgb(84, 105, 141)),
+  "action-refresh": (rgb(84, 105, 141)),
+  "action-remove": (rgb(84, 105, 141)),
+  "action-reset-password": (rgb(84, 105, 141)),
+  "action-user-activation": (rgb(84, 105, 141)),
+  "action-add-contact": (rgb(160, 148, 237)),
   "action-approval": (rgb(0, 198, 183)),
-  "action-canvasapp": (rgb(129, 153, 175)),
+  "action-canvas": (rgb(129, 153, 175)),
   "action-goal": (rgb(86, 170, 223)),
   "action-opportunity-competitor": (rgb(252, 185, 91)),
   "action-opportunity-line-item": (rgb(252, 185, 91)),
@@ -920,8 +1032,9 @@ $bg-actions-map: (
   "action-following": (rgb(125, 207, 100)),
   "action-join-group": (rgb(119, 158, 242)),
   "action-leave-group": (rgb(243, 158, 88)),
-  "action-edit-group": (rgb(52, 190, 205)),
+  "action-edit-groups": (rgb(52, 190, 205)),
   "action-share-post": (rgb(101, 202, 228)),
+  "action-user": (rgb(101, 202, 228)),
   "action-share-file": (rgb(186, 172, 147)),
   "action-new-task": (rgb(75, 192, 118)),
   "action-new-contact": (rgb(160, 148, 237)),
@@ -941,7 +1054,7 @@ $bg-actions-map: (
   "action-description": (rgb(125, 195, 125)),
   "action-defer": (rgb(239, 126, 173)),
   "action-update": (rgb(129, 180, 214)),
-  "action-log-this-event": (rgb(248, 98, 104)),
+  "action-log-this-event": (rgb(235, 112, 146)),
   "action-email": (rgb(149, 174, 197)),
   "action-dial-in": (rgb(139, 154, 227)),
   "action-map": (rgb(118, 198, 238)),
@@ -958,13 +1071,15 @@ $bg-actions-map: (
   "action-evernote": (rgb(134, 200, 111)),
   "action-docusign": (rgb(80, 128, 219)),
   "action-more": (rgb(98, 183, 237)),
-  "action-notebook": (rgb(200, 113, 214)),
+  "action-notebook": (rgb(230, 212, 120)),
+  "action-new-notebook": (rgb(230, 212, 120)),
   "action-preview": (rgb(127, 141, 225)),
   "action-priority": (rgb(251, 180, 57)),
   "action-default-custom-object": (rgb(129, 153, 175)),
   "action-new-custom-object": (rgb(167, 212, 77)),
   "action-lead-convert": (rgb(248, 137, 98)),
   "action-new-account": (rgb(127, 141, 225)),
+  "action-new-person-account": (rgb(127, 141, 225)),
   "action-new-campaign": (rgb(244, 151, 86)),
   "action-new-group": (rgb(131, 182, 255)),
   "action-update-status": (rgb(30, 199, 190)),
@@ -1071,7 +1186,8 @@ $bg-actions-map: (
   "action-apex": (rgb(105, 110, 113)),
   "action-flow": (rgb(0, 121, 188)),
   "action-announcement": (rgb(254, 143, 96)),
-  "action-record": (rgb(125, 195, 125))
+  "action-record": (rgb(125, 195, 125)),
+  "action-log-event": (rgb(108, 161, 233))
 );
 $bg-custom-map: (
   "custom-1": (rgb(255, 123, 132)),
@@ -1177,8 +1293,18 @@ $bg-custom-map: (
 );
 $bg-standard-map: (
   "log-a-call": (rgb(72, 195, 204)),
+  "document": (rgb(186, 172, 147)),
+  "environment-hub": (rgb(84, 105, 141)),
+  "flow": (rgb(84, 105, 141)),
+  "sossession": (rgb(84, 105, 141)),
+  "process": (rgb(84, 105, 141)),
+  "news": (rgb(127, 141, 225)),
+  "home": (rgb(239, 126, 173)),
   "account": (rgb(127, 141, 225)),
-  "social-post": (rgb(234, 116, 162)),
+  "apps-admin": (rgb(152, 149, 238)),
+  "announcement": (rgb(98, 183, 237)),
+  "person-account": (rgb(127, 141, 225)),
+  "social": (rgb(234, 116, 162)),
   "campaign-members": (rgb(244, 151, 86)),
   "article": (rgb(242, 207, 91)),
   "answer-public": (rgb(242, 207, 91)),
@@ -1193,17 +1319,22 @@ $bg-standard-map: (
   "user": (rgb(52, 190, 205)),
   "evernote": (rgb(134, 200, 111)),
   "coaching": (rgb(246, 117, 148)),
-  "connected-apps-admins": (rgb(152, 149, 238)),
+  "connected-apps": (rgb(152, 149, 238)),
   "drafts": (rgb(108, 161, 233)),
   "email": (rgb(149, 174, 197)),
+  "email-iq": (rgb(160, 148, 237)),
   "endorsement": (rgb(139, 154, 227)),
   "event": (rgb(235, 112, 146)),
   "dropbox": (rgb(82, 174, 249)),
   "concur": (rgb(76, 195, 199)),
   "email-chatter": (rgb(242, 207, 91)),
   "case-transcript": (rgb(242, 207, 91)),
+  "case-email": (rgb(242, 207, 91)),
+  "case-log-a-call": (rgb(242, 207, 91)),
   "case-comment": (rgb(242, 207, 91)),
   "case-change-status": (rgb(242, 207, 91)),
+  "work-order": (rgb(80, 227, 194)),
+  "work-order-item": (rgb(51, 168, 220)),
   "client": (rgb(0, 210, 190)),
   "contract": (rgb(110, 192, 110)),
   "dashboard": (rgb(239, 110, 100)),
@@ -1215,12 +1346,14 @@ $bg-standard-map: (
   "contact": (rgb(160, 148, 237)),
   "portal": (rgb(174, 199, 112)),
   "product": (rgb(183, 129, 211)),
+  "pricebook": (rgb(183, 129, 211)),
   "feed": (rgb(98, 183, 237)),
   "feedback": (rgb(109, 161, 234)),
   "file": (rgb(186, 172, 147)),
   "goals": (rgb(86, 170, 223)),
   "groups": (rgb(119, 158, 242)),
   "household": (rgb(0, 175, 160)),
+  "hierarchy": (rgb(52, 190, 205)),
   "insights": (rgb(236, 148, 237)),
   "investment-account": (rgb(75, 192, 118)),
   "performance": (rgb(248, 177, 86)),
@@ -1229,7 +1362,8 @@ $bg-standard-map: (
   "note": (rgb(230, 212, 120)),
   "lead": (rgb(248, 137, 98)),
   "opportunity": (rgb(252, 185, 91)),
-  "log-a-call-chatter": (rgb(242, 207, 91)),
+  "call": (rgb(242, 207, 91)),
+  "call-history": (rgb(242, 207, 91)),
   "orders": (rgb(118, 158, 217)),
   "post": (rgb(101, 202, 228)),
   "poll": (rgb(105, 155, 225)),
@@ -1248,27 +1382,44 @@ $bg-standard-map: (
   "report": (rgb(46, 203, 190)),
   "quotes": (rgb(136, 198, 81)),
   "task": (rgb(75, 192, 118)),
+  "task-2": (rgb(75, 192, 118)),
   "team-member": (rgb(242, 207, 91)),
   "thanks": (rgb(233, 105, 110)),
+  "reward": (rgb(233, 105, 110)),
   "thanks-loading": (rgb(184, 195, 206)),
   "today": (rgb(239, 126, 173)),
   "topic": (rgb(86, 170, 223)),
   "unmatched": (rgb(98, 183, 237)),
   "marketing-actions": (rgb(107, 189, 110)),
-  "marketing-resources": (rgb(0, 0, 0))
+  "folder": (rgb(139, 154, 227))
 );
 
 
 // TODO: Add to Design Tokens
-$color-border-inverse: #fff !default;
 $spacing-xx-large: 3rem !default;
 $square-tooltip-nubbin: $spacing-medium !default;
-$mq-x-small:   320px !default;
-$mq-small:  480px !default;
+$mq-x-small: 320px !default;
+$mq-small: 480px !default;
 $mq-medium: 768px !default;
-$mq-large:  1024px !default;
-$sales-path: 2rem; // @TODO: Temp token till we align sizing
+$mq-large: 1024px !default;
+$mq-x-large: 1280px !default;
+
+// Tokens with PR request - remove when merged
+$spacing-none: 0 !default; // Needed for the margin/padding zero
+$color-background-path-complete: $color-background-success;
+$color-background-path-complete-hover: $color-background-toast-success;
+$color-background-path-current: #0076de;
+$color-background-path-current-hover: rgb(0, 95, 178);
+$color-background-path-incomplete: $color-background-shade;
+$color-background-path-incomplete-hover: $color-background-input-checkbox-disabled;
+$color-background-path-lost: $color-background-notification-badge;
+$color-background-guidance: #fafafb;
+$color-border-path-divider: $color-border-input-checkbox-selected-checkmark;
+$color-border-inverse: $color-background-inverse;
+$height-sales-path: 2rem !default;
+$line-height-salespath: 1.5rem !default;
 
 $force-base-map: map-merge($force-base-map, (
-    "spacing-xx-large": $spacing-xx-large
+  'spacing-xx-large': $spacing-xx-large,
+  'spacing-none': $spacing-none
 ));

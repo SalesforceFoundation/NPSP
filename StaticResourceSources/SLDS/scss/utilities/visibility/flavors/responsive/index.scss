@@ -1,4 +1,4 @@
-/* Lightning Design System 0.12.1 */
+// Lightning Design System 1.0.0
 // Copyright (c) 2015, salesforce.com, inc. All rights reserved.
 
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -10,7 +10,7 @@
 
 
 
-@include visibility(x-small,$mq-x-small,$mq-small);
-@include visibility(small,$mq-small,$mq-medium);
-@include visibility(medium,$mq-medium,$mq-large);
-@include visibility(large,$mq-large);
+@include visibility(x-small, $mq-x-small, $mq-small);
+@include visibility(small, $mq-small, $mq-medium);
+@include visibility(medium, $mq-medium, $mq-large);
+@include visibility(large, $mq-large);

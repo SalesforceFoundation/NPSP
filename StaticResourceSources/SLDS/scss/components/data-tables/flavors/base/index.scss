@@ -1,4 +1,4 @@
-/* Lightning Design System 0.12.1 */
+// Lightning Design System 1.0.0
 // Copyright (c) 2015, salesforce.com, inc. All rights reserved.
 
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -11,6 +11,7 @@
 
 
 .#{$css-prefix}table {
+  // scss-lint:disable SelectorDepth
   background-color: $color-background-alt;
 
   // Cells
@@ -18,14 +19,7 @@
   td {
     padding: $spacing-x-small;
     white-space: nowrap;
-
-    &.#{$css-prefix}text-center {
-      text-align: center;
-    }
-
-    &.#{$css-prefix}text-right {
-      text-align: right;
-    }
+    position: relative;
   }
 
   // First and Last Cell of a row
@@ -87,7 +81,7 @@
 
 // Add vertical borders to a table
 .#{$css-prefix}table--bordered {
-
+  // scss-lint:disable SelectorDepth
   border: {
     top: $border-width-thin solid $color-border;
     bottom: $border-width-thin solid $color-border;
@@ -106,7 +100,7 @@
 
   // Default Table Row Hover
   &:not(.#{$css-prefix}no-row-hover) tbody tr:hover > td,
-  &:not(.#{$css-prefix}no-row-hover) tbody tr:hover > th  {
+  &:not(.#{$css-prefix}no-row-hover) tbody tr:hover > th {
     box-shadow: $color-border 0 ($border-width-thin * -1) 0 inset;
   }
 
@@ -117,7 +111,7 @@
     box-shadow: $color-border-selection 0 ($border-width-thick * -1) 0 inset;
 
     &.#{$css-prefix}is-selected {
-      box-shadow: $color-border-selection 0 ($border-width-thin * -1) 0 $border-width-thick inset
+      box-shadow: $color-border-selection 0 ($border-width-thin * -1) 0 $border-width-thick inset;
     }
   }
 }
@@ -150,5 +144,72 @@
     .#{$css-prefix}button {
       visibility: visible;
     }
+  }
+}
+
+// Resizable data table columns
+//
+// Set table to use fixed layout for width and truncation purposes
+.#{$css-prefix}table--fixed-layout {
+  position: relative;
+  table-layout: fixed;
+  width: 100%;
+  white-space: nowrap;
+
+  .#{$css-prefix}cell-shrink {
+    width: $square-icon-large-boundary;
+
+    &:nth-child(n) {
+      padding: 0;
+    }
+
+    &:first-child {
+      text-align: right;
+      padding-right: $spacing-x-small;
+    }
+
+    &:last-child {
+      text-align: left;
+      padding-left: $spacing-x-small;
+    }
+  }
+}
+
+.#{$css-prefix}is-resizable:hover {
+  box-shadow: $color-border-separator-alt ($spacing-xx-small * -1) 0 0 inset;
+}
+
+// Resizable handle
+.#{$css-prefix}resizable {
+  max-width: 100%;
+
+  &__handle {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: $spacing-xx-small;
+    height: 100%;
+    background: $color-background-button-brand;
+    display: block;
+    cursor: col-resize;
+    opacity: 0;
+    z-index: $z-index-popup;
+
+    &:hover,
+    &:active {
+      opacity: 1;
+    }
+
+    &--indicator {
+      right: auto;
+    }
+  }
+
+  &__divider {
+    position: absolute;
+    left: 50%;
+    height: 100vh;
+    width: 1px;
+    background: $color-background-button-brand;
   }
 }
