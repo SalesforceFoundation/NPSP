@@ -37,7 +37,7 @@
           </p>
         </div>                                                                          
         
-        <div class="slds-m-around--small">
+        <div>
             <table class="PagerUI" >
                 <tr>
                     <td style="vertical-align:middle;">
@@ -118,7 +118,7 @@
                             </td>
                             <apex:repeat value="{!pageController.strFields}" var="f2" > 
                                 <apex:outputText rendered="{!f2 != pageController.strNameField}" >
-                                    <td class="slds-cell-wrap slds-text-body--small">
+                                    <td style="word-wrap: break-word" class="slds-cell-wrap slds-text-body--small">
                                         <apex:outputText value="{!item.err[f2]}" />
                                     </td>
                                 </apex:outputText>
@@ -127,44 +127,6 @@
                     </apex:repeat>
                </tbody>
             </table>
-            <!--<apex:pageBlockTable value="{!listSLVObj}" var="item" rows="{!cRecordsPerPage}" >  
-
-                <apex:column rendered="{!showCheckboxes}" >
-                    <apex:facet name="header"> 
-                        <input type="checkbox" name="cbxContactAll" id="cbxAll" onchange="CheckAllSLVObj(this.checked);" />
-                    </apex:facet>
-                    <apex:inputCheckbox value="{!item.checked}" styleClass="slds-checkbox cbxSLVObj" />
-                </apex:column>          
-
-                <apex:column >
-                    <apex:outputLink value="/{!item.sobj['id']}" ><apex:outputField value="{!item.sobj[pageController.strNameField]}" /></apex:outputLink>
-                    <apex:facet name="header"> 
-                        <apex:commandLink action="{!SortItem}" rerender="panelData" status="statusLoad" value="{!$ObjectType.Error__c.Fields[pageController.strNameField].Label}" >
-                            <apex:param assignTo="{!SortItemField}" name="SortItemField" value="{!pageController.strNameField}" />
-                            <apex:outputText style="font-size:1.0em;font-weight:bold;font-family:symbol" 
-                                value="{!IF(SortItemField=pageController.strNameField, IF(SortItemAsc, ' ↑' , ' ↓'), '')}" escape="false" />
-                        </apex:commandLink>
-                    </apex:facet>                    
-                </apex:column>          
-
-                <apex:repeat value="{!pageController.strFields}" var="f" > 
-                    <apex:column value="{!item.err[f]}" rendered="{!f != pageController.strNameField}" >
-                        <apex:facet name="header"> 
-                            <apex:outputPanel > 
-                                <apex:outputText value="{!$ObjectType.Error__c.Fields[f].Label}" 
-                                    rendered="{!!$ObjectType.Error__c.Fields[f].filterable}" />
-                                <apex:commandLink action="{!SortItem}" rerender="panelData" status="statusLoad" value="{!$ObjectType.Error__c.Fields[f].Label}" 
-                                    rendered="{!$ObjectType.Error__c.Fields[f].filterable}" >
-                                    <apex:param assignTo="{!SortItemField}" name="SortItemField" value="{!f}" />
-                                    <apex:outputText style="font-size:1.0em;font-weight:bold;font-family:symbol" 
-                                        value="{!IF(SortItemField=f, IF(SortItemAsc, ' ↑' , ' ↓'), '')}" escape="false" />
-                                </apex:commandLink>
-                            </apex:outputPanel>
-                        </apex:facet> 
-                    </apex:column> 
-                </apex:repeat>         
-                                
-            </apex:pageBlockTable> -->
             <div class="PagerUI">
                 <apex:panelGrid columns="12" > 
                     <apex:outputText value="" />
