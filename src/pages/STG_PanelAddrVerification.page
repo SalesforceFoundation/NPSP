@@ -59,7 +59,7 @@
         <c:UTIL_PageMessages />
     
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-            <apex:commandButton id="EditNotif" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" styleClass="slds-button slds-button--small slds-button--neutral" oncomplete="hideUnusedElements()"/>
+            <apex:commandButton id="EditNotif" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" oncomplete="hideUnusedElements()"/>
         </div>
 
         <apex:outputPanel id="fields">
@@ -137,7 +137,7 @@
                     <div class="slds-form-element__control">
                         <apex:outputText value="{!IF(ISBLANK(addrVerifsettings.Auth_Token__c) || LEN(addrVerifsettings.Auth_Token__c) = 0, '', $Label.HiddenForSecurity)}"
                                         rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
-                        <apex:inputSecret value="{!addrVerifsettings.Auth_Token__c}" rendered="{!isEditMode}" id="iAuth_Token__c" redisplay="true" styleClass="form-control" />
+                        <apex:inputSecret value="{!addrVerifsettings.Auth_Token__c}" rendered="{!isEditMode}" id="iAuth_Token__c" redisplay="true" styleClass="slds-input" />
                         <apex:outputText value="{!$ObjectType.Addr_Verification_Settings__c.fields.Auth_Token__c.inlineHelpText}" styleClass="slds-form-element__help" />
                     </div>
                 </div>
@@ -169,23 +169,22 @@
             </apex:outputPanel>
         </apex:outputPanel>
         -->
-        <br/>
-        <apex:outputPanel layout="block" style="text-align: center;" id="commandButtons">
+        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
             <apex:commandButton id="saveNotif" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}"
-                        immediate="false" rerender="fields, commandButtons, saveApiSettingsFailure, batchVerify, validatorBatchHelpText" styleClass="slds-button slds-button--small slds-button--neutral"
+                        immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral"
                         oncomplete="hideUnusedElements()"/>
             <apex:commandButton id="cancelNotif" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}"
-                        immediate="true" rerender="fields, commandButtons, saveApiSettingsFailure" styleClass="slds-button slds-button--small slds-button--neutral"
+                        immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral"
                         oncomplete="hideUnusedElements()"/>
-        </apex:outputPanel>
+        </div>
 
         <div style="text-align:center; font-weight:bold; color: red;">
-        <apex:outputPanel id="saveApiSettingsFailure">
-            <apex:outputPanel rendered="{!NOT(ISNULL(apiSettingsErrorMessage))}">
-                <apex:outputText value="{!apiSettingsErrorMessage}" />
-                <br/>
+            <apex:outputPanel id="saveApiSettingsFailure">
+                <apex:outputPanel rendered="{!NOT(ISNULL(apiSettingsErrorMessage))}">
+                    <apex:outputText value="{!apiSettingsErrorMessage}" />
+                    <br/>
+                </apex:outputPanel>
             </apex:outputPanel>
-        </apex:outputPanel>
         </div>
 
         <div class="slds-m-around--large" id="iBatchVerifyDiv">

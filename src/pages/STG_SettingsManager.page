@@ -3,191 +3,11 @@
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-migrate-1.2.1.min.js')}"/>
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/CollapsibleList/CollapsibleList.js')}"/>
-    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/slds/js/slds.min.js')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
     <apex:stylesheet value="{!URLFOR($Resource.SLDS, 'assets/styles/salesforce-lightning-design-system-vf.css')}" />
-    <!--apex:styleSheet value="{!URLFOR($Resource.CumulusStaticResources, '/slds/css/slds-namespaced-s1.css')}" /-->
 
 <style>
     /* COMMON CSS FOR ALL SETTINGS PAGES */
-    html body.sfdcBody {
-        padding: 0;
-    }
-/*
-    .slds {
-        background: #fff;
-    }
-
-    .slds .container {
-        width: auto;
-        min-width: 800px;
-        padding-left: 0px;
-        padding-right: 0px;
-    }
-
-    .slds .container .sidebar {
-        padding-left: 0;
-        padding-right: 0;
-    }
-
-    .slds .container .content {
-        padding: 15px;
-    }
-
-    .slds .container .list-unstyled li {
-        margin-left: 0;
-    }
-
-    .slds .page-header {
-        margin: 0 0 15px;
-        padding: 0;
-        border-bottom: none;
-    }
-
-    .slds .page-header h1, .slds .page-header h2 {
-        margin: 0;
-        padding: 0;
-        color: #293f54;
-        margin-left: 36px;
-    }
-
-    .slds span.caret {
-       border-top: 0;
-    }
-
-    .page-header h1 {
-        font-size: 12px;
-        font-weight: bold;
-    }
-
-    .page-header h2 {
-        font-size: 22px;
-        font-weight: normal;
-    }
-
-    .pageTitleIcon {
-        float: left;
-    }
-
-    .slds h3.section-header {
-        color: #696e71;
-        background-color: #e8eaeb;
-        font-size: 13px;
-        padding: 8px 14px;
-        text-transform: uppercase;
-        clear: both;
-    }
-
-    .slds .pbBody {
-        color: #525354;
-    }
-
-    .slds .pbBody p {
-        margin-bottom: 10px;
-    }
-    .slds .slds-form-element__control {
-        margin-top: 7px;
-    }
-
-    .slds .slds-form-element__control input[type="text"],
-    .slds .slds-form-element__control input[type="number"],
-    .slds .slds-form-element__control input[type="password"],
-    .slds .slds-form-element__control input[type="datetime"],
-    .slds .slds-form-element__control input[type="url"] {
-        margin-top: -7px;
-    }
-
-    .slds .slds-form-element__control input[type="number"],
-    .slds .slds-form-element__control input[type="datetime"] {
-        max-width: 12em;
-    }
-
-    .slds .slds-button-group {
-        margin: 10px;
-        text-align: center;
-    }
-
-    .inline-form-block {
-        margin-bottom: 24px;
-    }
-
-    .slds .slds-button--neutral[disabled] {
-        color: #919293;
-        border: 1px solid #ccc;
-        font-weight: normal;
-    }
-
-    .sub-nav-item {
-        margin-left: 20px;
-    }
-
-    .panelButtons {
-        padding-left: 400px;
-    }
-
-
-    /* END - COMMON CSS FOR ALL SETTINGS PAGES *
-
-    /* SIDEBAR CSS *
-
-    .sidebar ul {
-        margin: 0;
-        padding: 0;
-        list-style: none;
-        background: lightgray;
-    }
-
-    div.slds-tree-container ul li {
-        font-size: 100%;
-        margin-bottom: 0px;
-        margin-left: 0px;
-        padding: 2px;
-        background: #f2f5f6;
-        font-weight: normal;
-        border: 1px solid #dce4e7;
-        border-top-color: #fff;
-    }
-
-    div.slds-tree-container ul li:hover {
-        background: gray;
-    }
-
-    div.slds-tree-container ul li.slds-tree__item:hover {
-        background: gray;
-    }
-
-    div.slds-tree-container ul li.slds-tree__item {
-        background: #eaeef0;
-        border-bottom: 0;
-        border-top: 0;
-    }
-
-    div.slds-tree-container {
-       border-top: 1px solid #dce4e7;
-    }
-
-    div.slds-tree-container ul li a {
-        display: block;
-        text-decoration: none;
-        padding: 5px 5px 5px 10px;
-        font-size: 100%;
-        color: black;
-    }
-
-    div.slds-tree-container ul li a:hover {
-        color: #fff;
-        background: none;
-    }
-
-
-
-    .nav-section-title {
-        display: block;
-        text-decoration: none;
-        padding: 5px 5px 5px 10px;
-        font-size: 100%;
-        color: black;
-    }
-        */
     .slds .noborder {
         border: 0;
         box-shadow: none;
@@ -201,10 +21,6 @@
         display: inline-block;
     }
 
-    a.nav-item {
-        align-items: stretch;
-    }
-
     .clsLoading {
         z-index: 99;
         position: fixed;
@@ -213,9 +29,6 @@
         width: 80px;
         height: 80px;
     }
-
-
-    /* END - SIDEBAR STYLES */
 
 </style>
 
@@ -268,7 +81,7 @@
 <apex:variable var="pathChevronDown" value="M22 8.2l-9.5 9.6c-.3.2-.7.2-1 0L2 8.2c-.2-.3-.2-.7 0-1l1-1c.3-.3.8-.3 1.1 0l7.4 7.5c.3.3.7.3 1 0l7.4-7.5c.3-.2.8-.2 1.1 0l1 1c.2.3.2.7 0 1z"/>
 
 <div class="slds">
-    <div class="slds-grid">
+    <div class="slds-grid slds-grid--frame">
         <div class="sidebar slds-col slds-small-size--1-of-1 slds-medium-size--3-of-12 slds-large-size--3-of-12 slds-p-top--large slds-col-rule--right">
             <div class="slds-tree-container" role="application">
                 <div class="slds-text-heading--small slds-tree__item" id="treeheading"><a href="#" onclick="ShowPanel('idPanelHome');return false;" class="slds-grow">{!$Label.stgNPSPSettingsTitle}</a></div>

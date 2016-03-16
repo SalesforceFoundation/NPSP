@@ -43,7 +43,7 @@
                 </div>
             </div>
             <div class="slds-form-element">
-                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.Matched_Donor_Role__c.Label}" for="idDBMS" styleClass="slds-form-element__label" />
+                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.Matched_Donor_Role__c.Label}" for="slMDR" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
                     <apex:outputField value="{!stgService.stgHH.Matched_Donor_Role__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
                     <apex:selectList value="{!stgService.stgHH.Matched_Donor_Role__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slMDR" styleClass="slds-select" >
