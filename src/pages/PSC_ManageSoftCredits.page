@@ -24,8 +24,8 @@
 
                 <div class="slds-col slds-no-flex slds-align-middle">
                     <div class="slds-button-group" role="group">
-                        <apex:commandButton styleClass="slds-button slds-button--neutral" action="{!save}" value="{!$Label.stgBtnSave}" />
                         <apex:commandButton styleClass="slds-button slds-button--neutral" action="{!cancel}" value="{!$Label.stgBtnCancel}" />
+                        <apex:commandButton styleClass="slds-button slds-button--brand" action="{!save}" value="{!$Label.stgBtnSave}" />
                     </div>
                 </div>
             </div>
@@ -33,7 +33,7 @@
         <!-- /PAGE HEADER -->
         
         <apex:actionFunction name="refresh" action="{!refresh}" reRender="totalSelected, totalUn" />
-        <apex:pageMessages />
+        <c:UTIL_PageMessages/>
         
         <!-- outer div of body below header -->
         <div class="myBodyContent">

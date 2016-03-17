@@ -143,8 +143,8 @@
 
                     <div class="slds-col slds-no-flex slds-align-middle">
                         <div class="slds-button-group" role="group">
-                            <apex:commandButton id="saveCloseBTN" styleClass="slds-button slds-button--neutral" action="{!saveClose}" value="{!$Label.alloBtnSaveAndClose}" immediate="false" disabled="{!opp<>null&&parentAmount==0}"/>
                             <apex:commandButton id="cancelBTN" styleClass="slds-button slds-button--neutral" action="{!cancel}" value="{!$Label.alloBtnCancel}"  immediate="true"/>
+                            <apex:commandButton id="saveCloseBTN" styleClass="slds-button slds-button--brand" action="{!saveClose}" value="{!$Label.alloBtnSaveAndClose}" immediate="false" disabled="{!opp<>null&&parentAmount==0}"/>
                         </div>
                     </div>
                 </div>
@@ -153,28 +153,20 @@
                 <apex:pageMessages id="messages"/>
             </div>
             <div>
+                <apex:outputPanel id="theTable">
                 <table class="slds-table slds-table--bordered" >
                     <thead>
                         <tr class="slds-text-heading--label">
-                            <th scope="col" width="155px"></th>
                             <th scope="col"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.General_Accounting_Unit__c.Label}</span></th>
                             <th scope="col" width="250px"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.Amount__c.Label}</span></th>
                             <th scope="col" width="130px"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.Percent__c.Label}</span></th>
-                            <th scope="col" width="161px"></th>
+                            <th scope="col" width="200px"></th>
                         </tr>
                     </thead>
                     <tbody>
                         <apex:variable var="cnt" value="{!0}" /> 
                         <apex:repeat var="allo" value="{!listAllo}" >
                             <tr>
-                                <td>
-                                    <div class="slds-form-element">
-                                        <apex:commandButton styleClass="slds-button slds-button--destructive" value="{!$Label.alloDeleteRow}" id="delRowBTN" title="{!$Label.alloDeleteRow}" action="{!delRow}" reRender="theForm" immediate="true">
-                                            <span class="slds-form-element__label slds-assistive-text">Delete Row {!cnt}</span>
-                                            <apex:param name="rowForDel" value="{!cnt}" assignTo="{!rowNumber}"/>
-                                        </apex:commandButton>
-                                    </div>
-                                </td>
                                 <td>
                                     <div class="slds-form-element">
                                         <label for="alloInputGAU{!cnt}" class="slds-form-element__label slds-assistive-text">{!$ObjectType.Allocation__c.Fields.General_Accounting_Unit__c.Label} {!cnt}</label>
@@ -206,20 +198,19 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="slds-form-element">
-                                        <apex:commandButton styleClass="slds-button slds-button--neutral" value="{!$Label.alloAddRow}" id="addRowBTN" title="{!$Label.alloAddRow}" action="{!addRow}" reRender="theForm" immediate="true">
-                                            <span class="slds-form-element__label slds-assistive-text">{!$Label.alloAddRowAtPosition} {!cnt}</span>
-                                            <apex:param name="rowForNew" value="{!cnt}" assignTo="{!rowNumber}"/>
-                                        </apex:commandButton>
-                                    </div>
+                                    <apex:commandButton styleClass="slds-button slds-button--destructive" value="{!$Label.alloDeleteRow}" id="delRowBTN" title="{!$Label.alloDeleteRow}" action="{!delRow}" reRender="theTable" immediate="true">
+                                        <span class="slds-form-element__label slds-assistive-text">Delete Row {!cnt}</span>
+                                        <apex:param name="rowForDel" value="{!cnt}" assignTo="{!rowNumber}"/>
+                                    </apex:commandButton>
+                                    <apex:commandButton styleClass="slds-button slds-button--neutral" value="{!$Label.alloAddRow}" id="addRowBTN" title="{!$Label.alloAddRow}" action="{!addRow}" reRender="theTable" immediate="true">
+                                        <span class="slds-form-element__label slds-assistive-text">{!$Label.alloAddRowAtPosition} {!cnt}</span>
+                                        <apex:param name="rowForNew" value="{!cnt}" assignTo="{!rowNumber}"/>
+                                    </apex:commandButton>
                                 </td>
                             </tr>
                             <apex:variable var="cnt" value="{!cnt+1}"/>
                         </apex:repeat>
                         <tr class="active">
-                            <th scope="row">
-                                {!IF(parentAmount>0,$Label.alloRemainder,$Label.alloTotals)}
-                            </th>
                             <td>
                                 <apex:outputField value="{!defaultAllo.General_Accounting_Unit__c}"/>
                             </td>
@@ -230,7 +221,7 @@
                                 <div id="totalPercent"></div>
                             </td>
                             <td>
-                                <apex:commandButton styleClass="slds-button slds-button--neutral slds-button--small" value="{!$Label.alloAddRow}" id="addRowBTN" title="{!$Label.alloAddRow}" action="{!addRow}" reRender="theForm" immediate="true" rendered="{!listAlloSize==0}">
+                                <apex:commandButton styleClass="slds-button slds-button--neutral slds-button--small" value="{!$Label.alloAddRow}" id="addRowBTN" title="{!$Label.alloAddRow}" action="{!addRow}" reRender="theTable" immediate="true" rendered="{!listAlloSize==0}">
                                     <span class="slds-form-element__label slds-assistive-text">{!$Label.alloAddRowAtPosition} {!cnt}</span>
                                     <apex:param name="rowForNew" value="{!cnt}" assignTo="{!rowNumber}"/>
                                 </apex:commandButton>
@@ -241,6 +232,7 @@
                 <script>
                     window.initOrReload();
                 </script>
+                </apex:outputPanel>
             </div>
         </div>
     </apex:form>
