@@ -76,7 +76,7 @@ public with sharing class STG_PanelErrorLog_CTRL extends STG_Panel implements UT
     */
     public list<string> getstrFields()
         { 
-    	   return new list<string> { 'Context_Type__c', 'Datetime__c', 'Error_Type__c', 'Full_Message__c', 
+    	   return new list<string> { 'Datetime__c', 'Error_Type__c', 'Full_Message__c', 
                     'Object_Type__c', 'Record_URL__c', 'Stack_Trace__c' };  // can't include  ', CreatedBy.Name'  unfortunately!
         } 
     

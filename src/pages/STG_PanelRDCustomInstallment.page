@@ -1,64 +1,67 @@
 <apex:page controller="STG_PanelRDCustomInstallment_CTRL" docType="html-5.0"  >
-    <c:STG_PageHeader sectionLabel="{!$Label.stgNavRecurringDonations}" pageLabel="{!$Label.stgNavRDInstallmentPeriods}" />
-
-    <apex:form id="form" styleClass="stgForm form-horizontal">  
-        <apex:pageMessages id="pageMessages"/>
-        <apex:pageBlock mode="maindetail">
-            <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="button-block">
-                <apex:commandButton value="{!$Label.stgBtnNewRDPeriod}" action="{!newCustomInstallment}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
-            </apex:outputPanel>
-
-            <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="inline-form-block">
-            <section>
-                <h3 class="section-header" >{!$Label.stgLabelRDNewPeriod}</h3>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.Name.Label}" for="tbxN" styleClass="col-md-4 control-label" />
-                    <div class="col-md-8 form-control-column">
-                        <apex:inputField value="{!ciNew.Name}" rendered="{!isEditMode}" required="false" id="tbxN" styleClass="form-control" />
-                    </div>
-                    <div class="col-md-offset-4 col-md-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpRDPeriodName}" />
+    <apex:form id="form" styleClass="slds-m-around--x-large">
+        <c:STG_PageHeader sectionLabel="{!$Label.stgNavRecurringDonations}" pageLabel="{!$Label.stgNavRDInstallmentPeriods}" />
+        <c:UTIL_PageMessages />
+        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
+            <apex:commandButton value="{!$Label.stgBtnNewRDPeriod}" action="{!newCustomInstallment}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+        </div>
+        <apex:outputPanel rendered="{!isEditMode}">
+            <div class="slds-section-title--divider" >{!$Label.stgLabelRDNewPeriod}</div>
+            <div class="slds-form--horizontal slds-m-around--large">
+                <div class="slds-form-element">
+                    <apex:outputLabel value="{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.Name.Label}" for="tbxN" styleClass="slds-form-element__label" />
+                    <div class="slds-form-element__control">
+                        <apex:inputField value="{!ciNew.Name}" rendered="{!isEditMode}" required="false" id="tbxN" styleClass="slds-input" />
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRDPeriodName}" />
                     </div>
                 </div>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.npe03__Value__c.Label}" for="tbxV" styleClass="col-md-4 control-label" />
-                    <div class="col-md-8 form-control-column">
-                        <apex:inputField value="{!ciNew.npe03__Value__c}" type="number" rendered="{!isEditMode}" required="false" id="tbxV" styleClass="form-control" />
-                    </div>
-                    <div class="col-md-offset-4 col-md-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpRDPeriodFrequency}" />
+                <div class="slds-form-element">
+                    <apex:outputLabel value="{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.npe03__Value__c.Label}" for="tbxV" styleClass="slds-form-element__label" />
+                    <div class="slds-form-element__control">
+                        <apex:inputField value="{!ciNew.npe03__Value__c}" type="number" rendered="{!isEditMode}" required="false" id="tbxV" styleClass="slds-input" />
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRDPeriodFrequency}" />
                     </div>
                 </div>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.npe03__Increment__c.Label}" for="slI" styleClass="col-md-4 control-label" />
-                    <div class="col-md-8 form-control-column">
-                        <apex:selectList value="{!ciNew.npe03__Increment__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slI" styleClass="form-control" >
+                <div class="slds-form-element">
+                    <apex:outputLabel value="{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.npe03__Increment__c.Label}" for="slI" styleClass="slds-form-element__label" />
+                    <div class="slds-form-element__control">
+                        <apex:selectList value="{!ciNew.npe03__Increment__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slI" styleClass="slds-select" >
                             <apex:selectOptions value="{!listSORDCustomPeriod}"/>
                         </apex:selectList>
-                    </div>
-                    <div class="col-md-offset-4 col-md-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpRDPeriodType}" />
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRDPeriodType}" />
                     </div>
                 </div>
-            </section>
-            <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="button-block">
-                <apex:commandButton value="{!$Label.stgBtnCreateRDPeriod}" action="{!createCustomInstallment}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
-                <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelCustomInstallment}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />
-            </apex:outputPanel>
-            </apex:outputPanel>
-                  <apex:pageBlockTable value="{!stgService.listRDCustomInstallment}" var="ci" >
-                    <apex:column headerValue="{!$Label.stgLabelActionColumn}" styleClass="actionColumn" style="text-align:center;" >
-                        <apex:commandLink action="{!deleteCi}" 
-                            title="{!$Label.stgLinkDelete} {!ci.Name}"                            
-                            styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" 
-                            onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
-                            <apex:param assignTo="{!ciIdDelete}" name="idDeleteCi" value="{!ci.Id}" /> 
-                        </apex:commandLink>
-                    </apex:column>
-                    <apex:column value="{!ci.Name}" /> 
-                    <apex:column value="{!ci.npe03__Value__c}" />
-                    <apex:column value="{!ci.npe03__Increment__c}" />
-                </apex:pageBlockTable> 
-        </apex:pageBlock> 
+            </div>
+            <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
+                <apex:commandButton value="{!$Label.stgBtnCreateRDPeriod}" action="{!createCustomInstallment}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+                <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelCustomInstallment}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+            </div>
+        </apex:outputPanel>
+        <apex:outputPanel rendered="{!AND(NOT(ISNULL(stgService.listRDCustomInstallment)), stgService.listRDCustomInstallment.size > 0)}">
+            <table class="slds-table slds-table--bordered" >
+                <thead>
+                    <tr class="slds-text-heading--label">
+                        <th scope="col"><label class="slds-truncate">{!$Label.stgLabelActionColumn}</label></th>
+                        <th scope="col"><label class="slds-truncate">{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.Name.Label}</label></th>
+                        <th scope="col"><label class="slds-truncate">{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.npe03__Value__c.Label}</label></th>
+                        <th scope="col"><label class="slds-truncate">{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.npe03__Increment__c.Label}</label></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <apex:repeat var="ci" value="{!stgService.listRDCustomInstallment}" >
+                        <tr>
+                            <td>
+                                <apex:commandLink action="{!deleteCi}" title="{!$Label.stgLinkDelete} {!ci.Name}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
+                                    <apex:param assignTo="{!ciIdDelete}" name="idDeleteCi" value="{!ci.Id}" />
+                                </apex:commandLink>
+                            </td>
+                            <td><div class="slds-form-element__static">{!ci.Name}</div></td>
+                            <td><div class="slds-form-element__static">{!ci.npe03__Value__c}</div></td>
+                            <td><div class="slds-form-element__static">{!ci.npe03__Increment__c}</div></td>
+                        </tr>
+                    </apex:repeat>
+               </tbody>
+            </table>
+        </apex:outputPanel>
     </apex:form>
 </apex:page>

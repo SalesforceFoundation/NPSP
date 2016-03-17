@@ -79,19 +79,12 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
     /*********************************************************************************************************
     * @description The panel's constructor 
     */
-    public STG_PanelOppNaming_CTRL() {
-        isRunningBatch = false;
-    }
+    public STG_PanelOppNaming_CTRL() {}
         
     /*********************************************************************************************************
     * @description Returns the string Id of the Households panel. 
     */
     public override string idPanel() { return 'idPanelOppNaming'; }
-
-    /*********************************************************************************************************
-    * @description Whether we are running the batch opportunity naming process 
-    */
-    public boolean isRunningBatch { get; set; }
 
     /*********************************************************************************************************
     * @description Action Method to delete a specific settings instance.
@@ -136,17 +129,6 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
             mapOppNameSettings = UTIL_ListCustomSettingsFacade.getMapOppNamingSettings();
             super.cancelEdit();
         }
-        return null;
-    }
-
-    /*********************************************************************************************************
-    * @description Action Method to run batch opportunity renaming.
-    * @return null 
-    */
-    public PageReference runBatch() {
-        isRunningBatch = true;
-        OPP_OpportunityNaming_BATCH batch = new OPP_OpportunityNaming_BATCH();
-        id batchProcessId = database.executeBatch(batch, 200);
         return null;
     }
     
