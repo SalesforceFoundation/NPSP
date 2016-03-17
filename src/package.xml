@@ -173,15 +173,18 @@
         <members>STG_PanelBDE_CTRL</members>
         <members>STG_PanelContactRoles_CTRL</members>
         <members>STG_PanelContacts_CTRL</members>
+        <members>STG_PanelCreatePayments_CTRL</members>
         <members>STG_PanelERR_CTRL</members>
         <members>STG_PanelErrorLog_CTRL</members>
         <members>STG_PanelHealthCheck_CTRL</members>
         <members>STG_PanelHealthCheck_TEST</members>
         <members>STG_PanelHouseholds_CTRL</members>
         <members>STG_PanelLeads_CTRL</members>
+        <members>STG_PanelMakeDefaultAllocations_CTRL</members>
         <members>STG_PanelMembership_CTRL</members>
         <members>STG_PanelOppBatch_CTRL</members>
         <members>STG_PanelOppCampaignMembers_CTRL</members>
+        <members>STG_PanelOppNamingBatch_CTRL</members>
         <members>STG_PanelOppNaming_CTRL</members>
         <members>STG_PanelOppRollups_CTRL</members>
         <members>STG_PanelOpps_CTRL</members>
@@ -194,7 +197,9 @@
         <members>STG_PanelRelAuto_CTRL</members>
         <members>STG_PanelRelReciprocal_CTRL</members>
         <members>STG_PanelRel_CTRL</members>
+        <members>STG_PanelRenameHouseholds_CTRL</members>
         <members>STG_PanelTDTM_CTRL</members>
+        <members>STG_PanelUpdatePrimaryContact_CTRL</members>
         <members>STG_PanelUserRollup_CTRL</members>
         <members>STG_SettingsManager_CTRL</members>
         <members>STG_SettingsManager_TEST</members>
@@ -243,7 +248,6 @@
         <members>STG_DataBoundMultiSelect</members>
         <members>STG_PageHeader</members>
         <members>UTIL_JobProgress</members>
-        <members>UTIL_PageMessages</members>
         <members>UTIL_JobProgressLightning</members>
         <members>UTIL_PageMessages</members>
         <members>UTIL_SoqlListView</members>
@@ -281,16 +285,19 @@
         <members>STG_PanelBDE</members>
         <members>STG_PanelContactRoles</members>
         <members>STG_PanelContacts</members>
+        <members>STG_PanelCreatePayments</members>
         <members>STG_PanelERR</members>
         <members>STG_PanelErrorLog</members>
         <members>STG_PanelHealthCheck</members>
         <members>STG_PanelHome</members>
         <members>STG_PanelHouseholds</members>
         <members>STG_PanelLeads</members>
+        <members>STG_PanelMakeDefaultAllocations</members>
         <members>STG_PanelMembership</members>
         <members>STG_PanelOppBatch</members>
         <members>STG_PanelOppCampaignMembers</members>
         <members>STG_PanelOppNaming</members>
+        <members>STG_PanelOppNamingBatch</members>
         <members>STG_PanelOppRollups</members>
         <members>STG_PanelOpps</members>
         <members>STG_PanelPaymentMapping</members>
@@ -301,7 +308,9 @@
         <members>STG_PanelRel</members>
         <members>STG_PanelRelAuto</members>
         <members>STG_PanelRelReciprocal</members>
+        <members>STG_PanelRenameHouseholds</members>
         <members>STG_PanelTDTM</members>
+        <members>STG_PanelUpdatePrimaryContact</members>
         <members>STG_PanelUserRollup</members>
         <members>STG_SettingsManager</members>
         <name>ApexPage</name>
@@ -1256,6 +1265,7 @@
         <members>stgNavAffiliations</members>
         <members>stgNavAllocations</members>
         <members>stgNavBDE</members>
+        <members>stgNavBulkProcesses</members>
         <members>stgNavConnections</members>
         <members>stgNavContactRoles</members>
         <members>stgNavContacts</members>

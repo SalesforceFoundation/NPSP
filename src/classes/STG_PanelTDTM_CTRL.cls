@@ -34,7 +34,12 @@
 * @description The controller for the TDTM Trigger Handler panel 
 */
 public with sharing class STG_PanelTDTM_CTRL extends STG_Panel {
-    
+
+    /*******************************************************************************************************
+    * @description Class constructor sets pagemessage
+    */
+    public STG_PanelTDTM_CTRL() {}
+
     /*******************************************************************************************************
     * @description The panel ID.
     */
@@ -66,35 +71,13 @@ public with sharing class STG_PanelTDTM_CTRL extends STG_Panel {
                 listTH = new list<Trigger_Handler__c>();
                 listTH = [select Id, Active__c, Asynchronous__c, Class__c, Load_Order__c, Object__c, Trigger_Action__c, 
                             User_Managed__c from Trigger_Handler__c order by Object__c, Load_Order__c];
+            }
+            for (Trigger_Handler__c th : listTH) {
+                th.Trigger_Action__c = th.Trigger_Action__c.replaceAll('[;]','; ');
             } 
             return listTH;           
         }
         private set;     
-    }
-
-    /*******************************************************************************************************
-    * @description whether any NPSP trigger handlers are marked Asynchronous
-    */
-    public boolean hasAsync { 
-        get {
-            if (hasAsync == null) {
-                hasAsync = false;
-                // load up our defaults to get their class names.
-                List<Trigger_Handler__c> listTHDefault = TDTM_DefaultConfig.getDefaultRecords();
-                set<string> setClasses = new set<string>();
-                for (Trigger_Handler__c th : listTHDefault)
-                    setClasses.add(th.Class__c);
-                
-                for (Trigger_Handler__c th : listTH) {
-                    if (setClasses.contains(th.Class__c) && th.Asynchronous__c) {
-                        hasAsync = true;
-                        break;
-                    }
-                }
-            }
-            return hasAsync;
-        }        
-        private set; 
     }
 
     /*******************************************************************************************************
@@ -115,6 +98,34 @@ public with sharing class STG_PanelTDTM_CTRL extends STG_Panel {
         }
         private set;
     } 
+
+    /*******************************************************************************************************
+    * @description Changes the page from view to edit mode (to create a new trigger handler).
+    * @return PageReference The page that it redirects to. Same page user was in, in this case.
+    */
+    public PageReference addPageMessages() {
+        // Display standard warning message
+        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Warning, Label.stgHelpTriggerHandlers));
+
+        // Display message if any async classes
+        boolean hasAsync = false;
+        List<Trigger_Handler__c> listTHDefault = TDTM_DefaultConfig.getDefaultRecords();
+        set<string> setClasses = new set<string>();
+        for (Trigger_Handler__c th : listTHDefault)
+            setClasses.add(th.Class__c);
+        
+        for (Trigger_Handler__c th : listTH) {
+            if (setClasses.contains(th.Class__c) && th.Asynchronous__c) {
+                hasAsync = true;
+                break;
+            }
+        }
+        if (hasAsync) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Warning, Label.stgHelpTriggerHandlersAsync));
+        }
+        return null;
+    }
+
     
     /*******************************************************************************************************
     * @description Changes the page from view to edit mode (to create a new trigger handler).
@@ -139,7 +150,7 @@ public with sharing class STG_PanelTDTM_CTRL extends STG_Panel {
 
         Savepoint sp = Database.setSavepoint();
         try {
-        	thNew.User_Managed__c = true;
+            thNew.User_Managed__c = true;
             insert thNew;
             isEditMode = false;
             listTH = null;
