@@ -1,36 +1,29 @@
 <apex:page controller="STG_PanelBDE_CTRL" >
-    <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavBDE}" />
-
-    <apex:form id="form" styleClass="form-horizontal">  
-        <apex:pageMessages id="pageMessages"/>
-        <apex:pageBlock mode="maindetail">
-            <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="button-block">
-                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
-            </apex:outputPanel>
-
-            <div class="form-group">
-                <apex:outputLabel value="{!$ObjectType.Batch_Data_Entry_Settings__c.Fields.Opportunity_Naming__c.Label}" for="cbxONC" styleClass="col-md-4 control-label" />
-                <div class="col-md-8 form-control-column">
-                    <apex:inputCheckbox value="{!stgService.stgBDE.Opportunity_Naming__c}" disabled="{!isReadOnlyMode}" id="cbxONC" />
-                </div>
-                <div class="col-md-offset-4 col-md-8 help-block">
-                    <apex:outputText value="{!$Label.stgHelpBDEOppNaming}" />
+    <apex:form id="form" styleClass="slds-m-around--x-large">
+        <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavBDE}" />
+        <c:UTIL_PageMessages />
+        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
+            <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+        </div>
+        <div class="slds-form--horizontal slds-m-around--large">
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.Batch_Data_Entry_Settings__c.Fields.Opportunity_Naming__c.Label}" for="cbxONC" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:inputCheckbox value="{!stgService.stgBDE.Opportunity_Naming__c}" disabled="{!isReadOnlyMode}" id="cbxONC" styleClass="slds-checkbox" />
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpBDEOppNaming}" />
                 </div>
             </div>
-            <div class="form-group">
-                <apex:outputLabel value="{!$ObjectType.Batch_Data_Entry_Settings__c.Fields.Allow_Blank_Opportunity_Names__c.Label}" for="cbxABON" styleClass="col-md-4 control-label" />
-                <div class="col-md-8 form-control-column">
-                    <apex:inputCheckbox value="{!stgService.stgBDE.Allow_Blank_Opportunity_Names__c}" disabled="{!isReadOnlyMode}" id="cbxABON" />
-                </div>
-                <div class="col-md-offset-4 col-md-8 help-block">
-                    <apex:outputText value="{!$Label.stgHelpBDEAllowBlankOppNames}" />
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.Batch_Data_Entry_Settings__c.Fields.Allow_Blank_Opportunity_Names__c.Label}" for="cbxABON" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:inputCheckbox value="{!stgService.stgBDE.Allow_Blank_Opportunity_Names__c}" disabled="{!isReadOnlyMode}" id="cbxABON" styleClass="slds-checkbox" />
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpBDEAllowBlankOppNames}" />
                 </div>
             </div>
-
-            <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="button-block">
-                <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
-                <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />
-            </apex:outputPanel>
-        </apex:pageBlock>
+        </div>
+        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
+            <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" immediate="false" rendered="{!isEditMode}" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+            <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" immediate="true" rendered="{!isEditMode}" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+        </div>
     </apex:form>
 </apex:page>

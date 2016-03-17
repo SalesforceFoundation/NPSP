@@ -1,45 +1,38 @@
 <apex:page controller="STG_PanelOppCampaignMembers_CTRL" >
-    <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgLabelOppCampMembers}" />
-
-    <apex:form id="form" styleClass="form-horizontal">   
-        <apex:pageMessages id="pageMessages"/>
-        <apex:pageBlock mode="maindetail">
-            <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="button-block">
-                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
-            </apex:outputPanel>
-            <div class="form-group">
-                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Automatic_Campaign_Member_Management__c.Label}" for="cbxACMM" styleClass="col-sm-4 control-label" />
-                <div class="col-sm-8 form-control-column">
-                    <apex:inputCheckbox value="{!stgService.stgCon.Automatic_Campaign_Member_Management__c}" disabled="{!isReadOnlyMode}" id="cbxACMM" />
-                 </div>
-                <div class="col-sm-offset-4 col-sm-8 help-block">
-                    <apex:outputText value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Automatic_Campaign_Member_Management__c.inlineHelpText}" />
+    <apex:form id="form" styleClass="slds-m-around--x-large">
+        <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgLabelOppCampMembers}" />
+        <c:UTIL_PageMessages />
+        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
+            <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" immediate="true" rendered="{!isReadOnlyMode}" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+        </div>
+        <div class="slds-form--horizontal slds-m-around--large">
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Automatic_Campaign_Member_Management__c.Label}" for="cbxACMM" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:inputCheckbox value="{!stgService.stgCon.Automatic_Campaign_Member_Management__c}" disabled="{!isReadOnlyMode}" id="cbxACMM" styleClass="slds-checkbox"/>
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Automatic_Campaign_Member_Management__c.inlineHelpText}" />
                 </div>
             </div>
-            <div class="form-group">
-                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Campaign_Member_Responded_Status__c.Label}" for="txtCMRS" styleClass="col-sm-4 control-label" />
-                <div class="col-sm-8 form-control-column">
-                    <apex:outputText value="{!stgService.stgCon.Campaign_Member_Responded_Status__c}" rendered="{!isReadOnlyMode}" />
-                    <apex:inputText value="{!stgService.stgCon.Campaign_Member_Responded_Status__c}" rendered="{!isEditMode}" id="txtCMRS" />
-                 </div>
-                <div class="col-sm-offset-4 col-sm-8 help-block">
-                    <apex:outputText value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Campaign_Member_Responded_Status__c.inlineHelpText}" />
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Campaign_Member_Responded_Status__c.Label}" for="txtCMRS" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:outputText value="{!stgService.stgCon.Campaign_Member_Responded_Status__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:inputText value="{!stgService.stgCon.Campaign_Member_Responded_Status__c}" rendered="{!isEditMode}" id="txtCMRS" styleClass="slds-input"/>
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Campaign_Member_Responded_Status__c.inlineHelpText}" />
                 </div>
             </div>
-            <div class="form-group">
-                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Campaign_Member_Non_Responded_Status__c.Label}" for="txtCMNRS" styleClass="col-sm-4 control-label" />
-                <div class="col-sm-8 form-control-column">
-                    <apex:outputText value="{!stgService.stgCon.Campaign_Member_Non_Responded_Status__c}" rendered="{!isReadOnlyMode}" />
-                    <apex:inputText value="{!stgService.stgCon.Campaign_Member_Non_Responded_Status__c}" rendered="{!isEditMode}" id="txtCMNRS" />
-                 </div>
-                <div class="col-sm-offset-4 col-sm-8 help-block">
-                    <apex:outputText value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Campaign_Member_Non_Responded_Status__c.inlineHelpText}" />
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Campaign_Member_Non_Responded_Status__c.Label}" for="txtCMNRS" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:outputText value="{!stgService.stgCon.Campaign_Member_Non_Responded_Status__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:inputText value="{!stgService.stgCon.Campaign_Member_Non_Responded_Status__c}" rendered="{!isEditMode}" id="txtCMNRS" styleClass="slds-input"/>
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Campaign_Member_Non_Responded_Status__c.inlineHelpText}" />
                 </div>
             </div>
-            <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="button-block">
-                <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
-                <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />
-            </apex:outputPanel>
-        </apex:pageBlock>
+        </div>
+        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
+            <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" immediate="false" rendered="{!isEditMode}" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+            <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" immediate="true" rendered="{!isEditMode}" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+        </div>
     </apex:form>
 </apex:page>

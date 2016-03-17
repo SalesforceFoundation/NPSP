@@ -1,113 +1,81 @@
 <apex:page controller="STG_PanelAllocations_CTRL" docType="html-5.0">
-    <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavAllocations}" />
     <style>
         input.lookupInput {
-            display: inline-block;
-            height: 34px;
-            padding: 6px 12px;
-            font-size: 14px;
-            line-height: 1.428571429;
-            color: #555555;
-            background-color: #ffffff;
+            background-color: white;
             background-image: none;
-            border: 1px solid #cccccc;
+            color: #16325c;
+            border: 1px solid #d8dde6;
             border-radius: 4px;
-            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-            -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
-            transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+            width: 100%;
+            -webkit-transition: border 0.1s linear, background-color 0.1s linear;
+            transition: border 0.1s linear, background-color 0.1s linear;
+            display: inline-block;
+            padding: 0 16px 0 12px;
+            line-height: 34px;
+            min-height: calc(34px + 2px);
+            line-height: normal;
+            margin-right: -30px;
         }
     </style>
-    <apex:form id="form" styleClass="form-horizontal">
-        <apex:pageBlock mode="maindetail">
-             <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="button-block">
-                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
-            </apex:outputPanel>
-            <section>
-                <h3 class="section-header" >{!$Label.stgLabelAllocationsRollupSettings}</h3>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Excluded_Opp_RecTypes__c.Label}" for="idDBMS" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgAllo}" fieldname="Excluded_Opp_RecTypes__c" listSO="{!listSOOppRecTypes}" inEditMode="{!isEditMode}" />
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpRollupExcludeAlloOppRecType}" />
-                    </div>
+    <apex:form id="form" styleClass="slds-m-around--x-large">
+        <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavAllocations}" />
+        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
+            <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+        </div>
+        <c:UTIL_PageMessages />
+        <div class="slds-section-title--divider" >{!$Label.stgLabelAllocationsRollupSettings}</div>
+        <div class="slds-form--horizontal">
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Excluded_Opp_RecTypes__c.Label}" for="idDBMS" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgAllo}" fieldname="Excluded_Opp_RecTypes__c" listSO="{!listSOOppRecTypes}" inEditMode="{!isEditMode}" />
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRollupExcludeAlloOppRecType}" />
                 </div>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Excluded_Opp_Types__c.Label}" for="idDBMS" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgAllo}" fieldname="Excluded_Opp_Types__c" listSO="{!listSOOppTypes}" inEditMode="{!isEditMode}" />
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpRollupExcludeAlloOppType}" />
-                    </div>
+            </div>
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Excluded_Opp_Types__c.Label}" for="idDBMS" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgAllo}" fieldname="Excluded_Opp_Types__c" listSO="{!listSOOppTypes}" inEditMode="{!isEditMode}" />
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRollupExcludeAlloOppType}" />
                 </div>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Rollup_N_Day_Value__c.Label}" for="tbxRNDV" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <apex:outputField value="{!stgService.stgAllo.Rollup_N_Day_Value__c}" rendered="{!isReadOnlyMode}" />
-                        <apex:inputfield value="{!stgService.stgAllo.Rollup_N_Day_Value__c}" type="number" rendered="{!isEditMode}" id="tbxRNDV" styleClass="form-control" />
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpAlloNDayValue}" />
-                    </div>
+            </div>
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Rollup_N_Day_Value__c.Label}" for="tbxRNDV" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:outputField value="{!stgService.stgAllo.Rollup_N_Day_Value__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:inputfield value="{!stgService.stgAllo.Rollup_N_Day_Value__c}" type="number" rendered="{!isEditMode}" id="tbxRNDV" styleClass="slds-input" />
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpAlloNDayValue}" />
                 </div>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Use_Fiscal_Year_for_Rollups__c.Label}" for="cbxUFYFR" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <apex:inputcheckbox value="{!stgService.stgAllo.Use_Fiscal_Year_for_Rollups__c}" disabled="{!isReadOnlyMode}" id="cbxUFYFR" />
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpAlloFiscalYearRollups}" />
-                    </div>
+            </div>
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Use_Fiscal_Year_for_Rollups__c.Label}" for="cbxUFYFR" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:inputcheckbox value="{!stgService.stgAllo.Use_Fiscal_Year_for_Rollups__c}" disabled="{!isReadOnlyMode}" id="cbxUFYFR" styleClass="slds-checkbox" />
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpAlloFiscalYearRollups}" />
                 </div>
-            </section>
-            <apex:pageMessages id="pageMessages"/>
-            <section>
-                <h3 class="section-header" >{!$Label.stgLabelAllocationsSettings}</h3>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Default_Allocations_Enabled__c.Label}" for="cbxDAE" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <apex:inputcheckbox value="{!stgService.stgAllo.Default_Allocations_Enabled__c}" disabled="{!isReadOnlyMode}" id="cbxDAE" />
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpDefaultAllocationsEnabled}" />
-                    </div>
+            </div>
+        </div>
+        <div class="slds-section-title--divider" >{!$Label.stgLabelAllocationsSettings}</div>
+        <div class="slds-form--horizontal">
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Default_Allocations_Enabled__c.Label}" for="cbxDAE" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:inputcheckbox value="{!stgService.stgAllo.Default_Allocations_Enabled__c}" disabled="{!isReadOnlyMode}" id="cbxDAE" styleClass="slds-checkbox"/>
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpDefaultAllocationsEnabled}" />
                 </div>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Default__c.Label}" for="inputDefaultGAU" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-4 col-sm-3 col-sm-1 form-control-column">
-                        <apex:outputText value="{!strDefaultGAUName}" rendered="{!isReadOnlyMode}" />
-                        <apex:inputfield value="{!allo.General_Accounting_Unit__c}" required="false" rendered="{!isEditMode}" id="inputDefaultGAU" styleClass="lookupInput" />
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpDefaultGAU}" />
-                    </div>
+            </div>
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Default__c.Label}" for="inputDefaultGAU" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:outputText value="{!strDefaultGAUName}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:inputfield value="{!allo.General_Accounting_Unit__c}" required="false" rendered="{!isEditMode}" id="inputDefaultGAU" styleClass="lookupInput" />
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpDefaultGAU}" />
                 </div>
-                <div class="col-sm-offset-1 col-sm-10">
-                    <apex:outputPanel rendered="{!isReadOnlyMode&&NOT(isRunningBatch)}" layout="block" styleClass="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">{!$Label.alloBatchCreateDefault}</h3>
-                        </div>
-                        <div class="panel-body" style="padding:15px;">                 
-                            <apex:outputText value="{!$Label.alloBatchDefaultInfo}" escape="false" />
-                            <div style="text-align:center;" class="form-control-column">
-                                <apex:commandButton value="{!$Label.stgBtnRunBatch}" status="statusLoad" action="{!runBatch}" disabled="{!NOT(stgService.stgAllo.Default_Allocations_Enabled__c)||ISNULL(stgService.stgAllo.Default__c)}" immediate="true" rerender="form" styleClass="btn-sm btn-default" rendered="{!isReadOnlyMode}"/>
-                            </div>
-                        </div>
-                    </apex:outputPanel>
-                    <apex:outputPanel rendered="{!isRunningBatch}">
-                        <c:UTIL_JobProgress strBatchComponentLabel="{!$Label.stgLabelAlloBatchProgress}" cNumberOfJobs="1" bRerenderOnComplete="true" />
-                    </apex:outputPanel>
-                </div>
-            </section>
-            <section>
-                <div class="btn-group col-sm-offset-4 col-sm-8">
-                    <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
-                    <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />
-                </div>
-            </section>
-        </apex:pageBlock>
+            </div>
+        </div>
+        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
+            <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+            <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+        </div>
     </apex:form>
 </apex:page>

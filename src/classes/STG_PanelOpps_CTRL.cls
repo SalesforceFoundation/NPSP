@@ -40,21 +40,6 @@ public with sharing class STG_PanelOpps_CTRL extends STG_Panel {
     */
     public override string idPanel() { return 'idPanelOpp'; }
 
-    /*********************************************************************************************************
-    * @description Whether we are running the batch opportunity naming process 
-    */
-    public boolean isRunningBatch { get; set; }
-
-    /*********************************************************************************************************
-    * @description Action Method to run batch opportunity renaming.
-    * @return null 
-    */
-    public PageReference runBatch() {
-        isRunningBatch = true;
-        id batchProcessId = database.executeBatch(new PMT_PaymentCreator_BATCH(), 200);
-        return null;
-    }
-
     /**
      * @description Get a list of the active closed/won opportunity stages
      * defined in this org.  This is for populating a select list in the
