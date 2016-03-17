@@ -4,6 +4,11 @@
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 
     <style type="text/css">
+        dt {
+            /* conflict with VF common.css bolding labels in page header */
+            font-weight: normal;
+        }
+
         #page-header-placeholder {
             position: relative;
         }
