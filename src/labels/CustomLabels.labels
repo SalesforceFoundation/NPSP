@@ -820,7 +820,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloBtnSaveAndClose</shortDescription>
-        <value>Save &amp; Close</value>
+        <value>Save</value>
     </labels>
     <labels>
         <fullName>alloCantAllocateNothing</fullName>
@@ -852,7 +852,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloDeleteRow</shortDescription>
-        <value>Delete Row</value>
+        <value>Delete</value>
     </labels>
     <labels>
         <fullName>alloExceedsOppAmount</fullName>
