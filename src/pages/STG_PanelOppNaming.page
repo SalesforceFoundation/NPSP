@@ -52,17 +52,27 @@
             <table class="slds-table slds-table--bordered" >
                 <thead>
                     <tr class="slds-text-heading--label">
-                        <th scope="col"><label class="slds-truncate">{!$Label.stgLabelActionColumn}</label></th>
-                        <th scope="col"><label class="slds-truncate">{!$ObjectType.Opportunity_Naming_Settings__c.Fields.Attribution__c.Label}</label></th>
-                        <th scope="col"><label class="slds-truncate">{!$ObjectType.Opportunity_Naming_Settings__c.Fields.Opportunity_Record_Types__c.Label}</label></th>
-                        <th scope="col"><label class="slds-truncate">{!$ObjectType.Opportunity_Naming_Settings__c.Fields.Opportunity_Name_Format__c.Label}</label></th>
-                        <th scope="col"><label class="slds-truncate">{!$ObjectType.Opportunity_Naming_Settings__c.Fields.Date_Format__c.Label}</label></th>
+                        <th scope="col" class="slds-cell-wrap">
+                            <label class="slds-truncate">{!$Label.stgLabelActionColumn}</label>
+                        </th>
+                        <th scope="col" class="slds-cell-wrap">
+                            <label class="slds-truncate">{!$ObjectType.Opportunity_Naming_Settings__c.Fields.Attribution__c.Label}</label>
+                        </th>
+                        <th scope="col" class="slds-cell-wrap">
+                            <label class="slds-truncate">{!$ObjectType.Opportunity_Naming_Settings__c.Fields.Opportunity_Record_Types__c.Label}</label>
+                        </th>
+                        <th scope="col" class="slds-cell-wrap">
+                            <label class="slds-truncate">{!$ObjectType.Opportunity_Naming_Settings__c.Fields.Opportunity_Name_Format__c.Label}</label>
+                        </th>
+                        <th scope="col" class="slds-cell-wrap">
+                            <label class="slds-truncate">{!$ObjectType.Opportunity_Naming_Settings__c.Fields.Date_Format__c.Label}</label>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
                     <apex:repeat var="ons" value="{!listOppNameSettings}" >
-                        <tr>
-                            <td>
+                        <tr class="slds-text-body--small">
+                            <td class="slds-cell-wrap">
                                 <apex:commandLink action="{!editONS}" title="{!$Label.stgBtnEdit}" oncomplete="window.initOppEditMode();" styleClass="actionLink" status="statusLoad" value="{!$Label.stgBtnEdit}" rerender="form" >
                                     <apex:param assignTo="{!currentONSName}" name="idEdit" value="{!ons.Name}" />
                                 </apex:commandLink>
@@ -71,10 +81,10 @@
                                     <apex:param assignTo="{!currentONSName}" name="idDelete" value="{!ons.Name}" />
                                 </apex:commandLink>
                             </td>
-                            <td><apex:outputField value="{!ons.Attribution__c}" styleClass="slds-form-element__static" /></td>
-                            <td><apex:outputField value="{!ons.Opportunity_Record_Types__c}" styleClass="slds-form-element__static" /></td>
-                            <td><apex:outputField value="{!ons.Opportunity_Name_Format__c}" styleClass="slds-form-element__static" /></td>
-                            <td><apex:outputField value="{!ons.Date_Format__c}" styleClass="slds-form-element__static" /></td>
+                            <td class="slds-cell-wrap"><apex:outputField value="{!ons.Attribution__c}" /></td>
+                            <td class="slds-cell-wrap"><apex:outputField value="{!ons.Opportunity_Record_Types__c}" /></td>
+                            <td class="slds-cell-wrap"><apex:outputField value="{!ons.Opportunity_Name_Format__c}" /></td>
+                            <td class="slds-cell-wrap"><apex:outputField value="{!ons.Date_Format__c}" /></td>
                         </tr>
                     </apex:repeat>
                </tbody>
