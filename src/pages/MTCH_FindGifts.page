@@ -1,28 +1,6 @@
 <apex:page standardController="Opportunity" extensions="MTCH_FindGifts_CTRL" standardStylesheets="false">
     <apex:stylesheet value="{!URLFOR($Resource.SLDS, 'assets/styles/salesforce-lightning-design-system-vf.css')}" />
-
-    <style>
-        html body.sfdcBody {
-            padding: 0;
-        }
-
-        input.lookupInput {
-            background-color: white;
-            background-image: none;
-            color: #16325c;
-            border: 1px solid #d8dde6;
-            border-radius: 4px;
-            width: 100%;
-            -webkit-transition: border 0.1s linear, background-color 0.1s linear;
-            transition: border 0.1s linear, background-color 0.1s linear;
-            display: inline-block;
-            padding: 0 16px 0 12px;
-            line-height: 34px;
-            min-height: calc(34px + 2px);
-            line-height: normal;
-            margin-right: -30px;
-        }        
-    </style>
+    <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 
     <script>        
         // show or hide the modal search popup

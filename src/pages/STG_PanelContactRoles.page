@@ -1,159 +1,115 @@
 <apex:page controller="STG_PanelContactRoles_CTRL" >
-    <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavContactRoles}" />
-
-    <apex:form id="form" styleClass="form-horizontal">   
-        <apex:pageMessages id="pageMessages"/>
-        <apex:pageBlock mode="maindetail">
-            <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="button-block">
-                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
-            </apex:outputPanel>
-
-            <section>
-                <h3 class="section-header">{!$Label.stgLabelAutoContactRoles}</h3>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Opportunity_Contact_Role_Default_role__c.Label}" for="slOCRDR" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <apex:outputField value="{!stgService.stgCon.npe01__Opportunity_Contact_Role_Default_role__c}" rendered="{!isReadOnlyMode}" />
-                        <apex:selectList value="{!stgService.stgCon.npe01__Opportunity_Contact_Role_Default_role__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slOCRDR" styleClass="form-control" >
-                            <apex:selectOptions value="{!listSOContactRoles}"/>
-                        </apex:selectList>
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpOCRDefaultRole}" />
-                    </div>
+    <apex:form id="form" styleClass="slds-m-around--x-large">
+        <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavContactRoles}" />
+        <c:UTIL_PageMessages />
+        
+        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
+            <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" immediate="true" rendered="{!isReadOnlyMode}" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+        </div>
+        <div class="slds-section-title--divider">{!$Label.stgLabelAutoContactRoles}</div>
+        <div class="slds-form--horizontal slds-m-around--large">
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Opportunity_Contact_Role_Default_role__c.Label}" for="slOCRDR" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:outputField value="{!stgService.stgCon.npe01__Opportunity_Contact_Role_Default_role__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:selectList value="{!stgService.stgCon.npe01__Opportunity_Contact_Role_Default_role__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slOCRDR" styleClass="slds-select" >
+                        <apex:selectOptions value="{!listSOContactRoles}"/>
+                    </apex:selectList>
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpOCRDefaultRole}" />
                 </div>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Always_Rollup_to_Primary_Contact__c.Label}" for="cbxARPC" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <apex:inputcheckbox value="{!stgService.stgHH.npo02__Always_Rollup_to_Primary_Contact__c}" disabled="{!isReadOnlyMode}" id="cbxARPC" />
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpRollupPrimaryContact}" />
-                    </div>
-                </div>
-            </section>
-            <section>
-                <h3 class="section-header" >{!$Label.stgLabelSoftCredit}</h3>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Enable_Soft_Credit_Rollups__c.Label}" for="cbxESCR" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <apex:inputcheckbox value="{!stgService.stgHH.npo02__Enable_Soft_Credit_Rollups__c}" disabled="{!isReadOnlyMode}" id="cbxESCR" />
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpEnableSoftCreditRollups}" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Soft_Credit_Roles__c.Label}" for="idDBMS" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Soft_Credit_Roles__c" listSO="{!listSOOppContactRoles}" inEditMode="{!isEditMode}" />
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpSoftCreditRoles}" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.Matched_Donor_Role__c.Label}" for="idDBMS" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <apex:outputField value="{!stgService.stgHH.Matched_Donor_Role__c}" rendered="{!isReadOnlyMode}" />
-                        <apex:selectList value="{!stgService.stgHH.Matched_Donor_Role__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slMDR" styleClass="form-control" >
-                            <apex:selectOptions value="{!listSOContactRoles}"/>
-                        </apex:selectList>
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpMatchedDonorRole}" />
-                    </div>
-                </div>
-            </section>
-            <section>
-                <h3 class="section-header">{!$Label.stgLabelHHOCR}</h3>            
-                <p class="section-help">{!$Label.npo02__Household_Contact_Roles_Help_Text}</p>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Contact_Roles_On__c.Label}" for="cbxHCRO" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <apex:inputCheckbox value="{!stgService.stgHH.npo02__Household_Contact_Roles_On__c}" disabled="{!isReadOnlyMode}" id="cbxHCRO" />
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpHHOCROn}" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Member_Contact_Role__c.Label}" for="slHMCR" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <apex:outputField value="{!stgService.stgHH.npo02__Household_Member_Contact_Role__c}" rendered="{!isReadOnlyMode}" />
-                        <apex:selectList value="{!stgService.stgHH.npo02__Household_Member_Contact_Role__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slHMCR" styleClass="form-control" >
-                            <apex:selectOptions value="{!listSOOppContactRoles}"/>
-                        </apex:selectList>
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpOCRRoleForHH}" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_OCR_Excluded_Recordtypes__c.Label}" for="idDBMS" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Household_OCR_Excluded_Recordtypes__c" listSO="{!listSOContactRecTypes}" inEditMode="{!isEditMode}" />
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpContactRTExcluded}" />
-                    </div>
-                </div>
-            </section>
-            <!-- Honoree and Notification Recipient Contact Roles -->
-            <section>
-                <h3 class="section-header">{!$Label.stgLabelHonoreeNotificationOCR}</h3>            
-                <p class="section-help">{!$Label.stgLabelHonoreeNotificationHelpText}</p>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Honoree_Opportunity_Contact_Role__c.Label}" for="slHonoreeRole" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <apex:outputField value="{!stgService.stgCon.Honoree_Opportunity_Contact_Role__c}" rendered="{!isReadOnlyMode}" />
-                        <apex:selectList value="{!stgService.stgCon.Honoree_Opportunity_Contact_Role__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slHonoreeRole" styleClass="form-control" >
-                            <apex:selectOptions value="{!listSOOppContactRoles}"/>
-                        </apex:selectList>
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Honoree_Opportunity_Contact_Role__c.inlineHelpText}" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Notification_Recipient_Opp_Contact_Role__c.Label}" for="slNotificationRecipientRole" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <apex:outputField value="{!stgService.stgCon.Notification_Recipient_Opp_Contact_Role__c}" rendered="{!isReadOnlyMode}" />
-                        <apex:selectList value="{!stgService.stgCon.Notification_Recipient_Opp_Contact_Role__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slNotificationRecipientRole" styleClass="form-control" >
-                            <apex:selectOptions value="{!listSOOppContactRoles}"/>
-                        </apex:selectList>
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Notification_Recipient_Opp_Contact_Role__c.inlineHelpText}" />
-                    </div>
-                </div>
-            </section>
-            <!-- Batch Opportunity Naming -->
-            <div class="col-sm-offset-1 col-sm-10" style="margin-top:50px">
-                <apex:outputPanel rendered="{!isReadOnlyMode && NOT(IsRunningBatch)}" layout="block" styleClass="panel panel-danger">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">{!$Label.stgLabelOppUpdatePrimaryContact}</h3>
-                    </div>
-                    <div class="panel-body" style="padding:15px;">                 
-                        <apex:outputText value="{!$Label.stgHelpPrimaryContactBatch}" escape="false" />
-                        <div style="text-align:center;" class="form-control-column">
-                            <apex:commandbutton value="{!$Label.stgBtnRefreshPrimaryContacts}" status="statusLoad" action="{!runBatch}" rendered="{!isReadOnlyMode}" immediate="false" rerender="form" styleClass="btn btn-sm btn-danger"/>
-                        </div>
-                    </div>
-                </apex:outputPanel>
             </div>
-            <!-- Batch Progress Bar -->
-            <div class="col-sm-offset-1 col-sm-10" style="margin-top:10px">
-                <apex:outputPanel rendered="{!isRunningBatch}">
-                    <br/><br/>
-                    <c:UTIL_JobProgress strBatchComponentLabel="{!$Label.stgLabelOppPrimaryContactTitle}" cNumberOfJobs="1" bRerenderOnComplete="true" />
-                    <br/>
-                </apex:outputPanel>
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Always_Rollup_to_Primary_Contact__c.Label}" for="cbxARPC" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:inputcheckbox value="{!stgService.stgHH.npo02__Always_Rollup_to_Primary_Contact__c}" disabled="{!isReadOnlyMode}" id="cbxARPC" styleClass="slds-checkbox"/>
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRollupPrimaryContact}" />
+                </div>
             </div>
-            <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="button-block">
-                <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
-                <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />
-            </apex:outputPanel>
-        </apex:pageBlock>
+        </div>
+        <div class="slds-section-title--divider" >{!$Label.stgLabelSoftCredit}</div>
+        <div class="slds-form--horizontal slds-m-around--large">
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Enable_Soft_Credit_Rollups__c.Label}" for="cbxESCR" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:inputcheckbox value="{!stgService.stgHH.npo02__Enable_Soft_Credit_Rollups__c}" disabled="{!isReadOnlyMode}" id="cbxESCR" styleClass="slds-checkbox"/>
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpEnableSoftCreditRollups}" />
+                </div>
+            </div>
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Soft_Credit_Roles__c.Label}" for="idDBMS" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Soft_Credit_Roles__c" listSO="{!listSOOppContactRoles}" inEditMode="{!isEditMode}" />
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpSoftCreditRoles}" />
+                </div>
+            </div>
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.Matched_Donor_Role__c.Label}" for="slMDR" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:outputField value="{!stgService.stgHH.Matched_Donor_Role__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:selectList value="{!stgService.stgHH.Matched_Donor_Role__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slMDR" styleClass="slds-select" >
+                        <apex:selectOptions value="{!listSOContactRoles}"/>
+                    </apex:selectList>
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpMatchedDonorRole}" />
+                </div>
+            </div>
+        </div>
+        <!-- Household Opportunity Contact Roles -->
+        <div class="slds-section-title--divider">{!$Label.stgLabelHHOCR}</div>
+        <p class="slds-text-body--small">{!$Label.npo02__Household_Contact_Roles_Help_Text}</p>
+        <div class="slds-form--horizontal slds-m-around--large">
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Contact_Roles_On__c.Label}" for="cbxHCRO" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:inputCheckbox value="{!stgService.stgHH.npo02__Household_Contact_Roles_On__c}" disabled="{!isReadOnlyMode}" id="cbxHCRO" styleClass="slds-checkbox" />
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpHHOCROn}" />
+                </div>
+            </div>
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Member_Contact_Role__c.Label}" for="slHMCR" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:outputField value="{!stgService.stgHH.npo02__Household_Member_Contact_Role__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:selectList value="{!stgService.stgHH.npo02__Household_Member_Contact_Role__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slHMCR" styleClass="slds-select" >
+                        <apex:selectOptions value="{!listSOOppContactRoles}"/>
+                    </apex:selectList>
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpOCRRoleForHH}" />
+                </div>
+            </div>
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_OCR_Excluded_Recordtypes__c.Label}" for="idDBMS" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Household_OCR_Excluded_Recordtypes__c" listSO="{!listSOContactRecTypes}" inEditMode="{!isEditMode}" />
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpContactRTExcluded}" />
+                </div>
+            </div>
+        </div>
+        <!-- Honoree and Notification Recipient Contact Roles -->
+        <div class="slds-section-title--divider">{!$Label.stgLabelHonoreeNotificationOCR}</div>
+        <p class="slds-text-body--small">{!$Label.stgLabelHonoreeNotificationHelpText}</p>
+        <div class="slds-form--horizontal slds-m-around--large">
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Honoree_Opportunity_Contact_Role__c.Label}" for="slHonoreeRole" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:outputField value="{!stgService.stgCon.Honoree_Opportunity_Contact_Role__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:selectList value="{!stgService.stgCon.Honoree_Opportunity_Contact_Role__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slHonoreeRole" styleClass="slds-select" >
+                        <apex:selectOptions value="{!listSOOppContactRoles}"/>
+                    </apex:selectList>
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Honoree_Opportunity_Contact_Role__c.inlineHelpText}" />
+                </div>
+            </div>
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Notification_Recipient_Opp_Contact_Role__c.Label}" for="slNotificationRecipientRole" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:outputField value="{!stgService.stgCon.Notification_Recipient_Opp_Contact_Role__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:selectList value="{!stgService.stgCon.Notification_Recipient_Opp_Contact_Role__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slNotificationRecipientRole" styleClass="slds-select" >
+                        <apex:selectOptions value="{!listSOOppContactRoles}"/>
+                    </apex:selectList>
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Notification_Recipient_Opp_Contact_Role__c.inlineHelpText}" />
+                </div>
+            </div>
+        </div>
+        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
+            <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+            <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+        </div>
     </apex:form>
 </apex:page>

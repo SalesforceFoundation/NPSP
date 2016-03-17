@@ -1,88 +1,64 @@
 <apex:page controller="STG_SettingsManager_CTRL" >
-
-<style>
-    .bootstrap .container .jumbotron {
-        background-color: #f0f1f2;
-        padding: 20px;
-    }
-    
-    .bootstrap .jumbotron p.fineprint {
-        font-size: 14px;
-    }
-    
-    .bootstrap .panel-body {
-        padding: 0px;
-    }
-    
-</style>
-
-
     <!-- HEADER -->
-    <div class="jumbotron">
-        <div class="row">
-            <div class="col-sm-9 col-xs-12">
-                <h3>Nonprofit Starter Pack Application Settings</h3>
+    <div class="slds-m-around--x-large slds-p-bottom--large slds-col-rule--bottom">
+        <div class="slds-media slds-media--center slds-media--responsive">
+            <div class="slds-media__body">
+                <h3 class="slds-text-heading--large slds-m-bottom--large">Nonprofit Starter Pack Application Settings</h3>
                 <p>Customize how the Nonprofit Starter Pack works for your organization.</p>
-                <p class="fineprint">Looking to customize page layouts, add fields, or add users?  Try the <a href="/setup/forcecomHomepage.apexp?setupid=ForceCom" target="_blank">Salesforce Setup</a> pages.</p>
+                <p class="slds-text-body--small slds-m-top--x-small">Looking to customize page layouts, add fields, or add users?  Try the <a href="/setup/forcecomHomepage.apexp?setupid=ForceCom" target="_blank">Salesforce Setup</a> pages.</p>
             </div>
-            <div class="col-sm-3 col-xs-12" >
-                <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/NPSP_Logo_Small.png')}" class="img-rounded img-responsive" />
+            <div class="slds-media__figure slds-media__figure--reverse">
+                <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/NPSP_Logo_Small_Cropped.png')}" class="img-rounded img-responsive" style="height: 75px" alt="NPSP Logo"/>
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-8">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Getting Started</h3>
-                </div>
-                <div class="panel-body">
-                    <div class="col-sm-5">
-                        <h4><img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/hub-logo.png')}" alt="Power of Us Hub" /></h4>
-                        <p>Got questions? Got answers? Join the <a href="https://powerofus.force.com/HUB_System_Admin_Group" target="_blank">System Administrators</a> group in the <a href="https://powerofus.force.com/" title="Power of Us Hub" target="_blank">Power of Us Hub</a>!</p>
-                    </div>
 
-                    <div class="col-sm-7">
-                        <!-- we don't have this content yet!!
-                        <h4 class="h5">Recommended Reading</h4>
-                        <ul>
-                            <li><a href="">Upgrading to NPSP 3.0</a></li
-                        </ul>
-                         -->
-                        
-                        <h4 class="h5">Salesforce Documentation &amp; Quick Starts</h4>
-                        <ul class="list-unstyled">
-                            <li><a href="https://powerofus.force.com/SF_Getting_Started_Guide" target="_blank" >Getting Started Implementation Guide</a></li>
-                            <li><a href="https://powerofus.force.com/SF_Managing_Users_Guide" target="_blank" >Adding and Managing Users Quick Start</a></li>
-                            <li><a href="https://powerofus.force.com/SF_Importing_Data_Quick_Start" target="_blank" >Importing Data Quick Start</a></li>
-                        </ul>
-                    </div>
+    <div class="slds-grid">
+        <div class="slds-col--padded slds-size--4-of-12">
+            <div class="slds-text-heading--medium slds-m-bottom--medium">
+                Quick Starts
+            </div>
+            <ul>
+                <li><a href="https://powerofus.force.com/SF_Getting_Started_Guide" target="_blank" >Getting Started Implementation Guide</a></li>
+                <li><a href="https://powerofus.force.com/SF_Managing_Users_Guide" target="_blank" >Adding and Managing Users Quick Start</a></li>
+                <li><a href="https://powerofus.force.com/SF_Importing_Data_Quick_Start" target="_blank" >Importing Data Quick Start</a></li>
+            </ul>
+        </div>
+        <div class="slds-col--padded slds-size--4-of-12">
+            <div class="slds-text-heading--medium slds-m-bottom--medium">
+                Power of Us Hub
+            </div>
+            <div class="slds-media slds-media--center">
+                <div class="slds-media__figure">
+                    <a href="https://powerofus.force.com/" title="Power of Us Hub" target="_blank"><img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/hub-logo.png')}" alt="Power of Us Hub" /></a>
+                </div>
+                <div class="slds-media__body">
+                    <p>Got questions? Got answers? Join the <a href="https://powerofus.force.com/HUB_System_Admin_Group" target="_blank">System Administrators</a> group in the <a href="https://powerofus.force.com/" title="Power of Us Hub" target="_blank">Power of Us Hub</a>!</p>
                 </div>
             </div>
         </div>
-       <div class="col-md-4">                                            
-           <div class="panel panel-default">
-               <div class="panel-heading">
-                   <h3 class="panel-title">Quick Links</h3>
-               </div>
-               <div class="panel-body">
-                   <div class="col-sm-12">
-                        <h4 class="h5">Tools</h4>
-                        <ul class="list-unstyled">
-                            <li><img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/stethoscope.png')}" style="float:left; padding-right:10px;" alt="Health Check" />
-                       Use <a href="." onclick="ShowPanel('idPanelHealthCheck');return false;">Health Check</a> to verify your NPSP configuration!</li>
-                            <li><a href="." onclick="ShowPanel('idPanelOppBatch');return false;">Batch rollup donations</a></li>
-                            <li><a href="." onclick="ShowPanel('idPanelErrorLog');return false;">Error logs</a></li>
-                        </ul>
-    
-                        <h4 class="h5">Documentation</h4>
-                        <ul class="list-unstyled">
-                            <li><a href="https://powerofus.force.com/NPSP_Release_Notes" target="_blank" >NPSP 3.0 Release Notes</a></li>
-                            <li><a href="https://powerofus.force.com/NPSP_Documentation" target="_blank" >NPSP 3.0 Documentation</a></li>
-                        </ul>
-                    </div>
+        <div class="slds-col--padded slds-size--4-of-12">
+            <h3 class="slds-text-heading--medium slds-m-bottom--medium">
+                Quick Links
+            </h3>
+            <div>
+                <div class="slds-text-heading--small slds-m-bottom--small">
+                    Documentation
                 </div>
-            </div>                
+                <ul>
+                    <li><a href="https://powerofus.force.com/NPSP_Documentation" target="_blank" >NPSP 3.0 Documentation</a></li>
+                    <li><a href="https://powerofus.force.com/NPSP_Release_Notes" target="_blank" >NPSP 3.0 Release Notes</a></li>
+                </ul>
+                <div class="slds-text-heading--small slds-m-bottom--small slds-m-top--small">
+                    Tools
+                </div>
+                <ul>
+                    <li><img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/stethoscope.png')}" style="float:left; padding-right:10px;" alt="Health Check" />
+                    Use <a href="." onclick="ShowPanel('idPanelHealthCheck');return false;">Health Check</a> to verify your NPSP configuration!</li>
+                    <li><a href="." onclick="ShowPanel('idPanelOppBatch');return false;">Batch rollup donations</a></li>
+                    <li><a href="." onclick="ShowPanel('idPanelErrorLog');return false;">Error logs</a></li>
+                </ul>
+            </div>
         </div>
     </div>
 </apex:page>
