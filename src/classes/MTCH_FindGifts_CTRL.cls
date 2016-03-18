@@ -91,7 +91,8 @@ public with sharing class MTCH_FindGifts_CTRL {
                         WHERE ((Matching_Gift__c = null AND StageName IN :closedWonStages AND Account.Name = :opp.Account.Name AND (Matching_Gift_Status__c = 'Potential' or Matching_Gift_Status__c = 'Submitted')) 
                         OR (Matching_Gift__c = null AND StageName IN :closedWonStages AND Matching_Gift_Account__r.Name = :opp.Account.Name AND (Matching_Gift_Status__c = 'Potential' or Matching_Gift_Status__c = 'Submitted')) 
                         OR Matching_Gift__c = :opp.Id)
-                        AND Id != :opp.Id ORDER BY Name];
+                        AND Id != :opp.Id 
+                        ORDER BY Name];
         selection = new Map<Id, Boolean>();
         for (Opportunity o : potentialGifts){
             if (o.Matching_Gift__c == opp.Id){
