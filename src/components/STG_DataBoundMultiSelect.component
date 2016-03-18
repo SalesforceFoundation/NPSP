@@ -6,8 +6,8 @@
     <apex:attribute name="inEditMode" type="boolean" assignTo="{!isEditMode}" description="whether to display the edit version or readonly version of the control."/>
     <apex:attribute name="inDisabledMode" type="boolean" assignTo="{!isDisabled}" description="whether the control is enabled or disabled."/>
 
-                <apex:outputText value="{!strValues}" rendered="{!!isEditMode}" />
-                <apex:selectList value="{!listStrValues}" multiselect="true" size="5" rendered="{!isEditMode}" disabled="{!isDisabled}" id="idDBMS" styleClass="form-control">
+                <apex:outputText value="{!strValues}" rendered="{!NOT(isEditMode)}" styleClass="slds-form-element__static"/>
+                <apex:selectList value="{!listStrValues}" multiselect="true" size="5" rendered="{!isEditMode}" disabled="{!isDisabled}" id="idDBMS" styleClass="slds-select">
                     <apex:selectOptions value="{!listSelectOption}"/>
                 </apex:selectList>
 

@@ -1,89 +1,58 @@
 <apex:page controller="STG_PanelOpps_CTRL" docType="html-5.0">
-    <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavPayments}" />
-
-    <apex:form id="form" styleClass="form-horizontal"> 
-        <apex:pageMessages id="pageMessages"/>
-        <apex:pageBlock mode="maindetail">
-            <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="button-block">
-                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
+    <apex:form id="form" styleClass="slds-m-around--x-large">
+        <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavPayments}" />
+        <c:UTIL_PageMessages />
+        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
+            <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="slds-button-group">
+                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
             </apex:outputPanel>
-
-            <div class="form-group">
-                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Payments_Enabled__c.Label}" for="cbxPE" styleClass="col-sm-4 control-label" />
-                <div class="col-sm-8 form-control-column">
+        </div>
+        <div class="slds-form--horizontal slds-m-around--large">
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Payments_Enabled__c.Label}" for="cbxPE" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
                     <apex:inputCheckbox value="{!stgService.stgCon.npe01__Payments_Enabled__c}" disabled="{!isReadOnlyMode}" id="cbxPE" />
-                </div>
-                <div class="col-sm-offset-4 col-sm-8 help-block">
-                    <apex:outputText value="{!$Label.stgHelpPaymentsEnabled}" />
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpPaymentsEnabled}" />
                 </div>
             </div>
-            <div class="form-group">
-                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Max_Payments__c.Label}" for="cbxMP" styleClass="col-sm-4 control-label" />
-                <div class="col-sm-8 form-control-column">
-                    <apex:outputField value="{!stgService.stgCon.Max_Payments__c}" rendered="{!isReadOnlyMode}" />                          
-                    <apex:inputField value="{!stgService.stgCon.Max_Payments__c}" type="number" rendered="{!isEditMode}" id="cbxMP" styleClass="form-control" />                          
-                </div>
-                <div class="col-sm-offset-4 col-sm-8 help-block">
-                    <apex:outputText value="{!$Label.stgHelpMaxPayments}" />
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Max_Payments__c.Label}" for="cbxMP" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:outputField value="{!stgService.stgCon.Max_Payments__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:inputField value="{!stgService.stgCon.Max_Payments__c}" type="number" rendered="{!isEditMode}" id="cbxMP" styleClass="slds-input" />
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpMaxPayments}" />
                 </div>
             </div>
-            <div class="form-group">
-                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Opp_RecTypes_Excluded_for_Payments__c.Label}" for="idDBMS" styleClass="col-sm-4 control-label" />
-                <div class="col-sm-8 form-control-column">
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Opp_RecTypes_Excluded_for_Payments__c.Label}" for="idDBMS" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
                     <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgCon}" fieldname="Opp_RecTypes_Excluded_for_Payments__c" listSO="{!listSOOppRecTypes}" inEditMode="{!isEditMode}" />
-                </div>
-                <div class="col-sm-offset-4 col-sm-8 help-block">
-                    <apex:outputText value="{!$Label.stgHelpOppRecTypesNoPayments}" />
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpOppRecTypesNoPayments}" />
                 </div>
             </div>
-            <div class="form-group">
-                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Opp_Types_Excluded_for_Payments__c.Label}" for="idDBMS" styleClass="col-sm-4 control-label" />
-                <div class="col-sm-8 form-control-column">
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Opp_Types_Excluded_for_Payments__c.Label}" for="idDBMS" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
                     <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgCon}" fieldname="Opp_Types_Excluded_for_Payments__c" listSO="{!listSOOppTypes}" inEditMode="{!isEditMode}" />
-                </div>
-                <div class="col-sm-offset-4 col-sm-8 help-block">
-                    <apex:outputText value="{!$Label.stgHelpOppTypesNoPayments}" />
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpOppTypesNoPayments}" />
                 </div>
             </div>
-            <div class="form-group">
-                <apex:outputlabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Payments_Auto_Close_Stage_Name__c.Label}" for="slCS" styleClass="col-sm-4 control-label" />
-                <div class="col-sm-8 form-control-column">
-                    <apex:outputField value="{!stgService.stgCon.Payments_Auto_Close_Stage_Name__c}" rendered="{!isReadOnlyMode}" />
-                    <apex:selectList value="{!stgService.stgCon.Payments_Auto_Close_Stage_Name__c}" size="1" rendered="{!isEditMode}" id="slCS" styleClass="form-control">
+            <div class="slds-form-element">
+                <apex:outputlabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Payments_Auto_Close_Stage_Name__c.Label}" for="slCS" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:outputField value="{!stgService.stgCon.Payments_Auto_Close_Stage_Name__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:selectList value="{!stgService.stgCon.Payments_Auto_Close_Stage_Name__c}" size="1" rendered="{!isEditMode}" id="slCS" styleClass="slds-select">
                         <apex:selectOptions value="{!opportunityClosedWonStages}" />
                     </apex:selectList>
-                </div>
-                <div class="col-sm-offset-4 col-sm-8 help-block">
-                    <apex:outputText value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Payments_Auto_Close_Stage_Name__c.InlineHelpText}" />
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Payments_Auto_Close_Stage_Name__c.InlineHelpText}" />
                 </div>
             </div>
-            
-            <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="button-block">
-                <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
-                <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />
-            </apex:outputPanel>            
-            <!-- Batch Opportunity Naming -->
-            <div class="col-sm-offset-1 col-sm-10" style="margin-top:50px">
-                <apex:outputPanel rendered="{!isReadOnlyMode && NOT(IsRunningBatch)}" layout="block" styleClass="panel panel-danger">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">{!$Label.stgLabelCreateMissingPayments}</h3>
-                    </div>
-                    <div class="panel-body" style="padding:15px;">                 
-                        <apex:outputText value="{!$Label.stgHelpCreateMissingPayments}" escape="false" />
-                        <div style="text-align:center;" class="form-control-column">
-                            <apex:commandbutton value="{!$Label.stgLabelCreateMissingPayments}" status="statusLoad" action="{!runBatch}" rendered="{!isReadOnlyMode}" immediate="false" rerender="form" styleClass="btn btn-sm btn-danger"/>
-                        </div>
-                    </div>
-                </apex:outputPanel>
-            </div>
-            <!-- Batch Progress Bar -->
-            <div class="col-sm-offset-1 col-sm-10" style="margin-top:10px">
-                <apex:outputPanel rendered="{!isRunningBatch}">
-                    <br/><br/>
-                    <c:UTIL_JobProgress strBatchComponentLabel="{!$Label.stgLabelCreateMissingPayments}" cNumberOfJobs="1" bRerenderOnComplete="true" />
-                    <br/>
-                </apex:outputPanel>
-            </div>
-        </apex:pageBlock>
+        </div>
+        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
+            <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="slds-button-group">
+                <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+                <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+            </apex:outputPanel>
+        </div>
     </apex:form>
 </apex:page>

@@ -38,47 +38,19 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
     /*********************************************************************************************************
     * @description The panel's constructor 
     */
-	public STG_PanelHouseholds_CTRL() {
-		isRunningBatch = false;
-	}
+	public STG_PanelHouseholds_CTRL() {}
 	    
     /*********************************************************************************************************
     * @description Returns the string Id of the Households panel. 
     */
     public override string idPanel() { return 'idPanelHH'; }
 
-    /*********************************************************************************************************
-    * @description Whether we are running the Update Household Names batch process 
-    */
-    public boolean isRunningBatch { get; set; }
-
-    /*********************************************************************************************************
-    * @description Action Method to save settings and invoke the Update Household Names batch process 
-    * @return null
-    */
-    public PageReference activateHouseholdNaming() {
-        boolean isActivation = (UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c == false);
-                
-        STG_Panel.stgService.stgHH.npo02__Advanced_Household_Naming__c = true;
-
-        // make sure any custom name formats are valid.
-		if (!isValidNameFormats()) {
-			return null;        			
-		}
-
-        saveSettings();
-        
-        isRunningBatch = true; 
-        HH_HouseholdNaming.refreshAllHouseholdNaming(isActivation);        
-        return null;
-    }
 
     /*********************************************************************************************************
     * @description Action Method to enter Edit mode
     * @return null 
     */
     public override PageReference editSettings() {
-        isRunningBatch = false;
         return super.editSettings();
     }
     

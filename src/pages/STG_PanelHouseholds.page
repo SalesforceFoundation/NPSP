@@ -1,8 +1,8 @@
-<apex:page controller="STG_PanelHouseholds_CTRL" >
+<apex:page controller="STG_PanelHouseholds_CTRL" docType="html-5.0" standardStylesheets="false">
 
 <script type="text/javascript">
     var strCurrentFormat = '';
-    
+
     // update all our examples strings
     function setExamples() {
        getExampleName(1);
@@ -11,7 +11,7 @@
        getExampleName(4);
        getExampleName(5);
     }
-    
+
     // get the example name for the supplied number of contacts.
     function getExampleName(cCon) {
         // if we have no current format, clear out the example.
@@ -20,7 +20,7 @@
             document.getElementById('example'+cCon).innerHTML = '';
             return;
         }
-        
+
         // create a Household Naming Settings object
         // we always just use the Household_Name_Format__c field for the current format string.
         var hns = { };
@@ -30,73 +30,73 @@
         hns.Name_Overrun__c = j$("[id$='txtOverrun']").val();
         hns.Contact_Overrun_Count__c = parseInt(j$("[id$='txtOverrunCount']").val());
         if (hns.Contact_Overrun_Count__c == '') hns.Contact_Overrun_Count__c = 0;
-    
+
         Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.STG_PanelHouseholds_CTRL.strNameSpecExample}', hns, 'Household_Name_Format__c', cCon, 
+            '{!$RemoteAction.STG_PanelHouseholds_CTRL.strNameSpecExample}', hns, 'Household_Name_Format__c', cCon,
             function(result, event) {
                 if (event.status) {
                     document.getElementById('example'+cCon).innerHTML = result;
                 } else {
                     document.getElementById('example'+cCon).innerHTML = event.message;
                 }
-            }, 
+            },
             {escape: true}
         );
     }
 
     // called when the user changes an option in the selectlist (or it gets the focus)
-    // set's the format to the current control's value, and refreshes the example strings.    
+    // set's the format to the current control's value, and refreshes the example strings.
     function setNameSpec(sl, idTxt, strLabel) {
         var strFormat = sl.value;
-        //var nslabel = sl.item(sl.selectedIndex).text;        
+        //var nslabel = sl.item(sl.selectedIndex).text;
         if (strFormat == '{!$Label.stgLabelOther}') {
             j$("[id$='" + idTxt + "']").show();
-            strFormat = j$("[id$='" + idTxt + "']").val();    
+            strFormat = j$("[id$='" + idTxt + "']").val();
         } else if (idTxt != null) {
-            j$("[id$='" + idTxt + "']").hide();    
+            j$("[id$='" + idTxt + "']").hide();
             j$("[id$='" + idTxt + "']").val(strFormat);
         }
         strCurrentFormat = strFormat;
         document.getElementById('lblExamples').innerHTML = strLabel;
         setExamples();
     }
-    
+
     // initialize the format selectlists in case they need to display other,
     // and set our examples, when the user goes into edit mode.
     function initEditMode() {
         initSelectListsForOther('slstrFormatHH', 'txtFormatHH');
         initSelectListsForOther('slstrFormatFG', 'txtFormatFG');
         initSelectListsForOther('slstrFormatIG', 'txtFormatIG');
-        
+
         var sl = j$("[id$='slstrFormatHH']").get(0);
         setNameSpec(sl, 'txtFormatHH', 'Examples for Household Name Format')
-        
+
     }
-    
-    // if the given format isn't shown in the select list, then set it to 'other' and show the other textbox.    
+
+    // if the given format isn't shown in the select list, then set it to 'other' and show the other textbox.
     function initSelectListsForOther(idSl, idTxt) {
         var sl = j$("[id$='" + idSl + "']");
         var txt = j$("[id$='" + idTxt + "']");
-        
+
         if (sl.val() == '' && txt.val() != '') {
             sl.val('{!$Label.stgLabelOther}');
             txt.show();
-        } 
+        }
     }
-    
+
 </script>
 
 <style>
     .listExamples li {
         padding-top: 6px;
     }
-    
+
     .listExamples {
         padding-left: 0;
         list-style-type: none;
         font-style: italic;
     }
-    
+
     .sectionExamples {
         color: #666;
         padding: 5px 5px 5px 10px;
@@ -106,228 +106,182 @@
         border-width: 1px;
         border-color: lightblue;
         width: 450px;
-        border-radius: 4px;             
-    } 
-    
-    .bootstrap .form-control-column input[type="text"].txtOther {
-        margin-top: 12px;    
+        border-radius: 4px;
     }
-    
+
+    .slds .slds-form-element__control input[type="text"].txtOther {
+        margin-top: 12px;
+    }
+
 </style>
 
+    <apex:form id="form" styleClass="slds-m-around--x-large">
+        <c:STG_PageHeader sectionLabel="{!$Label.stgNavPeople}" pageLabel="{!$Label.stgLabelHHSettings}" />
+        <c:UTIL_PageMessages />
+        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
+            <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" oncomplete="initEditMode();" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--neutral" />
+        </div>
 
-    <c:STG_PageHeader sectionLabel="{!$Label.stgNavPeople}" pageLabel="{!$Label.stgLabelHHSettings}" />
-
-    <apex:form id="form" styleClass="form-horizontal">   
-        <apex:pageMessages id="pageMessages"/>
-        <apex:pageBlock id="pbHH" mode="maindetail">
-            <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="button-block">
-                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" oncomplete="initEditMode();" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
-            </apex:outputPanel>
-	        <section>
-	            <h3 class="section-header">{!$Label.stgLabelHHNaming}</h3>
-	            <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Advanced_Household_Naming__c.Label}" for="cbxAHN" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-	                    <apex:inputcheckbox value="{!stgService.stgHH.npo02__Advanced_Household_Naming__c}" disabled="{!isReadOnlyMode}" id="cbxAHN" />
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-	                    <apex:outputText value="{!$Label.stgHelpHHNaming}" />
-                    </div>
-	            </div> 
-	            
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.Household_Naming_Settings__c.Fields.Household_Name_Format__c.Label}" for="slstrFormatHH" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <apex:outputText value="{!stgService.stgHN.Household_Name_Format__c}" rendered="{!isReadOnlyMode}" />
-		                <apex:outputPanel rendered="{!isEditMode}" >
-		                    <apex:selectList value="{!stgService.stgHN.Household_Name_Format__c}" styleClass="form-control"
-		                        onchange="setNameSpec(this, 'txtFormatHH', '{!$Label.stgLabelExamplesHHNameFOrmat}');"
-		                        onfocus="setNameSpec(this, 'txtFormatHH', '{!$Label.stgLabelExamplesHHNameFOrmat}');"
-		                        multiselect="false" size="1" rendered="{!isEditMode}" id="slstrFormatHH" >
-		                            <apex:selectOptions value="{!listSOHouseholdNameFormats}"/>
-		                    </apex:selectList>
-		                    <apex:outputLabel value="{!$Label.stgLabelOtherHHNameFormat}" styleClass="sr-only" for="txtFormatHH" />
-		                    <apex:inputText value="{!stgService.stgHN.Household_Name_Format__c}" styleClass="form-control txtOther" 
-		                        onchange="setNameSpec(this, null, '{!$Label.stgLabelExamplesHHNameFOrmat}');" 
-		                        onfocus="setNameSpec(this, null, '{!$Label.stgLabelExamplesHHNameFOrmat}');" 
-		                        rendered="{!isEditMode}" id="txtFormatHH" style="display:none;"/>
-		                </apex:outputPanel>
-		            </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpHHNameFormat}" />
-                    </div>
-                </div> 
-	            
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.Household_Naming_Settings__c.Fields.Formal_Greeting_Format__c.Label}" for="slstrFormatFG" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-		                <apex:outputText value="{!stgService.stgHN.Formal_Greeting_Format__c}" rendered="{!isReadOnlyMode}" />
-		                <apex:outputPanel rendered="{!isEditMode}" >
-		                    <apex:selectList value="{!stgService.stgHN.Formal_Greeting_Format__c}" styleClass="form-control"
-		                        onchange="setNameSpec(this, 'txtFormatFG', '{!$Label.stgLabelExamplesFGFormat}');"  
-		                        onfocus="setNameSpec(this, 'txtFormatFG', '{!$Label.stgLabelExamplesFGFormat}');"  
-		                        multiselect="false" size="1" rendered="{!isEditMode}" id="slstrFormatFG" >
-		                            <apex:selectOptions value="{!listSOFormalGreetingFormats}"/>
-		                    </apex:selectList>
-                            <apex:outputLabel value="{!$Label.stgLabelOtherFormalGreetingFormat}" styleClass="sr-only" for="txtFormatFG" />
-		                    <apex:inputText value="{!stgService.stgHN.Formal_Greeting_Format__c}" styleClass="form-control txtOther" 
-		                        onchange="setNameSpec(this, null, '{!$Label.stgLabelExamplesFGFormat}');" 
-		                        onfocus="setNameSpec(this, null, '{!$Label.stgLabelExamplesFGFormat}');" 
-		                        rendered="{!isEditMode}" id="txtFormatFG" style="display:none;"/>
-		                </apex:outputPanel>
-		            </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-		                <apex:outputText value="{!$Label.stgHelpFGFormat}" />
-                    </div>
-                </div>	            
-
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.Household_Naming_Settings__c.Fields.Informal_Greeting_Format__c.Label}" for="slstrFormatIG" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <apex:outputText value="{!stgService.stgHN.Informal_Greeting_Format__c}" rendered="{!isReadOnlyMode}" />
-		                <apex:outputPanel rendered="{!isEditMode}" >
-		                    <apex:selectList value="{!stgService.stgHN.Informal_Greeting_Format__c}" styleClass="form-control"
-		                        onchange="setNameSpec(this, 'txtFormatIG', '{!$Label.stgLabelExamplesIGFormat}');" 
-		                        onfocus="setNameSpec(this, 'txtFormatIG', '{!$Label.stgLabelExamplesIGFormat}');" 
-		                        multiselect="false" size="1" rendered="{!isEditMode}" id="slstrFormatIG" >
-		                            <apex:selectOptions value="{!listSOInformalGreetingFormats}"/>
-		                    </apex:selectList>
-                            <apex:outputLabel value="{!$Label.stgLabelOtherInformalGreetingFormat}" styleClass="sr-only" for="txtFormatIG" />
-		                    <apex:inputText value="{!stgService.stgHN.Informal_Greeting_Format__c}" styleClass="form-control txtOther" 
-		                        onchange="setNameSpec(this, null, '{!$Label.stgLabelExamplesIGFormat}');" 
-		                        onfocus="setNameSpec(this, null, '{!$Label.stgLabelExamplesIGFormat}');" 
-		                        rendered="{!isEditMode}" id="txtFormatIG" style="display:none;"/>
-		                </apex:outputPanel>
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpIGFormat}" />
-                    </div>
+        <div class="slds-section-title--divider">{!$Label.stgLabelHHNaming}</div>
+        <div class="slds-form--horizontal slds-m-around--large">
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Advanced_Household_Naming__c.Label}" for="cbxAHN" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:inputcheckbox value="{!stgService.stgHH.npo02__Advanced_Household_Naming__c}" disabled="{!isReadOnlyMode}" id="cbxAHN" styleClass="slds-checkbox"/>
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpHHNaming}"/>
                 </div>
-
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.Household_Naming_Settings__c.Fields.Name_Connector__c.Label}" for="txtAnd" styleClass="col-sm-4 control-label"  />
-                    <div class="col-sm-8 form-control-column">
-                        <apex:outputText value="{!stgService.stgHN.Name_Connector__c}" rendered="{!isReadOnlyMode}" />
-                        <apex:inputText value="{!stgService.stgHN.Name_Connector__c}" id="txtAnd" onchange="setExamples();" rendered="{!isEditMode}" styleClass="form-control" />
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpNameConnector}" />
-                    </div>
-                </div>
-
-	            <apex:outputPanel layout="block" styleClass="sectionExamples" rendered="{!isEditMode}">
-	                <h4><label id="lblExamples"></label></h4>
-	             <ul class="listExamples" >
-	                 <li><span id="example1"></span></li>
-	                 <li><span id="example2"></span></li>
-	                 <li><span id="example3"></span></li>
-	                 <li><span id="example4"></span></li>
-	                 <li><span id="example5"></span></li>
-	             </ul>
-	            </apex:outputPanel>
-            
-                <div class="form-group">            
-                    <apex:outputLabel value="{!$ObjectType.Household_Naming_Settings__c.Fields.Name_Overrun__c.Label}" for="txtOverrun" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-		                <apex:outputText value="{!stgService.stgHN.Name_Overrun__c}" rendered="{!isReadOnlyMode}" />
-		                <apex:inputText value="{!stgService.stgHN.Name_Overrun__c}" id="txtOverrun" onchange="setExamples();" rendered="{!isEditMode}" styleClass="form-control" />
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-		                <apex:outputText value="{!$Label.stgHelpNameOverrun}" />
-                    </div>
-                </div>
-            
-                <div class="form-group">            
-	                <apex:outputLabel value="{!$ObjectType.Household_Naming_Settings__c.Fields.Contact_Overrun_Count__c.Label}" for="txtOverrunCount" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-		                <apex:outputText value="{!stgService.stgHN.Contact_Overrun_Count__c}" rendered="{!isReadOnlyMode}" />
-		                <apex:inputText value="{!stgService.stgHN.Contact_Overrun_Count__c}" id="txtOverrunCount" onchange="setExamples();" rendered="{!isEditMode}" styleClass="form-control" />
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-    	                <apex:outputText value="{!$Label.stgHelpOverrunCount}" />
-                    </div>
-                </div>
-
-                <div class="form-group">            
-	                <apex:outputLabel value="{!$ObjectType.Household_Naming_Settings__c.Fields.Implementing_Class__c.Label}" for="txtClass" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-		                <apex:outputText value="{!stgService.stgHN.Implementing_Class__c}" rendered="{!isReadOnlyMode}" />
-		                <apex:inputText value="{!stgService.stgHN.Implementing_Class__c}" id="txtClass" onchange="setExamples();" rendered="{!isEditMode}" styleClass="form-control" />
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-    	                <apex:outputText value="{!$Label.stgHelpINamingClass}" />
-                    </div>
-                </div>
-            
-                <div class="col-sm-offset-1 col-sm-10"> 
-		            <apex:outputPanel rendered="{!isEditMode}" layout="block" styleClass="panel panel-danger">
-		                <div class="panel-heading">
-		                    <h3 class="panel-title">{!$Label.stgHHNameRefreshTitle}</h3>
-		                </div>
-		                <div class="panel-body" style="padding:15px;">	               
-		                    <apex:outputText value="{!$Label.stgHelpBtnHHNaming}" escape="false" />
-		                    <div style="text-align:center;" class="form-control-column">
-		                        <apex:commandbutton value="{!$Label.stgBtnHHAutoName}" status="statusLoad" action="{!activateHouseholdNaming}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-danger"/>
-		                    </div>
-	                    </div>
-		            </apex:outputPanel>                    
-	            </div>
-	        </section>
-			
-	        <apex:outputPanel rendered="{!isRunningBatch}">
-	            <br/><br/>
-	            <c:UTIL_JobProgress strBatchComponentLabel="{!$Label.stgHHNameRefreshTitle}" cNumberOfJobs="1" bRerenderOnComplete="true" />
-	            <br/>
-	        </apex:outputPanel>
-
-            <section>
-                <h3 class="section-header" >{!$Label.stgLabelHHObject}</h3> 
-                <p class="section-help"><apex:outputText value="{!$Label.stgHelpHHObjectOverview}" escape="false" /></p>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Rules__c.Label}" for="slHR" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <apex:outputField value="{!stgService.stgHH.npo02__Household_Rules__c}" rendered="{!isReadOnlyMode}" />
-                        <apex:selectList value="{!stgService.stgHH.npo02__Household_Rules__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slHR" styleClass="form-control" >
-                            <apex:selectOptions value="{!listSOHHRules}"/>
+            </div>
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.Household_Naming_Settings__c.Fields.Household_Name_Format__c.Label}" for="slstrFormatHH" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:outputText value="{!stgService.stgHN.Household_Name_Format__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:outputPanel rendered="{!isEditMode}" >
+                        <apex:selectList value="{!stgService.stgHN.Household_Name_Format__c}" styleClass="slds-select"
+                            onchange="setNameSpec(this, 'txtFormatHH', '{!$Label.stgLabelExamplesHHNameFOrmat}');"
+                            onfocus="setNameSpec(this, 'txtFormatHH', '{!$Label.stgLabelExamplesHHNameFOrmat}');"
+                            multiselect="false" size="1" rendered="{!isEditMode}" id="slstrFormatHH" >
+                                <apex:selectOptions value="{!listSOHouseholdNameFormats}"/>
                         </apex:selectList>
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpHHRules}" />
-                    </div>
+                        <apex:outputLabel value="{!$Label.stgLabelOtherHHNameFormat}" styleClass="slds-assistive-text" for="txtFormatHH" />
+                        <apex:inputText value="{!stgService.stgHN.Household_Name_Format__c}" styleClass="slds-input txtOther"
+                            onchange="setNameSpec(this, null, '{!$Label.stgLabelExamplesHHNameFOrmat}');"
+                            onfocus="setNameSpec(this, null, '{!$Label.stgLabelExamplesHHNameFOrmat}');"
+                            rendered="{!isEditMode}" id="txtFormatHH" style="display:none;"/>
+                    </apex:outputPanel>
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpHHNameFormat}" />
                 </div>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Creation_Excluded_Recordtypes__c.Label}" for="idDBMS" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Household_Creation_Excluded_Recordtypes__c" listSO="{!listSOContactRecTypes}" inEditMode="{!isEditMode}" />
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpHHExcludedRT}" />
-                    </div>
-                </div>
-            </section>
-            
-            <section>                    
-                <h3 class="section-header">{!$Label.stgLabelHHGeneral}</h3>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Mailing_List_ID__c.Label}" for="slHMLI" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <apex:outputText value="{!strMailingReport}" rendered="{!isReadOnlyMode}" />
-                        <apex:selectList value="{!stgService.stgHH.npo02__Household_Mailing_List_ID__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slHMLI" styleClass="form-control" >
-                            <apex:selectOptions value="{!listSOMailingReportIds}"/>
+            </div>
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.Household_Naming_Settings__c.Fields.Formal_Greeting_Format__c.Label}" for="slstrFormatFG" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:outputText value="{!stgService.stgHN.Formal_Greeting_Format__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:outputPanel rendered="{!isEditMode}" >
+                        <apex:selectList value="{!stgService.stgHN.Formal_Greeting_Format__c}" styleClass="slds-select"
+                            onchange="setNameSpec(this, 'txtFormatFG', '{!$Label.stgLabelExamplesFGFormat}');"
+                            onfocus="setNameSpec(this, 'txtFormatFG', '{!$Label.stgLabelExamplesFGFormat}');"
+                            multiselect="false" size="1" rendered="{!isEditMode}" id="slstrFormatFG" >
+                                <apex:selectOptions value="{!listSOFormalGreetingFormats}"/>
                         </apex:selectList>
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpHHMailingListReport}" />
-                    </div>
-                </div>                      
-            </section>
-            <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="button-block">
-                <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
-                <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />
-            </apex:outputPanel>
+                        <apex:outputLabel value="{!$Label.stgLabelOtherFormalGreetingFormat}" styleClass="slds-assistive-text" for="txtFormatFG" />
+                        <apex:inputText value="{!stgService.stgHN.Formal_Greeting_Format__c}" styleClass="slds-input txtOther"
+                            onchange="setNameSpec(this, null, '{!$Label.stgLabelExamplesFGFormat}');"
+                            onfocus="setNameSpec(this, null, '{!$Label.stgLabelExamplesFGFormat}');"
+                            rendered="{!isEditMode}" id="txtFormatFG" style="display:none;"/>
+                    </apex:outputPanel>
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpFGFormat}" />
+                </div>
+            </div>
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.Household_Naming_Settings__c.Fields.Informal_Greeting_Format__c.Label}" for="slstrFormatIG" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:outputText value="{!stgService.stgHN.Informal_Greeting_Format__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:outputPanel rendered="{!isEditMode}" >
+                        <apex:selectList value="{!stgService.stgHN.Informal_Greeting_Format__c}" styleClass="slds-select"
+                            onchange="setNameSpec(this, 'txtFormatIG', '{!$Label.stgLabelExamplesIGFormat}');"
+                            onfocus="setNameSpec(this, 'txtFormatIG', '{!$Label.stgLabelExamplesIGFormat}');"
+                            multiselect="false" size="1" rendered="{!isEditMode}" id="slstrFormatIG" >
+                                <apex:selectOptions value="{!listSOInformalGreetingFormats}"/>
+                        </apex:selectList>
+                        <apex:outputLabel value="{!$Label.stgLabelOtherInformalGreetingFormat}" styleClass="slds-assistive-text" for="txtFormatIG" />
+                        <apex:inputText value="{!stgService.stgHN.Informal_Greeting_Format__c}" styleClass="slds-input txtOther"
+                            onchange="setNameSpec(this, null, '{!$Label.stgLabelExamplesIGFormat}');"
+                            onfocus="setNameSpec(this, null, '{!$Label.stgLabelExamplesIGFormat}');"
+                            rendered="{!isEditMode}" id="txtFormatIG" style="display:none;"/>
+                    </apex:outputPanel>
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpIGFormat}" />
+                </div>
+            </div>
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.Household_Naming_Settings__c.Fields.Name_Connector__c.Label}" for="txtAnd" styleClass="slds-form-element__label"  />
+                <div class="slds-form-element__control">
+                    <apex:outputText value="{!stgService.stgHN.Name_Connector__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:inputText value="{!stgService.stgHN.Name_Connector__c}" id="txtAnd" onchange="setExamples();" rendered="{!isEditMode}" styleClass="slds-input" />
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpNameConnector}" />
+                </div>
+            </div>
+        </div>
+        <apex:outputPanel layout="block" styleClass="sectionExamples" rendered="{!isEditMode}">
+            <h4 class="slds-text-heading--medium"><label id="lblExamples"></label></h4>
+            <ul class="listExamples" >
+                <li><span id="example1"></span></li>
+                <li><span id="example2"></span></li>
+                <li><span id="example3"></span></li>
+                <li><span id="example4"></span></li>
+                <li><span id="example5"></span></li>
+            </ul>
+        </apex:outputPanel>
 
-        </apex:pageBlock>
-        <apex:pageMessages />
+        <div class="slds-form--horizontal slds-m-around--large">
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.Household_Naming_Settings__c.Fields.Name_Overrun__c.Label}" for="txtOverrun" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:outputText value="{!stgService.stgHN.Name_Overrun__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:inputText value="{!stgService.stgHN.Name_Overrun__c}" id="txtOverrun" onchange="setExamples();" rendered="{!isEditMode}" styleClass="slds-input" />
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpNameOverrun}" />
+                </div>
+            </div>
+
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.Household_Naming_Settings__c.Fields.Contact_Overrun_Count__c.Label}" for="txtOverrunCount" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:outputText value="{!stgService.stgHN.Contact_Overrun_Count__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:inputText value="{!stgService.stgHN.Contact_Overrun_Count__c}" id="txtOverrunCount" onchange="setExamples();" rendered="{!isEditMode}" styleClass="slds-input" />
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpOverrunCount}" />
+                </div>
+            </div>
+
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.Household_Naming_Settings__c.Fields.Implementing_Class__c.Label}" for="txtClass" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:outputText value="{!stgService.stgHN.Implementing_Class__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:inputText value="{!stgService.stgHN.Implementing_Class__c}" id="txtClass" onchange="setExamples();" rendered="{!isEditMode}" styleClass="slds-input" />
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpINamingClass}" />
+                </div>
+            </div>
+        </div>
+
+        <div class="slds-section-title--divider slds-m-around--none">
+            {!$Label.stgLabelHHObject}
+        </div>
+        <p class="slds-text-body--small slds-m-around--large"><apex:outputText value="{!$Label.stgHelpHHObjectOverview}" escape="false" /></p>
+        <div class="slds-form--horizontal slds-p-bottom--large">
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Rules__c.Label}" for="slHR" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:outputField value="{!stgService.stgHH.npo02__Household_Rules__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:selectList value="{!stgService.stgHH.npo02__Household_Rules__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slHR" styleClass="slds-select" >
+                        <apex:selectOptions value="{!listSOHHRules}"/>
+                    </apex:selectList>
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpHHRules}" />
+                </div>
+            </div>
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Creation_Excluded_Recordtypes__c.Label}" for="idDBMS" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Household_Creation_Excluded_Recordtypes__c" listSO="{!listSOContactRecTypes}" inEditMode="{!isEditMode}" />
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpHHExcludedRT}" />
+                </div>
+            </div>
+        </div>
+
+        <div class="slds-section-title--divider slds-m-around--none">
+            {!$Label.stgLabelHHGeneral}
+        </div>
+        <div class="slds-form--horizontal slds-m-around--large">
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Mailing_List_ID__c.Label}" for="slHMLI" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:outputText value="{!strMailingReport}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:selectList value="{!stgService.stgHH.npo02__Household_Mailing_List_ID__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slHMLI" styleClass="slds-select" >
+                        <apex:selectOptions value="{!listSOMailingReportIds}"/>
+                    </apex:selectList>
+                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpHHMailingListReport}" />
+                </div>
+            </div>
+        </div>
+        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
+            <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+            <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+        </div>
     </apex:form>
 </apex:page>

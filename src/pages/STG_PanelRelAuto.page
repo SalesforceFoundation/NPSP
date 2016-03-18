@@ -1,86 +1,88 @@
 <apex:page controller="STG_PanelRelAuto_CTRL" >
-    <c:STG_PageHeader sectionLabel="{!$Label.stgNavRelationships}" pageLabel="{!$Label.stgNavRelAutoCreate}" />
-    <p>{!$Label.npe4__RelationshipsAutoDescription}</p>
-
-    <apex:form id="form" styleClass="stgForm form-horizontal">  
-        <apex:pageMessages id="pageMessages"/>
-        <apex:pageBlock mode="maindetail">
-            <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="button-block">
-                <apex:commandButton value="{!$Label.stgBtnNewAutoRel}" action="{!newRelAutoCreate}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
-            </apex:outputPanel>
-
-            <apex:outputPanel layout="block" rendered="{!isEditMode}" id="panelNewAc" styleClass="inline-form-block">
-            <section >
-                <h3 class="section-header" >{!$Label.stgLabelNewAutoRel}</h3>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Auto_Create__c.Fields.npe4__Object__c.Label}" for="objectinputselect" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <apex:selectList value="{!acNew.npe4__Object__c}" id="objectinputselect" multiselect="false" size="1" styleClass="form-control" >
+    <apex:form id="form" styleClass="slds-m-around--x-large">
+        <c:STG_PageHeader sectionLabel="{!$Label.stgNavRelationships}" pageLabel="{!$Label.stgNavRelAutoCreate}" />
+        <div class="slds-grid">
+            <div class="slds-col slds-size--1-of-1 slds-m-around--medium">
+                <p class="slds-text-body--small slds-m-top--x-small">{!$Label.npe4__RelationshipsAutoDescription}</p>
+            </div>        
+        </div>
+        <c:UTIL_PageMessages />
+        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
+            <apex:commandButton value="{!$Label.stgBtnNewAutoRel}" action="{!newRelAutoCreate}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+        </div>
+        <apex:outputPanel rendered="{!isEditMode}" id="panelNewAc">
+            <div class="slds-section-title--divider" >{!$Label.stgLabelNewAutoRel}</div>
+            <div class="slds-form--horizontal slds-m-around--large">
+                <div class="slds-form-element">
+                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Auto_Create__c.Fields.npe4__Object__c.Label}" for="objectinputselect" styleClass="slds-form-element__label" />
+                    <div class="slds-form-element__control">
+                        <apex:selectList value="{!acNew.npe4__Object__c}" id="objectinputselect" multiselect="false" size="1" styleClass="slds-select" >
                             <apex:selectoption itemValue="" itemLabel="- none -"/>
                             <apex:selectoption itemValue="Contact" itemLabel="Contact"/>
                             <apex:selectoption itemValue="CampaignMember" itemLabel="Campaign Member"/>
                             <apex:actionSupport event="onchange" status="statusLoad" rerender="panelNewAc"/>
-                        </apex:selectList>              
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpAutoRelObject}" />
+                        </apex:selectList>
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpAutoRelObject}" />
                     </div>
                 </div>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Auto_Create__c.Fields.npe4__Field__c.Label}" for="slF" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <apex:selectList value="{!acNew.npe4__Field__c}" multiselect="false" size="1" id="slF" styleClass="form-control">
+                <div class="slds-form-element">
+                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Auto_Create__c.Fields.npe4__Field__c.Label}" for="slF" styleClass="slds-form-element__label" />
+                    <div class="slds-form-element__control">
+                        <apex:selectList value="{!acNew.npe4__Field__c}" multiselect="false" size="1" id="slF" styleClass="slds-select">
                             <apex:selectOptions value="{!listSOACfield}" />
-                        </apex:selectList>              
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpAutoRelField}" />
+                        </apex:selectList>
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpAutoRelField}" />
                     </div>
                 </div>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Auto_Create__c.Fields.npe4__Relationship_Type__c.Label}" for="slRT" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <apex:selectList value="{!acNew.npe4__Relationship_Type__c}" multiselect="false" size="1" id="slRT" styleClass="form-control">
+                <div class="slds-form-element">
+                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Auto_Create__c.Fields.npe4__Relationship_Type__c.Label}" for="slRT" styleClass="slds-form-element__label" />
+                    <div class="slds-form-element__control">
+                        <apex:selectList value="{!acNew.npe4__Relationship_Type__c}" multiselect="false" size="1" id="slRT" styleClass="slds-select">
                             <apex:selectOptions value="{!listSORelTypes}" />
-                        </apex:selectList>                                  
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpAutoRelType}" />
+                        </apex:selectList>
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpAutoRelType}" />
                     </div>
                 </div>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Auto_Create__c.Fields.npe4__Campaign_Types__c.Label}" for="idDBMS" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <c:STG_DataBoundMultiSelect settingObject="{!acNew}" fieldname="npe4__Campaign_Types__c" listSO="{!listSOCampaignTypes}" inEditMode="{!isEditMode}" 
-                            inDisabledMode="{!acNew.npe4__Object__c != 'CampaignMember'}" />
+                <apex:outputPanel rendered="acNew.npe4__Object__c == 'CampaignMember'}" styleClass="slds-form-element">
+                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Auto_Create__c.Fields.npe4__Campaign_Types__c.Label}" for="idDBMS" styleClass="slds-form-element__label" />
+                    <div class="slds-form-element__control">
+                        <c:STG_DataBoundMultiSelect settingObject="{!acNew}" fieldname="npe4__Campaign_Types__c" listSO="{!listSOCampaignTypes}" inEditMode="{!isEditMode}" />
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpAutoRelCampaignRT}" />
                     </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpAutoRelCampaignRT}" />
-                    </div>
-                </div>
-            </section>
-            <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="button-block">
-                <apex:commandButton value="{!$Label.stgBtnCreateAutoRel}" action="{!createRelAutoCreate}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
-                <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelRelAutoCreate}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />
-            </apex:outputPanel>
-            </apex:outputPanel>
-                   
-                <apex:pageBlockTable value="{!listRelAutoCreate}" var="ac" >
-                    <apex:column headerValue="{!$Label.stgLabelActionColumn}" styleClass="actionColumn" style="text-align:center;" >
-                        <apex:commandLink action="{!deleteAc}" 
-                            title="{!$Label.stgLinkDelete} {!ac.npe4__Object__c} - {!ac.npe4__Field__c}"                            
-                            styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" 
-                            onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
-                            <apex:param assignTo="{!acIdDelete}" name="idDeleteAc" value="{!ac.Id}" /> 
-                        </apex:commandLink>
-                    </apex:column>
-                    <apex:column value="{!ac.npe4__Object__c}" />
-                    <apex:column value="{!ac.npe4__Field__c}" />
-                    <apex:column value="{!ac.npe4__Relationship_Type__c}" />
-                    <apex:column value="{!ac.npe4__Campaign_Types__c}" />
-                </apex:pageBlockTable> 
-            
-
-        </apex:pageBlock> 
+                </apex:outputPanel>
+            </div>
+            <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
+                <apex:commandButton value="{!$Label.stgBtnCreateAutoRel}" action="{!createRelAutoCreate}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+                <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelRelAutoCreate}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+            </div>
+        </apex:outputPanel>
+        <apex:outputPanel rendered="{!listRelAutoCreate.size > 0}">
+            <table class="slds-table slds-table--bordered" >
+                <thead>
+                    <tr class="slds-text-heading--label">
+                        <th scope="col"><label class="slds-truncate">{!$Label.stgLabelActionColumn}</label></th>
+                        <th scope="col"><label class="slds-truncate">{!$ObjectType.npe4__Relationship_Auto_Create__c.Fields.npe4__Object__c.Label}</label></th>
+                        <th scope="col"><label class="slds-truncate">{!$ObjectType.npe4__Relationship_Auto_Create__c.Fields.npe4__Field__c.Label}</label></th>
+                        <th scope="col"><label class="slds-truncate">{!$ObjectType.npe4__Relationship_Auto_Create__c.Fields.npe4__Relationship_Type__c.Label}</label></th>
+                        <th scope="col"><label class="slds-truncate">{!$ObjectType.npe4__Relationship_Auto_Create__c.Fields.npe4__Campaign_Types__c.Label}</label></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <apex:repeat var="ac" value="{!listRelAutoCreate}" >
+                        <tr>
+                            <td>
+                                <apex:commandLink action="{!deleteAc}" title="{!$Label.stgLinkDelete} {!ac.npe4__Object__c} - {!ac.npe4__Field__c}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
+                                    <apex:param assignTo="{!acIdDelete}" name="idDeleteAc" value="{!ac.Id}" />
+                                </apex:commandLink>
+                            </td>
+                            <td><apex:outputField value="{!ac.npe4__Object__c}" styleClass="slds-form-element__static" /></td>
+                            <td><apex:outputField value="{!ac.npe4__Field__c}" styleClass="slds-form-element__static" /></td>
+                            <td><apex:outputField value="{!ac.npe4__Relationship_Type__c}" styleClass="slds-form-element__static" /></td>
+                            <td><apex:outputField value="{!ac.npe4__Campaign_Types__c}" styleClass="slds-form-element__static" /></td>
+                        </tr>
+                    </apex:repeat>
+               </tbody>
+            </table>
+        </apex:outputPanel>
     </apex:form>
 </apex:page>
