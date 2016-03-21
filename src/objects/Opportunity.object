@@ -1008,6 +1008,7 @@
         <label>Notification Message</label>
         <length>32768</length>
         <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
         <type>LongTextArea</type>
         <visibleLines>3</visibleLines>
     </fields>

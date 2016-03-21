@@ -3,7 +3,7 @@
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavPeople}" pageLabel="{!$Label.stgNavAccountModel}" />
         <div class="slds-grid">
             <div class="slds-col slds-size--1-of-1 slds-m-around--medium">
-                <p class="slds-text-body--small slds-m-top--x-small">{!$Label.npe01__Contacts_Settings_Account_Model_Help_Text}</p>
+                <p class="slds-text-body--small slds-m-top--x-small">{!$Label.10136000005r7M1}</p>
             </div>        
         </div>
         <c:UTIL_PageMessages />

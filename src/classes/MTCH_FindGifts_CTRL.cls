@@ -79,6 +79,12 @@ public with sharing class MTCH_FindGifts_CTRL {
         opp = [SELECT Id, Name, AccountId, Account.Name, Amount, StageName, Account.Matching_Gift_Percent__c FROM Opportunity WHERE Id = :opp.Id];
         matchingGiftPercent = opp.Account.Matching_Gift_Percent__c == null ? 100 : opp.Account.Matching_Gift_Percent__c;
         
+        //Bug #1977: if the opp Amount is null, this page should not run - there needs to be an amount
+        if (opp.Amount == null)
+        {
+       		ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, Label.mtchOppAmountNull));
+       		return; 
+        } 
         closedWonStages = new Set<String>();
         for (OpportunityStage s : [SELECT MasterLabel FROM OpportunityStage WHERE IsClosed = true AND IsWon = true]){
             closedWonStages.add(s.MasterLabel);
@@ -138,6 +144,7 @@ public with sharing class MTCH_FindGifts_CTRL {
                 if (userInfo.isMultiCurrencyOrganization()) 
                     oppTotalUnaccounted.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
             }
+            //Bug #1977 was failing if amount == null
             oppTotalUnaccounted.Amount = opp.Amount - oppTotalSelected.Amount;
             return oppTotalUnaccounted;
         }

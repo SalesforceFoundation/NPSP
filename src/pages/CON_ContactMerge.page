@@ -128,7 +128,7 @@
                     <div class="slds-card__body">
                         <apex:outputText rendered="{!NOT(hasResults)}">
                         <h3 class="slds-text-heading--small slds-p-top--large slds-p-bottom--large">
-                            <apex:outputText value="{!$Label.npe01__Contact_Merge_Error_Confirm_Message_Nothing_Found}"/>
+                            <apex:outputText value="{!$Label.10136000005r7Lo}"/>
                         </h3>
                         </apex:outputText>
                         <apex:outputText rendered="{!hasResults}">
@@ -296,7 +296,7 @@
                             <div class="slds-modal__content">
                                 <div>
                                     <p class="slds-text-align--center">
-                                        <apex:outputText value="{!$Label.npe01__Contact_Merge_Error_Confirm_Message}"/>
+                                        <apex:outputText value="{!$Label.10136000005r7Lm}"/>
                                     </p>
                                 </div>
                             </div>

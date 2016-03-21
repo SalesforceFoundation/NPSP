@@ -3,7 +3,7 @@
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavUserDefinedRollups}" />
         <div class="slds-grid">
             <div class="slds-col slds-size--1-of-1 slds-m-around--medium">
-                <p class="slds-text-body--small slds-m-top--x-small">{!$Label.npo02__UDRDescription}</p>
+                <p class="slds-text-body--small slds-m-top--x-small">{!$Label.10136000004MUX3}</p>
             </div>        
         </div>
         <c:UTIL_PageMessages />

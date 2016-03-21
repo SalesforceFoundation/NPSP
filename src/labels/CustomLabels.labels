@@ -919,14 +919,6 @@
         <value>Percent-based allocations cannot exceed 100%.</value>
     </labels>
     <labels>
-        <fullName>alloRemainder</fullName>
-        <categories>Allocation</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>alloRemainder</shortDescription>
-        <value>Remainder:</value>
-    </labels>
-    <labels>
         <fullName>alloSingleParent</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>
@@ -941,14 +933,6 @@
         <protected>false</protected>
         <shortDescription>Opportunity Allocation totals must not exceed the amount of the Opportunity.</shortDescription>
         <value>Opportunity allocation totals cannot exceed the amount of the opportunity.</value>
-    </labels>
-    <labels>
-        <fullName>alloTotals</fullName>
-        <categories>Allocation</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>alloTotals</shortDescription>
-        <value>Totals:</value>
     </labels>
     <labels>
         <fullName>bdiAccountCustomIdError</fullName>
@@ -2580,6 +2564,14 @@
         <value>{0} items</value>
     </labels>
     <labels>
+        <fullName>mtchOppAmountNull</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>mtchOppAmountNull</shortDescription>
+        <value>You cannot find Matched Gifts if the Opportunity Amount is empty.</value>
+    </labels>
+    <labels>
         <fullName>mtchSearchCriteriaEmpty</fullName>
         <categories>Find Matching Gifts</categories>
         <language>en_US</language>
@@ -2850,6 +2842,14 @@
         <protected>false</protected>
         <shortDescription>pscManageSoftCreditsAmountMissing</shortDescription>
         <value>Please enter a soft credit amount for all entries.</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsAmountNull</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pscManageSoftCreditsAmountNull</shortDescription>
+        <value>You cannot Manage Soft Credits if the Opportunity Amount is empty.</value>
     </labels>
     <labels>
         <fullName>pscManageSoftCreditsAmountOrPercent</fullName>
@@ -3858,7 +3858,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDAddCampaign</shortDescription>
-        <value>If selected, adds the campaign that you’ve specified for the Recurring Donation to all related (i.e. “child”) opportunities. If this option is not selected, the campaign appears on the Recurring Donation’s first opportunity only.</value>
+        <value>If selected, adds the campaign that youâve specified for the Recurring Donation to all related (i.e. âchildâ) opportunities. If this option is not selected, the campaign appears on the Recurring Donationâs first opportunity only.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDDisableScheduling</fullName>
@@ -3866,7 +3866,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDDisableScheduling</shortDescription>
-        <value>Prevents the scheduling of the nightly update to Recurring Donations. You’ll need to remove any existing scheduled jobs through Setup | Monitoring | Scheduled Jobs.</value>
+        <value>Prevents the scheduling of the nightly update to Recurring Donations. Youâll need to remove any existing scheduled jobs through Setup | Monitoring | Scheduled Jobs.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDFailures</fullName>
@@ -3930,7 +3930,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDOppForecastMonths</shortDescription>
-        <value>Number of months’ worth of open opportunities created for Open-Ended Recurring Donations. The default is 12, so after every month, Salesforce creates another month’s worth of open opportunities (i.e., the total months’ worth of open opportunities is always 12).</value>
+        <value>Number of monthsâ worth of open opportunities created for Open-Ended Recurring Donations. The default is 12, so after every month, Salesforce creates another monthâs worth of open opportunities (i.e., the total monthsâ worth of open opportunities is always 12).</value>
     </labels>
     <labels>
         <fullName>stgHelpRDOppRT</fullName>
@@ -3938,7 +3938,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDOppRT</shortDescription>
-        <value>The opportunity record type assigned to the Recurring Donation’s child opportunities.</value>
+        <value>The opportunity record type assigned to the Recurring Donationâs child opportunities.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDPeriodFrequency</fullName>
