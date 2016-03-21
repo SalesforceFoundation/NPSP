@@ -369,4 +369,31 @@ public class UTIL_Describe {
         }
         return strFields.substring(0, strFields.length()-1);
     }
+
+    /*******************************************************************************************************
+    * @description utility to return a field's available picklist values by record type.
+    * @param objectName the name of the object
+    * @param fieldName the name of the field
+    * @param recordTypeID the record type Id
+    * @return a comma separated string of field names in the field set
+    */
+    public static Set<String> getPicklistValuesByRecordType(String objectName, String fieldName, Id recordTypeId) {
+        Set<String> values = new Set<String>();
+        
+        // Create metadata service
+        MetadataService.MetadataPort service = new MetadataService.MetadataPort();
+        service.SessionHeader = new MetadataService.SessionHeader_element();
+        service.SessionHeader.sessionId = UserInfo.getSessionId();
+
+        // Read custom field
+        MetadataService.CustomField customField = (MetadataService.CustomField) service.readMetadata(
+            'CustomField', new List<String> { objectName + '.' + fieldName }).getRecords()[0];
+
+        for ( MetadataService.PicklistValue pk : customField.picklist.picklistValues ) {
+            values.add(pk.fullName);
+        }
+
+        return values;
+    }
+
 }

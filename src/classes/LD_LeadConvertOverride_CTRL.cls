@@ -119,7 +119,13 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     public list<selectOption> lcStatuses {
       get {
         if (lcStatuses == null) {
+          // TODO If there are Lead record types,
+          // Get all status values for the current lead's record type.
+          Set<String> valuesForThisRecordType = UTIL_Describe.getPicklistValuesByRecordType(
+                'Lead', 'Status', l.recordTypeId);
+
           lcStatuses = new list<selectOption>();
+          // TODO If there are Lead record types, then add valuesForThisRecordType to the where clause.
           for (LeadStatus ls : [Select Id, Masterlabel from LeadStatus where IsConverted=true] ) {
             lcStatuses.add( new SelectOption(ls.masterlabel, ls.masterlabel));
           }
