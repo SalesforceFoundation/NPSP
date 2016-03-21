@@ -93,7 +93,12 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
             FROM Opportunity WHERE Id = :controller.getRecord().Id];
         isAmount = true;
         allowTooManySoftCredits = false;
-        
+        //Bug #1977: if the opp Amount is null, this page should not run - there needs to be an amount
+        if (opp.Amount == null)
+        {
+       		ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, Label.pscManageSoftCreditsAmountNull));
+       		return; 
+        }
         // this page wants to display just the Soft Credit OCRs and PSCs.
         // since the PSC lookup to an OCR is really just a text field,
         // we can't assume the lookup is valid, and we must also deal with
