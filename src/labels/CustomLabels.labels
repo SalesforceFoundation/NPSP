@@ -2580,6 +2580,14 @@
         <value>{0} items</value>
     </labels>
     <labels>
+        <fullName>mtchOppAmountNull</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>mtchOppAmountNull</shortDescription>
+        <value>You cannot find Matched Gifts if the Opportunity Amount is empty.</value>
+    </labels>
+    <labels>
         <fullName>mtchSearchCriteriaEmpty</fullName>
         <categories>Find Matching Gifts</categories>
         <language>en_US</language>
@@ -2850,6 +2858,14 @@
         <protected>false</protected>
         <shortDescription>pscManageSoftCreditsAmountMissing</shortDescription>
         <value>Please enter a soft credit amount for all entries.</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsAmountNull</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pscManageSoftCreditsAmountNull</shortDescription>
+        <value>You cannot Manage Soft Credits if the Opportunity Amount is empty.</value>
     </labels>
     <labels>
         <fullName>pscManageSoftCreditsAmountOrPercent</fullName>
