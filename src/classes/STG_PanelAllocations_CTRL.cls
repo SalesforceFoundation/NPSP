@@ -33,7 +33,6 @@
 * @group Settings
 * @description Controller for the Allocations settings page.
 */
-
 public with sharing class STG_PanelAllocations_CTRL extends STG_Panel { 
 
     /*********************************************************************************************************
@@ -42,16 +41,9 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
     public override string idPanel() { return 'idPanelAllocations'; }
 
     /*********************************************************************************************************
-    * @description Whether we are currently running the batch process 
-    */
-    public boolean isRunningBatch { get; set; }
-
-    /*********************************************************************************************************
     * @description The panel's constructor.
     */
-    public STG_PanelAllocations_CTRL() {
-        isRunningBatch = false;
-    }
+    public STG_PanelAllocations_CTRL() {}
 
     /*********************************************************************************************************
     * @description An allocation, used to present a GAU lookup in the page to allow selecting a default GAU.
@@ -104,16 +96,5 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
         strDefaultGAUName = null;
 
         return super.saveSettings();
-    }
-
-    /*********************************************************************************************************
-    * @description Action Method to run the Batch Opp Rollups  
-    * @return null
-    */
-    public PageReference runBatch() {
-        // run batch rollup
-        isRunningBatch = true;
-        id batchProcessId = database.executeBatch(new ALLO_MakeDefaultAllocations_BATCH());
-        return null;
     }
 }

@@ -820,7 +820,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloBtnSaveAndClose</shortDescription>
-        <value>Save &amp; Close</value>
+        <value>Save</value>
     </labels>
     <labels>
         <fullName>alloCantAllocateNothing</fullName>
@@ -852,7 +852,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloDeleteRow</shortDescription>
-        <value>Delete Row</value>
+        <value>Delete</value>
     </labels>
     <labels>
         <fullName>alloExceedsOppAmount</fullName>
@@ -4812,6 +4812,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgNavBDE</shortDescription>
         <value>Batch Data Entry</value>
+    </labels>
+    <labels>
+        <fullName>stgNavBulkProcesses</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavBulkProcesses</shortDescription>
+        <value>Bulk Data Processes</value>
     </labels>
     <labels>
         <fullName>stgNavConnections</fullName>
