@@ -919,14 +919,6 @@
         <value>Percent-based allocations cannot exceed 100%.</value>
     </labels>
     <labels>
-        <fullName>alloRemainder</fullName>
-        <categories>Allocation</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>alloRemainder</shortDescription>
-        <value>Remainder:</value>
-    </labels>
-    <labels>
         <fullName>alloSingleParent</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>
@@ -941,14 +933,6 @@
         <protected>false</protected>
         <shortDescription>Opportunity Allocation totals must not exceed the amount of the Opportunity.</shortDescription>
         <value>Opportunity allocation totals cannot exceed the amount of the opportunity.</value>
-    </labels>
-    <labels>
-        <fullName>alloTotals</fullName>
-        <categories>Allocation</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>alloTotals</shortDescription>
-        <value>Totals:</value>
     </labels>
     <labels>
         <fullName>bdiAccountCustomIdError</fullName>
