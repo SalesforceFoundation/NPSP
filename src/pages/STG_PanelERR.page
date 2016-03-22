@@ -116,22 +116,28 @@
                 <div class="slds-form-element">
                     <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Store_Errors_On__c.Label}" for="cbxSEO" styleClass="slds-form-element__label" />
                     <div class="slds-form-element__control">
-                        <apex:inputCheckbox value="{!stgService.stgErr.Store_Errors_On__c}" disabled="{!isReadOnlyMode}" id="cbxSEO" styleClass="slds-checkbox"/>
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpStoreErrorsOn}" />
+                        <apex:inputCheckbox value="{!stgService.stgErr.Store_Errors_On__c}" disabled="{!isReadOnlyMode}" id="cbxSEO" html-aria-describedby="{!$Component.cbxSEOHelp}" styleClass="slds-checkbox"/>
+                        <apex:outputPanel id="cbxSEOHelp" layout="block">
+                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpStoreErrorsOn}" />
+                        </apex:outputPanel>
                     </div>
                 </div>
                 <div class="slds-form-element">
                     <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Error_Notifications_On__c.Label}" for="cbxENO" styleClass="slds-form-element__label" />
                     <div class="slds-form-element__control">
-                        <apex:inputCheckbox value="{!stgService.stgErr.Error_Notifications_On__c}" disabled="{!isReadOnlyMode}" id="cbxENO" styleClass="slds-checkbox" />
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpErrorNotifyOn}" />
+                        <apex:inputCheckbox value="{!stgService.stgErr.Error_Notifications_On__c}" disabled="{!isReadOnlyMode}" id="cbxENO" html-aria-describedby="{!$Component.cbxENOHelp}" styleClass="slds-checkbox" />
+                        <apex:outputPanel id="cbxENOHelp" layout="block">
+                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpErrorNotifyOn}" />
+                        </apex:outputPanel>
                     </div>
                 </div>
                 <div class="slds-form-element">
                     <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Disable_Error_Handling__c.Label}" for="cbxDEH" styleClass="slds-form-element__label" />
                     <div class="slds-form-element__control">
-                        <apex:inputCheckbox value="{!stgService.stgErr.Disable_Error_Handling__c}" disabled="{!isReadOnlyMode}" id="cbxDEH" styleClass="slds-checkbox" />
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$ObjectType.Error_Settings__c.Fields.Disable_Error_Handling__c.inlineHelpText}" />
+                        <apex:inputCheckbox value="{!stgService.stgErr.Disable_Error_Handling__c}" disabled="{!isReadOnlyMode}" id="cbxDEH" html-aria-describedby="{!$Component.cbxDEHHelp}" styleClass="slds-checkbox" />
+                        <apex:outputPanel id="cbxDEHHelp" layout="block">
+                            <apex:outputText styleClass="slds-form-element__help" value="{!$ObjectType.Error_Settings__c.Fields.Disable_Error_Handling__c.inlineHelpText}" />
+                        </apex:outputPanel>
                     </div>
                 </div>
                 <div class="slds-form-element">
@@ -139,12 +145,14 @@
                     <div class="slds-form-element__control">
                         <apex:outputPanel id="errRecipient">
                             <apex:outputText id="errorNotifDisplayName" value="{!strErrorNotifDisplayName}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static"/>
-                            <apex:selectList id="notificationOption" value="{!notificationToDropDown}" size="1" multiselect="false" rendered="{!isEditMode}" styleClass="slds-select">
+                            <apex:selectList id="notificationOption" value="{!notificationToDropDown}" size="1" multiselect="false" rendered="{!isEditMode}" html-aria-describedby="{!$Component.notificationOptionHelp}" styleClass="slds-select">
                                 <apex:selectOptions value="{!listSOERRNotifOptions}" />
                             </apex:selectList>
                         </apex:outputPanel>
-                        <apex:outputText styleClass="slds-form-element__help" id="recipientHelp" value="{!$Label.stgHelpErrorNotifyTo}" />
-                   </div>
+                        <apex:outputPanel id="notificationOptionHelp" layout="block">
+                            <apex:outputText styleClass="slds-form-element__help" id="recipientHelp" value="{!$Label.stgHelpErrorNotifyTo}" />
+                       </apex:outputPanel>
+                    </div>
                </div>
             </div>
         </apex:outputPanel>
@@ -154,7 +162,9 @@
                     <apex:outputLabel value="{!$Label.stgLabelSelectChatterGroup}" for="chatterGroupSearchBox" styleClass="slds-form-element__label" />
                     <div class="slds-form-element__control">
                         <c:UTIL_Typeahead searchBoxId="chatterGroupSearchBox" object="CollaborationGroup" primaryField="Name" searchScope="NAME" placeholder="{!$Label.stgLabelTypeAhead}" minSearchLength="2" destinationForSelectedId="groupId" stealFocus="false" styleClass="slds-input" />
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpChatterGroup}" />
+                        <apex:outputPanel layout="block">
+                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpChatterGroup}" />
+                        </apex:outputPanel>
                     </div>
                 </div>
             </div>
@@ -162,7 +172,7 @@
         </apex:outputPanel>
         <apex:outputPanel id="commandButtons">
             <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-                <apex:commandButton id="saveNotif" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="fields, commandButtons, saveError" styleClass="slds-button slds-button--small slds-button--neutral" />
+                <apex:commandButton id="saveNotif" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="fields, commandButtons, saveError" styleClass="slds-button slds-button--small slds-button--brand" />
                 <apex:commandButton id="cancelNotif" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="fields, commandButtons, saveError" styleClass="slds-button slds-button--small slds-button--neutral" />
             </div>
         </apex:outputPanel>
