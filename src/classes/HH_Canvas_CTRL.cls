@@ -11,6 +11,13 @@ public class HH_Canvas_CTRL {
     public static list<Contact> getContacts(ID hhId) {
         if (hhId == null)
             return null;
-        return [select Id, Firstname, Lastname from Contact where AccountId = :hhId];        
+        return [select Id, Firstname, Lastname from Contact 
+                where AccountId = :hhId
+                order by npo02__Household_Naming_Order__c, CreatedDate];        
+    }
+    
+    @AuraEnabled
+    public static void updateContacts(list<Contact> listCon) {
+        upsert listCon;
     }
 }

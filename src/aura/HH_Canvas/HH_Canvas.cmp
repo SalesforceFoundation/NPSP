@@ -1,21 +1,39 @@
 <aura:component controller="HH_Canvas_CTRL" >
+    
+    <!-- our attributes -->
     <aura:attribute name="hhId" type="String" />
     <aura:attribute name="hh" type="Account" />
     <aura:attribute name="listCon" type="Contact[]" />
     
+    <!-- events we fire -->
+   	<aura:registerEvent name="ContactReorderEvent" type="c:HH_ContactReorderEvent"/>
+    
+    <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
-    <h1>Household Canvas</h1>
-    <h2>hhId is {!v.hhId}</h2>
-    <h3>hh is {!v.hh}</h3>
-    <h4>hh.Name is {!v.hh.Name}</h4>
+    <!-- methods we expose -->
+    <aura:method name="save" action="{!c.doSave}" access="PUBLIC" />    
 
-    <aura:iteration items="{!v.listCon}" var="con">
-		<ul class="slds-list--horizontal slds-has-cards--space has-selections">
-    		<li class="slds-list__item">        
+    <!-- markup follows... -->
+	
+	<ul id="SortCanvas" class="slds-list--horizontal slds-has-cards--space">
+    	<aura:iteration items="{!v.listCon}" var="con" indexVar="icon" >
+    		<li class="slds-list__item" style="margin:0;border:0;" data-icontact="{!icon}" >        
 	    		<c:HH_ContactCard contact="{!con}" />
             </li>
-        </ul>
-    </aura:iteration>
-	
+	    </aura:iteration>
+    </ul>
+    
+    <!-- debug markup -->
+    <div class="slds-text-body--small slds-m-around--small" style="font-style:italic;">
+        <p>Debug information:</p>
+	    <p>Household Canvas - hhId is {!v.hhId}, hh.Name is {!v.hh.Name}</p>
+    	<p>Household contacts are: 
+			<aura:iteration items="{!v.listCon}" var="con" indexVar="icon" >        
+            	{!con.FirstName + ' ' + con.LastName},&nbsp;
+	    	</aura:iteration>
+    	</p>
+    </div>
+    
+    
 </aura:component>

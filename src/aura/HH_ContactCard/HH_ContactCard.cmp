@@ -1,18 +1,68 @@
 <aura:component >
+    <!-- our attributes -->
 	<aura:attribute name="contact" type="Contact"/>
-
-    <div class="slds-tile slds-tile--board">
-        <p class="slds-tile__title slds-truncate">
+    
+    <!-- events we fire -->
+   	<aura:registerEvent name="ContactChangedEvent" type="c:HH_ContactChangedEvent"/>
+    
+    <!-- markup follows... -->
+    
+  <div class="slds-card slds-p-around--none">
+    <div class="slds-card__header slds-p-around--none">
+    <div class="slds-tile slds-tile--board slds-m-around--none" style="margin:0;">
+        <span class="slds-tile__title slds-truncate">
           <div class="slds-media slds-media--center slds-has-flexi-truncate">
             <div class="slds-media__figure">
               <c:svg class="slds-icon slds-icon-standard-contact slds-icon--small"
                  xlinkHref="/resource/SLDS/assets/icons/standard-sprite/svg/symbols.svg#contact" />
             </div>
             <div class="slds-media__body">
-              <a href="#">{!v.contact.FirstName} {!v.contact.LastName}</a>
+              <a href="#">{!v.contact.FirstName}&nbsp;{!v.contact.LastName}</a>
             </div>
           </div>
-        </p>
+        </span>
     </div> <!-- slds-tile -->
-	
+	</div>
+		<div class="slds-card__body slds-m-around--x-small" >
+          	<form>
+			  <fieldset class="slds-form-element">
+      			<legend class="form-element__legend slds-form-element__label">Exclude from:</legend>                
+            	<div class="slds-form-element">
+                    <div class="slds-form-element__control">
+                      <label class="slds-checkbox">
+                          <ui:inputCheckbox aura:id="Exclude_from_Household_Name__c"
+                        		class="slds-checkbox" change="{!c.onCheck}"
+                        		value="{!v.contact.Exclude_from_Household_Name__c }"/> 
+                      	  <span class="slds-checkbox--faux"></span>
+                          <span class="slds-form-element__label" for="exHHName">Household Name</span>
+                      </label>
+                    </div>
+                </div>
+            	<div class="slds-form-element">
+                    <div class="slds-form-element__control">
+                      <label class="slds-checkbox">
+	            			<ui:inputCheckbox aura:id="Exclude_from_Household_Formal_Greeting__c"
+                        		class="slds-checkbox" change="{!c.onCheck}"
+        	                	value="{!v.contact.Exclude_from_Household_Formal_Greeting__c }"/>          
+            	          	<span class="slds-checkbox--faux"></span>
+	            	        <span class="slds-form-element__label">Formal Greeting</span>
+                      </label>
+                    </div>
+                </div>
+            	<div class="slds-form-element">
+                    <div class="slds-form-element__control">
+                      <label class="slds-checkbox">
+                            <ui:inputCheckbox aura:id="Exclude_from_Household_Informal_Greeting__c" 
+                        		class="slds-checkbox" change="{!c.onCheck}"
+                                value="{!v.contact.Exclude_from_Household_Informal_Greeting__c }"/>          
+                      	  	<span class="slds-checkbox--faux"></span>
+	                      	<span class="slds-form-element__label">Informal Greeting</span>
+                      </label>
+                    </div>
+                </div>
+              </fieldset>
+            </form>
+       </div>
+  </div> <!-- slds-card -->
+    
 </aura:component>

@@ -2,6 +2,9 @@
     <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <apex:includeLightning />
         <apex:stylesheet value="{!URLFOR($Resource.SLDS, 'assets/styles/salesforce-lightning-design-system-vf.css')}" />
+		<apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
+		<apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-migrate-1.2.1.min.js')}"/>
+		<apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery-ui/jquery-ui-1.10.4.min.js')}"/>
         
     	<style>
             html body.sfdcBody {
@@ -10,16 +13,30 @@
         </style>        
 
         <script>
+        	var j$ = jQuery.noConflict();
+        	var hhCanvas;
+
         	var hhId = '{!accHH.Id}';
             $Lightning.use("c:ManageHHApp", function() {
                 $Lightning.createComponent("c:HH_Canvas", 
                     { hhId : hhId },
                     "lightning",
                     function(cmp) {
-                        // anything needed after lightning loaded?
+                        // remember our component for our own javascript use
+                        hhCanvas = cmp;
                     }
                 );
             });
+        
+        	function doSave() {                
+                debugger;
+                $A.getCallback(function() {
+                    debugger;
+                    var action = hhCanvas.get('c.doSave');
+                    $A.enqueueAction(action);
+                });                
+            }
+        
         </script>
         
     <apex:form >
@@ -41,7 +58,7 @@
 
                 <div class="slds-col slds-no-flex slds-align-middle">
                     <div class="slds-button-group" role="group">
-                        <apex:commandButton styleClass="slds-button slds-button--neutral" action="{!save}" value="{!$Label.stgBtnSave}" />
+                        <apex:commandButton styleClass="slds-button slds-button--neutral" onclick="doSave();return false;" value="{!$Label.stgBtnSave}" />
                         <apex:commandButton styleClass="slds-button slds-button--neutral" action="{!cancel}" value="{!$Label.stgBtnCancel}" />
                     </div>
                 </div>

@@ -28,7 +28,7 @@
 			if (component.isValid() && state === "SUCCESS") {
                 var listCon = response.getReturnValue();
                 console.log(listCon);                
-				component.set("v.listCon", listCon);
+				component.set("v.listCon", listCon);                
 			}
             else if (component.isValid() && state === "ERROR") {
                 self.reportError(response);
@@ -39,7 +39,7 @@
     },
 
     // helper to display an errors that occur from a server method call
-    reportError: function(response) {
+    reportError : function(response) {
         var errors = response.getError();
         if (errors) {
             $A.logf("Errors", errors);
@@ -53,6 +53,62 @@
         } else {
             $A.error("Unknown error");
         }        
+    },
+    
+    initJQueryHandlers : function(component) {
+        if (typeof jQuery !== "undefined" && typeof $j === "undefined") {
+            $j = jQuery.noConflict(true);;
+        }        
+        
+        if (typeof $j === "undefined")
+            return;
+        
+        // turn on jqueryui drag/sortable support
+        j$('.slds-has-cards--space').sortable( {
+            tolerance: "pointer", 
+            
+            // called after DOM has been updated after a drag/drop sort
+ 	        update: function(event, ui) {
+                debugger;
+                
+                // update our listCon to the new order
+                var listCon = component.get('v.listCon');
+                var listConNew = [];
+                for (var i = 0; i < this.children.length; i++) {
+                    var icon = this.children[i].getAttribute("data-icontact");
+                	listConNew.push(listCon[icon]);
+                    listCon[icon].npo02__Household_Naming_Order__c = i;
+                }
+                component.set('v.listCon', listConNew);
+                
+                // now notify other components the reorder occurred
+                var event = $A.get("e.c:HH_ContactReorderEvent");
+                event.setParams({ "listCon" : listConNew });
+                event.fire();
+            }
+        });
+        j$('.slds-has-cards--space').disableSelection();         
+    },
+    
+    doSave : function(component) {
+        debugger;
+        var listCon = component.get("v.listCon");
+
+        // update our contacts
+		var action = component.get("c.updateContacts");
+        action.setParams({listCon: listCon});
+		var self = this;
+		action.setCallback(this, function(response) {
+			var state = response.getState();
+			if (component.isValid() && state === "SUCCESS") {
+                //self.close(component);
+                alert('save successful from Canvas!');
+			}
+            else if (component.isValid() && state === "ERROR") {
+                self.reportError(response);
+            }            
+		});
+		$A.enqueueAction(action);        
     },
 
 })
