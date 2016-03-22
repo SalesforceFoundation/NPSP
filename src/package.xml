@@ -786,10 +786,8 @@
         <members>alloNegativeAmount</members>
         <members>alloNegativePercent</members>
         <members>alloPercentExceed100</members>
-        <members>alloRemainder</members>
         <members>alloSingleParent</members>
         <members>alloTotalExceedsOppAmt</members>
-        <members>alloTotals</members>
         <members>bdiAccountCustomIdError</members>
         <members>bdiBatchException</members>
         <members>bdiBtnClose</members>
