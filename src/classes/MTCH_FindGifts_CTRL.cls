@@ -79,7 +79,7 @@ public with sharing class MTCH_FindGifts_CTRL {
         opp = [SELECT Id, Name, AccountId, Account.Name, Amount, StageName, Account.Matching_Gift_Percent__c FROM Opportunity WHERE Id = :opp.Id];
         matchingGiftPercent = opp.Account.Matching_Gift_Percent__c == null ? 100 : opp.Account.Matching_Gift_Percent__c;
         
-        // if the opp Amount is null, give a warning, but still load the page.
+        // if the opp Amount is null, treat as $0 and still load the page.
         if (opp.Amount == null) 
             opp.Amount = 0;
 

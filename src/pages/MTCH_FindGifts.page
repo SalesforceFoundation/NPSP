@@ -27,7 +27,7 @@
       <div class="slds">
       
         <!-- PAGE HEADER -->
-        <apex:outputPanel id="page-header-placeholder" > 
+        <div id="page-header-placeholder">
             <div id="page-header-fixed-placeholder"></div>
             <div id="page-header" class="slds-page-header" role="banner">
                 <nav role="navigation" class="slds-m-bottom--xx-small">
@@ -123,13 +123,13 @@
                     </div>
                 </div>
             </div>
-        </apex:outputPanel>
+        </div>
         <!-- /PAGE HEADER -->
 
         <apex:pageMessages />
 
         <!-- PAGE CONTENT -->
-        <apex:outputPanel styleclass="myBodyContent slds-m-top--large" rendered="{!opp.Amount != null}">
+        <div class="myBodyContent slds-m-top--large">
 
             
             <!-- DATA TABLE -->
@@ -242,7 +242,7 @@
             </div>
             <!-- /SEARCH POPUP -->
 
-        </apex:outputPanel> <!--  /myBodyContent -->
+        </div> <!--  /myBodyContent -->
       </div> <!-- /slds -->
     </apex:form>
     <script type="text/javascript">
