@@ -101,5 +101,7 @@ public with sharing class UTIL_Namespace_TEST {
         str = Label.CONV_Reload;
         str = Label.stgLabelOppUpdatePrimaryContact;
         str = Label.stgHelpNoUDR;
+        str = Label.alloRemainder;
+        str = Label.alloTotals;
     }
 }
