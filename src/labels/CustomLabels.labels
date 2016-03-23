@@ -3858,7 +3858,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDAddCampaign</shortDescription>
-        <value>If selected, adds the campaign that you’ve specified for the Recurring Donation to all related (i.e. “child”) opportunities. If this option is not selected, the campaign appears on the Recurring Donation’s first opportunity only.</value>
+        <value>If selected, adds the campaign that you&apos;ve specified for the Recurring Donation to all related (i.e. &apos;child&apos;) opportunities. If this option is not selected, the campaign appears on the Recurring Donation&apos;s first opportunity only.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDDisableScheduling</fullName>
@@ -3866,7 +3866,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDDisableScheduling</shortDescription>
-        <value>Prevents the scheduling of the nightly update to Recurring Donations. You’ll need to remove any existing scheduled jobs through Setup | Monitoring | Scheduled Jobs.</value>
+        <value>Prevents the scheduling of the nightly update to Recurring Donations. You will need to remove any existing scheduled jobs through Setup | Monitoring | Scheduled Jobs.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDFailures</fullName>
@@ -3930,7 +3930,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDOppForecastMonths</shortDescription>
-        <value>Number of months’ worth of open opportunities created for Open-Ended Recurring Donations. The default is 12, so after every month, Salesforce creates another month’s worth of open opportunities (i.e., the total months’ worth of open opportunities is always 12).</value>
+        <value>Number of months&apos; worth of open opportunities created for Open-Ended Recurring Donations. The default is 12, so after every month, Salesforce creates another month&apos;s worth of open opportunities (i.e., the total months&apos; worth of open opportunities is always 12).</value>
     </labels>
     <labels>
         <fullName>stgHelpRDOppRT</fullName>
@@ -3938,7 +3938,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDOppRT</shortDescription>
-        <value>The opportunity record type assigned to the Recurring Donation’s child opportunities.</value>
+        <value>The opportunity record type assigned to the Recurring Donation&apos;s child opportunities.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDPeriodFrequency</fullName>
