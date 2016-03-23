@@ -33,7 +33,7 @@
         <!-- /PAGE HEADER -->
         
         <apex:actionFunction name="refresh" action="{!refresh}" reRender="totalSelected, totalUn" />
-        <c:UTIL_PageMessages/>
+        <c:UTIL_PageMessages />
         
         <!-- outer div of body below header -->
         <div class="myBodyContent">
