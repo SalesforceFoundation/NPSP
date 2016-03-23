@@ -6,8 +6,8 @@
       <div class="slds">
     
         <!-- PAGE HEADER -->
-        <div class="slds-page-header" role="banner">
-            <div class="slds-grid">
+        <div class="slds-page-header" role="banner" >
+            <apex:outputPanel styleclass="slds-grid" rendered="{!opp.Amount != null}">
                 <div class="slds-col">
                     <nav role="navigation">
                         <p id="bread-crumb-label" class="slds-assistive-text">You are here:</p>
@@ -28,15 +28,15 @@
                         <apex:commandButton styleClass="slds-button slds-button--brand" action="{!save}" value="{!$Label.stgBtnSave}" />
                     </div>
                 </div>
-            </div>
+            </apex:outputPanel>
         </div>
         <!-- /PAGE HEADER -->
         
         <apex:actionFunction name="refresh" action="{!refresh}" reRender="totalSelected, totalUn" />
-        <c:UTIL_PageMessages/>
+        <c:UTIL_PageMessages />
         
         <!-- outer div of body below header -->
-        <div class="myBodyContent">
+        <apex:outputPanel styleclass="myBodyContent" rendered="{!opp.Amount != null}">
         
             <!-- SUMMARY INFO PANEL -->
             <div class="slds-grid slds-p-around--medium slds-p-bottom--large slds-theme--default">            
@@ -131,7 +131,7 @@
             <div class="slds-p-around--medium">
                 <apex:commandLink action="{!addAnotherSoftCredit}" value="{!$Label.pscManageSoftCreditsAdd}" reRender="tablePanel" />
             </div>
-        </div> <!-- myBodyContent -->
+        </apex:outputPanel> <!-- myBodyContent -->
       </div> <!-- slds -->
     </apex:form>
 </apex:page>

@@ -786,8 +786,10 @@
         <members>alloNegativeAmount</members>
         <members>alloNegativePercent</members>
         <members>alloPercentExceed100</members>
+        <members>alloRemainder</members>
         <members>alloSingleParent</members>
         <members>alloTotalExceedsOppAmt</members>
+        <members>alloTotals</members>
         <members>bdiAccountCustomIdError</members>
         <members>bdiBatchException</members>
         <members>bdiBtnClose</members>
@@ -992,7 +994,6 @@
         <members>mtchFindMoreGifts</members>
         <members>mtchFindMoreGiftsInfo</members>
         <members>mtchItems</members>
-        <members>mtchOppAmountNull</members>
         <members>mtchSearchCriteriaEmpty</members>
         <members>mtchSelectCbxTitle</members>
         <members>mtchTotalMatchingGift</members>
@@ -1027,7 +1028,6 @@
         <members>pscManageSoftCreditsAdd</members>
         <members>pscManageSoftCreditsAmount</members>
         <members>pscManageSoftCreditsAmountMissing</members>
-        <members>pscManageSoftCreditsAmountNull</members>
         <members>pscManageSoftCreditsAmountOrPercent</members>
         <members>pscManageSoftCreditsCantChangeCurrency</members>
         <members>pscManageSoftCreditsFull</members>
