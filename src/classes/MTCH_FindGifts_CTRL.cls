@@ -79,6 +79,10 @@ public with sharing class MTCH_FindGifts_CTRL {
         opp = [SELECT Id, Name, AccountId, Account.Name, Amount, StageName, Account.Matching_Gift_Percent__c FROM Opportunity WHERE Id = :opp.Id];
         matchingGiftPercent = opp.Account.Matching_Gift_Percent__c == null ? 100 : opp.Account.Matching_Gift_Percent__c;
         
+        // if the opp Amount is null, treat as $0 and still load the page.
+        if (opp.Amount == null) 
+            opp.Amount = 0;
+
         closedWonStages = new Set<String>();
         for (OpportunityStage s : [SELECT MasterLabel FROM OpportunityStage WHERE IsClosed = true AND IsWon = true]){
             closedWonStages.add(s.MasterLabel);
