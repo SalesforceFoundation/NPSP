@@ -1,96 +1,93 @@
-<apex:page controller="STG_PanelTDTM_CTRL" docType="html-5.0">
-    <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.stgNavTriggerConfig}" />
-    <apex:pageMessage summary="{!$Label.stgHelpTriggerHandlers}" severity="warning" strength="1" />
-    <apex:pageMessage summary="{!$Label.stgHelpTriggerHandlersAsync}" severity="warning" strength="1" rendered="{!hasAsync}"/>
-
-    <apex:form id="form" styleClass="stgForm form-horizontal" >  
-        <apex:pageMessages id="pageMessages"/>
-        <apex:pageBlock mode="maindetail">
-            <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="button-block">
-                <apex:commandButton value="{!$Label.stgBtnNewTH}" action="{!newTh}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
+<apex:page controller="STG_PanelTDTM_CTRL" docType="html-5.0" action="{!addPageMessages}">
+<style type="text/css">
+    .slds .slds-table.slds-table--bordered th, .slds .slds-table.slds-table--bordered td {
+        padding:3px;
+    }
+</style>
+    <apex:form id="form">
+        <div class="slds-m-around--x-large">
+            <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.stgNavTriggerConfig}" />
+            <c:UTIL_PageMessages />
+            <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
+                <apex:commandButton value="{!$Label.stgBtnNewTH}" action="{!newTh}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+            </div>
+            <apex:outputPanel rendered="{!isEditMode}" id="panelNewAc">
+                <div class="slds-section-title--divider" >{!$Label.stgLabelNewTH}</div>
+                <div class="slds-form--horizontal">
+                    <div class="slds-form-element">
+                        <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Object__c.Label}" for="tbxO" styleClass="slds-form-element__label" />
+                        <div class="slds-form-element__control">
+                            <apex:inputField value="{!thNew.Object__c}" required="false" id="tbxO" styleClass="slds-input" />
+                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpTHObject}" />
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+                        <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Class__c.Label}" for="tbxC" styleClass="slds-form-element__label" />
+                        <div class="slds-form-element__control">
+                            <apex:inputField value="{!thNew.Class__c}" required="false" id="tbxC" styleClass="fslds-input" />
+                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpTHClass}" />
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+                        <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Load_Order__c.Label}" for="tbxLO" styleClass="slds-form-element__label" />
+                        <div class="slds-form-element__control">
+                            <apex:inputField value="{!thNew.Load_Order__c}" type="number" required="false" id="tbxLO" styleClass="slds-input" />
+                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpTHLoadOrder}" />
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+                        <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Trigger_Action__c.Label}" styleClass="slds-form-element__label" />
+                        <div class="slds-form-element__control">
+                            <c:STG_DataBoundMultiSelect settingObject="{!thNew}" fieldname="Trigger_Action__c" listSO="{!listSOTriggerAction}" inEditMode="{!isEditMode}" />
+                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpTHTriggerAction}" />
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+                        <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Active__c.Label}" for="cbxA" styleClass="slds-form-element__label" />
+                        <div class="slds-form-element__control">
+                            <apex:inputField value="{!thNew.Active__c}" required="false" id="cbxA" styleClass="slds-checkbox" />
+                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpTHActive}" />
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+                        <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Asynchronous__c.Label}" for="cbxAs" styleClass="slds-form-element__label" />
+                        <div class="slds-form-element__control">
+                            <apex:inputField value="{!thNew.Asynchronous__c}" required="false" id="cbxAs" styleClass="slds-checkbox" />
+                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpTHAsync}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
+                    <apex:commandButton value="{!$Label.stgBtnCreateTH}" action="{!createTh}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+                    <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelTh}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+                </div>
             </apex:outputPanel>
-
-            <apex:outputPanel layout="block" rendered="{!isEditMode}" id="panelNewAc" styleClass="inline-form-block">
-            <section>
-                <h3 class="section-header" >{!$Label.stgLabelNewTH}</h3>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Object__c.Label}" for="tbxO" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <apex:inputField value="{!thNew.Object__c}" required="false" id="tbxO" styleClass="form-control" />
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpTHObject}" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Class__c.Label}" for="tbxC" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <apex:inputField value="{!thNew.Class__c}" required="false" id="tbxC" styleClass="form-control" />
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpTHClass}" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Load_Order__c.Label}" for="tbxLO" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <apex:inputField value="{!thNew.Load_Order__c}" type="number" required="false" id="tbxLO" styleClass="form-control" />
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpTHLoadOrder}" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Trigger_Action__c.Label}" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <c:STG_DataBoundMultiSelect settingObject="{!thNew}" fieldname="Trigger_Action__c" listSO="{!listSOTriggerAction}" inEditMode="{!isEditMode}" />
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpTHTriggerAction}" /> 
-                    </div>
-                </div>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Active__c.Label}" for="cbxA" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <apex:inputField value="{!thNew.Active__c}" required="false" id="cbxA" />
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpTHActive}" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Asynchronous__c.Label}" for="cbxAs" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <apex:inputField value="{!thNew.Asynchronous__c}" required="false" id="cbxAs" />
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpTHAsync}" />
-                    </div>
-                </div>
-            </section>
-            <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="button-block">
-                <apex:commandButton value="{!$Label.stgBtnCreateTH}" action="{!createTh}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
-                <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelTh}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />
-            </apex:outputPanel>
-            </apex:outputPanel>
- 
-            <apex:pageBlockTable value="{!listTH}" var="th" >
-               <!-- <apex:column headerValue="{!$Label.stgLabelActionColumn}" styleClass="actionColumn" style="text-align:center;" >
-                   <apex:commandLink action="{!deleteTh}" 
-                       title="{!$Label.stgLinkDelete} {!th.Object__c} - {!th.Class__c}"                                                    
-                       styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" 
-                       onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
-                       <apex:param assignTo="{!thIdDelete}" name="idDeleteTh" value="{!th.Id}" /> 
-                   </apex:commandLink>
-               </apex:column>  -->
-               <apex:column value="{!th.Object__c}" />
-               <apex:column value="{!th.Class__c}" />
-               <apex:column value="{!th.Load_Order__c}" />
-               <apex:column value="{!th.Trigger_Action__c}" />
-               <apex:column value="{!th.Active__c}" />
-               <apex:column value="{!th.Asynchronous__c}" />
-               <apex:column value="{!th.User_Managed__c}" />
-           </apex:pageBlockTable>
-        </apex:pageBlock> 
+        </div>
+        <table class="slds-table slds-table--bordered" style="width:100%; table-layout:fixed;">
+            <thead>
+                <tr class="slds-text-heading--label">
+                    <th scope="col" class="slds-cell-wrap">{!$ObjectType.Trigger_Handler__c.Fields.Object__c.Label}</th>
+                    <th scope="col" class="slds-cell-wrap">{!$ObjectType.Trigger_Handler__c.Fields.Class__c.Label}</th>
+                    <th scope="col" style="width:60px;" class="slds-cell-wrap">{!$ObjectType.Trigger_Handler__c.Fields.Load_Order__c.Label}</th>
+                    <th scope="col" style="width:100px;" class="slds-cell-wrap">{!$ObjectType.Trigger_Handler__c.Fields.Trigger_Action__c.Label}</th>
+                    <th scope="col" style="width:60px;" class="slds-cell-wrap">{!$ObjectType.Trigger_Handler__c.Fields.Active__c.Label}</th>
+                    <th scope="col" style="width:130px;" class="slds-cell-wrap">{!$ObjectType.Trigger_Handler__c.Fields.Asynchronous__c.Label}</th>
+                    <th scope="col" style="width:100px;" class="slds-cell-wrap">{!$ObjectType.Trigger_Handler__c.Fields.User_Managed__c.Label}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <apex:repeat var="th" value="{!listTH}" >
+                    <tr>
+                        <td class="slds-cell-wrap"><div class="slds-truncate slds-text-body--small">{!th.Object__c}</div></td>
+                        <td class="slds-cell-wrap"><div class="slds-truncate slds-text-body--small">{!th.Class__c}</div></td>
+                        <td class="slds-cell-wrap"><div class="slds-text-body--small">{!th.Load_Order__c}</div></td>
+                        <td class="slds-cell-wrap"><div class="slds-text-body--small">{!th.Trigger_Action__c}</div></td>
+                        <td class="slds-cell-wrap"><div class="slds-text-body--small"><apex:outputField value="{!th.Active__c}"/></div></td>
+                        <td class="slds-cell-wrap"><div class="slds-text-body--small"><apex:outputField value="{!th.Asynchronous__c}"/></div></td>
+                        <td class="slds-cell-wrap"><div class="slds-text-body--small"><apex:outputField value="{!th.User_Managed__c}"/></div></td>
+                    </tr>
+                </apex:repeat>
+           </tbody>
+        </table>
     </apex:form>
 </apex:page>

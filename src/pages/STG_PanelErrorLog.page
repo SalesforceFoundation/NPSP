@@ -1,15 +1,12 @@
 <apex:page controller="STG_PanelErrorLog_CTRL" >
-    <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.stgNavErrorLog}" />
-
-    <apex:form id="form" styleClass="stgForm" >  
-        <apex:pageMessages id="pageMessages"/>
-        <apex:pageBlock mode="maindetail">
-            <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="button-block">
-                <apex:commandButton value="{!$Label.stgBtnClearErrorLog}" action="{!clearErrorLog}" status="statusLoad" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
-            </apex:outputPanel>
-
-            <c:UTIL_SoqlListView SoqlListViewConsumer="{!slvConsumer}" />
-                                              
-        </apex:pageBlock> 
+    <apex:form id="form">
+        <div class="slds-m-around--x-large">
+            <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.stgNavErrorLog}" />
+            <c:UTIL_PageMessages />
+            <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
+                <apex:commandButton value="{!$Label.stgBtnClearErrorLog}" action="{!clearErrorLog}" rendered="{!isReadOnlyMode}" status="statusLoad" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+            </div>
+        </div>
+        <c:UTIL_SoqlListView SoqlListViewConsumer="{!slvConsumer}" />
     </apex:form>
 </apex:page>
