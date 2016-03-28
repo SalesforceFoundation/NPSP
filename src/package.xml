@@ -326,7 +326,6 @@
         <name>ApexTrigger</name>
     </types>
     <types>
-        <members>HHContainer</members>
         <members>HH_Canvas</members>
         <members>HH_ContactCard</members>
         <members>ManageHHApp</members>
