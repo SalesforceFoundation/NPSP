@@ -37,17 +37,17 @@
             dominant-baseline: middle;
             fill: #00396B;
         }
-        #jobsListTemplate {
+        ul[data-job-progress="template"] {
             display: none;
         }
     </style>
 
-    <div class="slds">
+    <apex:outputPanel layout="block" id="jobProgressContainer" styleClass="slds">
         <div class="slds-card">
             <div class="slds-card__header">
                 <h3 class="slds-text-heading--small">{!batchComponentLabel}</h3>
             </div>
-            <div id="jobsListContainer" class="slds-card__body">
+            <div data-job-progress="list-container" class="slds-card__body">
                 <div class="slds-spinner--large slds-container--center slds-m-vertical--xx-large">
                     <img src="{!URLFOR($Resource.SLDS, '/assets/images/spinners/slds_spinner_brand.gif')}" alt="Loading..." />
                 </div>
@@ -55,7 +55,7 @@
         </div>
 
 
-        <ul id="jobsListTemplate" class="slds-list--vertical">
+        <ul data-job-progress="template" class="slds-list--vertical">
             <li class="slds-list__item slds-m-bottom--large">
                 <div class="slds-media slds-tile slds-wrap">
                     <div class="slds-media__figure slds-size--2-of-12">
@@ -80,29 +80,29 @@
                             <dl class="slds-dl--horizontal slds-text-body--small">
                                 <div class="slds-x-small-show-only">
                                     <dt class="slds-dl--horizontal__label slds-medium-size--2-of-12 slds-x-small-show-only">
-                                        <p class="slds-truncate">Status:</p>
+                                        <span class="slds-truncate">Status:</span>
                                     </dt>
                                     <dd class="slds-dl--horizontal__detail slds-tile__meta slds-medium-size--10-of-12 slds-x-small-show-only">
-                                        <p class="slds-truncate status"></p>
+                                        <span class="slds-truncate status"></span>
                                     </dd>
                                 </div>
                                 <dt class="slds-dl--horizontal__label slds-medium-size--2-of-12">
-                                    <p class="slds-truncate">Progress:</p>
+                                    <span class="slds-truncate">Progress:</span>
                                 </dt>
                                 <dd class="slds-dl--horizontal__detail slds-tile__meta slds-medium-size--10-of-12">
-                                    <p class="slds-truncate"><span class="jobItemsProcessed"></span> of <span class="totalJobItems"></span> batches processed</p>
+                                    <span class="slds-truncate"><span class="jobItemsProcessed"></span> of <span class="totalJobItems"></span> batches processed</span>
                                 </dd>
                                 <dt class="slds-dl--horizontal__label slds-medium-size--2-of-12 completedDateContainer">
-                                    <p class="slds-truncate">Completed:</p>
+                                    <span class="slds-truncate">Completed:</span>
                                 </dt>
                                 <dd class="slds-dl--horizontal__detail slds-tile__meta slds-medium-size--10-of-12 completedDateContainer">
-                                    <p class="slds-truncate completedDate"></p>
+                                    <span class="slds-truncate completedDate"></span>
                                 </dd>
                                 <dt class="slds-dl--horizontal__label slds-medium-size--2-of-12 extendedStatusContainer">
-                                    <p class="slds-truncate">Extended Status:</p>
+                                    <span class="slds-truncate">Extended Status:</span>
                                 </dt>
                                 <dd class="slds-dl--horizontal__detail slds-tile__meta slds-medium-size--10-of-12 extendedStatusContainer">
-                                    <p class="slds-truncate extendedStatus"></p>
+                                    <span class="slds-truncate extendedStatus"></span>
                                 </dd>
                             </dl>
                         </div>
@@ -110,18 +110,19 @@
                 </div>
             </li>
         </ul>
-    </div>
+    </apex:outputPanel>
 
 
     <script>
     (function () {
 
+        var jobProgressContainer = document.getElementById('{!$Component.jobProgressContainer}');
         var pollingDelay = {!pollingDelay};
         var refreshInterval;
         var eventTarget;
 
-        var jobsListTemplate = document.getElementById('jobsListTemplate').cloneNode(true);
-        jobsListTemplate.removeAttribute("id");
+        var jobsListTemplate = jobProgressContainer.querySelector('[data-job-progress="template"]').cloneNode(true);
+        jobsListTemplate.removeAttribute("data-job-progress");
 
         var directives = {
             "completionBadge": {
@@ -190,7 +191,7 @@
                 {!numberOfJobs},
                 function (result, event) {
                     sendProgressEvents(result);
-                    var jobsListContainer = document.getElementById('jobsListContainer');
+                    var jobsListContainer = jobProgressContainer.querySelector('[data-job-progress="list-container"]');
                     var jobsListContent = Transparency.render(jobsListTemplate.cloneNode(true), result, directives);
                     jobsListContainer.replaceChild(jobsListContent, jobsListContainer.firstElementChild);
                 }
@@ -244,7 +245,7 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
+        function init() {
             eventTarget = document.getElementById('{!eventTargetId}');
 
             if (eventTarget) {
@@ -266,7 +267,13 @@
             if ({!IF(startPolling, 'true', 'false')}) {
                 startPolling(pollingDelay);
             }
-        });
+        }
+
+        if ('loading' !== document.readyState) {
+            init();
+        } else {
+            document.addEventListener('DOMContentLoaded', init);
+        }
     })();
     </script>
 </apex:component>

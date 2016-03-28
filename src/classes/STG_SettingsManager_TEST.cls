@@ -243,12 +243,9 @@ public with sharing class STG_SettingsManager_TEST {
         if (strTestOnly != '*' && strTestOnly != 'testPanelHouseholds') return;
         STG_PanelHouseholds_CTRL panel = new STG_PanelHouseholds_CTRL();
         system.assertEquals('idPanelHH', panel.idPanel());
-        system.assertEquals(false, panel.isRunningBatch);
         STG_Panel.stgService.stgHH.npo02__Advanced_Household_Naming__c = false;
         panel.saveSettings();
-        system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgHouseholdsSettings().npo02__Advanced_Household_Naming__c);        
-        panel.activateHouseholdNaming();
-        system.assertEquals(true, UTIL_CustomSettingsFacade.getOrgHouseholdsSettings().npo02__Advanced_Household_Naming__c);
+        system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgHouseholdsSettings().npo02__Advanced_Household_Naming__c);
     }
 
     /*********************************************************************************************************

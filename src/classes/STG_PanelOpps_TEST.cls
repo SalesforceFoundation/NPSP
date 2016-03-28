@@ -47,8 +47,5 @@ public with sharing class STG_PanelOpps_TEST {
         System.assert(opportunityStageOptions.size() >= 1);
         System.assertEquals('', opportunityStageOptions.get(0).getValue());
         System.assertEquals('-- no selection --', opportunityStageOptions.get(0).getLabel());
-
-        poc.runBatch();
     }
-
 }

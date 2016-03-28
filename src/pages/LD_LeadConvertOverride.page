@@ -19,24 +19,40 @@
             line-height: normal;
             margin-right: -30px;
         }
+
+        html body.sfdcBody {
+            padding: 0;
+        }
     </style>
 
     <div class="slds">
-
-        <div>
-            <apex:pageMessages />
-        </div>
-
-        <div class="slds-m-bottom--medium">
-            <h1 class="slds-text-heading--medium">
-                <apex:outputText value="{!$Label.leadConvertSectionTitle}"/>
-            </h1>
-            <h4 class="slds-text-heading--label">
-                <apex:outputText value="{!Lead.Name}"/>
-            </h4>
-        </div>
-
         <apex:form id="pbEdit" styleClass="slds-form--stacked">
+
+            <div>
+                <apex:pageMessages />
+            </div>
+
+            <div class="slds-page-header slds-m-bottom--medium" role="banner">
+                <div class="slds-grid">
+                    <div class="slds-col slds-has-flexi-truncate">
+                        <h1 class="slds-page-header__title slds-truncate slds-text-heading--medium">
+                            {!$Label.leadConvertSectionTitle}
+                        </h1>
+                        <p class="slds-text-heading--label slds-page-header__info">
+                            <apex:outputText value="{!Lead.Name}"/>
+                        </p>
+                    </div>
+                    <div class="slds-col slds-no-flex">
+                        <div class="slds-button-group" role="group">
+                            <apex:commandButton value="{!$Label.leadConvertBtnCancel}" action="{!cancel}" styleClass="slds-button slds-button--neutral"/>
+                            <apex:commandButton value="{!$Label.leadConvertBtnConvert}" action="{!convertLeadNow}" styleClass="slds-button slds-button--brand"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slds-p-horizontal--large">
+
             <div class="slds-form-element slds-is-required">
                 <label class="slds-form-element__label">
                     <apex:outputText value="{!$Label.leadConvertOwner}"/>
@@ -168,11 +184,7 @@
                 </div>
             </div>
 
-            <div class="slds-form-element">
-                <apex:commandButton value="{!$Label.leadConvertBtnCancel}" action="{!cancel}" styleClass="slds-button slds-button--neutral"/>
-                <apex:commandButton value="{!$Label.leadConvertBtnConvert}" action="{!convertLeadNow}" styleClass="slds-button slds-button--brand"/>
             </div>
-
 
         </apex:form>
 

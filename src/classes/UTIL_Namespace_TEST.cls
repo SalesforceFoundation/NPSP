@@ -98,5 +98,10 @@ public with sharing class UTIL_Namespace_TEST {
         str = Label.stgHelpCiceroAddrVerification;
         str = Label.stgHelpRDFieldMapOppField;
         str = Label.stgHelpRDFieldMapRDField;
+        str = Label.CONV_Reload;
+        str = Label.stgLabelOppUpdatePrimaryContact;
+        str = Label.stgHelpNoUDR;
+        str = Label.alloRemainder;
+        str = Label.alloTotals;
     }
 }
