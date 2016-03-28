@@ -188,10 +188,10 @@ public with sharing class HH_ManageHousehold_TEST {
         insert con1;
         
         Contact con2 = new Contact(
-            FirstName = 'David',
-            LastName = 'TestContactASDF',
-            email = 'testemail@groundwiretest.org',
-            npo02__Household__c = hh.id,
+            FirstName = 'Somebody',
+            LastName = 'Else',
+            email = 'withanother@email.org',
+            AccountId = hh.id,
             MailingStreet = '5678 Testing Drive Suite 1000',
             MailingCity = 'Seattle',
             MailingState = 'Washington',
