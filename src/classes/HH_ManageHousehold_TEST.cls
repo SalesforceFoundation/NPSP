@@ -191,7 +191,7 @@ public with sharing class HH_ManageHousehold_TEST {
             FirstName = 'Somebody',
             LastName = 'Else',
             email = 'withanother@email.org',
-            AccountId = hh.id,
+            npo02__Household__c = hh.id,
             MailingStreet = '5678 Testing Drive Suite 1000',
             MailingCity = 'Seattle',
             MailingState = 'Washington',
