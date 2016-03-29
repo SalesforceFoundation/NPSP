@@ -85,6 +85,7 @@
         <members>HH_CampaignDedupeBTN_TEST</members>
         <members>HH_CampaignDedupe_BATCH</members>
         <members>HH_Canvas_CTRL</members>
+        <members>HH_Container_LCTRL</members>
         <members>HH_HHObject_TDTM</members>
         <members>HH_HouseholdNaming</members>
         <members>HH_HouseholdNaming_BATCH</members>
@@ -337,6 +338,9 @@
     <types>
         <members>HH_Canvas</members>
         <members>HH_ContactCard</members>
+        <members>HH_ContactChangedEvent</members>
+        <members>HH_ContactReorderEvent</members>
+        <members>HH_Container</members>
         <members>ManageHHApp</members>
         <members>svg</members>
         <name>AuraDefinitionBundle</name>
