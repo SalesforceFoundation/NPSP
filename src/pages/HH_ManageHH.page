@@ -18,7 +18,7 @@
 
         	var hhId = '{!accHH.Id}';
             $Lightning.use("c:ManageHHApp", function() {
-                $Lightning.createComponent("c:HH_Canvas", 
+                $Lightning.createComponent("c:HH_Container", 
                     { hhId : hhId },
                     "lightning",
                     function(cmp) {
@@ -26,57 +26,10 @@
                         hhCanvas = cmp;
                     }
                 );
-            });
-        
-        	function doSave() {                
-                debugger;
-                $A.getCallback(function() {
-                    debugger;
-                    var action = hhCanvas.get('c.doSave');
-                    $A.enqueueAction(action);
-                });                
-            }
-        
+            });        
         </script>
-        
-    <apex:form >
-      <div class="slds">
-    
-        <!-- PAGE HEADER -->
-        <div class="slds-page-header" role="banner">
-            <div class="slds-grid">
-                <div class="slds-col">
-                    <nav role="navigation">
-                        <p id="bread-crumb-label" class="slds-assistive-text">You are here:</p>
-                        <ol class="slds-breadcrumb slds-list--horizontal" aria-labelledby="bread-crumb-label">
-                            <li class="slds-list__item slds-text-heading--label"><a class="slds-type-focus" href="{!URLFOR($Action.Account.Tab, $ObjectType.Account)}" >{!$ObjectType.Account.LabelPlural}</a></li>
-                            <li class="slds-list__item slds-text-heading--label"><a class="slds-type-focus" href="/{!accHH.Id}">{!accHH.Name}</a></li>
-                        </ol>
-                    </nav>              
-                    <h1 class="slds-text-heading--medium slds-p-top-medium">Manage Household</h1>
-                </div>        
 
-                <div class="slds-col slds-no-flex slds-align-middle">
-                    <div class="slds-button-group" role="group">
-                        <apex:commandButton styleClass="slds-button slds-button--neutral" onclick="doSave();return false;" value="{!$Label.stgBtnSave}" />
-                        <apex:commandButton styleClass="slds-button slds-button--neutral" action="{!cancel}" value="{!$Label.stgBtnCancel}" />
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- /PAGE HEADER -->
-        
-        <apex:pageMessages />
-        
-        <!-- outer div of body below header -->
-        <div class="myBodyContent">
-        
-	        <div id="lightning" />
-            
-        </div> <!-- myBodyContent -->
-      </div> <!-- slds -->
-    </apex:form>
-        
+        <div id="lightning" />        
         
     </html>
 </apex:page>

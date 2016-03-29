@@ -1,19 +1,18 @@
 ({
-	onCheck : function(component, event) {
-        debugger;
-        
-        // update our contact's exclusion property
-        var checked = event.source.elements[0].checked;
-        var con = component.get('v.contact');
-        // the item's Id is the developer field name
-        con[event.source.$localId$] = checked;
-        component.set('v.contact', con);
+    /*******************************************************************************************************
+    * @description Notifies the application that properties of the contact have changed
+    */
+	fireContactChangedEvent : function(component, event) {
+
+        // note that the contact's Naming Exclusions field is 
+        // updated by NPSP triggers based off the checkbox fields.
+        // so there is no reason to do it in the ui.
         
         // now notify other components the change occurred
         var event = $A.get("e.c:HH_ContactChangedEvent");
+        var con = component.get('v.contact');
         event.setParams({ "contact" : con });
-        event.fire();
-        
+        event.fire();        
 	},
     
 })

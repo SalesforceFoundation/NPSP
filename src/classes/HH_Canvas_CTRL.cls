@@ -18,6 +18,6 @@ public class HH_Canvas_CTRL {
     
     @AuraEnabled
     public static void updateContacts(list<Contact> listCon) {
-        upsert listCon;
+        update listCon;
     }
 }

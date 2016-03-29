@@ -23,7 +23,14 @@
         </span>
     </div> <!-- slds-tile -->
 	</div>
-		<div class="slds-card__body slds-m-around--x-small" >
+		<div class="slds-card__body slds-m-around--x-small slds-p-vertical--none" >
+            <!-- address -->
+            <div class="slds-text-body--small slds-m-bottom--small" >
+                <ui:outputText value="{!v.contact.MailingStreet}" /><br/>
+                <ui:outputText value="{!v.contact.MailingCity + ', ' + v.contact.MailingState + ' ' + v.contact.MailingPostalCode + ' '}" /><br/>
+                <ui:outputText value="{!v.contact.MailingCountry}" />                                     
+            </div>
+            
           	<form>
 			  <fieldset class="slds-form-element">
       			<legend class="form-element__legend slds-form-element__label">Exclude from:</legend>                
@@ -34,7 +41,7 @@
                         		class="slds-checkbox" change="{!c.onCheck}"
                         		value="{!v.contact.Exclude_from_Household_Name__c }"/> 
                       	  <span class="slds-checkbox--faux"></span>
-                          <span class="slds-form-element__label" for="exHHName">Household Name</span>
+                          <span class="slds-form-element__label" for="exHHName">Household Name </span>
                       </label>
                     </div>
                 </div>
@@ -45,7 +52,7 @@
                         		class="slds-checkbox" change="{!c.onCheck}"
         	                	value="{!v.contact.Exclude_from_Household_Formal_Greeting__c }"/>          
             	          	<span class="slds-checkbox--faux"></span>
-	            	        <span class="slds-form-element__label">Formal Greeting</span>
+	            	        <span class="slds-form-element__label">Formal Greeting </span>
                       </label>
                     </div>
                 </div>
@@ -56,7 +63,7 @@
                         		class="slds-checkbox" change="{!c.onCheck}"
                                 value="{!v.contact.Exclude_from_Household_Informal_Greeting__c }"/>          
                       	  	<span class="slds-checkbox--faux"></span>
-	                      	<span class="slds-form-element__label">Informal Greeting</span>
+	                      	<span class="slds-form-element__label">Informal Greeting </span>
                       </label>
                     </div>
                 </div>

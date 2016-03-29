@@ -1,10 +1,7 @@
 ({
+    // called after page load.  initialize our jquery/ui handlers
 	doInit : function(component, event, helper) {
-		helper.doInit(component);
         helper.initJQueryHandlers(component);
 	},
     
-    doSave : function(component, event, helper) {
-    	helper.doSave(component);
-	}
 })
