@@ -2,5 +2,5 @@
 <StaticResource xmlns="http://soap.sforce.com/2006/04/metadata">
     <cacheControl>Public</cacheControl>
     <contentType>application/zip</contentType>
-    <description>Salesforce Lightning Design System</description>
+    <description>Salesforce Lightning Design System v1.0.0</description>
 </StaticResource>

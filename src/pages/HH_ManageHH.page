@@ -1,0 +1,35 @@
+<apex:page standardController="Account" extensions="HH_ManageHH_CTRL" standardStylesheets="false" showHeader="true" docType="html-5.0"  >
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <apex:includeLightning />
+        <apex:stylesheet value="{!URLFOR($Resource.SLDS, 'assets/styles/salesforce-lightning-design-system-vf.css')}" />
+		<apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
+		<apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-migrate-1.2.1.min.js')}"/>
+		<apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery-ui/jquery-ui-1.10.4.min.js')}"/>
+        
+    	<style>
+            html body.sfdcBody {
+                padding: 0;
+            }
+        </style>        
+
+        <script>
+        	var j$ = jQuery.noConflict();
+        	var hhCanvas;
+
+        	var hhId = '{!accHH.Id}';
+            $Lightning.use("c:ManageHHApp", function() {
+                $Lightning.createComponent("c:HH_Container", 
+                    { hhId : hhId },
+                    "lightning",
+                    function(cmp) {
+                        // remember our component for our own javascript use
+                        hhCanvas = cmp;
+                    }
+                );
+            });        
+        </script>
+
+        <div id="lightning" />        
+        
+    </html>
+</apex:page>

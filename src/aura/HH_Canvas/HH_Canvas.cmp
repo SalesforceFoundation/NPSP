@@ -1,0 +1,24 @@
+<aura:component controller="HH_Canvas_CTRL" >
+    
+    <!-- our attributes -->
+    <aura:attribute name="hhId" type="String" />
+    <aura:attribute name="hh" type="Account" />
+    <aura:attribute name="listCon" type="Contact[]" />
+    
+    <!-- events we fire -->
+   	<aura:registerEvent name="ContactReorderEvent" type="c:HH_ContactReorderEvent"/>
+    
+    <!-- events we handle -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <!-- markup follows... -->
+	
+	<ul id="SortCanvas" class="slds-list--horizontal slds-has-cards--space" style="display:inline;" >
+    	<aura:iteration items="{!v.listCon}" var="con" indexVar="icon" >
+    		<li class="slds-list__item" style="margin:0;border:0;" data-icontact="{!icon}" >        
+	    		<c:HH_ContactCard contact="{!con}" />
+            </li>
+	    </aura:iteration>
+    </ul>    
+    
+</aura:component>
