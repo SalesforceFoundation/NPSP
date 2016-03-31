@@ -5,7 +5,7 @@
     */
     initJQueryHandlers : function(component) {
         if (typeof jQuery !== "undefined" && typeof $j === "undefined") {
-            $j = jQuery.noConflict(true);;
+            $j = jQuery.noConflict(true);
         }        
         
         if (typeof $j === "undefined")

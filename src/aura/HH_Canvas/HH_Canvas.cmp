@@ -1,8 +1,7 @@
-<aura:component controller="HH_Canvas_CTRL" >
+<aura:component >
     
     <!-- our attributes -->
-    <aura:attribute name="hhId" type="String" />
-    <aura:attribute name="hh" type="Account" />
+    <aura:attribute name="hh" type="SObject" />
     <aura:attribute name="listCon" type="Contact[]" />
     
     <!-- events we fire -->

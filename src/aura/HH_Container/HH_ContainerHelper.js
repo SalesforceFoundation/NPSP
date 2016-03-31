@@ -36,7 +36,6 @@
 			var state = response.getState();
 			if (component.isValid() && state === "SUCCESS") {
                 var listCon = response.getReturnValue();
-                console.log(listCon);                
 				component.set("v.listCon", listCon);                
 			}
             else if (component.isValid() && state === "ERROR") {
@@ -107,18 +106,18 @@
                 "value" : strError
             }]
         ],
-        function(components, status) {
-        	if (status === "SUCCESS") {
-                debugger;
-		        //component.set("v.showSpinner", false);
-	            var message = components[0];
-                var outputText = components[1];
-                // set the body of the ui:message to be the ui:outputText
-                message.set("v.body", outputText);
-                var div = component.find("divUIMessage");
-                // Replace div body with the dynamic component
-                div.set("v.body", message);
-            }
+            function(components, status) {
+                if (status === "SUCCESS") {
+                    debugger;
+                    //component.set("v.showSpinner", false);
+                    var message = components[0];
+                    var outputText = components[1];
+                    // set the body of the ui:message to be the ui:outputText
+                    message.set("v.body", outputText);
+                    var div = component.find("divUIMessage");
+                    // Replace div body with the dynamic component
+                    div.set("v.body", message);
+                }
        });
     },
     
@@ -133,10 +132,13 @@
 		var action = component.get("c.updateContacts");
         action.setParams({ listCon : listCon});
 		var self = this;
+        var countSuccesses = 0;
 		action.setCallback(this, function(response) {
 			var state = response.getState();
 			if (component.isValid() && state === "SUCCESS") {
-                self.close(component);
+                countSuccesses++;
+                if (countSuccesses == 2)
+	                self.close(component);
 			}
             else if (component.isValid() && state === "ERROR") {
                 self.reportError(component, response);
@@ -154,7 +156,9 @@
 		action.setCallback(this, function(response) {
 			var state = response.getState();
 			if (component.isValid() && state === "SUCCESS") {
-                self.close(component);
+                countSuccesses++;
+                if (countSuccesses == 2)
+	                self.close(component);
 			}
             else if (component.isValid() && state === "ERROR") {
                 self.reportError(component, response);
@@ -169,11 +173,11 @@
     updateNamingExclusions : function(component, hh) {
 		var strExclusions = '';
         if (!component.get('v.isAutoName'))
-            strExclusions = 'Household__c.Name;';
+            strExclusions += 'Household__c.Name;';
         if (!component.get('v.isAutoFormalGreeting'))
             strExclusions += 'Household__c.Formal_Greeting__c;';
         if (!component.get('v.isAutoInformalGreeting'))
-            strExclusions = 'Household__c.Informal_Greeting__c;';
+            strExclusions += 'Household__c.Informal_Greeting__c;';
         hh.npo02__SYSTEM_CUSTOM_NAMING__c = strExclusions;   
     },
 
@@ -183,7 +187,6 @@
     updateAutoNaming : function(component, event) {
         var inputText = event.getSource();
         var idText = inputText.getLocalId();
-        //var value = inputText.get('v.value');
         
         if (idText == 'txtHHName')
             component.set('v.isAutoName', false);
@@ -197,6 +200,7 @@
 	* @description Close the page by redirecting back to the household
     */
     close : function(component) {
+        // the correct way to handle navigation in Salesforce classic vs. LEX/mobile
         if (typeof sforce === "undefined") {
 	    	window.top.location.replace('/' + component.get('v.hhId'));
         } else {

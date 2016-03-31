@@ -1,10 +1,10 @@
 <aura:component controller="HH_Container_LCTRL" >
     <!-- public attributes -->
     <aura:attribute name="hhId" type="String" />
-    <aura:attribute name="hh" type="SObject" />
-    <aura:attribute name="listCon" type="Contact[]" />
 
     <!-- private attributes -->
+    <aura:attribute name="hh" type="SObject" access="private" />
+    <aura:attribute name="listCon" type="Contact[]" access="private" />
     <aura:attribute name="showSpinner" type="Boolean" default="true" access="private" />
     <aura:attribute name="isAutoName" type="Boolean" access="private" />
     <aura:attribute name="isAutoFormalGreeting" type="Boolean" access="private" />
@@ -31,7 +31,6 @@
                         <nav role="navigation">
                             <p id="bread-crumb-label" class="slds-assistive-text">You are here:</p>
                             <ol class="slds-breadcrumb slds-list--horizontal" aria-labelledby="bread-crumb-label">
-                                <li class="slds-list__item slds-text-heading--label"><a class="slds-type-focus" href="/001/o" >Account or Household</a></li>
                                 <li class="slds-list__item slds-text-heading--label"><a class="slds-type-focus" href="{!'/' + v.hhId}">{!v.hh.Name}</a></li>
                             </ol>
                         </nav>              
@@ -71,11 +70,11 @@
 
 				<!-- the Contact Cards & Canvas section -->
 				<div class="slds-p-bottom--large">                
-	                <c:HH_Canvas hhId="{!v.hhId}" hh="{!v.hh}" listCon="{!v.listCon}" />
+	                <c:HH_Canvas hh="{!v.hh}" listCon="{!v.listCon}" />
                 </div>
                 
                 <!-- the Household fields section -->   
-                <div class="slds-grid slds-grid--align-spread">
+                <div class="slds-grid slds-grid--align-spread slds-m-around--medium">
                     <div class="slds-form--stacked" style="width:80%" >
                         <ui:inputText value="{!v.hh.Name}" aura:id="txtHHName" class="slds-input" 
                         	label="Household Name" labelClass="slds-form-element__label" change="{!c.onTextChange}" />
@@ -121,21 +120,6 @@
                         <ui:inputTextArea value="{!v.hh.Description}" aura:id="txtDescription" class="slds-input" label="Description" rows="3" labelClass="slds-form-element__label" />
                     </div>                        
                 </div>
-
-                
-                
-                <!-- debug markup 
-                <div style="font-style:italic;color:green;">
-                    <p>Debug information:</p>
-                    <p>Household Canvas - hhId is {!v.hhId}, hh.Name is {!v.hh.Name}</p>
-                    <p>Household contacts are: 
-                        <aura:iteration items="{!v.listCon}" var="con" indexVar="icon" >        
-                            {!con.FirstName + ' ' + con.LastName},&nbsp;
-                        </aura:iteration>
-                    </p>
-                </div>
-                -->
-                
             </div> <!-- myBodyContent -->
         </div> <!-- slds -->
     </form>

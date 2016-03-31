@@ -16,7 +16,7 @@
         	var j$ = jQuery.noConflict();
         	var hhCanvas;
 
-        	var hhId = '{!accHH.Id}';
+        	var hhId = '{!hhId}';
             $Lightning.use("c:ManageHHApp", function() {
                 $Lightning.createComponent("c:HH_Container", 
                     { hhId : hhId },
