@@ -84,7 +84,6 @@
         <members>HH_CampaignDedupeBTN_CTRL</members>
         <members>HH_CampaignDedupeBTN_TEST</members>
         <members>HH_CampaignDedupe_BATCH</members>
-        <members>HH_Canvas_CTRL</members>
         <members>HH_Container_LCTRL</members>
         <members>HH_HHObject_TDTM</members>
         <members>HH_HouseholdNaming</members>
