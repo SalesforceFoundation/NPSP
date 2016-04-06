@@ -79,8 +79,9 @@ public without sharing class RLLP_OppRollup_UTIL {
     private static string HouseholdMembershipQuery;
     private static string ContactMembershipQuery;
     private static string AccountMembershipQuery;    
-    private static string SoftCreditQuery;
-    private static string ContactNDaySoftCreditQuery;
+    private static string SoftCreditOCRQuery;
+    private static string SoftCreditPSCQuery;
+    //private static string ContactNDaySoftCreditQuery;
          
     /*** Field Lists ***/
     private static set<string> AccountFields = new set<string>{'npo02__TotalOppAmount__c', 'npo02__OppsClosedThisYear__c', 'npo02__OppsClosedLastYear__c', 
@@ -714,6 +715,52 @@ public without sharing class RLLP_OppRollup_UTIL {
         return HouseholdMembershipQuery;
     }
     
+    /*******************************************************************************************************
+    * @description Builds the query string for Soft Credit rollups based on OCR's.
+    * Assumes caller will have local variables for cset, softCreditRoles, rectypeset, and typeset.
+    * @return String The soql query
+    */
+    public static string buildSoftCreditOCRQuery() {
+        if (SoftCreditOCRQuery == null) {
+            SoftCreditOCRQuery = 'SELECT Id, ContactId, Opportunity.CloseDate, Opportunity.Amount ';
+            if (isMultiCurrency()) {
+                SoftCreditOCRQuery += ', Opportunity.CurrencyIsoCode ';
+            }
+            SoftCreditOCRQuery += 'FROM OpportunityContactRole ';
+            SoftCreditOCRQuery += 'WHERE ContactId IN :cset AND Opportunity.isWon=true AND Role IN :softCreditRoles ';
+            if (areRecordTypesOnOpps()) {
+                SoftCreditOCRQuery += 'AND Opportunity.RecordTypeId NOT IN :rectypeset ';
+            }
+            SoftCreditOCRQuery += 'AND Opportunity.Type NOT IN :typeset ';
+            
+        }
+        return SoftCreditOCRQuery;
+    } 
+    
+    /*******************************************************************************************************
+    * @description Builds the query string for Soft Credit rollups based on PSC's.
+    * Assumes caller will have local variables for cset, softCreditRoles, rectypeset, and typeset.
+    * @return String The soql query
+    */
+    public static string buildSoftCreditPSCQuery() {
+        if (SoftCreditPSCQuery == null) {
+            SoftCreditPSCQuery = 'SELECT Id, Contact__c, Opportunity__r.CloseDate, Amount__c, Contact_Role_ID__c ';
+            if (isMultiCurrency()) {
+                SoftCreditPSCQuery += ', CurrencyIsoCode ';
+            }
+            SoftCreditPSCQuery += 'FROM Partial_Soft_Credit__c ';
+            SoftCreditPSCQuery += 'WHERE Contact__c IN :cset AND Opportunity__r.isWon=true AND Role_Name__c IN :softCreditRoles ';
+            if (areRecordTypesOnOpps()) {
+                SoftCreditPSCQuery += 'AND Opportunity__r.RecordTypeId NOT IN :rectypeset ';
+            }
+            SoftCreditPSCQuery += 'AND Opportunity__r.Type NOT IN :typeset ';
+            
+        }
+        return SoftCreditPSCQuery;
+    } 
+
+    /**************************************************************************
+    * Soft Credit Query rollups no longer use an aggregate query
     public string buildSoftCreditQuery(){
         if (SoftCreditQuery == null){           
             if (useFiscalYear)
@@ -730,11 +777,11 @@ public without sharing class RLLP_OppRollup_UTIL {
                 SoftCreditQuery += 'AND Opportunity.RecordTypeId NOT IN :rectypeset ';
             }
             SoftCreditQuery += 'AND Opportunity.Type NOT IN :typeset ';
-            /** soft credits should always roll up to contacts with those OCR's regardless of the tpe of account. 
-            if (!hh_settings.npo02__Always_Rollup_to_Primary_Contact__c){
-                SoftCreditQuery += 'AND (Opportunity.AccountId = null OR Opportunity.Account.npe01__SYSTEMIsIndividual__c = true) ';
-            }
-            */
+            // soft credits should always roll up to contacts with those OCR's regardless of the tpe of account. 
+            //if (!hh_settings.npo02__Always_Rollup_to_Primary_Contact__c){
+            //    SoftCreditQuery += 'AND (Opportunity.AccountId = null OR Opportunity.Account.npe01__SYSTEMIsIndividual__c = true) ';
+            //}
+            
             SoftCreditQuery += 'AND ContactId IN :cset ';            
             if (useFiscalYear)
                 SoftCreditQuery += 'GROUP BY ROLLUP(ContactId, Fiscal_Year(Opportunity.CloseDate)) ';
@@ -765,6 +812,7 @@ public without sharing class RLLP_OppRollup_UTIL {
         }       
         return ContactNDaySoftCreditQuery;
     }
+    **************************************************************************/
 
     /****************************************/
 

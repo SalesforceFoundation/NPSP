@@ -918,7 +918,7 @@
         <inlineHelpText>The account of the company who will match this gift.</inlineHelpText>
         <label>Matching Gift Account</label>
         <referenceTo>Account</referenceTo>
-        <relationshipLabel>Opportunities</relationshipLabel>
+        <relationshipLabel>Matched Gifts</relationshipLabel>
         <relationshipName>Opportunities</relationshipName>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
