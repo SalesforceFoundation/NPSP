@@ -1,6 +1,6 @@
 <aura:component >
     <!-- our attributes -->
-	<aura:attribute name="contact" type="Contact"/>
+	<aura:attribute name="contact" type="Contact" access="public"/>
     
     <!-- events we fire -->
    	<aura:registerEvent name="ContactChangedEvent" type="c:HH_ContactChangedEvent"/>

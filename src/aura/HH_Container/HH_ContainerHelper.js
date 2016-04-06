@@ -34,6 +34,7 @@
 		var self = this;
 		action.setCallback(this, function(response) {
 			var state = response.getState();
+            
 			if (component.isValid() && state === "SUCCESS") {
                 var listCon = response.getReturnValue();
 				component.set("v.listCon", listCon);                
@@ -41,7 +42,10 @@
             else if (component.isValid() && state === "ERROR") {
                 self.reportError(component, response);
             }            
-		});
+
+            // hide our initial startup spinner our visualforce container displays
+            j$('.initialSpinner').hide();                                  
+        });
 		$A.enqueueAction(action);        
 
     },
@@ -122,23 +126,28 @@
     },
     
     /*******************************************************************************************************
-    * @description Saves all changes and return to the household
+    * @description Saves all changes the container knows about (household object/account, contacts), and
+    * if successful, then calls the visualforce page's save actionMethod, which will also close the page.
     */
     save : function(component) {
         component.set("v.showSpinner", true);
         
+		// keep track of ourselves and whether both server updates succeed
+        var self = this;
+        var countSuccesses = 0;
+
         // save the contacts
         var listCon = component.get("v.listCon");
 		var action = component.get("c.updateContacts");
         action.setParams({ listCon : listCon});
-		var self = this;
-        var countSuccesses = 0;
 		action.setCallback(this, function(response) {
 			var state = response.getState();
 			if (component.isValid() && state === "SUCCESS") {
                 countSuccesses++;
-                if (countSuccesses == 2)
-	                self.close(component);
+                if (countSuccesses == 2) {
+                    saveVisualforce();
+	                //self.close(component);
+                }
 			}
             else if (component.isValid() && state === "ERROR") {
                 self.reportError(component, response);
@@ -157,8 +166,10 @@
 			var state = response.getState();
 			if (component.isValid() && state === "SUCCESS") {
                 countSuccesses++;
-                if (countSuccesses == 2)
-	                self.close(component);
+                if (countSuccesses == 2) {
+                    saveVisualforce();
+	                //self.close(component);
+                }
 			}
             else if (component.isValid() && state === "ERROR") {
                 self.reportError(component, response);

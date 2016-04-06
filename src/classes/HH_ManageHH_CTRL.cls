@@ -40,11 +40,15 @@ public with sharing class HH_ManageHH_CTRL {
     @AuraEnabled
     public ID hhId { get; set; }
 
+    /** @description The Household Object or Account */
+    @AuraEnabled
+    public SObject hh { get; set; }
+
     /*******************************************************************************************************
     * @description Constructor for the page
     */
     public HH_ManageHH_CTRL(ApexPages.StandardController controller) {
-        SObject hh = controller.getRecord();        
+        hh = controller.getRecord();        
         hhId = hh.Id;
     }    
 }
