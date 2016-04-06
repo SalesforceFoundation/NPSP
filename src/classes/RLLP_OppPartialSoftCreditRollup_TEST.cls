@@ -103,7 +103,6 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
     /*******************************************************************************************************
     * @description tests the original NPSP Soft Credit rollups for OCR's (not Partial Soft Credits)
     * @return void
-    */ 
     static testmethod void testOLDSoftCreditRollups() {
         if (strTestOnly != '*' && strTestOnly != 'testOLDSoftCreditRollups') return;
         createPSCData(cContactTest, cOppTest, amountTest);
@@ -130,6 +129,7 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
             system.assertEquals(null, con.Number_of_Soft_Credits__c);
         }       
     }
+    */ 
 
     /*******************************************************************************************************
     * @description tests the new NPSP Soft Credit rollups for OCR's and Partial Soft Credits.

@@ -711,7 +711,6 @@ public without sharing class RLLP_OppRollup {
     * NO LONGER USED SINCE DOES NOT SUPPORT PARTIAL SOFT CREDITS.  Can be removed once we are done testing.
     * @param cmap A map of contact IDs to contacts.
     * @return void This method does updates directly and returns nothing.
-    ********************************************************************************************************/
     public void rollupSoftCreditsOLDNoPartialSupport(map<id, Contact> cmap){      
         //arg used by multi currency for rollup field currencies
         map<Id,Opportunity> opptyCurrencies;
@@ -770,6 +769,7 @@ public without sharing class RLLP_OppRollup {
         
         update contactsToUpdate.values();  
     }
+    ********************************************************************************************************/
        
     /*******************************************************************************************************
     * @description Runs all batch opportunity rollups for all records on all objects.
@@ -966,7 +966,6 @@ public without sharing class RLLP_OppRollup {
     * @param r The aggregate result object.
     * @param opptyCurrencies Holds opportunity currency codes for multicurrency orgs.
     * @return void This method does updates directly and returns nothing.
-    ********************************************************************************************************/
     public static void updateSoftCreditFromResult(sobject obj, sobject r, map<id, Opportunity> opptyCurrencies){
          // get the fiscal year, total amount, and opp count for this result row     
         integer fy = (integer)(r.get('CalendarYr'));
@@ -1000,6 +999,7 @@ public without sharing class RLLP_OppRollup {
             obj.put('npo02__Soft_Credit_Total__c', amt);        
         }
     }
+    ********************************************************************************************************/
 
      /*******************************************************************************************************
     * @description Method writes soft credit last N days rollup fields from AggregateResults to an object 
@@ -1007,7 +1007,6 @@ public without sharing class RLLP_OppRollup {
     * @param obj The object to roll up to.
     * @param r The aggregate result object.
     * @return void This method does updates directly and returns nothing.
-    ********************************************************************************************************/
    public static void updateSoftCreditRollupFromResultLastNDays(sobject obj, sobject r){
            
         // get the total amount for this result row     
@@ -1019,4 +1018,5 @@ public without sharing class RLLP_OppRollup {
         
         obj.put('Soft_Credit_Last_N_Days__c', amt);               
     }
+    ********************************************************************************************************/
 }
