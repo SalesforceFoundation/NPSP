@@ -85,9 +85,9 @@
         if (errors) {
             $A.log("Errors", errors);
             if (errors[0] && errors[0].message) {
-                this.displayUIMessage(component, "Error message: " + errors[0].message);
+                this.displayUIMessage(component, errors[0].message);
             } else if (errors[0] && errors[0].pageErrors && errors[0].pageErrors[0].message) {
-                this.displayUIMessage(component, "Error message: " + errors[0].pageErrors[0].message);
+                this.displayUIMessage(component, errors[0].pageErrors[0].message);
             } else {
                 this.displayUIMessage(component, "Unknown error");
             }
@@ -100,10 +100,9 @@
     * @description creates a ui:message component for the given error string
     */
     displayUIMessage : function(component, strError) {
-        debugger;
         $A.createComponents([
             ["ui:message",{
-                "title" : "Runtime Error",
+                "title" : "Error",
                 "severity" : "error",
             }],
             ["ui:outputText",{
@@ -112,8 +111,6 @@
         ],
             function(components, status) {
                 if (status === "SUCCESS") {
-                    debugger;
-                    //component.set("v.showSpinner", false);
                     var message = components[0];
                     var outputText = components[1];
                     // set the body of the ui:message to be the ui:outputText

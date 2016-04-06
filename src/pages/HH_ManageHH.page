@@ -7,6 +7,14 @@
 		<apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-migrate-1.2.1.min.js')}"/>
 		<apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery-ui/jquery-ui-1.10.4.min.js')}"/>
         
+        <style>       
+            .required {
+                padding-left: 2px;
+                color: red;
+                font-weight: 700;
+            }
+        </style>
+        
         <script>
         	var j$ = jQuery.noConflict();
 
@@ -49,7 +57,7 @@
 
         <!-- used to display any save errors from the Visualforce page's fieldset -->
         <apex:outputPanel id="panelErrors">
-	        <apex:pageMessages />
+            <c:UTIL_PageMessages />
         </apex:outputPanel>
         
         <!-- the location that will hold our lightning component -->
@@ -63,14 +71,15 @@
                         <apex:repeat value="{!$ObjectType.Account.FieldSets.Manage_Household_Custom}" var="f">
                             <div class="slds-form-element">
                                 <label class="slds-form-element__label uiLabel-left form-element__label uiLabel" >
-                                    {!f.Label}
+                                    {!f.Label}<span class="required">{!IF(f.DBRequired || f.Required, '*', '')}</span>
                                 </label>
                                 <div class="slds-form-element__control">                                
-                                    <apex:inputField required="true" value="{!hh[f]}" label=""
+                                    <apex:inputField required="{!f.DBRequired || f.Required}" value="{!hh[f]}" label=""
                                     	styleClass="{!CASE(f.Type, 
                                                     	'reference', 'lookupInput', 
                                                     	'multipicklist', 'slds-select multipicklistSLDSFixup', 
-                                                    	'slds-input input')}" />                                
+                                                    	'boolean', 'slds-checkbox',
+                                                    	'slds-input')}" />                                
                                 </div>
                             </div>
                         </apex:repeat>
@@ -79,7 +88,7 @@
             </div>
 			
 			<!-- we expose a javascript function our lightning component can call to save the vf fieldset & close the page -->            
-            <apex:actionFunction action="{!save}" name="saveVisualforce" reRender="panelErrors, vfForm" />
+            <apex:actionFunction action="{!save}" name="saveVisualforce" />
         </apex:form>
         
     </html>

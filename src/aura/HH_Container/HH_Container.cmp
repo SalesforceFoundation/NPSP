@@ -58,7 +58,7 @@
 			<!-- Spinner for waiting feedback -->
             <aura:if isTrue="{!v.showSpinner}">
                 <div class="slds-spinner_container">
-                    <div class="slds-spinner--brand slds-spinner slds-spinner--medium" style="position:fixed;" aria-hidden="false" role="alert">
+                    <div class="slds-spinner--brand slds-spinner slds-spinner--medium" aria-hidden="false" role="alert">
                         <div class="slds-spinner__dot-a"></div>
                         <div class="slds-spinner__dot-b"></div>
                     </div>
@@ -77,7 +77,7 @@
                 <div class="slds-grid slds-grid--align-spread slds-m-around--medium">
                     <div class="slds-form--stacked" style="width:80%" >
                         
-                        <ui:inputText value="{!v.hh.Name}" aura:id="txtHHName" class="slds-input" 
+                        <ui:inputText value="{!v.hh.Name}" aura:id="txtHHName" class="slds-input" required="true"
                         	label="Household Name" labelClass="slds-form-element__label" change="{!c.onTextChange}" />
                         <div class="slds-form-element slds-m-bottom--medium">
                             <div class="slds-form-element__control">
