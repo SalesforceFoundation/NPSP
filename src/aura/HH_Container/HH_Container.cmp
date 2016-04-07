@@ -73,12 +73,13 @@
 	                <c:HH_Canvas hh="{!v.hh}" listCon="{!v.listCon}" />
                 </div>
                 
-                <!-- the Household fields section -->   
+                <!-- the section for our 3 special naming & greeting fields -->   
                 <div class="slds-grid slds-grid--align-spread slds-m-around--medium">
                     <div class="slds-form--stacked" style="width:80%" >
-                        <ui:inputText value="{!v.hh.Name}" aura:id="txtHHName" class="slds-input" 
+                        
+                        <ui:inputText value="{!v.hh.Name}" aura:id="txtHHName" class="slds-input" required="true"
                         	label="Household Name" labelClass="slds-form-element__label" change="{!c.onTextChange}" />
-                        <div class="slds-form-element">
+                        <div class="slds-form-element slds-m-bottom--medium">
                             <div class="slds-form-element__control">
                                 <label class="slds-checkbox">
                                     <ui:inputCheckbox aura:id="cbxAutoHHName" class="slds-checkbox" 
@@ -91,7 +92,7 @@
                         
                         <ui:inputText value="{!v.hh.npo02__Formal_Greeting__c}" aura:id="txtFormalGreeting" class="slds-input" 
                         	label="Formal Greeting" labelClass="slds-form-element__label" change="{!c.onTextChange}" />
-                        <div class="slds-form-element">
+                        <div class="slds-form-element slds-m-bottom--medium">
                             <div class="slds-form-element__control">
                                 <label class="slds-checkbox">
                                     <ui:inputCheckbox aura:id="cbxAutoFormalGreeting" class="slds-checkbox" 
@@ -113,15 +114,10 @@
                                     <span class="slds-form-element__label" for="cbxAutoInformalGreeting">Auto Informal Greeting</span>
                                 </label>
                             </div>
-                        </div>
-                        
-                        <ui:inputText value="{!v.hh.npe01__One2OneContact__c }" aura:id="txtPrimaryContact" class="slds-input" label="Primary Contact" labelClass="slds-form-element__label" />
-                        <ui:inputPhone value="{!v.hh.npo02__HouseholdPhone__c }" aura:id="txtPhone" class="slds-input" label="Household Phone" labelClass="slds-form-element__label" />
-                        <ui:inputTextArea value="{!v.hh.Description}" aura:id="txtDescription" class="slds-input" label="Description" rows="3" labelClass="slds-form-element__label" />
+                        </div>                        
                     </div>                        
                 </div>
             </div> <!-- myBodyContent -->
         </div> <!-- slds -->
-    </form>
-    
+    </form>   
 </aura:component>

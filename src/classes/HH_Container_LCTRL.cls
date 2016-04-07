@@ -46,12 +46,10 @@ public class HH_Container_LCTRL {
         if (hhId == null)
             return null;
         if (UTIL_Describe.isObjectIdThisType(hhId, 'Account'))
-	        return [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c, 
-                    npo02__Informal_Greeting__c, npe01__One2OneContact__c, Description, Phone, npo02__HouseholdPhone__c 
+	        return [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c
                     from Account where Id = :hhId];
         else
-	        return [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c, 
-                    npo02__Informal_Greeting__c, npo02__HouseholdPhone__c 
+	        return [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c 
                     from npo02__Household__c where Id = :hhId];
     }	
     
