@@ -9,6 +9,7 @@
         <literalValue>Multiply By</literalValue>
     </fieldOverrides>
     <label>New Recurring Donation</label>
+    <optionsCreateFeedItem>true</optionsCreateFeedItem>
     <quickActionLayout>
         <layoutSectionStyle>TwoColumnsLeftToRight</layoutSectionStyle>
         <quickActionLayoutColumns>

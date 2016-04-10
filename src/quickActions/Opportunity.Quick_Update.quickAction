@@ -5,6 +5,7 @@
         <formula>Opportunity.Name</formula>
     </fieldOverrides>
     <label>Quick Update</label>
+    <optionsCreateFeedItem>false</optionsCreateFeedItem>
     <quickActionLayout>
         <layoutSectionStyle>TwoColumnsLeftToRight</layoutSectionStyle>
         <quickActionLayoutColumns>
