@@ -450,6 +450,13 @@ private class OPP_OpportunityContactRoles_TEST {
         system.assertEquals(testCons[1].id,queryOCR[1].ContactId, 'Second OCR is for honoree contact.');
         system.assertEquals(false,queryOCR[1].isPrimary, 'Honoree OCR is not marked primary.');
         system.assertEquals(HonoreeRoleforTest,queryOCR[1].Role, 'Honoree OCR has the correct role.');
+
+        opp.Honoree_Contact__c = null;
+        update opp;
+
+        queryOpp = [SELECT Id, Notification_Recipient_Name__c, Honoree_Name__c FROM Opportunity WHERE Id = :opp.id];
+        system.assert(String.isBlank(queryOpp[0].Honoree_Name__c), 'Honoree Name should be deleted.');
+
     }
 
     /*******************************************************************************************************
