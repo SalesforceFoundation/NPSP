@@ -6,9 +6,9 @@
     modification, are permitted provided that the following conditions are met:
     
     * Redistributions of source code must retain the above copyright
-      notice, this List of conditions and the following disclaimer.
+      notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
-      notice, this List of conditions and the following disclaimer in the
+      notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
@@ -36,24 +36,24 @@
 */
 public class OPP_CampaignMember_TDTM extends TDTM_Runnable {
     
-    /**@description Lists to pass to CON_AddToCampaign*/
-    private List<Id> ListContactId = new List<Id>();
-    private List<Id> ListCampaignId = new List<Id>();
-    private List<String> ListMemberStatus = new List<String>();
+    /**@description lists to pass to CON_AddToCampaign*/
+    private list<Id> listContactId = new list<Id>();
+    private list<Id> listCampaignId = new list<Id>();
+    private list<String> listMemberStatus = new list<String>();
 
     /**@description Static flag to prevent recursion. */
-    public static boolean hasRun = false;
+    public static Boolean hasRun = false;
 
     /*******************************************************************************************************
     * @description Creates and updates campaign members based on opportunity primary contact, primary 
     * campaign source, and the primary contact status field.
-    * @param ListNew the List of Opportunities from trigger new. 
-    * @param ListOld the List of Opportunities from trigger old. 
+    * @param listNew the list of Opportunities from trigger new. 
+    * @param listOld the list of Opportunities from trigger old. 
     * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
     * @param objResult the describe for Opportunities.
     * @return dmlWrapper Campaign Members to insert or update.
     ********************************************************************************************************/
-    public override DmlWrapper run(List<SObject> newList, List<SObject> oldList, 
+    public override DmlWrapper run(list<SObject> newlist, list<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         
         dmlWrapper dmlWrapper = new DmlWrapper();
@@ -69,7 +69,7 @@ public class OPP_CampaignMember_TDTM extends TDTM_Runnable {
         //Due to how OpportunityContactRoles are created by the New Opportunity button, the Primary_Contact__c
         //field can be blank in an after insert context, so we have to use the OCR directly
         if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-            List<Opportunity> oppsWithConRoles = getOppsWithConroles((list<Opportunity>) newList);
+            list<Opportunity> oppsWithConRoles = getOppsWithConroles((list<Opportunity>) newlist);
             for (Opportunity opp : oppsWithConRoles) {
                 //if status is "omit", do nothing for this opportunity
                 if (isOmit(opp)) {
@@ -81,10 +81,10 @@ public class OPP_CampaignMember_TDTM extends TDTM_Runnable {
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-            for (integer i=0; i<newList.size(); i++) {
+            for (integer i=0; i<newlist.size(); i++) {
 
-                Opportunity opp = (Opportunity)newList[i];
-                Opportunity oldOpp = (Opportunity)oldList[i];
+                Opportunity opp = (Opportunity)newlist[i];
+                Opportunity oldOpp = (Opportunity)oldlist[i];
                 
                 //if status is "omit", do nothing for this opportunity
                 if (isOmit(opp)) {
@@ -92,7 +92,7 @@ public class OPP_CampaignMember_TDTM extends TDTM_Runnable {
                 }
 
                 //the status is blank and we're changing closed/won status
-                if (string.isBlank(opp.Primary_Contact_Campaign_Member_Status__c) && 
+                if (String.isBlank(opp.Primary_Contact_Campaign_Member_Status__c) && 
                     (opp.IsClosed != oldOpp.isClosed || opp.IsWon != oldOpp.isWon)) {
                     
                     addOppMemberFields(opp);
@@ -106,8 +106,8 @@ public class OPP_CampaignMember_TDTM extends TDTM_Runnable {
             }
         }
         
-        if (!ListContactId.isEmpty()) {
-            dmlWrapper = CON_AddToCampaign.CreateCampaignMembers(ListContactId, ListCampaignId, ListMemberStatus);
+        if (!listContactId.isEmpty()) {
+            dmlWrapper = CON_AddToCampaign.CreateCampaignMembers(listContactId, listCampaignId, listMemberStatus);
         }
 
         hasRun = true;
@@ -118,10 +118,10 @@ public class OPP_CampaignMember_TDTM extends TDTM_Runnable {
     * @description For a given list of opportunities, clones them and adds the primary opportunity contact
     * role's contact id to the Primary_Contact__c field.
     * @param listOpps A list of Opportunities.
-    * @return List<Opportunity> A cloned list of opportunities with the primary OCR's contact copied to the 
+    * @return list<Opportunity> A cloned list of opportunities with the primary OCR's contact copied to the 
     * Primary_Contact__c field.
     ********************************************************************************************************/
-    private List<Opportunity> getOppsWithConroles(list<Opportunity> listOpps) {
+    private list<Opportunity> getOppsWithConroles(list<Opportunity> listOpps) {
         Map<Id,Opportunity> mapResults = new Map<Id,Opportunity>();
         //make a map of cloned opportunities so we can update the Primary_Contact__c field, which can't be written in an after insert context
         for (Opportunity opp : listOpps) {
@@ -140,34 +140,34 @@ public class OPP_CampaignMember_TDTM extends TDTM_Runnable {
     * @return Boolean True if Primary_Contact_Campaign_Member_Status__c == Label.CampaignMemberStatusOmit
     ********************************************************************************************************/
     private Boolean isOmit(Opportunity opp) {
-        if (!string.isBlank(opp.Primary_Contact_Campaign_Member_Status__c) && opp.Primary_Contact_Campaign_Member_Status__c.equalsIgnoreCase(Label.CampaignMemberStatusOmit)) {
+        if (!String.isBlank(opp.Primary_Contact_Campaign_Member_Status__c) && opp.Primary_Contact_Campaign_Member_Status__c.equalsIgnoreCase(Label.CampaignMemberStatusOmit)) {
             return true;
         }
         return false;
     }
 
     /*******************************************************************************************************
-    * @description Adds a Contact Id, Campaign Id, and Status to our three Lists. If the opportunity has a
+    * @description Adds a Contact Id, Campaign Id, and Status to our three lists. If the opportunity has a
     * status it is used, otherwise a default is used based on if the opportunity is closed/won or not.
     * @param Opp The current opportunity.
-    * @return void This method adds to three Lists and returns nothing.
+    * @return void This method adds to three lists and returns nothing.
     ********************************************************************************************************/
     private void addOppMemberFields(Opportunity opp) {
-        if (opp.CampaignId == null || opp.Primary_Contact__c == null) {
+        if (opp.Primary_Contact__c == null || opp.CampaignId == null) {
             return;
         }
 
         //if no status is provided, default to a responded status if the opp is closed/won
         //otherwise default to a non-responded status
-        if (string.isBlank(opp.Primary_Contact_Campaign_Member_Status__c)) {
+        if (String.isBlank(opp.Primary_Contact_Campaign_Member_Status__c)) {
             if (opp.isClosed && opp.isWon) {
-                ListMemberStatus.add(Label.campaignMemberStatusResponded);
+                listMemberStatus.add(Label.campaignMemberStatusResponded);
             } else {
-                ListMemberStatus.add(Label.campaignMemberStatusNonResponded);
+                listMemberStatus.add(Label.campaignMemberStatusNonResponded);
             }
-        } else ListMemberStatus.add(opp.Primary_Contact_Campaign_Member_Status__c);
+        } else listMemberStatus.add(opp.Primary_Contact_Campaign_Member_Status__c);
 
-        ListCampaignId.add(opp.CampaignId);
-        ListContactId.add(opp.Primary_Contact__c);
+        listCampaignId.add(opp.CampaignId);
+        listContactId.add(opp.Primary_Contact__c);
     }
 }
