@@ -37,9 +37,9 @@
 public class OPP_CampaignMember_TDTM extends TDTM_Runnable {
     
     /**@description lists to pass to CON_AddToCampaign*/
-    private list<Id> listContactId = new list<Id>();
-    private list<Id> listCampaignId = new list<Id>();
-    private list<String> listMemberStatus = new list<String>();
+    private List<Id> listContactId = new List<Id>();
+    private List<Id> listCampaignId = new List<Id>();
+    private List<String> listMemberStatus = new List<String>();
 
     /**@description Static flag to prevent recursion. */
     public static Boolean hasRun = false;
@@ -53,7 +53,7 @@ public class OPP_CampaignMember_TDTM extends TDTM_Runnable {
     * @param objResult the describe for Opportunities.
     * @return dmlWrapper Campaign Members to insert or update.
     ********************************************************************************************************/
-    public override DmlWrapper run(list<SObject> newlist, list<SObject> oldlist, 
+    public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         
         dmlWrapper dmlWrapper = new DmlWrapper();
