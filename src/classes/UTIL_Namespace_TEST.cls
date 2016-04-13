@@ -103,5 +103,47 @@ public with sharing class UTIL_Namespace_TEST {
         str = Label.stgHelpNoUDR;
         str = Label.alloRemainder;
         str = Label.alloTotals;
+
+        // The following labels are referenced because the spider was having
+        // issues resolving references to them and they need to be directly
+        // referenced here to avoid build issues in the packaging org
+        str = Label.PageMessagesConfirm;
+        str = Label.PageMessagesError;
+        str = Label.PageMessagesFatal;
+        str = Label.PageMessagesWarning;
+        str = Label.mtchBtnSearch;
+        str = Label.mtchCloseDateEnd;
+        str = Label.mtchCloseDateStart;
+        str = Label.mtchFindMatchedGiftsSectionHeader;
+        str = Label.mtchFindMoreGifts;
+        str = Label.mtchFindMoreGiftsInfo;
+        str = Label.mtchItems;
+        str = Label.mtchSearchCriteriaEmpty;
+        str = Label.mtchSelectCbxTitle;
+        str = Label.mtchTotalMatchingGift;
+        str = Label.mtchTotalSelected;
+        str = Label.mtchTotalUnaccounted;
+        str = Label.pscManageSoftCreditsAdd;
+        str = Label.pscManageSoftCreditsAmount;
+        str = Label.pscManageSoftCreditsAmountMissing;
+        str = Label.pscManageSoftCreditsAmountOrPercent;
+        str = Label.pscManageSoftCreditsCantChangeCurrency;
+        str = Label.pscManageSoftCreditsFull;
+        str = Label.pscManageSoftCreditsInvalidContact;
+        str = Label.pscManageSoftCreditsNoRoles;
+        str = Label.pscManageSoftCreditsOppAmount;
+        str = Label.pscManageSoftCreditsPSCAmount;
+        str = Label.pscManageSoftCreditsPartial;
+        str = Label.pscManageSoftCreditsPercent;
+        str = Label.pscManageSoftCreditsPrimaryDonor;
+        str = Label.pscManageSoftCreditsReconcileFail;
+        str = Label.pscManageSoftCreditsRestrictions;
+        str = Label.pscManageSoftCreditsRoleMissing;
+        str = Label.pscManageSoftCreditsTitle;
+        str = Label.pscManageSoftCreditsType;
+        str = Label.pscManageSoftCreditsUnaccounted;
+        str = Label.pscManageSoftCreditsValidateTotals;
+        str = Label.stgHelpMatchedDonorRole;
+        str = Label.stgNavBulkProcesses;
     }
 }
