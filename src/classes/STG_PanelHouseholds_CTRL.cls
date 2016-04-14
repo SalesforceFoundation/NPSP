@@ -34,12 +34,12 @@
 * @description Controller for the Households panel.
 */
 public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
-	
+    
     /*********************************************************************************************************
     * @description The panel's constructor 
     */
-	public STG_PanelHouseholds_CTRL() {}
-	    
+    public STG_PanelHouseholds_CTRL() {}
+        
     /*********************************************************************************************************
     * @description Returns the string Id of the Households panel. 
     */
@@ -62,22 +62,22 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
     public boolean isValidNameFormats() {
         // make sure any custom name formats are valid.
         if (STG_Panel.stgService.stgHH.npo02__Advanced_Household_Naming__c) {
-	        string strSetting;        
-			try {
-				strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), 'Household_Name_Format__c');     
-	            strNameSpecExample(STG_Panel.stgService.stgHN, 'Household_Name_Format__c', 2); 
-				strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), 'Formal_Greeting_Format__c');     
-	            strNameSpecExample(STG_Panel.stgService.stgHN, 'Formal_Greeting_Format__c', 2); 
-				strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), 'Informal_Greeting_Format__c');     
-	            strNameSpecExample(STG_Panel.stgService.stgHN, 'Informal_Greeting_Format__c', 2);
-	            return true; 
-			} catch (Exception ex) {
-	            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 
-	            	string.format(label.stgErrorInvalidNameFormat, new string[]{strSetting, ex.getMessage()})));
-	            return false;			
-			}        
+            string strSetting;        
+            try {
+                strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), UTIL_Namespace.StrTokenNSPrefix('Household_Name_Format__c'));     
+                strNameSpecExample(STG_Panel.stgService.stgHN, 'Household_Name_Format__c', 2); 
+                strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), UTIL_Namespace.StrTokenNSPrefix('Formal_Greeting_Format__c'));     
+                strNameSpecExample(STG_Panel.stgService.stgHN, 'Formal_Greeting_Format__c', 2); 
+                strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), UTIL_Namespace.StrTokenNSPrefix('Informal_Greeting_Format__c'));     
+                strNameSpecExample(STG_Panel.stgService.stgHN, 'Informal_Greeting_Format__c', 2);
+                return true; 
+            } catch (Exception ex) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 
+                    string.format(label.stgErrorInvalidNameFormat, new string[]{strSetting, ex.getMessage()})));
+                return false;           
+            }        
         } 
-        return true;   	
+        return true;    
     }
 
     /*********************************************************************************************************
@@ -85,17 +85,17 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
     * @return null 
     */
     public override PageReference saveSettings() {
-    	
-    	// add some extra error detection
-    	if (STG_Panel.stgService.stgHH.npo02__Household_Rules__c != HH_Households.NO_HOUSEHOLDS_PROCESSOR &&
-    	   STG_Panel.stgService.stgCon.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
+        
+        // add some extra error detection
+        if (STG_Panel.stgService.stgHH.npo02__Household_Rules__c != HH_Households.NO_HOUSEHOLDS_PROCESSOR &&
+           STG_Panel.stgService.stgCon.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, system.Label.stgValidationHHAccountHHRules));
             return null;
         }
 
         // make sure any custom name formats are valid.
-		if (!isValidNameFormats())
-			return null;        
+        if (!isValidNameFormats())
+            return null;        
                 
         return super.saveSettings();
     }
@@ -106,12 +106,12 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
     static public string strMailingReport {
         get {
             if (strMailingReport == null) {
-            	ID id = STG_Panel.stgService.stgHH.npo02__Household_Mailing_List_ID__c;
-            	if (id != null) {
-	                list<Report> listRpt = [select Id, Name from Report where id = :id];
-	                if (listRpt.size() > 0)
-	                   strMailingReport = listRpt[0].Name;
-            	}
+                ID id = STG_Panel.stgService.stgHH.npo02__Household_Mailing_List_ID__c;
+                if (id != null) {
+                    list<Report> listRpt = [select Id, Name from Report where id = :id];
+                    if (listRpt.size() > 0)
+                       strMailingReport = listRpt[0].Name;
+                }
             }
             return strMailingReport;
         }
@@ -177,7 +177,7 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
     * @description The list of Contacts to use when construction sample name examples 
     */
     private static list<Contact> listConExamples {
-    	get {
+        get {
             if (listConExamples == null) {
                     listConExamples = new list<Contact>();
                     Contact con = new Contact();
@@ -215,7 +215,7 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
                 }
             return listConExamples;
         }
-    	private set;
+        private set;
     }
     
     /*********************************************************************************************************
@@ -231,8 +231,8 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
     
         list<Contact> listCon = new list<Contact>();
         for (integer i = 0; i < cContact && i < listConExamples.size(); i++)
-        	listCon.add(listConExamples[i]);
-        	
+            listCon.add(listConExamples[i]);
+            
         // call INaming interface dynamically  
         string strClass = hns.Implementing_Class__c;  
         if (strClass == null || strClass == '') strClass = 'HH_NameSpec';   
@@ -243,10 +243,10 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
                 HH_INaming n = (HH_INaming)classInstance;
                 return n.getExampleName(hns, strField, listCon);
             } else {
-            	return label.stgErrorINaming;
+                return label.stgErrorINaming;
             }
         } else {
-        	return label.stgErrorInvalidClass;
+            return label.stgErrorInvalidClass;
         }
     }    
 }
