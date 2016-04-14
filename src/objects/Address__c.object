@@ -60,6 +60,7 @@
     <enableFeeds>true</enableFeeds>
     <enableHistory>false</enableHistory>
     <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
     <fields>
@@ -216,7 +217,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
     <fields>
         <fullName>Latest_End_Date__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>The most recent ending date that this Address was used for this Household.</inlineHelpText>
+        <inlineHelpText>The most recent ending date that this address was used. Generally used with Latest Start Date to track a date range for an address that's no longer in use.</inlineHelpText>
         <label>Latest End Date</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
@@ -226,7 +227,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
     <fields>
         <fullName>Latest_Start_Date__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>The most recent starting date that this Address was used for this Household.</inlineHelpText>
+        <inlineHelpText>The most recent starting date that this address was used. Generally used with Latest End Date to track a date range for an address that's no longer in use.</inlineHelpText>
         <label>Latest Start Date</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
