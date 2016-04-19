@@ -43,7 +43,7 @@
                         <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpAutoRelType}" />
                     </div>
                 </div>
-                <apex:outputPanel rendered="acNew.npe4__Object__c == 'CampaignMember'}" styleClass="slds-form-element">
+                <apex:outputPanel rendered="{!acNew.npe4__Object__c == 'CampaignMember'}" styleClass="slds-form-element">
                     <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Auto_Create__c.Fields.npe4__Campaign_Types__c.Label}" for="idDBMS" styleClass="slds-form-element__label" />
                     <div class="slds-form-element__control">
                         <c:STG_DataBoundMultiSelect settingObject="{!acNew}" fieldname="npe4__Campaign_Types__c" listSO="{!listSOCampaignTypes}" inEditMode="{!isEditMode}" />
