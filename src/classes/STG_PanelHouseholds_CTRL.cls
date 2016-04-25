@@ -64,11 +64,11 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
         if (STG_Panel.stgService.stgHH.npo02__Advanced_Household_Naming__c) {
             string strSetting;        
             try {
-                strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), UTIL_Namespace.StrTokenNSPrefix('Household_Name_Format__c'));     
+                strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), 'Household_Name_Format__c');
                 strNameSpecExample(STG_Panel.stgService.stgHN, 'Household_Name_Format__c', 2); 
-                strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), UTIL_Namespace.StrTokenNSPrefix('Formal_Greeting_Format__c'));     
+                strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), 'Formal_Greeting_Format__c');
                 strNameSpecExample(STG_Panel.stgService.stgHN, 'Formal_Greeting_Format__c', 2); 
-                strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), UTIL_Namespace.StrTokenNSPrefix('Informal_Greeting_Format__c'));     
+                strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), 'Informal_Greeting_Format__c');     
                 strNameSpecExample(STG_Panel.stgService.stgHN, 'Informal_Greeting_Format__c', 2);
                 return true; 
             } catch (Exception ex) {
