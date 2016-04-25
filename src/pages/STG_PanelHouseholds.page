@@ -127,8 +127,10 @@
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Advanced_Household_Naming__c.Label}" for="cbxAHN" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <apex:inputcheckbox value="{!stgService.stgHH.npo02__Advanced_Household_Naming__c}" disabled="{!isReadOnlyMode}" id="cbxAHN" styleClass="slds-checkbox"/>
-                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpHHNaming}"/>
+                    <apex:inputcheckbox value="{!stgService.stgHH.npo02__Advanced_Household_Naming__c}" disabled="{!isReadOnlyMode}" id="cbxAHN" html-aria-describedby="{!$Component.cbxAHNHelp}" styleClass="slds-checkbox"/>
+                    <apex:outputPanel id="cbxAHNHelp" layout="block">
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpHHNaming}"/>
+                    </apex:outputPanel>
                 </div>
             </div>
             <div class="slds-form-element">
@@ -136,7 +138,7 @@
                 <div class="slds-form-element__control">
                     <apex:outputText value="{!stgService.stgHN.Household_Name_Format__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
                     <apex:outputPanel rendered="{!isEditMode}" >
-                        <apex:selectList value="{!stgService.stgHN.Household_Name_Format__c}" styleClass="slds-select"
+                        <apex:selectList value="{!stgService.stgHN.Household_Name_Format__c}" html-aria-describedby="{!$Component.slstrFormatHHHelp}" styleClass="slds-select"
                             onchange="setNameSpec(this, 'txtFormatHH', '{!$Label.stgLabelExamplesHHNameFOrmat}');"
                             onfocus="setNameSpec(this, 'txtFormatHH', '{!$Label.stgLabelExamplesHHNameFOrmat}');"
                             multiselect="false" size="1" rendered="{!isEditMode}" id="slstrFormatHH" >
@@ -148,7 +150,9 @@
                             onfocus="setNameSpec(this, null, '{!$Label.stgLabelExamplesHHNameFOrmat}');"
                             rendered="{!isEditMode}" id="txtFormatHH" style="display:none;"/>
                     </apex:outputPanel>
-                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpHHNameFormat}" />
+                    <apex:outputPanel id="slstrFormatHHHelp" layout="block">
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpHHNameFormat}" />
+                    </apex:outputPanel>
                 </div>
             </div>
             <div class="slds-form-element">
@@ -156,7 +160,7 @@
                 <div class="slds-form-element__control">
                     <apex:outputText value="{!stgService.stgHN.Formal_Greeting_Format__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
                     <apex:outputPanel rendered="{!isEditMode}" >
-                        <apex:selectList value="{!stgService.stgHN.Formal_Greeting_Format__c}" styleClass="slds-select"
+                        <apex:selectList value="{!stgService.stgHN.Formal_Greeting_Format__c}" html-aria-describedby="{!$Component.slstrFormatFGHelp}" styleClass="slds-select"
                             onchange="setNameSpec(this, 'txtFormatFG', '{!$Label.stgLabelExamplesFGFormat}');"
                             onfocus="setNameSpec(this, 'txtFormatFG', '{!$Label.stgLabelExamplesFGFormat}');"
                             multiselect="false" size="1" rendered="{!isEditMode}" id="slstrFormatFG" >
@@ -168,7 +172,9 @@
                             onfocus="setNameSpec(this, null, '{!$Label.stgLabelExamplesFGFormat}');"
                             rendered="{!isEditMode}" id="txtFormatFG" style="display:none;"/>
                     </apex:outputPanel>
-                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpFGFormat}" />
+                    <apex:outputPanel id="slstrFormatFGHelp" layout="block">
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpFGFormat}" />
+                    </apex:outputPanel>
                 </div>
             </div>
             <div class="slds-form-element">
@@ -176,7 +182,7 @@
                 <div class="slds-form-element__control">
                     <apex:outputText value="{!stgService.stgHN.Informal_Greeting_Format__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
                     <apex:outputPanel rendered="{!isEditMode}" >
-                        <apex:selectList value="{!stgService.stgHN.Informal_Greeting_Format__c}" styleClass="slds-select"
+                        <apex:selectList value="{!stgService.stgHN.Informal_Greeting_Format__c}" html-aria-describedby="{!$Component.slstrFormatIGHelp}" styleClass="slds-select"
                             onchange="setNameSpec(this, 'txtFormatIG', '{!$Label.stgLabelExamplesIGFormat}');"
                             onfocus="setNameSpec(this, 'txtFormatIG', '{!$Label.stgLabelExamplesIGFormat}');"
                             multiselect="false" size="1" rendered="{!isEditMode}" id="slstrFormatIG" >
@@ -188,15 +194,19 @@
                             onfocus="setNameSpec(this, null, '{!$Label.stgLabelExamplesIGFormat}');"
                             rendered="{!isEditMode}" id="txtFormatIG" style="display:none;"/>
                     </apex:outputPanel>
-                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpIGFormat}" />
+                    <apex:outputPanel id="slstrFormatIGHelp" layout="block">
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpIGFormat}" />
+                    </apex:outputPanel>
                 </div>
             </div>
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.Household_Naming_Settings__c.Fields.Name_Connector__c.Label}" for="txtAnd" styleClass="slds-form-element__label"  />
                 <div class="slds-form-element__control">
                     <apex:outputText value="{!stgService.stgHN.Name_Connector__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
-                    <apex:inputText value="{!stgService.stgHN.Name_Connector__c}" id="txtAnd" onchange="setExamples();" rendered="{!isEditMode}" styleClass="slds-input" />
-                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpNameConnector}" />
+                    <apex:inputText value="{!stgService.stgHN.Name_Connector__c}" id="txtAnd" onchange="setExamples();" rendered="{!isEditMode}" html-aria-describedby="{!$Component.txtAndHelp}" styleClass="slds-input" />
+                    <apex:outputPanel id="txtAndHelp" layout="block">
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpNameConnector}" />
+                    </apex:outputPanel>
                 </div>
             </div>
         </div>
@@ -216,8 +226,10 @@
                 <apex:outputLabel value="{!$ObjectType.Household_Naming_Settings__c.Fields.Name_Overrun__c.Label}" for="txtOverrun" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
                     <apex:outputText value="{!stgService.stgHN.Name_Overrun__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
-                    <apex:inputText value="{!stgService.stgHN.Name_Overrun__c}" id="txtOverrun" onchange="setExamples();" rendered="{!isEditMode}" styleClass="slds-input" />
-                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpNameOverrun}" />
+                    <apex:inputText value="{!stgService.stgHN.Name_Overrun__c}" id="txtOverrun" onchange="setExamples();" rendered="{!isEditMode}" html-aria-describedby="{!$Component.txtOverrunHelp}" styleClass="slds-input" />
+                    <apex:outputPanel id="txtOverrunHelp" layout="block">
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpNameOverrun}" />
+                    </apex:outputPanel>
                 </div>
             </div>
 
@@ -225,8 +237,10 @@
                 <apex:outputLabel value="{!$ObjectType.Household_Naming_Settings__c.Fields.Contact_Overrun_Count__c.Label}" for="txtOverrunCount" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
                     <apex:outputText value="{!stgService.stgHN.Contact_Overrun_Count__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
-                    <apex:inputText value="{!stgService.stgHN.Contact_Overrun_Count__c}" id="txtOverrunCount" onchange="setExamples();" rendered="{!isEditMode}" styleClass="slds-input" />
-                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpOverrunCount}" />
+                    <apex:inputText value="{!stgService.stgHN.Contact_Overrun_Count__c}" id="txtOverrunCount" onchange="setExamples();" rendered="{!isEditMode}" html-aria-describedby="{!$Component.txtOverrunCountHelp}" styleClass="slds-input" />
+                    <apex:outputPanel id="txtOverrunCountHelp" layout="block">
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpOverrunCount}" />
+                    </apex:outputPanel>
                 </div>
             </div>
 
@@ -234,8 +248,10 @@
                 <apex:outputLabel value="{!$ObjectType.Household_Naming_Settings__c.Fields.Implementing_Class__c.Label}" for="txtClass" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
                     <apex:outputText value="{!stgService.stgHN.Implementing_Class__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
-                    <apex:inputText value="{!stgService.stgHN.Implementing_Class__c}" id="txtClass" onchange="setExamples();" rendered="{!isEditMode}" styleClass="slds-input" />
-                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpINamingClass}" />
+                    <apex:inputText value="{!stgService.stgHN.Implementing_Class__c}" id="txtClass" onchange="setExamples();" rendered="{!isEditMode}" html-aria-describedby="{!$Component.txtClassHelp}" styleClass="slds-input" />
+                    <apex:outputPanel id="txtClassHelp" layout="block">
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpINamingClass}" />
+                    </apex:outputPanel>
                 </div>
             </div>
         </div>
@@ -249,17 +265,21 @@
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Rules__c.Label}" for="slHR" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
                     <apex:outputField value="{!stgService.stgHH.npo02__Household_Rules__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
-                    <apex:selectList value="{!stgService.stgHH.npo02__Household_Rules__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slHR" styleClass="slds-select" >
+                    <apex:selectList value="{!stgService.stgHH.npo02__Household_Rules__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slHR" html-aria-describedby="{!$Component.slHRHelp}" styleClass="slds-select" >
                         <apex:selectOptions value="{!listSOHHRules}"/>
                     </apex:selectList>
-                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpHHRules}" />
+                    <apex:outputPanel id="slHRHelp" layout="block">
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpHHRules}" />
+                    </apex:outputPanel>
                 </div>
             </div>
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Creation_Excluded_Recordtypes__c.Label}" for="idDBMS" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
                     <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Household_Creation_Excluded_Recordtypes__c" listSO="{!listSOContactRecTypes}" inEditMode="{!isEditMode}" />
-                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpHHExcludedRT}" />
+                    <apex:outputPanel id="idDBMSHelp" layout="block">
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpHHExcludedRT}" />
+                    </apex:outputPanel>
                 </div>
             </div>
         </div>
@@ -272,15 +292,17 @@
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Mailing_List_ID__c.Label}" for="slHMLI" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
                     <apex:outputText value="{!strMailingReport}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
-                    <apex:selectList value="{!stgService.stgHH.npo02__Household_Mailing_List_ID__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slHMLI" styleClass="slds-select" >
+                    <apex:selectList value="{!stgService.stgHH.npo02__Household_Mailing_List_ID__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slHMLI" html-aria-describedby="{!$Component.slHMLIHelp}" styleClass="slds-select" >
                         <apex:selectOptions value="{!listSOMailingReportIds}"/>
                     </apex:selectList>
-                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpHHMailingListReport}" />
+                    <apex:outputPanel id="slHMLIHelp" layout="block">
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpHHMailingListReport}" />
+                    </apex:outputPanel>
                 </div>
             </div>
         </div>
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-            <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+            <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
             <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
         </div>
     </apex:form>
