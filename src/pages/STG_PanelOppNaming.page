@@ -97,10 +97,12 @@
                 <div class="slds-form-element">
                     <apex:outputLabel value="{!$ObjectType.Opportunity_Naming_Settings__c.Fields.Attribution__c.Label}" for="slOppAttr" styleClass="slds-form-element__label" />
                     <div class="slds-form-element__control">
-                        <apex:selectList value="{!currentONS.Attribution__c}" styleClass="slds-select" multiselect="false" size="1" id="slOppAttr">
+                        <apex:selectList value="{!currentONS.Attribution__c}" styleClass="slds-select" multiselect="false" size="1" id="slOppAttr" html-aria-describedby="{!$Component.slOppAttrHelp}">
                             <apex:selectOptions value="{!listSOOpportunityAttribution}"/>
                         </apex:selectList>
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpOppNamingAttribution}" />
+                        <apex:outputPanel id="slOppAttrHelp" layout="block">
+                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpOppNamingAttribution}" />
+                        </apex:outputPanel>
                     </div>
                 </div>
                 <div class="slds-form-element">
@@ -117,7 +119,7 @@
                         <apex:outputPanel rendered="{!isEditMode}" >
                             <apex:selectList value="{!currentONS.Opportunity_Name_Format__c}" styleClass="slds-select"
                                 onchange="window.setOppNameSpec(this, 'txtFormatOppName');"
-                                multiselect="false" size="1" rendered="{!isEditMode}" id="slstrFormatOppName" >
+                                multiselect="false" size="1" rendered="{!isEditMode}" id="slstrFormatOppName" html-aria-describedby="{!$Component.slstrFormatOppNameHelp}">
                                     <apex:selectOptions value="{!listSOOpportunityNamingFormats}"/>
                             </apex:selectList>
                             <apex:outputLabel value="{!$Label.stgLabelOtherOpportunigyNamingFormat}" styleClass="slds-assistive-text" for="txtFormatOppName" />
@@ -125,7 +127,9 @@
                                 onchange="window.setOppNameSpec(this, null);"
                                 rendered="{!isEditMode}" id="txtFormatOppName" style="display:none;"/>
                         </apex:outputPanel>
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpOppNamingFormat}" escape="false" />
+                        <apex:outputPanel id="slstrFormatOppNameHelp" layout="block">
+                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpOppNamingFormat}" escape="false" />
+                        </apex:outputPanel>
                     </div>
                 </div>
                 <div class="slds-form-element">
@@ -135,7 +139,7 @@
                         <apex:outputPanel rendered="{!isEditMode}" >
                             <apex:selectList value="{!currentONS.Date_Format__c}" styleClass="slds-select"
                                 onchange="window.setOppNameSpec(this, 'txtFormatDate');"
-                                multiselect="false" size="1" rendered="{!isEditMode}" id="slstrFormatDate" >
+                                multiselect="false" size="1" rendered="{!isEditMode}" id="slstrFormatDate" html-aria-describedby="{!$Component.slstrFormatDateHelp}">
                                     <apex:selectOptions value="{!listSODateFormats}"/>
                             </apex:selectList>
                             <apex:outputLabel value="{!$Label.stgLabelOtherDateFormat}" styleClass="slds-assistive-text" for="txtFormatDate" />
@@ -143,12 +147,14 @@
                                 onchange="window.setOppNameSpec(this, null);"
                                 rendered="{!isEditMode}" id="txtFormatDate" style="display:none;"/>
                         </apex:outputPanel>
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpOppNamingDateFormat}" />
+                        <apex:outputPanel id="slstrFormatDateHelp" layout="block">
+                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpOppNamingDateFormat}" />
+                        </apex:outputPanel>
                     </div>
                 </div>
             </div>
             <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-                <apex:commandButton value="{!$Label.stgBtnSave}" action="{!saveONS}" status="statusLoad" rendered="{!isEditMode}" oncomplete="window.initOppEditMode()" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+                <apex:commandButton value="{!$Label.stgBtnSave}" action="{!saveONS}" status="statusLoad" rendered="{!isEditMode}" oncomplete="window.initOppEditMode()" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
                 <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelEdit}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn slds-button slds-button--small slds-button--neutral" />
             </div>
         </apex:outputPanel>
