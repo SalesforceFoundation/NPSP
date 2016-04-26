@@ -526,7 +526,10 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             // is the correct type for the current account processor
             Account acc = mapContactIdAccount.get(c.Id);
             if (acc != null && 
-                ((CAO_Constants.isHHAccountModel() && acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) ||
+                (
+                //Allow a contact to be disconnected from a household by setting its account to null,
+                //and it is up to the user (or the ManageHouseholdUI) to pick a new primary contact.
+                //(CAO_Constants.isHHAccountModel() && acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) ||
                 (CAO_Constants.isOneToOne() && acc.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE)) ) {
                 // if a user has blanked out the Account for a Contact, this will put it right back
                 c.AccountId = acc.Id;                
