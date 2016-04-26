@@ -121,6 +121,20 @@ public class HH_Container_LCTRL {
     }
     
     /*******************************************************************************************************
+    * @description deletes the Contacts in the database
+    * @param listCon The list of Contacts to delete
+    * @return void
+    */
+    @AuraEnabled
+    public static void deleteContacts(list<Contact> listCon) {
+        try {
+	        delete listCon;
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
+    }
+    
+    /*******************************************************************************************************
     * @description saves any changes to the Household in the database
     * @param hh The Household
     * @return void

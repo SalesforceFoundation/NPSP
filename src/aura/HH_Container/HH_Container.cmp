@@ -4,16 +4,21 @@
 
     <!-- private attributes -->
     <aura:attribute name="hh" type="SObject" access="private" />
+    <aura:attribute name="hhTypePrefix" type="String" access="private" />
     <aura:attribute name="listCon" type="Contact[]" access="private" />
     <aura:attribute name="showSpinner" type="Boolean" default="true" access="private" />
     <aura:attribute name="isAutoName" type="Boolean" access="private" />
     <aura:attribute name="isAutoFormalGreeting" type="Boolean" access="private" />
     <aura:attribute name="isAutoInformalGreeting" type="Boolean" access="private" />
+    <aura:attribute name="showDeleteContactPopup" type="Boolean" access="private" />
+    <aura:attribute name="conDelete" type="Contact" access="private" />
+    <aura:attribute name="listConDelete" type="Contact[]" access="private" />
     
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/> 
     <aura:handler event="c:HH_ContactChangedEvent" action="{!c.handleContactChangedEvent}"/>   
+    <aura:handler event="c:HH_ContactDeleteEvent" action="{!c.handleContactDeleteEvent}"/>   
     <aura:handler event="c:HH_ContactReorderEvent" action="{!c.handleContactReorderEvent}"/>   
     
     <!-- markup follows... -->
@@ -25,18 +30,26 @@
             <div aura:id="divUIMessage" />
             
             <!-- PAGE HEADER -->
-            <div class="slds-page-header" role="banner">
+            <div class="slds-page-header slds-p-bottom--medium" role="banner">
                 <div class="slds-grid">
                     <div class="slds-col">
-                        <nav role="navigation">
+                        <nav role="navigation" class="slds-p-bottom--x-small">
                             <p id="bread-crumb-label" class="slds-assistive-text">You are here:</p>
                             <ol class="slds-breadcrumb slds-list--horizontal" aria-labelledby="bread-crumb-label">
+                                <li class="slds-list__item slds-text-heading--label"><a class="slds-type-focus" href="{!'/' + v.hhTypePrefix}">Household</a></li>
                                 <li class="slds-list__item slds-text-heading--label"><a class="slds-type-focus" href="{!'/' + v.hhId}">{!v.hh.Name}</a></li>
                             </ol>
-                        </nav>              
-                        <h1 class="slds-text-heading--medium slds-p-top-medium">Manage Household</h1>
-                    </div>        
-                    
+                        </nav>  
+                        <div class="slds-media slds-media--center slds-has-flexi-truncate">
+                            <div class="slds-media__figure">
+                                <c:svg class="slds-icon slds-icon-standard-household slds-icon--medium"
+                                       xlinkHref="/resource/SLDS/assets/icons/standard-sprite/svg/symbols.svg#household" />
+                            </div>
+                            <div class="slds-media__body">
+                                <h1 class="slds-text-heading--medium">Manage Household</h1>              
+                            </div>
+                        </div>        
+                    </div>    
                     <div class="slds-col slds-no-flex slds-align-middle">
                         <div class="slds-button-group" role="group">
                             <ui:button class="slds-button slds-button--neutral" 
@@ -117,6 +130,45 @@
                         </div>                        
                     </div>                        
                 </div>
+                
+                
+            <!-- DELETE CONTACT POPUP -->
+            <aura:if isTrue="{!v.showDeleteContactPopup}">
+                <div id="deleteContactPopup" class="slds-modal slds-fade-in-open" aria-hidden="false" role="dialog">
+                    <div class="slds-modal__container">
+
+                        <div class="slds-modal__header">
+                            <h2 id="searchPopupLabel" class="slds-text-heading--medium">Delete Contact</h2>
+                            <button type="button" class="slds-button slds-button--icon-inverse slds-modal__close" data-dismiss="modal" data-target="searchPopup">
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+
+                        <div class="slds-modal__content slds-p-around--medium">
+                            <div>
+                                <p>Do you want to delete this contact, when the page is saved?</p>
+                            </div>
+                        </div> <!-- /slds-modal__content -->
+                        <div class="slds-modal__footer">
+                            <div class="slds-x-small-buttons--horizontal">
+                                <ui:button class="slds-button slds-button--neutral" 
+                                    aura:id="btnCancelDelete"
+                                    buttonTitle="Cancel" 
+                                    label="Cancel" 
+                                    press="{!c.cancelDeleteContact}" />
+                                <ui:button class="slds-button slds-button--brand" 
+                                    aura:id="btnDelete"
+                                    buttonTitle="Delete" 
+                                    label="Delete" 
+                                    press="{!c.doDeleteContact}" />
+                            </div>
+                        </div>
+                    </div> <!-- /slds-modal__container -->
+                </div> <!-- /slds-modal -->
+                <div class="slds-backdrop slds-backdrop--open"></div>
+            </aura:if>
+            <!-- /DELETE CONTACT POPUP -->
+                
             </div> <!-- myBodyContent -->
         </div> <!-- slds -->
     </form>   

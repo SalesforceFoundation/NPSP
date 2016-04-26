@@ -338,6 +338,7 @@
         <members>HH_Canvas</members>
         <members>HH_ContactCard</members>
         <members>HH_ContactChangedEvent</members>
+        <members>HH_ContactDeleteEvent</members>
         <members>HH_ContactReorderEvent</members>
         <members>HH_Container</members>
         <members>ManageHHApp</members>

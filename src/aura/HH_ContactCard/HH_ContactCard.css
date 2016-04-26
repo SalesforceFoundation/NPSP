@@ -1,0 +1,4 @@
+.THIS .deleteBtn:hover, .THIS .deleteBtn:focus, .THIS .deleteBtn.is-selected {
+    background: none;
+    border: 0;
+}
