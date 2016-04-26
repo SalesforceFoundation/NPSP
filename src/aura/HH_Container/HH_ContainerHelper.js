@@ -134,11 +134,8 @@
         var self = this;
         var countSuccesses = 0;
 
-        // save the contacts (both in the household and those being moved out)
+        // save the contacts
         var listCon = component.get("v.listCon");
-        var listConMove = component.get('v.listConMove');
-        if (listConMove != null)
-            listCon = listCon.concat(listConMove);
 		var action = component.get("c.updateContacts");
         action.setParams({ listCon : listCon});
 		action.setCallback(this, function(response) {
@@ -241,35 +238,22 @@
     },
 
     /*******************************************************************************************************
-	* @description The user has confirmed the contact should be deleted or moved to their own account.  
+	* @description The user has confirmed the contact should be deleted.  
     * Remove our delete contact popup.
-    * Add the contact to our list of contacts to delete or move.  
+    * Add the contact to our list of contacts to delete.  
     * Remove the contact from our list of contacts in the household.  
     * Update all household names and greetings.
     */
-    doDeleteMoveContact : function(component, event) {
+    doDeleteContact : function(component, event) {
         component.set('v.showDeleteContactPopup', false);
         var con = component.get('v.conDelete');
         if (con != null) {
-			// delete or move button?            
-            if (event.getSource().getLocalId() == 'btnDelete') {            
-                var listConDelete = component.get('v.listConDelete');
-                if (listConDelete == null)
-                    listConDelete = [];
-                listConDelete.push(con);
-                component.set('v.listConDelete', listConDelete);
-            } else {
-                var listConMove = component.get('v.listConMove');
-                if (listConMove == null)
-                    listConMove = [];
-                listConMove.push(con);
-                // null out their current household to force a new one to be created
-                if (con.npo02__Household__c != null)
-                    con.npo02__Household__c = null;
-               	else
-                    con.AccountId = null;
-                component.set('v.listConMove', listConMove);
-            }
+            var listConDelete = component.get('v.listConDelete');
+            if (listConDelete == null)
+                listConDelete = [];
+            listConDelete.push(con);
+            component.set('v.listConDelete', listConDelete);
+
             var listCon = component.get('v.listCon');
             var iconDel = listCon.indexOf(con);
             if (iconDel >= 0)

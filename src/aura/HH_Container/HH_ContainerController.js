@@ -20,8 +20,8 @@
 	},
 
     // a Contact has been requested to delete, so prompt the user and track the deletion
-    doDeleteMoveContact : function(component, event, helper) {
-        helper.doDeleteMoveContact(component, event);		
+    doDeleteContact : function(component, event, helper) {
+        helper.doDeleteContact(component, event);		
 	},
 
     // a Contact has been requested to delete, so prompt the user and track the deletion

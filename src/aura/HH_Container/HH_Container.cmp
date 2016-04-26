@@ -13,7 +13,6 @@
     <aura:attribute name="showDeleteContactPopup" type="Boolean" access="private" />
     <aura:attribute name="conDelete" type="Contact" access="private" />
     <aura:attribute name="listConDelete" type="Contact[]" access="private" />
-    <aura:attribute name="listConMove" type="Contact[]" access="private" />
     
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
@@ -147,7 +146,7 @@
 
                         <div class="slds-modal__content slds-p-around--medium">
                             <div>
-                                <p>Do you want to delete this contact, or move the contact to their own Household, when the page is saved?</p>
+                                <p>Do you want to delete this contact, when the page is saved?</p>
                             </div>
                         </div> <!-- /slds-modal__content -->
                         <div class="slds-modal__footer">
@@ -157,16 +156,11 @@
                                     buttonTitle="Cancel" 
                                     label="Cancel" 
                                     press="{!c.cancelDeleteContact}" />
-                                <ui:button class="slds-button slds-button--neutral" 
+                                <ui:button class="slds-button slds-button--brand" 
                                     aura:id="btnDelete"
                                     buttonTitle="Delete" 
                                     label="Delete" 
-                                    press="{!c.doDeleteMoveContact}" />
-                                <ui:button class="slds-button slds-button--brand" 
-                                    aura:id="btnMove"
-                                    buttonTitle="Move" 
-                                    label="Move" 
-                                    press="{!c.doDeleteMoveContact}" />
+                                    press="{!c.doDeleteContact}" />
                             </div>
                         </div>
                     </div> <!-- /slds-modal__container -->
