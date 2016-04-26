@@ -1,6 +1,6 @@
 <apex:page controller="STG_PanelOppNamingBatch_CTRL" >
     <apex:form id="form" styleClass="slds-m-around--x-large">
-        <c:STG_PageHeader sectionLabel="{!$Label.stgNavBulkProcesses}" pageLabel="{!$Label.stgLabelOppNamingRefreshTitle}" />
+        <c:STG_PageHeader sectionLabel="{!$Label.stgNavBulkProcesses}" pageLabel="{!$Label.stgNavRollupBatch}" />
         <div class="slds-text-body--small slds-m-around--medium"><apex:outputText value="{!$Label.stgHelpBtnOppNaming}" escape="false" styleClass="slds-list--ordered" /></div>
         <c:UTIL_PageMessages />
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">

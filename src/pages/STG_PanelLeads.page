@@ -9,13 +9,15 @@
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Default_Opp_on_Convert__c.Label}" for="cbxDOC" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <apex:inputCheckbox value="{!stgService.stgCon.npe01__Default_Opp_on_Convert__c}" disabled="{!isReadOnlyMode}" id="cbxDOC" styleClass="slds-checkbox"/>
-                    <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpLeadConvert}" />
+                    <apex:inputCheckbox value="{!stgService.stgCon.npe01__Default_Opp_on_Convert__c}" disabled="{!isReadOnlyMode}" id="cbxDOC" html-aria-describedby="{!$Component.cbxDOCHelp}" styleClass="slds-checkbox"/>
+                    <apex:outputPanel id="cbxDOCHelp" layout="block">
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpLeadConvert}" />
+                    </apex:outputPanel>
                 </div>
             </div>
         </div>
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-            <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" immediate="false" rendered="{!isEditMode}" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+            <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" immediate="false" rendered="{!isEditMode}" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
             <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" immediate="true" rendered="{!isEditMode}" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
         </div>
     </apex:form>
