@@ -19,6 +19,21 @@
         helper.updateHHNames(component);		
 	},
 
+    // a Contact has been requested to delete, so prompt the user and track the deletion
+    doDeleteMoveContact : function(component, event, helper) {
+        helper.doDeleteMoveContact(component, event);		
+	},
+
+    // a Contact has been requested to delete, so prompt the user and track the deletion
+    cancelDeleteContact : function(component, event, helper) {
+        helper.cancelDeleteContact(component, event);		
+	},
+
+    // a Contact has been requested to delete, so prompt the user and track the deletion
+    handleContactDeleteEvent : function(component, event, helper) {
+        helper.promptDeleteContact(component, event);		
+	},
+    
     // Contact ordering has changed, so update our naming
     handleContactReorderEvent : function(component, event, helper) {
         helper.updateHHNames(component);				

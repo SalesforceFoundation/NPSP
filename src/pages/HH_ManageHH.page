@@ -42,7 +42,20 @@
                         document.activeElement.blur();
                     }
                 );
-            });        
+            }); 
+        
+            // called by our lightning component when it needs to tell the visualforce page 
+            // a contact has been removed from the page.  Ideally we'd have the visualforce page
+            // handle the c:HH_ContactDeleteEvent, but we haven't yet found info on how to have
+            // a visualforce javascript lightning event handler.
+        	function contactRemoved(con) {
+                // if the contact being removed (deleted or moved) is the
+                // HH's primary contact, clear out that field.
+                var ctrlPC = j$('.npe01__One2OneContact__c');
+                if (ctrlPC != null && ctrlPC.val() == con.FirstName + ' ' + con.LastName)
+                    ctrlPC.val(null);
+            }
+        
         </script>
         
         <!-- start with a spinner here until lightning loads -->
@@ -74,9 +87,9 @@
                                     {!f.Label}<span class="required">{!IF(f.DBRequired || f.Required, '*', '')}</span>
                                 </label>
                                 <div class="slds-form-element__control">                                
-                                    <apex:inputField required="{!f.DBRequired || f.Required}" value="{!hh[f]}" label=""
+                                    <apex:inputField required="{!f.DBRequired || f.Required}" value="{!hh[f]}" label="" 
                                     	styleClass="{!CASE(f.Type, 
-                                                    	'reference', 'lookupInput', 
+                                                    	'reference', 'lookupInput' + ' ' + f.FieldPath, 
                                                     	'multipicklist', 'slds-select multipicklistSLDSFixup', 
                                                     	'boolean', 'slds-checkbox',
                                                     	'slds-input')}" />                                
@@ -88,7 +101,7 @@
             </div>
 			
 			<!-- we expose a javascript function our lightning component can call to save the vf fieldset & close the page -->            
-            <apex:actionFunction action="{!save}" name="saveVisualforce" />
+            <apex:actionFunction action="{!save}" name="saveAndCloseVisualforce" />
         </apex:form>
         
     </html>

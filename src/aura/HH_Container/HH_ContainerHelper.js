@@ -5,6 +5,7 @@
 	loadObjects : function(component) {
         component.set("v.showSpinner", true);
         var hhId = component.get('v.hhId');
+        component.set('v.hhTypePrefix', new String(hhId).substr(0, 3));
         
         // query for the Household account/object 
 		var action = component.get("c.getHH");
@@ -133,17 +134,19 @@
         var self = this;
         var countSuccesses = 0;
 
-        // save the contacts
+        // save the contacts (both in the household and those being moved out)
         var listCon = component.get("v.listCon");
+        var listConMove = component.get('v.listConMove');
+        if (listConMove != null)
+            listCon = listCon.concat(listConMove);
 		var action = component.get("c.updateContacts");
         action.setParams({ listCon : listCon});
 		action.setCallback(this, function(response) {
 			var state = response.getState();
 			if (component.isValid() && state === "SUCCESS") {
                 countSuccesses++;
-                if (countSuccesses == 2) {
-                    saveVisualforce();
-	                //self.close(component);
+                if (countSuccesses == 3) {
+                    saveAndCloseVisualforce();
                 }
 			}
             else if (component.isValid() && state === "ERROR") {
@@ -163,9 +166,26 @@
 			var state = response.getState();
 			if (component.isValid() && state === "SUCCESS") {
                 countSuccesses++;
-                if (countSuccesses == 2) {
-                    saveVisualforce();
-	                //self.close(component);
+                if (countSuccesses == 3) {
+                    saveAndCloseVisualforce();
+                }
+			}
+            else if (component.isValid() && state === "ERROR") {
+                self.reportError(component, response);
+            }            
+		});
+		$A.enqueueAction(action);
+
+        // delete any contacts
+        var listConDelete = component.get("v.listConDelete");
+		var action = component.get("c.deleteContacts");
+        action.setParams({ listCon : listConDelete});
+		action.setCallback(this, function(response) {
+			var state = response.getState();
+			if (component.isValid() && state === "SUCCESS") {
+                countSuccesses++;
+                if (countSuccesses == 3) {
+                    saveAndCloseVisualforce();
                 }
 			}
             else if (component.isValid() && state === "ERROR") {
@@ -202,6 +222,66 @@
             component.set('v.isAutoFormalGreeting', false);
         else if (idText == 'txtInformalGreeting')
             component.set('v.isAutoInformalGreeting', false);
+    },
+
+    /*******************************************************************************************************
+	* @description Ask the user if the Contact should be deleted, by displaying our delete contact popup.
+    */
+    promptDeleteContact : function(component, event) {
+        var con = event.getParam("contact")
+        component.set('v.showDeleteContactPopup', true);
+        component.set('v.conDelete', con);
+    },
+
+    /*******************************************************************************************************
+	* @description The user has decided not to delete the contact, so remove our delete contact popup.
+    */
+    cancelDeleteContact : function(component, event) {
+        component.set('v.showDeleteContactPopup', false);
+    },
+
+    /*******************************************************************************************************
+	* @description The user has confirmed the contact should be deleted or moved to their own account.  
+    * Remove our delete contact popup.
+    * Add the contact to our list of contacts to delete or move.  
+    * Remove the contact from our list of contacts in the household.  
+    * Update all household names and greetings.
+    */
+    doDeleteMoveContact : function(component, event) {
+        component.set('v.showDeleteContactPopup', false);
+        var con = component.get('v.conDelete');
+        if (con != null) {
+			// delete or move button?            
+            if (event.getSource().getLocalId() == 'btnDelete') {            
+                var listConDelete = component.get('v.listConDelete');
+                if (listConDelete == null)
+                    listConDelete = [];
+                listConDelete.push(con);
+                component.set('v.listConDelete', listConDelete);
+            } else {
+                var listConMove = component.get('v.listConMove');
+                if (listConMove == null)
+                    listConMove = [];
+                listConMove.push(con);
+                // null out their current household to force a new one to be created
+                if (con.npo02__Household__c != null)
+                    con.npo02__Household__c = null;
+               	else
+                    con.AccountId = null;
+                component.set('v.listConMove', listConMove);
+            }
+            var listCon = component.get('v.listCon');
+            var iconDel = listCon.indexOf(con);
+            if (iconDel >= 0)
+	            listCon.splice(iconDel, 1);
+            component.set('v.listCon', listCon);
+            this.updateHHNames(component);
+
+            // we must tell the visualforce page, in case the primary contact lookup is to this contact.
+            // ideally, the visualforce page would listen for a lightning event, but we haven't figured
+            // out how to do that!
+            contactRemoved(con);
+        }
     },
 
     /*******************************************************************************************************
