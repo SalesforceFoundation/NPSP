@@ -17,48 +17,60 @@
                     <div class="slds-form-element">
                         <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Object__c.Label}" for="tbxO" styleClass="slds-form-element__label" />
                         <div class="slds-form-element__control">
-                            <apex:inputField value="{!thNew.Object__c}" required="false" id="tbxO" styleClass="slds-input" />
-                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpTHObject}" />
+                            <apex:inputField value="{!thNew.Object__c}" required="false" id="tbxO" html-aria-describedby="{!$Component.tbxOHelp}" styleClass="slds-input" />
+                            <apex:outputPanel id="tbxOHelp" layout="block">
+                                <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpTHObject}" />
+                            </apex:outputPanel>
                         </div>
                     </div>
                     <div class="slds-form-element">
                         <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Class__c.Label}" for="tbxC" styleClass="slds-form-element__label" />
                         <div class="slds-form-element__control">
-                            <apex:inputField value="{!thNew.Class__c}" required="false" id="tbxC" styleClass="fslds-input" />
-                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpTHClass}" />
+                            <apex:inputField value="{!thNew.Class__c}" required="false" id="tbxC" html-aria-describedby="{!$Component.tbxCHelp}" styleClass="fslds-input" />
+                            <apex:outputPanel id="tbxCHelp" layout="block">
+                                <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpTHClass}" />
+                            </apex:outputPanel>
                         </div>
                     </div>
                     <div class="slds-form-element">
                         <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Load_Order__c.Label}" for="tbxLO" styleClass="slds-form-element__label" />
                         <div class="slds-form-element__control">
-                            <apex:inputField value="{!thNew.Load_Order__c}" type="number" required="false" id="tbxLO" styleClass="slds-input" />
-                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpTHLoadOrder}" />
+                            <apex:inputField value="{!thNew.Load_Order__c}" type="number" required="false" id="tbxLO" html-aria-describedby="{!$Component.tbxLOHelp}" styleClass="slds-input" />
+                            <apex:outputPanel id="tbxLOHelp" layout="block">
+                                <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpTHLoadOrder}" />
+                            </apex:outputPanel>
                         </div>
                     </div>
                     <div class="slds-form-element">
                         <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Trigger_Action__c.Label}" styleClass="slds-form-element__label" />
                         <div class="slds-form-element__control">
                             <c:STG_DataBoundMultiSelect settingObject="{!thNew}" fieldname="Trigger_Action__c" listSO="{!listSOTriggerAction}" inEditMode="{!isEditMode}" />
-                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpTHTriggerAction}" />
+                            <apex:outputPanel layout="block">
+                                <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpTHTriggerAction}" />
+                            </apex:outputPanel>
                         </div>
                     </div>
                     <div class="slds-form-element">
                         <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Active__c.Label}" for="cbxA" styleClass="slds-form-element__label" />
                         <div class="slds-form-element__control">
-                            <apex:inputField value="{!thNew.Active__c}" required="false" id="cbxA" styleClass="slds-checkbox" />
-                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpTHActive}" />
+                            <apex:inputField value="{!thNew.Active__c}" required="false" id="cbxA" html-aria-describedby="{!$Component.cbxAHelp}" styleClass="slds-checkbox" />
+                            <apex:outputPanel id="cbxAHelp" layout="block">
+                                <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpTHActive}" />
+                            </apex:outputPanel>
                         </div>
                     </div>
                     <div class="slds-form-element">
                         <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Asynchronous__c.Label}" for="cbxAs" styleClass="slds-form-element__label" />
                         <div class="slds-form-element__control">
-                            <apex:inputField value="{!thNew.Asynchronous__c}" required="false" id="cbxAs" styleClass="slds-checkbox" />
-                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpTHAsync}" />
+                            <apex:inputField value="{!thNew.Asynchronous__c}" required="false" id="cbxAs" html-aria-describedby="{!$Component.cbxAsHelp}" styleClass="slds-checkbox" />
+                            <apex:outputPanel id="cbxAsHelp" layout="block">
+                                <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpTHAsync}" />
+                            </apex:outputPanel>
                         </div>
                     </div>
                 </div>
                 <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-                    <apex:commandButton value="{!$Label.stgBtnCreateTH}" action="{!createTh}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+                    <apex:commandButton value="{!$Label.stgBtnCreateTH}" action="{!createTh}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
                     <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelTh}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
                 </div>
             </apex:outputPanel>
