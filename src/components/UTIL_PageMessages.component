@@ -1,5 +1,5 @@
 <apex:component controller="UTIL_PageMessages_CTRL" selfClosing="true">
-    <apex:stylesheet value="{!URLFOR($Resource.SLDS, 'assets/styles/salesforce-lightning-design-system-vf.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.SLDS, '/0_12_2/assets/styles/salesforce-lightning-design-system-vf.min.css')}"/>
 
     <apex:attribute name="useToast"
         description="If true, page messages will be displayed as floating toast messages, as described in the SLDS style guide. Otherwise, page messages will appear as blocks where the component is used."
