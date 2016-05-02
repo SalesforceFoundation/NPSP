@@ -43,14 +43,24 @@ public class HH_Container_LCTRL {
     */
     @AuraEnabled
     public static SObject getHH(ID hhId) {
-        if (hhId == null)
-            return null;
-        if (UTIL_Describe.isObjectIdThisType(hhId, 'Account'))
-	        return [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c
-                    from Account where Id = :hhId];
-        else
-	        return [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c 
-                    from npo02__Household__c where Id = :hhId];
+        try {
+            if (hhId == null)
+                return null;
+            string strSoql;
+            if (UTIL_Describe.isObjectIdThisType(hhId, 'Account')) {
+                strSoql = 'select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c,' + 
+                        'BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude';
+                if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled)
+                    strSoql += ', BillingCountryCode, BillingStateCode ';
+                strSoql += ' from Account where Id = :hhId';
+            } else {
+                strSoql = 'select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c ' +
+                        ' from npo02__Household__c where Id = :hhId';
+            }
+            return database.query(strSoql);
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
     }	
     
     /*******************************************************************************************************
@@ -60,21 +70,25 @@ public class HH_Container_LCTRL {
     */
     @AuraEnabled
     public static list<Contact> getContacts(ID hhId) {
-        if (hhId == null)
-            return null;
-        
-        string strSoql = conSelect;
-        
-        // don't use contact.HHId in one soql since it can't use an index
-        // and won't work in LDV orgs.
-        if (UTIL_Describe.isObjectIdThisType(hhId, 'Account'))
-            strSoql += ' where AccountId = :hhId ';
-        else
-            strSoql += ' where npo02__Household__c = :hhId ';
-        
-        strSoql += ' order by npo02__Household_Naming_Order__c, CreatedDate';
-        
-        return database.query(strSoql);
+        try {
+            if (hhId == null)
+                return null;
+            
+            string strSoql = conSelect;
+            
+            // don't use contact.HHId in one soql since it can't use an index
+            // and won't work in LDV orgs.
+            if (UTIL_Describe.isObjectIdThisType(hhId, 'Account'))
+                strSoql += ' where AccountId = :hhId ';
+            else
+                strSoql += ' where npo02__Household__c = :hhId ';
+            
+            strSoql += ' order by npo02__Household_Naming_Order__c, CreatedDate';
+            
+            return database.query(strSoql);
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
     }
     
     /*******************************************************************************************************
@@ -88,9 +102,12 @@ public class HH_Container_LCTRL {
                 string strSoql = 'SELECT Id, npo02__Household_Naming_Order__c, FirstName, LastName, Salutation, Name, ' +
                     'npo02__Naming_Exclusions__c, npo02__Household__c, AccountId, HHId__c, ' + 
                     'Exclude_from_Household_Name__c, Exclude_from_Household_Formal_Greeting__c, Exclude_from_Household_Informal_Greeting__c, ' +
-                    'is_Address_Override__c, Current_Address__c, ' + 
-                    'MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, CreatedDate ';
+                    'is_Address_Override__c, Current_Address__c, npe01__Primary_Address_Type__c, ' + 
+                    'MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, MailingLatitude, MailingLongitude, CreatedDate ';
                 
+                if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled)
+                    strSoql += ', MailingCountryCode, MailingStateCode ';
+
                 set<string> setStrField = HH_HouseholdNaming.iNaming.setHouseholdNameFieldsOnContact();
                 for (string strF : setStrField) {
                 	if (!strSoql.contains(' ' + strF))
@@ -166,22 +183,95 @@ public class HH_Container_LCTRL {
 	*/
 	@AuraEnabled
     public static SObject getHHNamesGreetings(SObject hh, list<Contact> listCon) {
-        
-        // update naming exclusions field based on exclusion checkboxes
-        for (Contact con : listCon)
-            HH_Households_TDTM.copyNamingExclusionsFromCheckboxes(con);
-        
-        HH_HouseholdNaming hn = new HH_HouseholdNaming();
-        String strExclusions = (String)hh.get('npo02__SYSTEM_CUSTOM_NAMING__c');
-        if (strExclusions == null)
-            strExclusions = '';
-        if (!strExclusions.contains('Name'))
-	        hh.put('Name', hn.getHHName(listCon));
-        if (!strExclusions.contains('Formal_Greeting__c'))
-	        hh.put('npo02__Formal_Greeting__c', hn.getFormalName(listCon));
-        if (!strExclusions.contains('Informal_Greeting__c'))
-    	    hh.put('npo02__Informal_Greeting__c', hn.getInformalName(listCon));
-        return hh;
+        try {        
+            // update naming exclusions field based on exclusion checkboxes
+            for (Contact con : listCon)
+                HH_Households_TDTM.copyNamingExclusionsFromCheckboxes(con);
+            
+            HH_HouseholdNaming hn = new HH_HouseholdNaming();
+            String strExclusions = (String)hh.get('npo02__SYSTEM_CUSTOM_NAMING__c');
+            if (strExclusions == null)
+                strExclusions = '';
+            if (!strExclusions.contains('Name'))
+                hh.put('Name', hn.getHHName(listCon));
+            if (!strExclusions.contains('Formal_Greeting__c'))
+                hh.put('npo02__Formal_Greeting__c', hn.getFormalName(listCon));
+            if (!strExclusions.contains('Informal_Greeting__c'))
+                hh.put('npo02__Informal_Greeting__c', hn.getInformalName(listCon));
+            return hh;
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
     }
+
+    /*******************************************************************************************************
+    * @description returns the Addresses for the given Household.  note that it returns Address objects,
+    * even when dealing with Household Objects (in which case it creates in memory address objects for each
+    * contact's mailing address).
+    * @param hh The Household
+    * @param listCon The Contacts in the Household
+    * @return list<Address__c> The addresses in the household and contacts
+    */
+    @AuraEnabled
+    public static list<Address__c> getAddresses(ID hhId) {
+        try {
+            if (hhId == null)
+                return null;
     
+            // keep unique list of addresses in temp Address objects
+            list<Address__c> listAddr = new list<Address__c>();
+            set<String> setAddrKey = new set<String>();
+    
+            // load our Household and Contacts
+            SObject hh = getHH(hhid);
+            list<Contact> listCon = getContacts(hhid);
+    
+            // copy the household's address
+            Address__c addr = new Address__c();
+            if (UTIL_Describe.isObjectIdThisType(hhId, 'Account')) 
+                ADDR_Addresses_TDTM.copyAddressStdSObjAddr(hh, 'Billing', addr, null);
+            else {
+                addr.MailingStreet__c = (String)hh.get('npo02__MailingStreet__c');
+                addr.MailingCity__c = (String)hh.get('npo02__MailingCity__c');
+                addr.MailingState__c = (String)hh.get('npo02__MailingState__c');
+                addr.MailingPostalCode__c = (String)hh.get('npo02__MailingPostalCode__c');
+                addr.MailingCountry__c = (String)hh.get('npo02__MailingCountry__c');
+            }
+            addr.Default_Address__c = true;  // we can always assume the HH address is the default.
+            String strKey = ADDR_Addresses_TDTM.getAddrKey(addr);
+            setAddrKey.add(strKey);
+            listAddr.add(addr);
+            
+            // copy the contacts' addresses        
+            for (Contact con : listCon) {
+                addr = new Address__c();
+                ADDR_Addresses_TDTM.copyAddressStdSObjAddr(con, 'Mailing', addr, null);
+                strKey = ADDR_Addresses_TDTM.getAddrKey(addr);
+                if (setAddrKey.add(strKey))
+                    listAddr.add(addr);
+            }
+            
+            // copy any address objects
+            if (UTIL_Describe.isObjectIdThisType(hhId, 'Account')) {
+                list<Address__c> listAddrHH = [select MailingStreet__c, MailingStreet2__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c
+                    from Address__c where Household_Account__c = :hhId];
+                for (Address__c addrT : listAddrHH) {
+                    // init other values we don't want to query for that the key might use.
+                    addrT.Seasonal_Start_Day__c = null;
+                    addrT.Seasonal_Start_Month__c = null;
+                    addrT.Seasonal_End_Day__c = null;
+                    addrT.Seasonal_End_Month__c = null;
+                    addrT.Address_Type__c = null;
+                    strKey = ADDR_Addresses_TDTM.getAddrKey(addrT);
+                    if (setAddrKey.add(strKey))
+                        listAddr.add(addrT);                
+                }
+            }
+            
+            return listAddr;
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
+    }
+       
 }

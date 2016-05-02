@@ -59,4 +59,9 @@
 		helper.close(component);
     },                           
     
+    // the default Address has changed, so update our Contacts
+    handleAddressChangedEvent : function(component, event, helper) {
+        helper.updateDefaultAddress(component, event);		
+	},
+
 })

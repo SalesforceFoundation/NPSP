@@ -909,7 +909,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * @param addr the Address to look at
     * @return string The Address's unique Key
     */ 
-    private static string getAddrKey(Address__c addr) {
+    public static string getAddrKey(Address__c addr) {
         string strKey =
             strCleanup(addr.MailingStreet__c) +
             strCleanup(addr.MailingStreet2__c) +
