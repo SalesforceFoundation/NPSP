@@ -1,5 +1,17 @@
 ({
-	onChangeListAddr : function(component, event, helper) {
+	doInit : function(component, event, helper) {
+        var addr = {
+            Mailing_Street__c : null,
+            Mailing_Street2__c : null,
+            Mailing_City__c : null,
+            Mailing_State__c : null,
+            Mailing_PostalCode__c : null,
+            Mailing_Country__c : null
+        };
+        component.set('v.addrNew', addr);
+	},
+
+    onChangeListAddr : function(component, event, helper) {
 		var listAddr = component.get('v.listAddr'); 
         if (listAddr.length > 0) {
             

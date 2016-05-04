@@ -4,11 +4,13 @@
 
     <!-- private attributes -->
     <aura:attribute name="addrDefault" type="Address__c" access="private" />
+    <aura:attribute name="addrNew" type="Address__c" access="private" />
     <aura:attribute name="showChangeAddressPopup" type="Boolean" access="private" />
     <aura:attribute name="iAddrSelected" type="Integer" default="0" access="private" />
     <aura:attribute name="isExistingAddrSectionOpen" type="Boolean" default="true" access="private" />
     
     <!-- events we handle -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:handler name="change" value="{!v.listAddr}" action="{!c.onChangeListAddr}" />
 
     <!-- events we fire -->
@@ -23,7 +25,7 @@
                     <div class="slds-text-body--small" >
                         <ui:outputText value="{!v.addrDefault.MailingStreet__c + 
                         	(v.addrDefault.MailingStreet2__c != null ? '\r' + v.addrDefault.MailingStreet2__c : '')}" /><br/>
-                        <ui:outputText value="{!v.addrDefault.MailingCity__c + ', ' + v.addrDefault.MailingState__c + ' ' + v.addrDefault.MailingPostalCode__c + ' '}" /><br/>
+                        <ui:outputText value="{!v.addrDefault.MailingCity__c + (v.addrDefault.MailingState__c != null ? ', ' : '') + v.addrDefault.MailingState__c + ' ' + v.addrDefault.MailingPostalCode__c + ' '}" /><br/>
                         <ui:outputText value="{!v.addrDefault.MailingCountry__c}" />                                     
                     </div>
                 </aura:if>
@@ -76,7 +78,7 @@
                                                 <div class="slds-text-body--small" >
                                                     <ui:outputText value="{!addr.MailingStreet__c + 
                                                     	(addr.MailingStreet2__c != null ? '\r' + addr.MailingStreet2__c : '')}" /><br/>
-                                                    <ui:outputText value="{!addr.MailingCity__c + ', ' + addr.MailingState__c + ' ' + addr.MailingPostalCode__c + ' '}" /><br/>
+                                                    <ui:outputText value="{!addr.MailingCity__c + (addr.MailingState__c != null ? ', ' : '') + addr.MailingState__c + ' ' + addr.MailingPostalCode__c + ' '}" /><br/>
                                                     <ui:outputText value="{!addr.MailingCountry__c}" />
                                                 </div>
                                             </div> 
@@ -91,13 +93,44 @@
                     <div class="{!v.isExistingAddrSectionOpen ? 'slds-section' : 'slds-section slds-is-open'}">
                         <div class="slds-section-title--divider slds-p-around--x-small">
                             <h4 class="slds-section__title-action" onclick="{!c.toggleAddrSection}">
-                                    <c:svg class="slds-button__icon"
-                                           xlinkHref="/resource/SLDS/assets/icons/utility-sprite/svg/symbols.svg#switch" />
+                                <c:svg class="slds-button__icon"
+                                       xlinkHref="/resource/SLDS/assets/icons/utility-sprite/svg/symbols.svg#switch" />
                                 Enter a New Address
                             </h4>
                         </div>
                         <div class="slds-section__content">                                                    
-							<p>new form here!</p>
+                            <div class="slds-form--stacked">
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="inputSample2">Mailing Street</label>
+                                    <div class="slds-form-element__control">
+                                        <ui:inputTextArea value="{!v.addrNew.MailingStreet__c}" class="slds-input" />
+                                    </div>
+                                </div>
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="inputSample2">Mailing City</label>
+                                    <div class="slds-form-element__control">
+                                        <ui:inputText value="{!v.addrNew.MailingCity__c}" class="slds-input" />
+                                    </div>
+                                </div>
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="inputSample2">Mailing State</label>
+                                    <div class="slds-form-element__control">
+                                        <ui:inputText value="{!v.addrNew.MailingState__c}" class="slds-input" />
+                                    </div>
+                                </div>
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="inputSample2">Mailing Postal Code</label>
+                                    <div class="slds-form-element__control">
+                                        <ui:inputText value="{!v.addrNew.MailingPostalCode__c}" class="slds-input" />
+                                    </div>
+                                </div>
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="inputSample2">Mailing Country</label>
+                                    <div class="slds-form-element__control">
+                                        <ui:inputText value="{!v.addrNew.MailingCountry__c}" class="slds-input" />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     

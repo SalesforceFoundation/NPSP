@@ -50,8 +50,12 @@ public class HH_Container_LCTRL {
             if (UTIL_Describe.isObjectIdThisType(hhId, 'Account')) {
                 strSoql = 'select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c,' + 
                         'BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude';
+
+                /*** until we support these, we don't want them to interfere with what the user specifies.
                 if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled)
                     strSoql += ', BillingCountryCode, BillingStateCode ';
+				****/
+
                 strSoql += ' from Account where Id = :hhId';
             } else {
                 strSoql = 'select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c ' +
@@ -105,9 +109,11 @@ public class HH_Container_LCTRL {
                     'is_Address_Override__c, Current_Address__c, npe01__Primary_Address_Type__c, ' + 
                     'MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, MailingLatitude, MailingLongitude, CreatedDate ';
                 
+                /*** until we support these, we don't want them to interfere with what the user specifies.
                 if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled)
                     strSoql += ', MailingCountryCode, MailingStateCode ';
-
+				******/
+                
                 set<string> setStrField = HH_HouseholdNaming.iNaming.setHouseholdNameFieldsOnContact();
                 for (string strF : setStrField) {
                 	if (!strSoql.contains(' ' + strF))
@@ -228,9 +234,18 @@ public class HH_Container_LCTRL {
     
             // copy the household's address
             Address__c addr = new Address__c();
-            if (UTIL_Describe.isObjectIdThisType(hhId, 'Account')) 
-                ADDR_Addresses_TDTM.copyAddressStdSObjAddr(hh, 'Billing', addr, null);
-            else {
+            if (UTIL_Describe.isObjectIdThisType(hhId, 'Account')) {
+                addr = new Address__c();
+                // can't use our utility routine, because we specifically are not querying for StateCode & CountryCode
+                // to avoid those saved codes from interfering with the user's changes (that won't include the codes)
+                //ADDR_Addresses_TDTM.copyAddressStdSObjAddr(hh, 'Billing', addr, null);
+                addr.MailingStreet__c = (String)hh.get('BillingStreet');
+                ADDR_Addresses_TDTM.handleMultilineStreet(addr);
+                addr.MailingCity__c = (String)hh.get('BillingCity');
+                addr.MailingState__c = (String)hh.get('BillingState');
+                addr.MailingPostalCode__c = (String)hh.get('BillingPostalCode');
+                addr.MailingCountry__c = (String)hh.get('BillingCountry');
+            } else {
                 addr.MailingStreet__c = (String)hh.get('npo02__MailingStreet__c');
                 addr.MailingCity__c = (String)hh.get('npo02__MailingCity__c');
                 addr.MailingState__c = (String)hh.get('npo02__MailingState__c');
@@ -245,7 +260,15 @@ public class HH_Container_LCTRL {
             // copy the contacts' addresses        
             for (Contact con : listCon) {
                 addr = new Address__c();
-                ADDR_Addresses_TDTM.copyAddressStdSObjAddr(con, 'Mailing', addr, null);
+                // can't use our utility routine, because we specifically are not querying for StateCode & CountryCode
+                // to avoid those saved codes from interfering with the user's changes (that won't include the codes)
+                //ADDR_Addresses_TDTM.copyAddressStdSObjAddr(con, 'Mailing', addr, null);
+                addr.MailingStreet__c = con.MailingStreet;
+                ADDR_Addresses_TDTM.handleMultilineStreet(addr);
+                addr.MailingCity__c = con.MailingCity;
+                addr.MailingState__c = con.MailingState;
+                addr.MailingPostalCode__c = con.MailingPostalCode;
+                addr.MailingCountry__c = con.MailingCountry;
                 strKey = ADDR_Addresses_TDTM.getAddrKey(addr);
                 if (setAddrKey.add(strKey))
                     listAddr.add(addr);

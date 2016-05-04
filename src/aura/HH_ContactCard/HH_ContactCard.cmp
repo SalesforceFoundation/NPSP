@@ -35,8 +35,11 @@
             <!-- address -->
             <div class="slds-text-body--small slds-m-bottom--small" >
                 <ui:outputText value="{!v.contact.MailingStreet}" /><br/>
-                <ui:outputText value="{!v.contact.MailingCity + ', ' + v.contact.MailingState + ' ' + v.contact.MailingPostalCode + ' '}" /><br/>
-                <ui:outputText value="{!v.contact.MailingCountry}" />                                     
+                <ui:outputText value="{!v.contact.MailingCity + (v.contact.MailingState != null ? ', ' : '') + v.contact.MailingState + ' ' + v.contact.MailingPostalCode + ' '}" /><br/>
+                <ui:outputText value="{!v.contact.MailingCountry}" /> 
+                <aura:if isTrue="{!v.contact.is_Address_Override__c}">
+                    <br/><i>(address override)</i>
+                </aura:if>
             </div>
             
           	<form>

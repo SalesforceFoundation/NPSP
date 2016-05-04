@@ -309,11 +309,11 @@
         if (isAccount) {
             hh.BillingStreet = addr.MailingStreet__c;
             if (addr.MailingStreet2__c != null) 
-                hh.MailingStreet += '\r' + addr.MailingStreet2__c;
-            hh.MailingCity = addr.MailingCity__c;
-            hh.MailingState = addr.MailingState__c;
-            hh.MailingPostalCode = addr.MailingPostalCode__c;
-            hh.MailingCountry = addr.MailingCountry__c;
+                hh.BillingStreet += '\n' + addr.MailingStreet2__c;
+            hh.BillingCity = addr.MailingCity__c;
+            hh.BillingState = addr.MailingState__c;
+            hh.BillingPostalCode = addr.MailingPostalCode__c;
+            hh.BillingCountry = addr.MailingCountry__c;
         } else {
             hh.MailingStreet__c = addr.MailingStreet__c;
             if (addr.MailingStreet2__c != null) 
@@ -323,6 +323,7 @@
             hh.MailingPostalCode__c = addr.MailingPostalCode__c;
             hh.MailingCountry__c = addr.MailingCountry__c;            
         }
+        component.set('v.hh', hh);
         
         // update the contacts
         var listCon = component.get('v.listCon');
@@ -331,11 +332,11 @@
             if (!con.is_Address_Override__c) {
                 con.MailingStreet = addr.MailingStreet__c;
                 if (addr.MailingStreet2__c != null) 
-                    con.MailingStreet += '\r' + addr.MailingStreet2__c;
+                    con.MailingStreet += '\n' + addr.MailingStreet2__c;
                 con.MailingCity = addr.MailingCity__c;
                 con.MailingState = addr.MailingState__c;
                 con.MailingPostalCode = addr.MailingPostalCode__c;
-                con.MalingCountry = addr.MailingCountry__c;
+                con.MailingCountry = addr.MailingCountry__c;
             }
         }
         component.set('v.listCon', listCon);
