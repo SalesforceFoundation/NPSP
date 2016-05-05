@@ -24,7 +24,7 @@
                 <aura:if isTrue="{!v.addrDefault != null}">
                     <div class="slds-text-body--small" >
                         <ui:outputText value="{!v.addrDefault.MailingStreet__c + 
-                        	(v.addrDefault.MailingStreet2__c != null ? '\r' + v.addrDefault.MailingStreet2__c : '')}" /><br/>
+                        	(v.addrDefault.MailingStreet2__c != null ? '\n' + v.addrDefault.MailingStreet2__c : '')}" /><br/>
                         <ui:outputText value="{!v.addrDefault.MailingCity__c + (v.addrDefault.MailingState__c != null ? ', ' : '') + v.addrDefault.MailingState__c + ' ' + v.addrDefault.MailingPostalCode__c + ' '}" /><br/>
                         <ui:outputText value="{!v.addrDefault.MailingCountry__c}" />                                     
                     </div>
@@ -77,7 +77,7 @@
                                                 <!-- address -->
                                                 <div class="slds-text-body--small" >
                                                     <ui:outputText value="{!addr.MailingStreet__c + 
-                                                    	(addr.MailingStreet2__c != null ? '\r' + addr.MailingStreet2__c : '')}" /><br/>
+                                                    	(addr.MailingStreet2__c != null ? '\n' + addr.MailingStreet2__c : '')}" /><br/>
                                                     <ui:outputText value="{!addr.MailingCity__c + (addr.MailingState__c != null ? ', ' : '') + addr.MailingState__c + ' ' + addr.MailingPostalCode__c + ' '}" /><br/>
                                                     <ui:outputText value="{!addr.MailingCountry__c}" />
                                                 </div>
@@ -101,34 +101,24 @@
                         <div class="slds-section__content">                                                    
                             <div class="slds-form--stacked">
                                 <div class="slds-form-element">
-                                    <label class="slds-form-element__label" for="inputSample2">Mailing Street</label>
-                                    <div class="slds-form-element__control">
-                                        <ui:inputTextArea value="{!v.addrNew.MailingStreet__c}" class="slds-input" />
-                                    </div>
+			                        <ui:inputTextArea value="{!v.addrNew.MailingStreet__c}" aura:id="txtStreet" class="slds-input slds-form-element__control" 
+			                        	label="Street" labelClass="slds-form-element__label" />
                                 </div>
                                 <div class="slds-form-element">
-                                    <label class="slds-form-element__label" for="inputSample2">Mailing City</label>
-                                    <div class="slds-form-element__control">
-                                        <ui:inputText value="{!v.addrNew.MailingCity__c}" class="slds-input" />
-                                    </div>
+			                        <ui:inputText value="{!v.addrNew.MailingCity__c}" aura:id="txtCity" class="slds-input slds-form-element__control" 
+			                        	label="City" labelClass="slds-form-element__label" />
                                 </div>
                                 <div class="slds-form-element">
-                                    <label class="slds-form-element__label" for="inputSample2">Mailing State</label>
-                                    <div class="slds-form-element__control">
-                                        <ui:inputText value="{!v.addrNew.MailingState__c}" class="slds-input" />
-                                    </div>
+			                        <ui:inputText value="{!v.addrNew.MailingState__c}" aura:id="txtState" class="slds-input slds-form-element__control" 
+			                        	label="State" labelClass="slds-form-element__label" />
                                 </div>
                                 <div class="slds-form-element">
-                                    <label class="slds-form-element__label" for="inputSample2">Mailing Postal Code</label>
-                                    <div class="slds-form-element__control">
-                                        <ui:inputText value="{!v.addrNew.MailingPostalCode__c}" class="slds-input" />
-                                    </div>
+			                        <ui:inputText value="{!v.addrNew.MailingPostalCode__c}" aura:id="txtZip" class="slds-input slds-form-element__control" 
+			                        	label="Postal Code" labelClass="slds-form-element__label" />
                                 </div>
                                 <div class="slds-form-element">
-                                    <label class="slds-form-element__label" for="inputSample2">Mailing Country</label>
-                                    <div class="slds-form-element__control">
-                                        <ui:inputText value="{!v.addrNew.MailingCountry__c}" class="slds-input" />
-                                    </div>
+			                        <ui:inputText value="{!v.addrNew.MailingCountry__c}" aura:id="txtCountry" class="slds-input slds-form-element__control" 
+			                        	label="Country" labelClass="slds-form-element__label" />
                                 </div>
                             </div>
                         </div>
