@@ -53,7 +53,6 @@
 		var self = this;
 		action.setCallback(this, function(response) {
 			var state = response.getState();
-            
 			if (component.isValid() && state === "SUCCESS") {
                 var listAddr = response.getReturnValue();
 				component.set("v.listAddr", listAddr);                
@@ -315,13 +314,13 @@
             hh.BillingPostalCode = addr.MailingPostalCode__c;
             hh.BillingCountry = addr.MailingCountry__c;
         } else {
-            hh.MailingStreet__c = addr.MailingStreet__c;
+            hh.npo02__MailingStreet__c = addr.MailingStreet__c;
             if (addr.MailingStreet2__c != null) 
-                hh.MailingStreet__c += ',' + addr.MailingStreet2__c;
-            hh.MailingCity__c = addr.MailingCity__c;
-            hh.MailingState__c = addr.MailingState__c;
-            hh.MailingPostalCode__c = addr.MailingPostalCode__c;
-            hh.MailingCountry__c = addr.MailingCountry__c;            
+                hh.npo02__MailingStreet__c += ',' + addr.MailingStreet2__c;
+            hh.npo02__MailingCity__c = addr.MailingCity__c;
+            hh.npo02__MailingState__c = addr.MailingState__c;
+            hh.npo02__MailingPostalCode__c = addr.MailingPostalCode__c;
+            hh.npo02__MailingCountry__c = addr.MailingCountry__c;            
         }
         component.set('v.hh', hh);
         
