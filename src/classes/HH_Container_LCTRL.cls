@@ -58,7 +58,8 @@ public class HH_Container_LCTRL {
 
                 strSoql += ' from Account where Id = :hhId';
             } else {
-                strSoql = 'select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c ' +
+                strSoql = 'select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, ' +
+                        'npo02__MailingStreet__c, npo02__MailingCity__c, npo02__MailingState__c, npo02__MailingPostalCode__c, npo02__MailingCountry__c ' +
                         ' from npo02__Household__c where Id = :hhId';
             }
             return database.query(strSoql);
