@@ -175,7 +175,7 @@ gwManageHH.originalState = JSON.stringify({!originalState});
     
     <input class="gwPreventUI btn gwControls-save" name="bottomSave" value="{!$Label.site.save}" type="submit" />
     <apex:commandButton styleClass="gwHidden" id="gwControls-StdSave" action="{!save}" value="{!$Label.site.save}" />
-    <apex:commandButton rendered="{!hhA.id != null}" styleClass="gwPreventUI" action="{!deleteHH}" value="{!$Label.npo02__Delete}" />
+    <apex:commandButton rendered="{!AND(hhA.id != null,$ObjectType.Account.Deletable)}" styleClass="gwPreventUI" action="{!deleteHH}" value="{!$Label.npo02__Delete}" />
     <apex:commandButton styleClass="gwPreventUI" action="{!cancel}" value="{!$Label.site.cancel}" />
     
 </div>
