@@ -1,0 +1,11 @@
+.THIS li.selected {
+    background-color: token(colorBackgroundRowSelected);
+}
+
+.THIS .slds-modal__container {
+    width: 20%;
+}
+
+.THIS .slds-section-title--divider {
+    padding: 8px;
+}

@@ -15,7 +15,7 @@
                     <div class="slds-media slds-media--center slds-has-flexi-truncate">
                         <div class="slds-media__figure">
                             <c:svg class="slds-icon slds-icon-standard-contact slds-icon--small"
-                                   xlinkHref="/resource/SLDS/assets/icons/standard-sprite/svg/symbols.svg#contact" />
+                                   xlinkHref="/resource/SLDS/1_0_3/assets/icons/standard-sprite/svg/symbols.svg#contact" />
                         </div>
                         <div class="slds-media__body">
                             <a href="#">{!v.contact.FirstName}&nbsp;{!v.contact.LastName}</a>
@@ -24,19 +24,22 @@
                             <ui:button label="Delete" buttonTitle="Delete" labelClass="assistiveText" 
                                        class="slds-button slds-button--icon deleteBtn" press="{!c.deleteContact}">
                                 <c:svg class="slds-icon slds-icon--x-small slds-icon-text-default slds-button__icon"
-                                       xlinkHref="/resource/SLDS/assets/icons/utility-sprite/svg/symbols.svg#delete" />
+                                       xlinkHref="/resource/SLDS/1_0_3/assets/icons/utility-sprite/svg/symbols.svg#delete" />
                             </ui:button>
                         </div>
                     </div>
                 </span>
             </div> <!-- slds-tile -->
-	</div>
+		</div>
 		<div class="slds-card__body slds-m-around--x-small slds-p-vertical--none" >
             <!-- address -->
             <div class="slds-text-body--small slds-m-bottom--small" >
                 <ui:outputText value="{!v.contact.MailingStreet}" /><br/>
-                <ui:outputText value="{!v.contact.MailingCity + ', ' + v.contact.MailingState + ' ' + v.contact.MailingPostalCode + ' '}" /><br/>
-                <ui:outputText value="{!v.contact.MailingCountry}" />                                     
+                <ui:outputText value="{!v.contact.MailingCity + (v.contact.MailingState != null ? ', ' : '') + v.contact.MailingState + ' ' + v.contact.MailingPostalCode + ' '}" /><br/>
+                <ui:outputText value="{!v.contact.MailingCountry}" /> 
+                <aura:if isTrue="{!v.contact.is_Address_Override__c}">
+                    <br/><i>(address override)</i>
+                </aura:if>
             </div>
             
           	<form>

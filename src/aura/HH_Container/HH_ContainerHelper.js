@@ -44,11 +44,27 @@
                 self.reportError(component, response);
             }            
 
+        });
+		$A.enqueueAction(action);        
+
+        // query for the Addresses 
+		var action = component.get("c.getAddresses");
+        action.setParams({ hhId : hhId });
+		var self = this;
+		action.setCallback(this, function(response) {
+			var state = response.getState();
+			if (component.isValid() && state === "SUCCESS") {
+                var listAddr = response.getReturnValue();
+				component.set("v.listAddr", listAddr);                
+			}
+            else if (component.isValid() && state === "ERROR") {
+                self.reportError(component, response);
+            }            
+
             // hide our initial startup spinner our visualforce container displays
             j$('.initialSpinner').hide();                                  
         });
 		$A.enqueueAction(action);        
-
     },
     
     /*******************************************************************************************************
@@ -279,5 +295,50 @@
 	    	sforce.one.navigateToSObject(component.get('v.hhId'));
         }
     },                           
+
+    /*******************************************************************************************************
+	* @description The default adddress has changed, so update our household and contacts
+    */
+    updateDefaultAddress : function(component, event) {
+        var addr = event.getParam('addrDefault');
+        var hh = component.get('v.hh');
+        var isAccount = component.get('v.hhTypePrefix') == '001';
+        
+        // update the household
+        if (isAccount) {
+            hh.BillingStreet = addr.MailingStreet__c;
+            if (addr.MailingStreet2__c != null) 
+                hh.BillingStreet += '\n' + addr.MailingStreet2__c;
+            hh.BillingCity = addr.MailingCity__c;
+            hh.BillingState = addr.MailingState__c;
+            hh.BillingPostalCode = addr.MailingPostalCode__c;
+            hh.BillingCountry = addr.MailingCountry__c;
+        } else {
+            hh.npo02__MailingStreet__c = addr.MailingStreet__c;
+            if (addr.MailingStreet2__c != null) 
+                hh.npo02__MailingStreet__c += ',' + addr.MailingStreet2__c;
+            hh.npo02__MailingCity__c = addr.MailingCity__c;
+            hh.npo02__MailingState__c = addr.MailingState__c;
+            hh.npo02__MailingPostalCode__c = addr.MailingPostalCode__c;
+            hh.npo02__MailingCountry__c = addr.MailingCountry__c;            
+        }
+        component.set('v.hh', hh);
+        
+        // update the contacts
+        var listCon = component.get('v.listCon');
+        for (var i = 0; i < listCon.length; i++) {
+            var con = listCon[i];
+            if (!con.is_Address_Override__c) {
+                con.MailingStreet = addr.MailingStreet__c;
+                if (addr.MailingStreet2__c != null) 
+                    con.MailingStreet += '\n' + addr.MailingStreet2__c;
+                con.MailingCity = addr.MailingCity__c;
+                con.MailingState = addr.MailingState__c;
+                con.MailingPostalCode = addr.MailingPostalCode__c;
+                con.MailingCountry = addr.MailingCountry__c;
+            }
+        }
+        component.set('v.listCon', listCon);
+    }
     
 })

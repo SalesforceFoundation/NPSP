@@ -335,6 +335,8 @@
         <name>ApexTrigger</name>
     </types>
     <types>
+        <members>HH_AddressChangedEvent</members>
+        <members>HH_AddressMgr</members>
         <members>HH_Canvas</members>
         <members>HH_ContactCard</members>
         <members>HH_ContactChangedEvent</members>
@@ -342,6 +344,7 @@
         <members>HH_ContactReorderEvent</members>
         <members>HH_Container</members>
         <members>ManageHHApp</members>
+        <members>defaultTokens</members>
         <members>svg</members>
         <name>AuraDefinitionBundle</name>
     </types>

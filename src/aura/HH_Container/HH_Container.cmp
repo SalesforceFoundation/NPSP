@@ -6,6 +6,7 @@
     <aura:attribute name="hh" type="SObject" access="private" />
     <aura:attribute name="hhTypePrefix" type="String" access="private" />
     <aura:attribute name="listCon" type="Contact[]" access="private" />
+    <aura:attribute name="listAddr" type="Address__c[]" access="private" />
     <aura:attribute name="showSpinner" type="Boolean" default="true" access="private" />
     <aura:attribute name="isAutoName" type="Boolean" access="private" />
     <aura:attribute name="isAutoFormalGreeting" type="Boolean" access="private" />
@@ -20,6 +21,7 @@
     <aura:handler event="c:HH_ContactChangedEvent" action="{!c.handleContactChangedEvent}"/>   
     <aura:handler event="c:HH_ContactDeleteEvent" action="{!c.handleContactDeleteEvent}"/>   
     <aura:handler event="c:HH_ContactReorderEvent" action="{!c.handleContactReorderEvent}"/>   
+    <aura:handler event="c:HH_AddressChangedEvent" action="{!c.handleAddressChangedEvent}"/>   
     
     <!-- markup follows... -->
     
@@ -43,7 +45,7 @@
                         <div class="slds-media slds-media--center slds-has-flexi-truncate">
                             <div class="slds-media__figure">
                                 <c:svg class="slds-icon slds-icon-standard-household slds-icon--medium"
-                                       xlinkHref="/resource/SLDS/assets/icons/standard-sprite/svg/symbols.svg#household" />
+                                       xlinkHref="/resource/SLDS/1_0_3/assets/icons/standard-sprite/svg/symbols.svg#household" />
                             </div>
                             <div class="slds-media__body">
                                 <h1 class="slds-text-heading--medium">Manage Household</h1>              
@@ -82,11 +84,22 @@
             <div class="myBodyContent">
 
 				<!-- the Contact Cards & Canvas section -->
-				<div class="slds-p-bottom--large">                
+				<div class="slds-p-bottom--small"> 
+                    <div class="slds-grid">
+	                    <div class="slds-col slds-text-heading--label slds-p-around--x-small">Household Members</div>
+                    	<div class="slds-col slds-text-align--right slds-p-around--x-small">(find contact autocomplete here!)</div>
+                    </div>
 	                <c:HH_Canvas hh="{!v.hh}" listCon="{!v.listCon}" />
                 </div>
                 
+				<!-- the Address section -->
+				<div class="slds-p-bottom--large"> 
+                    <div class="slds-text-heading--label slds-p-around--x-small">Household Address</div>
+                    <c:HH_AddressMgr listAddr="{!v.listAddr}" />
+                </div>
+
                 <!-- the section for our 3 special naming & greeting fields -->   
+                <div class="slds-text-heading--label slds-p-around--x-small">Household Details</div>
                 <div class="slds-grid slds-grid--align-spread slds-m-around--medium">
                     <div class="slds-form--stacked" style="width:80%" >
                         
@@ -138,10 +151,12 @@
                     <div class="slds-modal__container">
 
                         <div class="slds-modal__header">
-                            <h2 id="searchPopupLabel" class="slds-text-heading--medium">Delete Contact</h2>
-                            <button type="button" class="slds-button slds-button--icon-inverse slds-modal__close" data-dismiss="modal" data-target="searchPopup">
+                            <ui:button class="slds-button slds-button--icon-inverse slds-modal__close" press="{!c.cancelDeleteContact}">
+                                <c:svg class="slds-button__icon slds-button__icon--large"
+                                       xlinkHref="/resource/SLDS/1_0_3/assets/icons/action-sprite/svg/symbols.svg#close" />
                                 <span class="slds-assistive-text">Close</span>
-                            </button>
+                            </ui:button>                    
+                            <h2 id="searchPopupLabel" class="slds-text-heading--medium">Delete Contact</h2>
                         </div>
 
                         <div class="slds-modal__content slds-p-around--medium">
@@ -156,7 +171,7 @@
                                     buttonTitle="Cancel" 
                                     label="Cancel" 
                                     press="{!c.cancelDeleteContact}" />
-                                <ui:button class="slds-button slds-button--brand" 
+                                <ui:button class="slds-button slds-button--destructive" 
                                     aura:id="btnDelete"
                                     buttonTitle="Delete" 
                                     label="Delete" 

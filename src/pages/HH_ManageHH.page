@@ -1,7 +1,7 @@
 <apex:page standardController="Account" extensions="HH_ManageHH_CTRL" standardStylesheets="false" showHeader="true" docType="html-5.0"  >
     <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <apex:includeLightning />
-        <apex:stylesheet value="{!URLFOR($Resource.SLDS, 'assets/styles/salesforce-lightning-design-system-vf.css')}" />
+        <apex:stylesheet value="{!URLFOR($Resource.SLDS, '/1_0_3/assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
     	<apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 		<apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
 		<apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-migrate-1.2.1.min.js')}"/>
@@ -14,54 +14,11 @@
                 font-weight: 700;
             }
         </style>
-        
-        <script>
-        	var j$ = jQuery.noConflict();
-
-        	var hhId = '{!hhId}';
-            $Lightning.use("c:ManageHHApp", function() {
-                $Lightning.createComponent("c:HH_Container", 
-                    { hhId : hhId },
-                    "lightning",
-                    function(cmp) {
-                        // after lightning is loaded, do what we need to do here!
-                        
-                        // hide our startup spinner
-                        // actually, let our lightning component hide it when it's completely done loading!
-                        // j$('.initialSpinner').hide();
-                        
-                        // this hack is to prevent the normal apex:inputField of a multiselect picklist
-                        // behavior of hiding the normal select control and using a table with 2 selects
-                        // and 2 buttons.  under SLDS, we could not get this more complicated control to
-                        // style reasonably, so we just hide the table and force showing the original select!
-                        j$('.multipicklistSLDSFixup').show();
-                        j$('.multiSelectPicklistTable').hide();
-                        
-                        // need to remove focus from the visualforce page
-                        // or else our Contact Card checkboxes won't work on single click!
-                        document.activeElement.blur();
-                    }
-                );
-            }); 
-        
-            // called by our lightning component when it needs to tell the visualforce page 
-            // a contact has been removed from the page.  Ideally we'd have the visualforce page
-            // handle the c:HH_ContactDeleteEvent, but we haven't yet found info on how to have
-            // a visualforce javascript lightning event handler.
-        	function contactRemoved(con) {
-                // if the contact being removed (deleted or moved) is the
-                // HH's primary contact, clear out that field.
-                var ctrlPC = j$('.npe01__One2OneContact__c');
-                if (ctrlPC != null && ctrlPC.val() == con.FirstName + ' ' + con.LastName)
-                    ctrlPC.val(null);
-            }
-        
-        </script>
-        
+                
         <!-- start with a spinner here until lightning loads -->
         <div class="slds initialSpinner">
             <div class="slds-spinner_container">
-                <div class="slds-spinner--brand slds-spinner slds-spinner--medium" style="position:fixed;" aria-hidden="false" role="alert">
+                <div class="slds-spinner--brand slds-spinner slds-spinner--medium" style="position:fixed;top:30%;" aria-hidden="false" role="alert">
                     <div class="slds-spinner__dot-a"></div>
                     <div class="slds-spinner__dot-b"></div>
                 </div>
@@ -105,4 +62,48 @@
         </apex:form>
         
     </html>
+    
+    <script>
+    var j$ = jQuery.noConflict();
+    
+    var hhId = '{!hhId}';
+    $Lightning.use("c:ManageHHApp", function() {
+        $Lightning.createComponent("c:HH_Container", 
+                                   { hhId : hhId },
+                                   "lightning",
+                                   function(cmp) {
+                                       // after lightning is loaded, do what we need to do here!
+                                       
+                                       // hide our startup spinner
+                                       // actually, let our lightning component hide it when it's completely done loading!
+                                       // j$('.initialSpinner').hide();
+                                       
+                                       // this hack is to prevent the normal apex:inputField of a multiselect picklist
+                                       // behavior of hiding the normal select control and using a table with 2 selects
+                                       // and 2 buttons.  under SLDS, we could not get this more complicated control to
+                                       // style reasonably, so we just hide the table and force showing the original select!
+                                       j$('.multipicklistSLDSFixup').show();
+                                       j$('.multiSelectPicklistTable').hide();
+                                       
+                                       // need to remove focus from the visualforce page
+                                       // or else our Contact Card checkboxes won't work on single click!
+                                       document.activeElement.blur();
+                                   }
+                                  );
+    }); 
+    
+    // called by our lightning component when it needs to tell the visualforce page 
+    // a contact has been removed from the page.  Ideally we'd have the visualforce page
+    // handle the c:HH_ContactDeleteEvent, but we haven't yet found info on how to have
+    // a visualforce javascript lightning event handler.
+    function contactRemoved(con) {
+        // if the contact being removed (deleted or moved) is the
+        // HH's primary contact, clear out that field.
+        var ctrlPC = j$('.npe01__One2OneContact__c');
+        if (ctrlPC != null && ctrlPC.val() == con.FirstName + ' ' + con.LastName)
+            ctrlPC.val(null);
+    }
+    
+    </script>
+    
 </apex:page>
