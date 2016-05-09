@@ -97,7 +97,7 @@ public without sharing class RLLP_OppRollup {
                 rollupAccounts(amap);                               
             }   
             //do it @future
-            else if (Limits.getFutureCalls() < Limits.getLimitFutureCalls()){
+            else if (Limits.getAsyncCalls() < Limits.getLimitAsyncCalls()){
                 rollupAccountsFuture(amap.keySet());
             }                       
         }
