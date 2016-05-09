@@ -37,18 +37,72 @@
 public with sharing class HH_ManageHH_CTRL {
 
     /** @description The Id of the Household Object or Account */
-    @AuraEnabled
     public ID hhId { get; set; }
 
     /** @description The Household Object or Account */
-    @AuraEnabled
     public SObject hh { get; set; }
+    
+    /** @description The return URL from the caller */
+    public string retURL { get; set; }
 
     /*******************************************************************************************************
-    * @description Constructor for the page
+    * @description Constructor for the page.  Loads up the HH Account or HH Object, using fields from
+    * the appropriate field set.
     */
-    public HH_ManageHH_CTRL(ApexPages.StandardController controller) {
-        hh = controller.getRecord();        
-        hhId = hh.Id;
-    }    
+    public HH_ManageHH_CTRL() {
+        Map<String, String> pageParams = ApexPages.currentPage().getParameters();
+		hhId = pageParams.get('Id'); 
+        retURL = pageParams.get('retURL');
+        if (retURL == null)
+            retURL = '/' + hhId;
+        
+        // load up only the fields exposed in the field set for our visualforce page to use.
+        String strSoql = 'select Id';
+        for (Schema.FieldSetMember fsm : hhFieldSet)
+            strSoql += ', ' + fsm.getFieldPath();
+        strSoql += ' from ' + (isHHAccount ? 'Account' : 'npo02__Household__c');
+        strSoql += ' where Id = :hhId';
+        
+        hh = database.query(strSoql);
+    }
+    
+    /*******************************************************************************************************
+    * @description is the Household a Household Account, vs. a Household Object.
+    * @return Boolean
+    */
+    public boolean isHHAccount { 
+        get {
+            if (isHHAccount == null) {
+                isHHAccount = UTIL_Describe.isObjectIdThisType(hhId, 'Account');
+            }
+            return isHHAccount;
+        }
+        private set;
+    }
+    
+    /*******************************************************************************************************
+    * @description holds the list of FieldSetMembers from the appropriate field set.
+    * @return List<Schema.FieldSetMember>
+    */
+    public List<Schema.FieldSetMember> hhFieldSet {
+        get {
+            if (hhFieldSet == null) {
+                if (isHHAccount)
+                    hhFieldSet = Schema.SObjectType.Account.FieldSets.Manage_Household_Custom.getFields();
+                else
+                    hhFieldSet = Schema.SObjectType.npo02__Household__c.FieldSets.npo02__Manage_Household_Custom.getFields();
+            }
+            return hhFieldSet;
+        }
+        private set;
+    }
+    
+    /*******************************************************************************************************
+    * @description ActionMethod to save the Household and close the page.
+    * @return PageReference the original calling page's URL.
+    */
+    public PageReference save() {
+        update hh;
+        return new PageReference(retURL);
+    } 
 }
