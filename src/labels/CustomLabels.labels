@@ -824,6 +824,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Save</value>
     </labels>
     <labels>
+        <fullName>alloCampaignExceedsOppAmount</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>alloCampaignExceedsOppAmount</shortDescription>
+        <value>Your campaign allocations were not created. Campaign allocations for the opportunity exceeded the opportunity amount.</value>
+    </labels>
+    <labels>
         <fullName>alloCantAllocateNothing</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>
@@ -950,6 +958,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>alloTotals</shortDescription>
         <value>Totals:</value>
+    </labels>
+    <labels>
+        <fullName>alloUnallocated</fullName>
+        <categories>Allocation</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>alloUnallocated</shortDescription>
+        <value>unallocated</value>
     </labels>
     <labels>
         <fullName>bdiAccountCustomIdError</fullName>
@@ -3061,6 +3077,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Acknowledged</value>
     </labels>
     <labels>
+        <fullName>stgAddrGeneralSettingsIntro</fullName>
+        <categories>Settings, address</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgAddrGeneralSettingsIntro</shortDescription>
+        <value>Household and Organization Account Management lets you add multiple addresses to an Account, specify default addresses, and specify seasonal addresses. Address Management is only available in NPSP3 and later with the Household Account model.</value>
+    </labels>
+    <labels>
         <fullName>stgAddrMustChooseClass</fullName>
         <categories>Settings, address</categories>
         <language>en_US</language>
@@ -3253,6 +3277,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Save</value>
     </labels>
     <labels>
+        <fullName>stgDocumentation</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgDocumentation</shortDescription>
+        <value>Documentation</value>
+    </labels>
+    <labels>
         <fullName>stgErrorINaming</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -3372,6 +3404,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <shortDescription>stgHelpBatchAlloRollup</shortDescription>
         <value>This utility calculates rollup totals for all Closed Opportunities with Allocations and updates the relevant General Accounting Unit (GAU) records.
 This process may take some time, but you can safely close this page and the process will continue in the background.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpBatchCreateDefault</fullName>
+        <categories>Allocation, Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpBatchCreateDefault</shortDescription>
+        <value>Clicking this button starts a batch process that creates default allocations for all existing opportunities, except opportunities excluded in the Allocations Rollup Settings. Default allocations must be enabled and a default General Accounting Unit selected to run this tool.</value>
     </labels>
     <labels>
         <fullName>stgHelpBatchOppRollup</fullName>
@@ -3507,6 +3547,14 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <value>Rolls up Closed/Won Opportunity totals to Contact records based on assigned Opportunity Contact Roles. Soft credit rollups only happen in nightly batches, but you can run them manually from the Rollup Donations Batch settings.</value>
     </labels>
     <labels>
+        <fullName>stgHelpErrorLog</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpErrorLog</shortDescription>
+        <value>The Error Log shows a detailed list of errors for debugging purposes. Errors are logged only if Error Handling and the Store Errors options are enabled in System Tools | Error Notifications.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpErrorNotifyOn</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -3603,6 +3651,14 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <value>Specifies for which Contacts Salesforce will automatically create separate Household objects. (Applies to One-to-One or Individual Account Models only.)</value>
     </labels>
     <labels>
+        <fullName>stgHelpHealthCheck</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpHealthCheck</shortDescription>
+        <value>Use &lt;a href=&quot;.&quot; onclick=&quot;ShowPanel(&apos;idPanelHealthCheck&apos;);return false;&quot;&gt;Health Check&lt;/a&gt; to verify your NPSP configuration!</value>
+    </labels>
+    <labels>
         <fullName>stgHelpIGFormat</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -3659,6 +3715,22 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <value>The Record Type used when creating Opportunities that track Membership Donations. We recommend using Membership. Opportunities with this record type roll up separately from other Opportunity Record Types.</value>
     </labels>
     <labels>
+        <fullName>stgHelpNPSPDoc</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpNPSPDoc</shortDescription>
+        <value>NPSP 3.0 Documentation</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpNPSPSettings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpNPSPSettings</shortDescription>
+        <value>Configure the Nonprofit Starter Pack to meet your organization&apos;s needs. You can also monitor the health of your Salesforce organization, or run batch processes to update data.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpNameConnector</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -3699,6 +3771,14 @@ IMPORTANT: Both of these fields must have the same data type.</value>
         <protected>false</protected>
         <shortDescription>stgHelpNoUDR</shortDescription>
         <value>No User Defined Rollups Have Been Defined</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpOCR</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpOCR</shortDescription>
+        <value>Soft Credits, Contact Roles, and Matching Gifts relate to each other in important ways. If you&apos;re not familiar with these concepts and how they interact, you should read through the &lt;a href=&quot;https://powerofus.force.com/NPSP_SCMG&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt; before making any adjustments to these settings.</value>
     </labels>
     <labels>
         <fullName>stgHelpOCRDefaultRole</fullName>
@@ -3829,6 +3909,14 @@ IMPORTANT: Both of these fields must have the same data type.</value>
         <value>If enabled, Salesforce automatically creates Payments for new Opportunities (Donations).</value>
     </labels>
     <labels>
+        <fullName>stgHelpPowerOfUsHub</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpPowerOfUsHub</shortDescription>
+        <value>Got questions? The Hub has answers! Try the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;Nonprofit Starter Pack&lt;/a&gt; group for questions about NPSP and the &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; group for questions about Salesforce administration and cofiguration.&lt;br/&gt;&lt;br/&gt;Keep up with the latest NPSP release notes in the &lt;a href=&quot;https://powerofus.force.com/NPSP_Release_Notes&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt; group.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpPrimaryContactBatch</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -3854,6 +3942,20 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <protected>false</protected>
         <shortDescription>stgHelpRDAddCampaign</shortDescription>
         <value>If selected, adds the campaign that you&apos;ve specified for the Recurring Donation to all related (i.e. &apos;child&apos;) opportunities. If this option is not selected, the campaign appears on the Recurring Donation&apos;s first opportunity only.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRDBatch</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRDBatch</shortDescription>
+        <value>This utility runs a batch process for all open-ended Recurring Donations, and based on the number of Opportunity Forecast Months:
+&lt;br/&gt;
+&lt;br/&gt; 
+● creates new opportunities&lt;br/&gt;
+● updates the number of Installments and Paid Amount&lt;br/&gt;
+&lt;br/&gt;
+This process may take some time, but you can close this page and the process will continue in the background.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDDisableScheduling</fullName>
@@ -3968,6 +4070,14 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <value>Number of Recurring Donations successfully updated in the last batch run.</value>
     </labels>
     <labels>
+        <fullName>stgHelpRecDon</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRecDon</shortDescription>
+        <value>This setting lets you create custom installment periods for Recurring Donations, different from the default installment periods (monthly, quarterly, yearly, and so on) that come with the NPSP.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpRelAutoCreatedDup</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -4022,6 +4132,14 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <protected>false</protected>
         <shortDescription>stgHelpRelReciprocalNeutral</shortDescription>
         <value>The value Salesforce uses if it cannot determine the Contact&apos;s gender based on Gender field value or Salutation.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpReviewErrorLog</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpReviewErrorLog</shortDescription>
+        <value>Review &lt;a href=&quot;.&quot; onclick=&quot;ShowPanel(&apos;idPanelErrorLog&apos;);return false;&quot;&gt;Error Logs&lt;/a&gt; to see if there are issues.</value>
     </labels>
     <labels>
         <fullName>stgHelpRollupBatchSize</fullName>
@@ -4096,6 +4214,14 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <value>When this option is selected, Salesforce will ALWAYS roll up donor data to the Opportunity&apos;s Primary Contact, and corresponding Household Account or record, even if the Opportunity is not from an individual (i.e., from a company, a foundation, and so on). If left unselected, and the Opportunity&apos;s Account is an organization, only the organization will receive credit for the Opportunity.</value>
     </labels>
     <labels>
+        <fullName>stgHelpSalesforceSetup</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpSalesforceSetup</shortDescription>
+        <value>Looking to customize page layouts, add fields, or add users?  Try the &lt;a href=&quot;/setup/forcecomHomepage.apexp?setupid=ForceCom&quot; target=&quot;_blank&quot;&gt;Salesforce Setup&lt;/a&gt; pages.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpSimpleAddrChangeIsUpdate</fullName>
         <categories>NPSP Settings</categories>
         <language>en_US</language>
@@ -4118,6 +4244,14 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <protected>false</protected>
         <shortDescription>stgHelpStoreErrorsOn</shortDescription>
         <value>Check this if you&apos;d like errors to be stored in the database.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpTDTM</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpTDTM</shortDescription>
+        <value>Trigger Handlers contain the actual business logic that needs to be executed for a particular trigger event.</value>
     </labels>
     <labels>
         <fullName>stgHelpTHActive</fullName>
@@ -4745,6 +4879,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Target Field</value>
     </labels>
     <labels>
+        <fullName>stgLabelUDRTargetFieldHelp</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgLabelUDRTargetFieldHelp</shortDescription>
+        <value>The custom field on the target object that will display your custom rollup summary. This field must be of the same type as the Opportunity field you&apos;re rolling up.</value>
+    </labels>
+    <labels>
         <fullName>stgLabelUDRTargetObject</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -4761,12 +4903,36 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Del</value>
     </labels>
     <labels>
+        <fullName>stgNPSPGuideImportData</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNPSPGuideImportData</shortDescription>
+        <value>NPSP Guide to Importing Data</value>
+    </labels>
+    <labels>
+        <fullName>stgNPSPSettings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNPSPSettings</shortDescription>
+        <value>Nonprofit Starter Pack Application Settings</value>
+    </labels>
+    <labels>
         <fullName>stgNPSPSettingsTitle</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgNPSPSettingsTitle</shortDescription>
         <value>Nonprofit Starter Pack Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgNPSPWorkbook</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNPSPWorkbook</shortDescription>
+        <value>Nonprofit Starter Pack Workbook</value>
     </labels>
     <labels>
         <fullName>stgNavAccountModel</fullName>
@@ -5023,6 +5189,30 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgNavUserDefinedRollups</shortDescription>
         <value>User Defined Rollups</value>
+    </labels>
+    <labels>
+        <fullName>stgOppNamingDescription</fullName>
+        <categories>Settings, OppNaming</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgOppNamingDescription</shortDescription>
+        <value>When you create an Opportunity, the Name is automatically populated using a default naming convention. You can customize the naming convention by creating custom Opportunity Names.</value>
+    </labels>
+    <labels>
+        <fullName>stgPowerOfUsHub</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgPowerOfUsHub</shortDescription>
+        <value>Power of Us Hub</value>
+    </labels>
+    <labels>
+        <fullName>stgTools</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgTools</shortDescription>
+        <value>Tools</value>
     </labels>
     <labels>
         <fullName>stgValidationHHAccountHHRules</fullName>

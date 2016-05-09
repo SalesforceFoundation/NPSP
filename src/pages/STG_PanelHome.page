@@ -2,9 +2,9 @@
     <div class="slds-m-around--x-large slds-p-bottom--large slds-col-rule--bottom">
         <div class="slds-media slds-media--center slds-media--responsive">
             <div class="slds-media__body">
-                <h3 class="slds-text-heading--large slds-m-bottom--large">Nonprofit Starter Pack Application Settings</h3>
-                <p>Configure the Nonprofit Starter Pack to meet your organization's needs. You can also monitor the health of your Salesforce organization, or run batch processes to update data.</p>
-                <p class="slds-text-body--small slds-m-top--x-small">Looking to customize page layouts, add fields, or add users?  Try the <a href="/setup/forcecomHomepage.apexp?setupid=ForceCom" target="_blank">Salesforce Setup</a> pages.</p>
+                <h3 class="slds-text-heading--large slds-m-bottom--large">{!$Label.stgNPSPSettings}</h3>
+                <p>{!$Label.stgHelpNPSPSettings}</p>
+                <p class="slds-text-body--small slds-m-top--x-small"><apex:outputText value="{!$Label.stgHelpSalesforceSetup}" escape="false"/></p>
             </div>
             <div class="slds-media__figure slds-media__figure--reverse">
                 <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/NPSP_Logo_Small.png')}" style="height: 175px" alt="NPSP Logo"/>
@@ -14,31 +14,30 @@
     <div class="slds-grid">
         <div class="slds-col--padded slds-size--4-of-12">
             <div class="slds-text-heading--medium slds-m-bottom--medium">
-                Tools
+                {!$Label.stgTools}
             </div>
             <ul>
-                <li>Use <a href="." onclick="ShowPanel('idPanelHealthCheck');return false;">Health Check</a> to verify your NPSP configuration!</li>
-                <li>Review <a href="." onclick="ShowPanel('idPanelErrorLog');return false;">Error Logs</a> to see if there are issues.</li>
+                <li><apex:outputText value="{!$Label.stgHelpHealthCheck}" escape="false"/></li>
+                <li><apex:outputText value="{!$Label.stgHelpReviewErrorLog}" escape="false"/></li>
             </ul>
-
         </div>
         <div class="slds-col--padded slds-size--4-of-12">
             <h3 class="slds-text-heading--medium slds-m-bottom--medium">
-                Documentation
+                {!$Label.stgDocumentation}
             </h3>
             <div>
                 <ul>
-                    <li><a href="https://powerofus.force.com/NPSP_Documentation" target="_blank" >NPSP 3.0 Documentation</a></li>
-                    <li><a href="https://powerofus.force.com/NPSP_Workbook" target="_blank" >Nonprofit Starter Pack Workbook</a></li>
-                    <li><a href="https://powerofus.force.com/NPSP_Import_Data" target="_blank" >NPSP Guide to Importing Data</a></li>
+                    <li><a href="https://powerofus.force.com/NPSP_Documentation" target="_blank" >{!$Label.stgHelpNPSPDoc}</a></li>
+                    <li><a href="https://powerofus.force.com/NPSP_Workbook" target="_blank" >{!$Label.stgNPSPWorkbook}</a></li>
+                    <li><a href="https://powerofus.force.com/NPSP_Import_Data" target="_blank" >{!$Label.stgNPSPGuideImportData}</a></li>
                 </ul>
             </div>
         </div>
         <div class="slds-col--padded slds-size--4-of-12">
             <div class="slds-text-heading--medium slds-m-bottom--medium">
-                Power of Us Hub
+                {!$Label.stgPowerOfUsHub}
             </div>
-            <p>Got questions? The Hub has answers! Try the <a href="https://powerofus.force.com/HUB_NPSP_Group" target="_blank">Nonprofit Starter Pack</a> group for questions about NPSP and the <a href="https://powerofus.force.com/HUB_System_Admin_Group" target="_blank">System Administrators</a> group for questions about Salesforce administration and cofiguration.<br/><br/>Keep up with the latest NPSP release notes in the <a href="https://powerofus.force.com/NPSP_Release_Notes" target="_blank">NPSP Release Announcements</a> group.</p>
+            <p><apex:outputText value="{!$Label.stgHelpPowerOfUsHub}" escape="false"/></p>
         </div>
     </div>
 </apex:page>
