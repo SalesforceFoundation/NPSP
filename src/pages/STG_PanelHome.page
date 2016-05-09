@@ -1,64 +1,44 @@
 <apex:page controller="STG_SettingsManager_CTRL" >
-    <!-- HEADER -->
     <div class="slds-m-around--x-large slds-p-bottom--large slds-col-rule--bottom">
         <div class="slds-media slds-media--center slds-media--responsive">
             <div class="slds-media__body">
                 <h3 class="slds-text-heading--large slds-m-bottom--large">Nonprofit Starter Pack Application Settings</h3>
-                <p>Customize how the Nonprofit Starter Pack works for your organization.</p>
+                <p>Configure the Nonprofit Starter Pack to meet your organization's needs. You can also monitor the health of your Salesforce organization, or run batch processes to update data.</p>
                 <p class="slds-text-body--small slds-m-top--x-small">Looking to customize page layouts, add fields, or add users?  Try the <a href="/setup/forcecomHomepage.apexp?setupid=ForceCom" target="_blank">Salesforce Setup</a> pages.</p>
             </div>
             <div class="slds-media__figure slds-media__figure--reverse">
-                <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/NPSP_Logo_Small_Cropped.png')}" class="img-rounded img-responsive" style="height: 75px" alt="NPSP Logo"/>
+                <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/NPSP_Logo_Small.png')}" style="height: 175px" alt="NPSP Logo"/>
             </div>
         </div>
     </div>
-
     <div class="slds-grid">
         <div class="slds-col--padded slds-size--4-of-12">
             <div class="slds-text-heading--medium slds-m-bottom--medium">
-                Quick Starts
+                Tools
             </div>
             <ul>
-                <li><a href="https://powerofus.force.com/SF_Getting_Started_Guide" target="_blank" >Getting Started Implementation Guide</a></li>
-                <li><a href="https://powerofus.force.com/SF_Managing_Users_Guide" target="_blank" >Adding and Managing Users Quick Start</a></li>
-                <li><a href="https://powerofus.force.com/SF_Importing_Data_Quick_Start" target="_blank" >Importing Data Quick Start</a></li>
+                <li>Use <a href="." onclick="ShowPanel('idPanelHealthCheck');return false;">Health Check</a> to verify your NPSP configuration!</li>
+                <li>Review <a href="." onclick="ShowPanel('idPanelErrorLog');return false;">Error Logs</a> to see if there are issues.</li>
             </ul>
+
+        </div>
+        <div class="slds-col--padded slds-size--4-of-12">
+            <h3 class="slds-text-heading--medium slds-m-bottom--medium">
+                Documentation
+            </h3>
+            <div>
+                <ul>
+                    <li><a href="https://powerofus.force.com/NPSP_Documentation" target="_blank" >NPSP 3.0 Documentation</a></li>
+                    <li><a href="https://powerofus.force.com/NPSP_Workbook" target="_blank" >Nonprofit Starter Pack Workbook</a></li>
+                    <li><a href="https://powerofus.force.com/NPSP_Import_Data" target="_blank" >NPSP Guide to Importing Data</a></li>
+                </ul>
+            </div>
         </div>
         <div class="slds-col--padded slds-size--4-of-12">
             <div class="slds-text-heading--medium slds-m-bottom--medium">
                 Power of Us Hub
             </div>
-            <div class="slds-media slds-media--center">
-                <div class="slds-media__figure">
-                    <a href="https://powerofus.force.com/" title="Power of Us Hub" target="_blank"><img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/hub-logo.png')}" alt="Power of Us Hub" /></a>
-                </div>
-                <div class="slds-media__body">
-                    <p>Got questions? Got answers? Join the <a href="https://powerofus.force.com/HUB_System_Admin_Group" target="_blank">System Administrators</a> group in the <a href="https://powerofus.force.com/" title="Power of Us Hub" target="_blank">Power of Us Hub</a>!</p>
-                </div>
-            </div>
-        </div>
-        <div class="slds-col--padded slds-size--4-of-12">
-            <h3 class="slds-text-heading--medium slds-m-bottom--medium">
-                Quick Links
-            </h3>
-            <div>
-                <div class="slds-text-heading--small slds-m-bottom--small">
-                    Documentation
-                </div>
-                <ul>
-                    <li><a href="https://powerofus.force.com/NPSP_Documentation" target="_blank" >NPSP 3.0 Documentation</a></li>
-                    <li><a href="https://powerofus.force.com/NPSP_Release_Notes" target="_blank" >NPSP 3.0 Release Notes</a></li>
-                </ul>
-                <div class="slds-text-heading--small slds-m-bottom--small slds-m-top--small">
-                    Tools
-                </div>
-                <ul>
-                    <li><img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/stethoscope.png')}" style="float:left; padding-right:10px;" alt="Health Check" />
-                    Use <a href="." onclick="ShowPanel('idPanelHealthCheck');return false;">Health Check</a> to verify your NPSP configuration!</li>
-                    <li><a href="." onclick="ShowPanel('idPanelOppBatch');return false;">Batch rollup donations</a></li>
-                    <li><a href="." onclick="ShowPanel('idPanelErrorLog');return false;">Error logs</a></li>
-                </ul>
-            </div>
+            <p>Got questions? The Hub has answers! Try the <a href="https://powerofus.force.com/HUB_NPSP_Group" target="_blank">Nonprofit Starter Pack</a> group for questions about NPSP and the <a href="https://powerofus.force.com/HUB_System_Admin_Group" target="_blank">System Administrators</a> group for questions about Salesforce administration and cofiguration.<br/><br/>Keep up with the latest NPSP release notes in the <a href="https://powerofus.force.com/NPSP_Release_Notes" target="_blank">NPSP Release Announcements</a> group.</p>
         </div>
     </div>
 </apex:page>
