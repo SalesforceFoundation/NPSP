@@ -799,7 +799,13 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloBatchDefaultInfo</shortDescription>
-        <value>Clicking this button starts a batch process that creates default allocations for all existing opportunities, except opportunities excluded in the Allocations Rollup Settings. Default allocations must be enabled and a default General Accounting Unit selected to run this tool. You only need to run this tool once after enabling default allocations, as all new opportunities will receive a default allocation once enabled.</value>
+        <value>This utility runs a batch process that creates default Allocations for all existing Opportunities, except Opportunities excluded in the GAU Allocations Rollup Settings.
+&lt;br/&gt;
+&lt;br/&gt;
+To run this utility, default Allocations must be enabled and a default General Accounting Unit must be selected. You only need to run this tool once after enabling default Allocations, as all new Opportunities will receive a default Allocation once enabled.
+&lt;br/&gt;
+&lt;br/&gt;
+To check your GAU Allocation settings, go to Donations | GAU Allocations.</value>
     </labels>
     <labels>
         <fullName>alloBtnCancel</fullName>
@@ -1790,7 +1796,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthLabelIntro</shortDescription>
-        <value>Health Check will verify that all of your settings are valid, and look for problems in your account related data.</value>
+        <value>Health Check verifies that all of your NPSP Settings are valid and looks for problems in your account-related data. When complete, you can view the results, including detailed information for any failures.</value>
     </labels>
     <labels>
         <fullName>healthLabelLastRun</fullName>
@@ -3364,8 +3370,8 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpBatchAlloRollup</shortDescription>
-        <value>Click Run Batch to roll up totals for all closed opportunities with allocations assigned to them. The results will be saved in General Accounting Unit records.
-You can close this page at any time and the process will still run in the background.</value>
+        <value>This utility calculates rollup totals for all Closed Opportunities with Allocations and updates the relevant General Accounting Unit (GAU) records.
+This process may take some time, but you can safely close this page and the process will continue in the background.</value>
     </labels>
     <labels>
         <fullName>stgHelpBatchOppRollup</fullName>
@@ -3373,7 +3379,8 @@ You can close this page at any time and the process will still run in the backgr
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpBatchOppRollup</shortDescription>
-        <value>Use this page to rollup totals for all closed Opportunities, saving the results in Contact, Household, and Organization records.  The process may take some time; you can close this page and the process will continue in the background.</value>
+        <value>This utility calculates rollup totals for all Closed Opportunities and updates the relevant Contacts, Households, and Accounts.
+This process may take some time, but you can safely close this page and the process will continue in the background.</value>
     </labels>
     <labels>
         <fullName>stgHelpBtnHHNaming</fullName>
@@ -3387,13 +3394,13 @@ You can close this page at any time and the process will still run in the backgr
 
 Before starting this process, we recommend disabling the following when they affect Households:
 &lt;br/&gt;
-&lt;ul&gt;
-&lt;li&gt;Custom Validation Rules&lt;/li&gt;
-&lt;li&gt;Workflow Rules&lt;/li&gt;
-&lt;li&gt;Process Builder&lt;/li&gt;
-&lt;li&gt;Visual Workflows&lt;/li&gt;
-&lt;li&gt;Custom Triggers&lt;/li&gt;
-&lt;/ul&gt;
+&lt;br/&gt;
+● Custom Validation Rules&lt;br/&gt;
+● Workflow Rules&lt;br/&gt;
+● Process Builder&lt;br/&gt;
+● Visual Workflows&lt;br/&gt;
+● Custom Triggers&lt;br/&gt;
+
 &lt;br/&gt;
 Once the process is 100% complete, you can safely leave or refresh this page.</value>
     </labels>
@@ -3406,16 +3413,14 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <value>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate batch opportunity renaming, and refresh all Opportunity Names according to the formats you&apos;ve chosen. Salesforce will rename every opportunity in your organization except those opportunities whose Opportunity Name Formats you&apos;ve specified as &quot;Do Not Rename.&quot;&lt;br/&gt;&lt;br/&gt;
 
 &lt;b&gt;This is an irreversible process.&lt;/b&gt;
-Before starting this process, we recommend disabling the following when they affect Opportunities:
+Before starting this process, we recommend that you back up your data. We also recommend disabling the following when they affect Opportunities: 
 &lt;br/&gt;
-&lt;ul&gt;
-&lt;li&gt;Custom Validation Rules&lt;/li&gt;
-&lt;li&gt;Workflow Rules&lt;/li&gt;
-&lt;li&gt;Process Builder&lt;/li&gt;
-&lt;li&gt;Visual Workflows&lt;/li&gt;
-&lt;li&gt;Custom Triggers&lt;/li&gt;
-&lt;/ul&gt;
 &lt;br/&gt;
+● Custom Validation Rules&lt;br/&gt;
+● Workflow Rules&lt;br/&gt;
+● Process Builder&lt;br/&gt;
+● Visual Workflows&lt;br/&gt;
+● Custom Triggers&lt;br/&gt;&lt;br/&gt;
 Once the process is 100% complete, you can safely leave or refresh this page.</value>
     </labels>
     <labels>
@@ -3449,22 +3454,23 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <protected>false</protected>
         <shortDescription>stgHelpCreateMissingPayments</shortDescription>
         <value>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate batch payment creation. Salesforce will create a payment for each Opportunity without Payments that: 
-&lt;ul&gt; 
-&lt;li&gt;has an amount greater than zero&lt;/li&gt; 
-&lt;li&gt;is not marked Do Not Automatically Create Payment&lt;/li&gt; 
-&lt;li&gt;is not excluded in the above settings&lt;/li&gt; 
-&lt;/ul&gt; 
+&lt;br/&gt;
+&lt;br/&gt; 
+● has an amount greater than zero&lt;br/&gt; 
+● is not marked Do Not Automatically Create Payment&lt;br/&gt; 
+● is not excluded in the Donations | Payments settings&lt;br/&gt; 
+&lt;br/&gt; 
 
 &lt;b&gt;This is an irreversible process.&lt;/b&gt; 
 Before starting this process, we recommend disabling the following when they affect Payments: 
+&lt;br/&gt;
 &lt;br/&gt; 
-&lt;ul&gt; 
-&lt;li&gt;Custom Validation Rules&lt;/li&gt; 
-&lt;li&gt;Workflow Rules&lt;/li&gt; 
-&lt;li&gt;Process Builder&lt;/li&gt; 
-&lt;li&gt;Visual Workflows&lt;/li&gt; 
-&lt;li&gt;Custom Triggers&lt;/li&gt; 
-&lt;/ul&gt; 
+● Custom Validation Rules&lt;br/&gt; 
+● Workflow Rules&lt;br/&gt; 
+● Process Builder&lt;br/&gt; 
+● Visual Workflows&lt;br/&gt; 
+● Custom Triggers&lt;br/&gt; 
+
 &lt;br/&gt; 
 Once the process is 100% complete, you can safely leave or refresh this page.</value>
     </labels>
@@ -3831,16 +3837,14 @@ IMPORTANT: Both of these fields must have the same data type.</value>
         <value>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate a batch Opportunity update to refresh the Primary Contact field. Salesforce will update Opportunity records where the Primary Contact field isn&apos;t the same value as the  Opportunity Contact Role record marked Primary.&lt;br/&gt;&lt;br/&gt;
 
 &lt;b&gt;This is an irreversible process.&lt;/b&gt;
-This change updates Opportunity records. Before starting this process, we recommend disabling the following when they affect Opportunities:
+This change updates Opportunity records. Before starting this process, we recommend that you back up your data. We also recommend disabling the following when they affect Opportunities: 
 &lt;br/&gt;
-&lt;ul&gt;
-&lt;li&gt;Custom Validation Rules&lt;/li&gt;
-&lt;li&gt;Workflow Rules&lt;/li&gt;
-&lt;li&gt;Process Builder&lt;/li&gt;
-&lt;li&gt;Visual Workflows&lt;/li&gt;
-&lt;li&gt;Custom Triggers&lt;/li&gt;
-&lt;/ul&gt;
 &lt;br/&gt;
+● Custom Validation Rules&lt;br/&gt;
+● Workflow Rules&lt;br/&gt;
+● Process Builder&lt;br/&gt;
+● Visual Workflows&lt;br/&gt;
+● Custom Triggers&lt;br/&gt;&lt;br/&gt;
 Once the process is 100% complete, you can safely leave or refresh this page.</value>
     </labels>
     <labels>
@@ -3857,7 +3861,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDDisableScheduling</shortDescription>
-        <value>Prevents the scheduling of the nightly update to Recurring Donations. You will need to remove any existing scheduled jobs through Setup | Monitoring | Scheduled Jobs.</value>
+        <value>Prevents the scheduling of the nightly update to Recurring Donations.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDFailures</fullName>
@@ -4121,7 +4125,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpTHActive</shortDescription>
-        <value>Indicates that this module is active</value>
+        <value>Indicates that this Trigger Handler is active and will run when Trigger Action criteria is met.</value>
     </labels>
     <labels>
         <fullName>stgHelpTHAsync</fullName>
@@ -4129,7 +4133,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpTHAsync</shortDescription>
-        <value>Indicates that this module&apos;s After Events should be run asynchronously in this transaction</value>
+        <value>Indicates that this trigger handler&apos;s After Events should run asynchronously. WARNING: If the specified Apex Class doesn&apos;t support asynchronous processing and you select this checkbox, the class may not work properly.</value>
     </labels>
     <labels>
         <fullName>stgHelpTHClass</fullName>
@@ -4137,7 +4141,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpTHClass</shortDescription>
-        <value>Name of the class to be run</value>
+        <value>The Apex class to run.</value>
     </labels>
     <labels>
         <fullName>stgHelpTHLoadOrder</fullName>
@@ -4145,7 +4149,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpTHLoadOrder</shortDescription>
-        <value>Order in which this module should be run, helps maintain dependencies in the modules and data.</value>
+        <value>Order in which this trigger should be run. If the records that this trigger handler processes have related records, the load order ensures that they&apos;re created or updated in the correct order.</value>
     </labels>
     <labels>
         <fullName>stgHelpTHObject</fullName>
@@ -4153,7 +4157,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpTHObject</shortDescription>
-        <value>Name of the object this handler should be run for</value>
+        <value>The object related to this trigger handler.</value>
     </labels>
     <labels>
         <fullName>stgHelpTHTriggerAction</fullName>
@@ -4161,7 +4165,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpTHTriggerAction</shortDescription>
-        <value>Trigger Action in which this module should fire</value>
+        <value>Actions that fire this trigger. Ctrl and Command click to select more than one action.</value>
     </labels>
     <labels>
         <fullName>stgHelpTriggerHandlers</fullName>
@@ -4169,7 +4173,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpTriggerHandlers</shortDescription>
-        <value>These triggers control core functionality in the Nonprofit Starter Pack, so please exercise extreme caution in modifying them.</value>
+        <value>These triggers control core functionality in the Nonprofit Starter Pack, so please exercise extreme caution when creating or modifying them.</value>
     </labels>
     <labels>
         <fullName>stgHelpTriggerHandlersAsync</fullName>
