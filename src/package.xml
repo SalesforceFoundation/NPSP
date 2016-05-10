@@ -774,6 +774,7 @@
         <members>alloBatchDefaultInfo</members>
         <members>alloBtnCancel</members>
         <members>alloBtnSaveAndClose</members>
+        <members>alloCampaignExceedsOppAmount</members>
         <members>alloCantAllocateNothing</members>
         <members>alloDefaultGAUMissing</members>
         <members>alloDefaultNotPercent</members>
@@ -790,6 +791,7 @@
         <members>alloSingleParent</members>
         <members>alloTotalExceedsOppAmt</members>
         <members>alloTotals</members>
+        <members>alloUnallocated</members>
         <members>bdiAccountCustomIdError</members>
         <members>bdiBatchException</members>
         <members>bdiBtnClose</members>
@@ -1054,6 +1056,7 @@
         <members>sendAcknowledgmentPageTitle</members>
         <members>sendAcknowledgmentReturnLinkLabel</members>
         <members>sendAcknowledgmentSucceeded</members>
+        <members>stgAddrGeneralSettingsIntro</members>
         <members>stgAddrMustChooseClass</members>
         <members>stgBtnCancel</members>
         <members>stgBtnClearErrorLog</members>
@@ -1078,6 +1081,7 @@
         <members>stgBtnRefreshPrimaryContacts</members>
         <members>stgBtnRunBatch</members>
         <members>stgBtnSave</members>
+        <members>stgDocumentation</members>
         <members>stgErrorINaming</members>
         <members>stgErrorInvalidClass</members>
         <members>stgErrorInvalidNameFormat</members>
@@ -1093,6 +1097,7 @@
         <members>stgHelpBDEAllowBlankOppNames</members>
         <members>stgHelpBDEOppNaming</members>
         <members>stgHelpBatchAlloRollup</members>
+        <members>stgHelpBatchCreateDefault</members>
         <members>stgHelpBatchOppRollup</members>
         <members>stgHelpBtnHHNaming</members>
         <members>stgHelpBtnOppNaming</members>
@@ -1104,6 +1109,7 @@
         <members>stgHelpDefaultGAU</members>
         <members>stgHelpDisableHHAccountAddr</members>
         <members>stgHelpEnableSoftCreditRollups</members>
+        <members>stgHelpErrorLog</members>
         <members>stgHelpErrorNotifyOn</members>
         <members>stgHelpErrorNotifyTo</members>
         <members>stgHelpFGFormat</members>
@@ -1116,6 +1122,7 @@
         <members>stgHelpHHOCROn</members>
         <members>stgHelpHHObjectOverview</members>
         <members>stgHelpHHRules</members>
+        <members>stgHelpHealthCheck</members>
         <members>stgHelpIGFormat</members>
         <members>stgHelpINamingClass</members>
         <members>stgHelpLeadConvert</members>
@@ -1123,11 +1130,14 @@
         <members>stgHelpMaxPayments</members>
         <members>stgHelpMembershipGracePeriod</members>
         <members>stgHelpMembershipRT</members>
+        <members>stgHelpNPSPDoc</members>
+        <members>stgHelpNPSPSettings</members>
         <members>stgHelpNameConnector</members>
         <members>stgHelpNameOverrun</members>
         <members>stgHelpNewRDFieldMap</members>
         <members>stgHelpNewUDR</members>
         <members>stgHelpNoUDR</members>
+        <members>stgHelpOCR</members>
         <members>stgHelpOCRDefaultRole</members>
         <members>stgHelpOCRRoleForHH</members>
         <members>stgHelpOneToOneRTID</members>
@@ -1144,8 +1154,10 @@
         <members>stgHelpPaymentMapping</members>
         <members>stgHelpPaymentMappings</members>
         <members>stgHelpPaymentsEnabled</members>
+        <members>stgHelpPowerOfUsHub</members>
         <members>stgHelpPrimaryContactBatch</members>
         <members>stgHelpRDAddCampaign</members>
+        <members>stgHelpRDBatch</members>
         <members>stgHelpRDDisableScheduling</members>
         <members>stgHelpRDFailures</members>
         <members>stgHelpRDFieldMap</members>
@@ -1160,6 +1172,7 @@
         <members>stgHelpRDPeriodName</members>
         <members>stgHelpRDPeriodType</members>
         <members>stgHelpRDSuccesses</members>
+        <members>stgHelpRecDon</members>
         <members>stgHelpRelAutoCreatedDup</members>
         <members>stgHelpRelGenderField</members>
         <members>stgHelpRelReciprocalFemale</members>
@@ -1167,6 +1180,7 @@
         <members>stgHelpRelReciprocalMethod</members>
         <members>stgHelpRelReciprocalName</members>
         <members>stgHelpRelReciprocalNeutral</members>
+        <members>stgHelpReviewErrorLog</members>
         <members>stgHelpRollupBatchSize</members>
         <members>stgHelpRollupExcludeAccountOppRT</members>
         <members>stgHelpRollupExcludeAccountOppType</members>
@@ -1176,9 +1190,11 @@
         <members>stgHelpRollupExcludeContactOppType</members>
         <members>stgHelpRollupNDayValue</members>
         <members>stgHelpRollupPrimaryContact</members>
+        <members>stgHelpSalesforceSetup</members>
         <members>stgHelpSimpleAddrChangeIsUpdate</members>
         <members>stgHelpSoftCreditRoles</members>
         <members>stgHelpStoreErrorsOn</members>
+        <members>stgHelpTDTM</members>
         <members>stgHelpTHActive</members>
         <members>stgHelpTHAsync</members>
         <members>stgHelpTHClass</members>
@@ -1257,9 +1273,13 @@
         <members>stgLabelUDROp</members>
         <members>stgLabelUDROppField</members>
         <members>stgLabelUDRTargetField</members>
+        <members>stgLabelUDRTargetFieldHelp</members>
         <members>stgLabelUDRTargetObject</members>
         <members>stgLinkDelete</members>
+        <members>stgNPSPGuideImportData</members>
+        <members>stgNPSPSettings</members>
         <members>stgNPSPSettingsTitle</members>
+        <members>stgNPSPWorkbook</members>
         <members>stgNavAccountModel</members>
         <members>stgNavAddressVerification</members>
         <members>stgNavAffiliations</members>
@@ -1292,6 +1312,9 @@
         <members>stgNavSystem</members>
         <members>stgNavTriggerConfig</members>
         <members>stgNavUserDefinedRollups</members>
+        <members>stgOppNamingDescription</members>
+        <members>stgPowerOfUsHub</members>
+        <members>stgTools</members>
         <members>stgValidationHHAccountHHRules</members>
         <name>CustomLabel</name>
     </types>

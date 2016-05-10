@@ -48,12 +48,6 @@
             });
         });
     </script>
-    <style>
-        div.slds-text-body--small ol {
-            list-style: initial;
-            list-style-type: decimal;
-        }
-    </style>
     <apex:form id="form" styleClass="slds-m-around--x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavPeople}" pageLabel="{!$Label.stgLabelAddressVerification}" />
         <c:UTIL_PageMessages />
@@ -65,6 +59,9 @@
         <apex:outputPanel id="fields">
             <div class="slds-section-title--divider">
                 {!$Label.addrGeneralSettings}
+            </div>
+            <div class="slds-text-body--small slds-m-around--large">
+                <p>{!$Label.stgAddrGeneralSettingsIntro}</p>
             </div>
             <div class="slds-form--horizontal slds-m-around--large">
                 <div class="slds-form-element">
@@ -109,7 +106,7 @@
             </div>
             <div class="slds-text-body--small slds-m-around--large">
                 <p><apex:outputText value="{!$Label.Addr_Settings_Intro_Body1}" escape="false" /></p>
-                <p><apex:outputText value="{!$Label.Addr_Settings_Intro_Body2}" escape="false" styleClass="slds-list--ordered" /></p>
+                <p><apex:outputText value="{!$Label.Addr_Settings_Intro_Body2}" escape="false" /></p>
             </div>
             <div class="slds-form--horizontal slds-m-around--large">
                 <div class="slds-form-element">
