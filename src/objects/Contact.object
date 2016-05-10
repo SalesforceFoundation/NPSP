@@ -1708,9 +1708,9 @@
     </fields>
     <fields>
         <fullName>Number_of_Soft_Credits_Last_N_Days__c</fullName>
-        <description>The number of soft credits, closed in the last number of days defined in NPSP Settings.</description>
+        <description>Total amount for all soft credits that closed in the last N days. The value of N is defined in the NPSP Settings tab.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The number of soft credits, closed in the last number of days defined in NPSP Settings.</inlineHelpText>
+        <inlineHelpText>Total amount for all soft credits that closed in the last N days. The value of N is defined in the NPSP Settings tab.</inlineHelpText>
         <label>Number of Soft Credits Last N Days</label>
         <precision>18</precision>
         <required>false</required>
