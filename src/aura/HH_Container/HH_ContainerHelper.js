@@ -339,6 +339,20 @@
             }
         }
         component.set('v.listCon', listCon);
-    }
-    
+    },
+
+    /*******************************************************************************************************
+	* @description fixup custom labels exposed thru $Label, so the ones from the wrong namespace are null.
+    */
+    fixupCustomLabels : function(component) {
+        var lbl = $A.get('$Label');
+        for (var nspace in lbl) {
+            for (var str in lbl[nspace]) {
+                if (lbl[nspace][str] != null && lbl[nspace][str].startsWith('$Label'))
+                    lbl[nspace][str] = null;
+            }
+        }
+    },                           
+
+
 })

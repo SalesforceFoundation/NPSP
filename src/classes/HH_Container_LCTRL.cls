@@ -37,6 +37,28 @@
 public class HH_Container_LCTRL {
     
     /*******************************************************************************************************
+    * @description trick the packaging spider to pickup references to custom labels only used by our
+    * lightning components.
+    */
+    public static void packageLabels() {
+    	string str;
+        str = Label.lblAddressOverride;
+        str = Label.lblCCardExcludeFrom;
+        str = Label.lblHouseholdName;
+        str = Label.lblFormalGreeting;
+        str = Label.lblInformalGreeting;
+        str = Label.lblHousehold;
+        str = Label.lblDeleteContact;
+        str = Label.lblDeleteContactPrompt;
+        str = Label.lblStreet;
+        str = Label.lblCity;
+        str = Label.lblState;
+        str = Label.lblPostalCode;
+        str = Label.lblCountry;
+        
+    }
+
+    /*******************************************************************************************************
     * @description returns the Household object (Account or Custom Object) given the Id
     * @param hhId The Household's Id
     * @return SObject The Household Account or Custom Object
@@ -166,7 +188,6 @@ public class HH_Container_LCTRL {
     @AuraEnabled
     public static void updateHousehold(SObject hh) {
         try {
-
             // we've already saved the data for the contacts in the household.
             // now we only need to save the account fields an update, and we don't want
             // any of the normal account trigger work to run again.  specifically,
