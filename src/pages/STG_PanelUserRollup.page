@@ -59,7 +59,7 @@
                             <apex:actionSupport status="statusLoad" event="onchange" rerender="udrpageblock,btnCreate"/>
                         </apex:selectList>
                         <apex:outputPanel id="slSOpHelp" layout="block">
-                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgLabelUDRTargetField}" />
+                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgLabelUDRTargetFieldHelp}" />
                         </apex:outputPanel>
                     </div>
                 </div>
