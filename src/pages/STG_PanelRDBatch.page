@@ -1,6 +1,9 @@
 <apex:page controller="STG_PanelRDBatch_CTRL" >
     <apex:form id="form" styleClass="slds-m-around--x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavRecurringDonations}" pageLabel="{!$Label.stgNavRDBatch}" />
+        <div class="slds-text-body--small slds-m-around--medium">
+            <apex:outputText value="{!$Label.stgHelpRDBatch}" escape="false" />
+        </div>
         <c:UTIL_PageMessages />
         <apex:outputPanel rendered="{!isReadOnlyMode}">
             <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
