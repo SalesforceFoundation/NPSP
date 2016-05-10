@@ -103,6 +103,8 @@ public with sharing class UTIL_Namespace_TEST {
         str = Label.stgHelpNoUDR;
         str = Label.alloRemainder;
         str = Label.alloTotals;
+        str = Label.alloCampaignExceedsOppAmount;
+        str = Label.alloUnallocated;
 
         // The following labels are referenced because the spider was having
         // issues resolving references to them and they need to be directly

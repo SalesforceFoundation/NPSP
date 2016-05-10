@@ -16,7 +16,7 @@
                         <apex:selectOption itemValue="Value Inversion" itemLabel="Value Inversion" />
                     </apex:selectList>
                     <apex:outputPanel id="slRMHelp" layout="block">
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRelReciprocalMethod}" />
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRelReciprocalMethod}" escape="false"/>
                     </apex:outputPanel>
                 </div>
             </div>
