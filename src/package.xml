@@ -1349,27 +1349,46 @@
     </types>
     <types>
         <members>Account-es</members>
+        <members>Addr_Verification_Settings__c-en_US</members>
         <members>Addr_Verification_Settings__c-es</members>
+        <members>Address_Verification_Settings__c-en_US</members>
         <members>Address_Verification_Settings__c-es</members>
+        <members>Address__c-en_US</members>
         <members>Address__c-es</members>
+        <members>Allocation__c-en_US</members>
         <members>Allocation__c-es</members>
+        <members>Allocations_Settings__c-en_US</members>
         <members>Allocations_Settings__c-es</members>
+        <members>Batch_Data_Entry_Settings__c-en_US</members>
         <members>Batch_Data_Entry_Settings__c-es</members>
+        <members>Batch__c-en_US</members>
         <members>Batch__c-es</members>
         <members>Contact-es</members>
+        <members>DataImport__c-en_US</members>
         <members>DataImport__c-es</members>
+        <members>Data_Import_Settings__c-en_US</members>
         <members>Data_Import_Settings__c-es</members>
+        <members>Error_Settings__c-en_US</members>
         <members>Error_Settings__c-es</members>
+        <members>Error__c-en_US</members>
         <members>Error__c-es</members>
+        <members>Fund__c-en_US</members>
         <members>Fund__c-es</members>
+        <members>General_Accounting_Unit__c-en_US</members>
         <members>General_Accounting_Unit__c-es</members>
+        <members>Grant_Deadline__c-en_US</members>
         <members>Grant_Deadline__c-es</members>
+        <members>Household_Naming_Settings__c-en_US</members>
         <members>Household_Naming_Settings__c-es</members>
         <members>Lead-es</members>
         <members>Opportunity-es</members>
+        <members>Opportunity_Naming_Settings__c-en_US</members>
         <members>Opportunity_Naming_Settings__c-es</members>
+        <members>Partial_Soft_Credit__c-en_US</members>
         <members>Partial_Soft_Credit__c-es</members>
+        <members>Schedulable__c-en_US</members>
         <members>Schedulable__c-es</members>
+        <members>Trigger_Handler__c-en_US</members>
         <members>Trigger_Handler__c-es</members>
         <members>npe01__Contacts_And_Orgs_Settings__c-es</members>
         <members>npe01__OppPayment__c-es</members>
