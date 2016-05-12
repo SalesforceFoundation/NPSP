@@ -2405,6 +2405,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Do you want to delete this contact, when the page is saved?</value>
     </labels>
     <labels>
+        <fullName>lblFirstName</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblFirstName</shortDescription>
+        <value>First Name</value>
+    </labels>
+    <labels>
         <fullName>lblFormalGreeting</fullName>
         <categories>Manage Household UI</categories>
         <language>en_US</language>
@@ -2437,6 +2445,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Informal Greeting</value>
     </labels>
     <labels>
+        <fullName>lblLastName</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblLastName</shortDescription>
+        <value>Last Name</value>
+    </labels>
+    <labels>
         <fullName>lblNPSPSettings</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
@@ -2451,6 +2467,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>lblPostalCode</shortDescription>
         <value>Postal Code</value>
+    </labels>
+    <labels>
+        <fullName>lblSalutation</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblSalutation</shortDescription>
+        <value>Salutation</value>
     </labels>
     <labels>
         <fullName>lblState</fullName>

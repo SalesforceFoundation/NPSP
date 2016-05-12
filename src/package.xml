@@ -989,12 +989,15 @@
         <members>lblCountry</members>
         <members>lblDeleteContact</members>
         <members>lblDeleteContactPrompt</members>
+        <members>lblFirstName</members>
         <members>lblFormalGreeting</members>
         <members>lblHousehold</members>
         <members>lblHouseholdName</members>
         <members>lblInformalGreeting</members>
+        <members>lblLastName</members>
         <members>lblNPSPSettings</members>
         <members>lblPostalCode</members>
+        <members>lblSalutation</members>
         <members>lblState</members>
         <members>lblStreet</members>
         <members>leadConvertAccountName</members>

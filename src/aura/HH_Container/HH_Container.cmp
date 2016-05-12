@@ -14,6 +14,9 @@
     <aura:attribute name="showDeleteContactPopup" type="Boolean" access="private" />
     <aura:attribute name="conDelete" type="Contact" access="private" />
     <aura:attribute name="listConDelete" type="Contact[]" access="private" />
+    <aura:attribute name="showNewContactPopup" type="Boolean" access="private" />
+    <aura:attribute name="conNew" type="Contact" access="private" />
+    <aura:attribute name="listSalutation" type="SelectOption[]" access="private" />
     
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
@@ -87,7 +90,15 @@
 				<div class="slds-p-bottom--small"> 
                     <div class="slds-grid">
 	                    <div class="slds-col slds-text-heading--label slds-p-around--x-small">{!$Label.npo02.HouseholdMembers}</div>
-                    	<div class="slds-col slds-text-align--right slds-p-around--x-small">(find contact autocomplete here!)</div>
+                    	<div class="slds-col slds-text-align--right slds-p-around--x-small">
+                            (find contact autocomplete here!)
+                            <ui:button class="slds-button slds-button--small slds-button--neutral" 
+                                       aura:id="btnNewContact" 
+                                       buttonTitle="{!$Label.npo02.NewContact}" 
+                                       label="{!$Label.npo02.NewContact}" 
+                                       press="{!c.showNewContactPopup}" />
+                            
+                        </div>
                     </div>
 	                <c:HH_Canvas hh="{!v.hh}" listCon="{!v.listCon}" />
                 </div>
@@ -95,7 +106,7 @@
 				<!-- the Address section -->
 				<div class="slds-p-bottom--large"> 
                     <div class="slds-text-heading--label slds-p-around--x-small">{!$Label.npo02.HouseholdAddress}</div>
-                    <c:HH_AddressMgr listAddr="{!v.listAddr}" />
+                    <c:HH_AddressMgr listAddr="{!v.listAddr}" aura:id="addrMgr" />
                 </div>
 
                 <!-- the section for our 3 special naming & greeting fields -->   
@@ -184,6 +195,63 @@
             </aura:if>
             <!-- /DELETE CONTACT POPUP -->
                 
+            <!-- NEW CONTACT POPUP -->
+            <aura:if isTrue="{!v.showNewContactPopup}">
+                <div id="newContactPopup" class="slds-modal slds-fade-in-open" aria-hidden="false" role="dialog">
+                    <div class="slds-modal__container">
+
+                        <div class="slds-modal__header">
+                            <ui:button class="slds-button slds-button--icon-inverse slds-modal__close" press="{!c.cancelNewContact}">
+                                <c:svg class="slds-button__icon slds-button__icon--large"
+                                       xlinkHref="/resource/SLDS/1_0_3/assets/icons/action-sprite/svg/symbols.svg#close" />
+                                <span class="slds-assistive-text">{!$Label.c.bdiBtnClose}{!$Label.npsp.bdiBtnClose}</span>
+                            </ui:button>                    
+                            <h2 id="searchPopupLabel" class="slds-text-heading--medium">{!$Label.npo02.NewContact}</h2>
+                        </div>
+
+                        <div class="slds-modal__content slds-p-around--medium">
+                            <div class="slds-form--stacked">
+                                <div class="slds-form-element">
+                                    <ui:inputSelect aura:id="selSalutation" label="{!$Label.c.lblSalutation + $Label.npsp.lblSalutation}" 
+                                    	change="{!c.onSalutationChange}" class="slds-select slds-input slds-form-element__control" labelClass="slds-form-element__label" >
+                                        <aura:iteration items="{!v.listSalutation}" var="sal">
+                                            <ui:inputSelectOption text="{!sal.value}" label="{!sal.label}"/>
+                                        </aura:iteration>
+                                    </ui:inputSelect>                                
+                                </div>                                
+                                <div class="slds-form-element">
+                                    <ui:inputText value="{!v.conNew.FirstName}" aura:id="txtFirstName" class="slds-input slds-form-element__control" 
+                                                  label="{!$Label.c.lblFirstName + $Label.npsp.lblFirstName}" labelClass="slds-form-element__label" />
+                                </div>
+                                <div class="slds-form-element">
+                                    <ui:inputText value="{!v.conNew.LastName}" aura:id="txtLastName" class="slds-input slds-form-element__control" required="true"
+                                                  label="{!$Label.c.lblLastName + $Label.npsp.lblLastName}" labelClass="slds-form-element__label" />
+                                </div>
+                            </div>
+                        </div> <!-- /slds-modal__content -->
+                        
+                        <div class="slds-modal__footer">
+                            <div class="slds-x-small-buttons--horizontal">
+                                <ui:button class="slds-button slds-button--neutral" 
+                                    aura:id="btnCancelNew"
+                                    buttonTitle="{!$Label.c.stgBtnCancel + $Label.npsp.stgBtnCancel}" 
+                                    label="{!$Label.c.stgBtnCancel + $Label.npsp.stgBtnCancel}" 
+                                    press="{!c.cancelNewContact}" />
+                                <ui:button class="slds-button slds-button--brand" 
+                                    aura:id="btnNew"
+                                    buttonTitle="{!$Label.npo02.NewContact}" 
+                                    label="{!$Label.npo02.NewContact}" 
+                                    press="{!c.doNewContact}" />
+                            </div>
+                        </div>
+                    </div> <!-- /slds-modal__container -->
+                </div> <!-- /slds-modal -->
+                <div class="slds-backdrop slds-backdrop--open"></div>
+            </aura:if>
+            <!-- /NEW CONTACT POPUP -->
+
+
+
             </div> <!-- myBodyContent -->
         </div> <!-- slds -->
     </form>   

@@ -34,8 +34,7 @@
         action.setParams({ hhId : hhId });
 		var self = this;
 		action.setCallback(this, function(response) {
-			var state = response.getState();
-            
+			var state = response.getState();            
 			if (component.isValid() && state === "SUCCESS") {
                 var listCon = response.getReturnValue();
 				component.set("v.listCon", listCon);                
@@ -43,7 +42,21 @@
             else if (component.isValid() && state === "ERROR") {
                 self.reportError(component, response);
             }            
+        });
+		$A.enqueueAction(action);        
 
+        // query for the Contact Salutations
+		var action = component.get("c.getSalutations");
+		var self = this;
+		action.setCallback(this, function(response) {
+			var state = response.getState();
+			if (component.isValid() && state === "SUCCESS") {
+                var listSalutation = response.getReturnValue();
+				component.set("v.listSalutation", listSalutation);                
+			}
+            else if (component.isValid() && state === "ERROR") {
+                self.reportError(component, response);
+            }            
         });
 		$A.enqueueAction(action);        
 
@@ -152,7 +165,7 @@
 
         // save the contacts
         var listCon = component.get("v.listCon");
-		var action = component.get("c.updateContacts");
+		var action = component.get("c.upsertContacts");
         action.setParams({ listCon : listCon});
 		action.setCallback(this, function(response) {
 			var state = response.getState();
@@ -267,7 +280,8 @@
             var listConDelete = component.get('v.listConDelete');
             if (listConDelete == null)
                 listConDelete = [];
-            listConDelete.push(con);
+            if (con.Id != null)
+	            listConDelete.push(con);
             component.set('v.listConDelete', listConDelete);
 
             var listCon = component.get('v.listCon');
@@ -329,18 +343,25 @@
         for (var i = 0; i < listCon.length; i++) {
             var con = listCon[i];
             if (!con.is_Address_Override__c) {
-                con.MailingStreet = addr.MailingStreet__c;
-                if (addr.MailingStreet2__c != null) 
-                    con.MailingStreet += '\n' + addr.MailingStreet2__c;
-                con.MailingCity = addr.MailingCity__c;
-                con.MailingState = addr.MailingState__c;
-                con.MailingPostalCode = addr.MailingPostalCode__c;
-                con.MailingCountry = addr.MailingCountry__c;
+                this.copyAddrToContact(addr, con);
             }
         }
         component.set('v.listCon', listCon);
     },
 
+    /*******************************************************************************************************
+	* @description copy the address object to the appropriate contact fields
+    */
+    copyAddrToContact : function(addr, con) {
+        con.MailingStreet = addr.MailingStreet__c;
+        if (addr.MailingStreet2__c != null) 
+            con.MailingStreet += '\n' + addr.MailingStreet2__c;
+        con.MailingCity = addr.MailingCity__c;
+        con.MailingState = addr.MailingState__c;
+        con.MailingPostalCode = addr.MailingPostalCode__c;
+        con.MailingCountry = addr.MailingCountry__c;
+    },
+    
     /*******************************************************************************************************
 	* @description fixup custom labels exposed thru $Label, so the ones from the wrong namespace are null.
     */
@@ -354,5 +375,45 @@
         }
     },                           
 
+    /*******************************************************************************************************
+	* @description initialize a new Contact SObject
+    */
+    initNewContact : function(component) {
+        var hhId = component.get('v.hhId');        
+        var hhTypePrefix = component.get('v.hhTypePrefix');   
+        var con = {'sobjectType': 'Contact'};
+        if (hhTypePrefix == '001')
+            con.AccountId = hhId;
+        else
+            con.npo02__Household__c = hhId;
+        con.hhId = hhId;
+        component.set('v.conNew', con);
+    },                           
 
+    /*******************************************************************************************************
+	* @description add the new contact to the household, and update the household
+    */
+    createNewContact : function(component) {
+        var listCon = component.get('v.listCon');
+        var conNew = component.get('v.conNew');
+		var addrDefault = component.find('addrMgr').get('v.addrDefault');
+        if (addrDefault != null)
+            this.copyAddrToContact(addrDefault, conNew);
+        listCon.push(conNew);
+        component.set('v.listCon', listCon);
+        this.initNewContact(component);
+        component.set('v.showNewContactPopup', false);
+
+        // force our names to update since we have a new contact!
+        this.updateHHNames(component);
+    },                           
+
+    /*******************************************************************************************************
+	* @description the Salutation picklist has changed; update our contact.
+    */
+    onSalutationChange : function(component) {
+        var conNew = component.get('v.conNew');
+        conNew.Salutation = component.find('selSalutation').get('v.value');
+        component.set('v.conNew', conNew);
+    },
 })
