@@ -176,7 +176,7 @@ public class HH_Container_LCTRL {
     @AuraEnabled
     public static void upsertContacts(list<Contact> listCon) {
         try {
-            // even though we are given a list of contacts from the lightning component,
+            // even though we are given a list of Contacts from the lightning component,
             // apex seems to treat them as generic sObjects, and thus we can't do upsert.
             // thus we will split the list into update and insert lists.
             list<Contact> listInsert = new list<Contact>();
@@ -187,7 +187,14 @@ public class HH_Container_LCTRL {
                 else
                     listInsert.add(con);
             }
-            insert listInsert;
+            // allow potential duplicates when rules to warn are turned on.
+            Database.DMLOptions dml = new Database.DMLOptions();
+            dml.DuplicateRuleHeader.AllowSave = true;
+            list<Database.SaveResult> listSR = Database.insert(listInsert, dml);
+            for (Database.SaveResult sr : listSR) {
+                if (!sr.isSuccess()) 
+                    throw new DmlException(sr.getErrors()[0].getMessage());
+            }
 	        update listUpdate;
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
