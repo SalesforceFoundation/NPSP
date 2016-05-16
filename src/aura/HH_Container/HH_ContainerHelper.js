@@ -115,21 +115,21 @@
         if (errors) {
             $A.log("Errors", errors);
             if (errors[0] && errors[0].message) {
-                this.displayUIMessage(component, errors[0].message);
+                this.displayUIMessage(component, errors[0].message, "divUIMessageContainer");
             } else if (errors[0] && errors[0].pageErrors && errors[0].pageErrors[0].message) {
-                this.displayUIMessage(component, errors[0].pageErrors[0].message);
+                this.displayUIMessage(component, errors[0].pageErrors[0].message, "divUIMessageContainer");
             } else {
-                this.displayUIMessage(component, "Unknown error");
+                this.displayUIMessage(component, "Unknown error", "divUIMessageContainer");
             }
         } else {
-            this.displayUIMessage(component, "Unknown error");
+            this.displayUIMessage(component, "Unknown error", "divUIMessageContainer");
         }        
     },
 
     /*******************************************************************************************************
     * @description creates a ui:message component for the given error string
     */
-    displayUIMessage : function(component, strError) {
+    displayUIMessage : function(component, strError, whichDiv) {
         $A.createComponents([
             ["ui:message",{
                 "title" : "Error",
@@ -145,7 +145,7 @@
                     var outputText = components[1];
                     // set the body of the ui:message to be the ui:outputText
                     message.set("v.body", outputText);
-                    var div = component.find("divUIMessage");
+                    var div = component.find(whichDiv);
                     // Replace div body with the dynamic component
                     div.set("v.body", message);
                 }
@@ -396,6 +396,13 @@
     createNewContact : function(component) {
         var listCon = component.get('v.listCon');
         var conNew = component.get('v.conNew');
+        
+        // perform field validation, which we don't get for free
+        if (conNew.LastName == null) {
+            this.displayUIMessage(component, $A.get("$Label.npo02.ContactLastNameRqd"), "divUIMessageNewContactPopup");
+            return;
+        }
+        
 		var addrDefault = component.find('addrMgr').get('v.addrDefault');
         if (addrDefault != null)
             this.copyAddrToContact(addrDefault, conNew);

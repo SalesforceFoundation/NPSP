@@ -32,7 +32,7 @@
         <div class="slds">
             
             <!-- placeholder for uimessage component -->
-            <div aura:id="divUIMessage" />
+            <div aura:id="divUIMessageContainer" />
             
             <!-- PAGE HEADER -->
             <div class="slds-page-header slds-p-bottom--medium" role="banner">
@@ -210,6 +210,7 @@
                         </div>
 
                         <div class="slds-modal__content slds-p-around--medium">
+                            <div aura:id="divUIMessageNewContactPopup" />
                             <div class="slds-form--stacked">
                                 <div class="slds-form-element">
                                     <ui:inputSelect aura:id="selSalutation" label="{!$Label.c.lblSalutation + $Label.npsp.lblSalutation}" 
