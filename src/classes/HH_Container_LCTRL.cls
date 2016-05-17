@@ -58,6 +58,9 @@ public class HH_Container_LCTRL {
         str = Label.lblSalutation;
         str = Label.lblFirstName;
         str = Label.lblLastName;
+        str = Label.stgBtnCancel;
+        str = Label.stgBtnSave;
+        str = Label.bdiBtnClose;
         
     }
 

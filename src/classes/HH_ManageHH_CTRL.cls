@@ -42,9 +42,6 @@ public with sharing class HH_ManageHH_CTRL {
     /** @description The Household Object or Account */
     public SObject hh { get; set; }
     
-    /** @description The return URL from the caller */
-    public string retURL { get; set; }
-
     /*******************************************************************************************************
     * @description Constructor for the page.  Loads up the HH Account or HH Object, using fields from
     * the appropriate field set.
@@ -52,9 +49,6 @@ public with sharing class HH_ManageHH_CTRL {
     public HH_ManageHH_CTRL() {
         Map<String, String> pageParams = ApexPages.currentPage().getParameters();
 		hhId = pageParams.get('Id'); 
-        retURL = pageParams.get('retURL');
-        if (retURL == null)
-            retURL = '/' + hhId;
         
         // load up only the fields exposed in the field set for our visualforce page to use.
         String strSoql = 'select Id';
@@ -103,6 +97,6 @@ public with sharing class HH_ManageHH_CTRL {
     */
     public PageReference save() {
         update hh;
-        return new PageReference(retURL);
+        return new PageReference('/' + hhId);
     } 
 }

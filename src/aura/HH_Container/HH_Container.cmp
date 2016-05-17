@@ -59,12 +59,12 @@
                         <div class="slds-button-group" role="group">
                             <ui:button class="slds-button slds-button--neutral" 
 								aura:id="buttonCancel" 
-                                buttonTitle="Click to return to Household" 
+                                buttonTitle="{!$Label.c.stgBtnCancel + $Label.npsp.stgBtnCancel}" 
                                 label="{!$Label.c.stgBtnCancel + $Label.npsp.stgBtnCancel}" 
                                 press="{!c.close}" />
                             <ui:button class="slds-button slds-button--brand" 
                                 aura:id="buttonSave"
-                                buttonTitle="Click to save and return to Household" 
+                                buttonTitle="{!$Label.c.stgBtnSave + $Label.npsp.stgBtnSave}" 
                                 label="{!$Label.c.stgBtnSave + $Label.npsp.stgBtnSave}" 
                                 press="{!c.save}" />
                         </div>

@@ -366,9 +366,13 @@
 	* @description fixup custom labels exposed thru $Label, so the ones from the wrong namespace are null.
     */
     fixupCustomLabels : function(component) {
+        // get access to the label global value provider which appears as an object, with a subobject
+        // for each namespace, and property for each label.
         var lbl = $A.get('$Label');
         for (var nspace in lbl) {
             for (var str in lbl[nspace]) {
+                // the labels that fail to get resolved appear as
+                // "$Label.namespace.foo does not exist: Field $Label.namespace__foo does not exist. Check spelling."
                 if (lbl[nspace][str] != null && lbl[nspace][str].startsWith('$Label'))
                     lbl[nspace][str] = null;
             }
