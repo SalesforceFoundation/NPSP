@@ -4,6 +4,7 @@
 
 .THIS .slds-modal__container {
     width: 20%;
+    min-width: 270px;
 }
 
 .THIS .slds-section-title--divider {

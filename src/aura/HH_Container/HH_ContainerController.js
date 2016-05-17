@@ -1,7 +1,9 @@
 ({
     // initialize the container by loading up our Household and Contacts
-	doInit : function(component, event, helper) {
+	doInit : function(component, event, helper) {        
+        helper.fixupCustomLabels(component);
         helper.loadObjects(component);
+        helper.initNewContact(component);
 	},
     
 	// display the spinner
@@ -19,12 +21,12 @@
         helper.updateHHNames(component);		
 	},
 
-    // a Contact has been requested to delete, so prompt the user and track the deletion
+    // proceed with deleting the contact
     doDeleteContact : function(component, event, helper) {
         helper.doDeleteContact(component, event);		
 	},
 
-    // a Contact has been requested to delete, so prompt the user and track the deletion
+    // cancel deleting the contact
     cancelDeleteContact : function(component, event, helper) {
         helper.cancelDeleteContact(component, event);		
 	},
@@ -64,4 +66,23 @@
         helper.updateDefaultAddress(component, event);		
 	},
 
+    // show the new contact popup
+    showNewContactPopup : function(component, event, helper) {
+        component.set('v.showNewContactPopup', true);
+	},
+
+    // proceed with create a new contact
+    doNewContact : function(component, event, helper) {
+        helper.createNewContact(component, event);		
+	},
+
+    // cancel New Contact
+    cancelNewContact : function(component, event, helper) {
+        component.set('v.showNewContactPopup', false);
+	},
+    
+    // Salutation select list has changed, so update conNew
+    onSalutationChange : function(component, event, helper) {
+        helper.onSalutationChange(component);
+    },    
 })

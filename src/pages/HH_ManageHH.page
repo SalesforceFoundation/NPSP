@@ -1,4 +1,4 @@
-<apex:page standardController="Account" extensions="HH_ManageHH_CTRL" standardStylesheets="false" showHeader="true" docType="html-5.0"  >
+<apex:page controller="HH_ManageHH_CTRL" standardStylesheets="false" showHeader="true" docType="html-5.0"  >
     <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <apex:includeLightning />
         <apex:stylesheet value="{!URLFOR($Resource.SLDS, '/1_0_3/assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
@@ -38,13 +38,13 @@
             <div class="slds">
                 <div class="slds-grid slds-grid--align-spread slds-m-around--medium">
                     <div class="slds-form--stacked" style="width:80%" >                        
-                        <apex:repeat value="{!$ObjectType.Account.FieldSets.Manage_Household_Custom}" var="f">
+                        <apex:repeat value="{!hhFieldSet}" var="f">                            
                             <div class="slds-form-element">
                                 <label class="slds-form-element__label uiLabel-left form-element__label uiLabel" >
                                     {!f.Label}<span class="required">{!IF(f.DBRequired || f.Required, '*', '')}</span>
                                 </label>
                                 <div class="slds-form-element__control">                                
-                                    <apex:inputField required="{!f.DBRequired || f.Required}" value="{!hh[f]}" label="" 
+                                    <apex:inputField required="{!f.DBRequired || f.Required}" value="{!hh[f]}" label=""
                                     	styleClass="{!CASE(f.Type, 
                                                     	'reference', 'lookupInput' + ' ' + f.FieldPath, 
                                                     	'multipicklist', 'slds-select multipicklistSLDSFixup', 

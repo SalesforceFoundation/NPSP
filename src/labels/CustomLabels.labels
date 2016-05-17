@@ -2357,12 +2357,140 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Show more</value>
     </labels>
     <labels>
+        <fullName>lblAddressOverride</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblAddressOverride</shortDescription>
+        <value>(address override)</value>
+    </labels>
+    <labels>
+        <fullName>lblCCardExcludeFrom</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblCCardExcludeFrom</shortDescription>
+        <value>Exclude from:</value>
+    </labels>
+    <labels>
+        <fullName>lblCity</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblCity</shortDescription>
+        <value>City</value>
+    </labels>
+    <labels>
+        <fullName>lblCountry</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblCountry</shortDescription>
+        <value>Country</value>
+    </labels>
+    <labels>
+        <fullName>lblDeleteContact</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblDeleteContact</shortDescription>
+        <value>Delete Contact</value>
+    </labels>
+    <labels>
+        <fullName>lblDeleteContactPrompt</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblDeleteContactPrompt</shortDescription>
+        <value>Do you want to delete this contact, when the page is saved?</value>
+    </labels>
+    <labels>
+        <fullName>lblFirstName</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblFirstName</shortDescription>
+        <value>First Name</value>
+    </labels>
+    <labels>
+        <fullName>lblFormalGreeting</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblFormalGreeting</shortDescription>
+        <value>Formal Greeting</value>
+    </labels>
+    <labels>
+        <fullName>lblHousehold</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblHousehold</shortDescription>
+        <value>Household</value>
+    </labels>
+    <labels>
+        <fullName>lblHouseholdName</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblHouseholdName</shortDescription>
+        <value>Household Name</value>
+    </labels>
+    <labels>
+        <fullName>lblInformalGreeting</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblInformalGreeting</shortDescription>
+        <value>Informal Greeting</value>
+    </labels>
+    <labels>
+        <fullName>lblLastName</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblLastName</shortDescription>
+        <value>Last Name</value>
+    </labels>
+    <labels>
         <fullName>lblNPSPSettings</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>lblNPSPSettings</shortDescription>
         <value>NPSP Settings</value>
+    </labels>
+    <labels>
+        <fullName>lblPostalCode</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblPostalCode</shortDescription>
+        <value>Postal Code</value>
+    </labels>
+    <labels>
+        <fullName>lblSalutation</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblSalutation</shortDescription>
+        <value>Salutation</value>
+    </labels>
+    <labels>
+        <fullName>lblState</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblState</shortDescription>
+        <value>State</value>
+    </labels>
+    <labels>
+        <fullName>lblStreet</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblStreet</shortDescription>
+        <value>Street</value>
     </labels>
     <labels>
         <fullName>leadConvertAccountName</fullName>

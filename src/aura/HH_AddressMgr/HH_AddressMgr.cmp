@@ -1,9 +1,9 @@
 <aura:component >
     <!-- public attributes -->
     <aura:attribute name="listAddr" type="Address__c[]" access="public" />
+    <aura:attribute name="addrDefault" type="Address__c" access="public" />
 
     <!-- private attributes -->
-    <aura:attribute name="addrDefault" type="Address__c" access="private" />
     <aura:attribute name="addrNew" type="Address__c" access="private" />
     <aura:attribute name="showChangeAddressPopup" type="Boolean" access="private" />
     <aura:attribute name="iAddrSelected" type="Integer" default="0" access="private" />
@@ -34,8 +34,8 @@
                 <div class="slds-grid slds-grid--align-center">
                     <ui:button class="slds-button slds-button--small slds-button--neutral" 
                                aura:id="btnChangeAddress" 
-                               buttonTitle="Change address" 
-                               label="Change address" 
+                               buttonTitle="{!$Label.npo02.ChangeAddress}" 
+                               label="{!$Label.npo02.ChangeAddress}" 
                                press="{!c.openChangeAddress}" />
                 </div>
             </div>
@@ -51,9 +51,9 @@
                     <ui:button class="slds-button slds-button--icon-inverse slds-modal__close" press="{!c.cancelChangeAddress}">
                         <c:svg class="slds-button__icon slds-button__icon--large"
                                xlinkHref="/resource/SLDS/1_0_3/assets/icons/action-sprite/svg/symbols.svg#close" />
-                        <span class="slds-assistive-text">Close</span>
+                        <span class="slds-assistive-text">{!$Label.c.bdiBtnClose}{!$Label.npsp.bdiBtnClose}</span>
                     </ui:button>                    
-                    <h2 id="searchPopupLabel" class="slds-text-heading--medium">Change Mailing Address</h2>
+                    <h2 id="searchPopupLabel" class="slds-text-heading--medium">{!$Label.npo02.ChangeAddress}</h2>
                 </div>
                 
                 <div class="slds-modal__content slds-p-around--medium">
@@ -64,7 +64,7 @@
                             <h4 class="slds-section__title-action" onclick="{!c.toggleAddrSection}">
                                     <c:svg class="slds-button__icon"
                                            xlinkHref="/resource/SLDS/1_0_3/assets/icons/utility-sprite/svg/symbols.svg#switch" />
-                                Select Existing Address
+                                {!$Label.npo02.SelectExistingAddress}
                             </h4>
                         </div>
                         <div class="slds-section__content">                                                    
@@ -95,30 +95,30 @@
                             <h4 class="slds-section__title-action" onclick="{!c.toggleAddrSection}">
                                 <c:svg class="slds-button__icon"
                                        xlinkHref="/resource/SLDS/1_0_3/assets/icons/utility-sprite/svg/symbols.svg#switch" />
-                                Enter a New Address
+                                {!$Label.npo02.EnterNewAddress}
                             </h4>
                         </div>
                         <div class="slds-section__content">                                                    
                             <div class="slds-form--stacked">
                                 <div class="slds-form-element">
 			                        <ui:inputTextArea value="{!v.addrNew.MailingStreet__c}" aura:id="txtStreet" class="slds-input slds-form-element__control" 
-			                        	label="Street" labelClass="slds-form-element__label" />
+			                        	label="{!$Label.c.lblStreet + $Label.npsp.lblStreet}" labelClass="slds-form-element__label" />
                                 </div>
                                 <div class="slds-form-element">
 			                        <ui:inputText value="{!v.addrNew.MailingCity__c}" aura:id="txtCity" class="slds-input slds-form-element__control" 
-			                        	label="City" labelClass="slds-form-element__label" />
+			                        	label="{!$Label.c.lblCity + $Label.npsp.lblCity}" labelClass="slds-form-element__label" />
                                 </div>
                                 <div class="slds-form-element">
 			                        <ui:inputText value="{!v.addrNew.MailingState__c}" aura:id="txtState" class="slds-input slds-form-element__control" 
-			                        	label="State" labelClass="slds-form-element__label" />
+			                        	label="{!$Label.c.lblState + $Label.npsp.lblState}" labelClass="slds-form-element__label" />
                                 </div>
                                 <div class="slds-form-element">
 			                        <ui:inputText value="{!v.addrNew.MailingPostalCode__c}" aura:id="txtZip" class="slds-input slds-form-element__control" 
-			                        	label="Postal Code" labelClass="slds-form-element__label" />
+			                        	label="{!$Label.c.lblPostalCode + $Label.npsp.lblPostalCode}" labelClass="slds-form-element__label" />
                                 </div>
                                 <div class="slds-form-element">
 			                        <ui:inputText value="{!v.addrNew.MailingCountry__c}" aura:id="txtCountry" class="slds-input slds-form-element__control" 
-			                        	label="Country" labelClass="slds-form-element__label" />
+			                        	label="{!$Label.c.lblCountry + $Label.npsp.lblCountry}" labelClass="slds-form-element__label" />
                                 </div>
                             </div>
                         </div>
@@ -130,13 +130,13 @@
                     <div class="slds-x-small-buttons--horizontal">
                         <ui:button class="slds-button slds-button--neutral" 
                                    aura:id="btnCancelChangeAddress"
-                                   buttonTitle="Cancel" 
-                                   label="Cancel" 
+                                   buttonTitle="{!$Label.c.stgBtnCancel + $Label.npsp.stgBtnCancel}" 
+                                   label="{!$Label.c.stgBtnCancel + $Label.npsp.stgBtnCancel}" 
                                    press="{!c.cancelChangeAddress}" />
                         <ui:button class="slds-button slds-button--brand" 
                                    aura:id="btnSaveChangeAddress"
-                                   buttonTitle="Save address" 
-                                   label="Save address" 
+                                   buttonTitle="{!$Label.npo02.SetAddress}" 
+                                   label="{!$Label.npo02.SetAddress}" 
                                    press="{!c.saveChangeAddress}" />
                     </div>
                 </div>
