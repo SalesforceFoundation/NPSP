@@ -242,6 +242,25 @@ public class HH_Container_LCTRL {
     }
     
     /*******************************************************************************************************
+    * @description merge the list of households into the winning household
+    * @param hh The winning Household
+    * @param listHHMerge the list of Households to merge into the winner
+    * @return void
+    */
+    @AuraEnabled
+    public static void mergeHouseholds(SObject hhWinner, list<SObject> listHHmerge) {
+        try {
+            for (SObject sobj : listHHMerge) {
+                Contact conWinner = (Contact) hhWinner;
+                Contact conLoser = (Contact) sobj;
+                merge conWinner conLoser;
+            }
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
+    }
+    
+    /*******************************************************************************************************
     * @description sets the Household Name and Greetings on the Household object, given the list of Contacts
 	* @param hh The Household Object (Account or Custom Object) to set the names on
 	* @param listCon The list of Contacts to use

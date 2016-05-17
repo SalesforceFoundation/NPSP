@@ -17,6 +17,7 @@
     <aura:attribute name="showNewContactPopup" type="Boolean" access="private" />
     <aura:attribute name="conNew" type="Contact" access="private" />
     <aura:attribute name="listSalutation" type="SelectOption[]" access="private" />
+    <aura:attribute name="listHHMerge" type="SObject[]" access="private" />
     
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
@@ -97,6 +98,13 @@
                                        buttonTitle="{!$Label.npo02.NewContact}" 
                                        label="{!$Label.npo02.NewContact}" 
                                        press="{!c.showNewContactPopup}" />
+
+                            <!-- temporary merge button for testing -->
+                            <ui:button class="slds-button slds-button--small slds-button--neutral" 
+                                       aura:id="btnMerge" 
+                                       buttonTitle="Merge" 
+                                       label="Merge" 
+                                       press="{!c.mergeTest}" />
                             
                         </div>
                     </div>

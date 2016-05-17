@@ -85,4 +85,11 @@
     onSalutationChange : function(component, event, helper) {
         helper.onSalutationChange(component);
     },    
+
+    // temp code for testing household Merge
+    mergeTest : function(component, event, helper) {
+        var hh = {'sobjectType' : 'Account', 'Id' : '001G000001KmhH8'};
+        helper.mergeHousehold(component, hh);		
+	},
+
 })

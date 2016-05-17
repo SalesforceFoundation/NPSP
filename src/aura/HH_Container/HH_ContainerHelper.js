@@ -161,8 +161,27 @@
         
 		// keep track of ourselves and whether both server updates succeed
         var self = this;
-        var countSuccesses = 0;
-
+        var callbacksWaiting = 4;
+        
+        // first need to merge any households before we save contacts
+        // so we avoid deleting a household if that contact was the last one in the hh.
+        var listHHMerge = component.get('v.listHHMerge');
+        var hh = component.get('v.hh');
+        var action = component.get("c.mergeHouseholds");
+        action.setParams({ hhWinner : hh, listHHMerge : listHHMerge });
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            if (component.isValid() && state === "SUCCESS") {
+                if (--callbacksWaiting == 0) {
+                    saveAndCloseVisualforce();
+                }
+            }
+            else if (component.isValid() && state === "ERROR") {
+                self.reportError(component, response);
+            }            
+        });
+        $A.enqueueAction(action);
+        
         // save the contacts
         var listCon = component.get("v.listCon");
 		var action = component.get("c.upsertContacts");
@@ -170,8 +189,7 @@
 		action.setCallback(this, function(response) {
 			var state = response.getState();
 			if (component.isValid() && state === "SUCCESS") {
-                countSuccesses++;
-                if (countSuccesses == 3) {
+                if (--callbacksWaiting == 0) {
                     saveAndCloseVisualforce();
                 }
 			}
@@ -191,8 +209,7 @@
 		action.setCallback(this, function(response) {
 			var state = response.getState();
 			if (component.isValid() && state === "SUCCESS") {
-                countSuccesses++;
-                if (countSuccesses == 3) {
+                if (--callbacksWaiting == 0) {
                     saveAndCloseVisualforce();
                 }
 			}
@@ -209,8 +226,7 @@
 		action.setCallback(this, function(response) {
 			var state = response.getState();
 			if (component.isValid() && state === "SUCCESS") {
-                countSuccesses++;
-                if (countSuccesses == 3) {
+                if (--callbacksWaiting == 0) {
                     saveAndCloseVisualforce();
                 }
 			}
@@ -427,4 +443,54 @@
         conNew.Salutation = component.find('selSalutation').get('v.value');
         component.set('v.conNew', conNew);
     },
+    
+    /*******************************************************************************************************
+    * @description merge the specified household and its contacts into the existing household
+    */
+	mergeHousehold : function(component, hhMerge) {
+        component.set("v.showSpinner", true);
+        var hhId = component.get('v.hhId');
+        var hhTypePrefix = component.get('v.hhTypePrefix');        
+
+        // query for the Household Contacts 
+		var action = component.get("c.getContacts");
+        action.setParams({ hhId : hhMerge.Id });
+		var self = this;
+		action.setCallback(this, function(response) {
+			var state = response.getState();            
+			if (component.isValid() && state === "SUCCESS") {
+                var listConMerge = response.getReturnValue();
+				var listCon = component.get("v.listCon");
+                
+				// move all contacts into our household
+				var cExisting = listCon.length;
+                for (var i in listConMerge) {
+                    if (hhTypePrefix == '001')
+                        listConMerge[i].AccountId = hhId;
+                    else
+                        listConMerge[i].npo02__Household__c = hhId;
+                    listConMerge[i].npo02__Household_Naming_Order__c = i + cExisting;
+                    listCon.push(listConMerge[i]);
+                }               
+                component.set('v.listCon', listCon);                
+                
+                // remember that we need to merge the hh at save time
+                var listHHMerge = component.get('v.listHHMerge');
+                if (listHHMerge == null)
+                    listHHMerge = [];
+                listHHMerge.push(hhMerge);
+
+                // force our names to update since we have a new contact!
+                this.updateHHNames(component);
+			}
+            else if (component.isValid() && state === "ERROR") {
+                self.reportError(component, response);
+            }            
+        });
+		$A.enqueueAction(action);        
+
+        // UNDONE: query for the Addresses from hhMerge?
+        // UNDONE: update the merged contact's addresses to the hh default?
+    },
+    
 })
