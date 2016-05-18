@@ -2453,6 +2453,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Last Name</value>
     </labels>
     <labels>
+        <fullName>lblMergeHHPrompt</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblMergeHHPrompt</shortDescription>
+        <value>{0} is in a Household with other members.  Do you want to just add {0}, or add all members from the Household?</value>
+    </labels>
+    <labels>
+        <fullName>lblMergeHHTitle</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblMergeHHTitle</shortDescription>
+        <value>Merge Households</value>
+    </labels>
+    <labels>
         <fullName>lblNPSPSettings</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>

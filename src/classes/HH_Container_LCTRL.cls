@@ -61,6 +61,8 @@ public class HH_Container_LCTRL {
         str = Label.stgBtnCancel;
         str = Label.stgBtnSave;
         str = Label.bdiBtnClose;
+        str = Label.lblMergeHHTitle;
+        str = Label.lblMergeHHPrompt;
         
     }
 
@@ -76,7 +78,8 @@ public class HH_Container_LCTRL {
                 return null;
             string strSoql;
             if (UTIL_Describe.isObjectIdThisType(hhId, 'Account')) {
-                strSoql = 'select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c,' + 
+                strSoql = 'select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, ' +
+                    	UTIL_Namespace.StrTokenNSPrefix('Number_of_Household_Members__c') + ', ' + 
                         'BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude';
 
                 /*** until we support these, we don't want them to interfere with what the user specifies.
@@ -87,6 +90,7 @@ public class HH_Container_LCTRL {
                 strSoql += ' from Account where Id = :hhId';
             } else {
                 strSoql = 'select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, ' +
+                    	UTIL_Namespace.StrTokenNSPrefix('Number_of_Household_Members__c') + ', ' + 
                         'npo02__MailingStreet__c, npo02__MailingCity__c, npo02__MailingState__c, npo02__MailingPostalCode__c, npo02__MailingCountry__c ' +
                         ' from npo02__Household__c where Id = :hhId';
             }
@@ -305,7 +309,6 @@ public class HH_Container_LCTRL {
             set<String> setAddrKey = new set<String>();
             
             // if they provide existing addresses, do our initialization
-            system.debug('****DJH: listAddrExisting is ' + listAddrExisting);
             if (listAddrExisting != null) {
                 for (Address__c addr : listAddrExisting) {
                     listAddr.add(addr);

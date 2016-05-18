@@ -995,6 +995,8 @@
         <members>lblHouseholdName</members>
         <members>lblInformalGreeting</members>
         <members>lblLastName</members>
+        <members>lblMergeHHPrompt</members>
+        <members>lblMergeHHTitle</members>
         <members>lblNPSPSettings</members>
         <members>lblPostalCode</members>
         <members>lblSalutation</members>

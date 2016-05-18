@@ -448,6 +448,47 @@
     },
     
     /*******************************************************************************************************
+    * @description sees if the contact is NOT the lone member of a household, in which case it will bring up
+    * our Merge Household popup.  if they are the lone member, it will just proceed with the HH merge.
+    */
+	addOrMergeContact : function(component, conAdd, hhMerge) {
+        debugger;
+        var namespacePrefix = component.get('v.namespacePrefix');
+        if (hhMerge[namespacePrefix + 'Number_of_Household_Members__c'] == 1)
+            this.mergeHousehold(component, hhMerge);
+        else
+            component.set('v.showMergeHHPopup', true);
+    },
+
+    /*******************************************************************************************************
+    * @description add the Contact to the existing household
+    */
+	addContact : function(component, conAdd) {
+        var hhId = component.get('v.hhId');
+        var hhTypePrefix = component.get('v.hhTypePrefix');        
+        var listCon = component.get("v.listCon");
+        
+        if (hhTypePrefix == '001')
+            conAdd.AccountId = hhId;
+        else
+            conAdd.npo02__Household__c = hhId;
+        // put them at the end of our naming list
+        conAdd.npo02__Household_Naming_Order__c = listCon.length;
+        listCon.push(conAdd);
+		component.set('v.listCon', listCon);    
+
+        // update the contact's addresses to the hh default (if they have no override)
+        var addrDefault = component.find('addrMgr').get('v.addrDefault');
+        if (addrDefault != null)
+            this.updateDefaultAddress(component, addrDefault);
+        
+        // UNDONE: need to add the contact's address to our address mgr (if not override)
+
+        // force our names to update since we have new contacts!
+        this.updateHHNames(component);
+    },
+
+    /*******************************************************************************************************
     * @description merge the specified household and its contacts into the existing household
     */
 	mergeHousehold : function(component, hhMerge) {
@@ -475,18 +516,14 @@
                     // put them at the end of our naming list
                     listConMerge[i].npo02__Household_Naming_Order__c = i + cExisting;
                     listCon.push(listConMerge[i]);
-                }               
-                
+                }                               
+                component.set('v.listCon', listCon);                
+
                 // update the merged contact's addresses to the hh default (if they have no override)
                 var addrDefault = component.find('addrMgr').get('v.addrDefault');
                 if (addrDefault != null)
 	                this.updateDefaultAddress(component, addrDefault);
-                
-                // note that we are relying on the HH Account merge to move and dedupe address objects
-                // and we are not worrying about displaying them in the address dialog.
-                
-                component.set('v.listCon', listCon);                
-                
+                                
                 // remember that we need to merge the hh at save time (HH Accounts only!)
                 if (hhTypePrefix == '001') {
                     var listHHMerge = component.get('v.listHHMerge');

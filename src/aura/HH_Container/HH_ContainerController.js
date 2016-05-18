@@ -88,8 +88,35 @@
 
     // temp code for testing household Merge
     mergeTest : function(component, event, helper) {
-        var hh = {'sobjectType' : 'Account', 'Id' : '001G000001KmhH8'};
-        helper.mergeHousehold(component, hh);		
+        var hhMerge = {'sobjectType' : 'Account', 
+                       'Id' : '001G000001z8sxB',
+                       'Number_of_Household_Members__c' : '2'};
+        component.set('v.hhMerge', hhMerge);
+        var conAdd = {'sobjectType' : 'Contact', 
+                        'Id' : '001G000001z8tAW',
+                        'FirstName' : 'John',
+                        'LastName' : 'Doe'};
+        component.set('v.conAdd', conAdd);
+		helper.addOrMergeContact(component, conAdd, hhMerge);
 	},
 
+    // add just the contact to the Household
+    doAddContact : function(component, event, helper) {
+        var conAdd = component.get('v.conAdd');
+        helper.addContact(component, conAdd);
+        component.set('v.showMergeHHPopup', false);
+	},
+    
+    // merge the new household into the household
+    doMergeHH : function(component, event, helper) {
+        var hhMerge = component.get('v.hhMerge');
+        helper.mergeHousehold(component, hhMerge);
+        component.set('v.showMergeHHPopup', false);
+	},
+    
+    // cancel Merge HH Popup
+    cancelMergeHHPopup : function(component, event, helper) {
+        component.set('v.showMergeHHPopup', false);
+	},
+    
 })
