@@ -242,19 +242,16 @@ public class HH_Container_LCTRL {
     }
     
     /*******************************************************************************************************
-    * @description merge the list of households into the winning household
+    * @description merge the list of household Accounts into the winning household
     * @param hh The winning Household
     * @param listHHMerge the list of Households to merge into the winner
     * @return void
     */
     @AuraEnabled
-    public static void mergeHouseholds(SObject hhWinner, list<SObject> listHHmerge) {
+    public static void mergeHouseholds(Account hhWinner, list<Account> listHHMerge) {
         try {
-            for (SObject sobj : listHHMerge) {
-                Contact conWinner = (Contact) hhWinner;
-                Contact conLoser = (Contact) sobj;
-                merge conWinner conLoser;
-            }
+            for (Account loser : listHHMerge)
+                merge hhWinner loser;
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
@@ -293,12 +290,12 @@ public class HH_Container_LCTRL {
     * @description returns the Addresses for the given Household.  note that it returns Address objects,
     * even when dealing with Household Objects (in which case it creates in memory address objects for each
     * contact's mailing address).
-    * @param hh The Household
-    * @param listCon The Contacts in the Household
+    * @param hhId The Household's Id
+	* @param listAddrExisting the list of existing addresses
     * @return list<Address__c> The addresses in the household and contacts
     */
     @AuraEnabled
-    public static list<Address__c> getAddresses(ID hhId) {
+    public static list<Address__c> getAddresses(ID hhId, list<Address__c> listAddrExisting) {
         try {
             if (hhId == null)
                 return null;
@@ -306,6 +303,15 @@ public class HH_Container_LCTRL {
             // keep unique list of addresses in temp Address objects
             list<Address__c> listAddr = new list<Address__c>();
             set<String> setAddrKey = new set<String>();
+            
+            // if they provide existing addresses, do our initialization
+            system.debug('****DJH: listAddrExisting is ' + listAddrExisting);
+            if (listAddrExisting != null) {
+                for (Address__c addr : listAddrExisting) {
+                    listAddr.add(addr);
+                    setAddrKey.add(ADDR_Addresses_TDTM.getAddrKey(addr));
+                }
+            }
     
             // load our Household and Contacts
             // CONSIDER: since the client also loads the hh and contacts, we could
@@ -335,10 +341,11 @@ public class HH_Container_LCTRL {
                 addr.MailingPostalCode__c = (String)hh.get('npo02__MailingPostalCode__c');
                 addr.MailingCountry__c = (String)hh.get('npo02__MailingCountry__c');
             }
-            addr.Default_Address__c = true;  // we can always assume the HH address is the default.
+            if (listAddrExisting == null)
+	            addr.Default_Address__c = true;  // the HH address is the default.
             String strKey = ADDR_Addresses_TDTM.getAddrKey(addr);
-            setAddrKey.add(strKey);
-            listAddr.add(addr);
+            if (setAddrKey.add(strKey))
+	            listAddr.add(addr);
             
             // copy the contacts' addresses        
             for (Contact con : listCon) {

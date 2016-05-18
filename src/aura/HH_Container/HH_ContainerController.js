@@ -63,7 +63,7 @@
     
     // the default Address has changed, so update our Contacts
     handleAddressChangedEvent : function(component, event, helper) {
-        helper.updateDefaultAddress(component, event);		
+        helper.updateDefaultAddress(component, event.getParam('addrDefault'));	
 	},
 
     // show the new contact popup
