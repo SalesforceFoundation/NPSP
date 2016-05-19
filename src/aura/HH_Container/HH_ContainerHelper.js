@@ -464,6 +464,7 @@
     * @description add the Contact to the existing household
     */
 	addContact : function(component, conAdd) {
+        component.set("v.showSpinner", true);
         var hhId = component.get('v.hhId');
         var hhTypePrefix = component.get('v.hhTypePrefix');        
         var listCon = component.get("v.listCon");
@@ -486,6 +487,29 @@
 
         // force our names to update since we have new contacts!
         this.updateHHNames(component);
+        
+        // add the Contact's address to our list 
+        var action = component.get("c.addContactAddresses");
+        var listAddr = component.get('v.listAddr');
+        // because our address objects aren't real, we need to 
+        // tell the system what type of sobject they are
+        for (var i in listAddr)
+            listAddr[i].sobjectType = 'Address__c';
+        var listCon = [conAdd];
+        action.setParams({ listCon : listCon, listAddrExisting : listAddr });
+        var self = this;
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            if (component.isValid() && state === "SUCCESS") {
+                var listAddr = response.getReturnValue();
+                component.set("v.listAddr", listAddr);                
+            }
+            else if (component.isValid() && state === "ERROR") {
+                self.reportError(component, response);
+            }            
+        });
+        $A.enqueueAction(action);        
+        
     },
 
     /*******************************************************************************************************

@@ -391,6 +391,55 @@ public class HH_Container_LCTRL {
     }
 
     /*******************************************************************************************************
+    * @description adds the Contact's addresses to the provided list, ensuring uniqueness. note that it returns Address objects,
+    * even when dealing with Household Objects (in which case it creates in memory address objects for each
+    * contact's mailing address).
+	* @param listCon the list of Contacts
+	* @param listAddrExisting the list of existing addresses
+    * @return list<Address__c> The addresses in the household and contacts
+    */
+    @AuraEnabled
+    public static list<Address__c> addContactAddresses(list<Contact> listCon, list<Address__c> listAddrExisting) {
+        try {
+            if (listCon == null)
+                return null;
+    
+            // keep unique list of addresses in temp Address objects
+            list<Address__c> listAddr = new list<Address__c>();
+            set<String> setAddrKey = new set<String>();
+            
+            // if they provide existing addresses, do our initialization
+            if (listAddrExisting != null) {
+                for (Address__c addr : listAddrExisting) {
+                    listAddr.add(addr);
+                    setAddrKey.add(ADDR_Addresses_TDTM.getAddrKey(addr));
+                }
+            }
+    
+            // copy the contacts' addresses        
+            for (Contact con : listCon) {
+                Address__c addr = new Address__c();
+                // can't use our utility routine, because we specifically are not querying for StateCode & CountryCode
+                // to avoid those saved codes from interfering with the user's changes (that won't include the codes)
+                //ADDR_Addresses_TDTM.copyAddressStdSObjAddr(con, 'Mailing', addr, null);
+                addr.MailingStreet__c = con.MailingStreet;
+                ADDR_Addresses_TDTM.handleMultilineStreet(addr);
+                addr.MailingCity__c = con.MailingCity;
+                addr.MailingState__c = con.MailingState;
+                addr.MailingPostalCode__c = con.MailingPostalCode;
+                addr.MailingCountry__c = con.MailingCountry;
+                string strKey = ADDR_Addresses_TDTM.getAddrKey(addr);
+                if (setAddrKey.add(strKey))
+                    listAddr.add(addr);
+            }
+            
+            return listAddr;
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
+    }
+
+    /*******************************************************************************************************
     * @description returns the Salutation choices on Contact
     * @return list<SelectOption> The Salutations
     */

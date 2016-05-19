@@ -1,6 +1,7 @@
 ({
     // initialize the container by loading up our Household and Contacts
-	doInit : function(component, event, helper) {        
+	doInit : function(component, event, helper) {  
+        debugger;
         helper.fixupCustomLabels(component);
         helper.loadObjects(component);
         helper.initNewContact(component);
@@ -95,7 +96,10 @@
         var conAdd = {'sobjectType' : 'Contact', 
                         'Id' : '001G000001z8tAW',
                         'FirstName' : 'John',
-                        'LastName' : 'Doe'};
+                        'LastName' : 'Doe',
+                      'MailingStreet' : 'Doe street',
+                      'MailingCity' : 'Doe city',
+                      'is_Address_Override__c' : 'true'};
         component.set('v.conAdd', conAdd);
 		helper.addOrMergeContact(component, conAdd, hhMerge);
 	},
