@@ -452,7 +452,6 @@
     * our Merge Household popup.  if they are the lone member, it will just proceed with the HH merge.
     */
 	addOrMergeContact : function(component, conAdd, hhMerge) {
-        debugger;
         var namespacePrefix = component.get('v.namespacePrefix');
         if (hhMerge[namespacePrefix + 'Number_of_Household_Members__c'] == 1)
             this.mergeHousehold(component, hhMerge);
