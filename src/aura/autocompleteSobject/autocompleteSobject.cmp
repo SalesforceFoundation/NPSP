@@ -1,0 +1,22 @@
+<aura:component >
+    <aura:attribute name="sobject" type="String" required="true" access="public"/>
+    <aura:attribute name="fields" type="String[]" default="['Name']" access="public"/>
+    <aura:attribute name="searchField" type="String" default="Name" access="public"/>
+
+    <aura:attribute name="label" type="String" access="public"/>
+    <aura:attribute name="placeholder" type="String" access="public"/>
+    <aura:attribute name="iconSprite" type="String" access="public"/>
+    <aura:attribute name="iconName" type="String" access="public"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="optionSelected" event="c:autocompleteSelectListOption" action="{!c.handleOptionSelected}"/>
+    
+    <c:autocomplete aura:id="autocomplete" label="{!v.label}" placeholder="{!v.placeholder}">
+        <aura:set attribute="itemTemplate">
+            <c:autocompleteOption value="{!item.value}" displayValue="{!item.displayValue}" iconSprite="{!v.iconSprite}" iconName="{!v.iconName}"/>
+        </aura:set>
+        <aura:set attribute="dataProvider">
+            <c:dataProviderSobject sobject="{!v.sobject}" fields="{!v.fields}" searchField="{!v.searchField}"/>
+        </aura:set>
+    </c:autocomplete>
+</aura:component>

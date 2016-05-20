@@ -1,0 +1,5 @@
+<aura:component controller="DataProviderSobject_CTRL" implements="c:dataProviderInterface">
+    <aura:attribute name="sobject" type="String" required="true" access="public"/>
+    <aura:attribute name="fields" type="String[]" required="true" access="public"/>
+    <aura:attribute name="searchField" type="String" required="true" access="public"/>
+</aura:component>

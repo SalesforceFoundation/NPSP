@@ -1,0 +1,32 @@
+<aura:component >
+    <aura:registerEvent name="addAddress" type="c:autocompleteHHAddAddress"/>
+    
+    <c:autocomplete aura:id="autocomplete"
+                    label=""
+                    placeholder="Find a contact or add a new contact to the household"
+                    searchContext="in Contacts">
+        
+        <aura:set attribute="itemTemplate">
+            <c:autocompleteOptionHHAddress value="{!item.value}"/>
+        </aura:set>
+        
+        <aura:set attribute="dataProvider">
+            <c:dataProviderSobject sobject="Contact"
+                                   fields="['Name', 'FirstName', 'LastName', 'MailingStreet', 'MailingCity', 'MailingState', 'MailingPostalCode', 'MailingCountry']"
+                                   searchField="Name"/>
+        </aura:set>
+        
+        <aura:set attribute="listFooter">
+            <div class="slds-lookup__item">
+                <button class="slds-button" onclick="{!c.handleAddAddress}">
+                    <c:svg ariaHidden="true"
+                           class="slds-icon slds-icon-text-default slds-icon--small"
+                           xlinkHref="/resource/SLDS/1_0_3/assets/icons/utility-sprite/svg/symbols.svg#add"
+                           />
+                    Add Contact
+                </button>
+            </div>
+        </aura:set>
+        
+    </c:autocomplete>
+</aura:component>

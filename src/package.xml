@@ -73,6 +73,7 @@
         <members>CON_DeleteContactOverride_TEST</members>
         <members>CON_DoNotContact_TDTM</members>
         <members>CON_DoNotContact_TEST</members>
+        <members>DataProviderSobject_CTRL</members>
         <members>ERR_AddError_TEST</members>
         <members>ERR_Handler</members>
         <members>ERR_Handler_API</members>
@@ -243,6 +244,19 @@
         <members>UTIL_Version_API</members>
         <members>UTIL_iSoqlListViewConsumer</members>
         <name>ApexClass</name>
+    </types>
+    <types>
+        <members>autocomplete</members>
+        <members>autocompleteHHAddAddress</members>
+        <members>autocompleteHHAddress</members>
+        <members>autocompleteOption</members>
+        <members>autocompleteOptionHHAddress</members>
+        <members>autocompleteSelectListOption</members>
+        <members>autocompleteSobject</members>
+        <members>dataProviderInterface</members>
+        <members>dataProviderSobject</members>
+        <members>svg</members>
+        <name>AuraDefinitionBundle</name>
     </types>
     <types>
         <members>STG_DataBoundMultiSelect</members>
