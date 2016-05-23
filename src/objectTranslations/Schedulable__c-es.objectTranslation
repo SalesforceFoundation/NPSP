@@ -24,23 +24,23 @@
         <name>Frequency__c</name>
         <picklistValues>
             <masterLabel>Daily</masterLabel>
-            <translation>Cada día</translation>
+            <translation><!-- Daily --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Hourly</masterLabel>
-            <translation>Cada hora</translation>
+            <translation><!-- Hourly --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Monthly</masterLabel>
-            <translation>Mensual</translation>
+            <translation><!-- Monthly --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Quarterly</masterLabel>
-            <translation>Trimestral</translation>
+            <translation><!-- Quarterly --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Weekly</masterLabel>
-            <translation>Semanal</translation>
+            <translation><!-- Weekly --></translation>
         </picklistValues>
     </fields>
     <fields>
