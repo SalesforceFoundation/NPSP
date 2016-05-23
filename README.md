@@ -1,6 +1,3 @@
-dev:  [![Build Status](http://mrbelvedere.salesforcefoundation.org/mrbelvedere/jenkins/prod/Cumulus_dev/status)](http://ci.salesforcefoundation.org/job/Cumulus_dev/)
-rel:  [![Build Status](http://mrbelvedere.salesforcefoundation.org/mrbelvedere/jenkins/prod/Cumulus_rel/status)](http://ci.salesforcefoundation.org/job/Cumulus_rel)
-
 ![Salesforce Nonprofit Starter Pack](https://cloud.githubusercontent.com/assets/926530/6358168/b55fec9c-bc37-11e4-88c8-40691541bad2.png "Salesforce Nonprofit Starter Pack")
 
 #### For Users
@@ -23,6 +20,7 @@ Project Cumulus was the codename for version 3 of the Nonprofit Starter Pack, th
 
 #### Meta
 
-Released under the [BSD 3-Clause License](http://www.opensource.org/licenses/BSD-3-Clause).
+The Nonprofit Starter Pack (“NPSP”) is an open-source package licensed by Salesforce.org (“SFDO”) under the BSD-3 Clause License, found at https://opensource.org/licenses/BSD-3-Clause. ANY MASTER SUBSCRIPTION AGREEMENT YOU OR YOUR ENTITY MAY HAVE WITH SFDO DOES NOT APPLY TO YOUR USE OF NPSP. NPSP IS PROVIDED “AS IS” AND AS AVAILABLE, AND SFDO MAKES NO WARRANTY OF ANY KIND REGARDING NPSP, WHETHER EXPRESS, IMPLIED, STATUTORY OR OTHERWISE, INCLUDING BUT NOT LIMITED TO ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, FREEDOM FROM DEFECTS OR NON-INFRINGEMENT, TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW.
+SFDO WILL HAVE NO LIABILITY ARISING OUT OF OR RELATED TO YOUR USE OF NPSP FOR ANY DIRECT DAMAGES OR FOR ANY LOST PROFITS, REVENUES, GOODWILL OR INDIRECT, SPECIAL, INCIDENTAL, CONSEQUENTIAL, EXEMPLARY, COVER, BUSINESS INTERRUPTION OR PUNITIVE DAMAGES, WHETHER AN ACTION IS IN CONTRACT OR TORT AND REGARDLESS OF THE THEORY OF LIABILITY, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES OR IF A REMEDY OTHERWISE FAILS OF ITS ESSENTIAL PURPOSE. THE FOREGOING DISCLAIMER WILL NOT APPLY TO THE EXTENT PROHIBITED BY LAW. SFDO DISCLAIMS ALL LIABILITY AND INDEMNIFICATION OBLIGATIONS FOR ANY HARM OR DAMAGES CAUSED BY ANY THIRD-PARTY HOSTING PROVIDERS.
 
 _ducking-octo-happiness, laughing-archer_
