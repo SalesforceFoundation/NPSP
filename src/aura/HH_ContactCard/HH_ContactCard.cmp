@@ -18,7 +18,7 @@
                                    xlinkHref="/resource/SLDS/1_0_3/assets/icons/standard-sprite/svg/symbols.svg#contact" />
                         </div>
                         <div class="slds-media__body">
-                            <a href="#">{!v.contact.FirstName}&nbsp;{!v.contact.LastName}</a>
+                            <a href="{! '/' + v.contact.Id}" target="_blank">{!v.contact.FirstName}&nbsp;{!v.contact.LastName}</a>
                         </div>
                         <div class="slds-media__figure slds-m-right--none">
                             <ui:button label="{!$Label.npo02.Delete}" buttonTitle="{!$Label.npo02.Delete}" labelClass="assistiveText" 
