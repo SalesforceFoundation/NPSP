@@ -124,15 +124,15 @@
         <name>Matching_Gift_Status__c</name>
         <picklistValues>
             <masterLabel>Potential</masterLabel>
-            <translation>Potencial</translation>
+            <translation><!-- Potential --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Received</masterLabel>
-            <translation>Recibido</translation>
+            <translation><!-- Received --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Submitted</masterLabel>
-            <translation>Presentada</translation>
+            <translation><!-- Submitted --></translation>
         </picklistValues>
     </fields>
     <fields>
