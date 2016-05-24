@@ -1,0 +1,23 @@
+<aura:component extensible="true">
+    <aura:attribute name="value" type="Object" required="true" access="public"/>
+    <aura:attribute name="displayValue" type="String" access="public"/>
+    <aura:attribute name="iconSprite" type="String" access="public"/>
+    <aura:attribute name="iconName" type="String" access="public"/>
+    <aura:registerEvent name="optionSelected" type="c:autocompleteSelectListOption"/>
+
+    <aura:attribute name="body" type="Aura.Component[]">
+        <li class="slds-lookup__item">
+            <button class="slds-button" role="option" onclick="{!c.handleClick}">
+                <aura:if isTrue="{!and(!empty(v.iconSprite), !empty(v.iconName))}">
+                    <c:svg ariaHidden="true"
+                           class="{!'slds-icon slds-icon--small slds-icon-' + v.iconSprite + '-' + v.iconName}"
+                           xlinkHref="{!'/resource/SLDS/1_0_3/assets/icons/' + v.iconSprite + '-sprite/svg/symbols.svg#' + v.iconName}"
+                           />
+                </aura:if>
+                {!v.displayValue}
+            </button>
+        </li>
+    </aura:attribute>
+
+    {!v.body}
+</aura:component>
