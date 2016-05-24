@@ -28,7 +28,7 @@
            </span>
         </div>
     </aura:attribute>
-    
+
     <aura:attribute name="itemTemplate" type="Aura.ComponentDefRef[]" access="public">
         <c:autocompleteOption value="{!item}" displayValue="{!item}"/>
     </aura:attribute>
@@ -47,10 +47,10 @@
 
     <aura:attribute name="listFooter" type="Aura.Component[]" description="A facet below the rendered list, for use as a list footer" access="public"/>
     <aura:attribute name="showListHeader" type="Boolean" default="true" description="Indicates whether the listHeader is visible. The default is true." access="public"/>
-    <aura:attribute name="showListFooter" type="Boolean" default="true" description="Indicates whether the listFooter is visible. The default is true." access="public"/>    
+    <aura:attribute name="showListFooter" type="Boolean" default="true" description="Indicates whether the listFooter is visible. The default is true." access="public"/>
     <aura:attribute name="loadingIndicator" type="Aura.Component[]" description="Content to be shown while the list is loading" access="public"/>
     <aura:attribute name="showLoadingIndicator" type="Boolean" default="false" access="public"/>
-    <aura:attribute name="showPills" type="Boolean" default="true" access="public"/>    
+    <aura:attribute name="showPills" type="Boolean" default="true" access="public"/>
     <aura:attribute name="emptyListContent" type="Aura.Component[]" description="Content to be shown if the list is empty" access="public"/>
 
     <div class="slds" aura:id="autocomplete">

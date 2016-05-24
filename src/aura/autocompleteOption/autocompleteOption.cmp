@@ -4,7 +4,7 @@
     <aura:attribute name="iconSprite" type="String" access="public"/>
     <aura:attribute name="iconName" type="String" access="public"/>
     <aura:registerEvent name="optionSelected" type="c:autocompleteSelectListOption"/>
-    
+
     <aura:attribute name="body" type="Aura.Component[]">
         <li class="slds-lookup__item">
             <button class="slds-button" role="option" onclick="{!c.handleClick}">
@@ -18,6 +18,6 @@
             </button>
         </li>
     </aura:attribute>
-    
+
     {!v.body}
 </aura:component>
