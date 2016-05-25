@@ -9,6 +9,8 @@ exclude_paths:
   - "ApexDocContent/"
   - "StaticResourceSources/"
   - "scripts/"
+  - "unpackaged/"
+  - "lib/"
   - "src/documents/"
   - "**.schema"
   - "**.xml"
