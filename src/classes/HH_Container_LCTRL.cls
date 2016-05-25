@@ -63,6 +63,8 @@ public class HH_Container_LCTRL {
         str = Label.bdiBtnClose;
         str = Label.lblMergeHHTitle;
         str = Label.lblMergeHHPrompt;
+        str = Label.lblBtnAddContact;
+        str = Label.lblBtnAddAllHHMembers;
         
     }
 

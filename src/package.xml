@@ -984,6 +984,8 @@
         <members>labelMessageLoading</members>
         <members>labelShowMore</members>
         <members>lblAddressOverride</members>
+        <members>lblBtnAddAllHHMembers</members>
+        <members>lblBtnAddContact</members>
         <members>lblCCardExcludeFrom</members>
         <members>lblCity</members>
         <members>lblCountry</members>
