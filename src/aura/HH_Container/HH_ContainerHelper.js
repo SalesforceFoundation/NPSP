@@ -162,7 +162,19 @@
 		// keep track of ourselves and whether both server updates succeed
         var self = this;
         var callbacksWaiting = 4;
-        
+
+        var callback = function (response) {
+            var state = response.getState();
+            if (component.isValid() && state === "SUCCESS") {
+                if (--callbacksWaiting == 0) {
+                    saveAndCloseVisualforce();
+                }
+            }
+            else if (component.isValid() && state === "ERROR") {
+                self.reportError(component, response);
+            }
+        }
+
         // first need to merge any households (Accounts only) before we save contacts
         // so we avoid deleting a household if that contact was the last one in the hh.
         var listHHMerge = component.get('v.listHHMerge');
@@ -170,17 +182,7 @@
         if (listHHMerge != null && listHHMerge.length > 0) {        
             var action = component.get("c.mergeHouseholds");
             action.setParams({ hhWinner : hh, listHHMerge : listHHMerge });
-            action.setCallback(this, function(response) {
-                var state = response.getState();
-                if (component.isValid() && state === "SUCCESS") {
-                    if (--callbacksWaiting == 0) {
-                        saveAndCloseVisualforce();
-                    }
-                }
-                else if (component.isValid() && state === "ERROR") {
-                    self.reportError(component, response);
-                }            
-            });
+            action.setCallback(this, callback);
             $A.enqueueAction(action);
         } else {
             callbacksWaiting--;
@@ -190,17 +192,7 @@
         var listCon = component.get("v.listCon");
 		var action = component.get("c.upsertContacts");
         action.setParams({ listCon : listCon});
-		action.setCallback(this, function(response) {
-			var state = response.getState();
-			if (component.isValid() && state === "SUCCESS") {
-                if (--callbacksWaiting == 0) {
-                    saveAndCloseVisualforce();
-                }
-			}
-            else if (component.isValid() && state === "ERROR") {
-                self.reportError(component, response);
-            }            
-		});
+        action.setCallback(this, callback);
 		$A.enqueueAction(action);
 
         // update our auto-naming exclusion states
@@ -210,34 +202,14 @@
         // save the Household
 		var action = component.get("c.updateHousehold");
         action.setParams({ hh : hh});
-		action.setCallback(this, function(response) {
-			var state = response.getState();
-			if (component.isValid() && state === "SUCCESS") {
-                if (--callbacksWaiting == 0) {
-                    saveAndCloseVisualforce();
-                }
-			}
-            else if (component.isValid() && state === "ERROR") {
-                self.reportError(component, response);
-            }            
-		});
+        action.setCallback(this, callback);
 		$A.enqueueAction(action);
 
         // delete any contacts
         var listConDelete = component.get("v.listConDelete");
 		var action = component.get("c.deleteContacts");
         action.setParams({ listCon : listConDelete});
-		action.setCallback(this, function(response) {
-			var state = response.getState();
-			if (component.isValid() && state === "SUCCESS") {
-                if (--callbacksWaiting == 0) {
-                    saveAndCloseVisualforce();
-                }
-			}
-            else if (component.isValid() && state === "ERROR") {
-                self.reportError(component, response);
-            }            
-		});
+        action.setCallback(this, callback);
 		$A.enqueueAction(action);
     },
     
