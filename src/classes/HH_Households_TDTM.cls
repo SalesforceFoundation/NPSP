@@ -239,7 +239,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
             
             if (householdnameupdates.size() > 0){
                               
-                if (currentHouseholdsSettings.npo02__Async_Household_Naming__c == true)
+                if (currentHouseholdsSettings.npo02__Async_Household_Naming__c == true && !system.isFuture() && !system.isBatch())
                     HH_HouseholdNaming.FutureUpdateNames(householdnameupdates);
                 else{
                     HH_HouseholdNaming hn = new HH_HouseholdNaming(); 

@@ -2365,6 +2365,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>(address override)</value>
     </labels>
     <labels>
+        <fullName>lblBtnAddAllHHMembers</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblBtnAddAllHHMembers</shortDescription>
+        <value>Add All Members</value>
+    </labels>
+    <labels>
+        <fullName>lblBtnAddContact</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblBtnAddContact</shortDescription>
+        <value>Add {0}</value>
+    </labels>
+    <labels>
         <fullName>lblCCardExcludeFrom</fullName>
         <categories>Manage Household UI</categories>
         <language>en_US</language>
@@ -2451,6 +2467,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>lblLastName</shortDescription>
         <value>Last Name</value>
+    </labels>
+    <labels>
+        <fullName>lblMergeHHPrompt</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblMergeHHPrompt</shortDescription>
+        <value>{0} is in a Household with other members.  Do you want to just add {0}, or add all members from the Household?</value>
+    </labels>
+    <labels>
+        <fullName>lblMergeHHTitle</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblMergeHHTitle</shortDescription>
+        <value>Merge Households</value>
     </labels>
     <labels>
         <fullName>lblNPSPSettings</fullName>

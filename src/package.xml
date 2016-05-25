@@ -984,6 +984,8 @@
         <members>labelMessageLoading</members>
         <members>labelShowMore</members>
         <members>lblAddressOverride</members>
+        <members>lblBtnAddAllHHMembers</members>
+        <members>lblBtnAddContact</members>
         <members>lblCCardExcludeFrom</members>
         <members>lblCity</members>
         <members>lblCountry</members>
@@ -995,6 +997,8 @@
         <members>lblHouseholdName</members>
         <members>lblInformalGreeting</members>
         <members>lblLastName</members>
+        <members>lblMergeHHPrompt</members>
+        <members>lblMergeHHTitle</members>
         <members>lblNPSPSettings</members>
         <members>lblPostalCode</members>
         <members>lblSalutation</members>
