@@ -6,6 +6,8 @@ ratings:
     - "**.cls"
     - "**.trigger"
 exclude_paths:
+  - "cumulusci.properties"
+  - "LICENSE"
   - "ApexDocContent/"
   - "StaticResourceSources/"
   - "scripts/"
