@@ -91,7 +91,7 @@
 		<priority>3</priority>
 		
 		<properties>
-        	<property name="reportLevel" value="10"/>
+        	<property name="reportLevel" value="12"/>
         	
         	<!-- relevant for Code Climate output only -->
         	<property name="cc_categories" value="Complexity"/>
