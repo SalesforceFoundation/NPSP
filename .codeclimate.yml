@@ -6,6 +6,9 @@ ratings:
     - "**.cls"
     - "**.trigger"
 exclude_paths:
+  - "ApexDocContent/"
+  - "StaticResourceSources/"
+  - "scripts/"
   - "src/documents/"
   - "**.schema"
   - "**.xml"
