@@ -1,4 +1,4 @@
-<aura:component>
+<aura:component >
 
     <!-- our attributes -->
     <aura:attribute name="hh" type="SObject" />
@@ -9,12 +9,14 @@
 
     <!-- events we handle -->
 
-    <!-- libraries needed -->
-    <ltng:require
-        scripts="{!join(',', 
-        $Resource.CumulusStaticResources + '/jquery/jquery-2.2.4.js', 
+    <!-- libraries needed
+    <ltng:require scripts="{!join(',',
+        $Resource.CumulusStaticResources + '/jquery/jquery-2.2.4.js',
         $Resource.CumulusStaticResources + '/jquery-ui/jquery-ui-1.11.4.js')}"
         afterScriptsLoaded="{!c.afterScriptsLoaded}" />
+-->
+    <ltng:require scripts="/resource/CumulusStaticResources/jquery/jquery-2.2.4.js,/resource/CumulusStaticResources/jquery-ui/jquery-ui-1.11.4.js"
+    afterScriptsLoaded="{!c.afterScriptsLoaded}" />
 
     <!-- markup follows... -->
 

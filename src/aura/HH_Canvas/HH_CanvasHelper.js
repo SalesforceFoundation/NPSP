@@ -12,6 +12,9 @@
 
         if (typeof j$ === "undefined")
             return;
+        
+        if (!j$('.slds-has-cards--space').sortable)
+            return;
 
         // turn on jqueryui drag/sortable support
         j$('.slds-has-cards--space').sortable( {
