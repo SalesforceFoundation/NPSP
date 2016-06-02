@@ -7,12 +7,12 @@
     },
 
     // display the spinner
-    showSpinner : function(component, event, helper) {
+    showSpinner : function(component /* , event, helper */) {
         component.set("v.showSpinner", true);
     },
 
     // hide the spinner
-    hideSpinner : function(component, event, helper) {
+    hideSpinner : function(component /* , event, helper */) {
         component.set("v.showSpinner", false);
     },
 
@@ -67,7 +67,7 @@
     },
 
     // show the new contact popup
-    showNewContactPopup : function(component, event, helper) {
+    showNewContactPopup : function(component /*, event, helper */) {
         component.set('v.showNewContactPopup', true);
     },
 
@@ -77,7 +77,7 @@
     },
 
     // cancel New Contact
-    cancelNewContact : function(component, event, helper) {
+    cancelNewContact : function(component /* , event, helper */) {
         component.set('v.showNewContactPopup', false);
     },
 
@@ -118,7 +118,7 @@
     },
 
     // cancel Merge HH Popup
-    cancelMergeHHPopup : function(component, event, helper) {
+    cancelMergeHHPopup : function(component /* , event, helper */) {
         component.set('v.showMergeHHPopup', false);
     },
 

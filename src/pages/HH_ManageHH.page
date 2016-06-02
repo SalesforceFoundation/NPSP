@@ -2,10 +2,8 @@
     <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <apex:includeLightning />
         <apex:stylesheet value="{!URLFOR($Resource.SLDS, '/1_0_3/assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
-    	<apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
-		<apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
-		<apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-migrate-1.2.1.min.js')}"/>
-		<apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery-ui/jquery-ui-1.10.4.min.js')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
+        <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-2.2.4.js')}"/>
         
         <style>       
             .required {
@@ -46,18 +44,17 @@
                                 <div class="slds-form-element__control">                                
                                     <apex:inputField required="{!f.DBRequired || f.Required}" value="{!hh[f]}" label=""
                                     	styleClass="{!CASE(f.Type, 
-                                                    	'reference', 'lookupInput' + ' ' + f.FieldPath, 
-                                                    	'multipicklist', 'slds-select multipicklistSLDSFixup', 
-                                                    	'boolean', 'slds-checkbox',
-                                                    	'slds-input')}" />                                
+                                                        'reference', 'lookupInput' + ' ' + f.FieldPath, 
+                                                        'multipicklist', 'slds-select multipicklistSLDSFixup', 
+                                                        'boolean', 'slds-checkbox',
+                                                        'slds-input')}" />                                
                                 </div>
                             </div>
                         </apex:repeat>
                     </div>
                 </div>                
             </div>
-			
-			<!-- we expose a javascript function our lightning component can call to save the vf fieldset & close the page -->            
+            <!-- we expose a javascript function our lightning component can call to save the vf fieldset & close the page -->            
             <apex:actionFunction action="{!save}" name="saveAndCloseVisualforce" />
         </apex:form>
         
@@ -75,9 +72,12 @@
                                    function(cmp) {
                                        // after lightning is loaded, do what we need to do here!
                                        
+                                       // hook up our event handlers
+                                       $A.eventService.addHandler({ "event": "c:HH_HouseholdSavedEvent", "handler" : saveAndCloseVisualforce});
+                                       $A.eventService.addHandler({ "event": "c:HH_ContactAfterDeleteEvent", "handler" : contactRemoved});
+
                                        // hide our startup spinner
-                                       // actually, let our lightning component hide it when it's completely done loading!
-                                       // j$('.initialSpinner').hide();
+                                       j$('.initialSpinner').hide();
                                        
                                        // this hack is to prevent the normal apex:inputField of a multiselect picklist
                                        // behavior of hiding the normal select control and using a table with 2 selects
@@ -94,15 +94,17 @@
     }); 
     
     // called by our lightning component when it needs to tell the visualforce page 
-    // a contact has been removed from the page.  Ideally we'd have the visualforce page
-    // handle the c:HH_ContactDeleteEvent, but we haven't yet found info on how to have
-    // a visualforce javascript lightning event handler.
-    function contactRemoved(con) {
+    // a contact has been removed from the page.  
+    var contactRemoved = function(event) {
+        var con = event.getParam("contact");
+        
         // if the contact being removed (deleted or moved) is the
         // HH's primary contact, clear out that field.
-        var ctrlPC = j$('.npe01__One2OneContact__c');
-        if (ctrlPC != null && ctrlPC.val() == con.FirstName + ' ' + con.LastName)
-            ctrlPC.val(null);
+        if (con) {
+            var ctrlPC = j$('.npe01__One2OneContact__c');
+            if (ctrlPC && ctrlPC.val() == con.FirstName + ' ' + con.LastName)
+                ctrlPC.val(null);
+        }
     }
     
     </script>

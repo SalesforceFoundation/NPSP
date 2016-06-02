@@ -9,7 +9,7 @@
         // so there is no reason to do it in the ui.
 
         // now notify other components the change occurred
-        var event = $A.get("e.c:HH_ContactChangedEvent");
+        event = $A.get("e.c:HH_ContactChangedEvent");
         var con = component.get('v.contact');
         event.setParams({ "contact" : con });
         event.fire();
@@ -21,7 +21,7 @@
     fireContactDeleteEvent : function(component, event) {
 
         // now notify other components the delete request occurred
-        var event = $A.get("e.c:HH_ContactDeleteEvent");
+        event = $A.get("e.c:HH_ContactDeleteEvent");
         var con = component.get('v.contact');
         event.setParams({ "contact" : con });
         event.fire();

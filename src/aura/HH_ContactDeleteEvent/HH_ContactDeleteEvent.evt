@@ -1,3 +1,3 @@
-<aura:event type="APPLICATION" description="Fired when the delete button is pressed on a HH_ContactCard." >
-    <aura:attribute name="contact" type="Contact"/>
+<aura:event type="APPLICATION" description="Fired when the delete button is pressed on a HH_ContactCard.">
+    <aura:attribute name="contact" type="Contact" />
 </aura:event>

@@ -5,7 +5,7 @@
     loadObjects : function(component) {
         component.set("v.showSpinner", true);
         var hhId = component.get('v.hhId');
-        component.set('v.hhTypePrefix', new String(hhId).substr(0, 3));
+        component.set('v.hhTypePrefix', String(hhId).substr(0, 3));
 
         // query for the Household account/object
         var action = component.get("c.getHH");
@@ -19,63 +19,53 @@
 
                 // set our auto-naming checkbox states
                 var strExclusions = hh.npo02__SYSTEM_CUSTOM_NAMING__c;
-                component.set('v.isAutoName', strExclusions == null || !strExclusions.includes('Name'));
-                component.set('v.isAutoFormalGreeting', strExclusions == null || !strExclusions.includes('Formal_Greeting__c'));
-                component.set('v.isAutoInformalGreeting', strExclusions == null || !strExclusions.includes('Informal_Greeting__c'));
-            }
-            else if (component.isValid() && state === "ERROR") {
+                component.set('v.isAutoName', !strExclusions || !strExclusions.includes('Name'));
+                component.set('v.isAutoFormalGreeting', !strExclusions || !strExclusions.includes('Formal_Greeting__c'));
+                component.set('v.isAutoInformalGreeting', !strExclusions || !strExclusions.includes('Informal_Greeting__c'));
+            } else if (component.isValid() && state === "ERROR") {
                 self.reportError(component, response);
             }
         });
         $A.enqueueAction(action);
 
         // query for the Household Contacts
-        var action = component.get("c.getContacts");
+        action = component.get("c.getContacts");
         action.setParams({ hhId : hhId });
-        var self = this;
         action.setCallback(this, function(response) {
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
                 var listCon = response.getReturnValue();
                 component.set("v.listCon", listCon);
-            }
-            else if (component.isValid() && state === "ERROR") {
+            } else if (component.isValid() && state === "ERROR") {
                 self.reportError(component, response);
             }
         });
         $A.enqueueAction(action);
 
         // query for the Contact Salutations
-        var action = component.get("c.getSalutations");
-        var self = this;
+        action = component.get("c.getSalutations");
         action.setCallback(this, function(response) {
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
                 var listSalutation = response.getReturnValue();
                 component.set("v.listSalutation", listSalutation);
-            }
-            else if (component.isValid() && state === "ERROR") {
+            } else if (component.isValid() && state === "ERROR") {
                 self.reportError(component, response);
             }
         });
         $A.enqueueAction(action);
 
         // query for the Addresses
-        var action = component.get("c.getAddresses");
+        action = component.get("c.getAddresses");
         action.setParams({ hhId : hhId, listAddrExisting : null });
-        var self = this;
         action.setCallback(this, function(response) {
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
                 var listAddr = response.getReturnValue();
                 component.set("v.listAddr", listAddr);
-            }
-            else if (component.isValid() && state === "ERROR") {
+            } else if (component.isValid() && state === "ERROR") {
                 self.reportError(component, response);
             }
-
-            // hide our initial startup spinner our visualforce container displays
-            j$('.initialSpinner').hide();
         });
         $A.enqueueAction(action);
     },
@@ -97,10 +87,9 @@
         action.setCallback(this, function(response) {
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
-                var hh = response.getReturnValue();
+                hh = response.getReturnValue();
                 component.set("v.hh", hh);
-            }
-            else if (component.isValid() && state === "ERROR") {
+            } else if (component.isValid() && state === "ERROR") {
                 self.reportError(component, response);
             }
         });
@@ -131,11 +120,11 @@
     */
     displayUIMessage : function(component, strError, whichDiv) {
         $A.createComponents([
-            ["ui:message",{
+            ["ui:message", {
                 "title" : "Error",
-                "severity" : "error",
+                "severity" : "error"
             }],
-            ["ui:outputText",{
+            ["ui:outputText", {
                 "value" : strError
             }]
         ],
@@ -162,16 +151,19 @@
         // keep track of ourselves and whether both server updates succeed
         var self = this;
         var callbacksWaiting = 4;
+        var action;
         
         // create our shared callback code
         var callback = function (response) {
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
-                if (--callbacksWaiting == 0) {
-                    saveAndCloseVisualforce();
+                if (--callbacksWaiting === 0) {
+                    // tell our visualforce page we are done saving, so it should save
+                    // its data and close the page.
+                    var event = $A.get("e.c:HH_HouseholdSavedEvent");
+                    event.fire();
                 }
-            }
-            else if (component.isValid() && state === "ERROR") {
+            } else if (component.isValid() && state === "ERROR") {
                 self.reportError(component, response);
             }
         };            
@@ -180,8 +172,8 @@
         // so we avoid deleting a household if that contact was the last one in the hh.
         var listHHMerge = component.get('v.listHHMerge');
         var hh = component.get('v.hh');
-        if (listHHMerge != null && listHHMerge.length > 0) {
-            var action = component.get("c.mergeHouseholds");
+        if (listHHMerge && listHHMerge.length > 0) {
+            action = component.get("c.mergeHouseholds");
             action.setParams({ hhWinner : hh, listHHMerge : listHHMerge });
             action.setCallback(this, callback);
             $A.enqueueAction(action);
@@ -191,24 +183,24 @@
 
         // save the contacts
         var listCon = component.get("v.listCon");
-        var action = component.get("c.upsertContacts");
+        action = component.get("c.upsertContacts");
         action.setParams({ listCon : listCon});
         action.setCallback(this, callback);
         $A.enqueueAction(action);
 
         // update our auto-naming exclusion states
-        var hh = component.get("v.hh");
+        hh = component.get("v.hh");
         this.updateNamingExclusions(component, hh);
 
         // save the Household
-        var action = component.get("c.updateHousehold");
+        action = component.get("c.updateHousehold");
         action.setParams({ hh : hh});
         action.setCallback(this, callback);
         $A.enqueueAction(action);
 
         // delete any contacts
         var listConDelete = component.get("v.listConDelete");
-        var action = component.get("c.deleteContacts");
+        action = component.get("c.deleteContacts");
         action.setParams({ listCon : listConDelete});
         action.setCallback(this, callback);
         $A.enqueueAction(action);
@@ -235,11 +227,11 @@
         var inputText = event.getSource();
         var idText = inputText.getLocalId();
 
-        if (idText == 'txtHHName')
+        if (idText === 'txtHHName')
             component.set('v.isAutoName', false);
-        else if (idText == 'txtFormalGreeting')
+        else if (idText === 'txtFormalGreeting')
             component.set('v.isAutoFormalGreeting', false);
-        else if (idText == 'txtInformalGreeting')
+        else if (idText === 'txtInformalGreeting')
             component.set('v.isAutoInformalGreeting', false);
     },
 
@@ -247,7 +239,7 @@
     * @description Ask the user if the Contact should be deleted, by displaying our delete contact popup.
     */
     promptDeleteContact : function(component, event) {
-        var con = event.getParam("contact")
+        var con = event.getParam("contact");
         component.set('v.showDeleteContactPopup', true);
         component.set('v.conDelete', con);
     },
@@ -255,7 +247,7 @@
     /*******************************************************************************************************
     * @description The user has decided not to delete the contact, so remove our delete contact popup.
     */
-    cancelDeleteContact : function(component, event) {
+    cancelDeleteContact : function(component /* , event */) {
         component.set('v.showDeleteContactPopup', false);
     },
 
@@ -269,26 +261,44 @@
     doDeleteContact : function(component, event) {
         component.set('v.showDeleteContactPopup', false);
         var con = component.get('v.conDelete');
-        if (con != null) {
+        if (con) {
             var listConDelete = component.get('v.listConDelete');
-            if (listConDelete == null)
+            if (!listConDelete)
                 listConDelete = [];
-            if (con.Id != null)
+            if (con.Id)
                 listConDelete.push(con);
             component.set('v.listConDelete', listConDelete);
 
             var listCon = component.get('v.listCon');
-            var iconDel = listCon.indexOf(con);
+            var iconDel = this.findContact(listCon, con);
             if (iconDel >= 0)
                 listCon.splice(iconDel, 1);
             component.set('v.listCon', listCon);
             this.updateHHNames(component);
 
             // we must tell the visualforce page, in case the primary contact lookup is to this contact.
-            // ideally, the visualforce page would listen for a lightning event, but we haven't figured
-            // out how to do that!
-            contactRemoved(con);
+            event = $A.get("e.c:HH_ContactAfterDeleteEvent");
+            event.setParams({ "contact" : con });
+            event.fire();
         }
+    },
+
+    /*******************************************************************************************************
+    * @description find the contact in the list
+    * @param listCon the list of Contacts
+    * @param con the contact to find
+    * @return iCon the index to the found contact, or -1 if not found.
+    */
+    findContact : function(listCon, con) {
+    	var iCon;
+        for (iCon = 0; iCon < listCon.length; iCon++) {
+            var con2 = listCon[iCon];
+            if (con.Id && con.Id === con2.Id)
+                return iCon;
+            if (!con.Id && !con2.Id && con.dtNewContact === con2.dtNewContact)
+                return iCon;
+        }
+        return -1;
     },
 
     /*******************************************************************************************************
@@ -297,8 +307,9 @@
     close : function(component) {
         // the correct way to handle navigation in Salesforce classic vs. LEX/mobile
         if (typeof sforce === "undefined") {
-            window.top.location.replace('/' + component.get('v.hhId'));
+            window.location.replace('/' + component.get('v.hhId'));
         } else {
+	        /*global sforce */
             sforce.one.navigateToSObject(component.get('v.hhId'));
         }
     },
@@ -308,12 +319,12 @@
     */
     updateDefaultAddress : function(component, addr) {
         var hh = component.get('v.hh');
-        var isAccount = component.get('v.hhTypePrefix') == '001';
+        var isAccount = component.get('v.hhTypePrefix') === '001';
 
         // update the household
         if (isAccount) {
             hh.BillingStreet = addr.MailingStreet__c;
-            if (addr.MailingStreet2__c != null)
+            if (addr.MailingStreet2__c)
                 hh.BillingStreet += '\n' + addr.MailingStreet2__c;
             hh.BillingCity = addr.MailingCity__c;
             hh.BillingState = addr.MailingState__c;
@@ -321,7 +332,7 @@
             hh.BillingCountry = addr.MailingCountry__c;
         } else {
             hh.npo02__MailingStreet__c = addr.MailingStreet__c;
-            if (addr.MailingStreet2__c != null)
+            if (addr.MailingStreet2__c)
                 hh.npo02__MailingStreet__c += ',' + addr.MailingStreet2__c;
             hh.npo02__MailingCity__c = addr.MailingCity__c;
             hh.npo02__MailingState__c = addr.MailingState__c;
@@ -346,7 +357,7 @@
     */
     copyAddrToContact : function(addr, con) {
         con.MailingStreet = addr.MailingStreet__c;
-        if (addr.MailingStreet2__c != null)
+        if (addr.MailingStreet2__c)
             con.MailingStreet += '\n' + addr.MailingStreet2__c;
         con.MailingCity = addr.MailingCity__c;
         con.MailingState = addr.MailingState__c;
@@ -357,7 +368,7 @@
     /*******************************************************************************************************
     * @description fixup custom labels exposed thru $Label, so the ones from the wrong namespace are null.
     */
-    fixupCustomLabels : function(component) {
+    fixupCustomLabels : function(/* component */) {
         // get access to the label global value provider which appears as an object, with a subobject
         // for each namespace, and property for each label.
         var lbl = $A.get('$Label');
@@ -365,7 +376,7 @@
             for (var str in lbl[nspace]) {
                 // the labels that fail to get resolved appear as
                 // "$Label.namespace.foo does not exist: Field $Label.namespace__foo does not exist. Check spelling."
-                if (lbl[nspace][str] != null && lbl[nspace][str].startsWith('$Label'))
+                if (lbl[nspace][str] && lbl[nspace][str].startsWith('$Label'))
                     lbl[nspace][str] = null;
             }
         }
@@ -378,11 +389,13 @@
         var hhId = component.get('v.hhId');
         var hhTypePrefix = component.get('v.hhTypePrefix');
         var con = {'sobjectType': 'Contact'};
-        if (hhTypePrefix == '001')
+        if (hhTypePrefix === '001')
             con.AccountId = hhId;
         else
             con.npo02__Household__c = hhId;
         con.hhId = hhId;
+        // tag each new contact with a timestamp, so we can identify it if we need to delete it.
+        con.dtNewContact = Date.now();
         component.set('v.conNew', con);
     },
 
@@ -394,13 +407,13 @@
         var conNew = component.get('v.conNew');
 
         // perform field validation, which we don't get for free
-        if (conNew.LastName == null) {
+        if (!conNew.LastName) {
             this.displayUIMessage(component, $A.get("$Label.npo02.ContactLastNameRqd"), "divUIMessageNewContactPopup");
             return;
         }
 
         var addrDefault = component.find('addrMgr').get('v.addrDefault');
-        if (addrDefault != null)
+        if (addrDefault)
             this.copyAddrToContact(addrDefault, conNew);
         listCon.push(conNew);
         component.set('v.listCon', listCon);
@@ -426,7 +439,7 @@
     */
     addOrMergeContact : function(component, conAdd, hhMerge) {
         var namespacePrefix = component.get('v.namespacePrefix');
-        if (hhMerge[namespacePrefix + 'Number_of_Household_Members__c'] == 1)
+        if (hhMerge[namespacePrefix + 'Number_of_Household_Members__c'] === 1)
             this.mergeHousehold(component, hhMerge);
         else
             component.set('v.showMergeHHPopup', true);
@@ -441,7 +454,7 @@
         var hhTypePrefix = component.get('v.hhTypePrefix');
         var listCon = component.get("v.listCon");
 
-        if (hhTypePrefix == '001')
+        if (hhTypePrefix === '001')
             conAdd.AccountId = hhId;
         else
             conAdd.npo02__Household__c = hhId;
@@ -452,7 +465,7 @@
 
         // update the contact's addresses to the hh default (if they have no override)
         var addrDefault = component.find('addrMgr').get('v.addrDefault');
-        if (addrDefault != null)
+        if (addrDefault)
             this.updateDefaultAddress(component, addrDefault);
 
         // UNDONE: need to add the contact's address to our address mgr (if not override)
@@ -467,16 +480,15 @@
         // tell the system what type of sobject they are
         for (var i in listAddr)
             listAddr[i].sobjectType = 'Address__c';
-        var listCon = [conAdd];
+        listCon = [conAdd];
         action.setParams({ listCon : listCon, listAddrExisting : listAddr });
         var self = this;
         action.setCallback(this, function(response) {
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
-                var listAddr = response.getReturnValue();
+                listAddr = response.getReturnValue();
                 component.set("v.listAddr", listAddr);
-            }
-            else if (component.isValid() && state === "ERROR") {
+            } else if (component.isValid() && state === "ERROR") {
                 self.reportError(component, response);
             }
         });
@@ -505,7 +517,7 @@
                 // move all contacts into our household
                 var cExisting = listCon.length;
                 for (var i in listConMerge) {
-                    if (hhTypePrefix == '001')
+                    if (hhTypePrefix === '001')
                         listConMerge[i].AccountId = hhId;
                     else
                         listConMerge[i].npo02__Household__c = hhId;
@@ -517,42 +529,40 @@
 
                 // update the merged contact's addresses to the hh default (if they have no override)
                 var addrDefault = component.find('addrMgr').get('v.addrDefault');
-                if (addrDefault != null)
+                if (addrDefault)
                     this.updateDefaultAddress(component, addrDefault);
 
                 // remember that we need to merge the hh at save time (HH Accounts only!)
-                if (hhTypePrefix == '001') {
+                if (hhTypePrefix === '001') {
                     var listHHMerge = component.get('v.listHHMerge');
-                    if (listHHMerge == null)
+                    if (!listHHMerge)
                         listHHMerge = [];
                     listHHMerge.push(hhMerge);
                 }
 
                 // force our names to update since we have new contacts!
                 this.updateHHNames(component);
-            }
-            else if (component.isValid() && state === "ERROR") {
+            } else if (component.isValid() && state === "ERROR") {
                 self.reportError(component, response);
             }
         });
         $A.enqueueAction(action);
 
         // query for the new Addresses
-        var action = component.get("c.getAddresses");
+        action = component.get("c.getAddresses");
         var listAddr = component.get('v.listAddr');
         // because our address objects aren't real, we need to
         // tell the system what type of sobject they are
         for (var i in listAddr)
             listAddr[i].sobjectType = 'Address__c';
         action.setParams({ hhId : hhMerge.Id, listAddrExisting : listAddr });
-        var self = this;
+        self = this;
         action.setCallback(this, function(response) {
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
-                var listAddr = response.getReturnValue();
+                listAddr = response.getReturnValue();
                 component.set("v.listAddr", listAddr);
-            }
-            else if (component.isValid() && state === "ERROR") {
+            } else if (component.isValid() && state === "ERROR") {
                 self.reportError(component, response);
             }
         });

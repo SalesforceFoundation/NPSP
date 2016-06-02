@@ -32,7 +32,7 @@
 * @date 2016
 * @group Households
 * @group-content ../../ApexDocContent/Households.htm
-* @description Lightning Component Server Controller for the Manage Household UI page
+* @description Lightning Component Server Controller for the Manage Household UI page's HH_Container LC.
 */
 public class HH_Container_LCTRL {
 

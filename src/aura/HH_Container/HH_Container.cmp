@@ -23,6 +23,10 @@
     <aura:attribute name="conAdd" type="Contact" access="private" />
     <aura:attribute name="hhMerge" type="SObject" access="private" />
 
+    <!-- events we fire -->
+    <aura:registerEvent name="ContactAfterDeleteEvent" type="c:HH_ContactAfterDeleteEvent" />
+    <aura:registerEvent name="HouseholdSavedEvent" type="c:HH_HouseholdSavedEvent" />
+
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>
