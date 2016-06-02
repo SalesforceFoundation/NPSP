@@ -247,6 +247,14 @@
         <name>ApexClass</name>
     </types>
     <types>
+        <members>autocomplete</members>
+        <members>autocompleteOption</members>
+        <members>autocompleteSelectListOption</members>
+        <members>dataProviderInterface</members>
+        <members>svg</members>
+        <name>AuraDefinitionBundle</name>
+    </types>
+    <types>
         <members>STG_DataBoundMultiSelect</members>
         <members>STG_PageHeader</members>
         <members>UTIL_JobProgress</members>
@@ -338,11 +346,13 @@
         <members>HH_AddressChangedEvent</members>
         <members>HH_AddressMgr</members>
         <members>HH_Canvas</members>
+        <members>HH_ContactAfterDeleteEvent</members>
         <members>HH_ContactCard</members>
         <members>HH_ContactChangedEvent</members>
         <members>HH_ContactDeleteEvent</members>
         <members>HH_ContactReorderEvent</members>
         <members>HH_Container</members>
+        <members>HH_HouseholdSavedEvent</members>
         <members>ManageHHApp</members>
         <members>defaultTokens</members>
         <members>svg</members>

@@ -4,11 +4,16 @@
     * @description Initializes jquery and jqueryUI to support drag/drop sortable in our ui
     */
     initJQueryHandlers : function(component) {
-        if (typeof jQuery !== "undefined" && typeof $j === "undefined") {
-            $j = jQuery.noConflict(true);
+        var j$;
+        /*global jQuery*/
+        if (typeof jQuery !== "undefined" && typeof j$ === "undefined") {
+            j$ = jQuery.noConflict(true);
         }
 
-        if (typeof $j === "undefined")
+        if (typeof j$ === "undefined")
+            return;
+        
+        if (!j$('.slds-has-cards--space').sortable)
             return;
 
         // turn on jqueryui drag/sortable support
@@ -16,7 +21,7 @@
             tolerance: "pointer",
 
             // called after DOM has been updated after a drag/drop sort
-            update: function(event, ui) {
+            update: function(/* event, ui */) {
                 // update our listCon to the new order
                 var listCon = component.get('v.listCon');
                 var listConNew = [];
@@ -28,9 +33,9 @@
                 component.set('v.listCon', listConNew);
 
                 // now notify other components the reorder occurred
-                var event = $A.get("e.c:HH_ContactReorderEvent");
-                event.setParams({ "listCon" : listConNew });
-                event.fire();
+                var evt = $A.get("e.c:HH_ContactReorderEvent");
+                evt.setParams({ "listCon" : listConNew });
+                evt.fire();
             }
         });
         j$('.slds-has-cards--space').disableSelection();
