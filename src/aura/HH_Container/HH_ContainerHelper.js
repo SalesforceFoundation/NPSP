@@ -383,6 +383,18 @@
     },
 
     /*******************************************************************************************************
+    * @description show the New Contact Popup in response to the ContactNewEvent
+    */
+    showNewContactPopup : function(component, event) {
+        var con = event.getParam('contact');
+        var conNew = component.get('v.conNew');
+        conNew.FirstName = con.FirstName;
+        conNew.LastName = con.LastName;
+		component.set('v.conNew', conNew);
+        component.set('v.showNewContactPopup', true);
+    },
+    
+    /*******************************************************************************************************
     * @description initialize a new Contact SObject
     */
     initNewContact : function(component) {
@@ -437,12 +449,34 @@
     * @description sees if the contact is NOT the lone member of a household, in which case it will bring up
     * our Merge Household popup.  if they are the lone member, it will just proceed with the HH merge.
     */
-    addOrMergeContact : function(component, conAdd, hhMerge) {
+    addOrMergeContact : function(component, event) {
+        debugger;
         var namespacePrefix = component.get('v.namespacePrefix');
-        if (hhMerge[namespacePrefix + 'Number_of_Household_Members__c'] === 1)
+        var conAdd = event.getParam('value');
+        var cMembers = 0;
+        var hhId = conAdd[namespacePrefix + 'HHId__c'];
+
+        if (hhId && String(hhId).substr(0, 3) === '001') {
+            var acc = conAdd.Account;
+            cMembers = acc[namespacePrefix + 'Number_of_Household_Members__c'];
+        } else if (conAdd.npo02__Household__c) {
+			cMembers = conAdd.npo02__Household__r.Number_of_Household_Members__c;            
+        }
+        var hhMerge = {'Id' : hhId};
+        hhMerge[namespacePrefix + 'Number_of_Household_Members__c'] = cMembers;
+        component.set('v.hhMerge', hhMerge);
+        component.set('v.conAdd', conAdd);
+         
+        // handle contacts not in a household account, and having no household object.
+        if (!hhId) {
+            this.addContact(component, conAdd);
+        // if only one contact in household, merge the households
+        } else if (cMembers === 1) {
             this.mergeHousehold(component, hhMerge);
-        else
+        // more contacts in household, prompt for add vs merge.
+        } else {
             component.set('v.showMergeHHPopup', true);
+        }
     },
 
     /*******************************************************************************************************
