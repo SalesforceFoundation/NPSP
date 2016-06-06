@@ -3,6 +3,8 @@
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
     <aura:handler name="optionSelected" event="c:autocompleteSelectListOption" action="{!c.handleOptionSelected}"/>
+	<aura:handler name="change" value="{!v.isListVisible}" action="{!c.handleIsListVisibleChange}"/>
+    
 
     <aura:attribute name="items" type="Object[]" default="[]" access="private"/>
     <aura:attribute name="keyword" type="String" access="private"/>
@@ -13,18 +15,19 @@
     <aura:attribute name="value" type="Object" access="public"/>
     <aura:attribute name="dataProvider" type="Aura.Component[]" required="true" access="public"/>
     <aura:attribute name="itemVar" default="item" type="String" access="public"/>
+    <aura:attribute name="isListVisible" default="false" type="Boolean" access="public"/>
 
     <aura:attribute name="displayValueTemplate" type="Aura.Component[]" access="public">
         <div class="slds-pill_container slds-show">
             <span class="slds-pill">
                 <span class="slds-pill__label">{!v.displayValue}</span>
-                <button class="slds-button slds-button--icon-bare slds-pill__remove" onclick="{!c.handleRemovePill}">
+                <ui:button class="slds-button slds-button--icon-bare slds-pill__remove" press="{!c.handleRemovePill}">
                     <c:svg ariaHidden="true"
                        class="slds-button__icon"
                        xlinkHref="/resource/SLDS/1_0_3/assets/icons/utility-sprite/svg/symbols.svg#close"
                        />
                     <span class="slds-assistive-text">Remove</span>
-                </button>
+                </ui:button>
            </span>
         </div>
     </aura:attribute>

@@ -17,6 +17,7 @@
             }
 
             this.setListVisibility(component, true);
+			component.set('v.showLoadingIndicator', true);
 
             var dataProvider = component.get('v.dataProvider')[0];
 
@@ -26,7 +27,7 @@
                     if (!component || !component.isValid()) {
                         return;
                     }
-
+					component.set('v.showLoadingIndicator', false);
                     if (err) {
                         throw err;
                     }
@@ -59,5 +60,6 @@
     setListVisibility: function (component, visible) {
         var listComponent = component.find('list');
         $A.util.toggleClass(listComponent, "slds-hide", !visible);
+		component.set('v.isListVisible', visible);
     },
 })
