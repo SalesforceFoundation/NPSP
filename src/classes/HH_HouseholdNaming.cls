@@ -327,11 +327,13 @@ public without sharing class HH_HouseholdNaming {
 
                     if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
                     	string hName = (string)h.get('Name');
-                        if (hName != null && hName != mapIdHHOld.get(h.id).get('Name') && !customnameset.contains('Name')) {
-                            customname += 'Name' + ';';
-                        } else if ((hName == null || hName == '' || hName == system.Label.npo02.NameReplacementText) && customnameset.contains('Name')) {
-                            customname = customname.replace('Name;', ';');
+                        if ((hName == null || hName == '' || hName == system.Label.npo02.NameReplacementText)) {
+                            if (customnameset.contains('Name')) {
+                                customname = customname.replace('Name;', ';');
+                            }
                             h.put('Name', system.Label.npo02.NameReplacementText);
+                        } else if (hName != mapIdHHOld.get(h.id).get('Name') && !customnameset.contains('Name')) {
+                            customname += 'Name' + ';';
                         }
 
                         string informalGreeting = (string)h.get('npo02__Informal_Greeting__c');
