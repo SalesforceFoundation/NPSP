@@ -9,7 +9,7 @@
         // causing it to reopen.
         //
         // if this event is fired and the element is not focused, ignore
-        if (el === document.activeElement) {
+        if (component.get('v.inputFocused')) {
             component.set('v.keyword', keyword);
 
             if (!keyword) {
@@ -61,5 +61,5 @@
         var listComponent = component.find('list');
         $A.util.toggleClass(listComponent, "slds-hide", !visible);
         component.set('v.isListVisible', visible);
-    },
+    }
 })
