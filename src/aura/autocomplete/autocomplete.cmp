@@ -7,6 +7,7 @@
 
     <aura:attribute name="items" type="Object[]" default="[]" access="private"/>
     <aura:attribute name="keyword" type="String" access="private"/>
+    <aura:attribute name="inputFocused" type="Boolean" default="false" access="private"/>
     <aura:attribute name="placeholder" type="String" default="" access="public"/>
     <aura:attribute name="label" type="String" default="" access="public"/>
     <aura:attribute name="searchContext" type="String" default="" access="public"/>
