@@ -59,6 +59,11 @@
         action = component.get("c.getAddresses");
         action.setParams({ hhId : hhId, listAddrExisting : null });
         action.setCallback(this, function(response) {
+
+		    // tell our visualforce page we are done loading
+            var event = $A.get("e.c:HH_ContainerLoadedEvent");
+            event.fire();
+            
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
                 var listAddr = response.getReturnValue();

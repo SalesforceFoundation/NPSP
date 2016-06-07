@@ -65,6 +65,8 @@ public class HH_Container_LCTRL {
         str = Label.lblMergeHHPrompt;
         str = Label.lblBtnAddContact;
         str = Label.lblBtnAddAllHHMembers;
+        str = Label.lblFindOrAddContact;
+        str = Label.lblFindInContacts;
 
     }
 

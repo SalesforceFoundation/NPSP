@@ -26,6 +26,7 @@
     <!-- events we fire -->
     <aura:registerEvent name="ContactAfterDeleteEvent" type="c:HH_ContactAfterDeleteEvent" />
     <aura:registerEvent name="HouseholdSavedEvent" type="c:HH_HouseholdSavedEvent" />
+    <aura:registerEvent name="ContainerLoadedEvent" type="c:HH_ContainerLoadedEvent" />
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />

@@ -24,7 +24,7 @@
                                    class="slds-button__icon slds-button__icon--large"
                                    xlinkHref="/resource/SLDS/1_0_3/assets/icons/utility-sprite/svg/symbols.svg#new"
                                    />
-                            <span class="slds-assistive-text">Add</span>
+                            <span class="slds-assistive-text">{!$Label.npo02.Add}</span>
                         </ui:button>
                     </div>
                     <div class="slds-tile__detail slds-text-body--small">

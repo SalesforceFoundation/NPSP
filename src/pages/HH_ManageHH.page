@@ -75,10 +75,8 @@
                                        // hook up our event handlers
                                        $A.eventService.addHandler({ "event": "c:HH_HouseholdSavedEvent", "handler" : saveAndCloseVisualforce});
                                        $A.eventService.addHandler({ "event": "c:HH_ContactAfterDeleteEvent", "handler" : contactRemoved});
+                                       $A.eventService.addHandler({ "event": "c:HH_ContainerLoadedEvent", "handler" : doneLoading});
 
-                                       // hide our startup spinner
-                                       j$('.initialSpinner').hide();
-                                       
                                        // this hack is to prevent the normal apex:inputField of a multiselect picklist
                                        // behavior of hiding the normal select control and using a table with 2 selects
                                        // and 2 buttons.  under SLDS, we could not get this more complicated control to
@@ -107,6 +105,13 @@
         }
     }
     
+    // called by our lightning component when it has fully finished loading
+    // use it to hide our initial load wait indicator
+    var doneLoading = function(event) {
+        // hide our startup spinner
+        j$('.initialSpinner').hide();                                       
+    }
+
     </script>
     
 </apex:page>
