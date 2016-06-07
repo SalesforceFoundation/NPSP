@@ -34,7 +34,7 @@
     <aura:handler event="c:HH_ContactDeleteEvent" action="{!c.handleContactDeleteEvent}"/>
     <aura:handler event="c:HH_ContactReorderEvent" action="{!c.handleContactReorderEvent}"/>
     <aura:handler event="c:HH_AddressChangedEvent" action="{!c.handleAddressChangedEvent}"/>
-	<aura:handler event="c:autocompleteSelectListOption" name="optionSelected" action="{!c.handleAutoCompleteOptionSelectedEvent}" />    
+    <aura:handler event="c:autocompleteSelectListOption" name="optionSelected" action="{!c.handleAutoCompleteOptionSelectedEvent}" />    
     <aura:handler event="c:HH_ContactNewEvent" name="ContactNewEvent" action="{!c.handleContactNewEvent}" />    
 
     <!-- markup follows... -->
@@ -303,8 +303,6 @@
                 <div class="slds-backdrop slds-backdrop--open"></div>
             </aura:if>
             <!-- /NEW CONTACT POPUP -->
-
-
 
             </div> <!-- myBodyContent -->
         </div> <!-- slds -->

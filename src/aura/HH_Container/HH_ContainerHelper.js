@@ -306,10 +306,10 @@
     */
     close : function(component) {
         // the correct way to handle navigation in Salesforce classic vs. LEX/mobile
+        /*global sforce */
         if (typeof sforce === "undefined") {
             window.location.replace('/' + component.get('v.hhId'));
         } else {
-	        /*global sforce */
             sforce.one.navigateToSObject(component.get('v.hhId'));
         }
     },
@@ -390,7 +390,7 @@
         var conNew = component.get('v.conNew');
         conNew.FirstName = con.FirstName;
         conNew.LastName = con.LastName;
-		component.set('v.conNew', conNew);
+        component.set('v.conNew', conNew);
         component.set('v.showNewContactPopup', true);
     },
     
@@ -460,7 +460,7 @@
             var acc = conAdd.Account;
             cMembers = acc[namespacePrefix + 'Number_of_Household_Members__c'];
         } else if (conAdd.npo02__Household__c) {
-			cMembers = conAdd.npo02__Household__r.Number_of_Household_Members__c;            
+            cMembers = conAdd.npo02__Household__r.Number_of_Household_Members__c;            
         }
         var hhMerge = {'Id' : hhId};
         hhMerge[namespacePrefix + 'Number_of_Household_Members__c'] = cMembers;

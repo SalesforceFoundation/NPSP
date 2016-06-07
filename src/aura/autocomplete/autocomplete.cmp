@@ -3,8 +3,7 @@
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
     <aura:handler name="optionSelected" event="c:autocompleteSelectListOption" action="{!c.handleOptionSelected}"/>
-	<aura:handler name="change" value="{!v.isListVisible}" action="{!c.handleIsListVisibleChange}"/>
-    
+    <aura:handler name="change" value="{!v.isListVisible}" action="{!c.handleIsListVisibleChange}"/>
 
     <aura:attribute name="items" type="Object[]" default="[]" access="private"/>
     <aura:attribute name="keyword" type="String" access="private"/>

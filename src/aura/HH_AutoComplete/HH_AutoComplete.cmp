@@ -6,7 +6,7 @@
     <aura:attribute name="isListVisible" default="false" type="Boolean" access="public"/>    
 
     <!-- events we fire -->
-	<aura:registerEvent name="ContactNewEvent" type="c:HH_ContactNewEvent" />
+    <aura:registerEvent name="ContactNewEvent" type="c:HH_ContactNewEvent" />
 
     <!-- markup follows... -->
 
@@ -17,7 +17,7 @@
                     searchContext="in Contacts">
 
         <aura:set attribute="itemTemplate">
-        	<c:HH_AutoCompleteOption value="{!item.value}"/>
+            <c:HH_AutoCompleteOption value="{!item.value}"/>
         </aura:set>
 
         <aura:set attribute="dataProvider">

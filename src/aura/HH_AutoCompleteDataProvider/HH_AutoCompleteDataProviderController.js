@@ -7,7 +7,7 @@
         var args = event.getParam('arguments');
         if (args && args.keyword && args.callback) {
             var queryAction = component.get('c.queryObjects');
-			var listCon = component.get('v.listCon');
+            var listCon = component.get('v.listCon');
             queryAction.setParams({
                 queryValue: args.keyword,
                 listCon: listCon

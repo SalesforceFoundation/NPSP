@@ -60,6 +60,6 @@
     setListVisibility: function (component, visible) {
         var listComponent = component.find('list');
         $A.util.toggleClass(listComponent, "slds-hide", !visible);
-		component.set('v.isListVisible', visible);
+        component.set('v.isListVisible', visible);
     },
 })

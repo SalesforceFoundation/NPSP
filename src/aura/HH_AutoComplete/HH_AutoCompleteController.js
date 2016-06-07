@@ -1,5 +1,5 @@
 ({
-	handleNewContact: function(component, event, helper) {
+    handleNewContact: function(component, event, helper) {
         var con = {'sobjectType': 'Contact'};
         var autocomplete = component.find('autocomplete');
         var name = autocomplete.get('v.displayValue');
@@ -18,6 +18,6 @@
         var evt = component.get('e.ContactNewEvent');
         evt.setParams({ "contact" : con });
         evt.fire();
-	},
+    },
 
 })
