@@ -185,7 +185,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
                             }
                         } else if (type_set.contains('country')){
                             a.MailingCountry__c = add.short_name;
-                        } else if (type_set.contains('administratrive_area_level_1')){
+                        } else if (type_set.contains('administrative_area_level_1')){
                             a.MailingState__c = add.short_name;
                         } else if (type_set.contains('administrative_area_level_2')){
                             a.County_Name__c = add.long_name;
