@@ -1,4 +1,8 @@
 ({
+    /*******************************************************************************************************
+    * @description called by the autocomplete component to retrieve the list of contacts that matches
+    * the name the user has typed in.
+    */
     provide: function (component, event, helper) {
         var args = event.getParam('arguments');
         if (args && args.keyword && args.callback) {

@@ -147,6 +147,7 @@ public class HH_Container_LCTRL {
                 }
                 // add a few fields we need for contact merge code
                 strSoql += ', Account.Number_of_Household_Members__c, npo02__Household__r.Number_of_Household_Members__c ';
+                strSoql += ', Account.Name, npo02__Household__r.Name ';
                 strSoql += ' FROM Contact ';
                 conSelect = strSoql;
             }
