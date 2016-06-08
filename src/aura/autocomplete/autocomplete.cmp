@@ -3,7 +3,6 @@
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
     <aura:handler name="optionSelected" event="c:autocompleteSelectListOption" action="{!c.handleOptionSelected}"/>
-    <aura:handler name="change" value="{!v.isListVisible}" action="{!c.handleIsListVisibleChange}"/>
 
     <aura:attribute name="items" type="Object[]" default="[]" access="private"/>
     <aura:attribute name="keyword" type="String" access="private"/>
@@ -82,7 +81,7 @@
                 </div>
             </div>
 
-            <div class="slds-lookup__menu slds-hide" role="listbox" aura:id="list" tabindex="-1" onfocusin="{!c.handleListFocus}" onfocusout="{!c.handleListBlur}" onfocus="{!c.handleListFocus}" onblur="{!c.handleListBlur}">
+            <div class="{!'slds-lookup__menu' + (v.isListVisible ? '' : ' slds-hide')}" role="listbox" aura:id="list" tabindex="-1" onfocusin="{!c.handleListFocus}" onfocusout="{!c.handleListBlur}" onfocus="{!c.handleListFocus}" onblur="{!c.handleListBlur}">
                 <aura:if isTrue="{!v.showListHeader}">
                     {!v.listHeader}
                 </aura:if>

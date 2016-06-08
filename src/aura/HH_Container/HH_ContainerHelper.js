@@ -60,7 +60,7 @@
         action.setParams({ hhId : hhId, listAddrExisting : null });
         action.setCallback(this, function(response) {
 
-		    // tell our visualforce page we are done loading
+            // tell our visualforce page we are done loading
             var event = $A.get("e.c:HH_ContainerLoadedEvent");
             event.fire();
             
@@ -455,7 +455,6 @@
     * our Merge Household popup.  if they are the lone member, it will just proceed with the HH merge.
     */
     addOrMergeContact : function(component, event) {
-        debugger;
         var namespacePrefix = component.get('v.namespacePrefix');
         var conAdd = event.getParam('value');
         var cMembers = 0;

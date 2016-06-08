@@ -65,11 +65,6 @@
         helper.setListVisibilityDelayed(component, false);
     },
     
-    handleIsListVisibleChange: function (component, event, helper) {
-        var isListVisible = component.get('v.isListVisible');
-        helper.setListVisibilityDelayed(component, isListVisible);
-    },
-
     handleRemovePill: function (component) {
         component.set('v.value', '');
         component.set('v.displayValue', '');

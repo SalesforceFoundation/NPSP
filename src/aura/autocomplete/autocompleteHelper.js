@@ -17,7 +17,7 @@
             }
 
             this.setListVisibility(component, true);
-			component.set('v.showLoadingIndicator', true);
+            component.set('v.showLoadingIndicator', true);
 
             var dataProvider = component.get('v.dataProvider')[0];
 
@@ -27,7 +27,7 @@
                     if (!component || !component.isValid()) {
                         return;
                     }
-					component.set('v.showLoadingIndicator', false);
+                    component.set('v.showLoadingIndicator', false);
                     if (err) {
                         throw err;
                     }
