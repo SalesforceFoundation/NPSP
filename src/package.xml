@@ -545,6 +545,31 @@
         <members>Data_Import_Settings__c.Batch_Size__c</members>
         <members>Data_Import_Settings__c.Contact_Custom_Unique_ID__c</members>
         <members>Data_Import_Settings__c.Contact_Matching_Rule__c</members>
+        <members>Engagement_Plan_Task__c.Assigned_To__c</members>
+        <members>Engagement_Plan_Task__c.Comments__c</members>
+        <members>Engagement_Plan_Task__c.Days_After__c</members>
+        <members>Engagement_Plan_Task__c.Delay_Type__c</members>
+        <members>Engagement_Plan_Task__c.Dependent_Task__c</members>
+        <members>Engagement_Plan_Task__c.Engagement_Plan_Template__c</members>
+        <members>Engagement_Plan_Task__c.Priority__c</members>
+        <members>Engagement_Plan_Task__c.Reminder_Minutes__c</members>
+        <members>Engagement_Plan_Task__c.Reminder__c</members>
+        <members>Engagement_Plan_Task__c.Send_Email__c</members>
+        <members>Engagement_Plan_Task__c.Status__c</members>
+        <members>Engagement_Plan_Task__c.Type__c</members>
+        <members>Engagement_Plan_Template__c.Skip_Weekends__c</members>
+        <members>Engagement_Plan_Template__c.Total_Engagement_Plans__c</members>
+        <members>Engagement_Plan_Template__c.Total_Tasks__c</members>
+        <members>Engagement_Plan__c.Account__c</members>
+        <members>Engagement_Plan__c.Campaign__c</members>
+        <members>Engagement_Plan__c.Case__c</members>
+        <members>Engagement_Plan__c.Completed_Tasks__c</members>
+        <members>Engagement_Plan__c.Contact__c</members>
+        <members>Engagement_Plan__c.Engagement_Plan_Template__c</members>
+        <members>Engagement_Plan__c.Opportunity__c</members>
+        <members>Engagement_Plan__c.Recurring_Donation__c</members>
+        <members>Engagement_Plan__c.Status__c</members>
+        <members>Engagement_Plan__c.Total_Tasks__c</members>
         <members>Error_Settings__c.Disable_Error_Handling__c</members>
         <members>Error_Settings__c.Enable_Debug__c</members>
         <members>Error_Settings__c.Error_Notifications_On__c</members>
@@ -1333,6 +1358,9 @@
         <members>Contact</members>
         <members>DataImport__c</members>
         <members>Data_Import_Settings__c</members>
+        <members>Engagement_Plan_Task__c</members>
+        <members>Engagement_Plan_Template__c</members>
+        <members>Engagement_Plan__c</members>
         <members>Error_Settings__c</members>
         <members>Error__c</members>
         <members>Fund__c</members>
@@ -1470,6 +1498,7 @@
         <members>DataImport__c.Failed_Data_Imports</members>
         <members>DataImport__c.Succesfully_Imported</members>
         <members>DataImport__c.To_Be_Imported</members>
+        <members>Engagement_Plan_Template__c.All</members>
         <members>General_Accounting_Unit__c.All</members>
         <members>Opportunity.To_Be_Acknowledged</members>
         <members>Trigger_Handler__c.All</members>
