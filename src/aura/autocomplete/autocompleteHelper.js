@@ -9,7 +9,7 @@
         // causing it to reopen.
         //
         // if this event is fired and the element is not focused, ignore
-        if (el === document.activeElement) {
+        if (component.get('v.inputFocused')) {
             component.set('v.keyword', keyword);
 
             if (!keyword) {
@@ -17,6 +17,7 @@
             }
 
             this.setListVisibility(component, true);
+            component.set('v.showLoadingIndicator', true);
 
             var dataProvider = component.get('v.dataProvider')[0];
 
@@ -26,7 +27,7 @@
                     if (!component || !component.isValid()) {
                         return;
                     }
-
+                    component.set('v.showLoadingIndicator', false);
                     if (err) {
                         throw err;
                     }
@@ -59,5 +60,6 @@
     setListVisibility: function (component, visible) {
         var listComponent = component.find('list');
         $A.util.toggleClass(listComponent, "slds-hide", !visible);
-    },
+        component.set('v.isListVisible', visible);
+    }
 })

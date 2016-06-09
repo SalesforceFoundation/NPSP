@@ -65,6 +65,8 @@ public class HH_Container_LCTRL {
         str = Label.lblMergeHHPrompt;
         str = Label.lblBtnAddContact;
         str = Label.lblBtnAddAllHHMembers;
+        str = Label.lblFindOrAddContact;
+        str = Label.lblFindInContacts;
 
     }
 
@@ -134,7 +136,7 @@ public class HH_Container_LCTRL {
     * @description returns the soql string to use to query contacts and their appropriate fields
     * @return String The soql select string to use for Contacts
     */
-    private static string conSelect {
+    public static string conSelect {
         get {
             if (conSelect == null) {
                 //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
@@ -145,6 +147,9 @@ public class HH_Container_LCTRL {
                     strSoql += strComma + strF;
                     strComma = ',';
                 }
+                // add a few fields we need for contact merge code
+                strSoql += ', Account.Number_of_Household_Members__c, npo02__Household__r.Number_of_Household_Members__c ';
+                strSoql += ', Account.Name, npo02__Household__r.Name ';
                 strSoql += ' FROM Contact ';
                 conSelect = strSoql;
             }

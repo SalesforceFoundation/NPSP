@@ -1,0 +1,47 @@
+<aura:component extends="c:autocompleteOption">
+    <li class="slds-lookup__item">
+        <span>
+            <div class="slds-media slds-tile slds-hint-parent">
+                <div class="slds-media__figure">
+                    <aura:if isTrue="{!v.value.HHId__c != null}" >
+                        <c:svg ariaHidden="true"
+                               class="slds-icon slds-icon--small slds-icon-standard-household"
+                               xlinkHref="/resource/SLDS/1_0_3/assets/icons/standard-sprite/svg/symbols.svg#household"
+                               />
+                        <aura:set attribute="else">                            
+                            <c:svg ariaHidden="true"
+                                   class="slds-icon slds-icon--small slds-icon-standard-contact"
+                                   xlinkHref="/resource/SLDS/1_0_3/assets/icons/standard-sprite/svg/symbols.svg#contact"
+                                   />
+                        </aura:set>
+                    </aura:if>
+                </div>
+                <div class="slds-media__body">
+                    <div class="slds-grid slds-grid--align-spread slds-has-flexi-truncate">
+                        <p class="slds-tile__title slds-truncate">{!v.value.FirstName}&nbsp;{!v.value.LastName}</p>
+                        <ui:button class="slds-button slds-button--icon slds-shrink-none" press="{!c.handleClick}">
+                            <c:svg ariaHidden="true"
+                                   class="slds-button__icon slds-button__icon--large"
+                                   xlinkHref="/resource/SLDS/1_0_3/assets/icons/utility-sprite/svg/symbols.svg#new"
+                                   />
+                            <span class="slds-assistive-text">{!$Label.npo02.Add}</span>
+                        </ui:button>
+                    </div>
+                    <div class="slds-tile__detail slds-text-body--small">
+                        <ul>
+                            <aura:if isTrue="{!v.value.npo02__Household__r.Name != null}" >
+                                <li>{!v.value.npo02__Household__r.Name}</li>
+                                <aura:set attribute="else">                            
+                                    <li>{!v.value.Account.Name}</li>
+                                </aura:set>
+                            </aura:if>
+                            <li><ui:outputText value="{!v.value.MailingStreet}" /></li>
+                            <li><ui:outputText value="{!v.value.MailingCity + (v.value.MailingState != null ? ', ' : '') + v.value.MailingState + ' ' + v.value.MailingPostalCode + ' '}" /></li>
+                            <li><ui:outputText value="{!v.value.MailingCountry}" /></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </span>
+    </li>
+</aura:component>

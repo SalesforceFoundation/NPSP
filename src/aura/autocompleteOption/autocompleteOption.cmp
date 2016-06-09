@@ -7,7 +7,7 @@
 
     <aura:attribute name="body" type="Aura.Component[]">
         <li class="slds-lookup__item">
-            <button class="slds-button" role="option" onclick="{!c.handleClick}">
+            <ui:button class="slds-button" press="{!c.handleClick}">
                 <aura:if isTrue="{!and(!empty(v.iconSprite), !empty(v.iconName))}">
                     <c:svg ariaHidden="true"
                            class="{!'slds-icon slds-icon--small slds-icon-' + v.iconSprite + '-' + v.iconName}"
@@ -15,7 +15,7 @@
                            />
                 </aura:if>
                 {!v.displayValue}
-            </button>
+            </ui:button>
         </li>
     </aura:attribute>
 

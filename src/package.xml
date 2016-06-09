@@ -81,6 +81,7 @@
         <members>ERR_Notifier</members>
         <members>ERR_ParentAccountUpdater2_TEST</members>
         <members>ERR_ParentAccountUpdater_TEST</members>
+        <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
         <members>HH_CampaignDedupeBTN_TEST</members>
         <members>HH_CampaignDedupe_BATCH</members>
@@ -345,15 +346,24 @@
     <types>
         <members>HH_AddressChangedEvent</members>
         <members>HH_AddressMgr</members>
+        <members>HH_AutoComplete</members>
+        <members>HH_AutoCompleteDataProvider</members>
+        <members>HH_AutoCompleteOption</members>
         <members>HH_Canvas</members>
         <members>HH_ContactAfterDeleteEvent</members>
         <members>HH_ContactCard</members>
         <members>HH_ContactChangedEvent</members>
         <members>HH_ContactDeleteEvent</members>
+        <members>HH_ContactNewEvent</members>
         <members>HH_ContactReorderEvent</members>
         <members>HH_Container</members>
+        <members>HH_ContainerLoadedEvent</members>
         <members>HH_HouseholdSavedEvent</members>
         <members>ManageHHApp</members>
+        <members>autocomplete</members>
+        <members>autocompleteOption</members>
+        <members>autocompleteSelectListOption</members>
+        <members>dataProviderInterface</members>
         <members>defaultTokens</members>
         <members>svg</members>
         <name>AuraDefinitionBundle</name>
@@ -1001,6 +1011,8 @@
         <members>lblCountry</members>
         <members>lblDeleteContact</members>
         <members>lblDeleteContactPrompt</members>
+        <members>lblFindInContacts</members>
+        <members>lblFindOrAddContact</members>
         <members>lblFirstName</members>
         <members>lblFormalGreeting</members>
         <members>lblHousehold</members>

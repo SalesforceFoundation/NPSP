@@ -26,6 +26,7 @@
     <!-- events we fire -->
     <aura:registerEvent name="ContactAfterDeleteEvent" type="c:HH_ContactAfterDeleteEvent" />
     <aura:registerEvent name="HouseholdSavedEvent" type="c:HH_HouseholdSavedEvent" />
+    <aura:registerEvent name="ContainerLoadedEvent" type="c:HH_ContainerLoadedEvent" />
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
@@ -34,6 +35,8 @@
     <aura:handler event="c:HH_ContactDeleteEvent" action="{!c.handleContactDeleteEvent}"/>
     <aura:handler event="c:HH_ContactReorderEvent" action="{!c.handleContactReorderEvent}"/>
     <aura:handler event="c:HH_AddressChangedEvent" action="{!c.handleAddressChangedEvent}"/>
+    <aura:handler event="c:autocompleteSelectListOption" name="optionSelected" action="{!c.handleAutoCompleteOptionSelectedEvent}" />    
+    <aura:handler event="c:HH_ContactNewEvent" name="ContactNewEvent" action="{!c.handleContactNewEvent}" />    
 
     <!-- markup follows... -->
 
@@ -100,20 +103,8 @@
                     <div class="slds-grid">
                         <div class="slds-col slds-text-heading--label slds-p-around--x-small">{!$Label.npo02.HouseholdMembers}</div>
                         <div class="slds-col slds-text-align--right slds-p-around--x-small">
-                            (find contact autocomplete here!)
-                            <ui:button class="slds-button slds-button--small slds-button--neutral"
-                                       aura:id="btnNewContact"
-                                       buttonTitle="{!$Label.npo02.NewContact}"
-                                       label="{!$Label.npo02.NewContact}"
-                                       press="{!c.showNewContactPopup}" />
-
-                            <!-- temporary merge button for testing -->
-                            <ui:button class="slds-button slds-button--small slds-button--neutral"
-                                       aura:id="btnMerge"
-                                       buttonTitle="Merge"
-                                       label="Merge"
-                                       press="{!c.mergeTest}" />
-
+                            <!-- the autocomplete component for finding and adding contacts -->
+                            <c:HH_AutoComplete aura:id="HHAutoComplete" hhId="{!v.hhId}" namespacePrefix="{!v.namespacePrefix}" listCon="{!v.listCon}" />                            
                         </div>
                     </div>
                     <c:HH_Canvas hh="{!v.hh}" listCon="{!v.listCon}" />
@@ -313,8 +304,6 @@
                 <div class="slds-backdrop slds-backdrop--open"></div>
             </aura:if>
             <!-- /NEW CONTACT POPUP -->
-
-
 
             </div> <!-- myBodyContent -->
         </div> <!-- slds -->

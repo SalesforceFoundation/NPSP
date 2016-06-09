@@ -2421,6 +2421,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Do you want to delete this contact, when the page is saved?</value>
     </labels>
     <labels>
+        <fullName>lblFindInContacts</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>autocomplete&apos;s label for &quot;smith in Contacts&quot;</shortDescription>
+        <value>in Contacts</value>
+    </labels>
+    <labels>
+        <fullName>lblFindOrAddContact</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>string displayed in the autocomplete control when empty</shortDescription>
+        <value>Find a contact or add a new contact to the household</value>
+    </labels>
+    <labels>
         <fullName>lblFirstName</fullName>
         <categories>Manage Household UI</categories>
         <language>en_US</language>

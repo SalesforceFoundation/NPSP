@@ -67,8 +67,8 @@
     },
 
     // show the new contact popup
-    showNewContactPopup : function(component /*, event, helper */) {
-        component.set('v.showNewContactPopup', true);
+    handleContactNewEvent : function(component, event, helper) {
+        helper.showNewContactPopup(component, event);
     },
 
     // proceed with create a new contact
@@ -84,23 +84,6 @@
     // Salutation select list has changed, so update conNew
     onSalutationChange : function(component, event, helper) {
         helper.onSalutationChange(component);
-    },
-
-    // temp code for testing household Merge
-    mergeTest : function(component, event, helper) {
-        var hhMerge = {'sobjectType' : 'Account',
-                        'Id' : '001G000001z8sxB',
-                        'Number_of_Household_Members__c' : '2'};
-        component.set('v.hhMerge', hhMerge);
-        var conAdd = {'sobjectType' : 'Contact',
-                        'Id' : '001G000001z8tAW',
-                        'FirstName' : 'John',
-                        'LastName' : 'Doe',
-                        'MailingStreet' : 'Doe street',
-                        'MailingCity' : 'Doe city',
-                        'is_Address_Override__c' : 'true'};
-        component.set('v.conAdd', conAdd);
-        helper.addOrMergeContact(component, conAdd, hhMerge);
     },
 
     // add just the contact to the Household
@@ -122,4 +105,12 @@
         component.set('v.showMergeHHPopup', false);
     },
 
+    // a Contact has been selected in the autocomplete
+    handleAutoCompleteOptionSelectedEvent : function(component, event, helper) {
+        // collapse the autocomplete list
+        var autoComplete = component.find('HHAutoComplete');
+        autoComplete.set('v.isListVisible', false);
+        // do the work.
+        helper.addOrMergeContact(component, event);
+    },
 })
