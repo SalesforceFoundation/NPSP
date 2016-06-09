@@ -73,6 +73,10 @@
         <members>CON_DeleteContactOverride_TEST</members>
         <members>CON_DoNotContact_TDTM</members>
         <members>CON_DoNotContact_TEST</members>
+        <members>EP_EngagementPlans_TDTM</members>
+        <members>EP_EngagementPlans_TEST</members>
+        <members>EP_TaskCreator</members>
+        <members>EP_Utils</members>
         <members>ERR_AddError_TEST</members>
         <members>ERR_Handler</members>
         <members>ERR_Handler_API</members>
@@ -323,6 +327,7 @@
         <members>TDTM_Campaign</members>
         <members>TDTM_CampaignMember</members>
         <members>TDTM_Contact</members>
+        <members>TDTM_EngagementPlan</members>
         <members>TDTM_HouseholdObject</members>
         <members>TDTM_Lead</members>
         <members>TDTM_Opportunity</members>
@@ -1602,5 +1607,5 @@
         <members>Opportunity.Opportunity Email Acknowledgment</members>
         <name>WorkflowRule</name>
     </types>
-    <version>36.0</version>
+    <version>33.0</version>
 </Package>
