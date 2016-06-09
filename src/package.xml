@@ -555,6 +555,7 @@
         <members>Engagement_Plan_Task__c.Reminder_Minutes__c</members>
         <members>Engagement_Plan_Task__c.Reminder__c</members>
         <members>Engagement_Plan_Task__c.Send_Email__c</members>
+        <members>Engagement_Plan_Task__c.Status__c</members>
         <members>Engagement_Plan_Task__c.Type__c</members>
         <members>Engagement_Plan_Template__c.Skip_Weekends__c</members>
         <members>Engagement_Plan_Template__c.Total_Engagement_Plans__c</members>
@@ -567,7 +568,6 @@
         <members>Engagement_Plan__c.Engagement_Plan_Template__c</members>
         <members>Engagement_Plan__c.Opportunity__c</members>
         <members>Engagement_Plan__c.Recurring_Donation__c</members>
-        <members>Engagement_Plan__c.Status__c</members>
         <members>Engagement_Plan__c.Total_Tasks__c</members>
         <members>Error_Settings__c.Disable_Error_Handling__c</members>
         <members>Error_Settings__c.Enable_Debug__c</members>
