@@ -651,10 +651,20 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
             SObjectField OppRecordTypeId = Schema.sObjectType.Opportunity.fields.getMap().get('RecordTypeId');
             if (OppRecordTypeId != null)
                 soql += ' and RecordTypeId not in :setOppRecordTypeIdNoPayment ';
-                     
+
+            soql += 'LIMIT 1001';
+
             integer cMissing = database.countQuery(soql);
             if (cMissing > 0) {
-                createDR(Label.healthLabelOppPayments, statusWarning, string.format(Label.healthDetailsMissingOppPayments, new string[]{string.valueOf(cMissing)}), label.healthSolutionMissingOppPayments);
+                String sMissing;
+
+                if (cMissing > 1000) {
+                    sMissing = '1000+';
+                } else {
+                    sMissing = String.valueOf(cMissing);
+                }
+
+                createDR(Label.healthLabelOppPayments, statusWarning, string.format(Label.healthDetailsMissingOppPayments, new string[]{sMissing}), label.healthSolutionMissingOppPayments);
             } else {
                 createDR(Label.healthLabelOppPayments, statusSuccess, null, label.healthLabelNoMissingOppPayments);
             }            
