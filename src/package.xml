@@ -770,6 +770,8 @@
         <members>CONV_Warning</members>
         <members>CONV_What_This_Tool_Does</members>
         <members>CampaignMemberStatusOmit</members>
+        <members>EPTaskDependency</members>
+        <members>EPTaskTemplate</members>
         <members>HiddenForSecurity</members>
         <members>PageMessagesConfirm</members>
         <members>PageMessagesError</members>
