@@ -56,6 +56,46 @@
     <enableSharing>false</enableSharing>
     <enableStreamingApi>false</enableStreamingApi>
     <fields>
+        <fullName>Blank_Assignment_Rule__c</fullName>
+        <description>When an Engagement Plan Task&apos;s Assigned To field is left blank, who should the task be assigned to?</description>
+        <externalId>false</externalId>
+        <inlineHelpText>When an Engagement Plan Task&apos;s Assigned To field is left blank, who should the task be assigned to?</inlineHelpText>
+        <label>Blank Assignment Rule</label>
+        <picklist>
+            <picklistValues>
+                <fullName>User Creating Action Plan</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Owner of Receiving Object</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Skip_Day__c</fullName>
+        <description>Should tasks that land on a weekend be scheduled for the Friday before the weekend or the Monday after?</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Should tasks that land on a weekend be scheduled for the Friday before the weekend or the Monday after?</inlineHelpText>
+        <label>Skip Day</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Monday</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Friday</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
         <fullName>Skip_Weekends__c</fullName>
         <defaultValue>true</defaultValue>
         <description>If selected, tasks created in this Engagement Plan will not be given a Due Date that falls on a weekend.</description>

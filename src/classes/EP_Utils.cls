@@ -35,36 +35,76 @@
 * @description 
 */
 public with sharing class EP_Utils {
-    
-    public static Map<String, Schema.DescribeFieldResult> fieldDescribeMap = UTIL_Describe.getAllFieldsDescribe('Engagement_Plan__c');
-    public static Set<String> lookupFields {
+
+    /** @description Engagement Plan field describe map.*/
+    private static Map<String, Schema.DescribeFieldResult> fieldDescribeMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('Engagement_Plan__c'));
+    /** @description A map of field name to relationship name for all custom relationship fields, except for the template master-detail field.*/
+    private static Map<String, String> lookupFieldsToRelationship {
         get {
-            if (lookupFields == null) {
-                lookupFields = new Set<String>();
+            if (lookupFieldsToRelationship == null) {
+                lookupFieldsToRelationship = new Map<String, String>();
                 for (String fieldName : fieldDescribeMap.keySet()) {
-                    if (fieldDescribeMap.get(fieldName).getRelationshipName() != null) { 
-                        if (fieldName != UTIL_Namespace.StrTokenNSPrefix('Engagement_Plan_Template__c')) {
-                            lookupFields.add(fieldName);
+                    Schema.DescribeFieldResult fieldDescribe = fieldDescribeMap.get(fieldName);
+                    if (fieldDescribe.getRelationshipName() != null && fieldDescribe.isCustom()) { 
+                        if (fieldName != 'Engagement_Plan_Template__c') {
+                            lookupFieldsToRelationship.put(fieldName, fieldDescribe.getRelationshipName() + '.OwnerId');
                         }
                     }
                 }
             }
-            return lookupFields;
+            return lookupFieldsToRelationship;
         }
         private set;
     }
 
-    public static Id getTargetObject(Engagement_Plan__c engagementPlan) {
-        Id targetObjectId;
-        for (String fieldName : lookupFields) {
+
+    /** @description */
+    public Map<Id, String> targetFieldMap = new Map<Id, Id>();
+    /** @description */
+    public Map<Id, Id> targetObjectMap = new Map<Id, Id>();
+    /** @description */
+    public Map<Id, Id> targetOwnerMap = new Map<Id, Id>();
+
+
+    public EP_Utils(List<Engagement_Plan__c> engagementPlans) {
+        for (Engagement_Plan__c engagementPlan : engagementPlans) {
+            targetFieldMap.put(engagementPlan.id, getTargetObjectField(engagementPlan));
+        }
+
+        for (Engagement_Plan__c engagementPlan : database.query(getOwnerIdQuery() + ' WHERE Id IN :engagementPlans')) {
+            String targetField = targetFieldMap.get(engagementPlan.id);
+            if (!String.isBlank(targetField)) {
+                targetObjectMap.put(engagementPlan.id, (Id)engagementPlan.get('targetField'));
+                targetOwnerMap.put(engagementPlan.id, (Id)engagementPlan.get(lookupFieldsToRelationship.get('targetField')));
+            }
+        }
+    }
+
+    private String getOwnerIdQuery() {
+        //compile list of all lookup fields and their relationship to the object's OwnerId
+        List<String> queryFields = new List<String>(lookupFieldsToRelationship.keySet());
+        queryFields.addAll(lookupFieldsToRelationship.values());
+
+        String result = 'SELECT Id, ';
+        result += String.join(queryFields, ', ');
+        result += ' FROM Engagement_Plan__c';
+        return result;
+    }
+
+    public String getTargetObjectField(Engagement_Plan__c engagementPlan) {
+        String targetObjectField;
+        for (String fieldName : lookupFieldsToRelationship.keySet()) {
             if (engagementPlan.get(fieldName) != null) {
-                if (targetObjectId != null) {
+                if (targetObjectField != null) {
                     engagementPlan.addError('Only one object lookup can be populated per engagement plan.');
                 } else {
-                    targetObjectId = (Id)engagementPlan.get(fieldName);
+                    targetObjectField = fieldName;
                 }
             }
         }
-        return targetObjectId;
+        if (targetObjectField == null) {
+            engagementPlan.addError('One object lookup must be populated for each engagement plan.');
+        }
+        return targetObjectField;
     }
 }

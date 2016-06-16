@@ -32,6 +32,6 @@ trigger TDTM_EngagementPlan on Engagement_Plan__c (after delete, after insert, a
 
     TDTM_TriggerHandler handler = new TDTM_TriggerHandler();  
     handler.run(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete, 
-        Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.Partial_Soft_Credit__c, 
+        Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.Engagement_Plan__c, 
         new TDTM_ObjectDataGateway());
 }
