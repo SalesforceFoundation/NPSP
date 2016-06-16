@@ -44,7 +44,7 @@ public with sharing class HH_ManageHH_CTRL {
 
     /** @description what is the namespace (null if unmanaged, or npsp__ if managed) */
     public string namespacePrefix { get; set; }
-
+    
     /*******************************************************************************************************
     * @description Constructor for the page.  Loads up the HH Account or HH Object, using fields from
     * the appropriate field set.
@@ -56,7 +56,7 @@ public with sharing class HH_ManageHH_CTRL {
 
         Map<String, String> pageParams = ApexPages.currentPage().getParameters();
         hhId = pageParams.get('Id');
-
+        
         // load up only the fields exposed in the field set for our visualforce page to use.
         String strSoql = 'select Id';
         for (Schema.FieldSetMember fsm : hhFieldSet)

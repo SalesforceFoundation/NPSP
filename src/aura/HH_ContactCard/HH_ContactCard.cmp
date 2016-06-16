@@ -1,6 +1,7 @@
 <aura:component >
     <!-- our attributes -->
     <aura:attribute name="contact" type="Contact" access="public"/>
+    <aura:attribute name="allowContactDelete" type="Boolean" default="false" access="public" />
 
     <!-- events we fire -->
        <aura:registerEvent name="ContactChangedEvent" type="c:HH_ContactChangedEvent"/>
@@ -21,11 +22,13 @@
                             <a href="{! '/' + v.contact.Id}" target="_blank">{!v.contact.FirstName}&nbsp;{!v.contact.LastName}</a>
                         </div>
                         <div class="slds-media__figure slds-m-right--none">
-                            <ui:button label="{!$Label.npo02.Delete}" buttonTitle="{!$Label.npo02.Delete}" labelClass="assistiveText"
-                                       class="slds-button slds-button--icon deleteBtn" press="{!c.deleteContact}">
-                                <c:svg class="slds-icon slds-icon--x-small slds-icon-text-default slds-button__icon"
-                                       xlinkHref="/resource/SLDS/1_0_3/assets/icons/utility-sprite/svg/symbols.svg#delete" />
-                            </ui:button>
+                            <aura:if isTrue="{!v.allowContactDelete}">
+                                <ui:button label="{!$Label.npo02.Delete}" buttonTitle="{!$Label.npo02.Delete}" labelClass="assistiveText"
+                                           class="slds-button slds-button--icon deleteBtn" press="{!c.deleteContact}">
+                                    <c:svg class="slds-icon slds-icon--x-small slds-icon-text-default slds-button__icon"
+                                           xlinkHref="/resource/SLDS/1_0_3/assets/icons/utility-sprite/svg/symbols.svg#delete" />
+                                </ui:button>
+                            </aura:if>
                         </div>
                     </div>
                 </span>

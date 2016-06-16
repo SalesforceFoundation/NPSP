@@ -1024,6 +1024,7 @@
         <members>lblMergeHHPrompt</members>
         <members>lblMergeHHTitle</members>
         <members>lblNPSPSettings</members>
+        <members>lblNoHHMergePermissions</members>
         <members>lblPostalCode</members>
         <members>lblSalutation</members>
         <members>lblState</members>
