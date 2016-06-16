@@ -4,8 +4,8 @@
     <aura:attribute name="allowContactDelete" type="Boolean" default="false" access="public" />
 
     <!-- events we fire -->
-       <aura:registerEvent name="ContactChangedEvent" type="c:HH_ContactChangedEvent"/>
-       <aura:registerEvent name="ContactDeleteEvent" type="c:HH_ContactDeleteEvent"/>
+    <aura:registerEvent name="ContactChangedEvent" type="c:HH_ContactChangedEvent"/>
+    <aura:registerEvent name="ContactDeleteEvent" type="c:HH_ContactDeleteEvent"/>
 
     <!-- markup follows... -->
 

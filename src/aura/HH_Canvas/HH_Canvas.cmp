@@ -10,14 +10,14 @@
 
     <!-- events we handle -->
 
-    <!-- libraries needed
+    <!-- libraries needed 
     <ltng:require scripts="{!join(',',
         $Resource.CumulusStaticResources + '/jquery/jquery-2.2.4.js',
         $Resource.CumulusStaticResources + '/jquery-ui/jquery-ui-1.11.4.js')}"
         afterScriptsLoaded="{!c.afterScriptsLoaded}" />
 -->
     <ltng:require scripts="/resource/CumulusStaticResources/jquery/jquery-2.2.4.js,/resource/CumulusStaticResources/jquery-ui/jquery-ui-1.11.4.js"
-    afterScriptsLoaded="{!c.afterScriptsLoaded}" />
+        afterScriptsLoaded="{!c.afterScriptsLoaded}" />
 
     <!-- markup follows... -->
 

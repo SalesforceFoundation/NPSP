@@ -42,7 +42,7 @@ public with sharing class HH_ManageHH_CTRL {
     /** @description The Household Object or Account */
     public SObject hh { get; set; }
 
-    /** @description what is the namespace (null if unmanaged, or npsp__ if managed) */
+    /** @description what is the namespace (null if unmanaged, or npsp if managed) */
     public string namespacePrefix { get; set; }
     
     /*******************************************************************************************************
@@ -51,8 +51,6 @@ public with sharing class HH_ManageHH_CTRL {
     */
     public HH_ManageHH_CTRL() {
         namespacePrefix = UTIL_Namespace.getNamespace();
-        if (namespacePrefix != null && namespacePrefix != '')
-            namespacePrefix += '__';
 
         Map<String, String> pageParams = ApexPages.currentPage().getParameters();
         hhId = pageParams.get('Id');

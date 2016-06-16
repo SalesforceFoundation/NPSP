@@ -422,7 +422,7 @@
                 // the labels that fail to get resolved appear as
                 // "$Label.namespace.foo does not exist: Field $Label.namespace__foo does not exist. Check spelling."
                 if (lbl[nspace][str] && lbl[nspace][str].startsWith('$Label'))
-                    lbl[nspace][str] = '';
+                    lbl[nspace][str] = ''; //lbl['c'][str];
             }
         }
     },

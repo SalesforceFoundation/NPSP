@@ -21,7 +21,7 @@
             tolerance: "pointer",
 
             // called after DOM has been updated after a drag/drop sort
-            update: function(/* event, ui */) {
+            update: $A.getCallback(function(/* event, ui */) {
                 // update our listCon to the new order
                 var listCon = component.get('v.listCon');
                 var listConNew = [];
@@ -36,7 +36,7 @@
                 var evt = $A.get("e.c:HH_ContactReorderEvent");
                 evt.setParams({ "listCon" : listConNew });
                 evt.fire();
-            }
+            })
         });
         j$('.slds-has-cards--space').disableSelection();
     },
