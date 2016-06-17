@@ -86,6 +86,7 @@
         <members>HH_CampaignDedupeBTN_TEST</members>
         <members>HH_CampaignDedupe_BATCH</members>
         <members>HH_Container_LCTRL</members>
+        <members>HH_Container_TEST</members>
         <members>HH_HHObject_TDTM</members>
         <members>HH_HouseholdNaming</members>
         <members>HH_HouseholdNaming_BATCH</members>
@@ -96,6 +97,7 @@
         <members>HH_INaming</members>
         <members>HH_ManageHHAccount_TEST</members>
         <members>HH_ManageHH_CTRL</members>
+        <members>HH_ManageHH_TEST</members>
         <members>HH_ManageHousehold_EXT</members>
         <members>HH_ManageHousehold_TEST</members>
         <members>HH_NameSpec</members>

@@ -42,7 +42,7 @@ public with sharing class HH_ManageHH_CTRL {
     /** @description The Household Object or Account */
     public SObject hh { get; set; }
 
-    /** @description what is the namespace (null if unmanaged, or npsp if managed) */
+    /** @description what is the namespace (null if unmanaged, or npsp__ if managed) */
     public string namespacePrefix { get; set; }
 
     /*******************************************************************************************************

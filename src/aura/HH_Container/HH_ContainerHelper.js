@@ -295,7 +295,7 @@
     * @return iCon the index to the found contact, or -1 if not found.
     */
     findContact : function(listCon, con) {
-    	var iCon;
+        var iCon;
         for (iCon = 0; iCon < listCon.length; iCon++) {
             var con2 = listCon[iCon];
             if (con.Id && con.Id === con2.Id)

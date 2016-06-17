@@ -45,11 +45,14 @@ public with sharing class HH_AutoCompleteDataProvider_LCTRL {
     @AuraEnabled
     public static List<ProviderResult> queryObjects(String queryValue, list<Contact> listCon) {
         try {
+            if (listCon == null)
+                listCon = new list<Contact>();
+            
             // '%', '_', and '\' all are special characters in LIKE syntax.
             // We escape them here by prepending those characters with a backslash
             String preparedQueryValue = '%' + queryValue.replaceAll('([%_\\\\])', '\\\\$0') + '%';
             
-			// use helper to get all contact fields to support custom household naming and greetings.
+            // use helper to get all contact fields to support custom household naming and greetings.
             String strSoql = HH_Container_LCTRL.conSelect;
             strSoql += ' WHERE Name LIKE :preparedQueryValue AND Id not in :listCon LIMIT 100';
     
