@@ -383,8 +383,11 @@ public class UTIL_Describe {
             DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(strObject, strF);
             if (dfr == null || !dfr.isCreateable() || !dfr.isUpdateable())
                 throw (new permsException(string.format(label.flsError, new string[]{strObject + '.' + strF})));
-                
-            dst.put(strF, src.get(strF));
+            
+            // don't copy null for checkbox fields, or they will give an error on update
+            if (dfr.isNillable() || src.get(strF)!= null) {    
+                dst.put(strF, src.get(strF));
+            }
         }
     }
 

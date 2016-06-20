@@ -90,7 +90,7 @@ public with sharing class HH_Container_LCTRL {
             list<String> listStrFld = getUpdateableHouseholdFields(isHHAccount);
             String strObject = isHHAccount ? 'Account' : 'npo02__Household__c';
             
-			// check field level security and construct our soql            
+            // check field level security and construct our soql            
             for (String strF : listStrFld) {
                 DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(strObject, strF);
                 if (dfr == null || !dfr.isAccessible() || !dfr.isUpdateable())
@@ -112,7 +112,7 @@ public with sharing class HH_Container_LCTRL {
     * @return list<String> the set of Fields
     */
     private static list<String> getUpdateableHouseholdFields(Boolean isHHAccount) {
-		List<String> listFields = new List<String>{
+        List<String> listFields = new List<String>{
             'Name',
             'npo02__SYSTEM_CUSTOM_NAMING__c', 
             'npo02__Formal_Greeting__c', 
@@ -142,7 +142,7 @@ public with sharing class HH_Container_LCTRL {
             if (hhId == null)
                 return null;
 
-			// conSelect does the FLS check
+            // conSelect does the FLS check
             string strSoql = getContactSelectQueryWithFls();
 
             // don't use contact.HHId in one soql since it can't use an index
@@ -242,7 +242,10 @@ public with sharing class HH_Container_LCTRL {
     * @return set<String> the set of Contact Fields
     */
     private static set<String> setUpdateableContactFields() {
-		set<String> setContactFields = new Set<String>{
+        set<String> setContactFields = new Set<String>{
+            'FirstName',
+            'LastName',
+            'Salutation',
             'npo02__Household_Naming_Order__c', 
             'npo02__Naming_Exclusions__c', 
             UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Name__c'), 
@@ -255,7 +258,7 @@ public with sharing class HH_Container_LCTRL {
             'MailingCountry', 
             'MailingLatitude', 
             'MailingLongitude'};        
-		return setContactFields;
+        return setContactFields;
     }
 
     /*******************************************************************************************************
@@ -282,9 +285,9 @@ public with sharing class HH_Container_LCTRL {
     @AuraEnabled
     public static void upsertContacts(list<Contact> listCon) {
         try {
-			// check object permissions
+            // check object permissions
             if (!Contact.sObjectType.getDescribe().isCreateable() || !Contact.sObjectType.getDescribe().isUpdateable()) {
-            	 throw new System.NoAccessException();    
+                 throw new System.NoAccessException();    
             }
 
             // Even though we are given a list of Contacts from the lightning component,
@@ -296,7 +299,7 @@ public with sharing class HH_Container_LCTRL {
             
             for (Contact con : listCon) {
                 Contact con2 = new Contact(Id=con.Id);
-            	// do FLS and only copy the fields we allow to be touched in our UI
+                // do FLS and only copy the fields we allow to be touched in our UI
                 UTIL_Describe.copyObjectFLS('Contact', con, con2, listStrFld);
                 if (con.Id != null) {
                     listUpdate.add(con2);
@@ -330,8 +333,8 @@ public with sharing class HH_Container_LCTRL {
                 return;
             
             // Check object permissions
-			if (!Contact.sObjectType.getDescribe().isDeletable()) {
-            	throw new System.NoAccessException();    
+            if (!Contact.sObjectType.getDescribe().isDeletable()) {
+                throw new System.NoAccessException();    
             }
             delete listCon;
         } catch (Exception ex) {
@@ -355,13 +358,13 @@ public with sharing class HH_Container_LCTRL {
                 strObject = 'Account';
                 hhCopy = new Account(Id=hh.Id);
                 if (!Account.sObjectType.getDescribe().isUpdateable()) {
-            		throw new System.NoAccessException(); 
+                    throw new System.NoAccessException(); 
                 }
             } else {
                 strObject = 'npo02__Household__c';
                 hhCopy = new npo02__Household__c(Id=hh.Id);
                 if (!npo02__Household__c.sObjectType.getDescribe().isUpdateable()) {
-            		throw new System.NoAccessException(); 
+                    throw new System.NoAccessException(); 
                 }
             }
             
@@ -397,8 +400,8 @@ public with sharing class HH_Container_LCTRL {
             // Check object permissions
             if (!Account.sObjectType.getDescribe().isUpdateable() || 
                 !Account.sObjectType.getDescribe().isDeletable()) {
-            		throw new System.NoAccessException(); 
-           	}
+                    throw new System.NoAccessException(); 
+               }
             for (Account loser : listHHMerge)
                 merge hhWinner loser;
         } catch (Exception ex) {
@@ -517,15 +520,15 @@ public with sharing class HH_Container_LCTRL {
 
                 set<String> setFields = new set<String>{'MailingStreet__c', 'MailingStreet2__c', 
                     'MailingCity__c', 'MailingState__c', 'MailingPostalCode__c', 'MailingCountry__c'};
-				string strSoql = 'select ';
+                string strSoql = 'select ';
                 string strComma = '';
                 
                 for (String strF : setFields) {
                     // check field level security
                     DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('Address__c'), strF);
-                	if (dfr == null || !dfr.isAccessible())
-                    	throw (new permsException(string.format(label.flsError, new string[]{'Address__c' + '.' + strF})));
-					
+                    if (dfr == null || !dfr.isAccessible())
+                        throw (new permsException(string.format(label.flsError, new string[]{'Address__c' + '.' + strF})));
+                    
                     strSoql += strComma + strF;
                     strComma = ',';
                 }
