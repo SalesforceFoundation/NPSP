@@ -54,7 +54,7 @@ public with sharing class HH_AutoCompleteDataProvider_LCTRL {
             
             // use helper to get all contact fields to support custom household naming and greetings.
             // note that our helper does FLS, so we don't have to do it here.
-            String strSoql = HH_Container_LCTRL.conSelect;
+            String strSoql = HH_Container_LCTRL.getContactSelectQueryWithFls();
             strSoql += ' WHERE Name LIKE :preparedQueryValue AND Id not in :listCon LIMIT 100';
     
             List<SObject> results = Database.query(strSoql);

@@ -143,7 +143,7 @@ public with sharing class HH_Container_LCTRL {
                 return null;
 
 			// conSelect does the FLS check
-            string strSoql = conSelect;
+            string strSoql = getContactSelectQueryWithFls();
 
             // don't use contact.HHId in one soql since it can't use an index
             // and won't work in LDV orgs.
@@ -164,38 +164,32 @@ public with sharing class HH_Container_LCTRL {
     * @description returns the soql string to use to query contacts and their appropriate fields
     * @return String The soql select string to use for Contacts
     */
-    public static string conSelect {
-        get {
-            if (conSelect == null) {
-                //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
-                list<string> listStrField = getContactFields();
-                string strSoql = 'SELECT ';
-                string strComma = '';                
-                set<String> setCheckUpdate = setUpdateableContactFields();
-                
-                for (string strF : listStrField) {
+    public static string getContactSelectQueryWithFls() {
+        //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
+        list<string> listStrField = getContactFields();
+        string strSoql = 'SELECT ';
+        string strComma = '';                
+        set<String> setCheckUpdate = setUpdateableContactFields();
+        
+        for (string strF : listStrField) {
 
-                    // check field level security
-                    DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('Contact', strF);
-                	if (dfr == null || !dfr.isAccessible() || ((setCheckUpdate.contains(strF) && !dfr.isUpdateable())))
-                    	throw (new permsException(string.format(label.flsError, new string[]{'Contact' + '.' + strF})));
-                    
-                    strSoql += strComma + strF;
-                    strComma = ',';
-                }
-                // add a few fields we need for contact merge code
-                // we don't have these in our set of fields, because we want to avoid FLS on them,
-                // since we want to support both HH Accounts and Objects, but we expect customers might
-                // only grant permissions on the model they are currently using, but we may have data in both models.
-                // the find autocomplete lookup also uses this code, so it needs to see both types of households.
-                strSoql += ', Account.Number_of_Household_Members__c, npo02__Household__r.Number_of_Household_Members__c ';
-                strSoql += ', Account.Name, npo02__Household__r.Name ';
-                strSoql += ' FROM Contact ';
-                conSelect = strSoql;
-            }
-            return conSelect;
+            // check field level security
+            DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('Contact', strF);
+            if (dfr == null || !dfr.isAccessible() || ((setCheckUpdate.contains(strF) && !dfr.isUpdateable())))
+                throw (new permsException(string.format(label.flsError, new string[]{'Contact' + '.' + strF})));
+            
+            strSoql += strComma + strF;
+            strComma = ',';
         }
-        set;
+        // add a few fields we need for contact merge code
+        // we don't have these in our set of fields, because we want to avoid FLS on them,
+        // since we want to support both HH Accounts and Objects, but we expect customers might
+        // only grant permissions on the model they are currently using, but we may have data in both models.
+        // the find autocomplete lookup also uses this code, so it needs to see both types of households.
+        strSoql += ', Account.Number_of_Household_Members__c, npo02__Household__r.Number_of_Household_Members__c ';
+        strSoql += ', Account.Name, npo02__Household__r.Name ';
+        strSoql += ' FROM Contact ';
+        return strSoql;
     }
 
     /*******************************************************************************************************
