@@ -75,6 +75,8 @@
         <members>CON_DoNotContact_TEST</members>
         <members>EP_TaskDependencyCheck_TDTM</members>
         <members>EP_TaskDependencyCheck_TEST</members>
+        <members>EP_TaskRollup_TDTM</members>
+        <members>EP_TaskRollup_TEST</members>
         <members>ERR_AddError_TEST</members>
         <members>ERR_Handler</members>
         <members>ERR_Handler_API</members>
@@ -332,6 +334,7 @@
         <members>TDTM_PartialSoftCredit</members>
         <members>TDTM_RecurringDonation</members>
         <members>TDTM_Relationship</members>
+        <members>TDTM_Task</members>
         <name>ApexTrigger</name>
     </types>
     <types>
@@ -370,6 +373,7 @@
         <members>Account.Membership_Span__c</members>
         <members>Account.Membership_Status__c</members>
         <members>Account.Number_of_Household_Members__c</members>
+        <members>Activity.Engagement_Plan__c</members>
         <members>Addr_Verification_Settings__c.Address_Verification_Endpoint__c</members>
         <members>Addr_Verification_Settings__c.Auth_ID__c</members>
         <members>Addr_Verification_Settings__c.Auth_Token__c</members>
@@ -571,6 +575,7 @@
         <members>Engagement_Plan__c.Engagement_Plan_Template__c</members>
         <members>Engagement_Plan__c.Opportunity__c</members>
         <members>Engagement_Plan__c.Recurring_Donation__c</members>
+        <members>Engagement_Plan__c.Total_EP_Tasks__c</members>
         <members>Engagement_Plan__c.Total_Tasks__c</members>
         <members>Error_Settings__c.Disable_Error_Handling__c</members>
         <members>Error_Settings__c.Enable_Debug__c</members>
@@ -1352,6 +1357,7 @@
     </types>
     <types>
         <members>Account</members>
+        <members>Activity</members>
         <members>Addr_Verification_Settings__c</members>
         <members>Address_Verification_Settings__c</members>
         <members>Address__c</members>
@@ -1495,6 +1501,10 @@
         <name>Letterhead</name>
     </types>
     <types>
+        <members>Activity.AllActivities</members>
+        <members>Activity.MyActivities</members>
+        <members>Activity.TodaysTasks</members>
+        <members>Activity.UpcomingEvents</members>
         <members>Batch__c.All</members>
         <members>Batch__c.Completed_Batches</members>
         <members>Batch__c.Open_Batches</members>
