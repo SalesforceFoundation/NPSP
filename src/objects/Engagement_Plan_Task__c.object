@@ -44,7 +44,6 @@
         <actionName>View</actionName>
         <type>Default</type>
     </actionOverrides>
-    <allowInChatterGroups>false</allowInChatterGroups>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
     <enableActivities>false</enableActivities>
@@ -52,7 +51,6 @@
     <enableFeeds>false</enableFeeds>
     <enableHistory>false</enableHistory>
     <enableReports>true</enableReports>
-    <enableSearch>true</enableSearch>
     <enableSharing>false</enableSharing>
     <enableStreamingApi>false</enableStreamingApi>
     <fields>
@@ -110,7 +108,8 @@
         <externalId>false</externalId>
         <label>Dependent Task</label>
         <referenceTo>Engagement_Plan_Task__c</referenceTo>
-        <relationshipName>Action_Plan_Tasks</relationshipName>
+        <relationshipLabel>Engagement Plan Tasks</relationshipLabel>
+        <relationshipName>Engagement_Plan_Tasks</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>

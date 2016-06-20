@@ -153,13 +153,13 @@ public class EP_TaskDependencyCheck_TDTM extends TDTM_Runnable {
         Map<Id, Engagement_Plan_Task__c> mapIdToTaskWithChildren = new Map<Id, Engagement_Plan_Task__c>(
             [SELECT Id, 
                 (SELECT Id, Dependent_Task__c, Engagement_Plan_Template__c
-                FROM Action_Plan_Tasks__r)
+                FROM Engagement_Plan_Tasks__r)
                 FROM Engagement_Plan_Task__c WHERE Id IN :listToValidate]);
         // loop through the tasks where the Engagement Plan Template has chained and check for dependent tasks
         for (Engagement_Plan_Task__c newEPTask : listToValidate) {
             // If one or more tasks are dependent on this task then verify they are from the same template
-            if (mapIdToTaskWithChildren.get(newEPTask.Id).Action_Plan_Tasks__r.size() > 0) {
-                for (Engagement_Plan_Task__c childTask : mapIdToTaskWithChildren.get(newEPTask.Id).Action_Plan_Tasks__r) {
+            if (mapIdToTaskWithChildren.get(newEPTask.Id).Engagement_Plan_Tasks__r.size() > 0) {
+                for (Engagement_Plan_Task__c childTask : mapIdToTaskWithChildren.get(newEPTask.Id).Engagement_Plan_Tasks__r) {
                     if (childTask.Engagement_Plan_Template__c != newEPTask.Engagement_Plan_Template__c) {
                         newEPTask.addError(Label.EPTaskTemplate);
                     }
