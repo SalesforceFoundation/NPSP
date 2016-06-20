@@ -273,6 +273,11 @@ public without sharing class TDTM_DefaultConfig {
               Class__c = 'EP_TaskDependencyCheck_TDTM', Load_Order__c = 1, Object__c = 'Engagement_Plan_Task__c',
               Trigger_Action__c = 'AfterInsert;AfterUpdate'));
 
+        // Tasks
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+              Class__c = 'EP_TaskRollup_TDTM', Load_Order__c = 1, Object__c = 'Task',
+              Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete;AfterUndelete'));
+
         return handlers;
     }
 

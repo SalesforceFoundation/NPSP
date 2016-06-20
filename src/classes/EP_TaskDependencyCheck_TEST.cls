@@ -31,37 +31,21 @@
 * @author Salesforce.org
 * @date 2016
 * @group Engagement Plans
-* @description Trigger Handler on Engagement Plan Tasks 
+* @description Test Trigger Handler on Engagement Plan Tasks 
 */
 @isTest
 public class EP_TaskDependencyCheck_TEST {
-    
-    /*******************************************************************************************************
-    * @description Setup Test Data to be used by the various test methods
-    */
-    @testSetup static void generateTestData() {
-        List<Engagement_Plan_Template__c> templateTests = new List<Engagement_Plan_Template__c>();
-        List<Engagement_Plan_Task__c> taskTests = new List<Engagement_Plan_Task__c>();
-
-        for (integer i = 1; i <= 10; i++) {
-            templateTests.add(new Engagement_Plan_Template__c(Name = 'Test ' + i));
-        }
-        insert templateTests;
-
-        for (Engagement_Plan_Template__c templateTest : templateTests) {
-            for (integer i = 1; i <= 10; i++) {
-                taskTests.add(new Engagement_Plan_Task__c(Engagement_Plan_Template__c = templateTest.Id));
-            }
-        }
-        insert taskTests;
-    }
             
     /*******************************************************************************************************
     * @description Insert a single Engagment Plan Task Dependent on an existing task.
     */ 
     static testmethod void testSingleEPDependentTask() {
-        Engagement_Plan_Template__c templateTest = [SELECT Id, (SELECT Id FROM Engagement_Plan_Tasks__r LIMIT 1) FROM Engagement_Plan_Template__c LIMIT 1];
-        Engagement_Plan_Task__c taskTest = new Engagement_Plan_Task__c(Engagement_Plan_Template__c = templateTest.Id, Dependent_Task__c = templateTest.Engagement_Plan_Tasks__r[0].Id);
+        List<Engagement_Plan_Template__c> templateTests = UTIL_UnitTestData_TEST.createEPTemplates(1);
+        insert templateTests;
+        List<Engagement_Plan_Task__c> taskTests = UTIL_UnitTestData_TEST.createEPTasksForTemplates(2, templateTests);
+        insert taskTests;
+        Engagement_Plan_Task__c taskTest = new Engagement_Plan_Task__c(
+            Engagement_Plan_Template__c = taskTests[0].Engagement_Plan_Template__c, Dependent_Task__c = taskTests[0].Id);
         
         Test.startTest();
         insert taskTest;
@@ -74,17 +58,21 @@ public class EP_TaskDependencyCheck_TEST {
     * @description Insert multiple Engagment Plan Tasks Dependent on an existing task.
     */ 
     static testmethod void testMultipleEPDependentTask() {
-        Engagement_Plan_Template__c templateTest = [SELECT Id, (SELECT Id, Name FROM Engagement_Plan_Tasks__r) FROM Engagement_Plan_Template__c LIMIT 1];
-        List<Engagement_Plan_Task__c> taskTests = new List<Engagement_Plan_Task__c>();
-        for (Engagement_Plan_Task__c taskTest : templateTest.Engagement_Plan_Tasks__r) {
-            taskTests.add(new Engagement_Plan_Task__c(
+        List<Engagement_Plan_Template__c> templateTests = UTIL_UnitTestData_TEST.createEPTemplates(1);
+        insert templateTests;
+        List<Engagement_Plan_Task__c> taskTests = UTIL_UnitTestData_TEST.createEPTasksForTemplates(10, templateTests);
+        insert taskTests;
+        List<Engagement_Plan_Task__c> dependentTaskTests = new List<Engagement_Plan_Task__c>();
+
+        for (Engagement_Plan_Task__c taskTest : taskTests) {
+            dependentTaskTests.add(new Engagement_Plan_Task__c(
                 Name = taskTest.Name + ' Dependent',
-                Engagement_Plan_Template__c = templateTest.Id,
+                Engagement_Plan_Template__c = templateTests[0].Id,
                 Dependent_Task__c = taskTest.Id));
         }
 
         Test.startTest();
-        insert taskTests;
+        insert dependentTaskTests;
         Test.stopTest();
 
         List<Engagement_Plan_Task__c> taskTestsNew = [SELECT Id, (SELECT Id FROM Engagement_Plan_Tasks__r)
@@ -97,20 +85,17 @@ public class EP_TaskDependencyCheck_TEST {
     * dependent on B which is dependent on A
     */ 
     static testmethod void testRedundantEPDependentTask() {
-        Engagement_Plan_Template__c templateTest = [SELECT Id, (SELECT Id, Dependent_Task__c
-            FROM Engagement_Plan_Tasks__r LIMIT 4) FROM Engagement_Plan_Template__c LIMIT 1];
-        Engagement_Plan_Task__c taskTestA = templateTest.Engagement_Plan_Tasks__r[0];
-        Engagement_Plan_Task__c taskTestB = templateTest.Engagement_Plan_Tasks__r[1];
-        Engagement_Plan_Task__c taskTestC = templateTest.Engagement_Plan_Tasks__r[2];
-        taskTestA.Dependent_Task__c = taskTestC.Id;
-        update taskTestA;
-        taskTestB.Dependent_Task__c = taskTestA.Id;
-        update taskTestB;
-        taskTestC.Dependent_Task__c = taskTestB.Id;
+        List<Engagement_Plan_Template__c> templateTests = UTIL_UnitTestData_TEST.createEPTemplates(1);
+        insert templateTests;
+        List<Engagement_Plan_Task__c> taskTests = UTIL_UnitTestData_TEST.createEPTasksForTemplates(4, templateTests);
+        insert taskTests;
+        taskTests[0].Dependent_Task__c = taskTests[2].Id;
+        taskTests[1].Dependent_Task__c = taskTests[0].Id;
+        taskTests[2].Dependent_Task__c = taskTests[1].Id;
 
         Test.startTest();
         try {
-            update taskTestC;
+            update taskTests;
             System.assert(false, 'An EP task with a circular dependency should fail insert.');
         } catch (Exception e) {
             System.assert(e.getMessage().contains(Label.EPTaskDependency));
@@ -122,15 +107,19 @@ public class EP_TaskDependencyCheck_TEST {
     * @description Insert EP Tasks with dependency task from a different template.
     */ 
     static testmethod void testCrossTemplateEPDependentTask() {
-        List<Engagement_Plan_Template__c> templateTests = [SELECT Id, (SELECT Id FROM Engagement_Plan_Tasks__r LIMIT 1)
-            FROM Engagement_Plan_Template__c LIMIT 2];
-        Engagement_Plan_Task__c taskTestA = templateTests[0].Engagement_Plan_Tasks__r[0];
-        Engagement_Plan_Task__c taskTestB = new Engagement_Plan_Task__c(Engagement_Plan_Template__c = templateTests[1].Id, Dependent_Task__c = templateTests[0].Engagement_Plan_Tasks__r[0].Id);
-        update taskTestA;
+        List<Engagement_Plan_Template__c> templateTests = UTIL_UnitTestData_TEST.createEPTemplates(2);
+        insert templateTests;
+        List<Engagement_Plan_Task__c> taskTests =
+            UTIL_UnitTestData_TEST.createEPTasksForTemplates(2, new List<Engagement_Plan_Template__c>{templateTests[0]});
+        insert taskTests;
+
+        Engagement_Plan_Task__c crossTemplateTask = taskTests[0].clone();
+        crossTemplateTask.Dependent_Task__c = taskTests[0].Id;
+        crossTemplateTask.Engagement_Plan_Template__c = templateTests[1].Id;
 
         Test.startTest();
         try {
-            insert taskTestB;
+            insert crossTemplateTask;
             System.assert(false, 'An EP task should fail if dependent task belongs to a different template.');
         } catch (Exception e) {
             System.assert(e.getMessage().contains(Label.EPTaskTemplate));
@@ -142,20 +131,21 @@ public class EP_TaskDependencyCheck_TEST {
     * @description Update EP Task that other tasks are dependent on and change its template.
     */ 
     static testmethod void testUpdateCrossTemplateEPDependentTask() {
-        List<Engagement_Plan_Template__c> templateTests = [SELECT Id, (SELECT Id FROM Engagement_Plan_Tasks__r LIMIT 3)
-            FROM Engagement_Plan_Template__c LIMIT 2];
-        Engagement_Plan_Task__c taskTestA = templateTests[0].Engagement_Plan_Tasks__r[0];
-        Engagement_Plan_Task__c taskTestB = templateTests[0].Engagement_Plan_Tasks__r[1];
-        Engagement_Plan_Task__c taskTestC = templateTests[0].Engagement_Plan_Tasks__r[2];
-        taskTestA.Dependent_Task__c = taskTestC.Id;
-        update taskTestA;
-        taskTestB.Dependent_Task__c = taskTestC.Id;
-        update taskTestB;
-        taskTestC.Engagement_Plan_Template__c = templateTests[1].Id;
+        List<Engagement_Plan_Template__c> templateTests = UTIL_UnitTestData_TEST.createEPTemplates(2);
+        insert templateTests;
+        List<Engagement_Plan_Task__c> taskTests =
+            UTIL_UnitTestData_TEST.createEPTasksForTemplates(3, new List<Engagement_Plan_Template__c>{templateTests[0]});
+        insert taskTests;
+
+        taskTests[0].Dependent_Task__c = taskTests[2].Id;
+        taskTests[1].Dependent_Task__c = taskTests[2].Id;
+        update taskTests;
+
+        taskTests[2].Engagement_Plan_Template__c = templateTests[1].Id;
 
         Test.startTest();
         try {
-            update taskTestC;
+            update taskTests[2];
             System.assert(false, 'An EP task should fail if tasks that are dependent on it belongs to a different template.');
         } catch (Exception e) {
             System.assert(e.getMessage().contains(Label.EPTaskTemplate));
