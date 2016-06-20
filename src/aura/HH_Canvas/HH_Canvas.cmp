@@ -1,29 +1,30 @@
 <aura:component >
 
     <!-- our attributes -->
-    <aura:attribute name="hh" type="SObject" />
-    <aura:attribute name="listCon" type="Contact[]" />
+    <aura:attribute name="hh" type="SObject" access="public" />
+    <aura:attribute name="listCon" type="Contact[]" access="public" />
+    <aura:attribute name="allowContactDelete" type="Boolean" default="false" access="public" />
 
     <!-- events we fire -->
     <aura:registerEvent name="ContactReorderEvent" type="c:HH_ContactReorderEvent" />
 
     <!-- events we handle -->
 
-    <!-- libraries needed
+    <!-- libraries needed 
     <ltng:require scripts="{!join(',',
         $Resource.CumulusStaticResources + '/jquery/jquery-2.2.4.js',
         $Resource.CumulusStaticResources + '/jquery-ui/jquery-ui-1.11.4.js')}"
         afterScriptsLoaded="{!c.afterScriptsLoaded}" />
 -->
     <ltng:require scripts="/resource/CumulusStaticResources/jquery/jquery-2.2.4.js,/resource/CumulusStaticResources/jquery-ui/jquery-ui-1.11.4.js"
-    afterScriptsLoaded="{!c.afterScriptsLoaded}" />
+        afterScriptsLoaded="{!c.afterScriptsLoaded}" />
 
     <!-- markup follows... -->
 
     <ul id="SortCanvas" class="slds-list--horizontal slds-has-cards--space" style="display: inline;">
         <aura:iteration items="{!v.listCon}" var="con" indexVar="icon">
             <li class="slds-list__item" style="margin: 0; border: 0; vertical-align: top" data-icontact="{!icon}">
-                <c:HH_ContactCard contact="{!con}" />
+                <c:HH_ContactCard contact="{!con}" allowContactDelete="{!v.allowContactDelete}" />
             </li>
         </aura:iteration>
     </ul>

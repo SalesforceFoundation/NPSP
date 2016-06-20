@@ -42,21 +42,19 @@ public with sharing class HH_ManageHH_CTRL {
     /** @description The Household Object or Account */
     public SObject hh { get; set; }
 
-    /** @description what is the namespace (null if unmanaged, or npsp__ if managed) */
+    /** @description what is the namespace (null if unmanaged, or npsp if managed) */
     public string namespacePrefix { get; set; }
-
+    
     /*******************************************************************************************************
     * @description Constructor for the page.  Loads up the HH Account or HH Object, using fields from
     * the appropriate field set.
     */
     public HH_ManageHH_CTRL() {
         namespacePrefix = UTIL_Namespace.getNamespace();
-        if (namespacePrefix != null && namespacePrefix != '')
-            namespacePrefix += '__';
 
         Map<String, String> pageParams = ApexPages.currentPage().getParameters();
         hhId = pageParams.get('Id');
-
+        
         // load up only the fields exposed in the field set for our visualforce page to use.
         String strSoql = 'select Id';
         for (Schema.FieldSetMember fsm : hhFieldSet)

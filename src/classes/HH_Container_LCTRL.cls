@@ -34,8 +34,11 @@
 * @group-content ../../ApexDocContent/Households.htm
 * @description Lightning Component Server Controller for the Manage Household UI page's HH_Container LC.
 */
-public class HH_Container_LCTRL {
+public with sharing class HH_Container_LCTRL {
 
+    /** @description our exception object for Field Level & Object Security errors. */
+    private class permsException extends Exception {}
+    
     /*******************************************************************************************************
     * @description trick the packaging spider to pickup references to custom labels only used by our
     * lightning components.
@@ -67,7 +70,7 @@ public class HH_Container_LCTRL {
         str = Label.lblBtnAddAllHHMembers;
         str = Label.lblFindOrAddContact;
         str = Label.lblFindInContacts;
-
+        str = Label.lblNoHHMergePermissions;
     }
 
     /*******************************************************************************************************
@@ -80,28 +83,52 @@ public class HH_Container_LCTRL {
         try {
             if (hhId == null)
                 return null;
-            string strSoql;
-            if (UTIL_Describe.isObjectIdThisType(hhId, 'Account')) {
-                strSoql = 'select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, ' +
-                        UTIL_Namespace.StrTokenNSPrefix('Number_of_Household_Members__c') + ', ' +
-                        'BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude';
-
-                /*** until we support these, we don't want them to interfere with what the user specifies.
-                if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled)
-                    strSoql += ', BillingCountryCode, BillingStateCode ';
-                ****/
-
-                strSoql += ' from Account where Id = :hhId';
-            } else {
-                strSoql = 'select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, ' +
-                        UTIL_Namespace.StrTokenNSPrefix('Number_of_Household_Members__c') + ', ' +
-                        'npo02__MailingStreet__c, npo02__MailingCity__c, npo02__MailingState__c, npo02__MailingPostalCode__c, npo02__MailingCountry__c ' +
-                        ' from npo02__Household__c where Id = :hhId';
+            
+            string strSoql = 'select Id, ';
+            String strComma = '';
+            Boolean isHHAccount = UTIL_Describe.isObjectIdThisType(hhId, 'Account');
+            list<String> listStrFld = getUpdateableHouseholdFields(isHHAccount);
+            String strObject = isHHAccount ? 'Account' : 'npo02__Household__c';
+            
+			// check field level security and construct our soql            
+            for (String strF : listStrFld) {
+                DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(strObject, strF);
+                if (dfr == null || !dfr.isAccessible() || !dfr.isUpdateable())
+                    throw (new permsException(string.format(label.flsError, new string[]{strObject + '.' + strF})));
+                
+                strSoql += strComma + strF;
+                strComma = ',';
             }
+            
+            strSoql += ' from ' + strObject + ' where Id = :hhId';
             return database.query(strSoql);
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
+    }
+
+    /*******************************************************************************************************
+    * @description returns a list of Fields (developer name) that must be editable on the Household
+    * @return list<String> the set of Fields
+    */
+    private static list<String> getUpdateableHouseholdFields(Boolean isHHAccount) {
+		List<String> listFields = new List<String>{
+            'Name',
+            'npo02__SYSTEM_CUSTOM_NAMING__c', 
+            'npo02__Formal_Greeting__c', 
+            'npo02__Informal_Greeting__c',
+            UTIL_Namespace.StrTokenNSPrefix('Number_of_Household_Members__c')};
+
+        if (isHHAccount) {
+            listFields.addAll(new List<String>{
+                'BillingStreet', 'BillingCity', 'BillingState', 'BillingPostalCode', 
+                'BillingCountry', 'BillingLatitude', 'BillingLongitude'});
+        } else {
+            listFields.addAll(new List<String>{
+                'npo02__MailingStreet__c', 'npo02__MailingCity__c', 'npo02__MailingState__c', 
+                'npo02__MailingPostalCode__c', 'npo02__MailingCountry__c'});
+        }
+        return listFields;
     }
 
     /*******************************************************************************************************
@@ -115,7 +142,8 @@ public class HH_Container_LCTRL {
             if (hhId == null)
                 return null;
 
-            string strSoql = conSelect;
+			// conSelect does the FLS check
+            string strSoql = getContactSelectQueryWithFls();
 
             // don't use contact.HHId in one soql since it can't use an index
             // and won't work in LDV orgs.
@@ -136,26 +164,32 @@ public class HH_Container_LCTRL {
     * @description returns the soql string to use to query contacts and their appropriate fields
     * @return String The soql select string to use for Contacts
     */
-    public static string conSelect {
-        get {
-            if (conSelect == null) {
-                //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
-                list<string> listStrField = getContactFields();
-                string strSoql = 'SELECT ';
-                string strComma = '';
-                for (string strF : listStrField) {
-                    strSoql += strComma + strF;
-                    strComma = ',';
-                }
-                // add a few fields we need for contact merge code
-                strSoql += ', Account.Number_of_Household_Members__c, npo02__Household__r.Number_of_Household_Members__c ';
-                strSoql += ', Account.Name, npo02__Household__r.Name ';
-                strSoql += ' FROM Contact ';
-                conSelect = strSoql;
-            }
-            return conSelect;
+    public static string getContactSelectQueryWithFls() {
+        //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
+        list<string> listStrField = getContactFields();
+        string strSoql = 'SELECT ';
+        string strComma = '';                
+        set<String> setCheckUpdate = setUpdateableContactFields();
+        
+        for (string strF : listStrField) {
+
+            // check field level security
+            DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('Contact', strF);
+            if (dfr == null || !dfr.isAccessible() || ((setCheckUpdate.contains(strF) && !dfr.isUpdateable())))
+                throw (new permsException(string.format(label.flsError, new string[]{'Contact' + '.' + strF})));
+            
+            strSoql += strComma + strF;
+            strComma = ',';
         }
-        set;
+        // add a few fields we need for contact merge code
+        // we don't have these in our set of fields, because we want to avoid FLS on them,
+        // since we want to support both HH Accounts and Objects, but we expect customers might
+        // only grant permissions on the model they are currently using, but we may have data in both models.
+        // the find autocomplete lookup also uses this code, so it needs to see both types of households.
+        strSoql += ', Account.Number_of_Household_Members__c, npo02__Household__r.Number_of_Household_Members__c ';
+        strSoql += ', Account.Name, npo02__Household__r.Name ';
+        strSoql += ' FROM Contact ';
+        return strSoql;
     }
 
     /*******************************************************************************************************
@@ -164,11 +198,32 @@ public class HH_Container_LCTRL {
     */
     private static list<String> getContactFields() {
         try {
-            set<String> setContactFields = new Set<String>{'Id', 'npo02__Household_Naming_Order__c', 'FirstName', 'LastName', 'Salutation', 'Name',
-                'npo02__Naming_Exclusions__c', 'npo02__Household__c', 'AccountId', 'HHId__c',
-                'Exclude_from_Household_Name__c', 'Exclude_from_Household_Formal_Greeting__c', 'Exclude_from_Household_Informal_Greeting__c',
-                'is_Address_Override__c', 'Current_Address__c', 'npe01__Primary_Address_Type__c',
-                'MailingStreet', 'MailingCity', 'MailingState', 'MailingPostalCode', 'MailingCountry', 'MailingLatitude', 'MailingLongitude', 'CreatedDate'};
+            set<String> setContactFields = new Set<String>{
+                'Id', 
+                'npo02__Household_Naming_Order__c', 
+                'FirstName', 
+                'LastName', 
+                'Salutation', 
+                'Name',
+                'npo02__Naming_Exclusions__c', 
+                'npo02__Household__c', 
+                'AccountId', 
+                UTIL_Namespace.StrTokenNSPrefix('HHId__c'),
+                UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Name__c'), 
+                UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Formal_Greeting__c'), 
+                UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Informal_Greeting__c'),
+                UTIL_Namespace.StrTokenNSPrefix('is_Address_Override__c'), 
+                UTIL_Namespace.StrTokenNSPrefix('Current_Address__c'), 
+                'npe01__Primary_Address_Type__c',
+                'MailingStreet', 
+                'MailingCity', 
+                'MailingState', 
+                'MailingPostalCode', 
+                'MailingCountry', 
+                'MailingLatitude', 
+                'MailingLongitude', 
+                'CreatedDate'
+            };
 
                 /*** until we support these, we don't want them to interfere with what the user specifies.
                 if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled)
@@ -183,6 +238,43 @@ public class HH_Container_LCTRL {
     }
 
     /*******************************************************************************************************
+    * @description returns a set of Contact Fields (developer name) that must be editable
+    * @return set<String> the set of Contact Fields
+    */
+    private static set<String> setUpdateableContactFields() {
+		set<String> setContactFields = new Set<String>{
+            'npo02__Household_Naming_Order__c', 
+            'npo02__Naming_Exclusions__c', 
+            UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Name__c'), 
+            UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Formal_Greeting__c'), 
+            UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Informal_Greeting__c'),
+            'MailingStreet', 
+            'MailingCity', 
+            'MailingState',
+            'MailingPostalCode', 
+            'MailingCountry', 
+            'MailingLatitude', 
+            'MailingLongitude'};        
+		return setContactFields;
+    }
+
+    /*******************************************************************************************************
+    * @description checks whether the user has delete permissions on the specified object
+    * @param strSObject the object
+    * @return Boolean whether the object can be deleted
+    */
+    @AuraEnabled
+    public static Boolean isDeletable(String strSObject) {
+        try {
+            // Check object permissions
+            Schema.DescribeSObjectResult dresult = UTIL_Describe.getObjectDescribe(strSObject);
+            return dresult.isDeletable();
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
+    }
+    
+    /*******************************************************************************************************
     * @description saves any changes to the Contacts in the database
     * @param listCon The list of Contacts to save
     * @return void
@@ -190,16 +282,27 @@ public class HH_Container_LCTRL {
     @AuraEnabled
     public static void upsertContacts(list<Contact> listCon) {
         try {
-            // even though we are given a list of Contacts from the lightning component,
+			// check object permissions
+            if (!Contact.sObjectType.getDescribe().isCreateable() || !Contact.sObjectType.getDescribe().isUpdateable()) {
+            	 throw new System.NoAccessException();    
+            }
+
+            // Even though we are given a list of Contacts from the lightning component,
             // apex seems to treat them as generic sObjects, and thus we can't do upsert.
             // thus we will split the list into update and insert lists.
             list<Contact> listInsert = new list<Contact>();
             list<Contact> listUpdate = new list<Contact>();
+            list<String> listStrFld = new list<String>(setUpdateableContactFields());
+            
             for (Contact con : listCon) {
-                if (con.Id != null)
-                    listUpdate.add(con);
-                else
-                    listInsert.add(con);
+                Contact con2 = new Contact(Id=con.Id);
+            	// do FLS and only copy the fields we allow to be touched in our UI
+                UTIL_Describe.copyObjectFLS('Contact', con, con2, listStrFld);
+                if (con.Id != null) {
+                    listUpdate.add(con2);
+                } else {
+                    listInsert.add(con2);
+                }
             }
             // allow potential duplicates when rules to warn are turned on.
             Database.DMLOptions dml = new Database.DMLOptions();
@@ -223,6 +326,13 @@ public class HH_Container_LCTRL {
     @AuraEnabled
     public static void deleteContacts(list<Contact> listCon) {
         try {
+            if (listCon.size() == 0)
+                return;
+            
+            // Check object permissions
+			if (!Contact.sObjectType.getDescribe().isDeletable()) {
+            	throw new System.NoAccessException();    
+            }
             delete listCon;
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
@@ -237,6 +347,28 @@ public class HH_Container_LCTRL {
     @AuraEnabled
     public static void updateHousehold(SObject hh) {
         try {
+            // Check object permissions
+            Boolean isHHAccount = UTIL_Describe.isObjectIdThisType(hh.Id, 'Account');
+            String strObject;
+            SObject hhCopy;
+            if (isHHAccount) {
+                strObject = 'Account';
+                hhCopy = new Account(Id=hh.Id);
+                if (!Account.sObjectType.getDescribe().isUpdateable()) {
+            		throw new System.NoAccessException(); 
+                }
+            } else {
+                strObject = 'npo02__Household__c';
+                hhCopy = new npo02__Household__c(Id=hh.Id);
+                if (!npo02__Household__c.sObjectType.getDescribe().isUpdateable()) {
+            		throw new System.NoAccessException(); 
+                }
+            }
+            
+            // do FLS and only copy the fields we allow to be touched in our UI
+            list<String> listStrFld = getUpdateableHouseholdFields(isHHAccount);            
+            UTIL_Describe.copyObjectFLS(strObject, hh, hhCopy, listStrFld);
+            
             // we've already saved the data for the contacts in the household.
             // now we only need to save the account fields an update, and we don't want
             // any of the normal account trigger work to run again.  specifically,
@@ -246,7 +378,8 @@ public class HH_Container_LCTRL {
             // excluded from auto-naming!
             HH_ProcessControl.inFutureContext = true;
 
-            update hh;
+            update hhCopy;
+
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
@@ -261,6 +394,11 @@ public class HH_Container_LCTRL {
     @AuraEnabled
     public static void mergeHouseholds(Account hhWinner, list<Account> listHHMerge) {
         try {
+            // Check object permissions
+            if (!Account.sObjectType.getDescribe().isUpdateable() || 
+                !Account.sObjectType.getDescribe().isDeletable()) {
+            		throw new System.NoAccessException(); 
+           	}
             for (Account loser : listHHMerge)
                 merge hhWinner loser;
         } catch (Exception ex) {
@@ -376,8 +514,23 @@ public class HH_Container_LCTRL {
 
             // copy any address objects
             if (UTIL_Describe.isObjectIdThisType(hhId, 'Account')) {
-                list<Address__c> listAddrHH = [select MailingStreet__c, MailingStreet2__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c
-                    from Address__c where Household_Account__c = :hhId];
+
+                set<String> setFields = new set<String>{'MailingStreet__c', 'MailingStreet2__c', 
+                    'MailingCity__c', 'MailingState__c', 'MailingPostalCode__c', 'MailingCountry__c'};
+				string strSoql = 'select ';
+                string strComma = '';
+                
+                for (String strF : setFields) {
+                    // check field level security
+                    DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('Address__c'), strF);
+                	if (dfr == null || !dfr.isAccessible())
+                    	throw (new permsException(string.format(label.flsError, new string[]{'Address__c' + '.' + strF})));
+					
+                    strSoql += strComma + strF;
+                    strComma = ',';
+                }
+                strSoql += ' from Address__c where Household_Account__c = :hhId';
+                list<Address__c> listAddrHH = database.query(strSoql);
                 for (Address__c addrT : listAddrHH) {
                     // init other values we don't want to query for that the key might use.
                     addrT.Seasonal_Start_Day__c = null;
@@ -392,6 +545,8 @@ public class HH_Container_LCTRL {
             }
 
             return listAddr;
+        } catch (AuraHandledException aex) {
+            throw aex;
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }

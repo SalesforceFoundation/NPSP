@@ -22,6 +22,9 @@
     <aura:attribute name="showMergeHHPopup" type="Boolean" access="private" />
     <aura:attribute name="conAdd" type="Contact" access="private" />
     <aura:attribute name="hhMerge" type="SObject" access="private" />
+    <aura:attribute name="isSaveDisabled" type="Boolean" default="false" access="private" />
+    <aura:attribute name="allowContactDelete" type="Boolean" default="false" access="private" />
+    <aura:attribute name="allowHouseholdMerge" type="Boolean" default="false" access="private" />
 
     <!-- events we fire -->
     <aura:registerEvent name="ContactAfterDeleteEvent" type="c:HH_ContactAfterDeleteEvent" />
@@ -78,6 +81,7 @@
                                 aura:id="buttonSave"
                                 buttonTitle="{!$Label.c.stgBtnSave + $Label.npsp.stgBtnSave}"
                                 label="{!$Label.c.stgBtnSave + $Label.npsp.stgBtnSave}"
+                                disabled="{!v.isSaveDisabled}"
                                 press="{!c.save}" />
                         </div>
                     </div>
@@ -107,7 +111,7 @@
                             <c:HH_AutoComplete aura:id="HHAutoComplete" hhId="{!v.hhId}" namespacePrefix="{!v.namespacePrefix}" listCon="{!v.listCon}" />                            
                         </div>
                     </div>
-                    <c:HH_Canvas hh="{!v.hh}" listCon="{!v.listCon}" />
+                    <c:HH_Canvas hh="{!v.hh}" listCon="{!v.listCon}" allowContactDelete="{!v.allowContactDelete}" />
                 </div>
 
                 <!-- the Address section -->

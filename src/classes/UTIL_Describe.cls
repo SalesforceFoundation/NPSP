@@ -369,4 +369,26 @@ public class UTIL_Describe {
         }
         return strFields.substring(0, strFields.length()-1);
     }
+
+    /*******************************************************************************************************
+    * @description copies the specified fields, make sure the user has apppropriate permissions
+    * @param strObject the name of the object
+    * @param src the Source object
+    * @param dst the Destination object
+    * @param listStrF the list of field names to check FLS and copy data from
+    * @return void
+    */
+    public static void copyObjectFLS(string strObject, SObject src, SObject dst, list<String> listStrF) {
+        for (String strF : listStrF) {
+            DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(strObject, strF);
+            if (dfr == null || !dfr.isCreateable() || !dfr.isUpdateable())
+                throw (new permsException(string.format(label.flsError, new string[]{strObject + '.' + strF})));
+                
+            dst.put(strF, src.get(strF));
+        }
+    }
+
+    /** @description our exception object for Field Level & Object Security errors. */
+    private class permsException extends Exception {}
+    
 }
