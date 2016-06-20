@@ -554,7 +554,6 @@
         <members>Engagement_Plan_Task__c.Assigned_To__c</members>
         <members>Engagement_Plan_Task__c.Comments__c</members>
         <members>Engagement_Plan_Task__c.Days_After__c</members>
-        <members>Engagement_Plan_Task__c.Delay_Type__c</members>
         <members>Engagement_Plan_Task__c.Dependent_Task__c</members>
         <members>Engagement_Plan_Task__c.Engagement_Plan_Template__c</members>
         <members>Engagement_Plan_Task__c.Priority__c</members>

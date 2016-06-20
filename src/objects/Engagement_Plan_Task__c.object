@@ -87,24 +87,6 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Delay_Type__c</fullName>
-        <externalId>false</externalId>
-        <label>Delay Type</label>
-        <picklist>
-            <picklistValues>
-                <fullName>After Due Date</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>After Date Completed</fullName>
-                <default>false</default>
-            </picklistValues>
-            <sorted>false</sorted>
-        </picklist>
-        <trackTrending>false</trackTrending>
-        <type>Picklist</type>
-    </fields>
-    <fields>
         <fullName>Dependent_Task__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
