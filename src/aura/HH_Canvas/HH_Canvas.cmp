@@ -12,11 +12,11 @@
 
     <!-- libraries needed 
     <ltng:require scripts="{!join(',',
-        $Resource.CumulusStaticResources + '/jquery/jquery-2.2.4.js',
-        $Resource.CumulusStaticResources + '/jquery-ui/jquery-ui-1.11.4.js')}"
+        $Resource.CumulusStaticResources + '/jquery/jquery-2.2.4.min.js',
+        $Resource.CumulusStaticResources + '/jquery-ui/jquery-ui-1.11.4.min.js')}"
         afterScriptsLoaded="{!c.afterScriptsLoaded}" />
 -->
-    <ltng:require scripts="/resource/CumulusStaticResources/jquery/jquery-2.2.4.js,/resource/CumulusStaticResources/jquery-ui/jquery-ui-1.11.4.js"
+    <ltng:require scripts="/resource/CumulusStaticResources/jquery/jquery-2.2.4.min.js,/resource/CumulusStaticResources/jquery-ui/jquery-ui-1.11.4.min.js"
         afterScriptsLoaded="{!c.afterScriptsLoaded}" />
 
     <!-- markup follows... -->
