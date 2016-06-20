@@ -118,7 +118,10 @@ If you are on a unix based system, the following commands should work:
         
     </target>
     <target name="postDeploy">
+        <!--
         <echo>Sleeping for 30 seconds to allow background jobs to complete</echo>
         <sleep seconds="30" />
+        -->
+        <antcall target="deployUpdatedAdminProfile" />
     </target>
 </project>
