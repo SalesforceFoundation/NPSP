@@ -41,15 +41,45 @@ public with sharing class HH_ManageHH_CTRL {
 
     /** @description The Household Object or Account */
     public SObject hh { get; set; }
+    
+    /** @description The household cast to an Account for account override checking */
+    public Account hhA {
+        get {
+            return (Account)hh;
+        }
+    }
 
     /** @description what is the namespace (null if unmanaged, or npsp if managed) */
     public string namespacePrefix { get; set; }
+    
+    /*******************************************************************************************************
+    * @description to easily tell our Account override page whether to defer to the normal Account edit page
+    * when the user is trying to change their recordtype!
+    */
+    public boolean isChangingRecordType {
+        get {
+            if (ApexPages.currentPage() != null) {
+                map<string, string> mapParams = ApexPages.currentPage().getParameters();
+                if (mapParams != null) {
+                    string paramRtId = mapParams.get('RecordType');
+                    if (paramRtId != null && paramRtId != ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(true)) {
+                        return true;
+                    }
+                }
+            }
+            return false; 
+        }
+    }
     
     /*******************************************************************************************************
     * @description Constructor for the page.  Loads up the HH Account or HH Object, using fields from
     * the appropriate field set.
     */
     public HH_ManageHH_CTRL() {
+        this(null);
+    }
+    
+    public HH_ManageHH_CTRL(ApexPages.StandardController controller) {
         namespacePrefix = UTIL_Namespace.getNamespace();
 
         Map<String, String> pageParams = ApexPages.currentPage().getParameters();
@@ -57,6 +87,11 @@ public with sharing class HH_ManageHH_CTRL {
         
         // load up only the fields exposed in the field set for our visualforce page to use.
         String strSoql = 'select Id';
+        
+        // for accounts, also include system field our page needs
+        if (isHHAccount)
+            strSoql += ', npe01__SYSTEM_AccountType__c';
+            
         for (Schema.FieldSetMember fsm : hhFieldSet)
             strSoql += ', ' + fsm.getFieldPath();
         strSoql += ' from ' + (isHHAccount ? 'Account' : 'npo02__Household__c');
