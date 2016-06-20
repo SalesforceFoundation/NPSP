@@ -23,6 +23,7 @@
                 component.set('v.isAutoFormalGreeting', !strExclusions || !strExclusions.includes('Formal_Greeting__c'));
                 component.set('v.isAutoInformalGreeting', !strExclusions || !strExclusions.includes('Informal_Greeting__c'));
             } else if (component.isValid() && state === "ERROR") {
+                component.set('v.isSaveDisabled', true);
                 self.reportError(component, response);
             }
         });
@@ -37,6 +38,7 @@
                 var listCon = response.getReturnValue();
                 component.set("v.listCon", listCon);
             } else if (component.isValid() && state === "ERROR") {
+                component.set('v.isSaveDisabled', true);
                 self.reportError(component, response);
             }
         });
@@ -50,6 +52,39 @@
                 var listSalutation = response.getReturnValue();
                 component.set("v.listSalutation", listSalutation);
             } else if (component.isValid() && state === "ERROR") {
+                component.set('v.isSaveDisabled', true);
+                self.reportError(component, response);
+            }
+        });
+        $A.enqueueAction(action);
+
+        // query for Contact Delete permissions
+        action = component.get("c.isDeletable");
+        action.setParams({ strSObject : 'Contact' });
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            if (component.isValid() && state === "SUCCESS") {
+                component.set("v.allowContactDelete", response.getReturnValue());
+            } else if (component.isValid() && state === "ERROR") {
+                component.set('v.isSaveDisabled', true);
+                self.reportError(component, response);
+            }
+        });
+        $A.enqueueAction(action);
+
+        // query for Household Delete permissions for merge usage
+        var strSObject = 'Account';
+        if (component.get('v.hhTypePrefix') !== '001') {
+            strSObject = 'npo02__Household__c';
+        }
+        action = component.get("c.isDeletable");
+        action.setParams({ strSObject : strSObject });
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            if (component.isValid() && state === "SUCCESS") {
+                component.set("v.allowHouseholdMerge", response.getReturnValue());
+            } else if (component.isValid() && state === "ERROR") {
+                component.set('v.isSaveDisabled', true);
                 self.reportError(component, response);
             }
         });
@@ -69,6 +104,7 @@
                 var listAddr = response.getReturnValue();
                 component.set("v.listAddr", listAddr);
             } else if (component.isValid() && state === "ERROR") {
+                component.set('v.isSaveDisabled', true);
                 self.reportError(component, response);
             }
         });
@@ -140,8 +176,12 @@
                     // set the body of the ui:message to be the ui:outputText
                     message.set("v.body", outputText);
                     var div = component.find(whichDiv);
-                    // Replace div body with the dynamic component
-                    div.set("v.body", message);
+                    if (div) {
+                        // append div body with the dynamic component
+                        var curMsg = div.get('v.body');
+                        curMsg.push(message);
+                        div.set("v.body", curMsg);
+                    }
                 }
        });
     },
@@ -382,7 +422,7 @@
                 // the labels that fail to get resolved appear as
                 // "$Label.namespace.foo does not exist: Field $Label.namespace__foo does not exist. Check spelling."
                 if (lbl[nspace][str] && lbl[nspace][str].startsWith('$Label'))
-                    lbl[nspace][str] = null;
+                    lbl[nspace][str] = ''; //lbl['c'][str];
             }
         }
     },
@@ -470,6 +510,19 @@
         hhMerge[namespacePrefix + 'Number_of_Household_Members__c'] = cMembers;
         component.set('v.hhMerge', hhMerge);
         component.set('v.conAdd', conAdd);
+        
+        // if we can't merge households (due to permissions), we only support moving a contact
+        // from one household to another if there will still be remaining household members.
+        // otherwise the household would need to get deleted which we can't allow.
+        if (!component.get('v.allowHouseholdMerge')) {
+            if (cMembers > 1) {
+                this.addContact(component, conAdd);
+                return;
+            } else {
+                this.displayUIMessage(component, $A.get("$Label.c.lblNoHHMergePermissions") + $A.get("$Label.npsp.lblNoHHMergePermissions"), "divUIMessageContainer");
+                return;
+            }
+        }
          
         // handle contacts not in a household account, and having no household object.
         if (!hhId) {

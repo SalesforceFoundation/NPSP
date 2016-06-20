@@ -46,7 +46,7 @@ private class HH_Container_TEST {
     * @description initializes test data of a Household Account and a Household Object
     */
     private static void initTestData() { 
-
+        
         // create a Household Account and contact and address object
         hhA = new Account(Name = 'test_hh', npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE);
         insert hhA;

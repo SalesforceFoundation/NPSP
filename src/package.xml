@@ -95,11 +95,8 @@
         <members>HH_Households_TDTM</members>
         <members>HH_Households_TEST</members>
         <members>HH_INaming</members>
-        <members>HH_ManageHHAccount_TEST</members>
         <members>HH_ManageHH_CTRL</members>
         <members>HH_ManageHH_TEST</members>
-        <members>HH_ManageHousehold_EXT</members>
-        <members>HH_ManageHousehold_TEST</members>
         <members>HH_NameSpec</members>
         <members>HH_NameSpec_TEST</members>
         <members>HH_OppContactRoles_TDTM</members>
@@ -1024,6 +1021,7 @@
         <members>lblMergeHHPrompt</members>
         <members>lblMergeHHTitle</members>
         <members>lblNPSPSettings</members>
+        <members>lblNoHHMergePermissions</members>
         <members>lblPostalCode</members>
         <members>lblSalutation</members>
         <members>lblState</members>

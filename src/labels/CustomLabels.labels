@@ -2509,6 +2509,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>NPSP Settings</value>
     </labels>
     <labels>
+        <fullName>lblNoHHMergePermissions</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>error displayed when required perms missing to add a contact and its household</shortDescription>
+        <value>You must have update and delete permissions on Households (Accounts) in order to add an existing contact to the Household.</value>
+    </labels>
+    <labels>
         <fullName>lblPostalCode</fullName>
         <categories>Manage Household UI</categories>
         <language>en_US</language>

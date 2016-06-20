@@ -62,20 +62,30 @@
     
     <script>
     var j$ = jQuery.noConflict();
+    var ns = '{!namespacePrefix}';
+    var nsPrefix;
+    var nsPrefixEvent;
+    if (ns === '') {
+        nsPrefix = '';
+        nsPrefixEvent = 'c';
+    } else {
+        nsPrefix = ns + '__';
+        nsPrefixEvent = ns;
+    }
     
     var hhId = '{!hhId}';
     $Lightning.use("c:ManageHHApp", function() {
         $Lightning.createComponent("c:HH_Container", 
                                    { hhId : hhId,
-                                     namespacePrefix : "{!namespacePrefix}" },
+                                     namespacePrefix : nsPrefix },
                                    "lightning",
                                    function(cmp) {
                                        // after lightning is loaded, do what we need to do here!
                                        
                                        // hook up our event handlers
-                                       $A.eventService.addHandler({ "event": "c:HH_HouseholdSavedEvent", "handler" : saveAndCloseVisualforce});
-                                       $A.eventService.addHandler({ "event": "c:HH_ContactAfterDeleteEvent", "handler" : contactRemoved});
-                                       $A.eventService.addHandler({ "event": "c:HH_ContainerLoadedEvent", "handler" : doneLoading});
+                                       $A.eventService.addHandler({ "event": nsPrefixEvent + ":HH_HouseholdSavedEvent", "handler" : saveAndCloseVisualforce});
+                                       $A.eventService.addHandler({ "event": nsPrefixEvent + ":HH_ContactAfterDeleteEvent", "handler" : contactRemoved});
+                                       $A.eventService.addHandler({ "event": nsPrefixEvent + ":HH_ContainerLoadedEvent", "handler" : doneLoading});
 
                                        // this hack is to prevent the normal apex:inputField of a multiselect picklist
                                        // behavior of hiding the normal select control and using a table with 2 selects
