@@ -340,6 +340,28 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         return mapDIFieldToObjField;
     }
 
+    /*******************************************************************************************************
+    * @description Copies non-null DI field values to the destination object, given the provided mapping.
+    * also explicitly ignores boolean false's, since we can't differentiate null from false.
+    * @param di The DataImport record
+    * @param strDIField The DI field to copy from
+    * @param objDst The object to copy to
+    * @param mapDIFieldToDstField The field map from a DI field to the destination field
+    * @return boolean True if copied, False is not copied.
+    */
+    private static boolean isCopiedDIField(DataImport__c di, String strDIField, SObject objDst, map<string, string> mapDIFieldToDstField) {
+        
+        Object val = di.get(strDIField);
+
+        // explicitly avoid updating unchecked booleans (since we can't tell the difference between null and false)
+        if (val != null && val != false) {
+            objDst.put(mapDIFieldToDstField.get(strDIField), val);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     //********************************************* CONTACTS & HOUSEHOLDS ************************************************
     // method to handle importing or updating Contact1 and Contact2,
     // creating their Household if none exists.
@@ -368,8 +390,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             
             boolean isModified = false;                 
             for (string strDIField : mapDIFieldToC1Field.keySet()) {
-                if (di.get(strDIField) != null) {
-                    con.put(mapDIFieldToC1Field.get(strDIField), di.get(strDIField));
+                if (isCopiedDIField(di, strDIField, con, mapDIFieldToC1Field)) {
                     isModified = true;
                 }
             }
@@ -446,8 +467,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             
             boolean isModified = false;                 
             for (string strDIField : mapDIFieldToC2Field.keySet()) {
-                if (di.get(strDIField) != null) {
-                    con.put(mapDIFieldToC2Field.get(strDIField), di.get(strDIField));
+                if (isCopiedDIField(di, strDIField, con, mapDIFieldToC2Field)) {
                     isModified = true;
                 }
             }
@@ -514,8 +534,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             boolean isModified = false;
             Account accHH = new Account(Id=di.HouseholdAccountImported__c);                
             for (string strDIField : mapDIFieldToHHField.keySet()) {
-                if (di.get(strDIField) != null) {
-                    accHH.put(mapDIFieldToHHField.get(strDIField), di.get(strDIField));
+                if (isCopiedDIField(di, strDIField, accHH, mapDIFieldToHHField)) {
                     isModified = true;
                 }
             }
@@ -988,8 +1007,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
 
             boolean isModified = false;             
             for (string strDIField : mapDIFieldToA1Field.keySet()) {
-                if (di.get(strDIField) != null) {
-                    acc.put(mapDIFieldToA1Field.get(strDIField), di.get(strDIField));
+                if (isCopiedDIField(di, strDIField, acc, mapDIFieldToA1Field)) {
                     isModified = true;
                 }
             }
@@ -1053,8 +1071,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
 
             boolean isModified = false;             
             for (string strDIField : mapDIFieldToA2Field.keySet()) {
-                if (di.get(strDIField) != null) {
-                    acc.put(mapDIFieldToA2Field.get(strDIField), di.get(strDIField));
+                if (isCopiedDIField(di, strDIField, acc, mapDIFieldToA2Field)) {
                     isModified = true;
                 }
             }
@@ -1301,8 +1318,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             addr.Household_Account__c = (con != null ? con.AccountId : null);
             boolean isEmpty = true;
             for (string strDIField : mapDIFieldToAddrField.keySet()) {
-                if (di.get(strDIField) != null) {
-                    addr.put(mapDIFieldToAddrField.get(strDIField), di.get(strDIField));
+                if (isCopiedDIField(di, strDIField, addr, mapDIFieldToAddrField)) {
                     isEmpty = false;
                 }
             }
@@ -1560,8 +1576,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             }
 
             for (string strDIField : mapDIFieldToOppField.keySet()) {
-                if (di.get(strDIField) != null) {
-                    opp.put(mapDIFieldToOppField.get(strDIField), di.get(strDIField));
+                if (isCopiedDIField(di, strDIField, opp, mapDIFieldToOppField)) {
                     cPropSet++;
                 }
             }
@@ -1644,8 +1659,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
                 if (pmt != null) {
                     integer cPropSet = 0;
                     for (string strDIField : mapDIFieldToPmtField.keySet()) {
-                        if (di.get(strDIField) != null) {
-                            pmt.put(mapDIFieldToPmtField.get(strDIField), di.get(strDIField));
+                        if (isCopiedDIField(di, strDIField, pmt, mapDIFieldToPmtField)) {
                             cPropSet++;
                         }
                     }                    
