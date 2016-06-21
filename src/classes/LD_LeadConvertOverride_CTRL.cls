@@ -415,8 +415,11 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             }
 
             //clean up the extra OCR Issue
-            // if we create an opp, its a 1x1 (or HH), and its merged into an existing contact
-            if (!lc.isDoNotCreateOpportunity() && !CAO_Constants.isBucketModel() && strConId != 'NEW_CONTACT'){
+            // if we create an opp, its a 1x1 (or HH), 
+            // before 6/2016 this fix was only applied if merging into an existing contact,
+            // but we've run into multiple orgs where they can reproduce the bug when creating new contacts.
+            // npsp devs have not been able to reproduce it, but feel this is a safe fix for all.
+            if (!lc.isDoNotCreateOpportunity() && !CAO_Constants.isBucketModel()){
 
                 //get the new OCRs
                 list<OpportunityContactRole> ocrList = [select id, isPrimary, Role from OpportunityContactRole where 
