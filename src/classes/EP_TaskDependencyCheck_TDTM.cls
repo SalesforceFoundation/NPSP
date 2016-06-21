@@ -75,7 +75,9 @@ public class EP_TaskDependencyCheck_TDTM extends TDTM_Runnable {
                 Engagement_Plan_Task__c newEPTask = (Engagement_Plan_Task__c)newSO;
                 Engagement_Plan_Task__c oldEPTask = mapOld.get(newEPTask.Id);
 
-                if (newEPTask.Dependent_Task__c != null && newEPTask.Dependent_Task__c != oldEPTask.Dependent_Task__c) {
+                if (newEPTask.Dependent_Task__c != null
+                    && (newEPTask.Dependent_Task__c != oldEPTask.Dependent_Task__c
+                        || newEPTask.Engagement_Plan_Template__c != oldEPTask.Engagement_Plan_Template__c)) {
                         listToValidateDependencies.add(newEPTask);
                 } 
                 if (newEPTask.Dependent_Task__c == null && newEPTask.Engagement_Plan_Template__c != oldEPTask.Engagement_Plan_Template__c) {

@@ -152,4 +152,30 @@ public class EP_TaskDependencyCheck_TEST {
         }
         Test.stopTest();
     }
+
+    /*******************************************************************************************************
+    * @description Update EP Task template that is dependent on another tasks with a different template.
+    */ 
+    static testmethod void testUpdateTemplateWithEPDependentTask() {
+        List<Engagement_Plan_Template__c> templateTests = UTIL_UnitTestData_TEST.createEPTemplates(2);
+        insert templateTests;
+        List<Engagement_Plan_Task__c> taskTests =
+            UTIL_UnitTestData_TEST.createEPTasksForTemplates(3, new List<Engagement_Plan_Template__c>{templateTests[0]});
+        insert taskTests;
+
+        taskTests[0].Dependent_Task__c = taskTests[2].Id;
+        taskTests[1].Dependent_Task__c = taskTests[2].Id;
+        update taskTests;
+
+        taskTests[1].Engagement_Plan_Template__c = templateTests[1].Id;
+
+        Test.startTest();
+        try {
+            update taskTests[1];
+            System.assert(false, 'An EP task should fail when template changes and it is dependent on another task from a different template.');
+        } catch (Exception e) {
+            System.assert(e.getMessage().contains(Label.EPTaskTemplate));
+        }
+        Test.stopTest();
+    }
 }
