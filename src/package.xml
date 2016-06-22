@@ -76,6 +76,10 @@
         <members>EP_EngagementPlans_TDTM</members>
         <members>EP_EngagementPlans_TEST</members>
         <members>EP_TaskCreator</members>
+        <members>EP_TaskDependencyCheck_TDTM</members>
+        <members>EP_TaskDependencyCheck_TEST</members>
+        <members>EP_TaskRollup_TDTM</members>
+        <members>EP_TaskRollup_TEST</members>
         <members>EP_Utils</members>
         <members>ERR_AddError_TEST</members>
         <members>ERR_Handler</members>
@@ -328,6 +332,7 @@
         <members>TDTM_CampaignMember</members>
         <members>TDTM_Contact</members>
         <members>TDTM_EngagementPlan</members>
+        <members>TDTM_EngagementPlanTask</members>
         <members>TDTM_HouseholdObject</members>
         <members>TDTM_Lead</members>
         <members>TDTM_Opportunity</members>
@@ -373,6 +378,7 @@
         <members>Account.Membership_Span__c</members>
         <members>Account.Membership_Status__c</members>
         <members>Account.Number_of_Household_Members__c</members>
+        <members>Activity.Engagement_Plan__c</members>
         <members>Activity.Engagement_Plan_Task__c</members>
         <members>Addr_Verification_Settings__c.Address_Verification_Endpoint__c</members>
         <members>Addr_Verification_Settings__c.Auth_ID__c</members>
@@ -576,8 +582,8 @@
         <members>Engagement_Plan__c.Engagement_Plan_Template__c</members>
         <members>Engagement_Plan__c.Opportunity__c</members>
         <members>Engagement_Plan__c.Recurring_Donation__c</members>
-        <members>Engagement_Plan__c.Status__c</members>
         <members>Engagement_Plan__c.Total_EP_Tasks__c</members>
+        <members>Engagement_Plan__c.Total_Tasks__c</members>
         <members>Error_Settings__c.Disable_Error_Handling__c</members>
         <members>Error_Settings__c.Enable_Debug__c</members>
         <members>Error_Settings__c.Error_Notifications_On__c</members>
@@ -776,6 +782,8 @@
         <members>CONV_Warning</members>
         <members>CONV_What_This_Tool_Does</members>
         <members>CampaignMemberStatusOmit</members>
+        <members>EPTaskDependency</members>
+        <members>EPTaskTemplate</members>
         <members>HiddenForSecurity</members>
         <members>PageMessagesConfirm</members>
         <members>PageMessagesError</members>
@@ -1485,8 +1493,10 @@
         <members>Contact-Contact Layout</members>
         <members>DataImport__c-Data Import Layout</members>
         <members>Engagement_Plan_Task__c-Action Plan Task Layout</members>
+        <members>Engagement_Plan_Task__c-Engagement Plan Task Layout</members>
         <members>Engagement_Plan_Template__c-Engagement Plan Template Layout</members>
         <members>Engagement_Plan__c-Action Plan Layout</members>
+        <members>Engagement_Plan__c-Engagement Plan Layout</members>
         <members>Error__c-Error Layout</members>
         <members>Fund__c-Fund Layout</members>
         <members>General_Accounting_Unit__c-General Accounting Unit Layout</members>
