@@ -34,6 +34,8 @@
 * @description Trigger Handler on Tasks 
 */
 public class EP_TaskRollup_TDTM extends TDTM_Runnable {
+    // newOldTaskMap - track changes after workflow rules run
+    private static Map<Id, Task> mapNewOldTask = new Map<Id, Task>();
     
     /*******************************************************************************************************
     * @description Trigger Handler on Tasks related to Engagement Plans to rollup total tasks and total 
@@ -60,6 +62,7 @@ public class EP_TaskRollup_TDTM extends TDTM_Runnable {
                 Task newTask = (Task)newSo;
                 if (newTask.Engagement_Plan__c != null) {
                     epIdsToUpdate.add(newTask.Engagement_Plan__c);
+                    mapNewOldTask.put(newTask.Id, newTask);
                 }
             }
             if (epIdsToUpdate.size() > 0) {
@@ -74,7 +77,13 @@ public class EP_TaskRollup_TDTM extends TDTM_Runnable {
 
             for (SObject newSO : listNew) {
                 Task newTask = (Task)newSo;
-                Task oldTask = mapOld.get(newTask.Id);
+                Task oldTask;
+                if (mapNewOldTask.containsKey(newTask.Id)) {
+                    oldTask = mapNewOldTask.get(newTask.Id);
+                } else {
+                    oldTask = mapOld.get(newTask.Id);
+                    mapNewOldTask.put(newTask.Id, newTask);
+                }
                 if (newTask.Engagement_Plan__c != oldTask.Engagement_Plan__c
                     || (newTask.Engagement_Plan__c != null
                         && newTask.IsClosed != oldTask.IsClosed)) {
