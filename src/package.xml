@@ -334,6 +334,7 @@
         <members>TDTM_PartialSoftCredit</members>
         <members>TDTM_RecurringDonation</members>
         <members>TDTM_Relationship</members>
+        <members>TDTM_Task</members>
         <name>ApexTrigger</name>
     </types>
     <types>
@@ -1616,5 +1617,5 @@
         <members>Opportunity.Opportunity Email Acknowledgment</members>
         <name>WorkflowRule</name>
     </types>
-    <version>33.0</version>
+    <version>36.0</version>
 </Package>
