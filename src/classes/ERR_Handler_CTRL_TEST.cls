@@ -27,6 +27,13 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
+
+/**
+* @author Salesforce.org
+* @date 2014
+* @description test class for error handler controller
+* @group ErrorHandling
+*/
 public with sharing class ERR_Handler_CTRL_TEST {
 
     public pageReference withoutManualRollback() {     

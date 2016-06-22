@@ -30,6 +30,7 @@
 /**
 * @author Team Kick Ass; Veronica Waters, Evan Callahan, Derek Dsouza, Mike Fullmore
 * @date 04/27/2011
+* @group BatchDataEntry
 * @description test class for the batch data entry, supports all the custom settings you might have.
 */
 @isTest

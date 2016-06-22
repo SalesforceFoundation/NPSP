@@ -27,10 +27,15 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
+/**
+* @author Salesforce.org
+* @date 2014
+* @description The  tests in this class confirm that error messages are associated with the right records. 
+* We cannot directly test the Helper class since there is no "getError" method, but we indirectly test 
+* it here since we are following the same design.
+* @group ErrorHandling
+*/
 @isTest
-/*** The  tests in this class confirm that error messages are associated with the right records. 
-     We cannot directly test the Helper class since there is no "getError" method, but we indirectly test 
-     it here since we are following the same design. ***/
 public with sharing class ERR_AddError_TEST {
 
     public testmethod static void simpleDml() {
