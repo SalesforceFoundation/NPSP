@@ -97,6 +97,7 @@
         <members>HH_INaming</members>
         <members>HH_ManageHH_CTRL</members>
         <members>HH_ManageHH_TEST</members>
+        <members>HH_ManageHousehold_EXT</members>
         <members>HH_NameSpec</members>
         <members>HH_NameSpec_TEST</members>
         <members>HH_OppContactRoles_TDTM</members>
