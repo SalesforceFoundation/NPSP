@@ -147,10 +147,22 @@
         <type>Lookup</type>
     </fields>
     <fields>
-        <fullName>Total_Tasks__c</fullName>
+        <fullName>Total_EP_Tasks__c</fullName>
         <externalId>false</externalId>
         <formula>Engagement_Plan_Template__r.Total_Tasks__c</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Total EP Tasks</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Total_Tasks__c</fullName>
+        <defaultValue>0</defaultValue>
+        <externalId>false</externalId>
         <label>Total Tasks</label>
         <precision>18</precision>
         <required>false</required>
