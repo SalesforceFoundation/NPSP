@@ -55,7 +55,7 @@ private class HH_ManageHH_TEST {
         system.assertEquals(true, ctrl.isHHAccount);
         system.assertNotEquals(null, ctrl.hhFieldSet);
         if (UTIL_Namespace.getNamespace() != '')
-            system.assertEquals(UTIL_Namespace.getNamespace()+'__', ctrl.namespacePrefix);
+            system.assertEquals(UTIL_Namespace.getNamespace(), ctrl.namespacePrefix);
         else
             system.assertEquals('', ctrl.namespacePrefix);
         system.assertNotEquals(null, ctrl.save());
@@ -81,7 +81,7 @@ private class HH_ManageHH_TEST {
         system.assertEquals(false, ctrl.isHHAccount);
         system.assertNotEquals(null, ctrl.hhFieldSet);
         if (UTIL_Namespace.getNamespace() != '')
-            system.assertEquals(UTIL_Namespace.getNamespace()+'__', ctrl.namespacePrefix);
+            system.assertEquals(UTIL_Namespace.getNamespace(), ctrl.namespacePrefix);
         else
             system.assertEquals('', ctrl.namespacePrefix);
         system.assertNotEquals(null, ctrl.save());
