@@ -35,7 +35,9 @@
 * @group ErrorHandling
 */
 public with sharing class ERR_Handler_CTRL_TEST {
-
+    /*******************************************************************************************************
+    * @description test error handling without a save point
+    */
     public pageReference withoutManualRollback() {     
         
         Contact contact1 = new Contact(FirstName = 'test', LastName = 'testerson1', Title = 'VP1');
@@ -52,7 +54,9 @@ public with sharing class ERR_Handler_CTRL_TEST {
         
         return null;
     }
-    
+    /*******************************************************************************************************
+    * @description test error handling with a save point
+    */
     public pageReference withManualRollback() {
         Savepoint sp = Database.setSavepoint();
         try {       

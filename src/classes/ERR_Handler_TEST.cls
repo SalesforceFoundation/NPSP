@@ -41,7 +41,9 @@ public class ERR_Handler_TEST {
     private static string strTestOnly = '*';
     
     private static Id chatterGroupId;
-    
+    /*******************************************************************************************************
+    * @description test setup of error notifications via chatter
+    */
     private static void setupWithChatterNotifications() {
     	// all these tests are about testing our error handling, so we can't let the assert interfere
     	TDTM_TriggerHandler.suppressDebugAssertAfterErrorLogging = true;        
@@ -64,7 +66,9 @@ public class ERR_Handler_TEST {
     		  Error_Notifications_To__c = null, Store_Errors_On__c = true));
     	}
     }
-    
+    /*******************************************************************************************************
+    * @description test setup of error notifications via email
+    */
     private static void setupWithEmailNotifications() {
         // all these tests are about testing our error handling, so we can't let the assert interfere
         TDTM_TriggerHandler.suppressDebugAssertAfterErrorLogging = true;        
@@ -78,11 +82,13 @@ public class ERR_Handler_TEST {
         UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(Error_Notifications_On__c = true, 
             Error_Notifications_To__c = user.Id, Store_Errors_On__c = true));
     }
-    
-    /*** We need to use Database.insert because otherwise the code does not go passed the contacts insert operation
-         in the test itself. 
-         An error record gets inserted just because the name field for accounts was not retrieved. This happens in 
-         the second pass of the Database.insert ***/
+    /*******************************************************************************************************
+    * @description test and verify error notifications posted to chatter
+    * We need to use Database.insert because otherwise the code does not go passed the contacts insert operation
+    *     in the test itself. 
+    *     An error record gets inserted just because the name field for accounts was not retrieved. This happens in 
+    *     the second pass of the Database.insert
+    */
     public testmethod static void errorsStoredInDbTdtmCustomConfigPostToChatter() {
     	if (strTestOnly != '*' && strTestOnly != 'errorsStoredInDbTdtmCustomConfigPostToChatter') return;
     	
@@ -138,10 +144,13 @@ public class ERR_Handler_TEST {
         }
     }
     
-    /*** We need to use Database.insert because otherwise the code does not go passed the contacts insert operation
-         in the test itself. 
-         An error record gets inserted just because the name field for accounts was not retrieved. This happens in 
-         the second pass of the Database.insert ***/
+    /*******************************************************************************************************
+    * @description test and verify error notifications were emailed
+    * We need to use Database.insert because otherwise the code does not go passed the contacts insert operation
+    *     in the test itself. 
+    *     An error record gets inserted just because the name field for accounts was not retrieved. This happens in 
+    *     the second pass of the Database.insert
+    */
     public testmethod static void errorsStoredInDbTdtmCustomConfigEmailErrors() {
         if (strTestOnly != '*' && strTestOnly != 'errorsStoredInDbTdtmCustomConfigEmailErrors') return;
         
@@ -191,19 +200,18 @@ public class ERR_Handler_TEST {
         }
     }
     
-    /**
-     * Tests that an error record does not get created, and an error notification isn't sent when the "disable 
-     * error handling" setting is on (even if the other two settings are on as well).
-     */
-     
-     public testmethod static void errorHandlingDisabled() {
+    /*******************************************************************************************************
+    * @description Tests that an error record does not get created, and an error notification isn't sent
+    * when the "disable error handling" setting is on (even if the other two settings are on as well).
+    */
+    public testmethod static void errorHandlingDisabled() {
         if (strTestOnly != '*' && strTestOnly != 'errorHandlingDisabled') return;
-        
+
         setupWithEmailNotifications();
         //Disable error handling. Using the API class just to give it test coverage.
         Error_Settings__c errorSettings = UTIL_CustomSettings_API.getErrorSettings();
         errorSettings.Disable_Error_Handling__c = true;
-        
+
         insert new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'ERR_ParentAccountUpdater_TEST', Load_Order__c = 1, Object__c = 'Contact', 
               Trigger_Action__c = 'BeforeInsert;');
@@ -213,7 +221,7 @@ public class ERR_Handler_TEST {
         Account acc2 = new Account(Name='test2');
         Account acc3 = new Account(Name='test3');
         insert new Account[] {acc1, acc2, acc3};
-        
+
         //Create contact
         Contact contact1 = new Contact(FirstName = 'test', LastName = 'testerson1', AccountId = acc1.Id, Title = 'VP1');
         Contact contact2 = new Contact(FirstName = 'test', LastName = 'testerson2', AccountId = acc2.Id, Title = 'VP2');
@@ -221,12 +229,12 @@ public class ERR_Handler_TEST {
 
         //Delete the account to get ERR_ParentAccountUpdater_TEST code to throw an exception
         delete acc2;
-        
+
         Test.startTest();
         List<Contact> contacts = new Contact[]{contact1, contact2, contact3};
         LIST<database.SaveResult> results = Database.insert(contacts, false);
         Test.stopTest();
-        
+
         //All the records will be flagged as failure now, since an unhandled exception went out.
         //(The platform rolls everything back in this case.)
         System.assertEquals(false, results[0].isSuccess());  
@@ -236,20 +244,21 @@ public class ERR_Handler_TEST {
         //Verify 2 contacts were properly inserted
         list<Contact> insertedContacts = [select Id from Contact where Id in :contacts];
         System.assertEquals(0, insertedContacts.size()); 
-        
+
         //Verify no error record was created
         List<Error__c> errors = [select Id, Full_Message__c, Stack_Trace__c, Email_Sent__c from Error__c];
         System.assertEquals(0, errors.size());
-        
+
         //Verify error was emailed
         for(Error__c error : errors) {
             System.assertEquals(false, error.Email_Sent__c);
         }
     }
-    
-    /** To prove that there are different types of null pointer exceptions. In this case the account
-    name is always available. The error does not get stored because the second time that Database.insert 
-    runs there are no errors. **/
+    /*******************************************************************************************************
+    * @description Test to prove that there are different types of null pointer exceptions. In this case the
+    * account name is always available. The error does not get stored because the second time that 
+    * Database.insert runs there are no errors.
+    */
     public testmethod static void errorsStoredInDbTdtmCustomConfig2() {
         if (strTestOnly != '*' && strTestOnly != 'errorsStoredInDbTdtmCustomConfig') return;
         
@@ -292,8 +301,9 @@ public class ERR_Handler_TEST {
         List<Error__c> errors = [select Id, Full_Message__c, Stack_Trace__c from Error__c];
         System.assertEquals(0, errors.size()); 
     }
-    
-    /** Test using the default configuration of classes that implement TDTM_Runnable **/
+    /*******************************************************************************************************
+    * @description Test using the default configuration of classes that implement TDTM_Runnable
+    */
     public testmethod static void errorStoredInDbTdtmStandardConfig() {
     	if (strTestOnly != '*' && strTestOnly != 'errorStoredInDbTdtmStandardConfig') return;
     
@@ -338,9 +348,10 @@ public class ERR_Handler_TEST {
         UTIL_Debug.debug('****ERROR: ' + JSON.serializePretty(errors));
         System.assertEquals(0, errors.size());                                    
     }
-    
-    /** This is the same test called testErrorRecordCreation in the REL_Relationships_TEST class, but
-        using simple insert instead of Database.insert ***/
+    /*******************************************************************************************************
+    * @description This is the same test called testErrorRecordCreation in the REL_Relationships_TEST class,
+    * but using simple insert instead of Database.insert
+    */
     static testMethod void errorStoredInDatabaseFromInsert() {
         if (strTestOnly != '*' && strTestOnly != 'errorStoredInDatabaseFromInsert') return;
         
@@ -372,7 +383,10 @@ public class ERR_Handler_TEST {
         system.assertEquals(1, [select count() from Error__c]);
     }
     
-    /*** Testing that DML that occurs before an exception is thrown and caught does not get automatically rolled back ***/
+    /*******************************************************************************************************
+    * @description Testing that DML that occurs before an exception is thrown and caught does not get 
+    * automatically rolled back 
+    */
     static testMethod void controllerWithoutManualRollback() {
         if (strTestOnly != '*' && strTestOnly != 'controllerWithoutManualRollback') return;
         
@@ -393,9 +407,10 @@ public class ERR_Handler_TEST {
         //assert an error record was created - Required fields are missing: [npe4__Contact__c]
         system.assertEquals(1, [select count() from Error__c]);  
     }
-    
-    /*** Testing that DML changes are properly rolled back in a controller that adheres to our error-handling design, and
-         that the error is properly stored. ***/
+    /*******************************************************************************************************
+    * @description Testing that DML changes are properly rolled back in a controller that adheres to our
+    * error-handling design, and that the error is properly stored.
+    */
     static testMethod void controllerWithManualRollback() {
         if (strTestOnly != '*' && strTestOnly != 'controllerWithManualRollback') return;
         
@@ -416,8 +431,9 @@ public class ERR_Handler_TEST {
         //assert an error record was created - Required fields are missing: [npe4__Contact__c]
         system.assertEquals(1, [select count() from Error__c]);    
     }
-
-    /** Test that an inactive user won't receive email as the primary error user **/
+    /*******************************************************************************************************
+    * @description Test that an inactive user won't receive email as the primary error user 
+    */
     static testMethod void testInactiveUserEmailBehavior() {
 
         if (strTestOnly != '*' && strTestOnly != 'testInactiveUserEmailBehavior') return;

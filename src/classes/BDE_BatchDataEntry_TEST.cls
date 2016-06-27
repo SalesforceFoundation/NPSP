@@ -35,7 +35,9 @@
 */
 @isTest
 private class BDE_BatchDataEntry_TEST {
-
+    /*********************************************************************************************************
+    * @description Validates the BDE_BatchDataEntry methods.
+    */
     static testMethod void testBatchDataEntry(){
         BDE_BatchDataEntry bde;
 
