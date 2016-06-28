@@ -72,7 +72,7 @@
     }
     
     var hhId = '{!hhId}';
-    $Lightning.use("c:ManageHHApp", function() {
+    $Lightning.use(ns + ":ManageHHApp", function() {
         $Lightning.createComponent(ns + ":HH_Container", 
                                    { hhId : hhId,
                                      namespacePrefix : nsPrefix },
