@@ -1,20 +1,25 @@
 ({
     /*******************************************************************************************************
-    * @description called at onInit to load up the Household Object/Account, and its Contacts
-    */
-    loadObjects : function(component) {
+     * @description called at onInit to load up the Household Object/Account, and its Contacts
+     */
+    loadObjects: function(component) {
         component.set("v.showSpinner", true);
         var hhId = component.get('v.hhId');
         component.set('v.hhTypePrefix', String(hhId).substr(0, 3));
+        var namespacePrefix = component.get('v.namespacePrefix');
 
         // query for the Household account/object
         var action = component.get("c.getHH");
-        action.setParams({ hhId : hhId });
+        action.setParams({
+            hhId: hhId
+        });
         var self = this;
         action.setCallback(this, function(response) {
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
                 var hh = response.getReturnValue();
+                // now we need to fixup namespacing of fields
+                hh = this.removePrefixFromObjectFields(namespacePrefix, hh);
                 component.set("v.hh", hh);
 
                 // set our auto-naming checkbox states
@@ -31,11 +36,15 @@
 
         // query for the Household Contacts
         action = component.get("c.getContacts");
-        action.setParams({ hhId : hhId });
+        action.setParams({
+            hhId: hhId
+        });
         action.setCallback(this, function(response) {
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
                 var listCon = response.getReturnValue();
+                // now we need to fixup namespacing of fields
+                listCon = this.removePrefixFromListObjectFields(namespacePrefix, listCon);
                 component.set("v.listCon", listCon);
             } else if (component.isValid() && state === "ERROR") {
                 component.set('v.isSaveDisabled', true);
@@ -60,7 +69,9 @@
 
         // query for Contact Delete permissions
         action = component.get("c.isDeletable");
-        action.setParams({ strSObject : 'Contact' });
+        action.setParams({
+            strSObject: 'Contact'
+        });
         action.setCallback(this, function(response) {
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
@@ -78,7 +89,9 @@
             strSObject = 'npo02__Household__c';
         }
         action = component.get("c.isDeletable");
-        action.setParams({ strSObject : strSObject });
+        action.setParams({
+            strSObject: strSObject
+        });
         action.setCallback(this, function(response) {
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
@@ -92,16 +105,21 @@
 
         // query for the Addresses
         action = component.get("c.getAddresses");
-        action.setParams({ hhId : hhId, listAddrExisting : null });
+        action.setParams({
+            hhId: hhId,
+            listAddrExisting: null
+        });
         action.setCallback(this, function(response) {
 
             // tell our visualforce page we are done loading
             var event = $A.get("e.c:HH_ContainerLoadedEvent");
             event.fire();
-            
+
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
                 var listAddr = response.getReturnValue();
+                // now we need to fixup namespacing of fields
+                listAddr = this.removePrefixFromListObjectFields(namespacePrefix, listAddr);
                 component.set("v.listAddr", listAddr);
             } else if (component.isValid() && state === "ERROR") {
                 component.set('v.isSaveDisabled', true);
@@ -112,9 +130,9 @@
     },
 
     /*******************************************************************************************************
-    * @description get updated names and greetings from server's custom naming code
-    */
-    updateHHNames : function(component) {
+     * @description get updated names and greetings from server's custom naming code
+     */
+    updateHHNames: function(component) {
         var hh = component.get('v.hh');
         var listCon = component.get('v.listCon');
 
@@ -123,12 +141,20 @@
 
         // get updated Names and Greetings
         var action = component.get("c.getHHNamesGreetings");
-        action.setParams({ hh : hh, listCon : listCon });
+        // now we need to fixup namespacing of fields
+        var namespacePrefix = component.get('v.namespacePrefix');        
+        hh = this.addPrefixToObjectFields(namespacePrefix, hh);
+        listCon = this.addPrefixToListObjectFields(namespacePrefix, listCon);
+        action.setParams({
+            hh: hh,
+            listCon: listCon
+        });
         var self = this;
         action.setCallback(this, function(response) {
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
                 hh = response.getReturnValue();
+                hh = this.removePrefixFromObjectFields(namespacePrefix, hh);
                 component.set("v.hh", hh);
             } else if (component.isValid() && state === "ERROR") {
                 self.reportError(component, response);
@@ -138,9 +164,9 @@
     },
 
     /*******************************************************************************************************
-    * @description helper to display an errors that occur from a server method call
-    */
-    reportError : function(component, response) {
+     * @description helper to display an errors that occur from a server method call
+     */
+    reportError: function(component, response) {
         var errors = response.getError();
         if (errors) {
             $A.log("Errors", errors);
@@ -157,18 +183,18 @@
     },
 
     /*******************************************************************************************************
-    * @description creates a ui:message component for the given error string
-    */
-    displayUIMessage : function(component, strError, whichDiv) {
+     * @description creates a ui:message component for the given error string
+     */
+    displayUIMessage: function(component, strError, whichDiv) {
         $A.createComponents([
-            ["ui:message", {
-                "title" : "Error",
-                "severity" : "error"
-            }],
-            ["ui:outputText", {
-                "value" : strError
-            }]
-        ],
+                ["ui:message", {
+                    "title": "Error",
+                    "severity": "error"
+                }],
+                ["ui:outputText", {
+                    "value": strError
+                }]
+            ],
             function(components, status) {
                 if (status === "SUCCESS") {
                     var message = components[0];
@@ -183,23 +209,23 @@
                         div.set("v.body", curMsg);
                     }
                 }
-       });
+            });
     },
 
     /*******************************************************************************************************
-    * @description Saves all changes the container knows about (household object/account, contacts), and
-    * if successful, then calls the visualforce page's save actionMethod, which will also close the page.
-    */
-    save : function(component) {
+     * @description Saves all changes the container knows about (household object/account, contacts), and
+     * if successful, then calls the visualforce page's save actionMethod, which will also close the page.
+     */
+    save: function(component) {
         component.set("v.showSpinner", true);
 
         // keep track of ourselves and whether both server updates succeed
         var self = this;
         var callbacksWaiting = 4;
         var action;
-        
+
         // create our shared callback code
-        var callback = function (response) {
+        var callback = function(response) {
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
                 if (--callbacksWaiting === 0) {
@@ -211,15 +237,21 @@
             } else if (component.isValid() && state === "ERROR") {
                 self.reportError(component, response);
             }
-        };            
+        };
 
         // first need to merge any households (Accounts only) before we save contacts
         // so we avoid deleting a household if that contact was the last one in the hh.
         var listHHMerge = component.get('v.listHHMerge');
         var hh = component.get('v.hh');
+        var namespacePrefix = component.get('v.namespacePrefix');        
+        hh = this.addPrefixToObjectFields(namespacePrefix, hh);
         if (listHHMerge && listHHMerge.length > 0) {
+            listHHMerge = this.addPrefixToListObjectFields(namespacePrefix, listHHMerge);
             action = component.get("c.mergeHouseholds");
-            action.setParams({ hhWinner : hh, listHHMerge : listHHMerge });
+            action.setParams({
+                hhWinner: hh,
+                listHHMerge: listHHMerge
+            });
             action.setCallback(this, callback);
             $A.enqueueAction(action);
         } else {
@@ -228,33 +260,40 @@
 
         // save the contacts
         var listCon = component.get("v.listCon");
+        listCon = this.addPrefixToListObjectFields(namespacePrefix, listCon);
         action = component.get("c.upsertContacts");
-        action.setParams({ listCon : listCon});
+        action.setParams({
+            listCon: listCon
+        });
         action.setCallback(this, callback);
         $A.enqueueAction(action);
 
         // update our auto-naming exclusion states
-        hh = component.get("v.hh");
         this.updateNamingExclusions(component, hh);
 
         // save the Household
         action = component.get("c.updateHousehold");
-        action.setParams({ hh : hh});
+        action.setParams({
+            hh: hh
+        });
         action.setCallback(this, callback);
         $A.enqueueAction(action);
 
         // delete any contacts
         var listConDelete = component.get("v.listConDelete");
+        listConDelete = this.addPrefixToListObjectFields(namespacePrefix, listConDelete);
         action = component.get("c.deleteContacts");
-        action.setParams({ listCon : listConDelete});
+        action.setParams({
+            listCon: listConDelete
+        });
         action.setCallback(this, callback);
         $A.enqueueAction(action);
     },
 
     /*******************************************************************************************************
-    * @description Update our auto-naming exclusion states based on our checkboxes.
-    */
-    updateNamingExclusions : function(component, hh) {
+     * @description Update our auto-naming exclusion states based on our checkboxes.
+     */
+    updateNamingExclusions: function(component, hh) {
         var strExclusions = '';
         if (!component.get('v.isAutoName'))
             strExclusions += 'Household__c.Name;';
@@ -266,9 +305,9 @@
     },
 
     /*******************************************************************************************************
-    * @description Update our auto-naming exclusion states based on Name/Greeting Changes
-    */
-    updateAutoNaming : function(component, event) {
+     * @description Update our auto-naming exclusion states based on Name/Greeting Changes
+     */
+    updateAutoNaming: function(component, event) {
         var inputText = event.getSource();
         var idText = inputText.getLocalId();
 
@@ -281,29 +320,29 @@
     },
 
     /*******************************************************************************************************
-    * @description Ask the user if the Contact should be deleted, by displaying our delete contact popup.
-    */
-    promptDeleteContact : function(component, event) {
+     * @description Ask the user if the Contact should be deleted, by displaying our delete contact popup.
+     */
+    promptDeleteContact: function(component, event) {
         var con = event.getParam("contact");
         component.set('v.showDeleteContactPopup', true);
         component.set('v.conDelete', con);
     },
 
     /*******************************************************************************************************
-    * @description The user has decided not to delete the contact, so remove our delete contact popup.
-    */
-    cancelDeleteContact : function(component /* , event */) {
+     * @description The user has decided not to delete the contact, so remove our delete contact popup.
+     */
+    cancelDeleteContact: function(component /* , event */ ) {
         component.set('v.showDeleteContactPopup', false);
     },
 
     /*******************************************************************************************************
-    * @description The user has confirmed the contact should be deleted.
-    * Remove our delete contact popup.
-    * Add the contact to our list of contacts to delete.
-    * Remove the contact from our list of contacts in the household.
-    * Update all household names and greetings.
-    */
-    doDeleteContact : function(component, event) {
+     * @description The user has confirmed the contact should be deleted.
+     * Remove our delete contact popup.
+     * Add the contact to our list of contacts to delete.
+     * Remove the contact from our list of contacts in the household.
+     * Update all household names and greetings.
+     */
+    doDeleteContact: function(component, event) {
         component.set('v.showDeleteContactPopup', false);
         var con = component.get('v.conDelete');
         if (con) {
@@ -323,18 +362,20 @@
 
             // we must tell the visualforce page, in case the primary contact lookup is to this contact.
             event = $A.get("e.c:HH_ContactAfterDeleteEvent");
-            event.setParams({ "contact" : con });
+            event.setParams({
+                "contact": con
+            });
             event.fire();
         }
     },
 
     /*******************************************************************************************************
-    * @description find the contact in the list
-    * @param listCon the list of Contacts
-    * @param con the contact to find
-    * @return iCon the index to the found contact, or -1 if not found.
-    */
-    findContact : function(listCon, con) {
+     * @description find the contact in the list
+     * @param listCon the list of Contacts
+     * @param con the contact to find
+     * @return iCon the index to the found contact, or -1 if not found.
+     */
+    findContact: function(listCon, con) {
         var iCon;
         for (iCon = 0; iCon < listCon.length; iCon++) {
             var con2 = listCon[iCon];
@@ -347,9 +388,9 @@
     },
 
     /*******************************************************************************************************
-    * @description Close the page by redirecting back to the household
-    */
-    close : function(component) {
+     * @description Close the page by redirecting back to the household
+     */
+    close: function(component) {
         // the correct way to handle navigation in Salesforce classic vs. LEX/mobile
         /*global sforce */
         if (typeof sforce === "undefined") {
@@ -360,9 +401,9 @@
     },
 
     /*******************************************************************************************************
-    * @description The default adddress has changed, so update our household and contacts
-    */
-    updateDefaultAddress : function(component, addr) {
+     * @description The default adddress has changed, so update our household and contacts
+     */
+    updateDefaultAddress: function(component, addr) {
         var hh = component.get('v.hh');
         var isAccount = component.get('v.hhTypePrefix') === '001';
 
@@ -398,9 +439,9 @@
     },
 
     /*******************************************************************************************************
-    * @description copy the address object to the appropriate contact fields
-    */
-    copyAddrToContact : function(addr, con) {
+     * @description copy the address object to the appropriate contact fields
+     */
+    copyAddrToContact: function(addr, con) {
         con.MailingStreet = addr.MailingStreet__c;
         if (addr.MailingStreet2__c)
             con.MailingStreet += '\n' + addr.MailingStreet2__c;
@@ -411,9 +452,9 @@
     },
 
     /*******************************************************************************************************
-    * @description fixup custom labels exposed thru $Label, so the ones from the wrong namespace are null.
-    */
-    fixupCustomLabels : function(/* component */) {
+     * @description fixup custom labels exposed thru $Label, so the ones from the wrong namespace are null.
+     */
+    fixupCustomLabels: function( /* component */ ) {
         // get access to the label global value provider which appears as an object, with a subobject
         // for each namespace, and property for each label.
         var lbl = $A.get('$Label');
@@ -428,9 +469,9 @@
     },
 
     /*******************************************************************************************************
-    * @description show the New Contact Popup in response to the ContactNewEvent
-    */
-    showNewContactPopup : function(component, event) {
+     * @description show the New Contact Popup in response to the ContactNewEvent
+     */
+    showNewContactPopup: function(component, event) {
         var con = event.getParam('contact');
         var conNew = component.get('v.conNew');
         conNew.FirstName = con.FirstName;
@@ -438,14 +479,16 @@
         component.set('v.conNew', conNew);
         component.set('v.showNewContactPopup', true);
     },
-    
+
     /*******************************************************************************************************
-    * @description initialize a new Contact SObject
-    */
-    initNewContact : function(component) {
+     * @description initialize a new Contact SObject
+     */
+    initNewContact: function(component) {
         var hhId = component.get('v.hhId');
         var hhTypePrefix = component.get('v.hhTypePrefix');
-        var con = {'sobjectType': 'Contact'};
+        var con = {
+            'sobjectType': 'Contact'
+        };
         if (hhTypePrefix === '001')
             con.AccountId = hhId;
         else
@@ -457,9 +500,9 @@
     },
 
     /*******************************************************************************************************
-    * @description add the new contact to the household, and update the household
-    */
-    createNewContact : function(component) {
+     * @description add the new contact to the household, and update the household
+     */
+    createNewContact: function(component) {
         var listCon = component.get('v.listCon');
         var conNew = component.get('v.conNew');
 
@@ -482,35 +525,39 @@
     },
 
     /*******************************************************************************************************
-    * @description the Salutation picklist has changed; update our contact.
-    */
-    onSalutationChange : function(component) {
+     * @description the Salutation picklist has changed; update our contact.
+     */
+    onSalutationChange: function(component) {
         var conNew = component.get('v.conNew');
         conNew.Salutation = component.find('selSalutation').get('v.value');
         component.set('v.conNew', conNew);
     },
 
     /*******************************************************************************************************
-    * @description sees if the contact is NOT the lone member of a household, in which case it will bring up
-    * our Merge Household popup.  if they are the lone member, it will just proceed with the HH merge.
-    */
-    addOrMergeContact : function(component, event) {
+     * @description sees if the contact is NOT the lone member of a household, in which case it will bring up
+     * our Merge Household popup.  if they are the lone member, it will just proceed with the HH merge.
+     */
+    addOrMergeContact: function(component, event) {
         var namespacePrefix = component.get('v.namespacePrefix');
         var conAdd = event.getParam('value');
+        conAdd = this.removePrefixFromObjectFields(namespacePrefix, conAdd);
+        
         var cMembers = 0;
-        var hhId = conAdd[namespacePrefix + 'HHId__c'];
+        var hhId = conAdd.HHId__c;
 
         if (hhId && String(hhId).substr(0, 3) === '001') {
             var acc = conAdd.Account;
-            cMembers = acc[namespacePrefix + 'Number_of_Household_Members__c'];
+            cMembers = acc.Number_of_Household_Members__c;
         } else if (conAdd.npo02__Household__c) {
-            cMembers = conAdd.npo02__Household__r.Number_of_Household_Members__c;            
+            cMembers = conAdd.npo02__Household__r.Number_of_Household_Members__c;
         }
-        var hhMerge = {'Id' : hhId};
-        hhMerge[namespacePrefix + 'Number_of_Household_Members__c'] = cMembers;
+        var hhMerge = {
+            'Id': hhId
+        };
+        hhMerge.Number_of_Household_Members__c = cMembers;
         component.set('v.hhMerge', hhMerge);
         component.set('v.conAdd', conAdd);
-        
+
         // if we can't merge households (due to permissions), we only support moving a contact
         // from one household to another if there will still be remaining household members.
         // otherwise the household would need to get deleted which we can't allow.
@@ -523,23 +570,23 @@
                 return;
             }
         }
-         
+
         // handle contacts not in a household account, and having no household object.
         if (!hhId) {
             this.addContact(component, conAdd);
-        // if only one contact in household, merge the households
+            // if only one contact in household, merge the households
         } else if (cMembers === 1) {
             this.mergeHousehold(component, hhMerge);
-        // more contacts in household, prompt for add vs merge.
+            // more contacts in household, prompt for add vs merge.
         } else {
             component.set('v.showMergeHHPopup', true);
         }
     },
 
     /*******************************************************************************************************
-    * @description add the Contact to the existing household
-    */
-    addContact : function(component, conAdd) {
+     * @description add the Contact to the existing household
+     */
+    addContact: function(component, conAdd) {
         component.set("v.showSpinner", true);
         var hhId = component.get('v.hhId');
         var hhTypePrefix = component.get('v.hhTypePrefix');
@@ -567,17 +614,24 @@
         // add the Contact's address to our list
         var action = component.get("c.addContactAddresses");
         var listAddr = component.get('v.listAddr');
+        var namespacePrefix = component.get('v.namespacePrefix');
         // because our address objects aren't real, we need to
         // tell the system what type of sobject they are
         for (var i in listAddr)
-            listAddr[i].sobjectType = 'Address__c';
+            listAddr[i].sobjectType = namespacePrefix + 'Address__c';
         listCon = [conAdd];
-        action.setParams({ listCon : listCon, listAddrExisting : listAddr });
+        listCon = this.addPrefixToListObjectFields(namespacePrefix, hh);
+        listAddr = this.addPrefixToListObjectFields(namespacePrefix, listAddr);
+        action.setParams({
+            listCon: listCon,
+            listAddrExisting: listAddr
+        });
         var self = this;
         action.setCallback(this, function(response) {
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
                 listAddr = response.getReturnValue();
+                listAddr = this.removePrefixFromListObjectFields(namespacePrefix, listAddr);
                 component.set("v.listAddr", listAddr);
             } else if (component.isValid() && state === "ERROR") {
                 self.reportError(component, response);
@@ -588,21 +642,25 @@
     },
 
     /*******************************************************************************************************
-    * @description merge the specified household and its contacts into the existing household
-    */
-    mergeHousehold : function(component, hhMerge) {
+     * @description merge the specified household and its contacts into the existing household
+     */
+    mergeHousehold: function(component, hhMerge) {
         component.set("v.showSpinner", true);
         var hhId = component.get('v.hhId');
         var hhTypePrefix = component.get('v.hhTypePrefix');
+        var namespacePrefix = component.get('v.namespacePrefix');
 
         // query for the Household Contacts
         var action = component.get("c.getContacts");
-        action.setParams({ hhId : hhMerge.Id });
+        action.setParams({
+            hhId: hhMerge.Id
+        });
         var self = this;
         action.setCallback(this, function(response) {
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
                 var listConMerge = response.getReturnValue();
+                listConMerge = this.removePrefixFromListObjectFields(namespacePrefix, listConMerge);
                 var listCon = component.get("v.listCon");
 
                 // move all contacts into our household
@@ -645,13 +703,18 @@
         // because our address objects aren't real, we need to
         // tell the system what type of sobject they are
         for (var i in listAddr)
-            listAddr[i].sobjectType = 'Address__c';
-        action.setParams({ hhId : hhMerge.Id, listAddrExisting : listAddr });
+            listAddr[i].sobjectType = namespacePrefix + 'Address__c';
+        listAddr = this.addPrefixToListObjectFields(namespacePrefix, listAddr);
+        action.setParams({
+            hhId: hhMerge.Id,
+            listAddrExisting: listAddr
+        });
         self = this;
         action.setCallback(this, function(response) {
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
                 listAddr = response.getReturnValue();
+                listAddr = this.removePrefixFromListObjectFields(namespacePrefix, listAddr);
                 component.set("v.listAddr", listAddr);
             } else if (component.isValid() && state === "ERROR") {
                 self.reportError(component, response);
@@ -660,5 +723,86 @@
         $A.enqueueAction(action);
 
     },
+
+    /*******************************************************************************************************
+     * @description add the namespace prefix to any object custom fields that have no prefix
+     */
+    addPrefixToObjectFields: function(namespacePrefix, object) {
+        return this.processPrefixObjectFields(namespacePrefix, object, true);
+    },
+
+    /*******************************************************************************************************
+     * @description remove the namespace prefix from any object custom fields that have it
+     */
+    removePrefixFromObjectFields: function(namespacePrefix, object) {
+        return this.processPrefixObjectFields(namespacePrefix, object, false);
+    },
+
+    /*******************************************************************************************************
+     * @description add the namespace prefix to a list of objects with custom fields that have no prefix
+     */
+    addPrefixToListObjectFields: function(namespacePrefix, listObject) {
+        if (namespacePrefix && namespacePrefix.length > 0) {
+            var listObj = [];
+            for (var object in listObject) {
+                var obj = this.processPrefixObjectFields(namespacePrefix, object, true);
+                listObj.push(obj);
+            }
+            return listObj;
+        } else {
+            return listObject;
+        }
+    },
+
+    /*******************************************************************************************************
+     * @description remove the namespace prefix to a list of objects with custom fields that have the prefix
+     */
+    removePrefixFromListObjectFields: function(namespacePrefix, listObject) {
+        if (namespacePrefix && namespacePrefix.length > 0) {
+            var listObj = [];
+            for (var object in listObject) {
+                var obj = this.processPrefixObjectFields(namespacePrefix, object, false);
+                listObj.push(obj);
+            }
+            return listObj;
+        } else {
+            return listObject;
+        }
+    },
+
+    /*******************************************************************************************************
+     * @description adds or removes namespace prefix from the object's custom fields
+     */
+    processPrefixObjectFields: function(namespacePrefix, object, isAdd) {
+        if (namespacePrefix && namespacePrefix.length > 0) {
+
+            var obj = {}; //create object
+
+            // process namespace prefix from each custom field
+            for (var fld in object) {
+                if (isAdd) {
+                    // see if custom field has no namespace prefix
+                    if (fld.endsWith('__c') && fld.indexOf('__') === fld.lastIndexOf('__')) {
+                        var fld2 = namespacePrefix + fld;
+                        obj[fld2] = object[fld];
+                    } else {
+                        obj[fld] = object[fld];
+                    }
+                } else {
+                    // see if custom field starts with our namespace prefix
+                    if (fld.endsWith('__c') && fld.startsWith(namespacePrefix)) {
+                        var fld2 = fld.replace(namespacePrefix, fld);
+                        obj[fld2] = object[fld];
+                    } else {
+                        obj[fld] = object[fld];
+                    }
+                }
+            }
+            return obj;
+        } else {
+            return object;
+        }
+    },
+
 
 })
