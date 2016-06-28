@@ -243,6 +243,8 @@ public with sharing class HH_Container_LCTRL {
     */
     private static set<String> setUpdateableContactFields() {
         set<String> setContactFields = new Set<String>{
+            'AccountId',
+            'npo02__Household__c',
             'FirstName',
             'LastName',
             'Salutation',
