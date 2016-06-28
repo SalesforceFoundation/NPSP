@@ -142,7 +142,7 @@
         // get updated Names and Greetings
         var action = component.get("c.getHHNamesGreetings");
         // now we need to fixup namespacing of fields
-        var namespacePrefix = component.get('v.namespacePrefix');        
+        var namespacePrefix = component.get('v.namespacePrefix');
         hh = this.addPrefixToObjectFields(namespacePrefix, hh);
         listCon = this.addPrefixToListObjectFields(namespacePrefix, listCon);
         action.setParams({
@@ -243,7 +243,7 @@
         // so we avoid deleting a household if that contact was the last one in the hh.
         var listHHMerge = component.get('v.listHHMerge');
         var hh = component.get('v.hh');
-        var namespacePrefix = component.get('v.namespacePrefix');        
+        var namespacePrefix = component.get('v.namespacePrefix');
         hh = this.addPrefixToObjectFields(namespacePrefix, hh);
         if (listHHMerge && listHHMerge.length > 0) {
             listHHMerge = this.addPrefixToListObjectFields(namespacePrefix, listHHMerge);
@@ -456,10 +456,10 @@
      */
     fixupCustomLabels: function(component) {
         var namespacePrefix = component.get('v.namespacePrefix');
-        
+
         if (namespacePrefix && namespacePrefix.length > 0) {
             var nspace = namespacePrefix.replace('__', '');
-    
+
             // get access to the label global value provider which appears as an object, with a subobject
             // for each namespace, and property for each label.
             var lbl = $A.get('$Label');
@@ -520,6 +520,7 @@
         var addrDefault = component.find('addrMgr').get('v.addrDefault');
         if (addrDefault)
             this.copyAddrToContact(addrDefault, conNew);
+        conNew.npo02__Household_Naming_Order__c = listCon.length;
         listCon.push(conNew);
         component.set('v.listCon', listCon);
         this.initNewContact(component);
@@ -546,7 +547,7 @@
         var namespacePrefix = component.get('v.namespacePrefix');
         var conAdd = event.getParam('value');
         conAdd = this.removePrefixFromObjectFields(namespacePrefix, conAdd);
-        
+
         var cMembers = 0;
         var hhId = conAdd.HHId__c;
 
@@ -750,7 +751,7 @@
         if (namespacePrefix && namespacePrefix.length > 0) {
             var listObj = [];
             for (var object in listObject) {
-                var obj = this.processPrefixObjectFields(namespacePrefix, object, true);
+                var obj = this.processPrefixObjectFields(namespacePrefix, listObject[object], true);
                 listObj.push(obj);
             }
             return listObj;
@@ -766,7 +767,7 @@
         if (namespacePrefix && namespacePrefix.length > 0) {
             var listObj = [];
             for (var object in listObject) {
-                var obj = this.processPrefixObjectFields(namespacePrefix, object, false);
+                var obj = this.processPrefixObjectFields(namespacePrefix, listObject[object], false);
                 listObj.push(obj);
             }
             return listObj;
@@ -796,7 +797,7 @@
                 } else {
                     // see if custom field starts with our namespace prefix
                     if (fld.endsWith('__c') && fld.startsWith(namespacePrefix)) {
-                        var fld2 = fld.replace(namespacePrefix, fld);
+                        var fld2 = fld.replace(namespacePrefix, '');
                         obj[fld2] = object[fld];
                     } else {
                         obj[fld] = object[fld];
