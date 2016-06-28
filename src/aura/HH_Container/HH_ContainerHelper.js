@@ -659,7 +659,7 @@
         for (var i in listAddr)
             listAddr[i].sobjectType = namespacePrefix + 'Address__c';
         listCon = [conAdd];
-        listCon = this.addPrefixToListObjectFields(namespacePrefix, hh);
+        listCon = this.addPrefixToListObjectFields(namespacePrefix, listCon);
         listAddr = this.addPrefixToListObjectFields(namespacePrefix, listAddr);
         action.setParams({
             listCon: listCon,

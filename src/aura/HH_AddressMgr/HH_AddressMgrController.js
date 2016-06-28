@@ -36,8 +36,8 @@
     onPressAddrTile : function(component, event /* , helper */) {
         var iAddr = Number(event.currentTarget.getAttribute('data-iAddr'));
         component.set('v.iAddrSelected', iAddr);
-        component.set('v.listAddr', component.get('v.listAddr'));
-        component.set('v.showChangeAddressPopup', true);
+        //component.set('v.listAddr', component.get('v.listAddr'));
+        //component.set('v.showChangeAddressPopup', true);
     },
 
     toggleAddrSection : function(component /* , event, helper */) {

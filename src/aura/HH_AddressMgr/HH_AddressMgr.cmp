@@ -21,14 +21,13 @@
         <div class="slds-card slds-p-around--none">
             <div class="slds-card__body slds-m-around--x-small slds-p-vertical--none" >
                 <!-- address -->
-                <aura:if isTrue="{!v.addrDefault != null}">
+                <!-- <aura:if isTrue="{!v.addrDefault != null}">  -->
                     <div class="slds-text-body--small" >
                         <ui:outputText value="{!v.addrDefault.MailingStreet__c + 
                             (v.addrDefault.MailingStreet2__c != null ? '\n' + v.addrDefault.MailingStreet2__c : '')}" /><br/>
                         <ui:outputText value="{!v.addrDefault.MailingCity__c + (v.addrDefault.MailingState__c != null ? ', ' : '') + v.addrDefault.MailingState__c + ' ' + v.addrDefault.MailingPostalCode__c + ' '}" /><br/>
                         <ui:outputText value="{!v.addrDefault.MailingCountry__c}" />                                     
                     </div>
-                </aura:if>
             </div> 
             <div class="slds-card__footer">
                 <div class="slds-grid slds-grid--align-center">
