@@ -29,7 +29,7 @@
                 <ui:button class="slds-button" press="{!c.handleNewContact}">
                     <c:svg ariaHidden="true"
                            class="slds-icon slds-icon-text-default slds-icon--small"
-                           xlinkHref="/resource/SLDS/1_0_3/assets/icons/utility-sprite/svg/symbols.svg#add"
+                           xlinkHref="{!$Resource.SLDS + '/1_0_3/assets/icons/utility-sprite/svg/symbols.svg#add'}"
                            />
                     {!$Label.npo02.NewContact}
                 </ui:button>

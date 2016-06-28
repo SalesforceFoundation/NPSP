@@ -63,7 +63,7 @@
                         <div class="slds-media slds-media--center slds-has-flexi-truncate">
                             <div class="slds-media__figure">
                                 <c:svg class="slds-icon slds-icon-standard-household slds-icon--medium"
-                                       xlinkHref="/resource/SLDS/1_0_3/assets/icons/standard-sprite/svg/symbols.svg#household" />
+                                       xlinkHref="{!$Resource.SLDS + '/1_0_3/assets/icons/standard-sprite/svg/symbols.svg#household'}" />
                             </div>
                             <div class="slds-media__body">
                                 <h1 class="slds-text-heading--medium">{!$Label.npo02.ManageHousehold}</h1>
@@ -175,7 +175,7 @@
                         <div class="slds-modal__header">
                             <ui:button class="slds-button slds-button--icon-inverse slds-modal__close" press="{!c.cancelDeleteContact}">
                                 <c:svg class="slds-button__icon slds-button__icon--large"
-                                       xlinkHref="/resource/SLDS/1_0_3/assets/icons/action-sprite/svg/symbols.svg#close" />
+                                       xlinkHref="{!$Resource.SLDS + '/1_0_3/assets/icons/action-sprite/svg/symbols.svg#close'}" />
                                 <span class="slds-assistive-text">{!$Label.c.bdiBtnClose}{!$Label.npsp.bdiBtnClose}</span>
                             </ui:button>
                             <h2 id="searchPopupLabel" class="slds-text-heading--medium">{!$Label.c.lblDeleteContact}{!$Label.npsp.lblDeleteContact}</h2>
@@ -214,7 +214,7 @@
                         <div class="slds-modal__header">
                             <ui:button class="slds-button slds-button--icon-inverse slds-modal__close" press="{!c.cancelMergeHH}">
                                 <c:svg class="slds-button__icon slds-button__icon--large"
-                                       xlinkHref="/resource/SLDS/1_0_3/assets/icons/action-sprite/svg/symbols.svg#close" />
+                                       xlinkHref="{!$Resource.SLDS + '/1_0_3/assets/icons/action-sprite/svg/symbols.svg#close'}" />
                                 <span class="slds-assistive-text">{!$Label.c.bdiBtnClose}{!$Label.npsp.bdiBtnClose}</span>
                             </ui:button>
                             <h2 id="searchPopupLabel" class="slds-text-heading--medium">{!$Label.c.lblMergeHHTitle}{!$Label.npsp.lblMergeHHTitle}</h2>
@@ -261,7 +261,7 @@
                         <div class="slds-modal__header">
                             <ui:button class="slds-button slds-button--icon-inverse slds-modal__close" press="{!c.cancelNewContact}">
                                 <c:svg class="slds-button__icon slds-button__icon--large"
-                                       xlinkHref="/resource/SLDS/1_0_3/assets/icons/action-sprite/svg/symbols.svg#close" />
+                                       xlinkHref="{!$Resource.SLDS + '/1_0_3/assets/icons/action-sprite/svg/symbols.svg#close'}" />
                                 <span class="slds-assistive-text">{!$Label.c.bdiBtnClose}{!$Label.npsp.bdiBtnClose}</span>
                             </ui:button>
                             <h2 id="searchPopupLabel" class="slds-text-heading--medium">{!$Label.npo02.NewContact}</h2>

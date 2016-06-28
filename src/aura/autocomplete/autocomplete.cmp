@@ -1,5 +1,5 @@
 <aura:component >
-    <ltng:require styles="/resource/SLDS/1_0_3/assets/styles/salesforce-lightning-design-system-ltng.min.css" />
+    <ltng:require styles="{!$Resource.SLDS + '/1_0_3/assets/styles/salesforce-lightning-design-system-ltng.min.css'}" />
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
     <aura:handler name="optionSelected" event="c:autocompleteSelectListOption" action="{!c.handleOptionSelected}"/>
@@ -23,7 +23,7 @@
                 <ui:button class="slds-button slds-button--icon-bare slds-pill__remove" press="{!c.handleRemovePill}">
                     <c:svg ariaHidden="true"
                        class="slds-button__icon"
-                       xlinkHref="/resource/SLDS/1_0_3/assets/icons/utility-sprite/svg/symbols.svg#close"
+                       xlinkHref="{!$Resource.SLDS + '/1_0_3/assets/icons/utility-sprite/svg/symbols.svg#close'}"
                        />
                     <span class="slds-assistive-text">Remove</span>
                 </ui:button>
@@ -40,7 +40,7 @@
             <span>
                 <c:svg ariaHidden="true"
                        class="slds-icon slds-icon-text-default slds-icon--small"
-                       xlinkHref="/resource/SLDS/1_0_3/assets/icons/utility-sprite/svg/symbols.svg#search"
+                       xlinkHref="{!$Resource.SLDS + '/1_0_3/assets/icons/utility-sprite/svg/symbols.svg#search'}"
                        />
                 &quot;{!v.keyword}&quot; {!if(!empty(v.searchContext), v.searchContext, '')}
             </span>
@@ -68,7 +68,7 @@
                 <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--right">
                     <c:svg ariaHidden="true"
                            class="slds-input__icon slds-icon-text-default"
-                           xlinkHref="/resource/SLDS/1_0_3/assets/icons/utility-sprite/svg/symbols.svg#search"
+                           xlinkHref="{!$Resource.SLDS + '/1_0_3/assets/icons/utility-sprite/svg/symbols.svg#search'}"
                            />
                     <aura:if isTrue="{!and(v.showPills, !empty(v.value), !empty(v.displayValue))}">
                         {!v.displayValueTemplate}

@@ -16,7 +16,7 @@
                     <div class="slds-media slds-media--center slds-has-flexi-truncate">
                         <div class="slds-media__figure">
                             <c:svg class="slds-icon slds-icon-standard-contact slds-icon--small"
-                                   xlinkHref="/resource/SLDS/1_0_3/assets/icons/standard-sprite/svg/symbols.svg#contact" />
+                                   xlinkHref="{!$Resource.SLDS + '/1_0_3/assets/icons/standard-sprite/svg/symbols.svg#contact'}" />
                         </div>
                         <div class="slds-media__body">
                             <a href="{! '/' + v.contact.Id}" target="_blank">{!v.contact.FirstName}&nbsp;{!v.contact.LastName}</a>
@@ -26,7 +26,7 @@
                                 <ui:button label="{!$Label.npo02.Delete}" buttonTitle="{!$Label.npo02.Delete}" labelClass="assistiveText"
                                            class="slds-button slds-button--icon deleteBtn" press="{!c.deleteContact}">
                                     <c:svg class="slds-icon slds-icon--x-small slds-icon-text-default slds-button__icon"
-                                           xlinkHref="/resource/SLDS/1_0_3/assets/icons/utility-sprite/svg/symbols.svg#delete" />
+                                           xlinkHref="{!$Resource.SLDS + '/1_0_3/assets/icons/utility-sprite/svg/symbols.svg#delete'}" />
                                 </ui:button>
                             </aura:if>
                         </div>

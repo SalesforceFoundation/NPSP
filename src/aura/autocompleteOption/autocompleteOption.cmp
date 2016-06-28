@@ -11,7 +11,7 @@
                 <aura:if isTrue="{!and(!empty(v.iconSprite), !empty(v.iconName))}">
                     <c:svg ariaHidden="true"
                            class="{!'slds-icon slds-icon--small slds-icon-' + v.iconSprite + '-' + v.iconName}"
-                           xlinkHref="{!'/resource/SLDS/1_0_3/assets/icons/' + v.iconSprite + '-sprite/svg/symbols.svg#' + v.iconName}"
+                           xlinkHref="{!$Resource.SLDS + '/1_0_3/assets/icons/' + v.iconSprite + '-sprite/svg/symbols.svg#' + v.iconName}"
                            />
                 </aura:if>
                 {!v.displayValue}
