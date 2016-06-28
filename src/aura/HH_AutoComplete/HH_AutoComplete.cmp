@@ -13,8 +13,8 @@
     <c:autocomplete aura:id="autocomplete"
                     isListVisible="{!v.isListVisible}"
                     label=""
-                    placeholder="{!$Label.c.lblFindOrAddContact + $Label.npsp.lblFindOrAddContact}"
-                    searchContext="{!$Label.c.lblFindInContacts + $Label.npsp.lblFindInContacts}">
+                    placeholder="{!$Label.c.lblFindOrAddContact}"
+                    searchContext="{!$Label.c.lblFindInContacts}">
 
         <aura:set attribute="itemTemplate">
             <c:HH_AutoCompleteOption value="{!item.value}"/>

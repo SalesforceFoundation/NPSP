@@ -452,18 +452,23 @@
     },
 
     /*******************************************************************************************************
-     * @description fixup custom labels exposed thru $Label, so the ones from the wrong namespace are null.
+     * @description fixup custom labels exposed thru $Label, so the ones from our namespace work for 'c'
      */
-    fixupCustomLabels: function( /* component */ ) {
-        // get access to the label global value provider which appears as an object, with a subobject
-        // for each namespace, and property for each label.
-        var lbl = $A.get('$Label');
-        for (var nspace in lbl) {
-            for (var str in lbl[nspace]) {
+    fixupCustomLabels: function(component) {
+        var namespacePrefix = component.get('v.namespacePrefix');
+        
+        if (namespacePrefix && namespacePrefix.length > 0) {
+            var nspace = namespacePrefix.replace('__', '');
+    
+            // get access to the label global value provider which appears as an object, with a subobject
+            // for each namespace, and property for each label.
+            var lbl = $A.get('$Label');
+
+            for (var str in lbl['c']) {
                 // the labels that fail to get resolved appear as
                 // "$Label.namespace.foo does not exist: Field $Label.namespace__foo does not exist. Check spelling."
-                if (lbl[nspace][str] && lbl[nspace][str].startsWith('$Label'))
-                    lbl[nspace][str] = ''; //lbl['c'][str];
+                if (lbl['c'][str] && lbl['c'][str].startsWith('$Label'))
+                    lbl['c'][str] = lbl[nspace][str];
             }
         }
     },
@@ -566,7 +571,7 @@
                 this.addContact(component, conAdd);
                 return;
             } else {
-                this.displayUIMessage(component, $A.get("$Label.c.lblNoHHMergePermissions") + $A.get("$Label.npsp.lblNoHHMergePermissions"), "divUIMessageContainer");
+                this.displayUIMessage(component, $A.get("$Label.c.lblNoHHMergePermissions"), "divUIMessageContainer");
                 return;
             }
         }
