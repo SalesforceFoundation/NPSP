@@ -466,11 +466,44 @@
 
             for (var str in lbl['c']) {
                 // the labels that fail to get resolved appear as
-                // "$Label.namespace.foo does not exist: Field $Label.namespace__foo does not exist. Check spelling."
+                // "$Label namespace.foo does not exist: Field $Label namespace__foo does not exist. Check spelling."
                 if (lbl['c'][str] && lbl['c'][str].startsWith('$Label'))
                     lbl['c'][str] = lbl[nspace][str];
             }
         }
+        return;
+        
+        // force the following label references, or these won't be available to $Label.
+        try {
+            $A.get("$Label.npsp.lblAddressOverride");
+            $A.get("$Label.npsp.lblCCardExcludeFrom");
+            $A.get("$Label.npsp.lblHouseholdName");
+            $A.get("$Label.npsp.lblFormalGreeting");
+            $A.get("$Label.npsp.lblInformalGreeting");
+            $A.get("$Label.npsp.lblHousehold");
+            $A.get("$Label.npsp.lblDeleteContact");
+            $A.get("$Label.npsp.lblDeleteContactPrompt");
+            $A.get("$Label.npsp.lblStreet");
+            $A.get("$Label.npsp.lblCity");
+            $A.get("$Label.npsp.lblState");
+            $A.get("$Label.npsp.lblPostalCode");
+            $A.get("$Label.npsp.lblCountry");
+            $A.get("$Label.npsp.lblSalutation");
+            $A.get("$Label.npsp.lblFirstName");
+            $A.get("$Label.npsp.lblLastName");
+            $A.get("$Label.npsp.stgBtnCancel");
+            $A.get("$Label.npsp.stgBtnSave");
+            $A.get("$Label.npsp.bdiBtnClose");
+            $A.get("$Label.npsp.lblMergeHHTitle");
+            $A.get("$Label.npsp.lblMergeHHPrompt");
+            $A.get("$Label.npsp.lblBtnAddContact");
+            $A.get("$Label.npsp.lblBtnAddAllHHMembers");
+            $A.get("$Label.npsp.lblFindOrAddContact");
+            $A.get("$Label.npsp.lblFindInContacts");
+            $A.get("$Label.npsp.lblNoHHMergePermissions");
+        } catch(e) {
+        }
+        
     },
 
     /*******************************************************************************************************
