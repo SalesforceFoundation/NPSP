@@ -35,62 +35,60 @@
 * @description base class for the batch data entry, supports all the custom settings you might have.
 */
 public with sharing class BDE_BatchDataEntry {
-    /*
-    * @description Object for batch data entry.
-    */
+    /** @description Object for batch data entry. */
     private String objectName;
-    /*
-    * @description Fields to include for batch data entry, based on entry field set
-    */
+    /** @description Fields to include for batch data entry, based on entry field set. */
     private List<String> entryFieldList;
-    /*
-    * @description Fields to list for batch data entry, based on list field set
-    */
+    /** @description Fields to list for batch data entry, based on list field set. */
     private List<String> listFieldList;
-    /*
-    * @description Boolean flag, set to true
-    */
+    /** @description Boolean flag, set to true. */
     private Boolean saveBatch;
-    /*
-    * @description Set with any error messages that may occur during batch data entry
-    */
+    /** @description Set with any error messages that may occur during batch data entry. */
     private String statusMessage;
-    /*
-    * @description The field that is a lookup to the batch object on the selected object
-    */
+    /** @description The field that is a lookup to the batch object on the selected object. */
     private String batchLookupFieldName;
-    /*
-    * @description Set of all entry and list fields combined
-    */
+    /** @description Set of all entry and list fields combined. */
     private Set<String> fieldSet;
-    /*
-    * @description Holds the result of the query string built from the set of fields for the selected object
-    */
+    /** @description Holds the result of the query string built from the set of fields for the selected object. */
     private String queryString;
-    
+    /** @description Success Status Message. */
     private final String SUCCESS = 'Success';
+    /** @description Failure Status Message. */
     private final String FAIL = 'Failure: ';
+    /** @description Custom Settings Message. */
     private final String CREATED_CUSTOM_SETTING = 'You did not have a default custom setting so we are passing one to you in memory';
+    /** @description Default Opportunity Name. */
     private final String DEFAULT_NAME = 'opportunity';
+    /** @description Default Entry Fields. */
     private final String DEFAULT_ENTRY_FS = 'AccountID,Name,StageName,Amount,CloseDate';
+    /** @description Default List Fields. */
     private final String DEFAULT_LIST_FS = 'AccountID,Name,StageName,Amount,CloseDate';
+    /** @description Default Save Batch Value. */
     private final Boolean DEFAULT_SAVE_BATCH = true;
-
+    /** @description Returns objectName to the page. */
     public String getObjectName(){return this.objectName;}
+    /** @description Returns entryFieldList to the page. */
     public List<String> getEntryFieldList(){return this.entryFieldList;}
+    /** @description Returns listFieldList to the page. */
     public List<String> getListFieldList(){return this.listFieldList;}
+    /** @description Returns saveBatch to the page. */
     public Boolean getSaveBatch(){return this.saveBatch;}
+    /** @description Returns statusMessage to the page. */
     public String getStatusMessage(){return this.statusMessage;}
+    /** @description Returns fail to the page. */
     public String getFailureMessage(){return this.FAIL;}
+    /** @description Returns batchLookupFieldName to the page. */
     public String getBatchLookupFieldName() {return this.batchLookupFieldName;}
+    /** @description Returns fieldSet to the page. */
     public Set<String> getFieldSet(){return this.fieldSet;}
+    /** @description Returns queryString to the page. */
     public String getQueryString(){return this.queryString;}
 
     /*********************************************************************************************************
     * @description For valid objects that have a lookup field to the batch, populates the entryFieldList and
     * listFieldList with fields in the field set from the object and then runs buildFieldSet and 
     * buildQueryString methods.
-    * @param pObjectName - the object used to build the field sets
+    * @param pObjectName the object to use for batch data entry
     */
     public BDE_BatchDataEntry(String pObjectName){
         this.queryString = 'select Id';
@@ -135,6 +133,7 @@ public with sharing class BDE_BatchDataEntry {
     }
     /*********************************************************************************************************
     * @description Assigns the entry and list fields to the field set.
+    * @return void
     */
     private void buildFieldSet(){
         this.fieldSet = new Set<String>();
@@ -149,6 +148,7 @@ public with sharing class BDE_BatchDataEntry {
     }
     /*********************************************************************************************************
     * @description Builds the query string from fieldSet and objectName.
+    * @return void
     */
     private void buildQueryString(){
         if(this.fieldSet != null){
@@ -160,7 +160,7 @@ public with sharing class BDE_BatchDataEntry {
     }
     /*********************************************************************************************************
     * @description Determines if the object has a lookup field to batch and populates batchLookupFieldName.
-    * @return boolean value which is true when a field is found.
+    * @return boolean set to true when a field is found.
     */
     private boolean checkLookupExists() {
         Map<String, Schema.DescribeFieldResult> allFieldsMap = UTIL_Describe.getAllFieldsDescribe(this.objectName);
@@ -177,7 +177,7 @@ public with sharing class BDE_BatchDataEntry {
     }
     /*********************************************************************************************************
     * @description Builds a map of all objects that support Batch Data Entry.
-    * @return mapBDE - a map of the devName to the object label.
+    * @return Map<String, String> the map of the devName to the object label.
     */
     public static map<string, string> mapDevNameToLabelBDEObjects() {
     	//return new string[]{'Opportunity','Contact','Lead','Account'};

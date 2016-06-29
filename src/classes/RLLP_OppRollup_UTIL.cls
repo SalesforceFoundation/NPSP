@@ -34,56 +34,86 @@
 */
 public without sharing class RLLP_OppRollup_UTIL {
 
-    /*** Settings ***/       
+    /*** Settings ***/
+
+    /** @description Set to true if fiscal year should be used. */    
     public static boolean useFiscalYear = false;
+    /** @description Set of Opportunity record types to exclue from Account Rollups. */
     public static set<id> recordTypesToExcludeAccts = new set<id>();
+    /** @description Set of Opportunity record types to exclue from Contact Rollups. */
     public static set<id> recordTypesToExcludeCons = new set<id>();
+    /** @description Set of Opportunity Membership record type Ids. */
     public static set<id> mbrRecordTypes = new set<id>(); 
+    /** @description Set of Opportunity record type names to exclue from Account Rollups. */
     public static set<string> oppTypesToExcludeAccts = new set<string>();
-    public static set<string> oppTypesToExcludeCons = new set<string>();  
+    /** @description Set of Opportunity record type names to exclue from Contract Rollups. */
+    public static set<string> oppTypesToExcludeCons = new set<string>();
+    /** @description Set of Roles to use for Soft Credit Rollups. */
     public static set<string> softCreditRoles = new set<string>();
+    /** @description Household Custom Settings. */
     public static npo02__Households_Settings__c hh_settings;
+    /** @description Batch size defaults to 200 if not set in Settings. */
     public static integer BATCH_SIZE = 200;
+    /** @description Set to true if record types are enabled for opportunities. */
     private static boolean recordTypesOnOpps;
+    /** @description Set to true if soft credits are used. */
     private static boolean useSoftCredits;
+    /** @description Set of Account Ids of Individual Accounts. */
     private static set<id> IndividualAccountIds;
-    
-    /*** FY ***/
+    /** @description Current Fiscal Year. */
     private static integer fiscal_year;
     
     /*** Multicurrency ***/
-    //set when multicurrency check is called, holds the field string/sobject mapping
+    /** @description set when multicurrency check is called, holds the field string/sobject mapping. */
     public static Map<String, SObjectField> mcFieldValues = new Map<String, SObjectField>();
+    /** @description Determines if multi-currency is enabled. */
     public static boolean multiCurrency;
-    //exchangerate store
+    /** @description map of exchange rates. */
     static map<string, decimal> exchangeRates = new map<string,decimal>();
-    //corporate currency
+    /** @description Coproate Currency */
     public static string currCorporate; 
     
     /*** User Rollups ***/
-    //map of object and rollup field 
+    /** @description map of object and rollup field. */
     public static map<string, string> objectRollUpFieldMap;
+    /** @description User Rollup Field Custom Settings. */
     public static map<string, npo02__User_Rollup_Field_Settings__c> urfsMap = new map<string, npo02__User_Rollup_Field_Settings__c>();
     
     /*** Query Strings ***/
+    /** @description Holds the Account Query String. */
     private static string AccountQuery;
+    /** @description Holds the Contact Query String. */
     private static string ContactQuery;
+    /** @description Holds the Household Query String. */
     private static string HouseholdQuery;
+    /** @description Holds the Opportunity Contact Role Query String. */
     private static string OpportunityContactRoleQuery;
+    /** @description Holds the Household Rollup Query String. */
     private static string HouseholdRollupQuery;
+    /** @description Holds the Contact Rollup Query String. */
     private static string ContactRollupQuery;
-    private static string AccountRollupQuery;    
+    /** @description Holds the Account Rollup Query String. */
+    private static string AccountRollupQuery;
+    /** @description Holds the Household NDay Rollup Query String. */
     private static string HouseholdNDayQuery;
+    /** @description Holds the Contact NDay Rollup Query String. */
     private static string ContactNDayQuery;
-    private static string AccountNDayQuery;    
+    /** @description Holds the Account NDay Rollup Query String. */
+    private static string AccountNDayQuery;
+    /** @description Holds the Household Membership Rollup Query String. */
     private static string HouseholdMembershipQuery;
+    /** @description Holds the Contact Membership Rollup Query String. */
     private static string ContactMembershipQuery;
-    private static string AccountMembershipQuery;    
+    /** @description Holds the Account Membership Rollup Query String. */
+    private static string AccountMembershipQuery;
+    /** @description Holds the Soft Credit Opportunity Contact Role Rollup Query String. */
     private static string SoftCreditOCRQuery;
+    /** @description Holds the Soft Credit Partial Soft Credit Rollup Query String. */
     private static string SoftCreditPSCQuery;
     //private static string ContactNDaySoftCreditQuery;
          
     /*** Field Lists ***/
+    /** @description List of Account Fields to use in Account Queries. */
     private static set<string> AccountFields = new set<string>{'npo02__TotalOppAmount__c', 'npo02__OppsClosedThisYear__c', 'npo02__OppsClosedLastYear__c', 
                                                         'npo02__OppsClosedLastNDays__c', 'npo02__OppsClosed2YearsAgo__c', 'npo02__OppAmountLastYear__c', 
                                                         'npo02__OppAmount2YearsAgo__c', 'npo02__OppAmountThisYear__c', 'npo02__OppAmountLastNDays__c', 
@@ -92,8 +122,7 @@ public without sharing class RLLP_OppRollup_UTIL {
                                                         'npo02__MembershipEndDate__c', 'npo02__Best_Gift_Year__c', 'npo02__Best_Gift_Year_Total__c', 'npo02__LastMembershipOrigin__c',
                                                         'npo02__AverageAmount__c', 'npo02__LargestAmount__c', 'npo02__SmallestAmount__c', 'npo02__LastMembershipAmount__c'
                                                         };
-
-
+    /** @description List of Opportunity Contact Role Fields to use in OCR Queries. */
     private static set<string> OpportunityContactRoleFields = new set<string>{'ContactId', 'Contact.npo02__household__c', 
                                                         'Contact.npo02__AverageAmount__c', 'Contact.npo02__household__r.npo02__AverageAmount__c', 
                                                         'Contact.npo02__Best_Gift_Year__c', 'Contact.npo02__household__r.npo02__Best_Gift_Year__c', 
@@ -119,7 +148,7 @@ public without sharing class RLLP_OppRollup_UTIL {
                                                         'Contact.npo02__TotalMembershipOppAmount__c', 'Contact.npo02__household__r.npo02__TotalMembershipOppAmount__c', 
                                                         'Contact.npo02__TotalOppAmount__c', 'Contact.npo02__household__r.npo02__TotalOppAmount__c'
                                                         }; 
-        
+    /** @description List of Contact Fields to use in Contact Queries. */   
     private static set<string> ContactFields = new set<string>{'npo02__TotalOppAmount__c', 'npo02__OppsClosedThisYear__c', 'npo02__OppsClosedLastYear__c', 
                                                         'npo02__OppsClosedLastNDays__c', 'npo02__OppsClosed2YearsAgo__c', 'npo02__OppAmountLastYear__c', 
                                                         'npo02__OppAmount2YearsAgo__c', 'npo02__OppAmountThisYear__c', 'npo02__OppAmountLastNDays__c', 
@@ -137,7 +166,7 @@ public without sharing class RLLP_OppRollup_UTIL {
                                                         'Number_of_Soft_Credits_Two_Years_Ago__c', 'Soft_Credit_Last_N_Days__c',                                                     
                                                         'npo02__Household__c', 'npo02__Soft_Credit_This_Year__c'
                                                         };
-    
+    /** @description List of Household Fields to use in Household Queries. */
     private static set<string> HouseholdFields = new set<string>{'npo02__TotalOppAmount__c', 'npo02__OppsClosedThisYear__c', 'npo02__OppsClosedLastYear__c', 
                                                         'npo02__OppsClosedLastNDays__c', 'npo02__OppsClosed2YearsAgo__c', 'npo02__OppAmountLastYear__c', 
                                                         'npo02__OppAmount2YearsAgo__c', 'npo02__OppAmountThisYear__c', 'npo02__OppAmountLastNDays__c', 
@@ -157,8 +186,8 @@ public without sharing class RLLP_OppRollup_UTIL {
 	    setupUserRollupVars();
 	}
     /*********************************************************************************************************
-    * @description Configures and sets up static variables for OppRollups settings based on custom settings
-    * @param household_settings - custom household settings
+    * @description Configures and sets up static variables for OppRollups settings based on custom settings.
+    * @param household_settings custom household settings.
     */
     public static void setupRollupVars(npo02__Households_Settings__c household_settings){
         
@@ -246,7 +275,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     }
     /*********************************************************************************************************
     * @description Determines if record types are enabled on opportunities.
-    * @return recordTypesOnOpps - Boolean representing whether or not the record types are enabled.
+    * @return Boolean representing whether or not the record types are enabled.
     */
     public static boolean areRecordTypesOnOpps(){
         if (recordTypesOnOpps==null){
@@ -262,7 +291,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     }
     /*********************************************************************************************************
     * @description Determines if Soft Credit Rollups are enabled.
-    * @return useSoftCredits - Boolean representing whether or not the soft credits are enabled.
+    * @return Boolean representing whether or not the soft credits are enabled.
     */
     public static boolean useSoftCredits(){
         if (useSoftCredits == null){
@@ -275,7 +304,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     }  
     /*********************************************************************************************************
     * @description Retrieves the Individual Account Ids when available.
-    * @return IndividualAccountIds - the set of Individual Account Ids retrieved.
+    * @return Set<Id> Set of Individual Account Ids retrieved.
     */
     public static set<id> getIndividualAccountIds(){
         if (IndividualAccountIds == null){         
@@ -292,7 +321,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     
     /*********************************************************************************************************
     * @description Determines if multi-currency is enabled for the org.
-    * @return multiCurrency - Boolean representing whether or not multi-currency is enabled.
+    * @return Boolean representing whether or not multi-currency is enabled.
     */
     public static boolean isMultiCurrency(){                    
         if (multiCurrency==null){
@@ -331,7 +360,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     * @description Converts the amount from corporate currency to the currency specified by the ISO code.
     * @param ISO The ISO code.
     * @param amt The amount to convert.
-    * @return amt - converted amount.
+    * @return Decimal The converted amount.
     */
     public static decimal convertFromCorporate(String ISO,Decimal amt){
         if(currCorporate == ISO || currCorporate == null) // no need to convert
@@ -344,7 +373,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     * @param fromISO The ISO code to convert from.
     * @param toISO The ISO code to convert to.
     * @param amt The amount to convert.
-    * @return decimal - converted amount.
+    * @return Decimal The converted amount.
     */
     public static decimal convertCurrency(String fromISO, String toISO, Decimal amt){
         if(fromISO == toISO) // no need to convert
@@ -355,7 +384,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     /*********************************************************************************************************
     * @description Retrieves the Opportunities CurrencyIsoCode related to the objects passed in
     * @param objectList The list of obects with rollup field sets to obtain the Id from.
-    * @return opptyCurrencies - a map of those Ids and the associated oppty.
+    * @return Map<Id, Opportunity> The map of the Ids and the associated oppty.
     */
     public static map<Id,Opportunity> rcfFindCurrency(list<sobject> objectList){
         //new set to hold the opptys we need to query for
@@ -385,7 +414,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     /*********************************************************************************************************
     * @description evaluates a single Opportunity to see if it needs to be rolled up
     * @param o The opportunity to evaluate.
-    * @return needsRollup - Boolean representing whether or not a rollup is needed.
+    * @return Boolean representing whether or not a rollup is needed.
     */  
     public static boolean oppForRollup(Opportunity o){
         boolean needsRollup = false;
@@ -396,7 +425,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     /*********************************************************************************************************
     * @description evaluates if an Opp will need a contact-based rollup
     * @param o The opportunity to evaluate.
-    * @return needsRollup - Boolean representing whether or not a rollup is needed.
+    * @return Boolean representing whether or not a rollup is needed.
     */ 
     public static boolean needsContactRollup(Opportunity o){
         boolean needsRollup = false;
@@ -413,7 +442,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     /*********************************************************************************************************
     * @description evaluates if an Opp belongs to a valid Account needing a rollup
     * @param o The opportunity to evaluate.
-    * @return needsRollup - Boolean representing whether or not a rollup is needed.
+    * @return Boolean representing whether or not a rollup is needed.
     */ 
     public static boolean needsAccountRollup(Opportunity o){
         boolean needsRollup = false;    
@@ -431,7 +460,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     * @description evaluates two opps for changes that would require a rollup
     * @param newOpp The opportunity after update to evaluate.
     * @param oldOPP The opportunity before update to evaluate.
-    * @return needsRollup - Boolean representing whether or not a rollup is needed.
+    * @return Boolean representing whether or not a rollup is needed.
     */
     public static boolean oppForRollup (Opportunity newOpp, Opportunity oldOpp){
         boolean needsRollup = false;          
@@ -458,7 +487,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     
     /*********************************************************************************************************
     * @description Builds the query string for Account Rollups.
-    * @return AccountQuery - The resulting Account Query.
+    * @return String The resulting Account Query.
     */
     public string buildAccountQuery(){
         if (AccountQuery == null){
@@ -474,7 +503,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     }
     /*********************************************************************************************************
     * @description Builds the query string for Opportunity Contact Roll Rollups.
-    * @return OpportunityContactRoleQuery - The resulting Opportunity Contact Role Query.
+    * @return String The resulting Opportunity Contact Role Query.
     */
     public string buildOpportunityContactRoleQuery(){
         if (OpportunityContactRoleQuery == null){
@@ -489,7 +518,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     }
     /*********************************************************************************************************
     * @description Builds the query string for Contact Rollups.
-    * @return ContactQuery - The resulting Contact Query.
+    * @return String The resulting Contact Query.
     */
     public string buildContactQuery(){    
         if (ContactQuery == null){
@@ -504,7 +533,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     }
     /*********************************************************************************************************
     * @description Builds the query string for Household Rollups.
-    * @return HouseholdQuery - The resulting Household Query.
+    * @return String The resulting Household Query.
     */
     public string buildHouseholdQuery(){
         if (HouseholdQuery == null){
@@ -519,7 +548,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     }
     /*********************************************************************************************************
     * @description Builds the query string for the Account Rollups.
-    * @return AccountRollupQuery - The resulting Account Rollup Query.
+    * @return String The resulting Account Rollup Query.
     */
     public string buildAccountRollupQuery(){
         if (AccountRollupQuery == null){
@@ -561,7 +590,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     }
     /*********************************************************************************************************
     * @description Builds the query string for the Account NDay Rollups.
-    * @return AccountNDayQuery - The resulting Account NDay Query.
+    * @return String The resulting Account NDay Query.
     */
     public string buildAccountNDayQuery(){
         if (AccountNDayQuery == null){
@@ -592,7 +621,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     }
     /*********************************************************************************************************
     * @description Builds the query string for the Account Membership Rollups.
-    * @return AccountMembershipQuery - The resulting Account Membership Query.
+    * @return String The resulting Account Membership Query.
     */
     public string buildAccountMembershipQuery(){
         if (AccountMembershipQuery == null){
@@ -628,7 +657,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     }
     /*********************************************************************************************************
     * @description Builds the query string for the Contact Rollups.
-    * @return ContactRollupQuery - The resulting Contact Rollup Query.
+    * @return String The resulting Contact Rollup Query.
     */
     public string buildContactRollupQuery(){
         if (ContactRollupQuery == null){
@@ -663,7 +692,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     }
     /*********************************************************************************************************
     * @description Builds the query string for the Contact N Day Rollups.
-    * @return ContactNDayQuery - The resulting Contact NDay Query.
+    * @return String The resulting Contact NDay Query.
     */
     public string buildContactNDayQuery(){
         if (ContactNDayQuery == null){
@@ -687,7 +716,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     }
     /*********************************************************************************************************
     * @description Builds the query string for Contact Membership Rollups.
-    * @return AccountMembershipQuery - The resulting Account Membership Query.
+    * @return String The resulting Account Membership Query.
     */
     public string buildContactMembershipQuery(){ 
         if (ContactMembershipQuery == null){
@@ -715,7 +744,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     }
     /*********************************************************************************************************
     * @description Builds the query string for the Household Rollups.
-    * @return HouseholdRollupQuery - The resulting Household Rollup Query.
+    * @return String The resulting Household Rollup Query.
     */
     public string buildHouseholdRollupQuery(){
         if (HouseholdRollupQuery == null){
@@ -750,7 +779,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     }
     /*********************************************************************************************************
     * @description Builds the query string for the Household NDay Rollups.
-    * @return HouseholdNDayQuery - The resulting Household NDay Query.
+    * @return String The resulting Household NDay Query.
     */
     public string buildHouseholdNDayQuery(){
         if (HouseholdNDayQuery == null){
@@ -774,7 +803,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     }
     /*********************************************************************************************************
     * @description Builds the query string ]for the Household Membership Rollups.
-    * @return HouseholdHMembershipQuery - The resulting Household NDay Query.
+    * @return String The resulting Household NDay Query.
     */
     public string buildHouseholdMembershipQuery(){
         if (HouseholdMembershipQuery == null){
@@ -906,7 +935,7 @@ public without sharing class RLLP_OppRollup_UTIL {
 
     /*********************************************************************************************************
     * @description Determines the fiscal year for the current date according to the current org settings.
-    * @return fiscal_year - The resulting fiscal year.
+    * @return Integer The resulting fiscal year.
     */
     public static Integer getCurrentFY() {
         if (fiscal_year == null) {
@@ -933,7 +962,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     * @param targetDate The date for which the fiscal year will be determined
     * @param fiscalYearStartMonth The month, as an Integer (Jan=1), that the fiscal year starts (see Fiscal Year org settings)
     * @param usesStartDateAsFiscalYearName If true, then the fiscal year is determined by the year of the starting month of the fiscal year, otherwise the fiscal year is determined by the end month in the fiscal year (see Fiscal Year org settings)
-    * @return fiscalYearStartDate or fiscalYearEndDate - depends on usesStartDateAsFiscalYearName parameter
+    * @return Integer The Fiscal Year for the Date which will depend on whether to use Start or End date
     */
     public static Integer getFiscalYearForDate(Date targetDate, Integer fiscalYearStartMonth, Boolean usesStartDateAsFiscalYearName) {
         Date fiscalYearStartDate = Date.newInstance(

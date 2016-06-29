@@ -1319,10 +1319,10 @@
         <name>CustomLabel</name>
     </types>
     <types>
-        <name>CustomLabel</name>
+        <members>CustomLabels</members>
+        <name>CustomLabels</name>
     </types>
     <types>
-        <members>Account</members>
         <members>Addr_Verification_Settings__c</members>
         <members>Address_Verification_Settings__c</members>
         <members>Address__c</members>
@@ -1330,7 +1330,6 @@
         <members>Allocations_Settings__c</members>
         <members>Batch_Data_Entry_Settings__c</members>
         <members>Batch__c</members>
-        <members>Contact</members>
         <members>DataImport__c</members>
         <members>Data_Import_Settings__c</members>
         <members>Error_Settings__c</members>
@@ -1339,63 +1338,11 @@
         <members>General_Accounting_Unit__c</members>
         <members>Grant_Deadline__c</members>
         <members>Household_Naming_Settings__c</members>
-        <members>Lead</members>
-        <members>Opportunity</members>
         <members>Opportunity_Naming_Settings__c</members>
         <members>Partial_Soft_Credit__c</members>
         <members>Schedulable__c</members>
         <members>Trigger_Handler__c</members>
         <name>CustomObject</name>
-    </types>
-    <types>
-        <members>Account-es</members>
-        <members>Addr_Verification_Settings__c-en_US</members>
-        <members>Addr_Verification_Settings__c-es</members>
-        <members>Address_Verification_Settings__c-en_US</members>
-        <members>Address_Verification_Settings__c-es</members>
-        <members>Address__c-en_US</members>
-        <members>Address__c-es</members>
-        <members>Allocation__c-en_US</members>
-        <members>Allocation__c-es</members>
-        <members>Allocations_Settings__c-en_US</members>
-        <members>Allocations_Settings__c-es</members>
-        <members>Batch_Data_Entry_Settings__c-en_US</members>
-        <members>Batch_Data_Entry_Settings__c-es</members>
-        <members>Batch__c-en_US</members>
-        <members>Batch__c-es</members>
-        <members>Contact-es</members>
-        <members>DataImport__c-en_US</members>
-        <members>DataImport__c-es</members>
-        <members>Data_Import_Settings__c-en_US</members>
-        <members>Data_Import_Settings__c-es</members>
-        <members>Error_Settings__c-en_US</members>
-        <members>Error_Settings__c-es</members>
-        <members>Error__c-en_US</members>
-        <members>Error__c-es</members>
-        <members>Fund__c-en_US</members>
-        <members>Fund__c-es</members>
-        <members>General_Accounting_Unit__c-en_US</members>
-        <members>General_Accounting_Unit__c-es</members>
-        <members>Grant_Deadline__c-en_US</members>
-        <members>Grant_Deadline__c-es</members>
-        <members>Household_Naming_Settings__c-en_US</members>
-        <members>Household_Naming_Settings__c-es</members>
-        <members>Lead-es</members>
-        <members>Opportunity-es</members>
-        <members>Opportunity_Naming_Settings__c-en_US</members>
-        <members>Opportunity_Naming_Settings__c-es</members>
-        <members>Partial_Soft_Credit__c-en_US</members>
-        <members>Partial_Soft_Credit__c-es</members>
-        <members>Schedulable__c-en_US</members>
-        <members>Schedulable__c-es</members>
-        <members>Trigger_Handler__c-en_US</members>
-        <members>Trigger_Handler__c-es</members>
-        <members>npe01__Contacts_And_Orgs_Settings__c-es</members>
-        <members>npe01__OppPayment__c-es</members>
-        <members>npe03__Recurring_Donation__c-es</members>
-        <members>npo02__Household__c-es</members>
-        <members>npo02__Households_Settings__c-es</members>
-        <name>CustomObjectTranslation</name>
     </types>
     <types>
         <members>Address__c</members>
@@ -1480,9 +1427,6 @@
         <name>MatchingRule</name>
     </types>
     <types>
-        <name>MatchingRule</name>
-    </types>
-    <types>
         <members>Account.New_Address</members>
         <members>Account.New_Affiliation</members>
         <members>Account.Quick_Household_Update</members>
@@ -1534,10 +1478,6 @@
         <name>StaticResource</name>
     </types>
     <types>
-        <members>es</members>
-        <name>Translations</name>
-    </types>
-    <types>
         <members>Account.Manage_Household</members>
         <members>Address__c.Verify_Address</members>
         <members>Allocation__c.Manage_Allocations</members>
@@ -1553,10 +1493,6 @@
         <members>Opportunity.Refresh_Name</members>
         <members>Partial_Soft_Credit__c.Manage_Soft_Credits</members>
         <name>WebLink</name>
-    </types>
-    <types>
-        <members>Opportunity</members>
-        <name>Workflow</name>
     </types>
     <types>
         <members>Opportunity.Opportunity_Email_Acknowledgment</members>

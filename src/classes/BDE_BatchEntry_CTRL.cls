@@ -34,28 +34,35 @@
 * @description controller for the batch entry page.
 */
 public with sharing class BDE_BatchEntry_CTRL {
-
+    /** @description Batch record being modified or created. */
     public batch__c batch { get; set; }
+    /** @description Set to true if batch section should be displayed. */
     public boolean displayBatchSection { get; set; }   // could be transient?
+    /** @description Set to true if record info section should be displayed. */
     public boolean displayRecInfoSection { get; set; }     // could be transient?
+    /** @description Set to true if settings section should be displayed. */
     public boolean displaySettingsSection { get; set; }     // could be transient?
-    
+    /** @description List of all objects that support Batch Data Entry. */
     public List<SelectOption> objectSettingsList { get; private set; }
-    
+    /** @description Represents the current batch item being created or edited. */
     public BatchItem currentItem { get; set; }   // could be transient - already getting it on edit, otherwise should be clear (what about errors?)
+    /** @description List of related batch items. */
     public list<BatchItem> itemList { get; set; }   // could be transient - would need list of ids instead
-
-    // could get all this every time, but not a lot of viewstate
-    public string objname { get; set; }
+    /** @description Object for batch data entry. */
+    public string objname { get; set; } // could get all this every time, but not a lot of viewstate
+    /** @description The field that is a lookup to the batch object on the selected object. */
     public string batchLookupField { get; private set; }
+    /** @description Dynamically set page subtitle. */
     public string pageSubtitle { get; private set; }
+    /** @description Fields to include for batch data entry, based on entry field set. */
     public list<EntryField> entryFieldList { get; private set; }
+    /** @description Fields to list for batch data entry, based on list field set. */
     public list<string> listFieldList { get; private set; }
-    
+    /** @description Batch data entry custom settings. */
     public Batch_Data_Entry_Settings__c bdec {get; set;}
-    
+    /** @description Total number of items in the related items list. */
     public integer itemCount { get { return (itemList != null) ? itemList.size() : 0; } }
-            
+    /** @description Opportunity Id mapped to the Primary Opportunity Contact Role. */
     public map<id, OpportunityContactRole> ocrlookup;
 
     /*******************************************************************************************************
@@ -100,6 +107,7 @@ public with sharing class BDE_BatchEntry_CTRL {
     }
     /*********************************************************************************************************
     * @description Initializes the batch data entry page
+    * @return void
     */
     public void initializeBatchEntry(){
            
@@ -417,7 +425,11 @@ public with sharing class BDE_BatchEntry_CTRL {
             currentItem = new BatchItem(this);
             return null;
     }
-    
+    /*******************************************************************************************************
+    * @description actionMethod to delete sobject related to the batch item and remove the item from the list
+    * @param sobj the sObject to delete
+    * @return void
+    */
     public void deleteItem(sobject sobj) {
     	Savepoint sp = Database.setSavepoint();
         try {
@@ -437,7 +449,7 @@ public with sharing class BDE_BatchEntry_CTRL {
     }
     /*******************************************************************************************************
     * @description actionMethod to open the batch entry page with selected object
-    * @return batch entry page reference
+    * @return pageReference (Batch Entry Page)
     */
     public pageReference openBatchEnterPage() {
         PageReference pageRef = Page.BDE_BatchEntry;
