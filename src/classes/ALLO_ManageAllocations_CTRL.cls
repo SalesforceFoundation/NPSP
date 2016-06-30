@@ -87,6 +87,9 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     /** @description Row number sent back by page for add and delete row methods.*/
     public integer rowNumber {get;set;}
 
+    /** @description The currency symbol or ISO code of the related record or org default */
+    private String currencySymbol;
+
     /** @description Constructor queries for the parent object and the allocations, and fills out attributes.*/
     public ALLO_ManageAllocations_CTRL(ApexPages.StandardSetController ssc) {
 
@@ -149,6 +152,39 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         keyPrefix = describe.getKeyPrefix();
         objectAPIName = describe.getName();
         objectLabelPlural = describe.getLabelPlural();
+    }
+
+    /**
+     * @description Return the currency symbol appropriate for the current
+     * user/org/record.  If the org is multi currency enabled, it will use the
+     * currency iso code from the related record.  If the org is not multi
+     * currency enabled, it will return the symbol for the currency of the org,
+     * or the currency iso code if no symbol is known.
+     *
+     * @return String A currency symbol or currency ISO code
+     */
+    public String getCurrencySymbol() {
+        if (currencySymbol == null) {
+            String parentObjectName = parentId.getSobjectType().getDescribe().getName();
+            if (UserInfo.isMultiCurrencyOrganization()) {
+                sObject parentObject = Database.query('SELECT CurrencyIsoCode FROM ' + parentObjectName + ' LIMIT 1');
+                currencySymbol = (String) parentObject.get('CurrencyIsoCode');
+            } else {
+                Map<String, String> currencySymbols = new Map<String, String>{
+                    'USD' => '$', 'CNY' => '¥', 'JPY' => '¥', 'EUR' => '€',
+                        'GBP' => '£', 'BRL' => 'R$', 'INR' => '₹', 'RUB' => '₽',
+                        'CAD' => '$', 'AUD' => '$', 'KRW' => '₩', 'MXN' => '$',
+                        'IDR' => 'Rp', 'TRY' => '₺','SAR' => '﷼'
+                        };
+                String orgCurrency = UserInfo.getDefaultCurrency();
+                if (currencySymbols.containsKey(orgCurrency)) {
+                    currencySymbol = currencySymbols.get(orgCurrency);
+                } else {
+                    currencySymbol = orgCurrency;
+                }
+            }
+        }
+        return currencySymbol;
     }
 
     /** @description Adds an empty row to the bottom of the list and refreshes the page.*/

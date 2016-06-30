@@ -1,6 +1,6 @@
 <apex:page standardController="Allocation__c" recordSetVar="allocations" extensions="ALLO_ManageAllocations_CTRL" title="Manage Allocations" tabStyle="Allocation__c" showHeader="true" sidebar="true" standardStylesheets="false" cache="false" >
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
-    <apex:stylesheet value="{!URLFOR($Resource.SLDS, '/0_12_2/assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.SLDS, '/1_0_3/assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,10 +8,8 @@
     (function($) {
 
         var sumAmount;
-        var sumPercent;
         
         var parentAmount = {!parentAmount};
-        var dollarSign = '{!$Label.npe01__DefaultContactTransactionCurrency}';
         var defaultEnabled = {!Settings.Default_Allocations_Enabled__c};
 
         function isLightningExperienceOrSalesforce1() {
@@ -32,8 +30,6 @@
             $('.alloAmount').each(function(i,o){
                 var thisRowAmount = $('.amount'+i);
                 var thisRowPercent = $('.percent'+i);
-
-                //thisRowAmount.val(thisRowAmount.val().toFixed(2));
 
                 //if amount and percent are blank, enable them both
                 if (isBlankOrEmpty(thisRowAmount)){
@@ -58,7 +54,7 @@
             //if we're over the parent amount, make it red.
             if (parentAmount > 0) {
                 var unallocated = (Math.round((parentAmount*100) - sumAmount)/100).toFixed(2);
-                $('#totalAmount').text(dollarSign + unallocated);
+                $('#totalAmount').text(unallocated);
                 if (unallocated < 0) {
                     $('#totalAmount').css({ "color": "red", "font-weight": "bold" });
                     $('[id$="saveCloseBTN"]').attr('disabled','disabled');
@@ -67,7 +63,7 @@
                     $('[id$="saveCloseBTN"]').removeAttr('disabled');
                 }
             } else {
-                $('#totalAmount').text(dollarSign + (Math.round(sumAmount)/100).toFixed(2));
+                $('#totalAmount').text((Math.round(sumAmount)/100).toFixed(2));
             }
             
         }
@@ -177,23 +173,19 @@
                                 </td>
                                 <td>
                                     <div class="slds-form-element">
-                                        <label for="alloInputAmount{!cnt}" class="slds-form-element__label slds-assistive-text">{!$ObjectType.Allocation__c.Fields.Amount__c.Label} {!cnt}</label>
-                                        <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon">
-                                            <span class="slds-input__icon">&nbsp;{!$Label.npe01__DefaultContactTransactionCurrency}</span>
-                                            <div id="alloInputAmount{!cnt}">
-                                                <apex:inputField styleClass="slds-input alloAmount amount{!cnt}" onkeyup="window.initOrReload()"  value="{!Allo.Amount__c}"/>
-                                            </div>
+                                        <label for="{!$Component.alloInputAmount}" class="slds-form-element__label slds-assistive-text">{!$ObjectType.Allocation__c.Fields.Amount__c.Label} {!cnt}</label>
+                                        <div class="slds-form-element__control slds-input-has-fixed-addon">
+                                            <span class="slds-form-element__addon">{!currencySymbol}</span>
+                                            <apex:inputField id="alloInputAmount" styleClass="slds-input alloAmount amount{!cnt}" onkeyup="window.initOrReload()"  value="{!Allo.Amount__c}"/>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="slds-form-element">
-                                        <label for="alloInputPercent{!cnt}" class="slds-form-element__label slds-assistive-text">{!$ObjectType.Allocation__c.Fields.Percent__c.Label} {!cnt}</label>
-                                        <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--right">
-                                            <div id="alloInputPercent{!cnt}">
-                                                <apex:inputField styleClass="slds-input alloPercent percent{!cnt}" onkeyup="window.changePercent({!cnt})" value="{!Allo.Percent__c}"/>
-                                            </div>
-                                            <span class="slds-input__icon">%</span>
+                                        <label for="{!$Component.alloInputPercent}" class="slds-form-element__label slds-assistive-text">{!$ObjectType.Allocation__c.Fields.Percent__c.Label} {!cnt}</label>
+                                        <div class="slds-form-element__control slds-input-has-fixed-addon">
+                                            <apex:inputField id="alloInputPercent" styleClass="slds-input slds-size--2-of-3 alloPercent percent{!cnt}" onkeyup="window.changePercent({!cnt})" value="{!Allo.Percent__c}"/>
+                                            <span class="slds-form-element__addon">%</span>
                                         </div>
                                     </div>
                                 </td>
@@ -215,10 +207,14 @@
                                 <apex:outputField value="{!defaultAllo.General_Accounting_Unit__c}"/>
                             </td>
                             <td>
-                                <div id="totalAmount"></div>
+                                <div class="slds-form-element">
+                                    <div class="slds-form-element__control">
+                                        <span class="slds-form-element__addon">{!currencySymbol}</span>
+                                        <span class="slds-form-element__static" id="totalAmount"></span>
+                                    </div>
+                                </div>
                             </td>
                             <td>
-                                <div id="totalPercent"></div>
                             </td>
                             <td>
                                 <apex:commandButton styleClass="slds-button slds-button--neutral slds-button--small" value="{!$Label.alloAddRow}" id="addRowBTN" title="{!$Label.alloAddRow}" action="{!addRow}" reRender="theTable" immediate="true" rendered="{!listAlloSize==0}">
