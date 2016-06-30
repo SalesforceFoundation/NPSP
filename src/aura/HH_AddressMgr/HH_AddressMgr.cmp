@@ -2,6 +2,7 @@
     <!-- public attributes -->
     <aura:attribute name="listAddr" type="Address__c[]" access="public" />
     <aura:attribute name="addrDefault" type="Address__c" access="public" />
+    <aura:attribute name="namespacePrefix" type="String" access="public" />
 
     <!-- private attributes -->
     <aura:attribute name="addrNew" type="Address__c" access="private" />
@@ -21,13 +22,12 @@
         <div class="slds-card slds-p-around--none">
             <div class="slds-card__body slds-m-around--x-small slds-p-vertical--none" >
                 <!-- address -->
-                <!-- <aura:if isTrue="{!v.addrDefault != null}">  -->
-                    <div class="slds-text-body--small" >
-                        <ui:outputText value="{!v.addrDefault.MailingStreet__c + 
-                            (v.addrDefault.MailingStreet2__c != null ? '\n' + v.addrDefault.MailingStreet2__c : '')}" /><br/>
-                        <ui:outputText value="{!v.addrDefault.MailingCity__c + (v.addrDefault.MailingState__c != null ? ', ' : '') + v.addrDefault.MailingState__c + ' ' + v.addrDefault.MailingPostalCode__c + ' '}" /><br/>
-                        <ui:outputText value="{!v.addrDefault.MailingCountry__c}" />                                     
-                    </div>
+                <div class="slds-text-body--small" >
+                    <ui:outputText value="{!v.addrDefault.MailingStreet__c + 
+                        (v.addrDefault.MailingStreet2__c != null ? '\n' + v.addrDefault.MailingStreet2__c : '')}" /><br/>
+                    <ui:outputText value="{!v.addrDefault.MailingCity__c + (v.addrDefault.MailingState__c != null ? ', ' : '') + v.addrDefault.MailingState__c + ' ' + v.addrDefault.MailingPostalCode__c + ' '}" /><br/>
+                    <ui:outputText value="{!v.addrDefault.MailingCountry__c}" />                                     
+                </div>
             </div> 
             <div class="slds-card__footer">
                 <div class="slds-grid slds-grid--align-center">

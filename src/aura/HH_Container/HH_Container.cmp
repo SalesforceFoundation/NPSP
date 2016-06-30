@@ -117,7 +117,7 @@
                 <!-- the Address section -->
                 <div class="slds-p-bottom--large">
                     <div class="slds-text-heading--label slds-p-around--x-small">{!$Label.npo02.HouseholdAddress}</div>
-                    <c:HH_AddressMgr listAddr="{!v.listAddr}" aura:id="addrMgr" />
+                    <c:HH_AddressMgr listAddr="{!v.listAddr}" aura:id="addrMgr" namespacePrefix="{!v.namespacePrefix}" />
                 </div>
 
                 <!-- the section for our 3 special naming & greeting fields -->
@@ -212,7 +212,7 @@
                     <div class="slds-modal__container">
 
                         <div class="slds-modal__header">
-                            <ui:button class="slds-button slds-button--icon-inverse slds-modal__close" press="{!c.cancelMergeHH}">
+                            <ui:button class="slds-button slds-button--icon-inverse slds-modal__close" press="{!c.cancelMergeHHPopup}">
                                 <c:svg class="slds-button__icon slds-button__icon--large"
                                        xlinkHref="{!$Resource.SLDS + '/1_0_3/assets/icons/action-sprite/svg/symbols.svg#close'}" />
                                 <span class="slds-assistive-text">{!$Label.c.bdiBtnClose}</span>
