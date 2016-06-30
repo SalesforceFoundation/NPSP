@@ -243,6 +243,8 @@ public with sharing class HH_Container_LCTRL {
     */
     private static set<String> setUpdateableContactFields() {
         set<String> setContactFields = new Set<String>{
+            'AccountId',
+            'npo02__Household__c',
             'FirstName',
             'LastName',
             'Salutation',
@@ -492,7 +494,7 @@ public with sharing class HH_Container_LCTRL {
                 addr.MailingPostalCode__c = (String)hh.get('npo02__MailingPostalCode__c');
                 addr.MailingCountry__c = (String)hh.get('npo02__MailingCountry__c');
             }
-            if (listAddrExisting == null)
+            if (listAddrExisting == null || listAddrExisting.size() == 0)
                 addr.Default_Address__c = true;  // the HH address is the default.
             String strKey = ADDR_Addresses_TDTM.getAddrKey(addr);
             if (setAddrKey.add(strKey))
@@ -519,7 +521,7 @@ public with sharing class HH_Container_LCTRL {
             if (UTIL_Describe.isObjectIdThisType(hhId, 'Account')) {
 
                 set<String> setFields = new set<String>{'MailingStreet__c', 'MailingStreet2__c', 
-                    'MailingCity__c', 'MailingState__c', 'MailingPostalCode__c', 'MailingCountry__c'};
+                    'MailingCity__c', 'MailingState__c', 'MailingPostalCode__c', 'MailingCountry__c', 'Default_Address__c'};
                 string strSoql = 'select ';
                 string strComma = '';
                 

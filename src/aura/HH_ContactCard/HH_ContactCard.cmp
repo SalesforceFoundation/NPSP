@@ -16,7 +16,7 @@
                     <div class="slds-media slds-media--center slds-has-flexi-truncate">
                         <div class="slds-media__figure">
                             <c:svg class="slds-icon slds-icon-standard-contact slds-icon--small"
-                                   xlinkHref="/resource/SLDS/1_0_3/assets/icons/standard-sprite/svg/symbols.svg#contact" />
+                                   xlinkHref="{!$Resource.SLDS + '/1_0_3/assets/icons/standard-sprite/svg/symbols.svg#contact'}" />
                         </div>
                         <div class="slds-media__body">
                             <a href="{! '/' + v.contact.Id}" target="_blank">{!v.contact.FirstName}&nbsp;{!v.contact.LastName}</a>
@@ -26,7 +26,7 @@
                                 <ui:button label="{!$Label.npo02.Delete}" buttonTitle="{!$Label.npo02.Delete}" labelClass="assistiveText"
                                            class="slds-button slds-button--icon deleteBtn" press="{!c.deleteContact}">
                                     <c:svg class="slds-icon slds-icon--x-small slds-icon-text-default slds-button__icon"
-                                           xlinkHref="/resource/SLDS/1_0_3/assets/icons/utility-sprite/svg/symbols.svg#delete" />
+                                           xlinkHref="{!$Resource.SLDS + '/1_0_3/assets/icons/utility-sprite/svg/symbols.svg#delete'}" />
                                 </ui:button>
                             </aura:if>
                         </div>
@@ -41,13 +41,13 @@
                 <ui:outputText value="{!v.contact.MailingCity + (v.contact.MailingState != null ? ', ' : '') + v.contact.MailingState + ' ' + v.contact.MailingPostalCode + ' '}" /><br/>
                 <ui:outputText value="{!v.contact.MailingCountry}" />
                 <aura:if isTrue="{!v.contact.is_Address_Override__c}">
-                    <br/><i>{!$Label.c.lblAddressOverride}{!$Label.npsp.lblAddressOverride}</i>
+                    <br/><i>{!$Label.c.lblAddressOverride}</i>
                 </aura:if>
             </div>
 
               <form>
               <fieldset class="slds-form-element">
-                  <legend class="form-element__legend slds-form-element__label">{!$Label.c.lblCCardExcludeFrom}{!$Label.npsp.lblCCardExcludeFrom}</legend>
+                  <legend class="form-element__legend slds-form-element__label">{!$Label.c.lblCCardExcludeFrom}</legend>
                 <div class="slds-form-element">
                     <div class="slds-form-element__control">
                       <label class="slds-checkbox">
@@ -55,7 +55,7 @@
                                 class="slds-checkbox" change="{!c.onCheck}"
                                 value="{!v.contact.Exclude_from_Household_Name__c }"/>
                             <span class="slds-checkbox--faux"></span>
-                          <span class="slds-form-element__label" for="exHHName">{!$Label.c.lblHouseholdName}{!$Label.npsp.lblHouseholdName} </span>
+                          <span class="slds-form-element__label" for="exHHName">{!$Label.c.lblHouseholdName} </span>
                       </label>
                     </div>
                 </div>
@@ -66,7 +66,7 @@
                                 class="slds-checkbox" change="{!c.onCheck}"
                                 value="{!v.contact.Exclude_from_Household_Formal_Greeting__c }"/>
                               <span class="slds-checkbox--faux"></span>
-                            <span class="slds-form-element__label">{!$Label.c.lblFormalGreeting}{!$Label.npsp.lblFormalGreeting} </span>
+                            <span class="slds-form-element__label">{!$Label.c.lblFormalGreeting} </span>
                       </label>
                     </div>
                 </div>
@@ -77,7 +77,7 @@
                                 class="slds-checkbox" change="{!c.onCheck}"
                                 value="{!v.contact.Exclude_from_Household_Informal_Greeting__c }"/>
                                 <span class="slds-checkbox--faux"></span>
-                              <span class="slds-form-element__label">{!$Label.c.lblInformalGreeting}{!$Label.npsp.lblInformalGreeting} </span>
+                              <span class="slds-form-element__label">{!$Label.c.lblInformalGreeting} </span>
                       </label>
                     </div>
                 </div>

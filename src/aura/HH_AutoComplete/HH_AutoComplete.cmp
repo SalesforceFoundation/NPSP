@@ -13,8 +13,8 @@
     <c:autocomplete aura:id="autocomplete"
                     isListVisible="{!v.isListVisible}"
                     label=""
-                    placeholder="{!$Label.c.lblFindOrAddContact + $Label.npsp.lblFindOrAddContact}"
-                    searchContext="{!$Label.c.lblFindInContacts + $Label.npsp.lblFindInContacts}">
+                    placeholder="{!$Label.c.lblFindOrAddContact}"
+                    searchContext="{!$Label.c.lblFindInContacts}">
 
         <aura:set attribute="itemTemplate">
             <c:HH_AutoCompleteOption value="{!item.value}"/>
@@ -29,7 +29,7 @@
                 <ui:button class="slds-button" press="{!c.handleNewContact}">
                     <c:svg ariaHidden="true"
                            class="slds-icon slds-icon-text-default slds-icon--small"
-                           xlinkHref="/resource/SLDS/1_0_3/assets/icons/utility-sprite/svg/symbols.svg#add"
+                           xlinkHref="{!$Resource.SLDS + '/1_0_3/assets/icons/utility-sprite/svg/symbols.svg#add'}"
                            />
                     {!$Label.npo02.NewContact}
                 </ui:button>

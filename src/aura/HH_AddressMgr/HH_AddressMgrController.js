@@ -1,13 +1,6 @@
 ({
     doInit : function(component /* , event, helper */) {
-        var addr = {
-            Mailing_Street__c : null,
-            Mailing_Street2__c : null,
-            Mailing_City__c : null,
-            Mailing_State__c : null,
-            Mailing_PostalCode__c : null,
-            Mailing_Country__c : null
-        };
+        var addr = {};
         component.set('v.addrNew', addr);
     },
 
@@ -43,8 +36,6 @@
     onPressAddrTile : function(component, event /* , helper */) {
         var iAddr = Number(event.currentTarget.getAttribute('data-iAddr'));
         component.set('v.iAddrSelected', iAddr);
-        component.set('v.listAddr', component.get('v.listAddr'));
-        component.set('v.showChangeAddressPopup', true);
     },
 
     toggleAddrSection : function(component /* , event, helper */) {

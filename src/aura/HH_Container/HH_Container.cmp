@@ -56,14 +56,14 @@
                         <nav role="navigation" class="slds-p-bottom--x-small">
                             <p id="bread-crumb-label" class="slds-assistive-text">You are here:</p>
                             <ol class="slds-breadcrumb slds-list--horizontal" aria-labelledby="bread-crumb-label">
-                                <li class="slds-list__item slds-text-heading--label"><a class="slds-type-focus" href="{!'/' + v.hhTypePrefix}">{!$Label.c.lblHousehold}{!$Label.npsp.lblHousehold}</a></li>
+                                <li class="slds-list__item slds-text-heading--label"><a class="slds-type-focus" href="{!'/' + v.hhTypePrefix}">{!$Label.c.lblHousehold}</a></li>
                                 <li class="slds-list__item slds-text-heading--label"><a class="slds-type-focus" href="{!'/' + v.hhId}">{!v.hh.Name}</a></li>
                             </ol>
                         </nav>
                         <div class="slds-media slds-media--center slds-has-flexi-truncate">
                             <div class="slds-media__figure">
                                 <c:svg class="slds-icon slds-icon-standard-household slds-icon--medium"
-                                       xlinkHref="/resource/SLDS/1_0_3/assets/icons/standard-sprite/svg/symbols.svg#household" />
+                                       xlinkHref="{!$Resource.SLDS + '/1_0_3/assets/icons/standard-sprite/svg/symbols.svg#household'}" />
                             </div>
                             <div class="slds-media__body">
                                 <h1 class="slds-text-heading--medium">{!$Label.npo02.ManageHousehold}</h1>
@@ -74,13 +74,13 @@
                         <div class="slds-button-group" role="group">
                             <ui:button class="slds-button slds-button--neutral"
                                 aura:id="buttonCancel"
-                                buttonTitle="{!$Label.c.stgBtnCancel + $Label.npsp.stgBtnCancel}"
-                                label="{!$Label.c.stgBtnCancel + $Label.npsp.stgBtnCancel}"
+                                buttonTitle="{!$Label.c.stgBtnCancel}"
+                                label="{!$Label.c.stgBtnCancel}"
                                 press="{!c.close}" />
                             <ui:button class="slds-button slds-button--brand"
                                 aura:id="buttonSave"
-                                buttonTitle="{!$Label.c.stgBtnSave + $Label.npsp.stgBtnSave}"
-                                label="{!$Label.c.stgBtnSave + $Label.npsp.stgBtnSave}"
+                                buttonTitle="{!$Label.c.stgBtnSave}"
+                                label="{!$Label.c.stgBtnSave}"
                                 disabled="{!v.isSaveDisabled}"
                                 press="{!c.save}" />
                         </div>
@@ -117,7 +117,7 @@
                 <!-- the Address section -->
                 <div class="slds-p-bottom--large">
                     <div class="slds-text-heading--label slds-p-around--x-small">{!$Label.npo02.HouseholdAddress}</div>
-                    <c:HH_AddressMgr listAddr="{!v.listAddr}" aura:id="addrMgr" />
+                    <c:HH_AddressMgr listAddr="{!v.listAddr}" aura:id="addrMgr" namespacePrefix="{!v.namespacePrefix}" />
                 </div>
 
                 <!-- the section for our 3 special naming & greeting fields -->
@@ -175,23 +175,23 @@
                         <div class="slds-modal__header">
                             <ui:button class="slds-button slds-button--icon-inverse slds-modal__close" press="{!c.cancelDeleteContact}">
                                 <c:svg class="slds-button__icon slds-button__icon--large"
-                                       xlinkHref="/resource/SLDS/1_0_3/assets/icons/action-sprite/svg/symbols.svg#close" />
-                                <span class="slds-assistive-text">{!$Label.c.bdiBtnClose}{!$Label.npsp.bdiBtnClose}</span>
+                                       xlinkHref="{!$Resource.SLDS + '/1_0_3/assets/icons/action-sprite/svg/symbols.svg#close'}" />
+                                <span class="slds-assistive-text">{!$Label.c.bdiBtnClose}</span>
                             </ui:button>
-                            <h2 id="searchPopupLabel" class="slds-text-heading--medium">{!$Label.c.lblDeleteContact}{!$Label.npsp.lblDeleteContact}</h2>
+                            <h2 id="searchPopupLabel" class="slds-text-heading--medium">{!$Label.c.lblDeleteContact}</h2>
                         </div>
 
                         <div class="slds-modal__content slds-p-around--medium">
                             <div>
-                                <p>{!$Label.c.lblDeleteContactPrompt}{!$Label.npsp.lblDeleteContactPrompt}</p>
+                                <p>{!$Label.c.lblDeleteContactPrompt}</p>
                             </div>
                         </div> <!-- /slds-modal__content -->
                         <div class="slds-modal__footer">
                             <div class="slds-x-small-buttons--horizontal">
                                 <ui:button class="slds-button slds-button--neutral"
                                     aura:id="btnCancelDelete"
-                                    buttonTitle="{!$Label.c.stgBtnCancel + $Label.npsp.stgBtnCancel}"
-                                    label="{!$Label.c.stgBtnCancel + $Label.npsp.stgBtnCancel}"
+                                    buttonTitle="{!$Label.c.stgBtnCancel}"
+                                    label="{!$Label.c.stgBtnCancel}"
                                     press="{!c.cancelDeleteContact}" />
                                 <ui:button class="slds-button slds-button--destructive"
                                     aura:id="btnDelete"
@@ -212,38 +212,35 @@
                     <div class="slds-modal__container">
 
                         <div class="slds-modal__header">
-                            <ui:button class="slds-button slds-button--icon-inverse slds-modal__close" press="{!c.cancelMergeHH}">
+                            <ui:button class="slds-button slds-button--icon-inverse slds-modal__close" press="{!c.cancelMergeHHPopup}">
                                 <c:svg class="slds-button__icon slds-button__icon--large"
-                                       xlinkHref="/resource/SLDS/1_0_3/assets/icons/action-sprite/svg/symbols.svg#close" />
-                                <span class="slds-assistive-text">{!$Label.c.bdiBtnClose}{!$Label.npsp.bdiBtnClose}</span>
+                                       xlinkHref="{!$Resource.SLDS + '/1_0_3/assets/icons/action-sprite/svg/symbols.svg#close'}" />
+                                <span class="slds-assistive-text">{!$Label.c.bdiBtnClose}</span>
                             </ui:button>
-                            <h2 id="searchPopupLabel" class="slds-text-heading--medium">{!$Label.c.lblMergeHHTitle}{!$Label.npsp.lblMergeHHTitle}</h2>
+                            <h2 id="searchPopupLabel" class="slds-text-heading--medium">{!$Label.c.lblMergeHHTitle}</h2>
                         </div>
 
                         <div class="slds-modal__content slds-p-around--medium">
                             <div>
-                                <p>{!format($Label.c.lblMergeHHPrompt, v.conAdd.FirstName + ' ' + v.conAdd.LastName)}
-                                    {!format($Label.npsp.lblMergeHHPrompt, v.conAdd.FirstName + ' ' + v.conAdd.LastName)}</p>
+                                <p>{!format($Label.c.lblMergeHHPrompt, v.conAdd.FirstName + ' ' + v.conAdd.LastName)}</p>
                             </div>
                         </div> <!-- /slds-modal__content -->
                         <div class="slds-modal__footer">
                             <div class="slds-x-small-buttons--horizontal">
                                 <ui:button class="slds-button slds-button--neutral"
                                     aura:id="btnCancelHHMerge"
-                                    buttonTitle="{!$Label.c.stgBtnCancel + $Label.npsp.stgBtnCancel}"
-                                    label="{!$Label.c.stgBtnCancel + $Label.npsp.stgBtnCancel}"
+                                    buttonTitle="{!$Label.c.stgBtnCancel}"
+                                    label="{!$Label.c.stgBtnCancel}"
                                     press="{!c.cancelMergeHHPopup}" />
                                 <ui:button class="slds-button slds-button--neutral"
                                     aura:id="btnAddContact"
-                                    buttonTitle="{!format($Label.c.lblBtnAddContact, v.conAdd.FirstName + ' ' + v.conAdd.LastName) +
-                                                 format($Label.npsp.lblBtnAddContact, v.conAdd.FirstName + ' ' + v.conAdd.LastName)}"
-                                    label="{!format($Label.c.lblBtnAddContact, v.conAdd.FirstName + ' ' + v.conAdd.LastName) +
-                                                 format($Label.npsp.lblBtnAddContact, v.conAdd.FirstName + ' ' + v.conAdd.LastName)}"
+                                    buttonTitle="{!format($Label.c.lblBtnAddContact, v.conAdd.FirstName + ' ' + v.conAdd.LastName)}"
+                                    label="{!format($Label.c.lblBtnAddContact, v.conAdd.FirstName + ' ' + v.conAdd.LastName)}"
                                     press="{!c.doAddContact}" />
                                 <ui:button class="slds-button slds-button--brand"
                                     aura:id="btnMergeHH"
-                                    buttonTitle="{!$Label.c.lblBtnAddAllHHMembers + $Label.npsp.lblBtnAddAllHHMembers}"
-                                    label="{!$Label.c.lblBtnAddAllHHMembers + $Label.npsp.lblBtnAddAllHHMembers}"
+                                    buttonTitle="{!$Label.c.lblBtnAddAllHHMembers}"
+                                    label="{!$Label.c.lblBtnAddAllHHMembers}"
                                     press="{!c.doMergeHH}" />
                             </div>
                         </div>
@@ -261,8 +258,8 @@
                         <div class="slds-modal__header">
                             <ui:button class="slds-button slds-button--icon-inverse slds-modal__close" press="{!c.cancelNewContact}">
                                 <c:svg class="slds-button__icon slds-button__icon--large"
-                                       xlinkHref="/resource/SLDS/1_0_3/assets/icons/action-sprite/svg/symbols.svg#close" />
-                                <span class="slds-assistive-text">{!$Label.c.bdiBtnClose}{!$Label.npsp.bdiBtnClose}</span>
+                                       xlinkHref="{!$Resource.SLDS + '/1_0_3/assets/icons/action-sprite/svg/symbols.svg#close'}" />
+                                <span class="slds-assistive-text">{!$Label.c.bdiBtnClose}</span>
                             </ui:button>
                             <h2 id="searchPopupLabel" class="slds-text-heading--medium">{!$Label.npo02.NewContact}</h2>
                         </div>
@@ -271,7 +268,7 @@
                             <div aura:id="divUIMessageNewContactPopup" />
                             <div class="slds-form--stacked">
                                 <div class="slds-form-element">
-                                    <ui:inputSelect aura:id="selSalutation" label="{!$Label.c.lblSalutation + $Label.npsp.lblSalutation}"
+                                    <ui:inputSelect aura:id="selSalutation" label="{!$Label.c.lblSalutation}"
                                         change="{!c.onSalutationChange}" class="slds-select slds-input slds-form-element__control" labelClass="slds-form-element__label" >
                                         <aura:iteration items="{!v.listSalutation}" var="sal">
                                             <ui:inputSelectOption text="{!sal.value}" label="{!sal.label}"/>
@@ -280,11 +277,11 @@
                                 </div>
                                 <div class="slds-form-element">
                                     <ui:inputText value="{!v.conNew.FirstName}" aura:id="txtFirstName" class="slds-input slds-form-element__control"
-                                                  label="{!$Label.c.lblFirstName + $Label.npsp.lblFirstName}" labelClass="slds-form-element__label" />
+                                                  label="{!$Label.c.lblFirstName}" labelClass="slds-form-element__label" />
                                 </div>
                                 <div class="slds-form-element">
                                     <ui:inputText value="{!v.conNew.LastName}" aura:id="txtLastName" class="slds-input slds-form-element__control" required="true"
-                                                  label="{!$Label.c.lblLastName + $Label.npsp.lblLastName}" labelClass="slds-form-element__label" />
+                                                  label="{!$Label.c.lblLastName}" labelClass="slds-form-element__label" />
                                 </div>
                             </div>
                         </div> <!-- /slds-modal__content -->
@@ -293,8 +290,8 @@
                             <div class="slds-x-small-buttons--horizontal">
                                 <ui:button class="slds-button slds-button--neutral"
                                     aura:id="btnCancelNew"
-                                    buttonTitle="{!$Label.c.stgBtnCancel + $Label.npsp.stgBtnCancel}"
-                                    label="{!$Label.c.stgBtnCancel + $Label.npsp.stgBtnCancel}"
+                                    buttonTitle="{!$Label.c.stgBtnCancel}"
+                                    label="{!$Label.c.stgBtnCancel}"
                                     press="{!c.cancelNewContact}" />
                                 <ui:button class="slds-button slds-button--brand"
                                     aura:id="btnNew"
