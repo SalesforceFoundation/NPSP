@@ -1,6 +1,7 @@
 ({
     // initialize the container by loading up our Household and Contacts
     doInit : function(component, event, helper) {
+        helper.warnOnLockerService(component);
         helper.fixupCustomLabels(component);
         helper.loadObjects(component);
         helper.initNewContact(component);

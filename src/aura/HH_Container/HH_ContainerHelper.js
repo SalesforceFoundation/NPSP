@@ -1,5 +1,15 @@
 ({
     /*******************************************************************************************************
+     * @description called at onInit to detect if Locker Service is enabled, warning if so.
+     */
+    warnOnLockerService: function(component) {
+        debugger;
+        if (component.$lskey != null) {        
+            this.displayUIMessage(component, "LockerService is activated which prevents this page from working correctly.  Under Setup, search for Critical Updates, and deactivate the critical update 'Enable Lightning LockerService Security'. ", "divUIMessageContainer");
+        }
+    },
+
+    /*******************************************************************************************************
      * @description called at onInit to load up the Household Object/Account, and its Contacts
      */
     loadObjects: function(component) {
@@ -472,7 +482,7 @@
             }
         }
         return;
-        
+
         // force the following label references, or these won't be available to $Label.
         try {
             $A.get("$Label.npsp.lblAddressOverride");
@@ -501,9 +511,8 @@
             $A.get("$Label.npsp.lblFindOrAddContact");
             $A.get("$Label.npsp.lblFindInContacts");
             $A.get("$Label.npsp.lblNoHHMergePermissions");
-        } catch(e) {
-        }
-        
+        } catch (e) {}
+
     },
 
     /*******************************************************************************************************
