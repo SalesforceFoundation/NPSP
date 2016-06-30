@@ -32,7 +32,7 @@
 * @date 2016
 * @group Engagement Plans
 * @group-content ../../ApexDocContent/EngagementPlans.htm
-* @description 
+* @description Tests for Engagement Plan insert, validation, and Task creation.
 */
 @isTest
 private with sharing class EP_EngagementPlans_TEST {
@@ -64,6 +64,7 @@ private with sharing class EP_EngagementPlans_TEST {
             Reminder__c = true,
             Reminder_Minutes__c = '660',
             Send_Email__c = true,
+            Days_After__c = 3,
             Type__c = 'Call',
             Priority__c = 'Medium'
         );
@@ -77,7 +78,7 @@ private with sharing class EP_EngagementPlans_TEST {
             Reminder__c = true,
             Reminder_Minutes__c = '780',
             Send_Email__c = true,
-            Days_After__c = 3,
+            Days_After__c = 10,
             Type__c = 'Email',
             Priority__c = 'Low'
         );
@@ -96,25 +97,26 @@ private with sharing class EP_EngagementPlans_TEST {
                             IsReminderSet, ReminderDateTime FROM Task WHERE WhoId = :con.id ORDER BY ActivityDate];
         System.assertEquals(2, results.size(), 'Two tasks should be created.');
 
-        System.assertEquals(results[0].Subject, 'Call', 'Subject field should be set based on EP Task Name.');
-        System.assertEquals(results[0].Description, 'This comment should be copied correctly to the Task.');
+        System.assertEquals('Call', results[0].Subject, 'Subject field should be set based on EP Task Name.');
+        System.assertEquals('This comment should be copied correctly to the Task.', results[0].Description);
         
-        System.assertEquals(results[0].ActivityDate, System.Today(), 'Activity Date should be set today.');
+        System.assertEquals(System.Today().addDays(3), results[0].ActivityDate, 'Activity Date should be three days from today.');
         System.assert(results[0].IsReminderSet, 'Reminder should be set.');
-        System.assertEquals(results[0].ReminderDateTime.Date(), System.Today(), 'Reminder should be set today.');
-        System.assertEquals(results[0].Priority, 'Medium', 'Priority field should be set based on EP Task Priority.');
-        System.assertEquals(results[0].OwnerId, otherUserId, 'Task owner should be based on EP Task Assigned To field.');
+        System.assertEquals(System.Today().addDays(3), results[0].ReminderDateTime.Date(), 'Reminder should be set three days from today.');
+        System.assertEquals('Medium', results[0].Priority, 'Priority field should be set based on EP Task Priority.');
+        System.assertEquals(otherUserId, results[0].OwnerId, 'Task owner should be based on EP Task Assigned To field.');
 
-        System.assertEquals(results[1].Subject, 'Email', 'Subject field should be set based on EP Task Name.');
-        System.assertEquals(results[1].Description, 'This comment should also be copied correctly to the Task.');
-        System.assertEquals(results[1].ActivityDate, System.Today().addDays(3), 'Activity Date should be set three days from now.');
+        System.assertEquals('Email', results[1].Subject, 'Subject field should be set based on EP Task Name.');
+        System.assertEquals('This comment should also be copied correctly to the Task.', results[1].Description);
+        System.assertEquals(System.Today().addDays(13), results[1].ActivityDate, 'Activity Date should be set thirteen days from today.');
         System.assert(!results[1].IsReminderSet, 'Reminder should not be set for a dependent task.');
-        System.assertEquals(results[1].Priority, 'Low', 'Priority field should be set based on EP Task Priority.');
-        System.assertEquals(results[1].OwnerId, UserInfo.getUserId(), 'Task owner left blank should be based on running user.');
+        System.assertEquals('Low', results[1].Priority, 'Priority field should be set based on EP Task Priority.');
+        System.assertEquals(UserInfo.getUserId(), results[1].OwnerId, 'Task owner left blank should be based on running user.');
     }
 
     /*********************************************************************************************************
-    * @description 
+    * @description Creates an EP Task with a delay of the number of days until the weekend, as part of a 
+    * template set to delay until Monday. Verifies that the activity date is set on Monday.
     */
     static testMethod void testSkipWeekends() {
 
@@ -167,6 +169,45 @@ private with sharing class EP_EngagementPlans_TEST {
         System.assert(results[0].IsReminderSet, 'Reminder should be set.');
         System.assert(results[0].ReminderDateTime.Date() > System.now().addDays(daysUntilWeekend), 'Reminder should be set after the weekend.');
         System.assertEquals(results[0].Priority, 'Medium', 'Priority field should be set based on EP Task Priority.');
+    }
+
+    /*********************************************************************************************************
+    * @description Creates an EP Template and EP Task, and an Engagement Plan associated with an Account. 
+    * Verifies that WhatId is used for Engagement Plans assigned to objects other than Contact and Lead.
+    */
+    static testMethod void testTaskAssignment() {
+
+        Integer daysUntilWeekend = getDaysUntilWeekend(System.today());
+        
+        Account acc = new Account(Name = 'foo');
+        insert acc;
+
+        Engagement_Plan_Template__c template = new Engagement_Plan_Template__c(
+            Name = 'TemplateSkipWeekends',
+            Blank_Assignment_Rule__c = 'User Creating Action Plan'
+        );
+        insert template;
+
+        Engagement_Plan_Task__c epTask = new Engagement_Plan_Task__c(
+            Name = 'Call',
+            Engagement_Plan_Template__c = template.id,
+            Type__c = 'Call',
+            Priority__c = 'Medium'
+        );
+        insert epTask;
+
+        Engagement_Plan__c plan = new Engagement_Plan__c(
+            Account__c = acc.id,
+            Engagement_Plan_Template__c = template.id
+        );
+
+        Test.startTest();
+        insert plan;
+        Test.stopTest();
+
+        List<Task> results = [SELECT Id, OwnerId, WhatId, Type, Status, Subject, ActivityDate, Priority, Description,
+                            IsReminderSet, ReminderDateTime FROM Task WHERE WhatId = :acc.id];
+        System.assertEquals(1, results.size(), 'A task should be created.');
     }
 
     /*********************************************************************************************************

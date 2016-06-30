@@ -76,6 +76,24 @@
         <type>Picklist</type>
     </fields>
     <fields>
+        <fullName>Delay_Type__c</fullName>
+        <externalId>false</externalId>
+        <label>Delay Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>After Due Date</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>After Date Completed</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
         <fullName>Skip_Day__c</fullName>
         <description>Should tasks that land on a weekend be scheduled for the Friday before the weekend or the Monday after?</description>
         <externalId>false</externalId>

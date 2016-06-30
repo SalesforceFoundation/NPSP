@@ -32,9 +32,10 @@
 * @date 2016
 * @group Engagement Plans
 * @group-content ../../ApexDocContent/EngagementPlans.htm
-* @description 
+* @description Utility class for the Engagement_Plan__c object, for helping to manage the multiple lookups
+* to parent objects; validates that one and only one parent object lookup is populated per Engagement Plan.
 */
-public with sharing class EP_Utils {
+public with sharing class EP_EngagementPlans_UTIL {
 
     /** @description Engagement Plan field describe map.*/
     private static Map<String, Schema.DescribeFieldResult> fieldDescribeMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('Engagement_Plan__c'));
@@ -66,7 +67,7 @@ public with sharing class EP_Utils {
     public Map<Id, Id> targetOwnerMap = new Map<Id, Id>();
 
     /** @description Constructor initializes maps.*/
-    public EP_Utils(List<Engagement_Plan__c> engagementPlans) {
+    public EP_EngagementPlans_UTIL(List<Engagement_Plan__c> engagementPlans) {
         for (Engagement_Plan__c engagementPlan : engagementPlans) {
             targetFieldMap.put(engagementPlan.id, getTargetObjectField(engagementPlan));
         }

@@ -75,12 +75,14 @@
         <members>CON_DoNotContact_TEST</members>
         <members>EP_EngagementPlans_TDTM</members>
         <members>EP_EngagementPlans_TEST</members>
-        <members>EP_TaskCreator</members>
+        <members>EP_EngagementPlans_UTIL</members>
         <members>EP_TaskDependencyCheck_TDTM</members>
         <members>EP_TaskDependencyCheck_TEST</members>
+        <members>EP_TaskDependency_TDTM</members>
+        <members>EP_TaskDependency_TEST</members>
         <members>EP_TaskRollup_TDTM</members>
         <members>EP_TaskRollup_TEST</members>
-        <members>EP_Utils</members>
+        <members>EP_Task_UTIL</members>
         <members>ERR_AddError_TEST</members>
         <members>ERR_Handler</members>
         <members>ERR_Handler_API</members>
@@ -378,8 +380,8 @@
         <members>Account.Membership_Span__c</members>
         <members>Account.Membership_Status__c</members>
         <members>Account.Number_of_Household_Members__c</members>
-        <members>Activity.Engagement_Plan__c</members>
         <members>Activity.Engagement_Plan_Task__c</members>
+        <members>Activity.Engagement_Plan__c</members>
         <members>Addr_Verification_Settings__c.Address_Verification_Endpoint__c</members>
         <members>Addr_Verification_Settings__c.Auth_ID__c</members>
         <members>Addr_Verification_Settings__c.Auth_Token__c</members>
@@ -570,6 +572,7 @@
         <members>Engagement_Plan_Task__c.Status__c</members>
         <members>Engagement_Plan_Task__c.Type__c</members>
         <members>Engagement_Plan_Template__c.Blank_Assignment_Rule__c</members>
+        <members>Engagement_Plan_Template__c.Delay_Type__c</members>
         <members>Engagement_Plan_Template__c.Skip_Day__c</members>
         <members>Engagement_Plan_Template__c.Skip_Weekends__c</members>
         <members>Engagement_Plan_Template__c.Total_Engagement_Plans__c</members>
@@ -582,6 +585,7 @@
         <members>Engagement_Plan__c.Engagement_Plan_Template__c</members>
         <members>Engagement_Plan__c.Opportunity__c</members>
         <members>Engagement_Plan__c.Recurring_Donation__c</members>
+        <members>Engagement_Plan__c.Status__c</members>
         <members>Engagement_Plan__c.Total_EP_Tasks__c</members>
         <members>Engagement_Plan__c.Total_Tasks__c</members>
         <members>Error_Settings__c.Disable_Error_Handling__c</members>
@@ -878,6 +882,8 @@
         <members>campaignMemberStatusNonResponded</members>
         <members>campaignMemberStatusResponded</members>
         <members>conMergeErrNoPersonAccounts</members>
+        <members>engagementPlanNoLookups</members>
+        <members>engagementPlanTwoLookups</members>
         <members>flsError</members>
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>

@@ -280,8 +280,12 @@ public without sharing class TDTM_DefaultConfig {
 
         // Tasks
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
-              Class__c = 'EP_TaskRollup_TDTM', Load_Order__c = 1, Object__c = 'Task',
+              Class__c = 'EP_TaskRollup_TDTM', Load_Order__c = 0, Object__c = 'Task',
               Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete;AfterUndelete'));
+
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+              Class__c = 'EP_TaskDependency_TDTM', Load_Order__c = 1, Object__c = 'Task',
+              Trigger_Action__c = 'AfterUpdate'));
 
         return handlers;
     }

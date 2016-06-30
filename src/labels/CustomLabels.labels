@@ -578,7 +578,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>EPTaskDependency</shortDescription>
-        <value>dependency recursion is bad</value>
+        <value>Engagement Plan Task dependencies cannot make recursive dependency loops.</value>
     </labels>
     <labels>
         <fullName>EPTaskTemplate</fullName>
@@ -1342,6 +1342,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>conMergeErrNoPersonAccounts</shortDescription>
         <value>Person accounts are not supported.</value>
+    </labels>
+    <labels>
+        <fullName>engagementPlanNoLookups</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>engagementPlanNoLookups</shortDescription>
+        <value>One object lookup must be populated for each Engagement Plan.</value>
+    </labels>
+    <labels>
+        <fullName>engagementPlanTwoLookups</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>engagementPlanTwoLookups</shortDescription>
+        <value>Only one object lookup can be populated per Engagement Plan.</value>
     </labels>
     <labels>
         <fullName>flsError</fullName>

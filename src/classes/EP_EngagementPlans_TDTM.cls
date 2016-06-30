@@ -32,12 +32,16 @@
 * @date 2016
 * @group Engagement Plans
 * @group-content ../../ApexDocContent/EngagementPlans.htm
-* @description 
+* @description Trigger handler for Engagement Plans object. On insert, validates that the Engagement Plan has one lookup
+* to a parent object, then creates Tasks associated with that object based on the plan's template.
 */
 public with sharing class EP_EngagementPlans_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
-    * @description Trigger Handler on Engagement Plans that creates Tasks based on Engagement Plan Tasks.
+    * @description Trigger Handler on Engagement Plans after insert; creates Tasks based on the associated 
+    * template's Engagement Plan Tasks.
+    * This method inserts Task objects directly instead of using DmlWrapper, as DML options are needed on
+    * certain Tasks for sending emails.
     * @param listNew the list of Engagement Plans from trigger new. 
     * @param listOld the list of Engagement Plans from trigger old. 
     * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
@@ -47,8 +51,57 @@ public with sharing class EP_EngagementPlans_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         
-        EP_TaskCreator taskCreator = new EP_TaskCreator();
-        taskCreator.insertTasks((List<Engagement_Plan__c>) newlist);
+        List<Task> taskInsertEmail = new List<Task>();
+        List<Task> taskInsertNoEmail = new List<Task>();
+
+        List<Engagement_Plan__c> engagementPlans = (List<Engagement_Plan__c>) newlist;
+
+        EP_Task_UTIL taskCreator = new EP_Task_UTIL(engagementPlans);
+        // EP_EngagementPlans_UTIL class for calculating which lookup field Engagement Plans use and related operations.*/
+        EP_EngagementPlans_UTIL util = new EP_EngagementPlans_UTIL(engagementPlans);
+
+        for (Engagement_Plan__c engagementPlan : engagementPlans) {
+            Engagement_Plan_Template__c template = taskCreator.templateMap.get(engagementPlan.Engagement_Plan_Template__c);
+            for (Engagement_Plan_Task__c epTask : template.Engagement_Plan_Tasks__r) {
+                Task newTask = taskCreator.createTask(epTask);
+                
+                //set target object to WhoId or WhatId based on object type
+                taskCreator.assignTask(newTask, util.targetObjectIdMap.get(engagementPlan.id));
+
+                //set engagement plan lookup on task
+                newTask.Engagement_Plan__c = engagementPlan.Id;
+
+                //assign owner based on template setting
+                if (newTask.OwnerId == null) {
+                    if (template.Blank_Assignment_Rule__c == 'User Creating Action Plan') {
+                        newTask.OwnerId = UserInfo.getUserId();
+                    } else {
+                        //get the owner of the record this engagement plan is being applied to
+                        newTask.OwnerId = util.targetOwnerMap.get(engagementPlan.id);
+                    }
+                }
+
+                //add to appropriate list based on the email setting.
+                if (epTask.Send_Email__c && epTask.Dependent_Task__c == null) {
+                    taskInsertEmail.add(newTask);
+                } else {
+                    taskInsertNoEmail.add(newTask);
+                }
+            }
+        }
+
+        Database.DMLOptions options = new Database.DMLOptions();
+
+        if (!taskInsertEmail.isEmpty()) {
+            options.EmailHeader.triggerUserEmail = true;
+            List<Database.SaveResult> results = Database.insert(taskInsertEmail, options);
+        }
+
+        if (!taskInsertNoEmail.isEmpty()) {
+            options.EmailHeader.triggerUserEmail = false;
+            List<Database.SaveResult> results = Database.insert(taskInsertNoEmail, options);
+        }
+    
         return null;
     }
 }
