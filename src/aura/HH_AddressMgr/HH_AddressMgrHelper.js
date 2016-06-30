@@ -14,12 +14,12 @@
             var namespacePrefix = component.get('v.namespacePrefix');
             addr = component.get('v.addrNew');
             addr = this.processPrefixObjectFields(namespacePrefix, addr, false);
-            iAddrSelected = listAddr.length();
+            iAddrSelected = listAddr.length;
             listAddr.push(addr);
         }
 
         // clear out current default address
-        for (var i = 0; i < listAddr.length(); i++) {
+        for (var i = 0; i < listAddr.length; i++) {
             listAddr[i].Default_Address__c = false;
         }
 
