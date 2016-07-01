@@ -27,7 +27,7 @@
 
     <apex:form id="form" styleClass="slds-m-around--x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.stgNavHealthCheck}" />
-        <div class="slds-text-body--small slds-m-around--medium"><apex:outputText value="{!$Label.healthLabelIntro}" escape="false" styleClass="slds-list--ordered" /></div>
+        <div class="slds-text-body--small slds-m-around--medium"><apex:outputText value="{!$Label.healthLabelIntro}" escape="false" /></div>
         <c:UTIL_PageMessages />
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
             <apex:commandButton value="{!$Label.healthButtonRun}" status="statusLoad" action="{!runDetector}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral"/>

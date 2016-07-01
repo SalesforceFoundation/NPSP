@@ -13,25 +13,29 @@
                 <div class="slds-form-element">
                     <apex:outputLabel value="{!$ObjectType.npe01__Payment_Field_Mapping_Settings__c.Fields.npe01__Opportunity_Field__c.Label}" for="slOF" styleClass="slds-form-element__label" />
                     <div class="slds-form-element__control">
-                        <apex:selectList value="{!pfmNew.npe01__Opportunity_Field__c}" multiselect="false" size="5" id="slOF" styleClass="slds-select" >
+                        <apex:selectList value="{!pfmNew.npe01__Opportunity_Field__c}" multiselect="false" size="5" id="slOF" html-aria-describedby="{!$Component.slOFHelp}" styleClass="slds-select" >
                             <apex:selectOptions value="{!sourcefields}"  />
                             <apex:actionSupport event="onchange" action="{!onSelectSourceField}" rerender="slTargetField,panelButtons" status="statusLoad"/>
                         </apex:selectList>
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpPaymentMapOppField}" />
+                        <apex:outputPanel id="slOFHelp" layout="block">
+                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpPaymentMapOppField}" />
+                        </apex:outputPanel>
                     </div>
                 </div>
                 <div class="slds-form-element">
                     <apex:outputLabel value="{!$ObjectType.npe01__Payment_Field_Mapping_Settings__c.Fields.npe01__Payment_Field__c.Label}" for="slTargetField" styleClass="slds-form-element__label" />
                     <div class="slds-form-element__control">
-                        <apex:selectList value="{!pfmNew.npe01__Payment_Field__c}" id="slTargetField" multiselect="false" size="5" styleClass="slds-select">
+                        <apex:selectList value="{!pfmNew.npe01__Payment_Field__c}" id="slTargetField" multiselect="false" size="5" html-aria-describedby="{!$Component.slTargetFieldHelp}" styleClass="slds-select">
                             <apex:selectOptions value="{!targetfields}"  />
                         </apex:selectList>
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpPaymentMapPaymentField}" />
+                        <apex:outputPanel id="slTargetFieldHelp" layout="block">
+                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpPaymentMapPaymentField}" />
+                        </apex:outputPanel>
                     </div>
                 </div>
             </div>
             <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-                <apex:commandButton value="{!$Label.stgBtnCreateMapping}" status="statusLoad" action="{!savePfm}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+                <apex:commandButton value="{!$Label.stgBtnCreateMapping}" status="statusLoad" action="{!savePfm}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
                 <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelPfmEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
             </div>
         </apex:outputPanel>

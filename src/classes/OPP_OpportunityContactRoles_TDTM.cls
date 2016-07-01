@@ -183,7 +183,12 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                             oldName = mapConIdContact.get((id)oldOpp.get(field)).Name;
                         //only overwrite the name field if it's blank, or if we've switched contacts and it contained the old name
                         if (newOpp.get(nameField) == null || newOpp.get(nameField) == oldName) {
-                            newOpp.put(nameField, mapConIdContact.get((id)newOpp.get(field)).Name);
+                            id newContactId = (id)newOpp.get(field);
+                            if (newContactId != null) {
+                                newOpp.put(nameField, mapConIdContact.get(newContactId).Name);
+                            } else {
+                                newOpp.put(nameField, '');
+                            }
                         }
                     }
                 }

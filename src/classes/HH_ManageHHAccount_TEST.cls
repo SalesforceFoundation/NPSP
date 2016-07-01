@@ -181,7 +181,7 @@ public with sharing class HH_ManageHHAccount_TEST {
         insert hh;
         
         Contact con1 = new Contact(
-            FirstName = 'David',
+            FirstName = 'David1',
             LastName = 'TestContactASDF',
             email = 'testemail@groundwiretest.org',
             AccountId = hh.id,
@@ -194,9 +194,9 @@ public with sharing class HH_ManageHHAccount_TEST {
         insert con1;
         
         Contact con2 = new Contact(
-            FirstName = 'David',
-            LastName = 'TestContactASDF',
-            email = 'testemail@groundwiretest.org',
+            FirstName = 'Somebody',
+            LastName = 'Else',
+            email = 'withanother@email.org',
             AccountId = hh.id,
             MailingStreet = '5678 Testing Drive Suite 1000',
             MailingCity = 'Seattle',

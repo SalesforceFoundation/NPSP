@@ -20,6 +20,7 @@
             <operator>notEqual</operator>
             <value></value>
         </criteriaItems>
+        <language>en_US</language>
     </filter>
     <format>Summary</format>
     <groupingsDown>

@@ -40,10 +40,10 @@ public class RLLP_OppPartialSoftCreditRollup {
     /*******************************************************************************************************
     * @description calculates the Soft Credit statistics for the specified contacts.  Takes into account 
     * both OpportunityContactRoles and Partial_Soft_Credits
-    * @param scope The list of contacts to process
+    * @param listCon The list of contacts to process
     * @return void
     */ 
-    public static void rollupPartialSoftCredits(List<Contact> scope) {
+    public static void rollupPartialSoftCredits(List<Contact> listCon) {
         // since called by RLLP_OppRollups, we can assume RLLP_OppRollup_UTIL is set up.
         // RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
         
@@ -56,19 +56,15 @@ public class RLLP_OppPartialSoftCreditRollup {
             currentYearStart = Date.newInstance(Date.Today().Year(), 1, 1);
         }
 
-        //need a local variable for dynamic soql variable binding
+        // need local variables for dynamic soql variable binding to the soql
+        // strings created by our rollup utility class
         set<string> softCreditRoles = RLLP_OppRollup_UTIL.softCreditRoles;
-        string ocrQuery = 'SELECT Id, ContactId, Opportunity.CloseDate, Opportunity.Amount';
-        string pscQuery = 'SELECT Id, Contact__c, Opportunity__r.CloseDate, Amount__c, Contact_Role_ID__c';
-
-        if (RLLP_OppRollup_UTIL.isMultiCurrency()) {
-            ocrQuery += ', Opportunity.CurrencyIsoCode';
-            pscQuery += ', CurrencyIsoCode';
-        }
-
-        ocrQuery += ' FROM OpportunityContactRole WHERE ContactId IN :scope AND Opportunity.isWon=true AND Role IN :softCreditRoles';
-        pscQuery += ' FROM Partial_Soft_Credit__c WHERE Contact__c IN :scope AND Opportunity__r.isWon=true AND Role_Name__c IN :softCreditRoles';
-
+        List<Contact> cset = listCon;
+        set<string> typeset = RLLP_OppRollup_UTIL.oppTypesToExcludeCons;
+        set<id> rectypeset = RLLP_OppRollup_UTIL.recordTypesToExcludeCons;
+        string ocrQuery = RLLP_OppRollup_UTIL.buildSoftCreditOCRQuery();
+        string pscQuery = RLLP_OppRollup_UTIL.buildSoftCreditPSCQuery();
+        
         Map<Id, List<OpportunityContactRole>> opportunityContactRoles = new Map<Id, List<OpportunityContactRole>>();
         for (OpportunityContactRole ocr : database.query(ocrQuery)) {
             if (!opportunityContactRoles.containsKey(ocr.ContactId)) 
@@ -84,8 +80,7 @@ public class RLLP_OppPartialSoftCreditRollup {
         }
     
         List<Contact> toUpdate = new List<Contact>();
-        for (SObject o : scope) {
-            Contact c = (Contact) o;
+        for (Contact c : listCon) {
             Contact newC = new Contact(Id = c.Id,
                                        First_Soft_Credit_Amount__c = 0,
                                        First_Soft_Credit_Date__c = null,

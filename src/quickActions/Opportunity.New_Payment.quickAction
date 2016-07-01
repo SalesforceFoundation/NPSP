@@ -6,6 +6,7 @@
         <formula>Today()</formula>
     </fieldOverrides>
     <label>New Payment</label>
+    <optionsCreateFeedItem>true</optionsCreateFeedItem>
     <quickActionLayout>
         <layoutSectionStyle>TwoColumnsLeftToRight</layoutSectionStyle>
         <quickActionLayoutColumns>
