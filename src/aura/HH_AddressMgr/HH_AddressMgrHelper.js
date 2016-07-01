@@ -14,12 +14,7 @@
             iAddrSelected = component.get('v.iAddrSelected');
             addr = listAddr[iAddrSelected];
         } else {
-            // Salesforce is namespace prefixing the new address, so we must
-            // remove the prefix before adding it to our list.
-            // var namespacePrefix = component.get('v.namespacePrefix');
             addr = component.get('v.addrNew');
-            // since changing our addr to an object, rather than Address__c, we avoid namespace issues.
-            //addr = this.processPrefixObjectFields(namespacePrefix, addr, false);
             iAddrSelected = listAddr.length;
             listAddr.push(addr);
         }

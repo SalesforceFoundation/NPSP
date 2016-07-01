@@ -1,8 +1,8 @@
 <aura:component >
 
     <!-- our attributes -->
-    <aura:attribute name="hh" type="SObject" access="public" />
-    <aura:attribute name="listCon" type="Contact[]" access="public" />
+    <aura:attribute name="hh" type="Object" access="public" />
+    <aura:attribute name="listCon" type="Object[]" access="public" />
     <aura:attribute name="allowContactDelete" type="Boolean" default="false" access="public" />
 
     <!-- events we fire -->

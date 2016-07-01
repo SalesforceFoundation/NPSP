@@ -1,6 +1,6 @@
 <aura:component >
     <!-- our attributes -->
-    <aura:attribute name="contact" type="Contact" access="public"/>
+    <aura:attribute name="contact" type="Object" access="public"/>
     <aura:attribute name="allowContactDelete" type="Boolean" default="false" access="public" />
 
     <!-- events we fire -->

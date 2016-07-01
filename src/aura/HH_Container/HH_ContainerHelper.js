@@ -3,7 +3,6 @@
      * @description called at onInit to detect if Locker Service is enabled, warning if so.
      */
     warnOnLockerService: function(component) {
-        debugger;
         if (component.$lskey != null) {        
             this.displayUIMessage(component, "LockerService is activated which prevents this page from working correctly.  Under Setup, search for Critical Updates, and deactivate the critical update 'Enable Lightning LockerService Security'. ", "divUIMessageContainer");
         }
@@ -665,8 +664,9 @@
         var namespacePrefix = component.get('v.namespacePrefix');
         // because our address objects aren't real, we need to
         // tell the system what type of sobject they are
-        //for (var i in listAddr)
-        //    listAddr[i].sobjectType = namespacePrefix + 'Address__c';
+        for (var i in listAddr) {
+            listAddr[i].sobjectType = namespacePrefix + 'Address__c';
+        }
         listCon = [conAdd];
         listCon = this.addPrefixToListObjectFields(namespacePrefix, listCon);
         listAddr = this.addPrefixToListObjectFields(namespacePrefix, listAddr);
@@ -750,8 +750,9 @@
         var listAddr = component.get('v.listAddr');
         // because our address objects aren't real, we need to
         // tell the system what type of sobject they are
-        //for (var i in listAddr)
-        //    listAddr[i].sobjectType = namespacePrefix + 'Address__c';
+        for (var i in listAddr) {
+            listAddr[i].sobjectType = namespacePrefix + 'Address__c';
+        }
         listAddr = this.addPrefixToListObjectFields(namespacePrefix, listAddr);
         action.setParams({
             hhId: hhMerge.Id,

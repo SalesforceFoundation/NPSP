@@ -2,7 +2,7 @@
     <!-- public attributes -->
     <aura:attribute name="hhId" type="String" access="public" />
     <aura:attribute name="namespacePrefix" type="String" access="public" />
-    <aura:attribute name="listCon" type="Contact[]" access="public" />
+    <aura:attribute name="listCon" type="Object[]" access="public" />
     <aura:attribute name="isListVisible" default="false" type="Boolean" access="public"/>    
 
     <!-- events we fire -->

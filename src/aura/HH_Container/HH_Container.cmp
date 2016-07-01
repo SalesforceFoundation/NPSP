@@ -4,24 +4,24 @@
     <aura:attribute name="namespacePrefix" type="String" access="public" />
 
     <!-- private attributes -->
-    <aura:attribute name="hh" type="SObject" access="private" />
+    <aura:attribute name="hh" type="Object" access="private" />
     <aura:attribute name="hhTypePrefix" type="String" access="private" />
-    <aura:attribute name="listCon" type="Contact[]" access="private" />
-    <aura:attribute name="listAddr" type="Address__c[]" access="private" />
+    <aura:attribute name="listCon" type="Object[]" access="private" />
+    <aura:attribute name="listAddr" type="Object[]" access="private" />
     <aura:attribute name="showSpinner" type="Boolean" default="true" access="private" />
     <aura:attribute name="isAutoName" type="Boolean" access="private" />
     <aura:attribute name="isAutoFormalGreeting" type="Boolean" access="private" />
     <aura:attribute name="isAutoInformalGreeting" type="Boolean" access="private" />
     <aura:attribute name="showDeleteContactPopup" type="Boolean" access="private" />
-    <aura:attribute name="conDelete" type="Contact" access="private" />
-    <aura:attribute name="listConDelete" type="Contact[]" access="private" />
+    <aura:attribute name="conDelete" type="Object" access="private" />
+    <aura:attribute name="listConDelete" type="Object[]" access="private" />
     <aura:attribute name="showNewContactPopup" type="Boolean" access="private" />
-    <aura:attribute name="conNew" type="Contact" access="private" />
+    <aura:attribute name="conNew" type="Object" access="private" />
     <aura:attribute name="listSalutation" type="SelectOption[]" access="private" />
-    <aura:attribute name="listHHMerge" type="SObject[]" access="private" />
+    <aura:attribute name="listHHMerge" type="Object[]" access="private" />
     <aura:attribute name="showMergeHHPopup" type="Boolean" access="private" />
-    <aura:attribute name="conAdd" type="Contact" access="private" />
-    <aura:attribute name="hhMerge" type="SObject" access="private" />
+    <aura:attribute name="conAdd" type="Object" access="private" />
+    <aura:attribute name="hhMerge" type="Object" access="private" />
     <aura:attribute name="isSaveDisabled" type="Boolean" default="false" access="private" />
     <aura:attribute name="allowContactDelete" type="Boolean" default="false" access="private" />
     <aura:attribute name="allowHouseholdMerge" type="Boolean" default="false" access="private" />
