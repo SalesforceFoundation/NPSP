@@ -117,7 +117,7 @@
                 <!-- the Address section -->
                 <div class="slds-p-bottom--large">
                     <div class="slds-text-heading--label slds-p-around--x-small">{!$Label.npo02.HouseholdAddress}</div>
-                    <c:HH_AddressMgr listAddr="{!v.listAddr}" aura:id="addrMgr" namespacePrefix="{!v.namespacePrefix}" />
+                    <c:HH_AddressMgr listAddr="{!v.listAddr}" aura:id="addrMgr" />
                 </div>
 
                 <!-- the section for our 3 special naming & greeting fields -->

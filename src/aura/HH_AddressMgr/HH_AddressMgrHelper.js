@@ -1,4 +1,9 @@
 ({
+    /*******************************************************************************************************
+     * @description From the Change Address popup, finds the selected existing or new address, and makes it
+     * the new default, and fires the HH_AddressChangedEvent, so the container can update the contacts and
+     * hh with the new default address.
+     */
     setDefaultAddress : function(component) {
         var addr;
         var listAddr = component.get('v.listAddr');
@@ -11,9 +16,10 @@
         } else {
             // Salesforce is namespace prefixing the new address, so we must
             // remove the prefix before adding it to our list.
-            var namespacePrefix = component.get('v.namespacePrefix');
+            // var namespacePrefix = component.get('v.namespacePrefix');
             addr = component.get('v.addrNew');
-            addr = this.processPrefixObjectFields(namespacePrefix, addr, false);
+            // since changing our addr to an object, rather than Address__c, we avoid namespace issues.
+            //addr = this.processPrefixObjectFields(namespacePrefix, addr, false);
             iAddrSelected = listAddr.length;
             listAddr.push(addr);
         }
@@ -34,39 +40,5 @@
         event.setParams({ "addrDefault" : addr });
         event.fire();
     },
-    
-    /*******************************************************************************************************
-     * @description adds or removes namespace prefix from the object's custom fields
-     */
-    processPrefixObjectFields: function(namespacePrefix, object, isAdd) {
-        if (namespacePrefix && namespacePrefix.length > 0) {
-
-            var obj = {}; //create object
-
-            // process namespace prefix from each custom field
-            for (var fld in object) {
-                if (isAdd) {
-                    // see if custom field has no namespace prefix
-                    if (fld.endsWith('__c') && fld.indexOf('__') === fld.lastIndexOf('__')) {
-                        var fld2 = namespacePrefix + fld;
-                        obj[fld2] = object[fld];
-                    } else {
-                        obj[fld] = object[fld];
-                    }
-                } else {
-                    // see if custom field starts with our namespace prefix
-                    if (fld.endsWith('__c') && fld.startsWith(namespacePrefix)) {
-                        var fld2 = fld.replace(namespacePrefix, '');
-                        obj[fld2] = object[fld];
-                    } else {
-                        obj[fld] = object[fld];
-                    }
-                }
-            }
-            return obj;
-        } else {
-            return object;
-        }
-    },
-    
+        
 })

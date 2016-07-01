@@ -665,8 +665,8 @@
         var namespacePrefix = component.get('v.namespacePrefix');
         // because our address objects aren't real, we need to
         // tell the system what type of sobject they are
-        for (var i in listAddr)
-            listAddr[i].sobjectType = namespacePrefix + 'Address__c';
+        //for (var i in listAddr)
+        //    listAddr[i].sobjectType = namespacePrefix + 'Address__c';
         listCon = [conAdd];
         listCon = this.addPrefixToListObjectFields(namespacePrefix, listCon);
         listAddr = this.addPrefixToListObjectFields(namespacePrefix, listAddr);
@@ -750,8 +750,8 @@
         var listAddr = component.get('v.listAddr');
         // because our address objects aren't real, we need to
         // tell the system what type of sobject they are
-        for (var i in listAddr)
-            listAddr[i].sobjectType = namespacePrefix + 'Address__c';
+        //for (var i in listAddr)
+        //    listAddr[i].sobjectType = namespacePrefix + 'Address__c';
         listAddr = this.addPrefixToListObjectFields(namespacePrefix, listAddr);
         action.setParams({
             hhId: hhMerge.Id,
