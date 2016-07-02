@@ -68,7 +68,7 @@
                     <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Household_Account_Addresses_Disabled__c.Label}" for="cbxDHAA" styleClass="slds-form-element__label" />
                     <div class="slds-form-element__control">
                         <apex:inputCheckbox value="{!stgService.stgCon.Household_Account_Addresses_Disabled__c}" rendered="{!isEditMode}" id="cbxDHAA" html-aria-describedby="{!$Component.cbxDHAAHelp}" styleClass="slds-checkbox" />
-                        <apex:inputCheckbox value="{!stgService.stgCon.Household_Account_Addresses_Disabled__c}" rendered="{!isReadOnlyMode}" disabled="{!isReadOnlyMode}" id="cbxDHAAO" html-aria-describedby="{!$Component.cbxDHAAHelp}" styleClass="slds-checkbox" />
+                        <apex:inputCheckbox value="{!stgService.stgCon.Household_Account_Addresses_Disabled__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxDHAAO" html-aria-describedby="{!$Component.cbxDHAAHelp}" styleClass="slds-checkbox" />
                         <apex:outputPanel id="cbxDHAAHelp" layout="block">
                             <apex:outputText value="{!$Label.stgHelpDisableHHAccountAddr}" styleClass="slds-form-element__help" />
                         </apex:outputPanel>
@@ -78,7 +78,7 @@
                     <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Organizational_Account_Addresses_Enabled__c.Label}" for="cbxOAAE" styleClass="slds-form-element__label" />
                     <div class="slds-form-element__control">
                         <apex:inputCheckbox value="{!stgService.stgCon.Organizational_Account_Addresses_Enabled__c}" rendered="{!isEditMode}" id="cbxOAAE" html-aria-describedby="{!$Component.cbxOAAEHelp}" styleClass="slds-checkbox" />
-                        <apex:inputCheckbox value="{!stgService.stgCon.Organizational_Account_Addresses_Enabled__c}" rendered="{!isReadOnlyMode}" disabled="{!isReadOnlyMode}" id="cbxOAAEO" html-aria-describedby="{!$Component.cbxOAAEHelp}" styleClass="slds-checkbox"/>
+                        <apex:inputCheckbox value="{!stgService.stgCon.Organizational_Account_Addresses_Enabled__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxOAAEO" html-aria-describedby="{!$Component.cbxOAAEHelp}" styleClass="slds-checkbox"/>
                         <apex:outputPanel id="cbxOAAEHelp" layout="block">
                             <apex:outputText value="{!$Label.stgHelpOrgAccountAddressMgmt}" styleClass="slds-form-element__help" />
                         </apex:outputPanel>
@@ -88,7 +88,7 @@
                     <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Simple_Address_Change_Treated_as_Update__c.Label}" for="cbxSACT" styleClass="slds-form-element__label" />
                     <div class="slds-form-element__control">
                         <apex:inputCheckbox value="{!stgService.stgCon.Simple_Address_Change_Treated_as_Update__c}" rendered="{!isEditMode}" id="cbxSACT" html-aria-describedby="{!$Component.cbxSACTHelp}" styleClass="slds-checkbox" />
-                        <apex:inputCheckbox value="{!stgService.stgCon.Simple_Address_Change_Treated_as_Update__c}" rendered="{!isReadOnlyMode}" disabled="{!isReadOnlyMode}" id="cbxSACTO" html-aria-describedby="{!$Component.cbxSACTHelp}" styleClass="slds-checkbox" />
+                        <apex:inputCheckbox value="{!stgService.stgCon.Simple_Address_Change_Treated_as_Update__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxSACTO" html-aria-describedby="{!$Component.cbxSACTHelp}" styleClass="slds-checkbox" />
                         <apex:outputPanel id="cbxSACTHelp" layout="block">
                             <apex:outputText value="{!$Label.stgHelpSimpleAddrChangeIsUpdate}" styleClass="slds-form-element__help" />
                         </apex:outputPanel>
@@ -117,7 +117,7 @@
                                         styleClass="slds-form-element__label" />
                     <div class="slds-form-element__control">
                         <apex:inputCheckbox value="{!addrVerifsettings.Enable_Automatic_Verification__c}" rendered="{!isEditMode}" id="Enable_Automatic_Verification__c" html-aria-describedby="{!$Component.Enable_Automatic_Verification__cHelp}" styleClass="slds-checkbox" />
-                        <apex:inputCheckbox value="{!addrVerifsettings.Enable_Automatic_Verification__c}" rendered="{!isReadOnlyMode}" disabled="{!isReadOnlyMode}" id="Enable_Automatic_Verification__cO" html-aria-describedby="{!$Component.Enable_Automatic_Verification__cHelp}" styleClass="slds-checkbox" />
+                        <apex:inputCheckbox value="{!addrVerifsettings.Enable_Automatic_Verification__c}" rendered="{!isReadOnlyMode}" disabled="true" id="Enable_Automatic_Verification__cO" html-aria-describedby="{!$Component.Enable_Automatic_Verification__cHelp}" styleClass="slds-checkbox" />
                         <apex:outputPanel id="Enable_Automatic_Verification__cHelp" layout="block">
                             <apex:outputText value="{!$ObjectType.Addr_Verification_Settings__c.fields.Enable_Automatic_Verification__c.inlineHelpText}" styleClass="slds-form-element__help" />
                         </apex:outputPanel>
@@ -159,7 +159,7 @@
                                     styleClass="slds-form-element__label"/>
                     <div class="slds-form-element__control">
                         <apex:inputCheckbox value="{!addrVerifsettings.Reject_Ambiguous_Addresses__c}" rendered="{!isEditMode}" id="iReject_Ambiguous_Addresses__c" html-aria-describedby="{!$Component.iReject_Ambiguous_Addresses__cHelp}" styleClass="slds-checkbox"/>
-                        <apex:inputCheckbox value="{!addrVerifsettings.Reject_Ambiguous_Addresses__c}" rendered="{!isReadOnlyMode}" disabled="{!isReadOnlyMode}" id="iReject_Ambiguous_Addresses__cO" html-aria-describedby="{!$Component.iReject_Ambiguous_Addresses__cHelp}" styleClass="slds-checkbox"/>
+                        <apex:inputCheckbox value="{!addrVerifsettings.Reject_Ambiguous_Addresses__c}" rendered="{!isReadOnlyMode}" disabled="true" id="iReject_Ambiguous_Addresses__cO" html-aria-describedby="{!$Component.iReject_Ambiguous_Addresses__cHelp}" styleClass="slds-checkbox"/>
                         <apex:outputPanel id="iReject_Ambiguous_Addresses__cHelp" layout="block">
                             <apex:outputText value="{!$ObjectType.Addr_Verification_Settings__c.fields.Reject_Ambiguous_Addresses__c.inlineHelpText}" styleClass="slds-form-element__help" />
                         </apex:outputPanel>
