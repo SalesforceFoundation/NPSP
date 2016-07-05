@@ -699,7 +699,7 @@ public without sharing class RLLP_OppRollup {
     
     /*******************************************************************************************************
     * @description Runs opportunity soft credit rollups for contacts.
-    * @param cmap A map of contact IDs to contacts.
+    * @param list The list of contacts to rollup to.
     * @return void This method does updates directly and returns nothing.
     ********************************************************************************************************/
     public void rollupSoftCreditsWithPartialSupport(list<Contact> listCon) {
