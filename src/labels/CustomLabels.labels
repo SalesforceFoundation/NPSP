@@ -1436,7 +1436,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>The details displayed when the duplicate contact roles health check fails</shortDescription>
-        <value>There were opportunities with duplicate contact roles detected in you org.</value>
+        <value>There were opportunities with duplicate contact roles detected in your org.</value>
     </labels>
     <labels>
         <fullName>healthDetailsGenderField</fullName>
