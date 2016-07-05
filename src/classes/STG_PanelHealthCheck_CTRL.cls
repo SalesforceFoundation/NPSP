@@ -682,23 +682,38 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
      */
      public void verifyNoDuplicateContactRoles() {
         try {
+            Set<String> softCreditRoles = RLLP_OppRollup_UTIL.softCreditRoles;
+
             List<AggregateResult> results = [
                 SELECT
                     COUNT(Id),
                     OpportunityId,
                     ContactId
                 FROM OpportunityContactRole
+                WHERE Opportunity.IsWon = true
+                AND Role IN :softCreditRoles
                 GROUP BY OpportunityId, ContactId
                 HAVING Count(Id) > 1
                 LIMIT 1
             ];
+
+            List<String> quotedSoftCreditRoles = new List<String>();
+
+            for (String role : softCreditRoles) {
+                quotedSoftCreditRoles.add('\'' + String.escapeSingleQuotes(role) + '\'');
+            }
 
             if (results.size() > 0) {
                 createDR(
                     Label.healthLabelDuplicateContactRoles,
                     statusWarning,
                     Label.healthDetailsDuplicateContactRoles,
-                    Label.healthSolutionDuplicateContactRoles
+                    String.format(
+                        Label.healthSolutionDuplicateContactRoles,
+                        new List<String>{
+                            String.join(quotedSoftCreditRoles, ', ')
+                        }
+                    )
                 );
             } else {
                 createDR(

@@ -1436,7 +1436,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>The details displayed when the duplicate contact roles health check fails</shortDescription>
-        <value>There were opportunities with duplicate contact roles detected in your org.</value>
+        <value>Health Check found Opportunities with duplicate Contacts and rollup values.</value>
     </labels>
     <labels>
         <fullName>healthDetailsGenderField</fullName>
@@ -1772,7 +1772,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Label for Duplicate Contact Role health check</shortDescription>
-        <value>Duplicate Contact Roles</value>
+        <value>Duplicate Contacts and Rollup Values</value>
     </labels>
     <labels>
         <fullName>healthLabelErrorRecipientValid</fullName>
@@ -1844,7 +1844,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>The message displayed when the duplicate contact roles health check passes</shortDescription>
-        <value>There were no opportunities with duplicate contact roles detected.</value>
+        <value>Health Check did not find any Opportunities with duplicate Contacts or rollup values.</value>
     </labels>
     <labels>
         <fullName>healthLabelNoMissingOppPayments</fullName>
@@ -2083,7 +2083,9 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>The recommended solution for when the duplicate contact roles health check fails</shortDescription>
-        <value>You should expect these contacts to have different roll-up values than before, since duplicate contacts are no longer counted twice.  To discover duplicate opportunities and contacts in your org, you can run the following SOQL query in the Developer Console: &apos;SELECT Count(Id), OpportunityId, Opportunity.Name OpportunityName, ContactId, Contact.Name ContactName FROM OpportunityContactRole GROUP BY OpportunityId, Opportunity.Name, ContactId, Contact.Name HAVING Count(Id) &gt; 1&apos;</value>
+        <value>In the past, the NPSP double-counted soft credit rollup values for Contacts that were twice associated with an Opportunity through two different Opportunity Contact Roles. The NPSP now only counts these rollup values once, regardless of how many associations a Contact has on an Opportunity.&lt;br/&gt;
+&lt;br/&gt;
+If you want to know which Opportunities would have previously included this double rollup value counting, run this SOQL query in the Developer Console: &apos;&apos;SELECT Count(Id), OpportunityId, Opportunity.Name OpportunityName, ContactId, Contact.Name ContactName FROM OpportunityContactRole WHERE Opportunity.IsWon = true AND Role IN ({0}) GROUP BY OpportunityId, Opportunity.Name, ContactId, Contact.Name HAVING Count(Id) &gt; 1&apos;&apos;</value>
     </labels>
     <labels>
         <fullName>healthSolutionEditSetting</fullName>
