@@ -742,6 +742,10 @@
         <name>healthDetailsDuplicateAcctRT</name>
     </customLabels>
     <customLabels>
+        <label><!-- The details displayed when the duplicate contact roles health check fails --></label>
+        <name>healthDetailsDuplicateContactRoles</name>
+    </customLabels>
+    <customLabels>
         <label>El campo de género {0} no existe en el Contacto.</label>
         <name>healthDetailsGenderField</name>
     </customLabels>
@@ -906,6 +910,10 @@
         <name>healthLabelContactData</name>
     </customLabels>
     <customLabels>
+        <label><!-- Label for Duplicate Contact Role health check --></label>
+        <name>healthLabelDuplicateContactRoles</name>
+    </customLabels>
+    <customLabels>
         <label>Receptor de notificaciones de errores válido.</label>
         <name>healthLabelErrorRecipientValid</name>
     </customLabels>
@@ -936,6 +944,10 @@
     <customLabels>
         <label>Corrió por última vez: {0}</label>
         <name>healthLabelLastRun</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- The message displayed when the duplicate contact roles health check passes --></label>
+        <name>healthLabelNoDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
         <label>Todas las Oportunidades con Pagos tienen los Pagos esperados.</label>
@@ -1052,6 +1064,10 @@
     <customLabels>
         <label>Vea estos contactos en el informe &lt;b&gt;Contacts without Accounts&lt;/b&gt; en la carpeta de informes NPSP Health Check.</label>
         <name>healthSolutionContactData</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- The recommended solution for when the duplicate contact roles health check fails --></label>
+        <name>healthSolutionDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
         <label>En la pestaña Configuración del NPSP, haga clic en {0} | {1}, y elimine el registro inválido Auto creación de relaciones.</label>
