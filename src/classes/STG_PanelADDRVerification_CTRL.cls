@@ -137,9 +137,8 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     
     /*******************************************************************************************************
     * @description Sets the value of those fields that change according to the selected address verification service. 
-    * @return PageReference The page to redirect to. None, in this case.
     */
-    public PageReference initDynamicFields() {
+    public void initDynamicFields() {
         addrVerifSettings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
         String validator = addrVerifSettings.Class__c;
         clearDynamicFields();
@@ -153,10 +152,10 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
                 }
             }
         }
-        return null;
     }
     
     private void clearDynamicFields() {
+        validatorSelection = '';
         batchVerifEnabled = false;
         validatorBatchHelpText = '';
     }
@@ -278,6 +277,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
         apiSettingsSaveMessage = null;
         apiTestEntry = null;
         apiTestResult = null;
+        initDynamicFields();
         return super.cancelEdit();
     }
 
