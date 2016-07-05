@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2015
-* @group Opportunities
+* @group Opportunity
 * @description Trigger Handler on Opportunity for multi currency management 
 */
 public with sharing class PSC_Opportunity_TDTM extends TDTM_Runnable {
