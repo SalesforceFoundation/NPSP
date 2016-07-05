@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2015
-* @group Opportunities
+* @group Opportunity
 * @description tests for the Partial Soft Credits trigger handler
 */
 
