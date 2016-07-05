@@ -128,7 +128,7 @@
                                 </li>
                                 <li class="slds-list__item slds-text-heading--label">
                                     <a class="slds-type-focus" href="/{!parentId}">
-                                        {!objectName}<apex:outputText rendered="{!parentAmount<>0}" value=" - {0,number,currency}"><apex:param value="{!parentAmount}"/></apex:outputText>
+                                        {!objectName}<apex:outputText rendered="{!parentAmount<>0}"><apex:outputText value=" - {!currencySymbol}{!IF(LEN(currencySymbol) == 3, ' ', '')}{0,number,#.##}"><apex:param value="{!parentAmount}"/></apex:outputText></apex:outputText>
                                     </a>
                                 </li>
                             </ol>
