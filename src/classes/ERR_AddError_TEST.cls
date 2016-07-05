@@ -27,12 +27,19 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
+/**
+* @author Salesforce.org
+* @date 2014
+* @description The  tests in this class confirm that error messages are associated with the right records. 
+* We cannot directly test the Helper class since there is no "getError" method, but we indirectly test 
+* it here since we are following the same design.
+* @group ErrorHandling
+*/
 @isTest
-/*** The  tests in this class confirm that error messages are associated with the right records. 
-     We cannot directly test the Helper class since there is no "getError" method, but we indirectly test 
-     it here since we are following the same design. ***/
 public with sharing class ERR_AddError_TEST {
-
+    /*******************************************************************************************************
+    * @description test error handling on a simple dml operation, single error
+    */
     public testmethod static void simpleDml() {
         Account acc1 = new Account(Name='testAcc1');
         Account acc2 = new Account(Name='testAcc2');
@@ -56,7 +63,9 @@ public with sharing class ERR_AddError_TEST {
             System.assertEquals(1, failedRecordIndex);
         }
     }
-    
+    /*******************************************************************************************************
+    * @description test error handling on a simple dml operation, multiple errors
+    */
     public testmethod static void simpleDmlMultipleErrors() {
         Account acc1 = new Account(Name='testAcc1');
         Account acc2 = new Account(Name='testAcc2');
@@ -85,7 +94,9 @@ public with sharing class ERR_AddError_TEST {
             System.assertEquals(3, failedRecordIndex2);
         }
     }
-    
+    /*******************************************************************************************************
+    * @description test error handling on a database dml operation, verify success and failure results
+    */
     public testmethod static void databaseDml() {
     	Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings();
     	// Delete the error settings if they are from the database
