@@ -44,7 +44,8 @@
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Add_Campaign_to_All_Opportunites__c.Label}" for="cbxACAO" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <apex:inputCheckbox value="{!stgService.stgRD.npe03__Add_Campaign_to_All_Opportunites__c}" disabled="{!isReadOnlyMode}" id="cbxACAO" html-aria-describedby="{!$Component.cbxACAOHelp}" styleClass="slds-checkbox"/>
+                    <apex:inputCheckbox value="{!stgService.stgRD.npe03__Add_Campaign_to_All_Opportunites__c}"  rendered="{!isEditMode}" id="cbxACAO" html-aria-describedby="{!$Component.cbxACAOHelp}" styleClass="slds-checkbox"/>
+                    <apex:inputCheckbox value="{!stgService.stgRD.npe03__Add_Campaign_to_All_Opportunites__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxACAOO" html-aria-describedby="{!$Component.cbxACAOHelp}" styleClass="slds-checkbox"/>
                     <apex:outputPanel id="cbxACAOHelp" layout="block">
                         <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRDAddCampaign}" />
                     </apex:outputPanel>
@@ -65,7 +66,8 @@
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Disable_Nightly_Job__c.Label}" for="cbxDNJ" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <apex:inputCheckbox value="{!isRDScheduleDisabled}" disabled="{!isReadOnlyMode}" id="cbxDNJ" html-aria-describedby="{!$Component.cbxDNJHelp}" styleClass="slds-checkbox" />
+                    <apex:inputCheckbox value="{!isRDScheduleDisabled}" rendered="{!isEditMode}" id="cbxDNJ" html-aria-describedby="{!$Component.cbxDNJHelp}" styleClass="slds-checkbox" />
+                    <apex:inputCheckbox value="{!isRDScheduleDisabled}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxDNJO" html-aria-describedby="{!$Component.cbxDNJHelp}" styleClass="slds-checkbox" />
                     <apex:outputPanel id="cbxDNJHelp" layout="block">
                         <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRDDisableScheduling}" />
                     </apex:outputPanel>
