@@ -42,14 +42,25 @@ public with sharing class RLLP_OppRollup_TEST2 {
     
     static String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
     
+    /*********************************************************************************************************
+    * @description Runs testOpportunityUtilityErrorHandling test method for the One to One account processor.
+    */
     static testMethod void testOpportunityUtilityErrorHandlingOne2One() {
     	if (strTestOnly != '*' && strTestOnly != 'testOpportunityUtilityErrorHandlingOne2One') return;
         testOpportunityUtilityErrorHandling(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
+    /*********************************************************************************************************
+    * @description Runs testOpportunityUtilityErrorHandling test method for the household account processor.
+    */
     static testMethod void testOpportunityUtilityErrorHandlingHHAccount() {
     	if (strTestOnly != '*' && strTestOnly != 'testOpportunityUtilityErrorHandlingHHAccount') return;
         testOpportunityUtilityErrorHandling(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
+    /*********************************************************************************************************
+    * @description Creates a contact, inserts an opportunity missing required close date, and verifies no
+    * opportunities were inserted.
+    * @param strProcessor The account processor type.
+    */
     static void testOpportunityUtilityErrorHandling(string strProcessor) {
     	
     	Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings();
@@ -107,15 +118,25 @@ public with sharing class RLLP_OppRollup_TEST2 {
         system.assert(ore.Record_URL__c.endsWith(TestCons[0].id));
         system.assertEquals('Opportunity', ore.Object_Type__c);*/
     }
-    
+    /*********************************************************************************************************
+    * @description Runs testGivingRollupTooManyOpps test method for the One to One account processor.
+    */
     static testMethod void testGivingRollupTooManyOppsOne2One(){
         if (strTestOnly != '*' && strTestOnly != 'testGivingRollupTooManyOppsOne2One') return;
         testGivingRollupTooManyOpps(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
+    /*********************************************************************************************************
+    * @description Runs testGivingRollupTooManyOpps test method for the household account processor.
+    */
     static testMethod void testGivingRollupTooManyOppsHHAccount(){
         if (strTestOnly != '*' && strTestOnly != 'testGivingRollupTooManyOppsHHAccount') return;
         testGivingRollupTooManyOpps(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    }    
+    }
+    /*********************************************************************************************************
+    * @description Creates a contact, inserts hundreds of opportunities, and verifies rollup field from opportunity 
+    * trigger for a given contact matches total Opportunity Amount.
+    * @param strProcessor The account processor type.
+    */
     static void testGivingRollupTooManyOpps (string strProcessor) {
 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -165,15 +186,25 @@ public with sharing class RLLP_OppRollup_TEST2 {
 
             System.AssertEquals ( 45000 , UpdatedCon.npo02__TotalOppAmount__c );
     } 
-
+    /*********************************************************************************************************
+    * @description Runs testHouseholdStats test method for the One to One account processor.
+    */
     static testMethod void testHouseholdStatsOne2One(){
         if (strTestOnly != '*' && strTestOnly != 'testHouseholdStatsOne2One') return;
         testHouseholdStats(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
+    /*********************************************************************************************************
+    * @description Runs testHouseholdStats test method for the household account processor.
+    */
     static testMethod void testHouseholdStatsHHAccount(){
         if (strTestOnly != '*' && strTestOnly != 'testHouseholdStatsHHAccount') return;
         testHouseholdStats(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
+    /*********************************************************************************************************
+    * @description Creates contacts, inserts a few opportunities, and verifies rollup fields from opportunity 
+    * trigger for a given contact.
+    * @param strProcessor The account processor type.
+    */
     static void testHouseholdStats (string strProcessor) {
 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -254,15 +285,25 @@ public with sharing class RLLP_OppRollup_TEST2 {
             System.assertEquals (string.valueof(datClose.addYears(-2).year()), c.npo02__household__r.npo02__Best_Gift_Year__c);
             System.assertEquals (200, c.npo02__household__r.npo02__Best_Gift_Year_Total__c);
     }
-
+    /*********************************************************************************************************
+    * @description Runs testUserDefinedRollup test method for the One to One account processor.
+    */
     static testMethod void testUserDefinedRollupOne2One(){
         if (strTestOnly != '*' && strTestOnly != 'testUserDefinedRollupOne2One') return;
         testUserDefinedRollup(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
+    /*********************************************************************************************************
+    * @description Runs testUserDefinedRollup test method for the household account processor.
+    */
     static testMethod void testUserDefinedRollupHHAccount(){
         if (strTestOnly != '*' && strTestOnly != 'testUserDefinedRollupHHAccount') return;
         testUserDefinedRollup(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
+    /*********************************************************************************************************
+    * @description Clears and creates User Rollup Fields Settings, creates a contact, inserts an opportunity,
+    * and verifies rollup fields from opportunity trigger for a given contact.
+    * @param strProcessor The account processor type.
+    */
     static void testUserDefinedRollup(string strProcessor) {
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -341,15 +382,24 @@ public with sharing class RLLP_OppRollup_TEST2 {
             system.assertEquals (100,ct.npo02__OppAmountThisYearHH__c);
         system.assertEquals(system.today().addDays(-2), ct.BirthDate);
     }
-
+    /*********************************************************************************************************
+    * @description Runs testMultiCurrencyMethods test method for the One to One account processor.
+    */
     static testMethod void testMultiCurrencyMethodsOne2One(){
         if (strTestOnly != '*' && strTestOnly != 'testMultiCurrencyMethodsOne2One') return;
         testMultiCurrencyMethods(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
+    /*********************************************************************************************************
+    * @description Runs testMultiCurrencyMethods test method for the household account processor.
+    */
     static testMethod void testMultiCurrencyMethodsHHAccount(){
         if (strTestOnly != '*' && strTestOnly != 'testMultiCurrencyMethodsHHAccount') return;
         testMultiCurrencyMethods(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
+    /*********************************************************************************************************
+    * @description Checks currency conversion, creates a contact, inserts an opportunity.
+    * @param strProcessor The account processor type.
+    */
     static void testMultiCurrencyMethods(string strProcessor){
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
@@ -390,15 +440,25 @@ public with sharing class RLLP_OppRollup_TEST2 {
 
         // UNDONE: THERE ARE NO ASSERTS!!!!
     }
-
+    /*********************************************************************************************************
+    * @description Runs testRollupAlls test method for the One to One account processor.
+    */
     static testMethod void testRollupAllsOne2One(){
         if (strTestOnly != '*' && strTestOnly != 'testRollupAllsOne2One') return;
         testRollupAlls(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
+    /*********************************************************************************************************
+    * @description Runs testRollupAlls test method for the household account processor.
+    */
     static testMethod void testRollupAllsHHAccount(){
         if (strTestOnly != '*' && strTestOnly != 'testRollupAllsHHAccount') return;
         testRollupAlls(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
+    /*********************************************************************************************************
+    * @description Creates instance of RLLP_OppRollup and calls rollupAllContacts and rollupAllAccounts
+    * methods. Calls RLLP_OppRollup_Util isMultiCurrency, ConvertFromCorporate and ConvertCurrency methods
+    * @param strProcessor The account processor type.
+    */
     static void testRollupAlls(string strProcessor){
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
@@ -415,17 +475,27 @@ public with sharing class RLLP_OppRollup_TEST2 {
         decimal z = RLLP_OppRollup_UTIL.ConvertCurrency('USD', 'USD', 6565.54);
         test.stopTest();
 
-        // UNDONE: THERE ARE NO ASSERTRS!!!!
+        // UNDONE: THERE ARE NO ASSERTS!!!!
     }
-    
+    /*********************************************************************************************************
+    * @description Runs testFiscalYearandCustomNDay test method for the One to One account processor.
+    */
     static testMethod void testFiscalYearandCustomNDayOne2One(){
         if (strTestOnly != '*' && strTestOnly != 'testFiscalYearandCustomNDayOne2One') return;
         testFiscalYearandCustomNDay(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
+    /*********************************************************************************************************
+    * @description Runs testFiscalYearandCustomNDay test method for the household account processor.
+    */
     static testMethod void testFiscalYearandCustomNDayHHAccount(){
         if (strTestOnly != '*' && strTestOnly != 'testFiscalYearandCustomNDayHHAccount') return;
         testFiscalYearandCustomNDay(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    }    
+    }
+    /*********************************************************************************************************
+    * @description Creates opportunities with Fiscal Year for Rollups enabled and provides the N Day Value then
+    * verifies rollup fields from opportunity trigger for the contacts.
+    * @param strProcessor The account processor type.
+    */
     static void testFiscalYearandCustomNDay (string strProcessor) {
 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -480,16 +550,26 @@ public with sharing class RLLP_OppRollup_TEST2 {
 
             system.assertEquals(100, [select npo02__OppAmountLastNDays__c from Contact where id = :TestCons[0].id].npo02__OppAmountLastNDays__c);
     }
-
+    /*********************************************************************************************************
+    * @description Runs testSoftCredits test method for the One to One account processor.
+    */
     static testMethod void testSoftCreditsOne2One(){
         if (strTestOnly != '*' && strTestOnly != 'testSoftCreditsOne2One') return;
         testSoftCredits(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
+    /*********************************************************************************************************
+    * @description Runs testSoftCredits test method for the household account processor.
+    */
     static testMethod void testSoftCreditsHHAccount(){
         if (strTestOnly != '*' && strTestOnly != 'testSoftCreditsHHAccount') return;
         testSoftCredits(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
-   static void testSoftCredits(string strProcessor) {
+    /*********************************************************************************************************
+    * @description Creates opportunities with Soft Credit Opportunity Contract Roles and verifies rollup
+    * fields from opportunity trigger for the contacts.
+    * @param strProcessor The account processor type.
+    */
+    static void testSoftCredits(string strProcessor) {
 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
@@ -567,16 +647,27 @@ public with sharing class RLLP_OppRollup_TEST2 {
         create Organizational Opportunities, with Soft Credit OCR's
     verify:
         soft credits correctly rollup to their appropriate contacts
-    **********************************************************************************************************/            
+    **********************************************************************************************************/ 
+    /*********************************************************************************************************
+    * @description Runs testOrgSoftCredits test method for the One to One account processor.
+    */           
     static testMethod void testOrgSoftCreditsOne2One(){
         if (strTestOnly != '*' && strTestOnly != 'testOrgSoftCreditsOne2One') return;
         testOrgSoftCredits(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
+    /*********************************************************************************************************
+    * @description Runs testOrgSoftCredits test method for the household account processor.
+    */
     static testMethod void testOrgSoftCreditsHHAccount(){
         if (strTestOnly != '*' && strTestOnly != 'testOrgSoftCreditsHHAccount') return;
         testOrgSoftCredits(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
-   static void testOrgSoftCredits(string strProcessor) {
+    /*********************************************************************************************************
+    * @description Creates organizational opportunities with Soft Credit Opportunity Contact Roles and
+    * verifies rollup fields from opportunity trigger for the contacts.
+    * @param strProcessor The account processor type.
+    */
+    static void testOrgSoftCredits(string strProcessor) {
 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
@@ -646,15 +737,25 @@ public with sharing class RLLP_OppRollup_TEST2 {
                 system.assertEquals(0, con.npo02__Soft_Credit_Two_Years_Ago__c);
             }
     }
-    
+    /*********************************************************************************************************
+    * @description Runs testFutureMethods test method for the One to One account processor.
+    */
     static testMethod void testFutureMethodsOne2One(){
         if (strTestOnly != '*' && strTestOnly != 'testFutureMethodsOne2One') return;
         testFutureMethods(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
+    /*********************************************************************************************************
+    * @description Runs testFutureMethods test method for the household account processor.
+    */
     static testMethod void testFutureMethodsHHAccount(){
         if (strTestOnly != '*' && strTestOnly != 'testFutureMethodsHHAccount') return;
         testFutureMethods(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    }    
+    }
+    /*********************************************************************************************************
+    * @description Creates contacts and opportunities and calls the rollupContactsFuture and
+    * rollupHoseholdsFuture methods.
+    * @param strProcessor The account processor type.
+    */
     static void testFutureMethods(string strProcessor){
 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -702,16 +803,18 @@ public with sharing class RLLP_OppRollup_TEST2 {
         RLLP_OppRollup.rollupHouseholdsFuture(HHid);
         Test.stopTest();
     }
-
+    /*********************************************************************************************************
+    * @description Verifies the RLLP_OppRollup_UTIL getCurrentFY() is not null
+    */
     static testMethod void testFYUtility(){
         if (strTestOnly != '*' && strTestOnly != 'testFYUtility') return;
         integer fy = RLLP_OppRollup_UTIL.getCurrentFY();
         system.assert(fy != null);
     }
-
-    /**
-     * @description For a given date, test to see if fiscal year is correctly calculated based on all combinations of org fiscal year settings
-     */
+    /*********************************************************************************************************
+    * @description For a given date, test to see if fiscal year is correctly calculated based on all
+    * combinations of org fiscal year settings
+    */
     static testMethod void testGetFiscalYearForDate() {
         if (strTestOnly != '*' && strTestOnly != 'testGetFiscalYearForDate') return;
 
@@ -789,16 +892,25 @@ public with sharing class RLLP_OppRollup_TEST2 {
         // Target date is in fiscal year December 2013 through November 2014, year comes from end
         System.assertEquals(2014, RLLP_OppRollup_UTIL.getFiscalYearForDate(targetDate, 12, false));
     }
-
+    /*********************************************************************************************************
+    * @description Runs testUDRChangeBehavior test method for the One to One account processor.
+    */
     static testMethod void testUDRChangeBehaviorOne2One(){
         if (strTestOnly != '*' && strTestOnly != 'testUDRChangeBehaviorOne2One') return;
         testUDRChangeBehavior(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
+    /*********************************************************************************************************
+    * @description Creates User Defined Rollups, a Contact and an Opportunity, then updates the Opportunity
+    * Total Quantity and verifies rollup fields from opportunity trigger for the contacts reflects the update.
+    */
     static testMethod void testUDRChangeBehaviorHHAccount(){
         if (strTestOnly != '*' && strTestOnly != 'testUDRChangeBehaviorHHAccount') return;
         testUDRChangeBehavior(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
-    //a change to a UDR value should trigger a rollup
+    /*********************************************************************************************************
+    * @description Creates User Defined Rollups, a Contact and an Opportunity, then updates the Opportunity
+    * Total Quantity and verifies rollup fields from opportunity trigger for the contacts reflects the update.
+    */
     static void testUDRChangeBehavior(string strProcessor){
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
@@ -886,7 +998,10 @@ public with sharing class RLLP_OppRollup_TEST2 {
         system.assertEquals (100,ct.npo02__TotalOppAmount__c);
         system.assertEquals(4, ct.npo02__Household__r.npo02__Household_ID__c);
     }
-
+    /*********************************************************************************************************
+    * @description Inserts a new RLLP_OPPRollup_SCHED and verifes the schedule set matches CrontTrigger 
+    * CronExpression
+    */
     static testmethod void testOppRollupSchedule(){ 
         if (strTestOnly != '*' && strTestOnly != 'testOppRollupSchedule') return;
         Test.startTest(); 
