@@ -30,6 +30,7 @@
 /**
  * @author Tomas "Bobby" Hnizdil
  * @date 8/21/2013
+ * @group Opportunity
  * @description Controller for ManageSoftCredits VF page allowing users to add, remove and edit full and soft credits on Opportunity
  * This code has been contributed by KELL Partners, and enhanced by Salesforce.org
  */

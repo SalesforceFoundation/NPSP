@@ -27,6 +27,12 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
+/**
+* @author Salesforce.org
+* @date 2013
+* @description test trigger handler on Contact to throw an exception for error handling tests
+* @group ErrorHandling
+*/
 @isTest
 public with sharing class ERR_ParentAccountUpdater2_TEST extends TDTM_Runnable {
 	
