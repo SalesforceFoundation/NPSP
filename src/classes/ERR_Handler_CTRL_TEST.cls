@@ -27,8 +27,17 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
-public with sharing class ERR_Handler_CTRL_TEST {
 
+/**
+* @author Salesforce.org
+* @date 2014
+* @description test class for error handler controller
+* @group ErrorHandling
+*/
+public with sharing class ERR_Handler_CTRL_TEST {
+    /*******************************************************************************************************
+    * @description test error handling without a save point
+    */
     public pageReference withoutManualRollback() {     
         
         Contact contact1 = new Contact(FirstName = 'test', LastName = 'testerson1', Title = 'VP1');
@@ -45,7 +54,9 @@ public with sharing class ERR_Handler_CTRL_TEST {
         
         return null;
     }
-    
+    /*******************************************************************************************************
+    * @description test error handling with a save point
+    */
     public pageReference withManualRollback() {
         Savepoint sp = Database.setSavepoint();
         try {       
