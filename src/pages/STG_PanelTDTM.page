@@ -95,9 +95,9 @@
                         <td class="slds-cell-wrap"><div class="slds-truncate slds-text-body--small">{!th.Class__c}</div></td>
                         <td class="slds-cell-wrap"><div class="slds-text-body--small">{!th.Load_Order__c}</div></td>
                         <td class="slds-cell-wrap"><div class="slds-text-body--small">{!th.Trigger_Action__c}</div></td>
-                        <td class="slds-cell-wrap"><div class="slds-text-body--small"><apex:outputField value="{!th.Active__c}"/></div></td>
-                        <td class="slds-cell-wrap"><div class="slds-text-body--small"><apex:outputField value="{!th.Asynchronous__c}"/></div></td>
-                        <td class="slds-cell-wrap"><div class="slds-text-body--small"><apex:outputField value="{!th.User_Managed__c}"/></div></td>
+                        <td class="slds-cell-wrap"><div class="slds-text-body--small"><apex:inputCheckbox value="{!th.Active__c}" disabled="true"/></div></td>
+                        <td class="slds-cell-wrap"><div class="slds-text-body--small"><apex:inputCheckbox value="{!th.Asynchronous__c}" disabled="true"/></div></td>
+                        <td class="slds-cell-wrap"><div class="slds-text-body--small"><apex:inputCheckbox value="{!th.User_Managed__c}" disabled="true"/></div></td>
                     </tr>
                 </apex:repeat>
            </tbody>
