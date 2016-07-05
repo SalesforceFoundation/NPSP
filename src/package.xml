@@ -850,6 +850,7 @@
         <members>healthDetailsBadReportId</members>
         <members>healthDetailsContactData</members>
         <members>healthDetailsDuplicateAcctRT</members>
+        <members>healthDetailsDuplicateContactRoles</members>
         <members>healthDetailsGenderField</members>
         <members>healthDetailsHHAccountModel</members>
         <members>healthDetailsHHActNoContacts</members>
@@ -891,6 +892,7 @@
         <members>healthLabelAllTestsPassed</members>
         <members>healthLabelAutoRelValid</members>
         <members>healthLabelContactData</members>
+        <members>healthLabelDuplicateContactRoles</members>
         <members>healthLabelErrorRecipientValid</members>
         <members>healthLabelFailed</members>
         <members>healthLabelFiscalYearsValid</members>
@@ -899,6 +901,7 @@
         <members>healthLabelHHObjData</members>
         <members>healthLabelIntro</members>
         <members>healthLabelLastRun</members>
+        <members>healthLabelNoDuplicateContactRoles</members>
         <members>healthLabelNoMissingOppPayments</members>
         <members>healthLabelNone</members>
         <members>healthLabelOCRCheck</members>
@@ -928,6 +931,7 @@
         <members>healthSolutionAutoRelInvalidLookupField</members>
         <members>healthSolutionBadRDField</members>
         <members>healthSolutionContactData</members>
+        <members>healthSolutionDuplicateContactRoles</members>
         <members>healthSolutionEditSetting</members>
         <members>healthSolutionHHAccNoContacts</members>
         <members>healthSolutionHHObjNoContacts</members>
