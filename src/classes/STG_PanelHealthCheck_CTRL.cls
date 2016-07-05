@@ -182,6 +182,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         verifyOppContactRoles();
         verifyTriggerHandlers();
         verifyNoMissingOppPayments();
+        verifyNoDuplicateContactRoles();
         
         DateTime dtEnd = system.now();
         double msec = dtEnd.getTime() - dtStart.getTime();
@@ -673,5 +674,62 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         }    
         
     }
-    
+
+    /**
+     * @description Detect if any opportunities exists where the same contact
+     * is associated with that opportunity multiple times through multiple
+     * opportunity contact role records.
+     */
+     public void verifyNoDuplicateContactRoles() {
+        try {
+            Set<String> softCreditRoles = RLLP_OppRollup_UTIL.softCreditRoles;
+
+            List<AggregateResult> results = [
+                SELECT
+                    COUNT(Id),
+                    OpportunityId,
+                    ContactId
+                FROM OpportunityContactRole
+                WHERE Opportunity.IsWon = true
+                AND Role IN :softCreditRoles
+                GROUP BY OpportunityId, ContactId
+                HAVING Count(Id) > 1
+                LIMIT 1
+            ];
+
+            List<String> quotedSoftCreditRoles = new List<String>();
+
+            for (String role : softCreditRoles) {
+                quotedSoftCreditRoles.add('\'' + String.escapeSingleQuotes(role) + '\'');
+            }
+
+            if (results.size() > 0) {
+                createDR(
+                    Label.healthLabelDuplicateContactRoles,
+                    statusWarning,
+                    Label.healthDetailsDuplicateContactRoles,
+                    String.format(
+                        Label.healthSolutionDuplicateContactRoles,
+                        new List<String>{
+                            String.join(quotedSoftCreditRoles, ', ')
+                        }
+                    )
+                );
+            } else {
+                createDR(
+                    Label.healthLabelDuplicateContactRoles,
+                    statusSuccess,
+                    null,
+                    label.healthLabelNoDuplicateContactRoles
+                );
+            }
+        } catch (Exception e) {
+            createDR(
+                Label.healthLabelDuplicateContactRoles,
+                statusError,
+                e.getMessage(),
+                null
+            );
+        }
+     }
 }
