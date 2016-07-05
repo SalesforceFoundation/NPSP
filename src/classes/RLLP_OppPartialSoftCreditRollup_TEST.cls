@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2015
+* @group Opportunity
 * @description test Soft Credit Rollups, both full and partial
 */
 
