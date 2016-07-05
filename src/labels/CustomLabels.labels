@@ -1296,6 +1296,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Time:</value>
     </labels>
     <labels>
+        <fullName>btnRemove</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>button label on the Remove Contact popup</shortDescription>
+        <value>Remove</value>
+    </labels>
+    <labels>
         <fullName>campaignMemberStatusDefault</fullName>
         <categories>Campaign Member</categories>
         <language>en_US</language>

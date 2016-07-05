@@ -76,22 +76,6 @@
         });
         $A.enqueueAction(action);
 
-        // query for Contact Delete permissions
-        action = component.get("c.isDeletable");
-        action.setParams({
-            strSObject: 'Contact'
-        });
-        action.setCallback(this, function(response) {
-            var state = response.getState();
-            if (component.isValid() && state === "SUCCESS") {
-                component.set("v.allowContactDelete", response.getReturnValue());
-            } else if (component.isValid() && state === "ERROR") {
-                component.set('v.isSaveDisabled', true);
-                self.reportError(component, response);
-            }
-        });
-        $A.enqueueAction(action);
-
         // query for Household Delete permissions for merge usage
         var strSObject = 'Account';
         if (component.get('v.hhTypePrefix') !== '001') {
@@ -288,12 +272,12 @@
         action.setCallback(this, callback);
         $A.enqueueAction(action);
 
-        // delete any contacts
-        var listConDelete = component.get("v.listConDelete");
-        listConDelete = this.addPrefixToListObjectFields(namespacePrefix, listConDelete);
-        action = component.get("c.deleteContacts");
+        // remove any contacts
+        var listConRemove = component.get("v.listConRemove");
+        listConRemove = this.addPrefixToListObjectFields(namespacePrefix, listConRemove);
+        action = component.get("c.upsertContacts");
         action.setParams({
-            listCon: listConDelete
+            listCon: listConRemove
         });
         action.setCallback(this, callback);
         $A.enqueueAction(action);
@@ -329,38 +313,47 @@
     },
 
     /*******************************************************************************************************
-     * @description Ask the user if the Contact should be deleted, by displaying our delete contact popup.
+     * @description Ask the user if the Contact should be Removed, by displaying our Remove contact popup.
      */
-    promptDeleteContact: function(component, event) {
+    promptRemoveContact: function(component, event) {
         var con = event.getParam("contact");
-        component.set('v.showDeleteContactPopup', true);
-        component.set('v.conDelete', con);
+        component.set('v.showRemoveContactPopup', true);
+        component.set('v.conRemove', con);
     },
 
     /*******************************************************************************************************
-     * @description The user has decided not to delete the contact, so remove our delete contact popup.
+     * @description The user has decided not to Remove the contact, so remove our Remove contact popup.
      */
-    cancelDeleteContact: function(component /* , event */ ) {
-        component.set('v.showDeleteContactPopup', false);
+    cancelRemoveContact: function(component /* , event */ ) {
+        component.set('v.showRemoveContactPopup', false);
     },
 
     /*******************************************************************************************************
-     * @description The user has confirmed the contact should be deleted.
-     * Remove our delete contact popup.
-     * Add the contact to our list of contacts to delete.
+     * @description The user has confirmed the contact should be Removed.
+     * Remove our Remove contact popup.
+     * Add the contact to our list of contacts to Remove.
      * Remove the contact from our list of contacts in the household.
      * Update all household names and greetings.
      */
-    doDeleteContact: function(component, event) {
-        component.set('v.showDeleteContactPopup', false);
-        var con = component.get('v.conDelete');
+    doRemoveContact: function(component, event) {
+        component.set('v.showRemoveContactPopup', false);
+        var con = component.get('v.conRemove');
         if (con) {
-            var listConDelete = component.get('v.listConDelete');
-            if (!listConDelete)
-                listConDelete = [];
+            // we remove the contact from the household by clearing their household field
+            var hhTypePrefix = component.get('v.hhTypePrefix');
+            if (hhTypePrefix === '001') {
+                con.AccountId = null;
+            } else {
+                con.npo02__Household__c = null;
+            }
+            con.hhId = null;
+            
+            var listConRemove = component.get('v.listConRemove');
+            if (!listConRemove)
+                listConRemove = [];
             if (con.Id)
-                listConDelete.push(con);
-            component.set('v.listConDelete', listConDelete);
+                listConRemove.push(con);
+            component.set('v.listConRemove', listConRemove);
 
             var listCon = component.get('v.listCon');
             var iconDel = this.findContact(listCon, con);
@@ -370,7 +363,7 @@
             this.updateHHNames(component);
 
             // we must tell the visualforce page, in case the primary contact lookup is to this contact.
-            event = $A.get("e.c:HH_ContactAfterDeleteEvent");
+            event = $A.get("e.c:HH_ContactAfterRemoveEvent");
             event.setParams({
                 "contact": con
             });
@@ -492,6 +485,7 @@
             $A.get("$Label.npsp.lblHousehold");
             $A.get("$Label.npsp.lblDeleteContact");
             $A.get("$Label.npsp.lblDeleteContactPrompt");
+            $A.get("$Label.npsp.btnRemove");
             $A.get("$Label.npsp.lblStreet");
             $A.get("$Label.npsp.lblCity");
             $A.get("$Label.npsp.lblState");
@@ -540,7 +534,7 @@
         else
             con.npo02__Household__c = hhId;
         con.hhId = hhId;
-        // tag each new contact with a timestamp, so we can identify it if we need to delete it.
+        // tag each new contact with a timestamp, so we can identify it if we need to Remove it.
         con.dtNewContact = Date.now();
         component.set('v.conNew', con);
     },

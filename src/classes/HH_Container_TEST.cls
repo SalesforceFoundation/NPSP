@@ -133,7 +133,6 @@ private class HH_Container_TEST {
 
     /*********************************************************************************************************
     * @description Tests deleteContacts()
-    */
     public static testMethod void testDeleteContacts() { 
         initTestData();
         list<Contact> listCon = new list<Contact>{conA, conO};
@@ -146,6 +145,7 @@ private class HH_Container_TEST {
 
         Test.stopTest();        
     }
+    */
 
     /*********************************************************************************************************
     * @description Tests updateHousehold()
