@@ -150,7 +150,7 @@
             <quickActionName>FeedItem.TextPost</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>nictest__Address__c.Update_Address</quickActionName>
+            <quickActionName>Address__c.Update_Address</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
             <quickActionName>FeedItem.ContentPost</quickActionName>
