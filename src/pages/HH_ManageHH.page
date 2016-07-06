@@ -82,7 +82,7 @@
                                        
                                        // hook up our event handlers
                                        $A.eventService.addHandler({ "event": ns + ":HH_HouseholdSavedEvent", "handler" : saveAndCloseVisualforce});
-                                       $A.eventService.addHandler({ "event": ns + ":HH_ContactAfterDeleteEvent", "handler" : contactRemoved});
+                                       $A.eventService.addHandler({ "event": ns + ":HH_ContactAfterRemoveEvent", "handler" : contactRemoved});
                                        $A.eventService.addHandler({ "event": ns + ":HH_ContainerLoadedEvent", "handler" : doneLoading});
 
                                        // this hack is to prevent the normal apex:inputField of a multiselect picklist

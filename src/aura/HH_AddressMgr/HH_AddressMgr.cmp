@@ -1,11 +1,11 @@
 <aura:component >
     <!-- public attributes -->
-    <aura:attribute name="listAddr" type="Address__c[]" access="public" />
-    <aura:attribute name="addrDefault" type="Address__c" access="public" />
-    <aura:attribute name="namespacePrefix" type="String" access="public" />
+    <!-- note we kept our addresses typed as Object, to avoid namespace prefixing issues when we used Address__c -->
+    <aura:attribute name="listAddr" type="Object[]" access="public" />
+    <aura:attribute name="addrDefault" type="Object" access="public" />
 
     <!-- private attributes -->
-    <aura:attribute name="addrNew" type="Address__c" access="private" />
+    <aura:attribute name="addrNew" type="Object" access="private" />
     <aura:attribute name="showChangeAddressPopup" type="Boolean" access="private" />
     <aura:attribute name="iAddrSelected" type="Integer" default="0" access="private" />
     <aura:attribute name="isExistingAddrSectionOpen" type="Boolean" default="true" access="private" />

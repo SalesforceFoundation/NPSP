@@ -71,6 +71,7 @@ public with sharing class HH_Container_LCTRL {
         str = Label.lblFindOrAddContact;
         str = Label.lblFindInContacts;
         str = Label.lblNoHHMergePermissions;
+        str = Label.btnRemove;
     }
 
     /*******************************************************************************************************
@@ -161,7 +162,8 @@ public with sharing class HH_Container_LCTRL {
     }
 
     /*******************************************************************************************************
-    * @description returns the soql string to use to query contacts and their appropriate fields
+    * @description returns the soql string to use to query contacts and their appropriate fields, and ensures
+    * field level security that the user has permissions to read and modify those fields.
     * @return String The soql select string to use for Contacts
     */
     public static string getContactSelectQueryWithFls() {
@@ -327,7 +329,6 @@ public with sharing class HH_Container_LCTRL {
     * @description deletes the Contacts in the database
     * @param listCon The list of Contacts to delete
     * @return void
-    */
     @AuraEnabled
     public static void deleteContacts(list<Contact> listCon) {
         try {
@@ -343,6 +344,7 @@ public with sharing class HH_Container_LCTRL {
             throw new AuraHandledException(ex.getMessage());
         }
     }
+    */
 
     /*******************************************************************************************************
     * @description saves any changes to the Household in the database

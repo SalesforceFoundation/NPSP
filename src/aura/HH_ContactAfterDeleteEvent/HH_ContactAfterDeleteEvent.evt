@@ -1,4 +1,0 @@
-<aura:event type="APPLICATION"
-    description="Fired after a Contact has been deleted from the Household (ie, the user has OK'd the delete).">
-    <aura:attribute name="contact" type="Contact" />
-</aura:event>

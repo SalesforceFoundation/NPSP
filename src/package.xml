@@ -352,11 +352,11 @@
         <members>HH_AutoCompleteDataProvider</members>
         <members>HH_AutoCompleteOption</members>
         <members>HH_Canvas</members>
-        <members>HH_ContactAfterDeleteEvent</members>
+        <members>HH_ContactAfterRemoveEvent</members>
         <members>HH_ContactCard</members>
         <members>HH_ContactChangedEvent</members>
-        <members>HH_ContactDeleteEvent</members>
         <members>HH_ContactNewEvent</members>
+        <members>HH_ContactRemoveEvent</members>
         <members>HH_ContactReorderEvent</members>
         <members>HH_Container</members>
         <members>HH_ContainerLoadedEvent</members>
@@ -872,6 +872,7 @@
         <members>bdiStatusProcessed</members>
         <members>bdiStatusProcessing</members>
         <members>bdiTime</members>
+        <members>btnRemove</members>
         <members>campaignMemberStatusDefault</members>
         <members>campaignMemberStatusNonResponded</members>
         <members>campaignMemberStatusResponded</members>

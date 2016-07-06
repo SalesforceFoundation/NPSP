@@ -16,12 +16,12 @@
     },
 
     /*******************************************************************************************************
-    * @description Notifies the application that the contact's delete button was pressed
+    * @description Notifies the application that the contact's remove button was pressed
     */
-    fireContactDeleteEvent : function(component, event) {
+    fireContactRemoveEvent : function(component, event) {
 
-        // now notify other components the delete request occurred
-        event = $A.get("e.c:HH_ContactDeleteEvent");
+        // now notify other components the remove request occurred
+        event = $A.get("e.c:HH_ContactRemoveEvent");
         var con = component.get('v.contact');
         event.setParams({ "contact" : con });
         event.fire();

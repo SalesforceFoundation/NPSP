@@ -4,30 +4,29 @@
     <aura:attribute name="namespacePrefix" type="String" access="public" />
 
     <!-- private attributes -->
-    <aura:attribute name="hh" type="SObject" access="private" />
+    <aura:attribute name="hh" type="Object" access="private" />
     <aura:attribute name="hhTypePrefix" type="String" access="private" />
-    <aura:attribute name="listCon" type="Contact[]" access="private" />
-    <aura:attribute name="listAddr" type="Address__c[]" access="private" />
+    <aura:attribute name="listCon" type="Object[]" access="private" />
+    <aura:attribute name="listAddr" type="Object[]" access="private" />
     <aura:attribute name="showSpinner" type="Boolean" default="true" access="private" />
     <aura:attribute name="isAutoName" type="Boolean" access="private" />
     <aura:attribute name="isAutoFormalGreeting" type="Boolean" access="private" />
     <aura:attribute name="isAutoInformalGreeting" type="Boolean" access="private" />
-    <aura:attribute name="showDeleteContactPopup" type="Boolean" access="private" />
-    <aura:attribute name="conDelete" type="Contact" access="private" />
-    <aura:attribute name="listConDelete" type="Contact[]" access="private" />
+    <aura:attribute name="showRemoveContactPopup" type="Boolean" access="private" />
+    <aura:attribute name="conRemove" type="Object" access="private" />
+    <aura:attribute name="listConRemove" type="Object[]" access="private" />
     <aura:attribute name="showNewContactPopup" type="Boolean" access="private" />
-    <aura:attribute name="conNew" type="Contact" access="private" />
+    <aura:attribute name="conNew" type="Object" access="private" />
     <aura:attribute name="listSalutation" type="SelectOption[]" access="private" />
-    <aura:attribute name="listHHMerge" type="SObject[]" access="private" />
+    <aura:attribute name="listHHMerge" type="Object[]" access="private" />
     <aura:attribute name="showMergeHHPopup" type="Boolean" access="private" />
-    <aura:attribute name="conAdd" type="Contact" access="private" />
-    <aura:attribute name="hhMerge" type="SObject" access="private" />
+    <aura:attribute name="conAdd" type="Object" access="private" />
+    <aura:attribute name="hhMerge" type="Object" access="private" />
     <aura:attribute name="isSaveDisabled" type="Boolean" default="false" access="private" />
-    <aura:attribute name="allowContactDelete" type="Boolean" default="false" access="private" />
     <aura:attribute name="allowHouseholdMerge" type="Boolean" default="false" access="private" />
 
     <!-- events we fire -->
-    <aura:registerEvent name="ContactAfterDeleteEvent" type="c:HH_ContactAfterDeleteEvent" />
+    <aura:registerEvent name="ContactAfterRemoveEvent" type="c:HH_ContactAfterRemoveEvent" />
     <aura:registerEvent name="HouseholdSavedEvent" type="c:HH_HouseholdSavedEvent" />
     <aura:registerEvent name="ContainerLoadedEvent" type="c:HH_ContainerLoadedEvent" />
 
@@ -35,7 +34,7 @@
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>
     <aura:handler event="c:HH_ContactChangedEvent" action="{!c.handleContactChangedEvent}"/>
-    <aura:handler event="c:HH_ContactDeleteEvent" action="{!c.handleContactDeleteEvent}"/>
+    <aura:handler event="c:HH_ContactRemoveEvent" action="{!c.handleContactRemoveEvent}"/>
     <aura:handler event="c:HH_ContactReorderEvent" action="{!c.handleContactReorderEvent}"/>
     <aura:handler event="c:HH_AddressChangedEvent" action="{!c.handleAddressChangedEvent}"/>
     <aura:handler event="c:autocompleteSelectListOption" name="optionSelected" action="{!c.handleAutoCompleteOptionSelectedEvent}" />    
@@ -111,13 +110,13 @@
                             <c:HH_AutoComplete aura:id="HHAutoComplete" hhId="{!v.hhId}" namespacePrefix="{!v.namespacePrefix}" listCon="{!v.listCon}" />                            
                         </div>
                     </div>
-                    <c:HH_Canvas hh="{!v.hh}" listCon="{!v.listCon}" allowContactDelete="{!v.allowContactDelete}" />
+                    <c:HH_Canvas hh="{!v.hh}" listCon="{!v.listCon}" />
                 </div>
 
                 <!-- the Address section -->
                 <div class="slds-p-bottom--large">
                     <div class="slds-text-heading--label slds-p-around--x-small">{!$Label.npo02.HouseholdAddress}</div>
-                    <c:HH_AddressMgr listAddr="{!v.listAddr}" aura:id="addrMgr" namespacePrefix="{!v.namespacePrefix}" />
+                    <c:HH_AddressMgr listAddr="{!v.listAddr}" aura:id="addrMgr" />
                 </div>
 
                 <!-- the section for our 3 special naming & greeting fields -->
@@ -167,13 +166,13 @@
                 </div>
 
 
-            <!-- DELETE CONTACT POPUP -->
-            <aura:if isTrue="{!v.showDeleteContactPopup}">
-                <div id="deleteContactPopup" class="slds-modal slds-fade-in-open" aria-hidden="false" role="dialog">
+            <!-- REMOVE CONTACT POPUP -->
+            <aura:if isTrue="{!v.showRemoveContactPopup}">
+                <div id="RemoveContactPopup" class="slds-modal slds-fade-in-open" aria-hidden="false" role="dialog">
                     <div class="slds-modal__container">
 
                         <div class="slds-modal__header">
-                            <ui:button class="slds-button slds-button--icon-inverse slds-modal__close" press="{!c.cancelDeleteContact}">
+                            <ui:button class="slds-button slds-button--icon-inverse slds-modal__close" press="{!c.cancelRemoveContact}">
                                 <c:svg class="slds-button__icon slds-button__icon--large"
                                        xlinkHref="{!$Resource.SLDS + '/1_0_3/assets/icons/action-sprite/svg/symbols.svg#close'}" />
                                 <span class="slds-assistive-text">{!$Label.c.bdiBtnClose}</span>
@@ -189,22 +188,22 @@
                         <div class="slds-modal__footer">
                             <div class="slds-x-small-buttons--horizontal">
                                 <ui:button class="slds-button slds-button--neutral"
-                                    aura:id="btnCancelDelete"
+                                    aura:id="btnCancelRemove"
                                     buttonTitle="{!$Label.c.stgBtnCancel}"
                                     label="{!$Label.c.stgBtnCancel}"
-                                    press="{!c.cancelDeleteContact}" />
+                                    press="{!c.cancelRemoveContact}" />
                                 <ui:button class="slds-button slds-button--destructive"
-                                    aura:id="btnDelete"
-                                    buttonTitle="{!$Label.npo02.Delete}"
-                                    label="{!$Label.npo02.Delete}"
-                                    press="{!c.doDeleteContact}" />
+                                    aura:id="btnRemove"
+                                    buttonTitle="{!$Label.c.btnRemove}"
+                                    label="{!$Label.c.btnRemove}"
+                                    press="{!c.doRemoveContact}" />
                             </div>
                         </div>
                     </div> <!-- /slds-modal__container -->
                 </div> <!-- /slds-modal -->
                 <div class="slds-backdrop slds-backdrop--open"></div>
             </aura:if>
-            <!-- /DELETE CONTACT POPUP -->
+            <!-- /REMOVE CONTACT POPUP -->
 
             <!-- MERGE HH POPUP -->
             <aura:if isTrue="{!v.showMergeHHPopup}">

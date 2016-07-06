@@ -4,8 +4,8 @@
         helper.fireContactChangedEvent(component, event);
     },
 
-    // the delete button has been pressed, notify our container
-    deleteContact : function(component, event, helper) {
-        helper.fireContactDeleteEvent(component, event);
+    // the remove button has been pressed, notify our container
+    removeContact : function(component, event, helper) {
+        helper.fireContactRemoveEvent(component, event);
     },
 })
