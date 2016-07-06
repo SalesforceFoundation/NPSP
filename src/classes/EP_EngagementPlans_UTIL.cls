@@ -37,9 +37,17 @@
 */
 public with sharing class EP_EngagementPlans_UTIL {
 
+	public static final String BLANK_ASSIGNMENT_USER_CREATING = 'User Creating Action Plan';
+	public static final String BLANK_ASSIGNMENT_OWNER_RECEIVING = 'Owner of Receiving Object';
+	public static final String DELAY_TYPE_AFTER_COMPLETED = 'After Date Completed';
+	public static final String SKIP_DAY_FRIDAY = 'Friday';
+	public static final String SKIP_DAY_MONDAY = 'Monday';
+	public static final Integer MAX_ITERATIONS = 500;
+
     /** @description Engagement Plan field describe map.*/
     private static Map<String, Schema.DescribeFieldResult> fieldDescribeMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('Engagement_Plan__c'));
-    /** @description A map of Engagement Plan lookup field names to relationship name for all custom relationship fields, except for the template master-detail field.*/
+    /** @description A map of Engagement Plan lookup field names to the relationship name and OwnerId for all custom relationship fields,
+    * used for generating a query of all related object owners. Excludes the template master-detail field. */
     private static Map<String, String> lookupFieldsToRelationship {
         get {
             if (lookupFieldsToRelationship == null) {

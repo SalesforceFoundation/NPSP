@@ -52,7 +52,7 @@ private with sharing class EP_EngagementPlans_TEST {
         Engagement_Plan_Template__c template = new Engagement_Plan_Template__c(
             Name = 'Template',
             Skip_Weekends__c = false,
-            Blank_Assignment_Rule__c = 'User Creating Action Plan'
+            Blank_Assignment_Rule__c = EP_EngagementPlans_UTIL.BLANK_ASSIGNMENT_USER_CREATING
         );
         insert template;
 
@@ -97,20 +97,20 @@ private with sharing class EP_EngagementPlans_TEST {
                             IsReminderSet, ReminderDateTime FROM Task WHERE WhoId = :con.id ORDER BY ActivityDate];
         System.assertEquals(2, results.size(), 'Two tasks should be created.');
 
-        System.assertEquals('Call', results[0].Subject, 'Subject field should be set based on EP Task Name.');
-        System.assertEquals('This comment should be copied correctly to the Task.', results[0].Description);
+        System.assertEquals(epTask.Name, results[0].Subject, 'Subject field should be set based on EP Task Name.');
+        System.assertEquals(epTask.Comments__c, results[0].Description, 'Comment field should be copied correctly.');
         
         System.assertEquals(System.Today().addDays(3), results[0].ActivityDate, 'Activity Date should be three days from today.');
         System.assert(results[0].IsReminderSet, 'Reminder should be set.');
         System.assertEquals(System.Today().addDays(3), results[0].ReminderDateTime.Date(), 'Reminder should be set three days from today.');
-        System.assertEquals('Medium', results[0].Priority, 'Priority field should be set based on EP Task Priority.');
+        System.assertEquals(epTask.Priority__c, results[0].Priority, 'Priority field should be set based on EP Task Priority.');
         System.assertEquals(otherUserId, results[0].OwnerId, 'Task owner should be based on EP Task Assigned To field.');
 
-        System.assertEquals('Email', results[1].Subject, 'Subject field should be set based on EP Task Name.');
-        System.assertEquals('This comment should also be copied correctly to the Task.', results[1].Description);
+        System.assertEquals(dependentEpTask.Name, results[1].Subject, 'Subject field should be set based on EP Task Name.');
+        System.assertEquals(dependentEpTask.Comments__c, results[1].Description, 'Comment field should be copied correctly.');
         System.assertEquals(System.Today().addDays(13), results[1].ActivityDate, 'Activity Date should be set thirteen days from today.');
         System.assert(!results[1].IsReminderSet, 'Reminder should not be set for a dependent task.');
-        System.assertEquals('Low', results[1].Priority, 'Priority field should be set based on EP Task Priority.');
+        System.assertEquals(dependentEpTask.Priority__c, results[1].Priority, 'Priority field should be set based on EP Task Priority.');
         System.assertEquals(UserInfo.getUserId(), results[1].OwnerId, 'Task owner left blank should be based on running user.');
     }
 
@@ -118,7 +118,7 @@ private with sharing class EP_EngagementPlans_TEST {
     * @description Creates an EP Task with a delay of the number of days until the weekend, as part of a 
     * template set to delay until Monday. Verifies that the activity date is set on Monday.
     */
-    static testMethod void testSkipWeekends() {
+    static testMethod void testSkipWeekendsMonday() {
 
         Integer daysUntilWeekend = getDaysUntilWeekend(System.today());
         
@@ -128,8 +128,8 @@ private with sharing class EP_EngagementPlans_TEST {
         Engagement_Plan_Template__c template = new Engagement_Plan_Template__c(
             Name = 'TemplateSkipWeekends',
             Skip_Weekends__c = true,
-            Skip_Day__c = 'Monday',
-            Blank_Assignment_Rule__c = 'User Creating Action Plan'
+            Skip_Day__c = EP_EngagementPlans_UTIL.SKIP_DAY_MONDAY,
+            Blank_Assignment_Rule__c = EP_EngagementPlans_UTIL.BLANK_ASSIGNMENT_USER_CREATING
         );
         insert template;
 
@@ -159,8 +159,8 @@ private with sharing class EP_EngagementPlans_TEST {
                             IsReminderSet, ReminderDateTime FROM Task WHERE WhoId = :con.id ORDER BY ActivityDate];
         System.assertEquals(1, results.size(), 'A task should be created.');
 
-        System.assertEquals(results[0].Subject, 'Call', 'Subject field should be set based on EP Task Name.');
-        System.assertEquals(results[0].Description, 'This comment should be copied correctly to the Task.');
+        System.assertEquals(epTask.Name, results[0].Subject, 'Subject field should be set based on EP Task Name.');
+        System.assertEquals(epTask.Comments__c, results[0].Description, 'The comment should be copied correctly to the Task Description.');
         
         System.assert(
             results[0].ActivityDate > System.today().addDays(daysUntilWeekend), 
@@ -168,23 +168,96 @@ private with sharing class EP_EngagementPlans_TEST {
         );
         System.assert(results[0].IsReminderSet, 'Reminder should be set.');
         System.assert(results[0].ReminderDateTime.Date() > System.now().addDays(daysUntilWeekend), 'Reminder should be set after the weekend.');
-        System.assertEquals(results[0].Priority, 'Medium', 'Priority field should be set based on EP Task Priority.');
+        System.assert(results[0].ReminderDateTime.Date(), results[0].ActivityDate, 'Reminder date and activity date should be on the same day.');
+        
+        //verify minutes
+        Time reminderTimeMidnight = Time.newInstance(0,0,0,0);
+        DateTime reminderDateTimeMidnight = DateTime.newInstance(results[0].ActivityDate, reminderTimeMidnight);
+        System.assertEquals(ReminderDateTimeMidnight.addMinutes(660), results[0].ReminderDateTime, 'Reminder should be set 660 minutes after midnight.');
+
+        System.assertEquals(epTask.Priority__c, results[0].Priority, 'Priority field should be set based on EP Task Priority.');
     }
 
     /*********************************************************************************************************
-    * @description Creates an EP Template and EP Task, and an Engagement Plan associated with an Account. 
-    * Verifies that WhatId is used for Engagement Plans assigned to objects other than Contact and Lead.
+    * @description Creates an EP Task with a delay of the number of days until the weekend, as part of a 
+    * template set to advance the date to Friday. Verifies that the activity date is set on Friday.
+    */
+    static testMethod void testSkipWeekendsFriday() {
+
+        Integer daysUntilWeekend = getDaysUntilWeekend(System.today());
+        
+        Contact con = new Contact(LastName = 'foo');
+        insert con;
+
+        Engagement_Plan_Template__c template = new Engagement_Plan_Template__c(
+            Name = 'TemplateSkipWeekends',
+            Skip_Weekends__c = true,
+            Skip_Day__c = EP_EngagementPlans_UTIL.SKIP_DAY_FRIDAY
+        );
+        insert template;
+
+        Engagement_Plan_Task__c epTask = new Engagement_Plan_Task__c(
+            Name = 'Call',
+            Engagement_Plan_Template__c = template.id,
+            Comments__c = 'This comment should be copied correctly to the Task.',
+            Reminder__c = true,
+            Reminder_Minutes__c = '660',
+            Type__c = 'Call',
+            Priority__c = 'Medium',
+            //use the number of days until the weekend for the delay of this task
+            Days_After__c = daysUntilWeekend
+        );
+        insert epTask;
+
+        Engagement_Plan__c plan = new Engagement_Plan__c(
+            Contact__c = con.id,
+            Engagement_Plan_Template__c = template.id
+        );
+
+        Test.startTest();
+        insert plan;
+        Test.stopTest();
+
+        List<Task> results = [SELECT Id, OwnerId, WhoId, Type, Status, Subject, ActivityDate, Priority, Description,
+                            IsReminderSet, ReminderDateTime FROM Task WHERE WhoId = :con.id ORDER BY ActivityDate];
+        System.assertEquals(1, results.size(), 'A task should be created.');
+
+        System.assertEquals(epTask.Name, results[0].Subject, 'Subject field should be set based on EP Task Name.');
+        System.assertEquals(epTask.Comments__c, results[0].Description, 'The comment should be copied correctly to the Task Description.');
+        
+        System.assert(
+            results[0].ActivityDate < System.today().addDays(daysUntilWeekend), 
+            'Activity Date ('+results[0].ActivityDate+') should be set before the weekend. ' + System.today().addDays(daysUntilWeekend)
+        );
+        System.assert(results[0].IsReminderSet, 'Reminder should be set.');
+        System.assert(results[0].ReminderDateTime.Date() < System.now().addDays(daysUntilWeekend), 'Reminder should be set after the weekend.');
+        System.assert(results[0].ReminderDateTime.Date(), results[0].ActivityDate, 'Reminder date and activity date should be on the same day.');
+        
+        //verify minutes
+        Time reminderTimeMidnight = Time.newInstance(0,0,0,0);
+        DateTime reminderDateTimeMidnight = DateTime.newInstance(results[0].ActivityDate, reminderTimeMidnight);
+        System.assertEquals(ReminderDateTimeMidnight.addMinutes(660), results[0].ReminderDateTime, 'Reminder should be set 660 minutes after midnight.');
+
+        System.assertEquals(epTask.Priority__c, results[0].Priority, 'Priority field should be set based on EP Task Priority.');
+    }
+
+
+    /*********************************************************************************************************
+    * @description Creates an EP Template with "Owner of Receiving Object" assignment rule, an EP Task, and an
+    * Engagement Plan associated with an Account. Verifies that WhatId is used for Engagement Plans assigned
+    * to objects other than Contact and Lead, and that the task assignment correctly uses the Account's owner.
     */
     static testMethod void testTaskAssignment() {
 
         Integer daysUntilWeekend = getDaysUntilWeekend(System.today());
+        Id otherUserId = getOtherUserId();
         
-        Account acc = new Account(Name = 'foo');
+        Account acc = new Account(Name = 'foo', OwnerId = otherUserId);
         insert acc;
 
         Engagement_Plan_Template__c template = new Engagement_Plan_Template__c(
-            Name = 'TemplateSkipWeekends',
-            Blank_Assignment_Rule__c = 'User Creating Action Plan'
+            Name = 'TemplateTaskAssignment',
+            Blank_Assignment_Rule__c = EP_EngagementPlans_UTIL.BLANK_ASSIGNMENT_OWNER_RECEIVING
         );
         insert template;
 
@@ -208,6 +281,8 @@ private with sharing class EP_EngagementPlans_TEST {
         List<Task> results = [SELECT Id, OwnerId, WhatId, Type, Status, Subject, ActivityDate, Priority, Description,
                             IsReminderSet, ReminderDateTime FROM Task WHERE WhatId = :acc.id];
         System.assertEquals(1, results.size(), 'A task should be created.');
+        System.assertEquals(acc.id, results[0].WhatId, 'WhatId should be used for task assignment of objects other than contact/lead.');
+        System.assertEquals(acc.ownerId, results[0].OwnerId, 'Owner of Receiving Object assignment rule: the created task shoould be assigned to the account owner, not the running user.');
     }
 
     /*********************************************************************************************************

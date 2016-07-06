@@ -32,12 +32,13 @@
 * @date 2016
 * @group Engagement Plans
 * @group-content ../../ApexDocContent/EngagementPlans.htm
-* @description 
+* @description EP Task and Task utilities for Engagement Plans. Constructor creates maps of EP Tasks and EP Templates.
+* Methods to create and update tasks, calculate 
 */
 public with sharing class EP_Task_UTIL {
 
     /** @description Map of all EP Tasks from templates associated to the trigger set. */
-    public Map<Id, Engagement_Plan_Task__c> taskMap = new Map<Id, Engagement_Plan_Task__c>();
+    public Map<Id, Engagement_Plan_Task__c> epTaskMap = new Map<Id, Engagement_Plan_Task__c>();
     /** @description MAp of all templates from the trigger set and their associated EP Tasks.*/
     public Map<Id, Engagement_Plan_Template__c> templateMap = new Map<Id, Engagement_Plan_Template__c>();
 
@@ -91,7 +92,7 @@ public with sharing class EP_Task_UTIL {
         );
 
         //query for tasks and their child tasks
-        taskMap = new Map<Id, Engagement_Plan_Task__c>(
+        epTaskMap = new Map<Id, Engagement_Plan_Task__c>(
             [SELECT Id, Name, Engagement_Plan_Template__c, Assigned_To__c, Comments__c, Days_After__c, Type__c, 
             Dependent_Task__c, Priority__c, Reminder__c, Reminder_Minutes__c, Send_Email__c, Status__c,
                 (SELECT Id FROM Engagement_Plan_Tasks__r)
@@ -106,7 +107,7 @@ public with sharing class EP_Task_UTIL {
     * @param epTask An Engagement Plan Task from which to copy fields.
     * @return void This method updates class properties.
     ********************************************************************************************************/
-    public Task createTask(Engagement_Plan_Task__c epTask) {
+    public Task createTask(Engagement_Plan_Task__c epTask, Engagement_Plan__c engagementPlan) {
         Engagement_Plan_Template__c template = templateMap.get(epTask.Engagement_Plan_Template__c);
 
         Map<String,String> taskAPTaskFieldMap = new Map<String,String>();
@@ -124,6 +125,9 @@ public with sharing class EP_Task_UTIL {
         for (String taskField : taskAPTaskFieldMap.keySet()) {
             taskResult.put(taskField, epTask.get(taskAPTaskFieldMap.get(taskField)));
         }
+
+        //set engagement plan lookup on task
+        taskResult.Engagement_Plan__c = engagementPlan.Id;
 
         //modify the days after field in memory to facilitate calculating dates;
         //this will not be comitted to the database
@@ -162,8 +166,13 @@ public with sharing class EP_Task_UTIL {
         }
 
         //follow the dependency chain to get the total number of days delay
-        while (currentTask.Dependent_Task__c != null) {
-            currentTask = taskMap.get(currentTask.Dependent_Task__c);
+        Integer max_counter = 0;
+        while (currentTask.Dependent_Task__c != null
+                && max_counter < EP_EngagementPlans_UTIL.MAX_ITERATIONS) {
+            
+            max_counter++;
+
+            currentTask = epTaskMap.get(currentTask.Dependent_Task__c);
             if (currentTask.Days_After__c != null) {
                 result += (Integer)currentTask.Days_After__c;
             }
@@ -178,7 +187,7 @@ public with sharing class EP_Task_UTIL {
     * @return void This method edits the Task parameter directly.
     ********************************************************************************************************/
     public void updateActivateTask(Task taskForUpdate) {
-        Engagement_Plan_Task__c epTask = taskMap.get(taskForUpdate.Engagement_Plan_Task__c);
+        Engagement_Plan_Task__c epTask = epTaskMap.get(taskForUpdate.Engagement_Plan_Task__c);
         Engagement_Plan_Template__c template = templateMap.get(epTask.Engagement_Plan_Template__c);
 
         if (epTask.Status__c != null) {
@@ -188,7 +197,7 @@ public with sharing class EP_Task_UTIL {
         }
 
         //update activity dates if the template is set up to use the parent task completion date
-        if (template.Delay_Type__c == 'After Date Completed') {
+        if (template.Delay_Type__c == EP_EngagementPlans_UTIL.DELAY_TYPE_AFTER_COMPLETED) {
             taskForUpdate.ActivityDate = calcActivityDate(epTask, System.today());
         }
         //activate reminder if set, and update reminder date based on ActivityDate
@@ -202,7 +211,7 @@ public with sharing class EP_Task_UTIL {
     * @return void This method edits the Task parameter directly.
     ********************************************************************************************************/
     public void updateInactiveTask(Task taskForUpdate) {
-        Engagement_Plan_Task__c epTask = taskMap.get(taskForUpdate.Engagement_Plan_Task__c);
+        Engagement_Plan_Task__c epTask = epTaskMap.get(taskForUpdate.Engagement_Plan_Task__c);
 
         //update activity and reminder dates
         taskForUpdate.ActivityDate = calcActivityDate(epTask, System.today());
@@ -214,7 +223,7 @@ public with sharing class EP_Task_UTIL {
     * @return void This method edits the Task parameter directly.
     ********************************************************************************************************/
     private void setReminder(Task taskNeedingReminder) {
-        Engagement_Plan_Task__c epTask = taskMap.get((Id)taskNeedingReminder.Engagement_Plan_Task__c);
+        Engagement_Plan_Task__c epTask = epTaskMap.get((Id)taskNeedingReminder.Engagement_Plan_Task__c);
 
         if (epTask.Reminder__c) {
             taskNeedingReminder.IsReminderSet = true;
@@ -292,7 +301,7 @@ public with sharing class EP_Task_UTIL {
         Date refDate = Date.newInstance(1900, 1, 7);  // Jan 7 1900 = Sunday
         Integer dayOfWeek = Math.mod(refDate.daysBetween(originalDate), 7); // 0 = Sunday ... 6 = Saturday
         
-        if (skipDay == 'Friday') {
+        if (skipDay == EP_EngagementPlans_UTIL.SKIP_DAY_FRIDAY) {
             //subtract days to Friday
             if (dayOfWeek == 0) {
                 result = result.addDays(-2);

@@ -51,57 +51,57 @@ public with sharing class EP_EngagementPlans_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         
-        List<Task> taskInsertEmail = new List<Task>();
-        List<Task> taskInsertNoEmail = new List<Task>();
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
+            List<Task> taskInsertEmail = new List<Task>();
+            List<Task> taskInsertNoEmail = new List<Task>();
 
-        List<Engagement_Plan__c> engagementPlans = (List<Engagement_Plan__c>) newlist;
+            List<Engagement_Plan__c> engagementPlans = (List<Engagement_Plan__c>) newlist;
 
-        EP_Task_UTIL taskCreator = new EP_Task_UTIL(engagementPlans);
-        // EP_EngagementPlans_UTIL class for calculating which lookup field Engagement Plans use and related operations.*/
-        EP_EngagementPlans_UTIL util = new EP_EngagementPlans_UTIL(engagementPlans);
+            //EP_Task_UTIL class for Task creation and related functionality
+            EP_Task_UTIL taskUtil = new EP_Task_UTIL(engagementPlans);
+            // EP_EngagementPlans_UTIL class for calculating which lookup field Engagement Plans use and related operations.*/
+            EP_EngagementPlans_UTIL epUtil = new EP_EngagementPlans_UTIL(engagementPlans);
 
-        for (Engagement_Plan__c engagementPlan : engagementPlans) {
-            Engagement_Plan_Template__c template = taskCreator.templateMap.get(engagementPlan.Engagement_Plan_Template__c);
-            for (Engagement_Plan_Task__c epTask : template.Engagement_Plan_Tasks__r) {
-                Task newTask = taskCreator.createTask(epTask);
-                
-                //set target object to WhoId or WhatId based on object type
-                taskCreator.assignTask(newTask, util.targetObjectIdMap.get(engagementPlan.id));
+            for (Engagement_Plan__c engagementPlan : engagementPlans) {
+                Engagement_Plan_Template__c template = taskUtil.templateMap.get(engagementPlan.Engagement_Plan_Template__c);
+                for (Engagement_Plan_Task__c epTask : template.Engagement_Plan_Tasks__r) {
+                    Task newTask = taskUtil.createTask(epTask, engagementPlan);
+                    
+                    //set target object to WhoId or WhatId based on object type
+                    taskUtil.assignTask(newTask, epUtil.targetObjectIdMap.get(engagementPlan.id));
 
-                //set engagement plan lookup on task
-                newTask.Engagement_Plan__c = engagementPlan.Id;
+                    //assign owner based on template setting
+                    if (newTask.OwnerId == null) {
+                        if (template.Blank_Assignment_Rule__c == EP_EngagementPlans_UTIL.BLANK_ASSIGNMENT_USER_CREATING) {
+                            newTask.OwnerId = UserInfo.getUserId();
+                        } else {
+                            //get the owner of the record this engagement plan is being applied to
+                            newTask.OwnerId = epUtil.targetOwnerMap.get(engagementPlan.id);
+                        }
+                    }
 
-                //assign owner based on template setting
-                if (newTask.OwnerId == null) {
-                    if (template.Blank_Assignment_Rule__c == 'User Creating Action Plan') {
-                        newTask.OwnerId = UserInfo.getUserId();
+                    //add to appropriate list based on the email setting.
+                    if (epTask.Send_Email__c && epTask.Dependent_Task__c == null) {
+                        taskInsertEmail.add(newTask);
                     } else {
-                        //get the owner of the record this engagement plan is being applied to
-                        newTask.OwnerId = util.targetOwnerMap.get(engagementPlan.id);
+                        taskInsertNoEmail.add(newTask);
                     }
                 }
+            }
 
-                //add to appropriate list based on the email setting.
-                if (epTask.Send_Email__c && epTask.Dependent_Task__c == null) {
-                    taskInsertEmail.add(newTask);
-                } else {
-                    taskInsertNoEmail.add(newTask);
-                }
+            Database.DMLOptions options = new Database.DMLOptions();
+
+            if (!taskInsertEmail.isEmpty()) {
+                options.EmailHeader.triggerUserEmail = true;
+                List<Database.SaveResult> results = Database.insert(taskInsertEmail, options);
+            }
+
+            if (!taskInsertNoEmail.isEmpty()) {
+                options.EmailHeader.triggerUserEmail = false;
+                List<Database.SaveResult> results = Database.insert(taskInsertNoEmail, options);
             }
         }
 
-        Database.DMLOptions options = new Database.DMLOptions();
-
-        if (!taskInsertEmail.isEmpty()) {
-            options.EmailHeader.triggerUserEmail = true;
-            List<Database.SaveResult> results = Database.insert(taskInsertEmail, options);
-        }
-
-        if (!taskInsertNoEmail.isEmpty()) {
-            options.EmailHeader.triggerUserEmail = false;
-            List<Database.SaveResult> results = Database.insert(taskInsertNoEmail, options);
-        }
-    
         return null;
     }
 }

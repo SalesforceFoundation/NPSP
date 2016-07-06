@@ -52,8 +52,8 @@ private with sharing class EP_TaskDependency_TEST {
         Engagement_Plan_Template__c template = new Engagement_Plan_Template__c(
             Name = 'Template',
             Skip_Weekends__c = false,
-            Blank_Assignment_Rule__c = 'User Creating Action Plan',
-            Delay_Type__c = 'After Date Completed'
+            Blank_Assignment_Rule__c = EP_EngagementPlans_UTIL.BLANK_ASSIGNMENT_USER_CREATING,
+            Delay_Type__c = EP_EngagementPlans_UTIL.DELAY_TYPE_AFTER_COMPLETED
         );
         insert template;
 
@@ -146,7 +146,7 @@ private with sharing class EP_TaskDependency_TEST {
         results = [SELECT Id, OwnerId, WhoId, Type, Status, Subject, ActivityDate, Priority, Description,
                    IsReminderSet, ReminderDateTime FROM Task WHERE WhoId = :con.id ORDER BY ActivityDate];
 
-        System.assertEquals(System.Today().addDays(4), results[3].ActivityDate, 'Grandchild Task\'s Activity Date should be updated to only two days from today.');
+        System.assertEquals(System.Today().addDays(4), results[3].ActivityDate, 'Grandchild Task\'s Activity Date should be updated to four days from today.');
 
         System.assert(results[1].IsReminderSet, 'Reminder should be set for child tasks.');
         System.assert(results[2].IsReminderSet, 'Reminder should be set for child tasks.');
@@ -168,7 +168,7 @@ private with sharing class EP_TaskDependency_TEST {
         Engagement_Plan_Template__c template = new Engagement_Plan_Template__c(
             Name = 'Template',
             Skip_Weekends__c = false,
-            Blank_Assignment_Rule__c = 'User Creating Action Plan',
+            Blank_Assignment_Rule__c = EP_EngagementPlans_UTIL.BLANK_ASSIGNMENT_USER_CREATING,
             Delay_Type__c = 'After Due Date'
         );
         insert template;
@@ -214,7 +214,7 @@ private with sharing class EP_TaskDependency_TEST {
         System.assertEquals(System.Today(), results[0].ActivityDate, 'Activity Date should be today.');
         System.assertEquals(System.Today().addDays(1), results[1].ActivityDate, 'Activity Date one day from today.');
 
-        //update the grandchild days so that we can verify it is not recalculated when the parent is marked closed
+        //update the child days so that we can verify it is not recalculated when the parent is marked closed
         childEpTask.Days_After__c = 3;
         update childEpTask;
 
