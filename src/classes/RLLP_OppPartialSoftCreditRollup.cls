@@ -111,18 +111,21 @@ public class RLLP_OppPartialSoftCreditRollup {
                 newC.put('CurrencyIsoCode', c.get('CurrencyIsoCode'));
             }
             
-            Set<String> ocrIds = new Set<String>();
+            Set<Id> ocrForPSCIds = new Set<Id>();
             if (partialSoftCredits.containsKey(c.Id)) {
                 for (Partial_Soft_Credit__c psc : partialSoftCredits.get(c.Id)) {
                     newC = countPartialSoftCredits(newC, psc, currentYearStart);
-                    ocrIds.add(psc.Contact_Role_ID__c);
+                    ocrForPSCIds.add(psc.Contact_Role_ID__c);
                 }
             }
             
+            Set<Id> processedOpportunityIds = new Set<Id>();
             if (opportunityContactRoles.containsKey(c.Id)) {
                 for (OpportunityContactRole ocr : opportunityContactRoles.get(c.Id)) {
-                    if (ocrIds.contains(ocr.Id)) continue; // partial soft credit
+                    if (ocrForPSCIds.contains(ocr.Id)) continue; // partial soft credit
+                    if (processedOpportunityIds.contains(ocr.OpportunityId)) continue;
                     newC = countOpportunityContactRoles(newC, ocr, currentYearStart);
+                    processedOpportunityIds.add(ocr.OpportunityId);
                 }
             }
             
