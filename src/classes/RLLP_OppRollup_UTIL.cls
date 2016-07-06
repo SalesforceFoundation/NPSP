@@ -837,7 +837,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     */
     public static string buildSoftCreditOCRQuery() {
         if (SoftCreditOCRQuery == null) {
-            SoftCreditOCRQuery = 'SELECT Id, ContactId, Opportunity.CloseDate, Opportunity.Amount ';
+            SoftCreditOCRQuery = 'SELECT Id, ContactId, Opportunity.CloseDate, Opportunity.Amount, OpportunityId ';
             if (isMultiCurrency()) {
                 SoftCreditOCRQuery += ', Opportunity.CurrencyIsoCode ';
             }
