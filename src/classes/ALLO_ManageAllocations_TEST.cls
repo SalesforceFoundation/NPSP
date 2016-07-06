@@ -211,4 +211,43 @@ private class ALLO_ManageAllocations_TEST {
         list<Allocation__c> queryAllo = [SELECT Id, Percent__c, Amount__c FROM Allocation__c WHERE Recurring_Donation__c=:rd.id];
         system.assertEquals(2,queryAllo.size(),'2 allocations should be saved, one original allocation should be deleted.');
     }
+
+    /**
+     * @description getCurrencySymbol() should return the appropriate currency
+     * symbol as returned by UTIL_Currency
+     */
+    @isTest
+    private static void testGetCurrencySymbolCallsUtilCurrency() {
+        UTIL_Currency_TEST.UtilCurrencyMock mock = new UTIL_Currency_TEST.UtilCurrencyMock();
+        mock.getCurrencySymbolReturn = 'FOO';
+        UTIL_Currency.instance = mock;
+
+        ALLO_ManageAllocations_CTRL controller = new ALLO_ManageAllocations_CTRL();
+        controller.parentId = Account.sObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
+
+        System.assertEquals(
+            'FOO',
+            controller.getCurrencySymbol()
+        );
+
+        System.assertEquals(
+            controller.parentId,
+            mock.getCurrencySymbolRecordId
+        );
+    }
+
+    /**
+     * @description getCurrencySymbol() should returned a cached currency
+     * symbol, if it has been set
+     */
+    @isTest
+    private static void testGetCurrencySymbolReturnsCachedSymbol() {
+        ALLO_ManageAllocations_CTRL controller = new ALLO_ManageAllocations_CTRL();
+        controller.currencySymbol = 'FOO';
+
+        System.assertEquals(
+            'FOO',
+            controller.getCurrencySymbol()
+        );
+    }
 }
