@@ -2451,16 +2451,16 @@ If you want to know which Opportunities would have previously included this doub
         <categories>Manage Household UI</categories>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>lblDeleteContact</shortDescription>
-        <value>Delete Contact</value>
+        <shortDescription>caption of Remove Contact popup</shortDescription>
+        <value>Remove Contact</value>
     </labels>
     <labels>
         <fullName>lblDeleteContactPrompt</fullName>
         <categories>Manage Household UI</categories>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>lblDeleteContactPrompt</shortDescription>
-        <value>Do you want to delete this contact, when the page is saved?</value>
+        <shortDescription>prompt for the Remove Contact Popup</shortDescription>
+        <value>Do you want to remove this Contact from this Household on Save?</value>
     </labels>
     <labels>
         <fullName>lblFindInContacts</fullName>
