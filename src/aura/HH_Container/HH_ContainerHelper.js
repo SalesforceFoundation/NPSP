@@ -4,7 +4,7 @@
      */
     warnOnLockerService: function(component) {
         if (component.$lskey != null) {        
-            this.displayUIMessage(component, "LockerService is activated which prevents this page from working correctly.  Under Setup, search for Critical Updates, and deactivate the critical update 'Enable Lightning LockerService Security'. ", "divUIMessageContainer");
+            this.displayUIMessage(component, "LockerService, a new Salesforce security service, is activated and is preventing this page from working correctly. To get this page to work correctly, search for Critical Updates under Salesforce Setup, and then deactivate the Enable Lightning LockerService Security critical update.", "divUIMessageContainer");
         }
     },
 
