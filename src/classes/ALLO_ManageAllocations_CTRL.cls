@@ -87,6 +87,13 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     /** @description Row number sent back by page for add and delete row methods.*/
     public integer rowNumber {get;set;}
 
+    /**
+     * @description The currency symbol or ISO code of the related record or
+     * org default
+     */
+    @TestVisible
+    private String currencySymbol;
+
     /** @description Constructor queries for the parent object and the allocations, and fills out attributes.*/
     public ALLO_ManageAllocations_CTRL(ApexPages.StandardSetController ssc) {
 
@@ -143,12 +150,34 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             addRow();
     }
 
+    /**
+     * @description Private default constructor
+     */
+    @TestVisible
+    private ALLO_ManageAllocations_CTRL() {}
+
     /** @description Adds an empty row to the bottom of the list and refreshes the page.*/
     private void populateObjectParameters(Schema.sObjectType st) {
         DescribeSObjectResult describe = st.getDescribe();
         keyPrefix = describe.getKeyPrefix();
         objectAPIName = describe.getName();
         objectLabelPlural = describe.getLabelPlural();
+    }
+
+    /**
+     * @description Return the currency symbol appropriate for the current
+     * user/org/record.  If the org is multi currency enabled, it will use the
+     * currency iso code from the related record.  If the org is not multi
+     * currency enabled, it will return the symbol for the currency of the org,
+     * or the currency iso code if no symbol is known.
+     *
+     * @return String A currency symbol or currency ISO code
+     */
+    public String getCurrencySymbol() {
+        if (currencySymbol == null) {
+            currencySymbol = UTIL_Currency.getInstance().getCurrencySymbol(parentId);
+        }
+        return currencySymbol;
     }
 
     /** @description Adds an empty row to the bottom of the list and refreshes the page.*/
