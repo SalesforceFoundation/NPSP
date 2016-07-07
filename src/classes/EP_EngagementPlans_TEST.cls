@@ -168,7 +168,7 @@ private with sharing class EP_EngagementPlans_TEST {
         );
         System.assert(results[0].IsReminderSet, 'Reminder should be set.');
         System.assert(results[0].ReminderDateTime.Date() > System.now().addDays(daysUntilWeekend), 'Reminder should be set after the weekend.');
-        System.assert(results[0].ReminderDateTime.Date(), results[0].ActivityDate, 'Reminder date and activity date should be on the same day.');
+        System.assertEquals(results[0].ReminderDateTime.Date(), results[0].ActivityDate, 'Reminder date and activity date should be on the same day.');
         
         //verify minutes
         Time reminderTimeMidnight = Time.newInstance(0,0,0,0);
@@ -231,7 +231,7 @@ private with sharing class EP_EngagementPlans_TEST {
         );
         System.assert(results[0].IsReminderSet, 'Reminder should be set.');
         System.assert(results[0].ReminderDateTime.Date() < System.now().addDays(daysUntilWeekend), 'Reminder should be set after the weekend.');
-        System.assert(results[0].ReminderDateTime.Date(), results[0].ActivityDate, 'Reminder date and activity date should be on the same day.');
+        System.assertEquals(results[0].ReminderDateTime.Date(), results[0].ActivityDate, 'Reminder date and activity date should be on the same day.');
         
         //verify minutes
         Time reminderTimeMidnight = Time.newInstance(0,0,0,0);

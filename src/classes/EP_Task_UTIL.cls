@@ -37,6 +37,23 @@
 */
 public with sharing class EP_Task_UTIL {
 
+    /** @description Default status for active tasks. */
+    public static String defaultTaskStatus {
+        get {
+            if (defaultTaskStatus == null) {
+                List<TaskStatus> queryStatus = [SELECT MasterLabel FROM TaskStatus WHERE isDefault = true LIMIT 1];
+                if (queryStatus.isEmpty()) {
+                    defaultTaskStatus = '';
+                } else {
+                    defaultTaskStatus = queryStatus[0].MasterLabel;
+                }
+            }
+            return defaultTaskStatus;
+            
+        }
+        private set;
+    }
+
     /** @description Map of all EP Tasks from templates associated to the trigger set. */
     public Map<Id, Engagement_Plan_Task__c> epTaskMap = new Map<Id, Engagement_Plan_Task__c>();
     /** @description MAp of all templates from the trigger set and their associated EP Tasks.*/
@@ -140,7 +157,7 @@ public with sharing class EP_Task_UTIL {
             setReminder(taskResult);
             
             if (String.isBlank(taskResult.Status)) {
-                taskResult.Status = 'Not Started';
+                taskResult.Status = defaultTaskStatus;
             }
         //Dependent Task defaults
         //Don't set reminder for dependent tasks; it will be set once the parent task is complete.
@@ -193,7 +210,7 @@ public with sharing class EP_Task_UTIL {
         if (epTask.Status__c != null) {
             taskForUpdate.Status = epTask.Status__c;
         } else {
-            taskForUpdate.Status = 'Not Started';
+            taskForUpdate.Status = defaultTaskStatus;
         }
 
         //update activity dates if the template is set up to use the parent task completion date
