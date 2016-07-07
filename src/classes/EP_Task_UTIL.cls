@@ -127,20 +127,20 @@ public with sharing class EP_Task_UTIL {
     public Task createTask(Engagement_Plan_Task__c epTask, Engagement_Plan__c engagementPlan) {
         Engagement_Plan_Template__c template = templateMap.get(epTask.Engagement_Plan_Template__c);
 
-        Map<String,String> taskAPTaskFieldMap = new Map<String,String>();
+        Map<String,String> taskEPTaskFieldMap = new Map<String,String>();
         //Task field name -> Engagement_Plan_Task__c field name
-        taskAPTaskFieldMap.put('Engagement_Plan_Task__c', 'Id');
-        taskAPTaskFieldMap.put('Subject', 'Name');
-        taskAPTaskFieldMap.put('Priority', 'Priority__c');
-        taskAPTaskFieldMap.put('OwnerId', 'Assigned_To__c');
-        taskAPTaskFieldMap.put('Description', 'Comments__c');
-        taskAPTaskFieldMap.put('Type', 'Type__c');
-        taskAPTaskFieldMap.put('Status', 'Status__c');
+        taskEPTaskFieldMap.put('Engagement_Plan_Task__c', 'Id');
+        taskEPTaskFieldMap.put('Subject', 'Name');
+        taskEPTaskFieldMap.put('Priority', 'Priority__c');
+        taskEPTaskFieldMap.put('OwnerId', 'Assigned_To__c');
+        taskEPTaskFieldMap.put('Description', 'Comments__c');
+        taskEPTaskFieldMap.put('Type', 'Type__c');
+        taskEPTaskFieldMap.put('Status', 'Status__c');
 
         //copy fields
         Task taskResult = new Task();
-        for (String taskField : taskAPTaskFieldMap.keySet()) {
-            taskResult.put(taskField, epTask.get(taskAPTaskFieldMap.get(taskField)));
+        for (String taskField : taskEPTaskFieldMap.keySet()) {
+            taskResult.put(taskField, epTask.get(taskEPTaskFieldMap.get(taskField)));
         }
 
         //set engagement plan lookup on task
