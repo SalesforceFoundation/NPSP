@@ -2,8 +2,7 @@
     handleInputChange: function(component) {
         this.setListVisibility(component, false);
 
-        var el = component.find('input').getElement();
-        var keyword = el.value;
+        var keyword = component.find('input').get('v.value');
 
         // IE 11 fires the input event when we tab off,
         // causing it to reopen.
