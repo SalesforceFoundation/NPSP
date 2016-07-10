@@ -106,7 +106,9 @@
 
             // tell our visualforce page we are done loading
             var event = $A.get("e.c:HH_ContainerLoadedEvent");
-            event.fire();
+            //event.fire();
+            var vfEventHandlers = component.get('v.vfEventHandlers');
+            vfEventHandlers.HH_ContainerLoadedEvent(event);
 
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
@@ -225,7 +227,9 @@
                     // tell our visualforce page we are done saving, so it should save
                     // its data and close the page.
                     var event = $A.get("e.c:HH_HouseholdSavedEvent");
-                    event.fire();
+                    //event.fire();
+                    var vfEventHandlers = component.get('v.vfEventHandlers');
+                    vfEventHandlers.HH_HouseholdSavedEvent(event);
                 }
             } else if (component.isValid() && state === "ERROR") {
                 self.reportError(component, response);
@@ -367,7 +371,10 @@
             event.setParams({
                 "contact": con
             });
-            event.fire();
+            //event.fire();
+            var vfEventHandlers = component.get('v.vfEventHandlers');
+            vfEventHandlers.HH_ContactAfterRemoveEvent(event);
+            
         }
     },
 

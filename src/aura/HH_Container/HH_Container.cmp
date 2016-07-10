@@ -2,6 +2,7 @@
     <!-- public attributes -->
     <aura:attribute name="hhId" type="String" access="public" />
     <aura:attribute name="namespacePrefix" type="String" access="public" />
+    <aura:attribute name="vfEventHandlers" type="Object" access="public" />
 
     <!-- private attributes -->
     <aura:attribute name="hh" type="Object" access="private" />
