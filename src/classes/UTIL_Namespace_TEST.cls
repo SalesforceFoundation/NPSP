@@ -108,6 +108,8 @@ public with sharing class UTIL_Namespace_TEST {
         str = Label.alloTotals;
         str = Label.alloCampaignExceedsOppAmount;
         str = Label.alloUnallocated;
+        str = Label.stgHelpBatchCreateDefault;
+        str = Label.addrHHAddressAlwaysDefault;
 
         // The following labels are referenced because the spider was having
         // issues resolving references to them and they need to be directly
