@@ -1,0 +1,15 @@
+{
+  "name": "@salesforce-ux/design-system",
+  "version": "1.0.0",
+  "description": "Salesforce Lightning Design System",
+  "license": "SEE LICENSE IN README.md",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:salesforce-ux/design-system.git"
+  },
+  "author": "Salesforce",
+  "engines": {
+    "node": ">=0.12",
+    "npm": ">=2.7.0"
+  }
+}
