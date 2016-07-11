@@ -43,12 +43,12 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
     public static boolean hasRunAddrTrigger = false;
 
     /*******************************************************************************************************
-    * @description map from Country name to Country Code
+    * @description map from Country name (UPPER CASE) to Country Code
     */
     private static Map<String, String> validCountriesByLabel = new Map<String, String>();
 
     /*******************************************************************************************************
-    * @description map from State name to State Code
+    * @description map from State name (UPPER CASE) to State Code
     */
     private static Map<String, String> validStatesByLabel = new Map<String, String>();
 
@@ -909,7 +909,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * @param addr the Address to look at
     * @return string The Address's unique Key
     */ 
-    private static string getAddrKey(Address__c addr) {
+    public static string getAddrKey(Address__c addr) {
         string strKey =
             strCleanup(addr.MailingStreet__c) +
             strCleanup(addr.MailingStreet2__c) +
@@ -1033,7 +1033,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             // lookup country if needed, by country code
             string strCountryCode = (string)sobjSrc.get(strFieldPrefixSrc + 'CountryCode');
             if (addr.MailingCountry__c == null && strCountryCode != null) {
-                addr.MailingCountry__c = validCountriesByCode.get(strCountryCode);
+                addr.MailingCountry__c = validCountriesByCode.get(strCountryCode.toUpperCase());
             }
             
             // lookup state if needed, by country code and state code.
@@ -1072,9 +1072,9 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
         } else {
             if (addr.MailingCountry__c != null) {
-                if (validCountriesByLabel.containsKey(addr.MailingCountry__c)) {
+                if (validCountriesByLabel.containsKey(addr.MailingCountry__c.toUpperCase())) {
                     sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
-                    sobjDst.put(strFieldPrefix + 'CountryCode', validCountriesByLabel.get(addr.MailingCountry__c));
+                    sobjDst.put(strFieldPrefix + 'CountryCode', validCountriesByLabel.get(addr.MailingCountry__c.toUpperCase()));
                 } else if (validCountriesByCode.containsKey(addr.MailingCountry__c.toUpperCase())) {
                     sobjDst.put(strFieldPrefix + 'CountryCode', addr.MailingCountry__c.toUpperCase());
                     sobjDst.put(strFieldPrefix + 'Country', validCountriesByCode.get(addr.MailingCountry__c.toUpperCase()));
@@ -1087,9 +1087,9 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                 sobjDst.put(strFieldPrefix + 'Country', null);                
             }
             if (addr.MailingState__c != null) {             
-                if (validStatesByLabel.containsKey(addr.MailingState__c)) {
+                if (validStatesByLabel.containsKey(addr.MailingState__c.toUpperCase())) { 
                     sobjDst.put(strFieldPrefix + 'State', addr.MailingState__c);
-                    sobjDst.put(strFieldPrefix + 'StateCode', validStatesByLabel.get(addr.MailingState__c));
+                    sobjDst.put(strFieldPrefix + 'StateCode', validStatesByLabel.get(addr.MailingState__c.toUpperCase()));
                 } else {
                 	// too expensive for us to create the map of CountryCode|StateCode to StateLabel
                 	// so we will just try to save any state that isn't a label as a code.
@@ -1134,14 +1134,14 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             list<Schema.Picklistentry> countryPLValues = acctFields.get('BillingCountryCode').getDescribe().getPicklistValues();
             for (Schema.Picklistentry p : countryPLValues) {
                 if (p.isActive()) { 
-                    validCountriesByLabel.put(p.getLabel(), p.getValue()); 
+                    validCountriesByLabel.put(p.getLabel().toUpperCase(), p.getValue()); 
                     validCountriesByCode.put(p.getValue(), p.getLabel());
                 }
             }
             list<Schema.Picklistentry> statePLValues = acctFields.get('BillingStateCode').getDescribe().getPicklistValues();
             for (Schema.Picklistentry p : statePLValues) {
                 if (p.isActive()) { 
-                    validStatesByLabel.put(p.getLabel(), p.getValue());
+                    validStatesByLabel.put(p.getLabel().toUpperCase(), p.getValue());
                     // we can't have a map of valid StateCodes, because they are not unique.
                     // ideally we would have a map of CountryCode + StateCode -> StateLabel
                     // but Salesforce provides us no way of figuring out picklist dependencies efficiently. 

@@ -80,8 +80,11 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
                 Account accOld = (Account)listOld[i];
                 // note that we detect whether the address change is coming from the address trigger,
                 // in which case we don't want to create a new address.
-                if (ADDR_Addresses_TDTM.hasRunAddrTrigger)
+                if (ADDR_Addresses_TDTM.hasRunAddrTrigger) {
+                    UTIL_Debug.debug('DJH**** stop Addr Trigger recursion in ADDR_Account_TDTM');
                     continue;
+                    
+                }
                 // we only support address management with HH Accounts and Organizational Accounts (if enabled)
                 if ((acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE && 
                 		!UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) ||
