@@ -1296,6 +1296,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Time:</value>
     </labels>
     <labels>
+        <fullName>btnRemove</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>button label on the Remove Contact popup</shortDescription>
+        <value>Remove</value>
+    </labels>
+    <labels>
         <fullName>campaignMemberStatusDefault</fullName>
         <categories>Campaign Member</categories>
         <language>en_US</language>
@@ -2391,12 +2399,196 @@ If you want to know which Opportunities would have previously included this doub
         <value>Show more</value>
     </labels>
     <labels>
+        <fullName>lblAddressOverride</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblAddressOverride</shortDescription>
+        <value>(address override)</value>
+    </labels>
+    <labels>
+        <fullName>lblBtnAddAllHHMembers</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblBtnAddAllHHMembers</shortDescription>
+        <value>Add All Members</value>
+    </labels>
+    <labels>
+        <fullName>lblBtnAddContact</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblBtnAddContact</shortDescription>
+        <value>Add {0}</value>
+    </labels>
+    <labels>
+        <fullName>lblCCardExcludeFrom</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblCCardExcludeFrom</shortDescription>
+        <value>Exclude from:</value>
+    </labels>
+    <labels>
+        <fullName>lblCity</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblCity</shortDescription>
+        <value>City</value>
+    </labels>
+    <labels>
+        <fullName>lblCountry</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblCountry</shortDescription>
+        <value>Country</value>
+    </labels>
+    <labels>
+        <fullName>lblDeleteContact</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>caption of Remove Contact popup</shortDescription>
+        <value>Remove Contact</value>
+    </labels>
+    <labels>
+        <fullName>lblDeleteContactPrompt</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>prompt for the Remove Contact Popup</shortDescription>
+        <value>Do you want to remove this Contact from this Household on Save?</value>
+    </labels>
+    <labels>
+        <fullName>lblFindInContacts</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>autocomplete&apos;s label for &quot;smith in Contacts&quot;</shortDescription>
+        <value>in Contacts</value>
+    </labels>
+    <labels>
+        <fullName>lblFindOrAddContact</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>string displayed in the autocomplete control when empty</shortDescription>
+        <value>Find a contact or add a new contact to the household</value>
+    </labels>
+    <labels>
+        <fullName>lblFirstName</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblFirstName</shortDescription>
+        <value>First Name</value>
+    </labels>
+    <labels>
+        <fullName>lblFormalGreeting</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblFormalGreeting</shortDescription>
+        <value>Formal Greeting</value>
+    </labels>
+    <labels>
+        <fullName>lblHousehold</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblHousehold</shortDescription>
+        <value>Household</value>
+    </labels>
+    <labels>
+        <fullName>lblHouseholdName</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblHouseholdName</shortDescription>
+        <value>Household Name</value>
+    </labels>
+    <labels>
+        <fullName>lblInformalGreeting</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblInformalGreeting</shortDescription>
+        <value>Informal Greeting</value>
+    </labels>
+    <labels>
+        <fullName>lblLastName</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblLastName</shortDescription>
+        <value>Last Name</value>
+    </labels>
+    <labels>
+        <fullName>lblMergeHHPrompt</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblMergeHHPrompt</shortDescription>
+        <value>{0} is in a Household with other members.  Do you want to just add {0}, or add all members from the Household?</value>
+    </labels>
+    <labels>
+        <fullName>lblMergeHHTitle</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblMergeHHTitle</shortDescription>
+        <value>Merge Households</value>
+    </labels>
+    <labels>
         <fullName>lblNPSPSettings</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>lblNPSPSettings</shortDescription>
         <value>NPSP Settings</value>
+    </labels>
+    <labels>
+        <fullName>lblNoHHMergePermissions</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>error displayed when required perms missing to add a contact and its household</shortDescription>
+        <value>You must have update and delete permissions on Households (Accounts) in order to add an existing contact to the Household.</value>
+    </labels>
+    <labels>
+        <fullName>lblPostalCode</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblPostalCode</shortDescription>
+        <value>Postal Code</value>
+    </labels>
+    <labels>
+        <fullName>lblSalutation</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblSalutation</shortDescription>
+        <value>Salutation</value>
+    </labels>
+    <labels>
+        <fullName>lblState</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblState</shortDescription>
+        <value>State</value>
+    </labels>
+    <labels>
+        <fullName>lblStreet</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblStreet</shortDescription>
+        <value>Street</value>
     </labels>
     <labels>
         <fullName>leadConvertAccountName</fullName>

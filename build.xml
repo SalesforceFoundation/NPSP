@@ -87,7 +87,15 @@ If you are on a unix based system, the following commands should work:
     </target>
 
     <!-- Update the Admin.profile to grant all FLS permissions -->
-    <target name="preDeployUpdatedAdminProfile">
+    <target name="deployUpdatedAdminProfile">
+
+        <delete dir="admin_profile" />
+
+        <echo>Retrieving Admin.profile</echo>
+        <retrieveAdminProfile dir="admin_profile" manifest="lib/admin_profile.xml" />
+
+        <echo>Granting read/edit FLS on all fields in Admin.profile</echo>
+        <updateAdminProfileGrantFLS dir="admin_profile" />
 
         <!-- Strip the existing recordTypeVisibilties -->
         <xslt 
@@ -115,10 +123,20 @@ If you are on a unix based system, the following commands should work:
             file="admin_profile/profiles/Admin.profile" 
             match="(${lt}tabVisibilities>)" 
             replace="${lt}recordTypeVisibilities>${line.separator}      ${lt}default>true${lt}/default>${line.separator}      ${lt}personAccountDefault>true${lt}/personAccountDefault>${line.separator}      ${lt}recordType>Opportunity.NPSP_Default${lt}/recordType>${line.separator}      ${lt}visible>true${lt}/visible>${line.separator}    ${lt}/recordTypeVisibilities>${line.separator}    \1" />
-        
+
+        <echo>Deploying updated Admin.profile</echo>
+        <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="admin_profile" maxPoll="${cumulusci.maxPoll.notest}" />
+
+        <!--
+        <delete dir="admin_profile" />
+        -->
     </target>
+
     <target name="postDeploy">
+        <!--
         <echo>Sleeping for 30 seconds to allow background jobs to complete</echo>
         <sleep seconds="30" />
+        -->
+        <antcall target="deployUpdatedAdminProfile" />
     </target>
 </project>
