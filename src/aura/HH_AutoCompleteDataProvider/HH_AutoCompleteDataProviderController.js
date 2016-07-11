@@ -26,7 +26,7 @@
                         var auraErrors = response.getError();
                         var errors = [];
                         if (auraErrors) {
-                            for (error in auraErrors) {
+                            for (var error in auraErrors) {
                                 if (error.message) {
                                     errors.push(new Error(error.message));
                                 }

@@ -4,9 +4,9 @@
         var autocomplete = component.find('autocomplete');
         var name = autocomplete.get('v.displayValue');
         var list = name.split(' ');
-        if (list.length == 0) {
+        if (list.length === 0) {
             con.LastName = name;
-        } else if (list.length == 1) {
+        } else if (list.length === 1) {
             con.LastName = list[0];
         } else {
             con.FirstName = list[0];

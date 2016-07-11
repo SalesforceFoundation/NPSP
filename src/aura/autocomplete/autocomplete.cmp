@@ -77,6 +77,7 @@
                                   class="{!'slds-input ' + (and(v.showPills, !empty(v.value), !empty(v.displayValue)) ? 'slds-hide' : '')}"
                                   placeholder="{!v.placeholder}"
                                   value="{!v.displayValue}"
+                                  updateOn="keyup"
                                   />
                 </div>
             </div>

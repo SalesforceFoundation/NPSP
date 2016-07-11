@@ -3,7 +3,7 @@
         var inputCmp = component.find('input');
 
         if (inputCmp) {
-            inputCmp.addHandler('input', component, 'c.handleInputChange');
+            inputCmp.addHandler('keyup', component, 'c.handleInputChange');
             inputCmp.addHandler('focus', component, 'c.handleInputFocus');
             inputCmp.addHandler('blur', component, 'c.handleInputBlur');
         }

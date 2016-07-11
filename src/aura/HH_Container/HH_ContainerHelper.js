@@ -106,7 +106,9 @@
 
             // tell our visualforce page we are done loading
             var event = $A.get("e.c:HH_ContainerLoadedEvent");
-            event.fire();
+            //event.fire();
+            var vfEventHandlers = component.get('v.vfEventHandlers');
+            vfEventHandlers.HH_ContainerLoadedEvent(event);
 
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
@@ -225,7 +227,9 @@
                     // tell our visualforce page we are done saving, so it should save
                     // its data and close the page.
                     var event = $A.get("e.c:HH_HouseholdSavedEvent");
-                    event.fire();
+                    //event.fire();
+                    var vfEventHandlers = component.get('v.vfEventHandlers');
+                    vfEventHandlers.HH_HouseholdSavedEvent(event);
                 }
             } else if (component.isValid() && state === "ERROR") {
                 self.reportError(component, response);
@@ -367,7 +371,10 @@
             event.setParams({
                 "contact": con
             });
-            event.fire();
+            //event.fire();
+            var vfEventHandlers = component.get('v.vfEventHandlers');
+            vfEventHandlers.HH_ContactAfterRemoveEvent(event);
+            
         }
     },
 
@@ -466,16 +473,20 @@
             // for each namespace, and property for each label.
             var lbl = $A.get('$Label');
 
-            for (var str in lbl['c']) {
+            for (var str in lbl.c) {
                 // the labels that fail to get resolved appear as
                 // "$Label namespace.foo does not exist: Field $Label namespace__foo does not exist. Check spelling."
-                if (lbl['c'][str] && lbl['c'][str].startsWith('$Label'))
-                    lbl['c'][str] = lbl[nspace][str];
+                if (lbl.c[str] && lbl.c[str].startsWith('$Label'))
+                    lbl.c[str] = lbl[nspace][str];
             }
         }
         return;
-
-        // force the following label references, or these won't be available to $Label.
+    },
+    
+    /*******************************************************************************************************
+     * @description force the following label references, or these won't be available to $Label.
+     */
+    includeLabelReferences: function() {
         try {
             $A.get("$Label.npsp.lblAddressOverride");
             $A.get("$Label.npsp.lblCCardExcludeFrom");
@@ -505,7 +516,6 @@
             $A.get("$Label.npsp.lblFindInContacts");
             $A.get("$Label.npsp.lblNoHHMergePermissions");
         } catch (e) {}
-
     },
 
     /*******************************************************************************************************
@@ -581,6 +591,7 @@
     addOrMergeContact: function(component, event) {
         var namespacePrefix = component.get('v.namespacePrefix');
         var conAdd = event.getParam('value');
+        conAdd.sobjectType = 'Contact';
         conAdd = this.removePrefixFromObjectFields(namespacePrefix, conAdd);
 
         var cMembers = 0;
@@ -834,8 +845,8 @@
                 } else {
                     // see if custom field starts with our namespace prefix
                     if (fld.endsWith('__c') && fld.startsWith(namespacePrefix)) {
-                        var fld2 = fld.replace(namespacePrefix, '');
-                        obj[fld2] = object[fld];
+                        var fld3 = fld.replace(namespacePrefix, '');
+                        obj[fld3] = object[fld];
                     } else {
                         obj[fld] = object[fld];
                     }
