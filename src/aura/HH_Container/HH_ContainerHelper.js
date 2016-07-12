@@ -834,6 +834,12 @@
 
             // process namespace prefix from each custom field
             for (var fld in object) {
+                
+                // if the field is actually an object, process its fields first
+                if (typeof object[fld] === 'object') {
+                    object[fld] = this.processPrefixObjectFields(namespacePrefix, object[fld], isAdd);
+                }
+                
                 if (isAdd) {
                     // see if custom field has no namespace prefix
                     if (fld.endsWith('__c') && fld.indexOf('__') === fld.lastIndexOf('__')) {
