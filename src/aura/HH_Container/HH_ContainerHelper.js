@@ -350,7 +350,7 @@
             } else {
                 con.npo02__Household__c = null;
             }
-            con.hhId = null;
+            con.HHId__c = null;
             
             var listConRemove = component.get('v.listConRemove');
             if (!listConRemove)
@@ -543,7 +543,7 @@
             con.AccountId = hhId;
         else
             con.npo02__Household__c = hhId;
-        con.hhId = hhId;
+        con.HHId__c = hhId;
         // tag each new contact with a timestamp, so we can identify it if we need to Remove it.
         con.dtNewContact = Date.now();
         component.set('v.conNew', con);
@@ -836,7 +836,7 @@
             for (var fld in object) {
                 
                 // if the field is actually an object, process its fields first
-                if (typeof object[fld] === 'object') {
+                if (object[fld] !== null && typeof object[fld] === 'object') {
                     object[fld] = this.processPrefixObjectFields(namespacePrefix, object[fld], isAdd);
                 }
                 
@@ -863,6 +863,5 @@
             return object;
         }
     },
-
 
 })
