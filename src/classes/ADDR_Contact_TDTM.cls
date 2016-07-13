@@ -41,8 +41,8 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
     * 	Rules:
     * 		inserting new contact - make their address a new default address, unless they say it is an override
     * 		updating an existing contact - make their address a new default address, unless they say it is an override
-    *       moving an existing contact to a new household or different household - make their address a new default address,
-    *           unless they say it is an override
+    *       moving an existing contact to a new household or different household without an address - make their address
+    *       a new default address, unless they say it is an override
     * @param listNew the list of Contacts from trigger new. 
     * @param listOld the list of Contacts from trigger old. 
     * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
@@ -68,8 +68,8 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         // Rules:
         // inserting new contact - make their address a new default address, unless they say it is an override
         // updating an existing contact - make their address a new default address, unless they say it is an override
-        // moving an existing contact to a new household or different household - make their address a new default address,
-        //     unless they say it is an override
+        // moving an existing contact to a new household or different household without an address - make their address
+        //     a new default address, unless they say it is an override
         
         boolean isBefore = (triggerAction == TDTM_Runnable.Action.BeforeUpdate || triggerAction == TDTM_Runnable.Action.BeforeInsert);
         if (isBefore) { 
