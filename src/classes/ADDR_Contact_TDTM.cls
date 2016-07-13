@@ -201,7 +201,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 }
 
                 // if the contacts address changed or if the contact with an address moves to a new household remember the contact
-                if (isContactAddressChanged(con, conOld) || (acctChanged)) 
+                if (isContactAddressChanged(con, conOld) || (acctChanged && !isContactAddressEmpty(con))) 
                     listConCreateAddr.add(con);
             }             
         }
