@@ -1537,7 +1537,7 @@ public with sharing class ADDR_Addresses_TEST2 {
 
     /*********************************************************************************************************
     * @description update a household contact to be removed from existing household and verify that a new 
-    * household is created and the contact address matches the new HH Account Address and new Addresses created
+    * household is created and the contact address matches the new HH Account Address and new Address created
     **********************************************************************************************************/            
     static testMethod void updateHHContactToNewHH() {
         if (strTestOnly != '*' && strTestOnly != 'updateOrgContactToHH') return;
@@ -1557,9 +1557,11 @@ public with sharing class ADDR_Addresses_TEST2 {
         Test.stopTest();
         
         // verify that the new HH and Contacts share the same address
-        Map<Id, Account> mapAccIdAcc = new Map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude from Account]);
-        Map<Id, Contact> mapConIdCon = new Map<Id, Contact>([select Id, Name, AccountId, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, MailingLatitude, MailingLongitude from Contact]);
-        Map<Id, Address__c> mapAddrIdAddr = new Map<Id, Address__c>([select Id, Default_Address__c, MailingStreet__c, Household_Account__c from Address__c]);
+        Map<Id, Account> mapAccIdAcc = new Map<Id, Account>([SELECT Id, Name, BillingStreet, BillingCity, BillingState,
+            BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude from Account]);
+        Map<Id, Contact> mapConIdCon = new Map<Id, Contact>([SELECT Id, Name, AccountId, is_Address_Override__c, Current_Address__c,
+            MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, MailingLatitude, MailingLongitude FROM Contact]);
+        Map<Id, Address__c> mapAddrIdAddr = new Map<Id, Address__c>([SELECT Id, Default_Address__c, MailingStreet__c, Household_Account__c FROM Address__c]);
 
         // verify new accounts with new addresses were created and previous accounts and addresses were removed
         for (Contact conT : listConT) {

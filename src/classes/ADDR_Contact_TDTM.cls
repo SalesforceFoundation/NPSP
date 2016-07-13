@@ -41,8 +41,8 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
     * 	Rules:
     * 		inserting new contact - make their address a new default address, unless they say it is an override
     * 		updating an existing contact - make their address a new default address, unless they say it is an override
-    *       moving an existing contact to a new household or one without default -
-    *           make their address a new default address, unless an override unless they say it is an override
+    *       moving an existing contact to a new household or different household - make their address a new default address,
+    *           unless they say it is an override
     * @param listNew the list of Contacts from trigger new. 
     * @param listOld the list of Contacts from trigger old. 
     * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
@@ -58,8 +58,9 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         map<Id, boolean> mapAddrIdIsOverride = new map<Id, boolean>();
         list<Contact> listConAddrReset = new list<Contact>();
         Map<Id,Account> mapAccountIdAccount = null;
-        boolean hasDefaultAddress = false;
-        
+        boolean acctHasAddress = false;
+        boolean acctChanged = false;
+
 		// bail out if address mgmt turned off.
         if (UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c)
         	return dmlWrapper;
@@ -67,8 +68,8 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         // Rules:
         // inserting new contact - make their address a new default address, unless they say it is an override
         // updating an existing contact - make their address a new default address, unless they say it is an override
-        // moving an existing contact to a new household or one without default -
-        //     make their address a new default address, unless they say it is an override
+        // moving an existing contact to a new household or different household - make their address a new default address,
+        //     unless they say it is an override
         
         boolean isBefore = (triggerAction == TDTM_Runnable.Action.BeforeUpdate || triggerAction == TDTM_Runnable.Action.BeforeInsert);
         if (isBefore) { 
@@ -80,7 +81,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                     setAccountId.add(con.AccountId);
             }
             mapAccountIdAccount = new Map<Id,Account>([select Id, npe01__SYSTEM_AccountType__c,
-                (select Id from Addresses__r where Default_Address__c = true) from Account where Id IN :setAccountId]);
+                (select Id from Addresses__r) from Account where Id IN :setAccountId]);
         }        
        
         integer i = -1;        
@@ -94,12 +95,15 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             if (!isBefore && (con.HHId__c != con.AccountId))
                 continue;
             if (isBefore) {
-                hasDefaultAddress = (con.AccountId != null && mapAccountIdAccount.containsKey(con.AccountId)
+                acctHasAddress = (mapAccountIdAccount.containsKey(con.AccountId)
                     && mapAccountIdAccount.get(con.AccountId).Addresses__r.size() > 0);
                 Account a = mapAccountIdAccount.get(con.AccountId);
                 if (a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE)
                    continue;
             }                
+
+            Contact conOld = (listOld != null ? (Contact)listOld[i] : null);
+            acctChanged = (conOld != null && conOld.AccountId != con.AccountId);
 
             // BEFORE INSERT
             if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
@@ -109,7 +113,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                     if (con.is_Address_Override__c)
                         // track which address's need their dates updated
                         mapAddrIdIsOverride.put(con.Current_Address__c, true);
-                } else if (isContactAddressEmpty(con) && hasDefaultAddress) {
+                } else if (isContactAddressEmpty(con) && acctHasAddress) {
                 	// if the contact has no address specified and the household has a default address, pick up the hh default.
                     listConAddrReset.add(con);                	
                 }
@@ -143,13 +147,11 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             	//     - if MailingAddress field changes, update/new address object
                 //     - if isAddressOverride changes to false, refill from Default Address
             	
-            	Contact conOld = (Contact)listOld[i];
-            	
             	// new highest priority! if Account changes... 
-                if (conOld != null && con.AccountId != conOld.AccountId) {
+                if (acctChanged) {
                     // if no override, refill from the Default Address
             	    if (!con.is_Address_Override__c && !isContactAddressChanged(con, conOld)) {
-                        if (hasDefaultAddress) { // do not refresh contact address if new hh does not have an address
+                        if (acctHasAddress) { // refresh address if the contact does not have one and account does
                             listConAddrReset.add(con);
                         }
             	    } else { // create a new address on the account
@@ -198,12 +200,8 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                     continue;
                 }
 
-                // if the address changed, remember the contact we want to add a new address for    
-                Contact conOld = (listOld != null ? (Contact)listOld[i] : null);
-                // if the contact with an address moves to a new household remember the contact
-                boolean isNewHH = (conOld != null && conOld.AccountId != null
-                    && conOld.AccountId != con.AccountId && !isContactAddressEmpty(con));
-                if (isContactAddressChanged(con, conOld) || isNewHH) 
+                // if the contacts address changed or if the contact with an address moves to a new household remember the contact
+                if (isContactAddressChanged(con, conOld) || (acctChanged)) 
                     listConCreateAddr.add(con);
             }             
         }
