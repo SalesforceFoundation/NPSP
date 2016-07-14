@@ -54,7 +54,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         	
         DmlWrapper dmlWrapper = new DmlWrapper();        
         list<Contact> listConAddrSet = new list<Contact>(); 
-        list<Contact> listConCreateAddr = new list<Contact>();
+        Set<Contact> setConCreateAddr = new Set<Contact>();
         map<Id, boolean> mapAddrIdIsOverride = new map<Id, boolean>();
         list<Contact> listConAddrReset = new list<Contact>();
         Map<Id,Account> mapAccountIdAccount = null;
@@ -155,7 +155,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                             listConAddrReset.add(con);
                         }
             	    } else { // create a new address on the account
-                        listConCreateAddr.add(con);                    
+                        setConCreateAddr.add(con);                    
             	    }                
             	} else {
             	
@@ -202,7 +202,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
 
                 // if the contacts address changed or if the contact with an address moves to a new household remember the contact
                 if (isContactAddressChanged(con, conOld) || (acctChanged && !isContactAddressEmpty(con))) 
-                    listConCreateAddr.add(con);
+                    setConCreateAddr.add(con);
             }             
         }
         
@@ -225,8 +225,8 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             updateAddrIsOverride(mapAddrIdIsOverride, dmlWrapper);
             
         // create any new Default Address objects
-        if (listConCreateAddr.size() > 0)
-            createAddrFromCon(listConCreateAddr, dmlWrapper, triggerAction);
+        if (setConCreateAddr.size() > 0)
+            createAddrFromCon(new List<Contact>(setConCreateAddr), dmlWrapper, triggerAction);
             
         return dmlWrapper;    
     }
