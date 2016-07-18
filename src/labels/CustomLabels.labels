@@ -589,14 +589,6 @@
         <value>EP Tasks can only be dependent on other EP Tasks that belong to the same EP Template.</value>
     </labels>
     <labels>
-        <fullName>EPTaskWaitingStatus</fullName>
-        <categories>Engagement Plans</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>EPTaskWaitingStatus</shortDescription>
-        <value>Waiting on Dependent Task</value>
-    </labels>
-    <labels>
         <fullName>HiddenForSecurity</fullName>
         <categories>settings</categories>
         <language>en_US</language>

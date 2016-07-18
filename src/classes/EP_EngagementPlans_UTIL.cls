@@ -37,6 +37,7 @@
 */
 public with sharing class EP_EngagementPlans_UTIL {
 
+	public static final String TASK_STATUS_WAITING = 'Waiting on Dependent Task';
 	public static final String BLANK_ASSIGNMENT_USER_CREATING = 'User Creating Action Plan';
 	public static final String BLANK_ASSIGNMENT_OWNER_RECEIVING = 'Owner of Receiving Object';
 	public static final String DELAY_TYPE_AFTER_COMPLETED = 'After Date Completed';

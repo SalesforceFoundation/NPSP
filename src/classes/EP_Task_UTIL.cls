@@ -162,7 +162,7 @@ public with sharing class EP_Task_UTIL {
         //Dependent Task defaults
         //Don't set reminder for dependent tasks; it will be set once the parent task is complete.
         } else {
-            taskResult.Status = Label.EPTaskWaitingStatus;
+            taskResult.Status = EP_EngagementPlans_UTIL.TASK_STATUS_WAITING;
         }
 
         return taskResult;
