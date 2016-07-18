@@ -89,9 +89,13 @@ public with sharing class EP_TaskDependency_TDTM extends TDTM_Runnable {
         List<Task> taskUpdateEmail = new List<Task>();
         List<Task> taskUpdateNoEmail = new List<Task>();
 
+        //set of engagement plans for the current trigger set, for filtering out Tasks not related to current EPs.
+        Set<Id> engagementPlanIds = new Set<Id>();
+
         //gather all EP tasks that are direct children of EP tasks in the current trigger set
         //these will have their status, date, and reminder modified
         for (Task parentTask : tasksWithDependencies) {
+            engagementPlanIds.add(parentTask.Engagement_Plan__c);
             Engagement_Plan_Task__c parentEPTask = taskUtil.epTaskMap.get(parentTask.Engagement_Plan_Task__c);
             for (Engagement_Plan_Task__c childEPTask : parentEPTask.Engagement_Plan_Tasks__r) {
                 directDependentEPTasks.put(childEPTask.id, taskUtil.epTaskMap.get(childEPTask.id));
@@ -109,8 +113,9 @@ public with sharing class EP_TaskDependency_TDTM extends TDTM_Runnable {
         //we need to deal with lists of Tasks for each EP Task id.
         Map<Id, List<Task>> mapEpTaskIdTasks = new Map<Id, List<Task>>();
         for (Task taskForUpdate :  [SELECT Id, ActivityDate, Engagement_Plan_Task__c, Engagement_Plan__c
-                                    FROM Task WHERE Engagement_Plan_Task__c IN :directDependentEPTasks.values() OR 
-                                    Engagement_Plan_Task__c IN :indirectDependentEPTasks.values()]) {
+                                    FROM Task WHERE Engagement_Plan__c IN :engagementPlanIds AND
+                                    (Engagement_Plan_Task__c IN :directDependentEPTasks.values() OR 
+                                    Engagement_Plan_Task__c IN :indirectDependentEPTasks.values())]) {
             if (!mapEpTaskIdTasks.containsKey(taskForUpdate.Engagement_Plan_Task__c)) {
                 mapEpTaskIdTasks.put(taskForUpdate.Engagement_Plan_Task__c, new List<Task>{taskForUpdate});
             } else {
@@ -118,9 +123,8 @@ public with sharing class EP_TaskDependency_TDTM extends TDTM_Runnable {
             }
         }
         
-        //update directly dependent tasks that are now active; send email per the template setting
+        //update directly dependent tasks that are now active; send email per the task setting
         for (Engagement_Plan_Task__c epTask : directDependentEPTasks.values()) {
-            Engagement_Plan_Template__c template = taskUtil.templateMap.get(epTask.Engagement_Plan_Template__c);
             
             for (Task taskForUpdate : mapEpTaskIdTasks.get(epTask.Id)) {
 
