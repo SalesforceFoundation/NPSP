@@ -25,7 +25,9 @@ public class UTIL_RecordTypes {
     private static List<Schema.Recordtypeinfo> recordTypesList = New List<Schema.Recordtypeinfo>();
     
     public static String giftrecordTypeNameForTests;
+    public static Schema.RecordTypeInfo giftRecordTypeInfoForTests;
     public static String membershiprecordTypeNameForTests;
+    public static Schema.RecordTypeInfo membershipRecordTypeInfoForTests;
     
     /*******************************************************************************************************
     * @description Populates the static properties of the class, that store information about and Object and 
@@ -107,6 +109,28 @@ public class UTIL_RecordTypes {
         }
     }
 
+    /**
+     * @description Provides the RecordTypeInfo of the first Record Type found
+     * in an specific Object, or null if the object does not have any Record
+     * Types.
+     * @param objectName The name of the Object.
+     * @return Schema.RecordTypeInfo
+     */
+    public static Schema.RecordTypeInfo getRecordTypeInfoForGiftsTests(String objectName) {
+        if (giftRecordTypeInfoForTests == null){
+             // make sure we have this object's record types Mapped
+            if (!recordTypesByName.containsKey(objectName)) {
+                fillMapsForObject(objectName);
+            }
+
+            if (recordTypesList.size() > 0) {
+                giftRecordTypeInfoForTests = recordTypesList[0];
+            }
+        }
+
+        return giftRecordTypeInfoForTests;
+    }
+
     /*******************************************************************************************************
     * @description Provides the Id of the first Record Type found in an specific Object, or a blank string if the
     *              Object does not have any Record Types.
@@ -114,48 +138,85 @@ public class UTIL_RecordTypes {
     * @return String The name of a Record Type that belongs to the specified Object, if at least one exists. Blank 
     *                string otherwise.
     */
-    public static String getrecordTypeNameForGiftsTests(String objectName) {  
-
-        if (giftrecordTypeNameForTests == null){
-             // make sure we have this object's record types Mapped
-            if (!recordTypesByName.containsKey(objectName)) 
-                fillMapsForObject(objectName);
-                
-            if(recordTypesList.size()==0){
-                giftrecordTypeNameForTests = '';
-            } else{
-                giftrecordTypeNameForTests = recordTypesList[0].getName();          
-            }
-        }      
-       
-        return giftrecordTypeNameForTests;
+    public static String getRecordTypeNameForGiftsTests(String objectName) {
+        Schema.RecordTypeInfo rti = getRecordTypeInfoForGiftsTests(objectName);
+        if (rti == null) {
+            return '';
+        } else {
+            return rti.getName();
+        }
     }
-    
-    /*******************************************************************************************************
-    * @description Provides the Id of the first Record Type found in an specific Object, if it has only one, or 
-    *              the second one if it has more than one.
-    * @param objectName The name of the Object.
-    * @return String The name of the first Record Type found in the specified Object, if it has only one, or 
-    *              the second one if it has more than one. Blank string if none exists.
-    */
-    public static String getrecordTypeNameForMembershipTests(String objectName){      
-        if (membershiprecordTypeNameForTests == null){        
-            // make sure we have this object's record types Mapped
-            if (!recordTypesByName.containsKey(objectName)) 
+
+    /**
+     * @descroption Provides the Id of the first record type found for a
+     * specific object, or null if the object does not have any record types.
+     *
+     * @param objectName The name of the object
+     * @return Id
+     */
+    public static Id getRecordTypeIdForGiftsTests(String objectName) {
+        Schema.RecordTypeInfo rti = getRecordTypeInfoForGiftsTests(objectName);
+        if (rti == null) {
+            return null;
+        } else {
+            return rti.getRecordTypeId();
+        }
+    }
+
+    /**
+     * @description Provides the RecordTypeInfo of the first Record Type found
+     * in an specific Object, or null if the object does not have any Record
+     * Types.
+     * @param objectName The name of the Object.
+     * @return Schema.RecordTypeInfo
+     */
+    public static Schema.RecordTypeInfo getRecordTypeInfoForMembershipTests(String objectName) {
+        if (membershipRecordTypeInfoForTests == null){
+             // make sure we have this object's record types Mapped
+            if (!recordTypesByName.containsKey(objectName)) {
                 fillMapsForObject(objectName);
-                
-            if(recordTypesList.size()==0){
-                membershiprecordTypeNameForTests = '';
-            } else if(recordTypesList.size()==1){
-                membershiprecordTypeNameForTests = recordTypesList[0].getName();
-            } else {
-                membershiprecordTypeNameForTests = recordTypesList[1].getName();            
+            }
+
+            if (recordTypesList.size() > 0) {
+                membershipRecordTypeInfoForTests = recordTypesList[0];
             }
         }
-        
-        return membershiprecordTypeNameForTests;
+
+        return membershipRecordTypeInfoForTests;
     }
-        
+
+    /*******************************************************************************************************
+    * @description Provides the Id of the first Record Type found in an specific Object, or a blank string if the
+    *              Object does not have any Record Types.
+    * @param objectName The name of the Object.
+    * @return String The name of a Record Type that belongs to the specified Object, if at least one exists. Blank 
+    *                string otherwise.
+    */
+    public static String getRecordTypeNameForMembershipTests(String objectName) {
+        Schema.RecordTypeInfo rti = getRecordTypeInfoForMembershipTests(objectName);
+        if (rti == null) {
+            return '';
+        } else {
+            return rti.getName();
+        }
+    }
+
+    /**
+     * @descroption Provides the Id of the first record type found for a
+     * specific object, or null if the object does not have any record types.
+     *
+     * @param objectName The name of the object
+     * @return Id
+     */
+    public static Id getRecordTypeIdForMembershipTests(String objectName) {
+        Schema.RecordTypeInfo rti = getRecordTypeInfoForMembershipTests(objectName);
+        if (rti == null) {
+            return null;
+        } else {
+            return rti.getRecordTypeId();
+        }
+    }
+
     /*******************************************************************************************************
     * @description Provides the name of the Record Type with an specific Id in an specific Object.
     * @param objectName The name of the Object.

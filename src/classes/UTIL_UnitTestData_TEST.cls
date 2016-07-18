@@ -155,13 +155,17 @@ public class UTIL_UnitTestData_TEST {
     */
 
     public static List<Opportunity> OppsForContactList (List<Contact> Cons, id CampId, string Stage, date Close, double Amt, string rectype, string oppType) {
+        id rtid = UTIL_RecordTypes.GetRecordTypeId ('Opportunity',rectype);
+        return OppsForContactListByRecTypeId(Cons, CampId, Stage, Close, Amt, rtid, oppType);
+    }
+
+    public static List<Opportunity> OppsForContactListByRecTypeId (List<Contact> Cons, id CampId, string Stage, date Close, double Amt, Id rtid, string oppType) {
      
         // given a List of Contacts,
         // add one Opp per contact w/ the specified data
         // TBD should allow specifying rectype (optional)
     
         List<Opportunity> OppsToAdd = new List<Opportunity> ();
-        id rtid = UTIL_RecordTypes.GetRecordTypeId ('Opportunity',rectype);
         UTIL_Debug.debug('recordtypeintest: ' + rtid);
 
         for ( Contact thisCon : Cons ) {
@@ -181,17 +185,24 @@ public class UTIL_UnitTestData_TEST {
         }
         return oppsToAdd;
     }
-    
+
     /*******************************************************************************************************
     * @description Create an Opportunity for each Contact, using their Account as the Opportunity's Account.
     */
     public static List<Opportunity> OppsForContactWithAccountList (List<Contact> Cons, id CampId, string Stage, date Close, double Amt, string rectype, string oppType) {
+        id rtid = UTIL_RecordTypes.GetRecordTypeId ('Opportunity',rectype);
+        return OppsForContactWithAccountListByRecTypeId(Cons, CampId, Stage, Close, Amt, rtid, oppType);
+    }
+
+    /*******************************************************************************************************
+    * @description Create an Opportunity for each Contact, using their Account as the Opportunity's Account.
+    */
+    public static List<Opportunity> OppsForContactWithAccountListByRecTypeId (List<Contact> Cons, id CampId, string Stage, date Close, double Amt, Id rtid, string oppType) {
      
         // given a List of Contacts,
         // add one Opp per contact w/ the specified data
     
         List<Opportunity> OppsToAdd = new List<Opportunity> ();
-        id rtid = UTIL_RecordTypes.GetRecordTypeId ('Opportunity',rectype);
         UTIL_Debug.debug('recordtypeintest: ' + rtid);
 
         for ( Contact thisCon : Cons ) {
@@ -214,12 +225,16 @@ public class UTIL_UnitTestData_TEST {
     }
 
     public static List<Opportunity> OppsForAccountList (List<Account> listAcc, id CampId, string Stage, date Close, double Amt, string rectype, string oppType) {
+        id rtid = UTIL_RecordTypes.GetRecordTypeId ('Opportunity',rectype);
+        return OppsForAccountListByRecTypeId(listAcc, CampId, Stage, Close, Amt, rtid, oppType);
+    }
+
+    public static List<Opportunity> OppsForAccountListByRecTypeId (List<Account> listAcc, id CampId, string Stage, date Close, double Amt, Id rtid, string oppType) {
      
         // given a List of Accounts,
         // add one Opp per Account w/ the specified data
     
         List<Opportunity> OppsToAdd = new List<Opportunity> ();
-        id rtid = UTIL_RecordTypes.GetRecordTypeId ('Opportunity',rectype);
         UTIL_Debug.debug('recordtypeintest: ' + rtid);
 
         for (Account acc : listAcc) {
