@@ -1,6 +1,6 @@
 <apex:page standardController="Opportunity" extensions="PSC_ManageSoftCredits_CTRL" showHeader="true" standardStylesheets="false" >
-    <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
     <apex:stylesheet value="{!URLFOR($Resource.SLDS, '/0_12_2/assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
     
     <apex:form >
       <div class="slds">
@@ -94,7 +94,7 @@
                     <apex:repeat value="{!softCredits}" var="credit">
                     <tr>
                         <td>
-                            <apex:inputField styleClass="lookupInput slds-input--small" value="{!credit.contactRole.ContactId}" required="false">
+                            <apex:inputField styleClass="lookupInput" value="{!credit.contactRole.ContactId}" required="false">
                                 <apex:actionSupport action="{!refresh}" event="onchange" rerender="totalSelected, totalUn" />
                             </apex:inputField>
                         </td>
@@ -115,7 +115,7 @@
                         </td>
                         <td>
                             <apex:outputPanel id="amountField">
-                                <apex:inputField styleClass="slds-input slds-input--small" value="{!credit.partial.Amount__c}" rendered="{!NOT(credit.fullCredit)}">
+                                <apex:inputField styleClass="slds-input" value="{!credit.partial.Amount__c}" rendered="{!NOT(credit.fullCredit)}">
                                     <apex:actionSupport action="{!refresh}" event="onchange" reRender="totalSelected, totalUn" />
                                 </apex:inputField>
                                 <apex:outputText styleClass="slds-form-element__static" value="{!credit.partial.Amount__c}" rendered="{!credit.fullCredit}" />

@@ -106,7 +106,7 @@ public with sharing class UTIL_Currency implements UTIL_Currency.Interface_x {
      */
     public String getCurrencySymbol(Id recordId) {
         Interface_x currencyUtil = UTIL_Currency.getInstance();
-        if (currencyUtil.isMultiCurrencyOrganization()) {
+        if (currencyUtil.isMultiCurrencyOrganization() && recordId != null) {
             return currencyUtil.queryCurrencyIsoCode(recordId);
         } else {
             return currencyUtil.getDefaultCurrencySymbol();
