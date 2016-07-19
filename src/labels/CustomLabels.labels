@@ -2028,7 +2028,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionAccountModel</shortDescription>
-        <value>All of your individual Contacts should use the same Account Model. View these Contacts by running the &lt;b&gt;Individual Contacts by Account Type&lt;/b&gt; report in the NPSP Health Check reports folder.</value>
+        <value>All of your Accounts should use the same Account Model. View these Accounts by running the &lt;b&gt;Individual Accounts by Account Type&lt;/b&gt; report in the NPSP Health Check reports folder.</value>
     </labels>
     <labels>
         <fullName>healthSolutionAccountRTIssue</fullName>
