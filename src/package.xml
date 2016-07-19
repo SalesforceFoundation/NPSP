@@ -1586,6 +1586,7 @@
         <members>NPSP_Health_Check/Contacts_Without_Accounts</members>
         <members>NPSP_Health_Check/Empty_Household_Accounts</members>
         <members>NPSP_Health_Check/Empty_Household_Objects</members>
+        <members>NPSP_Health_Check/Individual_Accounts_by_Account_Type</members>
         <members>NPSP_Health_Check/Individual_Contacts_by_Account_Type</members>
         <members>NPSP_Health_Check/Opportunities_with_Primary_Contact_Roles</members>
         <members>NPSP_Health_Check/Opportunities_without_Payments</members>
