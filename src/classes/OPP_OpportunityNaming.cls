@@ -410,7 +410,11 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
             }
         } else if (dt == Schema.DisplayType.Currency) {
             if (obj.get(fieldName.trim())!=null) {
-                result = Label.npe01.DefaultContactTransactionCurrency + String.valueOf(obj.get(fieldName.trim()));
+                String currencySymbol = UTIL_Currency.getInstance().getCurrencySymbol((Id)obj.get('Id'));
+                if (currencySymbol.length() == 3) {
+                    currencySymbol += ' ';
+                }
+                result = currencySymbol + String.valueOf(obj.get(fieldName.trim()));
                 if (result.endsWith('.00'))
                     result = result.subString(0,result.length()-3);    
             }
