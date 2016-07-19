@@ -1373,7 +1373,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthDetailsAccountProcessor</shortDescription>
-        <value>The Account Model is set to {0}, but there are a mixture of Account types being used.</value>
+        <value>The Account Model is set to {0}, but Health Check has found that you&apos;re using a mixture of Account types.</value>
     </labels>
     <labels>
         <fullName>healthDetailsAccountRTIssue</fullName>
@@ -2028,7 +2028,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionAccountModel</shortDescription>
-        <value>All of your Accounts should use the same Account Model. View these Accounts by running the &lt;b&gt;Individual Accounts by Account Type&lt;/b&gt; report in the NPSP Health Check reports folder.</value>
+        <value>All of your Accounts should use the same Account Model. View all of your Accounts and their types by running the &lt;b&gt;Individual Accounts by Account Type&lt;/b&gt; report in the NPSP Health Check reports folder.</value>
     </labels>
     <labels>
         <fullName>healthSolutionAccountRTIssue</fullName>
