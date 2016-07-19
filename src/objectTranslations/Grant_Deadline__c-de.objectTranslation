@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>false</plural>
+        <value><!-- Grant Deadline --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>true</plural>
+        <value><!-- Grant Deadline --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>false</plural>
+        <value><!-- Grant Deadline --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>true</plural>
+        <value><!-- Grant Deadline --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>false</plural>
+        <value><!-- Grant Deadline --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>true</plural>
+        <value><!-- Grant Deadline --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>false</plural>
+        <value><!-- Grant Deadline --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>true</plural>
+        <value><!-- Grant Deadline --></value>
+    </caseValues>
+    <fields>
+        <label>Fälligk.dat. d. letzten Unterst.termins</label>
+        <name>Grant_Deadline_Due_Date__c</name>
+    </fields>
+    <fields>
+        <help>Das Datum, an dem zustellbare Unterstützung tatsächlich übermittelt wurde.</help>
+        <label>Schlussdatum für zustellb. Unterstützung</label>
+        <name>Grant_Deliverable_Close_Date__c</name>
+    </fields>
+    <fields>
+        <label>Anforderungen d. zustellb. Unterstützung</label>
+        <name>Grant_Deliverable_Requirements__c</name>
+    </fields>
+    <fields>
+        <label>Unterstützungs-Opportunity</label>
+        <name>Opportunity__c</name>
+        <relationshipLabel>Unterstützungs-Termine</relationshipLabel>
+    </fields>
+    <gender><!-- Neuter --></gender>
+    <layouts>
+        <layout>Grant Deadline Layout</layout>
+        <sections>
+            <label>Benutzerdefinierte Links</label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>Unterstützungsanforderungen</label>
+            <section>Grant Deliverable Requirements</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Grant Deadline Name --></nameFieldLabel>
+</CustomObjectTranslation>
