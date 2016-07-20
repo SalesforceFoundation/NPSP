@@ -636,7 +636,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     }
     
     /*********************************************************************************************************
-    * @description Verifies that there are no Opportunities that 
+    * @description Verifies that there are no Opportunities that are missing payment records
     */
     public void verifyNoMissingOppPayments() {
         if (!UTIL_CustomSettingsFacade.getContactsSettings().npe01__Payments_Enabled__c)
