@@ -1415,52 +1415,80 @@
         <name>CustomObject</name>
     </types>
     <types>
+        <members>Account-de</members>
         <members>Account-es</members>
+        <members>Addr_Verification_Settings__c-de</members>
         <members>Addr_Verification_Settings__c-en_US</members>
         <members>Addr_Verification_Settings__c-es</members>
+        <members>Address_Verification_Settings__c-de</members>
         <members>Address_Verification_Settings__c-en_US</members>
         <members>Address_Verification_Settings__c-es</members>
+        <members>Address__c-de</members>
         <members>Address__c-en_US</members>
         <members>Address__c-es</members>
+        <members>Allocation__c-de</members>
         <members>Allocation__c-en_US</members>
         <members>Allocation__c-es</members>
+        <members>Allocations_Settings__c-de</members>
         <members>Allocations_Settings__c-en_US</members>
         <members>Allocations_Settings__c-es</members>
+        <members>Batch_Data_Entry_Settings__c-de</members>
         <members>Batch_Data_Entry_Settings__c-en_US</members>
         <members>Batch_Data_Entry_Settings__c-es</members>
+        <members>Batch__c-de</members>
         <members>Batch__c-en_US</members>
         <members>Batch__c-es</members>
+        <members>Contact-de</members>
         <members>Contact-es</members>
+        <members>DataImport__c-de</members>
         <members>DataImport__c-en_US</members>
         <members>DataImport__c-es</members>
+        <members>Data_Import_Settings__c-de</members>
         <members>Data_Import_Settings__c-en_US</members>
         <members>Data_Import_Settings__c-es</members>
+        <members>Error_Settings__c-de</members>
         <members>Error_Settings__c-en_US</members>
         <members>Error_Settings__c-es</members>
+        <members>Error__c-de</members>
         <members>Error__c-en_US</members>
         <members>Error__c-es</members>
+        <members>Fund__c-de</members>
         <members>Fund__c-en_US</members>
         <members>Fund__c-es</members>
+        <members>General_Accounting_Unit__c-de</members>
         <members>General_Accounting_Unit__c-en_US</members>
         <members>General_Accounting_Unit__c-es</members>
+        <members>Grant_Deadline__c-de</members>
         <members>Grant_Deadline__c-en_US</members>
         <members>Grant_Deadline__c-es</members>
+        <members>Household_Naming_Settings__c-de</members>
         <members>Household_Naming_Settings__c-en_US</members>
         <members>Household_Naming_Settings__c-es</members>
+        <members>Lead-de</members>
         <members>Lead-es</members>
+        <members>Opportunity-de</members>
         <members>Opportunity-es</members>
+        <members>Opportunity_Naming_Settings__c-de</members>
         <members>Opportunity_Naming_Settings__c-en_US</members>
         <members>Opportunity_Naming_Settings__c-es</members>
+        <members>Partial_Soft_Credit__c-de</members>
         <members>Partial_Soft_Credit__c-en_US</members>
         <members>Partial_Soft_Credit__c-es</members>
+        <members>Schedulable__c-de</members>
         <members>Schedulable__c-en_US</members>
         <members>Schedulable__c-es</members>
+        <members>Trigger_Handler__c-de</members>
         <members>Trigger_Handler__c-en_US</members>
         <members>Trigger_Handler__c-es</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c-de</members>
         <members>npe01__Contacts_And_Orgs_Settings__c-es</members>
+        <members>npe01__OppPayment__c-de</members>
         <members>npe01__OppPayment__c-es</members>
+        <members>npe03__Recurring_Donation__c-de</members>
         <members>npe03__Recurring_Donation__c-es</members>
+        <members>npo02__Household__c-de</members>
         <members>npo02__Household__c-es</members>
+        <members>npo02__Households_Settings__c-de</members>
         <members>npo02__Households_Settings__c-es</members>
         <name>CustomObjectTranslation</name>
     </types>
@@ -1602,6 +1630,7 @@
         <name>StaticResource</name>
     </types>
     <types>
+        <members>de</members>
         <members>es</members>
         <name>Translations</name>
     </types>
