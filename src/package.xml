@@ -584,6 +584,18 @@
         <members>Data_Import_Settings__c.Batch_Size__c</members>
         <members>Data_Import_Settings__c.Contact_Custom_Unique_ID__c</members>
         <members>Data_Import_Settings__c.Contact_Matching_Rule__c</members>
+        <members>Donor_Level__c.Account_Summary_Field__c</members>
+        <members>Donor_Level__c.Active__c</members>
+        <members>Donor_Level__c.Benefits_Description__c</members>
+        <members>Donor_Level__c.Campaign__c</members>
+        <members>Donor_Level__c.Goal_Number_of_Gifts__c</members>
+        <members>Donor_Level__c.Goal_Total_Amount__c</members>
+        <members>Donor_Level__c.Impact_Description__c</members>
+        <members>Donor_Level__c.Lifetime_Donor_Level__c</members>
+        <members>Donor_Level__c.Maximum_Amount__c</members>
+        <members>Donor_Level__c.Minimum_Amount__c</members>
+        <members>Donor_Level__c.Prospect_Action_Plan_Template__c</members>
+        <members>Donor_Level__c.Stewardship_Action_Plan_Template__c</members>
         <members>Error_Settings__c.Disable_Error_Handling__c</members>
         <members>Error_Settings__c.Enable_Debug__c</members>
         <members>Error_Settings__c.Error_Notifications_On__c</members>
@@ -1400,6 +1412,7 @@
         <members>Contact</members>
         <members>DataImport__c</members>
         <members>Data_Import_Settings__c</members>
+        <members>Donor_Level__c</members>
         <members>Error_Settings__c</members>
         <members>Error__c</members>
         <members>Fund__c</members>
@@ -1469,6 +1482,7 @@
         <members>Batch_Data_Entry</members>
         <members>Contact_Merge</members>
         <members>DataImport__c</members>
+        <members>Donor_Level__c</members>
         <members>General_Accounting_Unit__c</members>
         <members>NPSP_Resources</members>
         <members>NPSP_Settings</members>
@@ -1511,6 +1525,7 @@
         <members>Campaign-NPSP Campaign Layout</members>
         <members>Contact-Contact Layout</members>
         <members>DataImport__c-Data Import Layout</members>
+        <members>Donor_Level__c-Donor Level Layout</members>
         <members>Error__c-Error Layout</members>
         <members>Fund__c-Fund Layout</members>
         <members>General_Accounting_Unit__c-General Accounting Unit Layout</members>
@@ -1537,6 +1552,7 @@
         <members>DataImport__c.Failed_Data_Imports</members>
         <members>DataImport__c.Succesfully_Imported</members>
         <members>DataImport__c.To_Be_Imported</members>
+        <members>Donor_Level__c.All</members>
         <members>General_Accounting_Unit__c.All</members>
         <members>Opportunity.To_Be_Acknowledged</members>
         <members>Trigger_Handler__c.All</members>
