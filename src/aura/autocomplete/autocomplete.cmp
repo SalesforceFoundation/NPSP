@@ -15,6 +15,7 @@
     <aura:attribute name="dataProvider" type="Aura.Component[]" required="true" access="public"/>
     <aura:attribute name="itemVar" default="item" type="String" access="public"/>
     <aura:attribute name="isListVisible" default="false" type="Boolean" access="public"/>
+    <aura:attribute name="idDataCallback" type="Integer" default="0" access="private" />
 
     <aura:attribute name="displayValueTemplate" type="Aura.Component[]" access="public">
         <div class="slds-pill_container slds-show">
