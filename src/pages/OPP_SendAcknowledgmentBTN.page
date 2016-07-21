@@ -2,8 +2,6 @@
     <apex:sectionHeader title="{!$Label.sendAcknowledgmentPageTitle}" />
     <apex:pageMessages />
     <p/>
-    <apex:outputLink value="{!retURL}">{!$Label.sendAcknowledgmentReturnLinkLabel}</apex:outputLink>
-    <p/>
     <apex:outputPanel rendered="{!cNotSent > 0}">
         <p>{!$Label.sendAcknowledgmentFailureReasons}</p>
         <apex:dataList value="{!listOppNotSent}" var="opp">
