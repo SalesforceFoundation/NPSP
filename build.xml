@@ -127,9 +127,7 @@ If you are on a unix based system, the following commands should work:
         <echo>Deploying updated Admin.profile</echo>
         <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="admin_profile" maxPoll="${cumulusci.maxPoll.notest}" />
 
-        <!--
         <delete dir="admin_profile" />
-        -->
     </target>
 
     <target name="postDeploy">
