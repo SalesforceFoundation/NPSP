@@ -69,5 +69,13 @@
         component.set('v.value', '');
         component.set('v.displayValue', '');
         component.set('v.keyword', '');
+    },
+    
+    clearList: function (component) {
+        component.set('v.items', []);
+        component.set('v.value', '');
+        component.set('v.displayValue', '');
+        component.set('v.keyword', '');
     }
+    
 })
