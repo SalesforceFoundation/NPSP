@@ -108,9 +108,11 @@
 
     // a Contact has been selected in the autocomplete
     handleAutoCompleteOptionSelectedEvent : function(component, event, helper) {
-        // collapse the autocomplete list
+        // collapse and clear the autocomplete list
         var autoComplete = component.find('HHAutoComplete');
         autoComplete.set('v.isListVisible', false);
+        autoComplete.clearList();
+        
         // do the work.
         helper.addOrMergeContact(component, event);
     },
