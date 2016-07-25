@@ -19,5 +19,10 @@
         evt.setParams({ "contact" : con });
         evt.fire();
     },
+    
+    clearList: function(component) {
+        var autocomplete = component.find('autocomplete');
+        autocomplete.clearList();
+    }
 
 })
