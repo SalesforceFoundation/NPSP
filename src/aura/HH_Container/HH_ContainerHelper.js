@@ -240,7 +240,9 @@
         // so we avoid deleting a household if that contact was the last one in the hh.
         var listHHMerge = component.get('v.listHHMerge');
         var hh = component.get('v.hh');
+        var listCon = component.get("v.listCon");
         var namespacePrefix = component.get('v.namespacePrefix');
+        hh.Number_of_Household_Members__c = listCon.length; 
         hh = this.addPrefixToObjectFields(namespacePrefix, hh);
         if (listHHMerge && listHHMerge.length > 0) {
             listHHMerge = this.addPrefixToListObjectFields(namespacePrefix, listHHMerge);
@@ -256,7 +258,6 @@
         }
 
         // save the contacts
-        var listCon = component.get("v.listCon");
         listCon = this.addPrefixToListObjectFields(namespacePrefix, listCon);
         action = component.get("c.upsertContacts");
         action.setParams({

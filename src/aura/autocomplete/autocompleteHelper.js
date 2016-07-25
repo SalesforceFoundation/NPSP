@@ -12,6 +12,8 @@
             component.set('v.keyword', keyword);
 
             if (!keyword) {
+                // user has cleared the textbox, so clear our results
+                component.set('v.items', []);
                 return;
             }
 
@@ -19,19 +21,28 @@
             component.set('v.showLoadingIndicator', true);
 
             var dataProvider = component.get('v.dataProvider')[0];
+            var idDataCallback = component.get('v.idDataCallback');
+            idDataCallback++;
+            component.set('v.idDataCallback', idDataCallback);
 
             dataProvider.provide(
                 keyword,
-                $A.getCallback(function (err, items) {
+                idDataCallback,
+                $A.getCallback(function (err, idDataCallback, items) {
                     if (!component || !component.isValid()) {
                         return;
                     }
-                    component.set('v.showLoadingIndicator', false);
                     if (err) {
+                        component.set('v.showLoadingIndicator', false);
                         throw err;
                     }
-
-                    component.set('v.items', items);
+                    var id = component.get('v.idDataCallback');
+                    // only refresh the list if this callback is the most recent
+                    if (idDataCallback >= id) {
+                        component.set('v.items', items);
+                        component.set('v.idDataCallback', idDataCallback);
+                        component.set('v.showLoadingIndicator', false);
+                    }
                 })
             );
 

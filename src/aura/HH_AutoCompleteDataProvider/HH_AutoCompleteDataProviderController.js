@@ -12,6 +12,7 @@
                 queryValue: args.keyword,
                 listCon: listCon
             });
+            queryAction.setAbortable();  
             queryAction.setCallback(
                 this,
                 function (response) {
@@ -20,6 +21,7 @@
                     if ('SUCCESS' === state) {
                         args.callback(
                             null,
+                            args.idDataCallback,
                             response.getReturnValue()
                         );
                     } else if ('ERROR' === state) {
@@ -34,6 +36,7 @@
                         }
                         args.callback(
                             errors,
+                            args.idDataCallback,
                             []
                         );
                     }
