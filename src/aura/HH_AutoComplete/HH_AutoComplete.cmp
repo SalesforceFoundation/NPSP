@@ -5,6 +5,9 @@
     <aura:attribute name="listCon" type="Object[]" access="public" />
     <aura:attribute name="isListVisible" default="false" type="Boolean" access="public"/>    
 
+    <!-- methods -->
+    <aura:method name="clearList" action="{!c.clearList}" access="public" />
+
     <!-- events we fire -->
     <aura:registerEvent name="ContactNewEvent" type="c:HH_ContactNewEvent" />
 
