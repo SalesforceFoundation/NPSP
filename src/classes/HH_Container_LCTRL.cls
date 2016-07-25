@@ -311,6 +311,13 @@ public with sharing class HH_Container_LCTRL {
                     listInsert.add(con2);
                 }
             }
+            
+
+            // avoid saving of contacts from updating household names
+            // to avoid record lock errors.  let the household be responsible
+            // for updating its name.
+            HH_ProcessControl.inFutureContext = true;
+            
             // allow potential duplicates when rules to warn are turned on.
             Database.DMLOptions dml = new Database.DMLOptions();
             dml.DuplicateRuleHeader.AllowSave = true;

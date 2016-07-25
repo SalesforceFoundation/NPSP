@@ -236,14 +236,28 @@
             }
         };
 
-        // first need to merge any households (Accounts only) before we save contacts
-        // so we avoid deleting a household if that contact was the last one in the hh.
-        var listHHMerge = component.get('v.listHHMerge');
+        // get our objects
         var hh = component.get('v.hh');
         var listCon = component.get("v.listCon");
+        var listHHMerge = component.get('v.listHHMerge');
+        var listConRemove = component.get("v.listConRemove");
         var namespacePrefix = component.get('v.namespacePrefix');
+
+        // update our auto-naming exclusion states
+        this.updateNamingExclusions(component, hh);
+
+        // save the Household
         hh.Number_of_Household_Members__c = listCon.length; 
         hh = this.addPrefixToObjectFields(namespacePrefix, hh);
+        action = component.get("c.updateHousehold");
+        action.setParams({
+            hh: hh
+        });
+        action.setCallback(this, callback);
+        $A.enqueueAction(action);
+
+        // need to merge any households (Accounts only) before we save contacts
+        // so we avoid deleting a household if that contact was the last one in the hh.
         if (listHHMerge && listHHMerge.length > 0) {
             listHHMerge = this.addPrefixToListObjectFields(namespacePrefix, listHHMerge);
             action = component.get("c.mergeHouseholds");
@@ -266,19 +280,7 @@
         action.setCallback(this, callback);
         $A.enqueueAction(action);
 
-        // update our auto-naming exclusion states
-        this.updateNamingExclusions(component, hh);
-
-        // save the Household
-        action = component.get("c.updateHousehold");
-        action.setParams({
-            hh: hh
-        });
-        action.setCallback(this, callback);
-        $A.enqueueAction(action);
-
         // remove any contacts
-        var listConRemove = component.get("v.listConRemove");
         listConRemove = this.addPrefixToListObjectFields(namespacePrefix, listConRemove);
         action = component.get("c.upsertContacts");
         action.setParams({
