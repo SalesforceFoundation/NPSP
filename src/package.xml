@@ -73,11 +73,11 @@
         <members>CON_DeleteContactOverride_TEST</members>
         <members>CON_DoNotContact_TDTM</members>
         <members>CON_DoNotContact_TEST</members>
+        <members>EP_EngagementPlanTaskValidation_TDTM</members>
+        <members>EP_EngagementPlanTaskValidation_TEST</members>
         <members>EP_EngagementPlans_TDTM</members>
         <members>EP_EngagementPlans_TEST</members>
         <members>EP_EngagementPlans_UTIL</members>
-        <members>EP_TaskDependencyCheck_TDTM</members>
-        <members>EP_TaskDependencyCheck_TEST</members>
         <members>EP_TaskDependency_TDTM</members>
         <members>EP_TaskDependency_TEST</members>
         <members>EP_TaskRollup_TDTM</members>
