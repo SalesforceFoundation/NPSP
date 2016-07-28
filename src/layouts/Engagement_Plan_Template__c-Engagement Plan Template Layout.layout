@@ -51,8 +51,25 @@
     </layoutSections>
     <relatedLists>
         <fields>NAME</fields>
+        <fields>Assigned_To__c</fields>
+        <fields>Days_After__c</fields>
         <fields>Dependent_Task__c</fields>
+        <fields>Reminder__c</fields>
+        <fields>Send_Email__c</fields>
+        <fields>Priority__c</fields>
+        <fields>Type__c</fields>
         <relatedList>Engagement_Plan_Task__c.Engagement_Plan_Template__c</relatedList>
+    </relatedLists>
+    <relatedLists>
+        <fields>Opportunity__c</fields>
+        <fields>Recurring_Donation__c</fields>
+        <fields>Contact__c</fields>
+        <fields>Case__c</fields>
+        <fields>Campaign__c</fields>
+        <fields>Account__c</fields>
+        <fields>CREATED_DATE</fields>
+        <fields>CREATEDBY_USER</fields>
+        <relatedList>Engagement_Plan__c.Engagement_Plan_Template__c</relatedList>
     </relatedLists>
     <relatedLists>
         <fields>TASK.SUBJECT</fields>
@@ -73,13 +90,16 @@
         <fields>TASK.LAST_UPDATE</fields>
         <relatedList>RelatedHistoryList</relatedList>
     </relatedLists>
+    <relatedLists>
+        <relatedList>RelatedNoteList</relatedList>
+    </relatedLists>
     <showEmailCheckbox>false</showEmailCheckbox>
     <showHighlightsPanel>false</showHighlightsPanel>
     <showInteractionLogPanel>false</showInteractionLogPanel>
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00h36000003N2f9</masterLabel>
+        <masterLabel>00hF000000s9Ymw</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>
