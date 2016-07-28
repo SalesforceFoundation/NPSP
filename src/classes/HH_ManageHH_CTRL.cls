@@ -132,25 +132,15 @@ public with sharing class HH_ManageHH_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description ActionMethod to save the Household and close the page.
-    * @return PageReference the original calling page's URL.
+    * @description ActionMethod to save the Household
+    * @return null
     */
     public PageReference save() {
         try {
-            // we've already saved the data for the contacts in the household.
-            // now we only need to save the account fields an update, and we don't want
-            // any of the normal account trigger work to run again.  specifically,
-            // we may have updated the names and greetings, because the contacts have changed,
-            // but the user still may want auto-naming turned on.  our normal trigger flow
-            // would think the user updated the name from what it was, and thus it should be
-            // excluded from auto-naming!
-            HH_ProcessControl.inFutureContext = true;
             update hh;
         } catch (Exception ex) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, ex.getMessage()));
-            return null;
-        }
-        
-        return new PageReference('/' + hhId);
+        }        
+        return null; 
     }
 }

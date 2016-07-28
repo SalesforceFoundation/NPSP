@@ -413,12 +413,41 @@ public with sharing class HH_Container_LCTRL {
                 !Account.sObjectType.getDescribe().isDeletable()) {
                     throw new System.NoAccessException(); 
                }
+            
             for (Account loser : listHHMerge)
                 merge hhWinner loser;
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
     }
+
+    /*******************************************************************************************************
+    * @description saves all changes from the Manage Household UI page to the database
+    * @param hh The Household
+    * @param listCon The list of Contacts to save (update and insert)
+    * @param listConRemove The list of Contacts to remove from the household
+    * @param listHHMerge the list of Households to merge into the winner
+    * @return void
+    */
+    @AuraEnabled
+    public static void saveHouseholdPage(SObject hh, list<Contact> listCon, list<Contact> listConRemove, list<Account>listHHMerge) {
+
+        // save the Household
+        updateHousehold(hh);
+        
+        // need to merge any households (Accounts only) before we save contacts
+        // so we avoid deleting a household if that contact was the last one in the hh.
+        if (listHHMerge != null && listHHMerge.size() > 0) {
+            mergeHouseholds((Account)hh, listHHMerge);
+        }
+        
+        // save the contacts
+        upsertContacts(listCon);
+        
+        // remove any contacts
+        upsertContacts(listConRemove);                
+    }
+
 
     /*******************************************************************************************************
     * @description sets the Household Name and Greetings on the Household object, given the list of Contacts

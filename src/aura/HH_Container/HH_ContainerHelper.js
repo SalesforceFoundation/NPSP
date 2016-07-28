@@ -212,30 +212,15 @@
      * if successful, then calls the visualforce page's save actionMethod, which will also close the page.
      */
     save: function(component) {
+        // this will take some time!!
         component.set("v.showSpinner", true);
-
-        // keep track of ourselves and whether both server updates succeed
-        var self = this;
-        var callbacksWaiting = 4;
-        var action;
-
-        // create our shared callback code
-        var callback = function(response) {
-            var state = response.getState();
-            if (component.isValid() && state === "SUCCESS") {
-                if (--callbacksWaiting === 0) {
-                    // tell our visualforce page we are done saving, so it should save
-                    // its data and close the page.
-                    var event = $A.get("e.c:HH_HouseholdSavedEvent");
-                    //event.fire();
-                    var vfEventHandlers = component.get('v.vfEventHandlers');
-                    vfEventHandlers.HH_HouseholdSavedEvent(event);
-                }
-            } else if (component.isValid() && state === "ERROR") {
-                self.reportError(component, response);
-            }
-        };
-
+        
+        // first tell our visualforce page to save its household field set
+        // we do this before we save our own data, to avoid record locks
+        // that account merging may cause.
+        var vfEventHandlers = component.get('v.vfEventHandlers');
+        vfEventHandlers.HH_saveHousehold();
+        
         // get our objects
         var hh = component.get('v.hh');
         var listCon = component.get("v.listCon");
@@ -246,47 +231,37 @@
         // update our auto-naming exclusion states
         this.updateNamingExclusions(component, hh);
 
-        // save the Household
         hh.Number_of_Household_Members__c = listCon.length; 
-        hh = this.addPrefixToObjectFields(namespacePrefix, hh);
-        action = component.get("c.updateHousehold");
-        action.setParams({
-            hh: hh
-        });
-        action.setCallback(this, callback);
-        $A.enqueueAction(action);
-
-        // need to merge any households (Accounts only) before we save contacts
-        // so we avoid deleting a household if that contact was the last one in the hh.
+        hh = this.addPrefixToObjectFields(namespacePrefix, hh);        
         if (listHHMerge && listHHMerge.length > 0) {
             listHHMerge = this.addPrefixToListObjectFields(namespacePrefix, listHHMerge);
-            action = component.get("c.mergeHouseholds");
-            action.setParams({
-                hhWinner: hh,
-                listHHMerge: listHHMerge
-            });
-            action.setCallback(this, callback);
-            $A.enqueueAction(action);
-        } else {
-            callbacksWaiting--;
         }
-
-        // save the contacts
         listCon = this.addPrefixToListObjectFields(namespacePrefix, listCon);
-        action = component.get("c.upsertContacts");
-        action.setParams({
-            listCon: listCon
-        });
-        action.setCallback(this, callback);
-        $A.enqueueAction(action);
-
-        // remove any contacts
         listConRemove = this.addPrefixToListObjectFields(namespacePrefix, listConRemove);
-        action = component.get("c.upsertContacts");
+
+        // call the save method that does all the work together!
+        var action = component.get("c.saveHouseholdPage");
         action.setParams({
-            listCon: listConRemove
+            hh: hh,
+            listCon: listCon,
+            listConRemove: listConRemove,
+            listHHMerge: listHHMerge
         });
-        action.setCallback(this, callback);
+        var self = this;
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            if (component.isValid() && state === "SUCCESS") {
+                // if no errors on the vfpage, close!
+                if (vfEventHandlers.HH_hasErrors()) {
+                    component.set("v.showSpinner", false);
+                 } else {
+                    self.closePage(component);
+                }
+            } else if (component.isValid() && state === "ERROR") {
+                component.set("v.showSpinner", false);
+                self.reportError(component, response);
+            }
+        });
         $A.enqueueAction(action);
     },
 
@@ -402,7 +377,7 @@
     /*******************************************************************************************************
      * @description Close the page by redirecting back to the household
      */
-    close: function(component) {
+    closePage: function(component) {
         // the correct way to handle navigation in Salesforce classic vs. LEX/mobile
         /*global sforce */
         if (typeof sforce === "undefined") {
