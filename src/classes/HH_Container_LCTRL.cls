@@ -183,11 +183,12 @@ public with sharing class HH_Container_LCTRL {
             strSoql += strComma + strF;
             strComma = ',';
         }
-        // add a few fields we need for contact merge code
+        // add a few fields we need for contact merge and standard code that
         // we don't have these in our set of fields, because we want to avoid FLS on them,
         // since we want to support both HH Accounts and Objects, but we expect customers might
         // only grant permissions on the model they are currently using, but we may have data in both models.
         // the find autocomplete lookup also uses this code, so it needs to see both types of households.
+        strSoql += ', npo02__Household__c'; 
         strSoql += ', Account.Number_of_Household_Members__c, npo02__Household__r.Number_of_Household_Members__c ';
         strSoql += ', Account.Name, npo02__Household__r.Name ';
         strSoql += ' FROM Contact ';
@@ -208,7 +209,6 @@ public with sharing class HH_Container_LCTRL {
                 'Salutation', 
                 'Name',
                 'npo02__Naming_Exclusions__c', 
-                'npo02__Household__c', 
                 'AccountId', 
                 UTIL_Namespace.StrTokenNSPrefix('HHId__c'),
                 UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Name__c'), 
@@ -246,7 +246,6 @@ public with sharing class HH_Container_LCTRL {
     private static set<String> setUpdateableContactFields() {
         set<String> setContactFields = new Set<String>{
             'AccountId',
-            'npo02__Household__c',
             'FirstName',
             'LastName',
             'Salutation',
