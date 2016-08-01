@@ -132,11 +132,15 @@ public with sharing class HH_ManageHH_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description ActionMethod to save the Household and close the page.
-    * @return PageReference the original calling page's URL.
+    * @description ActionMethod to save the Household
+    * @return null
     */
     public PageReference save() {
-        update hh;
-        return new PageReference('/' + hhId);
+        try {
+            update hh;
+        } catch (Exception ex) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, ex.getMessage()));
+        }        
+        return null; 
     }
 }

@@ -22,7 +22,7 @@
             <li class="slds-list__item" style="margin: 0; border: 0; vertical-align: top" data-icontact="{!icon}">
                 <c:HH_ContactCard contact="{!con}" />
             </li>
-        </aura:iteration>
+        </aura:iteration> 
     </ul>
 
 </aura:component>

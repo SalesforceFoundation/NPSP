@@ -183,11 +183,12 @@ public with sharing class HH_Container_LCTRL {
             strSoql += strComma + strF;
             strComma = ',';
         }
-        // add a few fields we need for contact merge code
+        // add a few fields we need for contact merge and standard code that
         // we don't have these in our set of fields, because we want to avoid FLS on them,
         // since we want to support both HH Accounts and Objects, but we expect customers might
         // only grant permissions on the model they are currently using, but we may have data in both models.
         // the find autocomplete lookup also uses this code, so it needs to see both types of households.
+        strSoql += ', npo02__Household__c'; 
         strSoql += ', Account.Number_of_Household_Members__c, npo02__Household__r.Number_of_Household_Members__c ';
         strSoql += ', Account.Name, npo02__Household__r.Name ';
         strSoql += ' FROM Contact ';
@@ -208,7 +209,6 @@ public with sharing class HH_Container_LCTRL {
                 'Salutation', 
                 'Name',
                 'npo02__Naming_Exclusions__c', 
-                'npo02__Household__c', 
                 'AccountId', 
                 UTIL_Namespace.StrTokenNSPrefix('HHId__c'),
                 UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Name__c'), 
@@ -246,7 +246,6 @@ public with sharing class HH_Container_LCTRL {
     private static set<String> setUpdateableContactFields() {
         set<String> setContactFields = new Set<String>{
             'AccountId',
-            'npo02__Household__c',
             'FirstName',
             'LastName',
             'Salutation',
@@ -311,6 +310,13 @@ public with sharing class HH_Container_LCTRL {
                     listInsert.add(con2);
                 }
             }
+            
+
+            // avoid saving of contacts from updating household names
+            // to avoid record lock errors.  let the household be responsible
+            // for updating its name.
+            HH_ProcessControl.inFutureContext = true;
+            
             // allow potential duplicates when rules to warn are turned on.
             Database.DMLOptions dml = new Database.DMLOptions();
             dml.DuplicateRuleHeader.AllowSave = true;
@@ -406,12 +412,41 @@ public with sharing class HH_Container_LCTRL {
                 !Account.sObjectType.getDescribe().isDeletable()) {
                     throw new System.NoAccessException(); 
                }
+            
             for (Account loser : listHHMerge)
                 merge hhWinner loser;
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
     }
+
+    /*******************************************************************************************************
+    * @description saves all changes from the Manage Household UI page to the database
+    * @param hh The Household
+    * @param listCon The list of Contacts to save (update and insert)
+    * @param listConRemove The list of Contacts to remove from the household
+    * @param listHHMerge the list of Households to merge into the winner
+    * @return void
+    */
+    @AuraEnabled
+    public static void saveHouseholdPage(SObject hh, list<Contact> listCon, list<Contact> listConRemove, list<Account>listHHMerge) {
+
+        // save the Household
+        updateHousehold(hh);
+        
+        // need to merge any households (Accounts only) before we save contacts
+        // so we avoid deleting a household if that contact was the last one in the hh.
+        if (listHHMerge != null && listHHMerge.size() > 0) {
+            mergeHouseholds((Account)hh, listHHMerge);
+        }
+        
+        // save the contacts
+        upsertContacts(listCon);
+        
+        // remove any contacts
+        upsertContacts(listConRemove);                
+    }
+
 
     /*******************************************************************************************************
     * @description sets the Household Name and Greetings on the Household object, given the list of Contacts
