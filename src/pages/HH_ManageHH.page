@@ -55,7 +55,7 @@
                 </div>                
             </div>
             <!-- we expose a javascript function our lightning component can call to save the vf fieldset & close the page -->            
-            <apex:actionFunction action="{!save}" name="saveAndCloseVisualforce" />
+            <apex:actionFunction action="{!save}" name="saveVisualforce" rerender="panelErrors, vfForm" />
         </apex:form>
         
     </html>
@@ -121,14 +121,21 @@
             j$('.initialSpinner').hide();                                       
         },
         
-        // called by our lightning component when it has finished saving its data
-        // and it wants the page to save and close.
-        HH_HouseholdSavedEvent : function(event) {
-            // show our startup spinner, because this save takes time
-            j$('.initialSpinner').show();                                       
-            saveAndCloseVisualforce();
-        } 
+        // called by our lightning component when it wants the page to save its field set
+        HH_saveHousehold : function(event) {
+            saveVisualforce();
+        },
         
+        // called by our lightning component when it has finished saving its data,
+        // so it knows whether it is safe to close the page.
+        HH_hasErrors : function() {
+            // look for both validation errors visualforce puts on fields, and our own c:UTIL_PageMessages ui
+            // yes, this is a hack, but avoid yet another round trip to the server to ask about pageMessages 
+            // which wouldn't event include the validation errors on the fields!
+            var hasErrors = j$('.errorMsg').length > 0 || j$('.slds-theme--error').length > 0;
+            return hasErrors;
+        }
+                
     };
 
     </script>
