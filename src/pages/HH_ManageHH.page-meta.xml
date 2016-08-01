@@ -3,7 +3,6 @@
     <apiVersion>36.0</apiVersion>
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
-    <description></description>
     <label>HH_ManageHH</label>
     <packageVersions>
         <majorNumber>3</majorNumber>
