@@ -58,7 +58,7 @@ private class HH_ManageHH_TEST {
             system.assertEquals(UTIL_Namespace.getNamespace(), ctrl.namespacePrefix);
         else
             system.assertEquals('', ctrl.namespacePrefix);
-        system.assertNotEquals(null, ctrl.save());
+        system.assertEquals(null, ctrl.save());
         
        Test.stopTest();
     }
@@ -84,7 +84,7 @@ private class HH_ManageHH_TEST {
             system.assertEquals(UTIL_Namespace.getNamespace(), ctrl.namespacePrefix);
         else
             system.assertEquals('', ctrl.namespacePrefix);
-        system.assertNotEquals(null, ctrl.save());
+        system.assertEquals(null, ctrl.save());
         
         Test.stopTest();
     }
