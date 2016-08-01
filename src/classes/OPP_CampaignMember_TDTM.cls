@@ -31,7 +31,7 @@
 * @author Salesforce.com Foundation
 * @date 2015
 * @group Opportunity
-* @group-content ../../ApexDocContent/Opportunities.htm
+* @group-content ../../ApexDocContent/Opportunity.htm
 * @description Handles adding and updating campaign members based on campaign donations.
 */
 public class OPP_CampaignMember_TDTM extends TDTM_Runnable {
