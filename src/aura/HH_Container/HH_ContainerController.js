@@ -59,7 +59,7 @@
 
     // close and return to the household
     close : function(component, event, helper) {
-        helper.close(component);
+        helper.closePage(component);
     },
 
     // the default Address has changed, so update our Contacts
