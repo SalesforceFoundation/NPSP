@@ -57,6 +57,11 @@ global without sharing class STG_InstallScript implements InstallHandler {
                 UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
                 UTIL_MasterSchedulableHelper.setSchedulableTable();
             }
+
+            if (context.isUpgrade() && context.previousVersion().compareTo(new Version(3, 78)) < 0) {
+                // update record type settings ONLY if upgrading from a version prior to 3.78
+                UTIL_RecordTypeSettingsUpdate.getInstance().updateSettings();
+            }
         } catch(Exception e) {
             sendEmailOnInstallError(e, context);
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
