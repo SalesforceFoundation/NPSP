@@ -248,8 +248,10 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
         
             //no reason to do this, since we are redirecting back to the Opp.
             //Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.CONFIRM, 'All soft credit records have been saved.'));
-            
-            return new PageReference('/' + opp.Id);
+            PageReference pageRef = new PageReference('/'+opp.Id);
+            pageRef.setRedirect(true);
+            pageRef.getParameters().put('t',''+(System.currentTimeMillis()));
+            return pageRef;
         } catch (Exception ex) {
             Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
         }

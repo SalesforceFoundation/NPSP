@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2015
-* @group Contact
+* @group Opportunity
 * @description Tests for opporunity campaign member creation.
 */
 @isTest
