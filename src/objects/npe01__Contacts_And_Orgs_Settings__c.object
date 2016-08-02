@@ -87,7 +87,7 @@
         <description>Salesforce won&apos;t automatically create Payments for the selected Opportunity record types. Control or Command click to select more than one record type.</description>
         <externalId>false</externalId>
         <inlineHelpText>Salesforce won&apos;t automatically create Payments for the selected Opportunity record types. Control or Command click to select more than one record type.</inlineHelpText>
-        <label>Exlcuded Opp Record Types</label>
+        <label>Excluded Opp Record Types</label>
         <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
