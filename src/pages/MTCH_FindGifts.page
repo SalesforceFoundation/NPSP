@@ -258,21 +258,30 @@
             var fixedRect = fixed.getBoundingClientRect();
 
             headerPlaceholder.style.height = headerRect.height + 'px';
-            headerPlaceholder.style.width = headerRect.width + 'px';
             header.style.height = headerRect.height + 'px';
-            header.style.width = headerRect.width + 'px';
             fixedPlaceholder.style.height = fixedRect.height + 'px';
-            fixedPlaceholder.style.width = fixedRect.width + 'px';
             fixedPlaceholder.style.top = (fixedRect.top - headerRect.top) + 'px';
             fixedPlaceholder.style.left = (fixedRect.left - headerRect.left) + 'px';
             fixedWrapper.style.height = fixedRect.height + 'px';
-            fixedWrapper.style.width = fixedRect.width + 'px';
-            fixed.style.width = fixedRect.width + 'px';
 
             var fixedTopLimit = 24;
             var headerTopLimit = 48 + fixedRect.height - headerRect.height;
             var fixedPosition = '';
             var headerPosition = '';
+
+            function resizeHeader(e) {
+                var headerPlaceholderRect = headerPlaceholder.getBoundingClientRect();
+                if (fixedPosition == 'fixed') {
+                    fixed.style.width = (headerPlaceholderRect.width - 48) + 'px';
+                } else {
+                    fixed.style.width = '';
+                }
+                if (headerPosition == 'fixed') {
+                    header.style.width = headerPlaceholderRect.width + 'px';
+                } else {
+                    header.style.width = '';
+                }
+            }
 
             function updateHeader(e) {
                 var headerRect = header.getBoundingClientRect();
@@ -280,29 +289,33 @@
                 var fixedPlaceholderRect = fixedPlaceholder.getBoundingClientRect();
                 var fixedRect = fixed.getBoundingClientRect();
 
-                if (fixedPlaceholderRect.top <= fixedTopLimit && fixedPosition != 'fixed') {
+                if (fixedPlaceholderRect.top <= fixedTopLimit) {
                     fixed.style.position = 'fixed';
                     fixedPosition = 'fixed';
                     fixed.style.top = fixedTopLimit + 'px';
                     fixed.style.left = fixedPlaceholderRect.left + 'px';
+                    fixed.style.width = headerPlaceholderRect.width + 'px';
                 }
 
-                if (fixedPlaceholderRect.bottom > fixedRect.bottom && fixedPosition == 'fixed') {
+                if (fixedPlaceholderRect.bottom > fixedRect.bottom) {
                     fixed.style.position = fixedPosition = '';
                     fixed.style.top = '';
                     fixed.style.left = '';
+                    fixed.style.width = '';
                 }
 
-                if (headerPlaceholderRect.top <= headerTopLimit && headerPosition != 'fixed') {
+                if (headerPlaceholderRect.top <= headerTopLimit) {
                     header.style.position = headerPosition = 'fixed';
                     header.style.top = headerTopLimit + 'px';
                     header.style.left = headerPlaceholderRect.left + 'px';
+                    header.style.width = headerPlaceholderRect.width + 'px';
                 }
 
-                if (headerPlaceholderRect.bottom > headerRect.bottom && headerPosition == 'fixed') {
+                if (headerPlaceholderRect.bottom > headerRect.bottom) {
                     header.style.position = headerPosition = '';
                     header.style.top = '';
                     header.style.left = '';
+                    header.style.width = '';
                 }
 
                 var opacity;
@@ -332,6 +345,7 @@
                 if (!updating) {
                     requestAnimationFrame(function () {
                         updateHeader();
+                        resizeHeader();
                         updating = false;
                     });
                     updating = true;
@@ -339,6 +353,7 @@
             }
 
             document.addEventListener('scroll', scroll);
+            window.addEventListener('resize', scroll);
         })();
     </script>
 </apex:page>
