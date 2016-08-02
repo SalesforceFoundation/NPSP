@@ -176,6 +176,46 @@ private with sharing class PMT_PaymentCreator_TEST {
     /*********************************************************************************************************
     * @description
     operation:
+        Update a closed opp with a null amount to have a positive amount
+    verify:
+        payment is created
+    **********************************************************************************************************/            
+    static testMethod void nullAmountUpdatePositiveAmount() {
+        if (strTestOnly != '*' && strTestOnly != 'nullAmountUpdatePositiveAmount') return;
+        
+        npe01__Contacts_And_Orgs_Settings__c PaymentsSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true));
+        
+        // create test data
+        Account acct = new Account (
+            Name='Test Account'
+        );
+        insert acct;
+
+        Opportunity opp = new Opportunity (
+            Name='Test Opp',
+            AccountId = acct.id,
+            CloseDate = date.today(), 
+            StageName = UTIL_UnitTestData_TEST.getOpenStage()
+        );
+        insert opp;
+
+        list<npe01__OppPayment__c> opmtAll = [select id, npe01__payment_method__c, npe01__payment_amount__c, npe01__paid__c, npe01__written_off__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp.Id];
+        system.assertEquals(0, opmtAll.size());
+
+        opp.Amount = 8;
+        opp.StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+        update opp;
+
+        opmtAll = [select id, npe01__payment_method__c, npe01__payment_amount__c, npe01__paid__c, npe01__written_off__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp.Id];
+        system.assertEquals(1, opmtAll.size());
+        system.assertEquals(8, opmtAll[0].npe01__payment_amount__c);
+
+    }
+
+    /*********************************************************************************************************
+    * @description
+    operation:
         create an Opp whose Type value is NOT excluded in settings from creating payments
     verify:
         no payment created

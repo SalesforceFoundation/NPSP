@@ -316,12 +316,14 @@ public class PMT_PaymentCreator {
                         }
                     }
                     
-                    // we may need to add payments if the open opp amount has been changed from $0
-                    else if (thisOpp.Amount != 0 && thisOpp.Amount != null && (oldOpp.Amount == 0 || oldOpp.Amount == null ) 
-                        && !thisOpp.isClosed && !isNoPaymentForOpp(thisOpp)){
+                    // we need to add payments if the opp amount has been changed from $0 or null and is not closed/lost
+                    else if (thisOpp.Amount != 0 && thisOpp.Amount != null && !isNoPaymentForOpp(thisOpp) 
+                         && (!thisOpp.isClosed || thisOpp.isWon)
+                         && (oldOpp.Amount == 0 || oldOpp.Amount == null )){
+
                         npe01__oppPayment__c op = new npe01__oppPayment__c(
                             npe01__opportunity__c = thisOpp.id,
-                            npe01__Paid__c = false,
+                            npe01__Paid__c = thisOpp.isClosed,
                             npe01__Scheduled_Date__c = thisOpp.CloseDate,
                             npe01__Payment_Amount__c = thisOpp.Amount
                         );                                
