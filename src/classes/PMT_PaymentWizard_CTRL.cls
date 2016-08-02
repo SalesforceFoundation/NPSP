@@ -322,6 +322,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
 	        insert writeoffPayment;
 	        PageReference oldOppPage = new PageReference('/' + currentOpp.id);
 	        oldOppPage.setRedirect(true);
+            oldOppPage.getParameters().put('t',''+(System.currentTimeMillis()));
 	        return oldOppPage;
     	} catch(Exception e) {
     		Database.rollback(sp);
@@ -405,6 +406,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
 	        // Send the user to the detail page for the new account.
 	        PageReference oldOppPage = new PageReference('/' + currentOpp.id);
 	        oldOppPage.setRedirect(true);
+            oldOppPage.getParameters().put('t',''+(System.currentTimeMillis()));
 	        return oldOppPage;
         
         } catch(Exception e) {
