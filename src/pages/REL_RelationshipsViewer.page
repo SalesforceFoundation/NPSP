@@ -403,7 +403,7 @@
             uriString += 'retURL=' + currentContact.id;
             var encodedNewRel = encodeURI(uriString);
             infoText += '<a href=' + encodedNewRel + ' target="_blank" style="color: white; font-weight: bold;" >[ {!$Label.REL_Create_New_Relationship} ]</a><br />';
-            infoText += '<a href=/apex/REL_RelationshipsViewer?id=' + currentContact.id + ' target="_parent" style="color: white; font-weight: bold;">[ {!$Label.REL_Create_New_Relationship} ]</a><br />';
+            infoText += '<a href=/apex/REL_RelationshipsViewer?id=' + currentContact.id + ' target="_parent" style="color: white; font-weight: bold;">[ {!$Label.REL_RECenter} ]</a><br />';
             infoText +='</strong></p>';     
             return infoText;    
         }   
