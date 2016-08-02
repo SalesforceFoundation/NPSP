@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2015
-* @group Contact
+* @group Contacts
 * @description Creates or updates campaign members.
 */
 public class CON_AddToCampaign {
