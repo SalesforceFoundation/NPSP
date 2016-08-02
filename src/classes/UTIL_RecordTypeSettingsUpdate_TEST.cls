@@ -146,210 +146,72 @@ private class UTIL_RecordTypeSettingsUpdate_TEST {
     }
 
     /**
-     * @description A stub class that overrides behavior of getIdsFromNames so
-     * that updateSettings can be verified to correctly call this method, and
-     * to correctly handle values returned by this method
+     * @description A stub class to provide known record type name to record
+     * type id mappings
      */
-    private class GetIdsFromNameStub extends UTIL_RecordTypeSettingsUpdate {
-        public List<String> nameStrings = new List<String>();
-        public List<Map<String, Id>> nameMaps = new List<Map<String, Id>>();
-        public List<String> returnNameStrings;
-        private override String getIdsFromNames(String names, Map<String, Id> nameMap) {
-            nameStrings.add(names);
-            nameMaps.add(nameMap);
-            return returnNameStrings.remove(0);
+    private class NameMappingStub extends UTIL_RecordTypeSettingsUpdate {
+        public Map<String, Id> opportunityNameMap;
+        public Map<String, Id> contactNameMap;
+        private Map<String, Id> getNameToRecordTypeIdMap(Schema.SObjectType sot) {
+            if (sot == Contact.sObjectType) {
+                return contactNameMap;
+            } else if (sot == Opportunity.sObjectType) {
+                return opportunityNameMap;
+            }
+            return null;
         }
     }
 
     @isTest
-    public static void testUpdateSettingsPopulatesSettings() {
-        // verify that if we call updateSettings(...), that it properly
-        // delegates to getIdsFromNames() and correctly assigns the results
+    private static void testUpdateSettings() {
+        // we insert some settings with fake record type names and then test to
+        // see if UTIL_RecordTypeSettingsUpdate correctly reads those settings,
+        // converts the fake names to fake ids, and then rewrites the settings.
+        // To control for a known set of record types, we will stub the
+        // getNameToRecordTypeIdMap() method to return a set of test mappings.
 
-        GetIdsFromNameStub stub = new GetIdsFromNameStub();
+        Allocations_Settings__c allocationsSettings = new Allocations_Settings__c(
+            Excluded_Opp_RecTypes__c = 'FakeOpportunityRecTypeName1;FakeOpportunityRecTypeName2'
+        );
 
-        List<String> returnNameStrings = new List<String>{
-            'converted allocationsSettings.Excluded_Opp_RecTypes__c',
-            'converted contactsAndOrgsSettings.Opp_RecTypes_Excluded_for_Payments__c',
-            'converted householdSettings.npo02__Household_Creation_Excluded_Recordtypes__c',
-            'converted householdSettings.npo02__Household_OCR_Excluded_Recordtypes__c',
-            'converted householdSettings.npo02__Membership_Record_Types__c',
-            'converted householdSettings.npo02__Excluded_Account_Opp_Rectypes__c',
-            'converted householdSettings.npo02__Excluded_Contact_Opp_Rectypes__c',
-            'converted opportunityNamingSettings.Opportunity_Record_Types__c'
+        npe01__Contacts_And_Orgs_Settings__c contactsAndOrgsSettings = new npe01__Contacts_And_Orgs_Settings__c(
+            Opp_RecTypes_Excluded_for_Payments__c = 'FakeOpportunityRecTypeName1;FakeOpportunityRecTypeName2'
+        );
+
+        npo02__Households_Settings__c householdsSettings = new npo02__Households_Settings__c(
+            npo02__Household_Creation_Excluded_Recordtypes__c = 'FakeContactRecTypeName1;FakeContactRecTypeName2',
+            npo02__Household_OCR_Excluded_Recordtypes__c = 'FakeContactRecTypeName1;FakeContactRecTypeName2',
+            npo02__Membership_Record_Types__c = 'FakeOpportunityRecTypeName1;FakeOpportunityRecTypeName2',
+            npo02__Excluded_Account_Opp_Rectypes__c = 'FakeOpportunityRecTypeName1;FakeOpportunityRecTypeName2',
+            npo02__Excluded_Contact_Opp_Rectypes__c = 'FakeOpportunityRecTypeName1;FakeOpportunityRecTypeName2'
+        );
+        Opportunity_Naming_Settings__c opportunityNamingSettings = new Opportunity_Naming_Settings__c(
+            Name = 'ons1',
+            Opportunity_Record_Types__c = 'FakeOpportunityRecTypeName1;FakeOpportunityRecTypeName2'
+        );
+
+        insert allocationsSettings;
+        insert contactsAndOrgsSettings;
+        insert householdsSettings;
+        insert opportunityNamingSettings;
+
+        Id opportunityRecTypeId1 = '012000000000001';
+        Id opportunityRecTypeId2 = '012000000000002';
+        Id contactRecTypeId1 = '012000000000003';
+        Id contactRecTypeId2 = '012000000000004';
+
+        NameMappingStub stub = new NameMappingStub();
+        stub.opportunityNameMap = new Map<String, Id>{
+            'FakeOpportunityRecTypeName1' => opportunityRecTypeId1,
+            'FakeOpportunityRecTypeName2' => opportunityRecTypeId2
+        };
+        stub.contactNameMap = new Map<String, Id>{
+            'FakeContactRecTypeName1' => contactRecTypeId1,
+            'FakeContactRecTypeName2' => contactRecTypeId2
         };
 
-        stub.returnNameStrings = returnNameStrings.clone();
-
-        // as getIdsFromName() gets called, these are the values for the
-        // parameter `names` we expect to receive in this order:
-        List<String> expectedNameStrings = new List<String>{
-            'unconverted allocationsSettings.Excluded_Opp_RecTypes__c',
-            'unconverted contactsAndOrgsSettings.Opp_RecTypes_Excluded_for_Payments__c',
-            'unconverted householdSettings.npo02__Household_Creation_Excluded_Recordtypes__c',
-            'unconverted householdSettings.npo02__Household_OCR_Excluded_Recordtypes__c',
-            'unconverted householdSettings.npo02__Membership_Record_Types__c',
-            'unconverted householdSettings.npo02__Excluded_Account_Opp_Rectypes__c',
-            'unconverted householdSettings.npo02__Excluded_Contact_Opp_Rectypes__c',
-            'unconverted opportunityNamingSettings.Opportunity_Record_Types__c'
-        };
-
-        UTIL_RecordTypeSettingsUpdate.RecordTypeSettings settings = new UTIL_RecordTypeSettingsUpdate.RecordTypeSettings();
-
-        settings.allocationsSettings = new Allocations_Settings__c(
-            Excluded_Opp_RecTypes__c = expectedNameStrings.get(0)
-        );
-
-        settings.contactsAndOrgsSettings = new npe01__Contacts_And_Orgs_Settings__c(
-            Opp_RecTypes_Excluded_for_Payments__c = expectedNameStrings.get(1)
-        );
-
-        settings.householdSettings = new npo02__Households_Settings__c(
-            npo02__Household_Creation_Excluded_Recordtypes__c = expectedNameStrings.get(2),
-            npo02__Household_OCR_Excluded_Recordtypes__c = expectedNameStrings.get(3),
-            npo02__Membership_Record_Types__c = expectedNameStrings.get(4),
-            npo02__Excluded_Account_Opp_Rectypes__c = expectedNameStrings.get(5),
-            npo02__Excluded_Contact_Opp_Rectypes__c = expectedNameStrings.get(6)
-        );
-
-        settings.opportunityNamingSettings = new Map<String, Opportunity_Naming_Settings__c>{
-            'testOns' => new Opportunity_Naming_Settings__c(
-                Name = 'testOns',
-                Opportunity_Record_Types__c = expectedNameStrings.get(7)
-            )
-        };
-
-        Map<String, Id> opportunityNameMap = new Map<String, Id>{'OpportunityRecordTypeName' => '000000000000001'};
-        Map<String, Id> contactNameMap = new Map<String, Id>{'ContactRecordTypeName' => '000000000000002'};
-
-        // as getIdsFromName() gets called, these are the values for the
-        // parameter `nameMap` we expect to receive in this order:
-        List<Map<String, Id>> expectedNameMaps = new List<Map<String, Id>>{
-            opportunityNameMap,
-            opportunityNameMap,
-            contactNameMap,
-            contactNameMap,
-            opportunityNameMap,
-            opportunityNameMap,
-            opportunityNameMap,
-            opportunityNameMap
-        };
-
-        Test.startTest();
-
-        stub.updateSettings(settings, opportunityNameMap, contactNameMap);
-
-        Test.stopTest();
-
-        System.assertEquals(expectedNameStrings, stub.nameStrings);
-        System.assertEquals(expectedNameMaps, stub.nameMaps);
-
-        System.assertEquals(
-            returnNameStrings.get(0),
-            settings.allocationsSettings.Excluded_Opp_RecTypes__c
-        );
-
-        System.assertEquals(
-            returnNameStrings.get(1),
-            settings.contactsAndOrgsSettings.Opp_RecTypes_Excluded_for_Payments__c
-        );
-
-        System.assertEquals(
-            returnNameStrings.get(2),
-            settings.householdSettings.npo02__Household_Creation_Excluded_Recordtypes__c
-        );
-
-        System.assertEquals(
-            returnNameStrings.get(3),
-            settings.householdSettings.npo02__Household_OCR_Excluded_Recordtypes__c
-        );
-
-        System.assertEquals(
-            returnNameStrings.get(4),
-            settings.householdSettings.npo02__Membership_Record_Types__c
-        );
-
-        System.assertEquals(
-            returnNameStrings.get(5),
-            settings.householdSettings.npo02__Excluded_Account_Opp_Rectypes__c
-        );
-
-        System.assertEquals(
-            returnNameStrings.get(6),
-            settings.householdSettings.npo02__Excluded_Contact_Opp_Rectypes__c
-        );
-
-        System.assertEquals(
-            returnNameStrings.get(7),
-            settings.opportunityNamingSettings.values().get(0).Opportunity_Record_Types__c
-        );
-    }
-
-    /**
-     * @description Stub class to verify that updateSettings() passes correct
-     * values to updateSettings(...) method and properly inserts converted
-     * settings
-     */
-    private class UpdateSettingsStub extends UTIL_RecordTypeSettingsUpdate {
-        public UTIL_RecordTypeSettingsUpdate.RecordTypeSettings givenSettings;
-        public UTIL_RecordTypeSettingsUpdate.RecordTypeSettings returnedSettings;
-        private override UTIL_RecordTypeSettingsUpdate.RecordTypeSettings updateSettings(
-            UTIL_RecordTypeSettingsUpdate.RecordTypeSettings settings,
-            Map<String, Id> opportunityNameMap,
-            Map<String, Id> contactNameMap
-        ) {
-            givenSettings = settings;
-            return returnedSettings;
-        }
-    }
-
-    @isTest
-    public static void testUpdateSettingsUpsertsRecords() {
-        // insert some settings, then call updateSettings() using stub class to
-        // verify that the correct settings are queried, and that the renamed
-        // settings are correctly saved to the database
-
-        UTIL_RecordTypeSettingsUpdate.RecordTypeSettings settings = new UTIL_RecordTypeSettingsUpdate.RecordTypeSettings();
-
-        settings.allocationsSettings = new Allocations_Settings__c(
-            Excluded_Opp_RecTypes__c = 'unconverted1'
-        );
-
-        settings.contactsAndOrgsSettings = new npe01__Contacts_And_Orgs_Settings__c(
-            Opp_RecTypes_Excluded_for_Payments__c = 'unconverted2'
-        );
-
-        settings.householdSettings = new npo02__Households_Settings__c(
-            npo02__Household_Creation_Excluded_Recordtypes__c = 'unconverted3',
-            npo02__Household_OCR_Excluded_Recordtypes__c = 'unconverted4',
-            npo02__Membership_Record_Types__c = 'unconverted5',
-            npo02__Excluded_Account_Opp_Rectypes__c = 'unconverted6',
-            npo02__Excluded_Contact_Opp_Rectypes__c = 'unconverted7'
-        );
-
-        settings.opportunityNamingSettings = new Map<String, Opportunity_Naming_Settings__c>{
-            'testOns' => new Opportunity_Naming_Settings__c(
-                Name = 'testOns',
-                Opportunity_Record_Types__c = 'unconverted8'
-            )
-        };
-
-        upsert settings.allocationsSettings;
-        upsert settings.contactsAndOrgsSettings;
-        upsert settings.householdSettings;
-        upsert settings.opportunityNamingSettings.values();
-
-        settings.allocationsSettings.Excluded_Opp_RecTypes__c = 'converted1';
-        settings.contactsAndOrgsSettings.Opp_RecTypes_Excluded_for_Payments__c = 'converted2';
-        settings.householdSettings.npo02__Household_Creation_Excluded_Recordtypes__c = 'converted3';
-        settings.householdSettings.npo02__Household_OCR_Excluded_Recordtypes__c = 'converted4';
-        settings.householdSettings.npo02__Membership_Record_Types__c = 'converted5';
-        settings.householdSettings.npo02__Excluded_Account_Opp_Rectypes__c = 'converted6';
-        settings.householdSettings.npo02__Excluded_Contact_Opp_Rectypes__c = 'converted7';
-        settings.opportunityNamingSettings.get('testOns').Opportunity_Record_Types__c = 'converted8';
-
-        UpdateSettingsStub stub = new UpdateSettingsStub();
-        stub.returnedSettings = settings;
+        String expectedOpportunityIdString = String.join(new List<String>{opportunityRecTypeId1, opportunityRecTypeId2}, ';');
+        String expectedContactIdString = String.join(new List<String>{contactRecTypeId1, contactRecTypeId2}, ';');
 
         Test.startTest();
 
@@ -357,28 +219,79 @@ private class UTIL_RecordTypeSettingsUpdate_TEST {
 
         Test.stopTest();
 
-        System.assertEquals('unconverted1', stub.givenSettings.allocationsSettings.Excluded_Opp_RecTypes__c);
-        System.assertEquals('unconverted2', stub.givenSettings.contactsAndOrgsSettings.Opp_RecTypes_Excluded_for_Payments__c);
-        System.assertEquals('unconverted3', stub.givenSettings.householdSettings.npo02__Household_Creation_Excluded_Recordtypes__c);
-        System.assertEquals('unconverted4', stub.givenSettings.householdSettings.npo02__Household_OCR_Excluded_Recordtypes__c);
-        System.assertEquals('unconverted5', stub.givenSettings.householdSettings.npo02__Membership_Record_Types__c);
-        System.assertEquals('unconverted6', stub.givenSettings.householdSettings.npo02__Excluded_Account_Opp_Rectypes__c);
-        System.assertEquals('unconverted7', stub.givenSettings.householdSettings.npo02__Excluded_Contact_Opp_Rectypes__c);
-        System.assertEquals('unconverted8', stub.givenSettings.opportunityNamingSettings.values().get(0).Opportunity_Record_Types__c);
+        Allocations_Settings__c allocationsSettingsActual = [
+            SELECT Excluded_Opp_RecTypes__c
+            FROM Allocations_Settings__c
+            WHERE Id = :allocationsSettings.Id
+        ];
 
-        Allocations_Settings__c updatedAllocationsSettings = Allocations_Settings__c.getInstance();
-        npe01__Contacts_And_Orgs_Settings__c updatedContactsAndOrgsSettings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
-        npo02__Households_Settings__c updatedHouseholdSettings = npo02__Households_Settings__c.getInstance();
-        Map<String, Opportunity_Naming_Settings__c> updatedOpportunityNamingSettings = Opportunity_Naming_Settings__c.getAll();
+        npe01__Contacts_And_Orgs_Settings__c contactsAndOrgsSettingsActual = [
+            SELECT Opp_RecTypes_Excluded_for_Payments__c
+            FROM npe01__Contacts_And_Orgs_Settings__c
+            WHERE Id = :contactsAndOrgsSettings.Id
+        ];
 
-        System.assertEquals('converted1', updatedAllocationsSettings.Excluded_Opp_RecTypes__c);
-        System.assertEquals('converted2', updatedContactsAndOrgsSettings.Opp_RecTypes_Excluded_for_Payments__c);
-        System.assertEquals('converted3', updatedHouseholdSettings.npo02__Household_Creation_Excluded_Recordtypes__c);
-        System.assertEquals('converted4', updatedHouseholdSettings.npo02__Household_OCR_Excluded_Recordtypes__c);
-        System.assertEquals('converted5', updatedHouseholdSettings.npo02__Membership_Record_Types__c);
-        System.assertEquals('converted6', updatedHouseholdSettings.npo02__Excluded_Account_Opp_Rectypes__c);
-        System.assertEquals('converted7', updatedHouseholdSettings.npo02__Excluded_Contact_Opp_Rectypes__c);
-        System.assertEquals('converted8', updatedOpportunityNamingSettings.get('testOns').Opportunity_Record_Types__c);
+        npo02__Households_Settings__c householdsSettingsActual = [
+            SELECT
+                npo02__Household_Creation_Excluded_Recordtypes__c,
+                npo02__Household_OCR_Excluded_Recordtypes__c,
+                npo02__Membership_Record_Types__c,
+                npo02__Excluded_Account_Opp_Rectypes__c,
+                npo02__Excluded_Contact_Opp_Rectypes__c
+            FROM npo02__Households_Settings__c
+            WHERE Id = :householdsSettings.Id
+        ];
+
+        Opportunity_Naming_Settings__c opportunityNamingSettingsActual = [
+            SELECT Opportunity_Record_Types__c
+            FROM Opportunity_Naming_Settings__c
+            WHERE Id = :opportunityNamingSettings.Id
+        ];
+
+        System.assertEquals(
+            expectedOpportunityIdString,
+            allocationsSettingsActual.Excluded_Opp_RecTypes__c
+        );
+
+        System.assertEquals(
+            expectedOpportunityIdString,
+            contactsAndOrgsSettingsActual.Opp_RecTypes_Excluded_for_Payments__c
+        );
+
+        System.assertEquals(
+            expectedContactIdString,
+            householdsSettingsActual.npo02__Household_Creation_Excluded_Recordtypes__c
+        );
+
+        System.assertEquals(
+            expectedContactIdString,
+            householdsSettingsActual.npo02__Household_OCR_Excluded_Recordtypes__c
+        );
+
+        System.assertEquals(
+            expectedOpportunityIdString,
+            householdsSettingsActual.npo02__Membership_Record_Types__c
+        );
+
+        System.assertEquals(
+            expectedOpportunityIdString,
+            householdsSettingsActual.npo02__Excluded_Account_Opp_Rectypes__c
+        );
+
+        System.assertEquals(
+            expectedOpportunityIdString,
+            householdsSettingsActual.npo02__Excluded_Contact_Opp_Rectypes__c
+        );
+
+        System.assertEquals(
+            expectedOpportunityIdString,
+            opportunityNamingSettingsActual.Opportunity_Record_Types__c
+        );
+    }
+
+    private static void testUpdateSettingsHandlesNoSettings() {
+        // no settings in database, verify updateSettings() properly runs
+        UTIL_RecordTypeSettingsUpdate.getInstance().updateSettings();
     }
 
     /**
@@ -394,14 +307,14 @@ private class UTIL_RecordTypeSettingsUpdate_TEST {
 
     @isTest
     public static void testUpdateRunsOnUpgradeFrom377() {
-        // when upgrading from v3.77, the updateSettings() method should be
+        // when upgrading from v3.78, the updateSettings() method should be
         // called exactly once
         UpdateSettingsRunCount stub = new UpdateSettingsRunCount();
         UTIL_RecordTypeSettingsUpdate.instance = stub;
 
         Test.startTest();
 
-        Test.testInstall(new STG_InstallScript(), new Version(3, 77));
+        Test.testInstall(new STG_InstallScript(), new Version(3, 78));
 
         Test.stopTest();
 
@@ -412,7 +325,7 @@ private class UTIL_RecordTypeSettingsUpdate_TEST {
     public static void testUpdateRunsOnUpgradeFrom354() {
         // when upgrading from v3.54, the updateSettings() method should be
         // called exactly once (this is to verify that if upgrading from a
-        // version prior to 3.78 the update will run)
+        // version prior to 3.79 the update will run)
         UpdateSettingsRunCount stub = new UpdateSettingsRunCount();
         UTIL_RecordTypeSettingsUpdate.instance = stub;
 
@@ -441,14 +354,14 @@ private class UTIL_RecordTypeSettingsUpdate_TEST {
     }
 
     @isTest
-    public static void testUpdateDoesNotRunOnUpgradeFrom378() {
-        // when upgrading from version 3.78 or later, update should not run
+    public static void testUpdateDoesNotRunOnUpgradeFrom379() {
+        // when upgrading from version 3.79 or later, update should not run
         UpdateSettingsRunCount stub = new UpdateSettingsRunCount();
         UTIL_RecordTypeSettingsUpdate.instance = stub;
 
         Test.startTest();
 
-        Test.testInstall(new STG_InstallScript(), new Version(3, 78));
+        Test.testInstall(new STG_InstallScript(), new Version(3, 79));
 
         Test.stopTest();
 
@@ -457,7 +370,7 @@ private class UTIL_RecordTypeSettingsUpdate_TEST {
 
     @isTest
     public static void testUpdateDoesNotRunOnUpgradeFrom399() {
-        // when upgrading from version 3.78 or later, update should not run
+        // when upgrading from version 3.79 or later, update should not run
         // when new install, updateSettings() should not be called
         UpdateSettingsRunCount stub = new UpdateSettingsRunCount();
         UTIL_RecordTypeSettingsUpdate.instance = stub;

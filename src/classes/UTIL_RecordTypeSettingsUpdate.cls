@@ -44,7 +44,7 @@
  *  npo02__Households_Settings__c.npo02__Excluded_Contact_Opp_Rectypes__c (Opportunity, Hierarchy)
  *  Opportunity_Naming_Settings__c.Opportunity_Record_Types__c (Opportunity, List)
  */
-public virtual class UTIL_RecordTypeSettingsUpdate {
+global virtual class UTIL_RecordTypeSettingsUpdate {
     @TestVisible
     /** @description Private constructor for singleton pattern */
     private UTIL_RecordTypeSettingsUpdate() {}
@@ -57,7 +57,7 @@ public virtual class UTIL_RecordTypeSettingsUpdate {
      * @description get singleton instance of this class
      * @return UTIL_RecordTypeSettingsUpdate
      */
-    public static UTIL_RecordTypeSettingsUpdate getInstance() {
+    global static UTIL_RecordTypeSettingsUpdate getInstance() {
         if (null == instance) {
             instance = new UTIL_RecordTypeSettingsUpdate();
         }
@@ -67,24 +67,53 @@ public virtual class UTIL_RecordTypeSettingsUpdate {
     /**
      * @description Update custom settings from old format to new format
      */
-    public virtual void updateSettings() {
+    global virtual void updateSettings() {
         Map<String, Id> opportunityNameMap = getNameToRecordTypeIdMap(Opportunity.sObjectType);
         Map<String, Id> contactNameMap = getNameToRecordTypeIdMap(Contact.sObjectType);
 
         RecordTypeSettings settings = new RecordTypeSettings();
 
-        settings.allocationsSettings = Allocations_Settings__c.getInstance();
-        settings.contactsAndOrgsSettings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
-        settings.householdSettings = npo02__Households_Settings__c.getInstance();
-        settings.opportunityNamingSettings = Opportunity_Naming_Settings__c.getAll();
+        settings.allocationsSettings = [
+            SELECT Excluded_Opp_RecTypes__c
+            FROM Allocations_Settings__c
+        ];
+
+        settings.contactsAndOrgsSettings = [
+            SELECT Opp_RecTypes_Excluded_for_Payments__c
+            FROM npe01__Contacts_And_Orgs_Settings__c
+        ];
+
+        settings.householdSettings = [
+            SELECT
+                npo02__Household_Creation_Excluded_Recordtypes__c,
+                npo02__Household_OCR_Excluded_Recordtypes__c,
+                npo02__Membership_Record_Types__c,
+                npo02__Excluded_Account_Opp_Rectypes__c,
+                npo02__Excluded_Contact_Opp_Rectypes__c
+            FROM npo02__Households_Settings__c
+        ];
+
+        settings.opportunityNamingSettings = [
+            SELECT Opportunity_Record_Types__c
+            FROM Opportunity_Naming_Settings__c
+        ];
 
         settings = updateSettings(settings, opportunityNameMap, contactNameMap);
 
-        upsert settings.allocationsSettings;
-        upsert settings.contactsAndOrgsSettings;
-        upsert settings.householdSettings;
+        if (settings.allocationsSettings != null && !settings.allocationsSettings.isEmpty()) {
+            upsert settings.allocationsSettings;
+        }
+
+        if (settings.contactsAndOrgsSettings != null && !settings.contactsAndOrgsSettings.isEmpty()) {
+            upsert settings.contactsAndOrgsSettings;
+        }
+
+        if (settings.householdSettings != null && !settings.householdSettings.isEmpty()) {
+            upsert settings.householdSettings;
+        }
+
         if (settings.opportunityNamingSettings != null && !settings.opportunityNamingSettings.isEmpty()) {
-            upsert settings.opportunityNamingSettings.values();
+            upsert settings.opportunityNamingSettings;
         }
     }
 
@@ -99,45 +128,51 @@ public virtual class UTIL_RecordTypeSettingsUpdate {
      * @param contactNameMap A mapping of Contact record type display names to record type ids
      * @return RecordTypeSettings The settings after they have been converted
      */
-    private virtual RecordTypeSettings updateSettings(RecordTypeSettings settings, Map<String, Id> opportunityNameMap, Map<String, Id> contactNameMap) {
-        settings.allocationsSettings.Excluded_Opp_RecTypes__c = getIdsFromNames(
-            settings.allocationsSettings.Excluded_Opp_RecTypes__c,
-            opportunityNameMap
-        );
+    private RecordTypeSettings updateSettings(RecordTypeSettings settings, Map<String, Id> opportunityNameMap, Map<String, Id> contactNameMap) {
+        for (Allocations_Settings__c allocationsSettings : settings.allocationsSettings) {
+            allocationsSettings.Excluded_Opp_RecTypes__c = getIdsFromNames(
+                allocationsSettings.Excluded_Opp_RecTypes__c,
+                opportunityNameMap
+            );
+        }
 
-        settings.contactsAndOrgsSettings.Opp_RecTypes_Excluded_for_Payments__c = getIdsFromNames(
-            settings.contactsAndOrgsSettings.Opp_RecTypes_Excluded_for_Payments__c,
-            opportunityNameMap
-        );
+        for (npe01__Contacts_And_Orgs_Settings__c contactsAndOrgsSettings : settings.contactsAndOrgsSettings) {
+                contactsAndOrgsSettings.Opp_RecTypes_Excluded_for_Payments__c = getIdsFromNames(
+                    contactsAndOrgsSettings.Opp_RecTypes_Excluded_for_Payments__c,
+                    opportunityNameMap
+                );
+            }
 
-        settings.householdSettings.npo02__Household_Creation_Excluded_Recordtypes__c = getIdsFromNames(
-            settings.householdSettings.npo02__Household_Creation_Excluded_Recordtypes__c,
-            contactNameMap
-        );
+        for (npo02__Households_Settings__c householdSettings : settings.householdSettings) {
+            householdSettings.npo02__Household_Creation_Excluded_Recordtypes__c = getIdsFromNames(
+                householdSettings.npo02__Household_Creation_Excluded_Recordtypes__c,
+                contactNameMap
+            );
 
-        settings.householdSettings.npo02__Household_OCR_Excluded_Recordtypes__c = getIdsFromNames(
-            settings.householdSettings.npo02__Household_OCR_Excluded_Recordtypes__c,
-            contactNameMap
-        );
+            householdSettings.npo02__Household_OCR_Excluded_Recordtypes__c = getIdsFromNames(
+                householdSettings.npo02__Household_OCR_Excluded_Recordtypes__c,
+                contactNameMap
+            );
 
-        settings.householdSettings.npo02__Membership_Record_Types__c = getIdsFromNames(
-            settings.householdSettings.npo02__Membership_Record_Types__c,
-            opportunityNameMap
-        );
+            householdSettings.npo02__Membership_Record_Types__c = getIdsFromNames(
+                householdSettings.npo02__Membership_Record_Types__c,
+                opportunityNameMap
+            );
 
-        settings.householdSettings.npo02__Excluded_Account_Opp_Rectypes__c = getIdsFromNames(
-            settings.householdSettings.npo02__Excluded_Account_Opp_Rectypes__c,
-            opportunityNameMap
-        );
+            householdSettings.npo02__Excluded_Account_Opp_Rectypes__c = getIdsFromNames(
+                householdSettings.npo02__Excluded_Account_Opp_Rectypes__c,
+                opportunityNameMap
+            );
 
-        settings.householdSettings.npo02__Excluded_Contact_Opp_Rectypes__c = getIdsFromNames(
-            settings.householdSettings.npo02__Excluded_Contact_Opp_Rectypes__c,
-            opportunityNameMap
-        );
+            householdSettings.npo02__Excluded_Contact_Opp_Rectypes__c = getIdsFromNames(
+                householdSettings.npo02__Excluded_Contact_Opp_Rectypes__c,
+                opportunityNameMap
+            );
+        }
 
-        for (Opportunity_Naming_Settings__c ons : settings.opportunityNamingSettings.values()) {
-            ons.Opportunity_Record_Types__c = getIdsFromNames(
-                ons.Opportunity_Record_Types__c,
+        for (Opportunity_Naming_Settings__c opportunityNamingSettings : settings.opportunityNamingSettings) {
+            opportunityNamingSettings.Opportunity_Record_Types__c = getIdsFromNames(
+                opportunityNamingSettings.Opportunity_Record_Types__c,
                 opportunityNameMap
             );
         }
@@ -155,7 +190,7 @@ public virtual class UTIL_RecordTypeSettingsUpdate {
      * @param sot The sObjectType to use for determining record types
      * @return Map<String, Id>
      */
-    private Map<String, Id> getNameToRecordTypeIdMap(Schema.SObjectType sot) {
+    private virtual Map<String, Id> getNameToRecordTypeIdMap(Schema.SObjectType sot) {
         String sobjectTypeName = sot.getDescribe().getName();
 
         List<RecordType> recordTypes = [
@@ -191,7 +226,7 @@ public virtual class UTIL_RecordTypeSettingsUpdate {
      * @param nameMap A mapping of record type names to record type ids
      * @return String
      */
-    private virtual String getIdsFromNames(String nameString, Map<String, Id> nameMap) {
+    private String getIdsFromNames(String nameString, Map<String, Id> nameMap) {
         if (nameString == null) {
             return null;
         }
@@ -218,9 +253,9 @@ public virtual class UTIL_RecordTypeSettingsUpdate {
      * setting objects
      */
     private class RecordTypeSettings {
-        public Allocations_Settings__c allocationsSettings;
-        public npe01__Contacts_And_Orgs_Settings__c contactsAndOrgsSettings;
-        public npo02__Households_Settings__c householdSettings;
-        public Map<String, Opportunity_Naming_Settings__c> opportunityNamingSettings;
+        public List<Allocations_Settings__c> allocationsSettings;
+        public List<npe01__Contacts_And_Orgs_Settings__c> contactsAndOrgsSettings;
+        public List<npo02__Households_Settings__c> householdSettings;
+        public List<Opportunity_Naming_Settings__c> opportunityNamingSettings;
     }
 }
