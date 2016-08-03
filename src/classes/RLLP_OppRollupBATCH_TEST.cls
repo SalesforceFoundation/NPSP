@@ -163,7 +163,7 @@ private class RLLP_OppRollupBATCH_TEST {
         UTIL_Debug.debugWithInfo('DJH: testOppSoftCreditRollupBatch');
 
         contact18 = [select npo02__Soft_Credit_This_Year__c, npo02__Soft_Credit_Total__c,
-            npe01__Lifetime_Giving_History_Amount__c, npo02__OppsClosedThisYear__c, npo02__TotalOppAmount__c
+                     npo02__OppsClosedThisYear__c, npo02__TotalOppAmount__c
                             from Contact where Id=:contact18.Id];
         System.assertEquals(giftAmount, contact18.npo02__Soft_Credit_This_Year__c);
         System.assertEquals(giftAmount, contact18.npo02__Soft_Credit_Total__c);
