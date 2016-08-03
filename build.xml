@@ -30,6 +30,23 @@ If you are on a unix based system, the following commands should work:
     <import file="${env.CUMULUSCI_PATH}/build/build.xml" />
 
     <!-- Add project specific build targets and CumulusCI overrides here -->
+    <target name="updateMetaXml">
+        <for list="${required.packages}" delimiter="," param="packageNamespace">
+            <sequential>
+                <if>
+                    <not><equals arg1="@{packageNamespace}" arg2="managed" /></not>
+                    <then>
+                        <updateMetaXml dir="${basedir}/src" namespace="@{packageNamespace}" version="${version.@{packageNamespace}}" />
+                    </then>
+                </if>
+            </sequential>
+        </for>
+    </target>
+
+    <target name="updateMetaXmlApi">
+        <updateMetaXmlApi dir="${basedir}/src" apiVersion="${cumulusci.package.apiVersion}" />
+    </target>
+
     <target name="preUpdateRequiredPackages">
         <!-- npsp depends on all other packages.  If it is installed and other packages need to be downgraded (uninstalled), uninstall npsp first -->
         <if>
