@@ -105,6 +105,9 @@
         <members>HH_ProcessControl</members>
         <members>LD_LeadConvertOverride_CTRL</members>
         <members>LD_LeadConvertOverride_TEST</members>
+        <members>LVL_LevelAssignBATCH_TEST</members>
+        <members>LVL_LevelAssign_BATCH</members>
+        <members>LVL_LevelAssign_SCHED</members>
         <members>MTCH_FindGifts_CTRL</members>
         <members>MTCH_FindGifts_TEST</members>
         <members>MTCH_Opportunity_TDTM</members>
@@ -632,6 +635,15 @@
         <members>Lead.CompanyPostalCode__c</members>
         <members>Lead.CompanyState__c</members>
         <members>Lead.CompanyStreet__c</members>
+        <members>Level__c.Active__c</members>
+        <members>Level__c.Description__c</members>
+        <members>Level__c.Engagement_Plan__c</members>
+        <members>Level__c.Level_Field__c</members>
+        <members>Level__c.Maximum_Amount__c</members>
+        <members>Level__c.Minimum_Amount__c</members>
+        <members>Level__c.Previous_Level_Field__c</members>
+        <members>Level__c.Source_Field__c</members>
+        <members>Level__c.Target__c</members>
         <members>Opportunity.Acknowledgment_Date__c</members>
         <members>Opportunity.Acknowledgment_Status__c</members>
         <members>Opportunity.Batch__c</members>
@@ -1407,6 +1419,7 @@
         <members>Grant_Deadline__c</members>
         <members>Household_Naming_Settings__c</members>
         <members>Lead</members>
+        <members>Level__c</members>
         <members>Opportunity</members>
         <members>Opportunity_Naming_Settings__c</members>
         <members>Partial_Soft_Credit__c</members>
@@ -1484,6 +1497,8 @@
         <members>Lead-de</members>
         <members>Lead-es</members>
         <members>Lead-ja</members>
+        <members>Level__c-de</members>
+        <members>Level__c-en_US</members>
         <members>Opportunity-de</members>
         <members>Opportunity-es</members>
         <members>Opportunity-ja</members>
@@ -1571,6 +1586,7 @@
         <members>Fund__c-Fund Layout</members>
         <members>General_Accounting_Unit__c-General Accounting Unit Layout</members>
         <members>Grant_Deadline__c-Grant Deadline Layout</members>
+        <members>Level__c-Level Layout</members>
         <members>Opportunity-Donation Layout</members>
         <members>Opportunity-Grant Layout</members>
         <members>Opportunity-In-Kind Gift Layout</members>
@@ -1594,6 +1610,7 @@
         <members>DataImport__c.Succesfully_Imported</members>
         <members>DataImport__c.To_Be_Imported</members>
         <members>General_Accounting_Unit__c.All</members>
+        <members>Level__c.All</members>
         <members>Opportunity.To_Be_Acknowledged</members>
         <members>Trigger_Handler__c.All</members>
         <name>ListView</name>
@@ -1662,6 +1679,10 @@
         <members>es</members>
         <members>ja</members>
         <name>Translations</name>
+    </types>
+    <types>
+        <members>Level__c.Target_Required</members>
+        <name>ValidationRule</name>
     </types>
     <types>
         <members>Account.Manage_Household</members>

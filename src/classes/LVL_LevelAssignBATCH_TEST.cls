@@ -1,0 +1,190 @@
+/*
+    Copyright (c) 2016, Salesforce.org
+    All rights reserved.
+    
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+    
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Salesforce.org nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+ 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    POSSIBILITY OF SUCH DAMAGE.  
+*/
+/**
+* @author Salesforce.org
+* @date 2016
+* @description test the batchable class for Level Assignments
+*/
+
+@isTest
+private class LVL_LevelAssignBATCH_TEST {
+
+    private static Level__c lvlBronze { get; set; }
+    private static Level__c lvlSilver { get; set; }
+    private static Level__c lvlGold { get; set; }
+
+    /*********************************************************************************************************
+    * @description creates Bronze, Silver, and Gold Level records for test code to use.
+    */
+    static void createTestLevels() {
+        // create Levels
+        lvlBronze = new Level__c(
+            Name = 'Bronze',
+            Target__c = 'Contact',
+            Source_Field__c = 'npo02__TotalOppAmount__c', 
+            Level_Field__c = 'npo02__LastMembershipLevel__c', 
+            Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c', 
+            Active__c = true, 
+            Minimum_Amount__c = 100, 
+            Maximum_Amount__c = 999);
+
+        lvlSilver = new Level__c(
+            Name = 'Silver',
+            Target__c = 'Contact',
+            Source_Field__c = 'npo02__TotalOppAmount__c', 
+            Level_Field__c = 'npo02__LastMembershipLevel__c', 
+            Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c', 
+            Active__c = true, 
+            Minimum_Amount__c = 1000, 
+            Maximum_Amount__c = 4999);
+
+        lvlGold = new Level__c(
+            Name = 'Gold',
+            Target__c = 'Contact',
+            Source_Field__c = 'npo02__TotalOppAmount__c', 
+            Level_Field__c = 'npo02__LastMembershipLevel__c', 
+            Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c', 
+            Active__c = true, 
+            Minimum_Amount__c = 5000, 
+            Maximum_Amount__c = 1000000);
+        
+        insert new Level__c[]{lvlBronze, lvlSilver, lvlGold};        
+    }
+
+
+    /*********************************************************************************************************
+    * @description creates a list of Contacts with various donation totals for test code to use.
+    */
+    private static list<Contact> listCon { get; set; }
+    static void createTestContacts() {
+        // create & insert contact
+        listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(7);
+        listCon[0].npo02__TotalOppAmount__c = null;
+        listCon[1].npo02__TotalOppAmount__c = 10;
+        listCon[2].npo02__TotalOppAmount__c = 100;
+        
+        listCon[3].npo02__TotalOppAmount__c = 999;
+        listCon[3].npo02__LastMembershipLevel__c = lvlGold.Id;
+
+        listCon[4].npo02__TotalOppAmount__c = 1000;
+        listCon[4].npo02__LastMembershipLevel__c = lvlBronze.Id;
+        
+        listCon[5].npo02__TotalOppAmount__c = 5000;
+
+        listCon[6].npo02__TotalOppAmount__c = 500;
+        listCon[6].npo02__LastMembershipLevel__c = lvlBronze.Id;
+        listCon[6].npo02__LastMembershipOrigin__c = lvlBronze.Id;
+        insert listCon;
+    }
+        
+    /*********************************************************************************************************
+    * @description test our batch process for assigning Levels to Contacts
+    */
+    static testMethod void testContactLevels() {
+        // create Levels
+        createTestLevels();
+        
+        // create test Contacts
+        createTestContacts();
+        
+        string strSoql = 'SELECT Id, Name, npo02__TotalOppAmount__c, npo02__LastMembershipLevel__c, npo02__LastMembershipOrigin__c, CreatedDate, LastModifiedDate FROM Contact';
+        LVL_LevelAssign_BATCH batch = new LVL_LevelAssign_BATCH(strSoql, 'Contact');
+        
+        Test.startTest();
+        Database.executeBatch(batch);
+        Test.stopTest();
+        
+        listCon = database.query(strSoql + ' order by FirstName');
+        System.assertEquals(null, listCon[0].npo02__LastMembershipLevel__c);
+        System.assertEquals(null, listCon[0].npo02__LastMembershipOrigin__c);
+        
+        System.assertEquals(null, listCon[1].npo02__LastMembershipLevel__c);
+        System.assertEquals(null, listCon[1].npo02__LastMembershipOrigin__c);
+        
+        System.assertEquals(lvlBronze.Id, listCon[2].npo02__LastMembershipLevel__c);
+        System.assertEquals(null, listCon[2].npo02__LastMembershipOrigin__c);
+        
+        System.assertEquals(lvlBronze.Id, listCon[3].npo02__LastMembershipLevel__c);
+        System.assertEquals(lvlGold.Id, listCon[3].npo02__LastMembershipOrigin__c);
+        
+        System.assertEquals(lvlSilver.Id, listCon[4].npo02__LastMembershipLevel__c);
+        System.assertEquals(lvlBronze.Id, listCon[4].npo02__LastMembershipOrigin__c);
+        
+        System.assertEquals(lvlGold.Id, listCon[5].npo02__LastMembershipLevel__c);
+        System.assertEquals(null, listCon[5].npo02__LastMembershipOrigin__c);
+        
+        System.assertEquals(lvlBronze.Id, listCon[6].npo02__LastMembershipLevel__c);
+        System.assertEquals(lvlBronze.Id, listCon[6].npo02__LastMembershipOrigin__c);
+        System.assertEquals(listCon[6].CreatedDate, listCon[6].LastModifiedDate);
+        
+    }
+    
+    /*********************************************************************************************************
+    * @description tests our Level Assigning when invokved through our Schedulable class.
+    */
+    static testMethod void testLevelAssignScheduling() {
+        // create Levels
+        createtestLevels();
+
+        // create test Contacts
+        createTestContacts();
+
+        LVL_LevelAssign_SCHED sched = new LVL_LevelAssign_SCHED();
+        Test.startTest();
+        sched.executeReturnStatus();
+        Test.stopTest();
+        
+        string strSoql = 'SELECT Id, Name, npo02__TotalOppAmount__c, npo02__LastMembershipLevel__c, npo02__LastMembershipOrigin__c, CreatedDate, LastModifiedDate FROM Contact';
+        listCon = database.query(strSoql + ' order by FirstName');
+        system.assertEquals(7, listCon.size());
+        System.assertEquals(null, listCon[0].npo02__LastMembershipLevel__c);
+        System.assertEquals(null, listCon[0].npo02__LastMembershipOrigin__c);
+        
+        System.assertEquals(null, listCon[1].npo02__LastMembershipLevel__c);
+        System.assertEquals(null, listCon[1].npo02__LastMembershipOrigin__c);
+        
+        System.assertEquals(lvlBronze.Id, listCon[2].npo02__LastMembershipLevel__c);
+        System.assertEquals(null, listCon[2].npo02__LastMembershipOrigin__c);
+        
+        System.assertEquals(lvlBronze.Id, listCon[3].npo02__LastMembershipLevel__c);
+        System.assertEquals(lvlGold.Id, listCon[3].npo02__LastMembershipOrigin__c);
+        
+        System.assertEquals(lvlSilver.Id, listCon[4].npo02__LastMembershipLevel__c);
+        System.assertEquals(lvlBronze.Id, listCon[4].npo02__LastMembershipOrigin__c);
+        
+        System.assertEquals(lvlGold.Id, listCon[5].npo02__LastMembershipLevel__c);
+        System.assertEquals(null, listCon[5].npo02__LastMembershipOrigin__c);
+        
+        System.assertEquals(lvlBronze.Id, listCon[6].npo02__LastMembershipLevel__c);
+        System.assertEquals(lvlBronze.Id, listCon[6].npo02__LastMembershipOrigin__c);
+        System.assertEquals(listCon[6].CreatedDate, listCon[6].LastModifiedDate);
+    }
+    
+}

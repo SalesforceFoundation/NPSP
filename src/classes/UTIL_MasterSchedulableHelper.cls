@@ -52,7 +52,7 @@ public without sharing class UTIL_MasterSchedulableHelper {
     * @description The classes to be run by the master schedulable.
     */
     public static String[] scheduledClasses = new String[] {'RD_RecurringDonations_BATCH', 'RLLP_OppAccRollup_BATCH', 'RLLP_OppContactRollup_BATCH', 
-    	'RLLP_OppHouseholdRollup_BATCH', 'RLLP_OppSoftCreditRollup_BATCH', 'ADDR_SEASONAL_SCHED', 'ALLO_Rollup_SCHED'};
+    	'RLLP_OppHouseholdRollup_BATCH', 'RLLP_OppSoftCreditRollup_BATCH', 'ADDR_SEASONAL_SCHED', 'ALLO_Rollup_SCHED', 'LVL_LevelAssign_SCHED' };
     
     /*******************************************************************************************************
     * @description The names to give to the instances of the master schedulable that are to be scheduled.
@@ -165,6 +165,8 @@ public without sharing class UTIL_MasterSchedulableHelper {
 	        jobs.add(new Schedulable__c(Name = 'Seasonal Address Updates', Class_Name__c = scheduledClasses[5],
 	                Active__c = true, Frequency__c = 'Daily'));
             jobs.add(new Schedulable__c(Name = 'GAU Allocations Rollups', Class_Name__c = scheduledClasses[6],
+                    Active__c = true, Frequency__c = 'Daily'));
+            jobs.add(new Schedulable__c(Name = 'Level Assignment Batch', Class_Name__c = scheduledClasses[7],
                     Active__c = true, Frequency__c = 'Daily'));
 	        insert jobs;
     	}    
