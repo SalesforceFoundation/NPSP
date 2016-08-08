@@ -116,7 +116,7 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
     * @param strObj The object to get the ladder levels for
     * @return map<String, list<Level__c>> The map of Ladder Levels for the object
     */
-    private static map<String, list<Level__c>> mapLadderToLevelsForObject(String strObj) {
+    public static map<String, list<Level__c>> mapLadderToLevelsForObject(String strObj) {
         
         // get all our levels for this object type
         list<Level__c> listAllLvls = [select Id, Name, Target__c, Source_Field__c, Level_Field__c, 

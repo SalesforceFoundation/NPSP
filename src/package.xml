@@ -108,6 +108,7 @@
         <members>LVL_LevelAssignBATCH_TEST</members>
         <members>LVL_LevelAssign_BATCH</members>
         <members>LVL_LevelAssign_SCHED</members>
+        <members>LVL_Level_TDTM</members>
         <members>MTCH_FindGifts_CTRL</members>
         <members>MTCH_FindGifts_TEST</members>
         <members>MTCH_Opportunity_TDTM</members>
@@ -344,6 +345,7 @@
         <members>TDTM_Contact</members>
         <members>TDTM_HouseholdObject</members>
         <members>TDTM_Lead</members>
+        <members>TDTM_Level</members>
         <members>TDTM_Opportunity</members>
         <members>TDTM_PartialSoftCredit</members>
         <members>TDTM_RecurringDonation</members>
@@ -1070,6 +1072,8 @@
         <members>leadConvertSendEmail</members>
         <members>leadConvertStatus</members>
         <members>leadConvertViewContactError</members>
+        <members>lvlErrorMaxOverlap</members>
+        <members>lvlErrorMinOverlap</members>
         <members>mtchBtnSearch</members>
         <members>mtchCloseDateEnd</members>
         <members>mtchCloseDateStart</members>

@@ -2767,6 +2767,22 @@ If you want to know which Opportunities would have previously included this doub
         <value>You can only view existing contacts.</value>
     </labels>
     <labels>
+        <fullName>lvlErrorMaxOverlap</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>error displayed with the max amount on a level overlaps existing levels</shortDescription>
+        <value>The Maximum Amount field on Level {0} overlaps with the Minimum Amount on Level {1}</value>
+    </labels>
+    <labels>
+        <fullName>lvlErrorMinOverlap</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error when we detect the minimum amount overlaps another level</shortDescription>
+        <value>The Minimum Amount field on Level {0} overlaps with the Minimum Amount on Level {1}</value>
+    </labels>
+    <labels>
         <fullName>mtchBtnSearch</fullName>
         <categories>Find Matched Gifts</categories>
         <language>en_US</language>

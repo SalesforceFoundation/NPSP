@@ -187,4 +187,147 @@ private class LVL_LevelAssignBATCH_TEST {
         System.assertEquals(listCon[6].CreatedDate, listCon[6].LastModifiedDate);
     }
     
+    /*********************************************************************************************************
+    * @description tests our Level Validation to detect overlaps with existing levels
+    */
+    static testMethod void testLevelValidationExistingMin() {
+        // create Levels
+        createtestLevels();
+        
+        Level__c lvl = new Level__c(
+            Name = 'Silver Overlap',
+            Target__c = 'Contact',
+            Source_Field__c = 'npo02__TotalOppAmount__c', 
+            Level_Field__c = 'npo02__LastMembershipLevel__c', 
+            Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c', 
+            Active__c = true, 
+            Minimum_Amount__c = 1000, 
+            Maximum_Amount__c = 4999);
+            
+        try {
+            Test.startTest();
+            insert lvl;
+            Test.stopTest();
+            system.assert(false, 'exception should have occurred');
+        } catch(Exception ex) {
+            system.assert(ex.getMessage().contains(lvl.Name));
+        }
+    }
+
+    /*********************************************************************************************************
+    * @description tests our Level Validation to detect overlaps with existing levels
+    */
+    static testMethod void testLevelValidationExistingMax() {
+        // create Levels
+        createtestLevels();
+        
+        Level__c lvl = new Level__c(
+            Name = 'Bronze Overlap',
+            Target__c = 'Contact',
+            Source_Field__c = 'npo02__TotalOppAmount__c', 
+            Level_Field__c = 'npo02__LastMembershipLevel__c', 
+            Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c', 
+            Active__c = true, 
+            Minimum_Amount__c = 10, 
+            Maximum_Amount__c = 100);
+            
+        try {
+            Test.startTest();
+            insert lvl;
+            Test.stopTest();
+            system.assert(false, 'exception should have occurred');
+        } catch(Exception ex) {
+            system.assert(ex.getMessage().contains(lvl.Name));
+        }
+    }
+
+    /*********************************************************************************************************
+    * @description tests our Level Validation to detect overlaps with new levels
+    */
+    static testMethod void testLevelValidationNewMin() {
+        
+        Level__c lvl1 = new Level__c(
+            Name = 'new',
+            Target__c = 'Contact',
+            Source_Field__c = 'npo02__TotalOppAmount__c', 
+            Level_Field__c = 'npo02__LastMembershipLevel__c', 
+            Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c', 
+            Active__c = true, 
+            Minimum_Amount__c = 10, 
+            Maximum_Amount__c = 100);
+            
+        Level__c lvl2 = new Level__c(
+            Name = 'new2',
+            Target__c = 'Contact',
+            Source_Field__c = 'npo02__TotalOppAmount__c', 
+            Level_Field__c = 'npo02__LastMembershipLevel__c', 
+            Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c', 
+            Active__c = true, 
+            Minimum_Amount__c = 101, 
+            Maximum_Amount__c = 200);
+
+        Level__c lvl3 = new Level__c(
+            Name = 'new3',
+            Target__c = 'Contact',
+            Source_Field__c = 'npo02__TotalOppAmount__c', 
+            Level_Field__c = 'npo02__LastMembershipLevel__c', 
+            Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c', 
+            Active__c = true, 
+            Minimum_Amount__c = 50, 
+            Maximum_Amount__c = 75);
+
+        try {
+            Test.startTest();
+            insert new Level__c[]{lvl1, lvl2, lvl3};
+            Test.stopTest();
+            system.assert(false, 'exception should have occurred');
+        } catch(Exception ex) {
+            system.assert(ex.getMessage().contains(lvl3.Name));
+        }
+    }
+
+    /*********************************************************************************************************
+    * @description tests our Level Validation to detect overlaps with new levels
+    */
+    static testMethod void testLevelValidationNewMax() {
+        
+        Level__c lvl1 = new Level__c(
+            Name = 'new',
+            Target__c = 'Contact',
+            Source_Field__c = 'npo02__TotalOppAmount__c', 
+            Level_Field__c = 'npo02__LastMembershipLevel__c', 
+            Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c', 
+            Active__c = true, 
+            Minimum_Amount__c = 10, 
+            Maximum_Amount__c = 100);
+            
+        Level__c lvl2 = new Level__c(
+            Name = 'new2',
+            Target__c = 'Contact',
+            Source_Field__c = 'npo02__TotalOppAmount__c', 
+            Level_Field__c = 'npo02__LastMembershipLevel__c', 
+            Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c', 
+            Active__c = true, 
+            Minimum_Amount__c = 101, 
+            Maximum_Amount__c = 200);
+
+        Level__c lvl3 = new Level__c(
+            Name = 'new3',
+            Target__c = 'Contact',
+            Source_Field__c = 'npo02__TotalOppAmount__c', 
+            Level_Field__c = 'npo02__LastMembershipLevel__c', 
+            Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c', 
+            Active__c = true, 
+            Minimum_Amount__c = 5, 
+            Maximum_Amount__c = 75);
+
+        try {
+            Test.startTest();
+            insert new Level__c[]{lvl1, lvl2, lvl3};
+            Test.stopTest();
+            system.assert(false, 'exception should have occurred');
+        } catch(Exception ex) {
+            system.assert(ex.getMessage().contains(lvl3.Name));
+        }
+    }
 }

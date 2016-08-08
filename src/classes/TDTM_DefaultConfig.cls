@@ -268,6 +268,11 @@ public without sharing class TDTM_DefaultConfig {
               Class__c = 'PSC_Opportunity_TDTM', Load_Order__c = 4, Object__c = 'Opportunity',
               Trigger_Action__c = 'AfterUpdate'));
 
+        // Level support
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+              Class__c = 'LVL_Level_TDTM', Load_Order__c = 1, Object__c = 'Level__c',
+              Trigger_Action__c = 'BeforeInsert;BeforeUpdate'));
+
         return handlers;
     }
 
