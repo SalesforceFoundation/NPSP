@@ -44,6 +44,8 @@ public without sharing class LVL_LevelAssign_SCHED implements UTIL_MasterSchedul
     public Boolean executeReturnStatus() {
         Savepoint sp = Database.setSavepoint();
         try {
+            cLvlAssignBatch = 0;
+
             // for a given Object (Contact, Account, etc), provides the set of fields from that object that need to be queried.
             map<String, set<String>> mapStrObjectToQueryFields = LVL_LevelAssign_BATCH.getMapStrObjectToQueryFields();
             
@@ -63,14 +65,20 @@ public without sharing class LVL_LevelAssign_SCHED implements UTIL_MasterSchedul
                 // kick off our batch
                 LVL_LevelAssign_BATCH batch = new LVL_LevelAssign_BATCH(strSoql, strObj);
                 Database.executeBatch(batch);
+                cLvlAssignBatch++;
             }
             return true;
         } catch(Exception e) {
             Database.rollback(sp);
             ERR_Handler.processError(e, ERR_Handler_API.Context.LVL);
+            cLvlAssignBatch = 0;
         }
         return false;
     }
     
+    /*********************************************************************************************************
+    * @description How many Level Assign Batches were kicked off
+    */
+    public integer cLvlAssignBatch { get; set; }
 
 }

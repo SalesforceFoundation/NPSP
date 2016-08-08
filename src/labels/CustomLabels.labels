@@ -3909,6 +3909,17 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <value>Specifies the default behavior for Opportunity creation when you convert a Lead to a Contact. If left unselected, Salesforce will NOT automatically create an Opportunity when you convert Leads to Contacts. For more information, see the &lt;a href=&quot;https://powerofus.force.com/NPSP_Leads&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</value>
     </labels>
     <labels>
+        <fullName>stgHelpLvlAssignBatch</fullName>
+        <categories>NPSP Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>help text displayed on the Level Assignment Batch page</shortDescription>
+        <value>This utility calculates Level Assignments for all Salesforce objects (typically Accounts and Contacts, but also any custom objects) that have Levels assigned to them. This process may take some time, but you can safely close this page and the process will continue in the background.
+&lt;br/&gt;&lt;br/&gt;
+
+&lt;b&gt;IMPORTANT:&lt;/b&gt; Since Salesforce is often evaluating Levels against updated fields from other bulk data processes, you may want to run those processes first.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpMatchedDonorRole</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -4791,6 +4802,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgLabelLeadSettings</shortDescription>
         <value>Lead Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelLvlAssignBatchTitle</fullName>
+        <categories>NPSP Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>menu title for the Level Assignment Batch in NPSP Settings</shortDescription>
+        <value>Level Assignment Batch</value>
     </labels>
     <labels>
         <fullName>stgLabelMembershipSettings</fullName>

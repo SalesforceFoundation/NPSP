@@ -186,6 +186,7 @@
         <members>STG_PanelHealthCheck_TEST</members>
         <members>STG_PanelHouseholds_CTRL</members>
         <members>STG_PanelLeads_CTRL</members>
+        <members>STG_PanelLvlAssignBatch_CTRL</members>
         <members>STG_PanelMakeDefaultAllocations_CTRL</members>
         <members>STG_PanelMembership_CTRL</members>
         <members>STG_PanelOppBatch_CTRL</members>
@@ -309,6 +310,7 @@
         <members>STG_PanelHome</members>
         <members>STG_PanelHouseholds</members>
         <members>STG_PanelLeads</members>
+        <members>STG_PanelLvlAssignBatch</members>
         <members>STG_PanelMakeDefaultAllocations</members>
         <members>STG_PanelMembership</members>
         <members>STG_PanelOppBatch</members>
@@ -1205,6 +1207,7 @@
         <members>stgHelpIGFormat</members>
         <members>stgHelpINamingClass</members>
         <members>stgHelpLeadConvert</members>
+        <members>stgHelpLvlAssignBatch</members>
         <members>stgHelpMatchedDonorRole</members>
         <members>stgHelpMaxPayments</members>
         <members>stgHelpMembershipGracePeriod</members>
@@ -1313,6 +1316,7 @@
         <members>stgLabelHonoreeNotificationHelpText</members>
         <members>stgLabelHonoreeNotificationOCR</members>
         <members>stgLabelLeadSettings</members>
+        <members>stgLabelLvlAssignBatchTitle</members>
         <members>stgLabelMembershipSettings</members>
         <members>stgLabelNewAutoRel</members>
         <members>stgLabelNewPaymentMapping</members>
@@ -1541,6 +1545,7 @@
         <members>Contact_Merge</members>
         <members>DataImport__c</members>
         <members>General_Accounting_Unit__c</members>
+        <members>Level__c</members>
         <members>NPSP_Resources</members>
         <members>NPSP_Settings</members>
         <members>npe01__OppPayment__c</members>
