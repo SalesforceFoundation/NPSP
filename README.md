@@ -1,5 +1,8 @@
 ![Salesforce Nonprofit Starter Pack](https://cloud.githubusercontent.com/assets/926530/6358168/b55fec9c-bc37-11e4-88c8-40691541bad2.png "Salesforce Nonprofit Starter Pack")
 
+<a href="https://codeclimate.com/github/Up2Go/Cumulus"><img src="https://codeclimate.com/github/Up2Go/Cumulus/badges/gpa.svg" /></a>
+<a href="https://codeclimate.com/github/Up2Go/Cumulus"><img src="https://codeclimate.com/github/Up2Go/Cumulus/badges/issue_count.svg" /></a>
+
 #### For Users
 
 * <a href="https://powerofus.force.com" target="_blank">Ask questions or get help</a>
