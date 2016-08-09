@@ -315,21 +315,6 @@
         </sections>
     </layouts>
     <layouts>
-        <layout>Major Gift Layout</layout>
-        <sections>
-            <label><!-- Donation Information --></label>
-            <section>Donation Information</section>
-        </sections>
-        <sections>
-            <label><!-- Major Gift Information --></label>
-            <section>Major Gift Information</section>
-        </sections>
-        <sections>
-            <label><!-- Payment Information --></label>
-            <section>Payment Information</section>
-        </sections>
-    </layouts>
-    <layouts>
         <layout>Matching Gift Layout</layout>
         <sections>
             <label>Spendeninformationen</label>
