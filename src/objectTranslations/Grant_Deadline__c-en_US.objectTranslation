@@ -2,29 +2,31 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value>Grant Deadline</value>
+        <value>Deliverable</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value>Grant Deadlines</value>
+        <value>Deliverables</value>
     </caseValues>
     <fields>
-        <label><!-- Grant Deadline Due Date --></label>
+        <help><!-- The date on which this particular Deliverable is due. --></help>
+        <label><!-- Due Date --></label>
         <name>Grant_Deadline_Due_Date__c</name>
     </fields>
     <fields>
         <help><!-- The date on which the deliverable was actually submitted. --></help>
-        <label><!-- Grant Deliverable Close Date --></label>
+        <label><!-- Close Date --></label>
         <name>Grant_Deliverable_Close_Date__c</name>
     </fields>
     <fields>
-        <label><!-- Grant Deliverable Requirements --></label>
+        <help><!-- Description of what is required for this deliverable. --></help>
+        <label><!-- Requirements --></label>
         <name>Grant_Deliverable_Requirements__c</name>
     </fields>
     <fields>
-        <label><!-- Grant Opportunity --></label>
+        <label><!-- Opportunity --></label>
         <name>Opportunity__c</name>
-        <relationshipLabel><!-- Grant Deadlines --></relationshipLabel>
+        <relationshipLabel><!-- Deliverables --></relationshipLabel>
     </fields>
     <layouts>
         <layout>Grant Deadline Layout</layout>

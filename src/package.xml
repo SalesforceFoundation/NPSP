@@ -646,8 +646,11 @@
         <members>Lead.CompanyStreet__c</members>
         <members>Opportunity.Acknowledgment_Date__c</members>
         <members>Opportunity.Acknowledgment_Status__c</members>
+        <members>Opportunity.Ask_Date__c</members>
         <members>Opportunity.Batch__c</members>
+        <members>Opportunity.Closed_Lost_Reason__c</members>
         <members>Opportunity.Fair_Market_Value__c</members>
+        <members>Opportunity.Gift_Strategy__c</members>
         <members>Opportunity.Grant_Contract_Date__c</members>
         <members>Opportunity.Grant_Contract_Number__c</members>
         <members>Opportunity.Grant_Period_End_Date__c</members>
@@ -673,6 +676,7 @@
         <members>Opportunity.Previous_Grant_Opportunity__c</members>
         <members>Opportunity.Primary_Contact_Campaign_Member_Status__c</members>
         <members>Opportunity.Primary_Contact__c</members>
+        <members>Opportunity.Qualified_Date__c</members>
         <members>Opportunity.Recurring_Donation_Installment_Name__c</members>
         <members>Opportunity.Recurring_Donation_Installment_Number__c</members>
         <members>Opportunity.Requested_Amount__c</members>

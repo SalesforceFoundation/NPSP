@@ -3,44 +3,45 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Grant Deadline --></value>
+        <value><!-- Deliverable --></value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Grant Deadline --></value>
+        <value><!-- Deliverable --></value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Grant Deadline --></value>
+        <value><!-- Deliverable --></value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Grant Deadline --></value>
+        <value><!-- Deliverable --></value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Grant Deadline --></value>
+        <value><!-- Deliverable --></value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Grant Deadline --></value>
+        <value><!-- Deliverable --></value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Grant Deadline --></value>
+        <value><!-- Deliverable --></value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Grant Deadline --></value>
+        <value><!-- Deliverable --></value>
     </caseValues>
     <fields>
+        <help><!-- The date on which this particular Deliverable is due. --></help>
         <label>Fälligk.dat. d. letzten Unterst.termins</label>
         <name>Grant_Deadline_Due_Date__c</name>
     </fields>
@@ -50,6 +51,7 @@
         <name>Grant_Deliverable_Close_Date__c</name>
     </fields>
     <fields>
+        <help><!-- Description of what is required for this deliverable. --></help>
         <label>Anforderungen d. zustellb. Unterstützung</label>
         <name>Grant_Deliverable_Requirements__c</name>
     </fields>
@@ -70,5 +72,5 @@
             <section>Grant Deliverable Requirements</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Grant Deadline Name --></nameFieldLabel>
+    <nameFieldLabel><!-- Deliverable Name --></nameFieldLabel>
 </CustomObjectTranslation>
