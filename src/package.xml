@@ -917,6 +917,7 @@
         <members>healthDetailsInvalidErrorRecipient</members>
         <members>healthDetailsInvalidErrorUser</members>
         <members>healthDetailsInvalidFiscalYears</members>
+        <members>healthDetailsInvalidLevelField</members>
         <members>healthDetailsInvalidObjectField</members>
         <members>healthDetailsInvalidOppField</members>
         <members>healthDetailsInvalidOppStage</members>
@@ -974,6 +975,8 @@
         <members>healthLabelTriggerHandlerCheck</members>
         <members>healthLabelTriggerHandlersValid</members>
         <members>healthLabelUDFValid</members>
+        <members>healthLabelVerifyLevels</members>
+        <members>healthLabelVerifyLevelsSuccess</members>
         <members>healthLabelWarning</members>
         <members>healthPaymentAutoCloseStageInvalid</members>
         <members>healthPaymentAutoCloseStageMustBeActiveClosedWonOrBlank</members>
@@ -992,6 +995,7 @@
         <members>healthSolutionHHAccNoContacts</members>
         <members>healthSolutionHHObjNoContacts</members>
         <members>healthSolutionInvalidFiscalYears</members>
+        <members>healthSolutionInvalidLevelField</members>
         <members>healthSolutionInvalidOppField</members>
         <members>healthSolutionInvalidOppStage</members>
         <members>healthSolutionInvalidPaymentField</members>

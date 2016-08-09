@@ -1527,6 +1527,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Fiscal Year Rollups are not supported when the organization is using Custom Fiscal Years.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsInvalidLevelField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Health Check error if a Level refers to an invalid field</shortDescription>
+        <value>Level {0} refers to an invalid field {1} on {2}.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsInvalidObjectField</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -1983,6 +1991,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>User Defined Rollups valid.</value>
     </labels>
     <labels>
+        <fullName>healthLabelVerifyLevels</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Health Check title for Levels</shortDescription>
+        <value>Levels</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelVerifyLevelsSuccess</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Health Check message when all Levels verify ok</shortDescription>
+        <value>All field references on all Levels are valid.</value>
+    </labels>
+    <labels>
         <fullName>healthLabelWarning</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -2126,6 +2150,14 @@ If you want to know which Opportunities would have previously included this doub
         <protected>false</protected>
         <shortDescription>healthSolutionInvalidFiscalYears</shortDescription>
         <value>Since Salesforce does not support turning off Custom Fiscal Years, NPSP Rollups will default to Calendar Year.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionInvalidLevelField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Health Check Solution for an invalid Level field</shortDescription>
+        <value>Go to the Levels Tab, and update the invalid field reference on Level {0}.</value>
     </labels>
     <labels>
         <fullName>healthSolutionInvalidOppField</fullName>

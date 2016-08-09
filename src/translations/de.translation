@@ -2018,6 +2018,10 @@ Weitere Informationen zum empfohlenen Haushalt-Account-Modell finden Sie in der 
         <name>stgHelpLeadConvert</name>
     </customLabels>
     <customLabels>
+        <label><!-- help text displayed on the Level Assignment Batch page --></label>
+        <name>stgHelpLvlAssignBatch</name>
+    </customLabels>
+    <customLabels>
         <label>Wählen Sie die Kontaktrolle für zugewiesene Spender aus.</label>
         <name>stgHelpMatchedDonorRole</name>
     </customLabels>
@@ -2465,6 +2469,10 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
     <customLabels>
         <label>Lead-Einstellungen</label>
         <name>stgLabelLeadSettings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- menu title for the Level Assignment Batch in NPSP Settings --></label>
+        <name>stgLabelLvlAssignBatchTitle</name>
     </customLabels>
     <customLabels>
         <label>Mitgliedschaft-Einstellungen</label>
