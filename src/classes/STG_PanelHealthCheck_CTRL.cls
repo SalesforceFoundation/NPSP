@@ -741,7 +741,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         try {
             // get all our levels for this object type
             list<Level__c> listAllLvls = [select Id, Name, Target__c, Source_Field__c, Level_Field__c, 
-                Previous_Level_Field__c, Active__c, Minimum_Amount__c, Maximum_Amount__c, Engagement_Plan__c
+                Previous_Level_Field__c, Active__c, Minimum_Amount__c, Maximum_Amount__c
                 from Level__c
                 order by Level_Field__c asc, Minimum_Amount__c asc];
             

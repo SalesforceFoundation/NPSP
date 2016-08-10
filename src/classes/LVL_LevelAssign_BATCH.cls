@@ -72,6 +72,9 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
         // track our objects to update
         map<Id, SObject> mapSObjUpdate = new map<Id, SObject>();
         
+        // track our Engagement Plans to create
+        list<Engagement_Plan__c> listEP = new list<Engagement_Plan__c>();
+        
         // for each of our objects
         for (SObject sobj : scope) {
             
@@ -92,6 +95,16 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
                                     sobj.put(lvl.Previous_Level_Field__c, lvlIdPrev);
                                 sobj.put(strLadder, lvl.Id);
                                 mapSObjUpdate.put(sobj.Id, sobj);
+                                
+                                // apply the Engagement Plan
+                                if (lvl.Engagement_Plan_Template__c != null) {
+                                    Engagement_Plan__c ep = new Engagement_Plan__c();
+                                    // a little trickery.  we know the objects supported by EP's
+                                    // use the object name exactly.
+                                    ep.put(lvl.Target__c + '__c', sobj.Id);
+						            ep.Engagement_Plan_Template__c = lvl.Engagement_Plan_Template__c;
+						            listEP.add(ep);
+                                }
                             }
                             // done with this level.
                             break;
@@ -103,6 +116,7 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
                 
         // save 'em
         update mapSObjUpdate.values();     
+        insert listEP;
     }
     
     /*********************************************************************************************************
@@ -120,7 +134,7 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
         
         // get all our levels for this object type
         list<Level__c> listAllLvls = [select Id, Name, Target__c, Source_Field__c, Level_Field__c, 
-            Previous_Level_Field__c, Active__c, Minimum_Amount__c, Maximum_Amount__c, Engagement_Plan__c
+            Previous_Level_Field__c, Active__c, Minimum_Amount__c, Maximum_Amount__c, Engagement_Plan_Template__c
             from Level__c
             where Target__c = :strObj and Active__c = true
             order by Level_Field__c asc, Minimum_Amount__c asc];
