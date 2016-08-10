@@ -73,6 +73,16 @@
         <members>CON_DeleteContactOverride_TEST</members>
         <members>CON_DoNotContact_TDTM</members>
         <members>CON_DoNotContact_TEST</members>
+        <members>EP_EngagementPlanTaskValidation_TDTM</members>
+        <members>EP_EngagementPlanTaskValidation_TEST</members>
+        <members>EP_EngagementPlans_TDTM</members>
+        <members>EP_EngagementPlans_TEST</members>
+        <members>EP_EngagementPlans_UTIL</members>
+        <members>EP_TaskDependency_TDTM</members>
+        <members>EP_TaskDependency_TEST</members>
+        <members>EP_TaskRollup_TDTM</members>
+        <members>EP_TaskRollup_TEST</members>
+        <members>EP_Task_UTIL</members>
         <members>ERR_AddError_TEST</members>
         <members>ERR_Handler</members>
         <members>ERR_Handler_API</members>
@@ -255,14 +265,6 @@
         <name>ApexClass</name>
     </types>
     <types>
-        <members>autocomplete</members>
-        <members>autocompleteOption</members>
-        <members>autocompleteSelectListOption</members>
-        <members>dataProviderInterface</members>
-        <members>svg</members>
-        <name>AuraDefinitionBundle</name>
-    </types>
-    <types>
         <members>STG_DataBoundMultiSelect</members>
         <members>STG_PageHeader</members>
         <members>UTIL_JobProgress</members>
@@ -343,6 +345,8 @@
         <members>TDTM_Campaign</members>
         <members>TDTM_CampaignMember</members>
         <members>TDTM_Contact</members>
+        <members>TDTM_EngagementPlan</members>
+        <members>TDTM_EngagementPlanTask</members>
         <members>TDTM_HouseholdObject</members>
         <members>TDTM_Lead</members>
         <members>TDTM_Level</members>
@@ -350,6 +354,7 @@
         <members>TDTM_PartialSoftCredit</members>
         <members>TDTM_RecurringDonation</members>
         <members>TDTM_Relationship</members>
+        <members>TDTM_Task</members>
         <name>ApexTrigger</name>
     </types>
     <types>
@@ -413,6 +418,8 @@
         <members>Account.Membership_Span__c</members>
         <members>Account.Membership_Status__c</members>
         <members>Account.Number_of_Household_Members__c</members>
+        <members>Activity.Engagement_Plan_Task__c</members>
+        <members>Activity.Engagement_Plan__c</members>
         <members>Addr_Verification_Settings__c.Address_Verification_Endpoint__c</members>
         <members>Addr_Verification_Settings__c.Auth_ID__c</members>
         <members>Addr_Verification_Settings__c.Auth_Token__c</members>
@@ -591,6 +598,34 @@
         <members>Data_Import_Settings__c.Batch_Size__c</members>
         <members>Data_Import_Settings__c.Contact_Custom_Unique_ID__c</members>
         <members>Data_Import_Settings__c.Contact_Matching_Rule__c</members>
+        <members>Engagement_Plan_Task__c.Assigned_To__c</members>
+        <members>Engagement_Plan_Task__c.Comments__c</members>
+        <members>Engagement_Plan_Task__c.Days_After__c</members>
+        <members>Engagement_Plan_Task__c.Dependent_Task__c</members>
+        <members>Engagement_Plan_Task__c.Engagement_Plan_Template__c</members>
+        <members>Engagement_Plan_Task__c.Priority__c</members>
+        <members>Engagement_Plan_Task__c.Reminder_Minutes__c</members>
+        <members>Engagement_Plan_Task__c.Reminder__c</members>
+        <members>Engagement_Plan_Task__c.Send_Email__c</members>
+        <members>Engagement_Plan_Task__c.Status__c</members>
+        <members>Engagement_Plan_Task__c.Type__c</members>
+        <members>Engagement_Plan_Template__c.Blank_Assignment_Rule__c</members>
+        <members>Engagement_Plan_Template__c.Delay_Type__c</members>
+        <members>Engagement_Plan_Template__c.Skip_Day__c</members>
+        <members>Engagement_Plan_Template__c.Skip_Weekends__c</members>
+        <members>Engagement_Plan_Template__c.Total_Engagement_Plans__c</members>
+        <members>Engagement_Plan_Template__c.Total_Tasks__c</members>
+        <members>Engagement_Plan__c.Account__c</members>
+        <members>Engagement_Plan__c.Campaign__c</members>
+        <members>Engagement_Plan__c.Case__c</members>
+        <members>Engagement_Plan__c.Completed_Tasks__c</members>
+        <members>Engagement_Plan__c.Contact__c</members>
+        <members>Engagement_Plan__c.Engagement_Plan_Template__c</members>
+        <members>Engagement_Plan__c.Opportunity__c</members>
+        <members>Engagement_Plan__c.Recurring_Donation__c</members>
+        <members>Engagement_Plan__c.Status__c</members>
+        <members>Engagement_Plan__c.Total_EP_Tasks__c</members>
+        <members>Engagement_Plan__c.Total_Tasks__c</members>
         <members>Error_Settings__c.Disable_Error_Handling__c</members>
         <members>Error_Settings__c.Enable_Debug__c</members>
         <members>Error_Settings__c.Error_Notifications_On__c</members>
@@ -798,6 +833,8 @@
         <members>CONV_Warning</members>
         <members>CONV_What_This_Tool_Does</members>
         <members>CampaignMemberStatusOmit</members>
+        <members>EPTaskDependency</members>
+        <members>EPTaskTemplate</members>
         <members>HiddenForSecurity</members>
         <members>PageMessagesConfirm</members>
         <members>PageMessagesError</members>
@@ -893,6 +930,8 @@
         <members>campaignMemberStatusNonResponded</members>
         <members>campaignMemberStatusResponded</members>
         <members>conMergeErrNoPersonAccounts</members>
+        <members>engagementPlanNoLookups</members>
+        <members>engagementPlanTwoLookups</members>
         <members>flsError</members>
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>
@@ -1145,6 +1184,9 @@
         <members>sendAcknowledgmentPageTitle</members>
         <members>sendAcknowledgmentReturnLinkLabel</members>
         <members>sendAcknowledgmentSucceeded</members>
+        <members>statusCompleted</members>
+        <members>statusInProgress</members>
+        <members>statusNotStarted</members>
         <members>stgAddrGeneralSettingsIntro</members>
         <members>stgAddrMustChooseClass</members>
         <members>stgBtnCancel</members>
@@ -1414,6 +1456,7 @@
     </types>
     <types>
         <members>Account</members>
+        <members>Activity</members>
         <members>Addr_Verification_Settings__c</members>
         <members>Address_Verification_Settings__c</members>
         <members>Address__c</members>
@@ -1424,6 +1467,9 @@
         <members>Contact</members>
         <members>DataImport__c</members>
         <members>Data_Import_Settings__c</members>
+        <members>Engagement_Plan_Task__c</members>
+        <members>Engagement_Plan_Template__c</members>
+        <members>Engagement_Plan__c</members>
         <members>Error_Settings__c</members>
         <members>Error__c</members>
         <members>Fund__c</members>
@@ -1595,6 +1641,9 @@
         <members>Campaign-NPSP Campaign Layout</members>
         <members>Contact-Contact Layout</members>
         <members>DataImport__c-Data Import Layout</members>
+        <members>Engagement_Plan_Task__c-Engagement Plan Task Layout</members>
+        <members>Engagement_Plan_Template__c-Engagement Plan Template Layout</members>
+        <members>Engagement_Plan__c-Engagement Plan Layout</members>
         <members>Error__c-Error Layout</members>
         <members>Fund__c-Fund Layout</members>
         <members>General_Accounting_Unit__c-General Accounting Unit Layout</members>
@@ -1622,6 +1671,7 @@
         <members>DataImport__c.Failed_Data_Imports</members>
         <members>DataImport__c.Succesfully_Imported</members>
         <members>DataImport__c.To_Be_Imported</members>
+        <members>Engagement_Plan_Template__c.All</members>
         <members>General_Accounting_Unit__c.All</members>
         <members>Level__c.All</members>
         <members>Opportunity.To_Be_Acknowledged</members>
