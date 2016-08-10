@@ -67,11 +67,15 @@ public class LVL_Level_TDTM extends TDTM_Runnable {
                     for (integer i = 0; i < newlist.size(); i++) {
                         Level__c lvl = (Level__c)newlist[i];
                         
+                        // only look at one object this iteration
+                        if (lvl.Target__c != strObj)
+                            continue;
+                        
                         // add new levels to their ladder
                         if (lvl.Id == null) {
                             if (lvl.Active__c) {
                                 list<Level__c> listLvl = getListLevel(mapLadderToLevels, lvl.Level_Field__c);
-                                insertLevel(lvl, listLvl);
+                                addLevel(lvl, listLvl);
                             }
                         }
                         
@@ -86,7 +90,7 @@ public class LVL_Level_TDTM extends TDTM_Runnable {
                             // add to new ladder
                             if (lvl.Active__c) {
                                 list<Level__c> listLvl = getListLevel(mapLadderToLevels, lvl.Level_Field__c);
-                                insertLevel(lvl, listLvl);
+                                addLevel(lvl, listLvl);
                             }
                         }
                     }
@@ -116,11 +120,11 @@ public class LVL_Level_TDTM extends TDTM_Runnable {
     }
     
     /*******************************************************************************************************
-    * @description insert the Level in the correct order for the list of Levels
+    * @description add the Level in the correct order for the list of Levels
     * @param lvl The Level to insert
     * @param listLvl The list to insert into
     */
-    private void insertLevel(Level__c lvl, list<Level__c> listLvl) {
+    private void addLevel(Level__c lvl, list<Level__c> listLvl) {
         
         for (integer i = 0; i < listLvl.size(); i++) {
             if (lvl.Minimum_Amount__c <= listLvl[i].Minimum_Amount__c) {
