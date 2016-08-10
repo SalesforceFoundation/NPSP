@@ -192,12 +192,10 @@ public without sharing class RLLP_OppRollup_UTIL {
     public static void setupRollupVars(npo02__Households_Settings__c household_settings){
         
         if (household_settings.npo02__Excluded_Contact_Opp_Rectypes__c != null) {
-            set<string> rtNamesToExclude = new set<string>(household_settings.npo02__Excluded_Contact_Opp_Rectypes__c.split(';'));
-            recordTypesToExcludeCons = UTIL_RecordTypes.GetRecordTypeIdSet('Opportunity', rtNamesToExclude);
+            recordTypesToExcludeCons = new Set<Id>((List<Id>)household_settings.npo02__Excluded_Contact_Opp_Rectypes__c.split(';'));
         }
         if (household_settings.npo02__Excluded_Account_Opp_Rectypes__c != null) {
-            set<string> rtNamesToExclude = new set<string>(household_settings.npo02__Excluded_Account_Opp_Rectypes__c.split(';'));
-            recordTypesToExcludeAccts = UTIL_RecordTypes.GetRecordTypeIdSet('Opportunity', rtNamesToExclude);
+            recordTypesToExcludeAccts = new Set<Id>((List<Id>)household_settings.npo02__Excluded_Account_Opp_Rectypes__c.split(';'));
         }
         if (household_settings.npo02__Excluded_Contact_Opp_Types__c != null) {
             oppTypesToExcludeCons = new set<string>(household_settings.npo02__Excluded_Contact_Opp_Types__c.split(';'));
@@ -206,8 +204,7 @@ public without sharing class RLLP_OppRollup_UTIL {
             oppTypesToExcludeAccts = new set<string>(household_settings.npo02__Excluded_Account_Opp_Types__c.split(';'));
         }    
         if (household_settings.npo02__Membership_Record_Types__c != null) {
-            set<string> mbrRecordTypeNames = new set<string>(household_settings.npo02__Membership_Record_Types__c.split(';'));
-            mbrRecordTypes = UTIL_RecordTypes.GetRecordTypeIdSet('Opportunity', mbrRecordTypeNames);
+            mbrRecordTypes = new Set<Id>((List<Id>)household_settings.npo02__Membership_Record_Types__c.split(';'));
         }  
         if (household_settings.npo02__Soft_Credit_Roles__c != null){
             softCreditRoles = new set<string>(household_Settings.npo02__Soft_Credit_Roles__c.split(';'));
