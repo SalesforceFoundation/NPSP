@@ -299,10 +299,20 @@ private with sharing class PMT_PaymentCreator_TEST {
         if (strGift != null && strGift != '' && UTIL_RecordTypes.isRecordTypeActive('Opportunity', strGift)) {
             rtIdGift = UTIL_RecordTypes.GetRecordTypeId('Opportunity', strGift);
         }
-        
+
+        npe01__Contacts_And_Orgs_Settings__c defaultSettingsForTests = new npe01__Contacts_And_Orgs_Settings__c(
+            npe01__Payments_Enabled__c = true,
+            Opp_RecTypes_Excluded_for_Payments__c = ''
+        );
+
+        if (rtIdGift != null) {
+            defaultSettingsForTests.Opp_RecTypes_Excluded_for_Payments__c = rtIdGift;
+        }
+
         npe01__Contacts_And_Orgs_Settings__c PaymentsSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-            new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true, Opp_RecTypes_Excluded_for_Payments__c=strGift));
-        
+            defaultSettingsForTests
+        );
+
         // create test data
         Account acct = new Account (
             Name='Test Account'
@@ -693,7 +703,7 @@ private with sharing class PMT_PaymentCreator_TEST {
                 !UTIL_RecordTypes.isRecordTypeDefault('Opportunity', recTypeName)) {
 
                 rtIdGift = UTIL_RecordTypes.GetRecordTypeId('Opportunity', recTypeName);
-                consSettings.Opp_RecTypes_Excluded_for_Payments__c=recTypeName;
+                consSettings.Opp_RecTypes_Excluded_for_Payments__c=rtIdGift;
             }
         }
         

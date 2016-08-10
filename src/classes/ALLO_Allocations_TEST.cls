@@ -400,7 +400,7 @@ private with sharing class ALLO_Allocations_TEST {
         string rtname = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
         id rtid = UTIL_RecordTypes.GetRecordTypeId('Opportunity',rtname);
 
-        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id, Excluded_Opp_Types__c='foo;bar', Excluded_Opp_RecTypes__c=rtname));
+        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id, Excluded_Opp_Types__c='foo;bar', Excluded_Opp_RecTypes__c=rtid));
         Account acc = new Account(Name='foo');
         insert acc;
 

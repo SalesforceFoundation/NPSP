@@ -115,7 +115,7 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
 
         //build string of opp rec type names for query
         if (alloSettings.Excluded_Opp_RecTypes__c != null) {
-            strExcludeOppRecTypesQuery = 'AND Opportunity__r.RecordType.Name NOT IN ' + convertToQueryListFormat(alloSettings.Excluded_Opp_Rectypes__c);
+            strExcludeOppRecTypesQuery = 'AND Opportunity__r.RecordTypeId NOT IN ' + convertToQueryListFormat(alloSettings.Excluded_Opp_Rectypes__c);
         }
 
         //make  opp types
