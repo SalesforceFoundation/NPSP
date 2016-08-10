@@ -108,6 +108,7 @@
         <members>LVL_LevelAssignBATCH_TEST</members>
         <members>LVL_LevelAssign_BATCH</members>
         <members>LVL_LevelAssign_SCHED</members>
+        <members>LVL_Level_TDTM</members>
         <members>MTCH_FindGifts_CTRL</members>
         <members>MTCH_FindGifts_TEST</members>
         <members>MTCH_Opportunity_TDTM</members>
@@ -186,6 +187,7 @@
         <members>STG_PanelHealthCheck_TEST</members>
         <members>STG_PanelHouseholds_CTRL</members>
         <members>STG_PanelLeads_CTRL</members>
+        <members>STG_PanelLvlAssignBatch_CTRL</members>
         <members>STG_PanelMakeDefaultAllocations_CTRL</members>
         <members>STG_PanelMembership_CTRL</members>
         <members>STG_PanelOppBatch_CTRL</members>
@@ -309,6 +311,7 @@
         <members>STG_PanelHome</members>
         <members>STG_PanelHouseholds</members>
         <members>STG_PanelLeads</members>
+        <members>STG_PanelLvlAssignBatch</members>
         <members>STG_PanelMakeDefaultAllocations</members>
         <members>STG_PanelMembership</members>
         <members>STG_PanelOppBatch</members>
@@ -342,6 +345,7 @@
         <members>TDTM_Contact</members>
         <members>TDTM_HouseholdObject</members>
         <members>TDTM_Lead</members>
+        <members>TDTM_Level</members>
         <members>TDTM_Opportunity</members>
         <members>TDTM_PartialSoftCredit</members>
         <members>TDTM_RecurringDonation</members>
@@ -913,6 +917,7 @@
         <members>healthDetailsInvalidErrorRecipient</members>
         <members>healthDetailsInvalidErrorUser</members>
         <members>healthDetailsInvalidFiscalYears</members>
+        <members>healthDetailsInvalidLevelField</members>
         <members>healthDetailsInvalidObjectField</members>
         <members>healthDetailsInvalidOppField</members>
         <members>healthDetailsInvalidOppStage</members>
@@ -970,6 +975,8 @@
         <members>healthLabelTriggerHandlerCheck</members>
         <members>healthLabelTriggerHandlersValid</members>
         <members>healthLabelUDFValid</members>
+        <members>healthLabelVerifyLevels</members>
+        <members>healthLabelVerifyLevelsSuccess</members>
         <members>healthLabelWarning</members>
         <members>healthPaymentAutoCloseStageInvalid</members>
         <members>healthPaymentAutoCloseStageMustBeActiveClosedWonOrBlank</members>
@@ -988,6 +995,7 @@
         <members>healthSolutionHHAccNoContacts</members>
         <members>healthSolutionHHObjNoContacts</members>
         <members>healthSolutionInvalidFiscalYears</members>
+        <members>healthSolutionInvalidLevelField</members>
         <members>healthSolutionInvalidOppField</members>
         <members>healthSolutionInvalidOppStage</members>
         <members>healthSolutionInvalidPaymentField</members>
@@ -1068,6 +1076,8 @@
         <members>leadConvertSendEmail</members>
         <members>leadConvertStatus</members>
         <members>leadConvertViewContactError</members>
+        <members>lvlErrorMaxOverlap</members>
+        <members>lvlErrorMinOverlap</members>
         <members>mtchBtnSearch</members>
         <members>mtchCloseDateEnd</members>
         <members>mtchCloseDateStart</members>
@@ -1205,6 +1215,7 @@
         <members>stgHelpIGFormat</members>
         <members>stgHelpINamingClass</members>
         <members>stgHelpLeadConvert</members>
+        <members>stgHelpLvlAssignBatch</members>
         <members>stgHelpMatchedDonorRole</members>
         <members>stgHelpMaxPayments</members>
         <members>stgHelpMembershipGracePeriod</members>
@@ -1313,6 +1324,7 @@
         <members>stgLabelHonoreeNotificationHelpText</members>
         <members>stgLabelHonoreeNotificationOCR</members>
         <members>stgLabelLeadSettings</members>
+        <members>stgLabelLvlAssignBatchTitle</members>
         <members>stgLabelMembershipSettings</members>
         <members>stgLabelNewAutoRel</members>
         <members>stgLabelNewPaymentMapping</members>
@@ -1541,6 +1553,7 @@
         <members>Contact_Merge</members>
         <members>DataImport__c</members>
         <members>General_Accounting_Unit__c</members>
+        <members>Level__c</members>
         <members>NPSP_Resources</members>
         <members>NPSP_Settings</members>
         <members>npe01__OppPayment__c</members>

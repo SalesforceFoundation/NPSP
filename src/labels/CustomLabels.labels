@@ -1527,6 +1527,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Fiscal Year Rollups are not supported when the organization is using Custom Fiscal Years.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsInvalidLevelField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Health Check error if a Level refers to an invalid field</shortDescription>
+        <value>Level {0} refers to an invalid field {1} on {2}.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsInvalidObjectField</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -1983,6 +1991,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>User Defined Rollups valid.</value>
     </labels>
     <labels>
+        <fullName>healthLabelVerifyLevels</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Health Check title for Levels</shortDescription>
+        <value>Levels</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelVerifyLevelsSuccess</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Health Check message when all Levels verify ok</shortDescription>
+        <value>All field references on all Levels are valid.</value>
+    </labels>
+    <labels>
         <fullName>healthLabelWarning</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -2126,6 +2150,14 @@ If you want to know which Opportunities would have previously included this doub
         <protected>false</protected>
         <shortDescription>healthSolutionInvalidFiscalYears</shortDescription>
         <value>Since Salesforce does not support turning off Custom Fiscal Years, NPSP Rollups will default to Calendar Year.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionInvalidLevelField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Health Check Solution for an invalid Level field</shortDescription>
+        <value>Go to the Levels Tab, and update the invalid field reference on Level {0}.</value>
     </labels>
     <labels>
         <fullName>healthSolutionInvalidOppField</fullName>
@@ -2765,6 +2797,22 @@ If you want to know which Opportunities would have previously included this doub
         <protected>false</protected>
         <shortDescription>leadConvertViewContactError</shortDescription>
         <value>You can only view existing contacts.</value>
+    </labels>
+    <labels>
+        <fullName>lvlErrorMaxOverlap</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>error displayed with the max amount on a level overlaps existing levels</shortDescription>
+        <value>The Maximum Amount field on Level {0} overlaps with the Minimum Amount on Level {1}</value>
+    </labels>
+    <labels>
+        <fullName>lvlErrorMinOverlap</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error when we detect the minimum amount overlaps another level</shortDescription>
+        <value>The Minimum Amount field on Level {0} overlaps with the Minimum Amount on Level {1}</value>
     </labels>
     <labels>
         <fullName>mtchBtnSearch</fullName>
@@ -3909,6 +3957,17 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <value>Specifies the default behavior for Opportunity creation when you convert a Lead to a Contact. If left unselected, Salesforce will NOT automatically create an Opportunity when you convert Leads to Contacts. For more information, see the &lt;a href=&quot;https://powerofus.force.com/NPSP_Leads&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</value>
     </labels>
     <labels>
+        <fullName>stgHelpLvlAssignBatch</fullName>
+        <categories>NPSP Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>help text displayed on the Level Assignment Batch page</shortDescription>
+        <value>This utility calculates Level Assignments for all Salesforce objects (typically Accounts and Contacts, but also any custom objects) that have Levels assigned to them. This process may take some time, but you can safely close this page and the process will continue in the background.
+&lt;br/&gt;&lt;br/&gt;
+
+&lt;b&gt;IMPORTANT:&lt;/b&gt; Since Salesforce is often evaluating Levels against updated fields from other bulk data processes, you may want to run those processes first.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpMatchedDonorRole</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -4791,6 +4850,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgLabelLeadSettings</shortDescription>
         <value>Lead Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelLvlAssignBatchTitle</fullName>
+        <categories>NPSP Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>menu title for the Level Assignment Batch in NPSP Settings</shortDescription>
+        <value>Level Assignment Batch</value>
     </labels>
     <labels>
         <fullName>stgLabelMembershipSettings</fullName>
