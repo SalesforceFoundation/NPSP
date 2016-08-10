@@ -125,4 +125,21 @@ public with sharing class STG_PanelOpps_CTRL extends STG_Panel {
             );
         }
     }
+
+    /**
+     * @description A user friendly rendering of record type ids by record type
+     * name for Opportunity Record Types Excluded for Payments
+     */
+    static public String strOppRecTypesExcludedForPaymentsReadOnly {
+        get {
+            if (strOppRecTypesExcludedForPaymentsReadOnly == null) {
+                strOppRecTypesExcludedForPaymentsReadOnly = STG_Panel.getRecordTypeNamesFromPicklistString(
+                    Opportunity.sObjectType,
+                    STG_Panel.stgService.stgCon.Opp_RecTypes_Excluded_for_Payments__c
+                );
+            }
+            return strOppRecTypesExcludedForPaymentsReadOnly;
+        }
+        private set;
+    }
 }

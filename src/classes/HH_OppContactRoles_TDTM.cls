@@ -107,11 +107,9 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
    
         DmlWrapper dmlWrapper = new DmlWrapper();
                              
-        set<string> HouseholdOCRRecordTypeExclusions = new set<string>();
         set<id> conRecordTypesToExclude = new set<id>();
         if (currentHouseholdsSettings.npo02__Household_OCR_Excluded_Recordtypes__c != null) {
-            HouseholdOCRRecordTypeExclusions = new set<string>(currentHouseholdsSettings.npo02__Household_OCR_Excluded_Recordtypes__c.split(';'));
-            conRecordTypesToExclude = UTIL_RecordTypes.GetRecordTypeIdSet('Contact', HouseholdOCRRecordTypeExclusions);            
+            conRecordTypesToExclude = new Set<Id>((List<Id>)currentHouseholdsSettings.npo02__Household_OCR_Excluded_Recordtypes__c.split(';'));
         }
         
         boolean recordTypesOnCons = false;
