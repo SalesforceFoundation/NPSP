@@ -56,7 +56,7 @@ public class ALLO_MakeDefaultAllocations_BATCH implements Database.Batchable<sOb
 
         //build string of opp record type names for query
         if (alloSettings.Excluded_Opp_RecTypes__c != null) {
-            strExcludeOppRecTypesQuery = ' WHERE RecordType.Name NOT IN ' + ALLO_Rollup_SCHED.convertToQueryListFormat(alloSettings.Excluded_Opp_Rectypes__c);
+            strExcludeOppRecTypesQuery = ' WHERE RecordTypeId NOT IN ' + ALLO_Rollup_SCHED.convertToQueryListFormat(alloSettings.Excluded_Opp_Rectypes__c);
         }
 
         //build string of opp types for query

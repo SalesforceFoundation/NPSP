@@ -40,7 +40,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
     // if you want to run all tests, then use '*'
     private static String strTestOnly = '*';
     
-    static String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+    static String giftRecordTypeIdForTests = UTIL_RecordTypes.GetRecordTypeId('Opportunity', UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity'));
     
     /*********************************************************************************************************
     * @description Runs testOpportunityUtilityErrorHandling test method for the One to One account processor.
@@ -96,8 +96,8 @@ public with sharing class RLLP_OppRollup_TEST2 {
         system.assert(TestCons[0].id != null);
 
         //create new opp with a missing required field (close date)
-        Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactList (TestCons, null, 
-            UTIL_UnitTestData_TEST.getClosedWonStage(), null, 1000 , giftRecordTypeNameForTests ,null);
+        Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactListByRecTypeId (TestCons, null, 
+            UTIL_UnitTestData_TEST.getClosedWonStage(), null, 1000 , giftRecordTypeIdForTests ,null);
 
         Test.startTest();
         List<Database.Saveresult> sr = Database.insert(newOpps, false);
@@ -171,7 +171,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
                     name = 'test opp ' + n, 
                     stagename = UTIL_UnitTestData_TEST.getClosedWonStage(), closedate = system.today().adddays(-n), amount = 100);
                 if(RLLP_OppRollup_UTIL.areRecordTypesOnOpps()){
-                    newOpp1.put('RecordTypeId',UTIL_RecordTypes.GetRecordTypeId('Opportunity', giftRecordTypeNameForTests));
+                    newOpp1.put('RecordTypeId', giftRecordTypeIdForTests);
                 }
                 newOpps1.add( newOpp1);
             }
@@ -258,9 +258,9 @@ public with sharing class RLLP_OppRollup_TEST2 {
             Contact[] TestCons = new Contact[] {Con1}; 
 
             // create new opps
-            Opportunity[] newOpps1 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 100 , giftRecordTypeNameForTests ,null);
-            Opportunity[] newOpps2 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose.addYears(-2), 200 , giftRecordTypeNameForTests ,null);
-            Opportunity[] newOpps3 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose.addYears(-3), 75 , giftRecordTypeNameForTests ,null);
+            Opportunity[] newOpps1 = UTIL_UnitTestData_TEST.OppsForContactListByRecTypeId ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 100 , giftRecordTypeIdForTests ,null);
+            Opportunity[] newOpps2 = UTIL_UnitTestData_TEST.OppsForContactListByRecTypeId ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose.addYears(-2), 200 , giftRecordTypeIdForTests ,null);
+            Opportunity[] newOpps3 = UTIL_UnitTestData_TEST.OppsForContactListByRecTypeId ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose.addYears(-3), 75 , giftRecordTypeIdForTests ,null);
 
             Opportunity[] testOpps = new Opportunity[0];
             testOpps.addAll (newOpps1);
@@ -533,14 +533,14 @@ public with sharing class RLLP_OppRollup_TEST2 {
                     name = 'test opp ', 
                     stagename = UTIL_UnitTestData_TEST.getClosedWonStage(), closedate = system.today(), amount = 100);
                if(RLLP_OppRollup_UTIL.areRecordTypesOnOpps())
-                    newOpp1.put('RecordTypeId',UTIL_RecordTypes.GetRecordTypeId('Opportunity', giftRecordTypeNameForTests));
+                    newOpp1.put('RecordTypeId', giftRecordTypeIdForTests);
             newOpps1.add( newOpp1);
 
             Opportunity newOpp2 = new opportunity(npe01__Contact_Id_for_Role__c = TestCons[0].id,
                     name = 'test opp 2', 
                     stagename = UTIL_UnitTestData_TEST.getClosedWonStage(), closedate = system.today().adddays(-40), amount = 100);
                if(RLLP_OppRollup_UTIL.areRecordTypesOnOpps())
-                    newOpp2.put('RecordTypeId',UTIL_RecordTypes.GetRecordTypeId('Opportunity', giftRecordTypeNameForTests));
+                    newOpp2.put('RecordTypeId', giftRecordTypeIdForTests);
             newOpps1.add(newOpp2);
 
             // insert the opp(s)
@@ -599,16 +599,16 @@ public with sharing class RLLP_OppRollup_TEST2 {
             insert TestCons;
 
             // create new opps
-            Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 1000 , giftRecordTypeNameForTests ,null);
+            Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactListByRecTypeId ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 1000 , giftRecordTypeIdForTests ,null);
             insert newOpps;
 
             account testacct = new account(name='testacct');
             insert testacct;
 
-            Opportunity[] lastYearOpps = UTIL_UnitTestData_TEST.OppsForContactList(new list<Contact>{TestCons[5]}, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose.addyears(-1), 150 , giftRecordTypeNameForTests ,null);
+            Opportunity[] lastYearOpps = UTIL_UnitTestData_TEST.OppsForContactListByRecTypeId(new list<Contact>{TestCons[5]}, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose.addyears(-1), 150 , giftRecordTypeIdForTests ,null);
             insert lastYearOpps;
 
-            Opportunity[] last2YearOpps = UTIL_UnitTestData_TEST.OppsForContactList(new list<Contact>{TestCons[8]}, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose.addyears(-2), 100 , giftRecordTypeNameForTests ,null);
+            Opportunity[] last2YearOpps = UTIL_UnitTestData_TEST.OppsForContactListByRecTypeId(new list<Contact>{TestCons[8]}, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose.addyears(-2), 100 , giftRecordTypeIdForTests ,null);
             insert last2YearOpps;
 
             //grab two random contacts and two random Opps and create an OCR for them
@@ -709,7 +709,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
             system.assertEquals(false, listAcc[0].npe01__SYSTEMIsIndividual__c);
             
             // create new opps
-            list<Opportunity> listOpp = UTIL_UnitTestData_TEST.OppsForAccountList(listAcc, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 1000 , giftRecordTypeNameForTests ,null);
+            list<Opportunity> listOpp = UTIL_UnitTestData_TEST.OppsForAccountListByRecTypeId(listAcc, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 1000 , giftRecordTypeIdForTests ,null);
             insert listOpp;
 
             // create our soft credit ocr's
@@ -786,7 +786,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
         insert TestCons;
 
         // create new opps
-        Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 1000 , giftRecordTypeNameForTests ,null);
+        Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactListByRecTypeId ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 1000 , giftRecordTypeIdForTests ,null);
         insert newOpps;
 
         TestCons = [select id, npo02__Household__c from Contact where ID IN :TestCons];

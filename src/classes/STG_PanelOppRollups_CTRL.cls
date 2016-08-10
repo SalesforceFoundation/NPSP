@@ -61,5 +61,39 @@ public with sharing class STG_PanelOppRollups_CTRL extends STG_Panel {
         }
         ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusSuccess, null, label.healthLabelFiscalYearsValid);            
     }        
-    
+
+    /**
+     * @description A user friendly rendering of record type ids by record type
+     * name for Excluded Account Opp RecTypes
+     */
+    static public String strExcludedAccountOppRecTypesReadOnly {
+        get {
+            if (strExcludedAccountOppRecTypesReadOnly == null) {
+                strExcludedAccountOppRecTypesReadOnly = STG_Panel.getRecordTypeNamesFromPicklistString(
+                    Opportunity.sObjectType,
+                    STG_Panel.stgService.stgHH.npo02__Excluded_Account_Opp_Rectypes__c
+                );
+            }
+            return strExcludedAccountOppRecTypesReadOnly;
+        }
+        private set;
+    }
+
+    /**
+     * @description A user friendly rendering of record type ids by record type
+     * name for Excluded Contact Opp RecTypes
+     */
+    static public String strExcludedContactOppRecTypesReadOnly {
+        get {
+            if (strExcludedContactOppRecTypesReadOnly == null) {
+                strExcludedContactOppRecTypesReadOnly = STG_Panel.getRecordTypeNamesFromPicklistString(
+                    Opportunity.sObjectType,
+                    STG_Panel.stgService.stgHH.npo02__Excluded_Contact_Opp_Rectypes__c
+                );
+            }
+            return strExcludedContactOppRecTypesReadOnly;
+        }
+        private set;
+    }
+
 }

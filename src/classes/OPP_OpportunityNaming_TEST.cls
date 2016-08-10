@@ -47,12 +47,12 @@ private class OPP_OpportunityNaming_TEST
     * @description Returns an active record type id for the current profile.
     */
     private static boolean hasActiveRecType() {
-        string giftRecTypeName = UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity');
+        Schema.RecordTypeInfo giftRecTypeInfo = UTIL_RecordTypes.getRecordTypeInfoForGiftsTests('Opportunity');
 
-        if (UTIL_RecordTypes.isRecordTypeActive('Opportunity',giftRecTypeName)) {
-            return true;
-        } else {
+        if (giftRecTypeInfo == null) {
             return false;
+        } else {
+            return giftRecTypeInfo.isAvailable();
         }
     }
 
@@ -71,7 +71,7 @@ private class OPP_OpportunityNaming_TEST
             Attribution__c = Label.oppNamingBoth
         );
         if (hasActiveRecType())
-            ons.Opportunity_Record_Types__c = UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity');
+            ons.Opportunity_Record_Types__c = UTIL_RecordTypes.getrecordTypeIdForGiftsTests('Opportunity');
         insert ons;
 
         Account acc = new Account(Name='accname');
@@ -132,7 +132,7 @@ private class OPP_OpportunityNaming_TEST
             Attribution__c = Label.oppNamingBoth
         );
         if (hasActiveRecType())
-            ons.Opportunity_Record_Types__c = UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity');
+            ons.Opportunity_Record_Types__c = UTIL_RecordTypes.getrecordTypeIdForGiftsTests('Opportunity');
         insert ons;
 
         Account acc = new Account(Name='accname');
@@ -185,7 +185,7 @@ private class OPP_OpportunityNaming_TEST
         ));
 
         if (hasActiveRecType())
-            onsList[1].Opportunity_Record_Types__c = UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity');
+            onsList[1].Opportunity_Record_Types__c = UTIL_RecordTypes.getRecordTypeIdForGiftsTests('Opportunity');
 
         Contact con = new Contact(LastName='conname', HasOptedOutOfFax=true);
         insert con;
@@ -195,7 +195,7 @@ private class OPP_OpportunityNaming_TEST
         list<Account> listAcc = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(10, null);
         insert listAcc;
 
-        list<Opportunity> listOpp = UTIL_UnitTestData_TEST.OppsForAccountList(listAcc, null, UTIL_UnitTestData_TEST.getClosedWonStage(), Date.newInstance(2000, 1, 1), 8, null,null);
+        list<Opportunity> listOpp = UTIL_UnitTestData_TEST.OppsForAccountListByRecTypeId(listAcc, null, UTIL_UnitTestData_TEST.getClosedWonStage(), Date.newInstance(2000, 1, 1), 8, null,null);
 
         opportunity opp = new Opportunity(
             AccountId = queryCon[0].accountId,
@@ -206,7 +206,7 @@ private class OPP_OpportunityNaming_TEST
             npe01__Contact_Id_for_Role__c = con.id
         );
         if (hasActiveRecType())
-            opp.RecordTypeId = UTIL_RecordTypes.GetRecordTypeId('Opportunity', UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity'));
+            opp.RecordTypeId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests('Opportunity');
         listOpp.add(opp);
         insert listOpp;
 
@@ -217,12 +217,14 @@ private class OPP_OpportunityNaming_TEST
 
         //verify opps haven't been renamed yet
         list<Opportunity> queryOpp = [SELECT Name FROM Opportunity WHERE Id IN :listOpp];
-        for (Opportunity thisopp : queryOpp)
+        for (Opportunity thisopp : queryOpp) {
             system.assert(thisopp.name.contains('Test'));
+        }
 
         test.startTest();
         STG_PanelOppNamingBatch_CTRL ctrl = new STG_PanelOppNamingBatch_CTRL();
         ctrl.runBatch();
+
         test.stopTest();
 
         queryOpp = [SELECT Name, RecordType.Name, Account.npe01__SYSTEMIsIndividual__c FROM Opportunity WHERE AccountId = :queryCon[0].accountId];
