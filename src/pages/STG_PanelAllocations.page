@@ -28,8 +28,8 @@
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Excluded_Opp_RecTypes__c.Label}" for="idDBMS" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgAllo}" fieldname="Excluded_Opp_RecTypes__c" listSO="{!listSOOppRecTypes}" inEditMode="{!isEditMode}" />
-                    <apex:outputPanel layout="block">
+                    <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgAllo}" fieldname="Excluded_Opp_RecTypes__c" listSO="{!listSOOppRecTypesIds}" strValuesOverride="{!strExcludedOppRecTypesReadOnly}" inEditMode="{!isEditMode}" />
+                    <apex:outputPanel id="idDBMSHelp" layout="block">
                         <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRollupExcludeAlloOppRecType}" />
                     </apex:outputPanel>
                 </div>

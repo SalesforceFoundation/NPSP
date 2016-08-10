@@ -79,7 +79,24 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
         }
         private set;
     }
-    
+
+    /**
+     * @description A user friendly rendering of record type ids by record type
+     * name for Excluded Opp RecTypes
+     */
+    static public String strExcludedOppRecTypesReadOnly {
+        get {
+            if (strExcludedOppRecTypesReadOnly == null) {
+                strExcludedOppRecTypesReadOnly = STG_Panel.getRecordTypeNamesFromPicklistString(
+                    Opportunity.sObjectType,
+                    STG_Panel.stgService.stgAllo.Excluded_Opp_RecTypes__c
+                );
+            }
+            return strExcludedOppRecTypesReadOnly;
+        }
+        private set;
+    }
+
     /*********************************************************************************************************
     * @description Action Method to save the current settings
     * If default allocations are enabled, ensure a default GAU is selected.

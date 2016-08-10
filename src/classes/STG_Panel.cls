@@ -182,7 +182,22 @@ public with sharing virtual class STG_Panel {
         }
         private set;
     }    
-        
+
+    /*
+    * @description list of SelectOptions for Contact Record Type Ids
+    */
+    static public List<SelectOption> listSOContactRecTypeIds {
+        get {
+            if (listSOContactRecTypeIds == null) {
+                listSOContactRecTypeIds = new list<SelectOption>();
+                listSOContactRecTypeIds.add(new SelectOption('', Label.stgLabelNone));
+                listSOContactRecTypeIds.addAll(UTIL_RecordTypes.getRecordTypesForSelectList('Contact'));            
+            }
+            return listSOContactRecTypeIds;
+        }
+        private set;
+    }
+
     /*******************************************************************************************************
     * @description list of SelectOptions for Acount Record Type Ids
     */ 
@@ -347,4 +362,58 @@ public with sharing virtual class STG_Panel {
         }
         private set;
     }     
+
+    /**
+     * @description Given an sObjectType and a list of semicolon ';' separated
+     * ids corresponding to record types, return a comma ',' separated string
+     * that contain the names of those record types.  If the given idValues
+     * string is blank, the given blankValue will be returned.
+     *
+     * @param Schema.sObjectType The object type to which the record types apply
+     * @param idValues A semicolon separated string of ids
+     * @param blankValue The string returned when the given idValues string is blank
+     * @return String
+     */
+    public static String getRecordTypeNamesFromPicklistString(Schema.sObjectType objectType, String idValues, String blankValue) {
+        if (idValues == null) {
+            return blankValue;
+        }
+
+        Map<Id, Schema.RecordTypeInfo> recordTypes = objectType.getDescribe().getRecordTypeInfosById();
+        List<String> recordTypeIdStrings = idValues.split(';', 0);
+        List<String> recordTypeNames = new List<String>();
+
+        for (String recordTypeIdString : recordTypeIdStrings) {
+            Id recordTypeId;
+
+            try {
+                recordTypeId = (Id) recordTypeIdString;
+            } catch (Exception e) {
+                continue;
+            }
+
+            if (recordTypes.containsKey(recordTypeId)) {
+                recordTypeNames.add(recordTypes.get(recordTypeId).getName());
+            }
+        }
+
+        if (recordTypeNames.isEmpty()) {
+            return blankValue;
+        } else {
+            return String.join(recordTypeNames, ', ');
+        }
+    }
+
+    /**
+     * @description Given an sObjectType and a list of semicolon ';' separated
+     * ids corresponding to record types, return a comma ',' separated string
+     * that contain the names of those record types.
+     *
+     * @param Schema.sObjectType The object type to which the record types apply
+     * @param idValues A semicolon separated string of ids
+     * @return String
+     */
+    public static String getRecordTypeNamesFromPicklistString(Schema.sObjectType objectType, String idValues) {
+        return getRecordTypeNamesFromPicklistString(objectType, idValues, Label.stgLabelNone);
+    }
 }
