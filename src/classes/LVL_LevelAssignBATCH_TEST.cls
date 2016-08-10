@@ -39,6 +39,7 @@ private class LVL_LevelAssignBATCH_TEST {
     private static Level__c lvlBronze { get; set; }
     private static Level__c lvlSilver { get; set; }
     private static Level__c lvlGold { get; set; }
+    private static Level__c lvlAcctZinc { get; set; }
 
     /*********************************************************************************************************
     * @description creates Bronze, Silver, and Gold Level records for test code to use.
@@ -75,7 +76,17 @@ private class LVL_LevelAssignBATCH_TEST {
             Minimum_Amount__c = 5000, 
             Maximum_Amount__c = 1000000);
         
-        insert new Level__c[]{lvlBronze, lvlSilver, lvlGold};        
+        lvlAcctZinc = new Level__c(
+            Name = 'Zinc',
+            Target__c = 'Account',
+            Source_Field__c = 'npo02__TotalOppAmount__c', 
+            Level_Field__c = 'npo02__LastMembershipLevel__c', 
+            Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c', 
+            Active__c = true, 
+            Minimum_Amount__c = 100, 
+            Maximum_Amount__c = 200);
+
+        insert new Level__c[]{lvlBronze, lvlSilver, lvlGold, lvlAcctZinc};        
     }
 
 
@@ -104,6 +115,18 @@ private class LVL_LevelAssignBATCH_TEST {
         insert listCon;
     }
         
+    /*********************************************************************************************************
+    * @description creates a list of Accounts with various donation totals for test code to use.
+    */
+    private static list<Account> listAcc { get; set; }
+    static void createTestAccounts() {
+        // create & insert contact
+        listAcc = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, null);
+        listAcc[0].npo02__TotalOppAmount__c = 10;
+        listAcc[1].npo02__TotalOppAmount__c = 150;
+        insert listAcc;
+    }
+
     /*********************************************************************************************************
     * @description test our batch process for assigning Levels to Contacts
     */
@@ -146,6 +169,32 @@ private class LVL_LevelAssignBATCH_TEST {
         
     }
     
+    /*********************************************************************************************************
+    * @description test our batch process for assigning Levels to Accounts
+    */
+    static testMethod void testAccountLevels() {
+        // create Levels
+        createTestLevels();
+        
+        // create test Accounts
+        createTestAccounts();
+        
+        string strSoql = 'SELECT Id, Name, npo02__TotalOppAmount__c, npo02__LastMembershipLevel__c, ' +
+            'npo02__LastMembershipOrigin__c, CreatedDate, LastModifiedDate FROM Account where npe01__SYSTEMIsIndividual__c = false ';
+        LVL_LevelAssign_BATCH batch = new LVL_LevelAssign_BATCH(strSoql, 'Account');
+        
+        Test.startTest();
+        Database.executeBatch(batch);
+        Test.stopTest();
+        
+        listAcc = database.query(strSoql + ' order by Name');
+        System.assertEquals(null, listAcc[0].npo02__LastMembershipLevel__c);
+        System.assertEquals(null, listAcc[0].npo02__LastMembershipOrigin__c);
+        
+        System.assertEquals(lvlAcctZinc.Id, listAcc[1].npo02__LastMembershipLevel__c);
+        System.assertEquals(null, listAcc[1].npo02__LastMembershipOrigin__c);
+    }
+
     /*********************************************************************************************************
     * @description tests our Level Assigning when invokved through our Schedulable class.
     */
