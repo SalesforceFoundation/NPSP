@@ -44,4 +44,21 @@ public with sharing class STG_PanelContactRoles_CTRL extends STG_Panel {
     * @description The panel's constructor 
     */
     public STG_PanelContactRoles_CTRL() {}
+
+    /**
+     * @description A user friendly rendering of record type ids by record type
+     * name for Household OCR Excluded Record Types
+     */
+    static public String strHouseholdOCRExcludedRecTypesReadOnly {
+        get {
+            if (strHouseholdOCRExcludedRecTypesReadOnly == null) {
+                strHouseholdOCRExcludedRecTypesReadOnly = STG_Panel.getRecordTypeNamesFromPicklistString(
+                    Contact.sObjectType,
+                    STG_Panel.stgService.stgHH.npo02__Household_OCR_Excluded_Recordtypes__c
+                );
+            }
+            return strHouseholdOCRExcludedRecTypesReadOnly;
+        }
+        private set;
+    }
 }
