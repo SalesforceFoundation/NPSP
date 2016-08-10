@@ -43,7 +43,7 @@
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Excluded_Account_Opp_Rectypes__c.Label}" for="idDBMS" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Excluded_Account_Opp_Rectypes__c" listSO="{!listSOOppRecTypes}" inEditMode="{!isEditMode}" />
+                    <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Excluded_Account_Opp_Rectypes__c" listSO="{!listSOOppRecTypesIds}" strValuesOverride="{!strExcludedAccountOppRecTypesReadOnly}" inEditMode="{!isEditMode}" />
                     <apex:outputPanel layout="block">
                         <apex:outputText styleClass="slds-form-element__help"  value="{!$Label.stgHelpRollupExcludeAccountOppRT}" />
                     </apex:outputPanel>
@@ -61,7 +61,7 @@
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Excluded_Contact_Opp_Rectypes__c.Label}" for="idDBMS" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Excluded_Contact_Opp_Rectypes__c" listSO="{!listSOOppRecTypes}" inEditMode="{!isEditMode}" />
+                    <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Excluded_Contact_Opp_Rectypes__c" listSO="{!listSOOppRecTypesIds}" strValuesOverride="{!strExcludedContactOppRecTypesReadOnly}" inEditMode="{!isEditMode}" />
                     <apex:outputPanel layout="block">
                         <apex:outputText styleClass="slds-form-element__help"  value="{!$Label.stgHelpRollupExcludeContactOppRT}" />
                     </apex:outputPanel>

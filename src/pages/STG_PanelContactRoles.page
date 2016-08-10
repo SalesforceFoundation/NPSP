@@ -98,7 +98,7 @@
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_OCR_Excluded_Recordtypes__c.Label}" for="idDBMS" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Household_OCR_Excluded_Recordtypes__c" listSO="{!listSOContactRecTypes}" inEditMode="{!isEditMode}" />
+                    <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Household_OCR_Excluded_Recordtypes__c" listSO="{!listSOContactRecTypeIds}" strValuesOverride="{!strHouseholdOCRExcludedRecTypesReadOnly}" inEditMode="{!isEditMode}" />
                     <apex:outputPanel layout="block">
                         <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpContactRTExcluded}" />
                     </apex:outputPanel>

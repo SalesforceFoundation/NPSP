@@ -332,11 +332,9 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
         //reload to evaluate insert criteria
         npo02__Households_Settings__c currentHouseholdsSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
                 
-        set<string> HouseholdRecordTypeExclusions = new set<string>();
         set<id> conRecordTypesToExclude = new set<id>();
         if (currentHouseholdsSettings.npo02__Household_Creation_Excluded_Recordtypes__c != null) {
-            HouseholdRecordTypeExclusions = new set<string>(currentHouseholdsSettings.npo02__Household_Creation_Excluded_Recordtypes__c.split(';'));
-            conRecordTypesToExclude = UTIL_RecordTypes.GetRecordTypeIdSet('Contact', HouseholdRecordTypeExclusions);            
+            conRecordTypesToExclude = new Set<Id>((List<Id>)currentHouseholdsSettings.npo02__Household_Creation_Excluded_Recordtypes__c.split(';'));
         }
         
         boolean recordTypesOnCons = false;

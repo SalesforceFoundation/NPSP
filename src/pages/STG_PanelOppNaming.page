@@ -79,17 +79,17 @@
                         <tr class="slds-text-body--small">
                             <td class="slds-cell-wrap">
                                 <apex:commandLink action="{!editONS}" title="{!$Label.stgBtnEdit}" oncomplete="window.initOppEditMode();" styleClass="actionLink" status="statusLoad" value="{!$Label.stgBtnEdit}" rerender="form" >
-                                    <apex:param assignTo="{!currentONSName}" name="idEdit" value="{!ons.Name}" />
+                                    <apex:param assignTo="{!currentONSName}" name="idEdit" value="{!ons.so.Name}" />
                                 </apex:commandLink>
                                 <apex:outputText value=" | "/>
                                 <apex:commandLink action="{!delONS}" title="{!$Label.stgLinkDelete}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
-                                    <apex:param assignTo="{!currentONSName}" name="idDelete" value="{!ons.Name}" />
+                                    <apex:param assignTo="{!currentONSName}" name="idDelete" value="{!ons.so.Name}" />
                                 </apex:commandLink>
                             </td>
-                            <td class="slds-cell-wrap"><apex:outputField value="{!ons.Attribution__c}" /></td>
-                            <td class="slds-cell-wrap"><apex:outputField value="{!ons.Opportunity_Record_Types__c}" /></td>
-                            <td class="slds-cell-wrap"><apex:outputField value="{!ons.Opportunity_Name_Format__c}" /></td>
-                            <td class="slds-cell-wrap"><apex:outputField value="{!ons.Date_Format__c}" /></td>
+                            <td class="slds-cell-wrap"><apex:outputField value="{!ons.so.Attribution__c}" /></td>
+                            <td class="slds-cell-wrap"><apex:outputText value="{!ons.oppRecordTypesString}" /></td>
+                            <td class="slds-cell-wrap"><apex:outputText value="{!ons.nameFormatString}" /></td>
+                            <td class="slds-cell-wrap"><apex:outputField value="{!ons.so.Date_Format__c}" /></td>
                         </tr>
                     </apex:repeat>
                </tbody>
@@ -113,7 +113,7 @@
                 <div class="slds-form-element">
                     <apex:outputLabel value="{!$ObjectType.Opportunity_Naming_Settings__c.Fields.Opportunity_Record_Types__c.Label}" for="mslOppRecTypes" styleClass="slds-form-element__label" />
                     <div class="slds-form-element__control">
-                        <c:STG_DataBoundMultiSelect settingObject="{!currentONS}" fieldname="Opportunity_Record_Types__c" listSO="{!listSOOppRecTypes}" inEditMode="{!isEditMode}" id="mslOppRecTypes"/>
+                        <c:STG_DataBoundMultiSelect settingObject="{!currentONS}" fieldname="Opportunity_Record_Types__c" listSO="{!listSOOppRecTypesIds}" inEditMode="{!isEditMode}" id="mslOppRecTypes"/>
                         <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpOppNamingRecTypes}" />
                     </div>
                 </div>

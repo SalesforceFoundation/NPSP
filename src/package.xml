@@ -243,6 +243,8 @@
         <members>UTIL_Namespace</members>
         <members>UTIL_Namespace_TEST</members>
         <members>UTIL_PageMessages_CTRL</members>
+        <members>UTIL_RecordTypeSettingsUpdate</members>
+        <members>UTIL_RecordTypeSettingsUpdate_TEST</members>
         <members>UTIL_RecordTypes</members>
         <members>UTIL_RecordTypes_API</members>
         <members>UTIL_RecordTypes_TEST</members>
