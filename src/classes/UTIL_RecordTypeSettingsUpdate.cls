@@ -193,21 +193,29 @@ global virtual class UTIL_RecordTypeSettingsUpdate {
     private virtual Map<String, Id> getNameToRecordTypeIdMap(Schema.SObjectType sot) {
         String sobjectTypeName = sot.getDescribe().getName();
 
-        List<RecordType> recordTypes = [
-            SELECT
-                Name,
-                (SELECT Value FROM Localization)
-            FROM RecordType
-            WHERE SobjectType = :sobjectTypeName
-        ];
+        List<RecordType> recordTypes;
+
+        try {
+            recordTypes = Database.query(
+                'SELECT Name, (SELECT Value FROM Localization) FROM RecordType WHERE SobjectType = :sobjectTypeName'
+            );
+        } catch (QueryException e) {
+            recordTypes = Database.query(
+                'SELECT Name FROM RecordType WHERE SobjectType = :sobjectTypeName'
+            );
+        }
 
         Map<String, Id> nameMap = new Map<String, Id>();
 
         for (RecordType rt : recordTypes) {
             nameMap.put(rt.Name, rt.Id);
-            for (RecordTypeLocalization rtl : rt.Localization) {
-                // potentially overwrite existing entry due to ambiguity in naming-- fine
-                nameMap.put(rtl.Value, rt.Id);
+            try {
+                for (sObject rtl : rt.getSobjects('Localization')) {
+                    // potentially overwrite existing entry due to ambiguity in naming-- fine
+                    nameMap.put((String) rtl.get('Value'), rt.Id);
+                }
+            } catch (SObjectException e) {
+                // no localizations available
             }
         }
 
