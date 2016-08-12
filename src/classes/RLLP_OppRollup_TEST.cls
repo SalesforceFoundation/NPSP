@@ -337,7 +337,7 @@ public with sharing class RLLP_OppRollup_TEST {
     */
     static void testGivingRollupExcludedRTProcessor (string strProcessor) {
 
-        if(giftRecordTypeIdForTests!=''){
+        if(giftRecordTypeIdForTests != null){
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
@@ -531,7 +531,7 @@ public with sharing class RLLP_OppRollup_TEST {
     */
     static void testMemberRollupProcessor (string strProcessor) {
 
-        if(membershipRecordTypeIdForTests!=''){
+        if(membershipRecordTypeIdForTests != null){
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
@@ -674,7 +674,7 @@ public with sharing class RLLP_OppRollup_TEST {
     }
     static void testGivingRollupAcctMembership (string strProcessor) {
 
-        if(membershipRecordTypeIdForTests!=''){
+        if(membershipRecordTypeIdForTests != null){
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
