@@ -1592,4 +1592,150 @@ private class ACCT_IndividualAccounts_TEST {
         else if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR)            
             system.assertEquals(newAcc.Name, CAO_Constants.Contact_LASTNAME_FOR_TESTS + ' Household');
     }
+
+    /*********************************************************************************************************
+    * @description Undelete a contact back to an existing Household Account
+    */
+    private static testMethod void undeleteContactToExistingHH() {
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+
+        Household_Naming_Settings__c hhNamingSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdNamingSettingsForTests(
+            new Household_Naming_Settings__c(
+                Household_Name_Format__c = '{!LastName} Household',
+                Formal_Greeting_Format__c = '{!{!Salutation} {!FirstName}} {!LastName}',
+                Informal_Greeting_Format__c = '{!{!FirstName}}',
+                Name_Connector__c = label.npo02.HouseholdNameConnector,
+                Name_Overrun__c = label.npo02.HouseholdNameOverrun,
+                Contact_Overrun_Count__c = 9,
+                Implementing_Class__c = 'HH_NameSpec'
+            )
+        );
+
+        Contact con = new Contact(
+            FirstName = 'Jane',
+            LastName = 'Smith',
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS,
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        insert con;
+
+        Contact insertedCon = [SELECT Account.Name, AccountId FROM Contact WHERE Id = :con.Id LIMIT 1];
+        Id acctId = insertedCon.AccountId;
+
+        Contact con2 = new Contact(FirstName = 'Johnny', LastName = 'Test', AccountId = null);
+        con2.AccountId = acctId;
+        insert con2;
+
+        Contact insertedCon2 = [SELECT Account.Name, AccountId FROM Contact WHERE Id = :con2.Id LIMIT 1];
+
+        System.assertNotEquals(null, acctId, 'The account should have been automatically created and assigned to the contact');
+        System.assertEquals(acctId, insertedCon2.AccountId, 'The second contact should be assigned to the same account as the first');
+        System.assert(insertedCon2.Account.Name.contains(con.LastName), 'The Account Name should contain the first contacts last name.');
+        System.assert(insertedCon2.Account.Name.contains(con2.LastName), 'The Account Name should contain the second contacts last name.');
+
+        delete insertedCon2;
+
+        List<Contact> insertedContacts = [SELECT Account.Name FROM Contact WHERE AccountId = :acctId];
+        System.assertEquals(1, insertedContacts.size(), 'The second contact should have been deleted, only one should remain.');
+        System.assert(insertedContacts[0].Account.Name.contains(con.LastName), 'The Account Name should still contain the first contacts last name.');
+        System.assert(!insertedContacts[0].Account.Name.contains(con2.LastName), 'The Account Name should no longer contain the first contacts last name after delete.');
+
+        Test.startTest();
+        undelete insertedCon2;
+        Test.stopTest();
+
+        insertedContacts = [SELECT Account.Name FROM Contact WHERE AccountId = :acctId];
+        System.assertEquals(2, insertedContacts.size(), 'The second contact should have been undeleted, both contacts should be there.');
+        System.assert(insertedContacts[0].Account.Name.contains(con.LastName), 'The Account Name should still contain the first contacts last name.');
+        System.assert(insertedContacts[0].Account.Name.contains(con2.LastName), 'The Account Name should contain the first contacts last name after undelete.');
+    }
+
+    /*********************************************************************************************************
+    * @description Delete a HH Contact without Opps and verify it cannot be undeleted.
+    */
+    public static testMethod void undeleteHHContactNoOpp() {
+
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+
+        Contact con = new Contact(
+            FirstName = 'Johnny',
+            LastName = 'Test',
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS,
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        insert con;
+
+        delete con;
+
+        Test.startTest();
+        try {
+            undelete con;
+            System.assert(false, 'Undelete should fail!');
+        } catch (Exception e) {
+            System.assert(true, 'The contact is no longer in the recycle bin and cannot be undeleted.');
+        }
+        Test.stopTest();
+    }
+
+    /*********************************************************************************************************
+    * @description Delete a HH Contact with opps and verify account name is updated after undelete.
+    */
+    public static testMethod void undeleteHHContactWithOpp() {
+
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+
+        Household_Naming_Settings__c hhNamingSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdNamingSettingsForTests(
+            new Household_Naming_Settings__c(
+                Household_Name_Format__c = '{!LastName} Household',
+                Formal_Greeting_Format__c = '{!{!Salutation} {!FirstName}} {!LastName}',
+                Informal_Greeting_Format__c = '{!{!FirstName}}',
+                Name_Connector__c = label.npo02.HouseholdNameConnector,
+                Name_Overrun__c = label.npo02.HouseholdNameOverrun,
+                Contact_Overrun_Count__c = 9,
+                Implementing_Class__c = 'HH_NameSpec'
+            )
+        );
+
+        Contact con = new Contact(
+            FirstName = 'Johnny',
+            LastName = 'Test',
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS,
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        insert con;
+
+        Contact insertedCon = [SELECT AccountId, Account.Name FROM Contact WHERE Id = :con.Id LIMIT 1];
+        Id acctId = insertedCon.AccountId;
+        System.assert(insertedCon.Account.Name.contains(con.LastName), 'The Account Name should contain the contacts last name.');
+
+        Opportunity opp = new Opportunity(
+            Amount = 500,
+            AccountId = acctId,
+            Name = 'test',
+            StageName = 'Closed/Won',
+            CloseDate = System.today()
+        );
+        insert opp;
+
+        delete con;
+
+        Account anonymousAcct = [SELECT Id, Name, (SELECT Id FROM Contacts) FROM Account WHERE Id = :acctId LIMIT 1];
+        System.assert(!anonymousAcct.Name.contains(con.LastName), 'The Account Name should no longer contain the contacts last name.');
+
+        Test.startTest();
+        undelete con;
+        Test.stopTest();
+        Contact undeletedCon = [SELECT AccountId, Account.Name FROM Contact WHERE Id = :con.Id LIMIT 1];
+        System.assert(undeletedCon.Account.Name.contains(con.LastName), 'The Account Name should contain the contacts last name again.');
+        System.assertEquals(acctId, undeletedCon.AccountId, 'The contact should be returned to the same account.');
+    }
 }
