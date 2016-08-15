@@ -80,17 +80,19 @@
         <visibleLines>3</visibleLines>
     </fields>
     <fields>
-        <fullName>Engagement_Plan__c</fullName>
+        <fullName>Engagement_Plan_Template__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
         <description>The Engagement Plan Template to apply to the Target Object when this Level is achieved.</description>
         <externalId>false</externalId>
         <inlineHelpText>The Engagement Plan Template to apply to the Target Object when this Level is achieved.</inlineHelpText>
-        <label>Engagement Plan</label>
-        <length>255</length>
+        <label>Engagement Plan Template</label>
+        <referenceTo>Engagement_Plan_Template__c</referenceTo>
+        <relationshipLabel>Levels</relationshipLabel>
+        <relationshipName>Levels</relationshipName>
         <required>false</required>
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
+        <type>Lookup</type>
     </fields>
     <fields>
         <fullName>Level_Field__c</fullName>

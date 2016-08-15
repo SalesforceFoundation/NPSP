@@ -20,8 +20,9 @@
     </fields>
     <fields>
         <help><!-- The Engagement Plan Template to apply to the Target Object when this Level is achieved. --></help>
-        <label><!-- Engagement Plan --></label>
-        <name>Engagement_Plan__c</name>
+        <label><!-- Engagement Plan Template --></label>
+        <name>Engagement_Plan_Template__c</name>
+        <relationshipLabel><!-- Levels --></relationshipLabel>
     </fields>
     <fields>
         <help><!-- The field (developer name) on the Target object to store the lookup to the current Level.  Note that this field implicitly defines the “Ladder” that this Level is part of. --></help>

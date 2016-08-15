@@ -800,6 +800,10 @@
         <name>healthDetailsInvalidFiscalYears</name>
     </customLabels>
     <customLabels>
+        <label><!-- Health Check error if a Level refers to an invalid field --></label>
+        <name>healthDetailsInvalidLevelField</name>
+    </customLabels>
+    <customLabels>
         <label>{0}-Feld {1} ist nicht vorhanden.</label>
         <name>healthDetailsInvalidObjectField</name>
     </customLabels>
@@ -1028,6 +1032,14 @@
         <name>healthLabelUDFValid</name>
     </customLabels>
     <customLabels>
+        <label><!-- Health Check title for Levels --></label>
+        <name>healthLabelVerifyLevels</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Health Check message when all Levels verify ok --></label>
+        <name>healthLabelVerifyLevelsSuccess</name>
+    </customLabels>
+    <customLabels>
         <label>Warnung</label>
         <name>healthLabelWarning</name>
     </customLabels>
@@ -1098,6 +1110,10 @@
     <customLabels>
         <label>Da in Salesforce das Ausschalten von &quot;Benutzerdefinierte Geschäftsjahre&quot; nicht unterstützt wird, werden NPSP-Rollups standardmäßig auf &quot;Kalenderjahr&quot; festgelegt.</label>
         <name>healthSolutionInvalidFiscalYears</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Health Check Solution for an invalid Level field --></label>
+        <name>healthSolutionInvalidLevelField</name>
     </customLabels>
     <customLabels>
         <label>Klicken Sie auf der Registerkarte &quot;NPSP-Einstellungen&quot; auf {0} | {1} und fügen Sie das fehlende Feld &quot;Opportunity&quot; hinzu oder löschen Sie den Datensatz &quot;Zahlungszuordnung&quot;.</label>

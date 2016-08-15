@@ -89,6 +89,49 @@ private class LVL_LevelAssignBATCH_TEST {
         insert new Level__c[]{lvlBronze, lvlSilver, lvlGold, lvlAcctZinc};        
     }
 
+    /*********************************************************************************************************
+    * @description create and add an Engagement Plan Template to the provided Level
+    */
+    static void createLevelEngagementPlan(Level__c lvl) {
+        Engagement_Plan_Template__c template = new Engagement_Plan_Template__c(
+            Name = 'Template',
+            Skip_Weekends__c = false,
+            Blank_Assignment_Rule__c = EP_EngagementPlans_UTIL.BLANK_ASSIGNMENT_USER_CREATING
+        );
+        insert template;
+
+        Engagement_Plan_Task__c epTask = new Engagement_Plan_Task__c(
+            Name = 'Call',
+            Engagement_Plan_Template__c = template.id,
+            Assigned_To__c = UserInfo.getUserId(),
+            Comments__c = 'This comment should be copied correctly to the Task.',
+            Reminder__c = true,
+            Reminder_Minutes__c = '660',
+            Send_Email__c = true,
+            Days_After__c = 3,
+            Type__c = 'Call',
+            Priority__c = 'Medium'
+        );
+        insert epTask;
+
+        Engagement_Plan_Task__c dependentEpTask = new Engagement_Plan_Task__c(
+            Name = 'Email',
+            Engagement_Plan_Template__c = template.id,
+            Dependent_Task__c = epTask.id,
+            Comments__c = 'This comment should also be copied correctly to the Task.',
+            Reminder__c = true,
+            Reminder_Minutes__c = '780',
+            Send_Email__c = true,
+            Days_After__c = 10,
+            Type__c = 'Email',
+            Priority__c = 'Low'
+        );
+        insert dependentEpTask;
+        
+        // now add the EPTemplate to the Level and update it.    
+        lvl.Engagement_Plan_Template__c = template.Id;
+        update lvl;
+    }
 
     /*********************************************************************************************************
     * @description creates a list of Contacts with various donation totals for test code to use.
@@ -134,6 +177,9 @@ private class LVL_LevelAssignBATCH_TEST {
         // create Levels
         createTestLevels();
         
+        // add an Engagement Plan Template to Silver
+        createLevelEngagementPlan(lvlSilver);
+        
         // create test Contacts
         createTestContacts();
         
@@ -160,6 +206,12 @@ private class LVL_LevelAssignBATCH_TEST {
         System.assertEquals(lvlSilver.Id, listCon[4].npo02__LastMembershipLevel__c);
         System.assertEquals(lvlBronze.Id, listCon[4].npo02__LastMembershipOrigin__c);
         
+        // check Silver's Engagement Plan got created
+        list<Engagement_Plan__c> listEP = [select Id, Contact__c, Engagement_Plan_Template__c from Engagement_Plan__c]; 
+        system.assertEquals(1, listEP.size());
+        system.assertEquals(listCon[4].Id, listEP[0].Contact__c);
+        system.assertEquals(lvlSilver.Engagement_Plan_Template__c, listEP[0].Engagement_Plan_Template__c);
+        
         System.assertEquals(lvlGold.Id, listCon[5].npo02__LastMembershipLevel__c);
         System.assertEquals(null, listCon[5].npo02__LastMembershipOrigin__c);
         
@@ -176,6 +228,9 @@ private class LVL_LevelAssignBATCH_TEST {
         // create Levels
         createTestLevels();
         
+        // add an Engagement Plan Template to Zinc
+        createLevelEngagementPlan(lvlAcctZinc);
+
         // create test Accounts
         createTestAccounts();
         
@@ -193,6 +248,12 @@ private class LVL_LevelAssignBATCH_TEST {
         
         System.assertEquals(lvlAcctZinc.Id, listAcc[1].npo02__LastMembershipLevel__c);
         System.assertEquals(null, listAcc[1].npo02__LastMembershipOrigin__c);
+
+        // check Zinc's Engagement Plan got created
+        list<Engagement_Plan__c> listEP = [select Id, Account__c, Engagement_Plan_Template__c from Engagement_Plan__c]; 
+        system.assertEquals(1, listEP.size());
+        system.assertEquals(listAcc[1].Id, listEP[0].Account__c);
+        system.assertEquals(lvlAcctZinc.Engagement_Plan_Template__c, listEP[0].Engagement_Plan_Template__c);
     }
 
     /*********************************************************************************************************
@@ -202,6 +263,9 @@ private class LVL_LevelAssignBATCH_TEST {
         // create Levels
         createtestLevels();
 
+        // add an Engagement Plan Template to Silver
+        createLevelEngagementPlan(lvlSilver);
+        
         // create test Contacts
         createTestContacts();
 
@@ -227,6 +291,12 @@ private class LVL_LevelAssignBATCH_TEST {
         
         System.assertEquals(lvlSilver.Id, listCon[4].npo02__LastMembershipLevel__c);
         System.assertEquals(lvlBronze.Id, listCon[4].npo02__LastMembershipOrigin__c);
+        
+        // check Silver's Engagement Plan got created
+        list<Engagement_Plan__c> listEP = [select Id, Contact__c, Engagement_Plan_Template__c from Engagement_Plan__c]; 
+        system.assertEquals(1, listEP.size());
+        system.assertEquals(listCon[4].Id, listEP[0].Contact__c);
+        system.assertEquals(lvlSilver.Engagement_Plan_Template__c, listEP[0].Engagement_Plan_Template__c);
         
         System.assertEquals(lvlGold.Id, listCon[5].npo02__LastMembershipLevel__c);
         System.assertEquals(null, listCon[5].npo02__LastMembershipOrigin__c);
