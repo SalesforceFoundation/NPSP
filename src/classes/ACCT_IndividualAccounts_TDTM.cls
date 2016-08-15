@@ -95,7 +95,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 for (Contact c : contacts) 
                     setAccountId.add(c.AccountId);
                 mapAccountIdAccount = new Map<Id,Account>([select Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c from Account where Id IN :setAccountId]);
-            } else if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
+            } else if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate || triggerAction == TDTM_Runnable.Action.AfterUndelete) {
                // requery to get correct Account values (and all the other fields we will look at)
                string strSoql = 'select id,npe01__Private__c,AccountId,Account.npe01__SYSTEMIsIndividual__c,' +
                     'Account.npe01__SYSTEM_AccountType__c,Account.npe01__One2OneContact__c,npe01__Organization_Type__c,Account.Name,' +
@@ -162,8 +162,8 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                         }                                                
                     }
         
-                    // AFTER INSERT
-                    if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
+                    // AFTER INSERT and AFTER UNDELETE
+                    if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUndelete) {
                         /*grab the Accounts that need to have the newly assigned Contact Id to them if:
                             1. If the contact is connected to an Account
                             2. The Contact is flagged as an individual
