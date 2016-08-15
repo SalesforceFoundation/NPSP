@@ -49,7 +49,7 @@
                 <div class="slds-modal__header">
                     <ui:button class="slds-button slds-button--icon-inverse slds-modal__close" press="{!c.cancelChangeAddress}">
                         <c:svg class="slds-button__icon slds-button__icon--large"
-                               xlinkHref="{!$Resource.SLDS + '/1_0_3/assets/icons/action-sprite/svg/symbols.svg#close'}" />
+                               xlinkHref="{!$Resource.sfdo203 + '/assets/icons/action-sprite/svg/symbols.svg#close'}" />
                         <span class="slds-assistive-text">{!$Label.c.bdiBtnClose}</span>
                     </ui:button>                    
                     <h2 id="searchPopupLabel" class="slds-text-heading--medium">{!$Label.npo02.ChangeAddress}</h2>
@@ -62,14 +62,14 @@
                         <div class="slds-section-title--divider slds-p-around--x-small">
                             <h4 class="slds-section__title-action" onclick="{!c.toggleAddrSection}">
                                     <c:svg class="slds-button__icon"
-                                           xlinkHref="{!$Resource.SLDS + '/1_0_3/assets/icons/utility-sprite/svg/symbols.svg#switch'}" />
+                                           xlinkHref="{!$Resource.sfdo203 + '/assets/icons/utility-sprite/svg/symbols.svg#switch'}" />
                                 {!$Label.npo02.SelectExistingAddress}
                             </h4>
                         </div>
                         <div class="slds-section__content">                                                    
-                            <ul class="slds-list--vertical slds-has-cards--space slds-has-list-interactions" >
+                            <ul class="slds-list--vertical slds-has-dividers--around-space slds-has-list-interactions" >
                                 <aura:iteration items="{!v.listAddr}" var="addr" indexVar="iAddr" >
-                                    <li class="{!iAddr == v.iAddrSelected ? 'slds-list__item selected' : 'slds-list__item' }" 
+                                    <li class="{!iAddr == v.iAddrSelected ? 'slds-item selected' : 'slds-item' }" 
                                         data-iAddr="{!iAddr}" onclick="{!c.onPressAddrTile}" >   
                                         <div class="slds-tile slds-tile--board">
                                             <div class="slds-tile__detail" >
@@ -93,7 +93,7 @@
                         <div class="slds-section-title--divider slds-p-around--x-small">
                             <h4 class="slds-section__title-action" onclick="{!c.toggleAddrSection}">
                                 <c:svg class="slds-button__icon"
-                                       xlinkHref="{!$Resource.SLDS + '/1_0_3/assets/icons/utility-sprite/svg/symbols.svg#switch'}" />
+                                       xlinkHref="{!$Resource.sfdo203 + '/assets/icons/utility-sprite/svg/symbols.svg#switch'}" />
                                 {!$Label.npo02.EnterNewAddress}
                             </h4>
                         </div>
