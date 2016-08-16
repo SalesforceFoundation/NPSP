@@ -339,8 +339,10 @@ private class UTIL_RecordTypeSettingsUpdate_TEST {
     }
 
     @isTest
-    public static void testUpdateDoesNotRunOnNewInstall() {
-        // when new install, updateSettings() should not be called
+    public static void testUpdateRunsOnNewInstall() {
+        // when new install, updateSettings() should be called, since this
+        // will handle cases where users are updating from NPSP 2.0, and
+        // otherwise be a noop.
         UpdateSettingsRunCount stub = new UpdateSettingsRunCount();
         UTIL_RecordTypeSettingsUpdate.instance = stub;
 
@@ -350,7 +352,7 @@ private class UTIL_RecordTypeSettingsUpdate_TEST {
 
         Test.stopTest();
 
-        System.assertEquals(0, stub.runCount);
+        System.assertEquals(1, stub.runCount);
     }
 
     @isTest
