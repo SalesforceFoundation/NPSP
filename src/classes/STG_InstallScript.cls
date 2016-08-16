@@ -63,7 +63,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
             //We won't rethrow the exception, to avoid package failure installation due to install script error
             return;
         }
-        if (context.isUpgrade() && context.previousVersion().compareTo(new Version(3, 79)) < 0) {
+        if (context.previousVersion() == null || context.previousVersion().compareTo(new Version(3, 79)) < 0) {
             // update record type settings ONLY if upgrading from a version prior to 3.78
             UTIL_RecordTypeSettingsUpdate.getInstance().updateSettings();
         }
