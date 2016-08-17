@@ -61,12 +61,12 @@
                     <div class="{!v.isExistingAddrSectionOpen ? 'slds-section slds-is-open' : 'slds-section'}">
                         <div class="slds-section-title--divider slds-p-around--x-small">
                             <h4 class="slds-section__title-action" onclick="{!c.toggleAddrSection}">
-                                    <c:svg class="slds-button__icon"
+                                    <c:svg class="slds-section__title-action-icon slds-button__icon slds-button__icon--left"
                                            xlinkHref="{!$Resource.sfdo203 + '/assets/icons/utility-sprite/svg/symbols.svg#switch'}" />
                                 {!$Label.npo02.SelectExistingAddress}
                             </h4>
                         </div>
-                        <div class="slds-section__content">                                                    
+                        <div class="{!v.isExistingAddrSectionOpen ? 'slds-section__content slds-is-expanded' : 'slds-section__content slds-is-collapsed'}">
                             <ul class="slds-list--vertical slds-has-dividers--around-space slds-has-list-interactions" >
                                 <aura:iteration items="{!v.listAddr}" var="addr" indexVar="iAddr" >
                                     <li class="{!iAddr == v.iAddrSelected ? 'slds-item selected' : 'slds-item' }" 
@@ -92,12 +92,12 @@
                     <div class="{!v.isExistingAddrSectionOpen ? 'slds-section' : 'slds-section slds-is-open'}">
                         <div class="slds-section-title--divider slds-p-around--x-small">
                             <h4 class="slds-section__title-action" onclick="{!c.toggleAddrSection}">
-                                <c:svg class="slds-button__icon"
+                                <c:svg class="slds-section__title-action-icon slds-button__icon slds-button__icon--left"
                                        xlinkHref="{!$Resource.sfdo203 + '/assets/icons/utility-sprite/svg/symbols.svg#switch'}" />
                                 {!$Label.npo02.EnterNewAddress}
                             </h4>
                         </div>
-                        <div class="slds-section__content">                                                    
+                        <div class="{!v.isExistingAddrSectionOpen ? 'slds-section__content slds-is-collapsed' : 'slds-section__content slds-is-expanded'}">
                             <div class="slds-form--stacked">
                                 <div class="slds-form-element">
                                     <ui:inputTextArea value="{!v.addrNew.MailingStreet__c}" aura:id="txtStreet" class="slds-input slds-form-element__control" 
