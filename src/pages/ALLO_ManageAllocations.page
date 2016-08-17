@@ -1,6 +1,6 @@
 <apex:page standardController="Allocation__c" recordSetVar="allocations" extensions="ALLO_ManageAllocations_CTRL" title="Manage Allocations" tabStyle="Allocation__c" showHeader="true" sidebar="true" standardStylesheets="false" cache="false" >
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
-    <apex:stylesheet value="{!URLFOR($Resource.SLDS, '/1_0_3/assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.sfdo203, '/assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -115,7 +115,7 @@
 
     </script>
     <apex:form id="theForm">
-        <div class="slds">
+        <div class="sfdo203">
             <!-- PAGE HEADER -->
             <div class="slds-page-header" role="banner">
                 <div class="slds-grid">
@@ -123,10 +123,10 @@
                         <nav role="navigation">
                             <p id="bread-crumb-label" class="slds-assistive-text">You are here:</p>
                             <ol class="slds-breadcrumb slds-list--horizontal" aria-labelledby="bread-crumb-label">
-                                <li class="slds-list__item slds-text-heading--label">
+                                <li class="slds-breadcrumb__item slds-text-heading--label">
                                     <a class="slds-type-focus" href="javascript:window.urlHome();">{!objectLabelPlural}</a>
                                 </li>
-                                <li class="slds-list__item slds-text-heading--label">
+                                <li class="slds-breadcrumb__item slds-text-heading--label">
                                     <a class="slds-type-focus" href="/{!parentId}">
                                         {!objectName}<apex:outputText rendered="{!parentAmount<>0}"><apex:outputText value=" - {!currencySymbol}{!IF(LEN(currencySymbol) == 3, ' ', '')}{0,number,#.##}"><apex:param value="{!parentAmount}"/></apex:outputText></apex:outputText>
                                     </a>
@@ -150,7 +150,7 @@
             </div>
             <div>
                 <apex:outputPanel id="theTable">
-                <table class="slds-table slds-table--bordered" >
+                <table class="slds-table slds-table--bordered slds-table--cell-buffer" >
                     <thead>
                         <tr class="slds-text-heading--label">
                             <th scope="col"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.General_Accounting_Unit__c.Label}</span></th>
