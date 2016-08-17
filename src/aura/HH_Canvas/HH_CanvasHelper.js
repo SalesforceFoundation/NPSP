@@ -13,11 +13,11 @@
         if (typeof j$ === "undefined")
             return;
         
-        if (!j$('.slds-has-cards--space').sortable)
+        if (!j$('.slds-has-dividers--around-space').sortable)
             return;
 
         // turn on jqueryui drag/sortable support
-        j$('.slds-has-cards--space').sortable( {
+        j$('.slds-has-dividers--around-space').sortable( {
             tolerance: "pointer",
 
             // called after DOM has been updated after a drag/drop sort
@@ -38,7 +38,7 @@
                 evt.fire();
             })
         });
-        j$('.slds-has-cards--space').disableSelection();
+        j$('.slds-has-dividers--around-space').disableSelection();
     },
 
 })
