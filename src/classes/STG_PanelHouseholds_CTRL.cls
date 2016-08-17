@@ -249,4 +249,21 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
             return label.stgErrorInvalidClass;
         }
     }    
+
+    /**
+     * @description A user friendly rendering of record type ids by record type
+     * name for Household Creation Excluded Record Types
+     */
+    static public String strHouseholdCreationExcludedRecTypesReadOnly {
+        get {
+            if (strHouseholdCreationExcludedRecTypesReadOnly == null) {
+                strHouseholdCreationExcludedRecTypesReadOnly = STG_Panel.getRecordTypeNamesFromPicklistString(
+                    Contact.sObjectType,
+                    STG_Panel.stgService.stgHH.npo02__Household_Creation_Excluded_Recordtypes__c
+                );
+            }
+            return strHouseholdCreationExcludedRecTypesReadOnly;
+        }
+        private set;
+    }
 }

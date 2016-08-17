@@ -62,14 +62,12 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
     * @description A list of all Opportunity Naming Settings for display on the page. Replaces blank Name 
     * Formats with  "- do not rename-" and blank Record Types with '- all record types -'
     */
-    public list<Opportunity_Naming_Settings__c> listOppNameSettings {
+    public List<OpportunityNamingSetting> listOppNameSettings {
         get {
-            listOppNameSettings = mapOppNameSettings.values().deepClone();
-            for (Opportunity_Naming_Settings__c ons : listOppNameSettings) {
-                if (string.isBlank(ons.Opportunity_Name_Format__c))
-                    ons.Opportunity_Name_Format__c = Label.stgLabelDoNotRename;
-                if (string.isBlank(ons.Opportunity_Record_Types__c))
-                    ons.Opportunity_Record_Types__c = Label.stgLabelAllRecordTypes;
+            listOppNameSettings = new List<OpportunityNamingSetting>();
+            List<Opportunity_Naming_Settings__c> oppNameSettings = mapOppNameSettings.values().deepClone();
+            for (Opportunity_Naming_Settings__c ons : oppNameSettings) {
+                listOppNameSettings.add(new OpportunityNamingSetting(ons));
             }
             return listOppNameSettings;
         }
@@ -198,5 +196,24 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
             return listSOOpportunityAttribution;
         }
         private set;
+    }
+
+    public class OpportunityNamingSetting {
+        public Opportunity_Naming_Settings__c so { get; set; }
+        public String oppRecordTypesString { get; set; }
+        public String nameFormatString { get; set; }
+        public OpportunityNamingSetting(Opportunity_Naming_Settings__c ons) {
+            this.so = ons;
+            this.oppRecordTypesString = STG_Panel.getRecordTypeNamesFromPicklistString(
+                Opportunity.sObjectType,
+                ons.Opportunity_Record_Types__c,
+                Label.stgLabelAllRecordTypes
+            );
+            if (string.isBlank(ons.Opportunity_Name_Format__c)) {
+                this.nameFormatString = Label.stgLabelDoNotRename;
+            } else {
+                this.nameFormatString = ons.Opportunity_Name_Format__c;
+            }
+        }
     }
 }

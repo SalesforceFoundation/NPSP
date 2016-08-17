@@ -39,4 +39,21 @@ public with sharing class STG_PanelMembership_CTRL extends STG_Panel {
     * @description Returns the string Id of the Membership panel. 
     */
     public override string idPanel() { return 'idPanelMembership'; }
+
+    /**
+     * @description A user friendly rendering of record type ids by record type
+     * name for Membership Record Types
+     */
+    static public String strMembershipRecTypesReadOnly {
+        get {
+            if (strMembershipRecTypesReadOnly == null) {
+                strMembershipRecTypesReadOnly = STG_Panel.getRecordTypeNamesFromPicklistString(
+                    Opportunity.sObjectType,
+                    STG_Panel.stgService.stgHH.npo02__Membership_Record_Types__c
+                );
+            }
+            return strMembershipRecTypesReadOnly;
+        }
+        private set;
+    }
 }

@@ -129,7 +129,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         set<id> oppRecordTypesToExclude = new set<id>();
         set<string> oppTypesToExclude = new set<string>();
         if (settings.Excluded_Opp_RecTypes__c!=null) 
-            oppRecordTypesToExclude = UTIL_RecordTypes.GetRecordTypeIdSet('Opportunity', new set<string>(settings.Excluded_Opp_RecTypes__c.split(';')));
+            oppRecordTypesToExclude = new Set<Id>((List<Id>)settings.Excluded_Opp_RecTypes__c.split(';'));
         if (settings.Excluded_Opp_Types__c!=null)
             oppTypesToExclude = new set<string>(settings.Excluded_Opp_Types__c.split(';'));
 

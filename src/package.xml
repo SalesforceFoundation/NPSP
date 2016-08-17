@@ -238,6 +238,8 @@
         <members>UTIL_Namespace</members>
         <members>UTIL_Namespace_TEST</members>
         <members>UTIL_PageMessages_CTRL</members>
+        <members>UTIL_RecordTypeSettingsUpdate</members>
+        <members>UTIL_RecordTypeSettingsUpdate_TEST</members>
         <members>UTIL_RecordTypes</members>
         <members>UTIL_RecordTypes_API</members>
         <members>UTIL_RecordTypes_TEST</members>
@@ -248,14 +250,6 @@
         <members>UTIL_Version_API</members>
         <members>UTIL_iSoqlListViewConsumer</members>
         <name>ApexClass</name>
-    </types>
-    <types>
-        <members>autocomplete</members>
-        <members>autocompleteOption</members>
-        <members>autocompleteSelectListOption</members>
-        <members>dataProviderInterface</members>
-        <members>svg</members>
-        <name>AuraDefinitionBundle</name>
     </types>
     <types>
         <members>STG_DataBoundMultiSelect</members>
@@ -1655,6 +1649,7 @@
     <types>
         <members>CumulusStaticResources</members>
         <members>SLDS</members>
+        <members>sfdo203</members>
         <name>StaticResource</name>
     </types>
     <types>
