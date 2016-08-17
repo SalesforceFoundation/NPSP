@@ -1,4 +1,4 @@
-<aura:component>
+<aura:component >
     <!-- our attributes -->
     <aura:attribute name="contact" type="Object" access="public" />
 
@@ -9,13 +9,13 @@
     <!-- markup follows... -->
 
     <div class="slds-card slds-p-around--none">
-        <div class="slds-card__header slds-p-around--none">
+        <div class="slds-card__header slds-p-around--small">
             <div class="slds-tile slds-tile--board slds-m-around--none" style="margin:0;">
                 <span class="slds-tile__title slds-truncate">
                     <div class="slds-media slds-media--center slds-has-flexi-truncate">
                         <div class="slds-media__figure">
                             <c:svg class="slds-icon slds-icon-standard-contact slds-icon--small"
-                                   xlinkHref="{!$Resource.SLDS + '/1_0_3/assets/icons/standard-sprite/svg/symbols.svg#contact'}" />
+                                   xlinkHref="{!$Resource.sfdo203 + '/assets/icons/standard-sprite/svg/symbols.svg#contact'}" />
                         </div>
                         <div class="slds-media__body">
                             <a href="{! '/' + v.contact.Id}" target="_blank">{!v.contact.FirstName}&nbsp;{!v.contact.LastName}</a>
@@ -24,7 +24,7 @@
                             <ui:button label="{!$Label.c.btnRemove}" buttonTitle="{!$Label.c.btnRemove}" labelClass="assistiveText"
                                        class="slds-button slds-button--icon removeBtn" press="{!c.removeContact}">
                                 <c:svg class="slds-icon slds-icon--x-small slds-icon-text-default slds-button__icon"
-                                       xlinkHref="{!$Resource.SLDS + '/1_0_3/assets/icons/utility-sprite/svg/symbols.svg#close'}" />
+                                       xlinkHref="{!$Resource.sfdo203 + '/assets/icons/utility-sprite/svg/symbols.svg#close'}" />
                             </ui:button>
                         </div>
                     </div>

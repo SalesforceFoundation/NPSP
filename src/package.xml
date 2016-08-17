@@ -252,14 +252,6 @@
         <name>ApexClass</name>
     </types>
     <types>
-        <members>autocomplete</members>
-        <members>autocompleteOption</members>
-        <members>autocompleteSelectListOption</members>
-        <members>dataProviderInterface</members>
-        <members>svg</members>
-        <name>AuraDefinitionBundle</name>
-    </types>
-    <types>
         <members>STG_DataBoundMultiSelect</members>
         <members>STG_PageHeader</members>
         <members>UTIL_JobProgress</members>
@@ -1661,6 +1653,7 @@
     <types>
         <members>CumulusStaticResources</members>
         <members>SLDS</members>
+        <members>sfdo203</members>
         <name>StaticResource</name>
     </types>
     <types>
