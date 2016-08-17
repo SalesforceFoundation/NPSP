@@ -1707,6 +1707,7 @@
     <types>
         <members>CumulusStaticResources</members>
         <members>SLDS</members>
+        <members>sfdo203</members>
         <name>StaticResource</name>
     </types>
     <types>
