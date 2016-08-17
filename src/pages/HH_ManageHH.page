@@ -1,7 +1,7 @@
 <apex:page controller="HH_ManageHH_CTRL" standardStylesheets="false" showHeader="true" docType="html-5.0"  >
     <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <apex:includeLightning />
-        <apex:stylesheet value="{!URLFOR($Resource.SLDS, '/1_0_3/assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
+        <apex:stylesheet value="{!URLFOR($Resource.sfdo203, '/assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
         <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
         <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-2.2.4.js')}"/>
         
@@ -14,7 +14,7 @@
         </style>
                 
         <!-- start with a spinner here until lightning loads -->
-        <div class="slds initialSpinner">
+        <div class="sfdo203 initialSpinner">
             <div class="slds-spinner_container">
                 <div class="slds-spinner--brand slds-spinner slds-spinner--medium" style="position:fixed;top:30%;" aria-hidden="false" role="alert">
                     <div class="slds-spinner__dot-a"></div>
@@ -33,7 +33,7 @@
       
         <!-- household fields section (using fieldset that Lightning does not yet support) -->
         <apex:form id="vfForm" >
-            <div class="slds">
+            <div class="sfdo203">
                 <div class="slds-grid slds-grid--align-spread slds-m-around--medium">
                     <div class="slds-form--stacked" style="width:80%" >                        
                         <apex:repeat value="{!hhFieldSet}" var="f">                            
