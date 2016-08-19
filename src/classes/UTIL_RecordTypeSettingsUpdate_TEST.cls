@@ -99,6 +99,22 @@ private class UTIL_RecordTypeSettingsUpdate_TEST {
     }
 
     @isTest
+    public static void testIdsRemainIds() {
+        // If the setting is an id, it should remain an id after updating
+        Test.startTest();
+
+        UTIL_RecordTypeSettingsUpdate rtsu = new UTIL_RecordTypeSettingsUpdate();
+        String ids = rtsu.getIdsFromNames(
+            '012410000000RXlAAM;01241000000N0kX',
+            new Map<String, Id>()
+        );
+
+        Test.stopTest();
+
+        System.assertEquals('012410000000RXlAAM;01241000000N0kX', ids);
+    }
+
+    @isTest
     public static void testKnownRecordTypeNamesAreConverted() {
         // Unknown record type names should be discarded
         Id knownRecordTypeId = '012000000000001';
@@ -128,7 +144,7 @@ private class UTIL_RecordTypeSettingsUpdate_TEST {
 
         UTIL_RecordTypeSettingsUpdate rtsu = new UTIL_RecordTypeSettingsUpdate();
         String ids = rtsu.getIdsFromNames(
-            ';KnownRecordTypeName1; ;UnknownRecordTypeName;KnownRecordTypeName2;   ;',
+            ';KnownRecordTypeName1; ;UnknownRecordTypeName;KnownRecordTypeName2;012410000000RXlAAM;01241000000N0kX;   ;',
             new Map<String, Id>{
                 'KnownRecordTypeName1' => knownRecordTypeId1,
                 'KnownRecordTypeName2' => knownRecordTypeId2
@@ -138,7 +154,7 @@ private class UTIL_RecordTypeSettingsUpdate_TEST {
         Test.stopTest();
 
         String expectedRecordTypeIds = String.join(
-            new List<String>{knownRecordTypeId1, knownRecordTypeId2},
+            new List<String>{knownRecordTypeId1, knownRecordTypeId2, '012410000000RXlAAM', '01241000000N0kX'},
             ';'
         );
 
