@@ -36,9 +36,11 @@
 @isTest
 private class LVL_LevelAssignBATCH_TEST {
 
+    private static Level__c lvlTin { get; set; }
     private static Level__c lvlBronze { get; set; }
     private static Level__c lvlSilver { get; set; }
     private static Level__c lvlGold { get; set; }
+    private static Level__c lvlPlatinum { get; set; }
     private static Level__c lvlAcctZinc { get; set; }
 
     /*********************************************************************************************************
@@ -46,6 +48,16 @@ private class LVL_LevelAssignBATCH_TEST {
     */
     static void createTestLevels() {
         // create Levels
+        lvlTin = new Level__c(
+            Name = 'Tin',
+            Target__c = 'Contact',
+            Source_Field__c = 'npo02__TotalOppAmount__c', 
+            Level_Field__c = 'npo02__LastMembershipLevel__c', 
+            Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c', 
+            Active__c = true, 
+            Minimum_Amount__c = null, 
+            Maximum_Amount__c = 100);
+
         lvlBronze = new Level__c(
             Name = 'Bronze',
             Target__c = 'Contact',
@@ -54,7 +66,7 @@ private class LVL_LevelAssignBATCH_TEST {
             Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c', 
             Active__c = true, 
             Minimum_Amount__c = 100, 
-            Maximum_Amount__c = 999);
+            Maximum_Amount__c = 1000);
 
         lvlSilver = new Level__c(
             Name = 'Silver',
@@ -64,7 +76,7 @@ private class LVL_LevelAssignBATCH_TEST {
             Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c', 
             Active__c = true, 
             Minimum_Amount__c = 1000, 
-            Maximum_Amount__c = 4999);
+            Maximum_Amount__c = 5000);
 
         lvlGold = new Level__c(
             Name = 'Gold',
@@ -74,7 +86,17 @@ private class LVL_LevelAssignBATCH_TEST {
             Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c', 
             Active__c = true, 
             Minimum_Amount__c = 5000, 
-            Maximum_Amount__c = 1000000);
+            Maximum_Amount__c = 100000);
+        
+        lvlPlatinum = new Level__c(
+            Name = 'Platinum',
+            Target__c = 'Contact',
+            Source_Field__c = 'npo02__TotalOppAmount__c', 
+            Level_Field__c = 'npo02__LastMembershipLevel__c', 
+            Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c', 
+            Active__c = true, 
+            Minimum_Amount__c = 100000, 
+            Maximum_Amount__c = null);
         
         lvlAcctZinc = new Level__c(
             Name = 'Zinc',
@@ -86,7 +108,7 @@ private class LVL_LevelAssignBATCH_TEST {
             Minimum_Amount__c = 100, 
             Maximum_Amount__c = 200);
 
-        insert new Level__c[]{lvlBronze, lvlSilver, lvlGold, lvlAcctZinc};        
+        insert new Level__c[]{lvlTin, lvlBronze, lvlSilver, lvlGold, lvlPlatinum, lvlAcctZinc};        
     }
 
     /*********************************************************************************************************
@@ -139,7 +161,7 @@ private class LVL_LevelAssignBATCH_TEST {
     private static list<Contact> listCon { get; set; }
     static void createTestContacts() {
         // create & insert contact
-        listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(7);
+        listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(8);
         listCon[0].npo02__TotalOppAmount__c = null;
         listCon[1].npo02__TotalOppAmount__c = 10;
         listCon[2].npo02__TotalOppAmount__c = 100;
@@ -155,6 +177,8 @@ private class LVL_LevelAssignBATCH_TEST {
         listCon[6].npo02__TotalOppAmount__c = 500;
         listCon[6].npo02__LastMembershipLevel__c = lvlBronze.Id;
         listCon[6].npo02__LastMembershipOrigin__c = lvlBronze.Id;
+        
+        listCon[7].npo02__TotalOppAmount__c = 100000;
         insert listCon;
     }
         
@@ -190,11 +214,40 @@ private class LVL_LevelAssignBATCH_TEST {
         Database.executeBatch(batch);
         Test.stopTest();
         
+        verifyContactLevels();
+    }
+    
+    /*********************************************************************************************************
+    * @description tests our Level Assigning when invokved through our Schedulable class.
+    */
+    static testMethod void testLevelAssignScheduling() {
+        // create Levels
+        createtestLevels();
+
+        // add an Engagement Plan Template to Silver
+        createLevelEngagementPlan(lvlSilver);
+        
+        // create test Contacts
+        createTestContacts();
+
+        LVL_LevelAssign_SCHED sched = new LVL_LevelAssign_SCHED();
+        Test.startTest();
+        sched.executeReturnStatus();
+        Test.stopTest();
+        
+        verifyContactLevels();
+    }
+
+    /*********************************************************************************************************
+    * @description verify contact levels correctly set
+    */
+    static void verifyContactLevels() {
+        string strSoql = 'SELECT Id, Name, npo02__TotalOppAmount__c, npo02__LastMembershipLevel__c, npo02__LastMembershipOrigin__c, CreatedDate, LastModifiedDate FROM Contact';
         listCon = database.query(strSoql + ' order by FirstName');
-        System.assertEquals(null, listCon[0].npo02__LastMembershipLevel__c);
+        System.assertEquals(lvlTin.Id, listCon[0].npo02__LastMembershipLevel__c);
         System.assertEquals(null, listCon[0].npo02__LastMembershipOrigin__c);
         
-        System.assertEquals(null, listCon[1].npo02__LastMembershipLevel__c);
+        System.assertEquals(lvlTin.Id, listCon[1].npo02__LastMembershipLevel__c);
         System.assertEquals(null, listCon[1].npo02__LastMembershipOrigin__c);
         
         System.assertEquals(lvlBronze.Id, listCon[2].npo02__LastMembershipLevel__c);
@@ -219,6 +272,8 @@ private class LVL_LevelAssignBATCH_TEST {
         System.assertEquals(lvlBronze.Id, listCon[6].npo02__LastMembershipOrigin__c);
         System.assertEquals(listCon[6].CreatedDate, listCon[6].LastModifiedDate);
         
+        System.assertEquals(lvlPlatinum.Id, listCon[7].npo02__LastMembershipLevel__c);
+        System.assertEquals(null, listCon[7].npo02__LastMembershipOrigin__c);
     }
     
     /*********************************************************************************************************
@@ -255,56 +310,6 @@ private class LVL_LevelAssignBATCH_TEST {
         system.assertEquals(listAcc[1].Id, listEP[0].Account__c);
         system.assertEquals(lvlAcctZinc.Engagement_Plan_Template__c, listEP[0].Engagement_Plan_Template__c);
     }
-
-    /*********************************************************************************************************
-    * @description tests our Level Assigning when invokved through our Schedulable class.
-    */
-    static testMethod void testLevelAssignScheduling() {
-        // create Levels
-        createtestLevels();
-
-        // add an Engagement Plan Template to Silver
-        createLevelEngagementPlan(lvlSilver);
-        
-        // create test Contacts
-        createTestContacts();
-
-        LVL_LevelAssign_SCHED sched = new LVL_LevelAssign_SCHED();
-        Test.startTest();
-        sched.executeReturnStatus();
-        Test.stopTest();
-        
-        string strSoql = 'SELECT Id, Name, npo02__TotalOppAmount__c, npo02__LastMembershipLevel__c, npo02__LastMembershipOrigin__c, CreatedDate, LastModifiedDate FROM Contact';
-        listCon = database.query(strSoql + ' order by FirstName');
-        system.assertEquals(7, listCon.size());
-        System.assertEquals(null, listCon[0].npo02__LastMembershipLevel__c);
-        System.assertEquals(null, listCon[0].npo02__LastMembershipOrigin__c);
-        
-        System.assertEquals(null, listCon[1].npo02__LastMembershipLevel__c);
-        System.assertEquals(null, listCon[1].npo02__LastMembershipOrigin__c);
-        
-        System.assertEquals(lvlBronze.Id, listCon[2].npo02__LastMembershipLevel__c);
-        System.assertEquals(null, listCon[2].npo02__LastMembershipOrigin__c);
-        
-        System.assertEquals(lvlBronze.Id, listCon[3].npo02__LastMembershipLevel__c);
-        System.assertEquals(lvlGold.Id, listCon[3].npo02__LastMembershipOrigin__c);
-        
-        System.assertEquals(lvlSilver.Id, listCon[4].npo02__LastMembershipLevel__c);
-        System.assertEquals(lvlBronze.Id, listCon[4].npo02__LastMembershipOrigin__c);
-        
-        // check Silver's Engagement Plan got created
-        list<Engagement_Plan__c> listEP = [select Id, Contact__c, Engagement_Plan_Template__c from Engagement_Plan__c]; 
-        system.assertEquals(1, listEP.size());
-        system.assertEquals(listCon[4].Id, listEP[0].Contact__c);
-        system.assertEquals(lvlSilver.Engagement_Plan_Template__c, listEP[0].Engagement_Plan_Template__c);
-        
-        System.assertEquals(lvlGold.Id, listCon[5].npo02__LastMembershipLevel__c);
-        System.assertEquals(null, listCon[5].npo02__LastMembershipOrigin__c);
-        
-        System.assertEquals(lvlBronze.Id, listCon[6].npo02__LastMembershipLevel__c);
-        System.assertEquals(lvlBronze.Id, listCon[6].npo02__LastMembershipOrigin__c);
-        System.assertEquals(listCon[6].CreatedDate, listCon[6].LastModifiedDate);
-    }
     
     /*********************************************************************************************************
     * @description tests our Level Validation to detect overlaps with existing levels
@@ -323,14 +328,24 @@ private class LVL_LevelAssignBATCH_TEST {
             Minimum_Amount__c = 1000, 
             Maximum_Amount__c = 4999);
             
+        Test.startTest();
         try {
-            Test.startTest();
             insert lvl;
-            Test.stopTest();
             system.assert(false, 'exception should have occurred');
         } catch(Exception ex) {
             system.assert(ex.getMessage().contains(lvl.Name));
         }
+        
+        // make sure null minimum also detected
+        lvl.Minimum_Amount__c = null;
+        try {
+            insert lvl;
+            system.assert(false, 'exception should have occurred');
+        } catch(Exception ex) {
+            system.assert(ex.getMessage().contains(lvl.Name));
+        }
+        Test.stopTest();
+        
     }
 
     /*********************************************************************************************************
@@ -350,14 +365,24 @@ private class LVL_LevelAssignBATCH_TEST {
             Minimum_Amount__c = 10, 
             Maximum_Amount__c = 100);
             
+        Test.startTest();
         try {
-            Test.startTest();
             insert lvl;
-            Test.stopTest();
             system.assert(false, 'exception should have occurred');
         } catch(Exception ex) {
             system.assert(ex.getMessage().contains(lvl.Name));
         }
+
+        // make sure null maximum also detected
+        lvl.Maximum_Amount__c = null;
+        try {
+            insert lvl;
+            system.assert(false, 'exception should have occurred');
+        } catch(Exception ex) {
+            system.assert(ex.getMessage().contains(lvl.Name));
+        }
+        Test.stopTest();
+        
     }
 
     /*********************************************************************************************************

@@ -1117,7 +1117,6 @@
         <members>leadConvertSendEmail</members>
         <members>leadConvertStatus</members>
         <members>leadConvertViewContactError</members>
-        <members>lvlErrorMaxOverlap</members>
         <members>lvlErrorMinOverlap</members>
         <members>mtchBtnSearch</members>
         <members>mtchCloseDateEnd</members>

@@ -51,10 +51,14 @@ public class LVL_Level_TDTM extends TDTM_Runnable {
             // only validate before triggers
             if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
                 
+                // maintain a set of all the object id's from the trigger, to help with error reporting
+                Set<Id> setIdTrigger = new Set<Id>();
+                
                 // first get a set of all objects being referenced
                 set<String> setStrObject = new set<String>();
                 for (SObject sobj : newlist) {
                     setStrObject.add(((Level__c)sobj).Target__c);
+                    setIdTrigger.add(sobj.Id);
                 }
                 
                 // for each object, validate any updates to its ladders
@@ -95,9 +99,10 @@ public class LVL_Level_TDTM extends TDTM_Runnable {
                         }
                     }
                     
+                    
                     // now validate that each ladder has no overlaps
                     for (list<Level__c> listLvl : mapLadderToLevels.values()) {
-                        verifyNoOverlapListLvl(listLvl);
+                        verifyNoOverlapListLvl(listLvl, setIdTrigger);
                     }
                 }
             }
@@ -127,7 +132,7 @@ public class LVL_Level_TDTM extends TDTM_Runnable {
     private void addLevel(Level__c lvl, list<Level__c> listLvl) {
         
         for (integer i = 0; i < listLvl.size(); i++) {
-            if (lvl.Minimum_Amount__c <= listLvl[i].Minimum_Amount__c) {
+            if (lvl.Minimum_Amount__c == null || lvl.Minimum_Amount__c <= listLvl[i].Minimum_Amount__c) {
                 listLvl.add(i, lvl);
                 return;
             }
@@ -153,16 +158,19 @@ public class LVL_Level_TDTM extends TDTM_Runnable {
     /*******************************************************************************************************
     * @description verify no Levels overlap in the list of Levels.  tags each level with a problem using 
     * addError(), rather than throwing an exception on the first error.
-    * @param listLvl The list to verity
+    * @param listLvl The list to verify
+    * @param setIdTrigger The objects that triggered this event
     */
-    private void verifyNoOverlapListLvl(list<Level__c> listLvl) {
+    private void verifyNoOverlapListLvl(list<Level__c> listLvl, Set<Id> setIdTrigger) {
         
         for (integer i = 1; i < listLvl.size(); i++) {
-            if (listLvl[i-1].Minimum_Amount__c >= listLvl[i].Minimum_Amount__c) {
-                listLvl[i-1].addError(String.format(Label.lvlErrorMinOverlap, new list<String>{listLvl[i-1].Name, listLvl[i].Name}));
+            if (listLvl[i].Minimum_Amount__c == null || listLvl[i-1].Minimum_Amount__c >= listLvl[i].Minimum_Amount__c) {
+                integer ierr = setIdTrigger.contains(listLvl[i-1].Id) ? i-1 : i;
+                listLvl[ierr].addError(String.format(Label.lvlErrorMinOverlap, new list<String>{listLvl[i-1].Name, listLvl[i].Name}));
             }
-            if (listLvl[i-1].Maximum_Amount__c >= listLvl[i].Minimum_Amount__c) {
-                listLvl[i-1].addError(String.format(Label.lvlErrorMaxOverlap, new list<String>{listLvl[i-1].Name, listLvl[i].Name}));
+            if (listLvl[i-1].Maximum_Amount__c == null || listLvl[i-1].Maximum_Amount__c > listLvl[i].Minimum_Amount__c) {
+                integer ierr = setIdTrigger.contains(listLvl[i-1].Id) ? i-1 : i;
+                listLvl[ierr].addError(String.format(Label.lvlErrorMinOverlap, new list<String>{listLvl[i].Name, listLvl[i-1].Name}));
             }
         }
     }
