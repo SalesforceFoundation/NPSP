@@ -957,8 +957,10 @@
         <members>healthDetailsInvalidErrorChatterGroup</members>
         <members>healthDetailsInvalidErrorRecipient</members>
         <members>healthDetailsInvalidErrorUser</members>
+        <members>healthDetailsInvalidFieldNumeric</members>
         <members>healthDetailsInvalidFiscalYears</members>
         <members>healthDetailsInvalidLevelField</members>
+        <members>healthDetailsInvalidLevelFieldReference</members>
         <members>healthDetailsInvalidObjectField</members>
         <members>healthDetailsInvalidOppField</members>
         <members>healthDetailsInvalidOppStage</members>
@@ -1117,6 +1119,9 @@
         <members>leadConvertSendEmail</members>
         <members>leadConvertStatus</members>
         <members>leadConvertViewContactError</members>
+        <members>lvlErrorDuplicateName</members>
+        <members>lvlErrorInvalidLookupField</members>
+        <members>lvlErrorInvalidSourceField</members>
         <members>lvlErrorMinOverlap</members>
         <members>mtchBtnSearch</members>
         <members>mtchCloseDateEnd</members>

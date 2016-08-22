@@ -86,7 +86,7 @@ private class LVL_LevelAssignBATCH_TEST {
             Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c', 
             Active__c = true, 
             Minimum_Amount__c = 5000, 
-            Maximum_Amount__c = 100000);
+            Maximum_Amount__c = 90000); // consciously left 10k break for other tests to use.
         
         lvlPlatinum = new Level__c(
             Name = 'Platinum',
@@ -474,4 +474,77 @@ private class LVL_LevelAssignBATCH_TEST {
             system.assert(ex.getMessage().contains(lvl3.Name));
         }
     }
+
+    /*********************************************************************************************************
+    * @description tests our Level Validation to detect duplicate names with existing levels
+    */
+    static testMethod void testLevelValidationExistingNames() {
+        // create Levels
+        createtestLevels();
+        
+        Level__c lvl = new Level__c(
+            Name = 'Gold',
+            Target__c = 'Contact',
+            Source_Field__c = 'npo02__TotalOppAmount__c', 
+            Level_Field__c = 'npo02__LastMembershipLevel__c', 
+            Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c', 
+            Active__c = true, 
+            Minimum_Amount__c = 90000, 
+            Maximum_Amount__c = 90001);
+            
+        Test.startTest();
+        try {
+            insert lvl;
+            system.assert(false, 'exception should have occurred');
+        } catch(Exception ex) {
+            system.assert(ex.getMessage().contains(lvl.Name));
+        }
+        
+        // make sure rename also detected
+        lvlSilver.Name = 'Gold';
+        try {
+            insert lvl;
+            system.assert(false, 'exception should have occurred');
+        } catch(Exception ex) {
+            system.assert(ex.getMessage().contains(lvl.Name));
+        }
+        Test.stopTest();        
+    }
+    
+    /*********************************************************************************************************
+    * @description tests our Level Validation to detect duplicate names with new levels
+    */
+    static testMethod void testLevelValidationNewNames() {
+        
+        Level__c lvl1 = new Level__c(
+            Name = 'new',
+            Target__c = 'Contact',
+            Source_Field__c = 'npo02__TotalOppAmount__c', 
+            Level_Field__c = 'npo02__LastMembershipLevel__c', 
+            Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c', 
+            Active__c = true, 
+            Minimum_Amount__c = 10, 
+            Maximum_Amount__c = 100);
+            
+        Level__c lvl2 = new Level__c(
+            Name = 'new',
+            Target__c = 'Contact',
+            Source_Field__c = 'npo02__TotalOppAmount__c', 
+            Level_Field__c = 'npo02__LastMembershipLevel__c', 
+            Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c', 
+            Active__c = true, 
+            Minimum_Amount__c = 101, 
+            Maximum_Amount__c = 200);
+
+        try {
+            Test.startTest();
+            insert new Level__c[]{lvl1, lvl2};
+            Test.stopTest();
+            system.assert(false, 'exception should have occurred');
+        } catch(Exception ex) {
+            system.assert(ex.getMessage().contains(lvl1.Name));
+        }
+    }
+    
+
 }

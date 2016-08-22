@@ -1551,6 +1551,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Invalid User {0}.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsInvalidFieldNumeric</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Health Check error if a Level refers to an invalid field</shortDescription>
+        <value>Level {0} refers to an invalid numeric field {1} on {2}.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsInvalidFiscalYears</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -1565,6 +1573,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>Health Check error if a Level refers to an invalid field</shortDescription>
         <value>Level {0} refers to an invalid field {1} on {2}.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidLevelFieldReference</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Health Check error if a Level refers to an invalid field</shortDescription>
+        <value>Level {0} refers to an invalid Level Lookup field {1} on {2}.</value>
     </labels>
     <labels>
         <fullName>healthDetailsInvalidObjectField</fullName>
@@ -2829,6 +2845,30 @@ If you want to know which Opportunities would have previously included this doub
         <protected>false</protected>
         <shortDescription>leadConvertViewContactError</shortDescription>
         <value>You can only view existing contacts.</value>
+    </labels>
+    <labels>
+        <fullName>lvlErrorDuplicateName</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>error when a name of a level is duplicated</shortDescription>
+        <value>Level name {0} already exists.  Names for the same Target and Level Field must be unique.</value>
+    </labels>
+    <labels>
+        <fullName>lvlErrorInvalidLookupField</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>error when Level Assignment fails to save its current or previous level</shortDescription>
+        <value>Field {0} specified in Level {1} is not a valid lookup to a Level object.</value>
+    </labels>
+    <labels>
+        <fullName>lvlErrorInvalidSourceField</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>error if level&apos;s source field isn&apos;t valid</shortDescription>
+        <value>Field {0} specified in Level {1} is not a valid number field.</value>
     </labels>
     <labels>
         <fullName>lvlErrorMinOverlap</fullName>

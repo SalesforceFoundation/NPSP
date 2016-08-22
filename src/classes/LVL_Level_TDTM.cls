@@ -52,13 +52,14 @@ public class LVL_Level_TDTM extends TDTM_Runnable {
             if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
                 
                 // maintain a set of all the object id's from the trigger, to help with error reporting
-                Set<Id> setIdTrigger = new Set<Id>();
+                Set<Level__c> setTrigger = new Set<Level__c>();
                 
-                // first get a set of all objects being referenced
+                // get a set of all objects being referenced
                 set<String> setStrObject = new set<String>();
+                
                 for (SObject sobj : newlist) {
                     setStrObject.add(((Level__c)sobj).Target__c);
-                    setIdTrigger.add(sobj.Id);
+                    setTrigger.add((Level__c)sobj);
                 }
                 
                 // for each object, validate any updates to its ladders
@@ -100,9 +101,10 @@ public class LVL_Level_TDTM extends TDTM_Runnable {
                     }
                     
                     
-                    // now validate that each ladder has no overlaps
+                    // now validate that each ladder has no overlaps, and no duplicate names
                     for (list<Level__c> listLvl : mapLadderToLevels.values()) {
-                        verifyNoOverlapListLvl(listLvl, setIdTrigger);
+                        verifyNoOverlapListLvl(listLvl, setTrigger);
+                        verifyNoDuplicateNames(listLvl, setTrigger);
                     }
                 }
             }
@@ -159,18 +161,50 @@ public class LVL_Level_TDTM extends TDTM_Runnable {
     * @description verify no Levels overlap in the list of Levels.  tags each level with a problem using 
     * addError(), rather than throwing an exception on the first error.
     * @param listLvl The list to verify
-    * @param setIdTrigger The objects that triggered this event
+    * @param setTrigger The objects that triggered this event
     */
-    private void verifyNoOverlapListLvl(list<Level__c> listLvl, Set<Id> setIdTrigger) {
+    private void verifyNoOverlapListLvl(list<Level__c> listLvl, Set<Level__c> setTrigger) {
         
         for (integer i = 1; i < listLvl.size(); i++) {
             if (listLvl[i].Minimum_Amount__c == null || listLvl[i-1].Minimum_Amount__c >= listLvl[i].Minimum_Amount__c) {
-                integer ierr = setIdTrigger.contains(listLvl[i-1].Id) ? i-1 : i;
+                integer ierr = setTrigger.contains(listLvl[i-1]) ? i-1 : i;
                 listLvl[ierr].addError(String.format(Label.lvlErrorMinOverlap, new list<String>{listLvl[i-1].Name, listLvl[i].Name}));
             }
             if (listLvl[i-1].Maximum_Amount__c == null || listLvl[i-1].Maximum_Amount__c > listLvl[i].Minimum_Amount__c) {
-                integer ierr = setIdTrigger.contains(listLvl[i-1].Id) ? i-1 : i;
+                integer ierr = setTrigger.contains(listLvl[i-1]) ? i-1 : i;
                 listLvl[ierr].addError(String.format(Label.lvlErrorMinOverlap, new list<String>{listLvl[i].Name, listLvl[i-1].Name}));
+            }
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description verify no Levels have the same name.  tags each level with a problem using 
+    * addError(), rather than throwing an exception on the first error.
+    * @param listLvl The list to verify
+    * @param setTrigger The objects that triggered this event
+    */
+    private void verifyNoDuplicateNames(list<Level__c> listLvl, Set<Level__c> setTrigger) {
+        
+        // track how many times each name is used
+        boolean hasDupe = false;
+        Map<String, Integer> mapNameToCount = new Map<String, Integer>();
+        for (Level__c lvl : listLvl) {
+            integer c = mapNameToCount.get(lvl.Name);
+            if (c == null) {
+                c = 1;
+            } else {
+                c++;
+                hasDupe = true;
+            }
+            mapNameToCount.put(lvl.Name, c);
+        }
+
+        // if dupe detected, find the one from the trigger that caused it
+        if (hasDupe) {
+            for (Level__c lvl : listLvl) {
+                if (setTrigger.contains(lvl) && mapNameToCount.get(lvl.Name) > 1) {
+                    lvl.addError(String.format(Label.lvlErrorDuplicateName, new list<String>{lvl.Name}));
+                }                
             }
         }
     }

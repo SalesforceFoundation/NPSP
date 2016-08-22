@@ -82,9 +82,16 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
             for (String strLadder : mapLadderToLevels.keySet()) {
                 list<Level__c> listLvls = mapLadderToLevels.get(strLadder);
                 
+                // note that we have try/catches around using the level fields, so we can provide useful errors if they are invalid
+
                 // go thru each list of Levels finding where this object fits
                 for (Level__c lvl : listLvls) {
-                    Decimal amt = (Decimal)sobj.get(lvl.Source_Field__c);
+                    Decimal amt;
+                    try {
+                        amt = (Decimal)sobj.get(lvl.Source_Field__c);
+                    } catch (Exception ex) {
+                        throw new LevelException(String.format(Label.lvlErrorInvalidSourceField, new list<String>{lvl.Source_Field__c, lvl.Name}));
+                    }
                     if (amt == null) 
                         amt = 0;
 
@@ -92,11 +99,28 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
                         (amt < lvl.Maximum_Amount__c || lvl.Maximum_Amount__c == null)) {
                         
                         // record the new level
-                        Id lvlIdPrev = (Id)sobj.get(strLadder);
+                        
+                        Id lvlIdPrev;
+                        try {
+                            lvlIdPrev = (Id)sobj.get(strLadder);
+                        } catch (Exception ex) {
+                            throw new LevelException(String.format(Label.lvlErrorInvalidLookupField, new list<String>{strLadder, lvl.Name}));
+                        }
+
                         if (lvlIdPrev != lvl.Id) {
-                            if (lvl.Previous_Level_Field__c != null)
-                                sobj.put(lvl.Previous_Level_Field__c, lvlIdPrev);
-                            sobj.put(strLadder, lvl.Id);
+                            if (lvl.Previous_Level_Field__c != null) {
+                                try {
+                                    sobj.put(lvl.Previous_Level_Field__c, lvlIdPrev);
+                                } catch (exception ex) {
+                                    throw new LevelException(String.format(Label.lvlErrorInvalidLookupField, new list<String>{lvl.Previous_Level_Field__c, lvl.Name}));
+                                }
+                            }
+                            
+                            try {
+                                sobj.put(strLadder, lvl.Id);
+                            } catch (exception ex) {
+                                throw new LevelException(String.format(Label.lvlErrorInvalidLookupField, new list<String>{strLadder, lvl.Name}));
+                            }
                             mapSObjUpdate.put(sobj.Id, sobj);
                             
                             // apply the Engagement Plan
@@ -121,6 +145,8 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
         update mapSObjUpdate.values();     
         insert listEP;
     }
+    
+    private class LevelException extends Exception {}
     
     /*********************************************************************************************************
     * @description Batch process finish method, does nothing.
