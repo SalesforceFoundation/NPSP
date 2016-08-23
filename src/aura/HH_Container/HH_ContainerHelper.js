@@ -454,7 +454,7 @@
             for (var str in lbl.c) {
                 // the labels that fail to get resolved appear as
                 // "$Label namespace.foo does not exist: Field $Label namespace__foo does not exist. Check spelling."
-                if (lbl.c[str] && lbl.c[str].startsWith('$Label'))
+                if (lbl.c[str] && lbl.c[str].indexOf('$Label') === 0)
                     lbl.c[str] = lbl[nspace][str];
             }
         }
@@ -820,7 +820,7 @@
                 
                 if (isAdd) {
                     // see if custom field has no namespace prefix
-                    if (fld.endsWith('__c') && fld.indexOf('__') === fld.lastIndexOf('__')) {
+                    if (fld.length > 3 && fld.lastIndexOf('__c') === (fld.length - 3) && fld.indexOf('__') === fld.lastIndexOf('__')) {
                         var fld2 = namespacePrefix + fld;
                         obj[fld2] = object[fld];
                     } else {
@@ -828,7 +828,7 @@
                     }
                 } else {
                     // see if custom field starts with our namespace prefix
-                    if (fld.endsWith('__c') && fld.startsWith(namespacePrefix)) {
+                    if (fld.length > 3 && fld.lastIndexOf('__c') === (fld.length - 3) && fld.indexOf(namespacePrefix) === 0) {
                         var fld3 = fld.replace(namespacePrefix, '');
                         obj[fld3] = object[fld];
                     } else {

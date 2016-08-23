@@ -252,14 +252,6 @@
         <name>ApexClass</name>
     </types>
     <types>
-        <members>autocomplete</members>
-        <members>autocompleteOption</members>
-        <members>autocompleteSelectListOption</members>
-        <members>dataProviderInterface</members>
-        <members>svg</members>
-        <name>AuraDefinitionBundle</name>
-    </types>
-    <types>
         <members>STG_DataBoundMultiSelect</members>
         <members>STG_PageHeader</members>
         <members>UTIL_JobProgress</members>
@@ -748,6 +740,7 @@
         <members>CONV_Address_Overrides_Set</members>
         <members>CONV_Addresses_Mapped</members>
         <members>CONV_All_Backed_Up</members>
+        <members>CONV_All_Dup_Rules_Disabled</members>
         <members>CONV_All_Households_Selected</members>
         <members>CONV_All_Required_Removed</members>
         <members>CONV_All_Triggers_Disabled</members>
@@ -1657,6 +1650,7 @@
     <types>
         <members>CumulusStaticResources</members>
         <members>SLDS</members>
+        <members>sfdo203</members>
         <name>StaticResource</name>
     </types>
     <types>

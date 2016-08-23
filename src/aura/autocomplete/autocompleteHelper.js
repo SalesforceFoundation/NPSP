@@ -60,7 +60,7 @@
                         }
                     }
                 ),
-                20
+                250 // too small a number caused issues in IE and Firefox on Windows
             );
         } else {
             helper.setListVisibility(component, visible);

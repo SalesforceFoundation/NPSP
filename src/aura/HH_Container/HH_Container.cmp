@@ -44,7 +44,7 @@
     <!-- markup follows... -->
 
     <form >
-        <div class="slds">
+        <div class="sfdo203">
 
             <!-- placeholder for uimessage component -->
             <div aura:id="divUIMessageContainer" />
@@ -56,14 +56,14 @@
                         <nav role="navigation" class="slds-p-bottom--x-small">
                             <p id="bread-crumb-label" class="slds-assistive-text">You are here:</p>
                             <ol class="slds-breadcrumb slds-list--horizontal" aria-labelledby="bread-crumb-label">
-                                <li class="slds-list__item slds-text-heading--label"><a class="slds-type-focus" href="{!'/' + v.hhTypePrefix}">{!$Label.c.lblHousehold}</a></li>
-                                <li class="slds-list__item slds-text-heading--label"><a class="slds-type-focus" href="{!'/' + v.hhId}">{!v.hh.Name}</a></li>
+                                <li class="slds-breadcrumb__item slds-text-heading--label"><a class="slds-type-focus" href="{!'/' + v.hhTypePrefix}">{!$Label.c.lblHousehold}</a></li>
+                                <li class="slds-breadcrumb__item slds-text-heading--label"><a class="slds-type-focus" href="{!'/' + v.hhId}">{!v.hh.Name}</a></li>
                             </ol>
                         </nav>
                         <div class="slds-media slds-media--center slds-has-flexi-truncate">
                             <div class="slds-media__figure">
                                 <c:svg class="slds-icon slds-icon-standard-household slds-icon--medium"
-                                       xlinkHref="{!$Resource.SLDS + '/1_0_3/assets/icons/standard-sprite/svg/symbols.svg#household'}" />
+                                       xlinkHref="{!$Resource.sfdo203 + '/assets/icons/standard-sprite/svg/symbols.svg#household'}" />
                             </div>
                             <div class="slds-media__body">
                                 <h1 class="slds-text-heading--medium">{!$Label.npo02.ManageHousehold}</h1>
@@ -175,7 +175,7 @@
                         <div class="slds-modal__header">
                             <ui:button class="slds-button slds-button--icon-inverse slds-modal__close" press="{!c.cancelRemoveContact}">
                                 <c:svg class="slds-button__icon slds-button__icon--large"
-                                       xlinkHref="{!$Resource.SLDS + '/1_0_3/assets/icons/action-sprite/svg/symbols.svg#close'}" />
+                                       xlinkHref="{!$Resource.sfdo203 + '/assets/icons/action-sprite/svg/symbols.svg#close'}" />
                                 <span class="slds-assistive-text">{!$Label.c.bdiBtnClose}</span>
                             </ui:button>
                             <h2 id="searchPopupLabel" class="slds-text-heading--medium">{!$Label.c.lblDeleteContact}</h2>
@@ -214,7 +214,7 @@
                         <div class="slds-modal__header">
                             <ui:button class="slds-button slds-button--icon-inverse slds-modal__close" press="{!c.cancelMergeHHPopup}">
                                 <c:svg class="slds-button__icon slds-button__icon--large"
-                                       xlinkHref="{!$Resource.SLDS + '/1_0_3/assets/icons/action-sprite/svg/symbols.svg#close'}" />
+                                       xlinkHref="{!$Resource.sfdo203 + '/assets/icons/action-sprite/svg/symbols.svg#close'}" />
                                 <span class="slds-assistive-text">{!$Label.c.bdiBtnClose}</span>
                             </ui:button>
                             <h2 id="searchPopupLabel" class="slds-text-heading--medium">{!$Label.c.lblMergeHHTitle}</h2>
@@ -258,7 +258,7 @@
                         <div class="slds-modal__header">
                             <ui:button class="slds-button slds-button--icon-inverse slds-modal__close" press="{!c.cancelNewContact}">
                                 <c:svg class="slds-button__icon slds-button__icon--large"
-                                       xlinkHref="{!$Resource.SLDS + '/1_0_3/assets/icons/action-sprite/svg/symbols.svg#close'}" />
+                                       xlinkHref="{!$Resource.sfdo203 + '/assets/icons/action-sprite/svg/symbols.svg#close'}" />
                                 <span class="slds-assistive-text">{!$Label.c.bdiBtnClose}</span>
                             </ui:button>
                             <h2 id="searchPopupLabel" class="slds-text-heading--medium">{!$Label.npo02.NewContact}</h2>
