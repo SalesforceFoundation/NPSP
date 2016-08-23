@@ -58,6 +58,14 @@
                                 </div>
 
                                 <div class="slds-form-element">
+                                    <label class="slds-checkbox" for="check-dup-disabled">
+                                        <input name="checkbox" type="checkbox" id="check-dup-disabled" />
+                                        <span class="slds-checkbox--faux"></span>
+                                        <span class="slds-form-element__label">{!$Label.CONV_All_Dup_Rules_Disabled}</span>
+                                    </label>
+                                </div>
+
+                                <div class="slds-form-element">
                                     <label class="slds-checkbox" for="check-sandbox-first">
                                         <input name="checkbox" type="checkbox" id="check-sandbox-first" />
                                         <span class="slds-checkbox--faux"></span>
@@ -181,6 +189,7 @@
                                     {!$Label.CONV_Begin}
                                 </button>
                             </div>
+                            <apex:actionFunction name="convert" action="{!convert}" reRender="pageMessages" oncomplete="afterConvert()"/>
                         </apex:form>
                     </div>
                 </div>
@@ -226,10 +235,6 @@
             </div>
             <div class="slds-backdrop" tabindex="-1"></div>
         </div>
-
-        <apex:form >
-            <apex:actionFunction name="convert" action="{!convert}" reRender="pageMessages" oncomplete="afterConvert()"/>
-        </apex:form>
 
         <script type="text/javascript">
             var conversionButtonElement = document.getElementById('conversionBTN');
