@@ -180,6 +180,10 @@
         <name>CONV_All_Backed_Up</name>
     </customLabels>
     <customLabels>
+        <label><!-- CONV_All_Dup_Rules_Disabled --></label>
+        <name>CONV_All_Dup_Rules_Disabled</name>
+    </customLabels>
+    <customLabels>
         <label>Alle vorhandenen Haushalte werden zusammen mit ihren Kontakten ausgewählt.</label>
         <name>CONV_All_Households_Selected</name>
     </customLabels>
