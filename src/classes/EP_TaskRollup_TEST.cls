@@ -66,7 +66,7 @@ public class EP_TaskRollup_TEST {
     /*******************************************************************************************************
     * @description Insert multiple Task related to an Engagement Plan
     */ 
-    static testmethod void testMultipleEPTask() {
+    static testmethod void testMultipleEPTasks() {
         List<Engagement_Plan_Template__c> templateTests = UTIL_UnitTestData_TEST.createEPTemplates(1);
         insert templateTests;
         List<Engagement_Plan_Task__c> epTaskTests = UTIL_UnitTestData_TEST.createEPTasksForTemplates(10, templateTests);
@@ -98,6 +98,56 @@ public class EP_TaskRollup_TEST {
             FROM Engagement_Plan__c WHERE Id = :epToInsert.Id LIMIT 1];
         System.assertEquals(taskTests.size(), epReQueried.Total_Tasks__c, 'All tasks should have created successfully and updated the Total Tasks');
         System.assertEquals(completedTasks, epReQueried.Completed_Tasks__c, 'Completed Tasks should equal total number of tasks marked complete.');
+    }
+    /*******************************************************************************************************
+    * @description Insert multiple Task related to different Engagement Plans
+    */ 
+    static testmethod void testMultipleEPTasksAndPlans() {
+        List<Engagement_Plan_Template__c> templateTests = UTIL_UnitTestData_TEST.createEPTemplates(2);
+        insert templateTests;
+        List<Engagement_Plan_Task__c> epTaskTests = UTIL_UnitTestData_TEST.createEPTasksForTemplates(10, templateTests);
+        insert epTaskTests;
+        Contact contactTest = new Contact(LastName = 'Test');
+        insert contactTest;
+        List<Engagement_Plan__c> epsToInsert = new List<Engagement_Plan__c>{
+            new Engagement_Plan__c(
+                Engagement_Plan_Template__c = templateTests[0].Id,
+                Contact__c = contactTest.Id,
+                Completed_Tasks__c = 0,
+                Total_Tasks__c = 0),
+            new Engagement_Plan__c(
+                Engagement_Plan_Template__c = templateTests[1].Id,
+                Contact__c = contactTest.Id,
+                Completed_Tasks__c = 0,
+                Total_Tasks__c = 0)
+        };
+        insert epsToInsert;
+        List<Task> taskTests = new List<Task>();
+        Integer completedTasks = 0;
+
+        for (Engagement_Plan__c epToInsert : epsToInsert) {
+            for (Integer i = 0; i < epTaskTests.size(); i++) {
+                if (epTaskTests[i].Engagement_Plan_Template__c == epToInsert.Engagement_Plan_Template__c) {
+                    Boolean markComplete = math.mod(i + 1, 2) != 0;
+                    completedTasks += markComplete ? 1 : 0;
+                    taskTests.add(new Task(
+                        Engagement_Plan__c = epToInsert.Id, 
+                        Subject = 'Test',
+                        Status = markComplete ? UTIL_UnitTestData_TEST.getOpenTaskStatus() : UTIL_UnitTestData_TEST.getClosedTaskStatus()));
+                }
+            }
+        }
+        Test.startTest();
+        insert taskTests;
+        Test.stopTest();
+
+        Engagement_Plan__c epReQueried1 = [SELECT Id, Completed_Tasks__c, Total_Tasks__c
+            FROM Engagement_Plan__c WHERE Id = :epsToInsert[0].Id LIMIT 1];
+        Engagement_Plan__c epReQueried2 = [SELECT Id, Completed_Tasks__c, Total_Tasks__c
+            FROM Engagement_Plan__c WHERE Id = :epsToInsert[1].Id LIMIT 1];
+        System.assertEquals(taskTests.size(), epReQueried1.Total_Tasks__c + epReQueried2.Total_Tasks__c, 'All tasks should have created successfully and updated the Total Tasks');
+        System.assertEquals(completedTasks / 2, epReQueried1.Completed_Tasks__c, 'Completed Tasks should equal half the total number of tasks marked complete.');
+        System.assertEquals(completedTasks / 2, epReQueried2.Completed_Tasks__c, 'Completed Tasks should equal half the total number of tasks marked complete.');
     }
     /*******************************************************************************************************
     * @description updating multiple Task related to an Engagement Plan
@@ -212,5 +262,39 @@ public class EP_TaskRollup_TEST {
         Engagement_Plan__c epReQueried = [SELECT Id, Completed_Tasks__c, Total_Tasks__c
             FROM Engagement_Plan__c WHERE Id = :epToInsert.Id LIMIT 1];
         System.assertEquals(taskTests.size() - 1, epReQueried.Total_Tasks__c, 'The total should have reduced by 1 after nullifying relationship.');
+    }
+    /*******************************************************************************************************
+    * @description Insert a single Task NOT related to an Engagement Plan
+    */ 
+    static testmethod void testSingleTask() {
+        Task taskTest = new Task(Subject = 'Test');
+        
+        Test.startTest();
+        insert taskTest;
+        Test.stopTest();
+
+        Task taskReQueried = [SELECT Id FROM Task WHERE Id = :taskTest.Id LIMIT 1];
+        System.assertNotEquals(null, taskReQueried.Id, 'A task not related to an EP should have created successfully');
+    }
+    /*******************************************************************************************************
+    * @description Insert multiple Task NOT related to an Engagement Plan
+    */ 
+    static testmethod void testMultipleTasks() {
+        List<Task> taskTests = new List<Task>();
+        Integer completedTasks = 0;
+        for (Integer i = 0; i < 10; i++) {
+            Boolean markComplete = math.mod(i + 1, 2) != 0;
+            completedTasks += markComplete ? 1 : 0;
+            taskTests.add(new Task(
+                Subject = 'Test ' + i,
+                Status = markComplete ? UTIL_UnitTestData_TEST.getOpenTaskStatus() : UTIL_UnitTestData_TEST.getClosedTaskStatus()));
+        }
+        
+        Test.startTest();
+        insert taskTests;
+        Test.stopTest();
+
+        List<Task> tasksReQueried = new List<Task>([SELECT Id FROM Task WHERE Id IN :taskTests]);
+        System.assertEquals(taskTests.size(), tasksReQueried.size(), 'All tasks not related to an EP should have created successfully');
     }
 }

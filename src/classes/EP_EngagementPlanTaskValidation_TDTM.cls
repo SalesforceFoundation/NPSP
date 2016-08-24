@@ -33,10 +33,7 @@
 * @group Engagement Plans
 * @description Trigger Handler on Engagement Plan Tasks 
 */
-public class EP_TaskDependencyCheck_TDTM extends TDTM_Runnable {
-
-    /** @description maximum number of tasks to check in a dependency chain */
-    private static Integer maxCount = 500;
+public class EP_EngagementPlanTaskValidation_TDTM extends TDTM_Runnable {
     
     /*******************************************************************************************************
     * @description Trigger Handler on Engagement Plan Tasks that prevents recursion on dependent tasks and
@@ -131,7 +128,7 @@ public class EP_TaskDependencyCheck_TDTM extends TDTM_Runnable {
                     Integer count = 0;
                     while (dependentTask.Dependent_Task__c != null
                             && mapExistingEPTasks.containsKey(dependentTask.Dependent_Task__c)
-                            && count < maxCount) {
+                            && count < EP_EngagementPlans_UTIL.MAX_ITERATIONS) {
                         if (taskIds.contains(dependentTask.Dependent_Task__c)) {
                             newEPTask.addError(Label.EPTaskDependency);
                             break;

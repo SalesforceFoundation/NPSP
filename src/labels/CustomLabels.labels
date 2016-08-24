@@ -593,7 +593,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>EPTaskTemplate</shortDescription>
-        <value>EP Tasks can only be dependent on other EP Tasks that belong to the same EP Template.</value>
+        <value>Engagement Plan Tasks can only be dependent on other Engagement Plan Tasks that belong to the same Engagement Plan Template.</value>
     </labels>
     <labels>
         <fullName>HiddenForSecurity</fullName>

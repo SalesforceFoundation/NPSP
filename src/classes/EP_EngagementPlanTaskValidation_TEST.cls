@@ -34,7 +34,7 @@
 * @description Test Trigger Handler on Engagement Plan Tasks 
 */
 @isTest
-public class EP_TaskDependencyCheck_TEST {
+public class EP_EngagementPlanTaskValidation_TEST {
             
     /*******************************************************************************************************
     * @description Insert a single Engagment Plan Task Dependent on an existing task.
