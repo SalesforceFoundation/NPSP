@@ -40,7 +40,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
     // if you want to run all tests, then use '*'
     private static String strTestOnly = '*';
     
-    static String giftRecordTypeIdForTests = UTIL_RecordTypes.GetRecordTypeId('Opportunity', UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity'));
+    static String giftRecordTypeIdForTests = UTIL_RecordTypes.GetRecordTypeId(Opportunity.sObjectType, UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType));
     
     /*********************************************************************************************************
     * @description Runs testOpportunityUtilityErrorHandling test method for the One to One account processor.
@@ -358,7 +358,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
         Contact c = new Contact(LastName = 'Lastname', BirthDate = system.today().addDays(-4));
         insert c;
 
-        id rtid = UTIL_RecordTypes.GetRecordTypeId ('Opportunity',UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity'));
+        id rtid = UTIL_RecordTypes.GetRecordTypeId (Opportunity.sObjectType,UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType));
         Opportunity newOpp = New Opportunity (
                 Name = 'Test Opp ',
                 Amount = 100,
@@ -955,7 +955,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
 
         c = database.query(q);
 
-        id rtid = UTIL_RecordTypes.GetRecordTypeId ('Opportunity',UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity'));
+        id rtid = UTIL_RecordTypes.GetRecordTypeId (Opportunity.sObjectType,UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType));
         Opportunity newOpp = New Opportunity (
                 Name = 'Test Opp ',
                 Amount = 100,
