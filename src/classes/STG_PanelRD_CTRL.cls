@@ -154,7 +154,7 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
     static public string strRDOppRecordTypeLabel {
         get {
             if (strRDOppRecordTypeLabel == null) {
-                strRDOppRecordTypeLabel = UTIL_RecordTypes.GetRecordTypeName('Opportunity', STG_Panel.stgService.stgRD.npe03__Record_Type__c);
+                strRDOppRecordTypeLabel = UTIL_RecordTypes.GetRecordTypeName(Opportunity.sObjectType, STG_Panel.stgService.stgRD.npe03__Record_Type__c);
             }
             return strRDOppRecordTypeLabel;
         }
