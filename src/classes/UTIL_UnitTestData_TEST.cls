@@ -185,7 +185,7 @@ public class UTIL_UnitTestData_TEST {
     */
 
     public static List<Opportunity> OppsForContactList (List<Contact> Cons, id CampId, string Stage, date Close, double Amt, string rectype, string oppType) {
-        id rtid = UTIL_RecordTypes.GetRecordTypeId ('Opportunity',rectype);
+        id rtid = UTIL_RecordTypes.GetRecordTypeId (Opportunity.sObjectType,rectype);
         return OppsForContactListByRecTypeId(Cons, CampId, Stage, Close, Amt, rtid, oppType);
     }
 
@@ -220,7 +220,7 @@ public class UTIL_UnitTestData_TEST {
     * @description Create an Opportunity for each Contact, using their Account as the Opportunity's Account.
     */
     public static List<Opportunity> OppsForContactWithAccountList (List<Contact> Cons, id CampId, string Stage, date Close, double Amt, string rectype, string oppType) {
-        id rtid = UTIL_RecordTypes.GetRecordTypeId ('Opportunity',rectype);
+        id rtid = UTIL_RecordTypes.GetRecordTypeId (Opportunity.sObjectType,rectype);
         return OppsForContactWithAccountListByRecTypeId(Cons, CampId, Stage, Close, Amt, rtid, oppType);
     }
 
@@ -255,7 +255,7 @@ public class UTIL_UnitTestData_TEST {
     }
 
     public static List<Opportunity> OppsForAccountList (List<Account> listAcc, id CampId, string Stage, date Close, double Amt, string rectype, string oppType) {
-        id rtid = UTIL_RecordTypes.GetRecordTypeId ('Opportunity',rectype);
+        id rtid = UTIL_RecordTypes.GetRecordTypeId (Opportunity.sObjectType,rectype);
         return OppsForAccountListByRecTypeId(listAcc, CampId, Stage, Close, Amt, rtid, oppType);
     }
 
