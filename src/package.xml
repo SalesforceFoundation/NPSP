@@ -604,8 +604,9 @@
         <members>Engagement_Plan_Task__c.Send_Email__c</members>
         <members>Engagement_Plan_Task__c.Status__c</members>
         <members>Engagement_Plan_Task__c.Type__c</members>
+        <members>Engagement_Plan_Template__c.Automatically_Update_Child_Task_Due_Date__c</members>
         <members>Engagement_Plan_Template__c.Blank_Assignment_Rule__c</members>
-        <members>Engagement_Plan_Template__c.Delay_Type__c</members>
+        <members>Engagement_Plan_Template__c.Description__c</members>
         <members>Engagement_Plan_Template__c.Skip_Day__c</members>
         <members>Engagement_Plan_Template__c.Skip_Weekends__c</members>
         <members>Engagement_Plan_Template__c.Total_Engagement_Plans__c</members>
