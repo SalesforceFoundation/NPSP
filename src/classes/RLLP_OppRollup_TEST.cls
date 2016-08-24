@@ -52,9 +52,9 @@ public with sharing class RLLP_OppRollup_TEST {
     /** @description The date of January 1st, four years ago */
     static Date dat4YearAgo = Date.newInstance( datToday.year()-4,1,1);
     /** @description Default gift record type for tests. */
-    static String giftRecordTypeIdForTests = UTIL_RecordTypes.getRecordTypeIdForGiftsTests('Opportunity');
+    static String giftRecordTypeIdForTests = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.sObjectType);
     /** @description Default membership record type for tests. */
-    static String membershipRecordTypeIdForTests = UTIL_RecordTypes.getRecordTypeIdForMembershipTests('Opportunity');
+    static String membershipRecordTypeIdForTests = UTIL_RecordTypes.getRecordTypeIdForMembershipTests(Opportunity.sObjectType);
     /** @description List of test contacts. */
     static list<Contact> listConTest;
     /** @description List of test opportunities. */

@@ -69,7 +69,7 @@ private class RLLP_OppRollupBATCH_TEST {
     	setup();
     	
         //The record type is an optional parameter when creating opps
-        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType);
          
         // create & insert contact
         Contact contact = UTIL_UnitTestData_TEST.getContact(); 
@@ -98,7 +98,7 @@ private class RLLP_OppRollupBATCH_TEST {
         setup();
         
         //The record type is an optional parameter when creating opps
-        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType);
          
         // create & insert contact
         Contact contact = UTIL_UnitTestData_TEST.getContact(); 
@@ -133,7 +133,7 @@ private class RLLP_OppRollupBATCH_TEST {
         if (strTestOnly != '*' && strTestOnly != 'testOppSoftCreditRollupBatch') return;
         setup();
         
-        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType);
          
         // create & insert contact
         Contact contact18 = UTIL_UnitTestData_TEST.getContact();
@@ -173,7 +173,7 @@ private class RLLP_OppRollupBATCH_TEST {
         if (strTestOnly != '*' && strTestOnly != 'testOppPartialSoftCreditRollupBatch') return;
         setup();
         
-        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType);
          
         // create & insert contact
         Contact contact18 = UTIL_UnitTestData_TEST.getContact();
