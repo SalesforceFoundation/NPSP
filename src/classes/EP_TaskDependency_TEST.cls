@@ -53,7 +53,7 @@ private with sharing class EP_TaskDependency_TEST {
             Name = 'Template',
             Skip_Weekends__c = false,
             Blank_Assignment_Rule__c = EP_EngagementPlans_UTIL.BLANK_ASSIGNMENT_USER_CREATING,
-            Delay_Type__c = EP_EngagementPlans_UTIL.DELAY_TYPE_AFTER_COMPLETED
+            Automatically_Update_Child_Task_Due_Date__c = true
         );
         insert template;
 
@@ -169,7 +169,7 @@ private with sharing class EP_TaskDependency_TEST {
             Name = 'Template',
             Skip_Weekends__c = false,
             Blank_Assignment_Rule__c = EP_EngagementPlans_UTIL.BLANK_ASSIGNMENT_USER_CREATING,
-            Delay_Type__c = 'After Due Date'
+            Automatically_Update_Child_Task_Due_Date__c = false
         );
         insert template;
 

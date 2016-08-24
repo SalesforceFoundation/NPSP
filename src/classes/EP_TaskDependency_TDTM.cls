@@ -141,7 +141,7 @@ public with sharing class EP_TaskDependency_TDTM extends TDTM_Runnable {
         //update indirect dependent Tasks if the template's delay type says to
         for (Engagement_Plan_Task__c epTask : indirectDependentEPTasks.values()) {
             Engagement_Plan_Template__c template = taskUtil.templateMap.get(epTask.Engagement_Plan_Template__c);
-            if (template.Delay_Type__c == EP_EngagementPlans_UTIL.DELAY_TYPE_AFTER_COMPLETED) {
+            if (template.Automatically_Update_Child_Task_Due_Date__c) {
                 for (Task indirectDependentTask : mapEpTaskIdTasks.get(epTask.id)) {
                     taskUtil.updateInactiveTask(indirectDependentTask);
                     taskUpdateNoEmail.add(indirectDependentTask);
