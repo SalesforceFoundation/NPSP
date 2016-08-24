@@ -276,7 +276,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     */
     public static boolean areRecordTypesOnOpps(){
         if (recordTypesOnOpps==null){
-            String giftRt = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+            String giftRt = UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType);
             if (giftRt!=null&&giftRt!=''){
                 recordTypesOnOpps = true;
             } 
