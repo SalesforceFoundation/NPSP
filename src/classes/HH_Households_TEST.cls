@@ -669,7 +669,7 @@ public with sharing class HH_Households_TEST {
         );            
         insert c1;  
         
-        id rtid = UTIL_RecordTypes.GetRecordTypeId ('Opportunity',UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity'));
+        id rtid = UTIL_RecordTypes.GetRecordTypeId (Opportunity.sObjectType,UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType));
         Opportunity newOpp = New Opportunity (
                 Name = 'Test Opp ',
                 Amount = 100,
