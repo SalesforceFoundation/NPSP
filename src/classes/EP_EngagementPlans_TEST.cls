@@ -52,7 +52,7 @@ private with sharing class EP_EngagementPlans_TEST {
         Engagement_Plan_Template__c template = new Engagement_Plan_Template__c(
             Name = 'Template',
             Skip_Weekends__c = false,
-            Blank_Assignment_Rule__c = EP_EngagementPlans_UTIL.BLANK_ASSIGNMENT_USER_CREATING
+            Default_Assignee__c = EP_EngagementPlans_UTIL.BLANK_ASSIGNMENT_USER_CREATING
         );
         insert template;
 
@@ -62,7 +62,7 @@ private with sharing class EP_EngagementPlans_TEST {
             Assigned_To__c = otherUserId,
             Comments__c = 'This comment should be copied correctly to the Task.',
             Reminder__c = true,
-            Reminder_Minutes__c = '660',
+            Reminder_Time__c = '660',
             Send_Email__c = true,
             Days_After__c = 3,
             Type__c = 'Call',
@@ -73,10 +73,10 @@ private with sharing class EP_EngagementPlans_TEST {
         Engagement_Plan_Task__c dependentEpTask = new Engagement_Plan_Task__c(
             Name = 'Email',
             Engagement_Plan_Template__c = template.id,
-            Dependent_Task__c = epTask.id,
+            Parent_Task__c = epTask.id,
             Comments__c = 'This comment should also be copied correctly to the Task.',
             Reminder__c = true,
-            Reminder_Minutes__c = '780',
+            Reminder_Time__c = '780',
             Send_Email__c = true,
             Days_After__c = 10,
             Type__c = 'Email',
@@ -128,8 +128,8 @@ private with sharing class EP_EngagementPlans_TEST {
         Engagement_Plan_Template__c template = new Engagement_Plan_Template__c(
             Name = 'TemplateSkipWeekends',
             Skip_Weekends__c = true,
-            Skip_Day__c = EP_EngagementPlans_UTIL.SKIP_DAY_MONDAY,
-            Blank_Assignment_Rule__c = EP_EngagementPlans_UTIL.BLANK_ASSIGNMENT_USER_CREATING
+            Reschedule_To__c = EP_EngagementPlans_UTIL.SKIP_DAY_MONDAY,
+            Default_Assignee__c = EP_EngagementPlans_UTIL.BLANK_ASSIGNMENT_USER_CREATING
         );
         insert template;
 
@@ -138,7 +138,7 @@ private with sharing class EP_EngagementPlans_TEST {
             Engagement_Plan_Template__c = template.id,
             Comments__c = 'This comment should be copied correctly to the Task.',
             Reminder__c = true,
-            Reminder_Minutes__c = '660',
+            Reminder_Time__c = '660',
             Type__c = 'Call',
             Priority__c = 'Medium',
             //use the number of days until the weekend for the delay of this task
@@ -192,7 +192,7 @@ private with sharing class EP_EngagementPlans_TEST {
         Engagement_Plan_Template__c template = new Engagement_Plan_Template__c(
             Name = 'TemplateSkipWeekends',
             Skip_Weekends__c = true,
-            Skip_Day__c = EP_EngagementPlans_UTIL.SKIP_DAY_FRIDAY
+            Reschedule_To__c = EP_EngagementPlans_UTIL.SKIP_DAY_FRIDAY
         );
         insert template;
 
@@ -201,7 +201,7 @@ private with sharing class EP_EngagementPlans_TEST {
             Engagement_Plan_Template__c = template.id,
             Comments__c = 'This comment should be copied correctly to the Task.',
             Reminder__c = true,
-            Reminder_Minutes__c = '660',
+            Reminder_Time__c = '660',
             Type__c = 'Call',
             Priority__c = 'Medium',
             //use the number of days until the weekend for the delay of this task
@@ -257,7 +257,7 @@ private with sharing class EP_EngagementPlans_TEST {
 
         Engagement_Plan_Template__c template = new Engagement_Plan_Template__c(
             Name = 'TemplateTaskAssignment',
-            Blank_Assignment_Rule__c = EP_EngagementPlans_UTIL.BLANK_ASSIGNMENT_OWNER_RECEIVING
+            Default_Assignee__c = EP_EngagementPlans_UTIL.BLANK_ASSIGNMENT_OWNER_RECEIVING
         );
         insert template;
 

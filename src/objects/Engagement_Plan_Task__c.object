@@ -93,20 +93,6 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Dependent_Task__c</fullName>
-        <deleteConstraint>SetNull</deleteConstraint>
-        <description>Indicates that this Engagement Plan Task is dependent on a Parent Task.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>Indicates that this Engagement Plan Task is dependent on a Parent Task.</inlineHelpText>
-        <label>Parent Task</label>
-        <referenceTo>Engagement_Plan_Task__c</referenceTo>
-        <relationshipLabel>Engagement Plan Tasks</relationshipLabel>
-        <relationshipName>Engagement_Plan_Tasks</relationshipName>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Lookup</type>
-    </fields>
-    <fields>
         <fullName>Engagement_Plan_Template__c</fullName>
         <description>The Template for this Engagement Plan Task.</description>
         <externalId>false</externalId>
@@ -120,6 +106,20 @@
         <trackTrending>false</trackTrending>
         <type>MasterDetail</type>
         <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
+    <fields>
+        <fullName>Parent_Task__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Indicates that this Engagement Plan Task is dependent on a Parent Task.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Indicates that this Engagement Plan Task is dependent on a Parent Task.</inlineHelpText>
+        <label>Parent Task</label>
+        <referenceTo>Engagement_Plan_Task__c</referenceTo>
+        <relationshipLabel>Engagement Plan Tasks</relationshipLabel>
+        <relationshipName>Engagement_Plan_Tasks</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
     </fields>
     <fields>
         <fullName>Priority__c</fullName>
@@ -146,7 +146,7 @@
         <type>Picklist</type>
     </fields>
     <fields>
-        <fullName>Reminder_Minutes__c</fullName>
+        <fullName>Reminder_Time__c</fullName>
         <description>The time on the Due Date that a reminder appears.</description>
         <externalId>false</externalId>
         <inlineHelpText>The time on the Due Date that a reminder appears.</inlineHelpText>

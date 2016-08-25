@@ -66,7 +66,7 @@
         <type>Checkbox</type>
     </fields>
     <fields>
-        <fullName>Blank_Assignment_Rule__c</fullName>
+        <fullName>Default_Assignee__c</fullName>
         <description>When an Engagement Plan Task&apos;s Assigned To field is left blank, who should the Task be assigned to?</description>
         <externalId>false</externalId>
         <inlineHelpText>When an Engagement Plan Task&apos;s Assigned To field is left blank, who should the Task be assigned to?</inlineHelpText>
@@ -94,7 +94,7 @@
         <type>TextArea</type>
     </fields>
     <fields>
-        <fullName>Skip_Day__c</fullName>
+        <fullName>Reschedule_To__c</fullName>
         <description>Should Tasks with Due Dates on a weekend day be scheduled for the Friday before the weekend or the Monday after? This applies only if Skip Weekend is selected.</description>
         <externalId>false</externalId>
         <inlineHelpText>Should Tasks with Due Dates on a weekend day be scheduled for the Friday before the weekend or the Monday after? This applies only if Skip Weekend is selected.</inlineHelpText>
@@ -155,4 +155,15 @@
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <startsWith>Vowel</startsWith>
+    <webLinks>
+        <fullName>Manage_Template</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Manage Template</masterLabel>
+        <openType>noSidebar</openType>
+        <page>EP_ManageEPTemplate</page>
+        <protected>false</protected>
+    </webLinks>
 </CustomObject>

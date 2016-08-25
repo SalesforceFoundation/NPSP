@@ -48,7 +48,7 @@ public with sharing class EP_TaskDependency_TDTM extends TDTM_Runnable {
     ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
-        
+
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
             List<Task> tasksToCheckDependencies = new List<Task>();
             Map<Id, SObject> oldMap = new Map<Id, SObject>(oldlist);
@@ -65,7 +65,6 @@ public with sharing class EP_TaskDependency_TDTM extends TDTM_Runnable {
                 updateDependentTasks(tasksToCheckDependencies);
             }
         }
-
         return null;
     }
 
