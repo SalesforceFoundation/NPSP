@@ -1540,7 +1540,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             }
                 
             if (di.Donation_Record_Type_Name__c != null) {
-                Id idRt = UTIL_RecordTypes.GetRecordTypeId('Opportunity', di.Donation_Record_Type_Name__c);
+                Id idRt = UTIL_RecordTypes.GetRecordTypeId(Opportunity.sObjectType, di.Donation_Record_Type_Name__c);
                 if (idRt == null) {
                     LogBDIError(di, label.bdiErrorInvalidOppRTName, 'DonationImportStatus__c');
                     continue;

@@ -176,7 +176,7 @@ public with sharing virtual class STG_Panel {
             if (listSOContactRecTypes == null) {
                 listSOContactRecTypes = new list<SelectOption>();
                 listSOContactRecTypes.add(new SelectOption('', Label.stgLabelNone));
-                listSOContactRecTypes.addAll(UTIL_RecordTypes.getStringRecordTypesForSelectList('Contact'));            
+                listSOContactRecTypes.addAll(UTIL_RecordTypes.getStringRecordTypesForSelectList(Contact.sObjectType));            
             }       
             return listSOContactRecTypes;
         }
@@ -191,7 +191,7 @@ public with sharing virtual class STG_Panel {
             if (listSOContactRecTypeIds == null) {
                 listSOContactRecTypeIds = new list<SelectOption>();
                 listSOContactRecTypeIds.add(new SelectOption('', Label.stgLabelNone));
-                listSOContactRecTypeIds.addAll(UTIL_RecordTypes.getRecordTypesForSelectList('Contact'));            
+                listSOContactRecTypeIds.addAll(UTIL_RecordTypes.getRecordTypesForSelectList(Contact.sObjectType));            
             }
             return listSOContactRecTypeIds;
         }
@@ -206,7 +206,7 @@ public with sharing virtual class STG_Panel {
             if (listSOAccountRecTypeIds == null) {
                 listSOAccountRecTypeIds = new list<SelectOption>();
                 listSOAccountRecTypeIds.add(new SelectOption('', Label.stgLabelNone));
-                listSOAccountRecTypeIds.addAll(UTIL_RecordTypes.getRecordTypesForSelectList('Account'));            
+                listSOAccountRecTypeIds.addAll(UTIL_RecordTypes.getRecordTypesForSelectList(Account.sObjectType));            
             }       
             return listSOAccountRecTypeIds;
         }
@@ -221,7 +221,7 @@ public with sharing virtual class STG_Panel {
             if (listSOOppRecTypes == null) {
                 listSOOppRecTypes = new list<SelectOption>();
                 listSOOppRecTypes.add(new SelectOption('', Label.stgLabelNone));
-                listSOOppRecTypes.addAll(UTIL_RecordTypes.getStringRecordTypesForSelectList('Opportunity'));            
+                listSOOppRecTypes.addAll(UTIL_RecordTypes.getStringRecordTypesForSelectList(Opportunity.sObjectType));            
             }       
             return listSOOppRecTypes;
         }
@@ -236,7 +236,7 @@ public with sharing virtual class STG_Panel {
             if (listSOOppRecTypesIds == null) {
                 listSOOppRecTypesIds = new list<SelectOption>();
                 listSOOppRecTypesIds.add(new SelectOption('', Label.stgLabelNone));
-                listSOOppRecTypesIds.addAll(UTIL_RecordTypes.getRecordTypesForSelectList('Opportunity'));            
+                listSOOppRecTypesIds.addAll(UTIL_RecordTypes.getRecordTypesForSelectList(Opportunity.sObjectType));            
             }       
             return listSOOppRecTypesIds;
         }
@@ -343,7 +343,7 @@ public with sharing virtual class STG_Panel {
     static public string strHHAccountRecordTypeLabel {
     	get {
     		if (strHHAccountRecordTypeLabel == null) {
-    			strHHAccountRecordTypeLabel = UTIL_RecordTypes.GetRecordTypeName('Account', stgService.stgCon.npe01__HH_Account_RecordTypeID__c);
+    			strHHAccountRecordTypeLabel = UTIL_RecordTypes.GetRecordTypeName(Account.sObjectType, stgService.stgCon.npe01__HH_Account_RecordTypeID__c);
     		}
     		return strHHAccountRecordTypeLabel;
     	}
@@ -356,7 +356,7 @@ public with sharing virtual class STG_Panel {
     static public string strOneToOneRecordTypeLabel {
         get {
             if (strOneToOneRecordTypeLabel == null) {
-                strOneToOneRecordTypeLabel = UTIL_RecordTypes.GetRecordTypeName('Account', stgService.stgCon.npe01__One_to_One_RecordTypeID__c);
+                strOneToOneRecordTypeLabel = UTIL_RecordTypes.GetRecordTypeName(Account.sObjectType, stgService.stgCon.npe01__One_to_One_RecordTypeID__c);
             }
             return strOneToOneRecordTypeLabel;
         }
