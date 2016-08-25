@@ -56,49 +56,49 @@
     <enableSharing>false</enableSharing>
     <enableStreamingApi>false</enableStreamingApi>
     <fields>
-        <fullName>Blank_Assignment_Rule__c</fullName>
-        <description>When an Engagement Plan Task&apos;s Assigned To field is left blank, who should the task be assigned to?</description>
+        <fullName>Automatically_Update_Child_Task_Due_Date__c</fullName>
+        <defaultValue>true</defaultValue>
+        <description>Recalculates a child Task&apos;s due date based on when the parent Task was actually completed.</description>
         <externalId>false</externalId>
-        <inlineHelpText>When an Engagement Plan Task&apos;s Assigned To field is left blank, who should the task be assigned to?</inlineHelpText>
-        <label>Blank Assignment Rule</label>
+        <inlineHelpText>Recalculates a child Task&apos;s due date based on when the parent Task was actually completed.</inlineHelpText>
+        <label>Automatically Update Child Task Due Date</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Default_Assignee__c</fullName>
+        <description>When an Engagement Plan Task&apos;s Assigned To field is left blank, who should the Task be assigned to?</description>
+        <externalId>false</externalId>
+        <inlineHelpText>When an Engagement Plan Task&apos;s Assigned To field is left blank, who should the Task be assigned to?</inlineHelpText>
+        <label>Default Assignee</label>
         <picklist>
             <picklistValues>
-                <fullName>User Creating Action Plan</fullName>
+                <fullName>Owner of Object for Engagement Plan</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>User Creating Engagement Plan</fullName>
                 <default>true</default>
             </picklistValues>
-            <picklistValues>
-                <fullName>Owner of Receiving Object</fullName>
-                <default>false</default>
-            </picklistValues>
             <sorted>false</sorted>
         </picklist>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
     </fields>
     <fields>
-        <fullName>Delay_Type__c</fullName>
+        <fullName>Description__c</fullName>
         <externalId>false</externalId>
-        <label>Delay Type</label>
-        <picklist>
-            <picklistValues>
-                <fullName>After Due Date</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>After Date Completed</fullName>
-                <default>false</default>
-            </picklistValues>
-            <sorted>false</sorted>
-        </picklist>
+        <label>Description</label>
+        <required>false</required>
         <trackTrending>false</trackTrending>
-        <type>Picklist</type>
+        <type>TextArea</type>
     </fields>
     <fields>
-        <fullName>Skip_Day__c</fullName>
-        <description>Should tasks that land on a weekend be scheduled for the Friday before the weekend or the Monday after?</description>
+        <fullName>Reschedule_To__c</fullName>
+        <description>Should Tasks with Due Dates on a weekend day be scheduled for the Friday before the weekend or the Monday after? This applies only if Skip Weekend is selected.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Should tasks that land on a weekend be scheduled for the Friday before the weekend or the Monday after?</inlineHelpText>
-        <label>Skip Day</label>
+        <inlineHelpText>Should Tasks with Due Dates on a weekend day be scheduled for the Friday before the weekend or the Monday after? This applies only if Skip Weekend is selected.</inlineHelpText>
+        <label>Reschedule To</label>
         <picklist>
             <picklistValues>
                 <fullName>Monday</fullName>
@@ -116,9 +116,9 @@
     <fields>
         <fullName>Skip_Weekends__c</fullName>
         <defaultValue>true</defaultValue>
-        <description>If selected, tasks created in this Engagement Plan will not be given a Due Date that falls on a weekend.</description>
+        <description>If selected, Tasks created in this Engagement Plan will not have Due Dates that fall on Saturday or Sunday.</description>
         <externalId>false</externalId>
-        <inlineHelpText>If selected, tasks created in this Engagement Plan will not be given a Due Date that falls on a weekend.</inlineHelpText>
+        <inlineHelpText>If selected, Tasks created in this Engagement Plan will not have Due Dates that fall on Saturday or Sunday.</inlineHelpText>
         <label>Skip Weekends</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>

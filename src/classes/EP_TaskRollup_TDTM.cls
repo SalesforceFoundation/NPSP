@@ -49,6 +49,7 @@ public class EP_TaskRollup_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         DmlWrapper dmlWrapper = new DmlWrapper();
+        
         Set<Id> epIdsToUpdate = new Set<Id>();
         
         // AFTER INSERT | DELETE | UNDELETE

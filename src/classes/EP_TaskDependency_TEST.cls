@@ -52,8 +52,8 @@ private with sharing class EP_TaskDependency_TEST {
         Engagement_Plan_Template__c template = new Engagement_Plan_Template__c(
             Name = 'Template',
             Skip_Weekends__c = false,
-            Blank_Assignment_Rule__c = EP_EngagementPlans_UTIL.BLANK_ASSIGNMENT_USER_CREATING,
-            Delay_Type__c = EP_EngagementPlans_UTIL.DELAY_TYPE_AFTER_COMPLETED
+            Default_Assignee__c = EP_EngagementPlans_UTIL.BLANK_ASSIGNMENT_USER_CREATING,
+            Automatically_Update_Child_Task_Due_Date__c = true
         );
         insert template;
 
@@ -73,7 +73,7 @@ private with sharing class EP_TaskDependency_TEST {
         childEpTasks.add(new Engagement_Plan_Task__c(
             Name = 'Email',
             Engagement_Plan_Template__c = template.id,
-            Dependent_Task__c = epTask.id,
+            Parent_Task__c = epTask.id,
             Comments__c = 'This comment should also be copied correctly to the Task.',
             Reminder__c = true,
             Send_Email__c = true,
@@ -84,7 +84,7 @@ private with sharing class EP_TaskDependency_TEST {
         childEpTasks.add(new Engagement_Plan_Task__c(
             Name = 'Meeting',
             Engagement_Plan_Template__c = template.id,
-            Dependent_Task__c = epTask.id,
+            Parent_Task__c = epTask.id,
             Comments__c = 'This comment should also be copied correctly to the Task.',
             Reminder__c = true,
             Send_Email__c = true,
@@ -97,7 +97,7 @@ private with sharing class EP_TaskDependency_TEST {
         Engagement_Plan_Task__c grandchildEpTask = new Engagement_Plan_Task__c(
             Name = 'Other',
             Engagement_Plan_Template__c = template.id,
-            Dependent_Task__c = childEpTasks[0].id,
+            Parent_Task__c = childEpTasks[0].id,
             Comments__c = 'This comment should also be copied correctly to the Task.',
             Reminder__c = true,
             Send_Email__c = true,
@@ -168,8 +168,8 @@ private with sharing class EP_TaskDependency_TEST {
         Engagement_Plan_Template__c template = new Engagement_Plan_Template__c(
             Name = 'Template',
             Skip_Weekends__c = false,
-            Blank_Assignment_Rule__c = EP_EngagementPlans_UTIL.BLANK_ASSIGNMENT_USER_CREATING,
-            Delay_Type__c = 'After Due Date'
+            Default_Assignee__c = EP_EngagementPlans_UTIL.BLANK_ASSIGNMENT_USER_CREATING,
+            Automatically_Update_Child_Task_Due_Date__c = false
         );
         insert template;
 
@@ -188,7 +188,7 @@ private with sharing class EP_TaskDependency_TEST {
         Engagement_Plan_Task__c childEpTask = new Engagement_Plan_Task__c(
             Name = 'Email',
             Engagement_Plan_Template__c = template.id,
-            Dependent_Task__c = epTask.id,
+            Parent_Task__c = epTask.id,
             Comments__c = 'This comment should also be copied correctly to the Task.',
             Reminder__c = true,
             Send_Email__c = true,

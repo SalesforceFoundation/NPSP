@@ -596,17 +596,18 @@
         <members>Engagement_Plan_Task__c.Assigned_To__c</members>
         <members>Engagement_Plan_Task__c.Comments__c</members>
         <members>Engagement_Plan_Task__c.Days_After__c</members>
-        <members>Engagement_Plan_Task__c.Dependent_Task__c</members>
         <members>Engagement_Plan_Task__c.Engagement_Plan_Template__c</members>
+        <members>Engagement_Plan_Task__c.Parent_Task__c</members>
         <members>Engagement_Plan_Task__c.Priority__c</members>
-        <members>Engagement_Plan_Task__c.Reminder_Minutes__c</members>
+        <members>Engagement_Plan_Task__c.Reminder_Time__c</members>
         <members>Engagement_Plan_Task__c.Reminder__c</members>
         <members>Engagement_Plan_Task__c.Send_Email__c</members>
         <members>Engagement_Plan_Task__c.Status__c</members>
         <members>Engagement_Plan_Task__c.Type__c</members>
-        <members>Engagement_Plan_Template__c.Blank_Assignment_Rule__c</members>
-        <members>Engagement_Plan_Template__c.Delay_Type__c</members>
-        <members>Engagement_Plan_Template__c.Skip_Day__c</members>
+        <members>Engagement_Plan_Template__c.Automatically_Update_Child_Task_Due_Date__c</members>
+        <members>Engagement_Plan_Template__c.Default_Assignee__c</members>
+        <members>Engagement_Plan_Template__c.Description__c</members>
+        <members>Engagement_Plan_Template__c.Reschedule_To__c</members>
         <members>Engagement_Plan_Template__c.Skip_Weekends__c</members>
         <members>Engagement_Plan_Template__c.Total_Engagement_Plans__c</members>
         <members>Engagement_Plan_Template__c.Total_Tasks__c</members>

@@ -29,7 +29,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Dependent_Task__c</field>
+                <field>Parent_Task__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -43,7 +43,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Reminder_Minutes__c</field>
+                <field>Reminder_Time__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>

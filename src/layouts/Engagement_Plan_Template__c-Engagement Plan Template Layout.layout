@@ -53,7 +53,7 @@
         <fields>NAME</fields>
         <fields>Assigned_To__c</fields>
         <fields>Days_After__c</fields>
-        <fields>Dependent_Task__c</fields>
+        <fields>Parent_Task__c</fields>
         <fields>Reminder__c</fields>
         <fields>Send_Email__c</fields>
         <fields>Priority__c</fields>
