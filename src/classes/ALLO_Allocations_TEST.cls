@@ -397,8 +397,8 @@ private with sharing class ALLO_Allocations_TEST {
         General_Accounting_Unit__c defaultgau = new General_Accounting_Unit__c(Name='General');
         insert defaultgau;
 
-        string rtname = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
-        id rtid = UTIL_RecordTypes.GetRecordTypeId('Opportunity',rtname);
+        string rtname = UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType);
+        id rtid = UTIL_RecordTypes.GetRecordTypeId(Opportunity.sObjectType,rtname);
 
         setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id, Excluded_Opp_Types__c='foo;bar', Excluded_Opp_RecTypes__c=rtid));
         Account acc = new Account(Name='foo');
