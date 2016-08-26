@@ -30,10 +30,15 @@
         <aura:set attribute="listFooter">
             <div class="slds-lookup__item">
                 <ui:button class="slds-button" press="{!c.handleNewContact}">
-                    <c:svg ariaHidden="true"
-                           class="slds-icon slds-icon-text-default slds-icon--small"
-                           xlinkHref="{!$Resource.sfdo203 + '/assets/icons/utility-sprite/svg/symbols.svg#add'}"
-                           />
+                    <c:svg spriteName="utilitySprite203"
+                                 symbolId="add"
+                                 iconName="add"
+                                 className="slds-icon-text-default"
+                                 category="utility"
+                                 size="small"
+                                 prefix="slds-"
+                                 assistiveText=""
+                                 />
                     {!$Label.npo02.NewContact}
                 </ui:button>
             </div>

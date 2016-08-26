@@ -48,9 +48,15 @@
                 
                 <div class="slds-modal__header">
                     <ui:button class="slds-button slds-button--icon-inverse slds-modal__close" press="{!c.cancelChangeAddress}">
-                        <c:svg class="slds-button__icon slds-button__icon--large"
-                               xlinkHref="{!$Resource.sfdo203 + '/assets/icons/action-sprite/svg/symbols.svg#close'}" />
-                        <span class="slds-assistive-text">{!$Label.c.bdiBtnClose}</span>
+                        <c:svg spriteName="actionSprite203"
+                                    symbolId="close"
+                                    iconName="close"
+                                    className=""
+                                    category="action"
+                                    size="large"
+                                    prefix="slds-button__"
+                                    assistiveText="{!$Label.c.bdiBtnClose}"
+                                    />
                     </ui:button>                    
                     <h2 id="searchPopupLabel" class="slds-text-heading--medium">{!$Label.npo02.ChangeAddress}</h2>
                 </div>
@@ -59,10 +65,17 @@
                     
                     <!-- Existing Address section -->  
                     <div class="{!v.isExistingAddrSectionOpen ? 'slds-section slds-is-open' : 'slds-section'}">
-                        <div class="slds-section-title--divider slds-p-around--x-small">
+                        <div class="slds-section-title--divider">
                             <h4 class="slds-section__title-action" onclick="{!c.toggleAddrSection}">
-                                    <c:svg class="slds-section__title-action-icon slds-button__icon slds-button__icon--left"
-                                           xlinkHref="{!$Resource.sfdo203 + '/assets/icons/utility-sprite/svg/symbols.svg#switch'}" />
+                                <c:svg spriteName="utilitySprite203"
+                                    symbolId="switch"
+                                    iconName="switch"
+                                    className="slds-section__title-action-icon slds-button__icon--left"
+                                    category="utility"
+                                    size="medium"
+                                    prefix="slds-button__"
+                                    assistiveText=""
+                                    />
                                 {!$Label.npo02.SelectExistingAddress}
                             </h4>
                         </div>
@@ -90,10 +103,17 @@
 
                     <!-- New Address Section -->
                     <div class="{!v.isExistingAddrSectionOpen ? 'slds-section' : 'slds-section slds-is-open'}">
-                        <div class="slds-section-title--divider slds-p-around--x-small">
+                        <div class="slds-section-title--divider">
                             <h4 class="slds-section__title-action" onclick="{!c.toggleAddrSection}">
-                                <c:svg class="slds-section__title-action-icon slds-button__icon slds-button__icon--left"
-                                       xlinkHref="{!$Resource.sfdo203 + '/assets/icons/utility-sprite/svg/symbols.svg#switch'}" />
+                                <c:svg spriteName="utilitySprite203"
+                                    symbolId="switch"
+                                    iconName="switch"
+                                    className="slds-section__title-action-icon slds-button__icon--left"
+                                    category="utility"
+                                    size="medium"
+                                    prefix="slds-button__"
+                                    assistiveText=""
+                                    />
                                 {!$Label.npo02.EnterNewAddress}
                             </h4>
                         </div>

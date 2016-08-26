@@ -4,15 +4,25 @@
             <div class="slds-media slds-tile slds-hint-parent">
                 <div class="slds-media__figure">
                     <aura:if isTrue="{!v.value.HHId__c != null}" >
-                        <c:svg ariaHidden="true"
-                               class="slds-icon slds-icon--small slds-icon-standard-household"
-                               xlinkHref="{!$Resource.sfdo203 + '/assets/icons/standard-sprite/svg/symbols.svg#household'}"
-                               />
-                        <aura:set attribute="else">                            
-                            <c:svg ariaHidden="true"
-                                   class="slds-icon slds-icon--small slds-icon-standard-contact"
-                                   xlinkHref="{!$Resource.sfdo203 + '/assets/icons/standard-sprite/svg/symbols.svg#contact'}"
-                                   />
+                        <c:svg spriteName="standardSprite203"
+                                symbolId="household"
+                                iconName="household"
+                                className=""
+                                category="standard"
+                                size="small"
+                                prefix="slds-"
+                                assistiveText=""
+                                />
+                        <aura:set attribute="else">
+                            <c:svg spriteName="standardSprite203"
+                                symbolId="contact"
+                                iconName="contact"
+                                className=""
+                                category="standard"
+                                size="small"
+                                prefix="slds-"
+                                assistiveText=""
+                                />
                         </aura:set>
                     </aura:if>
                 </div>
@@ -20,11 +30,15 @@
                     <div class="slds-grid slds-grid--align-spread slds-has-flexi-truncate">
                         <p class="slds-tile__title slds-truncate">{!v.value.FirstName}&nbsp;{!v.value.LastName}</p>
                         <ui:button class="slds-button slds-button--icon slds-shrink-none" press="{!c.handleClick}">
-                            <c:svg ariaHidden="true"
-                                   class="slds-button__icon slds-button__icon--large"
-                                   xlinkHref="{!$Resource.sfdo203 + '/assets/icons/utility-sprite/svg/symbols.svg#new'}"
-                                   />
-                            <span class="slds-assistive-text">{!$Label.npo02.Add}</span>
+                            <c:svg spriteName="utilitySprite203"
+                                symbolId="new"
+                                iconName="new"
+                                className=""
+                                category="utility"
+                                size="large"
+                                prefix="slds-button__"
+                                assistiveText="{!$Label.npo02.Add}"
+                                />
                         </ui:button>
                     </div>
                     <div class="slds-tile__detail slds-text-body--small">

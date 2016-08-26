@@ -1,5 +1,17 @@
-<aura:component >
-    <aura:attribute name="class" type="String" description="CSS classname for the SVG element" />
-    <aura:attribute name="xlinkHref" type="String" description="SLDS icon path. Ex: /assets/icons/utility-sprite/svg/symbols.svg#download" />
-    <aura:attribute name="ariaHidden" type="String" default="true" description="aria-hidden true or false. defaults to true" />
+<aura:component controller="UTIL_SvgIcon">
+	<!-- attributes -->
+	<aura:attribute name="spriteName"		default="" type="String" description="The name of the static resource." />
+	<aura:attribute name="symbolId"			default="" type="String" description="The symbol id in the static resource, this will be used to retrieve the SVG tag." />
+	<aura:attribute name="iconName"			default="" type="String" description="Name of the icon." />
+	<aura:attribute name="className"		default="" type="String" description="The class of this SVG tag, can be use for CSS purpose." />
+	<aura:attribute name="category"       	default="" type="String" description="Category of icon- action, standard, utility etc." />
+	<aura:attribute name="size"           	default="" type="String" description="Size of icon-- small, medium, large." />
+	<aura:attribute name="prefix"    		default="" type="String" description="The icon class prefix slds-, slds-button__, slds-input__ etc." />
+	<aura:attribute name="assistiveText"	default="" type="String" description="Description name of icon." />
+
+	<!-- markup -->
+	<div aura:id="svg_content" />
+	<aura:if isTrue="{!v.assistiveText != ''}">
+		<span aura:id="assistiveText" class="slds-assistive-text">{!v.assistiveText}</span>
+	</aura:if>
 </aura:component>
