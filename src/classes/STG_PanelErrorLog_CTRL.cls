@@ -120,7 +120,7 @@ public with sharing class STG_PanelErrorLog_CTRL extends STG_Panel implements UT
     * @return null 
     */
     public PageReference clearErrorLog() {
-    	delete [select Id from Error__c];
+    	delete [select Id from Error__c LIMIT 10000];
     	//listError = null;
     	ctrlSoqlListView.setCon = null;
     	return null;
