@@ -100,17 +100,12 @@ public without sharing class UTIL_MasterSchedulableHelper {
             if(classType != null && shouldRun) {     
                Object instance = classType.newInstance(); 
                if(instance instanceof UTIL_IRecurring) {
-                   try {
-                       UTIL_Debug.debug(LoggingLevel.WARN, '****Running ' + instance);
-                       Boolean wasRun = ((UTIL_IRecurring)instance).executeReturnStatus();
-                       //Update last time run
-                       if(wasRun) {
-                           job.Last_Time_Run__c = System.now();
-                           jobsToUpdate.add(job);
-                       }
-                   } catch (Exception e) {
-                       //The class itself should handle any errors. We don't want to have a reference to ERR_Handler
-                       //here because then we won't be able to push updates that modify it if the job is scheduled
+                   UTIL_Debug.debug(LoggingLevel.WARN, '****Running ' + instance);
+                   Boolean wasRun = ((UTIL_IRecurring)instance).executeReturnStatus();
+                   //Update last time run
+                   if(wasRun) {
+                       job.Last_Time_Run__c = System.now();
+                       jobsToUpdate.add(job);
                    }
                }
             }

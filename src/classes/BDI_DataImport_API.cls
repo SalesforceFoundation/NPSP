@@ -97,12 +97,16 @@ global with sharing class BDI_DataImport_API {
             return apexJobId;
 
         } catch (Exception ex) {
-            // no reason to log the error if we haven't started the batch,
-            // since it is just a validation error that we are displaying on the page.
-            if(batchRunning)
-                ERR_Handler.processError(ex, ERR_Handler_API.Context.BDI);
-            if(ApexPages.currentPage() != null)
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
+            if (ApexPages.currentPage() != null) {
+                ApexPages.addMessage(new ApexPages.Message(
+                    ApexPages.Severity.ERROR,
+                    ex.getMessage()
+                ));
+            } else {
+                // if we are not in a context where we can notify the user of
+                // this exception, rethrow it
+                throw ex;
+            }
             return null;
         }
     }

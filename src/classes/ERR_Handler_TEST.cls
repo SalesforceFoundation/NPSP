@@ -382,31 +382,7 @@ public class ERR_Handler_TEST {
         //assert no additional error record was created on update
         system.assertEquals(1, [select count() from Error__c]);
     }
-    
-    /*******************************************************************************************************
-    * @description Testing that DML that occurs before an exception is thrown and caught does not get 
-    * automatically rolled back 
-    */
-    static testMethod void controllerWithoutManualRollback() {
-        if (strTestOnly != '*' && strTestOnly != 'controllerWithoutManualRollback') return;
-        
-        setupWithChatterNotifications();
-        
-        ERR_Handler_CTRL_TEST controller = new ERR_Handler_CTRL_TEST();
-        
-        Test.startTest();
-        controller.withoutManualRollback();
-        Test.stopTest();
-        
-        //assert contact record creation was not automatically rolled back
-         system.assertEquals(1, [select count() from Contact]);
-        
-        //assert relationship record was stored (but the additional relationship was not created)
-         system.assertEquals(1, [select count() from npe4__Relationship__c]);
-         
-        //assert an error record was created - Required fields are missing: [npe4__Contact__c]
-        system.assertEquals(1, [select count() from Error__c]);  
-    }
+
     /*******************************************************************************************************
     * @description Testing that DML changes are properly rolled back in a controller that adheres to our
     * error-handling design, and that the error is properly stored.
