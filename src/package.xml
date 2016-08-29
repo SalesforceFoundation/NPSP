@@ -245,6 +245,7 @@
         <members>UTIL_RecordTypes_TEST</members>
         <members>UTIL_SoqlListView_CTRL</members>
         <members>UTIL_SvgIcon</members>
+        <members>UTIL_SvgIcon_TEST</members>
         <members>UTIL_Typeahead</members>
         <members>UTIL_Typeahead_TEST</members>
         <members>UTIL_UnitTestData_TEST</members>
