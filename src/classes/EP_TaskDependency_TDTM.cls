@@ -149,6 +149,7 @@ public with sharing class EP_TaskDependency_TDTM extends TDTM_Runnable {
         }
 
         Database.DMLOptions options = new Database.DMLOptions();
+        options.OptAllOrNone = true;
 
         if (!taskUpdateEmail.isEmpty()) {
             options.EmailHeader.triggerUserEmail = true;
