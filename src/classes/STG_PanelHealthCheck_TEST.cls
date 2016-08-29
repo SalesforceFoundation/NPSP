@@ -91,4 +91,59 @@ public with sharing class STG_PanelHealthCheck_TEST {
         system.assertEquals(1, hc.listDR.size());
         system.assertEquals(STG_PanelHealthCheck_CTRL.statusWarning, hc.listDR[0].strStatus);
     }
+
+
+    /*******************************************************************************************************
+    * @description verify that the health check test for verifying Level fields exist works
+    */ 
+    static testmethod void verifyLevelFieldsExist() {
+
+        Level__c lvl1 = new Level__c(
+            Name = 'new',
+            Target__c = 'Contact',
+            Source_Field__c = 'npo02__OppsClosedThisYear__c', 
+            Level_Field__c = 'Does_not_exist__c', 
+            Previous_Level_Field__c = null, 
+            Active__c = true, 
+            Minimum_Amount__c = 10, 
+            Maximum_Amount__c = 100);
+        insert lvl1;
+
+        STG_PanelHealthCheck_CTRL hc = new STG_PanelHealthCheck_CTRL();
+        system.assertEquals(0, hc.listDR.size());
+        
+        Test.startTest();
+        hc.verifyLevels();
+        Test.stopTest();
+        
+        system.assertEquals(1, hc.listDR.size());
+        system.assertEquals(STG_PanelHealthCheck_CTRL.statusError, hc.listDR[0].strStatus);
+    }
+
+    /*******************************************************************************************************
+    * @description verify that the health check test for verifying Level source fields are numeric
+    */ 
+    static testmethod void verifyLevelSourceFieldNumeric() {
+
+        Level__c lvl1 = new Level__c(
+            Name = 'new',
+            Target__c = 'Contact',
+            Source_Field__c = 'Name', 
+            Level_Field__c = 'Does_not_exist__c', 
+            Previous_Level_Field__c = null, 
+            Active__c = true, 
+            Minimum_Amount__c = 10, 
+            Maximum_Amount__c = 100);
+        insert lvl1;
+
+        STG_PanelHealthCheck_CTRL hc = new STG_PanelHealthCheck_CTRL();
+        system.assertEquals(0, hc.listDR.size());
+        
+        Test.startTest();
+        hc.verifyLevels();
+        Test.stopTest();
+        
+        system.assertEquals(2, hc.listDR.size());
+        system.assertEquals(STG_PanelHealthCheck_CTRL.statusError, hc.listDR[0].strStatus);
+    }
 }

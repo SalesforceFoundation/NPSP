@@ -735,7 +735,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
      }
 
     /*********************************************************************************************************
-    * @description Verifies that all Level records refer to existing fields
+    * @description Verifies that all Level records refer to existing fields of the correct type
     */
     public void verifyLevels() {
         try {
@@ -756,12 +756,29 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
                     else if (i == 2)
                         strField = lvl.Previous_Level_Field__c;
                         
+                    // ensure the field exists
                     if (strField != null && !UTIL_Describe.isValidField(lvl.Target__c, strField)) {
                         cErrors++; 
                         createDR(Label.healthLabelVerifyLevels, statusError, 
                             string.format(Label.healthDetailsInvalidLevelField, new string[]{lvl.Name, strField, lvl.Target__c}),
                             string.format(label.healthSolutionInvalidLevelField, new string[]{lvl.Name}));
-                    }        
+                    } 
+                    // ensure the datatype is valid
+                    else if (strField != null) {
+                        Schema.Displaytype dt = UTIL_Describe.getFieldDisplayType(lvl.Target__c, strField);
+                        if (i == 0 && !UTIL_Describe.canDisplaytypesCopy(dt, Schema.DisplayType.Double)) {
+	                        cErrors++; 
+	                        createDR(Label.healthLabelVerifyLevels, statusError, 
+	                            string.format(Label.healthDetailsInvalidFieldNumeric, new string[]{lvl.Name, strField, lvl.Target__c}),
+	                            string.format(label.healthSolutionInvalidLevelField, new string[]{lvl.Name}));
+                        }
+                        if (i > 0 && !UTIL_Describe.canDisplaytypesCopy(dt, Schema.DisplayType.Reference)) {
+                            cErrors++; 
+                            createDR(Label.healthLabelVerifyLevels, statusError, 
+                                string.format(Label.healthDetailsInvalidLevelFieldReference, new string[]{lvl.Name, strField, lvl.Target__c}),
+                                string.format(label.healthSolutionInvalidLevelField, new string[]{lvl.Name}));
+                        }
+                    }       
                 }
             }
 

@@ -109,12 +109,12 @@
     </fields>
     <fields>
         <fullName>Maximum_Amount__c</fullName>
-        <description>The maximum amount to be eligible for this Level.</description>
+        <description>The maximum amount the value must be below to be assigned this Level.  If empty, then any amount greater than or equal to this Level&apos;s Minimum Amount will assign this Level.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The maximum amount to be eligible for this Level.</inlineHelpText>
-        <label>Maximum Amount</label>
+        <inlineHelpText>The maximum amount the value must be below to be assigned this Level.  If empty, then any amount greater than or equal to this Level&apos;s Minimum Amount will assign this Level.</inlineHelpText>
+        <label>Maximum Amount (&lt;)</label>
         <precision>18</precision>
-        <required>true</required>
+        <required>false</required>
         <scale>2</scale>
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
@@ -123,12 +123,12 @@
     </fields>
     <fields>
         <fullName>Minimum_Amount__c</fullName>
-        <description>The minimum amount to be eligible for this Level.</description>
+        <description>The minimum amount to be assigned this Level.  If empty, then any amount less than this Level&apos;s Maximum Amount will assign this Level.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The minimum amount to be eligible for this Level.</inlineHelpText>
-        <label>Minimum Amount</label>
+        <inlineHelpText>The minimum amount to be assigned this Level.  If empty, then any amount less than this Level&apos;s Maximum Amount will assign this Level.</inlineHelpText>
+        <label>Minimum Amount (&gt;=)</label>
         <precision>18</precision>
-        <required>true</required>
+        <required>false</required>
         <scale>2</scale>
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>

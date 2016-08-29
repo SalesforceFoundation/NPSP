@@ -82,34 +82,61 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
             for (String strLadder : mapLadderToLevels.keySet()) {
                 list<Level__c> listLvls = mapLadderToLevels.get(strLadder);
                 
+                // note that we have try/catches around using the level fields, so we can provide useful errors if they are invalid
+
                 // go thru each list of Levels finding where this object fits
                 for (Level__c lvl : listLvls) {
-                    Decimal amt = (Decimal)sobj.get(lvl.Source_Field__c);
-                    if (amt != null) {
-                        if (amt >= lvl.Minimum_Amount__c && amt <= lvl.Maximum_Amount__c) {
-                            
-                            // record the new level
-                            Id lvlIdPrev = (Id)sobj.get(strLadder);
-                            if (lvlIdPrev != lvl.Id) {
-                                if (lvl.Previous_Level_Field__c != null)
+                    Decimal amt;
+                    try {
+                        amt = (Decimal)sobj.get(lvl.Source_Field__c);
+                    } catch (Exception ex) {
+                        throw new LevelException(String.format(Label.lvlErrorInvalidSourceField, new list<String>{lvl.Source_Field__c, lvl.Name}));
+                    }
+                    if (amt == null) 
+                        amt = 0;
+
+                    if ((amt >= lvl.Minimum_Amount__c || lvl.Minimum_Amount__c == null) && 
+                        (amt < lvl.Maximum_Amount__c || lvl.Maximum_Amount__c == null)) {
+                        
+                        // record the new level
+                        
+                        Id lvlIdPrev;
+                        try {
+                            lvlIdPrev = (Id)sobj.get(strLadder);
+                        } catch (Exception ex) {
+                            throw new LevelException(String.format(Label.lvlErrorInvalidLookupField, new list<String>{strLadder, lvl.Name}));
+                        }
+
+                        if (lvlIdPrev != lvl.Id) {
+                            if (lvl.Previous_Level_Field__c != null) {
+                                try {
                                     sobj.put(lvl.Previous_Level_Field__c, lvlIdPrev);
-                                sobj.put(strLadder, lvl.Id);
-                                mapSObjUpdate.put(sobj.Id, sobj);
-                                
-                                // apply the Engagement Plan
-                                if (lvl.Engagement_Plan_Template__c != null) {
-                                    Engagement_Plan__c ep = new Engagement_Plan__c();
-                                    // a little trickery.  we know the objects supported by EP's
-                                    // use the object name exactly.
-                                    ep.put(lvl.Target__c + '__c', sobj.Id);
-						            ep.Engagement_Plan_Template__c = lvl.Engagement_Plan_Template__c;
-						            listEP.add(ep);
+                                } catch (exception ex) {
+                                    throw new LevelException(String.format(Label.lvlErrorInvalidLookupField, new list<String>{lvl.Previous_Level_Field__c, lvl.Name}));
                                 }
                             }
-                            // done with this level.
-                            break;
+                            
+                            try {
+                                sobj.put(strLadder, lvl.Id);
+                            } catch (exception ex) {
+                                throw new LevelException(String.format(Label.lvlErrorInvalidLookupField, new list<String>{strLadder, lvl.Name}));
+                            }
+                            mapSObjUpdate.put(sobj.Id, sobj);
+                            
+                            // apply the Engagement Plan
+                            if (lvl.Engagement_Plan_Template__c != null) {
+                                Engagement_Plan__c ep = new Engagement_Plan__c();
+                                // a little trickery.  we know the objects supported by EP's
+                                // use the object name exactly.
+                                ep.put(lvl.Target__c + '__c', sobj.Id);
+                                ep.Engagement_Plan_Template__c = lvl.Engagement_Plan_Template__c;
+                                listEP.add(ep);
+                            }
                         }
+                        // done with this level.
+                        break;
                     }
+
                 } // levels               
             } // ladder            
         } // scope
@@ -118,6 +145,8 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
         update mapSObjUpdate.values();     
         insert listEP;
     }
+    
+    private class LevelException extends Exception {}
     
     /*********************************************************************************************************
     * @description Batch process finish method, does nothing.
@@ -137,7 +166,7 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
             Previous_Level_Field__c, Active__c, Minimum_Amount__c, Maximum_Amount__c, Engagement_Plan_Template__c
             from Level__c
             where Target__c = :strObj and Active__c = true
-            order by Level_Field__c asc, Minimum_Amount__c asc];
+            order by Level_Field__c asc, Minimum_Amount__c asc nulls first];
             
         // create our map to store the list of Levels per Ladder
         map<String, list<Level__c>> mapLadderToLvls = new map<String, list<Level__c>>();
