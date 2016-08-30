@@ -8,9 +8,10 @@
 	<aura:attribute name="size"           	default="" type="String" description="Size of icon-- small, medium, large." />
 	<aura:attribute name="prefix"    		default="" type="String" description="The icon class prefix slds-, slds-button__, slds-input__ etc." />
 	<aura:attribute name="assistiveText"	default="" type="String" description="Description name of icon." />
+	<aura:attribute name="containerClass" 	default="" type="String" description="Container class name for span container of icon" />
 
 	<!-- markup -->
-	<div aura:id="svg_content" />
+	<div aura:id="svg_container" class="{!v.containerClass}"/>
 	<aura:if isTrue="{!v.assistiveText != ''}">
 		<span aura:id="assistiveText" class="slds-assistive-text">{!v.assistiveText}</span>
 	</aura:if>
