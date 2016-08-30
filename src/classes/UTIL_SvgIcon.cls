@@ -35,10 +35,8 @@
  */
 public virtual with sharing class UTIL_SvgIcon {
     /** @description SVG namespace */
-    @TestVisible
     private static String NS_SVG = 'http://www.w3.org/2000/svg';
     /** @description XLINK namespace */
-    @TestVisible
     private static String NS_XLINK = 'http://www.w3.org/1999/xlink';
     /*******************************************************************************************************
      * @description Returns the string from the shared getSvgIconMarkup method enabling the method for use in Lightning Components.
@@ -72,7 +70,6 @@ public virtual with sharing class UTIL_SvgIcon {
      * @param prefix The icon class prefix slds-, slds-button__, slds-input__ etc.
      * @return String The full SVG markup
      *******************************************************************************************************/
-    @TestVisible
     private static String getSvgIconMarkup(String spriteName, String symbolId, String iconName, String className, String category, String size, String prefix) {
         String namespacePrefix = UTIL_Namespace.getNamespace();
         String iconClassName = getIconClassName(iconName, className, category, size, prefix);
