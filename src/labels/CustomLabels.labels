@@ -320,6 +320,13 @@
         <value>My data has been backed-up by going to Setup | Data Management | Export Data</value>
     </labels>
     <labels>
+        <fullName>CONV_All_Dup_Rules_Disabled</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>CONV_All_Dup_Rules_Disabled</shortDescription>
+        <value>All Data.com Duplication Management Rules have been disabled.</value>
+    </labels>
+    <labels>
         <fullName>CONV_All_Households_Selected</fullName>
         <language>en_US</language>
         <protected>false</protected>

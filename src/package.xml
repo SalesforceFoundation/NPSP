@@ -801,6 +801,7 @@
         <members>CONV_Address_Overrides_Set</members>
         <members>CONV_Addresses_Mapped</members>
         <members>CONV_All_Backed_Up</members>
+        <members>CONV_All_Dup_Rules_Disabled</members>
         <members>CONV_All_Households_Selected</members>
         <members>CONV_All_Required_Removed</members>
         <members>CONV_All_Triggers_Disabled</members>
@@ -1792,5 +1793,5 @@
         <members>Opportunity.Opportunity Email Acknowledgment</members>
         <name>WorkflowRule</name>
     </types>
-    <version>36.0</version>
+    <version>37.0</version>
 </Package>

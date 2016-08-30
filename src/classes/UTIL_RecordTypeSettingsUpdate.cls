@@ -241,18 +241,32 @@ global virtual class UTIL_RecordTypeSettingsUpdate {
 
         List<String> names = nameString.split(';', 0);
 
-        Set<Id> ids = new Set<Id>();
+        Set<String> ids = new Set<String>();
         for (String name : names) {
-            if (!nameMap.containsKey(name)) {
-                // could not find record type by with this name!-- ignore
-                continue;
+            if (isId(name)) {
+                ids.add(name);
+            } else if (nameMap.containsKey(name)) {
+                ids.add(String.valueOf(nameMap.get(name)));
             }
-            ids.add(nameMap.get(name));
         }
 
-        String idsString = String.join(new List<Id>(ids), ';');
+        String idsString = String.join(new List<String>(ids), ';');
 
         return idsString;
+    }
+
+    /**
+     * @description Determine if the given name is an id or not
+     * @param name The string value to check
+     * @return Boolean
+     */
+    private Boolean isId(String name) {
+        try {
+            Id.valueOf(name);
+            return true;
+        } catch (StringException e) {
+            return false;
+        }
     }
 
     @TestVisible

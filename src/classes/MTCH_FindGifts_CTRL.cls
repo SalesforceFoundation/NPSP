@@ -76,7 +76,15 @@ public with sharing class MTCH_FindGifts_CTRL {
     * @return void
     */ 
     private void init(){
-        opp = [SELECT Id, Name, AccountId, Account.Name, Amount, StageName, Account.Matching_Gift_Percent__c FROM Opportunity WHERE Id = :opp.Id];
+        Id oppId = opp.Id;
+        String oppQuery = 'SELECT Id, Name, AccountId, Account.Name, Amount, StageName, Account.Matching_Gift_Percent__c';
+
+        if (userInfo.isMultiCurrencyOrganization()) {
+            oppQuery += ', CurrencyIsoCode';
+        }
+
+        oppQuery +=  ' FROM Opportunity WHERE Id = :oppId';
+        opp = Database.query(oppQuery);
         matchingGiftPercent = opp.Account.Matching_Gift_Percent__c == null ? 100 : opp.Account.Matching_Gift_Percent__c;
         
         // if the opp Amount is null, treat as $0 and still load the page.
