@@ -1,15 +1,12 @@
 ({
-    render: function(component /* , helper */) {
-        //grab attributes from the component markup
-        var classname = component.get("v.class");
-        var xlinkhref = component.get("v.xlinkHref");
-        var ariaHidden = component.get("v.ariaHidden");
+    render: function(component, helper) {
+        // By default, after the component finished loading data/handling events,
+        // it will call this render function this.superRender() will call the
+        // render function in the parent component.
+        var ret = this.superRender();
 
-        //return an svg element w/ the attributes
-        var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        svg.setAttribute('class', classname);
-        svg.setAttribute('aria-hidden', ariaHidden);
-        svg.innerHTML = '<use xlink:href="'+xlinkhref+'"></use>';
-        return svg;
+        // Calls the helper function to retrieve and set the SVG Icon
+        helper.renderIcon(component);
+        return ret;
     }
 })

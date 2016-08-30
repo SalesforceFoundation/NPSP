@@ -62,8 +62,15 @@
                         </nav>
                         <div class="slds-media slds-media--center slds-has-flexi-truncate">
                             <div class="slds-media__figure">
-                                <c:svg class="slds-icon slds-icon-standard-household slds-icon--medium"
-                                       xlinkHref="{!$Resource.sfdo203 + '/assets/icons/standard-sprite/svg/symbols.svg#household'}" />
+                                <c:svg spriteName="standardSprite203"
+                                    symbolId="household"
+                                    iconName="household"
+                                    className=""
+                                    category="standard"
+                                    size="medium"
+                                    prefix="slds-"
+                                    assistiveText=""
+                                    />
                             </div>
                             <div class="slds-media__body">
                                 <h1 class="slds-text-heading--medium">{!$Label.npo02.ManageHousehold}</h1>
@@ -174,9 +181,15 @@
 
                         <div class="slds-modal__header">
                             <ui:button class="slds-button slds-button--icon-inverse slds-modal__close" press="{!c.cancelRemoveContact}">
-                                <c:svg class="slds-button__icon slds-button__icon--large"
-                                       xlinkHref="{!$Resource.sfdo203 + '/assets/icons/action-sprite/svg/symbols.svg#close'}" />
-                                <span class="slds-assistive-text">{!$Label.c.bdiBtnClose}</span>
+                                <c:svg spriteName="actionSprite203"
+                                    symbolId="close"
+                                    iconName="close"
+                                    className="slds-icon-text-default"
+                                    category="action"
+                                    size="large"
+                                    prefix="slds-button__"
+                                    assistiveText="{!$Label.c.bdiBtnClose}"
+                                    />
                             </ui:button>
                             <h2 id="searchPopupLabel" class="slds-text-heading--medium">{!$Label.c.lblDeleteContact}</h2>
                         </div>
@@ -213,9 +226,15 @@
 
                         <div class="slds-modal__header">
                             <ui:button class="slds-button slds-button--icon-inverse slds-modal__close" press="{!c.cancelMergeHHPopup}">
-                                <c:svg class="slds-button__icon slds-button__icon--large"
-                                       xlinkHref="{!$Resource.sfdo203 + '/assets/icons/action-sprite/svg/symbols.svg#close'}" />
-                                <span class="slds-assistive-text">{!$Label.c.bdiBtnClose}</span>
+                                <c:svg spriteName="actionSprite203"
+                                    symbolId="close"
+                                    iconName="close"
+                                    className="slds-icon-text-default"
+                                    category="action"
+                                    size="large"
+                                    prefix="slds-button__"
+                                    assistiveText="{!$Label.c.bdiBtnClose}"
+                                    />
                             </ui:button>
                             <h2 id="searchPopupLabel" class="slds-text-heading--medium">{!$Label.c.lblMergeHHTitle}</h2>
                         </div>
@@ -257,9 +276,15 @@
 
                         <div class="slds-modal__header">
                             <ui:button class="slds-button slds-button--icon-inverse slds-modal__close" press="{!c.cancelNewContact}">
-                                <c:svg class="slds-button__icon slds-button__icon--large"
-                                       xlinkHref="{!$Resource.sfdo203 + '/assets/icons/action-sprite/svg/symbols.svg#close'}" />
-                                <span class="slds-assistive-text">{!$Label.c.bdiBtnClose}</span>
+                                <c:svg spriteName="actionSprite203"
+                                    symbolId="close"
+                                    iconName="close"
+                                    className="slds-icon-text-default"
+                                    category="action"
+                                    size="large"
+                                    prefix="slds-button__"
+                                    assistiveText="{!$Label.c.bdiBtnClose}"
+                                    />
                             </ui:button>
                             <h2 id="searchPopupLabel" class="slds-text-heading--medium">{!$Label.npo02.NewContact}</h2>
                         </div>

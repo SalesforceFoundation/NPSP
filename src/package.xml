@@ -244,6 +244,8 @@
         <members>UTIL_RecordTypes_API</members>
         <members>UTIL_RecordTypes_TEST</members>
         <members>UTIL_SoqlListView_CTRL</members>
+        <members>UTIL_SvgIcon</members>
+        <members>UTIL_SvgIcon_TEST</members>
         <members>UTIL_Typeahead</members>
         <members>UTIL_Typeahead_TEST</members>
         <members>UTIL_UnitTestData_TEST</members>
@@ -1650,7 +1652,11 @@
     <types>
         <members>CumulusStaticResources</members>
         <members>SLDS</members>
+        <members>actionSprite203</members>
+        <members>mockSprite</members>
         <members>sfdo203</members>
+        <members>standardSprite203</members>
+        <members>utilitySprite203</members>
         <name>StaticResource</name>
     </types>
     <types>

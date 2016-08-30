@@ -14,8 +14,15 @@
                 <span class="slds-tile__title slds-truncate">
                     <div class="slds-media slds-media--center slds-has-flexi-truncate">
                         <div class="slds-media__figure">
-                            <c:svg class="slds-icon slds-icon-standard-contact slds-icon--small"
-                                   xlinkHref="{!$Resource.sfdo203 + '/assets/icons/standard-sprite/svg/symbols.svg#contact'}" />
+                            <c:svg spriteName="standardSprite203"
+                                symbolId="contact"
+                                iconName="contact"
+                                className=""
+                                category="standard"
+                                size="small"
+                                prefix="slds-"
+                                assistiveText=""
+                                />
                         </div>
                         <div class="slds-media__body">
                             <a href="{! '/' + v.contact.Id}" target="_blank">{!v.contact.FirstName}&nbsp;{!v.contact.LastName}</a>
@@ -23,8 +30,15 @@
                         <div class="slds-media__figure slds-m-right--none">
                             <ui:button label="{!$Label.c.btnRemove}" buttonTitle="{!$Label.c.btnRemove}" labelClass="assistiveText"
                                        class="slds-button slds-button--icon removeBtn" press="{!c.removeContact}">
-                                <c:svg class="slds-icon slds-icon--x-small slds-icon-text-default slds-button__icon"
-                                       xlinkHref="{!$Resource.sfdo203 + '/assets/icons/utility-sprite/svg/symbols.svg#close'}" />
+                                <c:svg spriteName="utilitySprite203"
+                                    symbolId="close"
+                                    iconName="close"
+                                    className="slds-icon-text-default"
+                                    category="utility"
+                                    size="medium"
+                                    prefix="slds-button__"
+                                    assistiveText=""
+                                    />
                             </ui:button>
                         </div>
                     </div>

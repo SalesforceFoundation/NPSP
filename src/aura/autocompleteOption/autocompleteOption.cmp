@@ -3,16 +3,23 @@
     <aura:attribute name="displayValue" type="String" access="public"/>
     <aura:attribute name="iconSprite" type="String" access="public"/>
     <aura:attribute name="iconName" type="String" access="public"/>
+    <aura:attribute name="symbolId" type="String" access="public"/>
+    <aura:attribute name="assistiveText" type="String" access="public"/>
     <aura:registerEvent name="optionSelected" type="c:autocompleteSelectListOption"/>
 
     <aura:attribute name="body" type="Aura.Component[]">
         <li class="slds-lookup__item">
             <ui:button class="slds-button" press="{!c.handleClick}">
                 <aura:if isTrue="{!and(!empty(v.iconSprite), !empty(v.iconName))}">
-                    <c:svg ariaHidden="true"
-                           class="{!'slds-icon slds-icon--small slds-icon-' + v.iconSprite + '-' + v.iconName}"
-                           xlinkHref="{!$Resource.sfdo203 + '/assets/icons/' + v.iconSprite + '-sprite/svg/symbols.svg#' + v.iconName}"
-                           />
+                    <c:svg spriteName="{!v.iconSprite + 'Sprite203'}"
+                        symbolId="{!v.symbolId}"
+                        iconName="{!v.iconName}"
+                        className="{!v.iconSprite}"
+                        category="icon"
+                        size="small"
+                        prefix="slds-"
+                        assistiveText="{!v.assistiveText}"
+                        />
                 </aura:if>
                 {!v.displayValue}
             </ui:button>
