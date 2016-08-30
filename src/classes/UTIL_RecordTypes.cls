@@ -107,11 +107,7 @@ public class UTIL_RecordTypes {
         Map<Id, Schema.RecordTypeInfo> rtiById = objectType.getDescribe().getRecordTypeInfosById();
         if (rtiById.containsKey(recordTypeId)) {
             Schema.RecordTypeInfo rti = rtiById.get(recordTypeId);
-            if (!rti.isMaster() && rti.isAvailable()) {
-                return rti.getName();
-            } else {
-                return null;
-            }
+            return rti.getName();
         } else {
             return null;
         }
