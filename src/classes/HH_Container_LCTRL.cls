@@ -564,7 +564,7 @@ public with sharing class HH_Container_LCTRL {
                 
                 for (String strF : setFields) {
                     // check field level security
-                    DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('Address__c'), strF);
+                    DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('Address__c'), UTIL_Namespace.StrTokenNSPrefix(strF));
                     if (dfr == null || !dfr.isAccessible())
                         throw (new permsException(string.format(label.flsError, new string[]{'Address__c' + '.' + strF})));
                     
