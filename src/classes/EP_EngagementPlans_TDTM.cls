@@ -90,6 +90,7 @@ public with sharing class EP_EngagementPlans_TDTM extends TDTM_Runnable {
             }
 
             Database.DMLOptions options = new Database.DMLOptions();
+            options.OptAllOrNone = true;
 
             if (!taskInsertEmail.isEmpty()) {
                 options.EmailHeader.triggerUserEmail = true;

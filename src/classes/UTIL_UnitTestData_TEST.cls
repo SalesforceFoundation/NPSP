@@ -333,7 +333,12 @@ public class UTIL_UnitTestData_TEST {
         
         for (Engagement_Plan_Template__c epTemplate : listEPTemplates) {
             for (integer i=0 ;i<n; i++) {
-                EPTasksToAdd.add(new Engagement_Plan_Task__c(Engagement_Plan_Template__c = epTemplate.Id));
+                EPTasksToAdd.add(
+                    new Engagement_Plan_Task__c(
+                    Engagement_Plan_Template__c = epTemplate.Id,
+                    Priority__c = 'Medium'
+                    )
+                );
             }
         }
         
