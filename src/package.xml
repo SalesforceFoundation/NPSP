@@ -119,6 +119,7 @@
         <members>LVL_LevelAssign_BATCH</members>
         <members>LVL_LevelAssign_SCHED</members>
         <members>LVL_LevelEdit_CTRL</members>
+        <members>LVL_LevelEdit_TEST</members>
         <members>LVL_Level_TDTM</members>
         <members>MTCH_FindGifts_CTRL</members>
         <members>MTCH_FindGifts_TEST</members>

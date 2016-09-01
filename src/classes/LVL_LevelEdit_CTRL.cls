@@ -47,10 +47,14 @@ public with sharing class LVL_LevelEdit_CTRL {
 
         // since we are using a standard controller, the system should have detected all the fields
         // we reference.  But for some reason, Salesforce only picked up our field set fields, but not
-        // the ones we have direct references to on the page.  So we will explicitly add them now.        
-        controller.addfields(new string[]{'Name', 'Target__c', 'Source_Field__c', 'Level_Field__c',
+        // the ones we have direct references to on the page.  So we will explicitly add them now. 
+        // Note however that there is a Salesforce bug in addFields that prevent using it in tests.
+        // https://success.salesforce.com/ideaView?id=08730000000YmzmAAC
+        if (!Test.isRunningTest()) {
+            controller.addFields(new string[]{'Name', 'Target__c', 'Source_Field__c', 'Level_Field__c',
                 'Previous_Level_Field__c', 'Minimum_Amount__c', 
                 'Maximum_Amount__c', 'Engagement_Plan_Template__c', 'Active__c'});
+        }
 
         lvl = (Level__c)controller.getRecord();
     }
@@ -119,7 +123,7 @@ public with sharing class LVL_LevelEdit_CTRL {
     /*********************************************************************************************************
     * @description sort the list of SelectOptions by labels
     */
-    public static void sortListSOByLabel(List<SelectOption> listSO) {
+    private static void sortListSOByLabel(List<SelectOption> listSO) {
         
         Map<String, SelectOption> mapSO = new Map<String, SelectOption>();
 

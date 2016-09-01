@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2016
+* @group Levels
 * @description test the batchable class for Level Assignments
 */
 
