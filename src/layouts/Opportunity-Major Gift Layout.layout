@@ -252,6 +252,7 @@
     </relatedLists>
     <relatedLists>
         <fields>NAME</fields>
+        <fields>Type__c</fields>
         <fields>Grant_Deadline_Due_Date__c</fields>
         <fields>Grant_Deliverable_Close_Date__c</fields>
         <fields>Grant_Deliverable_Requirements__c</fields>
@@ -309,7 +310,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00hj000000BARAr</masterLabel>
+        <masterLabel>00hG000000leWcK</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>

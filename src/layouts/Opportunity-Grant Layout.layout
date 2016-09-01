@@ -265,6 +265,7 @@
     </relatedLists>
     <relatedLists>
         <fields>NAME</fields>
+        <fields>Type__c</fields>
         <fields>Grant_Deadline_Due_Date__c</fields>
         <fields>Grant_Deliverable_Close_Date__c</fields>
         <fields>Grant_Deliverable_Requirements__c</fields>

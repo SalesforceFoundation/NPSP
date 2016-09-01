@@ -28,6 +28,26 @@
         <name>Opportunity__c</name>
         <relationshipLabel><!-- Deliverables --></relationshipLabel>
     </fields>
+    <fields>
+        <label><!-- Type --></label>
+        <name>Type__c</name>
+        <picklistValues>
+            <masterLabel>Application</masterLabel>
+            <translation><!-- Application --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Final Report</masterLabel>
+            <translation><!-- Final Report --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Interim Report</masterLabel>
+            <translation><!-- Interim Report --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>LOI</masterLabel>
+            <translation><!-- LOI --></translation>
+        </picklistValues>
+    </fields>
     <layouts>
         <layout>Grant Deadline Layout</layout>
         <sections>
