@@ -45,18 +45,113 @@ public with sharing class LVL_LevelEdit_CTRL {
     */ 
     public LVL_LevelEdit_CTRL(ApexPages.StandardController controller) {
 
-        ID lvlId = controller.getRecord().Id;
-        
-        // load up only the fields we use and what the user specifies in their field set
-        String strSoql = 'select Id, Name, Target__c, Source_Field__c, Level_Field__c, ' +
-            'Previous_Level_Field__c, Minimum_Amount__c, Maximum_Amount__c, Engagement_Plan_Template__c, Active__c';
-            
-        for (Schema.FieldSetMember fsm : Schema.SObjectType.Level__c.FieldSets.LevelEdit.getFields())
-            strSoql += ', ' + fsm.getFieldPath();
-        strSoql += ' from Level__c';
-        strSoql += ' where Id = :lvlId';
+        // since we are using a standard controller, the system should have detected all the fields
+        // we reference.  But for some reason, Salesforce only picked up our field set fields, but not
+        // the ones we have direct references to on the page.  So we will explicitly add them now.        
+        controller.addfields(new string[]{'Name', 'Target__c', 'Source_Field__c', 'Level_Field__c',
+                'Previous_Level_Field__c', 'Minimum_Amount__c', 
+                'Maximum_Amount__c', 'Engagement_Plan_Template__c', 'Active__c'});
 
-        lvl = database.query(strSoql);
+        lvl = (Level__c)controller.getRecord();
     }
     
+    /*********************************************************************************************************
+    * @description action method called when the Target field has changed
+    */
+    public PageReference targetChanged() {
+        listSOSourceFields = null;
+        listSOLevelFields = null;
+        return null;
+    }
+
+    /*********************************************************************************************************
+    * @description The SelectOption list of Source Fields available on the Target object.
+    */
+    public list<SelectOption> listSOSourceFields {
+        get {
+            if (listSOSourceFields == null) {
+                listSOSourceFields = new list<SelectOption>();
+            
+                if (lvl.Target__c != null) {
+                    listSOSourceFields.add(new SelectOption('', Label.stgLabelNone));
+                    Map<String, Schema.DescribeFieldResult> mapDFR = UTIL_Describe.getAllFieldsDescribe(lvl.Target__c);
+                    for (Schema.DescribeFieldResult f : mapDFR.values()) {                   
+                        if (f.isAccessible() && UTIL_Describe.canDisplaytypesCopy(f.getType(), Schema.Displaytype.Double))
+                           listSOSourceFields.add(new SelectOption(f.getName(), f.getLabel()));
+                    }
+                    sortListSOByLabel(listSOSourceFields);
+                }
+            }
+            return listSOSourceFields;
+        }
+        private set;
+    }
+
+    /*********************************************************************************************************
+    * @description The SelectOption list of Level Lookup Fields available on the Target object.
+    */
+    public list<SelectOption> listSOLevelFields {
+        get {
+            if (listSOLevelFields == null) {
+                listSOLevelFields = new list<SelectOption>();
+            
+                if (lvl.Target__c != null) {
+                    listSOLevelFields.add(new SelectOption('', Label.stgLabelNone));
+                    Map<String, Schema.DescribeFieldResult> mapDFR = UTIL_Describe.getAllFieldsDescribe(lvl.Target__c);
+                    Schema.sObjectType soTypeLevel = UTIL_Describe.getObjectDescribe('Level__c').getSObjectType(); 
+                    
+                    for (Schema.DescribeFieldResult f : mapDFR.values()) {                   
+                        if (f.isAccessible() && f.getType() == Schema.Displaytype.Reference) {
+                            List <Schema.sObjectType> listSO = f.getReferenceTo();
+                            if (listSO.size() == 1 && listSO[0] == soTypeLevel) {
+                                listSOLevelFields.add(new SelectOption(f.getName(), f.getLabel()));
+                            }
+                        }
+                    }
+                    sortListSOByLabel(listSOLevelFields);
+                }
+            }
+            return listSOLevelFields;
+        }
+        private set;
+    }
+
+    /*********************************************************************************************************
+    * @description sort the list of SelectOptions by labels
+    */
+    public static void sortListSOByLabel(List<SelectOption> listSO) {
+        
+        Map<String, SelectOption> mapSO = new Map<String, SelectOption>();
+
+        // Suffix to avoid duplicate values like same labels or values are in inbound list 
+        Integer suffix = 1;
+        for (SelectOption so : listSO) {
+            mapSO.put(so.getLabel() + suffix++, so);   
+        }
+        
+        List<String> sortKeys = new List<String>();
+        sortKeys.addAll(mapSO.keySet());
+        sortKeys.sort();
+        // clear the original collection to rebuilt it
+        listSO.clear();
+        
+        for (String key : sortKeys) {
+            listSO.add(mapSO.get(key));
+        }
+    }
+    
+    /*********************************************************************************************************
+    * @description actionMethod to Save the current Level and create a new one, which is assumed to be the
+    * next in the ladder.
+    */
+    public PageReference saveAndNew() {
+        upsert lvl;
+        // now fixup lvl to be the new next level
+        lvl.Id = null;
+        lvl.Name = null;
+        lvl.Minimum_Amount__c = lvl.Maximum_Amount__c;
+        lvl.Maximum_Amount__c = null;
+        lvl.Engagement_Plan_Template__c = null;
+        return null;
+    }
 }

@@ -2854,6 +2854,14 @@ If you want to know which Opportunities would have previously included this doub
         <value>You can only view existing contacts.</value>
     </labels>
     <labels>
+        <fullName>lvlBtnSaveAndNew</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Save &amp; New button on the Level Edit page</shortDescription>
+        <value>Save &amp; New</value>
+    </labels>
+    <labels>
         <fullName>lvlErrorDuplicateName</fullName>
         <categories>Levels</categories>
         <language>en_US</language>
@@ -3961,7 +3969,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHHAccountRTID</shortDescription>
-        <value>The Account record type you want to use for new Accounts if you&apos;ve selected the Household Account model above. You can select the default Household Account record type, or your own record type. If you select -none-, then Salesforce will use the default Account record type for the user who&apos;s creating the new Contact (and associated Account).</value>
+        <value>The Account record type you want to use for new Accounts if you&apos;ve selected the Household Account model above. You can select the default Household Account record type, or your own record type. If you select --None--, then Salesforce will use the default Account record type for the user who&apos;s creating the new Contact (and associated Account).</value>
     </labels>
     <labels>
         <fullName>stgHelpHHExcludedRT</fullName>
@@ -4182,7 +4190,7 @@ IMPORTANT: Both of these fields must have the same data type.</value>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpOneToOneRTID</shortDescription>
-        <value>The Account record type you want to use for new Accounts if you&apos;ve selected the One-to-One Account model above. NPSP does not come with a default record type for One-to-One Accounts, so you should create one (such as &quot;Individual&quot;) before selecting this model. If you select -none-, then Salesforce will use the default Account record type for the user who&apos;s creating the new Contact (and associated One-to-One Account).</value>
+        <value>The Account record type you want to use for new Accounts if you&apos;ve selected the One-to-One Account model above. NPSP does not come with a default record type for One-to-One Accounts, so you should create one (such as &quot;Individual&quot;) before selecting this model. If you select --None--, then Salesforce will use the default Account record type for the user who&apos;s creating the new Contact (and associated One-to-One Account).</value>
     </labels>
     <labels>
         <fullName>stgHelpOppNamingAttribution</fullName>
@@ -4214,7 +4222,7 @@ IMPORTANT: Both of these fields must have the same data type.</value>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpOppNamingRecTypes</shortDescription>
-        <value>The Opportunity record type(s) to which you want to apply this Opportunity Name. Control or Command click to select more than one record type. &quot;- none -&quot; applies the new naming to ALL record types.</value>
+        <value>The Opportunity record type(s) to which you want to apply this Opportunity Name. Control or Command click to select more than one record type. &quot;--None--&quot; applies the new naming to ALL record types.</value>
     </labels>
     <labels>
         <fullName>stgHelpOppRecTypesNoPayments</fullName>
@@ -5016,7 +5024,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgLabelNone</shortDescription>
-        <value>- none -</value>
+        <value>--None--</value>
     </labels>
     <labels>
         <fullName>stgLabelONS</fullName>

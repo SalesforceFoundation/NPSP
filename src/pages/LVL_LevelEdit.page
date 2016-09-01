@@ -2,6 +2,21 @@
     <apex:stylesheet value="{!URLFOR($Resource.sfdo203, '/assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
     
+    <style>
+        .sfdo203 .slds-select[size="1"] {
+            min-height: calc(1.875rem + (1px * 2));
+            height: calc(1.875rem + (1px * 2));
+        } 
+        
+        .mySpinner {
+            display: none;
+            position: absolute;
+            margin-top: -2em;
+            margin-left: 10em;
+            z-index: 9999;
+        }   
+    </style>
+            
     <apex:form >
       <div class="sfdo203">
     
@@ -17,6 +32,7 @@
                     <div class="slds-button-group" role="group">
                         <apex:commandButton styleClass="slds-button slds-button--neutral" action="{!cancel}" value="{!$Label.stgBtnCancel}" />
                         <apex:commandButton styleClass="slds-button slds-button--brand" action="{!save}" value="{!$Label.stgBtnSave}" />
+                        <apex:commandButton styleClass="slds-button slds-button--neutral" action="{!saveAndNew}" value="{!$Label.lvlBtnSaveAndNew}" />
                     </div>
                 </div>
             </div>
@@ -24,9 +40,9 @@
         <!-- /PAGE HEADER -->
         
         <c:UTIL_PageMessages />
-        
+                
         <!-- outer div of body below header -->
-        <div class="myBodyContent">
+        <div class="myBodyContent" >
         
             <div class="slds-grid slds-grid--align-spread slds-m-top--medium slds-m-left--medium slds-m-right--medium">
             
@@ -37,13 +53,13 @@
                                 <apex:outputLabel for="fldName" styleClass="slds-form-element__label uiLabel-left form-element__label uiLabel" >
                                     <span class="required slds-required">*</span>{!$ObjectType.Level__c.Fields.Name.Label}
                                 </apex:outputLabel>
-                                    <apex:inputField id="fldName" required="true" value="{!lvl.Name}" label="" styleClass="slds-input" />
+                                <apex:inputField id="fldName" required="true" value="{!lvl.Name}" label="" styleClass="slds-input" />
                             </div>
                             <div class="slds-form-element slds-size--1-of-2">
                                 <apex:outputLabel for="fldMinAmount" styleClass="slds-form-element__label uiLabel-left form-element__label uiLabel" >
                                     {!$ObjectType.Level__c.Fields.Minimum_Amount__c.Label}
                                 </apex:outputLabel>
-                                    <apex:inputField id="fldMinAmount" required="false" value="{!lvl.Minimum_Amount__c}" label="" styleClass="slds-input" />
+                                <apex:inputField id="fldMinAmount" required="false" value="{!lvl.Minimum_Amount__c}" label="" styleClass="slds-input" />
                             </div>
                         </div>
 
@@ -52,13 +68,22 @@
                                 <apex:outputLabel for="fldTarget" styleClass="slds-form-element__label uiLabel-left form-element__label uiLabel" >
                                     <span class="required slds-required">*</span>{!$ObjectType.Level__c.Fields.Target__c.Label}
                                 </apex:outputLabel>
-                                    <apex:inputField id="fldTarget" required="true" value="{!lvl.Target__c}" label="" styleClass="slds-select" />
+                                <apex:inputField id="fldTarget" required="false" value="{!lvl.Target__c}" label="" styleClass="slds-select" >
+                                    <apex:actionSupport status="statusRefill" event="onchange" rerender="fldSourceField,fldLevel,fldPreviousLevel"
+                                        immediate="false" action="{!targetChanged}" />
+                                    <apex:actionStatus id="statusRefill"
+                                        onstart="document.getElementById('divLoading').style.display = 'inline';"
+                                        onstop="document.getElementById('divLoading').style.display = 'none';" />
+                                    <div class="slds-spinner--small mySpinner" id="divLoading" >
+                                        <img src="{!URLFOR($Resource.sfdo203, '/assets/images/spinners/slds_spinner_brand.gif')}" alt="{!$Label.labelMessageLoading}" />
+                                    </div>
+                                </apex:inputField>
                             </div>
                             <div class="slds-form-element slds-size--1-of-2">
                                 <apex:outputLabel for="fldMaxAmount" styleClass="slds-form-element__label uiLabel-left form-element__label uiLabel" >
                                     {!$ObjectType.Level__c.Fields.Maximum_Amount__c.Label}
                                 </apex:outputLabel>
-                                    <apex:inputField id="fldMaxAmount" required="false" value="{!lvl.Maximum_Amount__c}" label="" styleClass="slds-input" />
+                                <apex:inputField id="fldMaxAmount" required="false" value="{!lvl.Maximum_Amount__c}" label="" styleClass="slds-input" />
                             </div>
                         </div>
 
@@ -67,13 +92,15 @@
                                 <apex:outputLabel for="fldSourceField" styleClass="slds-form-element__label uiLabel-left form-element__label uiLabel" >
                                     <span class="required slds-required">*</span>{!$ObjectType.Level__c.Fields.Source_Field__c.Label}
                                 </apex:outputLabel>
-                                    <apex:inputField id="fldSourceField" required="true" value="{!lvl.Source_Field__c}" label="" styleClass="slds-input" />
+                                <apex:selectList id="fldSourceField" value="{!lvl.Source_Field__c}" required="false" size="1" styleClass="slds-select">
+                                    <apex:selectOptions value="{!listSOSourceFields}"  />
+                                </apex:selectList>
                             </div>
                             <div class="slds-form-element slds-size--1-of-2">
                                 <apex:outputLabel for="fldEP" styleClass="slds-form-element__label uiLabel-left form-element__label uiLabel" >
                                     {!$ObjectType.Level__c.Fields.Engagement_Plan_Template__c.Label}
                                 </apex:outputLabel>
-                                    <apex:inputField id="fldEP" required="false" value="{!lvl.Engagement_Plan_Template__c}" label="" styleClass="lookupInput Engagement_Plan_Template__c" />
+                                <apex:inputField id="fldEP" required="false" value="{!lvl.Engagement_Plan_Template__c}" label="" styleClass="lookupInput Engagement_Plan_Template__c" />
                             </div>
                         </div>
 
@@ -82,13 +109,15 @@
                                 <apex:outputLabel for="fldLevel" styleClass="slds-form-element__label uiLabel-left form-element__label uiLabel" >
                                     <span class="required slds-required">*</span>{!$ObjectType.Level__c.Fields.Level_Field__c.Label}
                                 </apex:outputLabel>
-                                    <apex:inputField id="fldLevel" required="true" value="{!lvl.Source_Field__c}" label="" styleClass="slds-input" />
+                                <apex:selectList id="fldLevel" value="{!lvl.Level_Field__c}" required="false" size="1" styleClass="slds-select">
+                                    <apex:selectOptions value="{!listSOLevelFields}"  />
+                                </apex:selectList>
                             </div>
                             <div class="slds-form-element slds-size--1-of-2">
                                 <apex:outputLabel for="fldActive" styleClass="slds-form-element__label uiLabel-left form-element__label uiLabel" >
                                     {!$ObjectType.Level__c.Fields.Active__c.Label}
                                 </apex:outputLabel>
-                                    <apex:inputField id="fldActive" required="false" value="{!lvl.Active__c}" label="" styleClass="slds-input" />
+                                <apex:inputField id="fldActive" required="false" value="{!lvl.Active__c}" label="" styleClass="slds-input" />
                             </div>
                         </div>
 
@@ -97,7 +126,9 @@
                                 <apex:outputLabel for="fldPreviousLevel" styleClass="slds-form-element__label uiLabel-left form-element__label uiLabel" >
                                     {!$ObjectType.Level__c.Fields.Previous_Level_Field__c.Label}
                                 </apex:outputLabel>
-                                    <apex:inputField id="fldPreviousLevel" required="false" value="{!lvl.Previous_Level_Field__c}" label="" styleClass="slds-input" />
+                                <apex:selectList id="fldPreviousLevel" value="{!lvl.Previous_Level_Field__c}" required="false" size="1" styleClass="slds-select">
+                                    <apex:selectOptions value="{!listSOLevelFields}"  />
+                                </apex:selectList>
                             </div>
                             <div class="slds-form-element slds-size--1-of-2">
                             </div>
@@ -116,11 +147,13 @@
                                 <span class="required slds-required">{!IF(f.DBRequired || f.Required, '*', '')}</span>{!f.Label}
                             </apex:outputLabel>
                             <div class="slds-form-element__control">                                
-                                <apex:inputField id="fldX" required="{!f.DBRequired || f.Required}" value="{!lvl[f]}" label=""
+                                <apex:inputField id="fldX" required="false" value="{!lvl[f]}" label=""
                                     styleClass="{!CASE(f.Type, 
                                                     'reference', 'lookupInput' + ' ' + f.FieldPath, 
+                                                    'picklist', 'slds-select',
                                                     'multipicklist', 'slds-select multipicklistSLDSFixup', 
                                                     'boolean', 'slds-checkbox',
+                                                    'textarea', 'slds-textarea',
                                                     'slds-input')}" />                                
                             </div>
                         </div>
