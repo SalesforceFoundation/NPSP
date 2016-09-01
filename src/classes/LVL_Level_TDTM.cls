@@ -166,13 +166,10 @@ public class LVL_Level_TDTM extends TDTM_Runnable {
     private void verifyNoOverlapListLvl(list<Level__c> listLvl, Set<Level__c> setTrigger) {
         
         for (integer i = 1; i < listLvl.size(); i++) {
-            if (listLvl[i].Minimum_Amount__c == null || listLvl[i-1].Minimum_Amount__c >= listLvl[i].Minimum_Amount__c) {
+            if ((listLvl[i].Minimum_Amount__c == null || listLvl[i-1].Minimum_Amount__c >= listLvl[i].Minimum_Amount__c) ||
+                (listLvl[i-1].Maximum_Amount__c == null || listLvl[i-1].Maximum_Amount__c > listLvl[i].Minimum_Amount__c)) {
                 integer ierr = setTrigger.contains(listLvl[i-1]) ? i-1 : i;
                 listLvl[ierr].addError(String.format(Label.lvlErrorMinOverlap, new list<String>{listLvl[i-1].Name, listLvl[i].Name}));
-            }
-            if (listLvl[i-1].Maximum_Amount__c == null || listLvl[i-1].Maximum_Amount__c > listLvl[i].Minimum_Amount__c) {
-                integer ierr = setTrigger.contains(listLvl[i-1]) ? i-1 : i;
-                listLvl[ierr].addError(String.format(Label.lvlErrorMinOverlap, new list<String>{listLvl[i].Name, listLvl[i-1].Name}));
             }
         }
     }

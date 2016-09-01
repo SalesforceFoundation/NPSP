@@ -2891,7 +2891,7 @@ If you want to know which Opportunities would have previously included this doub
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>error when we detect the minimum amount overlaps another level</shortDescription>
-        <value>The Minimum Amount field on Level {0} overlaps with the Minimum Amount on Level {1}</value>
+        <value>The Minimum Amount to Maximum Amount range on Level {0} overlaps with the Minimum Amount to Maximum Amount range on Level {1}</value>
     </labels>
     <labels>
         <fullName>mtchBtnSearch</fullName>
