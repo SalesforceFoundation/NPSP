@@ -3,11 +3,6 @@
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
     
     <style>
-        .sfdo203 .slds-select[size="1"] {
-            min-height: calc(1.875rem + (1px * 2));
-            height: calc(1.875rem + (1px * 2));
-        } 
-        
         .mySpinner {
             display: none;
             position: absolute;
@@ -100,7 +95,7 @@
                                 <apex:outputLabel for="fldEP" styleClass="slds-form-element__label uiLabel-left form-element__label uiLabel" >
                                     {!$ObjectType.Level__c.Fields.Engagement_Plan_Template__c.Label}
                                 </apex:outputLabel>
-                                <apex:inputField id="fldEP" required="false" value="{!lvl.Engagement_Plan_Template__c}" label="" styleClass="lookupInput Engagement_Plan_Template__c" />
+                                <apex:inputField id="fldEP" required="false" value="{!lvl.Engagement_Plan_Template__c}" label="" styleClass="lookupInput203 Engagement_Plan_Template__c" />
                             </div>
                         </div>
 
@@ -149,9 +144,9 @@
                             <div class="slds-form-element__control">                                
                                 <apex:inputField id="fldX" required="false" value="{!lvl[f]}" label=""
                                     styleClass="{!CASE(f.Type, 
-                                                    'reference', 'lookupInput' + ' ' + f.FieldPath, 
+                                                    'reference', 'lookupInput203 ' + f.FieldPath, 
                                                     'picklist', 'slds-select',
-                                                    'multipicklist', 'slds-select multipicklistSLDSFixup', 
+                                                    'multipicklist', 'slds-select', 
                                                     'boolean', 'slds-checkbox',
                                                     'textarea', 'slds-textarea',
                                                     'slds-input')}" />                                
