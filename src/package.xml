@@ -1122,6 +1122,7 @@
         <members>leadConvertSendEmail</members>
         <members>leadConvertStatus</members>
         <members>leadConvertViewContactError</members>
+        <members>lvlBtnSaveAndNew</members>
         <members>lvlErrorDuplicateName</members>
         <members>lvlErrorInvalidLookupField</members>
         <members>lvlErrorInvalidSourceField</members>
@@ -1637,6 +1638,7 @@
         <members>Contact.ContactMergeFoundFS</members>
         <members>Lead.BDE_Entry_FS</members>
         <members>Lead.BDE_List_FS</members>
+        <members>Level__c.LevelEdit</members>
         <members>Opportunity.BDE_Entry_FS_v2</members>
         <members>Opportunity.BDE_List_FS_v2</members>
         <name>FieldSet</name>
