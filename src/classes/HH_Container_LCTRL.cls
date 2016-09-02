@@ -249,6 +249,7 @@ public with sharing class HH_Container_LCTRL {
             'FirstName',
             'LastName',
             'Salutation',
+            'npo02__Household__c',
             'npo02__Household_Naming_Order__c', 
             'npo02__Naming_Exclusions__c', 
             UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Name__c'), 
