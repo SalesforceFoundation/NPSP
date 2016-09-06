@@ -78,6 +78,8 @@
         <members>EP_EngagementPlans_TDTM</members>
         <members>EP_EngagementPlans_TEST</members>
         <members>EP_EngagementPlans_UTIL</members>
+        <members>EP_ManageEPTemplate_CTRL</members>
+        <members>EP_ManageEPTemplate_CTRL_TEST</members>
         <members>EP_TaskDependency_TDTM</members>
         <members>EP_TaskDependency_TEST</members>
         <members>EP_TaskRollup_TDTM</members>
@@ -282,6 +284,7 @@
         <members>CONV_Account_Conversion</members>
         <members>CON_ContactMerge</members>
         <members>CON_DeleteContactOverride</members>
+        <members>EP_ManageEPTemplate</members>
         <members>HH_CampaignDedupeBTN</members>
         <members>HH_ManageHH</members>
         <members>HH_ManageHHAccount</members>
