@@ -92,7 +92,7 @@ private with sharing class EP_ManageEPTemplate_CTRL_TEST {
         Test.stopTest();
 
         system.assert(ctrl.mapTaskWrappers.containsKey('1'), 'EP Task with level of 1 should exist.');
-        system.assert(ctrl.mapTaskWrappers.containsKey('1.1'), 'EP Task with level of 1.1 should exist.');
+        system.assert(ctrl.mapTaskWrappers.containsKey('1-1'), 'EP Task with level of 1-1 should exist.');
         system.assert(!ctrl.mapTaskWrappers.containsKey('2'), 'EP Task with level of 2 should not exist yet.');
 
         //add parent level task and verify it exists
@@ -101,20 +101,20 @@ private with sharing class EP_ManageEPTemplate_CTRL_TEST {
         ctrl.getTaskTree();
         system.assert(ctrl.mapTaskWrappers.containsKey('2'), 'EP Task with level of 2 should exist now.');
 
-        ctrl.currentTaskLevel = '1.1';
+        ctrl.currentTaskLevel = '1-1';
         ctrl.addDependentTask();
         ctrl.getTaskTree();
-        system.assert(ctrl.mapTaskWrappers.containsKey('1.1.1'), 'EP Task with level of 1.1.1 should be created.');
+        system.assert(ctrl.mapTaskWrappers.containsKey('1-1-1'), 'EP Task with level of 1-1-1 should be created.');
 
-        ctrl.currentTaskLevel = '1.1.1';
+        ctrl.currentTaskLevel = '1-1-1';
         ctrl.addDependentTask();
         ctrl.getTaskTree();
-        system.assert(ctrl.mapTaskWrappers.containsKey('1.1.1.1'), 'EP Task with level of 1.1.1.1 should be created.');
+        system.assert(ctrl.mapTaskWrappers.containsKey('1-1-1-1'), 'EP Task with level of 1-1-1-1 should be created.');
 
-        ctrl.currentTaskLevel = '1.1';
+        ctrl.currentTaskLevel = '1-1';
         ctrl.deleteTask();
         ctrl.getTaskTree();
-        system.assert(!ctrl.mapTaskWrappers.containsKey('1.1.1.1'), 'EP Task with level of 1.1.1.1 should be gone as its grandparent was deleted.');
+        system.assert(!ctrl.mapTaskWrappers.containsKey('1-1-1-1'), 'EP Task with level of 1-1-1-1 should be gone as its grandparent was deleted.');
 
         ctrl.saveClose();
 
