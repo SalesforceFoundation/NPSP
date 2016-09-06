@@ -155,4 +155,15 @@
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <startsWith>Vowel</startsWith>
+    <webLinks>
+        <fullName>Manage_Template</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Manage Template</masterLabel>
+        <openType>noSidebar</openType>
+        <page>EP_ManageEPTemplate</page>
+        <protected>false</protected>
+    </webLinks>
 </CustomObject>

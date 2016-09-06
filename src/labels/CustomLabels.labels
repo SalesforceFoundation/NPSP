@@ -580,6 +580,22 @@
         <value>omit</value>
     </labels>
     <labels>
+        <fullName>EPAddDependentTask</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>EPAddDependentTask</shortDescription>
+        <value>Add Dependent Task</value>
+    </labels>
+    <labels>
+        <fullName>EPDeleteTask</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>EPDeleteTask</shortDescription>
+        <value>Delete Task</value>
+    </labels>
+    <labels>
         <fullName>EPTaskDependency</fullName>
         <categories>Engagement Plan, Error</categories>
         <language>en_US</language>

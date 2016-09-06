@@ -80,6 +80,8 @@
         <members>EP_EngagementPlans_UTIL</members>
         <members>EP_ManageEPTemplate_CTRL</members>
         <members>EP_ManageEPTemplate_CTRL_TEST</members>
+        <members>EP_TaskDependencyCheck_TDTM</members>
+        <members>EP_TaskDependencyCheck_TEST</members>
         <members>EP_TaskDependency_TDTM</members>
         <members>EP_TaskDependency_TEST</members>
         <members>EP_TaskRollup_TDTM</members>
@@ -824,6 +826,8 @@
         <members>CONV_Warning</members>
         <members>CONV_What_This_Tool_Does</members>
         <members>CampaignMemberStatusOmit</members>
+        <members>EPAddDependentTask</members>
+        <members>EPDeleteTask</members>
         <members>EPTaskDependency</members>
         <members>EPTaskTemplate</members>
         <members>HiddenForSecurity</members>
@@ -1620,8 +1624,10 @@
         <members>Campaign-NPSP Campaign Layout</members>
         <members>Contact-Contact Layout</members>
         <members>DataImport__c-Data Import Layout</members>
+        <members>Engagement_Plan_Task__c-Action Plan Task Layout</members>
         <members>Engagement_Plan_Task__c-Engagement Plan Task Layout</members>
         <members>Engagement_Plan_Template__c-Engagement Plan Template Layout</members>
+        <members>Engagement_Plan__c-Action Plan Layout</members>
         <members>Engagement_Plan__c-Engagement Plan Layout</members>
         <members>Error__c-Error Layout</members>
         <members>Fund__c-Fund Layout</members>
@@ -1729,6 +1735,7 @@
         <members>DataImport__c.Delete_All_Data_Import_Records</members>
         <members>DataImport__c.Delete_Imported_Data_Import_Records</members>
         <members>DataImport__c.Process_Data_Import</members>
+        <members>Engagement_Plan_Template__c.Manage_Template</members>
         <members>General_Accounting_Unit__c.Recalculate_Rollups</members>
         <members>Opportunity.Email_Acknowledgment</members>
         <members>Opportunity.Email_Acknowledgments</members>
