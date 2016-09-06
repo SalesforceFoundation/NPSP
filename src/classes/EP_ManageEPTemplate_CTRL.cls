@@ -469,7 +469,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         mapTaskWrappers.put(wrapper.level, wrapper);
 
         //number for looping through the available colors for the side bar
-        Integer colorNumber = Math.mod(wrapper.level.countMatches('.'), sidebarColors.size());
+        Integer colorNumber = Math.mod(wrapper.level.countMatches('-'), sidebarColors.size());
 
         Component.Apex.OutputPanel topLevelPanel = new Component.Apex.OutputPanel(styleClass='slds-m-left--medium slds-m-top--small', layout='block');
         Component.Apex.OutputPanel formPanel = new Component.Apex.OutputPanel();
@@ -525,17 +525,18 @@ public with sharing class EP_ManageEPTemplate_CTRL {
 
         //recursively call this method to add children
         for (integer i = 0; i < wrapper.children.size(); i++) {
-            topLevelPanel.childComponents.add( addChildComponents(wrapper.children[i], i, accessString + '.children', levelString+'.'+(i+1)) );
+            topLevelPanel.childComponents.add( addChildComponents(wrapper.children[i], i, accessString + '.children', levelString+'-'+(i+1)) );
         } 
         return topLevelPanel;
     }
 
     /** @description Generates the markup for an SLDS styled form element with label.
+    * @param wrapper The TaskWrapper for the current Engagement Plan Task.
     * @param fieldName The name of the field.
     * @param outterCss CSS markup for the field input container.
     * @return Component.Apex.OutputPanel A form field container and label.
     */
-    private Component.Apex.OutputPanel fieldLabelPanel(String fieldName, String outterCss) {
+    private Component.Apex.OutputPanel fieldLabelPanel(TaskWrapper wrapper, String fieldName, String outterCss) {
         Component.Apex.OutputPanel result = new Component.Apex.OutputPanel(styleClass='slds-form-element ' + outterCss, layout='block');
         Component.Apex.OutputLabel fieldLabel = new Component.Apex.OutputLabel(
             value=UTIL_Describe.getFieldLabel(
@@ -545,6 +546,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
             ), 
             styleClass='slds-form-element__label'
         );
+        fieldLabel.for = fieldName + wrapper.level;
         result.childComponents.add(fieldLabel);
         return result;
     }
@@ -558,9 +560,10 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     * @return Component.Apex.OutputPanel OutputPanel containing the markup for an inputField.
     */
     private Component.Apex.OutputPanel genericInputPanel(TaskWrapper wrapper, String accessString, String fieldName, String outterCss, String inputCss) {
-        Component.Apex.OutputPanel outterPanel = fieldLabelPanel(fieldName, outterCss);
+        Component.Apex.OutputPanel outterPanel = fieldLabelPanel(wrapper, fieldName, outterCss);
 
         Component.Apex.InputField fieldInput = new Component.Apex.InputField(
+            id = fieldName + wrapper.level,
             value = wrapper.detail.get(fieldName),
             styleClass = 'slds-form-element__control ' + inputCss,
             //Set the Name field as required for auto validation
@@ -582,20 +585,21 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     * @return Component.Apex.OutputPanel OutputPanel containing the markup for a picklist field.
     */
     private Component.Apex.OutputPanel selectListInputPanel(TaskWrapper wrapper, String accessString, String fieldName, String outterCss, String inputCss, String selectOptions) {
-        Component.Apex.OutputPanel outterPanel = fieldLabelPanel(fieldName, outterCss);
+        Component.Apex.OutputPanel outterPanel = fieldLabelPanel(wrapper, fieldName, outterCss);
 
-        Component.Apex.SelectList fieldInput = new Component.Apex.SelectList(
+        Component.Apex.SelectList selectList = new Component.Apex.SelectList(
+            id = fieldName + wrapper.level,
             value = wrapper.detail.get(fieldName),
             styleClass = 'slds-form-element__control ' + inputCss,
             style = 'height: calc(1.875rem + 2px);',
             size = 1,
             multiselect = false
         );
-        fieldInput.expressions.value = '{!' + accessString + '.detail.' + fieldName + '}';
+        selectList.expressions.value = '{!' + accessString + '.detail.' + fieldName + '}';
         Component.Apex.SelectOptions options = new Component.Apex.SelectOptions();
         options.expressions.value='{!'+selectOptions+'}';
-        fieldInput.childComponents.add(options);
-        outterPanel.childComponents.add(fieldInput);
+        selectList.childComponents.add(options);
+        outterPanel.childComponents.add(selectList);
 
         return outterPanel;
     }
@@ -609,9 +613,10 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     * @return Component.Apex.OutputPanel OutputPanel containing the markup for a text area field.
     */
     private Component.Apex.OutputPanel commentsInputPanel(TaskWrapper wrapper, String accessString, String fieldName, String outterCss, String inputCss) {
-        Component.Apex.OutputPanel outterPanel = fieldLabelPanel(fieldName, outterCss);
+        Component.Apex.OutputPanel outterPanel = fieldLabelPanel(wrapper, fieldName, outterCss);
 
         Component.Apex.InputTextarea fieldInput = new Component.Apex.InputTextarea(
+            id = fieldName + wrapper.level,
             value = wrapper.detail.get(fieldName),
             styleClass = 'slds-form-element__control ' + inputCss,
             rows = 1
