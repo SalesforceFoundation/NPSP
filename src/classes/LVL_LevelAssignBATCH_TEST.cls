@@ -140,7 +140,7 @@ private class LVL_LevelAssignBATCH_TEST {
         Engagement_Plan_Task__c dependentEpTask = new Engagement_Plan_Task__c(
             Name = 'Email',
             Engagement_Plan_Template__c = template.id,
-            Dependent_Task__c = epTask.id,
+            Parent_Task__c = epTask.id,
             Comments__c = 'This comment should also be copied correctly to the Task.',
             Reminder__c = true,
             Reminder_Minutes__c = '780',
