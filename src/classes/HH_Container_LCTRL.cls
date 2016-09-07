@@ -172,6 +172,9 @@ public with sharing class HH_Container_LCTRL {
         string strSoql = 'SELECT ';
         string strComma = '';                
         set<String> setCheckUpdate = setUpdateableContactFields();
+        // Household field is needed in the setUpdateableContactFields but not in the FLS check, the field will
+        // be added back to the query below.
+        setCheckUpdate.remove('npo02__Household__c');
         
         for (string strF : listStrField) {
 
