@@ -1472,47 +1472,64 @@
     </types>
     <types>
         <members>Account-de</members>
+        <members>Account-en_US</members>
         <members>Account-es</members>
+        <members>Account-fr</members>
         <members>Account-ja</members>
         <members>Activity-de</members>
+        <members>Activity-en_US</members>
+        <members>Activity-es</members>
+        <members>Activity-fr</members>
+        <members>Activity-ja</members>
         <members>Addr_Verification_Settings__c-de</members>
         <members>Addr_Verification_Settings__c-en_US</members>
         <members>Addr_Verification_Settings__c-es</members>
+        <members>Addr_Verification_Settings__c-fr</members>
         <members>Addr_Verification_Settings__c-ja</members>
         <members>Address_Verification_Settings__c-de</members>
         <members>Address_Verification_Settings__c-en_US</members>
         <members>Address_Verification_Settings__c-es</members>
+        <members>Address_Verification_Settings__c-fr</members>
         <members>Address_Verification_Settings__c-ja</members>
         <members>Address__c-de</members>
         <members>Address__c-en_US</members>
         <members>Address__c-es</members>
+        <members>Address__c-fr</members>
         <members>Address__c-ja</members>
         <members>Allocation__c-de</members>
         <members>Allocation__c-en_US</members>
         <members>Allocation__c-es</members>
+        <members>Allocation__c-fr</members>
         <members>Allocation__c-ja</members>
         <members>Allocations_Settings__c-de</members>
         <members>Allocations_Settings__c-en_US</members>
         <members>Allocations_Settings__c-es</members>
+        <members>Allocations_Settings__c-fr</members>
         <members>Allocations_Settings__c-ja</members>
         <members>Batch_Data_Entry_Settings__c-de</members>
         <members>Batch_Data_Entry_Settings__c-en_US</members>
         <members>Batch_Data_Entry_Settings__c-es</members>
+        <members>Batch_Data_Entry_Settings__c-fr</members>
         <members>Batch_Data_Entry_Settings__c-ja</members>
         <members>Batch__c-de</members>
         <members>Batch__c-en_US</members>
         <members>Batch__c-es</members>
+        <members>Batch__c-fr</members>
         <members>Batch__c-ja</members>
         <members>Contact-de</members>
+        <members>Contact-en_US</members>
         <members>Contact-es</members>
+        <members>Contact-fr</members>
         <members>Contact-ja</members>
         <members>DataImport__c-de</members>
         <members>DataImport__c-en_US</members>
         <members>DataImport__c-es</members>
+        <members>DataImport__c-fr</members>
         <members>DataImport__c-ja</members>
         <members>Data_Import_Settings__c-de</members>
         <members>Data_Import_Settings__c-en_US</members>
         <members>Data_Import_Settings__c-es</members>
+        <members>Data_Import_Settings__c-fr</members>
         <members>Data_Import_Settings__c-ja</members>
         <members>Engagement_Plan_Task__c-de</members>
         <members>Engagement_Plan_Task__c-en_US</members>
