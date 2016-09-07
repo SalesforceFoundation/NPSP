@@ -442,7 +442,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         Component.Apex.CommandButton addTaskButton = new Component.Apex.CommandButton(
             styleClass = 'slds-button slds-button--brand slds-float--left',
             rerender = 'taskTree',
-            immediate = true
+            immediate = false
         );
         addTaskButton.expressions.action = '{!addTask}';
         addTaskButton.expressions.value = '{!$Label.EPAddTask}';
