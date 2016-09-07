@@ -1474,6 +1474,7 @@
         <members>Account-de</members>
         <members>Account-es</members>
         <members>Account-ja</members>
+        <members>Activity-de</members>
         <members>Addr_Verification_Settings__c-de</members>
         <members>Addr_Verification_Settings__c-en_US</members>
         <members>Addr_Verification_Settings__c-es</members>
@@ -1513,6 +1514,12 @@
         <members>Data_Import_Settings__c-en_US</members>
         <members>Data_Import_Settings__c-es</members>
         <members>Data_Import_Settings__c-ja</members>
+        <members>Engagement_Plan_Task__c-de</members>
+        <members>Engagement_Plan_Task__c-en_US</members>
+        <members>Engagement_Plan_Template__c-de</members>
+        <members>Engagement_Plan_Template__c-en_US</members>
+        <members>Engagement_Plan__c-de</members>
+        <members>Engagement_Plan__c-en_US</members>
         <members>Error_Settings__c-de</members>
         <members>Error_Settings__c-en_US</members>
         <members>Error_Settings__c-es</members>
