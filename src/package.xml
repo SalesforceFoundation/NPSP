@@ -1588,6 +1588,7 @@
         <members>Batch_Data_Entry</members>
         <members>Contact_Merge</members>
         <members>DataImport__c</members>
+        <members>Engagement_Plan_Template__c</members>
         <members>General_Accounting_Unit__c</members>
         <members>NPSP_Resources</members>
         <members>NPSP_Settings</members>
