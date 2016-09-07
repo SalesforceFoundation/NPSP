@@ -42,6 +42,8 @@ public class UTIL_UnitTestData_TEST {
     public static string closedWonStage;
     public static string closedLostStage;
     public static string openStage;
+    public static string closedTaskStatus;
+    public static string openTaskStatus;
     
     public static String getClosedWonStage(){
         if (closedWonStage == null){
@@ -83,6 +85,34 @@ public class UTIL_UnitTestData_TEST {
         }
         
         return openStage;
+    }
+
+    public static String getClosedTaskStatus(){
+        if (closedTaskStatus == null){
+            List<TaskStatus> closedTaskStatuses = [SELECT masterlabel FROM TaskStatus WHERE isClosed = true];
+            
+            if(closedTaskStatuses.size()>0){
+                closedTaskStatus = closedTaskStatuses[0].masterlabel;
+            } else {
+                closedTaskStatus = '';
+            }
+        }
+        
+        return closedTaskStatus;
+    }
+
+    public static String getOpenTaskStatus(){
+        if (openTaskStatus == null){
+            List<TaskStatus> openTaskStatuses = [SELECT masterlabel FROM TaskStatus WHERE isClosed = false];
+            
+            if(openTaskStatuses.size()>0){
+                openTaskStatus = openTaskStatuses[0].masterlabel;
+            } else {
+                openTaskStatus = '';
+            }
+        }
+        
+        return openTaskStatus;
     }
     
     public static Contact getContact() {
@@ -273,6 +303,46 @@ public class UTIL_UnitTestData_TEST {
         }
         
         return AcctsToAdd;
+    }
+
+    /**
+     * @description Create Engagement Plan Templates for unit testing.
+     * @param n The number of Engagement Plan Templates to be created
+     * @return List of Engagement Plan Templates
+     */
+    public static List<Engagement_Plan_Template__c> createEPTemplates (integer n) {
+        // Holds the list of EP Templates to be returned
+        List<Engagement_Plan_Template__c> EPTemplatesToAdd = New List<Engagement_Plan_Template__c>();
+        
+        for (integer i=0 ;i<n; i++) {
+            EPTemplatesToAdd.add(new Engagement_Plan_Template__c(Name = 'Test ' + i));
+        }
+        
+        return EPTemplatesToAdd;
+    }
+
+    /**
+     * @description Create Engagement Plan Tasks for unit testing.
+     * @param n The number of Engagement Plan Tasks per Template to be created
+     * @param listEPTemplates The templates the EP Tasks will belong to
+     * @return List of Engagement Plan Templates
+     */
+    public static List<Engagement_Plan_Task__c> createEPTasksForTemplates (integer n, List<Engagement_Plan_Template__c> listEPTemplates) {
+        // Holds the list of EP Tasks to be returned
+        List<Engagement_Plan_Task__c> EPTasksToAdd = New List<Engagement_Plan_Task__c>();
+        
+        for (Engagement_Plan_Template__c epTemplate : listEPTemplates) {
+            for (integer i=0 ;i<n; i++) {
+                EPTasksToAdd.add(
+                    new Engagement_Plan_Task__c(
+                    Engagement_Plan_Template__c = epTemplate.Id,
+                    Priority__c = 'Medium'
+                    )
+                );
+            }
+        }
+        
+        return EPTasksToAdd;
     }
 
     /**
