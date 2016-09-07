@@ -35,27 +35,15 @@
  */
 public with sharing class LVL_LevelEdit_CTRL {
 
+    /** @description holds the Level currently being edited by the page */
     public Level__c lvl {get; set;}
     
-
     /*******************************************************************************************************
     * @description constructor for the page
     * @param controller the StandardController for the page
     * @return nothing
     */ 
     public LVL_LevelEdit_CTRL(ApexPages.StandardController controller) {
-
-        // since we are using a standard controller, the system should have detected all the fields
-        // we reference.  But for some reason, Salesforce only picked up our field set fields, but not
-        // the ones we have direct references to on the page.  So we will explicitly add them now. 
-        // Note however that there is a Salesforce bug in addFields that prevent using it in tests.
-        // https://success.salesforce.com/ideaView?id=08730000000YmzmAAC
-        if (!Test.isRunningTest()) {
-            controller.addFields(new string[]{'Name', 'Target__c', 'Source_Field__c', 'Level_Field__c',
-                'Previous_Level_Field__c', 'Minimum_Amount__c', 
-                'Maximum_Amount__c', 'Engagement_Plan_Template__c', 'Active__c'});
-        }
-
         lvl = (Level__c)controller.getRecord();
     }
     
@@ -149,13 +137,32 @@ public with sharing class LVL_LevelEdit_CTRL {
     * next in the ladder.
     */
     public PageReference saveAndNew() {
-        upsert lvl;
-        // now fixup lvl to be the new next level
-        lvl.Id = null;
-        lvl.Name = null;
-        lvl.Minimum_Amount__c = lvl.Maximum_Amount__c;
-        lvl.Maximum_Amount__c = null;
-        lvl.Engagement_Plan_Template__c = null;
+        try {
+            upsert lvl;
+            // now fixup lvl to be the new next level
+            lvl.Id = null;
+            lvl.Name = null;
+            lvl.Minimum_Amount__c = lvl.Maximum_Amount__c;
+            lvl.Maximum_Amount__c = null;
+            lvl.Engagement_Plan_Template__c = null;
+        } catch (Exception ex) {
+            ApexPages.addMessages(ex);            
+        }
         return null;
+    }
+
+    /*********************************************************************************************************
+    * @description actionMethod to Save the current Level.  we didn't just let the standardController handle
+    * this, in case this is done after a saveAndNew, in which case we are actually editing a different Level
+    * than the standardController originally started with.
+    */
+    public PageReference save() {
+        try {
+            upsert lvl;
+            return new PageReference('/' + lvl.Id);
+        } catch (Exception ex) {
+            ApexPages.addMessages(ex);            
+            return null;
+        }
     }
 }

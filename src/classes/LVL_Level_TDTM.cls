@@ -105,6 +105,7 @@ public class LVL_Level_TDTM extends TDTM_Runnable {
                     for (list<Level__c> listLvl : mapLadderToLevels.values()) {
                         verifyNoOverlapListLvl(listLvl, setTrigger);
                         verifyNoDuplicateNames(listLvl, setTrigger);
+                        verifyNoDuplicateLookups(listLvl, setTrigger);
                     }
                 }
             }
@@ -166,11 +167,20 @@ public class LVL_Level_TDTM extends TDTM_Runnable {
     private void verifyNoOverlapListLvl(list<Level__c> listLvl, Set<Level__c> setTrigger) {
         
         for (integer i = 1; i < listLvl.size(); i++) {
+            // test overlapping ranges between levels
             if ((listLvl[i].Minimum_Amount__c == null || listLvl[i-1].Minimum_Amount__c >= listLvl[i].Minimum_Amount__c) ||
                 (listLvl[i-1].Maximum_Amount__c == null || listLvl[i-1].Maximum_Amount__c > listLvl[i].Minimum_Amount__c)) {
                 integer ierr = setTrigger.contains(listLvl[i-1]) ? i-1 : i;
                 listLvl[ierr].addError(String.format(Label.lvlErrorMinOverlap, new list<String>{listLvl[i-1].Name, listLvl[i].Name}));
             }
+        }
+                    
+        for (integer i = 0; i < listLvl.size(); i++) {
+            // test min/max overlap within a level
+            if (listLvl[i].Minimum_Amount__c >= listLvl[i].Maximum_Amount__c) {
+                listLvl[i].addError(String.format(Label.lvlErrorMinGTMax, new list<String>{listLvl[i].Name}));                
+            }
+            
         }
     }
 
@@ -203,6 +213,22 @@ public class LVL_Level_TDTM extends TDTM_Runnable {
                     lvl.addError(String.format(Label.lvlErrorDuplicateName, new list<String>{lvl.Name}));
                 }                
             }
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description verify no Level has the same lookup for current and previous.  tags each level with a problem using 
+    * addError(), rather than throwing an exception on the first error.
+    * @param listLvl The list to verify
+    * @param setTrigger The objects that triggered this event
+    */
+    private void verifyNoDuplicateLookups(list<Level__c> listLvl, Set<Level__c> setTrigger) {
+        
+        for (integer i = 0; i < listLvl.size(); i++) {
+            if (listLvl[i].Level_Field__c == listLvl[i].Previous_Level_Field__c) {
+                listLvl[i].addError(String.format(Label.lvlErrorDuplicateLookups, new list<String>{listLvl[i].Target__c}));                
+            }
+            
         }
     }
 

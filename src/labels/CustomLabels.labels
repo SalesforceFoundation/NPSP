@@ -2886,6 +2886,14 @@ If you want to know which Opportunities would have previously included this doub
         <value>Save &amp; New</value>
     </labels>
     <labels>
+        <fullName>lvlErrorDuplicateLookups</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when the Level has the same lookup field  specified for level and previous</shortDescription>
+        <value>You must specify different lookup fields on {0} for Level Field and Previous Level Field.</value>
+    </labels>
+    <labels>
         <fullName>lvlErrorDuplicateName</fullName>
         <categories>Levels</categories>
         <language>en_US</language>
@@ -2908,6 +2916,14 @@ If you want to know which Opportunities would have previously included this doub
         <protected>false</protected>
         <shortDescription>error if level&apos;s source field isn&apos;t valid</shortDescription>
         <value>Field {0} specified in Level {1} is not a valid number field.</value>
+    </labels>
+    <labels>
+        <fullName>lvlErrorMinGTMax</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error if the Level Minimum is &gt; than Level Maximum</shortDescription>
+        <value>The Minimum Amount must be less than the Maximum Amount on level {0}.</value>
     </labels>
     <labels>
         <fullName>lvlErrorMinOverlap</fullName>

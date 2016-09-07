@@ -9,34 +9,31 @@
         <value>Engagement Plan Templates</value>
     </caseValues>
     <fields>
-        <help><!-- When an Engagement Plan Task&apos;s Assigned To field is left blank, who should the task be assigned to? --></help>
-        <label><!-- Blank Assignment Rule --></label>
-        <name>Blank_Assignment_Rule__c</name>
+        <help><!-- Recalculates a child Task&apos;s due date based on when the parent Task was actually completed. --></help>
+        <label><!-- Automatically Update Child Task Due Date --></label>
+        <name>Automatically_Update_Child_Task_Due_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- When an Engagement Plan Task&apos;s Assigned To field is left blank, who should the Task be assigned to? --></help>
+        <label><!-- Default Assignee --></label>
+        <name>Default_Assignee__c</name>
         <picklistValues>
-            <masterLabel>Owner of Receiving Object</masterLabel>
-            <translation><!-- Owner of Receiving Object --></translation>
+            <masterLabel>Owner of Object for Engagement Plan</masterLabel>
+            <translation><!-- Owner of Object for Engagement Plan --></translation>
         </picklistValues>
         <picklistValues>
-            <masterLabel>User Creating Action Plan</masterLabel>
-            <translation><!-- User Creating Action Plan --></translation>
+            <masterLabel>User Creating Engagement Plan</masterLabel>
+            <translation><!-- User Creating Engagement Plan --></translation>
         </picklistValues>
     </fields>
     <fields>
-        <label><!-- Delay Type --></label>
-        <name>Delay_Type__c</name>
-        <picklistValues>
-            <masterLabel>After Date Completed</masterLabel>
-            <translation><!-- After Date Completed --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>After Due Date</masterLabel>
-            <translation><!-- After Due Date --></translation>
-        </picklistValues>
+        <label><!-- Description --></label>
+        <name>Description__c</name>
     </fields>
     <fields>
-        <help><!-- Should tasks that land on a weekend be scheduled for the Friday before the weekend or the Monday after? --></help>
-        <label><!-- Skip Day --></label>
-        <name>Skip_Day__c</name>
+        <help><!-- Should Tasks with Due Dates on a weekend day be scheduled for the Friday before the weekend or the Monday after? This applies only if Skip Weekend is selected. --></help>
+        <label><!-- Reschedule To --></label>
+        <name>Reschedule_To__c</name>
         <picklistValues>
             <masterLabel>Friday</masterLabel>
             <translation><!-- Friday --></translation>
@@ -47,7 +44,7 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- If selected, tasks created in this Engagement Plan will not be given a Due Date that falls on a weekend. --></help>
+        <help><!-- If selected, Tasks created in this Engagement Plan will not have Due Dates that fall on Saturday or Sunday. --></help>
         <label><!-- Skip Weekends --></label>
         <name>Skip_Weekends__c</name>
     </fields>
@@ -67,4 +64,8 @@
         </sections>
     </layouts>
     <startsWith>Vowel</startsWith>
+    <webLinks>
+        <label><!-- Manage_Template --></label>
+        <name>Manage_Template</name>
+    </webLinks>
 </CustomObjectTranslation>

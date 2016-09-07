@@ -1131,9 +1131,11 @@
         <members>leadConvertStatus</members>
         <members>leadConvertViewContactError</members>
         <members>lvlBtnSaveAndNew</members>
+        <members>lvlErrorDuplicateLookups</members>
         <members>lvlErrorDuplicateName</members>
         <members>lvlErrorInvalidLookupField</members>
         <members>lvlErrorInvalidSourceField</members>
+        <members>lvlErrorMinGTMax</members>
         <members>lvlErrorMinOverlap</members>
         <members>mtchBtnSearch</members>
         <members>mtchCloseDateEnd</members>
