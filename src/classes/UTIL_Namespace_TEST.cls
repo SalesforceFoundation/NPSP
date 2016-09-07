@@ -152,5 +152,6 @@ public with sharing class UTIL_Namespace_TEST {
         str = Label.pscManageSoftCreditsValidateTotals;
         str = Label.stgHelpMatchedDonorRole;
         str = Label.stgNavBulkProcesses;
+        str = Label.EPAddTask;
     }
 }

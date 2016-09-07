@@ -48,7 +48,7 @@ public with sharing class EP_TaskDependency_TDTM extends TDTM_Runnable {
     ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
-        
+
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
             List<Task> tasksToCheckDependencies = new List<Task>();
             Map<Id, SObject> oldMap = new Map<Id, SObject>(oldlist);
@@ -65,7 +65,6 @@ public with sharing class EP_TaskDependency_TDTM extends TDTM_Runnable {
                 updateDependentTasks(tasksToCheckDependencies);
             }
         }
-
         return null;
     }
 
@@ -141,7 +140,7 @@ public with sharing class EP_TaskDependency_TDTM extends TDTM_Runnable {
         //update indirect dependent Tasks if the template's delay type says to
         for (Engagement_Plan_Task__c epTask : indirectDependentEPTasks.values()) {
             Engagement_Plan_Template__c template = taskUtil.templateMap.get(epTask.Engagement_Plan_Template__c);
-            if (template.Delay_Type__c == EP_EngagementPlans_UTIL.DELAY_TYPE_AFTER_COMPLETED) {
+            if (template.Automatically_Update_Child_Task_Due_Date__c) {
                 for (Task indirectDependentTask : mapEpTaskIdTasks.get(epTask.id)) {
                     taskUtil.updateInactiveTask(indirectDependentTask);
                     taskUpdateNoEmail.add(indirectDependentTask);
@@ -150,6 +149,7 @@ public with sharing class EP_TaskDependency_TDTM extends TDTM_Runnable {
         }
 
         Database.DMLOptions options = new Database.DMLOptions();
+        options.OptAllOrNone = true;
 
         if (!taskUpdateEmail.isEmpty()) {
             options.EmailHeader.triggerUserEmail = true;

@@ -45,7 +45,7 @@ public class EP_EngagementPlanTaskValidation_TEST {
         List<Engagement_Plan_Task__c> taskTests = UTIL_UnitTestData_TEST.createEPTasksForTemplates(2, templateTests);
         insert taskTests;
         Engagement_Plan_Task__c taskTest = new Engagement_Plan_Task__c(
-            Engagement_Plan_Template__c = taskTests[0].Engagement_Plan_Template__c, Dependent_Task__c = taskTests[0].Id);
+            Engagement_Plan_Template__c = taskTests[0].Engagement_Plan_Template__c, Parent_Task__c = taskTests[0].Id);
         
         Test.startTest();
         insert taskTest;
@@ -68,7 +68,7 @@ public class EP_EngagementPlanTaskValidation_TEST {
             dependentTaskTests.add(new Engagement_Plan_Task__c(
                 Name = taskTest.Name + ' Dependent',
                 Engagement_Plan_Template__c = templateTests[0].Id,
-                Dependent_Task__c = taskTest.Id));
+                Parent_Task__c = taskTest.Id));
         }
 
         Test.startTest();
@@ -89,9 +89,9 @@ public class EP_EngagementPlanTaskValidation_TEST {
         insert templateTests;
         List<Engagement_Plan_Task__c> taskTests = UTIL_UnitTestData_TEST.createEPTasksForTemplates(4, templateTests);
         insert taskTests;
-        taskTests[0].Dependent_Task__c = taskTests[2].Id;
-        taskTests[1].Dependent_Task__c = taskTests[0].Id;
-        taskTests[2].Dependent_Task__c = taskTests[1].Id;
+        taskTests[0].Parent_Task__c = taskTests[2].Id;
+        taskTests[1].Parent_Task__c = taskTests[0].Id;
+        taskTests[2].Parent_Task__c = taskTests[1].Id;
 
         Test.startTest();
         try {
@@ -114,7 +114,7 @@ public class EP_EngagementPlanTaskValidation_TEST {
         insert taskTests;
 
         Engagement_Plan_Task__c crossTemplateTask = taskTests[0].clone();
-        crossTemplateTask.Dependent_Task__c = taskTests[0].Id;
+        crossTemplateTask.Parent_Task__c = taskTests[0].Id;
         crossTemplateTask.Engagement_Plan_Template__c = templateTests[1].Id;
 
         Test.startTest();
@@ -137,8 +137,8 @@ public class EP_EngagementPlanTaskValidation_TEST {
             UTIL_UnitTestData_TEST.createEPTasksForTemplates(3, new List<Engagement_Plan_Template__c>{templateTests[0]});
         insert taskTests;
 
-        taskTests[0].Dependent_Task__c = taskTests[2].Id;
-        taskTests[1].Dependent_Task__c = taskTests[2].Id;
+        taskTests[0].Parent_Task__c = taskTests[2].Id;
+        taskTests[1].Parent_Task__c = taskTests[2].Id;
         update taskTests;
 
         taskTests[2].Engagement_Plan_Template__c = templateTests[1].Id;
@@ -163,8 +163,8 @@ public class EP_EngagementPlanTaskValidation_TEST {
             UTIL_UnitTestData_TEST.createEPTasksForTemplates(3, new List<Engagement_Plan_Template__c>{templateTests[0]});
         insert taskTests;
 
-        taskTests[0].Dependent_Task__c = taskTests[2].Id;
-        taskTests[1].Dependent_Task__c = taskTests[2].Id;
+        taskTests[0].Parent_Task__c = taskTests[2].Id;
+        taskTests[1].Parent_Task__c = taskTests[2].Id;
         update taskTests;
 
         taskTests[1].Engagement_Plan_Template__c = templateTests[1].Id;

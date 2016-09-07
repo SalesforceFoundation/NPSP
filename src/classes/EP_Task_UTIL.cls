@@ -88,32 +88,52 @@ public with sharing class EP_Task_UTIL {
     }
 
     /*******************************************************************************************************
-    * @description Queries and builds maps for templates and template tasks related to a list of engagement 
-    * plans.
-    * @param engagementPlans a list of Engagement Plans to query and build maps for.
+    * @description Constructor initializes map properties based on a single template Id.
+    * @param templateId The Engagement Plan Template to build maps for.
+    * @return void This constructor instantiates class properties.
+    ********************************************************************************************************/
+    public EP_Task_UTIL(Id templateId) {
+        initializeMaps(new Set<Id>{templateId});
+    }
+
+
+    /*******************************************************************************************************
+    * @description Gathers a set of template Ids for a list of Engagement Plans
+    * @param plans a list of Engagement Plans to query and build maps for.
+    * @return void This method calls another method that instantiates class properties.
+    ********************************************************************************************************/
+    public void initializeMaps(List<Engagement_Plan__c> plans) {
+        Set<Id> templateIds = new Set<Id>();
+        for (Engagement_Plan__c plan : plans) {
+            templateIds.add(plan.Engagement_Plan_Template__c);
+        }
+
+        initializeMaps(templateIds);
+    }
+
+
+    /*******************************************************************************************************
+    * @description Queries and builds maps for templates and template tasks from a set of template Ids.
+    * @param templateIds a set of Engagement Plan Template Ids to query and build maps for.
     * @return void This method instantiates class properties.
     ********************************************************************************************************/
-    public void initializeMaps(List<Engagement_Plan__c> engagementPlans) {
-        //collect template IDs and target objects from the engagement plans
-        for (Engagement_Plan__c engagementPlan : engagementPlans) {
-            templateMap.put(engagementPlan.Engagement_Plan_Template__c, null);
-        }
+    public void initializeMaps(Set<Id> templateIds) {
 
         //query for templates and their child tasks
         templateMap = new Map<Id, Engagement_Plan_Template__c>(
-            [SELECT Id, Name, Skip_Weekends__c, Skip_Day__c, Delay_Type__c, Blank_Assignment_Rule__c,
+            [SELECT Id, Name, Skip_Weekends__c, Reschedule_To__c, Automatically_Update_Child_Task_Due_Date__c, Default_Assignee__c, Description__c,
                 (SELECT Id, Name, Engagement_Plan_Template__c, Assigned_To__c, Comments__c, Days_After__c, Type__c, 
-                Dependent_Task__c, Priority__c, Reminder__c, Reminder_Minutes__c, Send_Email__c, Status__c 
+                Parent_Task__c, Priority__c, Reminder__c, Reminder_Time__c, Send_Email__c, Status__c 
                 FROM Engagement_Plan_Tasks__r)
-            FROM Engagement_Plan_Template__c WHERE Id IN :templateMap.keySet()]
+            FROM Engagement_Plan_Template__c WHERE Id IN :templateIds]
         );
 
         //query for tasks and their child tasks
         epTaskMap = new Map<Id, Engagement_Plan_Task__c>(
             [SELECT Id, Name, Engagement_Plan_Template__c, Assigned_To__c, Comments__c, Days_After__c, Type__c, 
-            Dependent_Task__c, Priority__c, Reminder__c, Reminder_Minutes__c, Send_Email__c, Status__c,
+            Parent_Task__c, Priority__c, Reminder__c, Reminder_Time__c, Send_Email__c, Status__c,
                 (SELECT Id FROM Engagement_Plan_Tasks__r)
-            FROM Engagement_Plan_Task__c WHERE Engagement_Plan_Template__c IN :templateMap.keySet()]
+            FROM Engagement_Plan_Task__c WHERE Engagement_Plan_Template__c IN :templateIds]
         );        
     }
 
@@ -153,7 +173,7 @@ public with sharing class EP_Task_UTIL {
         taskResult.ActivityDate = calcActivityDate(epTask, System.today());
 
         //Non Dependent Task defaults
-        if (epTask.Dependent_Task__c == null) {
+        if (epTask.Parent_Task__c == null) {
             setReminder(taskResult);
             
             if (String.isBlank(taskResult.Status)) {
@@ -184,12 +204,12 @@ public with sharing class EP_Task_UTIL {
 
         //follow the dependency chain to get the total number of days delay
         Integer max_counter = 0;
-        while (currentTask.Dependent_Task__c != null
+        while (currentTask.Parent_Task__c != null
                 && max_counter < EP_EngagementPlans_UTIL.MAX_ITERATIONS) {
             
             max_counter++;
 
-            currentTask = epTaskMap.get(currentTask.Dependent_Task__c);
+            currentTask = epTaskMap.get(currentTask.Parent_Task__c);
             if (currentTask.Days_After__c != null) {
                 result += (Integer)currentTask.Days_After__c;
             }
@@ -214,7 +234,7 @@ public with sharing class EP_Task_UTIL {
         }
 
         //update activity dates if the template is set up to use the parent task completion date
-        if (template.Delay_Type__c == EP_EngagementPlans_UTIL.DELAY_TYPE_AFTER_COMPLETED) {
+        if (template.Automatically_Update_Child_Task_Due_Date__c) {
             taskForUpdate.ActivityDate = calcActivityDate(epTask, System.today());
         }
         //activate reminder if set, and update reminder date based on ActivityDate
@@ -246,11 +266,11 @@ public with sharing class EP_Task_UTIL {
             taskNeedingReminder.IsReminderSet = true;
 
             Integer reminderMinutes;
-            if (String.isBlank(epTask.Reminder_Minutes__c)) {
+            if (String.isBlank(epTask.Reminder_Time__c)) {
                 //default to noon, i.e. 12*60
                 reminderMinutes = 720;
             } else {
-                reminderMinutes = Integer.valueOf(epTask.Reminder_Minutes__c);
+                reminderMinutes = Integer.valueOf(epTask.Reminder_Time__c);
             }
 
             //We've already calculated the the activity date for this task, including offset and skip weekend setting
@@ -299,7 +319,7 @@ public with sharing class EP_Task_UTIL {
         }
 
         if (template.Skip_Weekends__c) {
-            result = skipWeekend(result, template.Skip_Day__c);
+            result = skipWeekend(result, template.Reschedule_To__c);
         }
 
         return result;

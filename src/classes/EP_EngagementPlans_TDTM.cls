@@ -59,7 +59,7 @@ public with sharing class EP_EngagementPlans_TDTM extends TDTM_Runnable {
 
             //EP_Task_UTIL class for Task creation and related functionality
             EP_Task_UTIL taskUtil = new EP_Task_UTIL(engagementPlans);
-            // EP_EngagementPlans_UTIL class for calculating which lookup field Engagement Plans use and related operations.*/
+            // EP_EngagementPlans_UTIL class for calculating which lookup field Engagement Plans use and related operations.
             EP_EngagementPlans_UTIL epUtil = new EP_EngagementPlans_UTIL(engagementPlans);
 
             for (Engagement_Plan__c engagementPlan : engagementPlans) {
@@ -72,7 +72,7 @@ public with sharing class EP_EngagementPlans_TDTM extends TDTM_Runnable {
 
                     //assign owner based on template setting
                     if (newTask.OwnerId == null) {
-                        if (template.Blank_Assignment_Rule__c == EP_EngagementPlans_UTIL.BLANK_ASSIGNMENT_USER_CREATING) {
+                        if (template.Default_Assignee__c == EP_EngagementPlans_UTIL.BLANK_ASSIGNMENT_USER_CREATING) {
                             newTask.OwnerId = UserInfo.getUserId();
                         } else {
                             //get the owner of the record this engagement plan is being applied to
@@ -81,7 +81,7 @@ public with sharing class EP_EngagementPlans_TDTM extends TDTM_Runnable {
                     }
 
                     //add to appropriate list based on the email setting.
-                    if (epTask.Send_Email__c && epTask.Dependent_Task__c == null) {
+                    if (epTask.Send_Email__c && epTask.Parent_Task__c == null) {
                         taskInsertEmail.add(newTask);
                     } else {
                         taskInsertNoEmail.add(newTask);
@@ -90,6 +90,7 @@ public with sharing class EP_EngagementPlans_TDTM extends TDTM_Runnable {
             }
 
             Database.DMLOptions options = new Database.DMLOptions();
+            options.OptAllOrNone = true;
 
             if (!taskInsertEmail.isEmpty()) {
                 options.EmailHeader.triggerUserEmail = true;
@@ -101,7 +102,6 @@ public with sharing class EP_EngagementPlans_TDTM extends TDTM_Runnable {
                 List<Database.SaveResult> results = Database.insert(taskInsertNoEmail, options);
             }
         }
-
         return null;
     }
 }
