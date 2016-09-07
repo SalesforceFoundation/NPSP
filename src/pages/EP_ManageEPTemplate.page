@@ -60,7 +60,7 @@
                             <div class="slds-form-element__control">
                                 <label class="slds-checkbox">
                                     <apex:inputCheckbox id="idSkipWeekends" value="{!template.Skip_Weekends__c}">
-                                        <apex:actionSupport event="onchange" immediate="false" reRender="templateForm" status="statusLoad"/>
+                                        <apex:actionSupport event="onchange" immediate="true" reRender="templateForm" status="statusLoad"/>
                                     </apex:inputCheckbox>
                                     <span class="slds-checkbox--faux"></span>
                                     <apex:outputPanel styleClass="slds-form-element__label">{!$ObjectType.Engagement_Plan_Template__c.Fields.Skip_Weekends__c.Label}</apex:outputPanel>
