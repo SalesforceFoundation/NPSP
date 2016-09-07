@@ -60,7 +60,7 @@
                             <div class="slds-form-element__control">
                                 <label class="slds-checkbox">
                                     <apex:inputCheckbox id="idSkipWeekends" value="{!template.Skip_Weekends__c}">
-                                        <apex:actionSupport event="onchange" immediate="true" reRender="templateForm" status="statusLoad"/>
+                                        <apex:actionSupport event="onchange" immediate="false" reRender="templateForm" status="statusLoad"/>
                                     </apex:inputCheckbox>
                                     <span class="slds-checkbox--faux"></span>
                                     <apex:outputPanel styleClass="slds-form-element__label">{!$ObjectType.Engagement_Plan_Template__c.Fields.Skip_Weekends__c.Label}</apex:outputPanel>
@@ -96,13 +96,13 @@
                 </div>
             </apex:outputPanel>
         </div>
-        <apex:actionFunction name="addDependentTaskJS" action="{!addDependentTask}" immediate="true" status="statusLoad" reRender="taskTree">
+        <apex:actionFunction name="addDependentTaskJS" action="{!addDependentTask}" immediate="false" status="statusLoad" reRender="taskTree">
             <apex:param name="depentendTaskParam" value="" assignTo="{!currentTaskLevel}" />
         </apex:actionFunction>
-        <apex:actionFunction name="deleteTaskJS" action="{!deleteTask}" immediate="true" status="statusLoad" reRender="taskTree">
+        <apex:actionFunction name="deleteTaskJS" action="{!deleteTask}" immediate="false" status="statusLoad" reRender="taskTree">
             <apex:param name="deleteTaskParam" value="" assignTo="{!currentTaskLevel}" />
         </apex:actionFunction>
-        <apex:actionFunction name="updateTemplateForm" immediate="true" status="statusLoad" reRender="theForm" />
+        <apex:actionFunction name="updateTemplateForm" immediate="false" status="statusLoad" reRender="theForm" />
         <!--spinner status-->
         <apex:actionStatus id="statusLoad"
                     onstart="document.getElementById('divLoading').style.display = 'block';console.log('started');"
