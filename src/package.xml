@@ -825,6 +825,7 @@
         <members>CONV_What_This_Tool_Does</members>
         <members>CampaignMemberStatusOmit</members>
         <members>EPAddDependentTask</members>
+        <members>EPAddTask</members>
         <members>EPDeleteTask</members>
         <members>EPTaskDependency</members>
         <members>EPTaskTemplate</members>

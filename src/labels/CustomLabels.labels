@@ -588,6 +588,14 @@
         <value>Add Dependent Task</value>
     </labels>
     <labels>
+        <fullName>EPAddTask</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Engagement Plan&apos;s Add Task button label</shortDescription>
+        <value>Add Task</value>
+    </labels>
+    <labels>
         <fullName>EPDeleteTask</fullName>
         <categories>Engagement Plans</categories>
         <language>en_US</language>
