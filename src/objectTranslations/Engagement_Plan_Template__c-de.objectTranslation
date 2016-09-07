@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>false</plural>
+        <value><!-- Engagement Plan Template --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>true</plural>
+        <value><!-- Engagement Plan Template --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>false</plural>
+        <value><!-- Engagement Plan Template --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>true</plural>
+        <value><!-- Engagement Plan Template --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>false</plural>
+        <value><!-- Engagement Plan Template --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>true</plural>
+        <value><!-- Engagement Plan Template --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>false</plural>
+        <value><!-- Engagement Plan Template --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>true</plural>
+        <value><!-- Engagement Plan Template --></value>
+    </caseValues>
+    <fields>
+        <help><!-- When an Engagement Plan Task&apos;s Assigned To field is left blank, who should the task be assigned to? --></help>
+        <label><!-- Blank Assignment Rule --></label>
+        <name>Blank_Assignment_Rule__c</name>
+        <picklistValues>
+            <masterLabel>Owner of Receiving Object</masterLabel>
+            <translation><!-- Owner of Receiving Object --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>User Creating Action Plan</masterLabel>
+            <translation><!-- User Creating Action Plan --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Delay Type --></label>
+        <name>Delay_Type__c</name>
+        <picklistValues>
+            <masterLabel>After Date Completed</masterLabel>
+            <translation><!-- After Date Completed --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>After Due Date</masterLabel>
+            <translation><!-- After Due Date --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Should tasks that land on a weekend be scheduled for the Friday before the weekend or the Monday after? --></help>
+        <label><!-- Skip Day --></label>
+        <name>Skip_Day__c</name>
+        <picklistValues>
+            <masterLabel>Friday</masterLabel>
+            <translation><!-- Friday --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Monday</masterLabel>
+            <translation><!-- Monday --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- If selected, tasks created in this Engagement Plan will not be given a Due Date that falls on a weekend. --></help>
+        <label><!-- Skip Weekends --></label>
+        <name>Skip_Weekends__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Engagement Plans --></label>
+        <name>Total_Engagement_Plans__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Tasks --></label>
+        <name>Total_Tasks__c</name>
+    </fields>
+    <gender><!-- Neuter --></gender>
+    <layouts>
+        <layout>Engagement Plan Template Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Engagement Plan Template Name --></nameFieldLabel>
+</CustomObjectTranslation>

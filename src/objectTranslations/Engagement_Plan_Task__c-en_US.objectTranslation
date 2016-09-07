@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Engagement Plan Task</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Engagement Plan Tasks</value>
+    </caseValues>
+    <fields>
+        <label><!-- Assigned To --></label>
+        <name>Assigned_To__c</name>
+        <relationshipLabel><!-- Engagement Plan Tasks --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Comments --></label>
+        <name>Comments__c</name>
+    </fields>
+    <fields>
+        <label><!-- Days After --></label>
+        <name>Days_After__c</name>
+    </fields>
+    <fields>
+        <label><!-- Dependent Task --></label>
+        <name>Dependent_Task__c</name>
+        <relationshipLabel><!-- Engagement Plan Tasks --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Engagement Plan Template --></label>
+        <name>Engagement_Plan_Template__c</name>
+        <relationshipLabel><!-- Engagement Plan Tasks --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Priority --></label>
+        <name>Priority__c</name>
+        <picklistValues>
+            <masterLabel>High</masterLabel>
+            <translation><!-- High --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Low</masterLabel>
+            <translation><!-- Low --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Medium</masterLabel>
+            <translation><!-- Medium --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- The number of minutes after midnight that the reminder should be set to. --></help>
+        <label><!-- Reminder Minutes --></label>
+        <name>Reminder_Minutes__c</name>
+    </fields>
+    <fields>
+        <label><!-- Reminder --></label>
+        <name>Reminder__c</name>
+    </fields>
+    <fields>
+        <label><!-- Send Email --></label>
+        <name>Send_Email__c</name>
+    </fields>
+    <fields>
+        <label><!-- Status --></label>
+        <name>Status__c</name>
+        <picklistValues>
+            <masterLabel>Completed</masterLabel>
+            <translation><!-- Completed --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Deferred</masterLabel>
+            <translation><!-- Deferred --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>In Progress</masterLabel>
+            <translation><!-- In Progress --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Not Started</masterLabel>
+            <translation><!-- Not Started --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Waiting on someone else</masterLabel>
+            <translation><!-- Waiting on someone else --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Type --></label>
+        <name>Type__c</name>
+        <picklistValues>
+            <masterLabel>Call</masterLabel>
+            <translation><!-- Call --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Email</masterLabel>
+            <translation><!-- Email --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Meeting</masterLabel>
+            <translation><!-- Meeting --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation><!-- Other --></translation>
+        </picklistValues>
+    </fields>
+    <layouts>
+        <layout>Engagement Plan Task Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Vowel</startsWith>
+</CustomObjectTranslation>
