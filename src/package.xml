@@ -670,6 +670,7 @@
         <members>Grant_Deadline__c.Grant_Deliverable_Close_Date__c</members>
         <members>Grant_Deadline__c.Grant_Deliverable_Requirements__c</members>
         <members>Grant_Deadline__c.Opportunity__c</members>
+        <members>Grant_Deadline__c.Type__c</members>
         <members>Household_Naming_Settings__c.Contact_Overrun_Count__c</members>
         <members>Household_Naming_Settings__c.Formal_Greeting_Format__c</members>
         <members>Household_Naming_Settings__c.Household_Name_Format__c</members>
@@ -694,8 +695,11 @@
         <members>Level__c.Target__c</members>
         <members>Opportunity.Acknowledgment_Date__c</members>
         <members>Opportunity.Acknowledgment_Status__c</members>
+        <members>Opportunity.Ask_Date__c</members>
         <members>Opportunity.Batch__c</members>
+        <members>Opportunity.Closed_Lost_Reason__c</members>
         <members>Opportunity.Fair_Market_Value__c</members>
+        <members>Opportunity.Gift_Strategy__c</members>
         <members>Opportunity.Grant_Contract_Date__c</members>
         <members>Opportunity.Grant_Contract_Number__c</members>
         <members>Opportunity.Grant_Period_End_Date__c</members>
@@ -721,6 +725,7 @@
         <members>Opportunity.Previous_Grant_Opportunity__c</members>
         <members>Opportunity.Primary_Contact_Campaign_Member_Status__c</members>
         <members>Opportunity.Primary_Contact__c</members>
+        <members>Opportunity.Qualified_Date__c</members>
         <members>Opportunity.Recurring_Donation_Installment_Name__c</members>
         <members>Opportunity.Recurring_Donation_Installment_Number__c</members>
         <members>Opportunity.Requested_Amount__c</members>
@@ -1691,6 +1696,7 @@
         <members>Opportunity-Donation Layout</members>
         <members>Opportunity-Grant Layout</members>
         <members>Opportunity-In-Kind Gift Layout</members>
+        <members>Opportunity-Major Gift Layout</members>
         <members>Opportunity-Matching Gift Layout</members>
         <members>Opportunity-Membership Layout</members>
         <members>Partial_Soft_Credit__c-Partial Soft Credit Layout</members>

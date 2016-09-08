@@ -31,14 +31,41 @@
         </picklistValues>
     </fields>
     <fields>
+        <help><!-- The date when the donor was specifically asked for the donation, as opposed to the Opportunity Close Date that the organization may set to either when the Opportunity was first created, or when the Opportunity was won. --></help>
+        <label><!-- Ask Date --></label>
+        <name>Ask_Date__c</name>
+    </fields>
+    <fields>
         <label><!-- Batch --></label>
         <name>Batch__c</name>
         <relationshipLabel><!-- Opportunities --></relationshipLabel>
     </fields>
     <fields>
+        <help><!-- Notes on why the donation ask was not successful. --></help>
+        <label><!-- Closed Lost Reason --></label>
+        <name>Closed_Lost_Reason__c</name>
+    </fields>
+    <fields>
         <help>Der mittlere Marktwert eines Sachgeschenks</help>
         <label>Mittlerer Marktwert</label>
         <name>Fair_Market_Value__c</name>
+    </fields>
+    <fields>
+        <help><!-- Categorizes the type of ask for this opportunity. --></help>
+        <label><!-- Gift Strategy --></label>
+        <name>Gift_Strategy__c</name>
+        <picklistValues>
+            <masterLabel>New Donor</masterLabel>
+            <translation><!-- New Donor --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Renewal</masterLabel>
+            <translation><!-- Renewal --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Upgrade</masterLabel>
+            <translation><!-- Upgrade --></translation>
+        </picklistValues>
     </fields>
     <fields>
         <help>Das Datum des Unterstützungsbeginns gemäß dem Dokument oder Vertrag, das die unterstützende Organisation gesendet hat</help>
@@ -206,6 +233,11 @@
         <relationshipLabel><!-- Opportunities --></relationshipLabel>
     </fields>
     <fields>
+        <help><!-- The date this donor was identified as qualifying for this donation. --></help>
+        <label><!-- Qualified Date --></label>
+        <name>Qualified_Date__c</name>
+    </fields>
+    <fields>
         <help>Ratenbezeichnung zur Verwendung in der Opportunity-Benennung Zeigt die Ratenanzahl in Klammern für unbefristete wiederkehrende Spenden bzw. die Nummer der Rate aus der Gesamtanzahl für wiederkehrende Spenden mit einer festgelegten Anzahl von Raten</help>
         <label>Ratenbezeichnung für wiederk. Spenden</label>
         <name>Recurring_Donation_Installment_Name__c</name>
@@ -280,6 +312,21 @@
         <sections>
             <label><!-- Tribute Information --></label>
             <section>Tribute Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Major Gift Layout</layout>
+        <sections>
+            <label><!-- Donation Information --></label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label><!-- Major Gift Information --></label>
+            <section>Major Gift Information</section>
+        </sections>
+        <sections>
+            <label><!-- Payment Information --></label>
+            <section>Payment Information</section>
         </sections>
     </layouts>
     <layouts>

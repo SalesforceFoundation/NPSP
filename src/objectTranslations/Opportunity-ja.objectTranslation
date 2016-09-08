@@ -31,14 +31,41 @@
         </picklistValues>
     </fields>
     <fields>
+        <help><!-- The date when the donor was specifically asked for the donation, as opposed to the Opportunity Close Date that the organization may set to either when the Opportunity was first created, or when the Opportunity was won. --></help>
+        <label><!-- Ask Date --></label>
+        <name>Ask_Date__c</name>
+    </fields>
+    <fields>
         <label>一括処理</label>
         <name>Batch__c</name>
         <relationshipLabel>支援</relationshipLabel>
     </fields>
     <fields>
+        <help><!-- Notes on why the donation ask was not successful. --></help>
+        <label><!-- Closed Lost Reason --></label>
+        <name>Closed_Lost_Reason__c</name>
+    </fields>
+    <fields>
         <help>現物支援の公正な時価。</help>
         <label><!-- Fair Market Value --></label>
         <name>Fair_Market_Value__c</name>
+    </fields>
+    <fields>
+        <help><!-- Categorizes the type of ask for this opportunity. --></help>
+        <label><!-- Gift Strategy --></label>
+        <name>Gift_Strategy__c</name>
+        <picklistValues>
+            <masterLabel>New Donor</masterLabel>
+            <translation><!-- New Donor --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Renewal</masterLabel>
+            <translation><!-- Renewal --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Upgrade</masterLabel>
+            <translation><!-- Upgrade --></translation>
+        </picklistValues>
     </fields>
     <fields>
         <help>助成金提供団体から送信されたドキュメントまたは契約による、助成金の開始日付。</help>
@@ -206,6 +233,11 @@
         <relationshipLabel>支援</relationshipLabel>
     </fields>
     <fields>
+        <help><!-- The date this donor was identified as qualifying for this donation. --></help>
+        <label><!-- Qualified Date --></label>
+        <name>Qualified_Date__c</name>
+    </fields>
+    <fields>
         <help>支援の命名規則に含まれる各支払の名前。無期限の継続支援では括弧内に回数が表示され、規定回数が設定されている継続支援では回数/総数が表示されます。</help>
         <label>継続支援の各支払の名前</label>
         <name>Recurring_Donation_Installment_Name__c</name>
@@ -280,6 +312,21 @@
         <sections>
             <label>敬意/追悼情報</label>
             <section>Tribute Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Major Gift Layout</layout>
+        <sections>
+            <label><!-- Donation Information --></label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label><!-- Major Gift Information --></label>
+            <section>Major Gift Information</section>
+        </sections>
+        <sections>
+            <label><!-- Payment Information --></label>
+            <section>Payment Information</section>
         </sections>
     </layouts>
     <layouts>

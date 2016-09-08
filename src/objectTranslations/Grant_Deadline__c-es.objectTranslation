@@ -2,13 +2,14 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Grant Deadline --></value>
+        <value><!-- Deliverable --></value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Grant Deadline --></value>
+        <value><!-- Deliverable --></value>
     </caseValues>
     <fields>
+        <help><!-- The date on which this particular Deliverable is due. --></help>
         <label>Fecha de vencimiento del hito</label>
         <name>Grant_Deadline_Due_Date__c</name>
     </fields>
@@ -18,6 +19,7 @@
         <name>Grant_Deliverable_Close_Date__c</name>
     </fields>
     <fields>
+        <help><!-- Description of what is required for this deliverable. --></help>
         <label>Requerimientos del entregable</label>
         <name>Grant_Deliverable_Requirements__c</name>
     </fields>
@@ -25,6 +27,26 @@
         <label>Oportunidad</label>
         <name>Opportunity__c</name>
         <relationshipLabel>Hitos del grant</relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Type --></label>
+        <name>Type__c</name>
+        <picklistValues>
+            <masterLabel>Application</masterLabel>
+            <translation><!-- Application --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Final Report</masterLabel>
+            <translation><!-- Final Report --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Interim Report</masterLabel>
+            <translation><!-- Interim Report --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>LOI</masterLabel>
+            <translation><!-- LOI --></translation>
+        </picklistValues>
     </fields>
     <gender><!-- Feminine --></gender>
     <layouts>
@@ -38,5 +60,5 @@
             <section>Grant Deliverable Requirements</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Grant Deadline Name --></nameFieldLabel>
+    <nameFieldLabel><!-- Deliverable Name --></nameFieldLabel>
 </CustomObjectTranslation>
