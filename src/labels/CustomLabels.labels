@@ -580,6 +580,46 @@
         <value>omit</value>
     </labels>
     <labels>
+        <fullName>EPAddDependentTask</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>EPAddDependentTask</shortDescription>
+        <value>Add Dependent Task</value>
+    </labels>
+    <labels>
+        <fullName>EPAddTask</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Engagement Plan&apos;s Add Task button label</shortDescription>
+        <value>Add Task</value>
+    </labels>
+    <labels>
+        <fullName>EPDeleteTask</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>EPDeleteTask</shortDescription>
+        <value>Delete Task</value>
+    </labels>
+    <labels>
+        <fullName>EPTaskDependency</fullName>
+        <categories>Engagement Plan, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>EPTaskDependency</shortDescription>
+        <value>Engagement Plan Task dependencies cannot make recursive dependency loops.</value>
+    </labels>
+    <labels>
+        <fullName>EPTaskTemplate</fullName>
+        <categories>Engagement Plan, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>EPTaskTemplate</shortDescription>
+        <value>Engagement Plan Tasks can only be dependent on other Engagement Plan Tasks that belong to the same Engagement Plan Template.</value>
+    </labels>
+    <labels>
         <fullName>HiddenForSecurity</fullName>
         <categories>settings</categories>
         <language>en_US</language>
@@ -1341,6 +1381,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>conMergeErrNoPersonAccounts</shortDescription>
         <value>Person accounts are not supported.</value>
+    </labels>
+    <labels>
+        <fullName>engagementPlanNoLookups</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>engagementPlanNoLookups</shortDescription>
+        <value>One object lookup must be populated for each Engagement Plan.</value>
+    </labels>
+    <labels>
+        <fullName>engagementPlanTwoLookups</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>engagementPlanTwoLookups</shortDescription>
+        <value>Only one object lookup can be populated per Engagement Plan.</value>
     </labels>
     <labels>
         <fullName>flsError</fullName>
@@ -3308,6 +3364,30 @@ If you want to know which Opportunities would have previously included this doub
         <protected>false</protected>
         <shortDescription>sendAcknowledgmentSucceeded</shortDescription>
         <value>Acknowledged</value>
+    </labels>
+    <labels>
+        <fullName>statusCompleted</fullName>
+        <categories>Status</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>statusCompleted</shortDescription>
+        <value>Completed</value>
+    </labels>
+    <labels>
+        <fullName>statusInProgress</fullName>
+        <categories>Status</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>statusInProgress</shortDescription>
+        <value>In Progress</value>
+    </labels>
+    <labels>
+        <fullName>statusNotStarted</fullName>
+        <categories>Status</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>statusNotStarted</shortDescription>
+        <value>Not Started</value>
     </labels>
     <labels>
         <fullName>stgAddrGeneralSettingsIntro</fullName>
