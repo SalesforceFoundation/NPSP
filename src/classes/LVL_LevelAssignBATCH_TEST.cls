@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2016
+* @group Levels
 * @description test the batchable class for Level Assignments
 */
 
@@ -118,7 +119,7 @@ private class LVL_LevelAssignBATCH_TEST {
         Engagement_Plan_Template__c template = new Engagement_Plan_Template__c(
             Name = 'Template',
             Skip_Weekends__c = false,
-            Blank_Assignment_Rule__c = EP_EngagementPlans_UTIL.BLANK_ASSIGNMENT_USER_CREATING
+            Default_Assignee__c = EP_EngagementPlans_UTIL.BLANK_ASSIGNMENT_USER_CREATING
         );
         insert template;
 
@@ -128,7 +129,6 @@ private class LVL_LevelAssignBATCH_TEST {
             Assigned_To__c = UserInfo.getUserId(),
             Comments__c = 'This comment should be copied correctly to the Task.',
             Reminder__c = true,
-            Reminder_Minutes__c = '660',
             Send_Email__c = true,
             Days_After__c = 3,
             Type__c = 'Call',
@@ -139,10 +139,9 @@ private class LVL_LevelAssignBATCH_TEST {
         Engagement_Plan_Task__c dependentEpTask = new Engagement_Plan_Task__c(
             Name = 'Email',
             Engagement_Plan_Template__c = template.id,
-            Dependent_Task__c = epTask.id,
+            Parent_Task__c = epTask.id,
             Comments__c = 'This comment should also be copied correctly to the Task.',
             Reminder__c = true,
-            Reminder_Minutes__c = '780',
             Send_Email__c = true,
             Days_After__c = 10,
             Type__c = 'Email',
@@ -539,6 +538,31 @@ private class LVL_LevelAssignBATCH_TEST {
         try {
             Test.startTest();
             insert new Level__c[]{lvl1, lvl2};
+            Test.stopTest();
+            system.assert(false, 'exception should have occurred');
+        } catch(Exception ex) {
+            system.assert(ex.getMessage().contains(lvl1.Name));
+        }
+    }
+    
+    /*********************************************************************************************************
+    * @description tests our Level Validation to detect min/max overlap within a new level
+    */
+    static testMethod void testLevelValidationMinMaxOverlap() {
+        
+        Level__c lvl1 = new Level__c(
+            Name = 'new',
+            Target__c = 'Contact',
+            Source_Field__c = 'npo02__TotalOppAmount__c', 
+            Level_Field__c = 'npo02__LastMembershipLevel__c', 
+            Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c', 
+            Active__c = true, 
+            Minimum_Amount__c = 101, 
+            Maximum_Amount__c = 100);
+
+        try {
+            Test.startTest();
+            insert lvl1;
             Test.stopTest();
             system.assert(false, 'exception should have occurred');
         } catch(Exception ex) {

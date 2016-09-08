@@ -3,7 +3,7 @@
     <apiVersion>37.0</apiVersion>
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
-    <label>STG_PanelLvlAssignBatch</label>
+    <label>LVL_LevelEdit</label>
     <packageVersions>
         <majorNumber>3</majorNumber>
         <minorNumber>3</minorNumber>

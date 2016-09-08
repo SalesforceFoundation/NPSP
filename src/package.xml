@@ -120,6 +120,8 @@
         <members>LVL_LevelAssignBATCH_TEST</members>
         <members>LVL_LevelAssign_BATCH</members>
         <members>LVL_LevelAssign_SCHED</members>
+        <members>LVL_LevelEdit_CTRL</members>
+        <members>LVL_LevelEdit_TEST</members>
         <members>LVL_Level_TDTM</members>
         <members>MTCH_FindGifts_CTRL</members>
         <members>MTCH_FindGifts_TEST</members>
@@ -295,6 +297,7 @@
         <members>HH_ManageHHAccount</members>
         <members>HH_ManageHousehold</members>
         <members>LD_LeadConvertOverride</members>
+        <members>LVL_LevelEdit</members>
         <members>MTCH_FindGifts</members>
         <members>NPSP_Resources</members>
         <members>OPP_MatchingDonationsBTN</members>
@@ -1127,9 +1130,12 @@
         <members>leadConvertSendEmail</members>
         <members>leadConvertStatus</members>
         <members>leadConvertViewContactError</members>
+        <members>lvlBtnSaveAndNew</members>
+        <members>lvlErrorDuplicateLookups</members>
         <members>lvlErrorDuplicateName</members>
         <members>lvlErrorInvalidLookupField</members>
         <members>lvlErrorInvalidSourceField</members>
+        <members>lvlErrorMinGTMax</members>
         <members>lvlErrorMinOverlap</members>
         <members>mtchBtnSearch</members>
         <members>mtchCloseDateEnd</members>
@@ -1658,6 +1664,7 @@
         <members>Contact.ContactMergeFoundFS</members>
         <members>Lead.BDE_Entry_FS</members>
         <members>Lead.BDE_List_FS</members>
+        <members>Level__c.LevelEdit</members>
         <members>Opportunity.BDE_Entry_FS_v2</members>
         <members>Opportunity.BDE_List_FS_v2</members>
         <name>FieldSet</name>
