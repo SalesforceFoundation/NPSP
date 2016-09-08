@@ -52,7 +52,7 @@ public class EP_EngagementPlanTaskValidation_TDTM extends TDTM_Runnable {
         if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
             for (SObject newSO : listNew) {
                 Engagement_Plan_Task__c newEPTask = (Engagement_Plan_Task__c)newSO;
-                if (newEPTask.Dependent_Task__c != null) {
+                if (newEPTask.Parent_Task__c != null) {
                     listToValidateDependencies.add(newEPTask);
                 }
             }
@@ -72,12 +72,12 @@ public class EP_EngagementPlanTaskValidation_TDTM extends TDTM_Runnable {
                 Engagement_Plan_Task__c newEPTask = (Engagement_Plan_Task__c)newSO;
                 Engagement_Plan_Task__c oldEPTask = mapOld.get(newEPTask.Id);
 
-                if (newEPTask.Dependent_Task__c != null
-                    && (newEPTask.Dependent_Task__c != oldEPTask.Dependent_Task__c
+                if (newEPTask.Parent_Task__c != null
+                    && (newEPTask.Parent_Task__c != oldEPTask.Parent_Task__c
                         || newEPTask.Engagement_Plan_Template__c != oldEPTask.Engagement_Plan_Template__c)) {
                         listToValidateDependencies.add(newEPTask);
                 } 
-                if (newEPTask.Dependent_Task__c == null && newEPTask.Engagement_Plan_Template__c != oldEPTask.Engagement_Plan_Template__c) {
+                if (newEPTask.Parent_Task__c == null && newEPTask.Engagement_Plan_Template__c != oldEPTask.Engagement_Plan_Template__c) {
                     listToValidateChildDependencies.add(newEPTask);
                 }
             }
@@ -108,7 +108,7 @@ public class EP_EngagementPlanTaskValidation_TDTM extends TDTM_Runnable {
         // A map of related Engagement Plan Template Ids and corresponding Template objects with their Tasks
         Map<Id, Engagement_Plan_Template__c> mapIdToTemplateWithTasks = new Map<Id, Engagement_Plan_Template__c>(
             [SELECT Id,
-                (SELECT Id, Dependent_Task__c, Dependent_Task__r.Engagement_Plan_Template__c, Engagement_Plan_Template__c
+                (SELECT Id, Parent_Task__c, Parent_Task__r.Engagement_Plan_Template__c, Engagement_Plan_Template__c
                 FROM Engagement_Plan_Tasks__r)
             FROM Engagement_Plan_Template__c WHERE Id IN :templateIds]);
         
@@ -117,24 +117,24 @@ public class EP_EngagementPlanTaskValidation_TDTM extends TDTM_Runnable {
             Map<Id, Engagement_Plan_Task__c> mapExistingEPTasks =
                 new Map<Id, Engagement_Plan_Task__c>(
                     mapIdToTemplateWithTasks.get(newEPTask.Engagement_Plan_Template__c).Engagement_Plan_Tasks__r);
-            if (newEPTask.Dependent_Task__c != null) {
+            if (newEPTask.Parent_Task__c != null) {
                 // If the dependent task does not belong to the same template add an error
-                if (!mapExistingEPTasks.containsKey(newEPTask.Dependent_Task__c)) {
+                if (!mapExistingEPTasks.containsKey(newEPTask.Parent_Task__c)) {
                     newEPTask.addError(Label.EPTaskTemplate);
                 } else {
                     // Traverse through the dependency chain to verify the dependency only occurs once in the chain
                     Set<Id> taskIds = new Set<Id>{newEPTask.Id};
-                    Engagement_Plan_Task__c dependentTask = mapExistingEPTasks.get(newEPTask.Dependent_Task__c);
+                    Engagement_Plan_Task__c dependentTask = mapExistingEPTasks.get(newEPTask.Parent_Task__c);
                     Integer count = 0;
-                    while (dependentTask.Dependent_Task__c != null
-                            && mapExistingEPTasks.containsKey(dependentTask.Dependent_Task__c)
+                    while (dependentTask.Parent_Task__c != null
+                            && mapExistingEPTasks.containsKey(dependentTask.Parent_Task__c)
                             && count < EP_EngagementPlans_UTIL.MAX_ITERATIONS) {
-                        if (taskIds.contains(dependentTask.Dependent_Task__c)) {
+                        if (taskIds.contains(dependentTask.Parent_Task__c)) {
                             newEPTask.addError(Label.EPTaskDependency);
                             break;
                         }
-                        taskIds.add(dependentTask.Dependent_Task__c);
-                        dependentTask = mapExistingEPTasks.get(dependentTask.Dependent_Task__c);
+                        taskIds.add(dependentTask.Parent_Task__c);
+                        dependentTask = mapExistingEPTasks.get(dependentTask.Parent_Task__c);
                         count++;
                     }
                 }
@@ -151,7 +151,7 @@ public class EP_EngagementPlanTaskValidation_TDTM extends TDTM_Runnable {
         // Engagement Plan Task mapped to tasks that are dependent on it to check for template mismatch
         Map<Id, Engagement_Plan_Task__c> mapIdToTaskWithChildren = new Map<Id, Engagement_Plan_Task__c>(
             [SELECT Id, 
-                (SELECT Id, Dependent_Task__c, Engagement_Plan_Template__c
+                (SELECT Id, Parent_Task__c, Engagement_Plan_Template__c
                 FROM Engagement_Plan_Tasks__r)
                 FROM Engagement_Plan_Task__c WHERE Id IN :listToValidate]);
         // loop through the tasks where the Engagement Plan Template has chained and check for dependent tasks

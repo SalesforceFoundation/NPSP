@@ -51,11 +51,9 @@ public class EP_TaskRollup_TEST {
             Contact__c = contactTest.Id,
             Completed_Tasks__c = 0,
             Total_Tasks__c = 0);
-        insert epToInsert;
-        Task taskTest = new Task(Engagement_Plan__c = epToInsert.Id, Subject = 'Test');
-        
+
         Test.startTest();
-        insert taskTest;
+        insert epToInsert;
         Test.stopTest();
 
         Engagement_Plan__c epReQueried = [SELECT Id, Completed_Tasks__c, Total_Tasks__c
@@ -79,19 +77,16 @@ public class EP_TaskRollup_TEST {
             Completed_Tasks__c = 0,
             Total_Tasks__c = 0);
         insert epToInsert;
-        List<Task> taskTests = new List<Task>();
+        List<Task> taskTests = new List<Task>([SELECT Id, Status FROM Task WHERE Engagement_Plan__c = :epToInsert.Id]);
         Integer completedTasks = 0;
-        for (Integer i = 0; i < epTaskTests.size(); i++) {
+        for (Integer i = 0; i < taskTests.size(); i++) {
             Boolean markComplete = math.mod(i + 1, 2) != 0;
             completedTasks += markComplete ? 1 : 0;
-            taskTests.add(new Task(
-                Engagement_Plan__c = epToInsert.Id, 
-                Subject = 'Test',
-                Status = markComplete ? UTIL_UnitTestData_TEST.getOpenTaskStatus() : UTIL_UnitTestData_TEST.getClosedTaskStatus()));
+            taskTests[i].Status = markComplete ? UTIL_UnitTestData_TEST.getOpenTaskStatus() : UTIL_UnitTestData_TEST.getClosedTaskStatus();
         }
         
         Test.startTest();
-        insert taskTests;
+        update taskTests;
         Test.stopTest();
 
         Engagement_Plan__c epReQueried = [SELECT Id, Completed_Tasks__c, Total_Tasks__c
@@ -122,7 +117,7 @@ public class EP_TaskRollup_TEST {
                 Total_Tasks__c = 0)
         };
         insert epsToInsert;
-        List<Task> taskTests = new List<Task>();
+        List<Task> taskTests = new List<Task>([SELECT Id, Status FROM Task WHERE Engagement_Plan__c IN :epsToInsert]);
         Integer completedTasks = 0;
 
         for (Engagement_Plan__c epToInsert : epsToInsert) {
@@ -130,15 +125,12 @@ public class EP_TaskRollup_TEST {
                 if (epTaskTests[i].Engagement_Plan_Template__c == epToInsert.Engagement_Plan_Template__c) {
                     Boolean markComplete = math.mod(i + 1, 2) != 0;
                     completedTasks += markComplete ? 1 : 0;
-                    taskTests.add(new Task(
-                        Engagement_Plan__c = epToInsert.Id, 
-                        Subject = 'Test',
-                        Status = markComplete ? UTIL_UnitTestData_TEST.getOpenTaskStatus() : UTIL_UnitTestData_TEST.getClosedTaskStatus()));
+                    taskTests[i].Status = markComplete ? UTIL_UnitTestData_TEST.getOpenTaskStatus() : UTIL_UnitTestData_TEST.getClosedTaskStatus();
                 }
             }
         }
         Test.startTest();
-        insert taskTests;
+        update taskTests;
         Test.stopTest();
 
         Engagement_Plan__c epReQueried1 = [SELECT Id, Completed_Tasks__c, Total_Tasks__c
@@ -165,15 +157,12 @@ public class EP_TaskRollup_TEST {
             Completed_Tasks__c = 0,
             Total_Tasks__c = 0);
         insert epToInsert;
-        List<Task> taskTests = new List<Task>();
+        List<Task> taskTests = new List<Task>([SELECT Id, Status FROM Task WHERE Engagement_Plan__c = :epToInsert.Id]);
         for (Integer i = 0; i < epTaskTests.size(); i++) {
             Boolean markComplete = math.mod(i + 1, 2) != 0;
-            taskTests.add(new Task(
-                Engagement_Plan__c = epToInsert.Id, 
-                Subject = 'Test',
-                Status = markComplete ? UTIL_UnitTestData_TEST.getOpenTaskStatus() : UTIL_UnitTestData_TEST.getClosedTaskStatus()));
+            taskTests[i].Status = markComplete ? UTIL_UnitTestData_TEST.getOpenTaskStatus() : UTIL_UnitTestData_TEST.getClosedTaskStatus();
         }
-        insert taskTests;
+        update taskTests;
 
         for (Task taskTest : taskTests) {
             taskTest.Status = UTIL_UnitTestData_TEST.getClosedTaskStatus();
@@ -204,17 +193,14 @@ public class EP_TaskRollup_TEST {
             Completed_Tasks__c = 0,
             Total_Tasks__c = 0);
         insert epToInsert;
-        List<Task> taskTests = new List<Task>();
+        List<Task> taskTests = new List<Task>([SELECT Id, Status FROM Task WHERE Engagement_Plan__c = :epToInsert.Id]);
         Integer completedTasks = 0;
         for (Integer i = 0; i < epTaskTests.size(); i++) {
             Boolean markComplete = math.mod(i + 1, 2) != 0;
             completedTasks += markComplete ? 1 : 0;
-            taskTests.add(new Task(
-                Engagement_Plan__c = epToInsert.Id, 
-                Subject = 'Test',
-                Status = markComplete ? UTIL_UnitTestData_TEST.getOpenTaskStatus() : UTIL_UnitTestData_TEST.getClosedTaskStatus()));
+            taskTests[i].Status = markComplete ? UTIL_UnitTestData_TEST.getOpenTaskStatus() : UTIL_UnitTestData_TEST.getClosedTaskStatus();
         }
-        insert taskTests;
+        update taskTests;
 
         Task taskToDelete = [SELECT Id FROM Task WHERE Status = :UTIL_UnitTestData_TEST.getClosedTaskStatus() AND Engagement_Plan__c = :epToInsert.Id LIMIT 1];
         
@@ -243,15 +229,12 @@ public class EP_TaskRollup_TEST {
             Completed_Tasks__c = 0,
             Total_Tasks__c = 0);
         insert epToInsert;
-        List<Task> taskTests = new List<Task>();
+        List<Task> taskTests = new List<Task>([SELECT Id, Status FROM Task WHERE Engagement_Plan__c = :epToInsert.Id]);
         for (Integer i = 0; i < epTaskTests.size(); i++) {
             Boolean markComplete = math.mod(i + 1, 2) != 0;
-            taskTests.add(new Task(
-                Engagement_Plan__c = epToInsert.Id, 
-                Subject = 'Test',
-                Status = markComplete ? UTIL_UnitTestData_TEST.getOpenTaskStatus() : UTIL_UnitTestData_TEST.getClosedTaskStatus()));
+            taskTests[i].Status = markComplete ? UTIL_UnitTestData_TEST.getOpenTaskStatus() : UTIL_UnitTestData_TEST.getClosedTaskStatus();
         }
-        insert taskTests;
+        update taskTests;
 
         taskTests[0].Engagement_Plan__c = null;
         

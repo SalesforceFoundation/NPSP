@@ -40,7 +40,6 @@ public with sharing class EP_EngagementPlans_UTIL {
 	public static final String TASK_STATUS_WAITING = 'Waiting on Dependent Task';
 	public static final String BLANK_ASSIGNMENT_USER_CREATING = 'User Creating Action Plan';
 	public static final String BLANK_ASSIGNMENT_OWNER_RECEIVING = 'Owner of Receiving Object';
-	public static final String DELAY_TYPE_AFTER_COMPLETED = 'After Date Completed';
 	public static final String SKIP_DAY_FRIDAY = 'Friday';
 	public static final String SKIP_DAY_MONDAY = 'Monday';
 	public static final Integer MAX_ITERATIONS = 500;
@@ -56,7 +55,7 @@ public with sharing class EP_EngagementPlans_UTIL {
                 for (String fieldName : fieldDescribeMap.keySet()) {
                     Schema.DescribeFieldResult fieldDescribe = fieldDescribeMap.get(fieldName);
                     if (fieldDescribe.getRelationshipName() != null && fieldDescribe.isCustom()) { 
-                        if (fieldName != 'Engagement_Plan_Template__c') {
+                        if (fieldName != UTIL_Namespace.StrTokenNSPrefix('Engagement_Plan_Template__c')) {
                             lookupFieldsToRelationship.put(fieldName, fieldDescribe.getRelationshipName() + '.OwnerId');
                         }
                     }
