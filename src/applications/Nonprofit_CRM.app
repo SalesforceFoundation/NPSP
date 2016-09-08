@@ -11,6 +11,7 @@
     <tab>standard-report</tab>
     <tab>npe03__Recurring_Donation__c</tab>
     <tab>Engagement_Plan_Template__c</tab>
+    <tab>Level__c</tab>
     <tab>Contact_Merge</tab>
     <tab>NPSP_Settings</tab>
     <tab>NPSP_Resources</tab>
