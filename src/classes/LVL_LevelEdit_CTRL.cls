@@ -90,7 +90,7 @@ public with sharing class LVL_LevelEdit_CTRL {
                 if (lvl.Target__c != null) {
                     listSOLevelFields.add(new SelectOption('', Label.stgLabelNone));
                     Map<String, Schema.DescribeFieldResult> mapDFR = UTIL_Describe.getAllFieldsDescribe(lvl.Target__c);
-                    Schema.sObjectType soTypeLevel = UTIL_Describe.getObjectDescribe('Level__c').getSObjectType(); 
+                    Schema.sObjectType soTypeLevel = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrTokenNSPrefix('Level__c')).getSObjectType(); 
                     
                     for (Schema.DescribeFieldResult f : mapDFR.values()) {                   
                         if (f.isAccessible() && f.getType() == Schema.Displaytype.Reference) {
