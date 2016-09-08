@@ -148,13 +148,6 @@
     </fields>
     <gender><!-- Neuter --></gender>
     <layouts>
-        <layout>Action Plan Task Layout</layout>
-        <sections>
-            <label><!-- Custom Links --></label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <layouts>
         <layout>Engagement Plan Task Layout</layout>
         <sections>
             <label><!-- Custom Links --></label>

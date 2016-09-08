@@ -1509,6 +1509,9 @@
         <members>Account-de</members>
         <members>Account-es</members>
         <members>Account-ja</members>
+        <members>Activity-de</members>
+        <members>Activity-es</members>
+        <members>Activity-ja</members>
         <members>Addr_Verification_Settings__c-de</members>
         <members>Addr_Verification_Settings__c-en_US</members>
         <members>Addr_Verification_Settings__c-es</members>
@@ -1548,6 +1551,18 @@
         <members>Data_Import_Settings__c-en_US</members>
         <members>Data_Import_Settings__c-es</members>
         <members>Data_Import_Settings__c-ja</members>
+        <members>Engagement_Plan_Task__c-de</members>
+        <members>Engagement_Plan_Task__c-en_US</members>
+        <members>Engagement_Plan_Task__c-es</members>
+        <members>Engagement_Plan_Task__c-ja</members>
+        <members>Engagement_Plan_Template__c-de</members>
+        <members>Engagement_Plan_Template__c-en_US</members>
+        <members>Engagement_Plan_Template__c-es</members>
+        <members>Engagement_Plan_Template__c-ja</members>
+        <members>Engagement_Plan__c-de</members>
+        <members>Engagement_Plan__c-en_US</members>
+        <members>Engagement_Plan__c-es</members>
+        <members>Engagement_Plan__c-ja</members>
         <members>Error_Settings__c-de</members>
         <members>Error_Settings__c-en_US</members>
         <members>Error_Settings__c-es</members>
@@ -1618,6 +1633,7 @@
         <members>Batch_Data_Entry</members>
         <members>Contact_Merge</members>
         <members>DataImport__c</members>
+        <members>Engagement_Plan_Template__c</members>
         <members>General_Accounting_Unit__c</members>
         <members>Level__c</members>
         <members>NPSP_Resources</members>
@@ -1662,10 +1678,8 @@
         <members>Campaign-NPSP Campaign Layout</members>
         <members>Contact-Contact Layout</members>
         <members>DataImport__c-Data Import Layout</members>
-        <members>Engagement_Plan_Task__c-Action Plan Task Layout</members>
         <members>Engagement_Plan_Task__c-Engagement Plan Task Layout</members>
         <members>Engagement_Plan_Template__c-Engagement Plan Template Layout</members>
-        <members>Engagement_Plan__c-Action Plan Layout</members>
         <members>Engagement_Plan__c-Engagement Plan Layout</members>
         <members>Error__c-Error Layout</members>
         <members>Fund__c-Fund Layout</members>

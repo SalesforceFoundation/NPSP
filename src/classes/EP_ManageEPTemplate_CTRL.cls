@@ -215,6 +215,10 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         util = new EP_Task_UTIL(templateId);
 
         template = util.templateMap.get(templateId);
+        
+        if (templateId == null || template == null) {
+            template = new Engagement_Plan_Template__c();
+        }
 
         initWrapperHeirarchy();
     }
@@ -261,10 +265,6 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     * update EP Tasks. */
     public pageReference saveClose() {
 
-        pageReference source = new pageReference('/'+template.Id);
-        source.setRedirect(true);
-        source.getParameters().put('t',''+(System.currentTimeMillis()));
-        
         try {
             upsert template;
 
@@ -299,6 +299,9 @@ public with sharing class EP_ManageEPTemplate_CTRL {
                 update tasksForUpdate;
             }
 
+            pageReference source = new pageReference('/'+template.Id);
+            source.setRedirect(true);
+            source.getParameters().put('t',''+(System.currentTimeMillis()));
             return source;
         } catch (Exception ex) {
             ApexPages.addMessages(ex);
@@ -442,7 +445,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         Component.Apex.CommandButton addTaskButton = new Component.Apex.CommandButton(
             styleClass = 'slds-button slds-button--brand slds-float--left',
             rerender = 'taskTree',
-            immediate = true
+            immediate = false
         );
         addTaskButton.expressions.action = '{!addTask}';
         addTaskButton.expressions.value = '{!$Label.EPAddTask}';

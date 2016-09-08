@@ -2,11 +2,7 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value>Engagement Plan Task</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Engagement Plan Tasks</value>
+        <value><!-- Engagement Plan Task --></value>
     </caseValues>
     <fields>
         <help><!-- This field maps to the Task&apos;s Assigned To field. If left blank, the task will be assigned based on the template&apos;s Blank Assignment Rule. --></help>
@@ -121,5 +117,5 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <startsWith>Vowel</startsWith>
+    <nameFieldLabel><!-- Subject --></nameFieldLabel>
 </CustomObjectTranslation>

@@ -55,7 +55,7 @@ public with sharing class EP_EngagementPlans_UTIL {
                 for (String fieldName : fieldDescribeMap.keySet()) {
                     Schema.DescribeFieldResult fieldDescribe = fieldDescribeMap.get(fieldName);
                     if (fieldDescribe.getRelationshipName() != null && fieldDescribe.isCustom()) { 
-                        if (fieldName != 'Engagement_Plan_Template__c') {
+                        if (fieldName != UTIL_Namespace.StrTokenNSPrefix('Engagement_Plan_Template__c')) {
                             lookupFieldsToRelationship.put(fieldName, fieldDescribe.getRelationshipName() + '.OwnerId');
                         }
                     }

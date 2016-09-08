@@ -2,11 +2,7 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value>Engagement Plan</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Engagement Plans</value>
+        <value><!-- Engagement Plan --></value>
     </caseValues>
     <fields>
         <label><!-- Account --></label>
@@ -66,5 +62,5 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <startsWith>Vowel</startsWith>
+    <nameFieldLabel><!-- Engagement Plan Number --></nameFieldLabel>
 </CustomObjectTranslation>
