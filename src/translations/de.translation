@@ -328,6 +328,26 @@
         <name>CampaignMemberStatusOmit</name>
     </customLabels>
     <customLabels>
+        <label><!-- EPAddDependentTask --></label>
+        <name>EPAddDependentTask</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Engagement Plan&apos;s Add Task button label --></label>
+        <name>EPAddTask</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- EPDeleteTask --></label>
+        <name>EPDeleteTask</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- EPTaskDependency --></label>
+        <name>EPTaskDependency</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- EPTaskTemplate --></label>
+        <name>EPTaskTemplate</name>
+    </customLabels>
+    <customLabels>
         <label>Aus Sicherheitsgründen ausgeblendet</label>
         <name>HiddenForSecurity</name>
     </customLabels>
@@ -706,6 +726,14 @@
     <customLabels>
         <label>Personen-Accounts werden nicht unterstützt.</label>
         <name>conMergeErrNoPersonAccounts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- engagementPlanNoLookups --></label>
+        <name>engagementPlanNoLookups</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- engagementPlanTwoLookups --></label>
+        <name>engagementPlanTwoLookups</name>
     </customLabels>
     <customLabels>
         <label>Sie verfügen nicht über die notwendigen Berechtigungen zum Bearbeiten von {0}.</label>
