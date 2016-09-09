@@ -44,6 +44,9 @@ public with sharing class LVL_LevelEdit_CTRL {
     * @return nothing
     */ 
     public LVL_LevelEdit_CTRL(ApexPages.StandardController controller) {
+        if (!Test.isRunningTest()) {
+            controller.addFields(UTIL_Describe.listStrFromFieldSet(UTIL_Namespace.StrTokenNSPrefix('Level__c'), UTIL_Namespace.StrTokenNSPrefix('LevelEdit')));
+        }
         lvl = (Level__c)controller.getRecord();
     }
     
