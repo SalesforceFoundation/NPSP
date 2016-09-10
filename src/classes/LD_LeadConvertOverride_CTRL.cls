@@ -102,7 +102,12 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     * @description List of possible matching Contacts
     */
     public list<selectOption> conList;
-    
+
+    /*******************************************************************************************************
+    * @description Selected Contact
+    */
+    public Contact selectedCon;
+
     /*******************************************************************************************************
     * @description List of possible Opportunity Account
     */
@@ -179,14 +184,45 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     private map<id, contact> conMap {
         get {
             if (conMap == null) {
+                Set<String> fieldSet = new Set<String>{'Id', 'Name', 'FirstName', 'LastName'};
+                String queryStr = 'SELECT ';
+                for (FieldSetMember cfs : conFieldSet)
+                   fieldSet.add(cfs.getFieldPath());
+                queryStr += String.join(new List<String>(fieldSet), ',');
+                queryStr += ' FROM Contact WHERE (LastName = \'' + l.LastName + '\' AND FirstName = \'' + l.FirstName + '\') OR (Email = \'' + l.Email + '\' AND Email != null) LIMIT 50';
+
                 // find contact matches
-                conMap = new map<id, contact>([select id, name, accountid, firstname, lastname from contact where
-                (lastname = : l.lastname and firstname = : l.firstname) or
-                (email = : l.email and email != null) limit 50]);            
+                conMap = new map<id, contact>((List<Contact>)Database.query(queryStr));
             }
             return conMap;
         }
         set;
+    }
+
+    /*******************************************************************************************************
+    * @description holds the list of FieldSetMembers from the appropriate field set.
+    * @return List<Schema.FieldSetMember>
+    */
+    public List<Schema.FieldSetMember> conFieldSet {
+        get {
+            if (conFieldSet == null) {
+                conFieldSet = Schema.SObjectType.Contact.FieldSets.ContactMergeFoundFS.getFields();
+            }
+            return conFieldSet;
+        }
+        private set;
+    }
+
+    /*******************************************************************************************************
+    * @description Display the selected Contact
+    */
+    public Contact getSelectedCon() {
+        if (strConId!='NEW_CONTACT' & strConId!=null && conMap.containsKey(strConId)) {
+            selectedCon = conMap.get(strConId);
+        } else if (strConId == null) {
+            selectedCon = null;
+        }
+        return selectedCon;
     }
 
     /*******************************************************************************************************

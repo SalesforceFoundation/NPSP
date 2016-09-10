@@ -1,5 +1,6 @@
 <apex:page standardController="Lead" extensions="LD_LeadConvertOverride_CTRL" title="{!$Label.leadConvertPageTitle} {!Lead.Name}" standardStylesheets="false">
 
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/modal.js')}"/>
     <apex:stylesheet value="{!URLFOR($Resource.SLDS, '/0_12_2/assets/styles/salesforce-lightning-design-system-vf.min.css')}"/>
 
     <style type="text/css">
@@ -27,165 +28,200 @@
 
     <div class="slds">
         <apex:form id="pbEdit" styleClass="slds-form--stacked">
+            <div class="hide-when-modal-open">
+                <div>
+                    <apex:pageMessages />
+                </div>
+
+                <div class="slds-page-header slds-m-bottom--medium" role="banner">
+                    <div class="slds-grid">
+                        <div class="slds-col slds-has-flexi-truncate">
+                            <h1 class="slds-page-header__title slds-truncate slds-text-heading--medium">
+                                {!$Label.leadConvertSectionTitle}
+                            </h1>
+                            <p class="slds-text-heading--label slds-page-header__info">
+                                <apex:outputText value="{!Lead.Name}"/>
+                            </p>
+                        </div>
+                        <div class="slds-col slds-no-flex">
+                            <div class="slds-button-group" role="group">
+                                <apex:commandButton value="{!$Label.leadConvertBtnCancel}" action="{!cancel}" styleClass="slds-button slds-button--neutral"/>
+                                <apex:commandButton value="{!$Label.leadConvertBtnConvert}" action="{!convertLeadNow}" styleClass="slds-button slds-button--brand"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slds-p-horizontal--large">
+
+                    <div class="slds-form-element slds-is-required">
+                        <label class="slds-form-element__label">
+                            <apex:outputText value="{!$Label.leadConvertOwner}"/>
+                        </label>
+                        <div class="slds-form-element__control">
+                            <apex:inputField styleClass="lookupInput" value="{!dummyCon.OwnerId}"/>
+                        </div>
+                    </div>
+
+                    <div class="slds-form-element">
+                        <label class="slds-checkbox">
+                            <apex:inputCheckbox value="{!sendEmailToOwner}"/>
+                            <span class="slds-checkbox--faux"></span>
+                            <span class="slds-form-element__label">
+                                <apex:outputText value="{!$Label.leadConvertSendEmail}"/>
+                            </span>
+                        </label>
+                    </div>
+
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label">
+                            <apex:outputText value="{!$ObjectType.Contact.Label}"/>
+                        </label>
+                        <div class="slds-form-element__control">
+                            <div class="slds-select_container">
+                                <apex:selectList value="{!strConId}" size="1" id="conlist" styleClass="slds-select">
+                                    <apex:selectOptions value="{!conList}"/>
+                                    <apex:actionSupport rerender="pbEdit" event="onchange"/>
+                                </apex:selectList>
+                            </div>
+                            <div>
+                                <span class="slds-form-element__help">
+                                    <a href="javascript:viewLink()" data-target="contact_modal" id="view">View</a>
+                                        <script type="text/javascript">
+                                            function viewLink() {
+                                                var contactId = '{!HTMLENCODE(strConId)}';
+                                                if (contactId  == null || contactId  == "" ||  contactId  == 'NEW_CONTACT') {
+                                                    alert("{!$Label.leadConvertViewContactError}");
+                                                } else {
+                                                    var view = document.getElementById('view');
+                                                    view.setAttribute("data-toggle","modal");
+                                                    view.click();
+                                                }
+                                            }
+                                        </script>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <apex:outputText rendered="{!NOT(isSpecialAccount) && (strConId == null || strConId=='' || strConId=='NEW_CONTACT')}">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">
+                                <apex:outputText value="{!$Label.leadConvertAccountName}"/>
+                            </label>
+                            <div class="slds-form-element__control">
+                                <div class="slds-select_container">
+                                    <apex:selectList value="{!strAccountId}" size="1" styleClass="slds-select">
+                                        <apex:selectOptions value="{!listSOAccounts}"/>
+                                    </apex:selectList>
+                                </div>
+                            </div>
+                        </div>
+                    </apex:outputText>
+
+                    <apex:outputText rendered="{!NOT(isSpecialAccount)}">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">
+                                <apex:outputText value="{!$Label.leadConvertAffilationName}"/>
+                            </label>
+                            <div class="slds-form-element__control">
+                                <div class="slds-select_container">
+                                    <apex:selectList value="{!strAfflAccountId}" size="1" styleClass="slds-select">
+                                        <apex:selectOptions value="{!listSOAfflAccounts}"/>
+                                    </apex:selectList>
+                                </div>
+                            </div>
+                        </div>
+                    </apex:outputText>
+
+                    <apex:outputText rendered="{!$ObjectType.Opportunity.Createable}">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">
+                                <apex:outputText value="{!$ObjectType.Opportunity.Label} {!$ObjectType.Opportunity.Fields.Name.Label}"/>
+                            </label>
+                            <div class="slds-form-element__control">
+                                <apex:inputText styleClass="slds-input" value="{!oppName}"/>
+                            </div>
+                        </div>
+
+                        <div class="slds-form-element">
+                            <label class="slds-checkbox">
+                                <apex:inputCheckbox value="{!doNotCreateOpp}"/>
+                                <span class="slds-checkbox--faux"></span>
+                                <span class="slds-form-element__label">
+                                    <apex:outputText value="{!$Label.leadConvertNewOpp}">
+                                       <apex:param value="{!$ObjectType.Opportunity.Label}"/>
+                                    </apex:outputText>
+                                </span>
+                            </label>
+                        </div>
+                    </apex:outputText>
+
+
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label">
+                            <apex:outputText value="{!$ObjectType.Opportunity.Label} {!$ObjectType.Account.Label}"/>
+                        </label>
+                        <div class="slds-form-element__control">
+                            <div class="slds-select_container">
+                                <apex:selectList value="{!strOppAccChoice}" size="1" styleClass="slds-select">
+                                    <apex:selectOptions value="{!oppAccChoices}"/>
+                                </apex:selectList>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label">
+                            <apex:outputText value="{!$Label.leadConvertStatus}"/>
+                        </label>
+                        <div class="slds-form-element__control">
+                            <div class="slds-select_container">
+                                <apex:selectList value="{!leadConvStatus}" size="1" styleClass="slds-select">
+                                    <apex:selectOptions value="{!lcStatuses}"/>
+                                </apex:selectList>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div>
-                <apex:pageMessages />
-            </div>
-
-            <div class="slds-page-header slds-m-bottom--medium" role="banner">
-                <div class="slds-grid">
-                    <div class="slds-col slds-has-flexi-truncate">
-                        <h1 class="slds-page-header__title slds-truncate slds-text-heading--medium">
-                            {!$Label.leadConvertSectionTitle}
-                        </h1>
-                        <p class="slds-text-heading--label slds-page-header__info">
-                            <apex:outputText value="{!Lead.Name}"/>
-                        </p>
-                    </div>
-                    <div class="slds-col slds-no-flex">
-                        <div class="slds-button-group" role="group">
-                            <apex:commandButton value="{!$Label.leadConvertBtnCancel}" action="{!cancel}" styleClass="slds-button slds-button--neutral"/>
-                            <apex:commandButton value="{!$Label.leadConvertBtnConvert}" action="{!convertLeadNow}" styleClass="slds-button slds-button--brand"/>
+                <div id="contact_modal" tabindex="-1" aria-hidden="true" role="dialog" class="slds-modal slds-modal--prompt">
+                    <div class="slds-modal__container slds-modal--prompt">
+                        <div class="slds-modal__header slds-theme--shade">
+                            <h2 class="slds-text-heading--medium">Contact Details</h2>
+                        </div>
+                        <div class="slds-modal__content">
+                            <div class="slds-panel slds-grid slds-grid--vertical slds-nowrap">
+                                <div class="slds-form--stacked slds-grow slds-scrollable--y">
+                                    <div class="slds-panel__section">
+                                        <apex:repeat value="{!conFieldSet}" var="f">
+                                            <div class="slds-form-element slds-has-divider--bottom">
+                                                <span class="slds-form-element__label">
+                                                    <apex:outputLabel value="{!IF(!contains(f.fieldPath,'.') && $ObjectType.Contact.fields[f].type == 'reference', $ObjectType.Contact.fields[f].relationshipName, f.label)}"/>
+                                                </span>
+                                                <div class="slds-form-element__control">
+                                                    <span class="slds-form-element__static">
+                                                        <apex:outputField value="{!selectedCon[f]}" label="" />
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </apex:repeat>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slds-modal__footer slds-theme--default">
+                            <div class="slds-x-small-buttons--horizontal">
+                                <button class="slds-button slds-button--neutral" data-dismiss="modal" data-target="contact_modal">Close</button>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div class="slds-backdrop" tabindex="-1"></div>
             </div>
-
-            <div class="slds-p-horizontal--large">
-
-            <div class="slds-form-element slds-is-required">
-                <label class="slds-form-element__label">
-                    <apex:outputText value="{!$Label.leadConvertOwner}"/>
-                </label>
-                <div class="slds-form-element__control">
-                    <apex:inputField styleClass="lookupInput" value="{!dummyCon.OwnerId}"/>
-                </div>
-            </div>
-
-            <div class="slds-form-element">
-                <label class="slds-checkbox">
-                    <apex:inputCheckbox value="{!sendEmailToOwner}"/>
-                    <span class="slds-checkbox--faux"></span>
-                    <span class="slds-form-element__label">
-                        <apex:outputText value="{!$Label.leadConvertSendEmail}"/>
-                    </span>
-                </label>
-            </div>
-
-            <div class="slds-form-element">
-                <label class="slds-form-element__label">
-                    <apex:outputText value="{!$ObjectType.Contact.Label}"/>
-                </label>
-                <div class="slds-form-element__control">
-                    <div class="slds-select_container">
-                        <apex:selectList value="{!strConId}" size="1" id="conlist" styleClass="slds-select">
-                            <apex:selectOptions value="{!conList}"/>
-                            <apex:actionSupport rerender="pbEdit" event="onchange"/>
-                        </apex:selectList>
-                    </div>
-                    <div>
-                        <span class="slds-form-element__help">
-                            <a href="javascript:viewLink();" title="View (New Window)">View</a>
-                               <script type="text/javascript">
-                                   function viewLink() {
-                                       var contactId = '{!HTMLENCODE(strConId)}';
-                                       if (contactId  == null || contactId  == "" ||  contactId  == 'NEW_CONTACT') {
-                                           alert("{!$Label.leadConvertViewContactError}");
-                                       }else{
-                                           printWin('/'+contactId+'/p');
-                                       }
-                                   }
-                                </script>
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <apex:outputText rendered="{!NOT(isSpecialAccount) && (strConId == null || strConId=='' || strConId=='NEW_CONTACT')}">
-                <div class="slds-form-element">
-                    <label class="slds-form-element__label">
-                        <apex:outputText value="{!$Label.leadConvertAccountName}"/>
-                    </label>
-                    <div class="slds-form-element__control">
-                        <div class="slds-select_container">
-                            <apex:selectList value="{!strAccountId}" size="1" styleClass="slds-select">
-                                <apex:selectOptions value="{!listSOAccounts}"/>
-                            </apex:selectList>
-                        </div>
-                    </div>
-                </div>
-            </apex:outputText>
-
-            <apex:outputText rendered="{!NOT(isSpecialAccount)}">
-                <div class="slds-form-element">
-                    <label class="slds-form-element__label">
-                        <apex:outputText value="{!$Label.leadConvertAffilationName}"/>
-                    </label>
-                    <div class="slds-form-element__control">
-                        <div class="slds-select_container">
-                    <apex:selectList value="{!strAfflAccountId}" size="1" styleClass="slds-select">
-                        <apex:selectOptions value="{!listSOAfflAccounts}"/>
-                    </apex:selectList>
-                        </div>
-                    </div>
-                </div>
-            </apex:outputText>
-
-            <apex:outputText rendered="{!$ObjectType.Opportunity.Createable}">
-
-            <div class="slds-form-element">
-                <label class="slds-form-element__label">
-                    <apex:outputText value="{!$ObjectType.Opportunity.Label} {!$ObjectType.Opportunity.Fields.Name.Label}"/>
-                </label>
-                <div class="slds-form-element__control">
-                    <apex:inputText styleClass="slds-input" value="{!oppName}"/>
-                </div>
-            </div>
-
-            <div class="slds-form-element">
-                <label class="slds-checkbox">
-                    <apex:inputCheckbox value="{!doNotCreateOpp}"/>
-                    <span class="slds-checkbox--faux"></span>
-                    <span class="slds-form-element__label">
-                        <apex:outputText value="{!$Label.leadConvertNewOpp}">
-                           <apex:param value="{!$ObjectType.Opportunity.Label}"/>
-                        </apex:outputText>
-                    </span>
-                </label>
-            </div>
-
-            </apex:outputText>
-
-
-            <div class="slds-form-element">
-                <label class="slds-form-element__label">
-                    <apex:outputText value="{!$ObjectType.Opportunity.Label} {!$ObjectType.Account.Label}"/>
-                </label>
-                <div class="slds-form-element__control">
-                    <div class="slds-select_container">
-                        <apex:selectList value="{!strOppAccChoice}" size="1" styleClass="slds-select">
-                            <apex:selectOptions value="{!oppAccChoices}"/>
-                        </apex:selectList>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="slds-form-element">
-                <label class="slds-form-element__label">
-                    <apex:outputText value="{!$Label.leadConvertStatus}"/>
-                </label>
-                <div class="slds-form-element__control">
-                    <div class="slds-select_container">
-                        <apex:selectList value="{!leadConvStatus}" size="1" styleClass="slds-select">
-                            <apex:selectOptions value="{!lcStatuses}"/>
-                        </apex:selectList>
-                    </div>
-                </div>
-            </div>
-
-            </div>
-
         </apex:form>
 
     </div>
