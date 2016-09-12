@@ -304,6 +304,9 @@ public with sharing class HH_Container_LCTRL {
                 Contact con2 = new Contact(Id=con.Id);
                 // do FLS and only copy the fields we allow to be touched in our UI
                 UTIL_Describe.copyObjectFLS('Contact', con, con2, listStrFld);
+                // Due to the complexity of working in both the Household and Account Household models,
+                // we need to skip the security check on the Household field.
+                    con2.npo02__Household__c = con.npo02__Household__c;
                 if (con.Id != null) {
                     listUpdate.add(con2);
                 } else {
