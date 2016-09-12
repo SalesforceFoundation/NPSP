@@ -172,9 +172,6 @@ public with sharing class HH_Container_LCTRL {
         string strSoql = 'SELECT ';
         string strComma = '';                
         set<String> setCheckUpdate = setUpdateableContactFields();
-        // Household field is needed in the setUpdateableContactFields but not in the FLS check, the field will
-        // be added back to the query below.
-        setCheckUpdate.remove('npo02__Household__c');
         
         for (string strF : listStrField) {
 
@@ -252,7 +249,6 @@ public with sharing class HH_Container_LCTRL {
             'FirstName',
             'LastName',
             'Salutation',
-            'npo02__Household__c',
             'npo02__Household_Naming_Order__c', 
             'npo02__Naming_Exclusions__c', 
             UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Name__c'), 
@@ -308,6 +304,9 @@ public with sharing class HH_Container_LCTRL {
                 Contact con2 = new Contact(Id=con.Id);
                 // do FLS and only copy the fields we allow to be touched in our UI
                 UTIL_Describe.copyObjectFLS('Contact', con, con2, listStrFld);
+                // Due to the complexity of working in both the Household and Account Household models,
+                // we need to skip the security check on the Household field.
+                    con2.npo02__Household__c = con.npo02__Household__c;
                 if (con.Id != null) {
                     listUpdate.add(con2);
                 } else {
