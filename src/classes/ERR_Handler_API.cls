@@ -56,6 +56,8 @@ global class ERR_Handler_API {
 	    HH, 
 	    /* @description Lead Conversion context. */
 	    LD, 
+        /* @description Level context. */
+        LVL, 
 	    /* @description Opportunities context. */
 	    OPP, 
 	    /* @description Payments context. */
