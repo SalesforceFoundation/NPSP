@@ -1582,12 +1582,36 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Invalid User {0}.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsInvalidFieldNumeric</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Health Check error if a Level refers to an invalid field</shortDescription>
+        <value>Level {0} refers to an invalid numeric field {1} on {2}.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsInvalidFiscalYears</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthDetailsInvalidFiscalYears</shortDescription>
         <value>Fiscal Year Rollups are not supported when the organization is using Custom Fiscal Years.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidLevelField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Health Check error if a Level refers to an invalid field</shortDescription>
+        <value>Level {0} refers to an invalid field {1} on {2}.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidLevelFieldReference</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Health Check error if a Level refers to an invalid field</shortDescription>
+        <value>Level {0} refers to an invalid Level Lookup field {1} on {2}.</value>
     </labels>
     <labels>
         <fullName>healthDetailsInvalidObjectField</fullName>
@@ -2046,6 +2070,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>User Defined Rollups valid.</value>
     </labels>
     <labels>
+        <fullName>healthLabelVerifyLevels</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Health Check title for Levels</shortDescription>
+        <value>Levels</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelVerifyLevelsSuccess</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Health Check message when all Levels verify ok</shortDescription>
+        <value>All field references on all Levels are valid.</value>
+    </labels>
+    <labels>
         <fullName>healthLabelWarning</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -2189,6 +2229,14 @@ If you want to know which Opportunities would have previously included this doub
         <protected>false</protected>
         <shortDescription>healthSolutionInvalidFiscalYears</shortDescription>
         <value>Since Salesforce does not support turning off Custom Fiscal Years, NPSP Rollups will default to Calendar Year.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionInvalidLevelField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Health Check Solution for an invalid Level field</shortDescription>
+        <value>Go to the Levels Tab, and update the invalid field reference on Level {0}.</value>
     </labels>
     <labels>
         <fullName>healthSolutionInvalidOppField</fullName>
@@ -2828,6 +2876,62 @@ If you want to know which Opportunities would have previously included this doub
         <protected>false</protected>
         <shortDescription>leadConvertViewContactError</shortDescription>
         <value>You can only view existing contacts.</value>
+    </labels>
+    <labels>
+        <fullName>lvlBtnSaveAndNew</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Save &amp; New button on the Level Edit page</shortDescription>
+        <value>Save &amp; New</value>
+    </labels>
+    <labels>
+        <fullName>lvlErrorDuplicateLookups</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when the Level has the same lookup field  specified for level and previous</shortDescription>
+        <value>You must specify different lookup fields on {0} for Level Field and Previous Level Field.</value>
+    </labels>
+    <labels>
+        <fullName>lvlErrorDuplicateName</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>error when a name of a level is duplicated</shortDescription>
+        <value>Level name {0} already exists.  Names for the same Target and Level Field must be unique.</value>
+    </labels>
+    <labels>
+        <fullName>lvlErrorInvalidLookupField</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>error when Level Assignment fails to save its current or previous level</shortDescription>
+        <value>Field {0} specified in Level {1} is not a valid lookup to a Level object.</value>
+    </labels>
+    <labels>
+        <fullName>lvlErrorInvalidSourceField</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>error if level&apos;s source field isn&apos;t valid</shortDescription>
+        <value>Field {0} specified in Level {1} is not a valid number field.</value>
+    </labels>
+    <labels>
+        <fullName>lvlErrorMinGTMax</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error if the Level Minimum is &gt; than Level Maximum</shortDescription>
+        <value>The Minimum Amount must be less than the Maximum Amount on level {0}.</value>
+    </labels>
+    <labels>
+        <fullName>lvlErrorMinOverlap</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error when we detect the minimum amount overlaps another level</shortDescription>
+        <value>The Minimum Amount to Maximum Amount range on Level {0} overlaps with the Minimum Amount to Maximum Amount range on Level {1}</value>
     </labels>
     <labels>
         <fullName>mtchBtnSearch</fullName>
@@ -3905,7 +4009,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHHAccountRTID</shortDescription>
-        <value>The Account record type you want to use for new Accounts if you&apos;ve selected the Household Account model above. You can select the default Household Account record type, or your own record type. If you select -none-, then Salesforce will use the default Account record type for the user who&apos;s creating the new Contact (and associated Account).</value>
+        <value>The Account record type you want to use for new Accounts if you&apos;ve selected the Household Account model above. You can select the default Household Account record type, or your own record type. If you select --None--, then Salesforce will use the default Account record type for the user who&apos;s creating the new Contact (and associated Account).</value>
     </labels>
     <labels>
         <fullName>stgHelpHHExcludedRT</fullName>
@@ -3994,6 +4098,17 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <protected>false</protected>
         <shortDescription>stgHelpLeadConvert</shortDescription>
         <value>Specifies the default behavior for Opportunity creation when you convert a Lead to a Contact. If left unselected, Salesforce will NOT automatically create an Opportunity when you convert Leads to Contacts. For more information, see the &lt;a href=&quot;https://powerofus.force.com/NPSP_Leads&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpLvlAssignBatch</fullName>
+        <categories>NPSP Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>help text displayed on the Level Assignment Batch page</shortDescription>
+        <value>This utility calculates Level Assignments for all Salesforce objects (typically Accounts and Contacts, but also any custom objects) that have Levels assigned to them. This process may take some time, but you can safely close this page and the process will continue in the background.
+&lt;br/&gt;&lt;br/&gt;
+
+&lt;b&gt;IMPORTANT:&lt;/b&gt; Since Salesforce is often evaluating Levels against updated fields from other bulk data processes, you may want to run those processes first.</value>
     </labels>
     <labels>
         <fullName>stgHelpMatchedDonorRole</fullName>
@@ -4115,7 +4230,7 @@ IMPORTANT: Both of these fields must have the same data type.</value>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpOneToOneRTID</shortDescription>
-        <value>The Account record type you want to use for new Accounts if you&apos;ve selected the One-to-One Account model above. NPSP does not come with a default record type for One-to-One Accounts, so you should create one (such as &quot;Individual&quot;) before selecting this model. If you select -none-, then Salesforce will use the default Account record type for the user who&apos;s creating the new Contact (and associated One-to-One Account).</value>
+        <value>The Account record type you want to use for new Accounts if you&apos;ve selected the One-to-One Account model above. NPSP does not come with a default record type for One-to-One Accounts, so you should create one (such as &quot;Individual&quot;) before selecting this model. If you select --None--, then Salesforce will use the default Account record type for the user who&apos;s creating the new Contact (and associated One-to-One Account).</value>
     </labels>
     <labels>
         <fullName>stgHelpOppNamingAttribution</fullName>
@@ -4147,7 +4262,7 @@ IMPORTANT: Both of these fields must have the same data type.</value>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpOppNamingRecTypes</shortDescription>
-        <value>The Opportunity record type(s) to which you want to apply this Opportunity Name. Control or Command click to select more than one record type. &quot;- none -&quot; applies the new naming to ALL record types.</value>
+        <value>The Opportunity record type(s) to which you want to apply this Opportunity Name. Control or Command click to select more than one record type. &quot;--None--&quot; applies the new naming to ALL record types.</value>
     </labels>
     <labels>
         <fullName>stgHelpOppRecTypesNoPayments</fullName>
@@ -4880,6 +4995,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Lead Settings</value>
     </labels>
     <labels>
+        <fullName>stgLabelLvlAssignBatchTitle</fullName>
+        <categories>NPSP Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>menu title for the Level Assignment Batch in NPSP Settings</shortDescription>
+        <value>Level Assignment Batch</value>
+    </labels>
+    <labels>
         <fullName>stgLabelMembershipSettings</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -4941,7 +5064,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgLabelNone</shortDescription>
-        <value>- none -</value>
+        <value>--None--</value>
     </labels>
     <labels>
         <fullName>stgLabelONS</fullName>

@@ -47,7 +47,7 @@
     <allowInChatterGroups>false</allowInChatterGroups>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
-    <description>A custom object for tracking various grant seeking deadlines such as the LOI delivery date, application date, and report due dates.</description>
+    <description>A custom object for tracking various grant/gift seeking deliverables such as the LOI delivery date, application date, and report due dates.</description>
     <enableActivities>true</enableActivities>
     <enableBulkApi>true</enableBulkApi>
     <enableFeeds>false</enableFeeds>
@@ -58,9 +58,10 @@
     <enableStreamingApi>true</enableStreamingApi>
     <fields>
         <fullName>Grant_Deadline_Due_Date__c</fullName>
-        <description>Sets the date on which this particular deadline is due.</description>
+        <description>The date on which this particular Deliverable is due.</description>
         <externalId>false</externalId>
-        <label>Grant Deadline Due Date</label>
+        <inlineHelpText>The date on which this particular Deliverable is due.</inlineHelpText>
+        <label>Due Date</label>
         <required>false</required>
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
@@ -71,7 +72,7 @@
         <description>The date on which the deliverable was actually submitted.</description>
         <externalId>false</externalId>
         <inlineHelpText>The date on which the deliverable was actually submitted.</inlineHelpText>
-        <label>Grant Deliverable Close Date</label>
+        <label>Close Date</label>
         <required>false</required>
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
@@ -81,7 +82,8 @@
         <fullName>Grant_Deliverable_Requirements__c</fullName>
         <description>Description of what is required for this deliverable.</description>
         <externalId>false</externalId>
-        <label>Grant Deliverable Requirements</label>
+        <inlineHelpText>Description of what is required for this deliverable.</inlineHelpText>
+        <label>Requirements</label>
         <length>32768</length>
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
@@ -90,11 +92,11 @@
     </fields>
     <fields>
         <fullName>Opportunity__c</fullName>
-        <description>Master-Detail relationship that determines which Grant Opportunity this Grant Deadline is related to.</description>
+        <description>Master-Detail relationship that determines which Opportunity this Deliverable is related to.</description>
         <externalId>false</externalId>
-        <label>Grant Opportunity</label>
+        <label>Opportunity</label>
         <referenceTo>Opportunity</referenceTo>
-        <relationshipLabel>Grant Deadlines</relationshipLabel>
+        <relationshipLabel>Deliverables</relationshipLabel>
         <relationshipName>Grant_Deadlines</relationshipName>
         <relationshipOrder>0</relationshipOrder>
         <reparentableMasterDetail>true</reparentableMasterDetail>
@@ -103,13 +105,40 @@
         <type>MasterDetail</type>
         <writeRequiresMasterRead>false</writeRequiresMasterRead>
     </fields>
-    <label>Grant Deadline</label>
+    <fields>
+        <fullName>Type__c</fullName>
+        <externalId>false</externalId>
+        <label>Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>LOI</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Application</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Interim Report</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Final Report</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <label>Deliverable</label>
     <nameField>
-        <label>Grant Deadline Name</label>
+        <label>Deliverable Name</label>
         <trackHistory>false</trackHistory>
         <type>Text</type>
     </nameField>
-    <pluralLabel>Grant Deadlines</pluralLabel>
+    <pluralLabel>Deliverables</pluralLabel>
     <searchLayouts/>
     <sharingModel>ControlledByParent</sharingModel>
 </CustomObject>

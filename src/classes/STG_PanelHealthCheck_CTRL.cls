@@ -183,6 +183,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         verifyTriggerHandlers();
         verifyNoMissingOppPayments();
         verifyNoDuplicateContactRoles();
+        verifyLevels();
         
         DateTime dtEnd = system.now();
         double msec = dtEnd.getTime() - dtStart.getTime();
@@ -732,4 +733,62 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
             );
         }
      }
+
+    /*********************************************************************************************************
+    * @description Verifies that all Level records refer to existing fields of the correct type
+    */
+    public void verifyLevels() {
+        try {
+            // get all our levels for this object type
+            list<Level__c> listAllLvls = [select Id, Name, Target__c, Source_Field__c, Level_Field__c, 
+                Previous_Level_Field__c, Active__c, Minimum_Amount__c, Maximum_Amount__c
+                from Level__c
+                order by Level_Field__c asc, Minimum_Amount__c asc];
+            
+            integer cErrors = 0;
+            for (Level__c lvl : listAllLvls) {
+                for (integer i = 0; i < 3; i++) {
+                    String strField;
+                    if (i == 0)
+                        strField = lvl.Source_Field__c;
+                    else if (i == 1)
+                        strField = lvl.Level_Field__c;
+                    else if (i == 2)
+                        strField = lvl.Previous_Level_Field__c;
+                        
+                    // ensure the field exists
+                    if (strField != null && !UTIL_Describe.isValidField(lvl.Target__c, strField)) {
+                        cErrors++; 
+                        createDR(Label.healthLabelVerifyLevels, statusError, 
+                            string.format(Label.healthDetailsInvalidLevelField, new string[]{lvl.Name, strField, lvl.Target__c}),
+                            string.format(label.healthSolutionInvalidLevelField, new string[]{lvl.Name}));
+                    } 
+                    // ensure the datatype is valid
+                    else if (strField != null) {
+                        Schema.Displaytype dt = UTIL_Describe.getFieldDisplayType(lvl.Target__c, strField);
+                        if (i == 0 && !UTIL_Describe.canDisplaytypesCopy(dt, Schema.DisplayType.Double)) {
+	                        cErrors++; 
+	                        createDR(Label.healthLabelVerifyLevels, statusError, 
+	                            string.format(Label.healthDetailsInvalidFieldNumeric, new string[]{lvl.Name, strField, lvl.Target__c}),
+	                            string.format(label.healthSolutionInvalidLevelField, new string[]{lvl.Name}));
+                        }
+                        if (i > 0 && !UTIL_Describe.canDisplaytypesCopy(dt, Schema.DisplayType.Reference)) {
+                            cErrors++; 
+                            createDR(Label.healthLabelVerifyLevels, statusError, 
+                                string.format(Label.healthDetailsInvalidLevelFieldReference, new string[]{lvl.Name, strField, lvl.Target__c}),
+                                string.format(label.healthSolutionInvalidLevelField, new string[]{lvl.Name}));
+                        }
+                    }       
+                }
+            }
+
+            if (cErrors == 0) {
+                createDR(Label.healthLabelVerifyLevels, statusSuccess, null, label.healthLabelVerifyLevelsSuccess);
+            }
+            
+        } catch (exception ex) {
+            createDR(Label.healthLabelVerifyLevels, statusError, ex.getMessage(), null);                   
+        }    
+        
+    }
 }

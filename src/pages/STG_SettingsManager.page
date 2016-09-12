@@ -175,6 +175,7 @@
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelOppNamingBatchNav"><a href="#" onclick="ShowPanel('idPanelOppNamingBatch');return false;" class="slds-grow slds-m-left--large">{!$Label.stgLabelOppNamingRefreshTitle}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelUpdatePrimaryContactNav"><a href="#" onclick="ShowPanel('idPanelUpdatePrimaryContact');return false;" class="slds-grow slds-m-left--large">{!$Label.stgLabelOppPrimaryContactTitle}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRDBatchNav"><a href="#" onclick="ShowPanel('idPanelRDBatch');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavRDBatch}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelLvlAssignBatchNav"><a href="#" onclick="ShowPanel('idPanelLvlAssignBatch');return false;" class="slds-grow slds-m-left--large">{!$Label.stgLabelLvlAssignBatchTitle}</a></li>
                             </ul>
                             <!-- System Tools -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelSystemNav">
@@ -320,6 +321,10 @@
 
                 <div class="panel noborder" id="idPanelOppNamingBatch" style="display:none" >
                     <apex:include pageName="STG_PanelOppNamingBatch" />
+                </div>
+
+                <div class="panel noborder" id="idPanelLvlAssignBatch" style="display:none" >
+                    <apex:include pageName="STG_PanelLvlAssignBatch" />
                 </div>
 
                 <div class="panel noborder" id="idPanelUpdatePrimaryContact" style="display:none" >
