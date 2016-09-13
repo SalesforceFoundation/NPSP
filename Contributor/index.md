@@ -26,7 +26,7 @@ This document outlines everything you need to know to start contributing code to
         - Each time new metadata is added through the UI or created via your IDE, it must be added to the unmanaged package.
         - Note: ANT scripts are not currently configured to handle all metadata types (weblinks and others are not yet supported)
     - Use ant build target to set up your DE org
-        - ```ant deployCI```
+        - ```ant deployDevOrg```
 3. Set up an IDE
     - [Force.com IDE](Force.com-IDE-Setup.html)
     - [Alternate IDEs](Alternate-IDEs.html) (MavensMate, et al.)
