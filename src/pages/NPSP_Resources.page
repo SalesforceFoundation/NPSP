@@ -16,10 +16,10 @@
     <div>
     
       <div class="container">
-       <div class="row"><h1>Welcome to Salesforce and the Nonprofit Starter Pack!</h1></div>
+       <div class="row"><h1>Welcome to Salesforce and the Nonprofit Success Pack!</h1></div>
       <div class="row">
-        <div class="col-md-9"><p>You now have access to ALL the powerful features of Salesforce Enterprise Edition PLUS the ability to better manage donors with the Nonprofit Starter Pack application.</p></div>
-        <div class="col-md-3"> <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/NPSP+logo+-+grey+text.png')}" style="max-width:100%;max-height:60;height:auto;" alt="NPSP Logo"/></div>
+        <div class="col-md-9"><p>You now have access to ALL the powerful features of Salesforce Enterprise Edition PLUS the ability to better manage donors with the Nonprofit Success Pack application.</p></div>
+        <div class="col-md-3"> <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/RGB_npsp-full-color.png')}" style="max-width:100%;max-height:60;height:auto;" alt="NPSP Logo"/></div>
       </div>
 
       </div>
@@ -40,7 +40,7 @@
                 </div>
       <!--END3Get Started: Fund-->  
       <!--4Get Started: NPSP-->
-                <h4><span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;Get Started with the Nonprofit Starter Pack</h4>
+                <h4><span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;Get Started with the Nonprofit Success Pack</h4>
                 
                 <div class="media" style="margin-bottom:60px;">
                     <div class="pull-left"><a href="https://developer.salesforce.com/trailhead/trail/nonprofit_fundraising" target="_blank"><img class="media-object" height="100" width="130" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/trailhead_npo.png')}" alt="NPSP Trail"/>
@@ -48,19 +48,19 @@
                     </div>
   
                     <div class="media-body">
-                    <h4 class="media-heading">Nonprofit Starter Pack Trail</h4>
-                    <p>Learn the basics of fundraising with the Nonprofit Starter Pack via <a href="https://developer.salesforce.com/trailhead/trail/nonprofit_fundraising" title="Nonprofit Fundraising Trail" target="_blank">this interactive learning path</a> from Salesforce.</p>
+                    <h4 class="media-heading">Nonprofit Success Pack Trail</h4>
+                    <p>Learn the basics of fundraising with the Nonprofit Success Pack via <a href="https://developer.salesforce.com/trailhead/trail/nonprofit_fundraising" title="Nonprofit Fundraising Trail" target="_blank">this interactive learning path</a> from Salesforce.</p>
                     </div>
                 </div>
                 
                 <div class="media" style="margin-bottom:60px;">
-                    <div class="pull-left"><a href="https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-3-Documentation" target="_blank"><img class="media-object" height="100" width="130" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/workbook.png')}" alt="NPSP Starter Pack Documentation"/>
+                    <div class="pull-left"><a href="https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-3-Documentation" target="_blank"><img class="media-object" height="100" width="130" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/workbook.png')}" alt="NPSP Success Pack Documentation"/>
     </a>
                     </div>
   
                     <div class="media-body">
-                    <h4 class="media-heading">Nonprofit Starter Pack Documentation</h4>
-                        <p>Consult our full set of <a href="https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-3-Documentation" title="Nonprofit Starter Pack Documentation" target="_blank">Nonprofit Starter Pack Documentation</a>, including the <a href="https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-Workbook" title="NPSP Getting Started Workbook" target="_blank">NPSP Getting Started Workbook</a>.</p>
+                    <h4 class="media-heading">Nonprofit Success Pack Documentation</h4>
+                        <p>Consult our full set of <a href="https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-3-Documentation" title="Nonprofit Success Pack Documentation" target="_blank">Nonprofit Success Pack Documentation</a>, including the <a href="https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-Workbook" title="NPSP Getting Started Workbook" target="_blank">NPSP Getting Started Workbook</a>.</p>
                     </div>
                 </div>
 

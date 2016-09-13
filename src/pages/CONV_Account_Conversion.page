@@ -21,7 +21,7 @@
                         <p>{!$Label.CONV_Page_Description}</p>
                     </div>
                     <div class="slds-media__figure slds-media__figure--reverse">
-                        <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/NPSP_Logo_Small_Cropped.png')}" class="img-rounded img-responsive" style="height: 75px" alt="NPSP Logo"/>
+                        <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/RGB_npsp-stacked-color.png')}" class="img-rounded img-responsive" style="height: 75px" alt="NPSP Logo"/>
                     </div>
                 </div>
             </div>
