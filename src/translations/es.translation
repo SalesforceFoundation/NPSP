@@ -1874,7 +1874,7 @@ Una vez que el proceso se completó al 100%, puede abandonar o actualizar esta p
 &lt;br/&gt;&lt;br/&gt;
 El objeto Familias y sus modelos de cuenta asociados ya no son recomendados. Sin embargo, si esta utilizando el modelo de cuenta Uno-a-Uno o Individual de versiones anteriores del Nonprofit Success Pack, puede cambiar la configuración del objeto Familias acá.
 &lt;br/&gt;&lt;br/&gt;
-Para aprender más sobre el modelo de Cuenta Familia recomendado, ver &lt;a href=&quot;https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-3-Documentation&quot; target=&quot;_new&quot;&gt;NPSP Documentation&lt;/a&gt;.</label>
+Para aprender más sobre el modelo de Cuenta Familia recomendado, ver &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_new&quot;&gt;NPSP Documentation&lt;/a&gt;.</label>
         <name>stgHelpHHObjectOverview</name>
     </customLabels>
     <customLabels>

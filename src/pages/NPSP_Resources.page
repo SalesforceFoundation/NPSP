@@ -54,23 +54,23 @@
                 </div>
                 
                 <div class="media" style="margin-bottom:60px;">
-                    <div class="pull-left"><a href="https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-3-Documentation" target="_blank"><img class="media-object" height="100" width="130" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/workbook.png')}" alt="NPSP Success Pack Documentation"/>
+                    <div class="pull-left"><a href="https://powerofus.force.com/NPSP_Documentation" target="_blank"><img class="media-object" height="100" width="130" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/workbook.png')}" alt="NPSP Success Pack Documentation"/>
     </a>
                     </div>
   
                     <div class="media-body">
                     <h4 class="media-heading">Nonprofit Success Pack Documentation</h4>
-                        <p>Consult our full set of <a href="https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-3-Documentation" title="Nonprofit Success Pack Documentation" target="_blank">Nonprofit Success Pack Documentation</a>, including the <a href="https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-Workbook" title="NPSP Getting Started Workbook" target="_blank">NPSP Getting Started Workbook</a>.</p>
+                        <p>Consult our full set of <a href="https://powerofus.force.com/NPSP_Documentation" title="Nonprofit Success Pack Documentation" target="_blank">Nonprofit Success Pack Documentation</a>, including the <a href="https://powerofus.force.com/NPSP_Workbook" title="NPSP Getting Started Workbook" target="_blank">NPSP Getting Started Workbook</a>.</p>
                     </div>
                 </div>
 
                 <div class="media" style="margin-bottom:40px;">
-                    <div class="pull-left"><a href="https://powerofus.force.com/articles/Resource/NPSP-Administrators-Guide-to-Importing-Donor-Data" target="_blank">
+                    <div class="pull-left"><a href="https://powerofus.force.com/NPSP_Import_Data" target="_blank">
       <img class="media-object" height="100" width="130" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/workbook.png')}"/></a>
                     </div>
                     <div class="media-body">
                     <h4 class="media-heading">NPSP Admin Guide to Importing Donor Data</h4>
-                    <p>This <a href="https://powerofus.force.com/articles/Resource/NPSP-Administrators-Guide-to-Importing-Donor-Data" title="NPSP Data Workbook" target="_blank">guide</a> is intended to help administrators use the NPSP Data Import tool to transfer existing data into Salesforce.</p>
+                    <p>This <a href="https://powerofus.force.com/NPSP_Import_Data" title="NPSP Data Workbook" target="_blank">guide</a> is intended to help administrators use the NPSP Data Import tool to transfer existing data into Salesforce.</p>
                     </div>
                     </div>
          <!--ENDGet Started: NPSP--> 
@@ -97,11 +97,11 @@
 
         <div class="media">
           <div class="pull-left">
-           <a href="https://powerofus.force.com/articles/Resource/Salesforce-com-Foundation-Weekly-Office-Hours" target="_blank"><img class="media-object" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/officehours.png')}" alt="Office Hours"/></a>
+           <a href="https://powerofus.force.com/HUB_Foundation_Office_Hours" target="_blank"><img class="media-object" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/officehours.png')}" alt="Office Hours"/></a>
           </div>
           <div class="media-body"><h4 class="media-heading">Salesforce.org Office Hours</h4>
           <p>Join us for our weekly office hours and get your questions answered by experts from the Power of Us Hub.</p>
-          <a href="https://powerofus.force.com/articles/Resource/Salesforce-com-Foundation-Weekly-Office-Hours" target="_blank"><button type="button" class="btn btn-primary">Learn More &raquo;</button></a>
+          <a href="https://powerofus.force.com/HUB_Foundation_Office_Hours" target="_blank"><button type="button" class="btn btn-primary">Learn More &raquo;</button></a>
           </div>
        </div>
        

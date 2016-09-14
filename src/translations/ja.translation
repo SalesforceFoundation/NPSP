@@ -1994,7 +1994,7 @@
 &lt;br/&gt;&lt;br/&gt;
 世帯オブジェクトとそれに関連付けられている団体モデルは推奨されなくなりました。ただし、以前のバージョンの Nonprofit Success Pack から 1 対 1 または個人 (「バケット」) の団体モデルを引き続き使用している場合、世帯オブジェクトの設定をここで変更できます。
 &lt;br/&gt;&lt;br/&gt;
-推奨される世帯団体モデルについての詳細は、&lt;a href=&quot;https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-3-Documentation&quot; target=&quot;_new&quot;&gt;NPSP ドキュメント&lt;/a&gt;を参照してください。</label>
+推奨される世帯団体モデルについての詳細は、&lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_new&quot;&gt;NPSP ドキュメント&lt;/a&gt;を参照してください。</label>
         <name>stgHelpHHObjectOverview</name>
     </customLabels>
     <customLabels>
