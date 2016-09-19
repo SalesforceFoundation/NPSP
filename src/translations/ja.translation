@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Translations xmlns="http://soap.sforce.com/2006/04/metadata">
     <customApplications>
-        <label><!-- Nonprofit Starter Pack --></label>
+        <label><!-- Nonprofit Success Pack --></label>
         <name>Nonprofit_CRM</name>
     </customApplications>
     <customLabels>
@@ -572,7 +572,7 @@
         <name>bdiDataImporterConfigTitle</name>
     </customLabels>
     <customLabels>
-        <label>NPSP データインポーターを使用すると、簡単にデータを Nonprofit Starter Pack にインポートできます</label>
+        <label>NPSP データインポーターを使用すると、簡単にデータを Nonprofit Success Pack にインポートできます</label>
         <name>bdiDataImporterDescription</name>
     </customLabels>
     <customLabels>
@@ -1812,7 +1812,7 @@
         <name>stgHelpAccountModel</name>
     </customLabels>
     <customLabels>
-        <label>このオプションをオンにすると、割り当ての積み上げ集計総額に対してカレンダー年度設定ではなく会計年度設定が有効になります。会計年度情報を設定するには、[設定] | [組織プロファイル] | [会計年度] に移動します。注意: Nonprofit Starter Pack では、カスタム会計年度設定はサポートされていません。</label>
+        <label>このオプションをオンにすると、割り当ての積み上げ集計総額に対してカレンダー年度設定ではなく会計年度設定が有効になります。会計年度情報を設定するには、[設定] | [組織プロファイル] | [会計年度] に移動します。注意: Nonprofit Success Pack では、カスタム会計年度設定はサポートされていません。</label>
         <name>stgHelpAlloFiscalYearRollups</name>
     </customLabels>
     <customLabels>
@@ -1990,11 +1990,11 @@
         <name>stgHelpHHOCROn</name>
     </customLabels>
     <customLabels>
-        <label>Nonprofit Starter Pack では、2 つの異なる方法で世帯を追跡できます。団体を個人の世帯として使用する世帯団体モデルを指定することをお勧めします。ただし、1 対 1 または個人の団体モデルを使用する場合、必要に応じて個々の世帯オブジェクトを個人の世帯として使用できます。
+        <label>Nonprofit Success Pack では、2 つの異なる方法で世帯を追跡できます。団体を個人の世帯として使用する世帯団体モデルを指定することをお勧めします。ただし、1 対 1 または個人の団体モデルを使用する場合、必要に応じて個々の世帯オブジェクトを個人の世帯として使用できます。
 &lt;br/&gt;&lt;br/&gt;
-世帯オブジェクトとそれに関連付けられている団体モデルは推奨されなくなりました。ただし、以前のバージョンの Nonprofit Starter Pack から 1 対 1 または個人 (「バケット」) の団体モデルを引き続き使用している場合、世帯オブジェクトの設定をここで変更できます。
+世帯オブジェクトとそれに関連付けられている団体モデルは推奨されなくなりました。ただし、以前のバージョンの Nonprofit Success Pack から 1 対 1 または個人 (「バケット」) の団体モデルを引き続き使用している場合、世帯オブジェクトの設定をここで変更できます。
 &lt;br/&gt;&lt;br/&gt;
-推奨される世帯団体モデルについての詳細は、&lt;a href=&quot;https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-3-Documentation&quot; target=&quot;_new&quot;&gt;NPSP ドキュメント&lt;/a&gt;を参照してください。</label>
+推奨される世帯団体モデルについての詳細は、&lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_new&quot;&gt;NPSP ドキュメント&lt;/a&gt;を参照してください。</label>
         <name>stgHelpHHObjectOverview</name>
     </customLabels>
     <customLabels>
@@ -2333,7 +2333,7 @@
         <name>stgHelpTHTriggerAction</name>
     </customLabels>
     <customLabels>
-        <label>これらのトリガで Nonprofit Starter Pack のコア機能が制御されるため、これらを変更する場合は細心の注意を払ってください。</label>
+        <label>これらのトリガで Nonprofit Success Pack のコア機能が制御されるため、これらを変更する場合は細心の注意を払ってください。</label>
         <name>stgHelpTriggerHandlers</name>
     </customLabels>
     <customLabels>
@@ -2355,7 +2355,7 @@
     <customLabels>
         <label>インストールに成功しましたが、軽微な問題が検出されました。問題を修正するには、Salesforce で [NPSP 設定] ページを読み込みます。
 
-注意: [NPSP 設定] が Nonprofit Starter Pack アプリケーションに表示されます。タブが表示されない場合は、右上隅のアプリケーションメニューから [Nonprofit Starter Pack] を選択します。</label>
+注意: [NPSP 設定] が Nonprofit Success Pack アプリケーションに表示されます。タブが表示されない場合は、右上隅のアプリケーションメニューから [Nonprofit Success Pack] を選択します。</label>
         <name>stgInstallScriptError</name>
     </customLabels>
     <customLabels>
@@ -2643,7 +2643,7 @@
         <name>stgNPSPSettings</name>
     </customLabels>
     <customLabels>
-        <label>Nonprofit Starter Pack 設定</label>
+        <label>Nonprofit Success Pack 設定</label>
         <name>stgNPSPSettingsTitle</name>
     </customLabels>
     <customLabels>

@@ -1124,7 +1124,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiDataImporterDescription</shortDescription>
-        <value>The NPSP Data Importer helps you easily import your data into the Nonprofit Starter Pack</value>
+        <value>The NPSP Data Importer helps you easily import your data into the Nonprofit Success Pack</value>
     </labels>
     <labels>
         <fullName>bdiDataImporterInfoLine1</fullName>
@@ -3739,7 +3739,7 @@ If you want to know which Opportunities would have previously included this doub
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpAccountModel</shortDescription>
-        <value>The Account model used by the Nonprofit Starter Pack. This option controls what happens when you create a Contact with a blank Account field value.</value>
+        <value>The Account model used by the Nonprofit Success Pack. This option controls what happens when you create a Contact with a blank Account field value.</value>
     </labels>
     <labels>
         <fullName>stgHelpAlloFiscalYearRollups</fullName>
@@ -3747,7 +3747,7 @@ If you want to know which Opportunities would have previously included this doub
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpAlloFiscalYearRollups</shortDescription>
-        <value>When checked, this option enables fiscal year settings, rather than calendar year settings, for allocation rollup totals. To set fiscal year information, go to Setup | Company Profile | Fiscal Year. NOTE: The Nonprofit Starter Pack does not support custom fiscal year settings.</value>
+        <value>When checked, this option enables fiscal year settings, rather than calendar year settings, for allocation rollup totals. To set fiscal year information, go to Setup | Company Profile | Fiscal Year. NOTE: The Nonprofit Success Pack does not support custom fiscal year settings.</value>
     </labels>
     <labels>
         <fullName>stgHelpAlloNDayValue</fullName>
@@ -4001,7 +4001,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpFiscalYearRollups</shortDescription>
-        <value>When checked, this option enables fiscal year settings, rather than calendar year settings, for Opportunity rollup totals. To set fiscal year information, go to Setup | Company Profile | Fiscal Year. NOTE: The Nonprofit Starter Pack does not support custom fiscal year settings.</value>
+        <value>When checked, this option enables fiscal year settings, rather than calendar year settings, for Opportunity rollup totals. To set fiscal year information, go to Setup | Company Profile | Fiscal Year. NOTE: The Nonprofit Success Pack does not support custom fiscal year settings.</value>
     </labels>
     <labels>
         <fullName>stgHelpHHAccountRTID</fullName>
@@ -4156,7 +4156,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpNPSPSettings</shortDescription>
-        <value>Configure the Nonprofit Starter Pack to meet your organization&apos;s needs. You can also monitor the health of your Salesforce organization, or run batch processes to update data.</value>
+        <value>Configure the Nonprofit Success Pack to meet your organization&apos;s needs. You can also monitor the health of your Salesforce organization, or run batch processes to update data.</value>
     </labels>
     <labels>
         <fullName>stgHelpNameConnector</fullName>
@@ -4342,7 +4342,7 @@ IMPORTANT: Both of these fields must have the same data type.</value>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpPowerOfUsHub</shortDescription>
-        <value>Got questions? The Hub has answers! Try the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;Nonprofit Starter Pack&lt;/a&gt; group for questions about NPSP and the &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; group for questions about Salesforce administration and cofiguration.&lt;br/&gt;&lt;br/&gt;Keep up with the latest NPSP release notes in the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt; group.</value>
+        <value>Got questions? The Hub has answers! Try the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; group for questions about NPSP and the &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; group for questions about Salesforce administration and cofiguration.&lt;br/&gt;&lt;br/&gt;Keep up with the latest NPSP release notes in the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt; group.</value>
     </labels>
     <labels>
         <fullName>stgHelpPrimaryContactBatch</fullName>
@@ -4735,7 +4735,7 @@ This process may take some time, but you can close this page and the process wil
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpTriggerHandlers</shortDescription>
-        <value>These triggers control core functionality in the Nonprofit Starter Pack, so please exercise extreme caution when creating or modifying them.</value>
+        <value>These triggers control core functionality in the Nonprofit Success Pack, so please exercise extreme caution when creating or modifying them.</value>
     </labels>
     <labels>
         <fullName>stgHelpTriggerHandlersAsync</fullName>
@@ -4776,7 +4776,7 @@ This process may take some time, but you can close this page and the process wil
         <shortDescription>stgInstallScriptError</shortDescription>
         <value>Your installation was successful, but we detected a slight problem. To fix the problem, simply load the NPSP Settings page in Salesforce.
 
-Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application. If you don&apos;t see the tab, select Nonprofit Starter Pack from the app menu in the upper-right corner.</value>
+Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application. If you don&apos;t see the tab, select Nonprofit Success Pack from the app menu in the upper-right corner.</value>
     </labels>
     <labels>
         <fullName>stgLabelActionColumn</fullName>
@@ -5352,7 +5352,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgNPSPSettings</shortDescription>
-        <value>Nonprofit Starter Pack Application Settings</value>
+        <value>Nonprofit Success Pack Application Settings</value>
     </labels>
     <labels>
         <fullName>stgNPSPSettingsTitle</fullName>
@@ -5360,7 +5360,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgNPSPSettingsTitle</shortDescription>
-        <value>Nonprofit Starter Pack Settings</value>
+        <value>Nonprofit Success Pack Settings</value>
     </labels>
     <labels>
         <fullName>stgNPSPWorkbook</fullName>
@@ -5368,7 +5368,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgNPSPWorkbook</shortDescription>
-        <value>Nonprofit Starter Pack Workbook</value>
+        <value>Nonprofit Success Pack Workbook</value>
     </labels>
     <labels>
         <fullName>stgNavAccountModel</fullName>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
     <defaultLandingTab>NPSP_Resources</defaultLandingTab>
-    <description>The Nonprofit Starter Pack application</description>
-    <label>Nonprofit Starter Pack</label>
+    <description>The Nonprofit Success Pack application</description>
+    <label>Nonprofit Success Pack</label>
     <tab>standard-Account</tab>
     <tab>standard-Contact</tab>
     <tab>standard-Lead</tab>
