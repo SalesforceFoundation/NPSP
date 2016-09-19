@@ -54,7 +54,7 @@
         <label>NPSP Address Compact Layout</label>
     </compactLayouts>
     <deploymentStatus>Deployed</deploymentStatus>
-    <description>Custom object for storing additional addresses for Household Accounts in the Nonprofit Starter Pack.</description>
+    <description>Custom object for storing additional addresses for Household Accounts in the Nonprofit Success Pack.</description>
     <enableActivities>false</enableActivities>
     <enableBulkApi>true</enableBulkApi>
     <enableFeeds>true</enableFeeds>
