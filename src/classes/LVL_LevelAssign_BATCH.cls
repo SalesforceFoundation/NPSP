@@ -30,8 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2016
-* @group Level
-* @group-content ../../ApexDocContent/Levels.htm
+* @group Levels
 * @description Batch class processes all Levels against Target objects, and updates any changes.
 */
 public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable<sObject>, Database.Stateful {
