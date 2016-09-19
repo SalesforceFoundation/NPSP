@@ -144,7 +144,7 @@ public class ERR_Notifier {
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
         mail.setUseSignature(false);
         mail.setReplyTo('donotreply@salesforce.org');
-        mail.setSenderDisplayName('Nonprofit Starter Pack');
+        mail.setSenderDisplayName('Nonprofit Success Pack');
         mail.setSubject('NPSP Error');
         string bodyString = 'Organization: ' + UserInfo.getOrganizationName() + '(' + UserInfo.getOrganizationId() + ')\n';
         bodyString += 'User: ' + UserInfo.getUserName() + '(' + UserInfo.getUserId() + ')';

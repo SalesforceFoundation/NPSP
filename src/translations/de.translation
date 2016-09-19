@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Translations xmlns="http://soap.sforce.com/2006/04/metadata">
     <customApplications>
-        <label><!-- Nonprofit Starter Pack --></label>
+        <label><!-- Nonprofit Success Pack --></label>
         <name>Nonprofit_CRM</name>
     </customApplications>
     <customLabels>
@@ -596,7 +596,7 @@
         <name>bdiDataImporterConfigTitle</name>
     </customLabels>
     <customLabels>
-        <label>Das NPSP-Datenimportprogramm hilft Ihnen, Ihre Daten leicht in das Nonprofit Starter Pack zu importieren.</label>
+        <label>Das NPSP-Datenimportprogramm hilft Ihnen, Ihre Daten leicht in das Nonprofit Success Pack zu importieren.</label>
         <name>bdiDataImporterDescription</name>
     </customLabels>
     <customLabels>
@@ -1860,7 +1860,7 @@
         <name>stgHelpAccountModel</name>
     </customLabels>
     <customLabels>
-        <label>Wenn diese Option aktiviert ist, werden für die Summen des Zuordnungs-Rollups die Geschäftsjahreinstellungen statt der Kalenderjahreinstellungen aktiviert. Gehen Sie zur Festlegung der Geschäftsjahrinformationen zu Setup | Unternehmensprofil | Geschäftsjahr. HINWEIS: Das Nonprofit Starter Pack unterstützt keine Geschäftsjahreinstellungen.</label>
+        <label>Wenn diese Option aktiviert ist, werden für die Summen des Zuordnungs-Rollups die Geschäftsjahreinstellungen statt der Kalenderjahreinstellungen aktiviert. Gehen Sie zur Festlegung der Geschäftsjahrinformationen zu Setup | Unternehmensprofil | Geschäftsjahr. HINWEIS: Das Nonprofit Success Pack unterstützt keine Geschäftsjahreinstellungen.</label>
         <name>stgHelpAlloFiscalYearRollups</name>
     </customLabels>
     <customLabels>
@@ -2038,11 +2038,11 @@ Wenn der Vorgang zu 100 % abgeschlossen ist, können Sie die Seite bedenkenlos 
         <name>stgHelpHHOCROn</name>
     </customLabels>
     <customLabels>
-        <label>Das Nonprofit Starter Pack unterstützt zwei verschiedene Methoden zum Verfolgen von Haushalten.  Die empfohlene Methode ist die Angabe des Haushalt-Account-Modells, das einen Account als den Haushalt des Kontakts verwendet.  Wenn Sie jedoch das Eins-zu-Eins- oder Einzelperson-Account-Modell verwenden, können Sie optional ein separates Haushalt-Objekt als Haushalt des Kontakts verwenden.
+        <label>Das Nonprofit Success Pack unterstützt zwei verschiedene Methoden zum Verfolgen von Haushalten.  Die empfohlene Methode ist die Angabe des Haushalt-Account-Modells, das einen Account als den Haushalt des Kontakts verwendet.  Wenn Sie jedoch das Eins-zu-Eins- oder Einzelperson-Account-Modell verwenden, können Sie optional ein separates Haushalt-Objekt als Haushalt des Kontakts verwenden.
 &lt;br/&gt;&lt;br/&gt;
-Das Haushalt-Objekt und dessen verknüpfte Account-Modelle werden nicht mehr empfohlen. Wenn Sie jedoch weiterhin das Eins-zu-Eins- oder Einzelperson-(&quot;Bucket&quot;-)Account-Modell aus früheren Versionen des Nonprofit Starter Pack verwenden, können Sie die Einstellungen für das Haushalt-Objekt hier ändern.
+Das Haushalt-Objekt und dessen verknüpfte Account-Modelle werden nicht mehr empfohlen. Wenn Sie jedoch weiterhin das Eins-zu-Eins- oder Einzelperson-(&quot;Bucket&quot;-)Account-Modell aus früheren Versionen des Nonprofit Success Pack verwenden, können Sie die Einstellungen für das Haushalt-Objekt hier ändern.
 &lt;br/&gt;&lt;br/&gt;
-Weitere Informationen zum empfohlenen Haushalt-Account-Modell finden Sie in der &lt;a href=&quot;https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-3-Documentation&quot; target=&quot;_new&quot;&gt;NPSP-Dokumentation&lt;/a&gt;.</label>
+Weitere Informationen zum empfohlenen Haushalt-Account-Modell finden Sie in der &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_new&quot;&gt;NPSP-Dokumentation&lt;/a&gt;.</label>
         <name>stgHelpHHObjectOverview</name>
     </customLabels>
     <customLabels>
@@ -2385,7 +2385,7 @@ Wenn der Vorgang zu 100 % abgeschlossen ist, können Sie die Seite bedenkenlos 
         <name>stgHelpTHTriggerAction</name>
     </customLabels>
     <customLabels>
-        <label>Diese Auslöser steuern Kernfunktionen im Nonprofit Starter Pack. Gehen Sie äußerst vorsichtig vor, wenn Sie sie ändern.</label>
+        <label>Diese Auslöser steuern Kernfunktionen im Nonprofit Success Pack. Gehen Sie äußerst vorsichtig vor, wenn Sie sie ändern.</label>
         <name>stgHelpTriggerHandlers</name>
     </customLabels>
     <customLabels>
@@ -2407,7 +2407,7 @@ Wenn der Vorgang zu 100 % abgeschlossen ist, können Sie die Seite bedenkenlos 
     <customLabels>
         <label>Die Installation war erfolgreich, doch es ist ein kleines Problem aufgetreten. Laden Sie einfach die Seite &quot;NPSP-Einstellungen&quot; in Salesforce, um das Problem zu beheben.
 
-Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit Starter Pack-Anwendung sichtbar. Wenn Sie die Registerkarte nicht sehen, wählen Sie das Nonprofit Starter Pack im App-Menü in der oberen rechten Ecke aus.</label>
+Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit Success Pack-Anwendung sichtbar. Wenn Sie die Registerkarte nicht sehen, wählen Sie das Nonprofit Success Pack im App-Menü in der oberen rechten Ecke aus.</label>
         <name>stgInstallScriptError</name>
     </customLabels>
     <customLabels>
@@ -2699,7 +2699,7 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <name>stgNPSPSettings</name>
     </customLabels>
     <customLabels>
-        <label>Nonprofit Starter Pack-Einstellungen</label>
+        <label>Nonprofit Success Pack-Einstellungen</label>
         <name>stgNPSPSettingsTitle</name>
     </customLabels>
     <customLabels>

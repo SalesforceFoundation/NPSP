@@ -18,37 +18,9 @@
     <aura:attribute name="idDataCallback" type="Integer" default="0" access="private" />
     
     <aura:method name="clearList" action="{!c.clearList}" access="public" />
-    
-
-    <aura:attribute name="displayValueTemplate" type="Aura.Component[]" access="public">
-        <div class="slds-pill_container slds-show">
-            <span class="slds-pill">
-                <span class="slds-pill__label">{!v.displayValue}</span>
-                <ui:button class="slds-button slds-button--icon slds-pill__remove" press="{!c.handleRemovePill}">
-                    <c:svg ariaHidden="true"
-                       class="slds-button__icon"
-                       xlinkHref="{!$Resource.sfdo203 + '/assets/icons/utility-sprite/svg/symbols.svg#close'}"
-                       />
-                    <span class="slds-assistive-text">Remove</span>
-                </ui:button>
-           </span>
-        </div>
-    </aura:attribute>
 
     <aura:attribute name="itemTemplate" type="Aura.ComponentDefRef[]" access="public">
         <c:autocompleteOption value="{!item}" displayValue="{!item}"/>
-    </aura:attribute>
-
-    <aura:attribute name="listHeader" type="Aura.Component[]" description="A facet above the rendered list, for use as a list header" access="public">
-        <div class="slds-lookup__item">
-            <span>
-                <c:svg ariaHidden="true"
-                       class="slds-icon slds-icon-text-default slds-icon--small"
-                       xlinkHref="{!$Resource.sfdo203 + '/assets/icons/utility-sprite/svg/symbols.svg#search'}"
-                       />
-                &quot;{!v.keyword}&quot; {!if(!empty(v.searchContext), v.searchContext, '')}
-            </span>
-        </div>
     </aura:attribute>
 
     <aura:attribute name="listFooter" type="Aura.Component[]" description="A facet below the rendered list, for use as a list footer" access="public"/>
@@ -56,7 +28,6 @@
     <aura:attribute name="showListFooter" type="Boolean" default="true" description="Indicates whether the listFooter is visible. The default is true." access="public"/>
     <aura:attribute name="loadingIndicator" type="Aura.Component[]" description="Content to be shown while the list is loading" access="public"/>
     <aura:attribute name="showLoadingIndicator" type="Boolean" default="false" access="public"/>
-    <aura:attribute name="showPills" type="Boolean" default="true" access="public"/>
     <aura:attribute name="emptyListContent" type="Aura.Component[]" description="Content to be shown if the list is empty" access="public"/>
 
     <div class="sfdo203" aura:id="autocomplete">
@@ -74,9 +45,6 @@
                            class="slds-input__icon slds-icon-text-default"
                            xlinkHref="{!$Resource.sfdo203 + '/assets/icons/utility-sprite/svg/symbols.svg#search'}"
                            />
-                    <aura:if isTrue="{!and(v.showPills, !empty(v.value), !empty(v.displayValue))}">
-                        {!v.displayValueTemplate}
-                    </aura:if>
                     <ui:inputText aura:id="input"
                                   class="{!'slds-input ' + (and(v.showPills, !empty(v.value), !empty(v.displayValue)) ? 'slds-hide' : '')}"
                                   placeholder="{!v.placeholder}"
@@ -88,7 +56,15 @@
 
             <div class="{!'slds-lookup__menu' + (v.isListVisible ? ' slds-show' : ' slds-hide')}" role="listbox" aura:id="list" tabindex="-1" onfocusin="{!c.handleListFocus}" onfocusout="{!c.handleListBlur}" onfocus="{!c.handleListFocus}" onblur="{!c.handleListBlur}">
                 <aura:if isTrue="{!v.showListHeader}">
-                    {!v.listHeader}
+                    <div class="slds-lookup__item">
+                        <span>
+                            <c:svg ariaHidden="true"
+                                   class="slds-icon slds-icon-text-default slds-icon--small"
+                                   xlinkHref="{!$Resource.sfdo203 + '/assets/icons/utility-sprite/svg/symbols.svg#search'}"
+                                   />
+                            &quot;{!v.keyword}&quot; {!if(!empty(v.searchContext), v.searchContext, '')}
+                        </span>
+                    </div>
                 </aura:if>
                 <ul aura:id="ullist" class="slds-lookup__list" role="presentation">
                     <aura:if isTrue="{!v.showLoadingIndicator}">

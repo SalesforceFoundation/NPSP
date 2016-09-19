@@ -237,7 +237,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
             Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
             mail.setUseSignature(false);
             mail.setReplyTo('donotreply@salesforce.org');
-            mail.setSenderDisplayName('Nonprofit Starter Pack');
+            mail.setSenderDisplayName('Nonprofit Success Pack');
             mail.setSubject('NPSP Install Errors');
             String bodyString = Label.stgInstallScriptError;
             bodyString += '\n\n==========================. \n\n Error message: \n' + e.getMessage() + '\n\n'
