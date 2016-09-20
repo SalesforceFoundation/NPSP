@@ -30,8 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2016
-* @group Level
-* @group-content ../../ApexDocContent/Levels.htm
+* @group Levels
 * @description Schedulable class that creates the batch processes to compute Levels for each Target object
 */
 public without sharing class LVL_LevelAssign_SCHED implements UTIL_MasterSchedulableHelper.UTIL_IRecurring {
