@@ -268,7 +268,7 @@
                         <apex:commandLink value="edit" action="{!item.editItem}" styleclass="editLink" immediate="true" rerender="recInfo" onclick="rememberDefaults();" oncomplete="resetSticky();" />
                         &nbsp;|&nbsp;
                         <apex:commandLink styleclass="delLink" value="del" action="{!item.deleteItem}" immediate="true" rerender="recList,itemCount,batchinfo"  oncomplete="resetDefaults();" />&nbsp;|&nbsp;
-                        <apex:commandLink value="view" action="{!item.viewItem}" immediate="true" target="_blank" />
+                        <apex:outputLink value="/{!item.sobj.Id}" target="_blank">view</apex:outputLink>
                     </apex:column>
                     <apex:repeat var="fieldname" value="{!listFieldList}" > 
                         <apex:column value="{!item.sobj[fieldname]}" styleClass="{!fieldname}" />
