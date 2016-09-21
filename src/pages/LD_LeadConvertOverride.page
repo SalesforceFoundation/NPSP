@@ -1,4 +1,4 @@
-<apex:page standardController="Lead" extensions="LD_LeadConvertOverride_CTRL" title="{!$Label.leadConvertPageTitle} {!Lead.Name}" standardStylesheets="false">
+<apex:page standardController="Lead" extensions="LD_LeadConvertOverride_CTRL" title="{!$Label.leadConvertPageTitle} {!Lead.Name}" standardStylesheets="false" docType="html-5.0">
 
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/modal.js')}"/>
     <apex:stylesheet value="{!URLFOR($Resource.SLDS, '/0_12_2/assets/styles/salesforce-lightning-design-system-vf.min.css')}"/>
@@ -188,10 +188,16 @@
             </div>
 
             <div>
-                <div id="contact_modal" tabindex="-1" aria-hidden="true" role="dialog" class="slds-modal slds-modal--prompt">
-                    <div class="slds-modal__container slds-modal--prompt">
+                <div id="contact_modal" tabindex="-1" aria-hidden="true" role="dialog" class="slds-modal">
+                    <div class="slds-modal__container">
                         <div class="slds-modal__header slds-theme--shade">
                             <h2 class="slds-text-heading--medium">Contact Details</h2>
+                            <button type="button" class="slds-button slds-button--icon-inverse slds-modal__close" data-dismiss="modal" data-target="contact_modal">
+                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon--large" viewBox="0 0 24 24" data-target="contact_modal">
+                                    <path data-target="contact_modal" d="M14.6 11.9l6-6c.3-.3.3-.7 0-1l-.9-1c-.3-.3-.7-.3-1 0L12.6 10c-.1.2-.4.2-.6 0L6 3.9c-.3-.3-.7-.3-1 0l-1 .9c-.3.3-.3.7 0 1l6.1 6.1c.1.1.1.4 0 .6L4 18.6c-.3.3-.3.7 0 1l.9.9c.3.3.7.3 1 0l6.1-6c.2-.2.5-.2.6 0l6.1 6c.3.3.7.3 1 0l.9-.9c.3-.3.3-.7 0-1l-6-6c-.2-.2-.2-.5 0-.7z"/>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
                         </div>
                         <div class="slds-modal__content">
                             <div class="slds-panel slds-grid slds-grid--vertical slds-nowrap">
