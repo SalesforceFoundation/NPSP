@@ -184,12 +184,16 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     private map<id, contact> conMap {
         get {
             if (conMap == null) {
+                String lLastName = l.LastName;
+                String lFirstName = l.FirstName;
+                String lEmail = l.Email;
+
                 Set<String> fieldSet = new Set<String>{'Id', 'Name', 'FirstName', 'LastName'};
                 String queryStr = 'SELECT ';
                 for (FieldSetMember cfs : conFieldSet)
                    fieldSet.add(cfs.getFieldPath());
                 queryStr += String.join(new List<String>(fieldSet), ',');
-                queryStr += ' FROM Contact WHERE (LastName = \'' + l.LastName + '\' AND FirstName = \'' + l.FirstName + '\') OR (Email = \'' + l.Email + '\' AND Email != null) LIMIT 50';
+                queryStr += ' FROM Contact WHERE (LastName = :lLastName AND FirstName = :lFirstName) OR (Email = :lEmail AND Email != null) LIMIT 50';
 
                 // find contact matches
                 conMap = new map<id, contact>((List<Contact>)Database.query(queryStr));
@@ -219,7 +223,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     public Contact getSelectedCon() {
         if (strConId!='NEW_CONTACT' & strConId!=null && conMap.containsKey(strConId)) {
             selectedCon = conMap.get(strConId);
-        } else if (strConId == null) {
+        } else {
             selectedCon = null;
         }
         return selectedCon;
