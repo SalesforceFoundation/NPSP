@@ -278,7 +278,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
                 Engagement_Plan_Task__c epTask = wrapper.detail;
                 epTask.Engagement_Plan_Template__c = template.id;
                 if (String.isBlank(epTask.Name)) {
-                    epTask.Name.addError('Name is a required field.');
+                    epTask.Name.addError(Label.NameRequired);
                     return null;
                 }
                 if (epTask.Id == null) {
