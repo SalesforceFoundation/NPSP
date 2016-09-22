@@ -38,8 +38,8 @@
 public with sharing class EP_EngagementPlans_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
-    * @description Trigger Handler on Engagement Plans after insert; creates Tasks based on the associated 
-    * template's Engagement Plan Tasks.
+    * @description Trigger Handler on Engagement Plans; creates Tasks based on the associated 
+    * template's Engagement Plan Tasks after insert, and prevents modifying lookups after update.
     * This method inserts Task objects directly instead of using DmlWrapper, as DML options are needed on
     * certain Tasks for sending emails.
     * @param listNew the list of Engagement Plans from trigger new. 
@@ -100,6 +100,19 @@ public with sharing class EP_EngagementPlans_TDTM extends TDTM_Runnable {
             if (!taskInsertNoEmail.isEmpty()) {
                 options.EmailHeader.triggerUserEmail = false;
                 List<Database.SaveResult> results = Database.insert(taskInsertNoEmail, options);
+            }
+        }
+
+        //validate that the user doesn't add two lookups, or modify an existing lookup to a new value
+        if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
+            for (Integer i = 0; i < newlist.size(); i++) {
+                Engagement_Plan__c newEP = (Engagement_Plan__c) newlist[i];
+                Engagement_Plan__c oldEP = (Engagement_Plan__c) oldlist[i];
+                Id newEpTarget = (Id) newEP.get(EP_EngagementPlans_UTIL.getTargetObjectField(newEP));
+                Id oldEpTarget = (Id) oldEP.get(EP_EngagementPlans_UTIL.getTargetObjectField(newEP));
+                if (newEpTarget != oldEpTarget) {
+                    newEP.addError(Label.engagementPlanCantEdit);
+                }
             }
         }
         return null;
