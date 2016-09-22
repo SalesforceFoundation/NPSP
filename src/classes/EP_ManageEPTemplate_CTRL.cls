@@ -277,6 +277,10 @@ public with sharing class EP_ManageEPTemplate_CTRL {
             for (TaskWrapper wrapper : mapTaskWrappers.values()) {
                 Engagement_Plan_Task__c epTask = wrapper.detail;
                 epTask.Engagement_Plan_Template__c = template.id;
+                if (String.isBlank(epTask.Name)) {
+                    epTask.Name.addError('Name is a required field.');
+                    return null;
+                }
                 if (epTask.Id == null) {
                     tasksForInsert.add(epTask);
                 }
@@ -568,9 +572,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         Component.Apex.InputField fieldInput = new Component.Apex.InputField(
             id = fieldName + wrapper.level,
             value = wrapper.detail.get(fieldName),
-            styleClass = 'slds-form-element__control ' + inputCss,
-            //Set the Name field as required for auto validation
-            required = fieldName == 'Name'
+            styleClass = 'slds-form-element__control ' + inputCss
         );
         fieldInput.expressions.value = '{!' + accessString + '.detail.' + fieldName + '}';
         outterPanel.childComponents.add(fieldInput);

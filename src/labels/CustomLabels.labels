@@ -628,6 +628,14 @@
         <value>Hidden for security</value>
     </labels>
     <labels>
+        <fullName>NameRequired</fullName>
+        <categories>Engagement Plans, Errors</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>NameRequired</shortDescription>
+        <value>Name is a required field.</value>
+    </labels>
+    <labels>
         <fullName>PageMessagesConfirm</fullName>
         <categories>PageMessages</categories>
         <language>en_US</language>

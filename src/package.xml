@@ -854,6 +854,7 @@
         <members>EPTaskDependency</members>
         <members>EPTaskTemplate</members>
         <members>HiddenForSecurity</members>
+        <members>NameRequired</members>
         <members>PageMessagesConfirm</members>
         <members>PageMessagesError</members>
         <members>PageMessagesFatal</members>
