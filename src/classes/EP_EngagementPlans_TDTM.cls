@@ -109,7 +109,7 @@ public with sharing class EP_EngagementPlans_TDTM extends TDTM_Runnable {
                 Engagement_Plan__c newEP = (Engagement_Plan__c) newlist[i];
                 Engagement_Plan__c oldEP = (Engagement_Plan__c) oldlist[i];
                 Id newEpTarget = (Id) newEP.get(EP_EngagementPlans_UTIL.getTargetObjectField(newEP));
-                Id oldEpTarget = (Id) oldEP.get(EP_EngagementPlans_UTIL.getTargetObjectField(newEP));
+                Id oldEpTarget = (Id) oldEP.get(EP_EngagementPlans_UTIL.getTargetObjectField(oldEP));
                 if (newEpTarget != oldEpTarget) {
                     newEP.addError(Label.engagementPlanCantEdit);
                 }
