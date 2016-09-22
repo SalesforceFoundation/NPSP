@@ -113,7 +113,7 @@ public with sharing class EP_EngagementPlans_UTIL {
     * @param engagementPlan The Engagement Plan 
     * @return String The name of the lookup field that is populated.
     ********************************************************************************************************/
-    public String getTargetObjectField(Engagement_Plan__c engagementPlan) {
+    public static String getTargetObjectField(Engagement_Plan__c engagementPlan) {
         String targetObjectField;
         for (String fieldName : lookupFieldsToRelationship.keySet()) {
             if (engagementPlan.get(fieldName) != null) {
