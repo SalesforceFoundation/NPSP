@@ -38,8 +38,8 @@
 public with sharing class EP_EngagementPlans_UTIL {
 
 	public static final String TASK_STATUS_WAITING = 'Waiting on Dependent Task';
-	public static final String BLANK_ASSIGNMENT_USER_CREATING = 'User Creating Action Plan';
-	public static final String BLANK_ASSIGNMENT_OWNER_RECEIVING = 'Owner of Receiving Object';
+	public static final String BLANK_ASSIGNMENT_USER_CREATING = 'User Creating Engagement Plan';
+	public static final String BLANK_ASSIGNMENT_OWNER_RECEIVING = 'Owner of Object for Engagement Plan';
 	public static final String SKIP_DAY_FRIDAY = 'Friday';
 	public static final String SKIP_DAY_MONDAY = 'Monday';
 	public static final Integer MAX_ITERATIONS = 500;
