@@ -628,6 +628,14 @@
         <value>Hidden for security</value>
     </labels>
     <labels>
+        <fullName>NameRequired</fullName>
+        <categories>Engagement Plans, Errors</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>NameRequired</shortDescription>
+        <value>Name is a required field.</value>
+    </labels>
+    <labels>
         <fullName>PageMessagesConfirm</fullName>
         <categories>PageMessages</categories>
         <language>en_US</language>
@@ -1381,6 +1389,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>conMergeErrNoPersonAccounts</shortDescription>
         <value>Person accounts are not supported.</value>
+    </labels>
+    <labels>
+        <fullName>engagementPlanCantEdit</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>engagementPlanCantEdit</shortDescription>
+        <value>You can&apos;t assign this Engagement Plan to a new object. Please create a new Engagement Plan.</value>
     </labels>
     <labels>
         <fullName>engagementPlanNoLookups</fullName>
@@ -5368,7 +5384,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgNPSPWorkbook</shortDescription>
-        <value>Nonprofit Success Pack Workbook</value>
+        <value>NPSP Fundraising Trail</value>
     </labels>
     <labels>
         <fullName>stgNavAccountModel</fullName>

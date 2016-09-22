@@ -854,6 +854,7 @@
         <members>EPTaskDependency</members>
         <members>EPTaskTemplate</members>
         <members>HiddenForSecurity</members>
+        <members>NameRequired</members>
         <members>PageMessagesConfirm</members>
         <members>PageMessagesError</members>
         <members>PageMessagesFatal</members>
@@ -948,6 +949,7 @@
         <members>campaignMemberStatusNonResponded</members>
         <members>campaignMemberStatusResponded</members>
         <members>conMergeErrNoPersonAccounts</members>
+        <members>engagementPlanCantEdit</members>
         <members>engagementPlanNoLookups</members>
         <members>engagementPlanTwoLookups</members>
         <members>flsError</members>
