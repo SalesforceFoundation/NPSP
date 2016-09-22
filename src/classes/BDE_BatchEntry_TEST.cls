@@ -137,7 +137,6 @@ private class BDE_BatchEntry_TEST {
         ext.currentItem.sobj = (sobject)o;
         //exercise item methods
         ext.currentItem.editItem();
-        ext.currentItem.viewItem();
         ext.currentItem.deleteItem();
     }
     /*******************************************************************************************************

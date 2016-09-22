@@ -298,11 +298,6 @@ public with sharing class BDE_BatchEntry_CTRL {
                                 
             }
             
-            public pageReference viewItem(){
-                ApexPages.Pagereference pr = new ApexPages.Pagereference('/' + sobj.id);
-                return pr;
-            }
-            
             //automatic donation naming 
             public string createName(){
                 string namestring = '';
