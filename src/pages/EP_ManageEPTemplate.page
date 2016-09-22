@@ -102,7 +102,6 @@
         <apex:actionFunction name="deleteTaskJS" action="{!deleteTask}" immediate="false" status="statusLoad" reRender="taskTree">
             <apex:param name="deleteTaskParam" value="" assignTo="{!currentTaskLevel}" />
         </apex:actionFunction>
-        <apex:actionFunction name="updateTemplateForm" immediate="false" status="statusLoad" reRender="theForm" />
         <!--spinner status-->
         <apex:actionStatus id="statusLoad"
                     onstart="document.getElementById('divLoading').style.display = 'block';console.log('started');"
