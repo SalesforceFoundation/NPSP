@@ -342,6 +342,38 @@ private with sharing class EP_EngagementPlans_TEST {
     }
 
     /*********************************************************************************************************
+    * @description Updates an engagement plan to change the value of the  lookup, verifies an exception is thrown.
+    */
+    static testMethod void testPlanUpdate() {
+
+        Account acc = new Account(Name='foo');
+        insert acc;
+        Account acc2 = new Account(Name='foo2');
+        insert acc2;
+        Engagement_Plan_Template__c template = new Engagement_Plan_Template__c(Name = 'Template');
+        insert template;
+
+        Engagement_Plan__c plan = new Engagement_Plan__c(
+            Engagement_Plan_Template__c = template.id,
+            Account__c = acc.id
+        );
+        insert plan;
+
+        Exception caughtException;
+        Test.startTest();
+        try {
+            plan.Account__c = acc2.id;
+            update plan;
+        } catch (Exception ex) {
+            caughtException = ex;
+        }
+        Test.stopTest();
+
+        System.assertNotEquals(null, caughtException, 'An exception should be caught.');
+        System.assert(caughtException.getMessage().contains(Label.engagementPlanCantEdit));
+    }
+
+    /*********************************************************************************************************
     * @description Returns the user id of an active user other than the current one if one exists, 
     * otherwise returns the current user id.
     */

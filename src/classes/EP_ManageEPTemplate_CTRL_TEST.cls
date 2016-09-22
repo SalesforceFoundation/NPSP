@@ -97,19 +97,23 @@ private with sharing class EP_ManageEPTemplate_CTRL_TEST {
 
         //add parent level task and verify it exists
         ctrl.addTask();
+
         //since getTaskTree() is run on every rerender, we have to run it manually to fill mapTaskWrapper
         ctrl.getTaskTree();
         system.assert(ctrl.mapTaskWrappers.containsKey('2'), 'EP Task with level of 2 should exist now.');
+        ctrl.mapTaskWrappers.get('2').detail.put('Name', 'foo');
 
         ctrl.currentTaskLevel = '1-1';
         ctrl.addDependentTask();
         ctrl.getTaskTree();
         system.assert(ctrl.mapTaskWrappers.containsKey('1-1-1'), 'EP Task with level of 1-1-1 should be created.');
+        ctrl.mapTaskWrappers.get('1-1-1').detail.put('Name', 'stuff');
 
         ctrl.currentTaskLevel = '1-1-1';
         ctrl.addDependentTask();
         ctrl.getTaskTree();
         system.assert(ctrl.mapTaskWrappers.containsKey('1-1-1-1'), 'EP Task with level of 1-1-1-1 should be created.');
+        ctrl.mapTaskWrappers.get('1-1-1-1').detail.put('Name', 'thing');
 
         ctrl.currentTaskLevel = '1-1';
         ctrl.deleteTask();
