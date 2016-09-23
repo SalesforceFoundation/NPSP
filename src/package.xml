@@ -1762,6 +1762,7 @@
         <members>Cicero</members>
         <members>GoogleAPI</members>
         <members>SmartyStreets</members>
+        <members>SmartyStreetsZip</members>
         <name>RemoteSiteSetting</name>
     </types>
     <types>
