@@ -801,6 +801,17 @@
         <type>Picklist</type>
     </fields>
     <fields>
+        <fullName>Ask_Date__c</fullName>
+        <description>The date when the donor was specifically asked for the donation, as opposed to the Opportunity Close Date that the organization may set to either when the Opportunity was first created, or when the Opportunity was won.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The date when the donor was specifically asked for the donation, as opposed to the Opportunity Close Date that the organization may set to either when the Opportunity was first created, or when the Opportunity was won.</inlineHelpText>
+        <label>Ask Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
         <fullName>Batch__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
@@ -814,6 +825,18 @@
         <type>Lookup</type>
     </fields>
     <fields>
+        <fullName>Closed_Lost_Reason__c</fullName>
+        <description>Notes on why the donation ask was not successful.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Notes on why the donation ask was not successful.</inlineHelpText>
+        <label>Closed Lost Reason</label>
+        <length>32768</length>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
         <fullName>Fair_Market_Value__c</fullName>
         <description>The Fair Market Value of an In-Kind gift.</description>
         <externalId>false</externalId>
@@ -825,6 +848,32 @@
         <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Gift_Strategy__c</fullName>
+        <description>Categorizes the type of ask for this opportunity.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Categorizes the type of ask for this opportunity.</inlineHelpText>
+        <label>Gift Strategy</label>
+        <picklist>
+            <picklistValues>
+                <fullName>New Donor</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Renewal</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Upgrade</fullName>
+                <default>false</default>
+            </picklistValues>
+            <restrictedPicklist>true</restrictedPicklist>
+            <sorted>false</sorted>
+        </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
     </fields>
     <fields>
         <fullName>Grant_Contract_Date__c</fullName>
@@ -872,10 +921,10 @@
     </fields>
     <fields>
         <fullName>Grant_Program_Area_s__c</fullName>
-        <description>Describes the funding areas for the grant. You can enter anything you want here. For example, you could enter the name of the program the grant applies to.</description>
+        <description>Describes the funding areas for the grant/gift. You can enter anything you want here. For example, you could enter the name of the program the grant/gift applies to.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Describes the funding areas for the grant. You can enter anything you want here. For example, you could enter the name of the program the grant applies to.</inlineHelpText>
-        <label>Grant Program Area(s)</label>
+        <inlineHelpText>Describes the funding areas for the grant/gift. You can enter anything you want here. For example, you could enter the name of the program the grant/gift applies to.</inlineHelpText>
+        <label>Program Areas</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
@@ -1045,10 +1094,10 @@
     </fields>
     <fields>
         <fullName>Next_Grant_Deadline_Due_Date__c</fullName>
-        <description>The NPSP updates this field automatically based on the next Grant Deadline record.</description>
+        <description>The NPSP updates this field automatically based on the next Deliverable record.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The NPSP updates this field automatically based on the next Grant Deadline record.</inlineHelpText>
-        <label>Next Grant Deadline Due Date</label>
+        <inlineHelpText>The NPSP updates this field automatically based on the next Deliverable record.</inlineHelpText>
+        <label>Next Deliverable Date</label>
         <summarizedField>Grant_Deadline__c.Grant_Deadline_Due_Date__c</summarizedField>
         <summaryFilterItems>
             <field>Grant_Deadline__c.Grant_Deadline_Due_Date__c</field>
@@ -1148,12 +1197,12 @@
     <fields>
         <fullName>Previous_Grant_Opportunity__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
-        <description>If this grant is a renewal of a previous grant, use this field to relate this record to the previous one.</description>
+        <description>If this grant/gift is a renewal of a previous grant/gift, use this field to relate this record to the previous one.</description>
         <externalId>false</externalId>
-        <inlineHelpText>If this grant is a renewal of a previous grant, use this field to relate this record to the previous one.</inlineHelpText>
-        <label>Previous Grant Opportunity</label>
+        <inlineHelpText>If this grant/gift is a renewal of a previous grant/gift, use this field to relate this record to the previous one.</inlineHelpText>
+        <label>Previous Grant/Gift Opportunity</label>
         <referenceTo>Opportunity</referenceTo>
-        <relationshipLabel>Related Grant Opportunities</relationshipLabel>
+        <relationshipLabel>Related Grants/Gifts</relationshipLabel>
         <relationshipName>Previous_Grant_Opportunities</relationshipName>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
@@ -1187,6 +1236,17 @@
         <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Qualified_Date__c</fullName>
+        <description>The date this donor was identified as qualifying for this donation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The date this donor was identified as qualifying for this donation.</inlineHelpText>
+        <label>Qualified Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
     </fields>
     <fields>
         <fullName>Recurring_Donation_Installment_Name__c</fullName>

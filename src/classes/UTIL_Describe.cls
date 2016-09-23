@@ -194,9 +194,6 @@ public class UTIL_Describe {
     * @return string the name of the of the field's type
     */
     public static string getFieldType(String objectName, String fieldName) {
-        // fields in our own package must not have their prefix for the Describe Field Map
-        fieldName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldName);
-
         // make sure we have this field's schema mapped
         if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName))
             fillFieldMapsForObject(objectName, fieldName);
@@ -213,9 +210,6 @@ public class UTIL_Describe {
     * @return Displaytype the Displaytype of the field
     */
     public static Schema.Displaytype getFieldDisplaytype(String objectName, String fieldName) {
-        // fields in our own package must not have their prefix for the Describe Field Map
-        fieldName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldName);
-
         // make sure we have this field's schema mapped
         if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName))
             fillFieldMapsForObject(objectName, fieldName);
@@ -231,9 +225,6 @@ public class UTIL_Describe {
     * @return Schema.DescribeFieldResult the describe field result for the given field
     */
     public static Schema.DescribeFieldResult getFieldDescribe(String objectName, String fieldName) {
-        // fields in our own package must not have their prefix for the Describe Field Map
-        fieldName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldName);
-
         // make sure we have this field's schema mapped
         if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName))
             fillFieldMapsForObject(objectName, fieldName);
@@ -249,9 +240,6 @@ public class UTIL_Describe {
     * @return string the label of the field
     */
     public static string getFieldLabel(String objectName, String fieldName) {
-        // fields in our own package must not have their prefix for the Describe Field Map
-        fieldName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldName);
-
         // make sure we have this field's schema mapped
         if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName))
             fillFieldMapsForObject(objectName, fieldName);
@@ -281,9 +269,6 @@ public class UTIL_Describe {
     * @return boolean whether the field exists
     */
     public static boolean isValidField(String objectName, String fieldName) {
-        // fields in our own package must not have their prefix for the Describe Field Map
-        fieldName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldName);
-
         // make sure we have this field's schema mapped
         try {
             if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName))
@@ -369,4 +354,29 @@ public class UTIL_Describe {
         }
         return strFields.substring(0, strFields.length()-1);
     }
+
+    /*******************************************************************************************************
+    * @description copies the specified fields, make sure the user has apppropriate permissions
+    * @param strObject the name of the object
+    * @param src the Source object
+    * @param dst the Destination object
+    * @param listStrF the list of field names to check FLS and copy data from
+    * @return void
+    */
+    public static void copyObjectFLS(string strObject, SObject src, SObject dst, list<String> listStrF) {
+        for (String strF : listStrF) {
+            DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(strObject, strF);
+            if (dfr == null || !dfr.isCreateable() || !dfr.isUpdateable())
+                throw (new permsException(string.format(label.flsError, new string[]{strObject + '.' + strF})));
+            
+            // don't copy null for checkbox fields, or they will give an error on update
+            if (dfr.isNillable() || src.get(strF)!= null) {    
+                dst.put(strF, src.get(strF));
+            }
+        }
+    }
+
+    /** @description our exception object for Field Level & Object Security errors. */
+    private class permsException extends Exception {}
+    
 }

@@ -239,7 +239,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
             
             if (householdnameupdates.size() > 0){
                               
-                if (currentHouseholdsSettings.npo02__Async_Household_Naming__c == true)
+                if (currentHouseholdsSettings.npo02__Async_Household_Naming__c == true && !system.isFuture() && !system.isBatch())
                     HH_HouseholdNaming.FutureUpdateNames(householdnameupdates);
                 else{
                     HH_HouseholdNaming hn = new HH_HouseholdNaming(); 
@@ -269,9 +269,12 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
     * @return void
     ********************************************************************************************************/
     public static void copyNamingExclusionsFromMSP(Contact con) {
-        con.Exclude_from_Household_Name__c = con.npo02__Naming_Exclusions__c.contains('Household__c.Name');
-        con.Exclude_from_Household_Formal_Greeting__c = con.npo02__Naming_Exclusions__c.contains('Household__c.Formal_Greeting__c');
-        con.Exclude_from_Household_Informal_Greeting__c = con.npo02__Naming_Exclusions__c.contains('Household__c.Informal_Greeting__c');
+        string strExclusions = con.npo02__Naming_Exclusions__c;
+        if (strExclusions == null)
+            strExclusions = '';
+        con.Exclude_from_Household_Name__c = strExclusions.contains('Household__c.Name');
+        con.Exclude_from_Household_Formal_Greeting__c = strExclusions.contains('Household__c.Formal_Greeting__c');
+        con.Exclude_from_Household_Informal_Greeting__c = strExclusions.contains('Household__c.Informal_Greeting__c');
     }
 
     /*******************************************************************************************************
@@ -329,11 +332,9 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
         //reload to evaluate insert criteria
         npo02__Households_Settings__c currentHouseholdsSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
                 
-        set<string> HouseholdRecordTypeExclusions = new set<string>();
         set<id> conRecordTypesToExclude = new set<id>();
         if (currentHouseholdsSettings.npo02__Household_Creation_Excluded_Recordtypes__c != null) {
-            HouseholdRecordTypeExclusions = new set<string>(currentHouseholdsSettings.npo02__Household_Creation_Excluded_Recordtypes__c.split(';'));
-            conRecordTypesToExclude = UTIL_RecordTypes.GetRecordTypeIdSet('Contact', HouseholdRecordTypeExclusions);            
+            conRecordTypesToExclude = new Set<Id>((List<Id>)currentHouseholdsSettings.npo02__Household_Creation_Excluded_Recordtypes__c.split(';'));
         }
         
         boolean recordTypesOnCons = false;

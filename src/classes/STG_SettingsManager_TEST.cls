@@ -892,5 +892,18 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals('idPanelHealthCheck', panel.idPanel());
         system.assertEquals(null, panel.runDetector());
     }
-    
+
+    /*********************************************************************************************************
+    * @description Tests the Level Assignment Batch panel
+    * @return void
+    */
+    public static testMethod void testPanelLvlAssignBatch() {
+        if (strTestOnly != '*' && strTestOnly != 'testPanelLvlAssignBatch') return;
+        STG_PanelLvlAssignBatch_CTRL panel = new STG_PanelLvlAssignBatch_CTRL();
+        system.assertEquals('idPanelLvlAssignBatch', panel.idPanel());
+        system.assertEquals(false, panel.isRunningBatch);
+        panel.runBatch();
+        system.assertEquals(true, panel.isRunningBatch);
+    }
+
 }

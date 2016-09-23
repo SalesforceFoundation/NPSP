@@ -320,6 +320,13 @@
         <value>My data has been backed-up by going to Setup | Data Management | Export Data</value>
     </labels>
     <labels>
+        <fullName>CONV_All_Dup_Rules_Disabled</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>CONV_All_Dup_Rules_Disabled</shortDescription>
+        <value>All Data.com Duplication Management Rules have been disabled.</value>
+    </labels>
+    <labels>
         <fullName>CONV_All_Households_Selected</fullName>
         <language>en_US</language>
         <protected>false</protected>
@@ -573,12 +580,60 @@
         <value>omit</value>
     </labels>
     <labels>
+        <fullName>EPAddDependentTask</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>EPAddDependentTask</shortDescription>
+        <value>Add Dependent Task</value>
+    </labels>
+    <labels>
+        <fullName>EPAddTask</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Engagement Plan&apos;s Add Task button label</shortDescription>
+        <value>Add Task</value>
+    </labels>
+    <labels>
+        <fullName>EPDeleteTask</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>EPDeleteTask</shortDescription>
+        <value>Delete Task</value>
+    </labels>
+    <labels>
+        <fullName>EPTaskDependency</fullName>
+        <categories>Engagement Plan, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>EPTaskDependency</shortDescription>
+        <value>Engagement Plan Task dependencies cannot make recursive dependency loops.</value>
+    </labels>
+    <labels>
+        <fullName>EPTaskTemplate</fullName>
+        <categories>Engagement Plan, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>EPTaskTemplate</shortDescription>
+        <value>Engagement Plan Tasks can only be dependent on other Engagement Plan Tasks that belong to the same Engagement Plan Template.</value>
+    </labels>
+    <labels>
         <fullName>HiddenForSecurity</fullName>
         <categories>settings</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>HiddenForSecurity</shortDescription>
         <value>Hidden for security</value>
+    </labels>
+    <labels>
+        <fullName>NameRequired</fullName>
+        <categories>Engagement Plans, Errors</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>NameRequired</shortDescription>
+        <value>Name is a required field.</value>
     </labels>
     <labels>
         <fullName>PageMessagesConfirm</fullName>
@@ -1077,7 +1132,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiDataImporterDescription</shortDescription>
-        <value>The NPSP Data Importer helps you easily import your data into the Nonprofit Starter Pack</value>
+        <value>The NPSP Data Importer helps you easily import your data into the Nonprofit Success Pack</value>
     </labels>
     <labels>
         <fullName>bdiDataImporterInfoLine1</fullName>
@@ -1296,6 +1351,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Time:</value>
     </labels>
     <labels>
+        <fullName>btnRemove</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>button label on the Remove Contact popup</shortDescription>
+        <value>Remove</value>
+    </labels>
+    <labels>
         <fullName>campaignMemberStatusDefault</fullName>
         <categories>Campaign Member</categories>
         <language>en_US</language>
@@ -1326,6 +1389,30 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>conMergeErrNoPersonAccounts</shortDescription>
         <value>Person accounts are not supported.</value>
+    </labels>
+    <labels>
+        <fullName>engagementPlanCantEdit</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>engagementPlanCantEdit</shortDescription>
+        <value>You can&apos;t assign this Engagement Plan to a new object. Please create a new Engagement Plan.</value>
+    </labels>
+    <labels>
+        <fullName>engagementPlanNoLookups</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>engagementPlanNoLookups</shortDescription>
+        <value>One object lookup must be populated for each Engagement Plan.</value>
+    </labels>
+    <labels>
+        <fullName>engagementPlanTwoLookups</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>engagementPlanTwoLookups</shortDescription>
+        <value>Only one object lookup can be populated per Engagement Plan.</value>
     </labels>
     <labels>
         <fullName>flsError</fullName>
@@ -1365,7 +1452,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthDetailsAccountProcessor</shortDescription>
-        <value>The Account Model is set to {0}, but there are a mixture of Account types being used.</value>
+        <value>The Account Model is set to {0}, but Health Check has found that you&apos;re using a mixture of Account types.</value>
     </labels>
     <labels>
         <fullName>healthDetailsAccountRTIssue</fullName>
@@ -1429,6 +1516,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>healthDetailsDuplicateAcctRT</shortDescription>
         <value>You cannot specify the same Account Record Type for the Household Account Record Type and One-to-One Record Type.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsDuplicateContactRoles</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The details displayed when the duplicate contact roles health check fails</shortDescription>
+        <value>Health Check found Opportunities with duplicate Contacts and rollup values.</value>
     </labels>
     <labels>
         <fullName>healthDetailsGenderField</fullName>
@@ -1503,12 +1598,36 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Invalid User {0}.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsInvalidFieldNumeric</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Health Check error if a Level refers to an invalid field</shortDescription>
+        <value>Level {0} refers to an invalid numeric field {1} on {2}.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsInvalidFiscalYears</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthDetailsInvalidFiscalYears</shortDescription>
         <value>Fiscal Year Rollups are not supported when the organization is using Custom Fiscal Years.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidLevelField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Health Check error if a Level refers to an invalid field</shortDescription>
+        <value>Level {0} refers to an invalid field {1} on {2}.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidLevelFieldReference</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Health Check error if a Level refers to an invalid field</shortDescription>
+        <value>Level {0} refers to an invalid Level Lookup field {1} on {2}.</value>
     </labels>
     <labels>
         <fullName>healthDetailsInvalidObjectField</fullName>
@@ -1759,6 +1878,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Contact Data</value>
     </labels>
     <labels>
+        <fullName>healthLabelDuplicateContactRoles</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Duplicate Contact Role health check</shortDescription>
+        <value>Duplicate Contacts and Rollup Values</value>
+    </labels>
+    <labels>
         <fullName>healthLabelErrorRecipientValid</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -1821,6 +1948,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>healthLabelLastRun</shortDescription>
         <value>Last run: {0}</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelNoDuplicateContactRoles</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The message displayed when the duplicate contact roles health check passes</shortDescription>
+        <value>Health Check did not find any Opportunities with duplicate Contacts or rollup values.</value>
     </labels>
     <labels>
         <fullName>healthLabelNoMissingOppPayments</fullName>
@@ -1951,6 +2086,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>User Defined Rollups valid.</value>
     </labels>
     <labels>
+        <fullName>healthLabelVerifyLevels</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Health Check title for Levels</shortDescription>
+        <value>Levels</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelVerifyLevelsSuccess</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Health Check message when all Levels verify ok</shortDescription>
+        <value>All field references on all Levels are valid.</value>
+    </labels>
+    <labels>
         <fullName>healthLabelWarning</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -1996,7 +2147,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionAccountModel</shortDescription>
-        <value>All of your individual Contacts should use the same Account Model. View these Contacts by running the &lt;b&gt;Individual Contacts by Account Type&lt;/b&gt; report in the NPSP Health Check reports folder.</value>
+        <value>All of your Accounts should use the same Account Model. View all of your Accounts and their types by running the &lt;b&gt;Individual Accounts by Account Type&lt;/b&gt; report in the NPSP Health Check reports folder.</value>
     </labels>
     <labels>
         <fullName>healthSolutionAccountRTIssue</fullName>
@@ -2054,6 +2205,16 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>View these Contacts by running the &lt;b&gt;Contacts without Accounts&lt;/b&gt; report in the NPSP Health Check reports folder.</value>
     </labels>
     <labels>
+        <fullName>healthSolutionDuplicateContactRoles</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The recommended solution for when the duplicate contact roles health check fails</shortDescription>
+        <value>In the past, the NPSP double-counted soft credit rollup values for Contacts that were twice associated with an Opportunity through two different Opportunity Contact Roles. The NPSP now only counts these rollup values once, regardless of how many associations a Contact has on an Opportunity.&lt;br/&gt;
+&lt;br/&gt;
+If you want to know which Opportunities would have previously included this double rollup value counting, run this SOQL query in the Developer Console: &apos;&apos;SELECT Count(Id), OpportunityId, Opportunity.Name OpportunityName, ContactId, Contact.Name ContactName FROM OpportunityContactRole WHERE Opportunity.IsWon = true AND Role IN ({0}) GROUP BY OpportunityId, Opportunity.Name, ContactId, Contact.Name HAVING Count(Id) &gt; 1&apos;&apos;</value>
+    </labels>
+    <labels>
         <fullName>healthSolutionEditSetting</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -2084,6 +2245,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>healthSolutionInvalidFiscalYears</shortDescription>
         <value>Since Salesforce does not support turning off Custom Fiscal Years, NPSP Rollups will default to Calendar Year.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionInvalidLevelField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Health Check Solution for an invalid Level field</shortDescription>
+        <value>Go to the Levels Tab, and update the invalid field reference on Level {0}.</value>
     </labels>
     <labels>
         <fullName>healthSolutionInvalidOppField</fullName>
@@ -2357,12 +2526,196 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Show more</value>
     </labels>
     <labels>
+        <fullName>lblAddressOverride</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblAddressOverride</shortDescription>
+        <value>(address override)</value>
+    </labels>
+    <labels>
+        <fullName>lblBtnAddAllHHMembers</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblBtnAddAllHHMembers</shortDescription>
+        <value>Add All Members</value>
+    </labels>
+    <labels>
+        <fullName>lblBtnAddContact</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblBtnAddContact</shortDescription>
+        <value>Add {0}</value>
+    </labels>
+    <labels>
+        <fullName>lblCCardExcludeFrom</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblCCardExcludeFrom</shortDescription>
+        <value>Exclude from:</value>
+    </labels>
+    <labels>
+        <fullName>lblCity</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblCity</shortDescription>
+        <value>City</value>
+    </labels>
+    <labels>
+        <fullName>lblCountry</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblCountry</shortDescription>
+        <value>Country</value>
+    </labels>
+    <labels>
+        <fullName>lblDeleteContact</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>caption of Remove Contact popup</shortDescription>
+        <value>Remove Contact</value>
+    </labels>
+    <labels>
+        <fullName>lblDeleteContactPrompt</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>prompt for the Remove Contact Popup</shortDescription>
+        <value>Do you want to remove this Contact from this Household on Save?</value>
+    </labels>
+    <labels>
+        <fullName>lblFindInContacts</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>autocomplete&apos;s label for &quot;smith in Contacts&quot;</shortDescription>
+        <value>in Contacts</value>
+    </labels>
+    <labels>
+        <fullName>lblFindOrAddContact</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>string displayed in the autocomplete control when empty</shortDescription>
+        <value>Find a contact or add a new contact to the household</value>
+    </labels>
+    <labels>
+        <fullName>lblFirstName</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblFirstName</shortDescription>
+        <value>First Name</value>
+    </labels>
+    <labels>
+        <fullName>lblFormalGreeting</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblFormalGreeting</shortDescription>
+        <value>Formal Greeting</value>
+    </labels>
+    <labels>
+        <fullName>lblHousehold</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblHousehold</shortDescription>
+        <value>Household</value>
+    </labels>
+    <labels>
+        <fullName>lblHouseholdName</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblHouseholdName</shortDescription>
+        <value>Household Name</value>
+    </labels>
+    <labels>
+        <fullName>lblInformalGreeting</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblInformalGreeting</shortDescription>
+        <value>Informal Greeting</value>
+    </labels>
+    <labels>
+        <fullName>lblLastName</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblLastName</shortDescription>
+        <value>Last Name</value>
+    </labels>
+    <labels>
+        <fullName>lblMergeHHPrompt</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblMergeHHPrompt</shortDescription>
+        <value>{0} is in a Household with other members.  Do you want to just add {0}, or add all members from the Household?</value>
+    </labels>
+    <labels>
+        <fullName>lblMergeHHTitle</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblMergeHHTitle</shortDescription>
+        <value>Merge Households</value>
+    </labels>
+    <labels>
         <fullName>lblNPSPSettings</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>lblNPSPSettings</shortDescription>
         <value>NPSP Settings</value>
+    </labels>
+    <labels>
+        <fullName>lblNoHHMergePermissions</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>error displayed when required perms missing to add a contact and its household</shortDescription>
+        <value>You must have update and delete permissions on Households (Accounts) in order to add an existing contact to the Household.</value>
+    </labels>
+    <labels>
+        <fullName>lblPostalCode</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblPostalCode</shortDescription>
+        <value>Postal Code</value>
+    </labels>
+    <labels>
+        <fullName>lblSalutation</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblSalutation</shortDescription>
+        <value>Salutation</value>
+    </labels>
+    <labels>
+        <fullName>lblState</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblState</shortDescription>
+        <value>State</value>
+    </labels>
+    <labels>
+        <fullName>lblStreet</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblStreet</shortDescription>
+        <value>Street</value>
     </labels>
     <labels>
         <fullName>leadConvertAccountName</fullName>
@@ -2539,6 +2892,62 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>leadConvertViewContactError</shortDescription>
         <value>You can only view existing contacts.</value>
+    </labels>
+    <labels>
+        <fullName>lvlBtnSaveAndNew</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Save &amp; New button on the Level Edit page</shortDescription>
+        <value>Save &amp; New</value>
+    </labels>
+    <labels>
+        <fullName>lvlErrorDuplicateLookups</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when the Level has the same lookup field  specified for level and previous</shortDescription>
+        <value>You must specify different lookup fields on {0} for Level Field and Previous Level Field.</value>
+    </labels>
+    <labels>
+        <fullName>lvlErrorDuplicateName</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>error when a name of a level is duplicated</shortDescription>
+        <value>Level name {0} already exists.  Names for the same Target and Level Field must be unique.</value>
+    </labels>
+    <labels>
+        <fullName>lvlErrorInvalidLookupField</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>error when Level Assignment fails to save its current or previous level</shortDescription>
+        <value>Field {0} specified in Level {1} is not a valid lookup to a Level object.</value>
+    </labels>
+    <labels>
+        <fullName>lvlErrorInvalidSourceField</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>error if level&apos;s source field isn&apos;t valid</shortDescription>
+        <value>Field {0} specified in Level {1} is not a valid number field.</value>
+    </labels>
+    <labels>
+        <fullName>lvlErrorMinGTMax</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error if the Level Minimum is &gt; than Level Maximum</shortDescription>
+        <value>The Minimum Amount must be less than the Maximum Amount on level {0}.</value>
+    </labels>
+    <labels>
+        <fullName>lvlErrorMinOverlap</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error when we detect the minimum amount overlaps another level</shortDescription>
+        <value>The Minimum Amount to Maximum Amount range on Level {0} overlaps with the Minimum Amount to Maximum Amount range on Level {1}</value>
     </labels>
     <labels>
         <fullName>mtchBtnSearch</fullName>
@@ -3077,6 +3486,30 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Acknowledged</value>
     </labels>
     <labels>
+        <fullName>statusCompleted</fullName>
+        <categories>Status</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>statusCompleted</shortDescription>
+        <value>Completed</value>
+    </labels>
+    <labels>
+        <fullName>statusInProgress</fullName>
+        <categories>Status</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>statusInProgress</shortDescription>
+        <value>In Progress</value>
+    </labels>
+    <labels>
+        <fullName>statusNotStarted</fullName>
+        <categories>Status</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>statusNotStarted</shortDescription>
+        <value>Not Started</value>
+    </labels>
+    <labels>
         <fullName>stgAddrGeneralSettingsIntro</fullName>
         <categories>Settings, address</categories>
         <language>en_US</language>
@@ -3322,7 +3755,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpAccountModel</shortDescription>
-        <value>The Account model used by the Nonprofit Starter Pack. This option controls what happens when you create a Contact with a blank Account field value.</value>
+        <value>The Account model used by the Nonprofit Success Pack. This option controls what happens when you create a Contact with a blank Account field value.</value>
     </labels>
     <labels>
         <fullName>stgHelpAlloFiscalYearRollups</fullName>
@@ -3330,7 +3763,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpAlloFiscalYearRollups</shortDescription>
-        <value>When checked, this option enables fiscal year settings, rather than calendar year settings, for allocation rollup totals. To set fiscal year information, go to Setup | Company Profile | Fiscal Year. NOTE: The Nonprofit Starter Pack does not support custom fiscal year settings.</value>
+        <value>When checked, this option enables fiscal year settings, rather than calendar year settings, for allocation rollup totals. To set fiscal year information, go to Setup | Company Profile | Fiscal Year. NOTE: The Nonprofit Success Pack does not support custom fiscal year settings.</value>
     </labels>
     <labels>
         <fullName>stgHelpAlloNDayValue</fullName>
@@ -3584,7 +4017,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpFiscalYearRollups</shortDescription>
-        <value>When checked, this option enables fiscal year settings, rather than calendar year settings, for Opportunity rollup totals. To set fiscal year information, go to Setup | Company Profile | Fiscal Year. NOTE: The Nonprofit Starter Pack does not support custom fiscal year settings.</value>
+        <value>When checked, this option enables fiscal year settings, rather than calendar year settings, for Opportunity rollup totals. To set fiscal year information, go to Setup | Company Profile | Fiscal Year. NOTE: The Nonprofit Success Pack does not support custom fiscal year settings.</value>
     </labels>
     <labels>
         <fullName>stgHelpHHAccountRTID</fullName>
@@ -3592,7 +4025,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHHAccountRTID</shortDescription>
-        <value>The Account record type you want to use for new Accounts if you&apos;ve selected the Household Account model above. You can select the default Household Account record type, or your own record type. If you select -none-, then Salesforce will use the default Account record type for the user who&apos;s creating the new Contact (and associated Account).</value>
+        <value>The Account record type you want to use for new Accounts if you&apos;ve selected the Household Account model above. You can select the default Household Account record type, or your own record type. If you select --None--, then Salesforce will use the default Account record type for the user who&apos;s creating the new Contact (and associated Account).</value>
     </labels>
     <labels>
         <fullName>stgHelpHHExcludedRT</fullName>
@@ -3656,7 +4089,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHealthCheck</shortDescription>
-        <value>Use &lt;a href=&quot;.&quot; onclick=&quot;ShowPanel(&apos;idPanelHealthCheck&apos;);return false;&quot;&gt;Health Check&lt;/a&gt; to verify your NPSP configuration!</value>
+        <value>Use &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelHealthCheck&apos;);return false;&quot;&gt;Health Check&lt;/a&gt; to verify your NPSP configuration!</value>
     </labels>
     <labels>
         <fullName>stgHelpIGFormat</fullName>
@@ -3681,6 +4114,17 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <protected>false</protected>
         <shortDescription>stgHelpLeadConvert</shortDescription>
         <value>Specifies the default behavior for Opportunity creation when you convert a Lead to a Contact. If left unselected, Salesforce will NOT automatically create an Opportunity when you convert Leads to Contacts. For more information, see the &lt;a href=&quot;https://powerofus.force.com/NPSP_Leads&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpLvlAssignBatch</fullName>
+        <categories>NPSP Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>help text displayed on the Level Assignment Batch page</shortDescription>
+        <value>This utility calculates Level Assignments for all Salesforce objects (typically Accounts and Contacts, but also any custom objects) that have Levels assigned to them. This process may take some time, but you can safely close this page and the process will continue in the background.
+&lt;br/&gt;&lt;br/&gt;
+
+&lt;b&gt;IMPORTANT:&lt;/b&gt; Since Salesforce is often evaluating Levels against updated fields from other bulk data processes, you may want to run those processes first.</value>
     </labels>
     <labels>
         <fullName>stgHelpMatchedDonorRole</fullName>
@@ -3728,7 +4172,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpNPSPSettings</shortDescription>
-        <value>Configure the Nonprofit Starter Pack to meet your organization&apos;s needs. You can also monitor the health of your Salesforce organization, or run batch processes to update data.</value>
+        <value>Configure the Nonprofit Success Pack to meet your organization&apos;s needs. You can also monitor the health of your Salesforce organization, or run batch processes to update data.</value>
     </labels>
     <labels>
         <fullName>stgHelpNameConnector</fullName>
@@ -3802,7 +4246,7 @@ IMPORTANT: Both of these fields must have the same data type.</value>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpOneToOneRTID</shortDescription>
-        <value>The Account record type you want to use for new Accounts if you&apos;ve selected the One-to-One Account model above. NPSP does not come with a default record type for One-to-One Accounts, so you should create one (such as &quot;Individual&quot;) before selecting this model. If you select -none-, then Salesforce will use the default Account record type for the user who&apos;s creating the new Contact (and associated One-to-One Account).</value>
+        <value>The Account record type you want to use for new Accounts if you&apos;ve selected the One-to-One Account model above. NPSP does not come with a default record type for One-to-One Accounts, so you should create one (such as &quot;Individual&quot;) before selecting this model. If you select --None--, then Salesforce will use the default Account record type for the user who&apos;s creating the new Contact (and associated One-to-One Account).</value>
     </labels>
     <labels>
         <fullName>stgHelpOppNamingAttribution</fullName>
@@ -3834,7 +4278,7 @@ IMPORTANT: Both of these fields must have the same data type.</value>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpOppNamingRecTypes</shortDescription>
-        <value>The Opportunity record type(s) to which you want to apply this Opportunity Name. Control or Command click to select more than one record type. &quot;- none -&quot; applies the new naming to ALL record types.</value>
+        <value>The Opportunity record type(s) to which you want to apply this Opportunity Name. Control or Command click to select more than one record type. &quot;--None--&quot; applies the new naming to ALL record types.</value>
     </labels>
     <labels>
         <fullName>stgHelpOppRecTypesNoPayments</fullName>
@@ -3914,7 +4358,7 @@ IMPORTANT: Both of these fields must have the same data type.</value>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpPowerOfUsHub</shortDescription>
-        <value>Got questions? The Hub has answers! Try the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;Nonprofit Starter Pack&lt;/a&gt; group for questions about NPSP and the &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; group for questions about Salesforce administration and cofiguration.&lt;br/&gt;&lt;br/&gt;Keep up with the latest NPSP release notes in the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt; group.</value>
+        <value>Got questions? The Hub has answers! Try the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; group for questions about NPSP and the &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; group for questions about Salesforce administration and cofiguration.&lt;br/&gt;&lt;br/&gt;Keep up with the latest NPSP release notes in the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt; group.</value>
     </labels>
     <labels>
         <fullName>stgHelpPrimaryContactBatch</fullName>
@@ -4139,7 +4583,7 @@ This process may take some time, but you can close this page and the process wil
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpReviewErrorLog</shortDescription>
-        <value>Review &lt;a href=&quot;.&quot; onclick=&quot;ShowPanel(&apos;idPanelErrorLog&apos;);return false;&quot;&gt;Error Logs&lt;/a&gt; to see if there are issues.</value>
+        <value>Review &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelErrorLog&apos;);return false;&quot;&gt;Error Logs&lt;/a&gt; to see if there are issues.</value>
     </labels>
     <labels>
         <fullName>stgHelpRollupBatchSize</fullName>
@@ -4307,7 +4751,7 @@ This process may take some time, but you can close this page and the process wil
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpTriggerHandlers</shortDescription>
-        <value>These triggers control core functionality in the Nonprofit Starter Pack, so please exercise extreme caution when creating or modifying them.</value>
+        <value>These triggers control core functionality in the Nonprofit Success Pack, so please exercise extreme caution when creating or modifying them.</value>
     </labels>
     <labels>
         <fullName>stgHelpTriggerHandlersAsync</fullName>
@@ -4348,7 +4792,7 @@ This process may take some time, but you can close this page and the process wil
         <shortDescription>stgInstallScriptError</shortDescription>
         <value>Your installation was successful, but we detected a slight problem. To fix the problem, simply load the NPSP Settings page in Salesforce.
 
-Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application. If you don&apos;t see the tab, select Nonprofit Starter Pack from the app menu in the upper-right corner.</value>
+Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application. If you don&apos;t see the tab, select Nonprofit Success Pack from the app menu in the upper-right corner.</value>
     </labels>
     <labels>
         <fullName>stgLabelActionColumn</fullName>
@@ -4567,6 +5011,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Lead Settings</value>
     </labels>
     <labels>
+        <fullName>stgLabelLvlAssignBatchTitle</fullName>
+        <categories>NPSP Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>menu title for the Level Assignment Batch in NPSP Settings</shortDescription>
+        <value>Level Assignment Batch</value>
+    </labels>
+    <labels>
         <fullName>stgLabelMembershipSettings</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -4628,7 +5080,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgLabelNone</shortDescription>
-        <value>- none -</value>
+        <value>--None--</value>
     </labels>
     <labels>
         <fullName>stgLabelONS</fullName>
@@ -4916,7 +5368,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgNPSPSettings</shortDescription>
-        <value>Nonprofit Starter Pack Application Settings</value>
+        <value>Nonprofit Success Pack Application Settings</value>
     </labels>
     <labels>
         <fullName>stgNPSPSettingsTitle</fullName>
@@ -4924,7 +5376,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgNPSPSettingsTitle</shortDescription>
-        <value>Nonprofit Starter Pack Settings</value>
+        <value>Nonprofit Success Pack Settings</value>
     </labels>
     <labels>
         <fullName>stgNPSPWorkbook</fullName>
@@ -4932,7 +5384,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgNPSPWorkbook</shortDescription>
-        <value>Nonprofit Starter Pack Workbook</value>
+        <value>NPSP Fundraising Trail</value>
     </labels>
     <labels>
         <fullName>stgNavAccountModel</fullName>

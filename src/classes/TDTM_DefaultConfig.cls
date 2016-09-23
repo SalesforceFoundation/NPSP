@@ -147,7 +147,7 @@ public without sharing class TDTM_DefaultConfig {
         // Account Management on Contact
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
               Class__c = 'ACCT_IndividualAccounts_TDTM', Load_Order__c = 1, Object__c = 'Contact',
-              Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate;AfterDelete'));
+              Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate;AfterDelete;AfterUndelete'));
 
         // Account Management on Account
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = ACCT_Accounts_TDTM_TestAsync,
@@ -267,6 +267,30 @@ public without sharing class TDTM_DefaultConfig {
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
               Class__c = 'PSC_Opportunity_TDTM', Load_Order__c = 4, Object__c = 'Opportunity',
               Trigger_Action__c = 'AfterUpdate'));
+
+        // Engagement Plans
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+              Class__c = 'EP_EngagementPlans_TDTM', Load_Order__c = 0, Object__c = 'Engagement_Plan__c',
+              Trigger_Action__c = 'AfterInsert;AfterUpdate'));
+
+        // Engagement Plan Tasks
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+              Class__c = 'EP_EngagementPlanTaskValidation_TDTM', Load_Order__c = 1, Object__c = 'Engagement_Plan_Task__c',
+              Trigger_Action__c = 'AfterInsert;AfterUpdate'));
+
+        // Tasks
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+              Class__c = 'EP_TaskRollup_TDTM', Load_Order__c = 0, Object__c = 'Task',
+              Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete;AfterUndelete'));
+
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+              Class__c = 'EP_TaskDependency_TDTM', Load_Order__c = 1, Object__c = 'Task',
+              Trigger_Action__c = 'AfterUpdate'));
+
+        // Level support
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+              Class__c = 'LVL_Level_TDTM', Load_Order__c = 1, Object__c = 'Level__c',
+              Trigger_Action__c = 'BeforeInsert;BeforeUpdate'));
 
         return handlers;
     }

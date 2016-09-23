@@ -84,8 +84,7 @@ public class PMT_PaymentCreator {
             if (setOppRecordTypeIdNoPayment == null) {
                 string strProp = UTIL_CustomSettingsFacade.getContactsSettings().Opp_RecTypes_Excluded_for_Payments__c;
                 if (strProp != null) {
-                    set<string> setStr = new set<string>(strProp.split(';'));    
-                    setOppRecordTypeIdNoPayment = UTIL_RecordTypes.GetRecordTypeIdSet('Opportunity', setStr);
+                    setOppRecordTypeIdNoPayment = new Set<Id>((List<Id>)strProp.split(';'));
                 } else {
                     setOppRecordTypeIdNoPayment = new set<Id>();
                 }

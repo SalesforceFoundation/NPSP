@@ -186,7 +186,8 @@ private class PMT_PaymentWizard_TEST {
         
         // save the page
         string nextPage=controller.createPayments().getUrl(); 
-
+        nextPage = nextPage.left(nextPage.indexOf('?')); // remove parameters
+        
         // look for the data
         npe01__OppPayment__c[] opmt = [select id, npe01__payment_method__c, npe01__payment_amount__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp.Id and npe01__paid__c = false];
         system.assertEquals(12, opmt.size());
@@ -483,7 +484,8 @@ private class PMT_PaymentWizard_TEST {
         pagereference ref = controller.calculate();
         
         // save the page
-        string nextPage=controller.createPayments().getUrl(); 
+        string nextPage=controller.createPayments().getUrl();
+        nextPage = nextPage.left(nextPage.indexOf('?')); // remove parameters
 
         Test.stopTest();
         

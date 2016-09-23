@@ -554,17 +554,7 @@
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
-            <field>npe01__Last_Donation_Date__c</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
             <field>LeadSource</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>npe01__Lifetime_Giving_History_Amount__c</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </availableFields>
@@ -1179,11 +1169,6 @@
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
-            <field>npe01__Last_Donation_Date__c</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
             <field>Last_Soft_Credit_Amount__c</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
@@ -1195,11 +1180,6 @@
         </availableFields>
         <availableFields>
             <field>LeadSource</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>npe01__Lifetime_Giving_History_Amount__c</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </availableFields>

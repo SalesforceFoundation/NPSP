@@ -92,6 +92,9 @@ public with sharing class UTIL_Namespace_TEST {
         str = Label.stgLabelTriggerHandlers;
         str = Label.stgNavContacts;
         str = Label.stgLabelHHNamingProgress;
+        str = Label.statusNotStarted;
+        str = Label.statusInProgress;
+        str = Label.statusCompleted;
         str = Label.Address_StateCountry_Invalid_Error;
         str = Label.Addr_Verify_Google_Help;
         str = Label.SmartyStreets_Help_Text;
@@ -106,6 +109,7 @@ public with sharing class UTIL_Namespace_TEST {
         str = Label.alloCampaignExceedsOppAmount;
         str = Label.alloUnallocated;
         str = Label.stgHelpBatchCreateDefault;
+        str = Label.addrHHAddressAlwaysDefault;
 
         // The following labels are referenced because the spider was having
         // issues resolving references to them and they need to be directly
@@ -148,5 +152,6 @@ public with sharing class UTIL_Namespace_TEST {
         str = Label.pscManageSoftCreditsValidateTotals;
         str = Label.stgHelpMatchedDonorRole;
         str = Label.stgNavBulkProcesses;
+        str = Label.EPAddTask;
     }
 }

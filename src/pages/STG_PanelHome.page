@@ -7,7 +7,7 @@
                 <p class="slds-text-body--small slds-m-top--x-small"><apex:outputText value="{!$Label.stgHelpSalesforceSetup}" escape="false"/></p>
             </div>
             <div class="slds-media__figure slds-media__figure--reverse">
-                <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/NPSP_Logo_Small.png')}" style="height: 175px" alt="NPSP Logo"/>
+                <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/RGB_npsp-stacked-color.png')}" style="height: 75px" alt="NPSP Logo"/>
             </div>
         </div>
     </div>
@@ -28,7 +28,7 @@
             <div>
                 <ul>
                     <li><a href="https://powerofus.force.com/NPSP_Documentation" target="_blank" >{!$Label.stgHelpNPSPDoc}</a></li>
-                    <li><a href="https://powerofus.force.com/NPSP_Workbook" target="_blank" >{!$Label.stgNPSPWorkbook}</a></li>
+                    <li><a href="https://developer.salesforce.com/trailhead/trail/nonprofit_fundraising" target="_blank" >{!$Label.stgNPSPWorkbook}</a></li>
                     <li><a href="https://powerofus.force.com/NPSP_Import_Data" target="_blank" >{!$Label.stgNPSPGuideImportData}</a></li>
                 </ul>
             </div>

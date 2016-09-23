@@ -52,9 +52,9 @@ public with sharing class RLLP_OppRollup_TEST {
     /** @description The date of January 1st, four years ago */
     static Date dat4YearAgo = Date.newInstance( datToday.year()-4,1,1);
     /** @description Default gift record type for tests. */
-    static String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+    static String giftRecordTypeIdForTests = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.sObjectType);
     /** @description Default membership record type for tests. */
-    static String membershipRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
+    static String membershipRecordTypeIdForTests = UTIL_RecordTypes.getRecordTypeIdForMembershipTests(Opportunity.sObjectType);
     /** @description List of test contacts. */
     static list<Contact> listConTest;
     /** @description List of test opportunities. */
@@ -68,7 +68,7 @@ public with sharing class RLLP_OppRollup_TEST {
     ********************************************************************************************************/    
     static boolean setupTestData(integer numContacts, string strProcessor) {      
         
-        if (membershipRecordTypeNameForTests == null)
+        if (membershipRecordTypeIdForTests == null)
             return false;
             
         // reinitialize our lists
@@ -90,7 +90,7 @@ public with sharing class RLLP_OppRollup_TEST {
                 npo02__Excluded_Account_Opp_Types__c = null,
                 npo02__Excluded_Contact_Opp_Rectypes__c = null,
                 npo02__Excluded_Contact_Opp_Types__c = null,
-                npo02__Membership_Record_Types__c = membershipRecordTypeNameForTests
+                npo02__Membership_Record_Types__c = membershipRecordTypeIdForTests
             ));
                 
         // create & insert contact(s)
@@ -98,11 +98,11 @@ public with sharing class RLLP_OppRollup_TEST {
         insert listConTest;
             
         // create a new gift for this yr
-        Opportunity[] testGift1 = UTIL_UnitTestData_TEST.OppsForContactList ( listConTest, null, UTIL_UnitTestData_TEST.getClosedWonStage(), 
+        Opportunity[] testGift1 = UTIL_UnitTestData_TEST.OppsForContactListByRecTypeId ( listConTest, null, UTIL_UnitTestData_TEST.getClosedWonStage(), 
             datToday, 100 , householdSettingsForTests.npo02__Membership_Record_Types__c,null);
         listOppTest.addAll(testGift1);
         //create a 2nd gift for last yr
-        Opportunity[] testGift2 = UTIL_UnitTestData_TEST.OppsForContactList ( listConTest, null, UTIL_UnitTestData_TEST.getClosedWonStage(), 
+        Opportunity[] testGift2 = UTIL_UnitTestData_TEST.OppsForContactListByRecTypeId ( listConTest, null, UTIL_UnitTestData_TEST.getClosedWonStage(), 
             dat1YearAgo, 60, householdSettingsForTests.npo02__Membership_Record_Types__c,null);
         listOppTest.addAll(testGift2);
         insert listOppTest;
@@ -178,7 +178,7 @@ public with sharing class RLLP_OppRollup_TEST {
         );
         insert c;
 
-        Id rt_id = UTIL_RecordTypes.GetRecordTypeId('Opportunity', giftRecordTypeNameForTests);
+        Id rt_id = giftRecordTypeIdForTests;
 
         //create new opp            
         Opportunity o = new Opportunity(
@@ -279,7 +279,7 @@ public with sharing class RLLP_OppRollup_TEST {
             insert TestCons;
 
             // create new opps
-            Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 100 , giftRecordTypeNameForTests ,null);
+            Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactListByRecTypeId ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 100 , giftRecordTypeIdForTests ,null);
 
             // insert the opp(s)
             Test.StartTest();
@@ -337,7 +337,7 @@ public with sharing class RLLP_OppRollup_TEST {
     */
     static void testGivingRollupExcludedRTProcessor (string strProcessor) {
 
-        if(giftRecordTypeNameForTests!=''){
+        if(giftRecordTypeIdForTests != null){
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
@@ -349,9 +349,9 @@ public with sharing class RLLP_OppRollup_TEST {
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
                     npo02__Enable_Opp_Rollup_Triggers__c = true,
-                    npo02__Excluded_Account_Opp_Rectypes__c = giftRecordTypeNameForTests,
+                    npo02__Excluded_Account_Opp_Rectypes__c = giftRecordTypeIdForTests,
                     npo02__Excluded_Account_Opp_Types__c = null,
-                    npo02__Excluded_Contact_Opp_Rectypes__c = giftRecordTypeNameForTests,
+                    npo02__Excluded_Contact_Opp_Rectypes__c = giftRecordTypeIdForTests,
                     npo02__Excluded_Contact_Opp_Types__c = null,
                     npo02__Membership_Record_Types__c = null
                 ));
@@ -377,7 +377,7 @@ public with sharing class RLLP_OppRollup_TEST {
             insert TestCons;
 
             // create new opps
-            Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 100 , giftRecordTypeNameForTests ,null);
+            Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactListByRecTypeId ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 100 , giftRecordTypeIdForTests ,null);
 
             // insert the opp(s)
             Test.StartTest();
@@ -476,7 +476,7 @@ public with sharing class RLLP_OppRollup_TEST {
             insert TestCons;
 
             // create new opps
-            Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 100 , giftRecordTypeNameForTests ,null);
+            Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactListByRecTypeId ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 100 , giftRecordTypeIdForTests ,null);
 
             // insert the opp(s)
             Test.StartTest();
@@ -531,7 +531,7 @@ public with sharing class RLLP_OppRollup_TEST {
     */
     static void testMemberRollupProcessor (string strProcessor) {
 
-        if(membershipRecordTypeNameForTests!=''){
+        if(membershipRecordTypeIdForTests != null){
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
@@ -547,7 +547,7 @@ public with sharing class RLLP_OppRollup_TEST {
                     npo02__Excluded_Account_Opp_Types__c = null,
                     npo02__Excluded_Contact_Opp_Rectypes__c = null,
                     npo02__Excluded_Contact_Opp_Types__c = null,
-                    npo02__Membership_Record_Types__c = membershipRecordTypeNameForTests
+                    npo02__Membership_Record_Types__c = membershipRecordTypeIdForTests
                 ));
 
             Date datClose = System.Today();
@@ -565,7 +565,7 @@ public with sharing class RLLP_OppRollup_TEST {
             insert TestCons;
 
             // create new opps
-            Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactList (
+            Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactListByRecTypeId (
                 TestCons,
                 null,
                 UTIL_UnitTestData_TEST.getClosedWonStage(),
@@ -643,7 +643,7 @@ public with sharing class RLLP_OppRollup_TEST {
                     closedate=datClose, amount=33333
                  );
             if(RLLP_OppRollup_UTIL.areRecordTypesOnOpps()){
-                newOpp.put('RecordTypeId',UTIL_RecordTypes.GetRecordTypeId('Opportunity', giftRecordTypeNameForTests));
+                newOpp.put('RecordTypeId', giftRecordTypeIdForTests);
             }
             // insert the opp(s)
             Test.StartTest();
@@ -674,7 +674,7 @@ public with sharing class RLLP_OppRollup_TEST {
     }
     static void testGivingRollupAcctMembership (string strProcessor) {
 
-        if(membershipRecordTypeNameForTests!=''){
+        if(membershipRecordTypeIdForTests != null){
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
@@ -690,7 +690,7 @@ public with sharing class RLLP_OppRollup_TEST {
                     npo02__Excluded_Account_Opp_Types__c = null,
                     npo02__Excluded_Contact_Opp_Rectypes__c = null,
                     npo02__Excluded_Contact_Opp_Types__c = null,
-                    npo02__Membership_Record_Types__c = membershipRecordTypeNameForTests
+                    npo02__Membership_Record_Types__c = membershipRecordTypeIdForTests
                 ));
 
             Date datClose = System.Today();
@@ -702,7 +702,7 @@ public with sharing class RLLP_OppRollup_TEST {
                  new opportunity (name = 'testopp', accountid = testacct.id, 
                                     npe01__member_level__c = 'Gold', npe01__membership_origin__c = 'New',
                                     stagename=UTIL_UnitTestData_TEST.getClosedWonStage(), closedate=datClose, amount=33333);
-            newOpp.put('RecordTypeId',UTIL_RecordTypes.GetRecordTypeId('Opportunity', householdSettingsForTests.npo02__Membership_Record_Types__c));
+            newOpp.put('RecordTypeId', householdSettingsForTests.npo02__Membership_Record_Types__c);
             // insert the opp(s)
             Test.StartTest();
             insert newOpp;
@@ -762,7 +762,7 @@ public with sharing class RLLP_OppRollup_TEST {
             insert TestCons;
 
             // create new opps
-            Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 1000 , giftRecordTypeNameForTests ,null);
+            Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactListByRecTypeId ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 1000 , giftRecordTypeIdForTests ,null);
 
             account testacct = new account(name='testacct');
             insert testacct;
@@ -827,7 +827,7 @@ public with sharing class RLLP_OppRollup_TEST {
         System.AssertEquals ( 60 , listConTest[0].npo02__OppAmountLastYear__c );
 
         // now create a gift from 2 yrs ago
-        Opportunity[] testGift3 = UTIL_UnitTestData_TEST.OppsForContactList ( listConTest, null, UTIL_UnitTestData_TEST.getClosedWonStage(), dat2YearAgo, 10 , giftRecordTypeNameForTests,null);  
+        Opportunity[] testGift3 = UTIL_UnitTestData_TEST.OppsForContactListByRecTypeId ( listConTest, null, UTIL_UnitTestData_TEST.getClosedWonStage(), dat2YearAgo, 10 , giftRecordTypeIdForTests,null);  
         insert testGift3;
 
         // now roll up manually
@@ -862,9 +862,9 @@ public with sharing class RLLP_OppRollup_TEST {
         System.AssertEquals ( 60 , listConTest[0].npo02__OppAmountLastYear__c );
 
         // add another from this year (to test adding)
-        Opportunity[] testGift4 = UTIL_UnitTestData_TEST.OppsForContactList ( listConTest, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datToday, 25 , giftRecordTypeNameForTests,null);
+        Opportunity[] testGift4 = UTIL_UnitTestData_TEST.OppsForContactListByRecTypeId ( listConTest, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datToday, 25 , giftRecordTypeIdForTests,null);
         insert testGift4;
-        Opportunity[] testGift5 = UTIL_UnitTestData_TEST.OppsForContactList ( listConTest, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datToday, 25 , giftRecordTypeNameForTests,null);
+        Opportunity[] testGift5 = UTIL_UnitTestData_TEST.OppsForContactListByRecTypeId ( listConTest, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datToday, 25 , giftRecordTypeIdForTests,null);
         insert testGift5;
 
         // now roll up manually
@@ -898,7 +898,7 @@ public with sharing class RLLP_OppRollup_TEST {
         System.AssertEquals ( 60 , listConTest[0].npo02__OppAmountLastYear__c );
 
         // TBD add a gift from longer ago
-        Opportunity[] testGift5 = UTIL_UnitTestData_TEST.OppsForContactList ( listConTest, null, UTIL_UnitTestData_TEST.getClosedWonStage(), dat4YearAgo, 200 , giftRecordTypeNameForTests,null);
+        Opportunity[] testGift5 = UTIL_UnitTestData_TEST.OppsForContactListByRecTypeId ( listConTest, null, UTIL_UnitTestData_TEST.getClosedWonStage(), dat4YearAgo, 200 , giftRecordTypeIdForTests,null);
         insert testGift5;
 
         // now roll up manually
@@ -934,7 +934,7 @@ public with sharing class RLLP_OppRollup_TEST {
         System.AssertEquals ( 60 , listConTest[0].npo02__OppAmountLastYear__c );
 
         // TBD add non-won gift
-        Opportunity[] testGift6 = UTIL_UnitTestData_TEST.OppsForContactList ( listConTest, null, UTIL_UnitTestData_TEST.getOpenStage(), dat4YearAgo, 35 , giftRecordTypeNameForTests,null);
+        Opportunity[] testGift6 = UTIL_UnitTestData_TEST.OppsForContactListByRecTypeId ( listConTest, null, UTIL_UnitTestData_TEST.getOpenStage(), dat4YearAgo, 35 , giftRecordTypeIdForTests,null);
         insert testGift6;
 
         // now roll up manually
@@ -1020,7 +1020,7 @@ public with sharing class RLLP_OppRollup_TEST {
             insert TestCons;
 
             // create a new gift for this yr
-            Opportunity[] testGift1 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datToday, 100 , giftRecordTypeNameForTests,'In Kind');
+            Opportunity[] testGift1 = UTIL_UnitTestData_TEST.OppsForContactListByRecTypeId ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datToday, 100 , giftRecordTypeIdForTests,'In Kind');
             Test.StartTest();
             insert testGift1 ;
             Test.StopTest();
@@ -1069,8 +1069,8 @@ public with sharing class RLLP_OppRollup_TEST {
             insert TestCons;
 
             // create new opps
-            Opportunity[] newOpps1 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 100 , giftRecordTypeNameForTests,null);
-            Opportunity[] newOpps2 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose.addYears(-1), 50 , giftRecordTypeNameForTests,null);
+            Opportunity[] newOpps1 = UTIL_UnitTestData_TEST.OppsForContactListByRecTypeId ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 100 , giftRecordTypeIdForTests,null);
+            Opportunity[] newOpps2 = UTIL_UnitTestData_TEST.OppsForContactListByRecTypeId ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose.addYears(-1), 50 , giftRecordTypeIdForTests,null);
 
             // insert the opp(s)
             Test.StartTest();

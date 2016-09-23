@@ -99,7 +99,7 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
             
             // delete the old household soft credits.
             delete [select Id from OpportunityContactRole where OpportunityId in :listOppToProcess and 
-                Role = :currentHouseholdsSettings.npo02__Household_Member_Contact_Role__c];
+                Role = :currentHouseholdsSettings.npo02__Household_Member_Contact_Role__c and isPrimary = false];
             
             // now continue with our processing to create the new household soft credits
             opportunities = listOppToProcess;
@@ -107,11 +107,9 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
    
         DmlWrapper dmlWrapper = new DmlWrapper();
                              
-        set<string> HouseholdOCRRecordTypeExclusions = new set<string>();
         set<id> conRecordTypesToExclude = new set<id>();
         if (currentHouseholdsSettings.npo02__Household_OCR_Excluded_Recordtypes__c != null) {
-            HouseholdOCRRecordTypeExclusions = new set<string>(currentHouseholdsSettings.npo02__Household_OCR_Excluded_Recordtypes__c.split(';'));
-            conRecordTypesToExclude = UTIL_RecordTypes.GetRecordTypeIdSet('Contact', HouseholdOCRRecordTypeExclusions);            
+            conRecordTypesToExclude = new Set<Id>((List<Id>)currentHouseholdsSettings.npo02__Household_OCR_Excluded_Recordtypes__c.split(';'));
         }
         
         boolean recordTypesOnCons = false;
@@ -209,9 +207,9 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
             list<id> c2HId = contactIdToHouseholdId.values();
             // query all contacts in all the Households
             if (recordTypesOnCons)
-                householdContacts = database.query('select id, npo02__Household__c, RecordTypeId, AccountId, Account.npe01__SYSTEM_AccountType__c from Contact where Deceased__c=FALSE AND (npo02__Household__c IN :c2HId or AccountId in :c2HId)');
+                householdContacts = database.query('select id, npo02__Household__c, RecordTypeId, AccountId, Deceased__c, Account.npe01__SYSTEM_AccountType__c from Contact where (npo02__Household__c IN :c2HId or AccountId in :c2HId)');
             else
-                householdContacts = database.query('select id, npo02__Household__c, AccountId, Account.npe01__SYSTEM_AccountType__c from Contact where Deceased__c=FALSE AND (npo02__Household__c IN :c2HId or AccountId in :c2HId)');
+                householdContacts = database.query('select id, npo02__Household__c, AccountId, Deceased__c, Account.npe01__SYSTEM_AccountType__c from Contact where (npo02__Household__c IN :c2HId or AccountId in :c2HId)');
             //UTIL_Debug.debug('DJH***** householdContacts: ' + householdContacts);
                                  
             // create a map of Household Id to list of member contacts
@@ -238,7 +236,7 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
                 // loop through all opps
                 for (Opportunity thisOpp : contactIdToOpps.get(thisContactId)) {
                     
-                    if (contactIdToHouseholdId.get(thisContactId) != null) {
+                    if (contactIdToHouseholdId.get(thisContactId) != null && householdIdToContact.get(contactIdToHouseholdId.get(thisContactId)) != null) {
                         // loop through all households members
                         for (Contact householdMember : householdIdToContact.get(contactIdToHouseholdId.get(thisContactId))) {
                             
@@ -258,7 +256,7 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
                                     thisRole.isPrimary = true;
                                     contactRolesForCreation.add(thisRole);
                                 }
-                            } else {
+                            } else if (!householdMember.Deceased__c) {
                                 // exclude any Contacts with an excluded record type
                                 if (recordTypesOnCons && conRecordTypesToExclude.contains((id)householdMember.get('RecordTypeId'))) {
                                    // backwards, but prevents having to query for a RecordTypeId that may or may not be there...

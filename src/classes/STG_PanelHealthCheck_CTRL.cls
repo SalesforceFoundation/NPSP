@@ -182,6 +182,8 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         verifyOppContactRoles();
         verifyTriggerHandlers();
         verifyNoMissingOppPayments();
+        verifyNoDuplicateContactRoles();
+        verifyLevels();
         
         DateTime dtEnd = system.now();
         double msec = dtEnd.getTime() - dtStart.getTime();
@@ -405,21 +407,21 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     */
     private void verifyRecordTypes() {
     
-        checkRecordTypeId('Account', STG_Panel.stgService.stgCon.npe01__HH_Account_RecordTypeID__c, 
+        checkRecordTypeId(Account.sObjectType, STG_Panel.stgService.stgCon.npe01__HH_Account_RecordTypeID__c, 
             'npe01__Contacts_And_Orgs_Settings__c', 'npe01__HH_Account_RecordTypeID__c', Label.stgNavPeople, Label.stgNavAccountModel);
-        checkRecordTypeId('Account', STG_Panel.stgService.stgCon.npe01__One_to_One_RecordTypeID__c, 
+        checkRecordTypeId(Account.sObjectType, STG_Panel.stgService.stgCon.npe01__One_to_One_RecordTypeID__c, 
             'npe01__Contacts_And_Orgs_Settings__c', 'npe01__One_to_One_RecordTypeID__c', Label.stgNavPeople, Label.stgNavAccountModel);        
-        checkRecordTypeId('Opportunity', STG_Panel.stgService.stgRD.npe03__Record_Type__c, 
+        checkRecordTypeId(Opportunity.sObjectType, STG_Panel.stgService.stgRD.npe03__Record_Type__c, 
             'npe03__Recurring_Donations_Settings__c', 'npe03__Record_Type__c', Label.stgNavRecurringDonations, Label.stgNavRecurringDonations);       
-        checkRecordTypeMulti('Contact', STG_Panel.stgService.stgHH.npo02__Household_Creation_Excluded_Recordtypes__c, false,
+        checkRecordTypeMulti(Contact.sObjectType, STG_Panel.stgService.stgHH.npo02__Household_Creation_Excluded_Recordtypes__c, true,
             'npo02__Households_Settings__c', 'npo02__Household_Creation_Excluded_Recordtypes__c', Label.stgNavPeople, Label.stgNavHouseholds);
-        checkRecordTypeMulti('Contact', STG_Panel.stgService.stgHH.npo02__Household_OCR_Excluded_Recordtypes__c, false,
+        checkRecordTypeMulti(Contact.sObjectType, STG_Panel.stgService.stgHH.npo02__Household_OCR_Excluded_Recordtypes__c, true,
             'npo02__Households_Settings__c', 'npo02__Household_OCR_Excluded_Recordtypes__c', Label.stgNavDonations, Label.stgNavContactRoles);            
-        checkRecordTypeMulti('Opportunity', STG_Panel.stgService.stgHH.npo02__Excluded_Account_Opp_Rectypes__c, false,
+        checkRecordTypeMulti(Opportunity.sObjectType, STG_Panel.stgService.stgHH.npo02__Excluded_Account_Opp_Rectypes__c, true,
             'npo02__Households_Settings__c', 'npo02__Excluded_Account_Opp_Rectypes__c', Label.stgNavDonations, Label.stgNavDonorStatistics);
-        checkRecordTypeMulti('Opportunity', STG_Panel.stgService.stgHH.npo02__Excluded_Contact_Opp_Rectypes__c, false,
+        checkRecordTypeMulti(Opportunity.sObjectType, STG_Panel.stgService.stgHH.npo02__Excluded_Contact_Opp_Rectypes__c, true,
             'npo02__Households_Settings__c', 'npo02__Excluded_Contact_Opp_Rectypes__c', Label.stgNavDonations, Label.stgNavDonorStatistics);
-        checkRecordTypeMulti('Opportunity', STG_Panel.stgService.stgHH.npo02__Membership_Record_Types__c, false,
+        checkRecordTypeMulti(Opportunity.sObjectType, STG_Panel.stgService.stgHH.npo02__Membership_Record_Types__c, true,
             'npo02__Households_Settings__c', 'npo02__Membership_Record_Types__c', Label.stgNavDonations, Label.stgNavMembership);   
             
         // avoid reusing the same recordtype in Account models
@@ -434,7 +436,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
 
     /*********************************************************************************************************
     * @description Checks a setting that contains multiple recordType Id's in a semi-colon delimeted string
-    * @param strObject The Object to check recordtypes against
+    * @param objectType The Object to check recordtypes against
     * @param strValues A semicolon separated string of values to check
     * @param isIds Whether the values are Ids or Names
     * @param strSettingObj The Settings object
@@ -443,14 +445,14 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     * @param strTabname The tab the setting is on
     * @return void
     */
-    private void checkRecordTypeMulti(string strObject, string strValues, boolean isIds, string strSettingObj, string strSettingField, string strTabLevel, string strTabname) {
+    private void checkRecordTypeMulti(sObjectType objectType, string strValues, boolean isIds, string strSettingObj, string strSettingField, string strTabLevel, string strTabname) {
         if (strValues != null) {
             list<string> listStr = strValues.split(';',0);
             for (string strRT : listStr) {
                 if (isIds)
-                    checkRecordTypeId(strObject, strRT, strSettingObj, strSettingField, strTabLevel, strTabname);
+                    checkRecordTypeId(objectType, strRT, strSettingObj, strSettingField, strTabLevel, strTabname);
                 else
-                    checkRecordTypeName(strObject, strRT, strSettingObj, strSettingField, strTabLevel, strTabname);              
+                    checkRecordTypeName(objectType, strRT, strSettingObj, strSettingField, strTabLevel, strTabname);              
             }
         } else {
             string strField = UTIL_Describe.getFieldLabel(strSettingObj, strSettingField);
@@ -460,7 +462,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
 
     /*********************************************************************************************************
     * @description Checks whether the recordType Id is valid, and logs an appropriate DetectResult
-    * @param strObject The Object to check recordtypes against
+    * @param objectType The Object to check recordtypes against
     * @param rtId A recordtype Id
     * @param strSettingObj The Settings object
     * @param strSettingField The Settings field
@@ -468,9 +470,9 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     * @param strTabname The tab the setting is on
     * @return void
     */
-    private void checkRecordTypeId(string strObject, string rtId, string strSettingObj, string strSettingField, string strTabLevel, string strTabname) {
+    private void checkRecordTypeId(sObjectType objectType, Id rtId, string strSettingObj, string strSettingField, string strTabLevel, string strTabname) {
         string strField = UTIL_Describe.getFieldLabel(strSettingObj, strSettingField);
-        string strRT = UTIL_RecordTypes.GetRecordTypeName(strObject, rtId);
+        string strRT = UTIL_RecordTypes.GetRecordTypeName(objectType, rtId);
         if (rtId != null && strRT == null) {
             createDR(strField, statusError, 
                 string.format(label.healthDetailsInvalidRecordtypeId, new string[]{rtId}),        
@@ -483,7 +485,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     
     /*********************************************************************************************************
     * @description Checks whether the recordType Name is valid, and logs an appropriate DetectResult
-    * @param strObject The Object to check recordtypes against
+    * @param objectType The Object to check recordtypes against
     * @param strRTName A recordtype name
     * @param strSettingObj The Settings object
     * @param strSettingField The Settings field
@@ -491,9 +493,9 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     * @param strTabname The tab the setting is on
     * @return void
     */
-    private void checkRecordTypeName(string strObject, string strRTName, string strSettingObj, string strSettingField, string strTabLevel, string strTabname) {
+    private void checkRecordTypeName(sObjectType objectType, string strRTName, string strSettingObj, string strSettingField, string strTabLevel, string strTabname) {
         string strField = UTIL_Describe.getFieldLabel(strSettingObj, strSettingField);
-        if (strRTName != null && UTIL_RecordTypes.GetRecordTypeId(strObject, strRTName) == null) {
+        if (strRTName != null && UTIL_RecordTypes.GetRecordTypeId(objectType, strRTName) == null) {
             createDR(strField, statusError, 
                 string.format(label.healthDetailsInvalidRecordtypeName, new string[]{strRTName}),        
                 string.format(label.healthSolutionEditSetting, new string[]{strField, strTabLevel, strTabname}));        
@@ -635,7 +637,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     }
     
     /*********************************************************************************************************
-    * @description Verifies that there are no Opportunities that 
+    * @description Verifies that there are no Opportunities that are missing payment records
     */
     public void verifyNoMissingOppPayments() {
         if (!UTIL_CustomSettingsFacade.getContactsSettings().npe01__Payments_Enabled__c)
@@ -673,5 +675,120 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         }    
         
     }
-    
+
+    /**
+     * @description Detect if any opportunities exists where the same contact
+     * is associated with that opportunity multiple times through multiple
+     * opportunity contact role records.
+     */
+     public void verifyNoDuplicateContactRoles() {
+        try {
+            Set<String> softCreditRoles = RLLP_OppRollup_UTIL.softCreditRoles;
+
+            List<AggregateResult> results = [
+                SELECT
+                    COUNT(Id),
+                    OpportunityId,
+                    ContactId
+                FROM OpportunityContactRole
+                WHERE Opportunity.IsWon = true
+                AND Role IN :softCreditRoles
+                GROUP BY OpportunityId, ContactId
+                HAVING Count(Id) > 1
+                LIMIT 1
+            ];
+
+            List<String> quotedSoftCreditRoles = new List<String>();
+
+            for (String role : softCreditRoles) {
+                quotedSoftCreditRoles.add('\'' + String.escapeSingleQuotes(role) + '\'');
+            }
+
+            if (results.size() > 0) {
+                createDR(
+                    Label.healthLabelDuplicateContactRoles,
+                    statusWarning,
+                    Label.healthDetailsDuplicateContactRoles,
+                    String.format(
+                        Label.healthSolutionDuplicateContactRoles,
+                        new List<String>{
+                            String.join(quotedSoftCreditRoles, ', ')
+                        }
+                    )
+                );
+            } else {
+                createDR(
+                    Label.healthLabelDuplicateContactRoles,
+                    statusSuccess,
+                    null,
+                    label.healthLabelNoDuplicateContactRoles
+                );
+            }
+        } catch (Exception e) {
+            createDR(
+                Label.healthLabelDuplicateContactRoles,
+                statusError,
+                e.getMessage(),
+                null
+            );
+        }
+     }
+
+    /*********************************************************************************************************
+    * @description Verifies that all Level records refer to existing fields of the correct type
+    */
+    public void verifyLevels() {
+        try {
+            // get all our levels for this object type
+            list<Level__c> listAllLvls = [select Id, Name, Target__c, Source_Field__c, Level_Field__c, 
+                Previous_Level_Field__c, Active__c, Minimum_Amount__c, Maximum_Amount__c
+                from Level__c
+                order by Level_Field__c asc, Minimum_Amount__c asc];
+            
+            integer cErrors = 0;
+            for (Level__c lvl : listAllLvls) {
+                for (integer i = 0; i < 3; i++) {
+                    String strField;
+                    if (i == 0)
+                        strField = lvl.Source_Field__c;
+                    else if (i == 1)
+                        strField = lvl.Level_Field__c;
+                    else if (i == 2)
+                        strField = lvl.Previous_Level_Field__c;
+                        
+                    // ensure the field exists
+                    if (strField != null && !UTIL_Describe.isValidField(lvl.Target__c, strField)) {
+                        cErrors++; 
+                        createDR(Label.healthLabelVerifyLevels, statusError, 
+                            string.format(Label.healthDetailsInvalidLevelField, new string[]{lvl.Name, strField, lvl.Target__c}),
+                            string.format(label.healthSolutionInvalidLevelField, new string[]{lvl.Name}));
+                    } 
+                    // ensure the datatype is valid
+                    else if (strField != null) {
+                        Schema.Displaytype dt = UTIL_Describe.getFieldDisplayType(lvl.Target__c, strField);
+                        if (i == 0 && !UTIL_Describe.canDisplaytypesCopy(dt, Schema.DisplayType.Double)) {
+	                        cErrors++; 
+	                        createDR(Label.healthLabelVerifyLevels, statusError, 
+	                            string.format(Label.healthDetailsInvalidFieldNumeric, new string[]{lvl.Name, strField, lvl.Target__c}),
+	                            string.format(label.healthSolutionInvalidLevelField, new string[]{lvl.Name}));
+                        }
+                        if (i > 0 && !UTIL_Describe.canDisplaytypesCopy(dt, Schema.DisplayType.Reference)) {
+                            cErrors++; 
+                            createDR(Label.healthLabelVerifyLevels, statusError, 
+                                string.format(Label.healthDetailsInvalidLevelFieldReference, new string[]{lvl.Name, strField, lvl.Target__c}),
+                                string.format(label.healthSolutionInvalidLevelField, new string[]{lvl.Name}));
+                        }
+                    }       
+                }
+            }
+
+            if (cErrors == 0) {
+                createDR(Label.healthLabelVerifyLevels, statusSuccess, null, label.healthLabelVerifyLevelsSuccess);
+            }
+            
+        } catch (exception ex) {
+            createDR(Label.healthLabelVerifyLevels, statusError, ex.getMessage(), null);                   
+        }    
+        
+    }
 }

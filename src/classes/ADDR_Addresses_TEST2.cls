@@ -1534,4 +1534,46 @@ public with sharing class ADDR_Addresses_TEST2 {
         system.assertEquals(listAddr[0].MailingStreet__c, acc.BillingStreet);
         
     }
+
+    /*********************************************************************************************************
+    * @description update a household contact to be removed from existing household and verify that a new 
+    * household is created and the contact address matches the new HH Account Address and new Address created
+    **********************************************************************************************************/            
+    static testMethod void updateHHContactToNewHH() {
+        if (strTestOnly != '*' && strTestOnly != 'updateOrgContactToHH') return;
+        
+        // this creates a default Address for each HH
+        createHHTestData(cHH, cCon);
+        
+        // update existing contacts to new HH with new addresses
+        for (Contact conT : listConT) {
+            conT.AccountId = null;
+        }
+
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        Test.startTest();
+        update listConT;         
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        Test.stopTest();
+        
+        // verify that the new HH and Contacts share the same address
+        Map<Id, Account> mapAccIdAcc = new Map<Id, Account>([SELECT Id, Name, BillingStreet, BillingCity, BillingState,
+            BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude from Account]);
+        Map<Id, Contact> mapConIdCon = new Map<Id, Contact>([SELECT Id, Name, AccountId, is_Address_Override__c, Current_Address__c,
+            MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, MailingLatitude, MailingLongitude FROM Contact]);
+        Map<Id, Address__c> mapAddrIdAddr = new Map<Id, Address__c>([SELECT Id, Default_Address__c, MailingStreet__c, Household_Account__c FROM Address__c]);
+
+        // verify new accounts with new addresses were created and previous accounts and addresses were removed
+        for (Contact conT : listConT) {
+            Contact updatedCon = mapConIdCon.get(conT.Id);
+            Account updatedAcc = mapAccIdAcc.get(updatedCon.AccountId);
+
+            System.assertNotEquals(conT.AccountId, updatedCon.AccountId, 'New Account should be created for the Contact.');
+            System.assert(!mapAccIdAcc.containsKey(conT.AccountId), 'The original account should have been deleted.');
+            System.assert(!mapAddrIdAddr.containsKey(conT.Current_Address__c), 'The original address should have been deleted.');
+            System.assert(mapAddrIdAddr.containsKey(updatedCon.Current_Address__c), 'A new address should have been created.');
+            System.assertEquals(true, ADDR_Addresses_TEST.isMatchAddressAccCon(updatedAcc, updatedCon), 'The new account address should match the contact.');
+            System.assertEquals(false, updatedCon.is_Address_Override__c, 'The contact\'s override should not be set.');
+        }
+    }
 }

@@ -254,15 +254,15 @@ private with sharing class PMT_PaymentCreator_TEST {
         if (strTestOnly != '*' && strTestOnly != 'createOppWithRecordTypeExcluded') return;
         
         // see if this org has any record types we can use!
-        string strGift = UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity');
-        Id rtIdGift = null;
-        if (strGift != null && strGift != '' && UTIL_RecordTypes.isRecordTypeActive('Opportunity', strGift)) {
-            rtIdGift = UTIL_RecordTypes.GetRecordTypeId('Opportunity', strGift);
-        }
-        
+        Id rtIdGift = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.sObjectType);
+
         npe01__Contacts_And_Orgs_Settings__c PaymentsSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-            new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true, Opp_RecTypes_Excluded_for_Payments__c=strGift));
-        
+            new npe01__Contacts_And_Orgs_Settings__c(
+                npe01__Payments_Enabled__c = true,
+                Opp_RecTypes_Excluded_for_Payments__c = rtIdGift
+            )
+        );
+
         // create test data
         Account acct = new Account (
             Name='Test Account'
@@ -276,9 +276,11 @@ private with sharing class PMT_PaymentCreator_TEST {
             Amount = 1,
             StageName = UTIL_UnitTestData_TEST.getOpenStage()
         );
-        if (rtIdGift != null)
-            opp.RecordtypeId = rtIdGift;
-        
+
+        if (rtIdGift != null) {
+            opp.RecordTypeId = rtIdGift;
+        }
+
         Test.startTest();
         insert opp;
         Test.stopTest();
@@ -647,13 +649,13 @@ private with sharing class PMT_PaymentCreator_TEST {
         Id rtIdGift = null;
         
         //only attempt a recordtype exclusion if we have a record type that isn't default
-        for (string recTypeName : new list<string>{UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity'),UTIL_RecordTypes.getrecordTypeNameForMembershipTests('Opportunity')}) {
+        for (string recTypeName : new list<string>{UTIL_RecordTypes.getrecordTypeNameForGiftsTests(Opportunity.sObjectType),UTIL_RecordTypes.getrecordTypeNameForMembershipTests(Opportunity.sObjectType)}) {
             if (!string.isBlank(recTypeName) && 
-                UTIL_RecordTypes.isRecordTypeActive('Opportunity', recTypeName) && 
-                !UTIL_RecordTypes.isRecordTypeDefault('Opportunity', recTypeName)) {
+                UTIL_RecordTypes.isRecordTypeActive(Opportunity.sObjectType, recTypeName) && 
+                !UTIL_RecordTypes.isRecordTypeDefault(Opportunity.sObjectType, recTypeName)) {
 
-                rtIdGift = UTIL_RecordTypes.GetRecordTypeId('Opportunity', recTypeName);
-                consSettings.Opp_RecTypes_Excluded_for_Payments__c=recTypeName;
+                rtIdGift = UTIL_RecordTypes.GetRecordTypeId(Opportunity.sObjectType, recTypeName);
+                consSettings.Opp_RecTypes_Excluded_for_Payments__c=rtIdGift;
             }
         }
         

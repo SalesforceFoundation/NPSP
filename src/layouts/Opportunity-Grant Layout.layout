@@ -67,6 +67,14 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
+                <field>Qualified_Date__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Ask_Date__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
                 <field>Grant_Requirements_Website__c</field>
             </layoutItems>
             <layoutItems>
@@ -102,6 +110,10 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Is_Grant_Renewal__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Closed_Lost_Reason__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
@@ -253,6 +265,7 @@
     </relatedLists>
     <relatedLists>
         <fields>NAME</fields>
+        <fields>Type__c</fields>
         <fields>Grant_Deadline_Due_Date__c</fields>
         <fields>Grant_Deliverable_Close_Date__c</fields>
         <fields>Grant_Deliverable_Requirements__c</fields>

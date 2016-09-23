@@ -11,7 +11,8 @@
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Payments_Enabled__c.Label}" for="cbxPE" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <apex:inputCheckbox value="{!stgService.stgCon.npe01__Payments_Enabled__c}" disabled="{!isReadOnlyMode}" id="cbxPE" html-aria-describedby="{!$Component.cbxPEHelp}" />
+                    <apex:inputField value="{!stgService.stgCon.npe01__Payments_Enabled__c}" rendered="{!isEditMode}" id="cbxPE" html-aria-describedby="{!$Component.cbxPEHelp}" />
+                    <apex:outputField value="{!stgService.stgCon.npe01__Payments_Enabled__c}" rendered="{!isReadOnlyMode}" id="cbxPEO" html-aria-describedby="{!$Component.cbxPEHelp}" />
                     <apex:outputPanel id="cbxPEHelp" layout="block">
                         <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpPaymentsEnabled}" />
                     </apex:outputPanel>
@@ -30,7 +31,7 @@
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Opp_RecTypes_Excluded_for_Payments__c.Label}" for="idDBMS" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgCon}" fieldname="Opp_RecTypes_Excluded_for_Payments__c" listSO="{!listSOOppRecTypes}" inEditMode="{!isEditMode}" />
+                    <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgCon}" fieldname="Opp_RecTypes_Excluded_for_Payments__c" listSO="{!listSOOppRecTypesIds}" strValuesOverride="{!strOppRecTypesExcludedForPaymentsReadOnly}" inEditMode="{!isEditMode}" />
                     <apex:outputPanel layout="block">
                         <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpOppRecTypesNoPayments}" />
                     </apex:outputPanel>

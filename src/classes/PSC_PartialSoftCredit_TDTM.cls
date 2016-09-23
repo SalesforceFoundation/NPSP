@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2015
-* @group Opportunities
+* @group Opportunity
 * @description Trigger Handler on Partial Soft Credit for PSC management 
 */
 public class PSC_PartialSoftCredit_TDTM extends TDTM_Runnable {

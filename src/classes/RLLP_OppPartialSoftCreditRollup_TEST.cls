@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2015
+* @group Opportunity
 * @description test Soft Credit Rollups, both full and partial
 */
 
@@ -130,6 +131,55 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
         }       
     }
     */ 
+
+
+    /*******************************************************************************************************
+    * @description test that soft credit rollups do not double count an opp when two OCRs exist.
+    * @return void
+    */ 
+    static testmethod void testDuplicateOCRSoftCredits() {
+      if (strTestOnly != '*' && strTestOnly != 'testDuplicateOCRSoftCredits') return;
+      
+      Contact con = new Contact(lastname='Testy');
+      insert con;
+      con = [select Id, lastname, AccountId from Contact];
+      
+      list<Opportunity> listOpp = new list<Opportunity>();
+      String stage = UTIL_UnitTestData_TEST.getClosedWonStage();
+      Date dt = system.Today();
+      listOpp.add(new Opportunity(name='03', CloseDate=dt, Amount=100, Primary_Contact__c=con.Id, StageName=stage));
+      insert listOpp;
+
+      // primary OCR's automatically created
+      list<OpportunityContactRole> listOCR = [select Id, ContactId, OpportunityId, Role, IsPrimary from OpportunityContactRole];
+      system.assertEquals(listOpp.size(), listOCR.size());
+
+      List<OpportunityContactRole> dupeOCR = new List<OpportunityContactRole>();
+      // change them to Soft Credit OCR's
+      for (OpportunityContactRole ocr : listOCR) {
+          ocr.Role = 'Soft Credit';        
+          ocr.IsPrimary = false;
+          dupeOCR.add(new OpportunityContactRole(ContactId = ocr.ContactId, 
+                                                 OpportunityId = ocr.OpportunityId, 
+                                                 Role=ocr.Role, 
+                                                 IsPrimary = ocr.IsPrimary));
+      }
+      update listOCR;
+      insert dupeOCR;
+      
+      // run our Partial Soft Credit Rollups
+      RLLP_OppRollup rllp = new RLLP_OppRollup();
+      RLLP_OppRollup_UTIL util = new RLLP_OppRollup_UTIL();        
+      listCon = (list<Contact>)Database.query(util.buildContactQuery());
+      system.assertEquals(1, listCon.size());
+
+      Test.startTest();
+      rllp.rollupSoftCreditsWithPartialSupport(listCon);
+      Test.stopTest();
+      
+      Contact resultContact = [SELECT Id,npo02__Soft_Credit_Total__c FROM Contact WHERE Id =: con.Id LIMIT 1];
+      System.assertEquals(100, resultContact.npo02__Soft_Credit_Total__c);
+    }
 
     /*******************************************************************************************************
     * @description tests the new NPSP Soft Credit rollups for OCR's and Partial Soft Credits.

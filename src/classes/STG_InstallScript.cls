@@ -61,7 +61,12 @@ global without sharing class STG_InstallScript implements InstallHandler {
             sendEmailOnInstallError(e, context);
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             //We won't rethrow the exception, to avoid package failure installation due to install script error
-       }
+            return;
+        }
+        if (context.previousVersion() == null || context.previousVersion().compareTo(new Version(3, 79)) < 0) {
+            // update record type settings ONLY if upgrading from a version prior to 3.78
+            UTIL_RecordTypeSettingsUpdate.getInstance().updateSettings();
+        }
     }
 
     /*******************************************************************************************************
@@ -232,7 +237,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
             Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
             mail.setUseSignature(false);
             mail.setReplyTo('donotreply@salesforce.org');
-            mail.setSenderDisplayName('Nonprofit Starter Pack');
+            mail.setSenderDisplayName('Nonprofit Success Pack');
             mail.setSubject('NPSP Install Errors');
             String bodyString = Label.stgInstallScriptError;
             bodyString += '\n\n==========================. \n\n Error message: \n' + e.getMessage() + '\n\n'

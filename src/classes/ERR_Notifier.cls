@@ -91,7 +91,7 @@ public class ERR_Notifier {
     * @return void
     */
     private static void sendEmailNotifications(String context, List<String> sendList) {
-        if (!system.isBatch() && !system.isFuture() && Limits.getFutureCalls() < Limits.getLimitFutureCalls()) {
+        if (!system.isBatch() && !system.isFuture() && Limits.getAsyncCalls() < Limits.getLimitAsyncCalls()) {
             //We cannot pass the context, because only primitive types can be passed to future methods.
             sendErrorQueueEmailNotificationFuture(sendList);
         } else if (system.isFuture()) {
@@ -144,7 +144,7 @@ public class ERR_Notifier {
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
         mail.setUseSignature(false);
         mail.setReplyTo('donotreply@salesforce.org');
-        mail.setSenderDisplayName('Nonprofit Starter Pack');
+        mail.setSenderDisplayName('Nonprofit Success Pack');
         mail.setSubject('NPSP Error');
         string bodyString = 'Organization: ' + UserInfo.getOrganizationName() + '(' + UserInfo.getOrganizationId() + ')\n';
         bodyString += 'User: ' + UserInfo.getUserName() + '(' + UserInfo.getUserId() + ')';

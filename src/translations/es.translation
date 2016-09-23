@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Translations xmlns="http://soap.sforce.com/2006/04/metadata">
     <customApplications>
-        <label><!-- Nonprofit Starter Pack --></label>
+        <label><!-- Nonprofit Success Pack --></label>
         <name>Nonprofit_CRM</name>
     </customApplications>
     <customLabels>
@@ -742,6 +742,10 @@
         <name>healthDetailsDuplicateAcctRT</name>
     </customLabels>
     <customLabels>
+        <label><!-- The details displayed when the duplicate contact roles health check fails --></label>
+        <name>healthDetailsDuplicateContactRoles</name>
+    </customLabels>
+    <customLabels>
         <label>El campo de género {0} no existe en el Contacto.</label>
         <name>healthDetailsGenderField</name>
     </customLabels>
@@ -906,6 +910,10 @@
         <name>healthLabelContactData</name>
     </customLabels>
     <customLabels>
+        <label><!-- Label for Duplicate Contact Role health check --></label>
+        <name>healthLabelDuplicateContactRoles</name>
+    </customLabels>
+    <customLabels>
         <label>Receptor de notificaciones de errores válido.</label>
         <name>healthLabelErrorRecipientValid</name>
     </customLabels>
@@ -936,6 +944,10 @@
     <customLabels>
         <label>Corrió por última vez: {0}</label>
         <name>healthLabelLastRun</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- The message displayed when the duplicate contact roles health check passes --></label>
+        <name>healthLabelNoDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
         <label>Todas las Oportunidades con Pagos tienen los Pagos esperados.</label>
@@ -1052,6 +1064,10 @@
     <customLabels>
         <label>Vea estos contactos en el informe &lt;b&gt;Contacts without Accounts&lt;/b&gt; en la carpeta de informes NPSP Health Check.</label>
         <name>healthSolutionContactData</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- The recommended solution for when the duplicate contact roles health check fails --></label>
+        <name>healthSolutionDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
         <label>En la pestaña Configuración del NPSP, haga clic en {0} | {1}, y elimine el registro inválido Auto creación de relaciones.</label>
@@ -1684,7 +1700,7 @@
     <customLabels>
         <label>Al seleccionar esta opción se activa el período de año fiscal, en lugar de año calendario, para los totales acumulativos. 
 Para configurar la información de ejercicio o período, vaya a Configuración | Perfil de la empresa | Año fiscal. 
-NOTA : El paquete Non Profit Starter Pack no es compatible con la configuración personalizada del año fiscal .</label>
+NOTA : El paquete Non Profit Success Pack no es compatible con la configuración personalizada del año fiscal .</label>
         <name>stgHelpAlloFiscalYearRollups</name>
     </customLabels>
     <customLabels>
@@ -1854,11 +1870,11 @@ Una vez que el proceso se completó al 100%, puede abandonar o actualizar esta p
         <name>stgHelpHHOCROn</name>
     </customLabels>
     <customLabels>
-        <label>El Nonprofit Starter Pack admite dos maneras diferentes de realizar un seguimiento a familias. La forma recomendada es Cuenta Familia, que usará una Cuenta como la Familia del Contacto. Sin embargo, si esta utilizando Uno-a-Uno o Individual, puede opcionalmente usar el objeto Familias como la Familia del contacto
+        <label>El Nonprofit Success Pack admite dos maneras diferentes de realizar un seguimiento a familias. La forma recomendada es Cuenta Familia, que usará una Cuenta como la Familia del Contacto. Sin embargo, si esta utilizando Uno-a-Uno o Individual, puede opcionalmente usar el objeto Familias como la Familia del contacto
 &lt;br/&gt;&lt;br/&gt;
-El objeto Familias y sus modelos de cuenta asociados ya no son recomendados. Sin embargo, si esta utilizando el modelo de cuenta Uno-a-Uno o Individual de versiones anteriores del Nonprofit Starter Pack, puede cambiar la configuración del objeto Familias acá.
+El objeto Familias y sus modelos de cuenta asociados ya no son recomendados. Sin embargo, si esta utilizando el modelo de cuenta Uno-a-Uno o Individual de versiones anteriores del Nonprofit Success Pack, puede cambiar la configuración del objeto Familias acá.
 &lt;br/&gt;&lt;br/&gt;
-Para aprender más sobre el modelo de Cuenta Familia recomendado, ver &lt;a href=&quot;https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-3-Documentation&quot; target=&quot;_new&quot;&gt;NPSP Documentation&lt;/a&gt;.</label>
+Para aprender más sobre el modelo de Cuenta Familia recomendado, ver &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_new&quot;&gt;NPSP Documentation&lt;/a&gt;.</label>
         <name>stgHelpHHObjectOverview</name>
     </customLabels>
     <customLabels>
@@ -2157,7 +2173,7 @@ Una vez que el procesos es 100% completo, usted puede abandonar est página o re
         <name>stgHelpTHTriggerAction</name>
     </customLabels>
     <customLabels>
-        <label>Estos triggers controlan funcionalidad básica en el Nonprofit Starter Pack, por lo que por favor ejercite extrema precaución al modificarlos.</label>
+        <label>Estos triggers controlan funcionalidad básica en el Nonprofit Success Pack, por lo que por favor ejercite extrema precaución al modificarlos.</label>
         <name>stgHelpTriggerHandlers</name>
     </customLabels>
     <customLabels>
@@ -2179,7 +2195,7 @@ Una vez que el procesos es 100% completo, usted puede abandonar est página o re
     <customLabels>
         <label>Su instalación se realizó correctamente, pero detectó un pequeño problema. Para solucionar el problema, sólo tiene que cargar la página Configuración de NPSP en Salesforce.
 
-Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Starter Pack. Si no ve la pestaña, seleccione Nonprofit Starter Pack desde el menú de aplicaciones en la esquina superior derecha.</label>
+Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Success Pack. Si no ve la pestaña, seleccione Nonprofit Success Pack desde el menú de aplicaciones en la esquina superior derecha.</label>
         <name>stgInstallScriptError</name>
     </customLabels>
     <customLabels>
@@ -2455,7 +2471,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Sta
         <name>stgLinkDelete</name>
     </customLabels>
     <customLabels>
-        <label>Configuración del Non Profit Starter Pack</label>
+        <label>Configuración del Non Profit Success Pack</label>
         <name>stgNPSPSettingsTitle</name>
     </customLabels>
     <customLabels>

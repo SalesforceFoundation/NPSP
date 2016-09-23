@@ -21,7 +21,7 @@
                         <p>{!$Label.CONV_Page_Description}</p>
                     </div>
                     <div class="slds-media__figure slds-media__figure--reverse">
-                        <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/NPSP_Logo_Small_Cropped.png')}" class="img-rounded img-responsive" style="height: 75px" alt="NPSP Logo"/>
+                        <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/RGB_npsp-stacked-color.png')}" class="img-rounded img-responsive" style="height: 75px" alt="NPSP Logo"/>
                     </div>
                 </div>
             </div>
@@ -54,6 +54,14 @@
                                         <input name="checkbox" type="checkbox" id="check-data-backedup" />
                                         <span class="slds-checkbox--faux"></span>
                                         <span class="slds-form-element__label">{!$Label.CONV_All_Backed_Up}</span>
+                                    </label>
+                                </div>
+
+                                <div class="slds-form-element">
+                                    <label class="slds-checkbox" for="check-dup-disabled">
+                                        <input name="checkbox" type="checkbox" id="check-dup-disabled" />
+                                        <span class="slds-checkbox--faux"></span>
+                                        <span class="slds-form-element__label">{!$Label.CONV_All_Dup_Rules_Disabled}</span>
                                     </label>
                                 </div>
 
@@ -181,6 +189,7 @@
                                     {!$Label.CONV_Begin}
                                 </button>
                             </div>
+                            <apex:actionFunction name="convert" action="{!convert}" reRender="pageMessages" oncomplete="afterConvert()"/>
                         </apex:form>
                     </div>
                 </div>
@@ -226,10 +235,6 @@
             </div>
             <div class="slds-backdrop" tabindex="-1"></div>
         </div>
-
-        <apex:form >
-            <apex:actionFunction name="convert" action="{!convert}" reRender="pageMessages" oncomplete="afterConvert()"/>
-        </apex:form>
 
         <script type="text/javascript">
             var conversionButtonElement = document.getElementById('conversionBTN');
