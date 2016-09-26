@@ -1,4 +1,4 @@
-![Salesforce Nonprofit Success Pack](https://cloud.githubusercontent.com/assets/926530/6358168/b55fec9c-bc37-11e4-88c8-40691541bad2.png "Salesforce Nonprofit Success Pack")
+![Salesforce Nonprofit Success Pack](https://cloud.githubusercontent.com/assets/450473/18836784/15e1774a-83c7-11e6-8434-0521d4fbebc0.png "Salesforce Nonprofit Success Pack")
 
 #### For Users
 
