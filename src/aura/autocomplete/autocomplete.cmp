@@ -32,7 +32,7 @@
 
     <div class="sfdo203" aura:id="autocomplete">
         <div
-             class="{!'slds-lookup ' + (and(v.showPills, !empty(v.value), !empty(v.displayValue)) ? 'slds-has-selection' : '')}"
+             class="{!'slds-lookup ' + (and(!empty(v.value), !empty(v.displayValue)) ? 'slds-has-selection' : '')}"
              data-select="single"
              data-scope="single"
              data-typeahead="true">
@@ -46,7 +46,7 @@
                            xlinkHref="{!$Resource.sfdo203 + '/assets/icons/utility-sprite/svg/symbols.svg#search'}"
                            />
                     <ui:inputText aura:id="input"
-                                  class="{!'slds-input ' + (and(v.showPills, !empty(v.value), !empty(v.displayValue)) ? 'slds-hide' : '')}"
+                                  class="{!'slds-input ' + (and(!empty(v.value), !empty(v.displayValue)) ? 'slds-hide' : '')}"
                                   placeholder="{!v.placeholder}"
                                   value="{!v.displayValue}"
                                   updateOn="keyup"
