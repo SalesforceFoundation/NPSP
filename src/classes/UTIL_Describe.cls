@@ -400,7 +400,7 @@ public class UTIL_Describe {
     * @param fieldName The name of the field.
     * @return String The default select option for this picklist field.
     */
-    private String getDefaultSelectOption(String objectName, String fieldName) {
+    public static String getDefaultSelectOption(String objectName, String fieldName) {
         Schema.DescribeFieldResult describeField = getFieldDescribe(objectName, fieldName);
         if (describeField.getType() == Schema.DisplayType.PICKLIST) {
             for (Schema.PicklistEntry entry : describeField.getPicklistValues()) {

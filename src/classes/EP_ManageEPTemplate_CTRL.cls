@@ -86,28 +86,13 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         }
     }
 
-    /** @description Returns the default SelectOption for a given object and picklist field name.
-    * @param objectName The name of the object.
-    * @param fieldName The name of the field.
-    * @return String The default select option for this picklist field.
-    */
-    private String defaultSelectOption(String objectName, String fieldName) {
-        Schema.DescribeFieldResult describeField = UTIL_Describe.getFieldDescribe(objectName, fieldName);
-        for (Schema.PicklistEntry entry : describeField.getPicklistValues()) {
-            if (entry.isDefaultValue()) {
-                return entry.getValue();
-            }
-        }
-        return null;
-    }
-
     /** @description Creates an Engagement Plan Task with defaults set for required picklist fields.
     * @return Engagement_Plan_Task__c A new Engagement Plan Task.
     */
     private Engagement_Plan_Task__c getTaskDefaults() {
         Engagement_Plan_Task__c result = new Engagement_Plan_Task__c(
-            Priority__c = defaultSelectOption('Task','Priority'),
-            Status__c = defaultSelectOption('Task','Status')
+            Priority__c = UTIL_Describe.getDefaultSelectOption('Task','Priority'),
+            Status__c = UTIL_Describe.getDefaultSelectOption('Task','Status')
         );
         return result;
     }
@@ -150,7 +135,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     }
 
     /** @description Iterates over tasks related to the current template, creating a list of parent
-    * EP tasks and a Hierarchy of wrappers.*/
+    * EP tasks and a hierarchy of wrappers.*/
     public void initWrapperHierarchy() {
         parentTaskWrappers = new list<TaskWrapper>();
         
@@ -169,7 +154,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         }
     }
 
-    /** @description Navigates the Hierarchy of Engagement Plan Tasks and recursively creates a wrapper Hierarchy.
+    /** @description Navigates the hierarchy of Engagement Plan Tasks and recursively creates a wrapper Hierarchy.
     * @param wrapper The TaskWrapper to create children wrappers for.
     * @return void This method updates class properties.
     */
@@ -295,7 +280,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         return null;
     }
 
-    /** @description Removes a given wrapper from the Hierarchy by removing the current wrapper from the parent's list
+    /** @description Removes a given wrapper from the hierarchy by removing the current wrapper from the parent's list
     * of children, and adding current children to parent's list of children. 
     * @param wrapper The TaskWrapper to remove from the wrapper Hierarchy.
     * @return void This method updates class properties.
@@ -392,8 +377,8 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     * task's children.
     * @param wrapper The TaskWrapper for the current Engagement Plan Task.
     * @param level The number for which child record we're at in the current place of the Hierarchy.
-    * @param accessString The string for accessing the current place in the Hierarchy using a nested expression.
-    * @param levelString The numbered Hierarchy level for naming and accessing EP Tasks.
+    * @param accessString The string for accessing the current place in the hierarchy using a nested expression.
+    * @param levelString The numbered hierarchy level for naming and accessing EP Tasks.
     * @return Component.Apex.OutputPanel A form for an EP Task and its children.
     */
     private Component.Apex.OutputPanel addChildComponents(TaskWrapper wrapper, Integer level, String accessString, String levelString) {
@@ -407,7 +392,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         Component.Apex.OutputPanel topLevelPanel = new Component.Apex.OutputPanel(styleClass='slds-m-left--medium slds-m-top--small', layout='block');
         Component.Apex.OutputPanel formPanel = new Component.Apex.OutputPanel();
     
-        //creates a box around the form with a label for the Hierarchy level, and a color bar to more easily grock which level we're at
+        //creates a box around the form with a label for the hierarchy level, and a color bar to more easily grock which level we're at
         Component.Apex.OutputText boxAndLabel = new Component.Apex.OutputText(value='<div aria-labelledby="task' + wrapper.level + 
             '", class="slds-m-left--medium slds-m-top--small"><fieldset class="slds-box slds-theme--default slds-container--fluid '+
             'slds-p-around--small", style="border-left: 6px solid ' + sidebarColors[colorNumber] + '"><legend id=task' + wrapper.level + 
@@ -486,7 +471,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
 
     /** @description Generates the markup for an SLDS styled apex:inputField.
     * @param wrapper The TaskWrapper for the current Engagement Plan Task.
-    * @param accessString The string for accessing the current place in the Hierarchy using a nested expression.
+    * @param accessString The string for accessing the current place in the hierarchy using a nested expression.
     * @param fieldName The name of the field.
     * @param outterCss CSS markup for the field input container.
     * @param inputCss CSS markup for the input itself.
@@ -508,7 +493,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
 
     /** @description Generates the markup for an SLDS styled picklist.
     * @param wrapper The TaskWrapper for the current Engagement Plan Task.
-    * @param accessString The string for accessing the current place in the Hierarchy using a nested expression.
+    * @param accessString The string for accessing the current place in the hierarchy using a nested expression.
     * @param fieldName The name of the field.
     * @param outterCss CSS markup for the field input container.
     * @param inputCss CSS markup for the input itself.
@@ -537,7 +522,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
 
     /** @description Generates the markup for an SLDS styled text area.
     * @param wrapper The TaskWrapper for the current Engagement Plan Task.
-    * @param accessString The string for accessing the current place in the Hierarchy using a nested expression.
+    * @param accessString The string for accessing the current place in the hierarchy using a nested expression.
     * @param fieldName The name of the field.
     * @param outterCss CSS markup for the field input container.
     * @param inputCss CSS markup for the input itself.
