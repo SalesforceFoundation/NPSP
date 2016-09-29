@@ -117,7 +117,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         }
     }
 
-    /** @description Constructor queries for tasks related to this template and fills out task wrapper Hierarchy.*/
+    /** @description Constructor queries for tasks related to this template and fills out task wrapper hierarchy.*/
     public EP_ManageEPTemplate_CTRL(ApexPages.StandardController controller) {
         checkFLS();
 
@@ -154,7 +154,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         }
     }
 
-    /** @description Navigates the hierarchy of Engagement Plan Tasks and recursively creates a wrapper Hierarchy.
+    /** @description Navigates the hierarchy of Engagement Plan Tasks and recursively creates a wrapper hierarchy.
     * @param wrapper The TaskWrapper to create children wrappers for.
     * @return void This method updates class properties.
     */
@@ -234,7 +234,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         return null;
     }
 
-    /** @description Adds a new dependent EP task to the Hierarchy. */
+    /** @description Adds a new dependent EP task to the hierarchy. */
     public pageReference addDependentTask() {
         TaskWrapper parentTask = mapTaskWrappers.get(currentTaskLevel);
 
@@ -282,7 +282,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
 
     /** @description Removes a given wrapper from the hierarchy by removing the current wrapper from the parent's list
     * of children, and adding current children to parent's list of children. 
-    * @param wrapper The TaskWrapper to remove from the wrapper Hierarchy.
+    * @param wrapper The TaskWrapper to remove from the wrapper hierarchy.
     * @return void This method updates class properties.
     */
 
@@ -324,7 +324,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     /** @description A map of level strings to TaskWrappers to easily get the current wrapper.*/
     public Map<String, TaskWrapper> mapTaskWrappers {get; set;}
 
-    /** @description Inner class wrapper of Engagement Plan Tasks to enable displaying the nested Hierarchy.*/
+    /** @description Inner class wrapper of Engagement Plan Tasks to enable displaying the nested hierarchy.*/
     public Class TaskWrapper {
         public Engagement_Plan_Task__c detail { get; set; }
         public List<TaskWrapper> children { get; set; }
@@ -376,7 +376,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     /** @description Generates the markup for a single Engagement Plan Task form, then calls itself recursively for that
     * task's children.
     * @param wrapper The TaskWrapper for the current Engagement Plan Task.
-    * @param level The number for which child record we're at in the current place of the Hierarchy.
+    * @param level The number for which child record we're at in the current place of the hierarchy.
     * @param accessString The string for accessing the current place in the hierarchy using a nested expression.
     * @param levelString The numbered hierarchy level for naming and accessing EP Tasks.
     * @return Component.Apex.OutputPanel A form for an EP Task and its children.
