@@ -56,7 +56,7 @@ public with sharing class EP_EngagementPlans_UTIL {
                     Schema.DescribeFieldResult fieldDescribe = fieldDescribeMap.get(fieldName);
                     if (fieldDescribe.getRelationshipName() != null && fieldDescribe.isCustom()) { 
                         if (fieldName != UTIL_Namespace.StrTokenNSPrefix('Engagement_Plan_Template__c')) {
-                            lookupFieldsToRelationship.put(fieldName, fieldDescribe.getRelationshipName() + '.OwnerId');
+                            lookupFieldsToRelationship.put(fieldName, fieldDescribe.getRelationshipName()+'.' + String.join(SObjectOwner.getOwnerIdPath(fieldDescribe.getReferenceTo()[0]),'.'));
                         }
                     }
                 }
@@ -84,9 +84,19 @@ public with sharing class EP_EngagementPlans_UTIL {
             String targetField = targetFieldMap.get(engagementPlan.id);
             if (!String.isBlank(targetField)) {
                 targetObjectIdMap.put(engagementPlan.id, (Id)engagementPlan.get(targetField));
+                
                 //split the lookup_field__r.OwnerId reference for dynamic referencing
-                List<String> splitRef = lookupFieldsToRelationship.get(targetField).split('\\.');
-                targetOwnerMap.put(engagementPlan.id, (Id)engagementPlan.getSObject(splitRef[0]).get(splitRef[1]));
+                String pathToOwner = lookupFieldsToRelationship.get(targetField);
+                SObject currentSObject = engagementPlan;
+                while (pathToOwner.contains('.')){
+    				List<String> cons = pathToOwner.split ('[.]', 2);
+
+                 	currentSObject = (SObject) currentSObject.getSobject(cons[0]);
+                 	pathToOwner = cons[1];
+                }
+
+                
+                targetOwnerMap.put(engagementPlan.id, (id)currentSobject.get(pathToOwner));
             }
         }
     }
@@ -129,4 +139,30 @@ public with sharing class EP_EngagementPlans_UTIL {
         }
         return targetObjectField;
     }
+    
+    public static List<String> getOwnerIdPath(SObjectType t) {
+        List<String> result = new List<String>();
+        DescribeSObjectResult obj = t.getDescribe();
+		Map<String, Schema.SObjectField> fieldMap = obj.fields.getMap();
+        if(fieldMap.containsKey('OwnerId')) {
+            result.add('OwnerId');
+            return result;
+        }
+        if(fieldMap.containsKey('ParentId')) {
+            result.add('Parent');
+            result.addAll(getOwnerIdPath(fieldMap.get('ParentId').getDescribe().getReferenceTo()[0]));
+            return result;
+        }
+        for(Schema.SObjectField f : fieldMap.values()) {
+            Schema.DescribeFieldResult dfr = f.getDescribe();
+            List <Schema.sObjectType> refs = dfr.getReferenceTo();
+            if(refs.size() > 0 && dfr.getRelationshipOrder() == 0 ) {
+                result.add(dfr.getRelationshipName());
+                result.addAll(getOwnerIdPath(refs[0]));
+                break;
+            }
+        }
+        return result;
+    }
+
 }
