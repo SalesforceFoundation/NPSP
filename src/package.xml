@@ -1483,11 +1483,10 @@
         <name>CustomLabel</name>
     </types>
     <types>
-        <name>CustomLabel</name>
+        <members>CustomLabels</members>
+        <name>CustomLabels</name>
     </types>
     <types>
-        <members>Account</members>
-        <members>Activity</members>
         <members>Addr_Verification_Settings__c</members>
         <members>Address_Verification_Settings__c</members>
         <members>Address__c</members>
@@ -1495,7 +1494,6 @@
         <members>Allocations_Settings__c</members>
         <members>Batch_Data_Entry_Settings__c</members>
         <members>Batch__c</members>
-        <members>Contact</members>
         <members>DataImport__c</members>
         <members>Data_Import_Settings__c</members>
         <members>Engagement_Plan_Task__c</members>
@@ -1507,9 +1505,7 @@
         <members>General_Accounting_Unit__c</members>
         <members>Grant_Deadline__c</members>
         <members>Household_Naming_Settings__c</members>
-        <members>Lead</members>
         <members>Level__c</members>
-        <members>Opportunity</members>
         <members>Opportunity_Naming_Settings__c</members>
         <members>Partial_Soft_Credit__c</members>
         <members>Schedulable__c</members>
@@ -1675,6 +1671,7 @@
         <members>Contact.BDE_Entry_FS</members>
         <members>Contact.BDE_List_FS</members>
         <members>Contact.ContactMergeFoundFS</members>
+        <members>Engagement_Plan_Template__c.ManageEPTemplateFS</members>
         <members>Lead.BDE_Entry_FS</members>
         <members>Lead.BDE_List_FS</members>
         <members>Level__c.LevelEdit</members>
@@ -1731,9 +1728,6 @@
     </types>
     <types>
         <members>Contact.NPSP_Contact_Personal_Email_Match</members>
-        <name>MatchingRule</name>
-    </types>
-    <types>
         <name>MatchingRule</name>
     </types>
     <types>
@@ -1817,10 +1811,6 @@
         <members>Opportunity.Refresh_Name</members>
         <members>Partial_Soft_Credit__c.Manage_Soft_Credits</members>
         <name>WebLink</name>
-    </types>
-    <types>
-        <members>Opportunity</members>
-        <name>Workflow</name>
     </types>
     <types>
         <members>Opportunity.Opportunity_Email_Acknowledgment</members>
