@@ -633,7 +633,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>NameRequired</shortDescription>
-        <value>Name is a required field.</value>
+        <value>Subject is a required field.</value>
     </labels>
     <labels>
         <fullName>PageMessagesConfirm</fullName>
