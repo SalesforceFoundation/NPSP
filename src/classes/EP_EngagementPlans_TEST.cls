@@ -372,6 +372,14 @@ private with sharing class EP_EngagementPlans_TEST {
         System.assertNotEquals(null, caughtException, 'An exception should be caught.');
         System.assert(caughtException.getMessage().contains(Label.engagementPlanCantEdit));
     }
+    
+    /*********************************************************************************************************
+    * @description tests the helper method that finds a path to ownerId.
+    */
+    static testmethod void test_getsobjectparentpath() {
+        System.assertEquals(new List<String>{'OwnerId'},EP_EngagementPlans_UTIL.getOwnerIdPath(Opportunity.SObjectType));
+        System.assertEquals(new List<String>{UTIL_Namespace.StrTokenNSPrefix('Household_Account__r'),'OwnerId'},EP_EngagementPlans_UTIL.getOwnerIdPath(Address__c.SObjectType));
+    }
 
     /*********************************************************************************************************
     * @description Returns the user id of an active user other than the current one if one exists, 
