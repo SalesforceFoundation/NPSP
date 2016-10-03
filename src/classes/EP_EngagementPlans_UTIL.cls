@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2016, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -15,16 +15,16 @@
       from this software without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -54,9 +54,9 @@ public with sharing class EP_EngagementPlans_UTIL {
                 lookupFieldsToRelationship = new Map<String, String>();
                 for (String fieldName : fieldDescribeMap.keySet()) {
                     Schema.DescribeFieldResult fieldDescribe = fieldDescribeMap.get(fieldName);
-                    if (fieldDescribe.getRelationshipName() != null && fieldDescribe.isCustom()) { 
+                    if (fieldDescribe.getRelationshipName() != null && fieldDescribe.isCustom()) {
                         if (fieldName != UTIL_Namespace.StrTokenNSPrefix('Engagement_Plan_Template__c')) {
-                            lookupFieldsToRelationship.put(fieldName, fieldDescribe.getRelationshipName() + '.OwnerId');
+                            lookupFieldsToRelationship.put(fieldName, fieldDescribe.getRelationshipName()+'.' + String.join(getOwnerIdPath(fieldDescribe.getReferenceTo()[0]),'.'));
                         }
                     }
                 }
@@ -84,9 +84,19 @@ public with sharing class EP_EngagementPlans_UTIL {
             String targetField = targetFieldMap.get(engagementPlan.id);
             if (!String.isBlank(targetField)) {
                 targetObjectIdMap.put(engagementPlan.id, (Id)engagementPlan.get(targetField));
+
                 //split the lookup_field__r.OwnerId reference for dynamic referencing
-                List<String> splitRef = lookupFieldsToRelationship.get(targetField).split('\\.');
-                targetOwnerMap.put(engagementPlan.id, (Id)engagementPlan.getSObject(splitRef[0]).get(splitRef[1]));
+                String pathToOwner = lookupFieldsToRelationship.get(targetField);
+                SObject currentSObject = engagementPlan;
+                while (pathToOwner.contains('.')){
+    				List<String> cons = pathToOwner.split ('[.]', 2);
+
+                 	currentSObject = (SObject) currentSObject.getSobject(cons[0]);
+                 	pathToOwner = cons[1];
+                }
+
+
+                targetOwnerMap.put(engagementPlan.id, (id)currentSobject.get(pathToOwner));
             }
         }
     }
@@ -110,7 +120,7 @@ public with sharing class EP_EngagementPlans_UTIL {
     /*******************************************************************************************************
     * @description Iterates over each lookup field for an Engagement Plan, verifies that one and only
     * one of these fields is populated, and returns that field name.
-    * @param engagementPlan The Engagement Plan 
+    * @param engagementPlan The Engagement Plan
     * @return String The name of the lookup field that is populated.
     ********************************************************************************************************/
     public static String getTargetObjectField(Engagement_Plan__c engagementPlan) {
@@ -129,4 +139,30 @@ public with sharing class EP_EngagementPlans_UTIL {
         }
         return targetObjectField;
     }
+
+    public static List<String> getOwnerIdPath(SObjectType t) {
+        List<String> result = new List<String>();
+        DescribeSObjectResult obj = t.getDescribe();
+		Map<String, Schema.SObjectField> fieldMap = obj.fields.getMap();
+        if(fieldMap.containsKey('OwnerId')) {
+            result.add('OwnerId');
+            return result;
+        }
+        if(fieldMap.containsKey('ParentId')) {
+            result.add('Parent');
+            result.addAll(getOwnerIdPath(fieldMap.get('ParentId').getDescribe().getReferenceTo()[0]));
+            return result;
+        }
+        for(Schema.SObjectField f : fieldMap.values()) {
+            Schema.DescribeFieldResult dfr = f.getDescribe();
+            List <Schema.sObjectType> refs = dfr.getReferenceTo();
+            if(refs.size() > 0 && dfr.getRelationshipOrder() == 0 ) {
+                result.add(dfr.getRelationshipName());
+                result.addAll(getOwnerIdPath(refs[0]));
+                break;
+            }
+        }
+        return result;
+    }
+
 }
