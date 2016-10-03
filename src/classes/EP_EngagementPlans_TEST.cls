@@ -378,7 +378,7 @@ private with sharing class EP_EngagementPlans_TEST {
     */
     static testmethod void test_getsobjectparentpath() {
         System.assertEquals(new List<String>{'OwnerId'},EP_EngagementPlans_UTIL.getOwnerIdPath(Opportunity.SObjectType));
-        System.assertEquals(new List<String>{'Household_Account__r','OwnerId'},EP_EngagementPlans_UTIL.getOwnerIdPath(Address__c.SObjectType));
+        System.assertEquals(new List<String>{UTIL_Namespace.StrTokenNSPrefix('Household_Account__r'),'OwnerId'},EP_EngagementPlans_UTIL.getOwnerIdPath(Address__c.SObjectType));
     }
 
     /*********************************************************************************************************
