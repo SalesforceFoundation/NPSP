@@ -33,7 +33,7 @@
 * @group Recurring Donations
 * @description Class provides a batchable wrapper for open ended recurring donations
 */
-public without sharing class RD_RecurringDonations_BATCH implements Database.Batchable<sObject>, Database.Stateful, 
+public without sharing class RD_RecurringDonations_BATCH implements Database.Batchable<sObject>, Database.Stateful,
 UTIL_MasterSchedulableHelper.UTIL_IRecurring {
 	
     /*******************************************************************************************************
@@ -78,6 +78,9 @@ UTIL_MasterSchedulableHelper.UTIL_IRecurring {
     * @return database.Querylocator  
     */
     public database.Querylocator start(Database.BatchableContext bc) {
+        // this must return a QueryLocator, or else uncaught exceptions in the
+        // execute() method will not properly update the processed/failure
+        // counts (see W-2443023).
         return Database.getQueryLocator(query);      
     }
     
@@ -88,15 +91,9 @@ UTIL_MasterSchedulableHelper.UTIL_IRecurring {
     * @return void  
     */
     public void execute(Database.BatchableContext bc, Sobject[] result) {
-    	Savepoint sp = Database.setSavepoint();
-        try {
-	        RD_ProcessControl.batchButton = true;
-	        recCount += result.size();
-	        failuresCount = RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(result);
-	    } catch(Exception e) {
-            Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler_API.Context.RD);
-        }    
+        RD_ProcessControl.batchButton = true;
+        recCount += result.size();
+        failuresCount = RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(result);
     }
 
     /*******************************************************************************************************
@@ -115,9 +112,6 @@ UTIL_MasterSchedulableHelper.UTIL_IRecurring {
         rds.npe03__Number_of_Failures__c = failuresCount;
         if (!Test.isRunningTest())
             upsert rds;                            
-        
-        //if needed, send error notifications
-        ERR_Notifier.sendErrorNotifications(ERR_Handler_API.Context.RD.name());        
     }
     
     

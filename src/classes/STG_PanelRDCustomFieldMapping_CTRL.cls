@@ -186,13 +186,13 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
     * @return string
     */
     private string getFieldLabel(string strObj, string strField) {
-        try {
-            return UTIL_Describe.getFieldLabel(strObj, strField);                   
-        } catch (Exception e) {
+        if (UTIL_Describe.isValidField(strObj, strField)) {
+            return UTIL_Describe.getFieldLabel(strObj, strField);
+        } else {
             return strField;
-        }       
+        }
     }
-        
+
     /*********************************************************************************************************
     * @description Set of invalid fields for opp mappings
     */

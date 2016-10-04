@@ -15,7 +15,6 @@
               <div class="slds-grid">
                 <div class="slds-col">
                   <p class="slds-text-heading--medium">Manage Engagement Plan Template</p>
-                  <!--h1 class="slds-text-heading- -medium">My Expenses</h1-->
                 </div>
                 <div class="slds-col slds-no-flex slds-align-middle">
                     <div class="slds-button-group" role="group">
@@ -105,7 +104,7 @@
                     </div>
                 </apex:outputPanel>
             </form>
-            <p class="slds-text-heading--medium slds-p-top--medium">Manage Engagement Plan Tasks</p>
+            <p class="slds-text-heading--medium slds-p-top--medium">{!$Label.EPManageTasks}</p>
             <apex:outputPanel layout="block" styleClass="slds-grid" id="taskTree">
                 <div class="slds-col slds-m-top--medium slds-m-right--medium slds-size--1-of-1">
                     <apex:dynamicComponent componentValue="{!taskTree}"/>
@@ -120,7 +119,7 @@
         </apex:actionFunction>
         <!--spinner status-->
         <apex:actionStatus id="statusLoad"
-                    onstart="document.getElementById('divLoading').style.display = 'block';console.log('started');"
-                    onstop="document.getElementById('divLoading').style.display = 'none';console.log('done');" />
+                    onstart="document.getElementById('divLoading').style.display = 'block';"
+                    onstop="document.getElementById('divLoading').style.display = 'none';" />
     </apex:form>
 </apex:page>
