@@ -327,7 +327,7 @@ public without sharing class HH_HouseholdNaming {
 
                     if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
                     	string hName = (string)h.get('Name');
-                        if ((hName == null || hName == '' || hName == system.Label.npo02.NameReplacementText)) {
+                        if (hName == null || hName == '' || hName == system.Label.npo02.NameReplacementText) {
                             if (customnameset.contains('Name')) {
                                 customname = customname.replace('Name;', ';');
                             }
@@ -337,27 +337,29 @@ public without sharing class HH_HouseholdNaming {
                         }
 
                         string informalGreeting = (string)h.get('npo02__Informal_Greeting__c');
-                        if (informalGreeting != null &&
-                            informalGreeting != mapIdHHOld.get(h.id).get('npo02__Informal_Greeting__c') &&
+                        if (informalGreeting == null || informalGreeting == '' || informalGreeting == system.Label.npo02.NameReplacementText) {
+                            if (customnameset.contains('Informal_Greeting__c')) {
+                                customname = customname.replace('Informal_Greeting__c;', ';');
+                            }
+                            h.put('npo02__Informal_Greeting__c', system.Label.npo02.NameReplacementText);
+                        } else if (informalGreeting != mapIdHHOld.get(h.id).get('npo02__Informal_Greeting__c') && 
                             !customnameset.contains('Informal_Greeting__c')) {
                             customname += 'Informal_Greeting__c' + ';';
-                        } else if ((informalGreeting == null || informalGreeting == '' || informalGreeting == system.Label.npo02.NameReplacementText) &&
-                            customnameset.contains('Informal_Greeting__c')) {
-                            customname = customname.replace('Informal_Greeting__c;', ';');
-                            h.put('npo02__Informal_Greeting__c', system.Label.npo02.NameReplacementText);
                         }
 
                         string formalGreeting = (string)h.get('npo02__Formal_Greeting__c');
-                        if (formalGreeting != null &&
-                            formalGreeting != mapIdHHOld.get(h.id).get('npo02__Formal_Greeting__c') &&
+                        if (formalGreeting == null || formalGreeting == '' || formalGreeting == system.Label.npo02.NameReplacementText) {
+                            if (customnameset.contains('Formal_Greeting__c')) {
+                                customname = customname.replace('Formal_Greeting__c;', ';');
+                            }
+                            h.put('npo02__Formal_Greeting__c', system.Label.npo02.NameReplacementText);
+                        } else if (formalGreeting != mapIdHHOld.get(h.id).get('npo02__Formal_Greeting__c') &&
                             !customnameset.contains('Formal_Greeting__c')) {
                             customname += 'Formal_Greeting__c' + ';';
-                        } else if ((formalGreeting == null || formalGreeting == '' || formalGreeting == system.Label.npo02.NameReplacementText) &&
-                            customnameset.contains('Formal_Greeting__c')) {
-                            customname = customname.replace('Formal_Greeting__c;', ';');
-                            h.put('npo02__Formal_Greeting__c', system.Label.npo02.NameReplacementText);
                         }
+                            
                         h.put('npo02__SYSTEM_CUSTOM_NAMING__c', customname);
+
                     } else if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                         if (h.get('Name') == system.Label.npo02.NameReplacementText)
                            hhlist.add(h.id);
