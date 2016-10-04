@@ -38,64 +38,7 @@
 @isTest
 public with sharing class ERR_AddError_TEST {
     /*******************************************************************************************************
-    * @description test error handling on a simple dml operation, single error
-    */
-    public testmethod static void simpleDml() {
-        Account acc1 = new Account(Name='testAcc1');
-        Account acc2 = new Account(Name='testAcc2');
-        Account acc3 = new Account(Name='testAcc3');
-        insert new Account[] {acc1, acc2, acc3};
-        
-        Contact contact1 = new Contact(FirstName = 'test1', LastName = 'testerson', AccountId = acc1.Id, Title = 'VP');
-        Contact contact2 = new Contact(FirstName = 'test2', LastName = 'testerson', AccountId = acc2.Id, Title = 'VP');
-        Contact contact3 = new Contact(FirstName = 'test3', LastName = 'testerson', AccountId = acc3.Id, Title = 'VP');
-        Contact[] contacts = new Contact[] {contact1, contact2, contact3};
-        
-        delete acc2;
-        
-        try {
-        	TDTM_TriggerHandler.suppressDebugAssertAfterErrorLogging = true;
-            insert contacts;
-        } catch(DmlException e) {
-            System.assertEquals(1, e.getNumDml());
-            Integer failedRecordIndex = e.getDmlIndex(0); //Position of failed record in original list
-            //The first (and only) error happened in the second record upon which the DML was performed
-            System.assertEquals(1, failedRecordIndex);
-        }
-    }
-    /*******************************************************************************************************
-    * @description test error handling on a simple dml operation, multiple errors
-    */
-    public testmethod static void simpleDmlMultipleErrors() {
-        Account acc1 = new Account(Name='testAcc1');
-        Account acc2 = new Account(Name='testAcc2');
-        Account acc3 = new Account(Name='testAcc3');
-        Account acc4 = new Account(Name='testAcc4');     
-        insert new Account[] {acc1, acc2, acc3, acc4};
-        
-        Contact contact1 = new Contact(FirstName = 'test1', LastName = 'testerson', AccountId = acc1.Id, Title = 'VP');
-        Contact contact2 = new Contact(FirstName = 'test2', LastName = 'testerson', AccountId = acc2.Id, Title = 'VP');
-        Contact contact3 = new Contact(FirstName = 'test3', LastName = 'testerson', AccountId = acc3.Id, Title = 'VP');
-        Contact contact4 = new Contact(FirstName = 'test3', LastName = 'testerson', AccountId = acc4.Id, Title = 'VP');
-        Contact[] contacts = new Contact[] {contact1, contact2, contact3, contact4};
-        
-        delete new Account[] {acc2, acc4};
-        
-        try {
-            TDTM_TriggerHandler.suppressDebugAssertAfterErrorLogging = true;
-            insert contacts;
-        } catch(DmlException e) {
-            System.assertEquals(2, e.getNumDml());
-            Integer failedRecordIndex = e.getDmlIndex(0); //Position of failed record in original list
-            //The first error happened in the second record upon which the DML was performed
-            System.assertEquals(1, failedRecordIndex);
-            Integer failedRecordIndex2 = e.getDmlIndex(1); //Position of failed record in original list
-            //The first error happened in the fourth record upon which the DML was performed
-            System.assertEquals(3, failedRecordIndex2);
-        }
-    }
-    /*******************************************************************************************************
-    * @description test error handling on a database dml operation, verify success and failure results
+    * @description test (lack of) error handling on a database dml operation, verify success and failure results
     */
     public testmethod static void databaseDml() {
     	Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings();
@@ -118,12 +61,16 @@ public with sharing class ERR_AddError_TEST {
         
         delete new Account[] {acc2, acc4};
         
-        TDTM_TriggerHandler.suppressDebugAssertAfterErrorLogging = true;
         List<Database.Saveresult> results = Database.insert(contacts, false);
         System.assertEquals(4, results.size());
-        System.assertEquals(true, results[0].isSuccess());
+        /* The failure of any of the contacts in the trigger, due to having a
+         * null Account lookup, will cause an unhandled exception and the
+         * entire trigger will be rolled back.  Every record will be marked as
+         * an error with the message corresponding to the unhandled exception.
+         */
+        System.assertEquals(false, results[0].isSuccess());
         System.assertEquals(false, results[1].isSuccess());
-        System.assertEquals(true, results[2].isSuccess());
+        System.assertEquals(false, results[2].isSuccess());
         System.assertEquals(false, results[3].isSuccess());
     }
 }

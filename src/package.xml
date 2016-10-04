@@ -86,6 +86,8 @@
         <members>EP_TaskRollup_TEST</members>
         <members>EP_Task_UTIL</members>
         <members>ERR_AddError_TEST</members>
+        <members>ERR_AsyncErrors</members>
+        <members>ERR_AsyncErrors_TEST</members>
         <members>ERR_Handler</members>
         <members>ERR_Handler_API</members>
         <members>ERR_Handler_CTRL_TEST</members>
@@ -635,6 +637,7 @@
         <members>Engagement_Plan__c.Status__c</members>
         <members>Engagement_Plan__c.Total_EP_Tasks__c</members>
         <members>Engagement_Plan__c.Total_Tasks__c</members>
+        <members>Error_Settings__c.Async_Error_Check_Last_Run__c</members>
         <members>Error_Settings__c.Disable_Error_Handling__c</members>
         <members>Error_Settings__c.Enable_Debug__c</members>
         <members>Error_Settings__c.Error_Notifications_On__c</members>
@@ -792,6 +795,7 @@
         <members>Addr_Verification_Batch_SmartyStreets_Message</members>
         <members>Addr_Verification_Batch_Status</members>
         <members>Addr_Verification_Batch_Title</members>
+        <members>Addr_Verification_Cant_Load_Class</members>
         <members>Addr_Verification_Required</members>
         <members>Addr_Verification_Undefined_Class</members>
         <members>Addr_Verification_Wrong_Class</members>
@@ -851,6 +855,7 @@
         <members>EPAddDependentTask</members>
         <members>EPAddTask</members>
         <members>EPDeleteTask</members>
+        <members>EPManageTasks</members>
         <members>EPTaskDependency</members>
         <members>EPTaskTemplate</members>
         <members>HiddenForSecurity</members>

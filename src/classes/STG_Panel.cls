@@ -386,9 +386,9 @@ public with sharing virtual class STG_Panel {
         for (String recordTypeIdString : recordTypeIdStrings) {
             Id recordTypeId;
 
-            try {
+            if (recordTypeIdString instanceof Id) {
                 recordTypeId = (Id) recordTypeIdString;
-            } catch (Exception e) {
+            } else {
                 continue;
             }
 

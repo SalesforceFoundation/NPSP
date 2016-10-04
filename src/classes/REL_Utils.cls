@@ -85,11 +85,7 @@ public with sharing class REL_Utils {
         // we are not attempting to handle fields with a newline inside of them
         // so, split on newline to get the spreadsheet rows
         List<String> lines = new List<String>();
-        try {
-            lines = contents.split('\n');
-        } catch (System.ListException e) {
-            UTIL_Debug.debug('Limits exceeded?' + e.getMessage());
-        }
+        lines = contents.split('\n');
         Integer num = 0;
         for(String line : lines) {
             // check for blank CSV lines (only commas)

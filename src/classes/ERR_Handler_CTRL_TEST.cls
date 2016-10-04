@@ -36,25 +36,6 @@
 */
 public with sharing class ERR_Handler_CTRL_TEST {
     /*******************************************************************************************************
-    * @description test error handling without a save point
-    */
-    public pageReference withoutManualRollback() {     
-        
-        Contact contact1 = new Contact(FirstName = 'test', LastName = 'testerson1', Title = 'VP1');
-        insert contact1;
-        
-        //I think npe4__Contact__c is missing from the reciprocal relationship that gets automatically created.
-        npe4__Relationship__c[] relationships = new npe4__Relationship__c[]{
-            new npe4__Relationship__c(npe4__contact__c = contact1.id, npe4__Type__c='TestLookupType') };    
-        
-        insert relationships;
-        
-        //No try-catch necessary. The error is found in the processDML method of TDTM_TriggerHandler.
-        //The transaction is rolled back in that same method.
-        
-        return null;
-    }
-    /*******************************************************************************************************
     * @description test error handling with a save point
     */
     public pageReference withManualRollback() {
