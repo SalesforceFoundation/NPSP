@@ -204,12 +204,18 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
                         servicesURLMap.put(((ADDR_IValidator)classInstance).getServiceName(), ((ADDR_IValidator)classInstance).getDefaultURL());
                     }
                 } catch(exception ex) {
-                    // just ignore this class and continue.
+                    ApexPages.addMessage(new ApexPages.Message(
+                        ApexPages.Severity.ERROR,
+                        String.format(
+                            Label.Addr_Verification_Cant_Load_Class,
+                            new List<String>{classType.getName()}
+                        )
+                    ));
                 }
             }
-        }         
+        }
     }
-    
+
     /*******************************************************************************************************
     * @description Saves the address verification settings.
     * @return PageReference The page to redirect to. None, in this case.

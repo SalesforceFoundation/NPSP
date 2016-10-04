@@ -4,6 +4,15 @@
     <description>Settings that control your error management configuration.</description>
     <enableFeeds>false</enableFeeds>
     <fields>
+        <fullName>Async_Error_Check_Last_Run__c</fullName>
+        <description>If checked, NPSP&apos;s error handling framework is disabled.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Used to keep track of the most recent execution of the Async job error logger</inlineHelpText>
+        <label>Async Error Check Last Run</label>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
         <fullName>Disable_Error_Handling__c</fullName>
         <defaultValue>false</defaultValue>
         <description>If checked, NPSP&apos;s error handling framework is disabled.</description>
