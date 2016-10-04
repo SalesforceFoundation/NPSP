@@ -119,14 +119,19 @@ public with sharing class EP_Task_UTIL {
     ********************************************************************************************************/
     public void initializeMaps(Set<Id> templateIds) {
 
+        //query our custom fields and fieldset fields for when this template is accessed from the UI
+        Set<String> templateFields = new Set<String>{'Id', 'Name', 'Skip_Weekends__c', 'Reschedule_To__c', 'Automatically_Update_Child_Task_Due_Date__c', 'Default_Assignee__c', 'Description__c'};
+        templateFields.addAll(UTIL_Describe.listStrFromFieldSet(UTIL_Namespace.StrTokenNSPrefix('Engagement_Plan_Template__c'), UTIL_Namespace.StrTokenNSPrefix('ManageEPTemplateFS')));
+
+        String templateQuery = 'SELECT ';
+        templateQuery += String.join(new List<String>(templateFields), ', ');
+        templateQuery += ', (SELECT Id, Name, Engagement_Plan_Template__c, Assigned_To__c, Comments__c, Days_After__c, Type__c, ';
+        templateQuery += 'Parent_Task__c, Priority__c, Reminder__c, Reminder_Time__c, Send_Email__c, Status__c ';
+        templateQuery += 'FROM Engagement_Plan_Tasks__r) ';
+        templateQuery += 'FROM Engagement_Plan_Template__c WHERE Id IN :templateIds';
+
         //query for templates and their child tasks
-        templateMap = new Map<Id, Engagement_Plan_Template__c>(
-            [SELECT Id, Name, Skip_Weekends__c, Reschedule_To__c, Automatically_Update_Child_Task_Due_Date__c, Default_Assignee__c, Description__c,
-                (SELECT Id, Name, Engagement_Plan_Template__c, Assigned_To__c, Comments__c, Days_After__c, Type__c, 
-                Parent_Task__c, Priority__c, Reminder__c, Reminder_Time__c, Send_Email__c, Status__c 
-                FROM Engagement_Plan_Tasks__r)
-            FROM Engagement_Plan_Template__c WHERE Id IN :templateIds]
-        );
+        templateMap = new Map<Id, Engagement_Plan_Template__c>((List<Engagement_Plan_Template__c>)Database.query(templateQuery));
 
         //query for tasks and their child tasks
         epTaskMap = new Map<Id, Engagement_Plan_Task__c>(
