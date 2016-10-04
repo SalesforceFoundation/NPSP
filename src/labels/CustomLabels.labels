@@ -604,6 +604,14 @@
         <value>Delete Task</value>
     </labels>
     <labels>
+        <fullName>EPManageTasks</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>EPManageTasks</shortDescription>
+        <value>Manage Engagement Plan Tasks</value>
+    </labels>
+    <labels>
         <fullName>EPTaskDependency</fullName>
         <categories>Engagement Plan, Error</categories>
         <language>en_US</language>

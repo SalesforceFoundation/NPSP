@@ -851,6 +851,7 @@
         <members>EPAddDependentTask</members>
         <members>EPAddTask</members>
         <members>EPDeleteTask</members>
+        <members>EPManageTasks</members>
         <members>EPTaskDependency</members>
         <members>EPTaskTemplate</members>
         <members>HiddenForSecurity</members>
