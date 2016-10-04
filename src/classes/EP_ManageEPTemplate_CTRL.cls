@@ -48,63 +48,23 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     /** @description Utilities class for querying tasks associated to the template. */
     private EP_Task_UTIL util;
 
-    /** @description Property used by the Add Dependent Task and Delete Task buttons to tell where in the heirarchy
+    /** @description Property used by the Add Dependent Task and Delete Task buttons to tell where in the Hierarchy
     * to perform the functions. */
     public String currentTaskLevel {get; set;}
 
     /** @description Set the select options Reminder Time field.*/
     public List<SelectOption> reminderTimeOptions {
         get {
-            List<SelectOption> options = new List<SelectOption>{
-                new SelectOption('0', '12:00 AM'),
-                new SelectOption('30', '12:30 AM'),
-                new SelectOption('60', '1:00 AM'),
-                new SelectOption('90', '1:30 AM'),
-                new SelectOption('120', '2:00 AM'),
-                new SelectOption('150', '2:30 AM'),
-                new SelectOption('180', '3:00 AM'),
-                new SelectOption('210', '3:30 AM'),
-                new SelectOption('240', '4:00 AM'),
-                new SelectOption('270', '4:30 AM'),
-                new SelectOption('300', '5:00 AM'),
-                new SelectOption('330', '5:30 AM'),
-                new SelectOption('360', '6:00 AM'),
-                new SelectOption('390', '6:30 AM'),
-                new SelectOption('420', '7:00 AM'),
-                new SelectOption('450', '7:30 AM'),
-                new SelectOption('480', '8:00 AM'),
-                new SelectOption('510', '8:30 AM'),
-                new SelectOption('540', '9:00 AM'),
-                new SelectOption('570', '9:30 AM'),
-                new SelectOption('600', '10:00 AM'),
-                new SelectOption('630', '10:30 AM'),
-                new SelectOption('660', '11:00 AM'),
-                new SelectOption('690', '11:30 AM'),
-                new SelectOption('720', '12:00 PM'),
-                new SelectOption('750', '12:30 PM'),
-                new SelectOption('780', '1:00 PM'),
-                new SelectOption('810', '1:30 PM'),
-                new SelectOption('840', '2:00 PM'),
-                new SelectOption('870', '2:30 PM'),
-                new SelectOption('900', '3:00 PM'),
-                new SelectOption('930', '3:30 PM'),
-                new SelectOption('960', '4:00 PM'),
-                new SelectOption('990', '4:30 PM'),
-                new SelectOption('1020', '5:00 PM'),
-                new SelectOption('1050', '5:30 PM'),
-                new SelectOption('1080', '6:00 PM'),
-                new SelectOption('1110', '6:30 PM'),
-                new SelectOption('1140', '7:00 PM'),
-                new SelectOption('1170', '7:30 PM'),
-                new SelectOption('1200', '8:00 PM'),
-                new SelectOption('1230', '8:30 PM'),
-                new SelectOption('1260', '9:00 PM'),
-                new SelectOption('1290', '9:30 PM'),
-                new SelectOption('1320', '10:00 PM'),
-                new SelectOption('1350', '10:30 PM'),
-                new SelectOption('1380', '11:00 PM'),
-                new SelectOption('1410', '11:30 PM')
-            };
+            List<SelectOption> options = new List<SelectOption>();
+            for (Integer minutes = 0; minutes <= 1410; minutes += 30) {
+                //start with midnight and increment 30 minutes
+                DateTime dt = DateTime.newInstance(1984, 1, 1, 0, minutes, 0);
+                //since we don't have a time.format(), use datetime.format() and remove date.format(), 
+                //works in all locales tested, even weird ones :)
+                String localeTime = dt.format().replace(dt.date().format(), '').trim();
+                
+                options.add(new SelectOption(String.valueOf(minutes), localeTime));
+            }
             return options;
         }
         set;
@@ -114,7 +74,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     * been updated from their defaults.*/
     public List<SelectOption> taskPriorityOptions {
         get {
-            return listSelectOptions('Task','Priority');
+            return UTIL_Describe.getSelectOptions('Task','Priority');
         }
     }
 
@@ -122,39 +82,8 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     * been updated from their defaults.*/
     public List<SelectOption> taskStatusOptions {
         get {
-            return listSelectOptions('Task','Status');
+            return UTIL_Describe.getSelectOptions('Task','Status');
         }
-    }
-
-    /** @description Returns a list of SelectOptions for a given object and picklist field name.
-    * @param objectName The name of the object.
-    * @param fieldName The name of the field.
-    * @return List<SelectOption> The select options for this picklist field.
-    */
-    private List<SelectOption> listSelectOptions(String objectName, String fieldName) {
-        Schema.DescribeFieldResult describeField = UTIL_Describe.getFieldDescribe(objectName, fieldName);
-        List<SelectOption> result = new List<SelectOption>();
-        for (Schema.PicklistEntry entry : describeField.getPicklistValues()) {
-            if (entry.isActive()) {
-                result.add(new SelectOption(entry.getLabel(), entry.getValue()));
-            }
-        }
-        return result;
-    }
-
-    /** @description Returns the default SelectOption for a given object and picklist field name.
-    * @param objectName The name of the object.
-    * @param fieldName The name of the field.
-    * @return String The default select option for this picklist field.
-    */
-    private String defaultSelectOption(String objectName, String fieldName) {
-        Schema.DescribeFieldResult describeField = UTIL_Describe.getFieldDescribe(objectName, fieldName);
-        for (Schema.PicklistEntry entry : describeField.getPicklistValues()) {
-            if (entry.isDefaultValue()) {
-                return entry.getValue();
-            }
-        }
-        return null;
     }
 
     /** @description Creates an Engagement Plan Task with defaults set for required picklist fields.
@@ -162,8 +91,8 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     */
     private Engagement_Plan_Task__c getTaskDefaults() {
         Engagement_Plan_Task__c result = new Engagement_Plan_Task__c(
-            Priority__c = defaultSelectOption('Task','Priority'),
-            Status__c = defaultSelectOption('Task','Status')
+            Priority__c = UTIL_Describe.getDefaultSelectOption('Task','Priority'),
+            Status__c = UTIL_Describe.getDefaultSelectOption('Task','Status')
         );
         return result;
     }
@@ -180,33 +109,15 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         };
 
         for (String fieldName : templateFields) {
-            checkFieldFLS('Engagement_Plan_Template__c', fieldName);
+            UTIL_Describe.checkFieldFLS('Engagement_Plan_Template__c', fieldName);
         }
 
         for (String fieldName : epTaskFields) {
-            checkFieldFLS('Engagement_Plan_Task__c', fieldName);
+            UTIL_Describe.checkFieldFLS('Engagement_Plan_Task__c', fieldName);
         }
     }
 
-    /** @description For a given object and field, verifies that the field is accessible and updateable,
-    * throwing an exception if it isn't.*/
-    private void checkFieldFLS(String objectName, String fieldName) {
-        DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(
-            UTIL_Namespace.StrTokenNSPrefix(objectName), 
-            fieldName.endsWith('__c')?UTIL_Namespace.StrTokenNSPrefix(fieldName):fieldName
-        );
-        if (dfr == null || !dfr.isAccessible() || !dfr.isUpdateable()) {
-            throw (new permsException(
-                string.format(
-                    label.flsError, 
-                    new string[]{UTIL_Namespace.StrTokenNSPrefix(objectName) + '.' + 
-                                 UTIL_Namespace.StrTokenNSPrefix(fieldName)}
-                )
-            ));
-        }
-    }
-
-    /** @description Constructor queries for tasks related to this template and fills out task wrapper heirarchy.*/
+    /** @description Constructor queries for tasks related to this template and fills out task wrapper hierarchy.*/
     public EP_ManageEPTemplate_CTRL(ApexPages.StandardController controller) {
         checkFLS();
 
@@ -220,12 +131,12 @@ public with sharing class EP_ManageEPTemplate_CTRL {
             template = new Engagement_Plan_Template__c();
         }
 
-        initWrapperHeirarchy();
+        initWrapperHierarchy();
     }
 
     /** @description Iterates over tasks related to the current template, creating a list of parent
-    * EP tasks and a heirarchy of wrappers.*/
-    public void initWrapperHeirarchy() {
+    * EP tasks and a hierarchy of wrappers.*/
+    public void initWrapperHierarchy() {
         parentTaskWrappers = new list<TaskWrapper>();
         
         for (Integer i=0; i < util.epTaskMap.values().size(); i++) {
@@ -243,7 +154,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         }
     }
 
-    /** @description Navigates the heirarchy of Engagement Plan Tasks and recursively creates a wrapper heirarchy.
+    /** @description Navigates the hierarchy of Engagement Plan Tasks and recursively creates a wrapper hierarchy.
     * @param wrapper The TaskWrapper to create children wrappers for.
     * @return void This method updates class properties.
     */
@@ -323,7 +234,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         return null;
     }
 
-    /** @description Adds a new dependent EP task to the heirarchy. */
+    /** @description Adds a new dependent EP task to the hierarchy. */
     public pageReference addDependentTask() {
         TaskWrapper parentTask = mapTaskWrappers.get(currentTaskLevel);
 
@@ -340,7 +251,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         return null;
     }
     
-    /** @description Deletes a task from the heirarchy, reparenting any children tasks to the
+    /** @description Deletes a task from the Hierarchy, reparenting any children tasks to the
     * deleted task's parent, and recalculating level names. */
     public pageReference deleteTask() {
         TaskWrapper currentTask = mapTaskWrappers.get(currentTaskLevel);
@@ -364,19 +275,19 @@ public with sharing class EP_ManageEPTemplate_CTRL {
             }
         }
 
-        removeFromHeirarchy(currentTask);
+        removeFromHierarchy(currentTask);
 
         return null;
     }
 
-    /** @description Removes a given wrapper from the heirarchy by removing the current wrapper from the parent's list
+    /** @description Removes a given wrapper from the hierarchy by removing the current wrapper from the parent's list
     * of children, and adding current children to parent's list of children. 
-    * @param wrapper The TaskWrapper to remove from the wrapper heirarchy.
+    * @param wrapper The TaskWrapper to remove from the wrapper hierarchy.
     * @return void This method updates class properties.
     */
 
-    private void removeFromHeirarchy(TaskWrapper wrapper) {
-        //reconfigure wrapper heirarchy
+    private void removeFromHierarchy(TaskWrapper wrapper) {
+        //reconfigure wrapper Hierarchy
         if (wrapper.parent != null) {
             //remove from children list of parent
             for (Integer i=0; i<wrapper.parent.children.size(); i++) {
@@ -413,7 +324,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     /** @description A map of level strings to TaskWrappers to easily get the current wrapper.*/
     public Map<String, TaskWrapper> mapTaskWrappers {get; set;}
 
-    /** @description Inner class wrapper of Engagement Plan Tasks to enable displaying the nested heirarchy.*/
+    /** @description Inner class wrapper of Engagement Plan Tasks to enable displaying the nested hierarchy.*/
     public Class TaskWrapper {
         public Engagement_Plan_Task__c detail { get; set; }
         public List<TaskWrapper> children { get; set; }
@@ -428,7 +339,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         }
     }
 
-    /** @description Generates the markup for the dynamicComponent each time it is rendered. Creates a nested heirarchy
+    /** @description Generates the markup for the dynamicComponent each time it is rendered. Creates a nested Hierarchy
     * of Engagement Plan Task forms.
     * @return Component.Apex.OutputPanel
     */
@@ -465,9 +376,9 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     /** @description Generates the markup for a single Engagement Plan Task form, then calls itself recursively for that
     * task's children.
     * @param wrapper The TaskWrapper for the current Engagement Plan Task.
-    * @param level The number for which child record we're at in the current place of the heirarchy.
-    * @param accessString The string for accessing the current place in the heirarchy using a nested expression.
-    * @param levelString The numbered heirarchy level for naming and accessing EP Tasks.
+    * @param level The number for which child record we're at in the current place of the hierarchy.
+    * @param accessString The string for accessing the current place in the hierarchy using a nested expression.
+    * @param levelString The numbered hierarchy level for naming and accessing EP Tasks.
     * @return Component.Apex.OutputPanel A form for an EP Task and its children.
     */
     private Component.Apex.OutputPanel addChildComponents(TaskWrapper wrapper, Integer level, String accessString, String levelString) {
@@ -481,7 +392,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         Component.Apex.OutputPanel topLevelPanel = new Component.Apex.OutputPanel(styleClass='slds-m-left--medium slds-m-top--small', layout='block');
         Component.Apex.OutputPanel formPanel = new Component.Apex.OutputPanel();
     
-        //creates a box around the form with a label for the heirarchy level, and a color bar to more easily grock which level we're at
+        //creates a box around the form with a label for the hierarchy level, and a color bar to more easily grock which level we're at
         Component.Apex.OutputText boxAndLabel = new Component.Apex.OutputText(value='<div aria-labelledby="task' + wrapper.level + 
             '", class="slds-m-left--medium slds-m-top--small"><fieldset class="slds-box slds-theme--default slds-container--fluid '+
             'slds-p-around--small", style="border-left: 6px solid ' + sidebarColors[colorNumber] + '"><legend id=task' + wrapper.level + 
@@ -560,7 +471,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
 
     /** @description Generates the markup for an SLDS styled apex:inputField.
     * @param wrapper The TaskWrapper for the current Engagement Plan Task.
-    * @param accessString The string for accessing the current place in the heirarchy using a nested expression.
+    * @param accessString The string for accessing the current place in the hierarchy using a nested expression.
     * @param fieldName The name of the field.
     * @param outterCss CSS markup for the field input container.
     * @param inputCss CSS markup for the input itself.
@@ -582,7 +493,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
 
     /** @description Generates the markup for an SLDS styled picklist.
     * @param wrapper The TaskWrapper for the current Engagement Plan Task.
-    * @param accessString The string for accessing the current place in the heirarchy using a nested expression.
+    * @param accessString The string for accessing the current place in the hierarchy using a nested expression.
     * @param fieldName The name of the field.
     * @param outterCss CSS markup for the field input container.
     * @param inputCss CSS markup for the input itself.
@@ -611,7 +522,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
 
     /** @description Generates the markup for an SLDS styled text area.
     * @param wrapper The TaskWrapper for the current Engagement Plan Task.
-    * @param accessString The string for accessing the current place in the heirarchy using a nested expression.
+    * @param accessString The string for accessing the current place in the hierarchy using a nested expression.
     * @param fieldName The name of the field.
     * @param outterCss CSS markup for the field input container.
     * @param inputCss CSS markup for the input itself.

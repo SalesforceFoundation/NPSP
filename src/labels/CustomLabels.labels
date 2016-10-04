@@ -179,6 +179,14 @@
         <value>Mass Verify Existing Addresses</value>
     </labels>
     <labels>
+        <fullName>Addr_Verification_Cant_Load_Class</fullName>
+        <categories>address</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Unable to load verification class when visiting settings page</shortDescription>
+        <value>There was an error loading the validator class {0}</value>
+    </labels>
+    <labels>
         <fullName>Addr_Verification_Required</fullName>
         <categories>address</categories>
         <language>en_US</language>
@@ -602,6 +610,14 @@
         <protected>false</protected>
         <shortDescription>EPDeleteTask</shortDescription>
         <value>Delete Task</value>
+    </labels>
+    <labels>
+        <fullName>EPManageTasks</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>EPManageTasks</shortDescription>
+        <value>Manage Engagement Plan Tasks</value>
     </labels>
     <labels>
         <fullName>EPTaskDependency</fullName>

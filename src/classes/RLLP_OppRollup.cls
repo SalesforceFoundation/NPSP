@@ -118,13 +118,7 @@ public without sharing class RLLP_OppRollup {
     ********************************************************************************************************/
     @future 
     public static void rollupContactsandHouseholdsForTriggerFuture(set<id> OppIds) {
-    	Savepoint sp = Database.setSavepoint();
-        try {
-            rollupContactsandHouseholdsForTrigger(OppIds);
-        } catch(Exception e) {
-            Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler_API.Context.RLLP);
-        }
+        rollupContactsandHouseholdsForTrigger(OppIds);
     }
 
     /*******************************************************************************************************
@@ -166,22 +160,15 @@ public without sharing class RLLP_OppRollup {
     ********************************************************************************************************/
     @future 
     public static void rollupAccountsFuture( set<id> acctIds ) {
-        Savepoint sp = Database.setSavepoint();
-        try {
-	        if (acctIds != null && !acctIds.isEmpty()) {
-	        	RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
-	            map<id, Account> amap = new map<id, account>((list<Account>)Database.query(oppRollupUtil.buildAccountQuery() + 
-	                                                           ' where id IN :acctIds')); 
-	            RLLP_OppRollup rg = new RLLP_OppRollup();
-	            rg.rollupAccounts(amap);
-	           
-	        }
-        } catch(Exception e) {
-            Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler_API.Context.RLLP);
+        if (acctIds != null && !acctIds.isEmpty()) {
+            RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+            map<id, Account> amap = new map<id, account>((list<Account>)Database.query(oppRollupUtil.buildAccountQuery() + 
+                                                           ' where id IN :acctIds')); 
+            RLLP_OppRollup rg = new RLLP_OppRollup();
+            rg.rollupAccounts(amap);
         }
     }
-    
+
     /*******************************************************************************************************
     * @description Future wrapper method for updating contact rollups from a set of contact IDs.
     * @param acctIds A set of contact ids.
@@ -189,19 +176,13 @@ public without sharing class RLLP_OppRollup {
     ********************************************************************************************************/
     @future
     public static void rollupContactsFuture (set<id> conIDs){
-        Savepoint sp = Database.setSavepoint();
-        try {
-	        if (conIds != null && !conIDs.isEmpty()){
-	        	RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
-	            map<id, Contact> cmap = new map<id, Contact>((list<Contact>)Database.query(oppRollupUtil.buildContactQuery() +
-	                                                          ' where id IN :conIds'));
-	            RLLP_OppRollup rg = new RLLP_OppRollup();
-	            rg.rollupContacts(cmap);
-	        }
-	    } catch(Exception e) {
-            Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler_API.Context.RLLP);
-        }     
+        if (conIds != null && !conIDs.isEmpty()){
+            RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+            map<id, Contact> cmap = new map<id, Contact>((list<Contact>)Database.query(oppRollupUtil.buildContactQuery() +
+                                                          ' where id IN :conIds'));
+            RLLP_OppRollup rg = new RLLP_OppRollup();
+            rg.rollupContacts(cmap);
+        }
     }
 
     /*******************************************************************************************************
@@ -211,20 +192,14 @@ public without sharing class RLLP_OppRollup {
     ********************************************************************************************************/
     @future
     public static void rollupHouseholdsFuture (set<id> hhIDs){
-    	Savepoint sp = Database.setSavepoint();
-        try {
-	        if (hhIds != null && !hhIds.isEmpty()){
-	        	RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
-	            map<id, npo02__Household__c> hhmap = new map<id, npo02__Household__c>((list<npo02__Household__c>)Database.query(oppRollupUtil.buildHouseholdQuery() +
-	                                                                            ' where id IN :hhIDs'));
-	            RLLP_OppRollup rg = new RLLP_OppRollup();
-	            rg.rollupHouseholds(hhmap);                                                                         
-	        }
-	    } catch(Exception e) {
-            Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler_API.Context.RLLP);
-        }       
-    } 
+        if (hhIds != null && !hhIds.isEmpty()){
+            RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+            map<id, npo02__Household__c> hhmap = new map<id, npo02__Household__c>((list<npo02__Household__c>)Database.query(oppRollupUtil.buildHouseholdQuery() +
+                                                                            ' where id IN :hhIDs'));
+            RLLP_OppRollup rg = new RLLP_OppRollup();
+            rg.rollupHouseholds(hhmap);
+        }
+    }
 
     /*******************************************************************************************************
     * @description Runs opportunity rollups for accounts.

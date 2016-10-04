@@ -149,14 +149,8 @@ public class RD_RecurringDonations {
     */ 
     @future
     public static void updateRecurringDonationOnOppChangeFuture(set<id> RDids){
-        Savepoint sp = Database.setSavepoint();
-        try {
-            updateRecurringDonationOnOppChange(RDids, null);
-        } catch(Exception e) {
-        	Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler_API.Context.RD);
-        }
-    } 
+        updateRecurringDonationOnOppChange(RDids, null);
+    }
     
     /*******************************************************************************************************
     * @description Updates the specified RD's by querying their Opps so it can update the RD's 
@@ -306,16 +300,10 @@ public class RD_RecurringDonations {
     */ 
     @future
     public static void insertOppsOnRecurringDonationInsertFuture(set<id> recids) {
-        Savepoint sp = Database.setSavepoint();
-        try {
-	        delete [select id from Opportunity where isClosed = false and npe03__Recurring_Donation__r.id IN :recids];
-	
-	        list<npe03__Recurring_Donation__c> reclist = requeryListRD(recids);
-	        insertOppsOnRecurringDonationInsert(reclist);
-        } catch(Exception e) {
-        	Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler_API.Context.RD);
-        }
+        delete [select id from Opportunity where isClosed = false and npe03__Recurring_Donation__r.id IN :recids];
+
+        list<npe03__Recurring_Donation__c> reclist = requeryListRD(recids);
+        insertOppsOnRecurringDonationInsert(reclist);
     }
     
     /*******************************************************************************************************
@@ -638,13 +626,7 @@ public class RD_RecurringDonations {
     */ 
     @future 
     public static void oppContactRolesFuture(set<id> oppIds){
-    	Savepoint sp = Database.setSavepoint();
-    	try {
-    	   oppContactRoles(oppIds);
-    	} catch(Exception e) {
-    	   Database.rollback(sp);
-           ERR_Handler.processError(e, ERR_Handler_API.Context.RD);
-        }
+       oppContactRoles(oppIds);
     }
     
     /*******************************************************************************************************
@@ -706,13 +688,7 @@ public class RD_RecurringDonations {
     */ 
     @future
     public static void updateExistingOppsFuture(set<id>recIDs){
-    	Savepoint sp = Database.setSavepoint();
-    	try {
-    	   updateExistingOpps(recIDs, null);
-    	} catch(Exception e) {
-    	   Database.rollback(sp);
-           ERR_Handler.processError(e, ERR_Handler_API.Context.RD);
-        }
+       updateExistingOpps(recIDs, null);
     }
     
     /*******************************************************************************************************

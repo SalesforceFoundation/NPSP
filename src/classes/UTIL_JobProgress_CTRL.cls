@@ -151,26 +151,22 @@ public with sharing class UTIL_JobProgress_CTRL {
         List<AsyncApexJob> jobs = new List<AsyncApexJob>();
         List<BatchJobStatus> jobsStatus = new List<BatchJobStatus>();
 
-        try {
-            jobs = [
-                SELECT
-                ApexClass.Name,
-                CreatedBy.Name,
-                CreatedDate,
-                Status,
-                ExtendedStatus,
-                CompletedDate,
-                JobItemsProcessed,
-                TotalJobItems,
-                NumberOfErrors
-                FROM AsyncApexJob
-                WHERE JobType = 'BatchApex'
-                ORDER BY CreatedDate DESC
-                LIMIT :numberOfJobs
-            ];
-        } catch (QueryException e) {
-            // could not query jobs or no jobs found
-        }
+        jobs = [
+            SELECT
+            ApexClass.Name,
+            CreatedBy.Name,
+            CreatedDate,
+            Status,
+            ExtendedStatus,
+            CompletedDate,
+            JobItemsProcessed,
+            TotalJobItems,
+            NumberOfErrors
+            FROM AsyncApexJob
+            WHERE JobType = 'BatchApex'
+            ORDER BY CreatedDate DESC
+            LIMIT :numberOfJobs
+        ];
 
         for (AsyncApexJob job : jobs) {
             jobsStatus.add(new BatchJobStatus(job));

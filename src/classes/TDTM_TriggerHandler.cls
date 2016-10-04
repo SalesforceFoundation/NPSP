@@ -67,80 +67,52 @@ public class TDTM_TriggerHandler {
            return;
         }
 
-        if(newList != null)
-    	   UTIL_Debug.debug(LoggingLevel.WARN, '****Trigger.new size: ' + newList.size());
-    	// This solves the problem of not being able to save error records if everything gets rolled back. 
-        // TDTM_TriggerHandler is taking care of saving error records if there is any error when performing 
-        // DML operations. It also takes care of rolling everything back in that case, just so there are no 
-        // issues (side effects) with re-entrant flags.
-    	Savepoint sp = Database.setSavepoint();
-    	
-    	try {
-    		TDTM_Runnable.Action thisAction = TDTM_TriggerActionHelper.determineTriggerAction(isBefore, 
-    		                                              isAfter, isInsert, isUpdate, isDelete, isUnDelete);
-            UTIL_Debug.debugWithInfo('****ACTION: ' + thisAction + ' on ' + describeObj.getLabel());
-        
-	        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
-	        
-	        // If there are no records, insert the defaults.
-	        if(!defaultRecordsInserted && dao.isEmpty()) {
-	        	List<Trigger_Handler__c> defaultConfig = TDTM_DefaultConfig.getDefaultRecords();
-	        	insert defaultConfig;
-	        	defaultRecordsInserted = true;
-	        }
-	        
-	        // Get the classes to run. Note that we are using the local object name, so it works for objects 
-	        // from Cumulus both in the package and unmanaged dev orgs.
-	        List<SObject> classesToCall = dao.getclassesToCallForObject(describeObj.getLocalName(), thisAction);
-	        UTIL_Debug.debug(LoggingLevel.WARN, '****Classes To Call for ' + describeObj.getLocalName() + ': ' + JSON.serializePretty(classesToCall));
-	        
-	        if(classesToCall != null && classesToCall.size() > 0) {
-	            //Run the relevant classes
-	            for (SObject classToCall : classesToCall) {
-	                TDTM_Runnable.DmlWrapper dmlWrapperLocal = new TDTM_Runnable.DmlWrapper();
-	                dmlWrapperLocal = runClass(classToCall, newList, OldList, thisAction, describeObj);
-	                if(dmlWrapperLocal != null) {
-	                	if(dmlWrapperLocal.objectsToInsert != null && !dmlWrapperLocal.objectsToInsert.isEmpty())
-	                        dmlWrapper.objectsToInsert.addAll(dmlWrapperLocal.objectsToInsert);
-	                    if(dmlWrapperLocal.objectsToUpdate != null && !dmlWrapperLocal.objectsToUpdate.isEmpty())
-	                        dmlWrapper.objectsToUpdate.addAll(dmlWrapperLocal.objectsToUpdate);
-	                    if(dmlWrapperLocal.objectsToDelete != null && !dmlWrapperLocal.objectsToDelete.isEmpty())
-	                        dmlWrapper.objectsToDelete.addAll(dmlWrapperLocal.objectsToDelete);
-	                    if(dmlWrapperLocal.objectsToUndelete != null && !dmlWrapperLocal.objectsToUndelete.isEmpty())
-	                        dmlWrapper.objectsToUndelete.addAll(dmlWrapperLocal.objectsToUndelete);
-	                }          
-                    UTIL_Debug.debugWithInfo('****Finished executing: ' + classToCall.get('Class__c'));
-	            }
-	                         
-	            //Process the result
-	            if(dmlWrapper != null)
-	               processDML(dmlWrapper);
-	        }
-	    } catch(Exception e) {
-	    	UTIL_Debug.debug(LoggingLevel.WARN, '****Exception caught in run method of TDTM_TriggerHandler: ' + e.getMessage());
-            UTIL_Debug.debug(LoggingLevel.WARN, '\n****Stack Trace:\n' + e.getStackTraceString() + '\n');
-            if(!UTIL_CustomSettingsFacade.getErrorSettings().Disable_Error_Handling__c) {
-                Database.rollback(sp);
-                //Store error record and send error email notification
-                ERR_Handler.processError(e, ERR_Handler_API.Context.TDTM);
-            } else { // re-throwing exception if error handling is disabled 
-            	throw e;
+        if(newList != null) {
+           UTIL_Debug.debug(LoggingLevel.WARN, '****Trigger.new size: ' + newList.size());
+        }
+
+        TDTM_Runnable.Action thisAction = TDTM_TriggerActionHelper.determineTriggerAction(isBefore,
+                                                      isAfter, isInsert, isUpdate, isDelete, isUnDelete);
+        UTIL_Debug.debugWithInfo('****ACTION: ' + thisAction + ' on ' + describeObj.getLabel());
+
+        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
+
+        // If there are no records, insert the defaults.
+        if(!defaultRecordsInserted && dao.isEmpty()) {
+            List<Trigger_Handler__c> defaultConfig = TDTM_DefaultConfig.getDefaultRecords();
+            insert defaultConfig;
+            defaultRecordsInserted = true;
+        }
+
+        // Get the classes to run. Note that we are using the local object name, so it works for objects
+        // from Cumulus both in the package and unmanaged dev orgs.
+        List<SObject> classesToCall = dao.getclassesToCallForObject(describeObj.getLocalName(), thisAction);
+        UTIL_Debug.debug(LoggingLevel.WARN, '****Classes To Call for ' + describeObj.getLocalName() + ': ' + JSON.serializePretty(classesToCall));
+
+        if(classesToCall != null && classesToCall.size() > 0) {
+            //Run the relevant classes
+            for (SObject classToCall : classesToCall) {
+                TDTM_Runnable.DmlWrapper dmlWrapperLocal = new TDTM_Runnable.DmlWrapper();
+                dmlWrapperLocal = runClass(classToCall, newList, OldList, thisAction, describeObj);
+                if(dmlWrapperLocal != null) {
+                    if(dmlWrapperLocal.objectsToInsert != null && !dmlWrapperLocal.objectsToInsert.isEmpty())
+                        dmlWrapper.objectsToInsert.addAll(dmlWrapperLocal.objectsToInsert);
+                    if(dmlWrapperLocal.objectsToUpdate != null && !dmlWrapperLocal.objectsToUpdate.isEmpty())
+                        dmlWrapper.objectsToUpdate.addAll(dmlWrapperLocal.objectsToUpdate);
+                    if(dmlWrapperLocal.objectsToDelete != null && !dmlWrapperLocal.objectsToDelete.isEmpty())
+                        dmlWrapper.objectsToDelete.addAll(dmlWrapperLocal.objectsToDelete);
+                    if(dmlWrapperLocal.objectsToUndelete != null && !dmlWrapperLocal.objectsToUndelete.isEmpty())
+                        dmlWrapper.objectsToUndelete.addAll(dmlWrapperLocal.objectsToUndelete);
+                }
+                UTIL_Debug.debugWithInfo('****Finished executing: ' + classToCall.get('Class__c'));
             }
-            // We don't need to mark the record(s) with an error (with addError) because the application does it automatically 
-            // for us (IF they are part of the DML performed in our processDML method). If we mark it with an error the transaction 
-            // will be rolled back by the platform, and our error record won't be saved or error notifications sent.
-                        
-            // but we do want our tests to fail if they encountered this error!
-            // we do need to allow some specific tests that are testing our error handling
-            // to avoid the assert, because by allowing it to throw an exception within our catch, it
-            // changes system behavior.
-            if (Test.isRunningTest() && !suppressDebugAssertAfterErrorLogging) {
-                UTIL_Debug.debug('****Stack trace: ' + e.getStackTraceString());
-                system.assertEquals(null, e.getMessage(), e.getStackTraceString()); 
-            }
+
+            //Process the result
+            if(dmlWrapper != null)
+               processDML(dmlWrapper);
         }
     }
-    
+
     private TDTM_Runnable.DmlWrapper runClass(SObject classToRunRecord, List<Sobject> newList, List<Sobject> oldList, 
     TDTM_Runnable.Action thisAction, Schema.DescribeSobjectResult describeObj) {
     	        
