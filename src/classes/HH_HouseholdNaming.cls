@@ -52,13 +52,8 @@ public without sharing class HH_HouseholdNaming {
         //this is b/c of the public visibility
         HH_HouseholdNaming hn = new HH_HouseholdNaming();
 
-        Savepoint sp = Database.setSavepoint();
-        try {
-            hn.UpdateNames(hhids);
-        } catch(Exception e) {
-        	Database.rollback(sp);
-        	ERR_Handler.processError(e, ERR_Handler_API.Context.HH);
-        }      
+        hn.UpdateNames(hhids);
+
         HH_ProcessControl.inFutureContext = false;    
     }
 
