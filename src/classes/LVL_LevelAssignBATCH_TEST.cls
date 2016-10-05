@@ -158,6 +158,7 @@ private class LVL_LevelAssignBATCH_TEST {
     * @description creates a list of Contacts with various donation totals for test code to use.
     */
     private static list<Contact> listCon { get; set; }
+    private static DateTime dtCon6Modified { get; set;  }
     static void createTestContacts() {
         // create & insert contact
         listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(8);
@@ -179,6 +180,12 @@ private class LVL_LevelAssignBATCH_TEST {
         
         listCon[7].npo02__TotalOppAmount__c = 100000;
         insert listCon;
+        
+        // we need to see what the LastModifiedDate is after the insert completes, in case any
+        // workflow rules in the org may have ran during the insert and thus LastModifiedDate <> CreatedDate.
+        // dtCon6Modified will be used in one of our asserts that this contact wasn't modified by our level batch.
+         Contact c6 = [select LastModifiedDate from Contact where Id = :listCon[6].Id];
+         dtCon6Modified = c6.LastModifiedDate;
     }
         
     /*********************************************************************************************************
@@ -267,9 +274,10 @@ private class LVL_LevelAssignBATCH_TEST {
         System.assertEquals(lvlGold.Id, listCon[5].npo02__LastMembershipLevel__c);
         System.assertEquals(null, listCon[5].npo02__LastMembershipOrigin__c);
         
+        // contact6 should not be touched since it was already Bronze level.
         System.assertEquals(lvlBronze.Id, listCon[6].npo02__LastMembershipLevel__c);
         System.assertEquals(lvlBronze.Id, listCon[6].npo02__LastMembershipOrigin__c);
-        System.assertEquals(listCon[6].CreatedDate, listCon[6].LastModifiedDate);
+        System.assertEquals(dtCon6Modified, listCon[6].LastModifiedDate);
         
         System.assertEquals(lvlPlatinum.Id, listCon[7].npo02__LastMembershipLevel__c);
         System.assertEquals(null, listCon[7].npo02__LastMembershipOrigin__c);

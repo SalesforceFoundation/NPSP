@@ -271,11 +271,11 @@
     updateNamingExclusions: function(component, hh) {
         var strExclusions = '';
         if (!component.get('v.isAutoName'))
-            strExclusions += 'Household__c.Name;';
+            strExclusions += 'Name;';
         if (!component.get('v.isAutoFormalGreeting'))
-            strExclusions += 'Household__c.Formal_Greeting__c;';
+            strExclusions += 'Formal_Greeting__c;';
         if (!component.get('v.isAutoInformalGreeting'))
-            strExclusions += 'Household__c.Informal_Greeting__c;';
+            strExclusions += 'Informal_Greeting__c;';
         hh.npo02__SYSTEM_CUSTOM_NAMING__c = strExclusions;
     },
 
