@@ -371,18 +371,20 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
             Integer i = 0;
             for (Contact c : contacts)
             {
-                if (lsr[i].isSuccess() == true)
-                {
-                    //write the new Household Ids to the Contacts
-                    Contact clone = c.Clone(true,false);
-                    clone.npo02__household__c = lsr[i].getId();
-                    contactUpdates.add(clone);
+                if (!recordTypesOnCons || !conRecordTypesToExclude.contains((id)c.get('RecordTypeId'))){
+                    if (lsr[i].isSuccess() == true)
+                    {
+                        //write the new Household Ids to the Contacts
+                        Contact clone = c.Clone(true,false);
+                        clone.npo02__household__c = lsr[i].getId();
+                        contactUpdates.add(clone);
+                    }
+                    else{
+                        Database.Error err = lsr[i].getErrors()[0];                 
+                        c.addError(err.getMessage());
+                    }
+                    i += 1;
                 }
-                else{
-                    Database.Error err = lsr[i].getErrors()[0];                 
-                    c.addError(err.getMessage());
-                }
-                i += 1;
             }
             
             if (contactUpdates.size() > 0) {
