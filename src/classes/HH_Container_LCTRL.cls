@@ -153,7 +153,7 @@ public with sharing class HH_Container_LCTRL {
             else
                 strSoql += ' where npo02__Household__c = :hhId ';
 
-            strSoql += ' order by npo02__Household_Naming_Order__c, CreatedDate';
+            strSoql += ' order by Primary_Contact__c DESC, npo02__Household_Naming_Order__c ASC NULLS LAST, CreatedDate ';
 
             return database.query(strSoql);
         } catch (Exception ex) {
