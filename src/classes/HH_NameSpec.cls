@@ -133,18 +133,18 @@ public with sharing class HH_NameSpec implements HH_INaming {
         private integer cMaxUseOverrun { get; set; }
         private string strHNSField { get; set; }
         
-	    /*******************************************************************************************************
-	    * @description NameSpec Constructor
-	    * @param hns An instance of Household Naming Settings to use.
-	    * @param strField The namespec field in Settings to use.
-	    */
+        /*******************************************************************************************************
+        * @description NameSpec Constructor
+        * @param hns An instance of Household Naming Settings to use.
+        * @param strField The namespec field in Settings to use.
+        */
         private NameSpec(Household_Naming_Settings__c hns, string strField) {
-        	strHNSField = strField; 
-        	string strNameSpec = string.valueOf(hns.get(strField));
-        	strAnd = hns.Name_Connector__c;
-        	strOverrun = hns.Name_Overrun__c;
-        	cMaxUseOverrun = integer.valueOf(hns.Contact_Overrun_Count__c);
-        	parseNameSpec(strNameSpec);
+            strHNSField = strField; 
+            string strNameSpec = string.valueOf(hns.get(strField));
+            strAnd = (hns.Name_Connector__c == null ? ' ' : ' ' + hns.Name_Connector__c + ' ');
+            strOverrun = hns.Name_Overrun__c;
+            cMaxUseOverrun = integer.valueOf(hns.Contact_Overrun_Count__c);
+            parseNameSpec(strNameSpec);
         }
         
         /*******************************************************************************************************
@@ -235,7 +235,7 @@ public with sharing class HH_NameSpec implements HH_INaming {
             while (j < cCon && j < ns.cMaxUseOverrun && (isNoLastnames || listCon[j].LastName == strLname)) {
                 integer k = j + 1;
                 if (k == cCon || (!isNoLastnames && listCon[k].LastName != strLname)) {
-                    strFname += ' ' + ns.strAnd + ' ' + strConFspec(listCon[j], ns.strFirstNameSpec);
+                    strFname += ns.strAnd + strConFspec(listCon[j], ns.strFirstNameSpec);
                     j++;
                     break;
                 } else {
@@ -253,12 +253,13 @@ public with sharing class HH_NameSpec implements HH_INaming {
             if (i > 0 && j < cCon && j < ns.cMaxUseOverrun) {
                 strName += ', ';
             } else if (i > 0 && (j == cCon || j == ns.cMaxUseOverrun)) {
-                strName += ' ' + ns.strAnd + ' ';
+                strName += ns.strAnd;
             }
             strName += strCon;
 
             if (j == ns.cMaxUseOverrun && cCon > ns.cMaxUseOverrun && ns.strFirstNameSpec != '') {
-                strName += ' ' + ns.strAnd + ' ' + ns.strOverrun;
+                if (ns.strOverrun != null)
+                    strName += ns.strAnd + ns.strOverrun;
             }
 
             // continue with the next person we haven't included

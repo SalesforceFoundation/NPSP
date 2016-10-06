@@ -43,11 +43,12 @@
                                 </label>
                                 <div class="slds-form-element__control">                                
                                     <apex:inputField required="{!f.DBRequired || f.Required}" value="{!hh[f]}" label=""
-                                    	styleClass="{!CASE(f.Type, 
+                                        styleClass="{!CASE(f.Type, 
                                                         'reference', 'lookupInput' + ' ' + f.FieldPath, 
                                                         'multipicklist', 'slds-select multipicklistSLDSFixup', 
                                                         'boolean', 'slds-checkbox',
-                                                        'slds-input')}" />                                
+                                                        'slds-input')}" 
+                                        onchange="{!IF(f.FieldPath = 'npe01__One2OneContact__c', 'fireContactChangedEvent();', '')}" />                                
                                 </div>
                             </div>
                         </apex:repeat>
@@ -98,6 +99,7 @@
     // we provide this object to our main Lightning Component, to provide it a mechanism
     // to notify our visualforce page of events its must handle.  this is in leui of
     // the visualforce page using $A.eventService.AddHandler() which is not publicly exposed by Lightning.
+    // we are also using this mechanism to provide some direct functions the LC can call in the vfpage.
     var vfEventHandlers = {
     
         // called by our lightning component when it needs to tell the visualforce page 
@@ -134,8 +136,29 @@
             // which wouldn't event include the validation errors on the fields!
             var hasErrors = j$('.errorMsg').length > 0 || j$('.slds-theme--error').length > 0;
             return hasErrors;
+        },
+        
+        // called by our lightning component when it needs to know the primary contact, which may be
+        // exposed on our field set.
+        HH_getPrimaryContactName : function() {
+            var ctrlPC = j$('.npe01__One2OneContact__c');
+            if (ctrlPC) {
+                return ctrlPC.val();
+            }
+            return null;
         }
+        
                 
+    };
+    
+    // when Primary Contact is changed, notify our Lightning Component
+    // so it can update names and greetings.
+    function fireContactChangedEvent () {
+        var evt;
+        if (window.$A && (evt = window.$A.get("e." + ns + ":HH_ContactChangedEvent"))) {            
+            evt.setParams({contact:null});
+            evt.fire();
+        }
     };
 
     </script>
