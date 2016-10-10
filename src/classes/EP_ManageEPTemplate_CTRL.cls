@@ -416,13 +416,17 @@ public with sharing class EP_ManageEPTemplate_CTRL {
 
         Component.Apex.OutputText addDependentTaskButton = new Component.Apex.OutputText(
             value='<button onclick="addDependentTaskJS(\''+ wrapper.level +'\');return false;" '+ 
-            'class="slds-button slds-button--brand">'+Label.EPAddDependentTask+'</button>',
+            'class="slds-button slds-button--brand">' + Label.EPAddDependentTask + 
+            '<span class="slds-assistive-text">' + Schema.Sobjecttype.Task.getLabel() + ' ' + wrapper.level + 
+            '</span></button>',
             escape=false
         );
          
         Component.Apex.OutputText deleteTaskButton = new Component.Apex.OutputText(
             value='<button onclick="deleteTaskJS(\''+ wrapper.level +'\');return false;" '+ 
-            'class="slds-button slds-button--destructive">'+Label.EPDeleteTask+'</button>',
+            'class="slds-button slds-button--destructive">' + Label.EPDeleteTask +
+            '<span class="slds-assistive-text">' + Schema.Sobjecttype.Task.getLabel() + ' ' + wrapper.level + 
+            '</span></button>',
             escape=false
         );
         

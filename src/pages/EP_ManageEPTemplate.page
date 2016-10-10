@@ -14,7 +14,7 @@
             <div class="slds-page-header" role="banner">
               <div class="slds-grid">
                 <div class="slds-col">
-                  <p class="slds-text-heading--medium">Manage Engagement Plan Template</p>
+                  <h1 class="slds-text-heading--medium">Manage Engagement Plan Template</h1>
                 </div>
                 <div class="slds-col slds-no-flex slds-align-middle">
                     <div class="slds-button-group" role="group">
@@ -67,44 +67,43 @@
                         <div class="slds-form-element slds-p-top--small">
                             <apex:outputLabel value="{!$ObjectType.Engagement_Plan_Template__c.Fields.Default_Assignee__c.Label}" for="idBlankAssignmentRule" styleClass="slds-form-element__label" />
                             <div class="slds-form-element__control">
-                                <apex:inputField id="idBlankAssignmentRule" styleClass="slds-select slds-input" value="{!template.Default_Assignee__c}" required="true"/>
+                                <apex:inputField id="idBlankAssignmentRule" styleClass="slds-select slds-input" value="{!template.Default_Assignee__c}" required="true" html-aria-describedby="{!$Component.defaultAssigneeHelpText}"/>
                             </div>
-                            <apex:outputText styleClass="slds-form-element__help" value="{!$ObjectType.Engagement_Plan_Template__c.Fields.Default_Assignee__c.inlinehelpText}" />
+                            <apex:outputText styleClass="slds-form-element__help" id="defaultAssigneeHelpText" value="{!$ObjectType.Engagement_Plan_Template__c.Fields.Default_Assignee__c.inlinehelpText}" />
                         </div>
                         <div class="slds-form-element slds-p-top--small">
                             <div class="slds-form-element__control">
                                 <label class="slds-checkbox">
-                                    <apex:inputCheckbox id="idSkipWeekends" value="{!template.Skip_Weekends__c}">
+                                    <apex:inputCheckbox id="idSkipWeekends" value="{!template.Skip_Weekends__c}" html-aria-describedby="{!$Component.skipWeekendsHelpText}">
                                         <apex:actionSupport event="onchange" immediate="false" reRender="templateForm" status="statusLoad"/>
                                     </apex:inputCheckbox>
                                     <span class="slds-checkbox--faux"></span>
                                     <apex:outputPanel styleClass="slds-form-element__label">{!$ObjectType.Engagement_Plan_Template__c.Fields.Skip_Weekends__c.Label}</apex:outputPanel>
                                 </label>
                             </div>
-                            <apex:outputText styleClass="slds-form-element__help" value="{!$ObjectType.Engagement_Plan_Template__c.Fields.Skip_Weekends__c.inlinehelpText}" />
+                            <apex:outputText styleClass="slds-form-element__help" id="skipWeekendsHelpText" value="{!$ObjectType.Engagement_Plan_Template__c.Fields.Skip_Weekends__c.inlinehelpText}" />
                         </div>
                         <apex:outputPanel rendered="{!template.Skip_Weekends__c==true}" layout="block" styleClass="slds-form-element slds-p-top--small">
                             <apex:outputLabel value="{!$ObjectType.Engagement_Plan_Template__c.Fields.Reschedule_To__c.Label}" for="idSkipDay" styleClass="slds-form-element__label" />
                             <div class="slds-form-element__control">
-                                <apex:inputField id="idSkipDay" styleClass="slds-select slds-input" value="{!template.Reschedule_To__c}"/>
+                                <apex:inputField id="idSkipDay" styleClass="slds-select slds-input" value="{!template.Reschedule_To__c}" html-aria-describedby="{!$Component.rescheduleToHelpText}"/>
                             </div>
-                            <apex:outputText styleClass="slds-form-element__help" value="{!$ObjectType.Engagement_Plan_Template__c.Fields.Reschedule_To__c.inlinehelpText}" />
+                            <apex:outputText styleClass="slds-form-element__help" id="rescheduleToHelpText" value="{!$ObjectType.Engagement_Plan_Template__c.Fields.Reschedule_To__c.inlinehelpText}" />
                         </apex:outputPanel>
                         <div class="slds-form-element slds-p-top--small">
                             <div class="slds-form-element__control">
                                 <label class="slds-checkbox">
-                                    <apex:inputCheckbox id="idUpdateDueDate" styleClass="slds-checkbox" value="{!template.Automatically_Update_Child_Task_Due_Date__c}" />
+                                    <apex:inputCheckbox id="idUpdateDueDate" styleClass="slds-checkbox" value="{!template.Automatically_Update_Child_Task_Due_Date__c}" html-aria-describedby="{!$Component.updateDueDateHelpText}"/>
                                     <span class="slds-checkbox--faux"></span>
-                                
                                     <apex:outputLabel value="{!$ObjectType.Engagement_Plan_Template__c.Fields.Automatically_Update_Child_Task_Due_Date__c.Label}" for="idUpdateDueDate" styleClass="slds-form-element__label" />
                                 </label>
                             </div>
-                            <apex:outputText styleClass="slds-form-element__help" value="{!$ObjectType.Engagement_Plan_Template__c.Fields.Automatically_Update_Child_Task_Due_Date__c.inlinehelpText}" />
+                            <apex:outputText styleClass="slds-form-element__help" id="updateDueDateHelpText" value="{!$ObjectType.Engagement_Plan_Template__c.Fields.Automatically_Update_Child_Task_Due_Date__c.inlinehelpText}" />
                         </div>
                     </div>
                 </apex:outputPanel>
             </form>
-            <p class="slds-text-heading--medium slds-p-top--medium">{!$Label.EPManageTasks}</p>
+            <h1 class="slds-text-heading--medium slds-p-top--medium slds-p-left--small">{!$Label.EPManageTasks}</h1>
             <apex:outputPanel layout="block" styleClass="slds-grid" id="taskTree">
                 <div class="slds-col slds-m-top--medium slds-m-right--medium slds-size--1-of-1">
                     <apex:dynamicComponent componentValue="{!taskTree}"/>
