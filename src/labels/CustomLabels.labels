@@ -620,6 +620,14 @@
         <value>Manage Engagement Plan Tasks</value>
     </labels>
     <labels>
+        <fullName>EPManageTemplate</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>EPManageTemplate</shortDescription>
+        <value>Manage Engagement Plan Template</value>
+    </labels>
+    <labels>
         <fullName>EPTaskDependency</fullName>
         <categories>Engagement Plan, Error</categories>
         <language>en_US</language>
@@ -634,6 +642,14 @@
         <protected>true</protected>
         <shortDescription>EPTaskTemplate</shortDescription>
         <value>Engagement Plan Tasks can only be dependent on other Engagement Plan Tasks that belong to the same Engagement Plan Template.</value>
+    </labels>
+    <labels>
+        <fullName>EPTo</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>to, as in &quot;Add depend task to task 1&quot;</shortDescription>
+        <value>to</value>
     </labels>
     <labels>
         <fullName>HiddenForSecurity</fullName>

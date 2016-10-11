@@ -2,6 +2,7 @@
     <apex:stylesheet value="{!URLFOR($Resource.sfdo203, '/assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{!$Label.EPManageTemplate}</title>
     <apex:form id="theForm">
         <div class="sfdo203">
             <div class="slds-spinner_container" style="z-index:999;position:fixed;display:none;" id="divLoading">
@@ -14,7 +15,7 @@
             <div class="slds-page-header" role="banner">
               <div class="slds-grid">
                 <div class="slds-col">
-                  <h1 class="slds-text-heading--medium">Manage Engagement Plan Template</h1>
+                  <h1 class="slds-text-heading--medium">{!$Label.EPManageTemplate}</h1>
                 </div>
                 <div class="slds-col slds-no-flex slds-align-middle">
                     <div class="slds-button-group" role="group">

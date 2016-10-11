@@ -396,7 +396,9 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         Component.Apex.OutputText boxAndLabel = new Component.Apex.OutputText(value='<div aria-labelledby="task' + wrapper.level + 
             '", class="slds-m-left--medium slds-m-top--small"><fieldset class="slds-box slds-theme--default slds-container--fluid '+
             'slds-p-around--small", style="border-left: 6px solid ' + sidebarColors[colorNumber] + '"><legend id=task' + wrapper.level + 
-            ' class="slds-text-heading--small">' + Schema.Sobjecttype.Task.getLabel() + ' ' + wrapper.level + '</legend>', escape=false);
+            ' class="slds-text-heading--small">' + Schema.Sobjecttype.Task.getLabel() + ' ' + wrapper.level + 
+            '<span class="slds-assistive-text"> ' + Schema.Sobjecttype.Task.getLabel() + ' ' + wrapper.level + 
+            '</span></legend>', escape=false);
 
         Component.Apex.OutputPanel firstRow = new Component.Apex.OutputPanel(styleClass='slds-grid', layout='block');
         Component.Apex.OutputPanel secondRow = new Component.Apex.OutputPanel(styleClass='slds-grid', layout='block');
@@ -417,7 +419,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         Component.Apex.OutputText addDependentTaskButton = new Component.Apex.OutputText(
             value='<button onclick="addDependentTaskJS(\''+ wrapper.level +'\');return false;" '+ 
             'class="slds-button slds-button--brand">' + Label.EPAddDependentTask + 
-            '<span class="slds-assistive-text">' + Schema.Sobjecttype.Task.getLabel() + ' ' + wrapper.level + 
+            '<span class="slds-assistive-text"> ' + Label.EPTo + Schema.Sobjecttype.Task.getLabel() + ' ' + wrapper.level + 
             '</span></button>',
             escape=false
         );
@@ -425,7 +427,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         Component.Apex.OutputText deleteTaskButton = new Component.Apex.OutputText(
             value='<button onclick="deleteTaskJS(\''+ wrapper.level +'\');return false;" '+ 
             'class="slds-button slds-button--destructive">' + Label.EPDeleteTask +
-            '<span class="slds-assistive-text">' + Schema.Sobjecttype.Task.getLabel() + ' ' + wrapper.level + 
+            '<span class="slds-assistive-text">' + wrapper.level + 
             '</span></button>',
             escape=false
         );
