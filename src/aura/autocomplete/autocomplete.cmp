@@ -1,5 +1,4 @@
 <aura:component >
-    <ltng:require styles="{!$Resource.sfdo203 + '/assets/styles/salesforce-lightning-design-system-ltng.min.css'}" />
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
     <aura:handler name="optionSelected" event="c:autocompleteSelectListOption" action="{!c.handleOptionSelected}"/>
@@ -30,7 +29,7 @@
     <aura:attribute name="showLoadingIndicator" type="Boolean" default="false" access="public"/>
     <aura:attribute name="emptyListContent" type="Aura.Component[]" description="Content to be shown if the list is empty" access="public"/>
 
-    <div class="sfdo203" aura:id="autocomplete">
+    <div class="slds" aura:id="autocomplete">
         <div
              class="{!'slds-lookup ' + (and(!empty(v.value), !empty(v.displayValue)) ? 'slds-has-selection' : '')}"
              data-select="single"
@@ -41,10 +40,8 @@
                     <label class="slds-form-element__label">{!v.label}</label>
                 </aura:if>
                 <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--right">
-                    <c:svg ariaHidden="true"
-                           class="slds-input__icon slds-icon-text-default"
-                           xlinkHref="{!$Resource.sfdo203 + '/assets/icons/utility-sprite/svg/symbols.svg#search'}"
-                           />
+                    <lightning:icon iconName="utility:search" 
+                        class="slds-input__icon slds-icon-text-default" size="x-small"/>
                     <ui:inputText aura:id="input"
                                   class="{!'slds-input ' + (and(!empty(v.value), !empty(v.displayValue)) ? 'slds-hide' : '')}"
                                   placeholder="{!v.placeholder}"
@@ -58,10 +55,7 @@
                 <aura:if isTrue="{!v.showListHeader}">
                     <div class="slds-lookup__item">
                         <span>
-                            <c:svg ariaHidden="true"
-                                   class="slds-icon slds-icon-text-default slds-icon--small"
-                                   xlinkHref="{!$Resource.sfdo203 + '/assets/icons/utility-sprite/svg/symbols.svg#search'}"
-                                   />
+                            <lightning:icon iconName="utility:search" class="slds-icon-text-default" size="small"/>
                             &quot;{!v.keyword}&quot; {!if(!empty(v.searchContext), v.searchContext, '')}
                         </span>
                     </div>

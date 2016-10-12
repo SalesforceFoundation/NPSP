@@ -1,5 +1,6 @@
 ({
     handleNewContact: function(component, event, helper) {
+        event.preventDefault();
         var con = {'sobjectType': 'Contact'};
         var autocomplete = component.find('autocomplete');
         var name = autocomplete.get('v.displayValue');
