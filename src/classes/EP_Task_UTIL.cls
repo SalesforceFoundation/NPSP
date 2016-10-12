@@ -177,6 +177,11 @@ public with sharing class EP_Task_UTIL {
 
         taskResult.ActivityDate = calcActivityDate(epTask, System.today());
 
+        //default the Priority field if none is set
+        if (String.isBlank(taskResult.Priority)) {
+            taskResult.Priority = UTIL_Describe.getDefaultSelectOption('Task','Priority');
+        }
+
         //Non Dependent Task defaults
         if (epTask.Parent_Task__c == null) {
             setReminder(taskResult);

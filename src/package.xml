@@ -856,8 +856,10 @@
         <members>EPAddTask</members>
         <members>EPDeleteTask</members>
         <members>EPManageTasks</members>
+        <members>EPManageTemplate</members>
         <members>EPTaskDependency</members>
         <members>EPTaskTemplate</members>
+        <members>EPTo</members>
         <members>HiddenForSecurity</members>
         <members>NameRequired</members>
         <members>PageMessagesConfirm</members>
