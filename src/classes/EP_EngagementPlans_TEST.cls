@@ -65,8 +65,7 @@ private with sharing class EP_EngagementPlans_TEST {
             Reminder_Time__c = '660',
             Send_Email__c = true,
             Days_After__c = 3,
-            Type__c = 'Call',
-            Priority__c = 'Medium'
+            Type__c = 'Call'
         );
         insert epTask;
 
@@ -103,7 +102,7 @@ private with sharing class EP_EngagementPlans_TEST {
         System.assertEquals(System.Today().addDays(3), results[0].ActivityDate, 'Activity Date should be three days from today.');
         System.assert(results[0].IsReminderSet, 'Reminder should be set.');
         System.assertEquals(System.Today().addDays(3), results[0].ReminderDateTime.Date(), 'Reminder should be set three days from today.');
-        System.assertEquals(epTask.Priority__c, results[0].Priority, 'Priority field should be set based on EP Task Priority.');
+        System.assertEquals(UTIL_Describe.getDefaultSelectOption('Task', 'Priority'), results[0].Priority, 'Priority field left blank should be set based on default picklist value.');
         System.assertEquals(otherUserId, results[0].OwnerId, 'Task owner should be based on EP Task Assigned To field.');
 
         System.assertEquals(dependentEpTask.Name, results[1].Subject, 'Subject field should be set based on EP Task Name.');
