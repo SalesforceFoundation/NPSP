@@ -395,10 +395,9 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         //creates a box around the form with a label for the hierarchy level, and a color bar to more easily grock which level we're at
         Component.Apex.OutputText boxAndLabel = new Component.Apex.OutputText(value='<div aria-labelledby="task' + wrapper.level + 
             '", class="slds-m-left--medium slds-m-top--small"><fieldset class="slds-box slds-theme--default slds-container--fluid '+
-            'slds-p-around--small", style="border-left: 6px solid ' + sidebarColors[colorNumber] + '"><legend id=task' + wrapper.level + 
+            'slds-p-around--small", style="border-left: 6px solid ' + sidebarColors[colorNumber] + '"><legend id="task' + wrapper.level + '"' +
             ' class="slds-text-heading--small">' + Schema.Sobjecttype.Task.getLabel() + ' ' + wrapper.level + 
-            '<span class="slds-assistive-text"> ' + Schema.Sobjecttype.Task.getLabel() + ' ' + wrapper.level + 
-            '</span></legend>', escape=false);
+            '</legend>', escape=false);
 
         Component.Apex.OutputPanel firstRow = new Component.Apex.OutputPanel(styleClass='slds-grid', layout='block');
         Component.Apex.OutputPanel secondRow = new Component.Apex.OutputPanel(styleClass='slds-grid', layout='block');

@@ -1,8 +1,7 @@
-<apex:page standardController="Engagement_Plan_Template__c" extensions="EP_ManageEPTemplate_CTRL" standardStylesheets="false" showHeader="true">
+<apex:page standardController="Engagement_Plan_Template__c" extensions="EP_ManageEPTemplate_CTRL" standardStylesheets="false" showHeader="true" title="{!$Label.EPManageTemplate}">
     <apex:stylesheet value="{!URLFOR($Resource.sfdo203, '/assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{!$Label.EPManageTemplate}</title>
     <apex:form id="theForm">
         <div class="sfdo203">
             <div class="slds-spinner_container" style="z-index:999;position:fixed;display:none;" id="divLoading">
