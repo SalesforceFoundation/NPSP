@@ -4196,7 +4196,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpNPSPDoc</shortDescription>
-        <value>NPSP 3.0 Documentation</value>
+        <value>NPSP Documentation</value>
     </labels>
     <labels>
         <fullName>stgHelpNPSPSettings</fullName>
