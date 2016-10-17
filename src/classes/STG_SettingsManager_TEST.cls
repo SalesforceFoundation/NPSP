@@ -68,9 +68,9 @@ public with sharing class STG_SettingsManager_TEST {
         List<Schedulable__c> scheduledJobs = [select Class_Name__c from Schedulable__c];
         System.assertEquals(UTIL_MasterSchedulableHelper.scheduledClasses.size(), scheduledJobs.size());
         
-        List<CronTrigger> masterJobs = [select Id, CronJobDetail.Id from CronTrigger where CronJobDetail.Name IN 
-        :UTIL_MasterSchedulableHelper.scheduledJobs and CronJobDetail.JobType = '7'];
-        System.assertEquals(3, masterJobs.size());
+        List<CronTrigger> masterJobs = [select Id, CronJobDetail.Id from CronTrigger where CronJobDetail.Name = 
+        :UTIL_MasterSchedulableHelper.scheduledJobName and CronJobDetail.JobType = '7'];
+        System.assertEquals(1, masterJobs.size());
     }
      
     /*********************************************************************************************************

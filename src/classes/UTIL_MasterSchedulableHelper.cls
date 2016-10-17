@@ -51,13 +51,13 @@ public without sharing class UTIL_MasterSchedulableHelper {
     /*******************************************************************************************************
     * @description The classes to be run by the master schedulable.
     */
-    public static String[] scheduledClasses = new String[] {'RD_RecurringDonations_BATCH', 'RLLP_OppAccRollup_BATCH', 'RLLP_OppContactRollup_BATCH', 
-    	'RLLP_OppHouseholdRollup_BATCH', 'RLLP_OppSoftCreditRollup_BATCH', 'ADDR_SEASONAL_SCHED', 'ALLO_Rollup_SCHED', 'LVL_LevelAssign_SCHED' };
+    public static List<String> scheduledClasses = new List<String> {'RD_RecurringDonations_BATCH', 'RLLP_OppAccRollup_BATCH', 'RLLP_OppContactRollup_BATCH', 
+    	'RLLP_OppHouseholdRollup_BATCH', 'RLLP_OppSoftCreditRollup_BATCH', 'ADDR_SEASONAL_SCHED', 'ALLO_Rollup_SCHED', 'LVL_LevelAssign_SCHED', 'ERR_AsyncErrors'};
     
     /*******************************************************************************************************
-    * @description The names to give to the instances of the master schedulable that are to be scheduled.
+    * @description The name to give to the instance of the master schedulable.
     */
-    public static String[] scheduledJobs = new String[] {'NPSP Scheduler 1', 'NPSP Scheduler 2', 'NPSP Scheduler 3'};
+    public static final String scheduledJobName = 'NPSP Scheduler';
     
     /*******************************************************************************************************
     * @description Constructor that calls the method that runs the classes.
@@ -85,15 +85,15 @@ public without sharing class UTIL_MasterSchedulableHelper {
             Boolean shouldRun = false;
             if(lastTimeRun == null) {
                 shouldRun = true;
-            } else if(frequency == SchedFrequency.HOURLY.name() && (lastTimeRun == null || lastTimeRun.addHours(1) < System.now())) {
+            } else if(frequency.equalsIgnoreCase(SchedFrequency.HOURLY.name()) && (lastTimeRun == null || lastTimeRun.addHours(1) < System.now())) {
                 shouldRun = true;
-            } else if(frequency == SchedFrequency.DAILY.name() && (lastTimeRun == null || lastTimeRun.addDays(1) < System.now())) {
+            } else if(frequency.equalsIgnoreCase(SchedFrequency.DAILY.name()) && (lastTimeRun == null || lastTimeRun.addDays(1) < System.now())) {
                 shouldRun = true;
-            } else if(frequency == SchedFrequency.WEEKLY.name() && (lastTimeRun == null || lastTimeRun.addDays(7) < System.now())) {
+            } else if(frequency.equalsIgnoreCase(SchedFrequency.WEEKLY.name()) && (lastTimeRun == null || lastTimeRun.addDays(7) < System.now())) {
                 shouldRun = true;
-            } else if(frequency == SchedFrequency.MONTHLY.name() && (lastTimeRun == null || lastTimeRun.addMonths(1) < System.now())) {
+            } else if(frequency.equalsIgnoreCase(SchedFrequency.MONTHLY.name()) && (lastTimeRun == null || lastTimeRun.addMonths(1) < System.now())) {
                 shouldRun = true;
-            } else if(frequency == SchedFrequency.QUARTERLY.name() && (lastTimeRun == null || lastTimeRun.addMonths(3) < System.now())) {
+            } else if(frequency.equalsIgnoreCase(SchedFrequency.QUARTERLY.name()) && (lastTimeRun == null || lastTimeRun.addMonths(3) < System.now())) {
                 shouldRun = true;
             }
             
@@ -110,7 +110,9 @@ public without sharing class UTIL_MasterSchedulableHelper {
                }
             }
         }
-        update jobsToUpdate;
+        if (!jobsToUpdate.isEmpty()) {
+            update jobsToUpdate;
+        }
     }
     
     /*******************************************************************************************************
@@ -122,8 +124,8 @@ public without sharing class UTIL_MasterSchedulableHelper {
         //Abort the scheduled jobs from the old NPSP packages.
         //Abort the "new" scheduled jobs so that they get rescheduled again from the settings page. We just changed the name
         //slightly (added a space) so that they get rescheduled (with different name when a user visits the settings page).
-        String[] jobNames = new String[]{'NPSP Global Scheduler', 'Nightly Opportunity Roll Up', 'Recurring Donation Updates', 
-            'NPSP Scheduler1', 'NPSP Scheduler2', 'NPSP Scheduler3'};     
+        List<String> jobNames = new List<String>{'NPSP Global Scheduler', 'Nightly Opportunity Roll Up', 'Recurring Donation Updates', 
+            'NPSP Scheduler1', 'NPSP Scheduler2', 'NPSP Scheduler3', 'NPSP Scheduler 1', 'NPSP Scheduler 2', 'NPSP Scheduler 3'};
         List<CronTrigger> oldScheduledJobs = [select Id, CronJobDetail.Id from CronTrigger 
            where CronJobDetail.Name IN :jobNames and CronJobDetail.JobType = '7'];
         if(oldScheduledJobs != null && oldScheduledJobs.size() > 0) {
@@ -139,11 +141,11 @@ public without sharing class UTIL_MasterSchedulableHelper {
     */
     public static void setSchedulableTable() {
     	
-    	Integer numOfExistingSchedClasses = [select count() from Schedulable__c where Class_Name__c IN :scheduledClasses];
+    	List<Schedulable__c> existingSchedClasses = [select Id from Schedulable__c where Class_Name__c IN :scheduledClasses];
     	
-    	if(numOfExistingSchedClasses != scheduledClasses.size()) {
+    	if(existingSchedClasses.size() != scheduledClasses.size()) {
 	        // clean table, in case it's a push upgrate and we have added or removed entries from the table.
-	        delete [select id from Schedulable__c where Name != null];
+	        delete existingSchedClasses;
 	        
 	        // create records for the jobs that are to run recursively
 	        List<Schedulable__c> jobs = new List<Schedulable__c>();
@@ -163,6 +165,8 @@ public without sharing class UTIL_MasterSchedulableHelper {
                     Active__c = true, Frequency__c = 'Daily'));
             jobs.add(new Schedulable__c(Name = 'Level Assignment Batch', Class_Name__c = scheduledClasses[7],
                     Active__c = true, Frequency__c = 'Daily'));
+            jobs.add(new Schedulable__c(Name = 'Asynchronous Error Processing', Class_Name__c = scheduledClasses[8],
+                    Active__c = true, Frequency__c = 'Hourly'));
 	        insert jobs;
     	}    
     }
@@ -177,8 +181,6 @@ public without sharing class UTIL_MasterSchedulableHelper {
         // NOTE: if more jobs are added to this list, they must also be added to the code in
         // STG_PanelHealthCheck_CTRL.verifyScheduledJobs() so that HealthCheck will include
         // verifying they exist.
-        UTIL_JobScheduler.scheduleJobIfNotScheduled(scheduledJobs[0], '0 0 23 ? * *', 'UTIL_MasterSchedulable');
-        UTIL_JobScheduler.scheduleJobIfNotScheduled(scheduledJobs[1], '0 0 1 ? * *', 'UTIL_MasterSchedulable');
-        UTIL_JobScheduler.scheduleJobIfNotScheduled(scheduledJobs[2], '0 0 2 ? * *', 'UTIL_MasterSchedulable');    
+        UTIL_JobScheduler.scheduleJobIfNotScheduled(scheduledJobName, '0 0 * * * ?', 'UTIL_MasterSchedulable');
     }
 }
