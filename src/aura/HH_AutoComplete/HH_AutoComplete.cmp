@@ -29,13 +29,8 @@
 
         <aura:set attribute="listFooter">
             <div class="slds-lookup__item">
-                <ui:button class="slds-button" press="{!c.handleNewContact}">
-                    <c:svg ariaHidden="true"
-                           class="slds-icon slds-icon-text-default slds-icon--small"
-                           xlinkHref="{!$Resource.sfdo203 + '/assets/icons/utility-sprite/svg/symbols.svg#add'}"
-                           />
-                    {!$Label.npo02.NewContact}
-                </ui:button>
+                <lightning:button variant="bare" label="{!$Label.npo02.NewContact}"
+                    iconName="utility:add" iconPosition="left" onclick="{!c.handleNewContact}" />
             </div>
         </aura:set>
         

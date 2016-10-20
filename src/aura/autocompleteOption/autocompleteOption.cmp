@@ -9,10 +9,7 @@
         <li class="slds-lookup__item">
             <ui:button class="slds-button" press="{!c.handleClick}">
                 <aura:if isTrue="{!and(!empty(v.iconSprite), !empty(v.iconName))}">
-                    <c:svg ariaHidden="true"
-                           class="{!'slds-icon slds-icon--small slds-icon-' + v.iconSprite + '-' + v.iconName}"
-                           xlinkHref="{!$Resource.sfdo203 + '/assets/icons/' + v.iconSprite + '-sprite/svg/symbols.svg#' + v.iconName}"
-                           />
+                    <lightning:icon iconName="{!v.iconSprite + ':' + v.iconName}" size="small"/>
                 </aura:if>
                 {!v.displayValue}
             </ui:button>

@@ -14,18 +14,14 @@
                 <span class="slds-tile__title slds-truncate">
                     <div class="slds-media slds-media--center slds-has-flexi-truncate">
                         <div class="slds-media__figure">
-                            <c:svg class="slds-icon slds-icon-standard-contact slds-icon--small"
-                                   xlinkHref="{!$Resource.sfdo203 + '/assets/icons/standard-sprite/svg/symbols.svg#contact'}" />
+                            <lightning:icon iconName="standard:contact" class="slds-icon--small" size="small"/>
                         </div>
                         <div class="slds-media__body">
                             <a href="{! '/' + v.contact.Id}" target="_blank">{!v.contact.FirstName}&nbsp;{!v.contact.LastName}</a>
                         </div>
                         <div class="slds-media__figure slds-m-right--none">
-                            <ui:button label="{!$Label.c.btnRemove}" buttonTitle="{!$Label.c.btnRemove}" labelClass="assistiveText"
-                                       class="slds-button slds-button--icon removeBtn" press="{!c.removeContact}">
-                                <c:svg class="slds-icon slds-icon--x-small slds-icon-text-default slds-button__icon"
-                                       xlinkHref="{!$Resource.sfdo203 + '/assets/icons/utility-sprite/svg/symbols.svg#close'}" />
-                            </ui:button>
+                            <lightning:buttonIcon iconName="utility:close" class="removeBtn" variant="bare"
+                                onclick="{!c.removeContact}" alternativeText="{!$Label.c.btnRemove}"/>
                         </div>
                     </div>
                 </span>
