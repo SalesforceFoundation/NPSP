@@ -93,7 +93,7 @@
                             </dt>
                             <dd>
                                 <p class="slds-text-body--regular slds-truncate">
-                                    <apex:outputField value="{!oppTotalSelected.Amount}"/>
+                                    <apex:outputField id="totalSelected" value="{!oppTotalSelected.Amount}"/>
                                 </p>
                             </dd>
                         </dl>
@@ -107,7 +107,7 @@
                             </dt>
                             <dd>
                                 <p class="slds-text-body--regular slds-truncate">
-                                    <apex:outputField value="{!oppTotalUnaccounted.Amount}"/>
+                                    <apex:outputField id="totalUn" value="{!oppTotalUnaccounted.Amount}"/>
                                 </p>
                             </dd>
                         </dl>
