@@ -63,7 +63,7 @@ Schedulable {
     /*******************************************************************************************************
     * @description Executes the RD Batch process.
     */ 
-    public static void execute(SchedulableContext context) {
+    public void execute(SchedulableContext context) {
         Database.executeBatch(new RD_RecurringDonations_BATCH(), 50); 
     }
     

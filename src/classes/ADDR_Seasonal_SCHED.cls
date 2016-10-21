@@ -38,12 +38,12 @@ public class ADDR_Seasonal_SCHED implements Database.Batchable<SObject>, Schedul
     /*******************************************************************************************************
     * @description holds the soql string that queries all Addresses in the current month and day
     */
-    public static String strQuery { get; set; }
+    public String strQuery { get; set; }
     
     /*******************************************************************************************************
     * @description Schedulable execute method executes this batch job.
     ********************************************************************************************************/
-    public static void execute(SchedulableContext context) {
+    public void execute(SchedulableContext context) {
         //call the batch job, processing 10 at a time
         integer iMonth = system.today().month();
         integer iDay = system.today().day();

@@ -38,14 +38,14 @@ public without sharing class LVL_LevelAssign_SCHED implements Schedulable {
     /*******************************************************************************************************
     * @description Schedulable execute method executes this batch job.
     */
-    public static void execute(SchedulableContext context) {
+    public void execute(SchedulableContext context) {
         runBatch();
     }
     
     /*******************************************************************************************************
     * @description Starts one batch job per level object.
     */
-    public static void runBatch() {
+    public void runBatch() {
         try {
             cLvlAssignBatch = 0;
 
@@ -79,6 +79,5 @@ public without sharing class LVL_LevelAssign_SCHED implements Schedulable {
     /*********************************************************************************************************
     * @description How many Level Assign Batches were kicked off
     */
-    public static integer cLvlAssignBatch { get; set; }
-
+    public integer cLvlAssignBatch { get; set; }
 }

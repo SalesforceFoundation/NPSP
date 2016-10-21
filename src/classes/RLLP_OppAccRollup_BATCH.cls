@@ -39,7 +39,7 @@ public class RLLP_OppAccRollup_BATCH implements Database.Batchable<SObject>, Sch
     /*******************************************************************************************************
     * @description Schedulable execute method executes this batch job.
     ********************************************************************************************************/
-    public static void execute(SchedulableContext context) {
+    public void execute(SchedulableContext context) {
         try {
             Database.executeBatch(new RLLP_OppAccRollup_BATCH(), RLLP_OppRollup_UTIL.BATCH_SIZE);
         } catch(Exception e) {

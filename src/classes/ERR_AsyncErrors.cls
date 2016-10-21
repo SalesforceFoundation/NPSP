@@ -37,7 +37,7 @@ public virtual class ERR_AsyncErrors implements Queueable, Schedulable {
     /**
      * @description Schedulable execute method enqueues this job.
      */
-    public static void execute(SchedulableContext context) {
+    public virtual void execute(SchedulableContext context) {
         System.enqueueJob(new ERR_AsyncErrors());
     }
 

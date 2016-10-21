@@ -52,7 +52,7 @@ public class ERR_AsyncErrors_TEST {
 
         stub.pendingAsyncJobErrors = new List<ERR_AsyncErrors.AsyncApexJobWrapper>();
 
-        stub.execute(null);
+        stub.execute((QueueableContext)null);
 
         System.assertEquals(
             DateTime.newInstanceGmt(2016, 8, 28, 8, 0, 0),
@@ -79,7 +79,7 @@ public class ERR_AsyncErrors_TEST {
 
         stub.pendingAsyncJobErrors = new List<ERR_AsyncErrors.AsyncApexJobWrapper>();
 
-        stub.execute(null);
+        stub.execute((QueueableContext)null);
 
         System.assertEquals(
             DateTime.newInstanceGmt(2016, 8, 29, 8, 0, 0),
@@ -106,7 +106,7 @@ public class ERR_AsyncErrors_TEST {
 
         stub.pendingAsyncJobErrors = new List<ERR_AsyncErrors.AsyncApexJobWrapper>();
 
-        stub.execute(null);
+        stub.execute((QueueableContext)null);
 
         System.assertEquals(
             'npsp',
@@ -131,7 +131,7 @@ public class ERR_AsyncErrors_TEST {
 
         stub.pendingAsyncJobErrors = new List<ERR_AsyncErrors.AsyncApexJobWrapper>();
 
-        stub.execute(null);
+        stub.execute((QueueableContext)null);
 
         System.assertEquals(
             DateTime.newInstanceGmt(2016, 8, 29, 8, 0, 0),
@@ -180,7 +180,7 @@ public class ERR_AsyncErrors_TEST {
             )
         };
 
-        stub.execute(null);
+        stub.execute((QueueableContext)null);
 
         Set<Error__c> expectedErrors = new Set<Error__c>{
             new Error__c(
@@ -237,7 +237,7 @@ public class ERR_AsyncErrors_TEST {
             )
         };
 
-        stub.execute(null);
+        stub.execute((QueueableContext)null);
 
         System.assert(stub.errorNotificationsSent);
     }
@@ -247,7 +247,7 @@ public class ERR_AsyncErrors_TEST {
      * @description This stub class overrides behavior of ERR_AsyncErrors that
      * depends on the runtime environment.
      */
-    private class AsyncErrorsStub extends ERR_AsyncErrors {
+    private class AsyncErrorsStub extends ERR_AsyncErrors implements Schedulable {
         public DateTime currentDateTime;
         public String currentNamespace;
         public Error_Settings__c errorSettingsOrgDefaults;
@@ -280,6 +280,8 @@ public class ERR_AsyncErrors_TEST {
             pendingAsyncJobErrorsNamespace = namespace;
             return pendingAsyncJobErrors;
         }
+        public override void execute(SchedulableContext sc) {
+            System.enqueueJob(new ERR_AsyncErrors());
+        }
     }
-
 }

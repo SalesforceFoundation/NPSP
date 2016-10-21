@@ -236,8 +236,9 @@ private class LVL_LevelAssignBATCH_TEST {
         // create test Contacts
         createTestContacts();
 
+        LVL_LevelAssign_SCHED sched = new LVL_LevelAssign_SCHED();
         Test.startTest();
-        LVL_LevelAssign_SCHED.runBatch();
+        sched.runBatch();
         Test.stopTest();
         
         verifyContactLevels();

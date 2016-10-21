@@ -37,7 +37,7 @@ public class RLLP_OppSoftCreditRollup_BATCH implements Database.Batchable<SObjec
     /*******************************************************************************************************
     * @description Schedulable execute method executes this batch job.
     ********************************************************************************************************/
-    public static void execute(SchedulableContext context) {
+    public void execute(SchedulableContext context) {
         try {
             Database.executeBatch(new RLLP_OppSoftCreditRollup_BATCH(), RLLP_OppRollup_UTIL.BATCH_SIZE);  
         } catch(Exception e) {
