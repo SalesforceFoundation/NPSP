@@ -178,7 +178,15 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
         mapOppIdSettings = new map<string,Opportunity_Naming_Settings__c>();
         for (Opportunity_Naming_Settings__c ons : listOppNamingSettings) {
 
-            List<Id> oppRecTypeIds = string.isBlank(ons.Opportunity_Record_Types__c) ? new List<Id>() : ons.Opportunity_Record_Types__c.split(';', 0);
+            List<String> oppRecTypeStrings = string.isBlank(ons.Opportunity_Record_Types__c) ? new List<String>() : ons.Opportunity_Record_Types__c.split(';', 0);
+            List<Id> oppRecTypeIds = new List<Id>();
+            for (String recTypeString : oppRecTypeStrings) {
+                if (!String.isBlank(recTypeString)) {
+                    try {
+                        oppRecTypeIds.add((id)recTypeString);
+                    } catch (Exception e) {}
+                }
+            }
 
             if (oppRecTypeIds.isEmpty()) {
                 mapOppIdSettings.put('', ons);
