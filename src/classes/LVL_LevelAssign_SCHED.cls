@@ -33,15 +33,19 @@
 * @group Levels
 * @description Schedulable class that creates the batch processes to compute Levels for each Target object
 */
-public without sharing class LVL_LevelAssign_SCHED implements UTIL_MasterSchedulableHelper.UTIL_IRecurring {
+public without sharing class LVL_LevelAssign_SCHED implements Schedulable {
     
     /*******************************************************************************************************
-    * @description Implementation of UTIL_MasterSchedulableHelper.UTIL_IRecurring, to allow nightly 
-    * scheduling. Attempts to start Level Assign batch jobs
-    * @return Boolean Whether the batch jobs started successfully. 
+    * @description Schedulable execute method executes this batch job.
     */
-    public Boolean executeReturnStatus() {
-        Savepoint sp = Database.setSavepoint();
+    public static void execute(SchedulableContext context) {
+        runBatch();
+    }
+    
+    /*******************************************************************************************************
+    * @description Starts one batch job per level object.
+    */
+    public static void runBatch() {
         try {
             cLvlAssignBatch = 0;
 
@@ -66,18 +70,15 @@ public without sharing class LVL_LevelAssign_SCHED implements UTIL_MasterSchedul
                 Database.executeBatch(batch);
                 cLvlAssignBatch++;
             }
-            return true;
         } catch(Exception e) {
-            Database.rollback(sp);
             ERR_Handler.processError(e, ERR_Handler_API.Context.LVL);
             cLvlAssignBatch = 0;
         }
-        return false;
     }
-    
+
     /*********************************************************************************************************
     * @description How many Level Assign Batches were kicked off
     */
-    public integer cLvlAssignBatch { get; set; }
+    public static integer cLvlAssignBatch { get; set; }
 
 }

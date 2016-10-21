@@ -34,26 +34,18 @@
 * @group-content ../../ApexDocContent/Allocations.htm
 * @description Allocations Rollups to General Accounting Units
 */
-public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH implements UTIL_MasterSchedulableHelper.UTIL_IRecurring {
+public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH implements Schedulable {
 
     /*******************************************************************************************************
-    * @description Implementation of UTIL_MasterSchedulableHelper.UTIL_IRecurring, to allow nightly 
-    * scheduling. Attempts to start allocations rollup batch job.
-    * @return Boolean Whether the batch job started successfully. 
+    * @description Schedulable execute method executes this batch job.
     ********************************************************************************************************/
-    public Boolean executeReturnStatus() {
-        if(UTIL_JobScheduler.canRunBatch()) {
-        	Savepoint sp = Database.setSavepoint();
-        	try {
-	            ALLO_Rollup_SCHED rollup = new ALLO_Rollup_SCHED(200);
-	            rollup.runRollups();
-	            return true;
-        	} catch(Exception e) {
-        		Database.rollback(sp);
-        		ERR_Handler.processError(e, ERR_Handler_API.Context.ALLO);
-        	}
+    public static void execute(SchedulableContext context) {
+        try {
+            ALLO_Rollup_SCHED rollup = new ALLO_Rollup_SCHED(RLLP_OppRollup_UTIL.BATCH_SIZE);
+            rollup.runRollups();
+        } catch(Exception e) {
+            ERR_Handler.processError(e, ERR_Handler_API.Context.ALLO);
         }
-        return false;
     }
 
     /*******************************************************************************************************

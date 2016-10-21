@@ -510,23 +510,20 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     */
     private void verifyScheduledJobs() {
         try {        
-            // make sure the Master Jobs are scheduduled
+            // make sure all default jobs are scheduduled
             List<CronTrigger> jobs = [select Id, CronJobDetail.Id from CronTrigger 
-               where CronJobDetail.Name = :UTIL_MasterSchedulableHelper.scheduledJobName and CronJobDetail.JobType = '7'];        
-            if (jobs.size() != 1) {
-                createDR(Label.healthLabelScheduler, statusError, Label.healthDetailsNothingScheduled, 
-                    String.format(label.healthSolutionNothingScheduled, new List<String>{UTIL_MasterSchedulableHelper.scheduledJobName}));
+               where CronJobDetail.Name IN :UTIL_MasterSchedulableHelper.defaultScheduledJobs.keySet() and CronJobDetail.JobType = '7'];        
+            if (jobs.size() != UTIL_MasterSchedulableHelper.defaultScheduledJobs.size()) {
+                createDR(
+                    Label.healthLabelScheduler, 
+                    statusError, 
+                    Label.healthDetailsNothingScheduled, 
+                    label.healthSolutionNothingScheduled
+                );
                 return;            
             }
     
-            // make sure the entries we expect are there.
-            Integer numOfJobs = [select count() from Schedulable__c where Class_Name__c IN :UTIL_MasterSchedulableHelper.scheduledClasses];
-            if (numOfJobs != UTIL_MasterSchedulableHelper.scheduledClasses.size()) {
-                createDR(Label.healthLabelScheduler, statusError, Label.healthDetailsScheduleJobs, Label.healthSolutionScheduleJobs);
-                return;            
-            }
-             
-            // now make sure all entries are valid
+            /*/ now make sure all entries are valid
             boolean isValidAll = true;
             List<Schedulable__c> schedClasses = [select Name, Class_Name__c, Last_Time_Run__c, Frequency__c from Schedulable__c where Active__c = true];
             for (Schedulable__c schedClass : schedClasses) {
@@ -551,12 +548,11 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
             }            
              
             if (isValidAll) {
-                createDR(Label.healthLabelScheduler, statusSuccess, null, label.healthLabelSchedulerValid);
-            }   
+            }   */
+            createDR(Label.healthLabelScheduler, statusSuccess, null, label.healthLabelSchedulerValid);
         } catch (exception ex) {
             createDR(Label.healthLabelScheduler, statusError,  ex.getMessage(), null);                   
         }    
-            
     }
     
     /*********************************************************************************************************

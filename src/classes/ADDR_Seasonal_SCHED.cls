@@ -33,32 +33,27 @@
 * @group Address Management
 * @description Supports the automatic scheduling of Seasonal Address updates  
 */ 
-public class ADDR_Seasonal_SCHED implements Database.Batchable<SObject>, UTIL_MasterSchedulableHelper.UTIL_IRecurring {
+public class ADDR_Seasonal_SCHED implements Database.Batchable<SObject>, Schedulable {
 
     /*******************************************************************************************************
     * @description holds the soql string that queries all Addresses in the current month and day
     */
-    public String strQuery { get; set; }
+    public static String strQuery { get; set; }
     
     /*******************************************************************************************************
-    * @description executes the batch job
-    * @return boolean. true if the batch runs, false if the batch cannot run.  
+    * @description Schedulable execute method executes this batch job.
     ********************************************************************************************************/
-    public Boolean executeReturnStatus() { 
-    	//call the batch job, processing 10 at a time
-        if(UTIL_JobScheduler.canRunBatch()) {
-	    	integer iMonth = system.today().month();
-	    	integer iDay = system.today().day();
-	        
-	        strQuery = 'select Id, Household_Account__c, Default_Address__c ' +
-	            ' from Address__c ' +
-	            ' where Seasonal_Start_Month__c = \'' + string.valueOf(iMonth) + '\'' +
-	            ' and Seasonal_Start_Day__c = \'' + string.valueOf(iDay) + '\'';
+    public static void execute(SchedulableContext context) {
+        //call the batch job, processing 10 at a time
+        integer iMonth = system.today().month();
+        integer iDay = system.today().day();
         
-            Id batchInstanceId = Database.executeBatch(this, 10);
-            return true;
-        }
-        return false;
+        strQuery = 'select Id, Household_Account__c, Default_Address__c ' +
+            ' from Address__c ' +
+            ' where Seasonal_Start_Month__c = \'' + string.valueOf(iMonth) + '\'' +
+            ' and Seasonal_Start_Day__c = \'' + string.valueOf(iDay) + '\'';
+    
+        Id batchInstanceId = Database.executeBatch(new ADDR_Seasonal_SCHED(), 10);
     }
 
     /*******************************************************************************************************
@@ -77,7 +72,7 @@ public class ADDR_Seasonal_SCHED implements Database.Batchable<SObject>, UTIL_Ma
     * @return void  
     ********************************************************************************************************/
     public void execute(Database.BatchableContext bc, Sobject[] listSobj) {
-    	ADDR_Addresses_TDTM.batchSeasonalUpdate((list<Address__c>) listSobj);        
+        ADDR_Addresses_TDTM.batchSeasonalUpdate((list<Address__c>) listSobj);        
     }
 
     /*******************************************************************************************************

@@ -33,14 +33,12 @@
 * @description A recurring job that will detect errors from asynchronous jobs
 * and log and send notifications for those errors
 */
-public virtual class ERR_AsyncErrors implements Queueable, UTIL_MasterSchedulableHelper.UTIL_IRecurring {
+public virtual class ERR_AsyncErrors implements Queueable, Schedulable {
     /**
-     * @description Implementation of UTIL_IRecurring.executeReturnStatus() to
-     * be called by UTIL_MasterSchedulableHelper
+     * @description Schedulable execute method enqueues this job.
      */
-    public Boolean executeReturnStatus() {
-        System.enqueueJob(this);
-        return true;
+    public static void execute(SchedulableContext context) {
+        System.enqueueJob(new ERR_AsyncErrors());
     }
 
     /**

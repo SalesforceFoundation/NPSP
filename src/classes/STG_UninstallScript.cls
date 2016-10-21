@@ -44,7 +44,7 @@ global class STG_UninstallScript implements UninstallHandler {
         
         String[] schedulers = new String[] {'NPSP Global Scheduler', 'NPSP Scheduler1', 'NPSP Scheduler2', 'NPSP Scheduler3', 
                                             'NPSP Scheduler 1', 'NPSP Scheduler 2', 'NPSP Scheduler 3'};
-        schedulers.add(UTIL_MasterSchedulableHelper.scheduledJobName);
+        schedulers.addAll(UTIL_MasterSchedulableHelper.defaultScheduledJobs.keySet());
     	List<CronTrigger> scheduledJobs = [select Id, CronJobDetail.Id from CronTrigger 
     	   where CronJobDetail.Name IN :schedulers and CronJobDetail.JobType = '7'];
     	

@@ -1755,7 +1755,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthDetailsNothingScheduled</shortDescription>
-        <value>The NPSP Global Scheduled class is not scheduled.</value>
+        <value>The NPSP default scheduled classes are not scheduled.</value>
     </labels>
     <labels>
         <fullName>healthDetailsOCRDupPrimary</fullName>
@@ -2067,7 +2067,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthLabelScheduler</shortDescription>
-        <value>NPSP Global Scheduler</value>
+        <value>NPSP Default Scheduler</value>
     </labels>
     <labels>
         <fullName>healthLabelSchedulerValid</fullName>
@@ -2075,7 +2075,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthLabelSchedulerValid</shortDescription>
-        <value>NPSP Global Scheduler job scheduled.</value>
+        <value>NPSP recurring jobs are scheduled.</value>
     </labels>
     <labels>
         <fullName>healthLabelShowPassedTests</fullName>
@@ -2364,7 +2364,7 @@ If you want to know which Opportunities would have previously included this doub
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionNothingScheduled</shortDescription>
-        <value>You must schedule the class UTIL_MasterSchedulable to run daily with the job name {0}.</value>
+        <value>You must schedule the NPSP default scheduled classes to run.</value>
     </labels>
     <labels>
         <fullName>healthSolutionOCRDupPrimary</fullName>

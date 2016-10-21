@@ -153,5 +153,9 @@ public with sharing class UTIL_Namespace_TEST {
         str = Label.stgHelpMatchedDonorRole;
         str = Label.stgNavBulkProcesses;
         str = Label.EPAddTask;
+        str = Label.healthDetailsInvalidScheduledJob;
+        str = Label.healthSolutionInvalidScheduledJob;
+        str = Label.healthDetailsScheduleJobs;
+        str = Label.healthSolutionScheduleJobs;
     }
 }

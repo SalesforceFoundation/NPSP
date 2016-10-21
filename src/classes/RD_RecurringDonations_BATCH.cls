@@ -33,9 +33,9 @@
 * @group Recurring Donations
 * @description Class provides a batchable wrapper for open ended recurring donations
 */
-public without sharing class RD_RecurringDonations_BATCH implements Database.Batchable<sObject>, Database.Stateful,
-UTIL_MasterSchedulableHelper.UTIL_IRecurring {
-	
+public without sharing class RD_RecurringDonations_BATCH implements Database.Batchable<sObject>, Database.Stateful, 
+Schedulable {
+    
     /*******************************************************************************************************
     * @description holds the query of all recurring donations to process
     */ 
@@ -55,21 +55,16 @@ UTIL_MasterSchedulableHelper.UTIL_IRecurring {
     * @description Class constructor
     */ 
     public RD_RecurringDonations_BATCH() {
-    	query = RD_RecurringDonations.strQueryRDNoWhere();
+        query = RD_RecurringDonations.strQueryRDNoWhere();
         query += ' where npe03__Open_Ended_Status__c = \'' + system.label.npe03.RecurringDonationOpenStatus + '\'';
-    	RD_ProcessControl.batchButton = true;
+        RD_ProcessControl.batchButton = true;
     }
         
     /*******************************************************************************************************
     * @description Executes the RD Batch process.
-    * @return boolean True if process executed, False if unable to run.
     */ 
-    public Boolean executeReturnStatus() {
-        if (UTIL_JobScheduler.canRunBatch()) {
-            Id batchInstanceId = Database.executeBatch(this, 50); 
-            return true;
-        }
-        return false;
+    public static void execute(SchedulableContext context) {
+        Database.executeBatch(new RD_RecurringDonations_BATCH(), 50); 
     }
     
     /*******************************************************************************************************
@@ -113,7 +108,4 @@ UTIL_MasterSchedulableHelper.UTIL_IRecurring {
         if (!Test.isRunningTest())
             upsert rds;                            
     }
-    
-    
-
 }
