@@ -55,7 +55,8 @@ public without sharing class UTIL_MasterSchedulableHelper {
             for(CronTrigger job : oldScheduledJobs) {
                  System.abortJob(job.Id);
             }
-        }   
+        }
+        delete [SELECT Id FROM Schedulable__c];
     }
     
     /*******************************************************************************************************
