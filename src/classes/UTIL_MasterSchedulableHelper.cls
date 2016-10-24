@@ -150,7 +150,11 @@ public without sharing class UTIL_MasterSchedulableHelper {
         String cronExpression = defaultScheduledJobs.get(jobName)[0];
         String className = defaultScheduledJobs.get(jobName)[1];
     
-        Schedulable classInstance = (Schedulable)Type.forName(className).newInstance();
-        System.schedule(jobName, cronExpression, classInstance);
+        try {
+            Schedulable classInstance = (Schedulable)Type.forName(className).newInstance();
+            System.schedule(jobName, cronExpression, classInstance);
+        } catch (Exception ex) {
+            ERR_Handler.processError(ex, ERR_Handler_API.Context.STTG);
+        }
     }
 }
