@@ -179,7 +179,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         // we must process dmlWrapper ourselves, so we can extract out the appropriate errors
         // that might occur updating contacts and accounts, and associating those errors with 
         // the correct addresses.
-        ERR_Handler.Errors errors = TDTM_TriggerHandler.processDMLWithRollback(dmlWrapper, false);
+        ERR_Handler.Errors errors = TDTM_TriggerHandler.processDMLAllOrNothing(dmlWrapper, false);
         if (errors.errorsExist) {
             for (Error__c error : errors.errorRecords) {
                 ID objId = ERR_Handler.getErrorObjectId(error);
