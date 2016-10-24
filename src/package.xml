@@ -222,6 +222,7 @@
         <members>STG_PanelRelReciprocal_CTRL</members>
         <members>STG_PanelRel_CTRL</members>
         <members>STG_PanelRenameHouseholds_CTRL</members>
+        <members>STG_PanelSchedule_CTRL</members>
         <members>STG_PanelTDTM_CTRL</members>
         <members>STG_PanelUpdatePrimaryContact_CTRL</members>
         <members>STG_PanelUserRollup_CTRL</members>
@@ -338,6 +339,7 @@
         <members>STG_PanelRelAuto</members>
         <members>STG_PanelRelReciprocal</members>
         <members>STG_PanelRenameHouseholds</members>
+        <members>STG_PanelSchedule</members>
         <members>STG_PanelTDTM</members>
         <members>STG_PanelUpdatePrimaryContact</members>
         <members>STG_PanelUserRollup</members>
@@ -636,6 +638,7 @@
         <members>Engagement_Plan__c.Total_Tasks__c</members>
         <members>Error_Settings__c.Async_Error_Check_Last_Run__c</members>
         <members>Error_Settings__c.Disable_Error_Handling__c</members>
+        <members>Error_Settings__c.Don_t_Auto_Schedule_Default_NPSP_Jobs__c</members>
         <members>Error_Settings__c.Enable_Debug__c</members>
         <members>Error_Settings__c.Error_Notifications_On__c</members>
         <members>Error_Settings__c.Error_Notifications_To__c</members>
@@ -1244,6 +1247,7 @@
         <members>stgBtnRunBatch</members>
         <members>stgBtnSave</members>
         <members>stgDocumentation</members>
+        <members>stgDontAutoScheduleHelpText</members>
         <members>stgErrorINaming</members>
         <members>stgErrorInvalidClass</members>
         <members>stgErrorInvalidNameFormat</members>
@@ -1473,6 +1477,7 @@
         <members>stgNavRelationships</members>
         <members>stgNavRollupAlloBatch</members>
         <members>stgNavRollupBatch</members>
+        <members>stgNavSchedule</members>
         <members>stgNavSystem</members>
         <members>stgNavTriggerConfig</members>
         <members>stgNavUserDefinedRollups</members>

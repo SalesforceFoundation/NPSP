@@ -29,44 +29,14 @@
 */
 /**
 * @author Salesforce.org
-* @date 2015
+* @date 2016
 * @group Settings
-* @description Controller for the Level Assignment Batch settings panel.
+* @description Controller for the Schedule panel.
 */
-public with sharing class STG_PanelLvlAssignBatch_CTRL extends STG_Panel {
-
+public with sharing class STG_PanelSchedule_CTRL extends STG_Panel {
+        
     /*********************************************************************************************************
-    * @description The panel's constructor 
+    * @description Returns the string Id of the Schedule panel. 
     */
-    public STG_PanelLvlAssignBatch_CTRL() {
-        isRunningBatch = false;
-    }
-
-    /*********************************************************************************************************
-    * @description Returns the string Id of the panel. 
-    */
-    public override string idPanel() { return 'idPanelLvlAssignBatch'; }
-
-    /*********************************************************************************************************
-    * @description Whether we are running the LvlAssignBatch process 
-    */
-    public boolean isRunningBatch { get; set; }
-
-    /*********************************************************************************************************
-    * @description Action Method to run the Level Assignment batches.  Scheduler kicks off one batch per
-    * Target object type.
-    * @return null 
-    */
-    public PageReference runBatch() {
-        isRunningBatch = true;
-        LVL_LevelAssign_SCHED sched = new LVL_LevelAssign_SCHED();
-        sched.runBatch();
-        cLvlAssignBatch = sched.cLvlAssignBatch;
-        return null;
-    }
-
-    /*********************************************************************************************************
-    * @description How many Level Assign Batches were kicked off
-    */
-    public integer cLvlAssignBatch { get; set; }
+    public override string idPanel() { return 'idPanelSchedule'; }
 }

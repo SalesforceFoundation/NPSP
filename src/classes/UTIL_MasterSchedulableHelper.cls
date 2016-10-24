@@ -41,7 +41,7 @@ public without sharing class UTIL_MasterSchedulableHelper {
     public UTIL_MasterSchedulableHelper() {}
     
     /*******************************************************************************************************
-    * @description Aborst deprecated scheduled jobs. They are all replaced by the master schedulable.
+    * @description Abort deprecated master scheduled jobs. They are all replaced by standard scheduled jobs.
     * @return void
     */
     public static void abortOldScheduledJobs() {
@@ -56,15 +56,14 @@ public without sharing class UTIL_MasterSchedulableHelper {
                  System.abortJob(job.Id);
             }
         }
-        delete [SELECT Id FROM Schedulable__c];
     }
-    
+
     /*******************************************************************************************************
     * @description This map contains all necessary information for scheduling default NPSP jobs:
     * Job name as key, and a list containing the cron expression for that job and its class name.
     */
     public static final Map<String, List<String>> defaultScheduledJobs = new Map<String, List<String>>{
-        'NPSP 00 - Error Processing'                => new List<String>{'0 0 * * * ?',  'ERR_AsyncErrors'},
+        'NPSP 00 - Error Processing'                => new List<String>{'0 0 * * * ?',  'ERR_AsyncErrors_SCHED'},
         'NPSP 01 - Opportunity Account Rollups'     => new List<String>{'0 0 23 ? * *', 'RLLP_OppAccRollup_BATCH'},
         'NPSP 02 - Opportunity Contact Rollups'     => new List<String>{'0 0 23 ? * *', 'RLLP_OppContactRollup_BATCH'},
         'NPSP 03 - Opportunity Household Rollups'   => new List<String>{'0 0 23 ? * *', 'RLLP_OppHouseholdRollup_BATCH'},
@@ -72,14 +71,61 @@ public without sharing class UTIL_MasterSchedulableHelper {
         'NPSP 05 - GAU Allocation Rollups'          => new List<String>{'0 0 23 ? * *', 'ALLO_Rollup_SCHED'},
         'NPSP 06 - Recurring Donation Updates'      => new List<String>{'0 0 23 ? * *', 'RD_RecurringDonations_BATCH'},
         'NPSP 07 - Seasonal Address Updates'        => new List<String>{'0 0 23 ? * *', 'ADDR_Seasonal_SCHED'},
-        'NPSP 08 - Level Assignment Batch'          => new List<String>{'0 0 4 ? * *',  'LVL_LevelAssign_SCHED'}
+        'NPSP 08 - Level Assignment Updates'          => new List<String>{'0 0 4 ? * *',  'LVL_LevelAssign_SCHED'}
     };
 
     /*******************************************************************************************************
-    * @description Schedules all NPSP jobs that are not yet scheduled.
+    * @description Schedules all NPSP jobs based on whether they are marked Active in the old Schedulable__c
+    * table, then clears the Schedulable__c table. If some jobs were disabled, sets the setting to prevent
+    * NPSP from auto scheduling them in the future. This method is only called from the post install script. 
+    * @return void
+    */
+    public static void scheduleJobsFromOldObject() {
+        List<Schedulable__c> scheduleObjects = [SELECT Id, Class_Name__c, Active__c FROM Schedulable__c];
+
+        Boolean allJobsActive = true;
+        for (Schedulable__c sched : scheduleObjects) { 
+            if (!sched.Active__c) {
+                allJobsActive = false;
+            }
+        }
+
+        //if all jobs are still active or no records are in the schedulable table, schedule them all. 
+        //This will be the default once this method has run once, since we are
+        //deleting all Schedulable__c records at the end of this method.
+        if (scheduleObjects.isEmpty() || allJobsActive) {
+            setScheduledJobs();
+        } else {
+            //there was no Schedulable__c object for error processing, so create it anyway
+            createJob('NPSP 00 - Error Processing');
+            for (Schedulable__c sched : scheduleObjects) {
+                for (String jobName : defaultScheduledJobs.keySet()) {
+                    if (sched.Class_Name__c.equalsIgnoreCase(defaultScheduledJobs.get(jobname)[1])) {
+                        createJob(jobName);
+                    }
+                }
+            }
+            Error_Settings__c orgErrorSettings = UTIL_CustomSettingsFacade.getOrgErrorSettings();
+            orgErrorSettings.Don_t_Auto_Schedule_Default_NPSP_Jobs__c = true;
+            if (!Test.isRunningTest()) {
+                update orgErrorSettings;
+            }
+        }
+
+        delete scheduleObjects;
+    }
+
+    /*******************************************************************************************************
+    * @description Schedules all NPSP jobs that are not already scheduled.
     * @return void
     */
     public static void setScheduledJobs() {
+        //don't auto schedule jobs if the setting tells us not to
+        Error_Settings__c orgErrorSettings = UTIL_CustomSettingsFacade.getOrgErrorSettings();
+        if (orgErrorSettings.Don_t_Auto_Schedule_Default_NPSP_Jobs__c) {
+            return;
+        }
+
         Set<String> scheduledJobs = new Set<String>();
         //query for the job names of all scheduled apex
         for (CronTrigger ct : [SELECT CronJobDetail.Name FROM CronTrigger WHERE CronJobDetail.JobType = '7']) {
@@ -89,12 +135,20 @@ public without sharing class UTIL_MasterSchedulableHelper {
         //if one of our jobs isn't scheduled, schedule it
         for (String jobName : defaultScheduledJobs.keySet()) {
             if (!scheduledJobs.contains(jobName)) {
-                String cronExpression = defaultScheduledJobs.get(jobName)[0];
-                String className = defaultScheduledJobs.get(jobName)[1];
-            
-                Schedulable classInstance = (Schedulable)Type.forName(className).newInstance();
-                System.schedule(jobName, cronExpression, classInstance);
+                createJob(jobName);
             }
         }
+    }
+
+    /*******************************************************************************************************
+    * @description Schedules a job based on that job's name.
+    * @return void
+    */
+    private static void createJob(String jobName) {
+        String cronExpression = defaultScheduledJobs.get(jobName)[0];
+        String className = defaultScheduledJobs.get(jobName)[1];
+    
+        Schedulable classInstance = (Schedulable)Type.forName(className).newInstance();
+        System.schedule(jobName, cronExpression, classInstance);
     }
 }

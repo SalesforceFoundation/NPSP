@@ -3750,6 +3750,23 @@ If you want to know which Opportunities would have previously included this doub
         <value>Documentation</value>
     </labels>
     <labels>
+        <fullName>stgDontAutoScheduleHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgDontAutoScheduleHelpText</shortDescription>
+        <value>When checked, NPSP won&apos;t automatically schedule default recurring jobs. 
+&lt;br/&gt; 
+&lt;br/&gt; 
+These recurring jobs calculate rollups, update recurring donations and seasonal address, and perform error handling. 
+&lt;br/&gt; 
+&lt;br/&gt; 
+When checked, every time you visit the NPSP Settings page, NPSP verifies that the default recurring jobs are scheduled. Rescheduling only applies to missing jobs, not updated jobs. 
+&lt;br/&gt; 
+&lt;br/&gt; 
+To view these jobs, search for Scheduled Jobs in Salesforce Setup.</value>
+    </labels>
+    <labels>
         <fullName>stgErrorINaming</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -5649,6 +5666,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgNavRollupBatch</shortDescription>
         <value>Rollup Donations Batch</value>
+    </labels>
+    <labels>
+        <fullName>stgNavSchedule</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavSchedule</shortDescription>
+        <value>Process Scheduler</value>
     </labels>
     <labels>
         <fullName>stgNavSystem</fullName>

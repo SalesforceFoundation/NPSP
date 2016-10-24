@@ -522,33 +522,6 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
                 );
                 return;            
             }
-    
-            /*/ now make sure all entries are valid
-            boolean isValidAll = true;
-            List<Schedulable__c> schedClasses = [select Name, Class_Name__c, Last_Time_Run__c, Frequency__c from Schedulable__c where Active__c = true];
-            for (Schedulable__c schedClass : schedClasses) {
-                Type classType = Type.forName(schedClass.Class_Name__c);
-                if (classType != null) {
-                    try {
-                        Object instance = classType.newInstance();
-                        if (instance != null) {
-                            if (instance instanceof UTIL_MasterSchedulableHelper.UTIL_IRecurring) {
-                                // this entry is good!
-                                continue;
-                            }
-                        }
-                    } catch (exception ex) {
-                        // fall thru to log error
-                    }
-                }
-                isValidAll = false;
-                createDR(Label.healthLabelScheduler, statusError, 
-                    string.format(label.healthDetailsInvalidScheduledJob, new string[]{schedClass.Class_Name__c}),
-                    label.healthSolutionInvalidScheduledJob);
-            }            
-             
-            if (isValidAll) {
-            }   */
             createDR(Label.healthLabelScheduler, statusSuccess, null, label.healthLabelSchedulerValid);
         } catch (exception ex) {
             createDR(Label.healthLabelScheduler, statusError,  ex.getMessage(), null);                   
