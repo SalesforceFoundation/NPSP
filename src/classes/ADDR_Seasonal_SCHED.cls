@@ -36,23 +36,9 @@
 public class ADDR_Seasonal_SCHED implements Database.Batchable<SObject>, Schedulable {
 
     /*******************************************************************************************************
-    * @description holds the soql string that queries all Addresses in the current month and day
-    */
-    public String strQuery { get; set; }
-    
-    /*******************************************************************************************************
     * @description Schedulable execute method executes this batch job.
     ********************************************************************************************************/
     public void execute(SchedulableContext context) {
-        //call the batch job, processing 10 at a time
-        integer iMonth = system.today().month();
-        integer iDay = system.today().day();
-        
-        strQuery = 'select Id, Household_Account__c, Default_Address__c ' +
-            ' from Address__c ' +
-            ' where Seasonal_Start_Month__c = \'' + string.valueOf(iMonth) + '\'' +
-            ' and Seasonal_Start_Day__c = \'' + string.valueOf(iDay) + '\'';
-    
         Id batchInstanceId = Database.executeBatch(new ADDR_Seasonal_SCHED(), 10);
     }
 
@@ -62,6 +48,15 @@ public class ADDR_Seasonal_SCHED implements Database.Batchable<SObject>, Schedul
     * @return database.Querylocator  
     ********************************************************************************************************/
     public database.Querylocator start(Database.BatchableContext bc){       
+        //call the batch job, processing 10 at a time
+        integer iMonth = system.today().month();
+        integer iDay = system.today().day();
+        
+        String strQuery = 'select Id, Household_Account__c, Default_Address__c ' +
+            ' from Address__c ' +
+            ' where Seasonal_Start_Month__c = \'' + string.valueOf(iMonth) + '\'' +
+            ' and Seasonal_Start_Day__c = \'' + string.valueOf(iDay) + '\'';
+
         return Database.getQueryLocator(strQuery);      
     }
     
