@@ -99,9 +99,11 @@ public without sharing class UTIL_MasterSchedulableHelper {
             //there was no Schedulable__c object for error processing, so create it anyway
             createJob('NPSP 00 - Error Processing');
             for (Schedulable__c sched : scheduleObjects) {
-                for (String jobName : defaultScheduledJobs.keySet()) {
-                    if (sched.Class_Name__c.equalsIgnoreCase(defaultScheduledJobs.get(jobname)[1])) {
-                        createJob(jobName);
+                if (sched.Active__c) {
+                    for (String jobName : defaultScheduledJobs.keySet()) {
+                        if (sched.Class_Name__c.equalsIgnoreCase(defaultScheduledJobs.get(jobname)[1])) {
+                            createJob(jobName);
+                        }
                     }
                 }
             }
