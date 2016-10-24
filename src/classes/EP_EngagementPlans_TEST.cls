@@ -385,7 +385,7 @@ private with sharing class EP_EngagementPlans_TEST {
     * otherwise returns the current user id.
     */
     private static Id getOtherUserId() {
-        List<User> otherUsers = [SELECT Id FROM User WHERE IsActive = true AND Id != :UserInfo.getUserId()];
+        List<User> otherUsers = [SELECT Id FROM User WHERE IsActive = true AND Id != :UserInfo.getUserId() AND UserType = 'Standard' LIMIT 1];
         if (otherUsers.isEmpty()) {
             return UserInfo.getUserId();
         } else {

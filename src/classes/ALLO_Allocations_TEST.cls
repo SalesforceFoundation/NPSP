@@ -503,7 +503,11 @@ private with sharing class ALLO_Allocations_TEST {
         ALLO_Allocations_TDTM.resetFlags(false);
         opp.Amount = 80;
 
-        update opp;
+        try {
+            update opp;
+        } catch(exception e) {
+            // we know the update will fail, but lets make sure the allocations are not changed.
+        }
 
         queryAllo = [SELECT Id, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :opp.id];
         system.assertEquals(4,queryAllo[0].Amount__c, 'Allocation to inactive GAU should not be modified.');
