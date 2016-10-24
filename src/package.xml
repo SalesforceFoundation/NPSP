@@ -87,6 +87,7 @@
         <members>EP_Task_UTIL</members>
         <members>ERR_AddError_TEST</members>
         <members>ERR_AsyncErrors</members>
+        <members>ERR_AsyncErrors_SCHED</members>
         <members>ERR_AsyncErrors_TEST</members>
         <members>ERR_Handler</members>
         <members>ERR_Handler_API</members>
