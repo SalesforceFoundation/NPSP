@@ -46,17 +46,13 @@ global without sharing class STG_InstallScript implements InstallHandler {
             //First install of Cumulus. NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
             if(context.previousVersion() == null) {
                 runNewOrgScript();
-                UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
-                UTIL_MasterSchedulableHelper.setSchedulableTable();    
             } else if(context.isUpgrade()) {
                 insertTdtmDefaults(null);
-                UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
-                UTIL_MasterSchedulableHelper.setSchedulableTable(); 
             } else if(context.isPush()) {
                 insertTdtmDefaults(null);
-                UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
-                UTIL_MasterSchedulableHelper.setSchedulableTable();
             }
+            UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
+            UTIL_MasterSchedulableHelper.scheduleJobsFromOldObject();
         } catch(Exception e) {
             sendEmailOnInstallError(e, context);
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);

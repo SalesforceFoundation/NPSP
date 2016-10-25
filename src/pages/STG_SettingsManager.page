@@ -167,6 +167,7 @@
                                 <a id="tree4-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavBulkProcesses}</a>
                             </div>
                             <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree4-node0-link">
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelOppBatchNav"><a href="#" onclick="ShowPanel('idPanelSchedule');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavSchedule}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelOppBatchNav"><a href="#" onclick="ShowPanel('idPanelOppBatch');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavRollupBatch}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelAlloBatchNav"><a href="#" onclick="ShowPanel('idPanelAlloBatch');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavRollupAlloBatch}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelMakeDefaultAllocationsNav"><a href="#" onclick="ShowPanel('idPanelMakeDefaultAllocations');return false;" class="slds-grow slds-m-left--large">{!$Label.alloBatchCreateDefault}</a></li>
@@ -299,6 +300,10 @@
                 </div>
 
                 <!-- Bulk Data Processes -->
+                <div class="panel noborder" id="idPanelSchedule" style="display:none" >
+                    <apex:include pageName="STG_PanelSchedule" />
+                </div>
+
                 <div class="panel noborder" id="idPanelOppBatch" style="display:none" >
                     <apex:include pageName="STG_PanelOppBatch" />
                 </div>

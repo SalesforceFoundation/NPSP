@@ -132,16 +132,6 @@
                     </div>
                 </div>
                 <div class="slds-form-element">
-                    <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Disable_Error_Handling__c.Label}" for="cbxDEH" styleClass="slds-form-element__label" />
-                    <div class="slds-form-element__control">
-                        <apex:inputCheckbox value="{!stgService.stgErr.Disable_Error_Handling__c}" rendered="{!isEditMode}" id="cbxDEH" html-aria-describedby="{!$Component.cbxDEHHelp}" styleClass="slds-checkbox" />
-                        <apex:inputCheckbox value="{!stgService.stgErr.Disable_Error_Handling__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxDEHO" html-aria-describedby="{!$Component.cbxDEHHelp}" styleClass="slds-checkbox" />
-                        <apex:outputPanel id="cbxDEHHelp" layout="block">
-                            <apex:outputText styleClass="slds-form-element__help" value="{!$ObjectType.Error_Settings__c.Fields.Disable_Error_Handling__c.inlineHelpText}" />
-                        </apex:outputPanel>
-                    </div>
-                </div>
-                <div class="slds-form-element">
                     <apex:outputLabel id="recipientLabel" value="{!$ObjectType.Error_Settings__c.Fields.Error_Notifications_To__c.Label}" for="notificationOption" styleClass="slds-form-element__label" />
                     <div class="slds-form-element__control">
                         <apex:outputPanel id="errRecipient">

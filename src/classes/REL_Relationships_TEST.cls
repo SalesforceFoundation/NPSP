@@ -699,7 +699,7 @@ private class REL_Relationships_TEST {
         Database.SaveResult[] insertResults = Database.insert(relationships, false);
         //assert an error - Required fields are missing: [npe4__Contact__c]
         //npe4__Contact__c is missing from the reciprocal relationship that gets automatically created.
-        system.assertEquals(1, [select count() from Error__c]);
+        system.assertEquals(false, insertResults[0].isSuccess());
         
         //update relationship - this will create the missing npe4__Contact__c field
         relationships[0].npe4__RelatedContact__c = c1.id;
@@ -712,10 +712,6 @@ private class REL_Relationships_TEST {
         ERR_Handler.Errors errors = ERR_Handler.getErrors(updateResults, (List<SObject>)relationships);
         //we still get an error, because of the Related_Contact_Do_Not_Change validation rule on Relationship
         system.assertEquals(true, errors.errorsExist);
-        system.assertEquals(1, errors.errorRecords.size());
-
-        //assert no additional error record was created on update
-        system.assertEquals(1, [select count() from Error__c]);
     }
     
     /*********************************************************************************************************

@@ -44,16 +44,6 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
     * @description holds value to evaluate change in forecast months
     */
     private integer originalForecastMonths;
-
-    /*********************************************************************************************************
-    * @description The Schedulable object 
-    */
-    public Schedulable__c rdSched { public get; public set; }
-
-    /*********************************************************************************************************
-    * @description Whether the Recurring Donations Scheduled Job is disabled
-    */
-    public boolean isRDScheduleDisabled { get; set; }
     
     /*********************************************************************************************************
     * @description The panel's constructor
@@ -64,12 +54,7 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
     * @description Initiliazes the classes data 
     */
     public void init(){
-        originalForecastMonths = (integer)STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c;        
-        list<Schedulable__c> listSch = [select Id, Active__c from Schedulable__c where Class_Name__c = 'RD_RecurringDonations_SCHED' limit 1];
-        if (listSch.size() > 0) {
-            rdSched = listSch[0];
-            isRDScheduleDisabled = !rdSched.Active__c;
-        }
+        originalForecastMonths = (integer)STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c;
     }
     
     /*********************************************************************************************************
@@ -86,13 +71,6 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
         	if(STG_Panel.stgService.stgRD != null && !Test.isRunningTest()) {
         		toUpdate.add(STG_Panel.stgService.stgRD);
         	}
-        	
-        	if(rdSched != null) {
-                rdSched.Active__c = !isRDScheduleDisabled;
-                toUpdate.add(rdSched);
-        	}
-        	
-            update toUpdate;
             
             strRDOppRecordTypeLabel = null;
 

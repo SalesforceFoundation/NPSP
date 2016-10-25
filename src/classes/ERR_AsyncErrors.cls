@@ -33,16 +33,7 @@
 * @description A recurring job that will detect errors from asynchronous jobs
 * and log and send notifications for those errors
 */
-public virtual class ERR_AsyncErrors implements Queueable, UTIL_MasterSchedulableHelper.UTIL_IRecurring {
-    /**
-     * @description Implementation of UTIL_IRecurring.executeReturnStatus() to
-     * be called by UTIL_MasterSchedulableHelper
-     */
-    public Boolean executeReturnStatus() {
-        System.enqueueJob(this);
-        return true;
-    }
-
+public virtual class ERR_AsyncErrors implements Queueable {
     /**
      * @description Query for un-processed AsyncApexJob records that represent
      * failed jobs, creates Error__c log records for those jobs, and then sends

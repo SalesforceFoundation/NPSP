@@ -151,7 +151,11 @@ public class ERR_Handler_TEST {
         npe4__Relationship__c[] relationships = new npe4__Relationship__c[]{
             new npe4__Relationship__c(npe4__contact__c = contact1.id, npe4__Type__c='TestLookupType') };
         
-        insert relationships;
+        try {
+            insert relationships;
+        } catch (exception ex) {
+            ERR_Handler.processError(ex, ERR_Handler_API.Context.REL);
+        }
         //assert an error record was created - Required fields are missing: [npe4__Contact__c]
         //npe4__Contact__c is missing from the reciprocal relationship that gets automatically created.
         system.assertEquals(1, [select count() from Error__c]);
