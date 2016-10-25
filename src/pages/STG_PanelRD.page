@@ -63,16 +63,6 @@
                     </apex:outputPanel>
                 </div>
             </div>
-            <div class="slds-form-element">
-                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Disable_Nightly_Job__c.Label}" for="cbxDNJ" styleClass="slds-form-element__label" />
-                <div class="slds-form-element__control">
-                    <apex:inputCheckbox value="{!isRDScheduleDisabled}" rendered="{!isEditMode}" id="cbxDNJ" html-aria-describedby="{!$Component.cbxDNJHelp}" styleClass="slds-checkbox" />
-                    <apex:inputCheckbox value="{!isRDScheduleDisabled}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxDNJO" html-aria-describedby="{!$Component.cbxDNJHelp}" styleClass="slds-checkbox" />
-                    <apex:outputPanel id="cbxDNJHelp" layout="block">
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRDDisableScheduling}" />
-                    </apex:outputPanel>
-                </div>
-            </div>
         </div>
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
             <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />

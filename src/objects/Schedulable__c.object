@@ -21,10 +21,6 @@
         <type>Default</type>
     </actionOverrides>
     <actionOverrides>
-        <actionName>Follow</actionName>
-        <type>Default</type>
-    </actionOverrides>
-    <actionOverrides>
         <actionName>List</actionName>
         <type>Default</type>
     </actionOverrides>
@@ -107,6 +103,7 @@
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
     </fields>
@@ -120,12 +117,12 @@
         <trackTrending>false</trackTrending>
         <type>DateTime</type>
     </fields>
-    <label>Schedulable</label>
+    <label>DEPRECATED-Schedulable</label>
     <nameField>
         <label>Job Name</label>
         <type>Text</type>
     </nameField>
-    <pluralLabel>Schedulabls</pluralLabel>
+    <pluralLabel>DEPRECATED-Schedulables</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
 </CustomObject>

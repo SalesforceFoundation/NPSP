@@ -330,9 +330,6 @@ public with sharing class STG_InstallScript_TEST {
         System.assertEquals('HH_NameSpec',householdNamingSettings.Implementing_Class__c);
         System.assertEquals(365,allocationsSettings.Rollup_N_Day_Value__c);
         System.assertEquals(50,dataImportSettings.Batch_Size__c);
-        
-        List<Schedulable__c> scheduledJobs = [select Class_Name__c from Schedulable__c];
-        System.assertEquals(UTIL_MasterSchedulableHelper.scheduledClasses.size(), scheduledJobs.size());
     }
 
     public static void deleteAllCustomSettings() {

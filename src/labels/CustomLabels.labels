@@ -1755,7 +1755,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthDetailsNothingScheduled</shortDescription>
-        <value>The NPSP Global Scheduled class is not scheduled.</value>
+        <value>The NPSP default scheduled classes are not scheduled.</value>
     </labels>
     <labels>
         <fullName>healthDetailsOCRDupPrimary</fullName>
@@ -2067,7 +2067,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthLabelScheduler</shortDescription>
-        <value>NPSP Global Scheduler</value>
+        <value>NPSP Default Scheduler</value>
     </labels>
     <labels>
         <fullName>healthLabelSchedulerValid</fullName>
@@ -2075,7 +2075,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthLabelSchedulerValid</shortDescription>
-        <value>NPSP Global Scheduler job scheduled.</value>
+        <value>NPSP recurring jobs are scheduled.</value>
     </labels>
     <labels>
         <fullName>healthLabelShowPassedTests</fullName>
@@ -2364,7 +2364,7 @@ If you want to know which Opportunities would have previously included this doub
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionNothingScheduled</shortDescription>
-        <value>You must schedule the class UTIL_MasterSchedulable to run daily with the job name {0}.</value>
+        <value>You must schedule the NPSP default scheduled classes to run.</value>
     </labels>
     <labels>
         <fullName>healthSolutionOCRDupPrimary</fullName>
@@ -3748,6 +3748,23 @@ If you want to know which Opportunities would have previously included this doub
         <protected>false</protected>
         <shortDescription>stgDocumentation</shortDescription>
         <value>Documentation</value>
+    </labels>
+    <labels>
+        <fullName>stgDontAutoScheduleHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgDontAutoScheduleHelpText</shortDescription>
+        <value>When checked, NPSP won&apos;t automatically schedule default recurring jobs. 
+&lt;br/&gt; 
+&lt;br/&gt; 
+These recurring jobs calculate rollups, update recurring donations and seasonal address, and perform error handling. 
+&lt;br/&gt; 
+&lt;br/&gt; 
+When unchecked, every time you visit the NPSP Settings page, NPSP verifies that the default recurring jobs are scheduled. Rescheduling only applies to missing jobs, not updated jobs. 
+&lt;br/&gt; 
+&lt;br/&gt; 
+To view these jobs, search for Scheduled Jobs in Salesforce Setup.</value>
     </labels>
     <labels>
         <fullName>stgErrorINaming</fullName>
@@ -5649,6 +5666,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgNavRollupBatch</shortDescription>
         <value>Rollup Donations Batch</value>
+    </labels>
+    <labels>
+        <fullName>stgNavSchedule</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavSchedule</shortDescription>
+        <value>Process Scheduler</value>
     </labels>
     <labels>
         <fullName>stgNavSystem</fullName>

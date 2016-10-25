@@ -32,27 +32,31 @@
 * @date 2014
 * @description Batch class for opportunity soft credit rollups. 
 */
-public class RLLP_OppSoftCreditRollup_BATCH implements Database.Batchable<SObject>, UTIL_MasterSchedulableHelper.UTIL_IRecurring {
-		    
-	public Boolean executeReturnStatus() {
-        if(UTIL_JobScheduler.canRunBatch()) {
-        	Savepoint sp = Database.setSavepoint();
-            try {
-	            Database.executeBatch(this);  
-	            return true;
-            } catch(Exception e) {
-                Database.rollback(sp);
-                ERR_Handler.processError(e, ERR_Handler_API.Context.RLLP);
-            }
+public class RLLP_OppSoftCreditRollup_BATCH implements Database.Batchable<SObject>, Schedulable {
+            
+    /*******************************************************************************************************
+    * @description Schedulable execute method executes this batch job.
+    ********************************************************************************************************/
+    public void execute(SchedulableContext context) {
+        try {
+            Database.executeBatch(new RLLP_OppSoftCreditRollup_BATCH(), RLLP_OppRollup_UTIL.BATCH_SIZE);  
+        } catch(Exception e) {
+            ERR_Handler.processError(e, ERR_Handler_API.Context.RLLP);
         }
-        return false;
     }
     
-	public database.Querylocator start(Database.BatchableContext bc) {
+    /*******************************************************************************************************
+    * @description Batch start method, instantiates RLLP_OppRollup_UTIL and builds query for household rollups.
+    ********************************************************************************************************/
+    public database.Querylocator start(Database.BatchableContext bc) {
         RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
         return Database.getQueryLocator(oppRollupUtil.buildContactQuery());      
     }
     
+    /*******************************************************************************************************
+    * @description Batch execute method, instantiates RLLP_OppRollup_UTIL and runs rollups for current 
+    * batch of households.
+    ********************************************************************************************************/
     public void execute(Database.BatchableContext bc, List<Contact> result) {
         // NOTE: we don't capture exception and log errors here, because if we don't let the 
         // exception percolate up the call stack, then the batch will think it all succeeded.
@@ -62,5 +66,8 @@ public class RLLP_OppSoftCreditRollup_BATCH implements Database.Batchable<SObjec
         oppRoller.RollupSoftCreditsWithPartialSupport(result);
     }
 
+    /*******************************************************************************************************
+    * @description Batch finish method, does nothing.
+    ********************************************************************************************************/
     public void finish(Database.BatchableContext bc) {}
 }

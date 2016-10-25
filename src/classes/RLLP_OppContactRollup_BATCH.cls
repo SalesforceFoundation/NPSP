@@ -34,31 +34,23 @@
 * @group-content ../../ApexDocContent/Rollups.htm
 * @description Batch class for contact account rollups. 
 */
-public class RLLP_OppContactRollup_BATCH implements Database.Batchable<SObject>, UTIL_MasterSchedulableHelper.UTIL_IRecurring {
-    	
+public class RLLP_OppContactRollup_BATCH implements Database.Batchable<SObject>, Schedulable {
+
     /*******************************************************************************************************
-    * @description Implementation of UTIL_MasterSchedulableHelper.UTIL_IRecurring, to allow nightly 
-    * scheduling. Attempts to start allocations rollup batch job.
-    * @return Boolean Whether the batch job started successfully. 
+    * @description Schedulable execute method executes this batch job.
     ********************************************************************************************************/
-	public Boolean executeReturnStatus() {
-        if(UTIL_JobScheduler.canRunBatch()) {
-        	Savepoint sp = Database.setSavepoint();
-            try {
-                Database.executeBatch(this);
-                return true;
-            } catch(Exception e) {
-                Database.rollback(sp);
-                ERR_Handler.processError(e, ERR_Handler_API.Context.RLLP);
-            }
+    public void execute(SchedulableContext context) {
+        try {
+            Database.executeBatch(new RLLP_OppContactRollup_BATCH(), RLLP_OppRollup_UTIL.BATCH_SIZE);
+        } catch(Exception e) {
+            ERR_Handler.processError(e, ERR_Handler_API.Context.RLLP);
         }
-        return false;
     }
     
     /*******************************************************************************************************
     * @description Batch start method, instantiates RLLP_OppRollup_UTIL and builds query for contact rollups.
     ********************************************************************************************************/
-	public database.Querylocator start(Database.BatchableContext bc) {
+    public database.Querylocator start(Database.BatchableContext bc) {
         RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
         return Database.getQueryLocator(oppRollupUtil.buildContactQuery());      
     }

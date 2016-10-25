@@ -495,9 +495,8 @@ public with sharing class ADDR_Addresses_TEST2 {
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
 
         // run the scheduled batch directly
-        ADDR_Seasonal_SCHED sch = new ADDR_Seasonal_SCHED();
         Test.startTest();
-        sch.executeReturnStatus();
+        Database.executeBatch(new ADDR_Seasonal_SCHED(), 10);
         Test.stopTest();
         
         // verify that the HH and Contacts share the same address and it's new!

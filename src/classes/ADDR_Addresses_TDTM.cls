@@ -68,7 +68,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
     ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
-        	
+
         // STRATEGY
         // when an Address is created or modified, we need to consider three other objects we may need to update:
         // - the Address's HH Account, if it is marked Default_Address

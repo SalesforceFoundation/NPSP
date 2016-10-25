@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.org
+    Copyright (c) 2016, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -13,7 +13,7 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
-
+ 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -29,29 +29,14 @@
 */
 /**
 * @author Salesforce.org
-* @date 2014
+* @date 2016
 * @group Settings
-* @description Test class for the Uninstall Script for the NPSP package. 
+* @description Controller for the Schedule panel.
 */
-@isTest
-public with sharing class STG_UninstallScript_TEST {
-
-    public testmethod static void rununinstall() {
-        //The scheduled jobs are being set when the settings page loads
-        STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL(); 
-        ctrl.setTriggerSchedConfig();
+public with sharing class STG_PanelSchedule_CTRL extends STG_Panel {
         
-        //Check jobs were scheduled
-        List<CronTrigger> scheduledJobs = [SELECT Id, CronJobDetail.Id FROM CronTrigger 
-           WHERE CronJobDetail.Name IN :UTIL_MasterSchedulableHelper.defaultScheduledJobs.keySet() AND CronJobDetail.JobType = '7'];
-        System.assertEquals(UTIL_MasterSchedulableHelper.defaultScheduledJobs.size(), scheduledJobs.size());
-        
-        //Run uninstall script
-        Test.testUninstall(new STG_UninstallScript());
-        
-        //Confirm scheduled job was deleted
-        scheduledJobs = [SELECT Id, CronJobDetail.Id FROM CronTrigger 
-           WHERE CronJobDetail.Name IN :UTIL_MasterSchedulableHelper.defaultScheduledJobs.keySet() AND CronJobDetail.JobType = '7'];
-        System.assertEquals(0, scheduledJobs.size());
-    }
+    /*********************************************************************************************************
+    * @description Returns the string Id of the Schedule panel. 
+    */
+    public override string idPanel() { return 'idPanelSchedule'; }
 }

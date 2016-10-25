@@ -60,7 +60,7 @@ public with sharing class STG_PanelLvlAssignBatch_CTRL extends STG_Panel {
     public PageReference runBatch() {
         isRunningBatch = true;
         LVL_LevelAssign_SCHED sched = new LVL_LevelAssign_SCHED();
-        sched.executeReturnStatus();
+        sched.runBatch();
         cLvlAssignBatch = sched.cLvlAssignBatch;
         return null;
     }
