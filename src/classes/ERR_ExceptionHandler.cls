@@ -1,7 +1,7 @@
 public with sharing class ERR_ExceptionHandler {
     private static final Map<String, String> exceptionMessages = new Map<String, String>{
-        'FIELD_CUSTOM_VALIDATION_EXCEPTION' => 'A validation rule is preventing the record from saving: ',
-        'REQUIRED_FIELD_MISSING' => 'A required field is missing: '
+        'FIELD_CUSTOM_VALIDATION_EXCEPTION, ' => 'A validation rule is preventing the record from saving: ',
+        'REQUIRED_FIELD_MISSING, ' => 'A required field is missing: '
     };
 
     public static void beautifyException(Exception ex) {
