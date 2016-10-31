@@ -62,7 +62,7 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
     /*******************************************************************************************************
     * @description whether to redirect on success, or stay on the page for errors.
     */
-    private boolean redirectPage = true;
+    public boolean redirectPage { get; set; }
     
     /*******************************************************************************************************
     * @description Constructor for the class
@@ -73,6 +73,7 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
         strSrcObject = null;
         returnurl = null;
         resulttext = null;
+        redirectPage = true;
         String id = ApexPages.currentPage().getParameters().get('id');
         if (id != null && id != '') {        	
         	if (UTIL_Describe.isObjectIdThisType(id, 'Contact')) {
@@ -91,7 +92,7 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
     
     /*******************************************************************************************************
     * @description Action method called when the user clicks on the copy button.
-    * @return PageReference
+    * @return PageReference - null
     */
     public PageReference buttonClick(){
         
@@ -210,15 +211,7 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
             showMsg(resulttext, ApexPages.Severity.ERROR);
         }
         
-        //decide how to handle the redirect
-        if (redirectPage){
-            PageReference pageRef = new PageReference('/' + obj.id);
-            pageRef.setRedirect(true);
-            return pageRef;
-        }        
-        else{
-            return null;
-        }
+        return null;
     }
     
     /*******************************************************************************************************
