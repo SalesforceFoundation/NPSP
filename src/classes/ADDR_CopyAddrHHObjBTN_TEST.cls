@@ -73,7 +73,7 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         system.currentPageReference().getParameters().put('id', cc.id);
         ADDR_CopyAddrHHObjBTN_CTRL cacbc = new ADDR_CopyAddrHHObjBTN_CTRL();
         PageReference prc = cacbc.buttonClick();
-        system.assert(prc.getUrl().contains(cc.id));
+        system.assertEquals(null, prc);
         npo02__Household__c h = [select id, npo02__MailingStreet__c, npo02__MailingState__c, npo02__MailingPostalCode__c, npo02__MailingCity__c, 
             npo02__MailingCountry__c from npo02__Household__c where id = :hh.id];
         system.assertEquals(h.npo02__MailingStreet__c, cc.MailingStreet);
@@ -88,7 +88,7 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         system.currentPageReference().getParameters().put('id', hh.id);
         cacbc = new ADDR_CopyAddrHHObjBTN_CTRL();
         prc = cacbc.buttonClick();
-        system.assert(prc.getUrl().contains(hh.id));
+        system.assertEquals(null, prc);
         Contact c1 = [select id, MailingStreet from Contact where npo02__Household__c = :hh.id]; 
         system.assertEquals(hh.npo02__MailingStreet__c, c1.MailingStreet);
         system.assertEquals(1, [select count() from Note where ParentID = :c1.id]);
