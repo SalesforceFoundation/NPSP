@@ -38,6 +38,8 @@
 */
 public class TDTM_TriggerHandler {
     
+    private static Integer depthCounter = 0;
+
     private static Boolean defaultRecordsInserted = false;
     
     public static boolean suppressDebugAssertAfterErrorLogging = false;
@@ -93,7 +95,22 @@ public class TDTM_TriggerHandler {
             //Run the relevant classes
             for (SObject classToCall : classesToCall) {
                 TDTM_Runnable.DmlWrapper dmlWrapperLocal = new TDTM_Runnable.DmlWrapper();
-                dmlWrapperLocal = runClass(classToCall, newList, OldList, thisAction, describeObj);
+                
+                try {
+                    dmlWrapperLocal = runClass(classToCall, newList, OldList, thisAction, describeObj);
+                } catch (Exception ex) {
+                    //use the correct list
+                    List<SObject> populatedList = newList == null || newList.isEmpty() ? oldList : newList;
+                    //if we're at the top level of the execution stack and only doing DML on one object,
+                    //trap the error and add the message to the page.
+                    if (depthCounter == 0 && populatedList.size() == 1) {
+                        ERR_ExceptionHandler.beautifyException(ex);
+                        populatedList[0].addError(ex.getMessage());
+                    } else {
+                        throw ex;
+                    }
+                }
+
                 if(dmlWrapperLocal != null) {
                     if(dmlWrapperLocal.objectsToInsert != null && !dmlWrapperLocal.objectsToInsert.isEmpty())
                         dmlWrapper.objectsToInsert.addAll(dmlWrapperLocal.objectsToInsert);
@@ -107,6 +124,8 @@ public class TDTM_TriggerHandler {
                 UTIL_Debug.debugWithInfo('****Finished executing: ' + classToCall.get('Class__c'));
             }
 
+            depthCounter++;
+            
             //Process the result
             if(dmlWrapper != null)
                processDML(dmlWrapper);
