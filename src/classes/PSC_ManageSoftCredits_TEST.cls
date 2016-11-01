@@ -364,6 +364,30 @@ public with sharing class PSC_ManageSoftCredits_TEST {
         list<OpportunityContactRole> listOCR = [select Id, ContactId, OpportunityId, Role from OpportunityContactRole];
         system.assertEquals(0, listOCR.size());        
     }
+
+    /*******************************************************************************************************
+    * @description delete some existing PSCs by calling the delete action.
+    * verify one PSC was deleted, one OCR was deleted
+    */
+    static testmethod void deleteExistingPSCs() {
+        initTestData(true); // creates cPSCExisting PSCs!
+        Test.setCurrentPage(Page.PSC_ManageSoftCredits);
+        PSC_ManageSoftCredits_CTRL ctrl = new PSC_ManageSoftCredits_CTRL(new ApexPages.StandardController(opp));
+        system.assertEquals(cPSCExisting, ctrl.softCredits.size());
+        system.assertEquals(cPSCExisting * 100 , ctrl.oppTotalSoftCredit.Amount);
+        ctrl.rowNumber = 1;
+        ctrl.delRow();
+
+        Test.startTest();
+        system.assertNotEquals(null, ctrl.save());
+        Test.stopTest();
+
+        list<Partial_Soft_Credit__c> listPSC = [select Id, Contact__c, Opportunity__c, Amount__c, Role_Name__c from Partial_Soft_Credit__c];
+        system.assertEquals(cPSCExisting - 1, listPSC.size());
+
+        list<OpportunityContactRole> listOCR = [select Id, ContactId, OpportunityId, Role from OpportunityContactRole];
+        system.assertEquals(cPSCExisting - 1, listOCR.size());
+    }
     
     /*******************************************************************************************************
     * @description change some existing Soft Credits.
