@@ -99,12 +99,11 @@ public class TDTM_TriggerHandler {
                 } catch (Exception ex) {
                     //use the correct list
                     List<SObject> populatedList = newList == null || newList.isEmpty() ? oldList : newList;
-                    system.debug('njjc exception caught ' + ex.getMessage());
-                    //if we're at the top level of the execution stack and only doing DML on one object,
+                    //if we're only doing DML on one object and the caught exception is handled,
                     //trap the error and add the message to the page.
-                    if (populatedList.size() == 1) {
-                        ERR_ExceptionHandler.beautifyException(ex);
-                        populatedList[0].addError(ex.getMessage());
+                    if (populatedList.size() == 1 && ERR_ExceptionHandler.isHandledException(ex)) {
+                        ERR_ExceptionHandler.beautifyExceptionMessage(ex);
+                        populatedList[0].addError(ex);
                         return;
                     } else {
                         throw ex;
@@ -132,12 +131,11 @@ public class TDTM_TriggerHandler {
                 } catch (Exception ex) {
                     //use the correct list
                     List<SObject> populatedList = newList == null || newList.isEmpty() ? oldList : newList;
-                    system.debug('njjc exception caught in process dml' + ex.getMessage());
-                    //if we're at the top level of the execution stack and only doing DML on one object,
+                    //if we're only doing DML on one object and the caught exception is handled,
                     //trap the error and add the message to the page.
-                    if (populatedList.size() == 1) {
-                        ERR_ExceptionHandler.beautifyException(ex);
-                        populatedList[0].addError(ex.getMessage());
+                    if (populatedList.size() == 1 && ERR_ExceptionHandler.isHandledException(ex)) {
+                        ERR_ExceptionHandler.beautifyExceptionMessage(ex);
+                        populatedList[0].addError(ex);
                         return;
                     } else {
                         throw ex;
