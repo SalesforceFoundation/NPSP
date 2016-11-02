@@ -44,6 +44,11 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @description does the Opp have an outstanding balance
     */ 
     public boolean haveAmount { get; private set; }
+
+    /*******************************************************************************************************
+    * @description after successful save set to true to redirect page
+    */ 
+    public Boolean redirect {get; set;}
     
     /*******************************************************************************************************
     * @description Class that stored numbered payment
@@ -141,7 +146,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @description Constructor for the wizard that initializes data structures
     */ 
     public PMT_PaymentWizard_CTRL() {
-        
+        redirect = false;
         if(ApexPages.currentPage().getParameters().get('wtype') == 'writeoff'){
             PaymentWriteoffWizard();
             isWriteoffWizard = true;
@@ -231,9 +236,8 @@ public with sharing class PMT_PaymentWizard_CTRL {
     /*******************************************************************************************************
     * @description ActionMethod for the Calculate button that given the current opp outstanding balance, 
     * creates the specified new payments to cover the amount.
-    * @return PageReference null
     */ 
-    public pageReference calculate() {
+    public void calculate() {
         if (haveAmount || removePaidPayments) {
             // clear the list
             newPayments.clear();
@@ -300,14 +304,12 @@ public with sharing class PMT_PaymentWizard_CTRL {
             }
             
         }
-        return null;
     }
     
     /*******************************************************************************************************
     * @description ActionMethod for the WriteOff button
-    * @return PageReference the Opp's detail page on success, null on failure.
     */ 
-    public pageReference writeoff() {
+    public void writeoff() {
     	Savepoint sp = Database.setSavepoint();
     	try {
 	        list<npe01__OppPayment__c> paymentsToDelete = new list<npe01__OppPayment__c>();
@@ -320,15 +322,11 @@ public with sharing class PMT_PaymentWizard_CTRL {
 	        }
 	        if (!paymentsToDelete.isEmpty()) delete paymentsToDelete;
 	        insert writeoffPayment;
-	        PageReference oldOppPage = new PageReference('/' + currentOpp.id);
-	        oldOppPage.setRedirect(true);
-            oldOppPage.getParameters().put('t',''+(System.currentTimeMillis()));
-	        return oldOppPage;
+	        redirect = true;
     	} catch(Exception e) {
     		Database.rollback(sp);
     		ERR_Handler.processError(e, ERR_Handler_API.Context.PMT);
     		ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
-    		return null;
     	}
     }
 
@@ -383,9 +381,8 @@ public with sharing class PMT_PaymentWizard_CTRL {
 
     /*******************************************************************************************************
     * @description ActionMethod for the Create Payments button
-    * @return PageReference the Opp's detail page on success, null on failure.
     */ 
-    public PageReference createPayments() {
+    public void createPayments() {
     	Savepoint sp = Database.setSavepoint();
         try {
 	        // first delete unpaid payments
@@ -403,28 +400,21 @@ public with sharing class PMT_PaymentWizard_CTRL {
 	        // create the payment records
 	        insert pmts;
 	        
-	        // Send the user to the detail page for the new account.
-	        PageReference oldOppPage = new PageReference('/' + currentOpp.id);
-	        oldOppPage.setRedirect(true);
-            oldOppPage.getParameters().put('t',''+(System.currentTimeMillis()));
-	        return oldOppPage;
+	        redirect = true;
         
         } catch(Exception e) {
             Database.rollback(sp);
             ERR_Handler.processError(e, ERR_Handler_API.Context.PMT);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
-            return null;
         }
     }
     
     /*******************************************************************************************************
     * @description ActionMethod for the Remove Paid Payments button, which sets the internal flag to
     * track this.
-    * @return PageReference null
     */ 
-    public pageReference RemovePaidPayments() {
+    public void RemovePaidPayments() {
         removePaidPayments = true;
-        return null;
     }
    
 }
