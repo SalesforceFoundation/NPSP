@@ -49,7 +49,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @description after successful save set to true to redirect page
     */ 
     public Boolean redirect {get; set;}
-    
+
     /*******************************************************************************************************
     * @description Class that stored numbered payment
     */ 
@@ -147,6 +147,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     */ 
     public PMT_PaymentWizard_CTRL() {
         redirect = false;
+
         if(ApexPages.currentPage().getParameters().get('wtype') == 'writeoff'){
             PaymentWriteoffWizard();
             isWriteoffWizard = true;
@@ -236,8 +237,9 @@ public with sharing class PMT_PaymentWizard_CTRL {
     /*******************************************************************************************************
     * @description ActionMethod for the Calculate button that given the current opp outstanding balance, 
     * creates the specified new payments to cover the amount.
+    * @return PageReference null
     */ 
-    public void calculate() {
+    public pageReference calculate() {
         if (haveAmount || removePaidPayments) {
             // clear the list
             newPayments.clear();
@@ -304,12 +306,14 @@ public with sharing class PMT_PaymentWizard_CTRL {
             }
             
         }
+        return null;
     }
     
     /*******************************************************************************************************
     * @description ActionMethod for the WriteOff button
+    * @return PageReference null
     */ 
-    public void writeoff() {
+    public pageReference writeoff() {
     	Savepoint sp = Database.setSavepoint();
     	try {
 	        list<npe01__OppPayment__c> paymentsToDelete = new list<npe01__OppPayment__c>();
@@ -328,6 +332,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     		ERR_Handler.processError(e, ERR_Handler_API.Context.PMT);
     		ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
     	}
+        return null;
     }
 
     /*******************************************************************************************************
@@ -381,8 +386,9 @@ public with sharing class PMT_PaymentWizard_CTRL {
 
     /*******************************************************************************************************
     * @description ActionMethod for the Create Payments button
+    * @return PageReference null
     */ 
-    public void createPayments() {
+    public PageReference createPayments() {
     	Savepoint sp = Database.setSavepoint();
         try {
 	        // first delete unpaid payments
@@ -407,14 +413,17 @@ public with sharing class PMT_PaymentWizard_CTRL {
             ERR_Handler.processError(e, ERR_Handler_API.Context.PMT);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
         }
+        return null;
     }
     
     /*******************************************************************************************************
     * @description ActionMethod for the Remove Paid Payments button, which sets the internal flag to
     * track this.
+    * @return PageReference null
     */ 
-    public void RemovePaidPayments() {
+    public pageReference RemovePaidPayments() {
         removePaidPayments = true;
+        return null;
     }
    
 }
