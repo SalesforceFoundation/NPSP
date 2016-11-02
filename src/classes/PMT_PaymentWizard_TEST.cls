@@ -107,8 +107,8 @@ private class PMT_PaymentWizard_TEST {
         // set values
         controller.writeoffPayment.npe01__payment_date__c = date.newInstance(2001,12,12);
         
-        // click calculate
-        pagereference ref = controller.writeoff();
+        // click writeoff
+        controller.writeoff();
 
         Test.stopTest();
         
@@ -182,11 +182,10 @@ private class PMT_PaymentWizard_TEST {
         controller.samplePayment.npe01__payment_method__c = 'Stock';
         
         // click calculate
-        pagereference ref = controller.calculate();
+        controller.calculate();
         
         // save the page
-        string nextPage=controller.createPayments().getUrl(); 
-        nextPage = nextPage.left(nextPage.indexOf('?')); // remove parameters
+        controller.createPayments();
         
         // look for the data
         npe01__OppPayment__c[] opmt = [select id, npe01__payment_method__c, npe01__payment_amount__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp.Id and npe01__paid__c = false];
@@ -194,8 +193,6 @@ private class PMT_PaymentWizard_TEST {
         system.assertEquals('Stock', opmt[0].npe01__payment_method__c);
         system.assertEquals(100, opmt[0].npe01__payment_amount__c);
 
-        // verify that the right page displays 
-        System.assertEquals(nextPage, '/' + opp.id); 
     }
     
     public static testMethod void test_PageElementsWeekly() {
@@ -241,10 +238,10 @@ private class PMT_PaymentWizard_TEST {
         controller.samplePayment.npe01__Scheduled_Date__c = date.newInstance(2001,12,12);
         
         // click calculate
-        pagereference ref = controller.calculate();
+        controller.calculate();
         
         // save the page
-        string nextPage=controller.createPayments().getUrl(); 
+        controller.createPayments();
 
         // look for the data
         npe01__OppPayment__c[] opmt = [select id, npe01__payment_method__c, npe01__payment_amount__c, npe01__scheduled_date__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp.Id and npe01__paid__c = false order by npe01__scheduled_date__c asc];
@@ -296,10 +293,10 @@ private class PMT_PaymentWizard_TEST {
         controller.samplePayment.npe01__Scheduled_Date__c = date.newInstance(2001,12,12);
         
         // click calculate
-        pagereference ref = controller.calculate();
+        controller.calculate();
         
         // save the page
-        string nextPage=controller.createPayments().getUrl(); 
+        controller.createPayments();
 
         // look for the data
         npe01__OppPayment__c[] opmt = [select id, npe01__payment_method__c, npe01__payment_amount__c, npe01__scheduled_date__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp.Id and npe01__paid__c = false];
@@ -340,7 +337,7 @@ private class PMT_PaymentWizard_TEST {
         Test.startTest();      
         controller.getPaymentsSettings();
         list<PMT_PaymentWizard_CTRL.payment> oplist = controller.getPayments();
-        ApexPages.Pagereference pr = controller.RemovePaidPayments();             
+        controller.RemovePaidPayments();
         Test.stopTest();
     }    
 
@@ -403,11 +400,11 @@ private class PMT_PaymentWizard_TEST {
         controller.samplePayment.npe01__Scheduled_Date__c = date.newInstance(2001,12,12);
         
          // click calculate
-        pagereference ref = controller.calculate();
+        controller.calculate();
         system.assertEquals(4, controller.getPayments().size());
         
         // save the page
-        string nextPage=controller.createPayments().getUrl(); 
+        controller.createPayments();
 
         // look for the data
         npe01__OppPayment__c[] opmt = [select id, npe01__payment_method__c, npe01__payment_amount__c, npe01__scheduled_date__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp1.Id];
@@ -481,11 +478,10 @@ private class PMT_PaymentWizard_TEST {
         controller.samplePayment.npe01__payment_method__c = 'Stock';
         
         // click calculate
-        pagereference ref = controller.calculate();
+        controller.calculate();
         
         // save the page
-        string nextPage=controller.createPayments().getUrl();
-        nextPage = nextPage.left(nextPage.indexOf('?')); // remove parameters
+        controller.createPayments();
 
         Test.stopTest();
         
@@ -497,9 +493,6 @@ private class PMT_PaymentWizard_TEST {
             system.assertEquals(100, pmt.npe01__payment_amount__c);
             system.assertEquals(opp.Name, pmt.npe01__Custom_Payment_Field__c);
         }
-
-        // verify that the right page displays 
-        System.assertEquals(nextPage, '/' + opp.id); 
     }
 
 }
