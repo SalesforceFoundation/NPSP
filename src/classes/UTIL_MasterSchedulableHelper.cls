@@ -62,7 +62,7 @@ public without sharing class UTIL_MasterSchedulableHelper {
     * @description This map contains all necessary information for scheduling default NPSP jobs:
     * Job name as key, and a list containing the cron expression for that job and its class name.
     */
-    public static final Map<String, List<String>> defaultScheduledJobs = new Map<String, List<String>>{
+    public static Map<String, List<String>> defaultScheduledJobs = new Map<String, List<String>>{
         'NPSP 00 - Error Processing'                => new List<String>{'0 0 * * * ?',  'ERR_AsyncErrors_SCHED'},
         'NPSP 01 - Opportunity Account Rollups'     => new List<String>{'0 0 23 ? * *', 'RLLP_OppAccRollup_BATCH'},
         'NPSP 02 - Opportunity Contact Rollups'     => new List<String>{'0 0 23 ? * *', 'RLLP_OppContactRollup_BATCH'},
@@ -122,20 +122,18 @@ public without sharing class UTIL_MasterSchedulableHelper {
     * @return void
     */
     public static void setScheduledJobs() {
-        //don't auto schedule jobs if the setting tells us not to
-        Error_Settings__c orgErrorSettings = UTIL_CustomSettingsFacade.getOrgErrorSettings();
 
         Map<String, CronTrigger> scheduledJobs = new Map<String, CronTrigger>();
-        //query for the job names of all scheduled apex
-        for (CronTrigger ct : [SELECT Id, CronJobDetail.Name, CreatedBy.Name, CreatedBy.IsActive FROM CronTrigger WHERE CronJobDetail.JobType = '7']) {
+        
+        //query for all scheduled apex
+        for (CronTrigger ct : [SELECT Id, CronExpression, CronJobDetail.Name, CreatedBy.Name, CreatedBy.IsActive FROM CronTrigger WHERE CronJobDetail.JobType = '7']) {
             scheduledJobs.put(ct.CronJobDetail.Name, ct);
         }
 
-        //if one of our jobs isn't scheduled, schedule it
         for (String jobName : defaultScheduledJobs.keySet()) {
             //schedule the job if it doesn't exist and they haven't disabled auto scheduling
             if (!scheduledJobs.containsKey(jobName)) {
-                if (!orgErrorSettings.Don_t_Auto_Schedule_Default_NPSP_Jobs__c) {
+                if (!UTIL_CustomSettingsFacade.getOrgErrorSettings().Don_t_Auto_Schedule_Default_NPSP_Jobs__c) {
                     createJob(jobName);
                 }
             } else {
@@ -144,6 +142,10 @@ public without sharing class UTIL_MasterSchedulableHelper {
                 CronTrigger currentJob = scheduledJobs.get(jobName);
                 if (currentJob.CreatedBy.Name == 'Nonprofit Success Pack' || !currentJob.CreatedBy.isActive) {
                     System.abortJob(currentJob.Id);
+                    
+                    //reuse their CronExpression so it's scheduled at the time they chose
+                    defaultScheduledJobs.get(jobName)[0] = currentJob.CronExpression;
+
                     createJob(jobName);
                 }
             }
