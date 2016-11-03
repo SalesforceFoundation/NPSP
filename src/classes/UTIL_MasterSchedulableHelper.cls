@@ -157,8 +157,8 @@ public without sharing class UTIL_MasterSchedulableHelper {
     * @return void
     */
     private static void createJob(String jobName) {
-        String cronExpression = defaultscheduledJobs.get(jobName)[0];
-        String className = defaultscheduledJobs.get(jobName)[1];
+        String cronExpression = defaultScheduledJobs.get(jobName)[0];
+        String className = defaultScheduledJobs.get(jobName)[1];
     
         try {
             Schedulable classInstance = (Schedulable)Type.forName(className).newInstance();
