@@ -47,11 +47,8 @@ public with sharing class ADDR_Validator {
         if (addrId != null) {
             set<id> setAddrId = new Set<Id>{addrId};
             verifyRecords(setAddrId);
-            
-            PageReference pageRef = new PageReference('/' + addrId);
-            pageRef.setRedirect(true);
-            return pageRef;
-        } else return null;
+        }
+        return null;
     }
 
     /*******************************************************************************************************

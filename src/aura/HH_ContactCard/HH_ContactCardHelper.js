@@ -22,6 +22,7 @@
 
         // now notify other components the remove request occurred
         event = $A.get("e.c:HH_ContactRemoveEvent");
+        event.preventDefault();
         var con = component.get('v.contact');
         event.setParams({ "contact" : con });
         event.fire();
