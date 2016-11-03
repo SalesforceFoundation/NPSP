@@ -390,6 +390,7 @@
         <members>autocompleteSelectListOption</members>
         <members>dataProviderInterface</members>
         <members>defaultTokens</members>
+        <members>svg</members>
         <name>AuraDefinitionBundle</name>
     </types>
     <types>
