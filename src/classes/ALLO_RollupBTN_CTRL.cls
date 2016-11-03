@@ -50,10 +50,7 @@ public with sharing class ALLO_RollupBTN_CTRL {
         	//run rollups for this General Accouting Unit
 			ALLO_Rollup_SCHED rollup = new ALLO_Rollup_SCHED(parentId);
 			rollup.runRollups();
-
-	        PageReference pageRef = sc.view();
-	        pageRef.setRedirect(true);
-	        return pageRef;
-        } else return null;
+        }
+        return null;
     }
 }

@@ -3,29 +3,14 @@
         <span>
             <div class="slds-media slds-tile slds-hint-parent">
                 <div class="slds-media__figure">
-                    <aura:if isTrue="{!v.value.HHId__c != null}" >
-                        <c:svg ariaHidden="true"
-                               class="slds-icon slds-icon--small slds-icon-standard-household"
-                               xlinkHref="{!$Resource.sfdo203 + '/assets/icons/standard-sprite/svg/symbols.svg#household'}"
-                               />
-                        <aura:set attribute="else">                            
-                            <c:svg ariaHidden="true"
-                                   class="slds-icon slds-icon--small slds-icon-standard-contact"
-                                   xlinkHref="{!$Resource.sfdo203 + '/assets/icons/standard-sprite/svg/symbols.svg#contact'}"
-                                   />
-                        </aura:set>
-                    </aura:if>
+                    <lightning:icon iconName="{!'standard:' + (!empty(v.value.HHId__c) ? 'household' : 'contact')}"
+                        class="slds-icon--small" size="small"/>
                 </div>
                 <div class="slds-media__body">
                     <div class="slds-grid slds-grid--align-spread slds-has-flexi-truncate">
                         <p class="slds-tile__title slds-truncate">{!v.value.FirstName}&nbsp;{!v.value.LastName}</p>
-                        <ui:button class="slds-button slds-button--icon slds-shrink-none" press="{!c.handleClick}">
-                            <c:svg ariaHidden="true"
-                                   class="slds-button__icon slds-button__icon--large"
-                                   xlinkHref="{!$Resource.sfdo203 + '/assets/icons/utility-sprite/svg/symbols.svg#new'}"
-                                   />
-                            <span class="slds-assistive-text">{!$Label.npo02.Add}</span>
-                        </ui:button>
+                        <lightning:buttonIcon iconName="utility:new" variant="bare" onclick="{!c.handleClick}"
+                            class="slds-shrink-none" size="large" alternativeText="{!$Label.npo02.Add}" />
                     </div>
                     <div class="slds-tile__detail slds-text-body--small">
                         <ul>

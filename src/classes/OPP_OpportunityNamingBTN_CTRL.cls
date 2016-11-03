@@ -37,6 +37,7 @@
 public with sharing class OPP_OpportunityNamingBTN_CTRL {
     
     private ApexPages.StandardController ctrl;
+    public Boolean redirect {get; set;}
 
     /** @description Standard opportunity controller constructor.*/
     public OPP_OpportunityNamingBTN_CTRL(ApexPages.StandardController oppCtrl) {
@@ -48,14 +49,15 @@ public with sharing class OPP_OpportunityNamingBTN_CTRL {
         list<Opportunity> thisOpp = new list<Opportunity>{(Opportunity)ctrl.getRecord()};
 
         if (!thisOpp.isEmpty()) {
-            
             OPP_OpportunityNaming.refreshOppNames(thisOpp);
-            update thisOpp;
-            
-            PageReference pageRef = new PageReference('/' + thisOpp[0].id);
-            pageRef.setRedirect(true);
-            return pageRef;
-        
-        } else return null;
+            try {
+                update thisOpp;
+                redirect = true;
+            } catch (Exception ex) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
+                redirect = false;
+            }
+        }
+        return null;
     }
 }
