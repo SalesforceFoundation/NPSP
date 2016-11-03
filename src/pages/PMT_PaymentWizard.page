@@ -23,9 +23,10 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
         function setFocusOnLoad() {}  
     </script>
     
-    <apex:form styleClass="slds">
+    <apex:form styleClass="slds" id="vfForm">
         <!-- Nav -->
-        <apex:pageMessages />
+        <c:UTIL_PageMessages />
+        <c:UTIL_NavigateBack recordId="{!currentOpp.id}" redirect="{!redirect}"/>
         <div class="slds-page-header" role="banner">
             <div class="slds-grid">
                 <div class="slds-col slds-col--padded">
@@ -79,7 +80,7 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
             </div>
             <div class="slds-grid slds-grid--align-center">
                 <div class="slds-col">
-                    <apex:commandButton action="{!RemovePaidPayments}" value="{!$Label.pmtWizardBtnRemovePaidPayments}" styleClass="slds-button slds-button--neutral"/>
+                    <apex:commandButton action="{!RemovePaidPayments}" value="{!$Label.pmtWizardBtnRemovePaidPayments}" styleClass="slds-button slds-button--neutral" reRender="vfForm"/>
                 </div>
             </div>
         </apex:outputText>
@@ -210,7 +211,7 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                 </apex:outputText>
                 <div class="slds-grid slds-grid--align-center">
                     <div class="slds-col">
-                        <apex:commandButton action="{!calculate}" value="{!$Label.pmtWizardBtnCalcPayments}" rendered="{!AND(NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true, isScheduleWizard == true, NOT(isClosedLost), OR(haveAmount, removePaidPayments))}" styleClass="slds-button slds-button--neutral slds-m-around--medium"/>
+                        <apex:commandButton action="{!calculate}" value="{!$Label.pmtWizardBtnCalcPayments}" rendered="{!AND(NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true, isScheduleWizard == true, NOT(isClosedLost), OR(haveAmount, removePaidPayments))}" styleClass="slds-button slds-button--neutral slds-m-around--medium" reRender="vfForm"/>
                     </div>
                 </div>
                 <!-- Show Payments to be Created -->
@@ -265,7 +266,7 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
            <!-- CREATE PAYMENTS BUTTON -->
             <div class="slds-grid slds-grid--align-center">
                 <div class="slds-col">
-                    <apex:commandButton action="{!createPayments}" value="{!$Label.pmtWizardBtnCreatePayments}" rendered="{!AND(NOT(isClosedLost), payments.size>0, OR(haveAmount, removePaidPayments))}" styleClass="slds-button slds-button--neutral"/>
+                    <apex:commandButton action="{!createPayments}" value="{!$Label.pmtWizardBtnCreatePayments}" rendered="{!AND(NOT(isClosedLost), payments.size>0, OR(haveAmount, removePaidPayments))}" styleClass="slds-button slds-button--neutral" reRender="vfForm"/>
                 </div>
             </div>
 
@@ -351,7 +352,7 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                     </div>
                     <div class="slds-grid slds-wrap slds-grid--align-center slds-m-around--medium">
                         <div class="slds-col">
-                            <apex:commandButton action="{!writeoff}" value="{!$Label.pmtWizardSectionWriteoffPayments}"  styleClass="slds-button slds-button--neutral"/>
+                            <apex:commandButton action="{!writeoff}" value="{!$Label.pmtWizardSectionWriteoffPayments}"  styleClass="slds-button slds-button--neutral" reRender="vfForm"/>
                         </div>
                     </div>
                 </apex:outputText>
