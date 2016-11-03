@@ -44,15 +44,15 @@ public without sharing class UTIL_MasterSchedulableHelper {
     * @description Abort deprecated master scheduled jobs. They are all replaced by standard scheduled jobs.
     * @return void
     */
-    public static void abortOldScheduledJobs() {
+    public static void abortOldscheduledJobs() {
         //Abort the old NPSPv3 schedulable, since we have changed the name and are using a new class now (as of July 24 2014).
         //Abort the scheduled jobs from the old NPSP packages.
         List<String> jobNames = new List<String>{'NPSP Global Scheduler', 'Nightly Opportunity Roll Up', 'Recurring Donation Updates', 
             'NPSP Scheduler1', 'NPSP Scheduler2', 'NPSP Scheduler3', 'NPSP Scheduler 1', 'NPSP Scheduler 2', 'NPSP Scheduler 3'};
-        List<CronTrigger> oldScheduledJobs = [select Id, CronJobDetail.Id from CronTrigger 
+        List<CronTrigger> oldscheduledJobs = [select Id, CronJobDetail.Id from CronTrigger 
            where CronJobDetail.Name IN :jobNames and CronJobDetail.JobType = '7'];
-        if(oldScheduledJobs != null && oldScheduledJobs.size() > 0) {
-            for(CronTrigger job : oldScheduledJobs) {
+        if(oldscheduledJobs != null && oldscheduledJobs.size() > 0) {
+            for(CronTrigger job : oldscheduledJobs) {
                  System.abortJob(job.Id);
             }
         }
@@ -62,7 +62,7 @@ public without sharing class UTIL_MasterSchedulableHelper {
     * @description This map contains all necessary information for scheduling default NPSP jobs:
     * Job name as key, and a list containing the cron expression for that job and its class name.
     */
-    public static final Map<String, List<String>> defaultScheduledJobs = new Map<String, List<String>>{
+    public static final Map<String, List<String>> defaultscheduledJobs = new Map<String, List<String>>{
         'NPSP 00 - Error Processing'                => new List<String>{'0 0 * * * ?',  'ERR_AsyncErrors_SCHED'},
         'NPSP 01 - Opportunity Account Rollups'     => new List<String>{'0 0 23 ? * *', 'RLLP_OppAccRollup_BATCH'},
         'NPSP 02 - Opportunity Contact Rollups'     => new List<String>{'0 0 23 ? * *', 'RLLP_OppContactRollup_BATCH'},
@@ -94,14 +94,14 @@ public without sharing class UTIL_MasterSchedulableHelper {
         //This will be the default once this method has run once, since we are
         //deleting all Schedulable__c records at the end of this method.
         if (scheduleObjects.isEmpty() || allJobsActive) {
-            setScheduledJobs();
+            setscheduledJobs();
         } else {
             //there was no Schedulable__c object for error processing, so create it anyway
             createJob('NPSP 00 - Error Processing');
             for (Schedulable__c sched : scheduleObjects) {
                 if (sched.Active__c) {
-                    for (String jobName : defaultScheduledJobs.keySet()) {
-                        if (sched.Class_Name__c.equalsIgnoreCase(defaultScheduledJobs.get(jobname)[1])) {
+                    for (String jobName : defaultscheduledJobs.keySet()) {
+                        if (sched.Class_Name__c.equalsIgnoreCase(defaultscheduledJobs.get(jobname)[1])) {
                             createJob(jobName);
                         }
                     }
@@ -121,23 +121,31 @@ public without sharing class UTIL_MasterSchedulableHelper {
     * @description Schedules all NPSP jobs that are not already scheduled.
     * @return void
     */
-    public static void setScheduledJobs() {
+    public static void setscheduledJobs() {
         //don't auto schedule jobs if the setting tells us not to
         Error_Settings__c orgErrorSettings = UTIL_CustomSettingsFacade.getOrgErrorSettings();
-        if (orgErrorSettings.Don_t_Auto_Schedule_Default_NPSP_Jobs__c) {
-            return;
-        }
 
-        Set<String> scheduledJobs = new Set<String>();
+        Map<String, CronTrigger> scheduledJobs = new Map<String, CronTrigger>();
         //query for the job names of all scheduled apex
-        for (CronTrigger ct : [SELECT CronJobDetail.Name FROM CronTrigger WHERE CronJobDetail.JobType = '7']) {
-            scheduledJobs.add(ct.CronJobDetail.Name);
+        for (CronTrigger ct : [SELECT Id, CronJobDetail.Name, CreatedBy.Name, CreatedBy.IsActive FROM CronTrigger WHERE CronJobDetail.JobType = '7']) {
+            scheduledJobs.put(ct.CronJobDetail.Name, ct);
         }
 
         //if one of our jobs isn't scheduled, schedule it
-        for (String jobName : defaultScheduledJobs.keySet()) {
-            if (!scheduledJobs.contains(jobName)) {
-                createJob(jobName);
+        for (String jobName : defaultscheduledJobs.keySet()) {
+            //schedule the job if it doesn't exist and they haven't disabled auto scheduling
+            if (!scheduledJobs.containsKey(jobName)) {
+                if (!orgErrorSettings.Don_t_Auto_Schedule_Default_NPSP_Jobs__c) {
+                    createJob(jobName);
+                }
+            } else {
+                //if it's already scheduled, but the ghost user or an inactve user scheduled it, 
+                //then abort and reschedule
+                CronTrigger currentJob = scheduledJobs.get(jobName);
+                if (currentJob.CreatedBy.Name == 'Nonprofit Success Pack' || !currentJob.CreatedBy.isActive) {
+                    System.abortJob(currentJob.Id);
+                    createJob(jobName);
+                }
             }
         }
     }
@@ -147,8 +155,8 @@ public without sharing class UTIL_MasterSchedulableHelper {
     * @return void
     */
     private static void createJob(String jobName) {
-        String cronExpression = defaultScheduledJobs.get(jobName)[0];
-        String className = defaultScheduledJobs.get(jobName)[1];
+        String cronExpression = defaultscheduledJobs.get(jobName)[0];
+        String className = defaultscheduledJobs.get(jobName)[1];
     
         try {
             Schedulable classInstance = (Schedulable)Type.forName(className).newInstance();
