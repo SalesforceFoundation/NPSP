@@ -7,10 +7,6 @@
     color: inherit;
 }
 
-.THIS .slds-spinner {
-    position: fixed;
-}
-
 .THIS .required {
     padding-left: 2px;
     color: red;

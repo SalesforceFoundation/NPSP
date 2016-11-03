@@ -44,7 +44,12 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @description does the Opp have an outstanding balance
     */ 
     public boolean haveAmount { get; private set; }
-    
+
+    /*******************************************************************************************************
+    * @description after successful save set to true to redirect page
+    */ 
+    public Boolean redirect {get; set;}
+
     /*******************************************************************************************************
     * @description Class that stored numbered payment
     */ 
@@ -141,7 +146,8 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @description Constructor for the wizard that initializes data structures
     */ 
     public PMT_PaymentWizard_CTRL() {
-        
+        redirect = false;
+
         if(ApexPages.currentPage().getParameters().get('wtype') == 'writeoff'){
             PaymentWriteoffWizard();
             isWriteoffWizard = true;
@@ -305,7 +311,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     
     /*******************************************************************************************************
     * @description ActionMethod for the WriteOff button
-    * @return PageReference the Opp's detail page on success, null on failure.
+    * @return PageReference null
     */ 
     public pageReference writeoff() {
     	Savepoint sp = Database.setSavepoint();
@@ -320,16 +326,13 @@ public with sharing class PMT_PaymentWizard_CTRL {
 	        }
 	        if (!paymentsToDelete.isEmpty()) delete paymentsToDelete;
 	        insert writeoffPayment;
-	        PageReference oldOppPage = new PageReference('/' + currentOpp.id);
-	        oldOppPage.setRedirect(true);
-            oldOppPage.getParameters().put('t',''+(System.currentTimeMillis()));
-	        return oldOppPage;
+	        redirect = true;
     	} catch(Exception e) {
     		Database.rollback(sp);
     		ERR_Handler.processError(e, ERR_Handler_API.Context.PMT);
     		ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
-    		return null;
     	}
+        return null;
     }
 
     /*******************************************************************************************************
@@ -383,7 +386,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
 
     /*******************************************************************************************************
     * @description ActionMethod for the Create Payments button
-    * @return PageReference the Opp's detail page on success, null on failure.
+    * @return PageReference null
     */ 
     public PageReference createPayments() {
     	Savepoint sp = Database.setSavepoint();
@@ -403,18 +406,14 @@ public with sharing class PMT_PaymentWizard_CTRL {
 	        // create the payment records
 	        insert pmts;
 	        
-	        // Send the user to the detail page for the new account.
-	        PageReference oldOppPage = new PageReference('/' + currentOpp.id);
-	        oldOppPage.setRedirect(true);
-            oldOppPage.getParameters().put('t',''+(System.currentTimeMillis()));
-	        return oldOppPage;
+	        redirect = true;
         
         } catch(Exception e) {
             Database.rollback(sp);
             ERR_Handler.processError(e, ERR_Handler_API.Context.PMT);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
-            return null;
         }
+        return null;
     }
     
     /*******************************************************************************************************

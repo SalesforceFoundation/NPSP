@@ -6,6 +6,7 @@
 
     // the remove button has been pressed, notify our container
     removeContact : function(component, event, helper) {
+        event.preventDefault();
         helper.fireContactRemoveEvent(component, event);
     },
 })
