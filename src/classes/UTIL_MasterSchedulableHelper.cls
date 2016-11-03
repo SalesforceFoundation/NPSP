@@ -44,7 +44,7 @@ public without sharing class UTIL_MasterSchedulableHelper {
     * @description Abort deprecated master scheduled jobs. They are all replaced by standard scheduled jobs.
     * @return void
     */
-    public static void abortoldScheduledJobs() {
+    public static void abortOldScheduledJobs() {
         //Abort the old NPSPv3 schedulable, since we have changed the name and are using a new class now (as of July 24 2014).
         //Abort the scheduled jobs from the old NPSP packages.
         List<String> jobNames = new List<String>{'NPSP Global Scheduler', 'Nightly Opportunity Roll Up', 'Recurring Donation Updates', 
