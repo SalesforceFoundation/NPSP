@@ -84,8 +84,7 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
                                           PermissionsAuthorApex FROM Profile WHERE Id = :UserInfo.getProfileId()];
             return currentUserProfile.PermissionsCustomizeApplication &&
                    currentUserProfile.PermissionsModifyAllData && 
-                   currentUserProfile.PermissionsAuthorApex &&
-                   Schema.SObjectType.CronTrigger.isCreateable();
+                   currentUserProfile.PermissionsAuthorApex;
         } catch (Exception e) {
             return false;
         }
