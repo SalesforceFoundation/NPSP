@@ -3291,7 +3291,7 @@ If you want to know which Opportunities would have previously included this doub
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>pscDeleteRow</shortDescription>
-        <value>Delete</value>
+        <value>Delete Row</value>
     </labels>
     <labels>
         <fullName>pscManageSoftCreditsAdd</fullName>
