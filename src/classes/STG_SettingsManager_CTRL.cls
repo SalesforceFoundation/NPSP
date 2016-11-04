@@ -79,8 +79,15 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
     * @return void
     */
     private boolean runningUserIsAdmin() {
-        Profile currentUserProfile = [SELECT Id, PermissionsCustomizeApplication, PermissionsModifyAllData 
-                                        FROM Profile WHERE Id = :UserInfo.getProfileId()];
-        return currentUserProfile.PermissionsCustomizeApplication && currentUserProfile.PermissionsModifyAllData;
+        try {
+            Profile currentUserProfile = [SELECT Id, PermissionsCustomizeApplication, PermissionsModifyAllData, 
+                                          PermissionsAuthorApex FROM Profile WHERE Id = :UserInfo.getProfileId()];
+            return currentUserProfile.PermissionsCustomizeApplication &&
+                   currentUserProfile.PermissionsModifyAllData && 
+                   currentUserProfile.PermissionsAuthorApex &&
+                   Schema.SObjectType.CronTrigger.isCreateable();
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
