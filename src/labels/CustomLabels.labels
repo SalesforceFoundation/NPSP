@@ -3286,6 +3286,14 @@ If you want to know which Opportunities would have previously included this doub
         <value>You are preparing to write off {0} Payment(s) totaling {1}.</value>
     </labels>
     <labels>
+        <fullName>pscDeleteRow</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pscDeleteRow</shortDescription>
+        <value>Delete Row</value>
+    </labels>
+    <labels>
         <fullName>pscManageSoftCreditsAdd</fullName>
         <categories>Manage Soft Credits</categories>
         <language>en_US</language>

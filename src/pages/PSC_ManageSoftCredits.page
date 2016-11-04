@@ -91,6 +91,7 @@
                         <th>{!$Label.pscManageSoftCreditsAmountOrPercent}</th>
                     </tr></thead>
                     <tbody>
+                    <apex:variable var="cnt" value="{!0}" />
                     <apex:repeat value="{!softCredits}" var="credit">
                     <tr>
                         <td>
@@ -121,7 +122,16 @@
                                 <apex:outputText styleClass="slds-form-element__static" value="{!credit.partial.Amount__c}" rendered="{!credit.fullCredit}" />
                             </apex:outputPanel>
                         </td>
+                        <td>
+                            <apex:commandButton styleClass="slds-button slds-button--destructive" value="{!$Label.alloDeleteRow}" id="delRowBTN" title="{!$Label.alloDeleteRow}" action="{!delRow}" reRender="tablePanel, totalSelected, totalUn" immediate="true">
+                                <span class="slds-form-element__label slds-assistive-text">
+                                    {!$Label.pscDeleteRow} {!cnt}
+                                </span>
+                                <apex:param name="rowForDel" value="{!cnt}" assignTo="{!rowNumber}"/>
+                            </apex:commandButton>
+                        </td>
                     </tr>
+                    <apex:variable var="cnt" value="{!cnt+1}"/>
                     </apex:repeat>
                     </tbody>
                 </table>
