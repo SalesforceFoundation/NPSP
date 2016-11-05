@@ -40,7 +40,11 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
     public boolean isAmount {get; set;} // true = amount, false = percentage
     public boolean allowTooManySoftCredits {get; set;}
     public List<SoftCredit> softCredits {get; set;}
+    /** @description List of soft credits to delete when the user clicks Save.*/
+    public List<sObject> listSoftCreditsForDelete = new List<sObject>();
     public List<SelectOption> contactRoles {get; private set;}
+    /** @description Row number sent back by page for delete row method.*/
+    public integer rowNumber {get;set;}
     
     /*******************************************************************************************************
     * @description temporary Opp to hold the current Total Soft Credit Amount and currency
@@ -175,7 +179,19 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
             Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, Label.pscManageSoftCreditsNoRoles));
         
     }
-    
+
+    /** @description Removes a row from the page, and adds to the list for deletion once the user saves.*/
+    public pageReference delRow() {
+        //add to deletion list if the soft credit has an id
+        if (softCredits[rowNumber].partial.id!=null)
+            listSoftCreditsForDelete.add(softCredits[rowNumber].partial);
+        if (softCredits[rowNumber].contactRole.Id != null && !softCredits[rowNumber].contactRole.IsPrimary)
+            listSoftCreditsForDelete.add(softCredits[rowNumber].contactRole);
+        softCredits.remove(rowNumber);
+
+        return null;
+    }
+
     /*******************************************************************************************************
     * @description actionMethod to save the soft credits on the page
     * @return the Opportunity's detail page if success, or null if any error encountered.
@@ -185,7 +201,7 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
         for (OpportunityContactRole ocr : [SELECT Id, ContactId, Contact.Name FROM OpportunityContactRole WHERE OpportunityId = :opp.Id AND IsPrimary = true]) {
             donors.put(ocr.ContactId, ocr.Contact.Name);
         }
-        List<SObject> toDelete = new List<SObject>();
+        List<SObject> toDelete = listSoftCreditsForDelete;
         List<OpportunityContactRole> toUpsertContactRoles = new List<OpportunityContactRole>();
         List<Partial_Soft_Credit__c> toUpsertPartialCredits = new List<Partial_Soft_Credit__c>();
         List<SoftCredit> upsertedSoftCredits = new List<SoftCredit>();
