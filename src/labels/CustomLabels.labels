@@ -2614,6 +2614,13 @@ If you want to know which Opportunities would have previously included this doub
         <value>City</value>
     </labels>
     <labels>
+        <fullName>lblCloned</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblCloned</shortDescription>
+        <value>Cloned</value>
+    </labels>
+    <labels>
         <fullName>lblCountry</fullName>
         <categories>Manage Household UI</categories>
         <language>en_US</language>

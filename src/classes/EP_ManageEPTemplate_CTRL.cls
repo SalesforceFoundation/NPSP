@@ -139,6 +139,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         if (params.containsKey('clone') && params.get('clone') == '1') {
             isClone = true;
             template = template.clone(false,true,false,false);
+            template.Name += ' - ' + Label.lblCloned;
         }
 
         initWrapperHierarchy();
