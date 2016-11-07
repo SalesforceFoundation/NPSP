@@ -36,6 +36,11 @@
 @isTest
 private with sharing class ERR_ExceptionHandler_TEST {
 
+    /*********************************************************************************************************
+    * @description Catches a required field exception, verifies it's an exception we can handle, applies 
+    * exception handler method to beautify the error message, and verifies the results. Applies the method 
+    * again, verifies the results are unchanged.
+    */
 	static testMethod void testHandleException() {
 		Exception ex;
 		try {
@@ -50,8 +55,18 @@ private with sharing class ERR_ExceptionHandler_TEST {
 
 		system.assert(ERR_ExceptionHandler.isHandledException(ex), 'After updating the message, we still detect it as handled.');
 		system.assert(ex.getMessage().contains(Label.exceptionRequiredField), 'The correct message is added.');
+
+		String oldMessage = ex.getMessage();
+		ERR_ExceptionHandler.beautifyExceptionMessage(ex);
+
+		system.assertEquals(oldMessage, ex.getMessage(), 'Applying the method twice shouldn\'t change the results.');
+
 	}
 
+    /*********************************************************************************************************
+    * @description Catches an invalid ID error, which we don't handle. Verifies it's not a handled exception,
+    * and that applying the beautify method does nothing.
+    */
 	static testMethod void testUnhandledExceptionIsUnmodified() {
 		Exception ex;
 		try {
