@@ -93,7 +93,23 @@ public class TDTM_TriggerHandler {
             //Run the relevant classes
             for (SObject classToCall : classesToCall) {
                 TDTM_Runnable.DmlWrapper dmlWrapperLocal = new TDTM_Runnable.DmlWrapper();
-                dmlWrapperLocal = runClass(classToCall, newList, OldList, thisAction, describeObj);
+                
+                try {
+                    dmlWrapperLocal = runClass(classToCall, newList, OldList, thisAction, describeObj);
+                } catch (Exception ex) {
+                    //use the correct list
+                    List<SObject> populatedList = newList == null || newList.isEmpty() ? oldList : newList;
+                    //if we're only doing DML on one object and the caught exception is handled,
+                    //trap the error and add the message to the page.
+                    if (populatedList.size() == 1 && ERR_ExceptionHandler.isHandledException(ex)) {
+                        ERR_ExceptionHandler.beautifyExceptionMessage(ex);
+                        populatedList[0].addError(ex);
+                        return;
+                    } else {
+                        throw ex;
+                    }
+                }
+
                 if(dmlWrapperLocal != null) {
                     if(dmlWrapperLocal.objectsToInsert != null && !dmlWrapperLocal.objectsToInsert.isEmpty())
                         dmlWrapper.objectsToInsert.addAll(dmlWrapperLocal.objectsToInsert);
@@ -107,9 +123,25 @@ public class TDTM_TriggerHandler {
                 UTIL_Debug.debugWithInfo('****Finished executing: ' + classToCall.get('Class__c'));
             }
 
+            
             //Process the result
-            if(dmlWrapper != null)
-               processDML(dmlWrapper);
+            if(dmlWrapper != null) {
+                try {
+                    processDML(dmlWrapper);
+                } catch (Exception ex) {
+                    //use the correct list
+                    List<SObject> populatedList = newList == null || newList.isEmpty() ? oldList : newList;
+                    //if we're only doing DML on one object and the caught exception is handled,
+                    //trap the error and add the message to the page.
+                    if (populatedList.size() == 1 && ERR_ExceptionHandler.isHandledException(ex)) {
+                        ERR_ExceptionHandler.beautifyExceptionMessage(ex);
+                        populatedList[0].addError(ex);
+                        return;
+                    } else {
+                        throw ex;
+                    }
+                }
+            }
         }
     }
 
