@@ -193,7 +193,7 @@ private with sharing class EP_ManageEPTemplate_CTRL_TEST {
         List<Engagement_Plan_Template__c> clonedTemplate = [SELECT Id, Name, Skip_Weekends__c, Default_Assignee__c
                                                             FROM Engagement_Plan_Template__c WHERE Id != :template.id];
         System.assertEquals(1, clonedTemplate.size(), 'A new cloned template should exist.');
-        System.assertEquals(template.Name, clonedTemplate[0].Name, 'Clone should have the same Name as the original.');
+        System.assert(clonedTemplate[0].Name.contains(Label.lblCloned), 'Cloned template should have the Cloned label.');
         System.assertEquals(template.Skip_Weekends__c, clonedTemplate[0].Skip_Weekends__c, 
             'Clone should have the same Skip Weekend field value as the original.');
         System.assertEquals(template.Default_Assignee__c, clonedTemplate[0].Default_Assignee__c, 
