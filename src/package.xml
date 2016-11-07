@@ -1109,6 +1109,7 @@
         <members>lblBtnAddContact</members>
         <members>lblCCardExcludeFrom</members>
         <members>lblCity</members>
+        <members>lblCloned</members>
         <members>lblCountry</members>
         <members>lblDeleteContact</members>
         <members>lblDeleteContactPrompt</members>
