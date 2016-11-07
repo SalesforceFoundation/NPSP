@@ -35,14 +35,14 @@
 * and to remove cruft.
 */
 public with sharing class ERR_ExceptionHandler {
-    /** @description Map of exception status codes to friendly error message.
+    /** @description Map of exception STATUS codes to friendly error message.
     */
     private static final Map<String, String> EXCEPTION_MESSAGES = new Map<String, String>{
         'FIELD_CUSTOM_VALIDATION_EXCEPTION' => Label.exceptionValidationRule,
         'REQUIRED_FIELD_MISSING' => Label.exceptionRequiredField
     };
 
-    /** @description Map of exception status codes to the string that defines the start and end of the useful part of the message
+    /** @description Map of exception STATUS codes to the string that defines the start and end of the useful part of the message
     */
     private static final Map<String, List<String>> SUBSTRINGS = new Map<String, List<String>>{
         'FIELD_CUSTOM_VALIDATION_EXCEPTION' => new List<String>{'FIELD_CUSTOM_VALIDATION_EXCEPTION,',':'},
@@ -56,9 +56,9 @@ public with sharing class ERR_ExceptionHandler {
     */
     public static void beautifyExceptionMessage(Exception ex) {
         String message = ex.getMessage();
-        for (String status : exceptionMessages.keySet()) {
-            if (message.contains(status)) {
-                message = EXCEPTION_MESSAGES.get(status) + message.substringBetween(SUBSTRINGS.get(status)[0], SUBSTRINGS.get(status)[1]);
+        for (String STATUS : EXCEPTION_MESSAGES.keySet()) {
+            if (message.contains(STATUS)) {
+                message = EXCEPTION_MESSAGES.get(STATUS) + message.substringBetween(SUBSTRINGS.get(STATUS)[0], SUBSTRINGS.get(STATUS)[1]);
                 ex.setMessage(message);
                 break;
             }
@@ -71,8 +71,8 @@ public with sharing class ERR_ExceptionHandler {
     * @return Boolean Whether the exception's message can or has been modified.
     */
     public static Boolean isHandledException(Exception ex) {
-        for (String status : exceptionMessages.keySet()) {
-            if (ex.getMessage().contains(status) || ex.getMessage().contains(exceptionMessages.get(status))) {
+        for (String STATUS : EXCEPTION_MESSAGES.keySet()) {
+            if (ex.getMessage().contains(STATUS) || ex.getMessage().contains(EXCEPTION_MESSAGES.get(STATUS))) {
                 return true;
             }
         }
