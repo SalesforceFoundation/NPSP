@@ -89,6 +89,8 @@
         <members>ERR_AsyncErrors</members>
         <members>ERR_AsyncErrors_SCHED</members>
         <members>ERR_AsyncErrors_TEST</members>
+        <members>ERR_ExceptionHandler</members>
+        <members>ERR_ExceptionHandler_TEST</members>
         <members>ERR_Handler</members>
         <members>ERR_Handler_API</members>
         <members>ERR_Handler_CTRL_TEST</members>
@@ -961,6 +963,8 @@
         <members>engagementPlanCantEdit</members>
         <members>engagementPlanNoLookups</members>
         <members>engagementPlanTwoLookups</members>
+        <members>exceptionRequiredField</members>
+        <members>exceptionValidationRule</members>
         <members>flsError</members>
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>

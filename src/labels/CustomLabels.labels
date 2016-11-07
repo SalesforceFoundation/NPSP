@@ -1447,6 +1447,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Only one object lookup can be populated per Engagement Plan.</value>
     </labels>
     <labels>
+        <fullName>exceptionRequiredField</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>exceptionRequiredField</shortDescription>
+        <value>Required fields are missing: </value>
+    </labels>
+    <labels>
+        <fullName>exceptionValidationRule</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>exceptionValidationRule</shortDescription>
+        <value>A validation rule is preventing the record from saving:</value>
+    </labels>
+    <labels>
         <fullName>flsError</fullName>
         <categories>Batch Data Import</categories>
         <language>en_US</language>
