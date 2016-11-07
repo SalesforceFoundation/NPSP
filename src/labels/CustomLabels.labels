@@ -1452,7 +1452,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>exceptionRequiredField</shortDescription>
-        <value>A required field is missing:</value>
+        <value>Required fields are missing: </value>
     </labels>
     <labels>
         <fullName>exceptionValidationRule</fullName>
