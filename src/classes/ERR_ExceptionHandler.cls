@@ -37,14 +37,14 @@
 public with sharing class ERR_ExceptionHandler {
     /** @description Map of exception status codes to friendly error message.
     */
-    private static final Map<String, String> exceptionMessages = new Map<String, String>{
+    private static final Map<String, String> EXCEPTION_MESSAGES = new Map<String, String>{
         'FIELD_CUSTOM_VALIDATION_EXCEPTION' => Label.exceptionValidationRule,
         'REQUIRED_FIELD_MISSING' => Label.exceptionRequiredField
     };
 
     /** @description Map of exception status codes to the string that defines the start and end of the useful part of the message
     */
-    private static final Map<String, List<String>> subStrings = new Map<String, List<String>>{
+    private static final Map<String, List<String>> SUBSTRINGS = new Map<String, List<String>>{
         'FIELD_CUSTOM_VALIDATION_EXCEPTION' => new List<String>{'FIELD_CUSTOM_VALIDATION_EXCEPTION,',':'},
         'REQUIRED_FIELD_MISSING' => new List<String>{': [',']'}
     };
@@ -58,7 +58,7 @@ public with sharing class ERR_ExceptionHandler {
         String message = ex.getMessage();
         for (String status : exceptionMessages.keySet()) {
             if (message.contains(status)) {
-                message = exceptionMessages.get(status) + message.substringBetween(subStrings.get(status)[0], subStrings.get(status)[1]);
+                message = EXCEPTION_MESSAGES.get(status) + message.substringBetween(SUBSTRINGS.get(status)[0], SUBSTRINGS.get(status)[1]);
                 ex.setMessage(message);
                 break;
             }
