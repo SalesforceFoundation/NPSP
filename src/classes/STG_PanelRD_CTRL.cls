@@ -72,6 +72,8 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
         		toUpdate.add(STG_Panel.stgService.stgRD);
         	}
             
+            update toUpdate;
+            
             strRDOppRecordTypeLabel = null;
 
             //if we reduced the number of forecast months, we need to trim opps

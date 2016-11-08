@@ -432,6 +432,7 @@ public with sharing class STG_SettingsManager_TEST {
         STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c = 15;
         system.assertEquals(null, panel.saveSettings());
         system.assertEquals(15, STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c);
+        system.assertEquals(15, UTIL_CustomSettingsFacade.getOrgRecurringDonationsSettings().npe03__Opportunity_Forecast_Months__c);
     }
 
     /*********************************************************************************************************
