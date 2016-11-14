@@ -959,6 +959,7 @@
         <members>campaignMemberStatusDefault</members>
         <members>campaignMemberStatusNonResponded</members>
         <members>campaignMemberStatusResponded</members>
+        <members>conFailedAccountCreate</members>
         <members>conMergeErrNoPersonAccounts</members>
         <members>engagementPlanCantEdit</members>
         <members>engagementPlanNoLookups</members>
