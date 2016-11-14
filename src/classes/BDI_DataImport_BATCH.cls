@@ -280,7 +280,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     	di.Status__c = label.bdiFailed;
         di.FailureInformation__c = strError;
         if (strStatusField != null)
-            di.put(strStatusField, strError);
+            di.put(strStatusField, strError.left(255));
     }
             
     // required method for Batchable.  Nothing we need to do though!
