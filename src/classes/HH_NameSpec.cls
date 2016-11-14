@@ -178,8 +178,11 @@ public with sharing class HH_NameSpec implements HH_INaming {
                 strNameSpec = strNameSpec.left(ich+1);
             }
             
+            // extract FirstNameSpec
+            string str = strFNameSpecFromStrNameSpec(strNameSpec);
+
             // look for the FirstNameSpec by removing any {LastName} field references
-            string str = strNameSpec.replace(chLToken + 'LastName' + chRToken, '');
+            //string str = strNameSpec.replace(chLToken + 'LastName' + chRToken, '');
             ich = str.indexOf(chLToken);
             integer ichR = str.lastIndexOf(chRToken);
             if (ich >= 0 && ichR > 0) {
@@ -323,4 +326,23 @@ public with sharing class HH_NameSpec implements HH_INaming {
         return setStrField;     
     }
 
+    /*******************************************************************************************************
+    * @description Given a namespec string, returns the firstnamespec which is demarcated by an outer {! }
+    * specified in that string.
+    * @param strNameSpec The namespec string, ie. {!lastname} {! {!firstname} foo {!bar}} Family
+    * return string The firstnamespec string, ie. {! {!firstname} foo {!bar}}
+    */
+    private static string strFNameSpecFromStrNameSpec(string strNameSpec) {
+
+        // First, instantiate a new Pattern object looking for {! {! xxxx } }
+        Pattern MyPattern = Pattern.compile('\\{![^\\}]*\\{!.*\\}[^\\{!]*\\}');       
+        // Then instantiate a new Matcher object 
+        Matcher MyMatcher = MyPattern.matcher(strNameSpec);
+        
+        if (MyMatcher.find()) {
+            return strNameSpec.substring(MyMatcher.start(), MyMatcher.end());
+        } else {
+            return '';
+        }     
+    }
 }
