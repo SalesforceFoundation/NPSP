@@ -1,0 +1,24 @@
+project:
+    name: Cumulus
+    package:
+        name: Cumulus
+        namespace: npsp
+        api_version: 37.0
+        install_class: STG_InstallScript
+        uninstall_class: STG_UninstallScript
+    git:
+        branch: dev
+        beta: uat/
+        release: rel/
+    dependencies:
+        - namespace: npo02
+          version: 3.6
+          dependencies:
+            - namespace: npe01
+              version: 3.4
+        - namespace: npe03
+          version: 3.5
+        - namespace: npe4
+          version: 3.3
+        - namespace: npe5
+          version: 3.3
