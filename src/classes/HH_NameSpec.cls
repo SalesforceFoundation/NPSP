@@ -181,13 +181,12 @@ public with sharing class HH_NameSpec implements HH_INaming {
             // extract FirstNameSpec
             string str = strFNameSpecFromStrNameSpec(strNameSpec);
 
-            // look for the FirstNameSpec by removing any {LastName} field references
-            //string str = strNameSpec.replace(chLToken + 'LastName' + chRToken, '');
+            // replace the firstnamespec with a token in our fullnamespec
             ich = str.indexOf(chLToken);
             integer ichR = str.lastIndexOf(chRToken);
             if (ich >= 0 && ichR > 0) {
+                strFullNameSpec = strNameSpec.replace(str, 'FirstNameSpec');
                 strFirstNameSpec = str.substring(ich + chLToken.length(), ichR);
-                strFullNameSpec = strNameSpec.replace(strFirstNameSpec, 'FirstNameSpec');
             } else {
                 strFullNameSpec = strNameSpec;
             }
@@ -201,6 +200,8 @@ public with sharing class HH_NameSpec implements HH_INaming {
             set<string> setStrField = new set<string>();
             if (strFirstNameSpec != null)
                 setStrField.addAll(setStrFieldFromStrFSpec(strFirstNameSpec));
+            if (strFullNameSpec != null)
+                setStrField.addAll(setStrFieldFromStrFSpec(strFullNameSpec));
             setStrField.add('LastName');    
             return setStrField;
         }
@@ -233,24 +234,29 @@ public with sharing class HH_NameSpec implements HH_INaming {
             string strLname = listCon[i].LastName;
             string strFname = strConFspec(listCon[i], ns.strFirstNameSpec);
             
-            // get the set of all fname's for this lname
+            // get the set of additional fname's for this lname
+            list<String> listFname = new list<String>();
             integer j = i + 1;
             while (j < cCon && j < ns.cMaxUseOverrun && (isNoLastnames || listCon[j].LastName == strLname)) {
-                integer k = j + 1;
-                if (k == cCon || (!isNoLastnames && listCon[k].LastName != strLname)) {
-                    strFname += ns.strAnd + strConFspec(listCon[j], ns.strFirstNameSpec);
-                    j++;
-                    break;
+                String strF = strConFspec(listCon[j], ns.strFirstNameSpec);
+                if (strF != '') {
+                    listFName.add(strF);
+                }
+                j++;
+            }
+
+            // now put those additional fname's together
+            for (integer k = 0; k < listFName.size(); k++) {
+                if (k == listFName.size() - 1 && (k+i) < ns.cMaxUseOverrun-2) {
+                    strFname += ns.strAnd + listFName[k];
                 } else {
-                    strFName += ', ' + strConFspec(listCon[j], ns.strFirstNameSpec);
-                    j++;
+                    strFName += ', ' + listFname[k];
                 }
             }
-            
-            // now all contacts from lname should have their fname in strFname.
-            string strCon = ns.strFullNameSpec;
-            strCon = strCon.replace(chLToken + 'LastName' + chRToken, strLname);
-            strCon = strCon.replace(chLToken + 'FirstNameSpec' + chRToken, strFname);
+
+            // create lname part using first contact with that lastname
+            string strCon = strConFSpec(listCon[i], ns.strFullNameSpec);
+            strCon = strCon.replace('FirstNameSpec', strFname);
             
             // add it to the whole name
             if (i > 0 && j < cCon && j < ns.cMaxUseOverrun) {
@@ -301,6 +307,7 @@ public with sharing class HH_NameSpec implements HH_INaming {
             }
             str = str.replace(strField, val == null ? '' : val);
         }
+        //system.debug('**** strConFspec con: ' + con + ' strFspec: ' + strFspec + ' returns: ' + str);
         return str;     
     }
 

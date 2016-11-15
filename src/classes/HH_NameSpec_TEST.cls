@@ -78,6 +78,11 @@ private with sharing class HH_NameSpec_TEST {
         hns.Informal_Greeting_Format__c = '{!{!FirstName} Dude}';
         system.assertEquals('John Dude', ns.getExampleName(hns, 'Informal_Greeting_Format__c', listCon));
 
+        hns.Informal_Greeting_Format__c = 'The {!{!Salutation}} {!FirstName} {!LastName} Family';
+        system.assertEquals('The Skipper John Doe Family', ns.getExampleName(hns, 'Informal_Greeting_Format__c', listCon));
+
+        hns.Informal_Greeting_Format__c = 'The {!{!FirstName} {!LastName}} {!FirstName} {!LastName} Family';
+        system.assertEquals('The John Doe John Doe Family', ns.getExampleName(hns, 'Informal_Greeting_Format__c', listCon));
     }
 
     /*********************************************************************************************************
@@ -118,6 +123,15 @@ private with sharing class HH_NameSpec_TEST {
 
         hns.Informal_Greeting_Format__c = '{!{!FirstName} Dude}';
         system.assertEquals('John Dude & Jane Dude', ns.getExampleName(hns, 'Informal_Greeting_Format__c', listCon));   
+
+        hns.Informal_Greeting_Format__c = 'The {!{!Salutation}} {!FirstName} {!LastName} Family';
+        system.assertEquals('The Skipper John Doe Family', ns.getExampleName(hns, 'Informal_Greeting_Format__c', listCon));
+
+        hns.Informal_Greeting_Format__c = 'The {!({!FirstName} {!LastName})} excellent {!FirstName} {!LastName} Family';
+        system.assertEquals('The (John Doe) & (Jane Doe) excellent John Doe Family', ns.getExampleName(hns, 'Informal_Greeting_Format__c', listCon));
+
+        hns.Informal_Greeting_Format__c = 'The {!{!FirstName} {!LastName}} excellent {!FirstName} {!LastName} Family';
+        system.assertEquals('The John Doe & Jane Doe excellent John Doe Family', ns.getExampleName(hns, 'Informal_Greeting_Format__c', listCon));
     }
 
     /*********************************************************************************************************
@@ -209,6 +223,12 @@ private with sharing class HH_NameSpec_TEST {
 
         hns.Informal_Greeting_Format__c = '{!{!FirstName} Dude}';
         system.assertEquals('John Dude, Jane Dude & Sally Dude', ns.getExampleName(hns, 'Informal_Greeting_Format__c', listCon));   
+
+        hns.Informal_Greeting_Format__c = 'The {!{!Salutation}} {!FirstName} {!LastName} Family';
+        system.assertEquals('The Skipper John Doe &  Sally Smith Family', ns.getExampleName(hns, 'Informal_Greeting_Format__c', listCon));
+
+        hns.Informal_Greeting_Format__c = 'The {!{!FirstName} {!LastName}} {!FirstName} {!LastName} Family';
+        system.assertEquals('The John Doe & Jane Doe John Doe & Sally Smith Sally Smith Family', ns.getExampleName(hns, 'Informal_Greeting_Format__c', listCon));
     }
     
     /*********************************************************************************************************
@@ -261,6 +281,12 @@ private with sharing class HH_NameSpec_TEST {
 
         hns.Informal_Greeting_Format__c = '{!{!FirstName} {!npe01__WorkEmail__c} Dude}';
         system.assertEquals('John john@doe.com Dude, Jane jane@doe.com Dude & Sally Dude', ns.getExampleName(hns, 'Informal_Greeting_Format__c', listCon));   
+
+        hns.Informal_Greeting_Format__c = 'The {!{!Salutation}} {!FirstName} {!npe01__WorkEmail__c} Family';
+        system.assertEquals('The Skipper & Mrs. John john@doe.com Family', ns.getExampleName(hns, 'Informal_Greeting_Format__c', listCon));
+
+        hns.Informal_Greeting_Format__c = 'The {!{!FirstName} {!npe01__WorkEmail__c}} {!FirstName} {!npe01__WorkEmail__c} Family';
+        system.assertEquals('The John john@doe.com, Jane jane@doe.com & Sally John john@doe.com Family', ns.getExampleName(hns, 'Informal_Greeting_Format__c', listCon));
     }
 
     /*********************************************************************************************************
@@ -327,6 +353,12 @@ private with sharing class HH_NameSpec_TEST {
 
         hns.Informal_Greeting_Format__c = '{!{!FirstName} Dude}';
         system.assertEquals('John Dude, Jane Dude, Sally Dude, Clay Dude, Cloe Dude & Friends', ns.getExampleName(hns, 'Informal_Greeting_Format__c', listCon));   
+
+        hns.Informal_Greeting_Format__c = 'The {!{!Salutation}} {!FirstName} {!LastName} Family';
+        system.assertEquals('The Skipper John Doe & Friends Family', ns.getExampleName(hns, 'Informal_Greeting_Format__c', listCon));
+
+        hns.Informal_Greeting_Format__c = 'The {!{!FirstName} {!LastName}} {!FirstName} {!LastName} Family';
+        system.assertEquals('The John Doe, Jane Doe, Sally Doe, Clay Doe, Cloe Doe John Doe & Friends Family', ns.getExampleName(hns, 'Informal_Greeting_Format__c', listCon));
     }
     
     /*********************************************************************************************************
