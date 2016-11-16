@@ -296,7 +296,31 @@ public with sharing class HH_NameSpec implements HH_INaming {
         while (MyMatcher.find()) {
             // get the fieldname without the {}'s
             string strField = strFspec.substring(MyMatcher.start() + chLToken.length(), MyMatcher.end()-chRToken.length());
-            string val = string.valueOf(con.get(strField.trim()));
+            
+            //separate cross object references, i.e. account.name
+            list<string> splitField = (strField.split('\\.',0));
+            
+            //remove the field name itself to only include parent object references
+            string fieldName = splitField[splitField.size()-1].trim();
+            splitField.remove(splitField.size()-1);
+
+            //use the correct sObject
+            sObject thisObj;
+            if (!splitField.isEmpty()) {
+                thisObj = con.getsObject(splitField[0]);
+                splitField.remove(0);
+            } else {
+                thisObj = con;
+            }
+
+            //traverse parent relationships until the last one
+            if (thisObj != null) {
+                for (string parentObj : splitField) {
+                    thisObj = thisObj.getsObject(parentObj);
+                }
+            }
+
+            string val = string.valueOf(thisObj.get(fieldName));
             // add back the {}'s for string substitution
             strField = chLToken + strField + chRToken;
             if (val == null) {   
