@@ -224,6 +224,17 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
                 } else {
                     di.HouseholdAccountImported__c = null;                    
                 }
+                
+                // our matching marks non-matches with created, assuming they will get created
+                // but if there were errors that stopped that creation, let's clear the status
+                if (di.Contact1Imported__c == null && di.Contact1ImportStatus__c == label.bdiCreated)
+                    di.Contact1ImportStatus__c = null;
+                if (di.Contact2Imported__c == null && di.Contact2ImportStatus__c == label.bdiCreated)
+                    di.Contact2ImportStatus__c = null;
+                if (di.Account1Imported__c == null && di.Account1ImportStatus__c == label.bdiCreated)
+                    di.Account1ImportStatus__c = null;
+                if (di.Account2Imported__c == null && di.Account2ImportStatus__c == label.bdiCreated)
+                    di.Account2ImportStatus__c = null;
             }
             
             //UTIL_Debug.debug('****DJH final update to listDI: ' + listDI);
@@ -269,7 +280,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     	di.Status__c = label.bdiFailed;
         di.FailureInformation__c = strError;
         if (strStatusField != null)
-            di.put(strStatusField, strError);
+            di.put(strStatusField, strError.left(255));
     }
             
     // required method for Batchable.  Nothing we need to do though!
@@ -1245,6 +1256,10 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         }        
         
         for (DataImport__c di : listDI) {
+            // skip di's that already have an error
+            if (di.Status__c == label.bdiFailed)
+               continue;
+
             Account acc = AccountFromDi(di, 1);
             list<string> listDiKey = listDiKeyA1(di);
             if (acc != null) {

@@ -36,9 +36,6 @@
 */
 public with sharing class EP_ManageEPTemplate_CTRL {
 
-    /** @description Custom exception class for throwing exceptions. */
-    private class permsException extends Exception {}
-
     /** @description The current template */
     public Engagement_Plan_Template__c template { get; set; }
 
@@ -51,6 +48,9 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     /** @description Property used by the Add Dependent Task and Delete Task buttons to tell where in the Hierarchy
     * to perform the functions. */
     public String currentTaskLevel {get; set;}
+
+    /** @description Is the current context the result of a clone button override?*/
+    private Boolean isClone = false;
 
     /** @description Set the select options Reminder Time field.*/
     public List<SelectOption> reminderTimeOptions {
@@ -121,7 +121,9 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     public EP_ManageEPTemplate_CTRL(ApexPages.StandardController controller) {
         checkFLS();
 
-        Id templateId = ApexPages.currentPage().getParameters().get('Id');
+        Map<String,String> params = ApexPages.currentPage().getParameters();
+
+        Id templateId = params.get('Id');
 
         util = new EP_Task_UTIL(templateId);
 
@@ -129,6 +131,15 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         
         if (templateId == null || template == null) {
             template = new Engagement_Plan_Template__c();
+        }
+
+
+        //if clone param is set, this is the clone button override
+        //recreate all objects in memory
+        if (params.containsKey('clone') && params.get('clone') == '1') {
+            isClone = true;
+            template = template.clone(false,true,false,false);
+            template.Name += ' - ' + Label.lblCloned;
         }
 
         initWrapperHierarchy();
@@ -147,6 +158,11 @@ public with sharing class EP_ManageEPTemplate_CTRL {
                 
                 if (!task.Engagement_Plan_Tasks__r.isEmpty()) {
                     initChildrenRecursive(wrapper);
+                }
+            
+                //once initialitzation is finished, clone the task
+                if (isClone) {
+                    wrapper.detail = task.clone(false,true,false,false);   
                 }
 
                 parentTaskWrappers.add(wrapper);
@@ -168,6 +184,13 @@ public with sharing class EP_ManageEPTemplate_CTRL {
 
             if (!childTask.Engagement_Plan_Tasks__r.isEmpty()) {
                 initChildrenRecursive(childWrapper);
+            }
+
+            //once all the children are initialized, check if we are cloning the current template
+            //if so, deep clone it and blank out the parent lookup, which will be recalculated on save
+            if (isClone) {
+                childWrapper.detail = childTask.clone(false,true,false,false);
+                childWrapper.detail.Parent_Task__c = null;
             }
         }
     }
@@ -285,7 +308,6 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     * @param wrapper The TaskWrapper to remove from the wrapper hierarchy.
     * @return void This method updates class properties.
     */
-
     private void removeFromHierarchy(TaskWrapper wrapper) {
         //reconfigure wrapper Hierarchy
         if (wrapper.parent != null) {
