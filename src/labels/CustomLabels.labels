@@ -1415,6 +1415,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>campaignMemberStatusResponded</value>
     </labels>
     <labels>
+        <fullName>conFailedAccountCreate</fullName>
+        <categories>Data Import, Contacts</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used when NPSP hits an error trying to create an account for a contact</shortDescription>
+        <value>Failed to create Account for Contact {0} {1}. {2}</value>
+    </labels>
+    <labels>
         <fullName>conMergeErrNoPersonAccounts</fullName>
         <categories>Contact Merge</categories>
         <language>en_US</language>
