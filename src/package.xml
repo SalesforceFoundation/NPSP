@@ -959,6 +959,7 @@
         <members>campaignMemberStatusDefault</members>
         <members>campaignMemberStatusNonResponded</members>
         <members>campaignMemberStatusResponded</members>
+        <members>conFailedAccountCreate</members>
         <members>conMergeErrNoPersonAccounts</members>
         <members>engagementPlanCantEdit</members>
         <members>engagementPlanNoLookups</members>
@@ -1109,6 +1110,7 @@
         <members>lblBtnAddContact</members>
         <members>lblCCardExcludeFrom</members>
         <members>lblCity</members>
+        <members>lblCloned</members>
         <members>lblCountry</members>
         <members>lblDeleteContact</members>
         <members>lblDeleteContactPrompt</members>

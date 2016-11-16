@@ -847,7 +847,7 @@ private with sharing class BDI_DataImport_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'ManyDISomeInvalidContactData') return;
             
         list<DataImport__c> listDI = new list<DataImport__c>();
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c=null, Contact1_Personal_Email__c='c0@foo.com'));
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c=null, Contact1_Personal_Email__c='c0@foo.com', Contact2_Firstname__c='c0b', Contact2_Lastname__c='C0b', Account1_Name__c='foo'));
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Work_Email__c='c1@foo.com'));
         listDI.add(new DataImport__c(Contact2_Firstname__c='c2', Contact2_Lastname__c=null, Contact2_Alternate_Email__c='c2@foo.com'));
         listDI.add(new DataImport__c(Contact2_Firstname__c='c3', Contact2_Lastname__c='C3', Contact2_Alternate_Email__c='c3@foo.com'));
@@ -865,7 +865,7 @@ private with sharing class BDI_DataImport_TEST2 {
         system.assertEquals(4, listCon.size());
         system.assertEquals('c1 C1', listCon[0].Name);
 
-        listDI = [select Status__c, FailureInformation__c, 
+        listDI = [select Status__c, FailureInformation__c, Contact1_Firstname__c, Account1ImportStatus__c,
             Contact1Imported__c, Contact1ImportStatus__c, Contact2Imported__c, Contact2ImportStatus__c 
             from DataImport__c order by Contact1ImportStatus__c];
         system.assertEquals(5, listDI.size());
@@ -875,7 +875,14 @@ private with sharing class BDI_DataImport_TEST2 {
             if (listDI[i].Contact1Imported__c != null) {
                 system.assertEquals(label.bdiCreated, listDI[i].Contact1ImportStatus__c);
                 cC1++;
+            } 
+            
+            // make sure when c1 fails, we don't incorrectly mark c2 as created
+            if (listDI[i].Contact1_Firstname__c == 'c0') {
+                system.assertEquals(null, listDI[i].Contact2ImportStatus__c);
+                system.assertEquals(null, listDI[i].Account1ImportStatus__c);
             }
+            
             if (listDI[i].Contact2Imported__c != null) {
                 system.assertEquals(label.bdiCreated, listDI[i].Contact2ImportStatus__c);            
                 cC2++;
