@@ -50,6 +50,7 @@
     </actionOverrides>
     <allowInChatterGroups>false</allowInChatterGroups>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <description>An Engagement Plan Template defines the process and associated set of tasks required to complete an Engagement Plan. To apply the process to a particular record, you must assign the Engagement Plan to the record.</description>
     <deploymentStatus>Deployed</deploymentStatus>
     <enableActivities>true</enableActivities>
     <enableBulkApi>false</enableBulkApi>
