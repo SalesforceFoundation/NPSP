@@ -78,7 +78,6 @@ public with sharing class STG_PanelContactRoles_CTRL extends STG_Panel {
     * @return Boolean whether the settings are valid or not.
     */
     public Boolean isValidOCRSettings() {
-        Boolean result = true;
         List<String> invalidOCRSettings = getInvalidOCRSettings();
         
         //if there are any invalid settings, add a message to the page
