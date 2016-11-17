@@ -61,4 +61,103 @@ public with sharing class STG_PanelContactRoles_CTRL extends STG_Panel {
         }
         private set;
     }
+
+    /*********************************************************************************************************
+    * @description Save override that performs settings validation before saving.
+    */
+    public override PageReference saveSettings() {
+        if (isValidOCRSettings()) {
+            return super.saveSettings();
+        } else {
+            return null;
+        }
+    }
+
+    /*********************************************************************************************************
+    * @description Performs settings validation and adds pagemessages for each error.
+    * @return Boolean whether the settings are valid or not.
+    */
+    public Boolean isValidOCRSettings() {
+        Boolean result = true;
+        List<String> invalidOCRSettings = getInvalidOCRSettings();
+        
+        //if there are any invalid settings, add a message to the page
+        if (!invalidOCRSettings.isEmpty()) {
+            for (Integer i=0; i<invalidOCRSettings.size(); i+=2) {
+                ApexPages.addMessage(
+                    new ApexPages.Message(
+                        ApexPages.Severity.ERROR, 
+                        String.format(Label.healthDetailsOCR, new List<String>{invalidOCRSettings[i], invalidOCRSettings[i+1]})
+                    )
+                );
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /*********************************************************************************************************
+    * @description Returns the labels of settings that have invalid OCRs. 
+    * Invalid OCR settings:
+    * Soft Credit Contact Roles contains the Default Role
+    * Default Role and HH Member Role are identical
+    * Default Role and Matched Donor Role are identical
+    * Default Role and Honoree Role are identical
+    * Default Role and Notifaction Recipient Role are identical
+    * HH Member Role and Matched Donor Role are identical
+    * HH Member Role and Honoree Role are identical
+    * HH Member Role and Notifaction Recipient Role are identical
+    * @return List<String> Which fields have invalid settings.
+    */
+    public static List<String> getInvalidOCRSettings() {
+        List<String> results = new List<String>();
+
+        String defaultRole = STG_Panel.stgService.stgCon.npe01__Opportunity_Contact_Role_Default_role__c;
+        String defaultRoleLabel = UTIL_Describe.getFieldLabel('npe01__Contacts_And_Orgs_Settings__c', 'npe01__Opportunity_Contact_Role_Default_role__c');
+        String softCreditRoles = STG_Panel.stgService.stgHH.npo02__Soft_Credit_Roles__c;
+        String softCreditRolesLabel = UTIL_Describe.getFieldLabel('npo02__Households_Settings__c', 'npo02__Soft_Credit_Roles__c');
+        String hhMemberRole = STG_Panel.stgService.stgHH.npo02__Household_Member_Contact_Role__c;
+        String hhMemberRoleLabel = UTIL_Describe.getFieldLabel('npo02__Households_Settings__c', 'npo02__Household_Member_Contact_Role__c');
+        String matchedDonorRole = STG_Panel.stgService.stgHH.Matched_Donor_Role__c;
+        String matchedDonorRoleLabel = UTIL_Describe.getFieldLabel('npo02__Households_Settings__c', UTIL_Namespace.StrTokenNSPrefix('Matched_Donor_Role__c'));
+        String honoreeRole = STG_Panel.stgService.stgCon.Honoree_Opportunity_Contact_Role__c;
+        String honoreeRoleLabel = UTIL_Describe.getFieldLabel('npe01__Contacts_And_Orgs_Settings__c', UTIL_Namespace.StrTokenNSPrefix('Honoree_Opportunity_Contact_Role__c'));
+        String notificationRole = STG_Panel.stgService.stgCon.Notification_Recipient_Opp_Contact_Role__c;
+        String notificationRoleLabel = UTIL_Describe.getFieldLabel('npe01__Contacts_And_Orgs_Settings__c', UTIL_Namespace.StrTokenNSPrefix('Notification_Recipient_Opp_Contact_Role__c'));
+
+        if (softCreditRoles.contains(defaultRole)) {
+            results.add(defaultRoleLabel);
+            results.add(softCreditRolesLabel);
+        }
+        if (defaultRole == hhMemberRole) {
+            results.add(defaultRoleLabel);
+            results.add(hhMemberRoleLabel);
+        }
+        if (defaultRole == matchedDonorRole) {
+            results.add(defaultRoleLabel);
+            results.add(matchedDonorRoleLabel);
+        }
+        if (defaultRole == honoreeRole) {
+            results.add(defaultRoleLabel);
+            results.add(honoreeRoleLabel);
+        }
+        if (defaultRole == notificationRole) {
+            results.add(defaultRoleLabel);
+            results.add(notificationRoleLabel);
+        }
+        if (hhMemberRole == matchedDonorRole) {
+            results.add(hhMemberRoleLabel);
+            results.add(matchedDonorRoleLabel);
+        }
+        if (hhMemberRole == honoreeRole) {
+            results.add(hhMemberRoleLabel);
+            results.add(honoreeRoleLabel);
+        }
+        if (hhMemberRole == notificationRole) {
+            results.add(hhMemberRoleLabel);
+            results.add(notificationRoleLabel);
+        }
+        return results;
+    }
 }
