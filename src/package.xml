@@ -106,6 +106,7 @@
         <members>HH_Container_TEST</members>
         <members>HH_HHObject_TDTM</members>
         <members>HH_HouseholdNaming</members>
+        <members>HH_HouseholdNaming_Action</members>
         <members>HH_HouseholdNaming_BATCH</members>
         <members>HH_HouseholdNaming_TEST</members>
         <members>HH_Households</members>
@@ -140,6 +141,7 @@
         <members>OPP_OpportunityContactRoles_TDTM</members>
         <members>OPP_OpportunityContactRoles_TEST</members>
         <members>OPP_OpportunityNaming</members>
+        <members>OPP_OpportunityNaming_Action</members>
         <members>OPP_OpportunityNamingBTN_CTRL</members>
         <members>OPP_OpportunityNaming_BATCH</members>
         <members>OPP_OpportunityNaming_TEST</members>
