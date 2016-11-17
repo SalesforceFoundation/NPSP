@@ -788,7 +788,14 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         
         // check all household naming fields for changes
         for(String fieldName : hhNamingFields) {
-            if (String.valueOf(conNew.get(fieldName)) != String.valueOf(conOld.get(fieldName))) {
+            // make sure to use case sensitive comparison
+            string strName = String.valueOf(conNew.get(fieldName));
+            if (strName == null)
+                strName = '';
+            string strNameOld = String.valueOf(conOld.get(fieldName));
+            if (strNameOld == null)
+                strNameOld = '';
+            if (!strName.equals(strNameOld)) {
                 return true;
             }
         }

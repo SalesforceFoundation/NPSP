@@ -388,4 +388,33 @@ public class HH_HouseholdNaming_TEST {
         
     }  
 
+    
+    /*********************************************************************************************************
+    * @description tests that case sensitive name changes on contacts update the Household name and greetings
+    */
+    public static testMethod void testCaseChanges() {
+        if (strTestOnly != '*' && strTestOnly != 'testCaseChanges') return;
+  
+        Contact con = new Contact(firstname='joe', lastname='smith');
+        insert con;
+  
+        Account hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c from Account];
+    
+        system.assertEquals('smith ' + system.label.npo02.DefaultHouseholdName, hh.Name);
+        system.assertEquals('joe smith', hh.npo02__Formal_greeting__c);
+        system.assertEquals('joe', hh.npo02__Informal_greeting__c);
+  
+        con.firstname = 'Joe';
+        con.lastname = 'Smith';
+        Test.startTest();
+        update con;
+        Test.stopTest();
+  
+        hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c from Account];
+    
+        system.assertEquals('Smith ' + system.label.npo02.DefaultHouseholdName, hh.Name);
+        system.assertEquals('Joe Smith', hh.npo02__Formal_greeting__c);
+        system.assertEquals('Joe', hh.npo02__Informal_greeting__c);
+    }
+    
 }
