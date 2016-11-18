@@ -229,4 +229,82 @@ private with sharing class EP_TaskDependency_TEST {
         System.assertEquals(System.Today().addDays(1), results[1].ActivityDate, 'Child Task\'s Activity Date should not have changed.');
         System.assert(results[1].IsReminderSet, 'Reminder should be set for child task.');
     }
+
+    /*********************************************************************************************************
+    * @description Creates a template with two EP Tasks, one parent and one child. Then creates an Engagement 
+    * Plan using the template. Verifies that tasks are created correctly. Deletes the Engagement Plan, then 
+    * updates the parent task to closed, and verifies that no exception is thrown.
+    */
+    static testMethod void testDeletedPlan() {
+
+        Contact con = new Contact(LastName = 'foo');
+        insert con;
+
+        Engagement_Plan_Template__c template = new Engagement_Plan_Template__c(
+            Name = 'Template',
+            Skip_Weekends__c = false,
+            Default_Assignee__c = EP_EngagementPlans_UTIL.BLANK_ASSIGNMENT_USER_CREATING,
+            Automatically_Update_Child_Task_Due_Date__c = false
+        );
+        insert template;
+
+        Engagement_Plan_Task__c epTask = new Engagement_Plan_Task__c(
+            Name = 'Call',
+            Engagement_Plan_Template__c = template.id,
+            Comments__c = 'This comment should be copied correctly to the Task.',
+            Reminder__c = true,
+            Send_Email__c = true,
+            Days_After__c = 0,
+            Type__c = 'Call',
+            Priority__c = 'Medium'
+        );
+        insert epTask;
+
+        Engagement_Plan_Task__c childEpTask = new Engagement_Plan_Task__c(
+            Name = 'Email',
+            Engagement_Plan_Template__c = template.id,
+            Parent_Task__c = epTask.id,
+            Comments__c = 'This comment should also be copied correctly to the Task.',
+            Reminder__c = true,
+            Send_Email__c = true,
+            Days_After__c = 1,
+            Type__c = 'Email',
+            Priority__c = 'Low'
+        );
+        insert childEpTask;
+
+        Engagement_Plan__c plan = new Engagement_Plan__c(
+            Contact__c = con.id,
+            Engagement_Plan_Template__c = template.id
+        );
+        insert plan;
+
+        List<Task> results = [SELECT Id, OwnerId, WhoId, Type, Status, Subject, ActivityDate, Priority, Description,
+                            IsReminderSet, ReminderDateTime FROM Task WHERE WhoId = :con.id ORDER BY ActivityDate];
+        System.assertEquals(2, results.size(), 'Two tasks should be created.');
+
+        delete plan;
+
+        results = [SELECT Engagement_Plan__c, Engagement_Plan_Task__c FROM Task WHERE WhoId = :con.id ORDER BY ActivityDate];
+        System.assertEquals(2, results.size(), 'Both tasks should still exist after the plan is deleted.');
+        System.assertEquals(null, results[0].Engagement_Plan__c, 'Engagement Plan lookup should be null.');
+        System.assertEquals(null, results[1].Engagement_Plan__c, 'Engagement Plan lookup should be null.');
+        System.assertNotEquals(null, results[0].Engagement_Plan_Task__c, 'Engagement Plan Task lookup should still exist.');
+        System.assertNotEquals(null, results[1].Engagement_Plan_Task__c, 'Engagement Plan Task lookup should still exist.');
+
+        //update the child days so that we can verify it is not recalculated when the parent is marked closed
+        results[0].Status = UTIL_UnitTestData_TEST.getClosedTaskStatus();
+
+        Exception ex;
+
+        Test.startTest();
+        try {
+            update results[0];
+        } catch (Exception e) {
+            ex = e;
+        }
+        Test.stopTest();
+
+        System.assertEquals(null, ex, 'No exception should be thrown when the engagement plan is deleted and its task is later updated.');
+    }
 }

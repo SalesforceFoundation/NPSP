@@ -56,7 +56,11 @@ public with sharing class EP_TaskDependency_TDTM extends TDTM_Runnable {
             for (sObject newSObject : newList) {
                 Task newTask = (Task) newSObject;
                 Task oldTask = (Task) oldMap.get(newTask.id);
-                if (newTask.Engagement_Plan_Task__c!=null && newTask.isClosed && !oldTask.isClosed) {
+                if (newTask.Engagement_Plan_Task__c != null &&
+                        newTask.Engagement_Plan__c!=null && 
+                        newTask.isClosed && 
+                        !oldTask.isClosed) {
+                    
                     tasksToCheckDependencies.add(newTask);
                 }
             }
