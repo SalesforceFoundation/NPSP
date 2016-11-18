@@ -78,22 +78,36 @@ public with sharing class STG_PanelContactRoles_CTRL extends STG_Panel {
     * @return Boolean whether the settings are valid or not.
     */
     public Boolean isValidOCRSettings() {
+        Boolean isValid = true;
         List<String> invalidOCRSettings = getInvalidOCRSettings();
         
-        //if there are any invalid settings, add a message to the page
+        //Blank out household member role if disabled
+        if (!STG_Panel.stgService.stgHH.npo02__Household_Contact_Roles_On__c && 
+            !String.isBlank(STG_Panel.stgService.stgHH.npo02__Household_Member_Contact_Role__c)) {
+            STG_Panel.stgService.stgHH.npo02__Household_Member_Contact_Role__c = '';
+        }
+
+        //add error for blank Primary Contact Role value
+        if (String.isBlank(STG_Panel.stgService.stgCon.npe01__Opportunity_Contact_Role_Default_role__c)) {
+            String defaultRoleLabel = UTIL_Describe.getFieldLabel('npe01__Contacts_And_Orgs_Settings__c', 'npe01__Opportunity_Contact_Role_Default_role__c');
+            ApexPages.addMessage(new ApexPages.message(ApexPages.Severity.ERROR, defaultRoleLabel + ' ' + Label.isARequiredField));
+            isValid = false;
+        }
+
+        //for each invalid settings, add a message to the page
         if (!invalidOCRSettings.isEmpty()) {
             for (Integer i=0; i<invalidOCRSettings.size(); i+=2) {
                 ApexPages.addMessage(
-                    new ApexPages.Message(
+                    new ApexPages.message(
                         ApexPages.Severity.ERROR, 
                         String.format(Label.healthDetailsOCR, new List<String>{invalidOCRSettings[i], invalidOCRSettings[i+1]})
                     )
                 );
             }
-            return false;
-        } else {
-            return true;
+            isValid = false;
         }
+
+        return isValid;
     }
 
     /*********************************************************************************************************
@@ -125,25 +139,33 @@ public with sharing class STG_PanelContactRoles_CTRL extends STG_Panel {
         String notificationRole = STG_Panel.stgService.stgCon.Notification_Recipient_Opp_Contact_Role__c;
         String notificationRoleLabel = UTIL_Describe.getFieldLabel('npe01__Contacts_And_Orgs_Settings__c', UTIL_Namespace.StrTokenNSPrefix('Notification_Recipient_Opp_Contact_Role__c'));
 
-        if (softCreditRoles.contains(defaultRole)) {
-            results.add(defaultRoleLabel);
-            results.add(softCreditRolesLabel);
+        //validation for npe01__Opportunity_Contact_Role_Default_role__c is done previously; don't check for identical values if this field is blank
+        if (!String.isBlank(STG_Panel.stgService.stgCon.npe01__Opportunity_Contact_Role_Default_role__c)) {
+            if (!String.isBlank(softCreditRoles) && softCreditRoles.contains(defaultRole)) {
+                results.add(defaultRoleLabel);
+                results.add(softCreditRolesLabel);
+            }
+            if (defaultRole == hhMemberRole) {
+                results.add(defaultRoleLabel);
+                results.add(hhMemberRoleLabel);
+            }
+            if (defaultRole == matchedDonorRole) {
+                results.add(defaultRoleLabel);
+                results.add(matchedDonorRoleLabel);
+            }
+            if (defaultRole == honoreeRole) {
+                results.add(defaultRoleLabel);
+                results.add(honoreeRoleLabel);
+            }
+            if (defaultRole == notificationRole) {
+                results.add(defaultRoleLabel);
+                results.add(notificationRoleLabel);
+            }
         }
-        if (defaultRole == hhMemberRole) {
-            results.add(defaultRoleLabel);
-            results.add(hhMemberRoleLabel);
-        }
-        if (defaultRole == matchedDonorRole) {
-            results.add(defaultRoleLabel);
-            results.add(matchedDonorRoleLabel);
-        }
-        if (defaultRole == honoreeRole) {
-            results.add(defaultRoleLabel);
-            results.add(honoreeRoleLabel);
-        }
-        if (defaultRole == notificationRole) {
-            results.add(defaultRoleLabel);
-            results.add(notificationRoleLabel);
+        
+        //only check the rest if we have a non-blank household member role
+        if (String.isBlank(hhMemberRole)) {
+            return results;
         }
         if (hhMemberRole == matchedDonorRole) {
             results.add(hhMemberRoleLabel);
