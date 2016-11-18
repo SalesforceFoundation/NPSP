@@ -242,4 +242,50 @@ private class OPP_OpportunityNaming_TEST
             system.assert(thisopp.name.contains('8'), 'Opportunities have been renamed by batch process.');
         }
     }
+
+    /*******************************************************************************************************
+    * @description Creates an opportunity name setting and an opportunity with a bad field and related
+    * object. Verifies name is still calculated correctly with blanks instead of missing fields/objects.
+    ********************************************************************************************************/
+    @isTest
+    static void testException() {
+        if (strTestOnly != '*' && strTestOnly != 'testMissingData') return;
+
+        Opportunity_Naming_Settings__c ons = new Opportunity_Naming_Settings__c(
+            Name = 'foo',
+            Opportunity_Name_Format__c = '{!Account.Name} {!Campaign.Name} {!Type} {!RecordType.Foo}',
+            Attribution__c = Label.oppNamingBoth
+        );
+        insert ons;
+
+        Account acc = new Account(Name='accname');
+        insert acc;
+
+        Contact con = new Contact(LastName='conname');
+        insert con;
+
+        Opportunity opp = new Opportunity(
+            AccountId = acc.id,
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            Name='temp',
+            Amount=8,
+            CloseDate = Date.newInstance(2000, 1, 1),
+            npe01__Contact_Id_for_Role__c = con.id
+        );
+
+        Exception oppException;
+
+        Test.startTest();
+        try {
+            insert opp;
+        } catch (Exception ex) {
+            oppException = ex;
+        }
+        Test.stopTest();
+
+        system.assertEquals(null, oppException, 'No exception should be thrown.');
+        list<Opportunity> queryOpp = [SELECT Name FROM Opportunity WHERE Id = :opp.id];
+        system.assertEquals('temp', queryOpp[0].Name, 'The name should be calculated based on the setting; missing fields should be excluded.');
+
+    }
 }
