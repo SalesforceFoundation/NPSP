@@ -1102,6 +1102,7 @@
         <members>hhCmpDedupeLabelOpenReport</members>
         <members>hhCmpDedupeNoReport</members>
         <members>hhCmpDedupeStatus</members>
+        <members>isARequiredField</members>
         <members>labelListViewFirst</members>
         <members>labelListViewLast</members>
         <members>labelListViewNext</members>

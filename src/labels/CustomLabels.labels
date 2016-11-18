@@ -2558,6 +2558,13 @@ If you want to know which Opportunities would have previously included this doub
         <value>- Household Duplicate</value>
     </labels>
     <labels>
+        <fullName>isARequiredField</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>isARequiredField</shortDescription>
+        <value>is a required field.</value>
+    </labels>
+    <labels>
         <fullName>labelListViewFirst</fullName>
         <categories>SoqlListView</categories>
         <language>en_US</language>
