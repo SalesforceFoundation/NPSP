@@ -244,16 +244,16 @@ private class OPP_OpportunityNaming_TEST
     }
 
     /*******************************************************************************************************
-    * @description Creates an opportunity name setting and an opportunity with a bad field and related
-    * object. Verifies name is still calculated correctly with blanks instead of missing fields/objects.
+    * @description Creates an invalid opportunity name setting. Inserts an opportunity. Verifies name left
+    * unchanged and no exception is thrown.
     ********************************************************************************************************/
     @isTest
     static void testException() {
-        if (strTestOnly != '*' && strTestOnly != 'testMissingData') return;
+        if (strTestOnly != '*' && strTestOnly != 'testException') return;
 
         Opportunity_Naming_Settings__c ons = new Opportunity_Naming_Settings__c(
             Name = 'foo',
-            Opportunity_Name_Format__c = '{!Account.Name} {!Campaign.Name} {!Type} {!RecordType.Foo}',
+            Opportunity_Name_Format__c = '{!Account.Invalid_Field}',
             Attribution__c = Label.oppNamingBoth
         );
         insert ons;
@@ -285,7 +285,9 @@ private class OPP_OpportunityNaming_TEST
 
         system.assertEquals(null, oppException, 'No exception should be thrown.');
         list<Opportunity> queryOpp = [SELECT Name FROM Opportunity WHERE Id = :opp.id];
-        system.assertEquals('temp', queryOpp[0].Name, 'The name should be calculated based on the setting; missing fields should be excluded.');
+        system.assertEquals('temp', queryOpp[0].Name, 'The name should not be calculated, as it is an invalid format based on the setting.');
+        List<Error__c> errors = [select Id from Error__c];
+        System.assertEquals(1, errors.size(), 'An error record should be created.');
 
     }
 }
