@@ -484,7 +484,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     private Component.Apex.OutputPanel fieldLabelPanel(TaskWrapper wrapper, String fieldName, String outterCss, Boolean required) {
         Component.Apex.OutputPanel result = new Component.Apex.OutputPanel(styleClass='slds-form-element ' + outterCss, layout='block');
         Component.Apex.OutputLabel fieldLabel = new Component.Apex.OutputLabel(
-            value=(required == true ? '<abbr class="slds-required" title="required">*</abbr>' : '') +
+            value=(required == true ? '<abbr class="slds-required" title="required">*</abbr> ' : '') +
                 UTIL_Describe.getFieldLabel(
                     UTIL_Namespace.StrTokenNSPrefix('Engagement_Plan_Task__c'),
                     //don't namespace prefix standard fields like Name
