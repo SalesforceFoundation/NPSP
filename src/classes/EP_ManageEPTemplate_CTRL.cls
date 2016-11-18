@@ -426,16 +426,16 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         Component.Apex.OutputPanel cardFooter = new Component.Apex.OutputPanel(styleClass='slds-grid', layout='block');
         Component.Apex.OutputPanel buttonGroup = new Component.Apex.OutputPanel(styleClass='slds-button-group slds-p-top--large', layout='block');
 
-        firstRow.childComponents.add(genericInputPanel(wrapper, accessString, 'Name', 'slds-col slds-size--1-of-4', 'slds-input'));
-        firstRow.childComponents.add(genericInputPanel(wrapper, accessString, 'Assigned_To__c', 'slds-col slds-size--1-of-4', 'lookupInput203'));
-        firstRow.childComponents.add(genericInputPanel(wrapper, accessString, 'Type__c', 'slds-col slds-size--1-of-4', 'slds-select'));
-        firstRow.childComponents.add(selectListInputPanel(wrapper, accessString, 'Priority__c', ' slds-col slds-size--1-of-4', 'slds-select','taskPriorityOptions'));
+        firstRow.childComponents.add(genericInputPanel(wrapper, accessString, 'Name', 'slds-col slds-size--1-of-4', 'slds-input', true));
+        firstRow.childComponents.add(genericInputPanel(wrapper, accessString, 'Assigned_To__c', 'slds-col slds-size--1-of-4', 'lookupInput203', false));
+        firstRow.childComponents.add(genericInputPanel(wrapper, accessString, 'Type__c', 'slds-col slds-size--1-of-4', 'slds-select', false));
+        firstRow.childComponents.add(selectListInputPanel(wrapper, accessString, 'Priority__c', ' slds-col slds-size--1-of-4', 'slds-select','taskPriorityOptions', false));
 
-        secondRow.childComponents.add(selectListInputPanel(wrapper, accessString, 'Status__c', ' slds-col slds-size--1-of-4', 'slds-select','taskStatusOptions'));
-        secondRow.childComponents.add(genericInputPanel(wrapper, accessString, 'Send_Email__c', 'slds-col slds-size--1-of-8 slds-p-top--medium slds-p-left--medium', 'slds-checkbox'));
-        secondRow.childComponents.add(genericInputPanel(wrapper, accessString, 'Reminder__c', 'slds-col slds-size--1-of-8 slds-p-top--medium', 'slds-checkbox'));
-        secondRow.childComponents.add(selectListInputPanel(wrapper, accessString, 'Reminder_Time__c', ' slds-col slds-size--1-of-4', 'slds-select','reminderTimeOptions'));
-        secondRow.childComponents.add(genericInputPanel(wrapper, accessString, 'Days_After__c', 'slds-col slds-size--1-of-4', 'slds-input'));
+        secondRow.childComponents.add(selectListInputPanel(wrapper, accessString, 'Status__c', ' slds-col slds-size--1-of-4', 'slds-select','taskStatusOptions', false));
+        secondRow.childComponents.add(genericInputPanel(wrapper, accessString, 'Send_Email__c', 'slds-col slds-size--1-of-8 slds-p-top--medium slds-p-left--medium', 'slds-checkbox', false));
+        secondRow.childComponents.add(genericInputPanel(wrapper, accessString, 'Reminder__c', 'slds-col slds-size--1-of-8 slds-p-top--medium', 'slds-checkbox', false));
+        secondRow.childComponents.add(selectListInputPanel(wrapper, accessString, 'Reminder_Time__c', ' slds-col slds-size--1-of-4', 'slds-select','reminderTimeOptions', false));
+        secondRow.childComponents.add(genericInputPanel(wrapper, accessString, 'Days_After__c', 'slds-col slds-size--1-of-4', 'slds-input', false));
 
         Component.Apex.OutputText addDependentTaskButton = new Component.Apex.OutputText(
             value='<button onclick="addDependentTaskJS(\''+ wrapper.level +'\');return false;" '+ 
@@ -456,7 +456,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         buttonGroup.childComponents.add(addDependentTaskButton);
         buttonGroup.childComponents.add(deleteTaskButton);
         cardFooter.childComponents.add(buttonGroup);
-        cardFooter.childComponents.add(commentsInputPanel(wrapper, accessString, 'Comments__c', 'slds-col slds-p-left--medium', 'slds-textarea'));
+        cardFooter.childComponents.add(commentsInputPanel(wrapper, accessString, 'Comments__c', 'slds-col slds-p-left--medium', 'slds-textarea', false));
 
         topLevelPanel.childComponents.add(formPanel);
         formPanel.childComponents.add(boxAndLabel);
@@ -481,15 +481,17 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     * @param outterCss CSS markup for the field input container.
     * @return Component.Apex.OutputPanel A form field container and label.
     */
-    private Component.Apex.OutputPanel fieldLabelPanel(TaskWrapper wrapper, String fieldName, String outterCss) {
+    private Component.Apex.OutputPanel fieldLabelPanel(TaskWrapper wrapper, String fieldName, String outterCss, Boolean required) {
         Component.Apex.OutputPanel result = new Component.Apex.OutputPanel(styleClass='slds-form-element ' + outterCss, layout='block');
         Component.Apex.OutputLabel fieldLabel = new Component.Apex.OutputLabel(
-            value=UTIL_Describe.getFieldLabel(
-                UTIL_Namespace.StrTokenNSPrefix('Engagement_Plan_Task__c'),
-                //don't namespace prefix standard fields like Name
-                fieldName.endsWith('__c')?UTIL_Namespace.StrTokenNSPrefix(fieldName):fieldName
-            ), 
-            styleClass='slds-form-element__label'
+            value=(required == true ? '<abbr class="slds-required" title="required">*</abbr>' : '') +
+                UTIL_Describe.getFieldLabel(
+                    UTIL_Namespace.StrTokenNSPrefix('Engagement_Plan_Task__c'),
+                    //don't namespace prefix standard fields like Name
+                    fieldName.endsWith('__c')?UTIL_Namespace.StrTokenNSPrefix(fieldName):fieldName
+                ),
+            styleClass='slds-form-element__label',
+            escape=false
         );
         fieldLabel.for = fieldName + wrapper.level;
         result.childComponents.add(fieldLabel);
@@ -504,8 +506,8 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     * @param inputCss CSS markup for the input itself.
     * @return Component.Apex.OutputPanel OutputPanel containing the markup for an inputField.
     */
-    private Component.Apex.OutputPanel genericInputPanel(TaskWrapper wrapper, String accessString, String fieldName, String outterCss, String inputCss) {
-        Component.Apex.OutputPanel outterPanel = fieldLabelPanel(wrapper, fieldName, outterCss);
+    private Component.Apex.OutputPanel genericInputPanel(TaskWrapper wrapper, String accessString, String fieldName, String outterCss, String inputCss, Boolean required) {
+        Component.Apex.OutputPanel outterPanel = fieldLabelPanel(wrapper, fieldName, outterCss, required);
 
         Component.Apex.InputField fieldInput = new Component.Apex.InputField(
             id = fieldName + wrapper.level,
@@ -527,8 +529,8 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     * @param selectOptions The controller parameter containing the selectOptions for this picklist.
     * @return Component.Apex.OutputPanel OutputPanel containing the markup for a picklist field.
     */
-    private Component.Apex.OutputPanel selectListInputPanel(TaskWrapper wrapper, String accessString, String fieldName, String outterCss, String inputCss, String selectOptions) {
-        Component.Apex.OutputPanel outterPanel = fieldLabelPanel(wrapper, fieldName, outterCss);
+    private Component.Apex.OutputPanel selectListInputPanel(TaskWrapper wrapper, String accessString, String fieldName, String outterCss, String inputCss, String selectOptions, Boolean required) {
+        Component.Apex.OutputPanel outterPanel = fieldLabelPanel(wrapper, fieldName, outterCss, required);
 
         Component.Apex.SelectList selectList = new Component.Apex.SelectList(
             id = fieldName + wrapper.level,
@@ -555,8 +557,8 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     * @param inputCss CSS markup for the input itself.
     * @return Component.Apex.OutputPanel OutputPanel containing the markup for a text area field.
     */
-    private Component.Apex.OutputPanel commentsInputPanel(TaskWrapper wrapper, String accessString, String fieldName, String outterCss, String inputCss) {
-        Component.Apex.OutputPanel outterPanel = fieldLabelPanel(wrapper, fieldName, outterCss);
+    private Component.Apex.OutputPanel commentsInputPanel(TaskWrapper wrapper, String accessString, String fieldName, String outterCss, String inputCss, Boolean required) {
+        Component.Apex.OutputPanel outterPanel = fieldLabelPanel(wrapper, fieldName, outterCss, required);
 
         Component.Apex.InputTextarea fieldInput = new Component.Apex.InputTextarea(
             id = fieldName + wrapper.level,
