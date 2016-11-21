@@ -1782,6 +1782,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>The NPSP default scheduled classes are not scheduled.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsOCR</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthDetailsOCR</shortDescription>
+        <value>{0} and {1} cannot use the same role value.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsOCRDupPrimary</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -1796,6 +1804,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>healthDetailsOCRDupPrimaryValid</shortDescription>
         <value>No Opportunities were found with multiple Primary Opportunity Contact Roles.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsOCRSettingsResolution</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthDetailsOCRSettingsResolution</shortDescription>
+        <value>On the NPSP Settings tab, click Donations | Contact Roles, and edit the above settings values.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsOCRSettingsValid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthDetailsOCRSettingsValid</shortDescription>
+        <value>NPSP Opportunity Contact Roles settings are valid.</value>
     </labels>
     <labels>
         <fullName>healthDetailsPaymentMappingBadDataTypes</fullName>
@@ -2036,6 +2060,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>healthLabelOCRCheck</shortDescription>
         <value>Opportunity Contact Roles</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelOCRSettings</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthLabelOCRSettings</shortDescription>
+        <value>Opportunity Contact Roles Settings</value>
     </labels>
     <labels>
         <fullName>healthLabelOppPayments</fullName>
@@ -2524,6 +2556,13 @@ If you want to know which Opportunities would have previously included this doub
         <protected>false</protected>
         <shortDescription>hhCmpDedupeStatus</shortDescription>
         <value>- Household Duplicate</value>
+    </labels>
+    <labels>
+        <fullName>isARequiredField</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>isARequiredField</shortDescription>
+        <value>is a required field.</value>
     </labels>
     <labels>
         <fullName>labelListViewFirst</fullName>
