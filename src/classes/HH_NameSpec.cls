@@ -320,7 +320,11 @@ public with sharing class HH_NameSpec implements HH_INaming {
                 }
             }
 
-            string val = string.valueOf(thisObj.get(fieldName));
+            string val;
+            if (thisObj != null) {
+                val = string.valueOf(thisObj.get(fieldName));
+            }
+            
             // add back the {}'s for string substitution
             strField = chLToken + strField + chRToken;
             if (val == null) {   
