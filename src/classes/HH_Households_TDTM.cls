@@ -178,7 +178,14 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                             hhNamingFields = HH_HouseholdNaming.iNaming.setHouseholdNameFieldsOnContact();
                             
                         for (String fieldName : hhNamingFields) {
-                            if (String.valueOf(newcmap.get(c.id).get(fieldName)) != String.valueOf(oldcmap.get(c.id).get(fieldName))) {
+                            // make sure to use case sensitive comparison
+                            string strName = String.valueOf(newcmap.get(c.id).get(fieldName));
+                            if (strName == null)
+                                strName = '';
+                            string strNameOld = String.valueOf(oldcmap.get(c.id).get(fieldName));
+                            if (strNameOld == null)
+                                strNameOld = '';
+                            if (!strName.equals(strNameOld)) {
                                 householdnameupdates.add(c.npo02__household__c);
                                 break;
                             }
