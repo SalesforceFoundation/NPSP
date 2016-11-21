@@ -132,6 +132,9 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
                 listSOHouseholdNameFormats.add(new SelectOption('{!LastName} Family', '{!LastName} Family'));
                 listSOHouseholdNameFormats.add(new SelectOption('{!{!FirstName}} {!LastName} Family', '{!{!FirstName}} {!LastName} Family'));
                 listSOHouseholdNameFormats.add(new SelectOption('{!LastName} ({!{!FirstName}}) Family', '{!LastName} ({!{!FirstName}}) Family'));
+                listSOHouseholdNameFormats.add(new SelectOption('{!{!Salutation}} {!FirstName} {!LastName} Family', '{!{!Salutation}} {!FirstName} {!LastName} Family'));
+                listSOHouseholdNameFormats.add(new SelectOption('{!Account.npe01__One2OneContact__r.LastName} Family', '{!Account.npe01__One2OneContact__r.LastName} Family'));
+                listSOHouseholdNameFormats.add(new SelectOption('{!LastName} ({!Account.BillingCity}) Family', '{!LastName}  ({!Account.BillingCity}) Family'));
                 listSOHouseholdNameFormats.add(new SelectOption(Label.stgLabelOther, Label.stgLabelOther));
             }
             return listSOHouseholdNameFormats;
@@ -149,6 +152,7 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
                 listSOFormalGreetingFormats.add(new SelectOption('', Label.stgLabelNone));
                 listSOFormalGreetingFormats.add(new SelectOption('{!{!FirstName}} {!LastName}', '{!{!FirstName}} {!LastName}'));
                 listSOFormalGreetingFormats.add(new SelectOption('{!{!Salutation} {!FirstName}} {!LastName}', '{!{!Salutation} {!FirstName}} {!LastName}'));
+                listSOFormalGreetingFormats.add(new SelectOption('{!{!Salutation}} {!FirstName} {!LastName}', '{!{!Salutation}} {!FirstName} {!LastName}'));
                 listSOFormalGreetingFormats.add(new SelectOption(Label.stgLabelOther, Label.stgLabelOther));
             }
             return listSOFormalGreetingFormats;
@@ -179,15 +183,25 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
     private static list<Contact> listConExamples {
         get {
             if (listConExamples == null) {
+                    // create a fake household account to use
+                    Account acc = new Account(
+                        Name = 'Sample',
+                        BillingCity = 'Seattle'
+                    );
+                                            
+                    // create fake contacts in memory only
                     listConExamples = new list<Contact>();
                     Contact con = new Contact();
+                    con.Account = acc;
                     con.FirstName = 'Sam';
                     con.LastName = 'Smith';
                     con.Salutation = 'Dr.';
                     con.MailingCity = 'Seattle';
                     listConExamples.add(con);
+                    acc.npe01__One2OneContact__r = con;
                     
                     con = new Contact();
+                    con.Account = acc;
                     con.FirstName = 'Sally';
                     con.LastName = 'Smith';
                     con.Salutation = 'Mrs.';
@@ -195,11 +209,13 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
                     listConExamples.add(con);
                     
                     con = new Contact();
+                    con.Account = acc;
                     con.FirstName = 'Suzie';
                     con.LastName = 'Smith';
                     listConExamples.add(con);
 
                     con = new Contact();
+                    con.Account = acc;
                     con.FirstName = 'Daphne';
                     con.LastName = 'Doe';
                     con.Salutation = 'Ms.';
@@ -207,6 +223,7 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
                     listConExamples.add(con);
 
                     con = new Contact();
+                    con.Account = acc;
                     con.FirstName = 'Donald';
                     con.LastName = 'Doe';
                     con.Salutation = 'Mr.';

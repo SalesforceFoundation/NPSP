@@ -1293,6 +1293,7 @@
         <members>stgHelpErrorLog</members>
         <members>stgHelpErrorNotifyOn</members>
         <members>stgHelpErrorNotifyTo</members>
+        <members>stgHelpExampleHHNames</members>
         <members>stgHelpFGFormat</members>
         <members>stgHelpFiscalYearRollups</members>
         <members>stgHelpHHAccountRTID</members>
