@@ -242,4 +242,52 @@ private class OPP_OpportunityNaming_TEST
             system.assert(thisopp.name.contains('8'), 'Opportunities have been renamed by batch process.');
         }
     }
+
+    /*******************************************************************************************************
+    * @description Creates an invalid opportunity name setting. Inserts an opportunity. Verifies name left
+    * unchanged and no exception is thrown.
+    ********************************************************************************************************/
+    @isTest
+    static void testException() {
+        if (strTestOnly != '*' && strTestOnly != 'testException') return;
+
+        Opportunity_Naming_Settings__c ons = new Opportunity_Naming_Settings__c(
+            Name = 'foo',
+            Opportunity_Name_Format__c = '{!Account.Invalid_Field}',
+            Attribution__c = Label.oppNamingBoth
+        );
+        insert ons;
+
+        Account acc = new Account(Name='accname');
+        insert acc;
+
+        Contact con = new Contact(LastName='conname');
+        insert con;
+
+        Opportunity opp = new Opportunity(
+            AccountId = acc.id,
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            Name='temp',
+            Amount=8,
+            CloseDate = Date.newInstance(2000, 1, 1),
+            npe01__Contact_Id_for_Role__c = con.id
+        );
+
+        Exception oppException;
+
+        Test.startTest();
+        try {
+            insert opp;
+        } catch (Exception ex) {
+            oppException = ex;
+        }
+        Test.stopTest();
+
+        system.assertEquals(null, oppException, 'No exception should be thrown.');
+        list<Opportunity> queryOpp = [SELECT Name FROM Opportunity WHERE Id = :opp.id];
+        system.assertEquals('temp', queryOpp[0].Name, 'The name should not be calculated, as it is an invalid format based on the setting.');
+        List<Error__c> errors = [select Id from Error__c];
+        System.assertEquals(1, errors.size(), 'An error record should be created.');
+
+    }
 }

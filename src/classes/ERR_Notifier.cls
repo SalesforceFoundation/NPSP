@@ -147,7 +147,8 @@ public class ERR_Notifier {
         mail.setSenderDisplayName('Nonprofit Success Pack');
         mail.setSubject('NPSP Error');
         string bodyString = 'Organization: ' + UserInfo.getOrganizationName() + '(' + UserInfo.getOrganizationId() + ')\n';
-        bodyString += 'User: ' + UserInfo.getUserName() + '(' + UserInfo.getUserId() + ')';
+        bodyString += 'User: ' + UserInfo.getUserName() + '(' + UserInfo.getUserId() + ')\n';
+        bodyString += Label.ErrorEmailMessage + '\n';
         if (context == ERR_Handler_API.Context.RD.name())
             bodyString += system.label.npe03.RecurringDonationErrorEmailBody;
         bodyString += '\n\nErrors:';
