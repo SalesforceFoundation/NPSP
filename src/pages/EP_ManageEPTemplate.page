@@ -35,7 +35,9 @@
                 <apex:outputPanel styleClass="slds-grid" id="templateForm">
                     <div class="slds-col slds-col--padded slds-p-top--large slds-size--1-of-2">
                         <div class="slds-form-element slds-p-top--small">
-                            <apex:outputLabel value="{!$ObjectType.Engagement_Plan_Template__c.Fields.Name.Label}" for="idName" styleClass="slds-form-element__label" />
+                            <apex:outputLabel for="idName" styleClass="slds-form-element__label">
+                                <abbr class="slds-required" title="required">*</abbr> {!$ObjectType.Engagement_Plan_Template__c.Fields.Name.Label}
+                            </apex:outputLabel>
                             <div class="slds-form-element__control">
                                 <apex:inputField id="idName" styleClass="slds-input" value="{!template.Name}" required="true"/>
                             </div>
