@@ -180,6 +180,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         verifyScheduledJobs();
         ERR_Notifier.verifyErrorSettings(this);
         verifyOppContactRoles();
+        verifyOppContactRolesSettings();
         verifyTriggerHandlers();
         verifyNoMissingOppPayments();
         verifyNoDuplicateContactRoles();
@@ -553,6 +554,22 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     }
     
     /*********************************************************************************************************
+    * @description Verifies that no OCR settings are conflicting.
+    */
+    public void verifyOppContactRolesSettings() {
+        List<String> invalidOCRSettings = STG_PanelContactRoles_CTRL.getInvalidOCRSettings();
+        if (invalidOCRSettings.isEmpty()) {
+            createDR(Label.healthLabelOCRSettings, statusSuccess, null, Label.healthDetailsOCRSettingsValid);
+        } else {
+            String invalidOCRErrors = '';
+            for (Integer i=0; i<invalidOCRSettings.size(); i+=2) {
+                invalidOCRErrors += String.format(Label.healthDetailsOCR, new List<String>{invalidOCRSettings[i], invalidOCRSettings[i+1]}) + '<br/>';
+            }
+            createDR(Label.healthLabelOCRSettings, statusError, invalidOCRErrors, Label.healthDetailsOCRSettingsResolution);
+        }
+    }
+
+    /*********************************************************************************************************
     * @description Verifies that the default trigger handlers exist in the Trigger_Handler object, and warns
     * about any NPSP triggers marked as Async.
     */
@@ -758,6 +775,5 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         } catch (exception ex) {
             createDR(Label.healthLabelVerifyLevels, statusError, ex.getMessage(), null);                   
         }    
-        
     }
 }

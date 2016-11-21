@@ -174,12 +174,14 @@ public with sharing class HH_Container_LCTRL {
         set<String> setCheckUpdate = setUpdateableContactFields();
         
         for (string strF : listStrField) {
-
-            // check field level security
-            DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('Contact', strF);
-            if (dfr == null || !dfr.isAccessible() || ((setCheckUpdate.contains(strF) && !dfr.isUpdateable())))
-                throw (new permsException(string.format(label.flsError, new string[]{'Contact' + '.' + strF})));
             
+            if (!strF.contains('.')) {
+                // check field level security (but not on compound lookup fields)
+                DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('Contact', strF);
+                if (dfr == null || !dfr.isAccessible() || ((setCheckUpdate.contains(strF) && !dfr.isUpdateable())))
+                    throw (new permsException(string.format(label.flsError, new string[]{'Contact' + '.' + strF})));
+            }
+                
             strSoql += strComma + strF;
             strComma = ',';
         }

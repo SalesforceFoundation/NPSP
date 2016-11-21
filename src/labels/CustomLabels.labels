@@ -1794,6 +1794,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>The NPSP default scheduled classes are not scheduled.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsOCR</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthDetailsOCR</shortDescription>
+        <value>{0} and {1} cannot use the same role value.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsOCRDupPrimary</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -1808,6 +1816,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>healthDetailsOCRDupPrimaryValid</shortDescription>
         <value>No Opportunities were found with multiple Primary Opportunity Contact Roles.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsOCRSettingsResolution</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthDetailsOCRSettingsResolution</shortDescription>
+        <value>On the NPSP Settings tab, click Donations | Contact Roles, and edit the above settings values.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsOCRSettingsValid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthDetailsOCRSettingsValid</shortDescription>
+        <value>NPSP Opportunity Contact Roles settings are valid.</value>
     </labels>
     <labels>
         <fullName>healthDetailsPaymentMappingBadDataTypes</fullName>
@@ -2048,6 +2072,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>healthLabelOCRCheck</shortDescription>
         <value>Opportunity Contact Roles</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelOCRSettings</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthLabelOCRSettings</shortDescription>
+        <value>Opportunity Contact Roles Settings</value>
     </labels>
     <labels>
         <fullName>healthLabelOppPayments</fullName>
@@ -2536,6 +2568,13 @@ If you want to know which Opportunities would have previously included this doub
         <protected>false</protected>
         <shortDescription>hhCmpDedupeStatus</shortDescription>
         <value>- Household Duplicate</value>
+    </labels>
+    <labels>
+        <fullName>isARequiredField</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>isARequiredField</shortDescription>
+        <value>is a required field.</value>
     </labels>
     <labels>
         <fullName>labelListViewFirst</fullName>
@@ -4102,6 +4141,14 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <protected>false</protected>
         <shortDescription>stgHelpErrorNotifyTo</shortDescription>
         <value>Select the type of user to send notifications to.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpExampleHHNames</fullName>
+        <categories>NPSP Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>displayed in the Example household names box</shortDescription>
+        <value>&lt;b&gt;NOTE:&lt;/b&gt; The above preview examples cannot preview information for fields other than First Name, Last Name, or Salutation. (For example, if you&apos;ve created a custom field for nickname that you want to use in the Informal Greeting, that custom field would not show up here.) Fields other than First Name, Last Name, and Salutation don&apos;t show up in the greetings fields of the Manage Household page either, but when you save Contact information from the Manage Household page, your Household naming conventions will appear correctly.</value>
     </labels>
     <labels>
         <fullName>stgHelpFGFormat</fullName>
