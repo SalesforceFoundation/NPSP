@@ -155,7 +155,12 @@ public with sharing class HH_Container_LCTRL {
 
             strSoql += ' order by Primary_Contact__c DESC, npo02__Household_Naming_Order__c ASC NULLS LAST, CreatedDate ';
 
-            return database.query(strSoql);
+            list<Contact> listCon = database.query(strSoql);
+            // let's update household naming order so the client doesn't have to worry about nulls.
+            for (integer i = 0; i < listCon.size(); i++) {
+                listCon[i].npo02__Household_Naming_Order__c = i;
+            }
+            return listCon;
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
