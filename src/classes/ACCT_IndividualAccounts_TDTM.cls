@@ -798,11 +798,28 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         
         // check all household naming fields for changes
         for(String fieldName : hhNamingFields) {
+            string strName;
+            string strNameOld;
+            
+            //separate cross object references, i.e. account.name
+            list<string> splitField = (fieldName.split('\\.',0));
+            if (splitField.size() > 1) {
+                SObject sobj = conNew.getSobject(splitField[0]);
+                if (sobj != null) {
+                    strName = sobj.Id;
+                }
+                sobj = conOld.getSobject(splitField[0]);
+                if (sobj != null) {
+                    strNameOld = sobj.Id;
+                }
+            } else {
+                strName = String.valueOf(conNew.get(fieldName));
+                strNameOld = String.valueOf(conOld.get(fieldName));
+            }
+
             // make sure to use case sensitive comparison
-            string strName = String.valueOf(conNew.get(fieldName));
             if (strName == null)
                 strName = '';
-            string strNameOld = String.valueOf(conOld.get(fieldName));
             if (strNameOld == null)
                 strNameOld = '';
             if (!strName.equals(strNameOld)) {
