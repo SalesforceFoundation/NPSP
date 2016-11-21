@@ -60,8 +60,11 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
 
         } else if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
             upsertContactRolesAfterInsert((list<Opportunity>) newlist);
-            updateOpportunityNames((list<Opportunity>) newList);            
-        
+            try {
+                updateOpportunityNames((list<Opportunity>) newList);            
+            } catch (Exception ex) {
+                ERR_Handler.processError(ex, ERR_Handler_API.Context.OPP);
+            }
         } else if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
             upsertContactRolesAfterUpdate((list<Opportunity>) newlist, (list<Opportunity>) oldlist);
         }
