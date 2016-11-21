@@ -4092,6 +4092,14 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <value>Select the type of user to send notifications to.</value>
     </labels>
     <labels>
+        <fullName>stgHelpExampleHHNames</fullName>
+        <categories>NPSP Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>displayed in the Example household names box</shortDescription>
+        <value>&lt;b&gt;NOTE:&lt;/b&gt; The above preview examples cannot preview information for fields other than First Name, Last Name, or Salutation. (For example, if you&apos;ve created a custom field for nickname that you want to use in the Informal Greeting, that custom field would not show up here.) Fields other than First Name, Last Name, and Salutation don&apos;t show up in the greetings fields of the Manage Household page either, but when you save Contact information from the Manage Household page, your Household naming conventions will appear correctly.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpFGFormat</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
