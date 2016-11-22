@@ -48,6 +48,13 @@ public with sharing class LVL_LevelEdit_CTRL {
             controller.addFields(UTIL_Describe.listStrFromFieldSet(UTIL_Namespace.StrTokenNSPrefix('Level__c'), UTIL_Namespace.StrTokenNSPrefix('LevelEdit')));
         }
         lvl = (Level__c)controller.getRecord();
+        
+        //if clone param is set, this is the clone button override
+        Map<String,String> params = ApexPages.currentPage().getParameters();
+        if (params.containsKey('clone') && params.get('clone') == '1') {
+            lvl.Id = null;
+            lvl.Name = null;
+        }
     }
     
     /*********************************************************************************************************
