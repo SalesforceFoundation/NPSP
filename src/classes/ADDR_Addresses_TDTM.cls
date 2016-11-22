@@ -335,7 +335,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             }
 
             // check the Contacts on this household
-            if (mapAccIdListCon != null && mapAccIdListCon.size() > 0) {
+            if (mapAccIdListCon != null && mapAccIdListCon.containsKey(accId)) {
 	            for (Contact con : mapAccIdListCon.get(accId)) {
 	                // detect that the contact's current address was deleted.
 	                // and if so clear any override flag so it will get the default address.
