@@ -864,6 +864,7 @@
         <members>EPTaskDependency</members>
         <members>EPTaskTemplate</members>
         <members>EPTo</members>
+        <members>ErrorEmailMessage</members>
         <members>HiddenForSecurity</members>
         <members>NameRequired</members>
         <members>PageMessagesConfirm</members>
@@ -1005,8 +1006,11 @@
         <members>healthDetailsMailingListReportMissing</members>
         <members>healthDetailsMissingOppPayments</members>
         <members>healthDetailsNothingScheduled</members>
+        <members>healthDetailsOCR</members>
         <members>healthDetailsOCRDupPrimary</members>
         <members>healthDetailsOCRDupPrimaryValid</members>
+        <members>healthDetailsOCRSettingsResolution</members>
+        <members>healthDetailsOCRSettingsValid</members>
         <members>healthDetailsPaymentMappingBadDataTypes</members>
         <members>healthDetailsRDFieldsBadDatatypes</members>
         <members>healthDetailsRelReciprocalInvalid</members>
@@ -1037,6 +1041,7 @@
         <members>healthLabelNoMissingOppPayments</members>
         <members>healthLabelNone</members>
         <members>healthLabelOCRCheck</members>
+        <members>healthLabelOCRSettings</members>
         <members>healthLabelOppPayments</members>
         <members>healthLabelPassed</members>
         <members>healthLabelPaymentMappingsValid</members>
@@ -1098,6 +1103,7 @@
         <members>hhCmpDedupeLabelOpenReport</members>
         <members>hhCmpDedupeNoReport</members>
         <members>hhCmpDedupeStatus</members>
+        <members>isARequiredField</members>
         <members>labelListViewFirst</members>
         <members>labelListViewLast</members>
         <members>labelListViewNext</members>
@@ -1287,6 +1293,7 @@
         <members>stgHelpErrorLog</members>
         <members>stgHelpErrorNotifyOn</members>
         <members>stgHelpErrorNotifyTo</members>
+        <members>stgHelpExampleHHNames</members>
         <members>stgHelpFGFormat</members>
         <members>stgHelpFiscalYearRollups</members>
         <members>stgHelpHHAccountRTID</members>
