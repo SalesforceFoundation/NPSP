@@ -178,13 +178,15 @@ public with sharing class HH_NameSpec implements HH_INaming {
                 strNameSpec = strNameSpec.left(ich+1);
             }
             
-            // look for the FirstNameSpec by removing any {LastName} field references
-            string str = strNameSpec.replace(chLToken + 'LastName' + chRToken, '');
+            // extract FirstNameSpec
+            string str = strFNameSpecFromStrNameSpec(strNameSpec);
+
+            // replace the firstnamespec with a token in our fullnamespec
             ich = str.indexOf(chLToken);
             integer ichR = str.lastIndexOf(chRToken);
             if (ich >= 0 && ichR > 0) {
+                strFullNameSpec = strNameSpec.replace(str, 'FirstNameSpec');
                 strFirstNameSpec = str.substring(ich + chLToken.length(), ichR);
-                strFullNameSpec = strNameSpec.replace(strFirstNameSpec, 'FirstNameSpec');
             } else {
                 strFullNameSpec = strNameSpec;
             }
@@ -198,6 +200,8 @@ public with sharing class HH_NameSpec implements HH_INaming {
             set<string> setStrField = new set<string>();
             if (strFirstNameSpec != null)
                 setStrField.addAll(setStrFieldFromStrFSpec(strFirstNameSpec));
+            if (strFullNameSpec != null)
+                setStrField.addAll(setStrFieldFromStrFSpec(strFullNameSpec));
             setStrField.add('LastName');    
             return setStrField;
         }
@@ -230,24 +234,29 @@ public with sharing class HH_NameSpec implements HH_INaming {
             string strLname = listCon[i].LastName;
             string strFname = strConFspec(listCon[i], ns.strFirstNameSpec);
             
-            // get the set of all fname's for this lname
+            // get the set of additional fname's for this lname
+            list<String> listFname = new list<String>();
             integer j = i + 1;
             while (j < cCon && j < ns.cMaxUseOverrun && (isNoLastnames || listCon[j].LastName == strLname)) {
-                integer k = j + 1;
-                if (k == cCon || (!isNoLastnames && listCon[k].LastName != strLname)) {
-                    strFname += ns.strAnd + strConFspec(listCon[j], ns.strFirstNameSpec);
-                    j++;
-                    break;
+                String strF = strConFspec(listCon[j], ns.strFirstNameSpec);
+                if (strF != '') {
+                    listFName.add(strF);
+                }
+                j++;
+            }
+
+            // now put those additional fname's together
+            for (integer k = 0; k < listFName.size(); k++) {
+                if (k == listFName.size() - 1 && (k+i) < ns.cMaxUseOverrun-2) {
+                    strFname += ns.strAnd + listFName[k];
                 } else {
-                    strFName += ', ' + strConFspec(listCon[j], ns.strFirstNameSpec);
-                    j++;
+                    strFName += ', ' + listFname[k];
                 }
             }
-            
-            // now all contacts from lname should have their fname in strFname.
-            string strCon = ns.strFullNameSpec;
-            strCon = strCon.replace(chLToken + 'LastName' + chRToken, strLname);
-            strCon = strCon.replace(chLToken + 'FirstNameSpec' + chRToken, strFname);
+
+            // create lname part using first contact with that lastname
+            string strCon = strConFSpec(listCon[i], ns.strFullNameSpec);
+            strCon = strCon.replace('FirstNameSpec', strFname);
             
             // add it to the whole name
             if (i > 0 && j < cCon && j < ns.cMaxUseOverrun) {
@@ -287,7 +296,35 @@ public with sharing class HH_NameSpec implements HH_INaming {
         while (MyMatcher.find()) {
             // get the fieldname without the {}'s
             string strField = strFspec.substring(MyMatcher.start() + chLToken.length(), MyMatcher.end()-chRToken.length());
-            string val = string.valueOf(con.get(strField.trim()));
+            
+            //separate cross object references, i.e. account.name
+            list<string> splitField = (strField.split('\\.',0));
+            
+            //remove the field name itself to only include parent object references
+            string fieldName = splitField[splitField.size()-1].trim();
+            splitField.remove(splitField.size()-1);
+
+            //use the correct sObject
+            sObject thisObj;
+            if (!splitField.isEmpty()) {
+                thisObj = con.getsObject(splitField[0]);
+                splitField.remove(0);
+            } else {
+                thisObj = con;
+            }
+
+            //traverse parent relationships until the last one
+            if (thisObj != null) {
+                for (string parentObj : splitField) {
+                    thisObj = thisObj.getsObject(parentObj);
+                }
+            }
+
+            string val;
+            if (thisObj != null) {
+                val = string.valueOf(thisObj.get(fieldName));
+            }
+            
             // add back the {}'s for string substitution
             strField = chLToken + strField + chRToken;
             if (val == null) {   
@@ -298,6 +335,7 @@ public with sharing class HH_NameSpec implements HH_INaming {
             }
             str = str.replace(strField, val == null ? '' : val);
         }
+        //system.debug('**** strConFspec con: ' + con + ' strFspec: ' + strFspec + ' returns: ' + str);
         return str;     
     }
 
@@ -323,4 +361,23 @@ public with sharing class HH_NameSpec implements HH_INaming {
         return setStrField;     
     }
 
+    /*******************************************************************************************************
+    * @description Given a namespec string, returns the firstnamespec which is demarcated by an outer {! }
+    * specified in that string.
+    * @param strNameSpec The namespec string, ie. {!lastname} {! {!firstname} foo {!bar}} Family
+    * return string The firstnamespec string, ie. {! {!firstname} foo {!bar}}
+    */
+    private static string strFNameSpecFromStrNameSpec(string strNameSpec) {
+
+        // First, instantiate a new Pattern object looking for {! {! xxxx } }
+        Pattern MyPattern = Pattern.compile('\\{![^\\}]*\\{!.*\\}[^\\{!]*\\}');       
+        // Then instantiate a new Matcher object 
+        Matcher MyMatcher = MyPattern.matcher(strNameSpec);
+        
+        if (MyMatcher.find()) {
+            return strNameSpec.substring(MyMatcher.start(), MyMatcher.end());
+        } else {
+            return '';
+        }     
+    }
 }
