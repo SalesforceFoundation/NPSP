@@ -53,7 +53,7 @@ public with sharing class LVL_LevelEdit_CTRL {
         Map<String,String> params = ApexPages.currentPage().getParameters();
         if (params.containsKey('clone') && params.get('clone') == '1') {
             lvl.Id = null;
-            lvl.Name = null;
+            lvl.Name += ' - ' + Label.lblCloned;
         }
     }
     

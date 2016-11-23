@@ -139,14 +139,13 @@ private with sharing class LVL_LevelEdit_TEST {
         ApexPages.StandardController stdCtrl = new ApexPages.StandardController(lvl);
         LVL_LevelEdit_CTRL ctrl = new LVL_LevelEdit_CTRL(stdCtrl);
         
-        system.assertEquals(null, ctrl.lvl.Name);
+        system.assertEquals(lvl.Name + ' - ' + Label.lblCloned, ctrl.lvl.Name);
         system.assertEquals(lvl.Target__c, ctrl.lvl.Target__c);
         system.assertEquals(lvl.Source_Field__c, ctrl.lvl.Source_Field__c);
         system.assertEquals(lvl.Level_Field__c, ctrl.lvl.Level_Field__c);
         system.assertEquals(lvl.Minimum_Amount__c, ctrl.lvl.Minimum_Amount__c);
         system.assertEquals(lvl.Maximum_Amount__c, ctrl.lvl.Maximum_Amount__c);
         
-        ctrl.lvl.Name = 'test level Clone';
         ctrl.lvl.Minimum_Amount__c = 200;
         ctrl.lvl.Maximum_Amount__c = null;
         
@@ -157,6 +156,6 @@ private with sharing class LVL_LevelEdit_TEST {
         list<Level__c> listLvl = [Select Id, Name, Target__c from Level__c order by Name];
         system.assertEquals(2, listLvl.size());
         system.assertEquals('test level', listLvl[0].Name);
-        system.assertEquals('test level Clone', listLvl[1].Name);
+        system.assertEquals('test level - ' + Label.lblCloned, listLvl[1].Name);
     }
 }
