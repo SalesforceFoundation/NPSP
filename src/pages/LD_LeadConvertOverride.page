@@ -178,9 +178,7 @@
                         </label>
                         <div class="slds-form-element__control">
                             <div class="slds-select_container">
-                                <apex:selectList value="{!leadConvStatus}" size="1" styleClass="slds-select">
-                                    <apex:selectOptions value="{!lcStatuses}"/>
-                                </apex:selectList>
+                                <apex:inputField value="{!lead.Status}" styleClass="slds-select" id="ldStatus"/>
                             </div>
                         </div>
                     </div>
@@ -231,6 +229,20 @@
         </apex:form>
 
     </div>
+    <script>
+        window.onload = function filterStatus() {
+            var lcStatus = '{!lcStatuses}';
+            var ldStatus = document.getElementById('{!$Component.pbEdit.ldStatus}');
+            ldStatus.selectedIndex = -1;
+            for (var i=0; i<ldStatus.length; i++){
+                if (lcStatus.indexOf(ldStatus.options[i].value) < 0 ){
+                    ldStatus.remove(i);
+                    i-=1;
+                }
+            }
+            ldStatus.selectedIndex = 0;
+        }
+    </script>
 
     <apex:outputField value="{!lead.company}" rendered="false" />
     <apex:outputField value="{!lead.name}" rendered="false" />
