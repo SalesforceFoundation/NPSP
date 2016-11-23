@@ -139,7 +139,7 @@ private with sharing class LVL_LevelEdit_TEST {
         ApexPages.StandardController stdCtrl = new ApexPages.StandardController(lvl);
         LVL_LevelEdit_CTRL ctrl = new LVL_LevelEdit_CTRL(stdCtrl);
         
-        system.assertEquals(lvl.Name + ' - ' + Label.lblCloned, ctrl.lvl.Name);
+        system.assertEquals('test level - ' + Label.lblCloned, ctrl.lvl.Name);
         system.assertEquals(lvl.Target__c, ctrl.lvl.Target__c);
         system.assertEquals(lvl.Source_Field__c, ctrl.lvl.Source_Field__c);
         system.assertEquals(lvl.Level_Field__c, ctrl.lvl.Level_Field__c);
