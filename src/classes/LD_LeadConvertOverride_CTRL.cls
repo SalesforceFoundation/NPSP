@@ -85,20 +85,6 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     public boolean doNotCreateOpp { get; set; }
 
     /*******************************************************************************************************
-    * @description Shows the value of the lead status
-    */
-    public string leadConvStatus {
-    	get {
-    		if (leadConvStatus == null || leadConvStatus == '') {
-                if (lcStatuses != null && lcStatuses.size() > 0)
-                    leadConvStatus = lcStatuses[0].getValue();
-    		}
-    		return leadConvStatus;
-    	}
-    	set;
-    }
-
-    /*******************************************************************************************************
     * @description List of possible matching Contacts
     */
     public list<selectOption> conList;
@@ -304,7 +290,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
 
         // get the lead
-        l = [select id, name, firstname, lastname, company, email, title, ownerId, 
+        l = [select id, name, firstname, lastname, company, email, title, ownerId, status,
              		CompanyStreet__c, CompanyCity__c, CompanyState__c, CompanyPostalCode__c, CompanyCountry__c
              from lead
              where id = : controller.getId()];
@@ -361,7 +347,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 	        lc.setLeadId(l.Id);
 	        if (!doNotCreateOpp && Schema.SObjectType.Opportunity.isCreateable()) lc.setOpportunityName(oppName);
 	        lc.setDoNotCreateOpportunity(!Schema.SObjectType.Opportunity.isCreateable() || doNotCreateOpp);
-	        lc.setConvertedStatus(leadConvStatus);
+	        lc.setConvertedStatus(l.Status);
 	        lc.setOwnerId(dummyCon.OwnerId);
 	        lc.setSendNotificationEmail(sendEmailToOwner);
 	        

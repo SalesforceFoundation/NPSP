@@ -1,4 +1,4 @@
-<apex:page standardController="Lead" extensions="LD_LeadConvertOverride_CTRL" title="{!$Label.leadConvertPageTitle} {!Lead.Name}" standardStylesheets="false" docType="html-5.0">
+<apex:page standardController="Lead" extensions="LD_LeadConvertOverride_CTRL" title="{!$Label.leadConvertPageTitle} {!l.Name}" standardStylesheets="false" docType="html-5.0">
 
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/modal.js')}"/>
     <apex:stylesheet value="{!URLFOR($Resource.SLDS, '/0_12_2/assets/styles/salesforce-lightning-design-system-vf.min.css')}"/>
@@ -40,7 +40,7 @@
                                 {!$Label.leadConvertSectionTitle}
                             </h1>
                             <p class="slds-text-heading--label slds-page-header__info">
-                                <apex:outputText value="{!Lead.Name}"/>
+                                <apex:outputText value="{!l.Name}"/>
                             </p>
                         </div>
                         <div class="slds-col slds-no-flex">
@@ -178,7 +178,7 @@
                         </label>
                         <div class="slds-form-element__control">
                             <div class="slds-select_container">
-                                <apex:inputField value="{!lead.Status}" styleClass="slds-select" id="ldStatus"/>
+                                <apex:inputField value="{!l.Status}" styleClass="slds-select" id="ldStatus"/>
                             </div>
                         </div>
                     </div>
@@ -243,9 +243,4 @@
             ldStatus.selectedIndex = 0;
         }
     </script>
-
-    <apex:outputField value="{!lead.company}" rendered="false" />
-    <apex:outputField value="{!lead.name}" rendered="false" />
-    <apex:outputField value="{!lead.Email}" rendered="false" />
-    <apex:outputField value="{!lead.OwnerId}" rendered="false"/>
 </apex:page>
