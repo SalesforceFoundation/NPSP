@@ -117,4 +117,45 @@ private with sharing class LVL_LevelEdit_TEST {
         Test.stopTest();
     }
         
+    /*******************************************************************************************************
+    * @description clone a level from the page
+    * verify Level created
+    */ 
+    static testmethod void testCloneLevel() {
+        Level__c lvl = new Level__c(
+            Name = 'test level',
+            Target__c = 'Contact',
+            Source_Field__c = 'npo02__TotalOppAmount__c',
+            Level_Field__c = 'npo02__LastMembershipLevel__c',
+            Minimum_Amount__c = 100,
+            Maximum_Amount__c = 200
+        );
+        insert lvl;
+            
+        PageReference pageRef = Page.LVL_LevelEdit;
+        pageRef.getParameters().put('id', lvl.Id);
+        pageRef.getParameters().put('clone', '1');
+        Test.setCurrentPage(pageRef);
+        ApexPages.StandardController stdCtrl = new ApexPages.StandardController(lvl);
+        LVL_LevelEdit_CTRL ctrl = new LVL_LevelEdit_CTRL(stdCtrl);
+        
+        system.assertEquals('test level - ' + Label.lblCloned, ctrl.lvl.Name);
+        system.assertEquals(lvl.Target__c, ctrl.lvl.Target__c);
+        system.assertEquals(lvl.Source_Field__c, ctrl.lvl.Source_Field__c);
+        system.assertEquals(lvl.Level_Field__c, ctrl.lvl.Level_Field__c);
+        system.assertEquals(lvl.Minimum_Amount__c, ctrl.lvl.Minimum_Amount__c);
+        system.assertEquals(lvl.Maximum_Amount__c, ctrl.lvl.Maximum_Amount__c);
+        
+        ctrl.lvl.Minimum_Amount__c = 200;
+        ctrl.lvl.Maximum_Amount__c = null;
+        
+        Test.startTest();
+        stdCtrl.save();
+        Test.stopTest();
+        
+        list<Level__c> listLvl = [Select Id, Name, Target__c from Level__c order by Name];
+        system.assertEquals(2, listLvl.size());
+        system.assertEquals('test level', listLvl[0].Name);
+        system.assertEquals('test level - ' + Label.lblCloned, listLvl[1].Name);
+    }
 }
