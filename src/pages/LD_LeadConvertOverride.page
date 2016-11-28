@@ -29,9 +29,6 @@
     <div class="slds">
         <apex:form id="pbEdit" styleClass="slds-form--stacked">
             <div class="hide-when-modal-open">
-                <div>
-                    <apex:pageMessages />
-                </div>
 
                 <div class="slds-page-header slds-m-bottom--medium" role="banner">
                     <div class="slds-grid">
@@ -50,6 +47,10 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div>
+                    <c:UTIL_PageMessages />
                 </div>
 
                 <div class="slds-p-horizontal--large">

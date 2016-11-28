@@ -311,6 +311,17 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             strConId = 'NEW_CONTACT';
         if (!isSpecialAccount)
             strAfflAccountId = listSOAfflAccounts[1].getValue(); // either the first existing or the new account if none.
+
+        // warn user if default record type is the same as the HH Account Record Type
+        Id recTypeId = UTIL_CustomSettingsFacade.getContactsSettings().npe01__HH_Account_RecordTypeID__c;
+        if (recTypeId != null) {
+            sObjectType objType = Account.sObjectType;
+            String recTypeName = UTIL_RecordTypes.getRecordTypeName(objType, recTypeId);
+            if (UTIL_RecordTypes.isRecordTypeDefault(objType, recTypeName)) {
+                apexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Warning,
+                        Label.leadConvertRecordTypeWarning));
+            }
+        }
     }
     
     /*******************************************************************************************************
@@ -338,7 +349,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     	try {
 	        if (strConId == null) {
 	            apexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error,
-	                'You must select an option in the Contact box.'));
+	                label.leadConvertContactSelection));
 	            return null;
 	        }
 

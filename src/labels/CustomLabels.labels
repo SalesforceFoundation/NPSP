@@ -2928,6 +2928,14 @@ If you want to know which Opportunities would have previously included this doub
         <value>Contact Account</value>
     </labels>
     <labels>
+        <fullName>leadConvertContactSelection</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>leadConvertContactSelection</shortDescription>
+        <value>You must select an option in the Contact box.</value>
+    </labels>
+    <labels>
         <fullName>leadConvertCreateAccount</fullName>
         <categories>Lead Converter</categories>
         <language>en_US</language>
@@ -2974,6 +2982,14 @@ If you want to know which Opportunities would have previously included this doub
         <protected>false</protected>
         <shortDescription>leadConvertPageTitle</shortDescription>
         <value>Convert Lead:</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertRecordTypeWarning</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>leadConvertRecordTypeWarning</shortDescription>
+        <value>The default Account Record Type for your Profile is the same Record Type set as the Account Model in NPSP Settings, which could cause various data issues. We recommend changing the Account Record Type default to a different value for all profile(s).</value>
     </labels>
     <labels>
         <fullName>leadConvertSectionTitle</fullName>
