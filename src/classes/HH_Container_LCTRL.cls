@@ -153,7 +153,7 @@ public with sharing class HH_Container_LCTRL {
             else
                 strSoql += ' where npo02__Household__c = :hhId ';
 
-            strSoql += ' order by Primary_Contact__c DESC, npo02__Household_Naming_Order__c ASC NULLS LAST, CreatedDate ';
+            strSoql += ' order by npo02__Household_Naming_Order__c ASC NULLS LAST, Primary_Contact__c DESC, CreatedDate ';
 
             list<Contact> listCon = database.query(strSoql);
             // let's update household naming order so the client doesn't have to worry about nulls.

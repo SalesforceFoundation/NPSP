@@ -417,4 +417,40 @@ public class HH_HouseholdNaming_TEST {
         system.assertEquals('Joe', hh.npo02__Informal_greeting__c);
     }
     
+    /*********************************************************************************************************
+    * @description tests name ordering since we changed to not force primary first
+    */
+    public static testMethod void testNamingOrder2() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamingOrder2') return;
+  
+        Contact con0 = new Contact(FirstName='c0', LastName='smith');
+        insert con0;
+        con0 = [Select Id, FirstName, LastName, AccountId from Contact];
+        system.assertNotEquals(null, con0.AccountId);
+        
+        Contact con1 = new Contact(FirstName='c1', LastName='smith', AccountId=con0.AccountId);
+        Contact con2 = new Contact(FirstName='c2', LastName='smith', AccountId=con0.AccountId);
+        Test.startTest();
+        insert new list<Contact>{con1,con2};
+        Test.stopTest();
+        
+        // primary contact defaults to first in order  
+        Account hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c, npe01__One2OneContact__c, Number_of_Household_Members__c from Account];
+        system.assertEquals(con0.Id, hh.npe01__One2OneContact__c);
+        system.assertEquals(3, hh.Number_of_Household_Members__c);
+        system.assertEquals('smith ' + system.label.npo02.DefaultHouseholdName, hh.Name);
+        system.assertEquals('c0, c1 and c2 smith', hh.npo02__Formal_greeting__c);
+        system.assertEquals('c0, c1 and c2', hh.npo02__Informal_greeting__c);
+  
+        con1.npo02__Household_Naming_Order__c = 0;
+        update con1;
+
+        // naming order overrides primary contact  
+        hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c, npe01__One2OneContact__c from Account];
+        system.assertEquals(con0.Id, hh.npe01__One2OneContact__c);
+        system.assertEquals('smith ' + system.label.npo02.DefaultHouseholdName, hh.Name);
+        system.assertEquals('c1, c0 and c2 smith', hh.npo02__Formal_greeting__c);
+        system.assertEquals('c1, c0 and c2', hh.npo02__Informal_greeting__c);
+  
+    }
 }
