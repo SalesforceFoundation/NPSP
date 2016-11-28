@@ -76,7 +76,7 @@ public without sharing class HH_HouseholdNaming {
         string strSoql = strContactSelectStmtAllNamingFields;
         string strHHId = UTIL_Namespace.StrTokenNSPrefix('HHId__c');
         strSoql += ' WHERE (AccountId != null AND AccountId IN :hhids) OR (npo02__Household__c != null AND npo02__Household__c in :hhids) ' +
-            ' ORDER BY ' + strHHId + ', Primary_Contact__c DESC, npo02__Household_Naming_Order__c ASC NULLS LAST, CreatedDate ';
+            ' ORDER BY ' + strHHId + ', npo02__Household_Naming_Order__c ASC NULLS LAST, Primary_Contact__c DESC, CreatedDate ';
         list<Contact> contactlist = Database.Query(strSoql);
 
         list<SObject> listHHObj = [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c from npo02__Household__c where id IN : hhids];
