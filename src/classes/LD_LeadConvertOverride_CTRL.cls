@@ -522,8 +522,15 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             	if(strOppAccChoice == 'AFF_ACC') {
                 	convertedOpp.AccountId = afflAccId;
             	}
-            
+                String oppName = convertedOpp.Name;
+
             	update convertedOpp;
+
+                // refresh opportunity names after update. if no opportunity names are defined, keeps original name
+                OPP_OpportunityNaming.refreshOppNames(new List<Opportunity>{convertedOpp});
+                // update Opportunity again if refreshed name is different
+                if (convertedOpp.Name != oppName)
+                    update convertedOpp;
             }
             
 	        // redirect

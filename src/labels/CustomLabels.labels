@@ -3894,7 +3894,7 @@ To view these jobs, search for Scheduled Jobs in Salesforce Setup.</value>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpAccountModel</shortDescription>
-        <value>The Account model used by the Nonprofit Success Pack. This option controls what happens when you create a Contact with a blank Account field value.</value>
+        <value>The Account model used by the Nonprofit Success Pack. This option controls what happens when you create a Contact with a blank Account field value. WARNING: The Record Type selected for the Account Model should not be used as the default Account Record Type for any Profile in your org. Using the same record type could cause various data issues.</value>
     </labels>
     <labels>
         <fullName>stgHelpAlloFiscalYearRollups</fullName>
