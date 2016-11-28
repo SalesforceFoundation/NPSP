@@ -123,23 +123,38 @@ public with sharing class EP_EngagementPlans_UTIL {
     * @param engagementPlan The Engagement Plan
     * @return String The name of the lookup field that is populated.
     ********************************************************************************************************/
-    public static String getTargetObjectField(Engagement_Plan__c engagementPlan) {
+    public static String getTargetObjectField(Engagement_Plan__c engagementPlan, Boolean addError) {
         String targetObjectField;
         for (String fieldName : lookupFieldsToRelationship.keySet()) {
             if (engagementPlan.get(fieldName) != null) {
                 if (targetObjectField != null) {
-                    engagementPlan.addError(Label.engagementPlanTwoLookups);
+                    if (addError) {
+                        engagementPlan.addError(Label.engagementPlanTwoLookups);
+                    } else {
+                        //throw exception
+                    }
                 } else {
                     targetObjectField = fieldName;
                 }
             }
         }
         if (targetObjectField == null) {
-            engagementPlan.addError(Label.engagementPlanNoLookups);
+            if (addError) {
+                engagementPlan.addError(Label.engagementPlanNoLookups);
+            } else {
+                //throw exception
+            }
         }
         return targetObjectField;
     }
 
+
+    /*******************************************************************************************************
+    * @description Finds the path to the owner of a record. For non-detail records, uses OwnerId. For detail
+    * records in a master-detail relationship, traverses the parent relationships until it finds an owner.
+    * @param t The SObjectType of the object we want the relationship path for.
+    * @return List<String> A list of each field reference in order to get to the OwnerId.
+    ********************************************************************************************************/
     public static List<String> getOwnerIdPath(SObjectType t) {
         List<String> result = new List<String>();
         DescribeSObjectResult obj = t.getDescribe();
