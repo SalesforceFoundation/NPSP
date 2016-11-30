@@ -231,9 +231,11 @@
 
     </div>
     <script>
+        // In order to respect the conversion status per record type, using the standard apex:input field for Status
+        // and filtering out any options that are not part of the converted status options
         window.onload = function filterStatus() {
-            var lcStatus = '{!lcStatuses}';
-            var ldStatus = document.getElementById('{!$Component.pbEdit.ldStatus}');
+            var lcStatus = '{!lcStatuses}'; // Lead conversion statuses
+            var ldStatus = document.getElementById('{!$Component.pbEdit.ldStatus}'); // All lead statuses
             ldStatus.selectedIndex = -1;
             for (var i=0; i<ldStatus.length; i++){
                 if (lcStatus.indexOf(ldStatus.options[i].value) < 0 ){
