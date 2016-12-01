@@ -822,12 +822,15 @@
     },
 
     /*******************************************************************************************************
-     * @description adds or removes namespace prefix from the object's custom fields
+     * @description adds or removes namespace prefix from the object's custom fields.  for non-namespaced
+     * fields, it will replace __c with __nons on add, and switch it back on subtract.  this way we don't
+     * assume on add, that no namespace means it should get our namespace!
      */
     processPrefixObjectFields: function(namespacePrefix, object, isAdd) {
         if (namespacePrefix && namespacePrefix.length > 0) {
 
             var obj = {}; //create object
+            var fld2;
 
             // process namespace prefix from each custom field
             for (var fld in object) {
@@ -840,16 +843,24 @@
                 if (isAdd) {
                     // see if custom field has no namespace prefix
                     if (fld.length > 3 && fld.lastIndexOf('__c') === (fld.length - 3) && fld.indexOf('__') === fld.lastIndexOf('__')) {
-                        var fld2 = namespacePrefix + fld;
+                        fld2 = namespacePrefix + fld;
                         obj[fld2] = object[fld];
+                    // see if it's marked with our non-namespaced custom field tag
+                    } else if (fld.lastIndexOf('__nons') === (fld.length - 6)) {
+                        fld2 = fld.replace('__nons', '__c');
+                        obj[fld2] = object[fld];                        
                     } else {
                         obj[fld] = object[fld];
                     }
                 } else {
                     // see if custom field starts with our namespace prefix
                     if (fld.length > 3 && fld.lastIndexOf('__c') === (fld.length - 3) && fld.indexOf(namespacePrefix) === 0) {
-                        var fld3 = fld.replace(namespacePrefix, '');
-                        obj[fld3] = object[fld];
+                        fld2 = fld.replace(namespacePrefix, '');
+                        obj[fld2] = object[fld];
+                    // see if it is a non-namespaced custom field
+                    } else if (fld.length > 3 && fld.lastIndexOf('__c') === (fld.length - 3) && fld.indexOf('__') === fld.lastIndexOf('__')) {
+                        fld2 = fld.replace('__c', '__nons');
+                        obj[fld2] = object[fld];                                            
                     } else {
                         obj[fld] = object[fld];
                     }

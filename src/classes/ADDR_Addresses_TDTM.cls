@@ -718,16 +718,42 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
     }
     
     /*******************************************************************************************************
-    * @description routine the scheduled batch job calls to update households with the specified Seasonal addresses
-    * @param listAddr a list of Addresses to update
+    * @description routine the scheduled batch job calls to update households with Seasonal addresses
+    * @param listAcc a list of Accounts to see if their address needs to be updated
     * @return void
     */ 
-    public static void batchSeasonalUpdate(list<Address__c> listAddr) {
-        if (listAddr == null || listAddr.size() == 0) return;
+    public static void batchSeasonalUpdate(list<Account> listAcc) {
+        if (listAcc == null || listAcc.size() == 0) 
+            return;
         
         map<Id, Address__c> mapAccIdAddr = new map<Id, Address__c>();
-        for (Address__c addr : listAddr) 
-            mapAccIdAddr.put(addr.Household_Account__c, addr);
+        for (Account acc : listAcc) 
+            mapAccIdAddr.put(acc.Id, null);
+        
+        // get the default and seasonal address for each HH
+        map<Id, ADDR_Addresses_TDTM.HHInfo> mapAccIdHHInfo = ADDR_Addresses_TDTM.refreshCurrentHHAddress(mapAccIdAddr, null, true);
+        
+        // now see which accounts actually had their address change, so we only update them.
+        for (Account acc : listAcc) {
+            ADDR_Addresses_TDTM.HHInfo hhinfo = mapAccIdHHInfo.get(acc.Id);
+            if (hhinfo != null) {
+                Address__c addr = hhinfo.addrSeasonal;
+                if (addr == null)
+                    addr = hhinfo.addrDefault;
+                if (addr != null) {
+                    Address__c addrCurrent = new Address__c();
+                    ADDR_Addresses_TDTM.copyAddressStdSObjAddr(acc, 'Billing', addrCurrent, null);
+                    // now see if the address has changed, and if not, we don't need to process it anymore
+                    if (!isAddressChanged(addr, addrCurrent, false)) {
+                        mapAccIdAddr.remove(acc.Id);
+                    }
+                    
+                }
+            }
+        }
+        
+        // now mapAccIdAddr only contains those Accounts (and Contacts) who need updating.
+        // we'll go thru refreshCurrentHHAddress() again, this time allowing it to do the updates    
         
         // must manually set our semaphore, so when we update contacts and households, they don't try to create additional addresses
         hasRunAddrTrigger = true;       
