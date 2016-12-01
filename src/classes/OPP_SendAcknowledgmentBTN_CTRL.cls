@@ -41,9 +41,14 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
     private ApexPages.StandardSetController setCtrl { get; set; }
 
     /*******************************************************************************************************
-    * @description the return URL (ie, the page that called us)
+    * @description the id to return the user to or first 3 for the list
     */
-    public string retURL { get; set; }
+    public String recordId { get; set; }
+
+    /*******************************************************************************************************
+    * @description set to true when user should be returned to previous page via javascript
+    */
+    public Boolean redirect { get; set; }
 
     /*******************************************************************************************************
     * @description the list of Opportunities to be acknowledged
@@ -85,7 +90,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
     * @return void
     */
     public OPP_SendAcknowledgmentBTN_CTRL(ApexPages.StandardSetController controller) {
-        retURL = ApexPages.currentPage().getParameters().get('retURL');
+        recordId = '006';
         setCtrl = controller;
         listOpp = setCtrl.getSelected();
         
@@ -95,15 +100,14 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
             if (oppId != null) {
                 Opportunity opp = [select Id from Opportunity where Id = :oppId];
                 listOpp.add(opp);
-                if (retURL == null)
-                    retURL = '/' + oppId;
-            }            
+                recordId = oppId;
+            }
         }
     }
     
     /*******************************************************************************************************
     * @description Action method called when the user clicks on the Send Acknowledgment button.
-    * @return PageReference to the calling page
+    * @return null to the calling page
     */
     public PageReference SendAcknowledgment() {
         // wanted to give an error if they were going to overflow their email limit,
@@ -164,7 +168,15 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
             return null;
         }
 
-        return new PageReference(retURL);
+        return null;
     }
-    
+
+    /*******************************************************************************************************
+    * @description Action method called to close and return.
+    * @return null to the calling page
+    */
+    public PageReference close() {
+        redirect = true;
+        return null;
+    }
 }

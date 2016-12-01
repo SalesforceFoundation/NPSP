@@ -104,7 +104,7 @@ public class ERR_Handler_TEST {
         if(Schema.SObjectType.User.isFeedEnabled()) {
 	        List<SObject> chatterPosts = Database.query('select Title from FeedItem where ParentId = :chatterGroupId');
 	        System.assertEquals(1, chatterPosts.size());
-	        System.assertEquals('NPSP Error', chatterPosts[0].get('Title'));
+	        System.assertEquals('Salesforce Error', chatterPosts[0].get('Title'));
 	        for(Error__c error : errors) {
 	        	System.assertEquals(true, error.Posted_in_Chatter__c);
 	        }
