@@ -123,27 +123,19 @@ public with sharing class EP_EngagementPlans_UTIL {
     * @param engagementPlan The Engagement Plan
     * @return String The name of the lookup field that is populated.
     ********************************************************************************************************/
-    public static String getTargetObjectField(Engagement_Plan__c engagementPlan, Boolean addError) {
+    public static String getTargetObjectField(Engagement_Plan__c engagementPlan) {
         String targetObjectField;
         for (String fieldName : lookupFieldsToRelationship.keySet()) {
             if (engagementPlan.get(fieldName) != null) {
                 if (targetObjectField != null) {
-                    if (addError) {
-                        engagementPlan.addError(Label.engagementPlanTwoLookups);
-                    } else {
-                        //throw exception
-                    }
+                    engagementPlan.addError(Label.engagementPlanTwoLookups);
                 } else {
                     targetObjectField = fieldName;
                 }
             }
         }
         if (targetObjectField == null) {
-            if (addError) {
-                engagementPlan.addError(Label.engagementPlanNoLookups);
-            } else {
-                //throw exception
-            }
+            engagementPlan.addError(Label.engagementPlanNoLookups);
         }
         return targetObjectField;
     }

@@ -271,7 +271,7 @@ public without sharing class TDTM_DefaultConfig {
         // Engagement Plans
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
               Class__c = 'EP_EngagementPlans_TDTM', Load_Order__c = 0, Object__c = 'Engagement_Plan__c',
-              Trigger_Action__c = 'AfterInsert;AfterUpdate'));
+              Trigger_Action__c = 'BeforeInsert;AfterInsert;BeforeUpdate'));
 
         // Engagement Plan Tasks
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
