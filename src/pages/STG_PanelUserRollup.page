@@ -8,7 +8,7 @@
         </div>
         <c:UTIL_PageMessages />
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-            <apex:commandButton value="{!$Label.stgBtnNewUDR}" action="{!startBuild}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+            <apex:commandButton id="newUDR" value="{!$Label.stgBtnNewUDR}" action="{!startBuild}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
         </div>
         <apex:outputPanel rendered="{!isEditMode}" id="udrpageblock" >
             <div class="slds-section-title--divider" >{!$Label.stgLabelNewUDR}</div>
@@ -66,8 +66,8 @@
             </div>
 
             <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-                <apex:commandButton id="btnCreate" value="{!$Label.stgBtnCreateUDR}" action="{!activeUDR.save}" status="statusLoad" rendered="{!isEditMode}" disabled="{!NOT(activeUDR.isValid)}" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
-                <apex:commandbutton value="{!$Label.stgBtnCancel}" action="{!cancel}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+                <apex:commandButton id="createUDR" id="btnCreate" value="{!$Label.stgBtnCreateUDR}" action="{!activeUDR.save}" status="statusLoad" rendered="{!isEditMode}" disabled="{!NOT(activeUDR.isValid)}" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
+                <apex:commandbutton id="cancelUDR" value="{!$Label.stgBtnCancel}" action="{!cancel}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
             </div>
         </apex:outputPanel>
         <apex:outputPanel rendered="{!AND(NOT(ISNULL(udrlist)), udrlist.size > 0)}">
@@ -85,7 +85,7 @@
                     <apex:repeat var="udr" value="{!udrlist}" >
                         <tr>
                             <td>
-                                <apex:commandLink action="{!udr.deleteMe}" title="{!$Label.stgLinkDelete} {!udr.SourceFieldLabel} - {!udr.Operation}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" />
+                                <apex:commandLink id="deleteUDR" action="{!udr.deleteMe}" title="{!$Label.stgLinkDelete} {!udr.SourceFieldLabel} - {!udr.Operation}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" />
                             </td>
                             <td><div class="slds-form-element__static">{!udr.SourceFieldLabel}</div></td>
                             <td><div class="slds-form-element__static">{!udr.Operation}</div></td>

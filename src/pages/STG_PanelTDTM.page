@@ -10,7 +10,7 @@
             <div class="slds-text-body--small slds-m-around--medium"><apex:outputText value="{!$Label.stgHelpTDTM}" /></div>
             <c:UTIL_PageMessages />
             <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-                <apex:commandButton value="{!$Label.stgBtnNewTH}" action="{!newTh}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+                <apex:commandButton id="newTriggerHandler" value="{!$Label.stgBtnNewTH}" action="{!newTh}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
             </div>
             <apex:outputPanel rendered="{!isEditMode}" id="panelNewAc">
                 <div class="slds-section-title--divider" >{!$Label.stgLabelNewTH}</div>
@@ -71,8 +71,8 @@
                     </div>
                 </div>
                 <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-                    <apex:commandButton value="{!$Label.stgBtnCreateTH}" action="{!createTh}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
-                    <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelTh}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+                    <apex:commandButton id="createTriggerHandler" value="{!$Label.stgBtnCreateTH}" action="{!createTh}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
+                    <apex:commandButton id="cancelTriggerHandler" value="{!$Label.stgBtnCancel}" action="{!cancelTh}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
                 </div>
             </apex:outputPanel>
         </div>
