@@ -1,4 +1,4 @@
-<apex:page standardController="Lead" extensions="LD_LeadConvertOverride_CTRL" title="{!$Label.leadConvertPageTitle} {!Lead.Name}" standardStylesheets="false" docType="html-5.0">
+<apex:page standardController="Lead" extensions="LD_LeadConvertOverride_CTRL" title="{!$Label.leadConvertPageTitle} {!l.Name}" standardStylesheets="false" docType="html-5.0">
 
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/modal.js')}"/>
     <apex:stylesheet value="{!URLFOR($Resource.SLDS, '/0_12_2/assets/styles/salesforce-lightning-design-system-vf.min.css')}"/>
@@ -29,9 +29,6 @@
     <div class="slds">
         <apex:form id="pbEdit" styleClass="slds-form--stacked">
             <div class="hide-when-modal-open">
-                <div>
-                    <apex:pageMessages />
-                </div>
 
                 <div class="slds-page-header slds-m-bottom--medium" role="banner">
                     <div class="slds-grid">
@@ -40,7 +37,7 @@
                                 {!$Label.leadConvertSectionTitle}
                             </h1>
                             <p class="slds-text-heading--label slds-page-header__info">
-                                <apex:outputText value="{!Lead.Name}"/>
+                                <apex:outputText value="{!l.Name}"/>
                             </p>
                         </div>
                         <div class="slds-col slds-no-flex">
@@ -50,6 +47,10 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div>
+                    <c:UTIL_PageMessages />
                 </div>
 
                 <div class="slds-p-horizontal--large">
@@ -178,9 +179,7 @@
                         </label>
                         <div class="slds-form-element__control">
                             <div class="slds-select_container">
-                                <apex:selectList value="{!leadConvStatus}" size="1" styleClass="slds-select">
-                                    <apex:selectOptions value="{!lcStatuses}"/>
-                                </apex:selectList>
+                                <apex:inputField value="{!l.Status}" styleClass="slds-select" id="ldStatus"/>
                             </div>
                         </div>
                     </div>
@@ -231,9 +230,20 @@
         </apex:form>
 
     </div>
-
-    <apex:outputField value="{!lead.company}" rendered="false" />
-    <apex:outputField value="{!lead.name}" rendered="false" />
-    <apex:outputField value="{!lead.Email}" rendered="false" />
-    <apex:outputField value="{!lead.OwnerId}" rendered="false"/>
+    <script>
+        // In order to respect the conversion status per record type, using the standard apex:input field for Status
+        // and filtering out any options that are not part of the converted status options
+        window.onload = function filterStatus() {
+            var lcStatus = '{!lcStatuses}'; // Lead conversion statuses
+            var ldStatus = document.getElementById('{!$Component.pbEdit.ldStatus}'); // All lead statuses
+            ldStatus.selectedIndex = -1;
+            for (var i=0; i<ldStatus.length; i++){
+                if (lcStatus.indexOf(ldStatus.options[i].value) < 0 ){
+                    ldStatus.remove(i);
+                    i-=1;
+                }
+            }
+            ldStatus.selectedIndex = 0;
+        }
+    </script>
 </apex:page>
