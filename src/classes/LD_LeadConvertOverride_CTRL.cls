@@ -85,20 +85,6 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     public boolean doNotCreateOpp { get; set; }
 
     /*******************************************************************************************************
-    * @description Shows the value of the lead status
-    */
-    public string leadConvStatus {
-    	get {
-    		if (leadConvStatus == null || leadConvStatus == '') {
-                if (lcStatuses != null && lcStatuses.size() > 0)
-                    leadConvStatus = lcStatuses[0].getValue();
-    		}
-    		return leadConvStatus;
-    	}
-    	set;
-    }
-
-    /*******************************************************************************************************
     * @description List of possible matching Contacts
     */
     public list<selectOption> conList;
@@ -304,7 +290,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
 
         // get the lead
-        l = [select id, name, firstname, lastname, company, email, title, ownerId, 
+        l = [select id, name, firstname, lastname, company, email, title, ownerId, status,
              		CompanyStreet__c, CompanyCity__c, CompanyState__c, CompanyPostalCode__c, CompanyCountry__c
              from lead
              where id = : controller.getId()];
@@ -325,6 +311,17 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             strConId = 'NEW_CONTACT';
         if (!isSpecialAccount)
             strAfflAccountId = listSOAfflAccounts[1].getValue(); // either the first existing or the new account if none.
+
+        // warn user if default record type is the same as the HH Account Record Type
+        Id recTypeId = UTIL_CustomSettingsFacade.getContactsSettings().npe01__HH_Account_RecordTypeID__c;
+        if (recTypeId != null) {
+            sObjectType objType = Account.sObjectType;
+            String recTypeName = UTIL_RecordTypes.getRecordTypeName(objType, recTypeId);
+            if (UTIL_RecordTypes.isRecordTypeDefault(objType, recTypeName)) {
+                apexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Warning,
+                        Label.leadConvertRecordTypeWarning));
+            }
+        }
     }
     
     /*******************************************************************************************************
@@ -352,7 +349,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     	try {
 	        if (strConId == null) {
 	            apexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error,
-	                'You must select an option in the Contact box.'));
+	                label.leadConvertContactSelection));
 	            return null;
 	        }
 
@@ -361,7 +358,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 	        lc.setLeadId(l.Id);
 	        if (!doNotCreateOpp && Schema.SObjectType.Opportunity.isCreateable()) lc.setOpportunityName(oppName);
 	        lc.setDoNotCreateOpportunity(!Schema.SObjectType.Opportunity.isCreateable() || doNotCreateOpp);
-	        lc.setConvertedStatus(leadConvStatus);
+	        lc.setConvertedStatus(l.Status);
 	        lc.setOwnerId(dummyCon.OwnerId);
 	        lc.setSendNotificationEmail(sendEmailToOwner);
 	        
@@ -536,8 +533,15 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             	if(strOppAccChoice == 'AFF_ACC') {
                 	convertedOpp.AccountId = afflAccId;
             	}
-            
+                String oppName = convertedOpp.Name;
+
             	update convertedOpp;
+
+                // refresh opportunity names after update. if no opportunity names are defined, keeps original name
+                OPP_OpportunityNaming.refreshOppNames(new List<Opportunity>{convertedOpp});
+                // update Opportunity again if refreshed name is different
+                if (convertedOpp.Name != oppName)
+                    update convertedOpp;
             }
             
 	        // redirect
