@@ -1148,12 +1148,14 @@
         <members>leadConvertBtnCancel</members>
         <members>leadConvertBtnConvert</members>
         <members>leadConvertContactAccount</members>
+        <members>leadConvertContactSelection</members>
         <members>leadConvertCreateAccount</members>
         <members>leadConvertCreateNewContact</members>
         <members>leadConvertMergeExistingContact</members>
         <members>leadConvertNewOpp</members>
         <members>leadConvertOwner</members>
         <members>leadConvertPageTitle</members>
+        <members>leadConvertRecordTypeWarning</members>
         <members>leadConvertSectionTitle</members>
         <members>leadConvertSendEmail</members>
         <members>leadConvertStatus</members>

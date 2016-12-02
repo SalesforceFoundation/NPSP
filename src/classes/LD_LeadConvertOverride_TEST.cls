@@ -91,15 +91,19 @@ private class LD_LeadConvertOverride_TEST {
         ext.getConList();
         system.assertEquals(2, ext.conList.size());
         system.assert(ext.lcStatuses.size() > 0);
-        system.assert(ext.leadConvStatus != null && ext.leadConvStatus != '');
         system.assertEquals(1, ext.listSOAccounts.size());
         system.assertEquals(1, ext.listSOAfflAccounts.size());
 
         // this selects the "New" option in the Contact box
         ext.strConId = 'NEW_CONTACT';
         ext.strAccountId = 'AUTO';
+
         Test.startTest();
-        ext.convertLeadNow();
+        for (SelectOption lcStatus : ext.lcStatuses) {
+            ext.l.Status = lcStatus.getValue();
+            if (ext.convertLeadNow() != null)
+                break;
+        }
         Test.stopTest();
 
         Contact[] convertedContacts = [select id, firstname, lastname,Account.npe01__Systemisindividual__c, Account.Name from Contact where lastname = :leadLastName];
@@ -184,7 +188,11 @@ private class LD_LeadConvertOverride_TEST {
         ext.strConId = c.id;
         ext.strAccountId = 'AUTO';
         Test.startTest();
-        ext.convertLeadNow();
+        for (SelectOption lcStatus : ext.lcStatuses) {
+            ext.l.Status = lcStatus.getValue();
+            if (ext.convertLeadNow() != null)
+                break;
+        }
         Test.stopTest();
 
         Contact[] convertedContacts = [select id, firstname, lastname,Account.npe01__Systemisindividual__c from Contact where lastname = :CAO_Constants.CONTACT_LASTNAME_FOR_TESTS];
@@ -252,7 +260,11 @@ private class LD_LeadConvertOverride_TEST {
         ext.strAccountId = 'NEW';
         ext.strAfflAccountID = 'NEW'; 
         Test.startTest();
-        ext.convertLeadNow();
+        for (SelectOption lcStatus : ext.lcStatuses) {
+            ext.l.Status = lcStatus.getValue();
+            if (ext.convertLeadNow() != null)
+                break;
+        }
         Test.stopTest();
 
         Contact[] convertedContacts = [select id, firstname, lastname, Account.npe01__Systemisindividual__c, Account.Name from Contact where lastname = :CAO_Constants.CONTACT_LASTNAME_FOR_TESTS];
@@ -325,7 +337,11 @@ private class LD_LeadConvertOverride_TEST {
         ext.strConId = 'NEW_CONTACT';
         ext.strAccountId = acc.Id;
         Test.startTest();
-        ext.convertLeadNow();
+        for (SelectOption lcStatus : ext.lcStatuses) {
+            ext.l.Status = lcStatus.getValue();
+            if (ext.convertLeadNow() != null)
+                break;
+        }
         Test.stopTest();
 
         Contact[] convertedContacts = [select id, firstname, lastname, Account.npe01__Systemisindividual__c, Account.Name from Contact where lastname = :CAO_Constants.CONTACT_LASTNAME_FOR_TESTS];
@@ -400,7 +416,11 @@ private class LD_LeadConvertOverride_TEST {
         ext.strAccountId = 'AUTO';
         ext.strAfflAccountId = acc.Id;
         Test.startTest();
-        ext.convertLeadNow();
+        for (SelectOption lcStatus : ext.lcStatuses) {
+            ext.l.Status = lcStatus.getValue();
+            if (ext.convertLeadNow() != null)
+                break;
+        }
         Test.stopTest();
 
         Contact[] convertedContacts = [select id, firstname, lastname, Account.npe01__Systemisindividual__c, Account.Name from Contact where lastname = :CAO_Constants.CONTACT_LASTNAME_FOR_TESTS];
@@ -470,7 +490,11 @@ private class LD_LeadConvertOverride_TEST {
         ext.strConId = 'NEW_CONTACT';
         ext.strAccountId = 'AUTO';
         Test.startTest();
-        ext.convertLeadNow();
+        for (SelectOption lcStatus : ext.lcStatuses) {
+            ext.l.Status = lcStatus.getValue();
+            if (ext.convertLeadNow() != null)
+                break;
+        }
         Test.stopTest();
 
         Contact[] convertedContacts = [select id, firstname, lastname, npo02__Household__c, Account.npe01__Systemisindividual__c from Contact where lastname = :CAO_Constants.CONTACT_LASTNAME_FOR_TESTS];
@@ -545,13 +569,23 @@ private class LD_LeadConvertOverride_TEST {
 		lc.setContactId(con.Id);
 		lc.setAccountId(con.AccountId);
 		
-		LeadStatus convertStatus = [SELECT Id, MasterLabel FROM LeadStatus WHERE IsConverted=true LIMIT 1];
-		lc.setConvertedStatus(convertStatus.MasterLabel);
+		List<LeadStatus> convertStatus = [SELECT Id, MasterLabel FROM LeadStatus WHERE IsConverted=true];
 		
 		Test.startTest();
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         system.debug('****ACTION: calling convertLead!');
-		Database.LeadConvertResult lcr = Database.convertLead(lc);
+        Database.LeadConvertResult lcr;
+        Boolean brkLoop;
+        for (LeadStatus cs : convertStatus) {
+            brkLoop = true;
+            lc.setConvertedStatus(cs.MasterLabel);
+            try {
+                lcr = Database.convertLead(lc);
+            } catch(Exception ex) {
+                  brkLoop = false;
+            }
+            if (brkLoop) break;
+        }
 		Test.stopTest();
 		System.assert(lcr.isSuccess());
         
@@ -617,7 +651,6 @@ private class LD_LeadConvertOverride_TEST {
         ext.getConList();
         system.assertEquals(2, ext.conList.size());
         system.assert(ext.lcStatuses.size() > 0);
-        system.assert(ext.leadConvStatus != null && ext.leadConvStatus != '');
         system.assertEquals(1, ext.listSOAccounts.size());
         system.assertEquals(1, ext.listSOAfflAccounts.size());
 
@@ -625,7 +658,11 @@ private class LD_LeadConvertOverride_TEST {
         ext.strConId = 'NEW_CONTACT';
         ext.strAccountId = 'AUTO';
         Test.startTest();
-        ext.convertLeadNow();
+        for (SelectOption lcStatus : ext.lcStatuses) {
+            ext.l.Status = lcStatus.getValue();
+            if (ext.convertLeadNow() != null)
+                break;
+        }
         Test.stopTest();
 
         Contact[] convertedContacts = [select id, firstname, lastname,Account.npe01__Systemisindividual__c, Account.Name,
@@ -708,7 +745,6 @@ private class LD_LeadConvertOverride_TEST {
         ext.getConList();
         system.assertEquals(2, ext.conList.size());
         system.assert(ext.lcStatuses.size() > 0);
-        system.assert(ext.leadConvStatus != null && ext.leadConvStatus != '');
         system.assertEquals(1, ext.listSOAccounts.size());
         system.assertEquals(1, ext.listSOAfflAccounts.size());
 
@@ -718,7 +754,11 @@ private class LD_LeadConvertOverride_TEST {
         ext.OppName = 'Test Opp';
         ext.doNotCreateOpp = false;
         Test.startTest();
-        ext.convertLeadNow();
+        for (SelectOption lcStatus : ext.lcStatuses) {
+            ext.l.Status = lcStatus.getValue();
+            if (ext.convertLeadNow() != null)
+                break;
+        }
         Test.stopTest();
 
         Contact[] convertedContacts = [select id, firstname, lastname,Account.npe01__Systemisindividual__c, Account.Name from Contact where lastname = :leadLastName];
@@ -810,7 +850,6 @@ private class LD_LeadConvertOverride_TEST {
         ext.getConList();
         system.assertEquals(3, ext.conList.size());
         system.assert(ext.lcStatuses.size() > 0);
-        system.assert(ext.leadConvStatus != null && ext.leadConvStatus != '');
         system.assertEquals(1, ext.listSOAccounts.size());
         system.assertEquals(1, ext.listSOAfflAccounts.size());
 
@@ -820,7 +859,11 @@ private class LD_LeadConvertOverride_TEST {
         ext.OppName = 'Test Opp';
         ext.doNotCreateOpp = false;
         Test.startTest();
-        ext.convertLeadNow();
+        for (SelectOption lcStatus : ext.lcStatuses) {
+            ext.l.Status = lcStatus.getValue();
+            if (ext.convertLeadNow() != null)
+                break;
+        }
         Test.stopTest();
 
         Contact[] convertedContacts = [select id, firstname, lastname,Account.npe01__Systemisindividual__c, Account.Name from Contact where lastname = :leadLastName];
@@ -916,7 +959,11 @@ private class LD_LeadConvertOverride_TEST {
         ext.strAfflAccountId = 'NEW';
         ext.doNotCreateOpp = false;
         Test.startTest();
-        ext.convertLeadNow();
+        for (SelectOption lcStatus : ext.lcStatuses) {
+            ext.l.Status = lcStatus.getValue();
+            if (ext.convertLeadNow() != null)
+                break;
+        }
         Test.stopTest();
 
         Contact[] convertedContacts = [select id, firstname, lastname,Account.npe01__Systemisindividual__c, Account.Name, Primary_Affiliation__c, Primary_Affiliation__r.BillingStreet from Contact where lastname = :leadLastName];
@@ -983,7 +1030,11 @@ private class LD_LeadConvertOverride_TEST {
         ext.strAccountId = 'NEW';
         ext.doNotCreateOpp = true;
         Test.startTest();
-        ext.convertLeadNow();
+        for (SelectOption lcStatus : ext.lcStatuses) {
+            ext.l.Status = lcStatus.getValue();
+            if (ext.convertLeadNow() != null)
+                break;
+        }
         Test.stopTest();
         
         Account result = [SELECT Id,Name,BillingStreet FROM Account LIMIT 1][0];
