@@ -51,11 +51,11 @@ public with sharing class EP_EngagementPlans_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         
-        //validate and adderror for poorly constructed 
+        //validate and adderror for poorly constructed engagement plans
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
             for (Integer i = 0; i < newlist.size(); i++) {
                 Engagement_Plan__c newEP = (Engagement_Plan__c) newlist[i];
-                Id newEpTarget = (Id) newEP.get(EP_EngagementPlans_UTIL.getTargetObjectField(newEP));
+                String targetField = EP_EngagementPlans_UTIL.getTargetObjectField(newEP);
             }
         }
 

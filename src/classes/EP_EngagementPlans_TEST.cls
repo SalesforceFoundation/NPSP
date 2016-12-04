@@ -306,7 +306,8 @@ private with sharing class EP_EngagementPlans_TEST {
         Test.stopTest();
 
         System.assertNotEquals(null, caughtException, 'An exception should be caught.');
-        System.assert(caughtException.getMessage().contains(Label.engagementPlanNoLookups));
+        System.assert(caughtException.getMessage().contains(Label.engagementPlanNoLookups), 
+            'The exception should have the correct message. Actual message: ' + caughtException.getMessage());
     }
 
     /*********************************************************************************************************
