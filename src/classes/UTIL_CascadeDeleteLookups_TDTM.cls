@@ -72,7 +72,6 @@ public with sharing class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
 
         if (cascades.containsKey(objResult.getSObjectType())) {
             for (String childLookup : cascades.get(objResult.getSObjectType())) {
-                system.debug('njjc ' + childLookup + ' ' + triggerAction);
                 try {
                     cascadeDelete(newlist, oldlist, childLookup, triggerAction);
                 } catch (Exception ex) {
@@ -106,12 +105,10 @@ public with sharing class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
         if (triggerAction == TDTM_Runnable.Action.BeforeDelete) {
             //cache related records before delete
             forDelete.addAll(Database.query(childQuery));
-            system.debug('njjc Added to forDelete: ' + forDelete);
         
         } else if (triggerAction == TDTM_Runnable.Action.AfterDelete && !forDelete.isEmpty()) {
             //do the delete in the parent record's afterdelete trigger, which allows cascading of deletes
             List<Database.DeleteResult> delResults = Database.delete(forDelete, false);
-            system.debug('njjc Deleted! ' + delResults);
             //allow partial success, process errors
             ERR_Handler.Errors errorResult = ERR_Handler.getErrors(delResults, forDelete);
             if (errorResult.errorsExist) {
@@ -124,7 +121,6 @@ public with sharing class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
             List<SObject> forUndelete = Database.query(childQuery + ' AND IsDeleted = true ALL ROWS');
             //undelete child records on parent undelete, allow partial success
             List<Database.UndeleteResult> undelResults = Database.undelete(forUndelete, false);
-            system.debug('njjc unDeleted! ' + undelResults);
             //process potential errors
             ERR_Handler.Errors errorResult = ERR_Handler.getErrors(undelResults, forUndelete);
             if (errorResult.errorsExist) {
