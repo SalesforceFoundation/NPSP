@@ -292,6 +292,27 @@ public without sharing class TDTM_DefaultConfig {
               Class__c = 'LVL_Level_TDTM', Load_Order__c = 1, Object__c = 'Level__c',
               Trigger_Action__c = 'BeforeInsert;BeforeUpdate'));
 
+        // cascade delete via lookup fields
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+              Class__c = 'UTIL_CascadeDeleteLookups_TDTM', Load_Order__c = 1, Object__c = 'Contact',
+              Trigger_Action__c = 'BeforeDelete;AfterDelete;AfterUndelete'));
+
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+              Class__c = 'UTIL_CascadeDeleteLookups_TDTM', Load_Order__c = 1, Object__c = 'Account',
+              Trigger_Action__c = 'BeforeDelete;AfterDelete;AfterUndelete'));
+
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+              Class__c = 'UTIL_CascadeDeleteLookups_TDTM', Load_Order__c = 1, Object__c = 'Campaign',
+              Trigger_Action__c = 'BeforeDelete;AfterDelete;AfterUndelete'));
+
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+              Class__c = 'UTIL_CascadeDeleteLookups_TDTM', Load_Order__c = 1, Object__c = 'Opportunity',
+              Trigger_Action__c = 'BeforeDelete;AfterDelete;AfterUndelete'));
+
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+              Class__c = 'UTIL_CascadeDeleteLookups_TDTM', Load_Order__c = 1, Object__c = 'npe03__Recurring_Donation__c',
+              Trigger_Action__c = 'BeforeDelete;AfterDelete;AfterUndelete'));
+
         return handlers;
     }
 
