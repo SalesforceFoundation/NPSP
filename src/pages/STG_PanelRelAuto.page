@@ -8,7 +8,7 @@
         </div>
         <c:UTIL_PageMessages />
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-            <apex:commandButton value="{!$Label.stgBtnNewAutoRel}" action="{!newRelAutoCreate}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+            <apex:commandButton id="newAutoRel" value="{!$Label.stgBtnNewAutoRel}" action="{!newRelAutoCreate}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
         </div>
         <apex:outputPanel rendered="{!isEditMode}" id="panelNewAc">
             <div class="slds-section-title--divider" >{!$Label.stgLabelNewAutoRel}</div>
@@ -60,8 +60,8 @@
                 </apex:outputPanel>
             </div>
             <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-                <apex:commandButton value="{!$Label.stgBtnCreateAutoRel}" action="{!createRelAutoCreate}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
-                <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelRelAutoCreate}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+                <apex:commandButton id="createAutoRel" value="{!$Label.stgBtnCreateAutoRel}" action="{!createRelAutoCreate}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
+                <apex:commandButton id="cancelAutoRel" value="{!$Label.stgBtnCancel}" action="{!cancelRelAutoCreate}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
             </div>
         </apex:outputPanel>
         <apex:outputPanel rendered="{!listRelAutoCreate.size > 0}">
@@ -79,7 +79,7 @@
                     <apex:repeat var="ac" value="{!listRelAutoCreate}" >
                         <tr>
                             <td>
-                                <apex:commandLink action="{!deleteAc}" title="{!$Label.stgLinkDelete} {!ac.npe4__Object__c} - {!ac.npe4__Field__c}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
+                                <apex:commandLink id="deleteAutoRel" action="{!deleteAc}" title="{!$Label.stgLinkDelete} {!ac.npe4__Object__c} - {!ac.npe4__Field__c}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
                                     <apex:param assignTo="{!acIdDelete}" name="idDeleteAc" value="{!ac.Id}" />
                                 </apex:commandLink>
                             </td>

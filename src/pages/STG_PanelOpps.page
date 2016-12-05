@@ -4,7 +4,7 @@
         <c:UTIL_PageMessages />
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
             <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="slds-button-group">
-                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+                <apex:commandButton id="editOpps" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
             </apex:outputPanel>
         </div>
         <div class="slds-form--horizontal slds-m-around--large">
@@ -61,8 +61,8 @@
         </div>
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
             <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="slds-button-group">
-                <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
-                <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+                <apex:commandButton id="saveOpps" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
+                <apex:commandButton id="cancelOpps" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
             </apex:outputPanel>
         </div>
     </apex:form>

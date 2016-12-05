@@ -4,7 +4,7 @@
         <p class="slds-text-body--small slds-m-top--x-small">{!$Label.stgHelpPaymentMappings}</p>
         <c:UTIL_PageMessages />
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
-            <apex:commandButton value="{!$Label.stgBtnNewPaymentMap}" status="statusLoad" action="{!newPfm}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+            <apex:commandButton id="newPaymentMapping" value="{!$Label.stgBtnNewPaymentMap}" status="statusLoad" action="{!newPfm}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
         </div>
         <apex:outputPanel rendered="{!isEditMode}" >
             <div class="slds-section-title--divider" >{!$Label.stgLabelNewPaymentMapping}</div>
@@ -35,8 +35,8 @@
                 </div>
             </div>
             <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-                <apex:commandButton value="{!$Label.stgBtnCreateMapping}" status="statusLoad" action="{!savePfm}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
-                <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelPfmEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+                <apex:commandButton id="createPaymentMapping" value="{!$Label.stgBtnCreateMapping}" status="statusLoad" action="{!savePfm}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
+                <apex:commandButton id="cancelPaymentMapping" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelPfmEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
             </div>
         </apex:outputPanel>
         <apex:outputPanel rendered="{!listPMTFieldMapping.size > 0}">
@@ -52,7 +52,7 @@
                     <apex:repeat var="pfm" value="{!listPMTFieldMapping}" >
                         <tr>
                             <td>
-                                <apex:commandLink action="{!deletePfm}" title="{!$Label.stgLinkDelete} {!pfm.npe01__Opportunity_Field__c} - {!pfm.npe01__Payment_Field__c}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
+                                <apex:commandLink id="deletePaymentMapping" action="{!deletePfm}" title="{!$Label.stgLinkDelete} {!pfm.npe01__Opportunity_Field__c} - {!pfm.npe01__Payment_Field__c}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
                                     <apex:param assignTo="{!pfmIdDelete}" name="idDeletePfm" value="{!pfm.Id}" />
                                 </apex:commandLink>
                             </td>

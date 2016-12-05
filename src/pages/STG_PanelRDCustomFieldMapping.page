@@ -8,7 +8,7 @@
         </div>
         <c:UTIL_PageMessages />
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-            <apex:commandButton value="{!$Label.stgBtnNewRDFieldMap}" action="{!newCustomFieldMapping}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+            <apex:commandButton id="newRDFieldMapping" value="{!$Label.stgBtnNewRDFieldMap}" action="{!newCustomFieldMapping}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
         </div>
         <apex:outputPanel rendered="{!isEditMode}">
             <div class="slds-section-title--divider" >{!$Label.stgLabelNewRDFieldMap}</div>
@@ -32,8 +32,8 @@
                 </div>
             </div>
             <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-                <apex:commandButton value="{!$Label.stgBtnRDCreateNewMap}" action="{!createCustomFieldMapping}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
-                <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelCustomFieldMapping}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+                <apex:commandButton id="createRDFieldMapping" value="{!$Label.stgBtnRDCreateNewMap}" action="{!createCustomFieldMapping}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
+                <apex:commandButton id="cancelRDFieldMapping" value="{!$Label.stgBtnCancel}" action="{!cancelCustomFieldMapping}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
             </div>
         </apex:outputPanel>
         <apex:outputPanel rendered="{!AND(NOT(ISNULL(listRDCustomFieldMapping)), listRDCustomFieldMapping.size > 0)}">
@@ -49,7 +49,7 @@
                     <apex:repeat var="fm" value="{!listRDCustomFieldMapping}" >
                         <tr>
                             <td>
-                                <apex:commandLink action="{!deleteFm}" title="{!$Label.stgLinkDelete} {!fm.npe03__Recurring_Donation_Field__c} - {!fm.npe03__Opportunity_Field__c}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
+                                <apex:commandLink id="deleteRDFieldMapping" action="{!deleteFm}" title="{!$Label.stgLinkDelete} {!fm.npe03__Recurring_Donation_Field__c} - {!fm.npe03__Opportunity_Field__c}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
                                     <apex:param assignTo="{!fmIdDelete}" name="idDeleteFm" value="{!fm.Id}" />
                                 </apex:commandLink>
                             </td>
