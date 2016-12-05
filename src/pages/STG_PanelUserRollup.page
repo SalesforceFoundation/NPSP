@@ -66,7 +66,7 @@
             </div>
 
             <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-                <apex:commandButton id="createUDR" id="btnCreate" value="{!$Label.stgBtnCreateUDR}" action="{!activeUDR.save}" status="statusLoad" rendered="{!isEditMode}" disabled="{!NOT(activeUDR.isValid)}" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
+                <apex:commandButton id="btnCreate" value="{!$Label.stgBtnCreateUDR}" action="{!activeUDR.save}" status="statusLoad" rendered="{!isEditMode}" disabled="{!NOT(activeUDR.isValid)}" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
                 <apex:commandbutton id="cancelUDR" value="{!$Label.stgBtnCancel}" action="{!cancel}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
             </div>
         </apex:outputPanel>
