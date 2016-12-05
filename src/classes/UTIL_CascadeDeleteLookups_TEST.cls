@@ -40,7 +40,6 @@ private class UTIL_CascadeDeleteLookups_TEST {
     * @description Deletes contact, which deletes recurring dontation, which deletes allocation. Verifies 
     * results. Then undeletes contact, which undeletes recurring donation, which undeletes allocation. Verifies
     * results.
-    * 
     */
     static testMethod void testCascade(){
         Contact con = new Contact(LastName='foo');
@@ -79,5 +78,41 @@ private class UTIL_CascadeDeleteLookups_TEST {
 
         List<Allocation__c> undeletedAllo = [SELECT Id FROM Allocation__c WHERE Id=:alloForInsert.Id AND IsDeleted=false ALL ROWS];
         System.assertEquals(1, undeletedAllo.size(), 'Allocation should be cascade undeleted.');
+    }
+
+    /*********************************************************************************************************
+    * @description Deletes contact, which deletes recurring dontation, which deletes allocation. Verifies 
+    * results. Then undeletes contact, which undeletes recurring donation, which undeletes allocation. Verifies
+    * results.
+    */
+    static testMethod void testCascadeGrandchild(){
+        Contact con = new Contact(LastName='foo');
+        insert con;
+
+        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
+            Name = 'test',
+            npe03__Installments__c = 2,
+            npe03__Amount__c = 1,
+            npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodYearly,
+            npe03__Date_Established__c = date.newinstance(1970,6,12),
+            npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue,
+            npe03__Contact__c = con.id
+        );
+        insert rd;
+
+        //select auto created hh account
+        Account acc = [SELECT Id FROM Account WHERE Id IN (SELECT AccountId FROM Contact WHERE Id=:con.id)];
+
+        Test.startTest();
+        delete acc;
+        Test.stopTest();
+
+        List<npe03__Recurring_Donation__c> deletedRd = [SELECT Id FROM npe03__Recurring_Donation__c WHERE Id=:rd.Id AND IsDeleted=true ALL ROWS];
+        System.assertEquals(1, deletedRd.size(), 'Recurring Donation should be cascade deleted when Contact is deleted.');
+
+        undelete acc;
+
+        List<npe03__Recurring_Donation__c> undeletedRd = [SELECT Id FROM npe03__Recurring_Donation__c WHERE Id=:rd.Id AND IsDeleted=false ALL ROWS];
+        System.assertEquals(1, undeletedRd.size(), 'Recurring Donation should be cascade undeleted when Contact is undeleted.');
     }
 }

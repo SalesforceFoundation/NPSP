@@ -37,6 +37,9 @@
  * their parent in the recycle bin.
  * To enable cascade delete for a new relationship, add it to the "cascades" map. When adding a new object type, also
  * add a corresponding trigger handler.
+ * NOTE: Since standard cascade deletes don't run triggers on deleted children, records in the "cascades" map can also
+ * be created for children further down the chain, e.g. grandchildren, great-grandchildren, etc. The relationship to 
+ * the deleted parent object can be provided to allow cascade functionality for those parent objects.
  */
 public with sharing class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
 
@@ -50,11 +53,13 @@ public with sharing class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
     * list
     */
     private final Map<SObjectType, List<String>> cascades = new Map<SObjectType, List<String>>{
-        Contact.SObjectType                      =>  new List<String>{'npe03__Recurring_Donation__c.npe03__Contact__c'},
-        Account.SObjectType                      =>  new List<String>{'npe03__Recurring_Donation__c.npe03__Organization__c'},
-        Opportunity.SObjectType                  =>  new List<String>{'Allocation__c.Opportunity__c'},
-        Campaign.SObjectType                     =>  new List<String>{'Allocation__c.Campaign__c'},
-        npe03__Recurring_Donation__c.SObjectType =>  new List<String>{'Allocation__c.Recurring_Donation__c'}
+        Contact.SObjectType                      =>  new List<String>{'npe03__Recurring_Donation__c|npe03__Contact__c'},
+        Account.SObjectType                      =>  new List<String>{'npe03__Recurring_Donation__c|npe03__Organization__c',
+                                                                      'npe03__Recurring_Donation__c|npe03__Contact__r.AccountId',
+                                                                      'Allocation__c|Opportunity__r.AccountId'},
+        Opportunity.SObjectType                  =>  new List<String>{'Allocation__c|Opportunity__c'},
+        Campaign.SObjectType                     =>  new List<String>{'Allocation__c|Campaign__c'},
+        npe03__Recurring_Donation__c.SObjectType =>  new List<String>{'Allocation__c|Recurring_Donation__c'}
     };
 
     /*******************************************************************************************************
@@ -96,8 +101,8 @@ public with sharing class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
     private void cascadeDelete(List<SObject> newlist, List<SObject> oldlist, 
         String childLookup, TDTM_Runnable.Action triggerAction) {
 
-        String childObjectName = childLookup.split('\\.')[0];
-        String lookupFieldName = childLookup.split('\\.')[1];
+        String childObjectName = childLookup.split('\\|')[0];
+        String lookupFieldName = childLookup.split('\\|')[1];
         List<SObject> deletedParents = (triggerAction == TDTM_Runnable.Action.AfterUndelete) ? newlist : oldlist;
 
         String childQuery = 'SELECT ID FROM ' + childObjectName + ' WHERE ' + lookupFieldName + ' IN :deletedParents';
