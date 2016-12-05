@@ -82,7 +82,7 @@
                             <div class="slds-select_container">
                                 <apex:selectList value="{!strConId}" size="1" id="conlist" styleClass="slds-select">
                                     <apex:selectOptions value="{!conList}"/>
-                                    <apex:actionSupport rerender="pbEdit" event="onchange"/>
+                                    <apex:actionSupport rerender="pbEdit" event="onchange" oncomplete="javascript:filterStatus();"/>
                                 </apex:selectList>
                             </div>
                             <div>
@@ -233,17 +233,25 @@
     <script>
         // In order to respect the conversion status per record type, using the standard apex:input field for Status
         // and filtering out any options that are not part of the converted status options
-        window.onload = function filterStatus() {
+        function filterStatus() {
             var lcStatus = '{!lcStatuses}'; // Lead conversion statuses
             var ldStatus = document.getElementById('{!$Component.pbEdit.ldStatus}'); // All lead statuses
-            ldStatus.selectedIndex = -1;
+            var selected = ldStatus.value;
             for (var i=0; i<ldStatus.length; i++){
                 if (lcStatus.indexOf(ldStatus.options[i].value) < 0 ){
                     ldStatus.remove(i);
                     i-=1;
                 }
             }
-            ldStatus.selectedIndex = 0;
+            if (lcStatus.indexOf(selected) < 0)
+                ldStatus.selectedIndex = 0;
+        }
+        var previousOnload = window.onload;
+        window.onload = function() {
+            if (previousOnload) {
+                previousOnload();
+            }
+            filterStatus();
         }
     </script>
 </apex:page>

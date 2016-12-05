@@ -7,7 +7,7 @@
         <c:UTIL_PageMessages />
         <apex:outputPanel rendered="{!isReadOnlyMode}">
             <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
-                <apex:commandButton value="{!$Label.stgBtnRunBatch}" status="statusLoad" action="{!runBatch}" disabled="{!isRunningBatch}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+                <apex:commandButton id="runRDBatch" value="{!$Label.stgBtnRunBatch}" status="statusLoad" action="{!runBatch}" disabled="{!isRunningBatch}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
             </div>
         </apex:outputPanel>
         <apex:outputPanel rendered="{!isRunningBatch}">

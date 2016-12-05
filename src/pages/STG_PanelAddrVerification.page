@@ -53,7 +53,7 @@
         <c:UTIL_PageMessages />
     
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-            <apex:commandButton id="EditNotif" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" oncomplete="hideUnusedElements()"/>
+            <apex:commandButton id="editAddr" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" oncomplete="hideUnusedElements()"/>
         </div>
 
         <apex:outputPanel id="fields">
@@ -186,10 +186,10 @@
         </apex:outputPanel>
         -->
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-            <apex:commandButton id="saveNotif" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}"
+            <apex:commandButton id="saveAddr" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}"
                         immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand"
                         oncomplete="hideUnusedElements()"/>
-            <apex:commandButton id="cancelNotif" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}"
+            <apex:commandButton id="cancelAddr" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}"
                         immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral"
                         oncomplete="hideUnusedElements()"/>
         </div>

@@ -51,6 +51,32 @@ public with sharing class EP_EngagementPlans_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         
+        //validate and adderror for poorly constructed engagement plans
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
+            for (Integer i = 0; i < newlist.size(); i++) {
+                Engagement_Plan__c newEP = (Engagement_Plan__c) newlist[i];
+                String targetField = EP_EngagementPlans_UTIL.getTargetObjectField(newEP, true);
+            }
+        }
+
+        //validate that the user doesn't add two lookups, or modify an existing lookup to a new value
+        if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            for (Integer i = 0; i < newlist.size(); i++) {
+                Engagement_Plan__c newEP = (Engagement_Plan__c) newlist[i];
+                Engagement_Plan__c oldEP = (Engagement_Plan__c) oldlist[i];
+                String newTargetField = EP_EngagementPlans_UTIL.getTargetObjectField(newEP, true);
+                String oldTargetField = EP_EngagementPlans_UTIL.getTargetObjectField(oldEP, false);
+                
+                if (!String.isBlank(newTargetField) && !String.isBlank(oldTargetField)) {
+                    Id newEpTarget = (Id) newEP.get(newTargetField);
+                    Id oldEpTarget = (Id) oldEP.get(oldTargetField);
+                    if (newEpTarget != oldEpTarget) {
+                        newEP.addError(Label.engagementPlanCantEdit);
+                    }
+                }
+            }
+        }
+
         if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
             List<Task> taskInsertEmail = new List<Task>();
             List<Task> taskInsertNoEmail = new List<Task>();
@@ -103,18 +129,6 @@ public with sharing class EP_EngagementPlans_TDTM extends TDTM_Runnable {
             }
         }
 
-        //validate that the user doesn't add two lookups, or modify an existing lookup to a new value
-        if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-            for (Integer i = 0; i < newlist.size(); i++) {
-                Engagement_Plan__c newEP = (Engagement_Plan__c) newlist[i];
-                Engagement_Plan__c oldEP = (Engagement_Plan__c) oldlist[i];
-                Id newEpTarget = (Id) newEP.get(EP_EngagementPlans_UTIL.getTargetObjectField(newEP));
-                Id oldEpTarget = (Id) oldEP.get(EP_EngagementPlans_UTIL.getTargetObjectField(oldEP));
-                if (newEpTarget != oldEpTarget) {
-                    newEP.addError(Label.engagementPlanCantEdit);
-                }
-            }
-        }
         return null;
     }
 }
