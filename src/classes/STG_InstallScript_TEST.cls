@@ -141,7 +141,12 @@ public with sharing class STG_InstallScript_TEST {
             System.assertEquals(afterScriptConfig[i].Object__c, defaultConfig[i].Object__c);
             System.assertEquals(afterScriptConfig[i].Active__c, defaultConfig[i].Active__c);
             System.assertEquals(afterScriptConfig[i].Asynchronous__c, defaultConfig[i].Asynchronous__c);
-            System.assertEquals(afterScriptConfig[i].Trigger_Action__c, defaultConfig[i].Trigger_Action__c);
+            //split and sort trigger actions so the test doesn't fail for different orders
+            List<String> afterTriggerAction = afterScriptConfig[i].Trigger_Action__c.split(';');
+            List<String> defaultTriggerAction = defaultConfig[i].Trigger_Action__c.split(';');
+            afterTriggerAction.sort();
+            defaultTriggerAction.sort();
+            System.assertEquals(afterTriggerAction, defaultTriggerAction);
         }
     }
     

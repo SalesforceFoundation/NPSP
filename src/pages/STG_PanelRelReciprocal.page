@@ -8,7 +8,7 @@
         </div>
         <c:UTIL_PageMessages />
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-            <apex:commandButton value="{!$Label.stgBtnNewRelReciprocal}" action="{!newRelLookup}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+            <apex:commandButton id="newRelReciprocal" value="{!$Label.stgBtnNewRelReciprocal}" action="{!newRelLookup}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
         </div>
         <apex:outputPanel rendered="{!isEditMode}">
             <div class="slds-section-title--divider" >{!$Label.stgLabelNewRelReciprocal}</div>
@@ -50,8 +50,8 @@
                     </div>
                 </div>
                 <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-                    <apex:commandButton value="{!$Label.stgBtnCreateRelReciprocal}" action="{!createRelLookup}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
-                    <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelRelLookup}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+                    <apex:commandButton id="createRelReciprocal" value="{!$Label.stgBtnCreateRelReciprocal}" action="{!createRelLookup}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
+                    <apex:commandButton id="cancelRelReciprocal" value="{!$Label.stgBtnCancel}" action="{!cancelRelLookup}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
                 </div>
             </div>
         </apex:outputPanel>
@@ -69,7 +69,7 @@
                 <apex:repeat var="rl" value="{!listRelLookup}" >
                     <tr>
                         <td>
-                            <apex:commandLink action="{!deleteRl}" title="{!$Label.stgLinkDelete} {!rl.Name}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
+                            <apex:commandLink id="deleteRelReciprocal" action="{!deleteRl}" title="{!$Label.stgLinkDelete} {!rl.Name}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
                                 <apex:param assignTo="{!rlIdDelete}" name="idDeleteRl" value="{!rl.Id}" />
                             </apex:commandLink>
                         </td>

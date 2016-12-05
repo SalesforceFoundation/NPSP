@@ -50,7 +50,7 @@
         </div>
         <c:UTIL_PageMessages />
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-            <apex:commandButton value="{!$Label.stgBtnNewONS}" action="{!newONS}" oncomplete="window.initOppEditMode();" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn slds-button slds-button--small slds-button--neutral" />
+            <apex:commandButton id="newONS" value="{!$Label.stgBtnNewONS}" action="{!newONS}" oncomplete="window.initOppEditMode();" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn slds-button slds-button--small slds-button--neutral" />
         </div>
         <!-- Settings List View -->
         <apex:outputPanel rendered="{!isReadOnlyMode && listOppNameSettings.size>0}">
@@ -78,11 +78,11 @@
                     <apex:repeat var="ons" value="{!listOppNameSettings}" >
                         <tr class="slds-text-body--small">
                             <td class="slds-cell-wrap">
-                                <apex:commandLink action="{!editONS}" title="{!$Label.stgBtnEdit}" oncomplete="window.initOppEditMode();" styleClass="actionLink" status="statusLoad" value="{!$Label.stgBtnEdit}" rerender="form" >
+                                <apex:commandLink id="editONS" action="{!editONS}" title="{!$Label.stgBtnEdit}" oncomplete="window.initOppEditMode();" styleClass="actionLink" status="statusLoad" value="{!$Label.stgBtnEdit}" rerender="form" >
                                     <apex:param assignTo="{!currentONSName}" name="idEdit" value="{!ons.so.Name}" />
                                 </apex:commandLink>
                                 <apex:outputText value=" | "/>
-                                <apex:commandLink action="{!delONS}" title="{!$Label.stgLinkDelete}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
+                                <apex:commandLink id="deleteONS" action="{!delONS}" title="{!$Label.stgLinkDelete}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
                                     <apex:param assignTo="{!currentONSName}" name="idDelete" value="{!ons.so.Name}" />
                                 </apex:commandLink>
                             </td>
@@ -159,8 +159,8 @@
                 </div>
             </div>
             <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-                <apex:commandButton value="{!$Label.stgBtnSave}" action="{!saveONS}" status="statusLoad" rendered="{!isEditMode}" oncomplete="window.initOppEditMode()" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
-                <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelEdit}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn slds-button slds-button--small slds-button--neutral" />
+                <apex:commandButton id="saveONS" value="{!$Label.stgBtnSave}" action="{!saveONS}" status="statusLoad" rendered="{!isEditMode}" oncomplete="window.initOppEditMode()" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
+                <apex:commandButton id="cancelONS" value="{!$Label.stgBtnCancel}" action="{!cancelEdit}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn slds-button slds-button--small slds-button--neutral" />
             </div>
         </apex:outputPanel>
     </apex:form>

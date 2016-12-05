@@ -4,7 +4,7 @@
         <div class="slds-text-body--small slds-m-around--medium"><apex:outputText value="{!$Label.stgHelpBatchAlloRollup}" escape="false" /></div>
         <c:UTIL_PageMessages />
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
-            <apex:commandButton value="{!$Label.stgBtnRunBatch}" status="statusLoad" action="{!runBatch}" disabled="{!isRunningBatch}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+            <apex:commandButton id="runAlloBatch" value="{!$Label.stgBtnRunBatch}" status="statusLoad" action="{!runBatch}" disabled="{!isRunningBatch}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
         </div>
         <apex:outputPanel rendered="{!isRunningBatch}">
             <c:UTIL_JobProgressLightning id="jobProgress"

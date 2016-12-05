@@ -8,7 +8,7 @@
         </div>
         <c:UTIL_PageMessages />
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-            <apex:commandButton value="{!$Label.stgBtnEdit}" rendered="{!isReadOnlyMode}" status="statusLoad" action="{!editSettings}" immediate="true" rerender="form" styleClass="slds-button slds-button--neutral" />
+            <apex:commandButton id="editCon" value="{!$Label.stgBtnEdit}" rendered="{!isReadOnlyMode}" status="statusLoad" action="{!editSettings}" immediate="true" rerender="form" styleClass="slds-button slds-button--neutral" />
         </div>
         <div class="slds-section-title--divider">{!$Label.CONV_Configuration_Options}</div>
         <div class="slds-form--horizontal slds-m-around--large">
@@ -49,8 +49,8 @@
                 </div>
             </div>
             <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-                <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--brand" />
-                <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--neutral" />
+                <apex:commandButton id="saveCon" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--brand" />
+                <apex:commandButton id="cancelCon" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--neutral" />
             </div>
         </div>
     </apex:form>

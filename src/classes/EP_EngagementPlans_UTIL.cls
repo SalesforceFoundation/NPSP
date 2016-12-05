@@ -77,7 +77,7 @@ public with sharing class EP_EngagementPlans_UTIL {
     /** @description Constructor initializes maps.*/
     public EP_EngagementPlans_UTIL(List<Engagement_Plan__c> engagementPlans) {
         for (Engagement_Plan__c engagementPlan : engagementPlans) {
-            targetFieldMap.put(engagementPlan.id, getTargetObjectField(engagementPlan));
+            targetFieldMap.put(engagementPlan.id, getTargetObjectField(engagementPlan, false));
         }
 
         for (Engagement_Plan__c engagementPlan : database.query(getOwnerIdQuery() + ' WHERE Id IN :engagementPlans')) {
@@ -121,25 +121,37 @@ public with sharing class EP_EngagementPlans_UTIL {
     * @description Iterates over each lookup field for an Engagement Plan, verifies that one and only
     * one of these fields is populated, and returns that field name.
     * @param engagementPlan The Engagement Plan
+    * @param addError Whether an error should be added to the current Engagement Plan if it is malformed. 
+    * Should only be true when the engagement plan is in trigger.new of a before insert/update trigger context.
     * @return String The name of the lookup field that is populated.
     ********************************************************************************************************/
-    public static String getTargetObjectField(Engagement_Plan__c engagementPlan) {
+    public static String getTargetObjectField(Engagement_Plan__c engagementPlan, Boolean addError) {
         String targetObjectField;
         for (String fieldName : lookupFieldsToRelationship.keySet()) {
             if (engagementPlan.get(fieldName) != null) {
                 if (targetObjectField != null) {
-                    engagementPlan.addError(Label.engagementPlanTwoLookups);
+                    if (addError) {
+                        engagementPlan.addError(Label.engagementPlanTwoLookups);
+                    }
+                    return null;
                 } else {
                     targetObjectField = fieldName;
                 }
             }
         }
-        if (targetObjectField == null) {
+        if (targetObjectField == null && addError) {
             engagementPlan.addError(Label.engagementPlanNoLookups);
         }
         return targetObjectField;
     }
 
+
+    /*******************************************************************************************************
+    * @description Finds the path to the owner of a record. For non-detail records, uses OwnerId. For detail
+    * records in a master-detail relationship, traverses the parent relationships until it finds an owner.
+    * @param t The SObjectType of the object we want the relationship path for.
+    * @return List<String> A list of each field reference in order to get to the OwnerId.
+    ********************************************************************************************************/
     public static List<String> getOwnerIdPath(SObjectType t) {
         List<String> result = new List<String>();
         DescribeSObjectResult obj = t.getDescribe();
