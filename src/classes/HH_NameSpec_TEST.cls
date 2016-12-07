@@ -688,4 +688,53 @@ private with sharing class HH_NameSpec_TEST {
         hns.Household_Name_Format__c = '{!{!Salutation}} {!FirstName} {!LastName} (boss: {!Account.npe01__One2OneContact__r.ReportsTo.FirstName} {!Account.npe01__One2OneContact__r.ReportsTo.LastName}) Family';
         system.assertEquals('Mr. & Mrs. John Doe (boss: Big Boss) Family', ns.getExampleName(hns, 'Household_Name_Format__c', listCon));
     }
+    
+    /*********************************************************************************************************
+    @description
+    operation:
+        1 contact in household, namespace with multiple cross object references
+    verify:
+        HH Name, Formal Greeting, and Informal Greeting are correct
+    **********************************************************************************************************/            
+    static testMethod void OneContactXReferences() {
+        if (strTestOnly != '*' && strTestOnly != 'OneContactXReferences') return;
+        
+        Account acc = new Account(Name='MyEmployer');
+        insert acc;
+
+        list<Contact> listCon = new list<Contact>();
+        Contact c1 = new Contact (
+            Salutation = 'Skipper',
+            FirstName = 'John',
+            LastName = 'Doe',
+            Primary_Affiliation__c = acc.Id
+        );
+        listCon.add(c1);
+        insert listCon;
+        
+        listCon = [select Id, Firstname, Lastname, Account.npe01__One2OneContact__r.Primary_Affiliation__r.Name from Contact];
+        system.assertEquals(1, listCon.size());
+               
+        HH_NameSpec ns = new HH_NameSpec();
+        Household_Naming_Settings__c hns = UTIL_CustomSettings_API.getHouseholdNamingSettings();
+        
+        // verify we handle multiple cross object references
+        hns.Formal_Greeting_Format__c = '{!Account.npe01__One2OneContact__r.Primary_Affiliation__r.Name}';
+        system.assertEquals('MyEmployer', ns.getExampleName(hns, 'Formal_Greeting_Format__c', listCon));
+        
+        // verify we handle multiple cross object references that encounter null lookups
+        listCon[0].Primary_Affiliation__c = null;
+        update listCon;
+        listCon = [select Id, Firstname, Lastname, Account.npe01__One2OneContact__r.Primary_Affiliation__r.Name from Contact];
+        system.assertEquals('', ns.getExampleName(hns, 'Formal_Greeting_Format__c', listCon));
+        
+        // now create bogus cross object reference to make sure we get an exception.
+        try {
+            hns.Formal_Greeting_Format__c = '{!Account.npe01__One2OneContact__r.Primary_Affiliation__c.Name}';
+            ns.getExampleName(hns, 'Formal_Greeting_Format__c', listCon);
+            system.assert(false);
+        } catch (exception ex) {
+            system.assert(ex.getMessage().contains('Invalid relationship Primary_Affiliation__c for Contact'));
+        }
+    }
 }

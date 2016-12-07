@@ -314,8 +314,8 @@ public with sharing class HH_NameSpec implements HH_INaming {
             }
 
             //traverse parent relationships until the last one
-            if (thisObj != null) {
-                for (string parentObj : splitField) {
+            for (string parentObj : splitField) {
+                if (thisObj != null) {
                     thisObj = thisObj.getsObject(parentObj);
                 }
             }
