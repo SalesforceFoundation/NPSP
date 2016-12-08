@@ -31,6 +31,5 @@ flows:
             - task: update_dependencies
             - task: deploy_pre
             - task: deploy
-            - task: uninstall_packaged_incremental
             - task: deploy_post
             - task: run_tests
