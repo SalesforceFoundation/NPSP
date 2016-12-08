@@ -1,8 +1,7 @@
-# If you need to handle concurrency greater than 1, uncomment the following and deploy an instance of https://github.com/SalesforceFoundation/circleci-github-trigger to trigger your builds
-#general:
-#  branches:
-#    ignore:
-#      - /feature\/.*/
+general:
+  branches:
+    only:
+      - /feature\/.*/
 machine:
   python:
     version: 2.7.12
@@ -25,5 +24,5 @@ test:
   post:
     - 'mkdir -p $CIRCLE_TEST_REPORTS/junit/'
     - 'cp test_results.xml $CIRCLE_TEST_REPORTS/junit/'
-    - 'if [[ $CIRCLE_BRANCH != "master" ]]; then cp test_results.json $CIRCLE_ARTIFACTS; fi'
+    #- 'if [[ $CIRCLE_BRANCH != "master" ]]; then cp test_results.json $CIRCLE_ARTIFACTS; fi'
     #- 'if [[ $CIRCLE_BRANCH != "master" ]]; then cumulusci2 task run apextestsdb_upload; fi'
