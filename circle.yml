@@ -1,8 +1,7 @@
-# If you need to handle concurrency greater than 1, uncomment the following and deploy an instance of https://github.com/SalesforceFoundation/circleci-github-trigger to trigger your builds
-#general:
-#  branches:
-#    ignore:
-#      - /feature\/.*/
+general:
+  branches:
+    only:
+      - /feature\/.*/
 machine:
   python:
     version: 2.7.12

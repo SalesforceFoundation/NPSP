@@ -38,4 +38,5 @@ flows:
             - task: deploy_pre
             - task: deploy
             - task: deploy_post
+            - task: update_admin_profile
             - task: run_tests

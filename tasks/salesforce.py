@@ -30,8 +30,6 @@ class UpdateAdminProfile(BaseUpdateAdminProfile):
         self._set_record_type('Account.Organization', 'true')
         self._set_record_type('Opportunity.NPSP_Default', 'true')
 
-        self.logger.info(open(os.path.join(self.tempdir, 'profiles', 'Admin.profile'), 'r').read())
-
     def _set_record_type(self, name, default):
         rt = rt_visibility_template.format(default, name)
         findReplace(
@@ -39,4 +37,5 @@ class UpdateAdminProfile(BaseUpdateAdminProfile):
             '{}<tabVisibilities>'.format(rt),
             os.path.join(self.tempdir, 'profiles'),
             'Admin.profile',
+            max=1,
         )
