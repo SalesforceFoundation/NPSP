@@ -7,9 +7,9 @@ project:
         install_class: STG_InstallScript
         uninstall_class: STG_UninstallScript
     git:
-        branch: dev
-        beta: uat/
-        release: rel/
+        default_branch: dev
+        prefix_beta: uat/
+        prefix_release: rel/
     dependencies:
         - namespace: npo02
           version: 3.6
@@ -22,6 +22,12 @@ project:
           version: 3.3
         - namespace: npe5
           version: 3.3
+
+tasks:
+    update_admin_profile:
+        class_path: tasks.salesforce.UpdateAdminProfile
+        options:
+            package_xml: lib/admin_profile.xml
 
 flows:
     ci_feature_temp:
