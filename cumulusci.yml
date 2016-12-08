@@ -22,3 +22,14 @@ project:
           version: 3.3
         - namespace: npe5
           version: 3.3
+
+flows:
+    ci_feature_temp:
+        description: Deploys the unmanaged package metadata and all dependencies to the target org and runs tests without collecting debug logs
+        tasks:
+            - task: create_package
+            - task: update_dependencies
+            - task: deploy_pre
+            - task: deploy
+            - task: deploy_post
+            - task: run_tests
