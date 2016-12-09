@@ -77,7 +77,10 @@ public class ACCT_Accounts_TDTM extends TDTM_Runnable {
 	               (acc.npe01__SYSTEM_AccountType__c == null || acc.npe01__SYSTEMISINDIVIDUAL__c != true)) {
 	                acc.npe01__SYSTEM_AccountType__c = CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
 	                acc.npe01__SYSTEMISINDIVIDUAL__c = true; 
-	            }    
+	            } else if (!(CAO_Constants.isBucketModel() && acc.Name == CAO_Constants.BUCKET_ACCOUNT_NAME)) {
+                    acc.npe01__SYSTEMISINDIVIDUAL__c = false;
+                    acc.npe01__SYSTEM_AccountType__c = null;
+                }
 	        }
 	        
 	        if (triggerAction == TDTM_Runnable.Action.BeforeUpdate || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
