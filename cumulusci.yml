@@ -30,13 +30,14 @@ tasks:
             package_xml: lib/admin_profile.xml
 
 flows:
-    ci_feature_temp:
+    ci_feature_cumulus:
         description: Deploys the unmanaged package metadata and all dependencies to the target org and runs tests without collecting debug logs
         tasks:
             - task: create_package
             - task: update_dependencies
             - task: deploy_pre
             - task: deploy
+            - task: util_sleep
             - task: deploy_post
             - task: update_admin_profile
             - task: run_tests
