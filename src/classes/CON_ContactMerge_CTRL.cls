@@ -276,9 +276,11 @@ public with sharing class CON_ContactMerge_CTRL {
             
             // Ignore fields that have an identical API name as an npsp prefixed field
             // This is due to a bug in dynamic SOQL, quich causes querying for two real fields, 
-            // e.g. npsp__foo__c and foo__c, to throw a duplicate field selected error
-            if (fieldName != UTIL_Namespace.StrTokenRemoveNSPrefix(fieldName) && 
-                contactFields.containsKey(UTIL_Namespace.StrTokenRemoveNSPrefix(fieldName))) {
+            // e.g. npsp__foo__c and foo__c, to throw a duplicate field selected error.
+            // Only select the NPSP namespaced field and ignore the same field without namespace
+            if (fieldName.countMatches('__') == 1 && 
+                contactFields.containsKey(UTIL_Namespace.StrTokenNSPrefix(fieldName))) {
+                
                 continue;
             }
 
