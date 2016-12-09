@@ -3080,6 +3080,14 @@ If you want to know which Opportunities would have previously included this doub
         <value>The Minimum Amount to Maximum Amount range on Level {0} overlaps with the Minimum Amount to Maximum Amount range on Level {1}</value>
     </labels>
     <labels>
+        <fullName>lvlErrorNoMinMax</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error if both min and max are empty on a level</shortDescription>
+        <value>The {0} level must have either a Minimum Amount or a Maximum Amount.</value>
+    </labels>
+    <labels>
         <fullName>mtchBtnSearch</fullName>
         <categories>Find Matched Gifts</categories>
         <language>en_US</language>
