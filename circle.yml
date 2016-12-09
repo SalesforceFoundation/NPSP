@@ -6,7 +6,6 @@ machine:
   python:
     version: 2.7.12
   environment:
-    CUMULUSCI_KEY: FIXME
     CUMULUSCI_KEYCHAIN_CLASS: cumulusci.core.keychain.EnvironmentProjectKeychain
 dependencies:
   override:
