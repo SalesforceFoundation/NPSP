@@ -7,9 +7,9 @@ project:
         install_class: STG_InstallScript
         uninstall_class: STG_UninstallScript
     git:
-        branch: dev
-        beta: uat/
-        release: rel/
+        default_branch: dev
+        prefix_beta: uat/
+        prefix_release: rel/
     dependencies:
         - namespace: npo02
           version: 3.6
@@ -23,13 +23,21 @@ project:
         - namespace: npe5
           version: 3.3
 
+tasks:
+    update_admin_profile:
+        class_path: tasks.salesforce.UpdateAdminProfile
+        options:
+            package_xml: lib/admin_profile.xml
+
 flows:
-    ci_feature_temp:
+    ci_feature_cumulus:
         description: Deploys the unmanaged package metadata and all dependencies to the target org and runs tests without collecting debug logs
         tasks:
             - task: create_package
             - task: update_dependencies
             - task: deploy_pre
             - task: deploy
+            - task: util_sleep
             - task: deploy_post
+            - task: update_admin_profile
             - task: run_tests
