@@ -237,7 +237,7 @@ public with sharing class HH_NameSpec implements HH_INaming {
             // get the set of additional fname's for this lname
             list<String> listFname = new list<String>();
             integer j = i + 1;
-            while (j < cCon && j < ns.cMaxUseOverrun && (isNoLastnames || listCon[j].LastName == strLname)) {
+            while (j < cCon && (isNoLastnames || listCon[j].LastName == strLname)) {
                 String strF = strConFspec(listCon[j], ns.strFirstNameSpec);
                 if (strF != '') {
                     listFName.add(strF);
@@ -247,28 +247,39 @@ public with sharing class HH_NameSpec implements HH_INaming {
 
             // now put those additional fname's together
             for (integer k = 0; k < listFName.size(); k++) {
-                if (k == listFName.size() - 1 && (k+i) < ns.cMaxUseOverrun-2) {
+                // if we've hit the limit, then bail out
+                if (i+k+1 == ns.cMaxUseOverrun) {
+                    // we need j to hold maxOverrun
+                    j = ns.cMaxUseOverrun;
+                    break;
+                }
+
+                // we want to use And if this is the last person in this lastname, or the last one we will include
+                if (k == listFName.size()-1 || (!isNoLastnames && (i+k+2) == ns.cMaxUseOverrun)) {
                     strFname += ns.strAnd + listFName[k];
                 } else {
                     strFName += ', ' + listFname[k];
                 }
             }
-
             // create lname part using first contact with that lastname
             string strCon = strConFSpec(listCon[i], ns.strFullNameSpec);
             strCon = strCon.replace('FirstNameSpec', strFname);
+            if (strFname == '')
+                strCon = strCon.trim();
             
             // add it to the whole name
-            if (i > 0 && j < cCon && j < ns.cMaxUseOverrun) {
+            boolean willAddOverrun = (j >= ns.cMaxUseOverrun && cCon > ns.cMaxUseOverrun && ns.strFirstNameSpec != '' && ns.strOverrun != null);
+             
+            // use and for last set as long as we won't be adding overrun too
+            if (i > 0 && j == cCon && !willAddOverrun) {
+                strName += ns.strAnd;                
+            } else if (i > 0) {
                 strName += ', ';
-            } else if (i > 0 && (j == cCon || j == ns.cMaxUseOverrun)) {
-                strName += ns.strAnd;
             }
             strName += strCon;
 
-            if (j == ns.cMaxUseOverrun && cCon > ns.cMaxUseOverrun && ns.strFirstNameSpec != '') {
-                if (ns.strOverrun != null)
-                    strName += ns.strAnd + ns.strOverrun;
+            if (willAddOverrun) {
+                strName += ns.strAnd + ns.strOverrun;
             }
 
             // continue with the next person we haven't included
@@ -314,8 +325,8 @@ public with sharing class HH_NameSpec implements HH_INaming {
             }
 
             //traverse parent relationships until the last one
-            if (thisObj != null) {
-                for (string parentObj : splitField) {
+            for (string parentObj : splitField) {
+                if (thisObj != null) {
                     thisObj = thisObj.getsObject(parentObj);
                 }
             }
