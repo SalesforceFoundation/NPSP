@@ -278,7 +278,7 @@ public with sharing class CON_ContactMerge_CTRL {
             // This is due to a bug in dynamic SOQL, quich causes querying for two real fields, 
             // e.g. npsp__foo__c and foo__c, to throw a duplicate field selected error.
             // Only select the NPSP namespaced field and ignore the same field without namespace
-            if (fieldName.countMatches('__') == 1 && 
+            if (!String.isBlank(UTIL_Namespace.getNamespace()) && !fieldName.startsWith(UTIL_Namespace.getNamespace()+'__') && 
                 contactFields.containsKey(UTIL_Namespace.StrTokenNSPrefix(fieldName))) {
                 
                 continue;
