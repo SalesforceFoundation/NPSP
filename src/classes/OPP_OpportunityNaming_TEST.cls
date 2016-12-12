@@ -128,7 +128,7 @@ private class OPP_OpportunityNaming_TEST
 
         Opportunity_Naming_Settings__c ons = new Opportunity_Naming_Settings__c(
             Name = 'foo',
-            Opportunity_Name_Format__c = '{!Account.Name} {!Campaign.Name} {!Type} {!RecordType.Name}',
+            Opportunity_Name_Format__c = '{!Account.Name} {!Account.npe01__One2OneContact__r.Primary_Affiliation__r.Name} {!Campaign.Name} {!Type} {!RecordType.Name}',
             Attribution__c = Label.oppNamingBoth
         );
         if (hasActiveRecType())
