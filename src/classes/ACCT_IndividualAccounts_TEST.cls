@@ -1744,7 +1744,7 @@ private class ACCT_IndividualAccounts_TEST {
     */
     public static testMethod void updateHHAccountRecType() {
 
-        List<RecordType> rectypes = [SELECT Id FROM RecordType WHERE SobjectType = 'Account'];
+        List<RecordType> rectypes = [SELECT Id FROM RecordType WHERE SobjectType = 'Account' AND IsActive = true];
         if (rectypes.size() < 2) {
             return;
         }
@@ -1765,7 +1765,7 @@ private class ACCT_IndividualAccounts_TEST {
 
         Account queryAccount = [SELECT Id, RecordTypeId, npe01__SYSTEMISINDIVIDUAL__c, npe01__SYSTEM_AccountType__c FROM Account WHERE Id = :queryCon.AccountId];
 
-        System.assertEquals(rectypes[0].id, queryAccount.RecordTypeId, 'RecType should not be set to hh account rectype.');
+        System.assertEquals(rectypes[0].id, queryAccount.RecordTypeId, 'RecType should be set to hh account rectype defined in settings.');
         System.assertEquals(true, queryAccount.npe01__SYSTEMISINDIVIDUAL__c, 'IsIndividual system field should be set for household account.');
         System.assertEquals(CAO_Constants.HH_ACCOUNT_TYPE, queryAccount.npe01__SYSTEM_AccountType__c, 'Account Type system field should be set for household account.');
 
@@ -1776,7 +1776,7 @@ private class ACCT_IndividualAccounts_TEST {
 
         queryAccount = [SELECT Id, RecordTypeId, npe01__SYSTEMISINDIVIDUAL__c, npe01__SYSTEM_AccountType__c FROM Account WHERE Id = :queryCon.AccountId];
 
-        System.assertEquals(false, queryAccount.npe01__SYSTEMISINDIVIDUAL__c, 'Individual system field should be set for household account.');
-        System.assertNotEquals(CAO_Constants.HH_ACCOUNT_TYPE, queryAccount.npe01__SYSTEM_AccountType__c, 'Account Type system field should be set for household account.');
+        System.assertEquals(false, queryAccount.npe01__SYSTEMISINDIVIDUAL__c, 'Individual system field should not be set for household account.');
+        System.assertNotEquals(CAO_Constants.HH_ACCOUNT_TYPE, queryAccount.npe01__SYSTEM_AccountType__c, 'Account Type system field should not be set for household account.');
     }
 }
