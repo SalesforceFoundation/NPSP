@@ -141,9 +141,13 @@ public with sharing class STG_PanelContactRoles_CTRL extends STG_Panel {
 
         //validation for npe01__Opportunity_Contact_Role_Default_role__c is done previously; don't check for identical values if this field is blank
         if (!String.isBlank(STG_Panel.stgService.stgCon.npe01__Opportunity_Contact_Role_Default_role__c)) {
-            if (!String.isBlank(softCreditRoles) && softCreditRoles.contains(defaultRole)) {
-                results.add(defaultRoleLabel);
-                results.add(softCreditRolesLabel);
+            if (!String.isBlank(softCreditRoles)) {
+                for (String softRole : softCreditRoles.split(';')) {
+                    if (softRole.equals(defaultRole)) {
+                        results.add(defaultRoleLabel);
+                        results.add(softCreditRolesLabel);
+                    }
+                }
             }
             if (defaultRole == hhMemberRole) {
                 results.add(defaultRoleLabel);
