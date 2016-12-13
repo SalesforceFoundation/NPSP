@@ -578,5 +578,27 @@ private class LVL_LevelAssignBATCH_TEST {
         }
     }
     
+    /*********************************************************************************************************
+    * @description tests our Level Validation to detect no min & max specified
+    */
+    static testMethod void testLevelValidationMinMaxMustExist() {
+        
+        Level__c lvl1 = new Level__c(
+            Name = 'new',
+            Target__c = 'Contact',
+            Source_Field__c = 'npo02__TotalOppAmount__c', 
+            Level_Field__c = 'npo02__LastMembershipLevel__c', 
+            Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c', 
+            Active__c = true);
+
+        try {
+            Test.startTest();
+            insert lvl1;
+            Test.stopTest();
+            system.assert(false, 'exception should have occurred');
+        } catch(Exception ex) {
+            system.assert(ex.getMessage().contains(lvl1.Name));
+        }
+    }
 
 }
