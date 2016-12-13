@@ -28,3 +28,8 @@ tasks:
         class_path: tasks.salesforce.UpdateAdminProfile
         options:
             package_xml: lib/admin_profile.xml
+
+flows:
+    ci_feature:
+        tasks:
+            - task: update_admin_profile
