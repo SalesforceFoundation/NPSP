@@ -1738,4 +1738,45 @@ private class ACCT_IndividualAccounts_TEST {
         System.assert(undeletedCon.Account.Name.contains(con.LastName), 'The Account Name should contain the contacts last name again.');
         System.assertEquals(acctId, undeletedCon.AccountId, 'The contact should be returned to the same account.');
     }
+
+    /*********************************************************************************************************
+    * @description Update a household account's record type, verify system fields are unset.
+    */
+    public static testMethod void updateHHAccountRecType() {
+
+        List<RecordType> rectypes = [SELECT Id FROM RecordType WHERE SobjectType = 'Account' AND IsActive = true];
+        if (rectypes.size() < 2) {
+            return;
+        }
+
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                npe01__HH_Account_RecordTypeID__c = rectypes[0].id
+            )
+        );
+
+        Contact con = new Contact(
+            LastName = 'Test'
+        );
+        insert con;
+
+        Contact queryCon = [SELECT AccountId FROM Contact WHERE Id = :con.id];
+
+        Account queryAccount = [SELECT Id, RecordTypeId, npe01__SYSTEMISINDIVIDUAL__c, npe01__SYSTEM_AccountType__c FROM Account WHERE Id = :queryCon.AccountId];
+
+        System.assertEquals(rectypes[0].id, queryAccount.RecordTypeId, 'RecType should be set to hh account rectype defined in settings.');
+        System.assertEquals(true, queryAccount.npe01__SYSTEMISINDIVIDUAL__c, 'IsIndividual system field should be set for household account.');
+        System.assertEquals(CAO_Constants.HH_ACCOUNT_TYPE, queryAccount.npe01__SYSTEM_AccountType__c, 'Account Type system field should be set for household account.');
+
+        Test.startTest();
+        queryAccount.RecordTypeId = rectypes[1].id;
+        update queryAccount;
+        Test.stopTest();
+
+        queryAccount = [SELECT Id, RecordTypeId, npe01__SYSTEMISINDIVIDUAL__c, npe01__SYSTEM_AccountType__c FROM Account WHERE Id = :queryCon.AccountId];
+
+        System.assertEquals(false, queryAccount.npe01__SYSTEMISINDIVIDUAL__c, 'Individual system field should not be set for household account.');
+        System.assertNotEquals(CAO_Constants.HH_ACCOUNT_TYPE, queryAccount.npe01__SYSTEM_AccountType__c, 'Account Type system field should not be set for household account.');
+    }
 }
