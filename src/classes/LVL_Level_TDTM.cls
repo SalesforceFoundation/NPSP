@@ -51,6 +51,9 @@ public class LVL_Level_TDTM extends TDTM_Runnable {
             // only validate before triggers
             if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
                 
+                // ensure valid values for each level object
+                verifyNoInvalidValues((List<Level__c>) newlist);
+                
                 // maintain a set of all the object id's from the trigger, to help with error reporting
                 Set<Level__c> setTrigger = new Set<Level__c>();
                 
@@ -105,7 +108,6 @@ public class LVL_Level_TDTM extends TDTM_Runnable {
                     for (list<Level__c> listLvl : mapLadderToLevels.values()) {
                         verifyNoOverlapListLvl(listLvl, setTrigger);
                         verifyNoDuplicateNames(listLvl, setTrigger);
-                        verifyNoDuplicateLookups(listLvl, setTrigger);
                     }
                 }
             }
@@ -217,18 +219,22 @@ public class LVL_Level_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description verify no Level has the same lookup for current and previous.  tags each level with a problem using 
+    * @description verify no invalid data in each level record.  tags each level with a problem using 
     * addError(), rather than throwing an exception on the first error.
     * @param listLvl The list to verify
-    * @param setTrigger The objects that triggered this event
     */
-    private void verifyNoDuplicateLookups(list<Level__c> listLvl, Set<Level__c> setTrigger) {
+    private void verifyNoInvalidValues(list<Level__c> listLvl) {
         
         for (integer i = 0; i < listLvl.size(); i++) {
+            // ensure no duplicate lookups
             if (listLvl[i].Level_Field__c == listLvl[i].Previous_Level_Field__c) {
                 listLvl[i].addError(String.format(Label.lvlErrorDuplicateLookups, new list<String>{listLvl[i].Target__c}));                
             }
             
+            // ensure both min & max are not missing
+            if (listLvl[i].Minimum_Amount__c == null && listLvl[i].Maximum_Amount__c == null) {
+                listLvl[i].addError(String.format(Label.lvlErrorNoMinMax, new list<String>{listLvl[i].Name}));                
+            }
         }
     }
 

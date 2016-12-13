@@ -1169,6 +1169,7 @@
         <members>lvlErrorInvalidSourceField</members>
         <members>lvlErrorMinGTMax</members>
         <members>lvlErrorMinOverlap</members>
+        <members>lvlErrorNoMinMax</members>
         <members>mtchBtnSearch</members>
         <members>mtchCloseDateEnd</members>
         <members>mtchCloseDateStart</members>

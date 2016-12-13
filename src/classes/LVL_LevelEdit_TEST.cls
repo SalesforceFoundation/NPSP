@@ -49,6 +49,8 @@ private with sharing class LVL_LevelEdit_TEST {
         ctrl.lvl.Target__c = 'Contact';
         ctrl.lvl.Source_Field__c = 'npo02__TotalOppAmount__c';
         ctrl.lvl.Level_Field__c = 'npo02__LastMembershipLevel__c';
+        ctrl.lvl.Minimum_Amount__c = 100;
+        ctrl.lvl.Maximum_Amount__c = 200;
         
         Test.startTest();
         stdCtrl.save();
