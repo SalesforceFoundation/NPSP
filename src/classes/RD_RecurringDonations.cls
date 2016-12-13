@@ -885,13 +885,23 @@ public class RD_RecurringDonations {
         // non open-ended rd's are handled strictly by the insert rd code.
         list<npe03__Recurring_Donation__c> listRDNonOpen = new list<npe03__Recurring_Donation__c>();
         list<npe03__Recurring_Donation__c> listRDOpen = new list<npe03__Recurring_Donation__c>();
-        for (npe03__Recurring_Donation__c rd : recurringDonationsToEvaluate) {
+        
+        for (Integer i=0; i<recurringDonationsToEvaluate.size(); i++) {
+            npe03__Recurring_Donation__c rd = recurringDonationsToEvaluate[i];
+            
+            //don't try to evaluate orphaned recurring donations
+            if (rd.npe03__Contact__c == null && rd.npe03__Organization__c == null) {
+                recurringDonationsToEvaluate.remove(i);
+                continue;
+            }
+
             if (rd.npe03__Open_Ended_Status__c != openlabel && rd.npe03__Open_Ended_Status__c != closedlabel) {
                 listRDNonOpen.add(rd);
             } else {
                 listRDOpen.add(rd);
             }
         }
+
         if (listRDNonOpen.size() > 0) {
             //clear existing open opps and recreate
             delete [select id from Opportunity where npe03__Recurring_Donation__c IN :listRDNonOpen and isClosed = false];
