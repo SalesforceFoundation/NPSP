@@ -274,6 +274,16 @@ public with sharing class CON_ContactMerge_CTRL {
             Schema.SobjectField f = contactFields.get(fieldName);
             Schema.DescribeFieldResult fResult = f.getDescribe();
             
+            // Ignore fields that have an identical API name as an npsp prefixed field
+            // This is due to a bug in dynamic SOQL, quich causes querying for two real fields, 
+            // e.g. npsp__foo__c and foo__c, to throw a duplicate field selected error.
+            // Only select the NPSP namespaced field and ignore the same field without namespace
+            if (!String.isBlank(UTIL_Namespace.getNamespace()) && !fieldName.startsWith(UTIL_Namespace.getNamespace()+'__') && 
+                contactFields.containsKey(UTIL_Namespace.StrTokenNSPrefix(fieldName))) {
+                
+                continue;
+            }
+
             // Only include the fields which are updateable and accessible
             if (fResult.isUpdateable() && fResult.isAccessible() && !isNPSPHiddenField(fieldname)) {
                 // If the field is type lookup, select the parent name  
