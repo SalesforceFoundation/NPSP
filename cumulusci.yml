@@ -30,6 +30,11 @@ tasks:
             package_xml: lib/admin_profile.xml
 
 flows:
+    dev_org:
+        tasks:
+            6.1:
+                task: update_admin_profile
     ci_feature:
         tasks:
-            - task: update_admin_profile
+            6.1:
+                task: update_admin_profile

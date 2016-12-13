@@ -10,7 +10,9 @@ machine:
 dependencies:
   override:
     - 'pip install --upgrade pip'
-    - 'pip install --upgrade -r requirements.txt'
+    #- 'pip install --upgrade -r requirements.txt'
+    - 'git clone git@github.com:SalesforceFoundation/CumulusCI'
+    - 'cd CumulusCI; git checkout feature/2.0; pip install -r requirements_dev.txt'
     - 'mkdir ~/.appcloud'
     - 'echo $SFDX_CONFIG > ~/.appcloud/workspace-config.json'
     - 'echo $SFDX_HUB_ORG > ~/.appcloud/hubOrg.json'
