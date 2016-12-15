@@ -38,10 +38,9 @@
     },
 
     handleInputFocus: function (component, event, helper) {
-        var keyword = component.get('v.keyword');
         component.set('v.inputFocused', true);
         var inputCmp = component.find('input');
-        if ('' !== inputCmp.get('v.value') && keyword) {
+        if ('' !== inputCmp.get('v.value')) {
             helper.setListVisibilityDelayed(component, true);
         }
     },
@@ -61,9 +60,15 @@
 
     handleOptionSelected: function (component, event, helper) {
         var valueSelected = event.getParam('value');
-        component.set('v.value', valueSelected.value);
-        component.set('v.displayValue', valueSelected.label);
+        component.set('v.value', valueSelected);
+        component.set('v.displayValue', valueSelected);
         helper.setListVisibilityDelayed(component, false);
+    },
+    
+    handleRemovePill: function (component) {
+        component.set('v.value', '');
+        component.set('v.displayValue', '');
+        component.set('v.keyword', '');
     },
     
     clearList: function (component) {
