@@ -63,19 +63,26 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     public pageReference processDelete() {
         Contact queryContact = [SELECT Id, AccountId, Account.npe01__SYSTEMIsIndividual__c FROM Contact WHERE Id = :conId];
         string accId = queryContact.AccountId;
-        list<AggregateResult> contactsInHousehold = [SELECT COUNT(id) ct FROM Contact WHERE AccountId = :accId GROUP BY AccountId HAVING COUNT(id) = 1];
+        boolean shouldDeleteContactAlone = true;
 
-        //This contact is alone in a system account, delete the system account and allow the cascading
-        //delete to remove the contact
-        if (contactsInHousehold.size() == 1 && contactsInHousehold[0].get('ct') == 1 && queryContact.Account.npe01__SYSTEMIsIndividual__c) {
-            Account accForDelete = new Account(id=accId);
-            delete accForDelete;
+        if (queryContact.AccountId != null && queryContact.Account.npe01__SYSTEMIsIndividual__c) {
+            list<AggregateResult> contactsInHousehold = [SELECT COUNT(id) ct FROM Contact WHERE AccountId = :accId GROUP BY AccountId HAVING COUNT(id) = 1];
 
-            //if we were returning to the account we just deleted, go back to contacts home
-            if (retURL.contains(accId.substring(0,15))) {
-                retURL = '/003/o';
+            //This contact is alone in a system account, delete the system account and allow the cascading
+            //delete to remove the contact
+            if (contactsInHousehold.size() == 1 && contactsInHousehold[0].get('ct') == 1) {
+                shouldDeleteContactAlone = false;
+                Account accForDelete = new Account(id=accId);
+                delete accForDelete;
+
+                //if we were returning to the account we just deleted, go back to contacts home
+                if (retURL.contains(accId.substring(0,15))) {
+                    retURL = '/003/o';
+                }
             }
-        } else {
+        }
+
+        if (shouldDeleteContactAlone) {
             delete queryContact;
         }
 
