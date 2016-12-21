@@ -67,7 +67,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
 
         //This contact is alone in a system account, delete the system account and allow the cascading
         //delete to remove the contact
-        if (agg.size() == 1 && agg[0].get('ct') == 1 && queryContact.Account.npe01__SYSTEMIsIndividual__c) {
+        if (contactsInHousehold.size() == 1 && contactsInHousehold[0].get('ct') == 1 && queryContact.Account.npe01__SYSTEMIsIndividual__c) {
             Account accForDelete = new Account(id=accId);
             delete accForDelete;
 
