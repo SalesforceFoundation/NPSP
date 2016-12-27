@@ -63,11 +63,11 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     public pageReference processDelete() {
         Contact queryContact = [SELECT Id, AccountId, Account.npe01__SYSTEMIsIndividual__c FROM Contact WHERE Id = :conId];
         string accId = queryContact.AccountId;
-        list<Contact> contactsInHousehold = [SELECT id FROM Contact WHERE AccountId = :accId];
+        list<AggregateResult> contactsInHousehold = [SELECT COUNT(id) ct FROM Contact WHERE AccountId = :accId GROUP BY AccountId HAVING COUNT(id) = 1];
 
         //This contact is alone in a system account, delete the system account and allow the cascading
         //delete to remove the contact
-        if (contactsInHousehold.size()==1 && queryContact.Account.npe01__SYSTEMIsIndividual__c) {
+        if (agg.size() == 1 && agg[0].get('ct') == 1 && queryContact.Account.npe01__SYSTEMIsIndividual__c) {
             Account accForDelete = new Account(id=accId);
             delete accForDelete;
 
