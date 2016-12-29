@@ -300,7 +300,7 @@ public class RD_RecurringDonations {
     */ 
     @future
     public static void insertOppsOnRecurringDonationInsertFuture(set<id> recids) {
-        delete [select id from Opportunity where isClosed = false and npe03__Recurring_Donation__r.id IN :recids];
+        delete [select id from Opportunity where isClosed = false and npe03__Recurring_Donation__c IN :recids];
 
         list<npe03__Recurring_Donation__c> reclist = requeryListRD(recids);
         insertOppsOnRecurringDonationInsert(reclist);
@@ -709,22 +709,22 @@ public class RD_RecurringDonations {
         List<npe03__Recurring_Donation__c> rdsToUpdate = database.query(rdQuery);       
         map<id, npe03__Recurring_Donation__c> rdMap = new map<id, npe03__Recurring_Donation__c>(rdsToUpdate);  
                            
-        list<Opportunity> oppList = [select id, Amount, Name, CampaignId, AccountID, CloseDate, Recurring_Donation_Installment_Number__c, npe03__Recurring_Donation__r.id                                         
+        list<Opportunity> oppList = [select id, Amount, Name, CampaignId, AccountID, CloseDate, Recurring_Donation_Installment_Number__c, npe03__Recurring_Donation__c                                         
                                        from Opportunity 
-                                       where npe03__Recurring_Donation__r.id IN :rdMap.keySet() 
+                                       where npe03__Recurring_Donation__c IN :rdMap.keySet() 
                                        and isClosed = false
                                        order by CloseDate asc];
 
         //build a map of recurring donation ID and opps 
         map<id, list<Opportunity>> RDOppMap = new map<id, list<Opportunity>>(); 
         for (Opportunity o : opplist){
-            if (RDOppMap.containsKey(o.npe03__Recurring_Donation__r.id)){
-                list<Opportunity> opps = RDOppMap.get(o.npe03__Recurring_Donation__r.id);
+            if (RDOppMap.containsKey(o.npe03__Recurring_Donation__c)){
+                list<Opportunity> opps = RDOppMap.get(o.npe03__Recurring_Donation__c);
                 opps.add(o);
-                RDOppMap.put(o.npe03__Recurring_Donation__r.id, opps);
+                RDOppMap.put(o.npe03__Recurring_Donation__c, opps);
             }
             else{
-                RDOppMap.put(o.npe03__Recurring_Donation__r.id, new list<Opportunity>{o});
+                RDOppMap.put(o.npe03__Recurring_Donation__c, new list<Opportunity>{o});
             }
         }       
         
@@ -923,10 +923,10 @@ public class RD_RecurringDonations {
                 
         //get the existing donations
         list<sobject> sobjs = [select count(id) oppCount, MAX(CloseDate) MaxDate,
-                                  npe03__Recurring_Donation__r.id rdid
+                                  npe03__Recurring_Donation__c rdid
                                   from Opportunity where npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c <> :closedLabel 
-                                  and npe03__Recurring_Donation__r.id IN :recurringDonationsToEvaluate                                  
-                                  group by rollup(npe03__Recurring_Donation__r.id)]; 
+                                  and npe03__Recurring_Donation__c IN :recurringDonationsToEvaluate                                  
+                                  group by rollup(npe03__Recurring_Donation__c)]; 
         
         map<id, date> lastOppMap = new map<id, date>();
         map<id, integer> oppCountMap = new map<id, integer>();
@@ -1102,8 +1102,8 @@ public class RD_RecurringDonations {
         npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
         //UTIL_Debug.debug('IN THE PRIVATE METHOD');
         if (!closedRDs.isEmpty() && rds.npe03__Open_Opportunity_Behavior__c != RecurringDonationCloseOptions.No_Action.name()) {
-            map<Id, Opportunity> mapIdOpp = new map<Id, Opportunity>([select Id, StageName, npe03__Recurring_Donation__r.id 
-                                    from Opportunity where npe03__Recurring_Donation__r.id IN :closedRDs and isClosed = false]);
+            map<Id, Opportunity> mapIdOpp = new map<Id, Opportunity>([select Id, StageName, npe03__Recurring_Donation__c 
+                                    from Opportunity where npe03__Recurring_Donation__c IN :closedRDs and isClosed = false]);
          
             if (rds.npe03__Open_Opportunity_Behavior__c == RecurringDonationCloseOptions.Delete_Open_Opportunities.name()){
                 //UTIL_Debug.debug('IN THE PRIVATE METHOD3');
