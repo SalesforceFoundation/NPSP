@@ -59,7 +59,8 @@ public with sharing class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
                                                                       'Allocation__c|Opportunity__r.AccountId'},
         Opportunity.SObjectType                  =>  new List<String>{'Allocation__c|Opportunity__c'},
         Campaign.SObjectType                     =>  new List<String>{'Allocation__c|Campaign__c'},
-        npe03__Recurring_Donation__c.SObjectType =>  new List<String>{'Allocation__c|Recurring_Donation__c'}
+        npe03__Recurring_Donation__c.SObjectType =>  new List<String>{'Allocation__c|Recurring_Donation__c',
+                                                                      'Opportunity|npe03__Recurring_Donation__c'}
     };
 
     /*******************************************************************************************************

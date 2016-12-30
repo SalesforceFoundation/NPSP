@@ -89,15 +89,9 @@ public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
                 }            
             } else if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
                 mapIdRDInserts.put(r.id, r);
-            } else if (triggerAction == TDTM_Runnable.Action.BeforeDelete) {
-                listRDDeletes.add(r);
             } else if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                 listRDUpdates.add(r);
             }            
-        }
-        
-        if (listRDDeletes.size() > 0) {
-            RD_RecurringDonations.approveDeleteRecDonations(listRDDeletes);
         }
         
         if (listRDUpdates.size() > 0) {
