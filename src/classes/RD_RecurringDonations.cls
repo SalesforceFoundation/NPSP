@@ -892,6 +892,8 @@ public class RD_RecurringDonations {
             //don't try to evaluate orphaned recurring donations
             if (rd.npe03__Contact__c == null && rd.npe03__Organization__c == null) {
                 recurringDonationsToEvaluate.remove(i);
+                //decrement counter after removing value to avoid going over the end of the array
+                i--;
                 continue;
             }
 
