@@ -65,6 +65,9 @@ private class UTIL_CascadeDeleteLookups_TEST {
         delete con;
         Test.stopTest();
 
+        List<Error__c> errors = [SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c FROM Error__c];
+        System.assertEquals(0, errors.size(), errors);
+
         List<npe03__Recurring_Donation__c> deletedRd = [SELECT Id FROM npe03__Recurring_Donation__c WHERE Id=:rd.Id AND IsDeleted=true ALL ROWS];
         System.assertEquals(1, deletedRd.size(), 'Recurring Donation should be cascade deleted when Contact is deleted.');
 
