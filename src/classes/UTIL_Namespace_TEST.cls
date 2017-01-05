@@ -110,6 +110,7 @@ public with sharing class UTIL_Namespace_TEST {
         str = Label.alloUnallocated;
         str = Label.stgHelpBatchCreateDefault;
         str = Label.addrHHAddressAlwaysDefault;
+        str = Label.Addr_Verification_Cant_Load_Class;
 
         // The following labels are referenced because the spider was having
         // issues resolving references to them and they need to be directly
