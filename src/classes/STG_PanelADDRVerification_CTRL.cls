@@ -204,13 +204,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
                         servicesURLMap.put(((ADDR_IValidator)classInstance).getServiceName(), ((ADDR_IValidator)classInstance).getDefaultURL());
                     }
                 } catch(exception ex) {
-                    ApexPages.addMessage(new ApexPages.Message(
-                        ApexPages.Severity.ERROR,
-                        String.format(
-                            Label.Addr_Verification_Cant_Load_Class,
-                            new List<String>{classType.getName()}
-                        )
-                    ));
+                    // we don't want to display an error, because we blindly pickup classes from any package that have ADDR in their title!
                 }
             }
         }
