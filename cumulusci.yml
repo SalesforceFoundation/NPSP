@@ -29,6 +29,25 @@ tasks:
         options:
             package_xml: lib/admin_profile.xml
 
+    test_data_1k:
+        class_path: cumulusci.tasks.bulkdata.LoadData
+        options:
+            database_url: 'sqlite:///testdata/1k/test_data.db'
+            mapping: 'testdata/1k/mapping.yml'
+
+    test_data_delete:
+        class_path: cumulusci.tasks.bulkdata.DeleteData
+        options:
+            objects:
+                - Opportunity
+                - npe03__Recurring_Donation__c
+                - Case
+                - Contact
+                - Account
+                - Allocation__c
+                - General_Accounting_Unit__c
+                - Campaign
+
 flows:
     dev_org:
         tasks:
