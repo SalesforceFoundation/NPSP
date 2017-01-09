@@ -1,0 +1,38 @@
+<apex:component >
+    <apex:attribute name="label" type="String" description="UI label." />
+    <apex:attribute name="field" type="String" description="The field to display." required="true"/>
+    <apex:attribute name="sObject" type="sObject" description="The object the field belongs to" required="true"/>
+    <apex:attribute name="type" type="String" description="Type of field: input; boolean, reference, picklist, multipicklist, date, datetime." required="true"/>
+    <apex:attribute name="onchange" type="String"  default="" description="On change event."/>
+    <apex:attribute name="required" type="Boolean" default="false" description="Is the field required field." />
+    <apex:attribute name="dependent" type="Boolean" default="false" description="Is the field a dependent (multi)picklist" />
+
+    <apex:variable var="dependentFixup" value="{!IF(dependent, IF(type=='picklist', 'dependentPicklistFixup', 'dependentMultiPicklistFixup'), '')}" />
+
+    <!-- default -->
+    <apex:outputPanel styleClass="{!dependentFixup}" id="divInput" rendered="{!type!='boolean'}">
+        <apex:outputLabel for="inputX" styleClass="slds-form-element__label" >
+            <abbr class="slds-required" title="required">{!IF(required,"*", "")}</abbr>{!label}
+        </apex:outputLabel>
+        <div class="slds-form-element__control">
+            <apex:inputField id="inputX" required="false" value="{!sObject[field]}" label=""
+                styleClass="{!CASE(type,
+                                        'reference', 'lookupInput203 ' + field,
+                                        'textarea', 'slds-textarea',
+                                        'picklist', 'slds-select',
+                                        'multipicklist', 'slds-select multipicklistSLDSFixup',
+                                        'date', 'slds-input dateFixup',
+                                        'datetime', 'slds-input dateFixup',
+                                        'slds-input')}" onchange="{!onchange}"/>
+        </div>
+    </apex:outputPanel>
+
+    <!-- checkbox field -->
+    <apex:outputPanel id="divCheckbox" rendered="{!type=='boolean'}">
+        <apex:outputLabel styleClass="slds-checkbox" for="checkBox">
+            <apex:inputField id="checkBox" value="{!sObject[field]}" onchange="{!onchange}"/>
+            <span class="slds-checkbox--faux"></span>
+            <span class="slds-form-element__label">{!label}</span>
+        </apex:outputLabel>
+    </apex:outputPanel>
+</apex:component>

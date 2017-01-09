@@ -278,6 +278,7 @@
     <types>
         <members>STG_DataBoundMultiSelect</members>
         <members>STG_PageHeader</members>
+        <members>UTIL_InputField</members>
         <members>UTIL_JobProgress</members>
         <members>UTIL_JobProgressLightning</members>
         <members>UTIL_NavigateBack</members>

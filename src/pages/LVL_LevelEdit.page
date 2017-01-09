@@ -1,4 +1,4 @@
-<apex:page standardController="Level__c" extensions="LVL_LevelEdit_CTRL" showHeader="true" standardStylesheets="false" >
+<apex:page standardController="Level__c" extensions="LVL_LevelEdit_CTRL" showHeader="true" standardStylesheets="true" >
     <apex:stylesheet value="{!URLFOR($Resource.sfdo203, '/assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
     
@@ -109,10 +109,11 @@
                                 </apex:selectList>
                             </div>
                             <div class="slds-form-element slds-size--1-of-2">
-                                <apex:outputLabel for="fldActive" styleClass="slds-form-element__label uiLabel-left form-element__label uiLabel" >
-                                    {!$ObjectType.Level__c.Fields.Active__c.Label}
+                                <apex:outputLabel styleClass="slds-checkbox" for="fldActive">
+                                    <apex:inputField id="fldActive" value="{!Level__c.Active__c}"></apex:inputField>
+                                    <span class="slds-checkbox--faux"></span>
+                                    <span class="slds-form-element__label">{!$ObjectType.Level__c.Fields.Active__c.Label}</span>
                                 </apex:outputLabel>
-                                <apex:inputField id="fldActive" required="false" value="{!Level__c.Active__c}" label="" styleClass="slds-input" />
                             </div>
                         </div>
 
@@ -136,21 +137,15 @@
             <div class="slds-grid slds-grid--align-spread slds-m-bottom--medium slds-m-left--medium slds-m-right--medium">
             
                 <div class="slds-form--stacked slds-size--4-of-5" >                        
-                    <apex:repeat value="{!$ObjectType.Level__c.FieldSets.LevelEdit}" var="f">                            
+                    <apex:repeat value="{!$ObjectType.Level__c.FieldSets.LevelEdit}" var="f">
                         <div class="slds-form-element">
-                            <apex:outputLabel for="fldX" styleClass="slds-form-element__label uiLabel-left form-element__label uiLabel" >
-                                <span class="required slds-required">{!IF(f.DBRequired || f.Required, '*', '')}</span>{!f.Label}
-                            </apex:outputLabel>
-                            <div class="slds-form-element__control">                                
-                                <apex:inputField id="fldX" required="false" value="{!Level__c[f]}" label=""
-                                    styleClass="{!CASE(f.Type, 
-                                                    'reference', 'lookupInput203 ' + f.FieldPath, 
-                                                    'picklist', 'slds-select',
-                                                    'multipicklist', 'slds-select', 
-                                                    'boolean', 'slds-checkbox',
-                                                    'textarea', 'slds-textarea',
-                                                    'slds-input')}" />                                
-                            </div>
+                            <c:UTIL_InputField label="{!IF(!contains(f.fieldPath,'.') && !contains(f.fieldPath,'__c') && f.type == 'reference',
+                                                $ObjectType.Level__c.fields[f].relationshipName, f.label)}"
+                                        field="{!f.fieldPath}"
+                                        sObject="{!Level__c}"
+                                        type="{!IF(f.fieldPath=='RecordTypeId', 'picklist', f.type)}"
+                                        dependent="{!$ObjectType.Level__c.fields[f].dependentPicklist}"
+                                        required="{!f.DBRequired || f.Required}"/>
                         </div>
                     </apex:repeat>
                 </div>
