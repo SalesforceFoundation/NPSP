@@ -37,7 +37,7 @@ input.lookupInput203 {
     height: calc(1.875rem + (1px * 2));
 }
 input.slds-input.dateFixup {
-    width: 80%;
+    width: 50%;
     margin-right: 4px;
 }
 /* trick to display multiselect picklists as simple select, just add multipicklistSLDSFixup to the msp*/
@@ -66,6 +66,6 @@ input.slds-input.dateFixup {
     padding: 8px;
 }
 .datePicker {
-   z-index: 10000!important;
+   z-index: 10000;
 }
         
