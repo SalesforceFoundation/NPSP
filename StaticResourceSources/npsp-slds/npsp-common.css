@@ -38,8 +38,8 @@ input.lookupInput203 {
 }
 .dateFixup span.dateFormat {
     position: absolute;
-    bottom: 10%;
-    right: 1%;
+    top: 50%;
+    right: .75rem;
 }
 /* trick to display multiselect picklists as simple select, just add multipicklistSLDSFixup to the msp*/
 .multiSelectPicklistTable {
