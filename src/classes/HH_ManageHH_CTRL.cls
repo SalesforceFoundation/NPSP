@@ -39,6 +39,9 @@ public with sharing class HH_ManageHH_CTRL {
     /** @description The Id of the Household Object or Account */
     public ID hhId { get; set; }
 
+    /** @description The Id of the Contact to use when invoked for a new Household Object */
+    private ID contactId { get; set; }
+
     /** @description The Household Object or Account */
     public SObject hh { get; set; }
     
@@ -84,22 +87,46 @@ public with sharing class HH_ManageHH_CTRL {
 
         Map<String, String> pageParams = ApexPages.currentPage().getParameters();
         hhId = pageParams.get('Id');
+        contactId = pageParams.get('cid');
         
-        // load up only the fields exposed in the field set for our visualforce page to use.
-        String strSoql = 'select Id';
-        
-        // for accounts, also include system field our page needs
-        if (isHHAccount)
-            strSoql += ', npe01__SYSTEM_AccountType__c';
-            
-        for (Schema.FieldSetMember fsm : hhFieldSet)
-            strSoql += ', ' + fsm.getFieldPath();
-        strSoql += ' from ' + (isHHAccount ? 'Account' : 'npo02__Household__c');
-        strSoql += ' where Id = :hhId';
-
-        hh = database.query(strSoql);
+        // handle existing Household.  new HH will be handled in actionMethod handleNewHousehold().
+        if (hhId != null) {
+	        // load up only the fields exposed in the field set for our visualforce page to use.
+	        String strSoql = 'select Id';
+	        
+	        // for accounts, also include system field our page needs
+	        if (isHHAccount)
+	            strSoql += ', npe01__SYSTEM_AccountType__c';
+	            
+	        for (Schema.FieldSetMember fsm : hhFieldSet)
+	            strSoql += ', ' + fsm.getFieldPath();
+	        strSoql += ' from ' + (isHHAccount ? 'Account' : 'npo02__Household__c');
+	        strSoql += ' where Id = :hhId';
+	
+	        hh = database.query(strSoql);
+        }
     }
-
+    
+    /*******************************************************************************************************
+    * @description ActionMethod called when the page loads, to handle new Household objects (so it can do)
+    * DML to save it.
+    * @return null
+    */
+    public PageReference handleNewHousehold() {
+        if (hhId == null) {
+            hh = new npo02__Household__c();
+            hh.put('Name', Label.npo02.DefaultHouseholdName);    // name will get fixed up when we update the contact
+            insert hh;
+            hhId = hh.Id;
+            
+            if (contactId != null) {
+                Contact con = new Contact(Id = contactId, npo02__Household__c = hhId);
+                update con;
+            }
+        }
+        return null;
+    }
+    
     /*******************************************************************************************************
     * @description is the Household a Household Account, vs. a Household Object.
     * @return Boolean
