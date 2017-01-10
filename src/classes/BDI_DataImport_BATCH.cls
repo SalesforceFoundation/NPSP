@@ -1722,6 +1722,9 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         list<DataImport__c> listDINew = new list<DataImport__c>();
         setStrCampaign.clear();
         for (DataImport__c di : listDI) {
+            // skip di's that already have an error
+            if (di.Status__c == label.bdiFailed)
+               continue;
             string strName = di.Donation_Campaign_Name__c;
             Campaign cmp;
             if (strName != null && setStrCampaign.add(strName)) {

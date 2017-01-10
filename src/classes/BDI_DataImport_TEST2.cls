@@ -1065,7 +1065,7 @@ private with sharing class BDI_DataImport_TEST2 {
             
         list<DataImport__c> listDI = new list<DataImport__c>();
         listDI.add(new DataImport__c(Account1_Name__c='a0', Donation_Donor__c='Account1', Donation_Amount__c=10, Donation_Campaign_Name__c='cmp1'));
-        listDI.add(new DataImport__c(Account1_Name__c='a1', Donation_Donor__c='Account1', Donation_Amount__c=20, Donation_Campaign_Name__c='FailTest1'));
+        listDI.add(new DataImport__c(Account1_Name__c='FailTest1', Donation_Donor__c='Account1', Donation_Amount__c=20, Donation_Campaign_Name__c='cmpNotCreated'));
         listDI.add(new DataImport__c(Account1_Name__c='a2', Donation_Donor__c='Account1', Donation_Amount__c=30, Donation_Campaign_Name__c='cmp1'));
         listDI.add(new DataImport__c(Account1_Name__c='a3', Donation_Donor__c='Account1', Donation_Amount__c=40, Donation_Campaign_Name__c='cmp2'));
         insert listDI;
@@ -1085,7 +1085,7 @@ private with sharing class BDI_DataImport_TEST2 {
         listDI = [select Status__c, FailureInformation__c, DonationImported__c, DonationImportStatus__c, Donation_Campaign_Name__c from DataImport__c];
         system.assertEquals(4, listDI.size());
         for (integer i = 0; i < listDI.size(); i++) {
-            if (listDI[i].Donation_Campaign_Name__c == 'FailTest1') {
+            if (listDI[i].Donation_Campaign_Name__c == 'cmpNotCreated') {
                 system.assertEquals(label.bdiFailed, listDI[i].Status__c);
                 system.assertNotEquals(label.bdiCreated, listDI[i].DonationImportStatus__c);
                 system.assertEquals(null, listDI[i].DonationImported__c);
