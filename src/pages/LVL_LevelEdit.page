@@ -108,13 +108,11 @@
                                     <apex:selectOptions value="{!listSOLevelFields}"  />
                                 </apex:selectList>
                             </div>
-                            <div class="slds-form-element slds-size--1-of-2">
-                                <apex:outputLabel styleClass="slds-checkbox" for="fldActive">
-                                    <apex:inputField id="fldActive" value="{!Level__c.Active__c}"></apex:inputField>
-                                    <span class="slds-checkbox--faux"></span>
-                                    <span class="slds-form-element__label">{!$ObjectType.Level__c.Fields.Active__c.Label}</span>
-                                </apex:outputLabel>
-                            </div>
+                                    <c:UTIL_InputField
+                                        field="Active__c"
+                                        sObj="{!Level__c}"
+                                        sObjType="Level__c"
+                                        styleClass="slds-size--1-of-2"/>
                         </div>
 
                         <div class="slds-form-element__row">
@@ -138,15 +136,11 @@
             
                 <div class="slds-form--stacked slds-size--4-of-5" >                        
                     <apex:repeat value="{!$ObjectType.Level__c.FieldSets.LevelEdit}" var="f">
-                        <div class="slds-form-element">
-                            <c:UTIL_InputField label="{!IF(!contains(f.fieldPath,'.') && !contains(f.fieldPath,'__c') && f.type == 'reference',
-                                                $ObjectType.Level__c.fields[f].relationshipName, f.label)}"
-                                        field="{!f.fieldPath}"
-                                        sObject="{!Level__c}"
-                                        type="{!IF(f.fieldPath=='RecordTypeId', 'picklist', f.type)}"
-                                        dependent="{!$ObjectType.Level__c.fields[f].dependentPicklist}"
-                                        required="{!f.DBRequired || f.Required}"/>
-                        </div>
+                        <c:UTIL_InputField
+                                    field="{!f.fieldPath}"
+                                    sObj="{!Level__c}"
+                                    sObjType="Level__c"
+                                    required="{!f.DBRequired || f.Required}"/>
                     </apex:repeat>
                 </div>
             </div>

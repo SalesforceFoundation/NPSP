@@ -38,16 +38,12 @@
                     <div class="slds-form--stacked" style="width:80%" >
                         <apex:variable value="{!IF(isHHAccount, 'Account', 'npo02__Household__c')}" var="objType"/>
                         <apex:repeat value="{!hhFieldSet}" var="f">
-                            <div class="slds-form-element">
-                                <c:UTIL_InputField label="{!IF(!contains(f.fieldPath,'.') && !contains(f.fieldPath,'__c') && f.type == 'reference',
-                                            $ObjectType[objType].fields[f].relationshipName, f.label)}"
-                                        field="{!f.fieldPath}"
-                                        sObject="{!hh}"
-                                        type="{!IF(f.fieldPath=='RecordTypeId', 'picklist', f.type)}"
-                                        dependent="{!$ObjectType[objType].fields[f].dependentPicklist}"
-                                        required="{!f.DBRequired || f.Required}"
-                                        onchange="{!IF(f.FieldPath = 'npe01__One2OneContact__c', 'fireContactChangedEvent();', '')}"/>
-                            </div>
+                            <c:UTIL_InputField
+                                    field="{!f.fieldPath}"
+                                    sObj="{!hh}"
+                                    sObjType="{!objType}"
+                                    required="{!f.DBRequired || f.Required}"
+                                    onchange="{!IF(f.FieldPath = 'npe01__One2OneContact__c', 'fireContactChangedEvent();', '')}"/>
                         </apex:repeat>
                     </div>
                 </div>                

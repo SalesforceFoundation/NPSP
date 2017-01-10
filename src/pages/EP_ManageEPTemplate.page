@@ -50,15 +50,12 @@
                         </div>
                         <!--template field set fields-->
                         <apex:repeat value="{!$ObjectType.Engagement_Plan_Template__c.FieldSets.ManageEPTemplateFS}" var="f">
-                            <div class="slds-form-element slds-p-top--small">
-                                <c:UTIL_InputField label="{!IF(!contains(f.fieldPath,'.') && !contains(f.fieldPath,'__c') && f.type == 'reference',
-                                            $ObjectType.Engagement_Plan_Template__c.fields[f].relationshipName, f.label)}"
-                                    field="{!f.fieldPath}"
-                                    sObject="{!template}"
-                                    type="{!IF(f.fieldPath=='RecordTypeId', 'picklist', f.type)}"
-                                    dependent="{!$ObjectType.Engagement_Plan_Template__c.fields[f].dependentPicklist}"
-                                    required="{!f.DBRequired || f.Required}"/>
-                            </div>
+                            <c:UTIL_InputField
+                                field="{!f.fieldPath}"
+                                sObj="{!template}"
+                                sObjType="Engagement_Plan_Template__c"
+                                styleClass="slds-p-top--small"
+                                required="{!f.DBRequired || f.Required}"/>
                         </apex:repeat>
                     </div>
                     <div class="slds-col slds-col--padded slds-p-top--large slds-size--1-of-2">
