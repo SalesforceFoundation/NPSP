@@ -50,8 +50,7 @@
                         </div>
                         <!--template field set fields-->
                         <apex:repeat value="{!$ObjectType.Engagement_Plan_Template__c.FieldSets.ManageEPTemplateFS}" var="f">
-                            <c:UTIL_InputField
-                                field="{!f.fieldPath}"
+                            <c:UTIL_InputField field="{!f.fieldPath}"
                                 sObj="{!template}"
                                 sObjType="Engagement_Plan_Template__c"
                                 styleClass="slds-p-top--small"

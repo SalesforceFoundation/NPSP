@@ -38,8 +38,7 @@
                     <div class="slds-form--stacked" style="width:80%" >
                         <apex:variable value="{!IF(isHHAccount, 'Account', 'npo02__Household__c')}" var="objType"/>
                         <apex:repeat value="{!hhFieldSet}" var="f">
-                            <c:UTIL_InputField
-                                    field="{!f.fieldPath}"
+                            <c:UTIL_InputField field="{!f.fieldPath}"
                                     sObj="{!hh}"
                                     sObjType="{!objType}"
                                     required="{!f.DBRequired || f.Required}"

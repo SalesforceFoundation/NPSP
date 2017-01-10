@@ -108,8 +108,7 @@
                                     <apex:selectOptions value="{!listSOLevelFields}"  />
                                 </apex:selectList>
                             </div>
-                                    <c:UTIL_InputField
-                                        field="Active__c"
+                                    <c:UTIL_InputField field="Active__c"
                                         sObj="{!Level__c}"
                                         sObjType="Level__c"
                                         styleClass="slds-size--1-of-2"/>
@@ -136,8 +135,7 @@
             
                 <div class="slds-form--stacked slds-size--4-of-5" >                        
                     <apex:repeat value="{!$ObjectType.Level__c.FieldSets.LevelEdit}" var="f">
-                        <c:UTIL_InputField
-                                    field="{!f.fieldPath}"
+                        <c:UTIL_InputField field="{!f.fieldPath}"
                                     sObj="{!Level__c}"
                                     sObjType="Level__c"
                                     required="{!f.DBRequired || f.Required}"/>
