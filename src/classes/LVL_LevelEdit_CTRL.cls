@@ -47,6 +47,7 @@ public with sharing class LVL_LevelEdit_CTRL {
         List<String> fieldSetList = UTIL_Describe.listStrFromFieldSet(UTIL_Namespace.StrTokenNSPrefix('Level__c'),
                 UTIL_Namespace.StrTokenNSPrefix('LevelEdit'));
         fieldSetList.add(UTIL_Namespace.StrTokenNSPrefix('Active__c'));
+        fieldSetList.add(UTIL_Namespace.StrTokenNSPrefix('Engagement_Plan_Template__c'));
         if (!Test.isRunningTest()) controller.addFields(fieldSetList);
         lvl = (Level__c)controller.getRecord();
         

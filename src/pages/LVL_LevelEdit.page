@@ -91,12 +91,10 @@
                                     <apex:selectOptions value="{!listSOSourceFields}"  />
                                 </apex:selectList>
                             </div>
-                            <div class="slds-form-element slds-size--1-of-2">
-                                <apex:outputLabel for="fldEP" styleClass="slds-form-element__label uiLabel-left form-element__label uiLabel" >
-                                    {!$ObjectType.Level__c.Fields.Engagement_Plan_Template__c.Label}
-                                </apex:outputLabel>
-                                <apex:inputField id="fldEP" required="false" value="{!Level__c.Engagement_Plan_Template__c}" label="" styleClass="lookupInput203 Engagement_Plan_Template__c" />
-                            </div>
+                            <c:UTIL_InputField field="Engagement_Plan_Template__c"
+                                sObj="{!Level__c}"
+                                sObjType="Level__c"
+                                styleClass="slds-size--1-of-2"/>
                         </div>
 
                         <div class="slds-form-element__row">
@@ -108,10 +106,10 @@
                                     <apex:selectOptions value="{!listSOLevelFields}"  />
                                 </apex:selectList>
                             </div>
-                                    <c:UTIL_InputField field="Active__c"
-                                        sObj="{!Level__c}"
-                                        sObjType="Level__c"
-                                        styleClass="slds-size--1-of-2"/>
+                            <c:UTIL_InputField field="Active__c"
+                                sObj="{!Level__c}"
+                                sObjType="Level__c"
+                                styleClass="slds-size--1-of-2"/>
                         </div>
 
                         <div class="slds-form-element__row">
