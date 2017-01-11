@@ -16,13 +16,13 @@
         afterScriptsLoaded="{!c.afterScriptsLoaded}" />
 
     <!-- markup follows... -->
-
-    <ul id="SortCanvas" class="slds-list--horizontal slds-has-dividers--around-space slds-wrap">
-        <aura:iteration items="{!v.listCon}" var="con" indexVar="icon">
-            <li class="slds-item" style="margin: 0; border: 0; vertical-align: top" data-icontact="{!icon}">
-                <c:HH_ContactCard contact="{!con}" />
-            </li>
-        </aura:iteration> 
-    </ul>
-
+	<div style="position:relative"> <!-- relative to allow jqueryui draggable to calculate offsets correctly -->
+        <ul id="SortCanvas" class="slds-list--horizontal slds-has-dividers--around-space slds-wrap">
+            <aura:iteration items="{!v.listCon}" var="con" indexVar="icon">
+                <li class="slds-item" style="margin: 0; border: 0; vertical-align: top" data-icontact="{!icon}">
+                    <c:HH_ContactCard contact="{!con}" />
+                </li>
+            </aura:iteration> 
+        </ul>
+	</div>
 </aura:component>
