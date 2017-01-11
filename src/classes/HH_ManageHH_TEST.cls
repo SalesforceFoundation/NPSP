@@ -88,4 +88,34 @@ private class HH_ManageHH_TEST {
         
         Test.stopTest();
     }
+
+    /*********************************************************************************************************
+    * @description Tests opening the ManageHouseholdUI page on an new HH Object
+    */
+    public static testMethod void testNewHHObject() { 
+        
+        Account acc = new Account(Name='some org account');
+        insert acc;
+        
+        Contact con = new Contact(Lastname='foo', AccountId=acc.Id);
+        insert con;
+        
+        con = [select Id, Lastname, AccountId, npo02__Household__c from Contact];
+        system.assertEquals(null, con.npo02__Household__c);
+        
+        Test.startTest();
+        
+        ApexPages.currentPage().getParameters().put('cid', con.Id);             
+        HH_ManageHH_CTRL ctrl = new HH_ManageHH_CTRL();
+        system.assertEquals(null, ctrl.handleNewHousehold());
+        system.assertNotEquals(null, ctrl.hh);
+        system.assertEquals(false, ctrl.isHHAccount);
+        system.assertNotEquals(null, ctrl.hhFieldSet);
+        system.assertEquals(null, ctrl.save());
+        
+        Test.stopTest();
+
+        con = [select Id, Lastname, AccountId, npo02__Household__c from Contact];
+        system.assertNotEquals(null, con.npo02__Household__c);
+    }
 }
