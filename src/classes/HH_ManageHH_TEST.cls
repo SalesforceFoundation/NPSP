@@ -94,9 +94,6 @@ private class HH_ManageHH_TEST {
     */
     public static testMethod void testNewHHObject() { 
         
-        npo02__Household__c hh = new npo02__Household__c(Name = 'test_hh');
-        insert hh;
-        
         Account acc = new Account(Name='some org account');
         insert acc;
         
