@@ -23,6 +23,11 @@
     loadObjects: function(component) {
         component.set("v.showSpinner", true);
         var hhId = component.get('v.hhId');
+        
+        // handle new household object
+        if (hhId === null)
+            return;
+        
         component.set('v.hhTypePrefix', String(hhId).substr(0, 3));
         var namespacePrefix = component.get('v.namespacePrefix');
 
