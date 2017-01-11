@@ -10,8 +10,7 @@
     <apex:variable var="dependent" value="{!sObjField.dependentPicklist}"/>
     <apex:variable var="type" value="{!IF(field=='RecordTypeId', 'picklist', sObjField.type)}"/>
     <apex:variable var="fixup" value="{!IF(dependent, IF(type=='picklist', 'dependentPicklistFixup', 'dependentMultiPicklistFixup'), IF(CONTAINS(type,'date'),'dateFixup', ''))}"/>
-    <apex:variable var="label" value="{!IF(!contains(field,'.') && !contains(field,'__c') && type == 'reference',
-                                            sObjField.relationshipName, sObjField.label)}"/>
+    <apex:variable var="label" value="{!sObjField.label}"/>
 
     <!-- default -->
     <apex:outputPanel layout="block" styleClass="{!'slds-form-element ' + styleClass + ' ' + fixup}" id="divInput" rendered="{!type!='boolean' && type!='reference'}">
