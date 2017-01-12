@@ -386,7 +386,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
 
         // handle multiple di's referring to the same existing contact
         set<string> setDIKeyUpsert = new set<string>();
-        list<Contact> listConUpsert = new list<Contact>();
+        set<Contact> setConUpsert = new set<Contact>();
         list<DataImport__c> listDIUpsert = new list<DataImport__c>();
                     
         // create/update our c1's
@@ -407,16 +407,8 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             }
                         
             if (isModified) {
-            	boolean isAlreadyAdded = false;
-            	// add all dikeys for the contact to make sure we don't try to upsert the contact twice
-            	for (string dikey : listDiKeyC1(di)) {
-	                if (!setDIKeyUpsert.add(diKey))
-	                   isAlreadyAdded = true; 
-            	}
-            	if (!isAlreadyAdded) {
-                    listConUpsert.add(con);
-                    listDIUpsert.add(di);
-            	}
+                setConUpsert.add(con);
+                listDIUpsert.add(di);
             }
             
             // testing error handling
@@ -424,7 +416,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
                 con.LastName = null;
         }
         //UTIL_Debug.debug('****DJH about to upsert c1s: ' + listConUpsert);
-        list<Database.UpsertResult> listUR = database.upsert(listConUpsert, false);
+        list<Database.UpsertResult> listUR = database.upsert(new list<Contact>(setConUpsert), false);
         for (integer i = 0; i < listUR.size(); i++) {
             Database.UpsertResult ur = listUR[i];
             if (!ur.isSuccess()) {
@@ -446,7 +438,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             
         // get the Household Accounts that were created for C1's
         map<Id, Id> mapC1IdToHHId = new map<Id, Id>();
-        for (Contact con : [select Id, AccountId from Contact where Id in :listConUpsert]) {
+        for (Contact con : [select Id, AccountId from Contact where Id in :setConUpsert]) {
             mapC1IdToHHId.put(con.Id, con.AccountId);
         }
         // store it back in C1 and the DI for later use
@@ -464,7 +456,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         // now create our c2's
         map<string, string> mapDIFieldToC2Field = mapFieldsForDIObject('Contact2', 'Contact', listStrDataImportFields);
         setDIKeyUpsert.clear();
-        listConUpsert.clear();
+        setConUpsert.clear();
         listDIUpsert.clear();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
@@ -483,23 +475,15 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
                 }
             }
             if (isModified) {
-                boolean isAlreadyAdded = false;
-                // add all dikeys for the contact to make sure we don't try to upsert the contact twice
-                for (string dikey : listDiKeyC2(di)) {
-                    if (!setDIKeyUpsert.add(diKey))
-                       isAlreadyAdded = true; 
-                }
-                if (!isAlreadyAdded) {
-                    listConUpsert.add(con);
-                    listDIUpsert.add(di);
-                }
+                setConUpsert.add(con);
+                listDIUpsert.add(di);
             }
             // testing error handling
             if (Test.isRunningTest() && con.LastName != null && con.LastName.startsWith('FailTest'))
                 con.LastName = null;
         }
         //UTIL_Debug.debug('****DJH about to upsert c2s: ' + listConUpsert);
-        listUR = database.upsert(listConUpsert, false);
+        listUR = database.upsert(new list<Contact>(setConUpsert), false);
         for (integer i = 0; i < listUR.size(); i++) {
             Database.UpsertResult ur = listUR[i];
             if (!ur.isSuccess()) {
@@ -570,11 +554,11 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     // for every di with C1 or C2 data, make sure they have a lastname
     private void verifyContactData() {    
         for (DataImport__c di: listDI) {
-            if (isContactSpecified(di, 'Contact1') && di.Contact1_Lastname__c == null) {
+            if (isContactSpecified(di, 'Contact1') && di.Contact1_Lastname__c == null && di.Contact1Imported__c == null) {
                 LogBDIError(di, label.bdiErrorInvalidLastname, 'Contact1ImportStatus__c');
                 continue;                
             }
-            if (isContactSpecified(di, 'Contact2') && di.Contact2_Lastname__c == null) {
+            if (isContactSpecified(di, 'Contact2') && di.Contact2_Lastname__c == null && di.Contact2Imported__c == null) {
                 di.Contact2_Lastname__c = di.Contact1_Lastname__c;
                 if (di.Contact2_Lastname__c == null)
 	                LogBDIError(di, label.bdiErrorInvalidLastname, 'Contact2ImportStatus__c');
@@ -584,6 +568,8 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     
     // utility to see if any of the dikey fields for the Contact are specified
     private boolean isContactSpecified(DataImport__c di, string strCx) {
+        if (di.get(strCx + 'Imported__c') != null)
+            return true;
         if (di.get(strCx + '_Firstname__c') != null)
             return true;
         if (di.get(strCx + '_Lastname__c') != null)
@@ -619,6 +605,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         set<string> setEmail = new set<string>();
         set<string> setCustomIDString = new set<string>();
         set<double> setCustomIDNumber = new set<double>();
+        set<Id> setSFId = new set<Id>();
         set<Id> setHHId = new set<Id>();
                 
         for (DataImport__c di : listDI) {
@@ -626,6 +613,8 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         	if (di.Status__c == label.bdiFailed)
         	   continue;
             // c1
+            if (di.Contact1Imported__c != null)
+                setSFId.add(di.Contact1Imported__c);
             if (di.Contact1_Firstname__c != null)
                 setFname.add(di.Contact1_Firstname__c);
             if (di.Contact1_Lastname__c != null)
@@ -647,6 +636,8 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             }
                 
             // c2
+            if (di.Contact2Imported__c != null)
+                setSFId.add(di.Contact2Imported__c);
             if (di.Contact2_Firstname__c != null)
                 setFname.add(di.Contact2_Firstname__c);
             if (di.Contact2_Lastname__c != null)
@@ -673,6 +664,9 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             strSoql += diSettings.Contact_Custom_Unique_ID__c + ', ';        
         strSoql += ' Email, npe01__AlternateEmail__c, npe01__HomeEmail__c, npe01__WorkEmail__c ';
         strSoql += ' from Contact where ';
+        if (setSFId.size() > 0) {
+            strSoql += ' (Id in :setSFId) or ';
+        }
         string strAnd = '(';
         if (isFirstnameInContactMatchRules) {
             strSoql += strAnd + ' Firstname in :setFName ';
@@ -693,6 +687,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         }
         strSoql += ')';
         
+        //system.debug('****DJH about to soql contacts: ' + strSoql);
         list<Contact> listCon = database.query(strSoql);
         //system.debug('****DJH potential existing contacts: ' + listCon);
         
@@ -861,8 +856,13 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             return null;
             
         list<string> listDiKey = new list<string>();
+        
+        // we need any Contact SFId key to always be checked first when matching
+        if (con.Id != null) {
+            listDiKey.add(con.Id);
+        }
 
-        // we need the Contact CustomId key to always be checked first when matching
+        // we need the Contact CustomId key to always be checked second when matching
         string strUniqueId = '';
         if (isCustomIDInContactMatchRules && (strUniqueId = strNull(con.get(diSettings.Contact_Custom_Unique_ID__c))) != '') {
             listDiKey.add(strUniqueId);
@@ -926,8 +926,14 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     private list<string> listDiKeyCx(DataImport__c di, string strCx) {
         list<string> listDiKey = new list<string>();
 
-        // we need the Contact CustomId key to always be checked first when matching
+        // we need the Contact Lookup key to always be checked first when matching
         string strUniqueId = ''; 
+        if ((strUniqueId = strNull(di.get(strCx + 'Imported__c'))) != '') {
+            listDiKey.add(strUniqueId);
+            strUniqueId = '';
+        }
+
+        // we need the Contact CustomId key to always be checked second when matching
         if (isCustomIDInContactMatchRules && (strUniqueId = strNull(di.get(strDIContactCustomIDField(strCx)))) != '') {
             listDiKey.add(strUniqueId);
         }
@@ -935,24 +941,37 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         list<string> listFName = new list<string>();    
         list<string> listLName = new list<string>();    
         list<string> listEmail = new list<string>();
+        boolean addedToken = false;
         
-        if (di.get(strCx + '_Firstname__c') != null)
+        if (di.get(strCx + '_Firstname__c') != null) {
             listFName.add(string.valueOf(di.get(strCx + '_Firstname__c')));
-        if (!isFirstnameInContactMatchRules)
+            addedToken = true;
+        }
+        if (!isFirstnameInContactMatchRules || !addedToken)
             listFName.add('');
-            
-        if (di.get(strCx + '_Lastname__c') != null)
+
+        addedToken = false;
+        if (di.get(strCx + '_Lastname__c') != null) {
             listLName.add(string.valueOf(di.get(strCx + '_Lastname__c')));
-        if (!isLastnameInContactMatchRules)
+            addedToken = true;
+        }
+        if (!isLastnameInContactMatchRules || !addedToken)
             listLName.add('');
-            
-        if (di.get(strCx + '_Personal_Email__c') != null)
+
+        addedToken = false;
+        if (di.get(strCx + '_Personal_Email__c') != null) {
             listEmail.add(string.valueOf(di.get(strCx + '_Personal_Email__c')));
-        if (di.get(strCx + '_Work_Email__c') != null)
+            addedToken = true;
+        }
+        if (di.get(strCx + '_Work_Email__c') != null) {
             listEmail.add(string.valueOf(di.get(strCx + '_Work_Email__c')));
-        if (di.get(strCx + '_Alternate_Email__c') != null)
+            addedToken = true;
+        }
+        if (di.get(strCx + '_Alternate_Email__c') != null) {
             listEmail.add(string.valueOf(di.get(strCx + '_Alternate_Email__c')));
-        if (!isEmailInContactMatchRules)
+            addedToken = true;
+        }
+        if (!isEmailInContactMatchRules || !addedToken)
             listEmail.add('');
             
         set<string> setDiKey = new set<string>();
@@ -978,7 +997,8 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         // for c2's that we know their household, we want to add a "looser" key to match by as well.
         if (strCx == 'Contact2' && di.HouseholdAccountImported__c != null && di.get('Contact2_Firstname__c') != null) {
             listDiKey.add(di.get('Contact2_Firstname__c') + '|' + di.HouseholdAccountImported__c);
-        }               
+        }
+        //system.debug('****DJH: listDiKeyCx returns: ' + listDiKey);               
         return listDiKey;
     }
     

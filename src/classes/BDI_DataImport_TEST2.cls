@@ -401,6 +401,50 @@ private with sharing class BDI_DataImport_TEST2 {
 
    /*********************************************************************************************************
     operation:
+        import existing contacts within multiple di records in the same batch, using Salesforce Id matching
+    verify:
+        all contacts matched
+    **********************************************************************************************************/            
+    static testMethod void ManyDISalesforceIdMatchingExistingContacts() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDISalesforceIdMatchingExistingContacts') return;
+            
+         // existing contacts
+        list<Contact> listConExisting = new list<Contact>();
+        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='foo@bar.com', Title='t1'));
+        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@c1.com', Title='t2'));
+        insert listConExisting;
+        
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c=null, 
+            Contact1_Title__c='t1Updated', Contact1Imported__c=listConExisting[0].Id));
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c=null, 
+            Contact1_Title__c='t2Updated', Contact1Imported__c=listConExisting[1].Id));
+        insert listDI;
+        
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name, Email, Title from Contact order by Title];
+        system.assertEquals(2, listCon.size());
+        
+        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, Contact2Imported__c, Contact2ImportStatus__c, Contact1_Title__c 
+            from DataImport__c 
+            order by Contact1_Title__c];
+        system.assertEquals(2, listDI.size());
+        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
+        system.assertEquals(listDI[1].Contact1Imported__c, listCon[1].Id);
+        system.assertEquals(listDI[0].Contact1_Title__c, listCon[0].Title);
+        system.assertEquals(listDI[1].Contact1_Title__c, listCon[1].Title);
+        system.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
+    }
+
+   /*********************************************************************************************************
+    operation:
         import existing contacts within multiple di records in the same batch, using Custom Unique Id matching
     verify:
         all contacts matched
