@@ -38,3 +38,7 @@ flows:
         tasks:
             6.1:
                 task: update_admin_profile
+    release_beta:
+        tasks:
+            10:
+                task: github_master_to_feature    
