@@ -1136,6 +1136,7 @@
         <members>lblNPSPSettings</members>
         <members>lblNoHHMergePermissions</members>
         <members>lblPostalCode</members>
+        <members>lblRequired</members>
         <members>lblSalutation</members>
         <members>lblState</members>
         <members>lblStreet</members>
