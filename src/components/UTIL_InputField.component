@@ -20,7 +20,7 @@
             </apex:outputText>{!label}
         </apex:outputLabel>
         <div class="slds-form-element__control">
-            <apex:inputField id="inputX" required="false" value="{!sObj[field]}" label=""
+            <apex:inputField id="inputX" required="{!required}" value="{!sObj[field]}" label=""
                 styleClass="{!CASE(type,
                                         'textarea', 'slds-textarea',
                                         'picklist', 'slds-select',
@@ -46,7 +46,7 @@
             </apex:outputText>{!label}
         </apex:outputLabel>
         <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--right">
-            <apex:inputField id="lookupX" required="false" value="{!sObj[field]}" label=""
+            <apex:inputField id="lookupX" required="{!required}" value="{!sObj[field]}" label=""
                 styleClass="{!'lookupInput203 ' + field}" onchange="{!onchange}"/>
         </div>
         <script type="text/javascript">
