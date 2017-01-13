@@ -9,68 +9,56 @@
     <apex:variable var="dependent" value="{!$ObjectType[sObjType].fields[field].dependentPicklist}"/>
     <apex:variable var="fixup"
         value="{!IF(dependent,
-                    IF($ObjectType[sObjType].fields[field].type=='picklist', 'dependentPicklistFixup', 'dependentMultiPicklistFixup'),
+                    IF($ObjectType[sObjType].fields[field].type=='picklist', ' dependentPicklistFixup', ' dependentMultiPicklistFixup'),
                         IF(CONTAINS($ObjectType[sObjType].fields[field].type,'date'),'dateFixup', ''))}"/>
     <apex:variable var="label" value="{!$ObjectType[sObjType].fields[field].label}"/>
 
-    <!-- read only -->
-    <apex:outputPanel layout="none" rendered="{!!$ObjectType[sObjType].fields[field].updateable}">
-        <div class="slds-form-element">
-            <span class="slds-form-element__label">{!label}</span>
-            <div class="slds-form-element__control">
-                <span class="slds-form-element__static">{!sObj[field]}</span>
-            </div>
-        </div>  
+    <!-- default -->
+    <apex:outputPanel layout="block" styleClass="{!'slds-form-element ' + styleClass + fixup}" id="divInput"
+        rendered="{!($ObjectType[sObjType].fields[field].type!='boolean' && $ObjectType[sObjType].fields[field].type!='reference') || field=='RecordTypeId'}">
+        <apex:outputLabel for="inputX" styleClass="slds-form-element__label" >
+            <apex:outputText rendered="{!required}">
+                <abbr class="slds-required" title="{!$Label.lblRequired}">*</abbr>
+            </apex:outputText>{!label}
+        </apex:outputLabel>
+        <div class="slds-form-element__control">
+            <apex:inputField id="inputX" required="{!required}" value="{!sObj[field]}" label=""
+                styleClass="{!CASE($ObjectType[sObjType].fields[field].type,
+                                        'textarea', 'slds-textarea',
+                                        'picklist', 'slds-select',
+                                        'multipicklist', 'slds-select multipicklistSLDSFixup',
+                                        IF(field=='RecordTypeId', 'slds-select', 'slds-input'))}" onchange="{!onchange}"/>
+        </div>
     </apex:outputPanel>
-    <!-- updateable -->
-    <apex:outputPanel layout="none" rendered="{!$ObjectType[sObjType].fields[field].updateable}">
-        <!-- default -->
-        <apex:outputPanel layout="block" styleClass="{!'slds-form-element ' + styleClass + ' ' + fixup}" id="divInput"
-            rendered="{!($ObjectType[sObjType].fields[field].type!='boolean' && $ObjectType[sObjType].fields[field].type!='reference') || field=='RecordTypeId'}">
-            <apex:outputLabel for="inputX" styleClass="slds-form-element__label" >
-                <apex:outputText rendered="{!required}">
-                    <abbr class="slds-required" title="{!$Label.lblRequired}">*</abbr>
-                </apex:outputText>{!label}
-            </apex:outputLabel>
-            <div class="slds-form-element__control">
-                <apex:inputField id="inputX" required="{!required}" value="{!sObj[field]}" label=""
-                    styleClass="{!CASE($ObjectType[sObjType].fields[field].type,
-                                            'textarea', 'slds-textarea',
-                                            'picklist', 'slds-select',
-                                            'multipicklist', 'slds-select multipicklistSLDSFixup',
-                                            IF(field=='RecordTypeId', 'slds-select', 'slds-input'))}" onchange="{!onchange}"/>
-            </div>
-        </apex:outputPanel>
-        <!-- checkbox field -->
-        <apex:outputPanel layout="block" styleClass="{!'slds-form-element ' + styleClass}" id="divCheckbox"
-            rendered="{!$ObjectType[sObjType].fields[field].type=='boolean'}">
-            <apex:outputLabel styleClass="slds-checkbox" for="checkBox">
-                <apex:inputField id="checkBox" value="{!sObj[field]}" onchange="{!onchange}"/>
-                <span class="slds-checkbox--faux"></span>
-                <span class="slds-form-element__label">{!label}</span>
-            </apex:outputLabel>
-        </apex:outputPanel>
-        <!-- lookup -->
-        <apex:outputPanel layout="block" styleClass="{!'slds-form-element ' + styleClass}" id="divLookup"
-            rendered="{!$ObjectType[sObjType].fields[field].type=='reference' && field!='RecordTypeId'}">
-            <apex:outputLabel for="lookupX" styleClass="slds-form-element__label" >
-                <apex:outputText rendered="{!required}">
-                    <abbr class="slds-required" title="{!$Label.lblRequired}">*</abbr>
-                </apex:outputText>{!label}
-            </apex:outputLabel>
-            <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--right">
-                <apex:inputField id="lookupX" required="{!required}" value="{!sObj[field]}" label=""
-                    styleClass="{!'lookupInput203 ' + field}" onchange="{!onchange}"/>
-            </div>
-            <script type="text/javascript">
-                var lkInput = document.getElementById("{!$Component.lookupX}");
-                lkInput.style.visibility = "";
-                var lkSpan = lkInput.parentElement;
-                var lkLink = lkSpan.querySelector("a");
-                lkLink.style.visibility = "";
-                lkLink.className = "";
-                lkLink.innerHTML = "<svg aria-hidden=\"true\" class=\"slds-icon slds-input__icon slds-icon--x-small slds-icon-text-default\" viewBox=\"0 0 24 24\"><path  d=\"M22.9 20.9l-6.2-6.1c1.3-1.8 1.9-4 1.6-6.4-.6-3.9-3.8-7.1-7.8-7.4C5 .4.4 5 1 10.5c.3 4 3.5 7.3 7.4 7.8 2.4.3 4.6-.3 6.4-1.5l6.1 6.1c.3.3.7.3 1 0l.9-1c.3-.3.3-.7.1-1zM3.7 9.6c0-3.2 2.7-5.9 5.9-5.9s6 2.7 6 5.9-2.7 6-6 6-5.9-2.6-5.9-6z\"></path></svg>";
-            </script>
-        </apex:outputPanel>
+    <!-- checkbox field -->
+    <apex:outputPanel layout="block" styleClass="{!'slds-form-element ' + styleClass}" id="divCheckbox"
+        rendered="{!$ObjectType[sObjType].fields[field].type=='boolean'}">
+        <apex:outputLabel styleClass="slds-checkbox" for="checkBox">
+            <apex:inputField id="checkBox" value="{!sObj[field]}" onchange="{!onchange}"/>
+            <span class="slds-checkbox--faux"></span>
+            <span class="slds-form-element__label">{!label}</span>
+        </apex:outputLabel>
+    </apex:outputPanel>
+    <!-- lookup -->
+    <apex:outputPanel layout="block" styleClass="{!'slds-form-element ' + styleClass}" id="divLookup"
+        rendered="{!$ObjectType[sObjType].fields[field].type=='reference' && field!='RecordTypeId'}">
+        <apex:outputLabel for="lookupX" styleClass="slds-form-element__label" >
+            <apex:outputText rendered="{!required}">
+                <abbr class="slds-required" title="{!$Label.lblRequired}">*</abbr>
+            </apex:outputText>{!label}
+        </apex:outputLabel>
+        <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--right">
+            <apex:inputField id="lookupX" required="{!required}" value="{!sObj[field]}" label=""
+                styleClass="{!'lookupInput203 ' + field}" onchange="{!onchange}"/>
+        </div>
+        <script type="text/javascript">
+            var lkInput = document.getElementById("{!$Component.lookupX}");
+            lkInput.style.visibility = "";
+            var lkSpan = lkInput.parentElement;
+            var lkLink = lkSpan.querySelector("a");
+            lkLink.style.visibility = "";
+            lkLink.className = "";
+            lkLink.innerHTML = "<svg aria-hidden=\"true\" class=\"slds-icon slds-input__icon slds-icon--x-small slds-icon-text-default\" viewBox=\"0 0 24 24\"><path  d=\"M22.9 20.9l-6.2-6.1c1.3-1.8 1.9-4 1.6-6.4-.6-3.9-3.8-7.1-7.8-7.4C5 .4.4 5 1 10.5c.3 4 3.5 7.3 7.4 7.8 2.4.3 4.6-.3 6.4-1.5l6.1 6.1c.3.3.7.3 1 0l.9-1c.3-.3.3-.7.1-1zM3.7 9.6c0-3.2 2.7-5.9 5.9-5.9s6 2.7 6 5.9-2.7 6-6 6-5.9-2.6-5.9-6z\"></path></svg>";
+        </script>
     </apex:outputPanel>
 </apex:component>
