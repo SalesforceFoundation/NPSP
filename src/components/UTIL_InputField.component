@@ -10,7 +10,7 @@
     <apex:variable var="fixup"
         value="{!IF(dependent,
                     IF($ObjectType[sObjType].fields[field].type=='picklist', ' dependentPicklistFixup', ' dependentMultiPicklistFixup'),
-                        IF(CONTAINS($ObjectType[sObjType].fields[field].type,'date'),'dateFixup', ''))}"/>
+                        IF(CONTAINS($ObjectType[sObjType].fields[field].type,'date'),' dateFixup', ''))}"/>
     <apex:variable var="label" value="{!$ObjectType[sObjType].fields[field].label}"/>
 
     <!-- default -->
