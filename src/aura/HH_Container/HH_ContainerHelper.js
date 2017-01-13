@@ -3,7 +3,7 @@
      * @description called at onInit to detect if Locker Service is enabled, warning if so.
      */
     warnOnLockerService: function(component) {
-        if (component.$lskey != null) {        
+        if (component.toString != null && component.toString().includes('SecureComponent')) {        
             this.displayUIMessage(component, "LockerService, a new Salesforce security service, is activated and is preventing this page from working correctly. To get this page to work correctly, search for Critical Updates under Salesforce Setup, and then deactivate the Enable Lightning LockerService Security critical update.", "divUIMessageContainer");
         }
     },
@@ -14,6 +14,11 @@
     loadObjects: function(component) {
         component.set("v.showSpinner", true);
         var hhId = component.get('v.hhId');
+        
+        // handle new household object
+        if (hhId === null)
+            return;
+        
         component.set('v.hhTypePrefix', String(hhId).substr(0, 3));
         var namespacePrefix = component.get('v.namespacePrefix');
 
@@ -131,25 +136,6 @@
         var hh = component.get('v.hh');
         var listCon = component.get('v.listCon');
         
-        // need to ensure our primary contact is first in the list for naming code
-        // we use a temporary list so it won't affect our shared list.
-        var listConT = [];
-        var vfEventHandlers = component.get('v.vfEventHandlers');
-        var primaryConName = vfEventHandlers.HH_getPrimaryContactName(); 
-        if (primaryConName) {
-            primaryConName = primaryConName.toLowerCase();
-        }
-        for (var i = 0; i < listCon.length; i++) {
-            var con = listCon[i];
-            var name = con.FirstName + ' ' + con.LastName;
-            name = name.toLowerCase();
-            if (name === primaryConName) {
-                listConT.unshift(con);
-            } else {
-                listConT.push(con);
-            }
-        }
-
         // update our auto-naming exclusion states
         this.updateNamingExclusions(component, hh);
 
@@ -158,10 +144,10 @@
         // now we need to fixup namespacing of fields
         var namespacePrefix = component.get('v.namespacePrefix');
         hh = this.addPrefixToObjectFields(namespacePrefix, hh);
-        listConT = this.addPrefixToListObjectFields(namespacePrefix, listConT);
+        listCon = this.addPrefixToListObjectFields(namespacePrefix, listCon);
         action.setParams({
             hh: hh,
-            listCon: listConT
+            listCon: listCon
         });
         var self = this;
         action.setCallback(this, function(response) {
