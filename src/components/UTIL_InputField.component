@@ -15,7 +15,7 @@
 
     <!-- read only -->
     <apex:outputPanel layout="none" rendered="{!!$ObjectType[sObjType].fields[field].updateable}">
-        <div class="slds-form-element slds-has-divider--bottom">
+        <div class="slds-form-element">
             <span class="slds-form-element__label">{!label}</span>
             <div class="slds-form-element__control">
                 <span class="slds-form-element__static">{!sObj[field]}</span>
@@ -26,7 +26,7 @@
     <apex:outputPanel layout="none" rendered="{!$ObjectType[sObjType].fields[field].updateable}">
         <!-- default -->
         <apex:outputPanel layout="block" styleClass="{!'slds-form-element ' + styleClass + ' ' + fixup}" id="divInput"
-            rendered="{!$ObjectType[sObjType].fields[field].type!='boolean' && $ObjectType[sObjType].fields[field].type!='reference'}">
+            rendered="{!($ObjectType[sObjType].fields[field].type!='boolean' && $ObjectType[sObjType].fields[field].type!='reference') || field=='RecordTypeId'}">
             <apex:outputLabel for="inputX" styleClass="slds-form-element__label" >
                 <apex:outputText rendered="{!required}">
                     <abbr class="slds-required" title="{!$Label.lblRequired}">*</abbr>
@@ -38,7 +38,7 @@
                                             'textarea', 'slds-textarea',
                                             'picklist', 'slds-select',
                                             'multipicklist', 'slds-select multipicklistSLDSFixup',
-                                            'slds-input')}" onchange="{!onchange}"/>
+                                            IF(field=='RecordTypeId', 'slds-select', 'slds-input'))}" onchange="{!onchange}"/>
             </div>
         </apex:outputPanel>
         <!-- checkbox field -->
@@ -52,7 +52,7 @@
         </apex:outputPanel>
         <!-- lookup -->
         <apex:outputPanel layout="block" styleClass="{!'slds-form-element ' + styleClass}" id="divLookup"
-            rendered="{!$ObjectType[sObjType].fields[field].type=='reference'}">
+            rendered="{!$ObjectType[sObjType].fields[field].type=='reference' && field!='RecordTypeId'}">
             <apex:outputLabel for="lookupX" styleClass="slds-form-element__label" >
                 <apex:outputText rendered="{!required}">
                     <abbr class="slds-required" title="{!$Label.lblRequired}">*</abbr>
