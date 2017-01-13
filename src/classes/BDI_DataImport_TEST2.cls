@@ -261,6 +261,52 @@ private with sharing class BDI_DataImport_TEST2 {
     
     /*********************************************************************************************************
     operation:
+        import matching contacts within multiple di records in the same batch, updating different fields
+    verify:
+        only one contact created
+    **********************************************************************************************************/            
+    static testMethod void ManyDIDuplicateNewContactManyFields() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDIDuplicateNewContactManyFields') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com', 
+            Contact1_Title__c='myTitle'));
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com', 
+            Contact1_Birthdate__c=system.Today()));
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com', 
+            Contact1_Home_Phone__c='123-456-7890'));
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name, Title, Birthdate, HomePhone from Contact];
+        system.assertEquals(1, listCon.size());
+        system.assertEquals('c1 C1', listCon[0].Name);
+        system.assertEquals('myTitle', listCon[0].Title);
+        system.assertEquals(system.Today(), listCon[0].Birthdate);
+        system.assertEquals('123-456-7890', listCon[0].HomePhone);
+
+        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c, 
+            Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Contact1ImportStatus__c];
+        system.assertEquals(3, listDI.size());
+        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
+        system.assertEquals(listDI[1].Contact1Imported__c, listCon[0].Id);
+        system.assertEquals(listDI[2].Contact1Imported__c, listCon[0].Id);
+        system.assertNotEquals(null, listDI[0].HouseholdAccountImported__c);
+        system.assertNotEquals(null, listDI[1].HouseholdAccountImported__c);
+        system.assertNotEquals(null, listDI[2].HouseholdAccountImported__c);
+        system.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
+        system.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
+    }
+
+    /*********************************************************************************************************
+    operation:
         import existing contacts within multiple di records in the same batch, using different email fields
     verify:
         all contacts matched
