@@ -30,10 +30,18 @@ tasks:
             package_xml: lib/admin_profile.xml
 
     test_data_1k:
+        description: Loads a test data set for most NPSP objects based on 1024 Contacts
         class_path: cumulusci.tasks.bulkdata.LoadData
         options:
             database_url: 'sqlite:///testdata/1k/test_data.db'
             mapping: 'testdata/1k/mapping.yml'
+
+    test_data_1k_data:
+        description: Loads a test data set for most NPSP objects based on 102400 Contacts.  NOTE: The sqlite data set is not included in the repo for this task so you need to load it into the correct filesystem location
+        class_path: cumulusci.tasks.bulkdata.LoadData
+        options:
+            database_url: 'sqlite:///testdata/100k/test_data.db'
+            mapping: 'testdata/100k/mapping.yml'
 
     test_data_delete:
         class_path: cumulusci.tasks.bulkdata.DeleteData
@@ -49,15 +57,6 @@ tasks:
                 - Campaign
 
 flows:
-    dev_org:
-        tasks:
-            6.1:
-                task: update_admin_profile
-    ci_feature:
-        tasks:
-            6.1:
-                task: update_admin_profile
-
     test_data_1k:
         description: WARNING, This flow deletes all data first, then loads the complete test data set based on 1,024 Contacts into the target org.
         tasks:
