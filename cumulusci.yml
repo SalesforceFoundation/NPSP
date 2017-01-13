@@ -30,7 +30,7 @@ tasks:
             package_xml: lib/admin_profile.xml
 
     test_data_1k:
-        description: Loads a test data set for most NPSP objects based on 1024 Contacts
+        description: 'Loads a test data set for most NPSP objects based on 1024 Contacts'
         class_path: cumulusci.tasks.bulkdata.LoadData
         options:
             database_url: 'sqlite:///testdata/1k/test_data.db'
@@ -44,6 +44,7 @@ tasks:
             mapping: 'testdata/100k/mapping.yml'
 
     test_data_delete:
+        description: 'WARNING: Deletes all data in the objects specified in the objects option.'
         class_path: cumulusci.tasks.bulkdata.DeleteData
         options:
             objects:
@@ -58,7 +59,7 @@ tasks:
 
 flows:
     test_data_1k:
-        description: WARNING, This flow deletes all data first, then loads the complete test data set based on 1,024 Contacts into the target org.
+        description: 'WARNING: This flow deletes all data first, then loads the complete test data set based on 1,024 Contacts into the target org.'
         tasks:
             1:
                 task: test_data_delete
