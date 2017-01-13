@@ -71,6 +71,9 @@ public with sharing class UTIL_Describe_TEST {
         s = UTIL_Describe.getFieldType('Account', 'CreatedDate');
         system.assertEquals('DATETIME', s);
         
+        s = UTIL_Describe.getNameField('Account');
+        system.assertEquals('name', s);
+
         try {
             s = UTIL_Describe.getObjectLabel('sdlkfjsdlkfjsldkfjlsdkfj');
         } catch (exception e) {
