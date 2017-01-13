@@ -386,7 +386,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
 
         // handle multiple di's referring to the same existing contact
         set<string> setDIKeyUpsert = new set<string>();
-        set<Contact> setConUpsert = new set<Contact>();
+        list<Contact> listConUpsert = new list<Contact>();
         list<DataImport__c> listDIUpsert = new list<DataImport__c>();
                     
         // create/update our c1's
@@ -407,16 +407,24 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             }
                         
             if (isModified) {
-                setConUpsert.add(con);
-                listDIUpsert.add(di);
+                boolean isAlreadyAdded = false;
+                // add all dikeys for the contact to make sure we don't try to upsert the contact twice
+                for (string dikey : listDiKeyContact(con)) {
+                    if (!setDIKeyUpsert.add(diKey))
+                       isAlreadyAdded = true; 
+                }
+                if (!isAlreadyAdded) {
+                    listConUpsert.add(con);
+                    listDIUpsert.add(di);
+                }
             }
             
             // testing error handling
             if (Test.isRunningTest() && con.LastName != null && con.LastName.startsWith('FailTest'))
                 con.LastName = null;
         }
-        //UTIL_Debug.debug('****DJH about to upsert c1s: ' + listConUpsert);
-        list<Database.UpsertResult> listUR = database.upsert(new list<Contact>(setConUpsert), false);
+        //system.debug('****DJH about to upsert c1s: ' + listConUpsert);
+        list<Database.UpsertResult> listUR = database.upsert(listConUpsert, false);
         for (integer i = 0; i < listUR.size(); i++) {
             Database.UpsertResult ur = listUR[i];
             if (!ur.isSuccess()) {
@@ -438,7 +446,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             
         // get the Household Accounts that were created for C1's
         map<Id, Id> mapC1IdToHHId = new map<Id, Id>();
-        for (Contact con : [select Id, AccountId from Contact where Id in :setConUpsert]) {
+        for (Contact con : [select Id, AccountId from Contact where Id in :listConUpsert]) {
             mapC1IdToHHId.put(con.Id, con.AccountId);
         }
         // store it back in C1 and the DI for later use
@@ -456,7 +464,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         // now create our c2's
         map<string, string> mapDIFieldToC2Field = mapFieldsForDIObject('Contact2', 'Contact', listStrDataImportFields);
         setDIKeyUpsert.clear();
-        setConUpsert.clear();
+        listConUpsert.clear();
         listDIUpsert.clear();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
@@ -475,15 +483,25 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
                 }
             }
             if (isModified) {
-                setConUpsert.add(con);
-                listDIUpsert.add(di);
+                boolean isAlreadyAdded = false;
+                // add all dikeys for the contact to make sure we don't try to upsert the contact twice
+                for (string dikey : listDiKeyContact(con)) {
+                    if (!setDIKeyUpsert.add(diKey))
+                       isAlreadyAdded = true; 
+                }
+                if (!isAlreadyAdded) {
+                    listConUpsert.add(con);
+                    listDIUpsert.add(di);
+                }
             }
             // testing error handling
             if (Test.isRunningTest() && con.LastName != null && con.LastName.startsWith('FailTest'))
                 con.LastName = null;
         }
-        //UTIL_Debug.debug('****DJH about to upsert c2s: ' + listConUpsert);
-        listUR = database.upsert(new list<Contact>(setConUpsert), false);
+        //system.debug('****DJH about to upsert c2s: ' + listConUpsert);
+        //system.debug('****DJH listDIUpsert: ' + listDIUpsert);
+        //system.debug('****DJH setDIKeyUpsert: ' + setDIKeyUpsert);
+        listUR = database.upsert(listConUpsert, false);
         for (integer i = 0; i < listUR.size(); i++) {
             Database.UpsertResult ur = listUR[i];
             if (!ur.isSuccess()) {
@@ -872,31 +890,47 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         list<string> listLName = new list<string>();    
         list<string> listEmail = new list<string>();
         
-        if (con.Firstname != null)
+        boolean addedToken = false;
+        if (con.Firstname != null) {
             listFName.add(con.Firstname);
-        if (!isFirstnameInContactMatchRules)
-        	listFName.add('');
-            
-        if (con.Lastname != null)
+            addedToken = true;
+        }
+        if (!addedToken || !isFirstnameInContactMatchRules)
+            listFName.add('');
+        
+        addedToken = false;
+        if (con.Lastname != null) {
             listLName.add(con.Lastname);
-        if (!isLastnameInContactMatchRules)
+            addedToken = true;
+        }
+        if (!addedToken || !isLastnameInContactMatchRules)
             listLName.add('');
             
-        if (con.Email != null)
+        addedToken = false;
+        if (con.Email != null) {
             listEmail.add(con.Email);
-        if (con.npe01__HomeEmail__c != null)
+            addedToken = true;
+        }
+        if (con.npe01__HomeEmail__c != null) {
             listEmail.add(con.npe01__HomeEmail__c);
-        if (con.npe01__WorkEmail__c != null)
+            addedToken = true;
+        }
+        if (con.npe01__WorkEmail__c != null) {
             listEmail.add(con.npe01__WorkEmail__c);
-        if (con.npe01__AlternateEmail__c != null)
+            addedToken = true;
+        }
+        if (con.npe01__AlternateEmail__c != null) {
             listEmail.add(con.npe01__AlternateEmail__c);
-        if (!isEmailInContactMatchRules)
+            addedToken = true;
+        }
+        if (!addedToken || !isEmailInContactMatchRules)
             listEmail.add('');
             
         set<string> setDiKey = new set<string>();
         addDiKeyPermutations(setDiKey, listFName, listLName, ListEmail, strUniqueId);
         listDiKey.addAll(setDiKey);
 
+        //system.debug('****DJH listDiKeyContact con: ' + con + ' listDIKey: ' + listDIKey);
         return listDiKey;
     }
 
