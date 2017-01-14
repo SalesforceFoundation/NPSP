@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2016, Salesforce.org
+    Copyright (c) 2017, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -30,41 +30,70 @@
 
 /**
  * @author Salesforce.org
- * @date 2016
+ * @date 2017
  * @group Util
- * @description Trigger handler allowing cascade delete and undelete of child objects through lookup relationships.
- * The only difference in functionality with standard cascade deletion is that child records show up separately from
- * their parent in the recycle bin.
- * To enable cascade delete for a new relationship, add it to the "cascades" map. When adding a new object type, also
- * add a corresponding trigger handler.
+ * @description Extend this to allow cascade delete and undelete of child objects through lookup relationships.
+ * 
+ * The only differences in functionality with standard cascade deletion is that child records show up separately from
+ * their parent in the recycle bin, and all triggers run on cascade deleted objects.
+ *
+ * To enable cascade delete for a new object type: extend this class, create a static list of Cascades, override the
+ * getCascades() method to return that static list, and create a Trigger Handler record for the new class.
+ *
  * NOTE: Since standard cascade deletes don't run triggers on deleted children, records in the "cascades" map can also
  * be created for children further down the chain, e.g. grandchildren, great-grandchildren, etc. The relationship to 
  * the deleted parent object can be provided to allow cascade functionality for those parent objects.
  */
-public with sharing class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
+//TBD making this global so managed package users can add lookup cascade deletions
+public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
-    * @description Static map of child sobjects per parent object type, used stashing objects for cascade deletion 
-    * between before and after triggers 
-    */
-    private static Map<SObjectType, List<SObject>> forDelete = new Map<SObjectType, List<SObject>>();
+    * @description Contains information for performing a cascade deletion.
+    * All that is needed to perform cascade deletion is the object name and the relationship to the parent
+    * object firing the deletion.
+    * To define conditions on child records to prevent the cascade deletion from completing, add any fields
+    * needed to queryFields, then override the addDeletionErrors
+    ********************************************************************************************************/
+    public class Cascade {
+        public final String objectName;
+        public final String parentRelationship;
+        //any additional fields needed to identify error conditions in child records
+        public List<String> queryFields;
+        //parent objects of trigger set that are firing the deletion
+        public Map<Id, SObject> parents;
+        //queried child object stash for deletion
+        public Map<Id, SObject> children;
+        //child to parent relationship
+        public Map<Id, Id> childToParent;
+
+        //child records preventing deletion grouped by type per parent record
+        public Map<Id, Map<String, List<Id>>> errors;
+        
+        //constructors
+        public Cascade(String objName, String parentRel) {
+            parents = new Map<Id, SObject>();
+            children = new Map<Id, SObject>();
+            childToParent = new Map<Id, Id>();
+            errors = new Map<Id, Map<String, List<Id>>>();
+
+            objectName = objName;
+            parentRelationship = parentRel;
+            queryFields = new List<String>{UTIL_Describe.getNameField(objName)};
+        }
+        public Cascade(String objName, String parentRel, List<String> qFields) {
+            this(objName, parentRel);
+            queryFields.addAll(qFields);
+        }
+    }
 
     /*******************************************************************************************************
-    * @description This map contains a keyset of object types that trigger cascade deletes, and values that store child
-    * objects that should be cascade deleted, and their lookup relationship to the parent object. Values are stored as a 
-    * list of strings; each string is of the format ObjectName.LookupFieldName, and multiple strings may be added to the 
-    * list
-    */
-    private final Map<SObjectType, List<String>> cascades = new Map<SObjectType, List<String>>{
-        Contact.SObjectType                      =>  new List<String>{'npe03__Recurring_Donation__c|npe03__Contact__c'},
-        Account.SObjectType                      =>  new List<String>{'npe03__Recurring_Donation__c|npe03__Organization__c',
-                                                                      'npe03__Recurring_Donation__c|npe03__Contact__r.AccountId',
-                                                                      'Allocation__c|Opportunity__r.AccountId'},
-        Opportunity.SObjectType                  =>  new List<String>{'Allocation__c|Opportunity__c'},
-        Campaign.SObjectType                     =>  new List<String>{'Allocation__c|Campaign__c'},
-        npe03__Recurring_Donation__c.SObjectType =>  new List<String>{'Allocation__c|Recurring_Donation__c',
-                                                                      'Opportunity|npe03__Recurring_Donation__c'}
-    };
+    * @description Override this method to pass a static list of Cascades to this super class. The list must
+    * be static to maintain context between before and after delete triggers.
+    * @return List<Cascade> The cascade deletions to perform for this trigger.
+    ********************************************************************************************************/
+    public virtual List<Cascade> getCascades() {
+        return new List<Cascade>();
+    }
 
     /*******************************************************************************************************
     * @description Performs cascade delete for lookup fields. Stashes records, deletes records, or undeletes
@@ -79,72 +108,156 @@ public with sharing class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        SObjectType objType = objResult.getSObjectType();
-        
         if (triggerAction == TDTM_Runnable.Action.BeforeDelete) {
-            doStash(objType, oldlist);
+            doStash(oldlist);
+            addDeletionErrors();
+            processDeletionErrors(objResult.getSObjectType().getDescribe().getName());
         }
 
-        if (triggerAction == TDTM_Runnable.Action.AfterDelete && forDelete.containsKey(objType)) {
-            doDelete(objType);
+        if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
+            //if this trigger context is the result of a merge, exit trigger without performing deletion
+            try {
+                String masterRecordId = (String)oldlist[0].get('MasterRecordId');
+                if (!String.isBlank(masterRecordId)) {
+                    return null;
+                }
+            } catch (Exception ex) {}
+
+            doDelete();
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterUndelete) {
-            doUndelete(objType, newlist);
+            doUndelete(newlist);
         }
-
         return null;
     }
 
     /*******************************************************************************************************
-    * @description Stashes child objects for cascade deletion in the before delete event, for deletion in the
-    * after delete event.
-    * @param objType The SObject type of the parent object being deleted
+    * @description Stashes child objects in the before delete event, for cascade deletion in the after delete
+    * event.
     * @param deletedParents The list of sobjects of deleted parent objects.
     * @return void This method stashes child objects for deletions in the static variable and returns nothing.
     ********************************************************************************************************/
-    private void doStash(SObjectType objType, List<SObject> deletedParents) {
-        if (cascades.containsKey(objType)) {
-            for (String childLookup : cascades.get(objType)) {
-                String childQuery = getQuery(childLookup);
-                List<SObject> queryResult = Database.query(childQuery);
+    private void doStash(List<SObject> deletedParents) {
+        for (Cascade cc : getCascades()) {
+            cc.parents = new Map<Id,SObject>(deletedParents);
 
-                if (!queryResult.isEmpty()) {
-                    if (!forDelete.containsKey(objType)) {
-                        forDelete.put(objType, new List<SObject>());
-                    }
-                    forDelete.get(objType).addAll(queryResult);
-                }
+            String childQuery = getQuery(cc);
+            cc.children = new Map<Id, SObject>(Database.query(childQuery));
+
+            //relate child ids to parent ids
+            for (SObject child : cc.children.values()) {
+                Id parent = getParentId(child, cc.parentRelationship);
+                cc.childToParent.put(child.id, parent);
             }
         }
     }
 
     /*******************************************************************************************************
+    * @description Override this method to do custom error processing of child records that would prevent
+    * a cascade deletion from completing.
+    * @return void When overriden, this method should add errors to Cascades using the putError method below.
+    ********************************************************************************************************/
+    public virtual void addDeletionErrors() {}
+
+    /*******************************************************************************************************
+    * @description Facilitates adding deletion errors to a Cascade class, and should be used in
+    * overrides of the addDeletionErrors method.
+    * @param cc The cascade to add the error to.
+    * @param child The record with the error.
+    * @param String The string that describes the error.
+    * @return void This method adds to the Cascade's errors and returns nothing.
+    ********************************************************************************************************/
+    public void putError(Cascade cc, Id child, String error) {
+        Id parent = cc.childToParent.get(child);
+
+        //instantiate the map if this is the first error for this parent
+        if (!cc.errors.containsKey(parent)) {
+            cc.errors.put(parent, new Map<String, List<String>>());
+        }
+
+        Map<String,List<Id>> errorMap = cc.errors.get(parent);
+
+        if (!errorMap.containsKey(error)) {
+            errorMap.put(error, new List<Id>{child});
+        } else {
+            errorMap.get(error).add(child);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Processes all errors stored in Cascades, creating links to the records with errors and
+    * adding the errors to the trigger set records.
+    * @param parentObjectName The name of the object firing the delete.
+    * @return void This method adds errors to records in the trigger set and returns nothing.
+    ********************************************************************************************************/
+    private void processDeletionErrors(String parentObjectName){
+        String parentNameField = UTIL_Describe.getNameField(parentObjectName);
+        for (Cascade cc : getCascades()) {
+            for (Id parentId : cc.errors.keySet()) {
+                SObject parent = cc.parents.get(parentId);
+                String parentName = (String)parent.get(parentNameField);
+                
+                String error = String.format(Label.CascadeDeletionError, new List<String>{parentName});
+                for (String errType : cc.errors.get(parentId).keySet()) {
+                    error += ' ' + errType + ': ' + getErrorLinks(cc,cc.errors.get(parentId).get(errType)) + '. ';
+                }
+                error += String.format(Label.CascadeDeleteOrReassociate, new List<String>{parentName});
+                //don't escape error message with HTML links
+                parent.addError(error, false);
+            }
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Creates a list of the child records preventing deletion, with html links to those records
+    * with the record's name.
+    * @param cc The Cascade these records belong to.
+    * @param records The child records preventing deletion.
+    * @return String An HTML string with links to the child records.
+    ********************************************************************************************************/
+    private String getErrorLinks(Cascade cc, List<Id> records) {
+        List<String> results = new List<String>();
+        String nameField = (String)UTIL_Describe.getNameField(records[0].getSobjectType().getDescribe().getName());
+        for (Id recId : records) {
+            String childName = (String)cc.children.get(recId).get(nameField);
+            String htmlLink = '<a href="/'+recId+'" target="_blank">' + childName + '</a>';
+            results.add(htmlLink);
+        }
+        return String.join(results,', ');
+    }
+
+    /*******************************************************************************************************
     * @description Performs cascade delete an object type, allowing for partial success and recording errors.
-    * @param objType The SObject type of the parent object being deleted
     * @return void This method deletes records inline and returns nothing.
     ********************************************************************************************************/
-    private void doDelete(SObjectType objType) {
-        List<Database.DeleteResult> delResults = Database.delete(forDelete.get(objType), false);
-        ERR_Handler.Errors errorResult = ERR_Handler.getErrors(delResults, forDelete.get(objType));
-        if (errorResult.errorsExist) {
-            ERR_Handler.processErrors(errorResult.errorRecords, 'TDTM');
+    private void doDelete() {
+        List<SObject> forDelete = new List<SObject>();
+        for (Cascade cc : getCascades()) {
+            forDelete.addAll(cc.children.values());
+            cc.children.clear();
         }
-        forDelete.remove(objType);
+        if (!forDelete.isEmpty()) {
+            List<Database.DeleteResult> delResults = Database.delete(forDelete, false);
+            
+            ERR_Handler.Errors errorResult = ERR_Handler.getErrors(delResults, forDelete);
+            if (errorResult.errorsExist) {
+                ERR_Handler.processErrors(errorResult.errorRecords, 'TDTM');
+            }
+        }
     }
 
     /*******************************************************************************************************
     * @description Performs cascade undelete for lookup fields.
-    * @param objType The SObject type of the parent object being deleted
     * @param deletedParents The list of sobjects of undeleted parent objects.
     * @return void This method undeletes records inline and returns nothing.
     ********************************************************************************************************/
-    private void doUndelete(SObjectType objType, List<SObject> deletedParents) {
-        if (cascades.containsKey(objType)) {
-            for (String childLookup : cascades.get(objType)) {
-                String childQuery = getQuery(childLookup) + ' AND IsDeleted = true ALL ROWS';
+    private void doUndelete(List<SObject> deletedParents) {
+        for (Cascade cc : getCascades()) {
+            String childQuery = getQuery(cc) + ' AND IsDeleted = true ALL ROWS';
 
-                List<SObject> forUndelete = Database.query(childQuery);
+            List<SObject> forUndelete = Database.query(childQuery);
+            if (!forUndelete.isEmpty()) {
                 List<Database.UndeleteResult> undelResults = Database.undelete(forUndelete, false);
                 ERR_Handler.Errors errorResult = ERR_Handler.getErrors(undelResults, forUndelete);
                 if (errorResult.errorsExist) {
@@ -159,13 +272,39 @@ public with sharing class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
     * @param childLookup The combo key containing the to query and the relationship to the parent object.
     * @return String The query.
     ********************************************************************************************************/
-    private String getQuery(String childLookup) {
-        String childObjectName = childLookup.split('\\|')[0];
-        String lookupFieldName = childLookup.split('\\|')[1];
-
-        String childQuery = 'SELECT ID FROM ' + childObjectName;
-        childQuery += ' WHERE ' + lookupFieldName + ' IN :deletedParents';
+    private String getQuery(Cascade cc) {
+        String childQuery = 'SELECT ID, ' + cc.parentRelationship;
+        if (!cc.queryFields.isEmpty()) {
+            childQuery += ', ' + String.join(cc.queryFields, ',');
+        }
+        childQuery += ' FROM ' + cc.objectName + ' WHERE ' +  cc.parentRelationship + ' IN :deletedParents';
 
         return childQuery;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns a child sobject's parent's Id, following cross object references.
+    * @param obj The child SObject.
+    * @param relationship The relationship to the parent object.
+    * @return Id The parent Id
+    ********************************************************************************************************/
+    private Id getParentId(SObject obj, String relationship) {
+
+        SObject thisObj = obj;
+        //separate cross object references, i.e. account.name
+        list<string> splitField = (relationship.split('\\.',0));
+        
+        //remove the field name itself to only include parent object references
+        string fieldName = splitField[splitField.size()-1];
+        splitField.remove(splitField.size()-1);
+
+        //traverse parent relationships until the last one
+        for (string parentObj : splitField) {
+            if (thisObj!=null) {
+                thisObj = thisObj.getsObject(parentObj);
+            }
+        }
+
+        return (Id)thisObj.get(fieldName);
     }
 }

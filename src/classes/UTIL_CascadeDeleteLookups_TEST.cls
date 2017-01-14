@@ -110,12 +110,19 @@ private class UTIL_CascadeDeleteLookups_TEST {
         delete acc;
         Test.stopTest();
 
+        List<Error__c> errors = [SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c FROM Error__c];
+        System.assertEquals(0, errors.size(), errors);
+
         List<npe03__Recurring_Donation__c> deletedRd = [SELECT Id FROM npe03__Recurring_Donation__c WHERE Id=:rd.Id AND IsDeleted=true ALL ROWS];
-        System.assertEquals(1, deletedRd.size(), 'Recurring Donation should be cascade deleted when Contact is deleted.');
+        System.assertEquals(1, deletedRd.size(), 'Contact Recurring Donation should be cascade deleted when Account is deleted.');
 
         undelete acc;
 
         List<npe03__Recurring_Donation__c> undeletedRd = [SELECT Id FROM npe03__Recurring_Donation__c WHERE Id=:rd.Id AND IsDeleted=false ALL ROWS];
-        System.assertEquals(1, undeletedRd.size(), 'Recurring Donation should be cascade undeleted when Contact is undeleted.');
+        System.assertEquals(1, undeletedRd.size(), 'Contact Recurring Donation should be cascade undeleted when Account is undeleted.');
     }
+
+    //one test per object type, with every child type, doing delete and undelete
+    //test merge doesn't delete losing record's children
+    //test error handling with multiple errors produces adderror with links
 }
