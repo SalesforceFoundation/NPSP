@@ -6,6 +6,7 @@
         <members>ACCT_AccountMerge_TEST</members>
         <members>ACCT_Accounts_TDTM</members>
         <members>ACCT_CascadeDeleteLookups_TDTM</members>
+        <members>ACCT_CascadeDeleteLookups_TEST</members>
         <members>ACCT_HHAccounts_TEST</members>
         <members>ACCT_IndividualAccounts_TDTM</members>
         <members>ACCT_IndividualAccounts_TEST</members>
@@ -166,6 +167,7 @@
         <members>RD_AddDonationsBTN_CTRL</members>
         <members>RD_BulkTests_TEST</members>
         <members>RD_CascadeDeleteLookups_TDTM</members>
+        <members>RD_CascadeDeleteLookups_TEST</members>
         <members>RD_InstallScript_BATCH</members>
         <members>RD_ProcessControl</members>
         <members>RD_RecurringDonations</members>
