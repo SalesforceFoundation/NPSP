@@ -27,7 +27,6 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
-
 /**
  * @author Salesforce.org
  * @date 2017
@@ -44,7 +43,7 @@
  * be created for children further down the chain, e.g. grandchildren, great-grandchildren, etc. The relationship to 
  * the deleted parent object can be provided to allow cascade functionality for those parent objects.
  */
-//TBD making this global so managed package users can add lookup cascade deletions
+//TBD making this class global so managed package users can add lookup cascade deletions
 public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
@@ -95,6 +94,9 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
         return new List<Cascade>();
     }
 
+    /** @description Disable cascade deletion in operations where needed, e.g. contact merge. */
+    public static Boolean disableCascade = false;
+
     /*******************************************************************************************************
     * @description Performs cascade delete for lookup fields. Stashes records, deletes records, or undeletes
     * records depending on trigger action.
@@ -107,6 +109,10 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
     ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+
+        if (disableCascade) {
+            return null;
+        }
 
         if (triggerAction == TDTM_Runnable.Action.BeforeDelete) {
             doStash(oldlist);
@@ -161,7 +167,7 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
     public virtual void addDeletionErrors() {}
 
     /*******************************************************************************************************
-    * @description Facilitates adding deletion errors to a Cascade class, and should be used in
+    * @description Facilitates adding deletion errors to a Cascade class; this method should be used in
     * overrides of the addDeletionErrors method.
     * @param cc The cascade to add the error to.
     * @param child The record with the error.
