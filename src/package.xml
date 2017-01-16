@@ -869,6 +869,7 @@
         <members>CampaignMemberStatusOmit</members>
         <members>CascadeDeleteOrReassociate</members>
         <members>CascadeDeletionError</members>
+        <members>ClosedWonOpportunities</members>
         <members>EPAddDependentTask</members>
         <members>EPAddTask</members>
         <members>EPDeleteTask</members>
@@ -880,6 +881,7 @@
         <members>ErrorEmailMessage</members>
         <members>HiddenForSecurity</members>
         <members>NameRequired</members>
+        <members>OrganizationalOpportunities</members>
         <members>PageMessagesConfirm</members>
         <members>PageMessagesError</members>
         <members>PageMessagesFatal</members>
