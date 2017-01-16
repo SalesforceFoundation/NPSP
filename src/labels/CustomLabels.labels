@@ -604,6 +604,14 @@
         <value>Your attempt to delete {0} could not be completed because it is associated with the following </value>
     </labels>
     <labels>
+        <fullName>ClosedWonOpportunities</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ClosedWonOpportunities</shortDescription>
+        <value>Closed Won Opportunities</value>
+    </labels>
+    <labels>
         <fullName>EPAddDependentTask</fullName>
         <categories>Engagement Plans</categories>
         <language>en_US</language>
@@ -694,6 +702,14 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <protected>false</protected>
         <shortDescription>NameRequired</shortDescription>
         <value>Subject is a required field.</value>
+    </labels>
+    <labels>
+        <fullName>OrganizationalOpportunities</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrganizationalOpportunities</shortDescription>
+        <value>Organizational Opportunities</value>
     </labels>
     <labels>
         <fullName>PageMessagesConfirm</fullName>
