@@ -601,7 +601,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>CascadeDeletionError</shortDescription>
-        <value>Your attempt to delete {0} could not be completed because it is associated with the following records:</value>
+        <value>Your attempt to delete {0} could not be completed because it is associated with the following </value>
     </labels>
     <labels>
         <fullName>EPAddDependentTask</fullName>
