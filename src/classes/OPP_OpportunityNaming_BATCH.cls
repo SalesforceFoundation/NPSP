@@ -34,7 +34,7 @@
 * @group-content ../../ApexDocContent/Opportunity.htm
 * @description Batch class creates names all Opportunities per the naming spec.
  */
-public class OPP_OpportunityNaming_BATCH implements Database.Batchable<sObject> {
+public class OPP_OpportunityNaming_BATCH implements Database.Batchable<sObject>, Schedulable {
     
     /** @description The query for the batch process to run on.*/
     String query;
@@ -52,6 +52,12 @@ public class OPP_OpportunityNaming_BATCH implements Database.Batchable<sObject> 
     /** @description Batch process start method.*/
     public Database.QueryLocator start(Database.BatchableContext BC) {
         return Database.getQueryLocator(query);
+    }
+
+
+    /** @description Schedulable execute method.*/
+    public void execute(SchedulableContext context) {
+        Database.executeBatch(new OPP_OpportunityNaming_BATCH(), 200);
     }
 
     /*********************************************************************************************************
@@ -73,8 +79,9 @@ public class OPP_OpportunityNaming_BATCH implements Database.Batchable<sObject> 
                 oppsForUpdate.add(opp);
         }
 
-        if (!oppsForUpdate.isEmpty())
+        if (!oppsForUpdate.isEmpty()) {
             database.update(oppsForUpdate, false);
+        }
     }
     
     /** @description Batch process finish method, does nothing.*/
