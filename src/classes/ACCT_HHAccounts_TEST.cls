@@ -357,7 +357,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         test.stopTest();    // to flush any future calls.
         
         listAcc = [select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c, npe01__SYSTEMIsIndividual__c, 
-            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, Number_of_Household_Members__c from Account];
+            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, Number_of_Household_Members__c from Account where Number_of_Household_Members__c>0];
         system.assertEquals(3, listAcc.size());
         
         for (Account acc : listAcc) {
@@ -547,7 +547,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         system.assertEquals(1, listCon.size());
         
         listAcc = [select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c, npe01__SYSTEMIsIndividual__c, 
-            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, Number_of_Household_Members__c from Account];
+            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, Number_of_Household_Members__c from Account where Number_of_Household_Members__c>0];
         system.assertEquals(1, listAcc.size());
         
         Account acc = listAcc[0];
@@ -612,7 +612,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         delete listConDel;
         list<Contact> listCon2 = [select Id, Name from Contact order by Name];
         system.assertEquals(1, listCon2.size());
-        list<Account> listAcc2 = [select Id, Name from Account];
+        list<Account> listAcc2 = [select Id, Name from Account where id = :listAcc[0].Id];
         system.assertEquals(1, listAcc2.size());
              
         // unfortunately, we can't undelete any contact whose account was also deleted.
@@ -628,7 +628,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         system.assertEquals(2, listCon.size());
         
         listAcc = [select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c, npe01__SYSTEMIsIndividual__c, 
-            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, Number_of_Household_Members__c from Account];
+            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, Number_of_Household_Members__c from Account where Number_of_Household_Members__c>0];
         system.assertEquals(1, listAcc.size());
         
         // Determine which contact is the primary contact
@@ -709,13 +709,12 @@ private with sharing class ACCT_HHAccounts_TEST {
         Test.stopTest();
         
         listAcc = [select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c, npe01__SYSTEMIsIndividual__c, 
-            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, Number_of_Household_Members__c from Account];
+            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, Number_of_Household_Members__c from Account
+            where Number_of_Household_Members__c>0];
         UTIL_Debug.debug('****' +listAcc);
-        system.assertEquals(7, listAcc.size()); // 6 HH, and 1 Bucket.
+        system.assertEquals(6, listAcc.size()); // 6 HH
         
         for (Account acc : listAcc) {
-        	if (acc.npe01__SYSTEM_AccountType__c == CAO_Constants.BUCKET_ORGANIZATION_TYPE) 
-        	   continue;
             system.assertNotEquals(null, acc.npe01__One2OneContact__c);
             system.assertNotEquals(null, acc.npo02__Formal_Greeting__c);
             system.assertNotEquals(null, acc.npo02__Informal_Greeting__c);

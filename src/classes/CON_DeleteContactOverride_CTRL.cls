@@ -61,33 +61,46 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     * @return pageReference Redirects to the Contacts tab.
     */ 
     public pageReference processDelete() {
-        Contact queryContact = [SELECT Id, AccountId, Account.npe01__SYSTEMIsIndividual__c FROM Contact WHERE Id = :conId];
-        string accId = queryContact.AccountId;
-        boolean shouldDeleteContactAlone = true;
+        try {
+            Contact queryContact = [SELECT Id, AccountId, Account.npe01__SYSTEMIsIndividual__c FROM Contact WHERE Id = :conId];
+            string accId = queryContact.AccountId;
+            boolean shouldDeleteContactAlone = true;
 
-        if (queryContact.AccountId != null && queryContact.Account.npe01__SYSTEMIsIndividual__c) {
-            list<AggregateResult> contactsInHousehold = [SELECT COUNT(id) ct FROM Contact WHERE AccountId = :accId GROUP BY AccountId HAVING COUNT(id) = 1];
+            if (queryContact.AccountId != null && queryContact.Account.npe01__SYSTEMIsIndividual__c) {
+                list<AggregateResult> contactsInHousehold = [SELECT COUNT(id) ct FROM Contact WHERE AccountId = :accId GROUP BY AccountId HAVING COUNT(id) = 1];
 
-            //This contact is alone in a system account, delete the system account and allow the cascading
-            //delete to remove the contact
-            if (contactsInHousehold.size() == 1 && contactsInHousehold[0].get('ct') == 1) {
-                shouldDeleteContactAlone = false;
-                Account accForDelete = new Account(id=accId);
-                delete accForDelete;
+                //This contact is alone in a system account, delete the system account and allow the cascading
+                //delete to remove the contact
+                if (contactsInHousehold.size() == 1 && contactsInHousehold[0].get('ct') == 1) {
+                    shouldDeleteContactAlone = false;
+                    Account accForDelete = new Account(id=accId);
+                    
+                    //add cascade to make prettier error message on contact delete page,
+                    //but don't want to attempt under normal circumstances 
+                    ACCT_CascadeDeleteLookups_TDTM.cascades.addAll(new List<UTIL_CascadeDeleteLookups_TDTM.Cascade>{
+                        new UTIL_CascadeDeleteLookups_TDTM.Cascade('Opportunity', 'AccountId', new List<String>{'IsWon','IsClosed'}),
+                        new UTIL_CascadeDeleteLookups_TDTM.Cascade('Case', 'AccountId')
+                    });
+                    
+                    delete accForDelete;
 
-                //if we were returning to the account we just deleted, go back to contacts home
-                if (retURL.contains(accId.substring(0,15))) {
-                    retURL = '/003/o';
+                    //if we were returning to the account we just deleted, go back to contacts home
+                    if (retURL.contains(accId.substring(0,15))) {
+                        retURL = '/003/o';
+                    }
                 }
             }
-        }
 
-        if (shouldDeleteContactAlone) {
-            delete queryContact;
-        }
+            if (shouldDeleteContactAlone) {
+                delete queryContact;
+            }
 
-        PageReference redirect = new PageReference(retURL);
-        redirect.setRedirect(true);
-        return redirect;
+            PageReference redirect = new PageReference(retURL);
+            redirect.setRedirect(true);
+            return redirect;
+        } catch (Exception ex){
+            ApexPages.addMessages(ex);
+            return null;
+        }
     }
 }

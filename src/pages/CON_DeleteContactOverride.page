@@ -1,2 +1,7 @@
 <apex:page standardController="Contact" extensions="CON_DeleteContactOverride_CTRL" action="{!processDelete}">
+    <apex:stylesheet value="{!URLFOR($Resource.sfdo203, '/assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
+    <apex:form styleClass="sfdo203">
+        <c:UTIL_PageMessages/>
+        <apex:outputLink target="_self" title="{!$Label.REL_Return_to_Contact}" value="/{!$CurrentPage.parameters.id}">{!$Label.REL_Return_to_Contact}</apex:outputLink>
+    </apex:form>
 </apex:page>

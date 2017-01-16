@@ -31,17 +31,16 @@
 * @author Salesforce.org
 * @date 2016
 * @group Util
-* @description Tests for currency utility class
+* @description Tests for cascade delete of Recurring Donations
 */
 @isTest
-private class UTIL_CascadeDeleteLookups_TEST {
+private class RD_CascadeDeleteLookups_TEST {
 
     /*********************************************************************************************************
-    * @description Deletes contact, which deletes recurring dontation, which deletes allocation. Verifies 
-    * results. Then undeletes contact, which undeletes recurring donation, which undeletes allocation. Verifies
-    * results.
+    * @description Deletes recurring donation, which deletes opportunities and allocations. Verifies results.
+    * Then undeletes recurring donation, which undeletes opportunities and allocation. Verifies results.
     */
-    static testMethod void testCascade(){
+    static testMethod void testRDCascade(){
         Contact con = new Contact(LastName='foo');
         insert con;
 
@@ -55,6 +54,9 @@ private class UTIL_CascadeDeleteLookups_TEST {
             npe03__Contact__c = con.id
         );
         insert rd;
+
+        List<Opportunity> queryOpps = [SELECT Id FROM Opportunity WHERE npe03__Recurring_Donation__c = :rd.id];
+        System.assertEquals(2, queryOpps.size(), 'Two opps should be auto created by recurring donation.');
 
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='foo');
         insert gau;
@@ -62,30 +64,32 @@ private class UTIL_CascadeDeleteLookups_TEST {
         insert alloForInsert;
 
         Test.startTest();
-        delete con;
+        delete rd;
         Test.stopTest();
 
-        List<npe03__Recurring_Donation__c> deletedRd = [SELECT Id FROM npe03__Recurring_Donation__c WHERE Id=:rd.Id AND IsDeleted=true ALL ROWS];
-        System.assertEquals(1, deletedRd.size(), 'Recurring Donation should be cascade deleted when Contact is deleted.');
+        queryOpps = [SELECT Id FROM Opportunity WHERE IsDeleted=true ALL ROWS];
+        System.assertEquals(2, queryOpps.size(), 'Opportunities should be cascade deleted with the recurring donation.');
+
+        List<Error__c> errors = [SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c FROM Error__c];
+        System.assertEquals(0, errors.size(), errors);
 
         List<Allocation__c> deletedAllo = [SELECT Id FROM Allocation__c WHERE Id=:alloForInsert.Id AND IsDeleted=true ALL ROWS];
         System.assertEquals(1, deletedAllo.size(), 'Allocation should be cascade deleted when recurring donation is deleted.');
 
-        undelete con;
+        undelete rd;
 
-        List<npe03__Recurring_Donation__c> undeletedRd = [SELECT Id FROM npe03__Recurring_Donation__c WHERE Id=:rd.Id AND IsDeleted=false ALL ROWS];
-        System.assertEquals(1, undeletedRd.size(), 'Recurring Donation should be cascade undeleted when Contact is undeleted.');
+        queryOpps = [SELECT Id FROM Opportunity WHERE npe03__Recurring_Donation__c = :rd.id];
+        System.assertEquals(2, queryOpps.size(), 'Two opps should be cascade undeleted.');
 
         List<Allocation__c> undeletedAllo = [SELECT Id FROM Allocation__c WHERE Id=:alloForInsert.Id AND IsDeleted=false ALL ROWS];
         System.assertEquals(1, undeletedAllo.size(), 'Allocation should be cascade undeleted.');
     }
 
     /*********************************************************************************************************
-    * @description Deletes contact, which deletes recurring dontation, which deletes allocation. Verifies 
-    * results. Then undeletes contact, which undeletes recurring donation, which undeletes allocation. Verifies
-    * results.
+    * @description Attempts to delete recurring donation with closed/won and org opps, verifies correct 
+    * exception is thrown.
     */
-    static testMethod void testCascadeGrandchild(){
+    static testMethod void testRDDeleteException(){
         Contact con = new Contact(LastName='foo');
         insert con;
 
@@ -100,19 +104,24 @@ private class UTIL_CascadeDeleteLookups_TEST {
         );
         insert rd;
 
-        //select auto created hh account
-        Account acc = [SELECT Id FROM Account WHERE Id IN (SELECT AccountId FROM Contact WHERE Id=:con.id)];
+        List<Opportunity> queryOpps = [SELECT Id FROM Opportunity WHERE npe03__Recurring_Donation__c = :rd.id];
+        System.assertEquals(2, queryOpps.size(), 'Two opps should be auto created by recurring donation.');
+
+        queryOpps[0].StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+        update queryOpps[0];
+
+        Exception caughException;
 
         Test.startTest();
-        delete acc;
+        try{
+            delete rd;
+        } catch (Exception ex) {
+            caughException = ex;
+        }
         Test.stopTest();
 
-        List<npe03__Recurring_Donation__c> deletedRd = [SELECT Id FROM npe03__Recurring_Donation__c WHERE Id=:rd.Id AND IsDeleted=true ALL ROWS];
-        System.assertEquals(1, deletedRd.size(), 'Recurring Donation should be cascade deleted when Contact is deleted.');
-
-        undelete acc;
-
-        List<npe03__Recurring_Donation__c> undeletedRd = [SELECT Id FROM npe03__Recurring_Donation__c WHERE Id=:rd.Id AND IsDeleted=false ALL ROWS];
-        System.assertEquals(1, undeletedRd.size(), 'Recurring Donation should be cascade undeleted when Contact is undeleted.');
+        System.assertNotEquals(null, caughException, 'An exception should be caught.');
+        System.assert(caughException.getMessage().contains(queryOpps[0].id), 'Exception message should contain the closed won opportunity id.');
+        System.assert(caughException.getMessage().contains(Label.ClosedWonOpportunities), 'Exception message should mention Closed Won Opportunities.');
     }
 }

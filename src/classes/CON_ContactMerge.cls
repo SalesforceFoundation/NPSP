@@ -69,6 +69,9 @@ public class CON_ContactMerge {
     * @return Boolean Whether the merge was successful.
     */
     public static Boolean mergeContacts(Contact winner, List<Contact> losers) {
+        //disable cascade deletion which prevents deletion in certain cases
+        UTIL_CascadeDeleteLookups_TDTM.disableCascade = true;
+
         boolean successfulMerge = false;
         
         List<Account> winnerAccount = new List<Account>();

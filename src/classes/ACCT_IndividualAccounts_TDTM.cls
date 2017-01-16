@@ -665,8 +665,15 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
         // delete the accounts
         if (accountsForDeletion.size() > 0) {
-            dmlWrapper.objectsToDelete.addAll(accountsForDeletion);           
-            //delete accountsForDeletion;
+            /*This is a bad strategy as it leaves the deleted contact unrecoverable from the recycle bin.
+            **Leaving an orphaned account is less of an issue than unrecoverable data, and that is solved
+            **by the contact delete button override.
+            **addError can't be used for these contacts as it is only available in before triggers and
+            **this is an after delete trigger, and changing that would require significant rewriting of this
+            **class.
+            */
+
+            //dmlWrapper.objectsToDelete.addAll(accountsForDeletion);
         }
         // update any HH accounts that just lost a contact
         if (listAccountIdUpdate.size() > 0)
