@@ -588,6 +588,22 @@
         <value>omit</value>
     </labels>
     <labels>
+        <fullName>CascadeDeleteOrReassociate</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CascadeDeleteOrReassociate</shortDescription>
+        <value>Delete or re-associate these records and then try deleting {0} again.</value>
+    </labels>
+    <labels>
+        <fullName>CascadeDeletionError</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CascadeDeletionError</shortDescription>
+        <value>Your attempt to delete {0} could not be completed because it is associated with the following records:</value>
+    </labels>
+    <labels>
         <fullName>EPAddDependentTask</fullName>
         <categories>Engagement Plans</categories>
         <language>en_US</language>
