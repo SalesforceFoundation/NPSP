@@ -74,6 +74,14 @@ public with sharing class CON_DeleteContactOverride_CTRL {
                 if (contactsInHousehold.size() == 1 && contactsInHousehold[0].get('ct') == 1) {
                     shouldDeleteContactAlone = false;
                     Account accForDelete = new Account(id=accId);
+                    
+                    //add cascade to make prettier error message on contact delete page,
+                    //but don't want to attempt under normal circumstances 
+                    ACCT_CascadeDeleteLookups_TDTM.cascades.addAll(new List<UTIL_CascadeDeleteLookups_TDTM.Cascade>{
+                        new UTIL_CascadeDeleteLookups_TDTM.Cascade('Opportunity', 'AccountId', new List<String>{'IsWon','IsClosed'}),
+                        new UTIL_CascadeDeleteLookups_TDTM.Cascade('Case', 'AccountId')
+                    });
+                    
                     delete accForDelete;
 
                     //if we were returning to the account we just deleted, go back to contacts home

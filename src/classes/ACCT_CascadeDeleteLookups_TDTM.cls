@@ -27,7 +27,6 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
-
 /**
  * @author Salesforce.org
  * @date 2017
@@ -39,7 +38,7 @@ public with sharing class ACCT_CascadeDeleteLookups_TDTM extends UTIL_CascadeDel
     /*******************************************************************************************************
     * @description Cascade deletion definitions for Account.
     ********************************************************************************************************/
-    private static List<Cascade> cascades = new List<Cascade>{
+    public static List<Cascade> cascades = new List<Cascade>{
         new Cascade('npe03__Recurring_Donation__c','npe03__Organization__c'),
         new Cascade('npe03__Recurring_Donation__c','npe03__Contact__r.AccountId'),
         new Cascade(UTIL_Namespace.StrTokenNSPrefix('Allocation__c'),'Opportunity__r.AccountId'),
@@ -52,5 +51,31 @@ public with sharing class ACCT_CascadeDeleteLookups_TDTM extends UTIL_CascadeDel
     ********************************************************************************************************/    
     public override List<Cascade> getCascades() {
         return cascades;
+    }
+
+    /*******************************************************************************************************
+    * @description This method override detects error conditions in cascade deleted objects. Opportunities 
+    * that are Closed/Won prevent deletion of the parent Account. 
+    * This only applies for the CON_DeleteContactOverride page as the platform handles this for accounts
+    * otherwise.
+    * @return void This method adds to the errors property of the Cascades objects and returns nothing.
+    ********************************************************************************************************/
+    public override void addDeletionErrors() {
+        for (Cascade cc : getCascades()) {
+            //special case deleting opportunities
+            if (cc.objectName == 'Opportunity') {
+                for (SObject child : cc.children.values()) {
+                    //don't cascade closed/won opportunities
+                    if ((Boolean)child.get('IsClosed') && (Boolean)child.get('IsWon')) {
+                        putError(cc, child.id, Label.ClosedWonOpportunities);
+                    }
+                }
+            }
+            if (cc.objectName == 'Case') {
+                for (SObject child : cc.children.values()) {
+                    putError(cc, child.id, Case.SObjectType.getDescribe().getLabelPlural());
+                }
+            }
+        }
     }
 }
