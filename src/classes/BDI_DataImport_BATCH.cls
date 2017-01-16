@@ -399,6 +399,10 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             if (con == null)
                 continue;
             
+            // potentially set c1's household if provided
+            if (di.HouseholdAccountImported__c != null)
+                con.AccountId = di.HouseholdAccountImported__c;
+            
             boolean isModified = false;                 
             for (string strDIField : mapDIFieldToC1Field.keySet()) {
                 if (isCopiedDIField(di, strDIField, con, mapDIFieldToC1Field)) {

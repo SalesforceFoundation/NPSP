@@ -1189,4 +1189,49 @@ public with sharing class BDI_DataImport_TEST {
         system.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
         system.assertEquals(label.bdiCreated, listDI[1].Contact1ImportStatus__c);        
     }
+
+    /*********************************************************************************************************
+    operation:
+        import new contacts into existing household accounts 
+    verify:
+        provided household account used
+    **********************************************************************************************************/            
+    static testMethod void TwoDINewContactsExistingsHousehold() {
+        if (strTestOnly != '*' && strTestOnly != 'TwoDINewContactsExistingsHousehold') return;
+            
+        // existing contacts
+        list<Contact> listConExisting = new list<Contact>();
+        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com'));
+        listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@C2.com'));
+        insert listConExisting;
+        
+        // get their households
+        listConExisting = [select Id, Firstname, Lastname, Email, AccountId from Contact order by Firstname];
+        system.assertEquals(2, listConExisting.size());
+        
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Contact1_Firstname__c='a1', Contact1_Lastname__c='C1', 
+            HouseholdAccountImported__c=listConExisting[0].AccountId));
+        listDI.add(new DataImport__c(Contact1_Firstname__c='a2', Contact1_Lastname__c='C2', Contact2_Firstname__c='b2',
+            HouseholdAccountImported__c=listConExisting[1].AccountId));
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Firstname, Lastname, Name, AccountId from Contact order by Lastname, Firstname];
+        system.assertEquals(5, listCon.size());
+        system.assertEquals(listConExisting[0].AccountId, listCon[0].AccountId);
+        system.assertEquals(listConExisting[0].AccountId, listCon[1].AccountId);
+        system.assertEquals(listConExisting[1].AccountId, listCon[2].AccountId);
+        system.assertEquals(listConExisting[1].AccountId, listCon[3].AccountId);
+        system.assertEquals(listConExisting[1].AccountId, listCon[4].AccountId);
+        
+        list<Account> listAcc = [select Id, Name from Account];
+        system.assertEquals(2, listAcc.size());
+    }
 }
