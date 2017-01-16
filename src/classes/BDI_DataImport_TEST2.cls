@@ -461,9 +461,9 @@ private with sharing class BDI_DataImport_TEST2 {
         insert listConExisting;
         
         list<DataImport__c> listDI = new list<DataImport__c>();
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c=null, 
+        listDI.add(new DataImport__c(Contact1_Firstname__c=null, Contact1_Lastname__c=null, Contact1_Personal_Email__c=null, 
             Contact1_Title__c='t1Updated', Contact1Imported__c=listConExisting[0].Id));
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c=null, 
+        listDI.add(new DataImport__c(Contact1_Firstname__c=null, Contact1_Lastname__c=null, Contact1_Personal_Email__c=null, 
             Contact1_Title__c='t2Updated', Contact1Imported__c=listConExisting[1].Id));
         insert listDI;
         
