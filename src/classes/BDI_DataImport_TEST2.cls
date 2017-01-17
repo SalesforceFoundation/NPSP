@@ -261,6 +261,53 @@ private with sharing class BDI_DataImport_TEST2 {
     
     /*********************************************************************************************************
     operation:
+        import matching contacts within multiple di records in the same batch, using different phone fields
+    verify:
+        only one contact created
+    **********************************************************************************************************/            
+    static testMethod void ManyDIDuplicatePhoneNewContacts() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDIDuplicatePhoneNewContacts') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Home_Phone__c='123-456-7890'));
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Work_Phone__c='123-456-7890'));
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Mobile_Phone__c='123-456-7890'));
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Other_Phone__c='123-456-7890'));
+        insert listDI;
+        
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Contact_Matching_Rule__c = 'Firstname,Lastname,Phone';
+        
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name from Contact];
+        system.assertEquals(1, listCon.size());
+        system.assertEquals('c1 C1', listCon[0].Name);
+
+        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c, 
+            Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Contact1ImportStatus__c];
+        system.assertEquals(4, listDI.size());
+        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
+        system.assertEquals(listDI[1].Contact1Imported__c, listCon[0].Id);
+        system.assertEquals(listDI[2].Contact1Imported__c, listCon[0].Id);
+        system.assertEquals(listDI[3].Contact1Imported__c, listCon[0].Id);
+        system.assertNotEquals(null, listDI[0].HouseholdAccountImported__c);
+        system.assertNotEquals(null, listDI[1].HouseholdAccountImported__c);
+        system.assertNotEquals(null, listDI[2].HouseholdAccountImported__c);
+        system.assertNotEquals(null, listDI[3].HouseholdAccountImported__c);
+        system.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
+        system.assertEquals(label.bdiMatched, listDI[2].Contact1ImportStatus__c);        
+        system.assertEquals(label.bdiMatched, listDI[3].Contact1ImportStatus__c);        
+    }
+
+    /*********************************************************************************************************
+    operation:
         import matching contacts within multiple di records in the same batch, updating different fields
     verify:
         only one contact created
@@ -387,6 +434,57 @@ private with sharing class BDI_DataImport_TEST2 {
         system.assertEquals('c1@c1.com', listCon[0].npe01__HomeEmail__c);
         system.assertEquals('c1@alt.com', listCon[0].npe01__AlternateEmail__c);
         system.assertEquals('c1@alt.com', listCon[0].npe01__WorkEmail__c);
+        
+        
+        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c, 
+            Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Contact1_Lastname__c];
+        system.assertEquals(3, listDI.size());
+        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
+        system.assertEquals(listDI[1].Contact1Imported__c, listCon[0].Id);
+        system.assertEquals(listDI[2].Contact1Imported__c, listCon[0].Id);
+        system.assertNotEquals(null, listDI[0].HouseholdAccountImported__c);
+        system.assertNotEquals(null, listDI[1].HouseholdAccountImported__c);
+        system.assertNotEquals(null, listDI[2].HouseholdAccountImported__c);
+        system.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
+        system.assertEquals(label.bdiMatched, listDI[2].Contact1ImportStatus__c);        
+    }
+
+    /*********************************************************************************************************
+    operation:
+        import existing contacts within multiple di records in the same batch, using overlapping phone fields
+    verify:
+        all contacts matched
+    **********************************************************************************************************/            
+    static testMethod void ManyDIOverlappingPhoneExistingContacts() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDIOverlappingPhoneExistingContacts') return;
+            
+         // existing contacts
+        list<Contact> listConExisting = new list<Contact>();
+        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Phone='123-456-7890'));
+        insert listConExisting;
+ 
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Home_Phone__c='123-456-7890'));
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Home_Phone__c='123-456-7890', Contact1_Mobile_Phone__c='999-888-7777'));
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Work_Phone__c='999-888-7777'));
+        insert listDI;
+          
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Contact_Matching_Rule__c = 'Firstname,Lastname,Phone';
+        
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name, Email, HomePhone, MobilePhone, Phone, npe01__WorkPhone__c from Contact order by Lastname];
+        system.assertEquals(1, listCon.size());
+        system.assertEquals('123-456-7890', listCon[0].HomePhone);
+        system.assertEquals('999-888-7777', listCon[0].MobilePhone);
+        system.assertEquals('999-888-7777', listCon[0].npe01__WorkPhone__c);
         
         
         listDI = [select Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c, 
@@ -883,15 +981,33 @@ private with sharing class BDI_DataImport_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'ManyDIMultiContactMatchRules5') return;
         ManyDIMultiContactMatchRules('Firstname,Email');
     }
+    static testMethod void ManyDIMultiContactMatchRules6() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDIMultiContactMatchRules6') return;
+        ManyDIMultiContactMatchRules('Firstname,Lastname,Phone');
+    }
+    static testMethod void ManyDIMultiContactMatchRules7() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDIMultiContactMatchRules7') return;
+        ManyDIMultiContactMatchRules('Firstname,Phone');
+    }
+    static testMethod void ManyDIMultiContactMatchRules8() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDIMultiContactMatchRules8') return;
+        ManyDIMultiContactMatchRules('Lastname,Phone');
+    }
+    static testMethod void ManyDIMultiContactMatchRules9() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDIMultiContactMatchRules9') return;
+        ManyDIMultiContactMatchRules('Phone');
+    }
     static void ManyDIMultiContactMatchRules(string strRule) {            
         list<DataImport__c> listDI = new list<DataImport__c>();
         listDI.add(new DataImport__c(Account1_Name__c='a0', Contact1_Firstname__c='c0', Contact1_Lastname__c='C0'));
         listDI.add(new DataImport__c(Account1_Name__c='a1', Contact1_Firstname__c=null, Contact1_Lastname__c='C1'));
         listDI.add(new DataImport__c(Account1_Name__c='a2', Contact1_Firstname__c='c2', Contact1_Lastname__c=null));
-        listDI.add(new DataImport__c(Account1_Name__c='a3', Contact1_Firstname__c='c3', Contact1_Lastname__c='C3', Contact1_Personal_Email__c='c3@C3.com'));   
+        listDI.add(new DataImport__c(Account1_Name__c='a3', Contact1_Firstname__c='c3', Contact1_Lastname__c='C3', 
+            Contact1_Personal_Email__c='c3@C3.com', Contact1_Home_Phone__c='123-456-7890'));   
         
         // one additional di that will always match given the current rule.
-        listDI.add(new DataImport__c(Account1_Name__c='a4', Contact1_Firstname__c='c3', Contact1_Lastname__c='C3', Contact1_Personal_Email__c='c3@C3.com'));                
+        listDI.add(new DataImport__c(Account1_Name__c='a4', Contact1_Firstname__c='c3', Contact1_Lastname__c='C3', 
+            Contact1_Personal_Email__c='c3@C3.com', Contact1_Home_Phone__c='123-456-7890'));                
         insert listDI;
           
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
