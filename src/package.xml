@@ -245,7 +245,6 @@
         <members>TDTM_iTableDataGateway</members>
         <members>UTIL_AbstractRollup_BATCH</members>
         <members>UTIL_CascadeDeleteLookups_TDTM</members>
-        <members>UTIL_CascadeDeleteLookups_TEST</members>
         <members>UTIL_Currency</members>
         <members>UTIL_Currency_TEST</members>
         <members>UTIL_CustomSettingsFacade</members>
