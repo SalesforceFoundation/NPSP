@@ -1212,7 +1212,14 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             return null;
 
         list<string> listDiKey = new list<string>();
-        string strUniqueId = '';
+        
+        // we need any Account SFId key to always be checked first when matching
+        if (acc.Id != null) {
+            listDiKey.add(acc.Id);
+        }
+
+        // we need the Account CustomId key to always be checked second when matching
+        string strUniqueId = ''; 
         if (isCustomIDInAccountMatchRules && (strUniqueId = strNull(acc.get(diSettings.Account_Custom_Unique_ID__c))) != '') {
             listDiKey.add(strUniqueId);
         }
@@ -1232,8 +1239,14 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     private list<string> listDiKeyAx(DataImport__c di, string strAx) {
         list<string> listDiKey = new list<string>();
 
-        // we nee the Account CustomId key to always be checked first when matching
-        string strUniqueId = '';
+        // we need the Account Lookup key to always be checked first when matching
+        string strUniqueId = ''; 
+        if ((strUniqueId = strNull(di.get(strAx + 'Imported__c'))) != '') {
+            listDiKey.add(strUniqueId);
+            strUniqueId = '';
+        }
+
+        // we need the Account CustomId key to always be checked second when matching
         if (isCustomIDInAccountMatchRules && (strUniqueId = strNull(di.get(strDIAccountCustomIDField(strAx)))) != '') {
             listDiKey.add(strUniqueId);
         }
@@ -1263,6 +1276,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         set<string> setName = new set<string>();
         set<string> setCustomIDString = new set<string>();
         set<double> setCustomIDNumber = new set<double>();
+        set<Id> setSFId = new set<Id>();
         
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
@@ -1270,6 +1284,8 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
                continue;
 
             // a1
+            if (di.Account1Imported__c != null)
+                setSFId.add(di.Account1Imported__c);
             if (di.Account1_Name__c != null)
                 setName.add(di.Account1_Name__c);
             if (isCustomIDInAccountMatchRules) { 
@@ -1282,6 +1298,8 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
                 }
             }
             // a2
+            if (di.Account2Imported__c != null)
+                setSFId.add(di.Account2Imported__c);
             if (di.Account2_Name__c != null)
                 setName.add(di.Account2_Name__c);
             if (isCustomIDInAccountMatchRules) { 
@@ -1300,6 +1318,9 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         if (isCustomIDInAccountMatchRules)
             strSoql += diSettings.Account_Custom_Unique_ID__c + ', ';                
         strSoql += 'Name from Account where ';
+        if (setSFId.size() > 0) {
+            strSoql += ' (Id in :setSFId) or ';
+        }
         strSoql += 'Name in :setName';
         if (isCustomIDInAccountMatchRules && isCustomIdInAccountDatatypeString) 
             strSoql += ' or ' + diSettings.Account_Custom_Unique_ID__c + ' in :setCustomIDString';     

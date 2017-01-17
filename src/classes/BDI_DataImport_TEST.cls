@@ -468,6 +468,47 @@ public with sharing class BDI_DataImport_TEST {
 
     /*********************************************************************************************************
     operation:
+        import existing accounts, matched by Salesforce Id 
+    verify:
+        no accounts created, just matched
+    **********************************************************************************************************/            
+    static testMethod void TwoDIExistingAccountsSalesforceId() {
+        if (strTestOnly != '*' && strTestOnly != 'TwoDIExistingAccountsSalesforceId') return;
+            
+        list<Account> listAcc = new list<Account>();
+        listAcc.add(new Account(name='A1'));
+        listAcc.add(new Account(name='A2'));
+        insert listAcc;    
+                    
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', 
+            Account1Imported__c=listAcc[0].Id));
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C2', Contact2_Firstname__c='c2', 
+            Account1Imported__c=listAcc[0].Id, Account2Imported__c=listAcc[1].Id));
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        listAcc = [select Id, Name from Account where Type != 'Household' order by Name];
+        system.assertEquals(2, listAcc.size());
+
+        listDI = [select Account1Imported__c, Account1ImportStatus__c, Account2Imported__c, Account2ImportStatus__c from DataImport__c order by Contact1_Lastname__c];
+        system.assertEquals(2, listDI.size());
+        system.assertEquals(listDI[0].Account1Imported__c, listAcc[0].Id);
+        system.assertEquals(listDI[1].Account1Imported__c, listAcc[0].Id);
+        system.assertEquals(listDI[1].Account2Imported__c, listAcc[1].Id);
+        system.assertEquals(label.bdiMatched, listDI[0].Account1ImportStatus__c);
+        system.assertEquals(label.bdiMatched, listDI[1].Account1ImportStatus__c);        
+        system.assertEquals(label.bdiMatched, listDI[1].Account2ImportStatus__c);        
+    }
+
+    /*********************************************************************************************************
+    operation:
         import contacts with Preferred Email set
     verify:
         ensure the appropriate contact email field gets copied into the standard email field.
