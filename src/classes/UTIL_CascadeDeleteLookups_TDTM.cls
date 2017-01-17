@@ -32,105 +32,11 @@
  * @author Salesforce.org
  * @date 2016
  * @group Util
- * @description Trigger handler allowing cascade delete and undelete of child objects through lookup relationships.
- * The only difference in functionality with standard cascade deletion is that child records show up separately from
- * their parent in the recycle bin.
- * To enable cascade delete for a new relationship, add it to the "cascades" map. When adding a new object type, also
- * add a corresponding trigger handler.
- * NOTE: Since standard cascade deletes don't run triggers on deleted children, records in the "cascades" map can also
- * be created for children further down the chain, e.g. grandchildren, great-grandchildren, etc. The relationship to 
- * the deleted parent object can be provided to allow cascade functionality for those parent objects.
+ * @description Does nothing for now.
  */
 public with sharing class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
-
-    /** @description Static list of sobjects for stashing objects for cascade deletion between before and after triggers */
-    private static List<SObject> forDelete = new List<SObject>();
-
-    /*******************************************************************************************************
-    * @description This map contains a keyset of object types that trigger cascade deletes, and values that store child
-    * objects that should be cascade deleted, and their lookup relationship to the parent object. Values are stored as a 
-    * list of strings; each string is of the format ObjectName.LookupFieldName, and multiple strings may be added to the 
-    * list
-    */
-    private final Map<SObjectType, List<String>> cascades = new Map<SObjectType, List<String>>{
-        Contact.SObjectType                      =>  new List<String>{'npe03__Recurring_Donation__c|npe03__Contact__c'},
-        Account.SObjectType                      =>  new List<String>{'npe03__Recurring_Donation__c|npe03__Organization__c',
-                                                                      'npe03__Recurring_Donation__c|npe03__Contact__r.AccountId',
-                                                                      'Allocation__c|Opportunity__r.AccountId'},
-        Opportunity.SObjectType                  =>  new List<String>{'Allocation__c|Opportunity__c'},
-        Campaign.SObjectType                     =>  new List<String>{'Allocation__c|Campaign__c'},
-        npe03__Recurring_Donation__c.SObjectType =>  new List<String>{'Allocation__c|Recurring_Donation__c'}
-    };
-
-    /*******************************************************************************************************
-    * @description Run method checks if there is a cascade deletion for the current trigger and runs the
-    * cascade method for each entry.
-    * @param listNew The list of sobjects from trigger new.
-    * @param listOld The list of sobjects from trigger old.
-    * @param triggerAction Which action triggered the current context. (Before or After; Insert, Update, 
-    * Delete, or Undelete.)
-    * @param objResult The field describe object for the current trigger set.
-    * @return dmlWrapper Objects that need to be inserted or updated after the processing of the trigger.
-    ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
-        TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
-
-        if (cascades.containsKey(objResult.getSObjectType())) {
-            for (String childLookup : cascades.get(objResult.getSObjectType())) {
-                try {
-                    cascadeDelete(newlist, oldlist, childLookup, triggerAction);
-                } catch (Exception ex) {
-                    ERR_Handler.processError(ex, 'TDTM');
-                }        
-            }
-        }
-
+            TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {                               
         return null;
-    }
-
-    /*******************************************************************************************************
-    * @description Performs cascade delete for lookup fields. Stashes records, deletes records, or undeletes
-    * records depending on trigger action.
-    * @param listNew The list of sobjects from trigger new.
-    * @param listOld The list of sobjects from trigger old.
-    * @param objResult The field describe object for the current trigger set.
-    * @param triggerAction Which action triggered the current context. (Before or After; Insert, Update, 
-    * Delete, or Undelete.)
-    * @return void This method deletes or undeletes records inline and returns nothing.
-    ********************************************************************************************************/
-    private void cascadeDelete(List<SObject> newlist, List<SObject> oldlist, 
-        String childLookup, TDTM_Runnable.Action triggerAction) {
-
-        String childObjectName = childLookup.split('\\|')[0];
-        String lookupFieldName = childLookup.split('\\|')[1];
-        List<SObject> deletedParents = (triggerAction == TDTM_Runnable.Action.AfterUndelete) ? newlist : oldlist;
-
-        String childQuery = 'SELECT ID FROM ' + childObjectName + ' WHERE ' + lookupFieldName + ' IN :deletedParents';
-
-        if (triggerAction == TDTM_Runnable.Action.BeforeDelete) {
-            //cache related records before delete
-            forDelete.addAll(Database.query(childQuery));
-        
-        } else if (triggerAction == TDTM_Runnable.Action.AfterDelete && !forDelete.isEmpty()) {
-            //do the delete in the parent record's afterdelete trigger, which allows cascading of deletes
-            List<Database.DeleteResult> delResults = Database.delete(forDelete, false);
-            //allow partial success, process errors
-            ERR_Handler.Errors errorResult = ERR_Handler.getErrors(delResults, forDelete);
-            if (errorResult.errorsExist) {
-                ERR_Handler.processErrors(errorResult.errorRecords, 'TDTM');
-            }
-            //avoid recursion by blanking out stashed objects
-            forDelete = new List<SObject>();
-        
-        } else if (triggerAction == TDTM_Runnable.Action.AfterUndelete) {
-            List<SObject> forUndelete = Database.query(childQuery + ' AND IsDeleted = true ALL ROWS');
-            //undelete child records on parent undelete, allow partial success
-            List<Database.UndeleteResult> undelResults = Database.undelete(forUndelete, false);
-            //process potential errors
-            ERR_Handler.Errors errorResult = ERR_Handler.getErrors(undelResults, forUndelete);
-            if (errorResult.errorsExist) {
-                ERR_Handler.processErrors(errorResult.errorRecords, 'TDTM');
-            }
-        }
     }
 }
