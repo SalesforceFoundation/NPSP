@@ -36,7 +36,7 @@ tasks:
             database_url: 'sqlite:///testdata/1k/test_data.db'
             mapping: 'testdata/1k/mapping.yml'
 
-    test_data_1k_data:
+    test_data_100k:
         description: 'Loads a test data set for most NPSP objects based on 102400 Contacts.  NOTE: The sqlite data set is not included in the repo for this task so you need to load it into the correct filesystem location'
         class_path: cumulusci.tasks.bulkdata.LoadData
         options:
