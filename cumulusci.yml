@@ -41,8 +41,8 @@ tasks:
         description: Runs the Ruby/Watir browser tests in the browsertests folder
         class_path: cumulusci.tasks.command.SalesforceBrowserTest
         options:
-            command: 'bundle exec cucumber features/'
-            dir: browser_tests
+            command: 'bundle install --quiet --path browser_tests; bundle exec cucumber browser_tests/features/'
+            dir: '.'
 
     test_data_1k:
         description: 'Loads a test data set for most NPSP objects based on 1024 Contacts'
