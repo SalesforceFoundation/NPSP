@@ -80,6 +80,23 @@ flows:
                 task: test_data_delete
             2:
                 task: test_data_1k
+
+    ci_beta_install:
+        description: Installs the latest beta version without running apex tests.  Use for deploying to other test environments such as browser testings orgs
+        tasks:
+            1:
+                task: uninstall_managed
+            2:
+                task: update_dependencies
+            3:
+                task: deploy_pre
+            4:
+                task: install_managed_beta
+            5:
+                task: deploy_post_managed
+            6:
+                task: update_admin_profile
+
     ci_browsertests_firefox:
         description: Runs the browser tests via SauceLabs against Firefox
         tasks:
