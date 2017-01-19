@@ -24,10 +24,25 @@ project:
           version: 3.3
 
 tasks:
+    download_browser_tests:
+        description: Downloads the browser tests from the NPSP-Browser-Tests Github repository.
+        class_path: cumulusci.tasks.util.DownloadZip
+        options:
+            url: 'https://github.com/SalesforceFoundation/NPSP-Browser-Tests/archive/master.zip'
+            dir: browser_tests
+            subfolder: NPSP-Browser-Tests-master
+
     update_admin_profile:
         class_path: tasks.salesforce.UpdateAdminProfile
         options:
             package_xml: lib/admin_profile.xml
+
+    run_browser_tests:
+        description: Runs the Ruby/Watir browser tests in the browsertests folder
+        class_path: cumulusci.tasks.command.SalesforceBrowserTest
+        options:
+            command: 'bundle exec cucumber features/'
+            dir: browser_tests
 
     test_data_1k:
         description: 'Loads a test data set for most NPSP objects based on 1024 Contacts'
@@ -65,3 +80,25 @@ flows:
                 task: test_data_delete
             2:
                 task: test_data_1k
+    ci_browsertests_firefox:
+        description: Runs the browser tests via SauceLabs against Firefox
+        tasks:
+            1:
+                task: download_browser_tests
+            2:
+                task: run_browser_tests
+                options:
+                    use_saucelabs: True
+                    env:
+                        SELENIUM_BROWSER: firefox
+    ci_browsertests_chrome:
+        description: Runs the browser tests via SauceLabs against Chrome
+        tasks:
+            1:
+                task: download_browser_tests
+            2:
+                task: run_browser_tests
+                options:
+                    use_saucelabs: True
+                    env:
+                        SELENIUM_BROWSER: chrome
