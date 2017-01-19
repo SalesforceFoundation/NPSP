@@ -41,7 +41,7 @@ tasks:
         description: Runs the Ruby/Watir browser tests in the browsertests folder
         class_path: cumulusci.tasks.command.SalesforceBrowserTest
         options:
-            command: 'bundle install --quiet --path browser_tests; bundle exec cucumber browser_tests/features/'
+            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber features/'
             dir: '.'
 
     test_data_1k:
