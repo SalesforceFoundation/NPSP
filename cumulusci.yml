@@ -24,17 +24,83 @@ project:
           version: 3.3
 
 tasks:
+    download_browser_tests:
+        description: Downloads the browser tests from the NPSP-Browser-Tests Github repository.
+        class_path: cumulusci.tasks.util.DownloadZip
+        options:
+            url: 'https://github.com/SalesforceFoundation/NPSP-Browser-Tests/archive/master.zip'
+            dir: browser_tests
+            subfolder: NPSP-Browser-Tests-master
+
     update_admin_profile:
         class_path: tasks.salesforce.UpdateAdminProfile
         options:
             package_xml: lib/admin_profile.xml
 
+    run_browser_tests:
+        description: Runs the Ruby/Watir browser tests in the browsertests folder
+        class_path: cumulusci.tasks.command.SalesforceBrowserTest
+        options:
+            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber -c features/'
+            dir: '.'
+
+    test_data_1k:
+        description: 'Loads a test data set for most NPSP objects based on 1024 Contacts'
+        class_path: cumulusci.tasks.bulkdata.LoadData
+        options:
+            database_url: 'sqlite:///testdata/1k/test_data.db'
+            mapping: 'testdata/1k/mapping.yml'
+
+    test_data_100k:
+        description: 'Loads a test data set for most NPSP objects based on 102400 Contacts.  NOTE: The sqlite data set is not included in the repo for this task so you need to load it into the correct filesystem location'
+        class_path: cumulusci.tasks.bulkdata.LoadData
+        options:
+            database_url: 'sqlite:///testdata/100k/test_data.db'
+            mapping: 'testdata/100k/mapping.yml'
+
+    test_data_delete:
+        description: 'WARNING: Deletes all data in the objects specified in the objects option.'
+        class_path: cumulusci.tasks.bulkdata.DeleteData
+        options:
+            objects:
+                - Opportunity
+                - npe03__Recurring_Donation__c
+                - Case
+                - Contact
+                - Account
+                - Allocation__c
+                - General_Accounting_Unit__c
+                - Campaign
+
 flows:
-    dev_org:
+    test_data_1k:
+        description: 'WARNING: This flow deletes all data first, then loads the complete test data set based on 1,024 Contacts into the target org.'
         tasks:
-            6.1:
-                task: update_admin_profile
-    ci_feature:
+            1:
+                task: test_data_delete
+            2:
+                task: test_data_1k
+
+    ci_browsertests_firefox:
+        description: Runs the browser tests via SauceLabs against Firefox
         tasks:
-            6.1:
-                task: update_admin_profile
+            1:
+                task: download_browser_tests
+            2:
+                task: run_browser_tests
+                options:
+                    use_saucelabs: True
+                    env:
+                        SELENIUM_BROWSER: firefox
+
+    ci_browsertests_chrome:
+        description: Runs the browser tests via SauceLabs against Chrome
+        tasks:
+            1:
+                task: download_browser_tests
+            2:
+                task: run_browser_tests
+                options:
+                    use_saucelabs: True
+                    env:
+                        SELENIUM_BROWSER: chrome
