@@ -9,6 +9,15 @@
     },
 
     /*******************************************************************************************************
+     * @description This is a workaround due to a LockerService bug where any added properties
+     * on an object don't get update the backing object.  The issue and workaround are in GUS issue W-3221032
+     * https://gus.my.salesforce.com/apex/adm_bugdetail?id=a07B0000002FDKi&sfdc.override=1&srKp=a07&srPos=0
+     */
+    componentSetObjFix: function(component, strParam, obj) {
+        component.set(strParam, JSON.parse(JSON.stringify(obj)));
+    },
+    
+    /*******************************************************************************************************
      * @description called at onInit to load up the Household Object/Account, and its Contacts
      */
     loadObjects: function(component) {
@@ -34,7 +43,7 @@
                 var hh = response.getReturnValue();
                 // now we need to fixup namespacing of fields
                 hh = this.removePrefixFromObjectFields(namespacePrefix, hh);
-                component.set("v.hh", hh);
+                this.componentSetObjFix(component, "v.hh", hh);
 
                 // set our auto-naming checkbox states
                 var strExclusions = hh.npo02__SYSTEM_CUSTOM_NAMING__c;
@@ -59,7 +68,7 @@
                 var listCon = response.getReturnValue();
                 // now we need to fixup namespacing of fields
                 listCon = this.removePrefixFromListObjectFields(namespacePrefix, listCon);
-                component.set("v.listCon", listCon);
+                this.componentSetObjFix(component, "v.listCon", listCon);
             } else if (component.isValid() && state === "ERROR") {
                 component.set('v.isSaveDisabled', true);
                 self.reportError(component, response);
@@ -120,7 +129,7 @@
                 var listAddr = response.getReturnValue();
                 // now we need to fixup namespacing of fields
                 listAddr = this.removePrefixFromListObjectFields(namespacePrefix, listAddr);
-                component.set("v.listAddr", listAddr);
+                this.componentSetObjFix(component, "v.listAddr", listAddr);
             } else if (component.isValid() && state === "ERROR") {
                 component.set('v.isSaveDisabled', true);
                 self.reportError(component, response);
@@ -155,7 +164,7 @@
             if (component.isValid() && state === "SUCCESS") {
                 hh = response.getReturnValue();
                 hh = this.removePrefixFromObjectFields(namespacePrefix, hh);
-                component.set("v.hh", hh);
+                this.componentSetObjFix(component, "v.hh", hh);
             } else if (component.isValid() && state === "ERROR") {
                 self.reportError(component, response);
             }
@@ -305,7 +314,7 @@
     promptRemoveContact: function(component, event) {
         var con = event.getParam("contact");
         component.set('v.showRemoveContactPopup', true);
-        component.set('v.conRemove', con);
+        this.componentSetObjFix(component, 'v.conRemove', con);
     },
 
     /*******************************************************************************************************
@@ -340,13 +349,13 @@
                 listConRemove = [];
             if (con.Id)
                 listConRemove.push(con);
-            component.set('v.listConRemove', listConRemove);
+            this.componentSetObjFix(component, 'v.listConRemove', listConRemove);
 
             var listCon = component.get('v.listCon');
             var iconDel = this.findContact(listCon, con);
             if (iconDel >= 0)
                 listCon.splice(iconDel, 1);
-            component.set('v.listCon', listCon);
+            this.componentSetObjFix(component, 'v.listCon', listCon);
             this.updateHHNames(component);
 
             // we must tell the visualforce page, in case the primary contact lookup is to this contact.
@@ -417,7 +426,7 @@
             hh.npo02__MailingPostalCode__c = addr.MailingPostalCode__c;
             hh.npo02__MailingCountry__c = addr.MailingCountry__c;
         }
-        component.set('v.hh', hh);
+        this.componentSetObjFix(component, 'v.hh', hh);
 
         // update the contacts
         var listCon = component.get('v.listCon');
@@ -427,7 +436,7 @@
                 this.copyAddrToContact(addr, con);
             }
         }
-        component.set('v.listCon', listCon);
+        this.componentSetObjFix(component, 'v.listCon', listCon);
     },
 
     /*******************************************************************************************************
@@ -509,7 +518,7 @@
         var conNew = component.get('v.conNew');
         conNew.FirstName = con.FirstName;
         conNew.LastName = con.LastName;
-        component.set('v.conNew', conNew);
+        this.componentSetObjFix(component, 'v.conNew', conNew);
         component.set('v.showNewContactPopup', true);
     },
 
@@ -529,7 +538,7 @@
         con.HHId__c = hhId;
         // tag each new contact with a timestamp, so we can identify it if we need to Remove it.
         con.dtNewContact = Date.now();
-        component.set('v.conNew', con);
+        this.componentSetObjFix(component, 'v.conNew', con);
     },
 
     /*******************************************************************************************************
@@ -550,7 +559,7 @@
             this.copyAddrToContact(addrDefault, conNew);
         conNew.npo02__Household_Naming_Order__c = listCon.length;
         listCon.push(conNew);
-        component.set('v.listCon', listCon);
+        this.componentSetObjFix(component, 'v.listCon', listCon);
         this.initNewContact(component);
         component.set('v.showNewContactPopup', false);
 
@@ -564,7 +573,7 @@
     onSalutationChange: function(component) {
         var conNew = component.get('v.conNew');
         conNew.Salutation = component.find('selSalutation').get('v.value');
-        component.set('v.conNew', conNew);
+        this.componentSetObjFix(component, 'v.conNew', conNew);
     },
 
     /*******************************************************************************************************
@@ -590,8 +599,8 @@
             'Id': hhId
         };
         hhMerge.Number_of_Household_Members__c = cMembers;
-        component.set('v.hhMerge', hhMerge);
-        component.set('v.conAdd', conAdd);
+        this.componentSetObjFix(component, 'v.hhMerge', hhMerge);
+        this.componentSetObjFix(component, 'v.conAdd', conAdd);
 
         // if we can't merge households (due to permissions), we only support moving a contact
         // from one household to another if there will still be remaining household members.
@@ -634,7 +643,7 @@
         // put them at the end of our naming list
         conAdd.npo02__Household_Naming_Order__c = listCon.length;
         listCon.push(conAdd);
-        component.set('v.listCon', listCon);
+        this.componentSetObjFix(component, 'v.listCon', listCon);
 
         // update the contact's addresses to the hh default (if they have no override)
         var addrDefault = component.find('addrMgr').get('v.addrDefault');
@@ -668,7 +677,7 @@
             if (component.isValid() && state === "SUCCESS") {
                 listAddr = response.getReturnValue();
                 listAddr = this.removePrefixFromListObjectFields(namespacePrefix, listAddr);
-                component.set("v.listAddr", listAddr);
+                this.componentSetObjFix(component, "v.listAddr", listAddr);
             } else if (component.isValid() && state === "ERROR") {
                 self.reportError(component, response);
             }
@@ -701,7 +710,7 @@
 
                 // move all contacts into our household
                 var cExisting = listCon.length;
-                for (var i in listConMerge) {
+                for (var i = 0; i < listConMerge.length; i++) {
                     if (hhTypePrefix === '001')
                         listConMerge[i].AccountId = hhId;
                     else
@@ -710,7 +719,7 @@
                     listConMerge[i].npo02__Household_Naming_Order__c = i + cExisting;
                     listCon.push(listConMerge[i]);
                 }
-                component.set('v.listCon', listCon);
+                this.componentSetObjFix(component, 'v.listCon', listCon);
 
                 // update the merged contact's addresses to the hh default (if they have no override)
                 var addrDefault = component.find('addrMgr').get('v.addrDefault');
@@ -723,6 +732,7 @@
                     if (!listHHMerge)
                         listHHMerge = [];
                     listHHMerge.push(hhMerge);
+                    this.componentSetObjFix(component, 'v.listHHMerge', listHHMerge);
                 }
 
                 // force our names to update since we have new contacts!
@@ -741,6 +751,9 @@
         for (var i in listAddr) {
             listAddr[i].sobjectType = namespacePrefix + 'Address__c';
         }
+        // hack to get backing object updated under LockerService
+        listAddr = JSON.parse(JSON.stringify(listAddr));
+        
         listAddr = this.addPrefixToListObjectFields(namespacePrefix, listAddr);
         action.setParams({
             hhId: hhMerge.Id,
@@ -752,7 +765,7 @@
             if (component.isValid() && state === "SUCCESS") {
                 listAddr = response.getReturnValue();
                 listAddr = this.removePrefixFromListObjectFields(namespacePrefix, listAddr);
-                component.set("v.listAddr", listAddr);
+                this.componentSetObjFix(component, "v.listAddr", listAddr);
             } else if (component.isValid() && state === "ERROR") {
                 self.reportError(component, response);
             }
