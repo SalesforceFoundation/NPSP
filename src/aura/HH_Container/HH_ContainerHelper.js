@@ -710,7 +710,7 @@
 
                 // move all contacts into our household
                 var cExisting = listCon.length;
-                for (var i in listConMerge) {
+                for (var i = 0; i < listConMerge.length; i++) {
                     if (hhTypePrefix === '001')
                         listConMerge[i].AccountId = hhId;
                     else
@@ -732,6 +732,7 @@
                     if (!listHHMerge)
                         listHHMerge = [];
                     listHHMerge.push(hhMerge);
+                    this.componentSetObjFix(component, 'v.listHHMerge', listHHMerge);
                 }
 
                 // force our names to update since we have new contacts!
