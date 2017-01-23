@@ -867,6 +867,7 @@
         <members>CONV_Warning</members>
         <members>CONV_What_This_Tool_Does</members>
         <members>CampaignMemberStatusOmit</members>
+        <members>CascadeDeletionError</members>
         <members>EPAddDependentTask</members>
         <members>EPAddTask</members>
         <members>EPDeleteTask</members>
