@@ -588,6 +588,14 @@
         <value>omit</value>
     </labels>
     <labels>
+        <fullName>CascadeDeleteOrReassociate</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CascadeDeleteOrReassociate</shortDescription>
+        <value>Delete or re-associate these records and then try deleting {0} again.</value>
+    </labels>
+    <labels>
         <fullName>CascadeDeletionError</fullName>
         <categories>Error</categories>
         <language>en_US</language>
@@ -686,6 +694,14 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <protected>false</protected>
         <shortDescription>NameRequired</shortDescription>
         <value>Subject is a required field.</value>
+    </labels>
+    <labels>
+        <fullName>OrganizationalOpportunities</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrganizationalOpportunities</shortDescription>
+        <value>Organizational Opportunities</value>
     </labels>
     <labels>
         <fullName>PageMessagesConfirm</fullName>
