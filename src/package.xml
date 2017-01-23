@@ -869,6 +869,8 @@
         <members>CampaignMemberStatusOmit</members>
         <members>CascadeDeleteOrReassociate</members>
         <members>CascadeDeletionError</members>
+        <members>ClosedWonOpportunities</members>
+        <members>ConfirmDeleteAccount</members>
         <members>EPAddDependentTask</members>
         <members>EPAddTask</members>
         <members>EPDeleteTask</members>
