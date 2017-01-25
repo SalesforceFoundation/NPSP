@@ -66,10 +66,6 @@
                                         'slds-input')}">
                 <apex:actionSupport event="onchange" action="{!actSupAction}" reRender="{!actSupReRender}" rendered="{!actSup}" status="{!actSupStatus}" immediate="{!actSupImmediate}"/>
             </apex:inputField>
-            <apex:outputText rendered="{!ftype=='boolean'}">
-                    <span class="slds-checkbox--faux"></span>
-                    <label class="slds-form-element__label" for="inputX">{!label}</label>
-            </apex:outputText>
         </div>
         <!-- Javascript will add the onchange event when needed and swap out the icon for lookup fields -->
         <script type="text/javascript">
@@ -97,21 +93,21 @@
     <apex:outputPanel layout="block" styleClass="{!'slds-form-element ' + styleClass}" id="divCheckbox"
         rendered="{!($ObjectType[sObjType].fields[field].updateable
                     || $ObjectType[sObjType].fields[field].createable && sObj['Id']=='') && $ObjectType[sObjType].fields[field].type == 'boolean'}">
-            <div class="slds-form-element__control">
-                <apex:outputLabel styleClass="slds-checkbox" for="inputCB">
-                    <apex:inputField id="inputCB" value="{!sObj[field]}" label="">
-                        <apex:actionSupport event="onchange" action="{!actSupAction}" reRender="{!actSupReRender}" rendered="{!actSup}" status="{!actSupStatus}" immediate="{!actSupImmediate}"/>
-                    </apex:inputField>
-                        <span class="slds-checkbox--faux"></span>
-                        <span class="slds-form-element__label" for="inputX">{!label}</span>
-                </apex:outputLabel>
-            </div>
-            <script type="text/javascript">
-                var oc = '{!onchange}';
-                var input = document.getElementById("{!$Component.inputCB}");
+        <div class="slds-form-element__control">
+            <apex:outputLabel styleClass="slds-checkbox" for="inputCB">
+                <apex:inputField id="inputCB" value="{!sObj[field]}" label="">
+                    <apex:actionSupport event="onchange" action="{!actSupAction}" reRender="{!actSupReRender}" rendered="{!actSup}" status="{!actSupStatus}" immediate="{!actSupImmediate}"/>
+                </apex:inputField>
+                    <span class="slds-checkbox--faux"></span>
+                    <span class="slds-form-element__label">{!label}</span>
+            </apex:outputLabel>
+        </div>
+        <script type="text/javascript">
+            var oc = '{!onchange}';
+            var input = document.getElementById("{!$Component.inputCB}");
 
-                // Add onchange event only when needed
-                if (oc) input.setAttribute("onchange", oc);
-            </script>
+            // Add onchange event only when needed
+            if (oc) input.setAttribute("onchange", oc);
+        </script>
     </apex:outputPanel>
 </apex:component>
