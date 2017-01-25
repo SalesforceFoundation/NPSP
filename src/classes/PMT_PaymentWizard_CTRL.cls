@@ -246,7 +246,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
                         
             Decimal OppAmountFloat = currentOpp.npe01__Amount_Outstanding__c;
             if (removePaidPayments == true)
-                OppAmountFloat = currentOpp.Amount;
+                OppAmountFloat = currentOpp.Total_Amount__c;
     
             //divide the amount by the number of installments, and deal with the remainder
             Decimal paymentAmount = OppAmountFloat.divide(numberOfPayments, 2, system.roundingmode.FLOOR);
