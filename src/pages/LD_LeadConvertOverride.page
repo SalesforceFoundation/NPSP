@@ -205,7 +205,7 @@
                                         <apex:repeat value="{!conFieldSet}" var="f">
                                             <div class="slds-form-element slds-has-divider--bottom">
                                                 <span class="slds-form-element__label">
-                                                    <apex:outputLabel value="{!IF(!contains(f.fieldPath,'.') && $ObjectType.Contact.fields[f].type == 'reference', $ObjectType.Contact.fields[f].relationshipName, f.label)}"/>
+                                                    <apex:outputLabel value="{!f.label}"/>
                                                 </span>
                                                 <div class="slds-form-element__control">
                                                     <span class="slds-form-element__static">

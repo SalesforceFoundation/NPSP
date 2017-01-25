@@ -1,4 +1,4 @@
-<apex:page controller="PMT_PaymentWizard_CTRL" tabStyle="Opportunity" standardStylesheets="false">
+<apex:page controller="PMT_PaymentWizard_CTRL" tabStyle="Opportunity" standardStylesheets="true">
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
     <apex:stylesheet value="{!URLFOR($Resource.SLDS, '/0_12_2/assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
 
