@@ -1,5 +1,5 @@
 <apex:page standardController="npo02__Household__c" extensions="HH_ManageHH_CTRL" title="{!$Label.npo02__ManageHousehold}" 
-    standardStylesheets="false" showHeader="true" docType="html-5.0" action="{!handleNewHousehold}"  >
+    standardStylesheets="true" showHeader="true" docType="html-5.0" action="{!handleNewHousehold}"  >
         
 	<apex:include pageName="HH_ManageHH"/>
         
