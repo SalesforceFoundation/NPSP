@@ -56,6 +56,8 @@ private class CAM_CascadeDeleteLookups_TEST {
         List<Allocation__c> deletedAllo = [SELECT Id FROM Allocation__c WHERE Id=:alloForInsert.Id AND IsDeleted=true ALL ROWS];
         System.assertEquals(1, deletedAllo.size(), 'Allocation should be cascade deleted when campaign is deleted.');
 
+        //flag needs to be reset as the delete and undelete are in the same context for tests.
+        UTIL_CascadeDeleteLookups_TDTM.disableCascade = false;
         undelete cam;
 
         List<Allocation__c> undeletedAllo = [SELECT Id FROM Allocation__c WHERE Id=:alloForInsert.Id AND IsDeleted=false ALL ROWS];

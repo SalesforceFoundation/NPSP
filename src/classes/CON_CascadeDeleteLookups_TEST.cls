@@ -68,10 +68,10 @@ private class CON_CascadeDeleteLookups_TEST {
         System.assertEquals(0, errors.size(), errors);
 
         List<npe03__Recurring_Donation__c> queryRd = [SELECT Id FROM npe03__Recurring_Donation__c WHERE Id=:rd.Id];
-        System.assertEquals(0, queryRd.size(), 'Recurring Donation shouldn\'t be cascade deleted when Contact is deleted without the override.');
+        System.assertEquals(1, queryRd.size(), 'Recurring Donation shouldn\'t be cascade deleted when Contact is deleted without the override.');
 
         List<Allocation__c> queryAllo = [SELECT Id FROM Allocation__c WHERE Id=:alloForInsert.Id];
-        System.assertEquals(0, queryAllo.size(), 'Allocation shouldn\'t be cascade deleted when recurring donation is deleted.');
+        System.assertEquals(1, queryAllo.size(), 'Allocation shouldn\'t be cascade deleted when recurring donation is deleted.');
     }
 
     /*********************************************************************************************************
