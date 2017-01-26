@@ -165,7 +165,8 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
 
                 String verified_street = '';
                 String verified_premise = '';
-                if (googresp.status == 'OK' && googresp.results.size() == 1 && !(settings.Reject_Ambiguous_Addresses__c && googresp.results[0].partial_match)){
+                if (googresp.status == 'OK' && googresp.results != null && googresp.results.size() == 1 && 
+                    !(settings.Reject_Ambiguous_Addresses__c && googresp.results[0].partial_match == true)){
 
                     for (ADDR_GoogleGeoAPI_Validator.Address_components add : googresp.results[0].address_components){
                         Set<String> type_set = new Set<String>();
@@ -217,7 +218,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
                     a.Verified__c = true;
                     a.API_Response__c = trimResponse(response);
                     a.Verification_Status__c = Label.Addr_Verified;
-                } else if ((googresp.status == 'OK' && googresp.results.size() > 1) || (googresp.results.size() == 1 && settings.Reject_Ambiguous_Addresses__c && googresp.results[0].partial_match)){
+                } else if ((googresp.status == 'OK' && googresp.results.size() > 1) || (googresp.results.size() == 1 && settings.Reject_Ambiguous_Addresses__c && googresp.results[0].partial_match == true)){
                     a.Ambiguous__c = true;
                     a.Verified__c = false;
                     a.API_Response__c = trimResponse(response);

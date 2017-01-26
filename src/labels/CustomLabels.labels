@@ -2808,6 +2808,14 @@ If you want to know which Opportunities would have previously included this doub
         <value>Postal Code</value>
     </labels>
     <labels>
+        <fullName>lblRequired</fullName>
+        <categories>Engagement Plan, UTIL_FormField</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>lblRequired</shortDescription>
+        <value>Required</value>
+    </labels>
+    <labels>
         <fullName>lblSalutation</fullName>
         <categories>Manage Household UI</categories>
         <language>en_US</language>
