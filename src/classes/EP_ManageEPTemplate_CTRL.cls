@@ -426,16 +426,16 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         Component.Apex.OutputPanel cardFooter = new Component.Apex.OutputPanel(styleClass='slds-grid', layout='block');
         Component.Apex.OutputPanel buttonGroup = new Component.Apex.OutputPanel(styleClass='slds-button-group slds-p-top--large', layout='block');
 
-        firstRow.childComponents.add(genericInputPanel(wrapper, accessString, 'Name', 'slds-col slds-size--1-of-4', 'slds-input', true));
-        firstRow.childComponents.add(genericInputPanel(wrapper, accessString, 'Assigned_To__c', 'slds-col slds-size--1-of-4', 'lookupInput203', false));
-        firstRow.childComponents.add(genericInputPanel(wrapper, accessString, 'Type__c', 'slds-col slds-size--1-of-4', 'slds-select', false));
+        firstRow.childComponents.add(genericInputField(wrapper, accessString, 'Name', 'slds-col slds-size--1-of-4', true));
+        firstRow.childComponents.add(genericInputField(wrapper, accessString, 'Assigned_To__c', 'slds-col slds-size--1-of-4', false));
+        firstRow.childComponents.add(genericInputField(wrapper, accessString, 'Type__c', 'slds-col slds-size--1-of-4', false));
         firstRow.childComponents.add(selectListInputPanel(wrapper, accessString, 'Priority__c', ' slds-col slds-size--1-of-4', 'slds-select','taskPriorityOptions', false));
 
         secondRow.childComponents.add(selectListInputPanel(wrapper, accessString, 'Status__c', ' slds-col slds-size--1-of-4', 'slds-select','taskStatusOptions', false));
-        secondRow.childComponents.add(genericInputPanel(wrapper, accessString, 'Send_Email__c', 'slds-col slds-size--1-of-8 slds-p-top--medium slds-p-left--medium', 'slds-checkbox', false));
-        secondRow.childComponents.add(genericInputPanel(wrapper, accessString, 'Reminder__c', 'slds-col slds-size--1-of-8 slds-p-top--medium', 'slds-checkbox', false));
+        secondRow.childComponents.add(genericInputField(wrapper, accessString, 'Send_Email__c', 'slds-col slds-size--1-of-8 slds-p-top--medium slds-p-left--medium', false));
+        secondRow.childComponents.add(genericInputField(wrapper, accessString, 'Reminder__c', 'slds-col slds-size--1-of-8 slds-p-top--medium', false));
         secondRow.childComponents.add(selectListInputPanel(wrapper, accessString, 'Reminder_Time__c', ' slds-col slds-size--1-of-4', 'slds-select','reminderTimeOptions', false));
-        secondRow.childComponents.add(genericInputPanel(wrapper, accessString, 'Days_After__c', 'slds-col slds-size--1-of-4', 'slds-input', false));
+        secondRow.childComponents.add(genericInputField(wrapper, accessString, 'Days_After__c', 'slds-col slds-size--1-of-4', false));
 
         Component.Apex.OutputText addDependentTaskButton = new Component.Apex.OutputText(
             value='<button onclick="addDependentTaskJS(\''+ wrapper.level +'\');return false;" '+ 
@@ -503,21 +503,19 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     * @param accessString The string for accessing the current place in the hierarchy using a nested expression.
     * @param fieldName The name of the field.
     * @param outterCss CSS markup for the field input container.
-    * @param inputCss CSS markup for the input itself.
+    * @param req Whether or not the field is required.
     * @return Component.Apex.OutputPanel OutputPanel containing the markup for an inputField.
     */
-    private Component.Apex.OutputPanel genericInputPanel(TaskWrapper wrapper, String accessString, String fieldName, String outterCss, String inputCss, Boolean required) {
-        Component.Apex.OutputPanel outterPanel = fieldLabelPanel(wrapper, fieldName, outterCss, required);
-
-        Component.Apex.InputField fieldInput = new Component.Apex.InputField(
-            id = fieldName + wrapper.level,
-            value = wrapper.detail.get(fieldName),
-            styleClass = 'slds-form-element__control ' + inputCss
+    private Component.c.UTIL_FormField genericInputField(TaskWrapper wrapper, String accessString, String fieldName, String style, Boolean req) {
+        Component.c.UTIL_FormField inputField = new Component.c.UTIL_FormField(
+            field=fieldName,
+            sObjType='Engagement_Plan_Task__c',
+            styleClass=style,
+            required=req
         );
-        fieldInput.expressions.value = '{!' + accessString + '.detail.' + fieldName + '}';
-        outterPanel.childComponents.add(fieldInput);
+        inputField.expressions.sObj = '{!' + accessString + '.detail}';
 
-        return outterPanel;
+        return inputField;
     }
 
     /** @description Generates the markup for an SLDS styled picklist.

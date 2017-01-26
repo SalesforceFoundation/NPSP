@@ -1,4 +1,4 @@
-<apex:page standardController="Opportunity" extensions="MTCH_FindGifts_CTRL" standardStylesheets="false">
+<apex:page standardController="Opportunity" extensions="MTCH_FindGifts_CTRL" standardStylesheets="true">
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/modal.js')}"/>
     <apex:stylesheet value="{!URLFOR($Resource.SLDS, '/0_12_2/assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />

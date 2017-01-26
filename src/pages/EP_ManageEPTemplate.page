@@ -1,4 +1,4 @@
-<apex:page standardController="Engagement_Plan_Template__c" extensions="EP_ManageEPTemplate_CTRL" standardStylesheets="false" showHeader="true" title="{!$Label.EPManageTemplate}">
+<apex:page standardController="Engagement_Plan_Template__c" extensions="EP_ManageEPTemplate_CTRL" standardStylesheets="true" showHeader="true" title="{!$Label.EPManageTemplate}">
     <apex:stylesheet value="{!URLFOR($Resource.sfdo203, '/assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -49,20 +49,12 @@
                             </div>
                         </div>
                         <!--template field set fields-->
-                        <apex:repeat value="{!$ObjectType.Engagement_Plan_Template__c.FieldSets.ManageEPTemplateFS}" var="field">
-                            <div class="slds-form-element slds-p-top--small">
-                                <apex:outputLabel value="{!field.Label}" for="idtest" styleClass="slds-form-element__label" />
-                                <div class="slds-form-element__control">
-                                    <apex:inputField id="idtest" value="{!template[field.FieldPath]}" 
-                                        styleClass="{!CASE(field.Type, 
-                                                'reference', 'lookupInput203 ' + field.FieldPath, 
-                                                'picklist', 'slds-select',
-                                                'multipicklist', 'slds-select', 
-                                                'boolean', 'slds-checkbox',
-                                                'textarea', 'slds-textarea',
-                                                'slds-input')}" />
-                                </div>
-                            </div>
+                        <apex:repeat value="{!$ObjectType.Engagement_Plan_Template__c.FieldSets.ManageEPTemplateFS}" var="f">
+                            <c:UTIL_FormField field="{!f.fieldPath}"
+                                sObj="{!template}"
+                                sObjType="Engagement_Plan_Template__c"
+                                styleClass="slds-p-top--small"
+                                required="{!f.DBRequired || f.Required}"/>
                         </apex:repeat>
                     </div>
                     <div class="slds-col slds-col--padded slds-p-top--large slds-size--1-of-2">
