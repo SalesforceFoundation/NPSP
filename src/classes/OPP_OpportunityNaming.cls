@@ -216,7 +216,7 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
     * @return string Individual or Organizational, based on the opportunity's attribution.
     ********************************************************************************************************/
     public static string getOppAttribution(Opportunity opp) {
-        if (opp.Account.npe01__SYSTEMIsIndividual__c)
+        if (opp.Account == null || opp.Account.npe01__SYSTEMIsIndividual__c)
             return Label.oppNamingIndividual;
         else
             return Label.oppNamingOrganizational;
