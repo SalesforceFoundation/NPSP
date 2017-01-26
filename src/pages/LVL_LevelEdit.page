@@ -1,4 +1,4 @@
-<apex:page standardController="Level__c" extensions="LVL_LevelEdit_CTRL" showHeader="true" standardStylesheets="false" >
+<apex:page standardController="Level__c" extensions="LVL_LevelEdit_CTRL" showHeader="true" standardStylesheets="true" >
     <apex:stylesheet value="{!URLFOR($Resource.sfdo203, '/assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
     
@@ -91,12 +91,10 @@
                                     <apex:selectOptions value="{!listSOSourceFields}"  />
                                 </apex:selectList>
                             </div>
-                            <div class="slds-form-element slds-size--1-of-2">
-                                <apex:outputLabel for="fldEP" styleClass="slds-form-element__label uiLabel-left form-element__label uiLabel" >
-                                    {!$ObjectType.Level__c.Fields.Engagement_Plan_Template__c.Label}
-                                </apex:outputLabel>
-                                <apex:inputField id="fldEP" required="false" value="{!Level__c.Engagement_Plan_Template__c}" label="" styleClass="lookupInput203 Engagement_Plan_Template__c" />
-                            </div>
+                            <c:UTIL_FormField field="Engagement_Plan_Template__c"
+                                sObj="{!Level__c}"
+                                sObjType="Level__c"
+                                styleClass="slds-size--1-of-2"/>
                         </div>
 
                         <div class="slds-form-element__row">
@@ -108,12 +106,10 @@
                                     <apex:selectOptions value="{!listSOLevelFields}"  />
                                 </apex:selectList>
                             </div>
-                            <div class="slds-form-element slds-size--1-of-2">
-                                <apex:outputLabel for="fldActive" styleClass="slds-form-element__label uiLabel-left form-element__label uiLabel" >
-                                    {!$ObjectType.Level__c.Fields.Active__c.Label}
-                                </apex:outputLabel>
-                                <apex:inputField id="fldActive" required="false" value="{!Level__c.Active__c}" label="" styleClass="slds-input" />
-                            </div>
+                            <c:UTIL_FormField field="Active__c"
+                                sObj="{!Level__c}"
+                                sObjType="Level__c"
+                                styleClass="slds-size--1-of-2"/>
                         </div>
 
                         <div class="slds-form-element__row">
@@ -136,22 +132,11 @@
             <div class="slds-grid slds-grid--align-spread slds-m-bottom--medium slds-m-left--medium slds-m-right--medium">
             
                 <div class="slds-form--stacked slds-size--4-of-5" >                        
-                    <apex:repeat value="{!$ObjectType.Level__c.FieldSets.LevelEdit}" var="f">                            
-                        <div class="slds-form-element">
-                            <apex:outputLabel for="fldX" styleClass="slds-form-element__label uiLabel-left form-element__label uiLabel" >
-                                <span class="required slds-required">{!IF(f.DBRequired || f.Required, '*', '')}</span>{!f.Label}
-                            </apex:outputLabel>
-                            <div class="slds-form-element__control">                                
-                                <apex:inputField id="fldX" required="false" value="{!Level__c[f]}" label=""
-                                    styleClass="{!CASE(f.Type, 
-                                                    'reference', 'lookupInput203 ' + f.FieldPath, 
-                                                    'picklist', 'slds-select',
-                                                    'multipicklist', 'slds-select', 
-                                                    'boolean', 'slds-checkbox',
-                                                    'textarea', 'slds-textarea',
-                                                    'slds-input')}" />                                
-                            </div>
-                        </div>
+                    <apex:repeat value="{!$ObjectType.Level__c.FieldSets.LevelEdit}" var="f">
+                        <c:UTIL_FormField field="{!f.fieldPath}"
+                                    sObj="{!Level__c}"
+                                    sObjType="Level__c"
+                                    required="{!f.DBRequired || f.Required}"/>
                     </apex:repeat>
                 </div>
             </div>
