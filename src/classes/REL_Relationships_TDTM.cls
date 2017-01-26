@@ -39,11 +39,7 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
     	List<npe4__Relationship__c> newListCasted = (newList == null ? new List<npe4__Relationship__c>(): (List<npe4__Relationship__c>)newList);
         List<npe4__Relationship__c> oldListCasted = (oldList == null ? new List<npe4__Relationship__c>(): (List<npe4__Relationship__c>)oldList);
     	
-    	if(triggerAction != TDTM_Runnable.Action.afterDelete) {
-    		return runForRelationships(newListCasted, oldListCasted, triggerAction);
-        } else {
-        	return runForRelationships(oldListCasted, null, triggerAction);
-        }
+		return runForRelationships(newListCasted, oldListCasted, triggerAction);
     }
     
     /// <name> REL_Relationships </name>
@@ -91,14 +87,19 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
                 }
             }
 
-            // AFTER DELETE
-            if (triggerAction == TDTM_Runnable.Action.afterDelete) {
-                if (r.npe4__ReciprocalRelationship__c != null) {
-                    relationshipsToDelete.add(r);
+            i++;
+        }
+
+        // AFTER DELETE
+        if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
+            Map<Id, npe4__Relationship__c> deletedRelMap = new Map<Id, npe4__Relationship__c>(oldlist);
+            for (npe4__Relationship__c rel : oldList) {
+                
+                //check that the recirocal relationship isn't already in the deletion trigger set before adding for deletion
+                if (rel.npe4__ReciprocalRelationship__c != null && !deletedRelMap.containsKey(rel.npe4__ReciprocalRelationship__c)) {
+                    relationshipsToDelete.add(new npe4__Relationship__c(Id=rel.npe4__ReciprocalRelationship__c));
                 }
             }
-
-            i++;
         }
 
         if (relationshipsToCreate.size() > 0 ) {
@@ -116,8 +117,7 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
             
         }
         if (relationshipsToDelete.size() > 0 ) {
-            DmlWrapper wrapper = deleteRelationships(relationshipsToDelete);
-            mainWrapper.objectsToDelete.addAll(wrapper.objectsToDelete);
+            mainWrapper.objectsToDelete.addAll((List<SObject>)relationshipsToDelete);
         }
 
         if (triggerAction == TDTM_Runnable.Action.afterUpdate) {
@@ -126,29 +126,6 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
         return mainWrapper;
     }
 
-
-    /// <name> deleteRelationships </name>
-    /// <summary> Deletes Reciprocal Relationships when a Relationship is deleted </summary>
-    /// <param name="relationships">  </param>
-    public static DmlWrapper deleteRelationships(npe4__Relationship__c[] relationships) {
-    	UTIL_Debug.debug('****Deleting relationships: ' + relationships);
-    	DmlWrapper dmlWrapper = new DmlWrapper();
-        List<SObject> relationshipsToDelete = new List<SObject>();
-        for(npe4__Relationship__c r : Relationships) {
-        	npe4__Relationship__c relationshipToDelete;
-            if(r.npe4__ReciprocalRelationship__c != null) {
-            	relationshipToDelete = new npe4__Relationship__c(Id = r.npe4__ReciprocalRelationship__c);
-            } else if(r.npe4__RelatedContact__c == null) {
-            	relationshipToDelete = new npe4__Relationship__c(Id = r.Id);
-	        }
-	        relationshipsToDelete.add(relationshipToDelete);
-        }
-        if ( relationshipsToDelete.size() > 0 ) {
-            dmlWrapper.objectsToDelete.addAll(relationshipsToDelete);
-        }
-        return dmlWrapper;
-    }
-    
     /// <name> reciprocate </name>
     /// <summary>  </summary>
     /// <param name="Relationships">  </param>
