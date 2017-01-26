@@ -277,6 +277,7 @@
     <types>
         <members>STG_DataBoundMultiSelect</members>
         <members>STG_PageHeader</members>
+        <members>UTIL_FormField</members>
         <members>UTIL_JobProgress</members>
         <members>UTIL_JobProgressLightning</members>
         <members>UTIL_NavigateBack</members>
@@ -1134,6 +1135,7 @@
         <members>lblNPSPSettings</members>
         <members>lblNoHHMergePermissions</members>
         <members>lblPostalCode</members>
+        <members>lblRequired</members>
         <members>lblSalutation</members>
         <members>lblState</members>
         <members>lblStreet</members>

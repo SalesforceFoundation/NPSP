@@ -1,4 +1,4 @@
-<apex:page controller="HH_ManageHH_CTRL" standardStylesheets="false" showHeader="true" docType="html-5.0" >
+<apex:page controller="HH_ManageHH_CTRL" standardStylesheets="true" showHeader="true" docType="html-5.0" >
     <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <apex:includeLightning />
         <apex:stylesheet value="{!URLFOR($Resource.sfdo203, '/assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
@@ -35,22 +35,14 @@
         <apex:form id="vfForm" >
             <div class="sfdo203">
                 <div class="slds-grid slds-grid--align-spread slds-m-around--medium">
-                    <div class="slds-form--stacked" style="width:80%" >                        
-                        <apex:repeat value="{!hhFieldSet}" var="f">                            
-                            <div class="slds-form-element">
-                                <label class="slds-form-element__label uiLabel-left form-element__label uiLabel" >
-                                    {!f.Label}<span class="required">{!IF(f.DBRequired || f.Required, '*', '')}</span>
-                                </label>
-                                <div class="slds-form-element__control">                                
-                                    <apex:inputField required="{!f.DBRequired || f.Required}" value="{!hh[f]}" label=""
-                                        styleClass="{!CASE(f.Type, 
-                                                        'reference', 'lookupInput' + ' ' + f.FieldPath, 
-                                                        'multipicklist', 'slds-select multipicklistSLDSFixup', 
-                                                        'boolean', 'slds-checkbox',
-                                                        'slds-input')}" 
-                                        onchange="{!IF(f.FieldPath = 'npe01__One2OneContact__c', 'fireContactChangedEvent();', '')}" />                                
-                                </div>
-                            </div>
+                    <div class="slds-form--stacked" style="width:80%" >
+                        <apex:variable value="{!IF(isHHAccount, 'Account', 'npo02__Household__c')}" var="objType"/>
+                        <apex:repeat value="{!hhFieldSet}" var="f">
+                            <c:UTIL_FormField field="{!f.fieldPath}"
+                                    sObj="{!hh}"
+                                    sObjType="{!objType}"
+                                    required="{!f.DBRequired || f.Required}"
+                                    onchange="{!IF(f.FieldPath = 'npe01__One2OneContact__c', 'fireContactChangedEvent();', '')}"/>
                         </apex:repeat>
                     </div>
                 </div>                
