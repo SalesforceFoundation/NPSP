@@ -44,9 +44,11 @@ public with sharing class LVL_LevelEdit_CTRL {
     * @return nothing
     */ 
     public LVL_LevelEdit_CTRL(ApexPages.StandardController controller) {
-        if (!Test.isRunningTest()) {
-            controller.addFields(UTIL_Describe.listStrFromFieldSet(UTIL_Namespace.StrTokenNSPrefix('Level__c'), UTIL_Namespace.StrTokenNSPrefix('LevelEdit')));
-        }
+        List<String> fieldSetList = UTIL_Describe.listStrFromFieldSet(UTIL_Namespace.StrTokenNSPrefix('Level__c'),
+                UTIL_Namespace.StrTokenNSPrefix('LevelEdit'));
+        fieldSetList.add(UTIL_Namespace.StrTokenNSPrefix('Active__c'));
+        fieldSetList.add(UTIL_Namespace.StrTokenNSPrefix('Engagement_Plan_Template__c'));
+        if (!Test.isRunningTest()) controller.addFields(fieldSetList);
         lvl = (Level__c)controller.getRecord();
         
         //if clone param is set, this is the clone button override
