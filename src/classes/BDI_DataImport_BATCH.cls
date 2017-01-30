@@ -408,11 +408,15 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             if (con == null)
                 continue;
             
-            // potentially set c1's household if provided
-            if (di.HouseholdAccountImported__c != null)
-                con.AccountId = di.HouseholdAccountImported__c;
-            
             boolean isModified = false;                 
+
+            // potentially set c1's household if provided
+            if (di.HouseholdAccountImported__c != null && di.HouseholdAccountImported__c != con.AccountId) {
+                con.AccountId = di.HouseholdAccountImported__c;
+                isModified = true;
+            }
+
+            // copy over all fields with data
             for (string strDIField : mapDIFieldToC1Field.keySet()) {
                 if (isCopiedDIField(di, strDIField, con, mapDIFieldToC1Field)) {
                     isModified = true;
@@ -486,10 +490,16 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             Contact con = ContactFromDi(di, 2);
             if (con == null)
                 continue;
-            // set c2's household to match c1
-            con.AccountId = mapC1IdToHHId.get(di.Contact1Imported__c);
-            
+
             boolean isModified = false;                 
+
+            // set c2's household to match c1
+            if (con.AccountId != mapC1IdToHHId.get(di.Contact1Imported__c)) {
+                con.AccountId = mapC1IdToHHId.get(di.Contact1Imported__c);
+                isModified = true;
+            }
+            
+            // copy over all fields with data
             for (string strDIField : mapDIFieldToC2Field.keySet()) {
                 if (isCopiedDIField(di, strDIField, con, mapDIFieldToC2Field)) {
                     isModified = true;
@@ -783,8 +793,9 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
                 di.Contact1ImportStatus__c = label.bdiMatched;
                 // remember all the existing household accounts, so we can query for and add "looser" keys for c2
                 if (con.AccountId != null) {
-                    di.HouseholdAccountImported__c = con.AccountId;
                     setHHId.add(con.AccountId);
+                    if (di.HouseholdAccountImported__c == null)
+                        di.HouseholdAccountImported__c = con.AccountId;
                 }
             } else if (listDiKey.size() > 0) {
                 con = new Contact();
