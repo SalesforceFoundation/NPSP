@@ -97,6 +97,7 @@ private class CON_DeleteContactOverride_TEST {
         test.startTest();
         CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
         ctrl.processDelete();
+        ctrl.deleteAccount();
         test.stopTest();
 
         list<account> queryAcc = [SELECT Id, isDeleted FROM Account WHERE id = :querycon[0].AccountId ALL ROWS];
@@ -127,6 +128,7 @@ private class CON_DeleteContactOverride_TEST {
         test.startTest();
         CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
         ctrl.processDelete();
+        ctrl.deleteAccount();
         test.stopTest();
 
         list<account> queryAcc = [SELECT Id, isDeleted FROM Account WHERE id = :querycon[0].AccountId ALL ROWS];
