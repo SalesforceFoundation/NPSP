@@ -213,8 +213,18 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
         for (Cascade cc : getCascades()) {
             for (Id parentId : cc.errors.keySet()) {
                 SObject parent = cc.parents.get(parentId);
+
                 String parentName = (String)parent.get(parentNameField);
-                
+
+                //special case Contacts as contact.name is null in the trigger set
+                if (String.isBlank(parentName) && parentObjectName == Contact.SObjectType.getDescribe().getName()) {
+                    //lastname is required, first name is optional.
+                    parentName = (String)parent.get('LastName');
+                    if (parent.get('FirstName') != null) {
+                        parentName = parent.get('FirstName') + ' ' + parentName;
+                    }
+                }
+
                 String error = String.format(Label.CascadeDeletionError, new List<String>{parentName}) + '<br/><br/>';
                 for (String errType : cc.errors.get(parentId).keySet()) {
                     error += ' ' + errType + ': ' + getErrorLinks(cc,cc.errors.get(parentId).get(errType));
@@ -237,7 +247,7 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
         String nameField = (String)UTIL_Describe.getNameField(records[0].getSobjectType().getDescribe().getName());
         for (Id recId : records) {
             String childName = (String)cc.children.get(recId).get(nameField);
-            String htmlLink = '<li><a href="/'+recId+'" target="_blank">' + childName + '</a></li>';
+            String htmlLink = '<li><a href="#" onclick="window.open(\'/'+recId+'\', \'\');return false;" target="_blank">' + childName + '</a></li>';
             results.add(htmlLink);
         }
         results.add('</ul>');
