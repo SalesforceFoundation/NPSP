@@ -942,6 +942,7 @@
         <members>bdiContactMatchFnameEmail</members>
         <members>bdiContactMatchFnameLname</members>
         <members>bdiContactMatchFnameLnameEmail</members>
+        <members>bdiContactMatchFnameLnamePhone</members>
         <members>bdiContactMatchLnameEmail</members>
         <members>bdiCreated</members>
         <members>bdiDataImporterConfigTitle</members>

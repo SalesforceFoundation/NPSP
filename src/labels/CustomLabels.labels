@@ -1187,6 +1187,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>First Name, Last Name, and Email</value>
     </labels>
     <labels>
+        <fullName>bdiContactMatchFnameLnamePhone</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Data Importer Contact matching option for Fname, Lname, Phone</shortDescription>
+        <value>First Name, Last Name, and Phone</value>
+    </labels>
+    <labels>
         <fullName>bdiContactMatchLnameEmail</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>

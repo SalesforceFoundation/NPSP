@@ -112,6 +112,7 @@
                                             <apex:selectOption itemLabel="{!$Label.bdiContactMatchFnameEmail}" itemValue="Firstname,Email" />
                                             <apex:selectOption itemLabel="{!$Label.bdiContactMatchFnameLname}" itemValue="Firstname,Lastname" />
                                             <apex:selectOption itemLabel="{!$Label.bdiContactMatchEmail}" itemValue="Email" />
+                                            <apex:selectOption itemLabel="{!$Label.bdiContactMatchFnameLnamePhone}" itemValue="Firstname,Lastname,Phone" />
                                         </apex:selectList>
                                     </div>
                                     <span class="slds-form-element__help">
