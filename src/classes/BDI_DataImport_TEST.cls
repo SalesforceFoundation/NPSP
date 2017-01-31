@@ -230,8 +230,10 @@ public with sharing class BDI_DataImport_TEST {
         system.assertEquals('c2 C2', listCon[1].Name);
         
         // verify only one household account
-        list<Account> listAcc = [select Id, Name from Account];
-        system.assertEquals(1, listAcc.size());
+        list<Account> listAcc = [select Id, Name from Account order by Name desc];
+        // because c2 is first created as a contact1, it will get a hh account, that will
+        // later get orphaned when we move c2 to c1's hh account.
+        system.assertEquals(2, listAcc.size());
         system.assertEquals(listAcc[0].Id, listCon[0].AccountId);
         system.assertEquals(listAcc[0].Id, listCon[1].AccountId);
 
@@ -468,6 +470,47 @@ public with sharing class BDI_DataImport_TEST {
 
     /*********************************************************************************************************
     operation:
+        import existing accounts, matched by Salesforce Id 
+    verify:
+        no accounts created, just matched
+    **********************************************************************************************************/            
+    static testMethod void TwoDIExistingAccountsSalesforceId() {
+        if (strTestOnly != '*' && strTestOnly != 'TwoDIExistingAccountsSalesforceId') return;
+            
+        list<Account> listAcc = new list<Account>();
+        listAcc.add(new Account(name='A1'));
+        listAcc.add(new Account(name='A2'));
+        insert listAcc;    
+                    
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', 
+            Account1Imported__c=listAcc[0].Id));
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C2', Contact2_Firstname__c='c2', 
+            Account1Imported__c=listAcc[0].Id, Account2Imported__c=listAcc[1].Id));
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        listAcc = [select Id, Name from Account where Type != 'Household' order by Name];
+        system.assertEquals(2, listAcc.size());
+
+        listDI = [select Account1Imported__c, Account1ImportStatus__c, Account2Imported__c, Account2ImportStatus__c from DataImport__c order by Contact1_Lastname__c];
+        system.assertEquals(2, listDI.size());
+        system.assertEquals(listDI[0].Account1Imported__c, listAcc[0].Id);
+        system.assertEquals(listDI[1].Account1Imported__c, listAcc[0].Id);
+        system.assertEquals(listDI[1].Account2Imported__c, listAcc[1].Id);
+        system.assertEquals(label.bdiMatched, listDI[0].Account1ImportStatus__c);
+        system.assertEquals(label.bdiMatched, listDI[1].Account1ImportStatus__c);        
+        system.assertEquals(label.bdiMatched, listDI[1].Account2ImportStatus__c);        
+    }
+
+    /*********************************************************************************************************
+    operation:
         import contacts with Preferred Email set
     verify:
         ensure the appropriate contact email field gets copied into the standard email field.
@@ -670,8 +713,10 @@ public with sharing class BDI_DataImport_TEST {
         system.assertEquals(listDI[0].Home_Country__c, listAddr[0].MailingCountry__c);
         
         list<Account> listAcc = [select Id, Name, BillingStreet, BillingCity, BillingState, 
-            BillingPostalCode, BillingCountry from Account order by Name];
-        system.assertEquals(1, listAcc.size());
+            BillingPostalCode, BillingCountry from Account order by Name desc];
+        // because c2 is first created as a contact1, it will get a hh account, that will
+        // later get orphaned when we move c2 to c1's hh account.
+        system.assertEquals(2, listAcc.size());
         system.assertEquals(listDI[0].Home_Street__c, listAcc[0].BillingStreet);
         system.assertEquals(listDI[0].Home_City__c, listAcc[0].BillingCity);
         system.assertEquals(listDI[0].Home_State_Province__c, listAcc[0].BillingState);
@@ -1188,5 +1233,50 @@ public with sharing class BDI_DataImport_TEST {
         system.assertNotEquals(null, listDI[1].HouseholdAccountImported__c);
         system.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
         system.assertEquals(label.bdiCreated, listDI[1].Contact1ImportStatus__c);        
+    }
+
+    /*********************************************************************************************************
+    operation:
+        import new contacts into existing household accounts 
+    verify:
+        provided household account used
+    **********************************************************************************************************/            
+    static testMethod void TwoDINewContactsExistingsHousehold() {
+        if (strTestOnly != '*' && strTestOnly != 'TwoDINewContactsExistingsHousehold') return;
+            
+        // existing contacts
+        list<Contact> listConExisting = new list<Contact>();
+        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com'));
+        listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@C2.com'));
+        insert listConExisting;
+        
+        // get their households
+        listConExisting = [select Id, Firstname, Lastname, Email, AccountId from Contact order by Firstname];
+        system.assertEquals(2, listConExisting.size());
+        
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Contact1_Firstname__c='a1', Contact1_Lastname__c='C1', 
+            HouseholdAccountImported__c=listConExisting[0].AccountId));
+        listDI.add(new DataImport__c(Contact1_Firstname__c='a2', Contact1_Lastname__c='C2', Contact2_Firstname__c='b2',
+            HouseholdAccountImported__c=listConExisting[1].AccountId));
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Firstname, Lastname, Name, AccountId from Contact order by Lastname, Firstname];
+        system.assertEquals(5, listCon.size());
+        system.assertEquals(listConExisting[0].AccountId, listCon[0].AccountId);
+        system.assertEquals(listConExisting[0].AccountId, listCon[1].AccountId);
+        system.assertEquals(listConExisting[1].AccountId, listCon[2].AccountId);
+        system.assertEquals(listConExisting[1].AccountId, listCon[3].AccountId);
+        system.assertEquals(listConExisting[1].AccountId, listCon[4].AccountId);
+        
+        list<Account> listAcc = [select Id, Name from Account];
+        system.assertEquals(2, listAcc.size());
     }
 }
