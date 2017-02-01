@@ -253,16 +253,20 @@ public class RD_RecurringDonations_TEST {
         system.assertEquals(a.id,installments2[0].AccountId);
         UTIL_Debug.debug('**** '+installments2);
         RD_ProcessControl.hasRun = false;
-        try{
-            delete r2;
-        } catch (exception e1) {
-            ERR_Handler.processError(e1, ERR_Handler_API.Context.RD);
-        }
+
+        delete r2;
         
-        //delete should have failed
-        Opportunity[] installments3 = [select amount from Opportunity where npe03__Recurring_Donation__c = :r2.id];
+        //delete should cascade related opps that aren't closed/won
+        Opportunity[] installments3 = [select Amount, IsDeleted from Opportunity where IsDeleted=true ALL ROWS];
         system.assertEquals(3,installments3.size());
         system.assertEquals(33.33,installments3[0].Amount);
+
+        //flag needs to be reset as the delete and undelete are in the same context for tests.
+        UTIL_CascadeDeleteLookups_TDTM.disableCascade = false;
+        undelete r2;
+
+        installments3 = [select Amount, IsDeleted from Opportunity where npe03__Recurring_Donation__c = :r2.id];
+        system.assertEquals(false,installments3[0].IsDeleted, 'Record should be undeleted.');
     }
     
     static testMethod void contactRolesOnOppsBucket() {

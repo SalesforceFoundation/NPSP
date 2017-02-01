@@ -5,6 +5,8 @@
         <members>ACCT_AccountMerge_TDTM</members>
         <members>ACCT_AccountMerge_TEST</members>
         <members>ACCT_Accounts_TDTM</members>
+        <members>ACCT_CascadeDeleteLookups_TDTM</members>
+        <members>ACCT_CascadeDeleteLookups_TEST</members>
         <members>ACCT_HHAccounts_TEST</members>
         <members>ACCT_IndividualAccounts_TDTM</members>
         <members>ACCT_IndividualAccounts_TEST</members>
@@ -55,12 +57,16 @@
         <members>BDI_DataImport_CTRL</members>
         <members>BDI_DataImport_TEST</members>
         <members>BDI_DataImport_TEST2</members>
+        <members>CAM_CascadeDeleteLookups_TDTM</members>
+        <members>CAM_CascadeDeleteLookups_TEST</members>
         <members>CAO_Constants</members>
         <members>CONV_Account_Conversion_BATCH</members>
         <members>CONV_Account_Conversion_BATCH_TEST</members>
         <members>CONV_Account_Conversion_CTRL</members>
         <members>CONV_Account_Conversion_CTRL_TEST</members>
         <members>CON_AddToCampaign</members>
+        <members>CON_CascadeDeleteLookups_TDTM</members>
+        <members>CON_CascadeDeleteLookups_TEST</members>
         <members>CON_ChangeAccount_TEST</members>
         <members>CON_ContactMerge</members>
         <members>CON_ContactMergeTDTM_TEST</members>
@@ -134,6 +140,8 @@
         <members>MTCH_Opportunity_TEST</members>
         <members>OPP_CampaignMember_TDTM</members>
         <members>OPP_CampaignMember_TEST</members>
+        <members>OPP_CascadeDeleteLookups_TDTM</members>
+        <members>OPP_CascadeDeleteLookups_TEST</members>
         <members>OPP_INaming</members>
         <members>OPP_MatchingDonationsBTN_CTRL</members>
         <members>OPP_MatchingDonationsBTN_TEST</members>
@@ -160,6 +168,8 @@
         <members>PSC_PartialSoftCredit_TEST</members>
         <members>RD_AddDonationsBTN_CTRL</members>
         <members>RD_BulkTests_TEST</members>
+        <members>RD_CascadeDeleteLookups_TDTM</members>
+        <members>RD_CascadeDeleteLookups_TEST</members>
         <members>RD_InstallScript_BATCH</members>
         <members>RD_ProcessControl</members>
         <members>RD_RecurringDonations</members>
@@ -858,6 +868,10 @@
         <members>CONV_Warning</members>
         <members>CONV_What_This_Tool_Does</members>
         <members>CampaignMemberStatusOmit</members>
+        <members>CascadeDeleteOrReassociate</members>
+        <members>CascadeDeletionError</members>
+        <members>ClosedWonOpportunities</members>
+        <members>ConfirmDeleteAccount</members>
         <members>EPAddDependentTask</members>
         <members>EPAddTask</members>
         <members>EPDeleteTask</members>
@@ -869,6 +883,7 @@
         <members>ErrorEmailMessage</members>
         <members>HiddenForSecurity</members>
         <members>NameRequired</members>
+        <members>OrganizationalOpportunities</members>
         <members>PageMessagesConfirm</members>
         <members>PageMessagesError</members>
         <members>PageMessagesFatal</members>
@@ -927,6 +942,7 @@
         <members>bdiContactMatchFnameEmail</members>
         <members>bdiContactMatchFnameLname</members>
         <members>bdiContactMatchFnameLnameEmail</members>
+        <members>bdiContactMatchFnameLnamePhone</members>
         <members>bdiContactMatchLnameEmail</members>
         <members>bdiCreated</members>
         <members>bdiDataImporterConfigTitle</members>

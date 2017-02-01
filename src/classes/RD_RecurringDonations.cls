@@ -1073,27 +1073,6 @@ public class RD_RecurringDonations {
     }
   
     /*******************************************************************************************************
-    * @description Validates that the Recurring Donations can be deleted, and marks the RD record
-    * with an error if there are any Opportunities referring to the RD. 
-    * @param listRD The list of RD's to process
-    * @return void
-    */ 
-    public static void approveDeleteRecDonations(list<npe03__Recurring_Donation__c> listRD) {
-        Map<Id,Id> mapRDIdOppId = new Map<Id,Id>();
-
-        for (Opportunity o : [Select Id, npe03__Recurring_Donation__c from Opportunity where npe03__Recurring_Donation__c in :listRD]) {
-            mapRDIdOppId.put(o.npe03__Recurring_Donation__c,o.Id);
-        }
-        
-        // don't allow deleting any RD which still has Opps pointing to it.
-        for (npe03__Recurring_Donation__c r : listRD) {
-            if (mapRDIdOppId.containsKey(r.Id)) {
-                r.addError(system.label.npe03.RecurringDonationCantDeleteError);
-            }
-        }
-    }
-    
-    /*******************************************************************************************************
     * @description When closing an RD, either deletes or closes all of its currently open Opps. 
     * @param closedRDs The list of RD's to process
     * @param dmlWrapper Object to hold the Opps that need deleting or updating
