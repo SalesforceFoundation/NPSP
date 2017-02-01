@@ -230,8 +230,10 @@ public with sharing class BDI_DataImport_TEST {
         system.assertEquals('c2 C2', listCon[1].Name);
         
         // verify only one household account
-        list<Account> listAcc = [select Id, Name from Account];
-        system.assertEquals(1, listAcc.size());
+        list<Account> listAcc = [select Id, Name from Account order by Name desc];
+        // because c2 is first created as a contact1, it will get a hh account, that will
+        // later get orphaned when we move c2 to c1's hh account.
+        system.assertEquals(2, listAcc.size());
         system.assertEquals(listAcc[0].Id, listCon[0].AccountId);
         system.assertEquals(listAcc[0].Id, listCon[1].AccountId);
 
@@ -711,8 +713,10 @@ public with sharing class BDI_DataImport_TEST {
         system.assertEquals(listDI[0].Home_Country__c, listAddr[0].MailingCountry__c);
         
         list<Account> listAcc = [select Id, Name, BillingStreet, BillingCity, BillingState, 
-            BillingPostalCode, BillingCountry from Account order by Name];
-        system.assertEquals(1, listAcc.size());
+            BillingPostalCode, BillingCountry from Account order by Name desc];
+        // because c2 is first created as a contact1, it will get a hh account, that will
+        // later get orphaned when we move c2 to c1's hh account.
+        system.assertEquals(2, listAcc.size());
         system.assertEquals(listDI[0].Home_Street__c, listAcc[0].BillingStreet);
         system.assertEquals(listDI[0].Home_City__c, listAcc[0].BillingCity);
         system.assertEquals(listDI[0].Home_State_Province__c, listAcc[0].BillingState);

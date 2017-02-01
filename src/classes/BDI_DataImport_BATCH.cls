@@ -108,6 +108,15 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         }
     }
 
+    private boolean isPhoneInContactMatchRules {
+        get {
+            string str = diSettings.Contact_Matching_Rule__c;
+            if (str == null || str == '')
+                return false;
+            return str.contains('Phone');
+        }
+    }
+
     private boolean isCustomIdInContactMatchRules {
         get {
             string str = diSettings.Contact_Custom_Unique_ID__c;
@@ -399,11 +408,15 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             if (con == null)
                 continue;
             
-            // potentially set c1's household if provided
-            if (di.HouseholdAccountImported__c != null)
-                con.AccountId = di.HouseholdAccountImported__c;
-            
             boolean isModified = false;                 
+
+            // potentially set c1's household if provided
+            if (di.HouseholdAccountImported__c != null && di.HouseholdAccountImported__c != con.AccountId) {
+                con.AccountId = di.HouseholdAccountImported__c;
+                isModified = true;
+            }
+
+            // copy over all fields with data
             for (string strDIField : mapDIFieldToC1Field.keySet()) {
                 if (isCopiedDIField(di, strDIField, con, mapDIFieldToC1Field)) {
                     isModified = true;
@@ -477,10 +490,16 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             Contact con = ContactFromDi(di, 2);
             if (con == null)
                 continue;
-            // set c2's household to match c1
-            con.AccountId = mapC1IdToHHId.get(di.Contact1Imported__c);
-            
+
             boolean isModified = false;                 
+
+            // set c2's household to match c1
+            if (con.AccountId != mapC1IdToHHId.get(di.Contact1Imported__c)) {
+                con.AccountId = mapC1IdToHHId.get(di.Contact1Imported__c);
+                isModified = true;
+            }
+            
+            // copy over all fields with data
             for (string strDIField : mapDIFieldToC2Field.keySet()) {
                 if (isCopiedDIField(di, strDIField, con, mapDIFieldToC2Field)) {
                     isModified = true;
@@ -602,6 +621,15 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             return true;
         if (di.get(strCx + '_Alternate_Email__c') != null)
             return true;
+        if (di.get(strCx + '_Home_Phone__c') != null)
+            return true;
+        if (di.get(strCx + '_Mobile_Phone__c') != null)
+            return true;
+        if (di.get(strCx + '_Other_Phone__c') != null)
+            return true;
+        if (di.get(strCx + '_Work_Phone__c') != null)
+            return true;
+
         // no dikey data about the contact
         return false;
     }
@@ -625,6 +653,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         set<string> setFname = new set<string>();
         set<string> setLname = new set<string>();
         set<string> setEmail = new set<string>();
+        set<string> setPhone = new set<string>();
         set<string> setCustomIDString = new set<string>();
         set<double> setCustomIDNumber = new set<double>();
         set<Id> setSFId = new set<Id>();
@@ -646,7 +675,15 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             if (di.Contact1_Work_Email__c != null)
                 setEmail.add(di.Contact1_Work_Email__c);            
             if (di.Contact1_Alternate_Email__c != null)
-                setEmail.add(di.Contact1_Alternate_Email__c);            
+                setEmail.add(di.Contact1_Alternate_Email__c);
+            if (di.Contact1_Home_Phone__c != null)
+                setPhone.add(di.Contact1_Home_Phone__c);
+            if (di.Contact1_Mobile_Phone__c != null)
+                setPhone.add(di.Contact1_Mobile_Phone__c);
+            if (di.Contact1_Other_Phone__c != null)
+                setPhone.add(di.Contact1_Other_Phone__c);
+            if (di.Contact1_Work_Phone__c != null)
+                setPhone.add(di.Contact1_Work_Phone__c);
             if (isCustomIDInContactMatchRules) { 
                 object val = di.get(strDIContactCustomIDField('Contact1'));
                 if (val != null) {
@@ -665,11 +702,19 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             if (di.Contact2_Lastname__c != null)
                 setLname.add(di.Contact2_Lastname__c);
             if (di.Contact2_Personal_Email__c != null)
-                setEmail.add(di.Contact2_Personal_Email__c);            
+                setEmail.add(di.Contact2_Personal_Email__c);
             if (di.Contact2_Work_Email__c != null)
-                setEmail.add(di.Contact1_Work_Email__c);            
+                setEmail.add(di.Contact1_Work_Email__c);
             if (di.Contact2_Alternate_Email__c != null)
-                setEmail.add(di.Contact1_Alternate_Email__c);            
+                setEmail.add(di.Contact1_Alternate_Email__c);
+            if (di.Contact2_Home_Phone__c != null)
+                setPhone.add(di.Contact2_Home_Phone__c);
+            if (di.Contact2_Mobile_Phone__c != null)
+                setPhone.add(di.Contact2_Mobile_Phone__c);
+            if (di.Contact2_Other_Phone__c != null)
+                setPhone.add(di.Contact2_Other_Phone__c);
+            if (di.Contact2_Work_Phone__c != null)
+                setPhone.add(di.Contact2_Work_Phone__c);
             if (isCustomIDInContactMatchRules) { 
                 object val = di.get(strDIContactCustomIDField('Contact2'));
                 if (val != null) {
@@ -684,7 +729,8 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         string strSoql = 'Select Id, Firstname, Lastname, AccountId, Account.npe01__SYSTEM_AccountType__c, ';
         if (isCustomIDInContactMatchRules)
             strSoql += diSettings.Contact_Custom_Unique_ID__c + ', ';        
-        strSoql += ' Email, npe01__AlternateEmail__c, npe01__HomeEmail__c, npe01__WorkEmail__c ';
+        strSoql += ' Email, npe01__AlternateEmail__c, npe01__HomeEmail__c, npe01__WorkEmail__c, ';
+        strSoql += ' Phone, HomePhone, MobilePhone, OtherPhone, npo02__Formula_HouseholdPhone__c, npe01__WorkPhone__c ';
         strSoql += ' from Contact where ';
         if (setSFId.size() > 0) {
             strSoql += ' (Id in :setSFId) or ';
@@ -700,6 +746,16 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         }
         if (isEmailInContactMatchRules) {
             strSoql += strAnd + '(Email in :setEmail or npe01__AlternateEmail__c in :setEmail or npe01__HomeEmail__c in :setEmail or npe01__WorkEmail__c in :setEmail)';
+            strAnd = ' and ';
+        }
+        if (isPhoneInContactMatchRules) {
+            strSoql += strAnd + '(' + 
+                'Phone in :setPhone or ' +  
+                'HomePhone in :setPhone or ' +  
+                'MobilePhone in :setPhone or ' + 
+                'OtherPhone in :setPhone or ' + 
+                'npo02__Formula_HouseholdPhone__c in :setPhone or ' + 
+                'npe01__WorkPhone__c in :setPhone )';
             strAnd = ' and ';
         }
         if (isCustomIDInContactMatchRules && isCustomIdInContactDatatypeString) {
@@ -737,8 +793,9 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
                 di.Contact1ImportStatus__c = label.bdiMatched;
                 // remember all the existing household accounts, so we can query for and add "looser" keys for c2
                 if (con.AccountId != null) {
-                    di.HouseholdAccountImported__c = con.AccountId;
                     setHHId.add(con.AccountId);
+                    if (di.HouseholdAccountImported__c == null)
+                        di.HouseholdAccountImported__c = con.AccountId;
                 }
             } else if (listDiKey.size() > 0) {
                 con = new Contact();
@@ -843,7 +900,9 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     /**********
     Key Matching Explained
     
-    We use a compound key of Contact Firstname, Lastname, and Email (with a | between each) to match against existing Contacts,
+    First, we create a key which is the Salesforce Id of the Contact.  
+    Second, if Contact Unique Id is specified, we create a key with that unique id.
+    Then we use a compound key of Contact Firstname, Lastname, Email, and Phone (with a | between each) to match against existing Contacts,
     and also those Contacts we are creating. We call this compound key a diKey. Our mapDIKeyToContact 
     is used to lookup a given Contact from a diKey. In order to support settings that tell us which fields
     to use in the match, a given Contact can have multiple keys. Eg., if the setting is Email Only, and
@@ -893,6 +952,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         list<string> listFName = new list<string>();    
         list<string> listLName = new list<string>();    
         list<string> listEmail = new list<string>();
+        list<string> listPhone = new list<string>();
         
         boolean addedToken = false;
         if (con.Firstname != null) {
@@ -929,9 +989,37 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         }
         if (!addedToken || !isEmailInContactMatchRules)
             listEmail.add('');
-            
+
+        addedToken = false;
+        if (con.Phone != null) {
+            listPhone.add(con.Phone);
+            addedToken = true;
+        }
+        if (con.HomePhone != null) {
+            listPhone.add(con.HomePhone);
+            addedToken = true;
+        }
+        if (con.MobilePhone != null) {
+            listPhone.add(con.MobilePhone);
+            addedToken = true;
+        }
+        if (con.OtherPhone != null) {
+            listPhone.add(con.OtherPhone);
+            addedToken = true;
+        }
+        if (con.npo02__Formula_HouseholdPhone__c != null) {
+            listPhone.add(con.OtherPhone);
+            addedToken = true;
+        }
+        if (con.npe01__WorkPhone__c != null) {
+            listPhone.add(con.npe01__WorkPhone__c);
+            addedToken = true;
+        }
+        if (!addedToken || !isPhoneInContactMatchRules)
+            listPhone.add('');
+
         set<string> setDiKey = new set<string>();
-        addDiKeyPermutations(setDiKey, listFName, listLName, ListEmail, strUniqueId);
+        addDiKeyPermutations(setDiKey, listFName, listLName, ListEmail, listPhone, strUniqueId);
         listDiKey.addAll(setDiKey);
 
         //system.debug('****DJH listDiKeyContact con: ' + con + ' listDIKey: ' + listDIKey);
@@ -939,15 +1027,18 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     }
 
     // utility to create all the diKey permutations given firstname, lastname, and emails.
-    private void addDiKeyPermutations(set<string> setDiKey, list<string> listFname, list<string> listLName, list<string> listEmail, string strUniqueId) {
+    private void addDiKeyPermutations(set<string> setDiKey, list<string> listFname, list<string> listLName, 
+        list<string> listEmail, list<string> listPhone, string strUniqueId) {
         for (string strFName : listFName) {
             for (string strLName : listLName) {
                 for (string strEmail : listEmail) {
-                    setDiKey.add(strFName + '|' + strLName + '|' + strEmail + '|' + strUniqueId);
+                    for (string strPhone : listPhone) {
+                        setDiKey.add(strFName + '|' + strLName + '|' + strEmail + '|' + strPhone + '|' + strUniqueId);
+                    }
                 }
             }
         }
-        setDiKey.remove('|||');
+        setDiKey.remove('||||');
     }
 
     // utility to return the dikeys for contact1 in the given di.
@@ -979,6 +1070,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         list<string> listFName = new list<string>();    
         list<string> listLName = new list<string>();    
         list<string> listEmail = new list<string>();
+        list<string> listPhone = new list<string>();
         boolean addedToken = false;
         
         if (di.get(strCx + '_Firstname__c') != null) {
@@ -1012,23 +1104,57 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         if (!isEmailInContactMatchRules || !addedToken)
             listEmail.add('');
             
+        addedToken = false;
+        if (di.get(strCx + '_Home_Phone__c') != null) {
+            listPhone.add(string.valueOf(di.get(strCx + '_Home_Phone__c')));
+            addedToken = true;
+        }
+        if (di.get(strCx + '_Mobile_Phone__c') != null) {
+            listPhone.add(string.valueOf(di.get(strCx + '_Mobile_Phone__c')));
+            addedToken = true;
+        }
+        if (di.get(strCx + '_Other_Phone__c') != null) {
+            listPhone.add(string.valueOf(di.get(strCx + '_Other_Phone__c')));
+            addedToken = true;
+        }
+        if (di.get(strCx + '_Work_Phone__c') != null) {
+            listPhone.add(string.valueOf(di.get(strCx + '_Work_Phone__c')));
+            addedToken = true;
+        }
+        if (!isPhoneInContactMatchRules || !addedToken)
+            listPhone.add('');
+
         set<string> setDiKey = new set<string>();
-        addDiKeyPermutations(setDiKey, listFName, listLName, ListEmail, strUniqueId);
+        addDiKeyPermutations(setDiKey, listFName, listLName, ListEmail, listPhone, strUniqueId);
         listDiKey.addAll(setDiKey);
         
         // if we didn't create any dikey's for this di due to it not matching all constraints,
         // we have to still add a single key that this di can use to find the new contact to be created.
         if (listDiKey.size() == 0) {
 	        string diKey =  strNull(di.get(strCx + '_Firstname__c')) + '|' + strNull(di.get(strCx + '_Lastname__c')) + '|';
+	        
+	        // email
 	        if (di.get(strCx + '_Personal_Email__c') != null)
 	           diKey += string.valueOf(di.get(strCx + '_Personal_Email__c'));
 	        else if (di.get(strCx + '_Work_Email__c') != null)
 	            diKey += string.valueOf(di.get(strCx + '_Work_Email__c'));
 	        else if (di.get(strCx + '_Alternate_Email__c') != null)
 	            diKey += string.valueOf(di.get(strCx + '_Alternate_Email__c'));
+	        diKey += '|';
+	            
+	        // phone
+            if (di.get(strCx + '_Home_Phone__c') != null) 
+                diKey += string.valueOf(di.get(strCx + '_Home_Phone__c'));
+            else if (di.get(strCx + '_Mobile_Phone__c') != null) 
+                diKey += string.valueOf(di.get(strCx + '_Mobile_Phone__c'));
+            else if (di.get(strCx + '_Other_Phone__c') != null) 
+                diKey += string.valueOf(di.get(strCx + '_Other_Phone__c'));
+            else if (di.get(strCx + '_Work_Phone__c') != null) 
+                diKey += string.valueOf(di.get(strCx + '_Work_Phone__c'));
+                
 	        diKey += '|' + strUniqueId;
 	        
-	        if (diKey != '|||')
+	        if (diKey != '||||')
 	           listDiKey.add(diKey);
         }
         

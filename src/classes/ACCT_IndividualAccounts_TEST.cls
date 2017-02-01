@@ -854,7 +854,7 @@ private class ACCT_IndividualAccounts_TEST {
     }
     
     /*********************************************************************************************************
-    * @description Delete a Contact and verify its One-to-One or Household Account is deleted.
+    * @description Delete a Contact and verify its One-to-One or Household Account is not deleted.
     */
      public static testMethod void deleteContactNoOppOneToOne() {
      	if (strTestOnly != '*' && strTestOnly != 'deleteContactNoOppOneToOne') return;
@@ -897,7 +897,7 @@ private class ACCT_IndividualAccounts_TEST {
         system.assertEquals(0,insertedContacts.size());
         
         Account[] missingAccount = [select id from Account where id=:createdAccountId];
-        system.assertEquals(0,missingAccount.size());
+        system.assertEquals(1,missingAccount.size());
     }
     
     /*********************************************************************************************************
@@ -1654,7 +1654,7 @@ private class ACCT_IndividualAccounts_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Delete a HH Contact without Opps and verify it cannot be undeleted.
+    * @description Delete a HH Contact without Opps and verify it can be undeleted.
     */
     public static testMethod void undeleteHHContactNoOpp() {
 
@@ -1676,9 +1676,8 @@ private class ACCT_IndividualAccounts_TEST {
         Test.startTest();
         try {
             undelete con;
-            System.assert(false, 'Undelete should fail!');
         } catch (Exception e) {
-            System.assert(true, 'The contact is no longer in the recycle bin and cannot be undeleted.');
+            System.assert(false, 'The contact is no longer in the recycle bin and cannot be undeleted.');
         }
         Test.stopTest();
     }
@@ -1717,16 +1716,24 @@ private class ACCT_IndividualAccounts_TEST {
         Id acctId = insertedCon.AccountId;
         System.assert(insertedCon.Account.Name.contains(con.LastName), 'The Account Name should contain the contacts last name.');
 
+        //add other contact to household and associate opportunity with that contact to avoid cascade deletion of opportunity
+        Contact othercon = new Contact(accountId = acctId, LastName='other');
+        insert othercon;
+
         Opportunity opp = new Opportunity(
             Amount = 500,
             AccountId = acctId,
             Name = 'test',
-            StageName = 'Closed/Won',
-            CloseDate = System.today()
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            CloseDate = System.today(),
+            Primary_Contact__c = othercon.id
         );
         insert opp;
 
         delete con;
+
+        List<Error__c> errors = [SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c FROM Error__c];
+        System.assertEquals(0, errors.size(), errors);
 
         Account anonymousAcct = [SELECT Id, Name, (SELECT Id FROM Contacts) FROM Account WHERE Id = :acctId LIMIT 1];
         System.assert(!anonymousAcct.Name.contains(con.LastName), 'The Account Name should no longer contain the contacts last name.');
@@ -1734,6 +1741,7 @@ private class ACCT_IndividualAccounts_TEST {
         Test.startTest();
         undelete con;
         Test.stopTest();
+
         Contact undeletedCon = [SELECT AccountId, Account.Name FROM Contact WHERE Id = :con.Id LIMIT 1];
         System.assert(undeletedCon.Account.Name.contains(con.LastName), 'The Account Name should contain the contacts last name again.');
         System.assertEquals(acctId, undeletedCon.AccountId, 'The contact should be returned to the same account.');

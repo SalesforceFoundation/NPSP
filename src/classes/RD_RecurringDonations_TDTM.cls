@@ -47,7 +47,6 @@ public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        list<npe03__Recurring_Donation__c> listRDDeletes = new list<npe03__Recurring_Donation__c>();
         map<id, npe03__Recurring_Donation__c> mapIdRDInserts = new map<id, npe03__Recurring_Donation__c>();
         list<npe03__Recurring_Donation__c> listRDUpdates = new list<npe03__Recurring_Donation__c>();
 
@@ -89,15 +88,9 @@ public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
                 }            
             } else if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
                 mapIdRDInserts.put(r.id, r);
-            } else if (triggerAction == TDTM_Runnable.Action.BeforeDelete) {
-                listRDDeletes.add(r);
             } else if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                 listRDUpdates.add(r);
             }            
-        }
-        
-        if (listRDDeletes.size() > 0) {
-            RD_RecurringDonations.approveDeleteRecDonations(listRDDeletes);
         }
         
         if (listRDUpdates.size() > 0) {
