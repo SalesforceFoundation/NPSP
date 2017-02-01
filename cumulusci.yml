@@ -2,6 +2,7 @@ project:
     name: Cumulus
     package:
         name: Cumulus
+        name_managed: Nonprofit Success Pack
         namespace: npsp
         api_version: 37.0
         install_class: STG_InstallScript
