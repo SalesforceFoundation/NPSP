@@ -179,11 +179,33 @@ public class UTIL_Describe {
     */
     public static Map<String, Schema.DescribeFieldResult> getAllFieldsDescribe(String objectName) {
 
-        // make sure we have this field's schema mapped
+        // make sure we have this object's schema mapped
         fillFieldMapsForObject(objectName);
 
         Map<String, Schema.DescribeFieldResult> fieldMap = fieldDescribes.get(objectName);
         return fieldMap;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns the Name field of any given object.
+    * @param objectName the name of the object to look up
+    * @return String the API name of the Name field
+    */
+    public static String getNameField(String objectName) {
+        String nameField = 'Name';
+
+        Map<String, Schema.DescribeFieldResult> mapObjectFields = getAllFieldsDescribe(objectName);
+
+        if (!mapObjectFields.containsKey(nameField)) {
+            nameField = null;
+            for (String relatedFieldName : mapObjectFields.keySet()) {
+                if (mapObjectFields.get(relatedFieldName).isNameField()) {
+                    return relatedFieldName;
+                }
+            }
+        }
+        
+        return nameField;
     }
 
     /*******************************************************************************************************

@@ -588,6 +588,38 @@
         <value>omit</value>
     </labels>
     <labels>
+        <fullName>CascadeDeleteOrReassociate</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CascadeDeleteOrReassociate</shortDescription>
+        <value>Delete or re-associate these records and then try deleting {0} again.</value>
+    </labels>
+    <labels>
+        <fullName>CascadeDeletionError</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CascadeDeletionError</shortDescription>
+        <value>Your attempt to delete {0} could not be completed because it is associated with the following records. Delete or re-associate these records and then try deleting {0} again.</value>
+    </labels>
+    <labels>
+        <fullName>ClosedWonOpportunities</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ClosedWonOpportunities</shortDescription>
+        <value>Closed Won Opportunities</value>
+    </labels>
+    <labels>
+        <fullName>ConfirmDeleteAccount</fullName>
+        <categories>Error, Delete</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ConfirmDeleteAccount</shortDescription>
+        <value>{0} is the only contact in the {1} account. Deleting this contact would leave an empty account. Would you like to delete {1} instead?</value>
+    </labels>
+    <labels>
         <fullName>EPAddDependentTask</fullName>
         <categories>Engagement Plans</categories>
         <language>en_US</language>
@@ -678,6 +710,14 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <protected>false</protected>
         <shortDescription>NameRequired</shortDescription>
         <value>Subject is a required field.</value>
+    </labels>
+    <labels>
+        <fullName>OrganizationalOpportunities</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrganizationalOpportunities</shortDescription>
+        <value>Organizational Opportunities</value>
     </labels>
     <labels>
         <fullName>PageMessagesConfirm</fullName>
@@ -1145,6 +1185,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>bdiContactMatchFnameLnameEmail</shortDescription>
         <value>First Name, Last Name, and Email</value>
+    </labels>
+    <labels>
+        <fullName>bdiContactMatchFnameLnamePhone</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Data Importer Contact matching option for Fname, Lname, Phone</shortDescription>
+        <value>First Name, Last Name, and Phone</value>
     </labels>
     <labels>
         <fullName>bdiContactMatchLnameEmail</fullName>
