@@ -461,9 +461,9 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             setC1Id.add(di.Contact1Imported__c);
         }
             
-        // get the Household Accounts that were created for C1's
+        // get the Household Accounts for C1's
         map<Id, Id> mapC1IdToHHId = new map<Id, Id>();
-        for (Contact con : [select Id, AccountId from Contact where Id in :listConUpsert]) {
+        for (Contact con : [select Id, AccountId from Contact where Id in :setC1Id]) {
             mapC1IdToHHId.put(con.Id, con.AccountId);
         }
         // store it back in C1 and the DI for later use
@@ -601,7 +601,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             }
             if (isContactSpecified(di, 'Contact2') && di.Contact2_Lastname__c == null && di.Contact2Imported__c == null) {
                 di.Contact2_Lastname__c = di.Contact1_Lastname__c;
-                if (di.Contact2_Lastname__c == null)
+                if (di.Contact2_Lastname__c == null && di.Contact1Imported__c == null)
 	                LogBDIError(di, label.bdiErrorInvalidLastname, 'Contact2ImportStatus__c');
             }
         }
@@ -836,6 +836,11 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
                 di.Contact2ImportStatus__c = label.bdiCreated;
                 di.Contact2_Preferred_Email__c = strPreferredEmail(di, 2);
                 di.Contact2_Preferred_Phone__c = strPreferredPhone(di, 2);
+                // if no lastname specified, we need to get it from c1 (which may only be implicit via Contact1_Imported)
+                if (di.Contact2_Lastname__c == null) {
+                    Contact con1 = ContactFromDi(di, 1);
+                    di.Contact2_Lastname__c = con1.Lastname;
+                }
             }
             // make sure all dikeys for that contact are in the map
             for (string diKey : listDiKey) 
