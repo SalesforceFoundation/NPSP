@@ -33,6 +33,18 @@ tasks:
             dir: browser_tests
             subfolder: NPSP-Browser-Tests-master
 
+    deploy_dev_config:
+        description: Deploys the post install configuration for an unmanaged DE org
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: dev_config/src
+
+    deploy_dev_config_delete:
+        description: Deploys the metadata deletions for the post install unmanaged DE org config
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: dev_config/delete
+
     update_admin_profile:
         class_path: tasks.salesforce.UpdateAdminProfile
         options:
@@ -74,14 +86,6 @@ tasks:
                 - Campaign
 
 flows:
-    test_data_1k:
-        description: 'WARNING: This flow deletes all data first, then loads the complete test data set based on 1,024 Contacts into the target org.'
-        tasks:
-            1:
-                task: test_data_delete
-            2:
-                task: test_data_1k
-
     ci_browsertests_firefox:
         description: Runs the browser tests via SauceLabs against Firefox
         tasks:
@@ -106,9 +110,25 @@ flows:
                     env:
                         SELENIUM_BROWSER: chrome
 
+    dev_org:
+        tasks:
+            8:
+                task: deploy_dev_config_delete
+            9:
+                task: deploy_dev_config
+
     release_beta:
         tasks:
             5:
                 task: mrbelvedere_publish
                 options:
                     tag: ^^github_release.tag_name
+
+    test_data_1k:
+        description: 'WARNING: This flow deletes all data first, then loads the complete test data set based on 1,024 Contacts into the target org.'
+        tasks:
+            1:
+                task: test_data_delete
+            2:
+                task: test_data_1k
+
