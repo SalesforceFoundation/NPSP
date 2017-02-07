@@ -47,7 +47,7 @@
         <recordType>Opportunity.Membership</recordType>
     </layoutAssignments>
     <recordTypeVisibilities>
-        <default>false</default>
+        <default>true</default>
         <recordType>Opportunity.Donation</recordType>
         <visible>true</visible>
     </recordTypeVisibilities>
@@ -75,6 +75,11 @@
         <default>false</default>
         <recordType>Opportunity.Membership</recordType>
         <visible>true</visible>
+    </recordTypeVisibilities>
+    <recordTypeVisibilities>
+        <default>false</default>
+        <recordType>Opportunity.NPSP_Default</recordType>
+        <visible>false</visible>
     </recordTypeVisibilities>
     <tabVisibilities>
         <tab>Address__c</tab>
@@ -124,12 +129,4 @@
         <tab>npe5__Affiliation__c</tab>
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
-    <userPermissions>
-        <enabled>true</enabled>
-        <name>ViewDataAssessment</name>
-    </userPermissions>
-    <userPermissions>
-        <enabled>true</enabled>
-        <name>ViewDataCategories</name>
-    </userPermissions>
 </Profile>
