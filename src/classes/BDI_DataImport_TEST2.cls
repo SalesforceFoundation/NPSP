@@ -589,6 +589,104 @@ private with sharing class BDI_DataImport_TEST2 {
 
    /*********************************************************************************************************
     operation:
+        import existing contacts by Id only, and specify new household member, using Salesforce Id matching
+    verify:
+        all contacts matched or created
+    **********************************************************************************************************/            
+    static testMethod void ManyDISalesforceIdMatchingExistingAndNewContacts() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDISalesforceIdMatchingExistingAndNewContacts') return;
+            
+         // existing contacts
+        list<Contact> listConExisting = new list<Contact>();
+        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='foo@bar.com', Title='t1'));
+        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@c1.com', Title='t2'));
+        insert listConExisting;
+        
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Contact1_Firstname__c=null, Contact1_Lastname__c=null, Contact1_Personal_Email__c=null, 
+            Contact1_Title__c='t1Updated', Contact1Imported__c=listConExisting[0].Id, 
+            Contact2_Firstname__c='c3', Contact2_Title__c='t3'));
+        listDI.add(new DataImport__c(Contact1_Firstname__c=null, Contact1_Lastname__c=null, Contact1_Personal_Email__c=null, 
+            Contact1_Title__c='t2Updated', Contact1Imported__c=listConExisting[1].Id, 
+            Contact2_Firstname__c='c4', Contact2_Lastname__c='C4', Contact2_Title__c='t4'));
+        insert listDI;
+        
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, AccountId, Firstname, Lastname, Email, Title from Contact order by Title];
+        system.assertEquals(4, listCon.size());
+        
+        // verify each c2 was created in existing c1's household
+        system.assertEquals(listCon[0].AccountId, listCon[2].AccountId);
+        system.assertEquals(listCon[1].AccountId, listCon[3].AccountId);
+        
+        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, Contact2Imported__c, Contact2ImportStatus__c, Contact1_Title__c 
+            from DataImport__c 
+            order by Contact1_Title__c];
+        system.assertEquals(2, listDI.size());
+        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
+        system.assertEquals(listDI[1].Contact1Imported__c, listCon[1].Id);
+        system.assertEquals(listDI[0].Contact1_Title__c, listCon[0].Title);
+        system.assertEquals(listDI[1].Contact1_Title__c, listCon[1].Title);
+        system.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
+        system.assertEquals(label.bdiCreated, listDI[0].Contact2ImportStatus__c);
+        system.assertEquals(label.bdiCreated, listDI[1].Contact2ImportStatus__c);        
+    }
+
+   /*********************************************************************************************************
+    operation:
+        import existing contacts by Id only, and specify new household member, using Salesforce Id matching
+    verify:
+        all contacts matched or created
+    **********************************************************************************************************/            
+    static testMethod void OneDISalesforceIdMatchingExistingAndNewContact() {
+        if (strTestOnly != '*' && strTestOnly != 'OneDISalesforceIdMatchingExistingAndNewContact') return;
+            
+         // existing contacts
+        list<Contact> listConExisting = new list<Contact>();
+        listConExisting.add(new Contact(Firstname='c1', Lastname='C1'));
+        insert listConExisting;
+        
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Contact1_Firstname__c=null, Contact1_Lastname__c=null, Contact1_Personal_Email__c=null, 
+            Contact1Imported__c=listConExisting[0].Id, 
+            Contact2_Firstname__c='c2', Contact2_Lastname__c='C2'));
+        insert listDI;
+        
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Contact_Matching_Rule__c = 'Firstname;Lastname';
+
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, AccountId, Firstname, Lastname, Email, Title from Contact order by Title];
+        system.assertEquals(2, listCon.size());
+        
+        // verify each c2 was created in existing c1's household
+        system.assertEquals(listCon[0].AccountId, listCon[1].AccountId);
+        
+        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, Contact2Imported__c, Contact2ImportStatus__c, Contact1_Title__c 
+            from DataImport__c 
+            order by Contact1_Title__c];
+        system.assertEquals(1, listDI.size());
+        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
+        system.assertEquals(listDI[0].Contact1_Title__c, listCon[0].Title);
+        system.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiCreated, listDI[0].Contact2ImportStatus__c);
+    }
+
+   /*********************************************************************************************************
+    operation:
         import existing contact into a different existing household account
     verify:
         contact moved to specified account
