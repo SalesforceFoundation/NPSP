@@ -104,8 +104,11 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     public PageReference processDelete() {
         try {
             return deleteContact();
-        } catch (Exception ex){}
-        return null;
+        } catch (Exception ex){
+            if (!hasPageMessages)
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
+            return null;
+        }
     }
 
     /*******************************************************************************************************
@@ -164,6 +167,8 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         try {
             delete accForDelete;
         } catch (Exception ex){
+            if (!hasPageMessages)
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
             return null;
         }
 
