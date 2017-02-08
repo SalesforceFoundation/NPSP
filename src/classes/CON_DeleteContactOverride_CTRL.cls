@@ -45,7 +45,10 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     private String accountId;
     /** @description The return URL. */
     private String retURL;
-
+    /** @description for LEx and SF1 set navigation instructions for JS - navigate back if only del contact and not from contact */ 
+    public String sforceNav {get; private set;}
+    /** @description Boolean that is set to true if user theme is LEx or SF1 */ 
+    private Boolean sforceUser;
     /** @description Formatted string prompting the user to delete the account instead. */
     public String helpDeleteAccountInstead {get;set;}
     /** @description Flag to tell the page which operation we're doing. */
@@ -63,8 +66,11 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     * account should be deleted.
     */ 
     public CON_DeleteContactOverride_CTRL(ApexPages.StandardController stdController) {
-        retURL = ApexPages.currentPage().getParameters().get('returl');
-        
+        sforceUser = UserInfo.getUiThemeDisplayed().contains('Theme4');
+        // In LEx and SF1 the returl param name differs from classic
+        String param = sforceUser ? 'vfRetURLInSFX' : 'returl';
+        retURL = ApexPages.currentPage().getParameters().get(param);
+
         //if we don't have a return URL, go back to Contacts home.
         if (String.isBlank(retURL)) {
             retURL = '/003/o';
@@ -98,8 +104,11 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     public PageReference processDelete() {
         try {
             return deleteContact();
-        } catch (Exception ex){}
-        return null;
+        } catch (Exception ex){
+            if (!hasPageMessages)
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
+            return null;
+        }
     }
 
     /*******************************************************************************************************
@@ -122,7 +131,12 @@ public with sharing class CON_DeleteContactOverride_CTRL {
             CON_CascadeDeleteLookups_TDTM.cascades.addAll(contactCascades);
             delete queryContact;
 
-            return getRedirect();
+            if (sforceUser) {
+                sforceNav = returl.contains(queryContact.Id) ? 'home' : 'back';
+                return null;
+            } else {
+                return getRedirect();
+            }
         }
         return null;
     }
@@ -153,6 +167,8 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         try {
             delete accForDelete;
         } catch (Exception ex){
+            if (!hasPageMessages)
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
             return null;
         }
 
@@ -161,7 +177,12 @@ public with sharing class CON_DeleteContactOverride_CTRL {
             retURL = '/003/o';
         }
 
-        return getRedirect();
+        if (sforceUser) {
+            sforceNav = 'home';
+            return null;
+        } else {
+            return getRedirect();
+        }
     }
 
     /*******************************************************************************************************
