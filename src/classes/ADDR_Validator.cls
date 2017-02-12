@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2014
+* @group Address Management
 * @description Class that asynchronously starts the address verification calls
 * and processes the results.
 */
