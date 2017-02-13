@@ -30,6 +30,8 @@
 /**
 * @author Salesforce.org
 * @date 2014
+* @group Batch Data Import
+* @group-content ../../ApexDocContent/BatchDataImport.htm
 * @description controller for the NPSP Data Importer visualforce page 
 */
 

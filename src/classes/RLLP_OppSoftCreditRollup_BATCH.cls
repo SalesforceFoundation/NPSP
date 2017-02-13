@@ -30,6 +30,8 @@
 /**
 * @author Salesforce.org
 * @date 2014
+* @group Rollups
+* @group-content ../../ApexDocContent/Rollups.htm
 * @description Batch class for opportunity soft credit rollups. 
 */
 public class RLLP_OppSoftCreditRollup_BATCH implements Database.Batchable<SObject>, Schedulable {

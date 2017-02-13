@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2014
+* @group Address Management
 * @description Validator to provide address geocoding/verification through the Google Geocoding API
  */
 @isTest

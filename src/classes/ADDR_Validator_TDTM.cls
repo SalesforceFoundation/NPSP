@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2014
+* @group Address Management
 * @description Class that gets called when Address__c records change and
 * begins the address verification/normalization.
 * @async_support this trigger handler DOES NOT SUPPORT ASYNC!  the validation call is a future,

@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2014
+* @group Address Management
 * @description Class that tests ADDR_SmartyStreets_Gateway class.
 */
 @isTest

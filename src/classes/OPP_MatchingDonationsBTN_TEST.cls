@@ -30,6 +30,7 @@
 /**
 * @author James Melville
 * @date 2011 (2.1)
+* @group Opportunity
 * @description testing for matching donation button for opportunity
 */
 @isTest
