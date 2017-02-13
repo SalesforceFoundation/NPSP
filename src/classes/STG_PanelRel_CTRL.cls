@@ -71,7 +71,81 @@ public with sharing class STG_PanelRel_CTRL extends STG_Panel {
     	get {
     		return getFieldLabel('Contact', STG_Panel.stgService.stgRel.npe4__Gender_Field__c);
     	}
-    }  
+    }
+
+        /*********************************************************************************************************
+    * @description The list of SelectOptions for Relationship fields to sync
+    */
+    public list<SelectOption> listSOSyncFieldOptions {
+        get {
+            if (listSOSyncFieldOptions == null) {
+                listSOSyncFieldOptions = new list<SelectOption>();
+                             
+                map<String, Schema.SObjectField> relFieldTokenList = Schema.SObjectType.npe4__Relationship__c.fields.getMap(); 
+               
+                //only get the describe information for custom fields (not from NPSP)
+                for (string fieldName : relFieldTokenList.keyset()) {
+                    if (fieldname.endsWith('__c') && !fieldname.startsWith('np')) {
+                        
+                        // disallow formula fields and autonums
+                        Schema.DescribeFieldResult f = UTIL_Describe.getFieldDescribe('npe4__Relationship__c', fieldName);
+                        if (f.isCalculated() || f.isAutoNumber()) {
+                            continue;
+                        }
+
+                        listSOSyncFieldOptions.add(new SelectOption(fieldName, UTIL_Describe.getFieldLabel('npe4__Relationship__c', fieldName))); 
+                    }               
+                }
+                
+                // insert disabled SelectOption if there are no valid fields    
+                if (listSOSyncFieldOptions.size() < 1){            
+                    listSOSyncFieldOptions.add(new SelectOption(strNoValidField, strNoValidField, true));
+                }
+            }               
+            System.debug('Select opts: ' + listSOSyncFieldOptions);
+            return listSOSyncFieldOptions;
+        }
+        private set;
+    }
+ 
+    /*********************************************************************************************************
+    * @description A localized string to use if there is no valid field
+    */
+    private static string strNoValidField = System.Label.stgLabelRelationshipSyncNoValidFields;
+
+    /*********************************************************************************************************
+    * @description The list of strings values databound to the object's field.  Setting this list will
+    * save those values into the object's field.
+    */
+    public list<string> listExcludedFields {
+        get {
+            if (listExcludedFields == null) {
+                //listStrValues = strValues.split(';',0);
+                listExcludedFields = new List<String>();
+                List<Relationship_Sync_Excluded_Fields__c> listRecs = [SELECT Name, Field_Name__c FROM Relationship_Sync_Excluded_Fields__c];
+                if (listRecs.size() > 0) {
+                    for (Relationship_Sync_Excluded_Fields__c f : listRecs) {
+                        listExcludedFields.add(f.Field_Name__c);
+                    }    
+                } 
+            }
+            //have to make the setting record lower case
+            System.debug('Excluded fields: ' + listExcludedFields);
+            return listExcludedFields;
+        }
+        set {
+            /* listStrValues = value;
+            strValues = '';
+            for (string str : listStrValues) {
+                strValues += str + ';';
+            }
+            if (strValues != '')
+                strValues = strValues.left(strValues.length()-1);
+            sobjBinding.put(strField, strValues);   */
+        }
+    }
+ 
+  
     
     /*********************************************************************************************************
     * @description Returns a field's label.  cover over describe call to handle fields that no longer exist.
