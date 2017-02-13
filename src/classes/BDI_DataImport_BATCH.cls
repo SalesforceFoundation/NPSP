@@ -30,6 +30,8 @@
 /**
 * @author Salesforce.org
 * @date 2014
+* @group Batch Data Import
+* @group-content ../../ApexDocContent/BatchDataImport.htm
 * @description Batch class for the Batch Data Importer.
 *
 * Batch process looks for all DataImport records that need to be processed

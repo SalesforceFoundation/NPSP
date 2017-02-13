@@ -27,12 +27,22 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
+/**
+ * @author Salesforce.org
+ * @date 2014
+ * @group TDTM
+ * @group-content ../../ApexDocContent/TDTM.htm
+ * @description Test class for TDTM_Runnable
+ *
+***/
 @isTest
 public with sharing class TDTM_Runnable_TEST {
 
     private static string strTestOnly = '*';
     
-    /** This test verifies that the runFuture method of the TDTM_Runnable class works properly **/
+    /*************************************************************************** 
+    * @description This test verifies that the runFuture method of the TDTM_Runnable class works properly 
+    **/
     public static testmethod void testAsync() {
     	if (strTestOnly != '*' && strTestOnly != 'testAsync') return;
     	
@@ -56,9 +66,11 @@ public with sharing class TDTM_Runnable_TEST {
         System.assertEquals('New Acc Name', acc.Name);
     }
     
-    /** Test we do not get the "Cannot have more than 10 chunks in a single operation. Please rearrange the data to 
-    reduce chunking" error. 
-    If you comment out the first line in the method groupSObjects of TDTM_Runnable this test fails.**/
+    /*************************************************************************** 
+    * @description Test we do not get the "Cannot have more than 10 chunks in a single operation. Please rearrange the data to 
+    * reduce chunking" error. 
+    * If you comment out the first line in the method groupSObjects of TDTM_Runnable this test fails.
+    **/
     public static testmethod void nochunking() {
     	if (strTestOnly != '*' && strTestOnly != 'nochunking') return;
     	

@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2014
+* @group Address Management
 * @description Class that talks to the SmartyStreets address verification API.
  */
 public with sharing class ADDR_SmartyStreets_Gateway {

@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2012 
+* @group Relationships
 * @description Controller for Relationships viewer VF page 
 */
 global with sharing class REL_RelationshipsViewer_CTRL{

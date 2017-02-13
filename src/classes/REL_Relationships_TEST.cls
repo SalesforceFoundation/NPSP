@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2011,2012 
+* @group Relationships
 * @description Testing for the Relationships class
 */
 @isTest

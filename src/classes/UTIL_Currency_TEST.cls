@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2016
-* @group Util
+* @group Utilities
 * @description Tests for currency utility class
 */
 @isTest

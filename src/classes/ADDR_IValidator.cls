@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2014
+* @group Address Management
 * @description Interface that classes that provide address validation/normalization
 * should implement.
 */
