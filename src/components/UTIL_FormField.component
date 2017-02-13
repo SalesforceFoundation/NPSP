@@ -33,7 +33,7 @@
             <apex:outputLabel for="outputX" styleClass="slds-form-element__label" rendered="{!ftype!='boolean'}">
                 {!label}
             </apex:outputLabel>
-            <div class="{!'slds-form-element__control' + IF($ObjectType[sObjType].fields[field].type!='boolean', ' slds-has-divider--bottom slds-p-left--small','')}">
+            <div class="{!'slds-form-element__control' + IF(ftype!='boolean', ' slds-has-divider--bottom slds-p-left--small','')}">
                 <!-- Blank space fixes issue where an empty span on read only fields were blank causing the line to shift when no value present -->
                 <apex:outputField id="outputX" value="{!sObj[field]}" styleClass="slds-form-element__static" rendered="{!ftype!='boolean'}">&nbsp;</apex:outputField>
                 <apex:outputPanel layout="{!IF(ftype=='boolean', 'inline', 'none')}" styleClass="{!IF(ftype=='boolean', 'slds-checkbox', '')}">
@@ -69,23 +69,26 @@
         </div>
         <!-- Javascript will add the onchange event when needed and swap out the icon for lookup fields -->
         <script type="text/javascript">
-            var oc = '{!onchange}';
-            var ftype = '{!ftype}';
-            var field = '{!field}';
-            var input = document.getElementById("{!$Component.inputX}");
+            (function() {
+                var oc = '{!onchange}';
+                var ftype = '{!ftype}';
+                var field = '{!field}';
+                var input = document.getElementById("{!$Component.inputX}");
 
-            // Add onchange event only when needed
-            if (oc) input.setAttribute("onchange", oc);
+                // Add onchange event only when needed
+                if (oc) input.setAttribute("onchange", oc);
 
-            // Swap out the search icon
-            if (ftype == 'reference' && field != 'RecordTypeId') {
-                input.style.visibility = "";
-                var lkSpan = input.parentElement;
-                var lkLink = lkSpan.querySelector("a");
-                lkLink.style.visibility = "";
-                lkLink.className = "";
-                lkLink.innerHTML = "<svg aria-hidden=\"true\" class=\"slds-icon slds-input__icon slds-icon--x-small slds-icon-text-default\" viewBox=\"0 0 24 24\"><path  d=\"M22.9 20.9l-6.2-6.1c1.3-1.8 1.9-4 1.6-6.4-.6-3.9-3.8-7.1-7.8-7.4C5 .4.4 5 1 10.5c.3 4 3.5 7.3 7.4 7.8 2.4.3 4.6-.3 6.4-1.5l6.1 6.1c.3.3.7.3 1 0l.9-1c.3-.3.3-.7.1-1zM3.7 9.6c0-3.2 2.7-5.9 5.9-5.9s6 2.7 6 5.9-2.7 6-6 6-5.9-2.6-5.9-6z\"></path></svg>";
-            }
+                // Swap out the search icon
+                if (ftype == 'reference' && field != 'RecordTypeId') {
+                    input.style.visibility = "";
+                    var lkSpan = input.parentElement;
+                    var lkLink = lkSpan.querySelector("a");
+                    lkLink.style.visibility = "";
+                    lkLink.className = "";
+                    lkLink.innerHTML = "<svg aria-hidden=\"true\" class=\"slds-icon slds-input__icon slds-icon--x-small slds-icon-text-default\" viewBox=\"0 0 24 24\"><path  d=\"M22.9 20.9l-6.2-6.1c1.3-1.8 1.9-4 1.6-6.4-.6-3.9-3.8-7.1-7.8-7.4C5 .4.4 5 1 10.5c.3 4 3.5 7.3 7.4 7.8 2.4.3 4.6-.3 6.4-1.5l6.1 6.1c.3.3.7.3 1 0l.9-1c.3-.3.3-.7.1-1zM3.7 9.6c0-3.2 2.7-5.9 5.9-5.9s6 2.7 6 5.9-2.7 6-6 6-5.9-2.6-5.9-6z\"></path></svg>";
+                }
+            })();
+
         </script>
     </apex:outputPanel>
 
@@ -103,11 +106,13 @@
             </apex:outputLabel>
         </div>
         <script type="text/javascript">
-            var oc = '{!onchange}';
-            var input = document.getElementById("{!$Component.inputCB}");
+            (function() {
+                var oc = '{!onchange}';
+                var input = document.getElementById("{!$Component.inputCB}");
 
-            // Add onchange event only when needed
-            if (oc) input.setAttribute("onchange", oc);
+                // Add onchange event only when needed
+                if (oc) input.setAttribute("onchange", oc);
+            })();
         </script>
     </apex:outputPanel>
 </apex:component>
