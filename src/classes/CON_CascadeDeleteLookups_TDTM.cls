@@ -30,7 +30,7 @@
 /**
  * @author Salesforce.org
  * @date 2017
- * @group Util
+ * @group Utilities
  * @description When contacts are deleted, cascade deletes related relationships, recurring donations, and 
  * opportunities. Prevents Contact deletion if any attributed opportunities are closed/won or attributed
  * to an organization.

@@ -27,13 +27,13 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
-/*
+/**
  * @author Tadeas Brzak
  * @date 8/16/2013
  * @group Opportunity
  * @description Controller for FindGifts VF page allowing users to find matched gifts for a particular Opportunity using custom filters.
  * This code has been contributed by KELL Partners.
- */
+ **/
 public with sharing class MTCH_FindGifts_CTRL {
     
     /* @description the Opportunity of the Matching Gift */

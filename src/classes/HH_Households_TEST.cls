@@ -489,8 +489,9 @@ public with sharing class HH_Households_TEST {
     }
 
 /************************************ Not Used ***************************************
-    /// <name> getHouseholdTransactionTotal </name>
-    /// <summary>  </summary>
+    /*********************************************************************************************************
+    * @description 
+
     static testMethod void getHouseholdTransactionTotal_test()
     {
         npo02__Household__c h = new npo02__Household__c(Name='Test Household');
@@ -512,8 +513,8 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(system.label.npo02.DefaultHouseholdTransactionCurrency + '100.00',HH_Households.getHouseholdTransactionTotal(h.id));
     }
     
-    /// <name> getHouseholdTransactionTotal </name>
-    /// <summary>  </summary>
+    /*********************************************************************************************************
+    * @description 
     static testMethod void getHouseholdLastTransaction_test()
     {
         Integer year = 2005;

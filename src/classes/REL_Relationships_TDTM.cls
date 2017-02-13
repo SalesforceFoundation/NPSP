@@ -31,6 +31,7 @@
 * @author Salesforce.org
 * @date 2013
 * @group Relationships
+* @group-content ../../ApexDocContent/Relationships.htm
 * @description Trigger Handler on Relationships that implements reciprocal relationships behavior.
 */
 public class REL_Relationships_TDTM extends TDTM_Runnable {

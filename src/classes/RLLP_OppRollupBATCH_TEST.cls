@@ -30,6 +30,8 @@
 /**
 * @author Salesforce.org
 * @date 2011
+* @group Rollups
+* @group-content ../../ApexDocContent/Rollups.htm
 * @description test the batchable wrapper for Opportunity Rollup functionality
 */
 
