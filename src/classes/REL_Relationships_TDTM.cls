@@ -29,10 +29,22 @@
 */
 /**
 * @author Salesforce.org
-* @description Implements relationships behavior 
+* @date 2013
+* @group Relationships
+* @group-content ../../ApexDocContent/Relationships.htm
+* @description Trigger Handler on Relationships that implements reciprocal relationships behavior.
 */
 public class REL_Relationships_TDTM extends TDTM_Runnable {
 
+    /*******************************************************************************************************
+    * @description Overload of run method that casts trigger objects to Relationships and passes them to 
+    * runForRelationships() with correct parameters
+    * @param newlist Sobjects that are being triggered 
+    * @param oldlist Sobjects with values before trigger event 
+    * @param triggerAction Trigger action that is occuring 
+    * @param objResult Schema.DescribeSobjectResult for npe4__Relationship__c
+    * @return DmlWrapper
+    */
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
     TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
     	
@@ -42,11 +54,13 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
 		return runForRelationships(newListCasted, oldListCasted, triggerAction);
     }
     
-    /// <name> REL_Relationships </name>
-    /// <summary> Overloads the REL_Relationships object constructor to handle Relationship processing </summary>
-    /// <param name="Relationships"> Relationship objects that are being triggered </param>
-    /// <param name="oldRelationships"> Relationships object values before trigger event </param>
-    /// <param name="ta"> Trigger action that is occuring </param>
+    /*******************************************************************************************************
+    * @description Method that implements correct action based on trigger action 
+    * @param newlist Relationship objects that are being triggered 
+    * @param oldlist Relationships object values before trigger event 
+    * @param triggerAction Trigger action that is occuring 
+    * @return DmlWrapper
+    */
     private DmlWrapper runForRelationships(List<npe4__Relationship__c> newlist, List<npe4__Relationship__c> oldlist, 
     TDTM_Runnable.Action triggerAction) {
     	    
@@ -126,9 +140,11 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
         return mainWrapper;
     }
 
-    /// <name> reciprocate </name>
-    /// <summary>  </summary>
-    /// <param name="Relationships">  </param>
+    /*******************************************************************************************************
+    * @description Generates DmlWrapper list of reciprocal relationships that need to be updated
+    * @param Relationships List of Relationships 
+    * @return DmlWarapper
+    */ 
     public static DmlWrapper reciprocate(npe4__Relationship__c[] Relationships) {
     	DmlWrapper dmlWrapper = new DmlWrapper();
         List<SObject> relationshipsToUpdate = new List<SObject>();
@@ -142,9 +158,11 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
         return dmlWrapper;
     }
     
-    /// <name> createRelationship </name>
-    /// <summary> Inserts a new reciprocal Relationship After a relationship is Inserted</summary>
-    /// <param name="Relationships">  </param>
+    /*******************************************************************************************************
+    * @description Creates new reciprocal Relationship records for those being Inserted
+    * @param Relationships  list of new Relationships being inserted
+    * @return DmlWrapper
+    */
     public static DmlWrapper createRelationship(npe4__Relationship__c[] Relationships) {
     	
     	DmlWrapper dmlWrapper = new DmlWrapper();
@@ -171,10 +189,12 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
         return dmlWrapper;
     }
 
-    /// <name> updateRelationship </name>
-    /// <summary> Updates the Status and/or Type of a relationship After its reciprocal has been updated </summary>
-    /// <param name="Relationships">  </param>
-    /// <param name="oldRelationships">  </param>
+    /*******************************************************************************************************
+    * @description Updates the Status and/or Type of a relationship After its reciprocal has been updated 
+    * @param Relationships  
+    * @param oldRelationships 
+    * @return DmlWrapper
+    */ 
     public static DmlWrapper updateRelationship(npe4__Relationship__c[] Relationships, 
     npe4__Relationship__c[] oldRelationships){
     	
@@ -225,6 +245,11 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
         return dmlWrapper;
     }
     
+    /*******************************************************************************************************
+    * @description Updates Type of a list of relationships based on reciprocal method and list settings 
+    * @param rList list of old Relationship records   
+    * @param rCopy List of SObjects (Relationships) being updated
+    * */ 
     public static void addType(list<npe4__Relationship__c> rList, List<SObject> rCopy) {
         
         npe4__Relationship_Settings__c rs = UTIL_CustomSettingsFacade.getRelationshipSettings();

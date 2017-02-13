@@ -30,6 +30,8 @@
 /**
 * @author Salesforce.org
 * @date 2014 
+* @group Rollups
+* @group-content ../../ApexDocContent/Rollups.htm
 * @description test Class which holds test methods for common utilities, 
 * such as detecting whether we are in a managed package, and some string helpers.
 */

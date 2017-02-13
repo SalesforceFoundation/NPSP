@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2016
-* @group Util
+* @group Utilities
 * @description Utilities for working with currencies
 */
 public with sharing class UTIL_Currency implements UTIL_Currency.Interface_x {

@@ -30,7 +30,7 @@
 /**
  * @author Salesforce.org
  * @date 2017
- * @group Util
+ * @group Utilities
  * @description Cascade deletion extension for Campaign object.
  */
 public with sharing class CAM_CascadeDeleteLookups_TDTM extends UTIL_CascadeDeleteLookups_TDTM {

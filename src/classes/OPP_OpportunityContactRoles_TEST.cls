@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2011 (1.x)
+* @group Opportunity
 * @description Tests for OpportunityContactRoles
 */
 @isTest

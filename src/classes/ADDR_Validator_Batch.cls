@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2014
+* @group Address Management
 * @description Batch class for SmartyStreets address verification. It looks for all populated addresses and updates them if the setting is turned on.
 */
 public class ADDR_Validator_Batch implements Database.Batchable<sObject>, Database.AllowsCallouts {
