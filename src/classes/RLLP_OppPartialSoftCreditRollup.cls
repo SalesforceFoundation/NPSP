@@ -27,7 +27,7 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
-/**
+/****************************************************************************************
  * @author Tomas "Bobby" Hnizdil, Saleforce.org
  * @date 8/22/2013
  * @group Opportunity

@@ -27,7 +27,7 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
-/**
+/****************************************************************************************
  * @author Tadeas Brzak
  * @date 8/16/2013
  * @group Opportunity
