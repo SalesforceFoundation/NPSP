@@ -73,14 +73,14 @@ public with sharing class STG_PanelRel_CTRL extends STG_Panel {
     	}
     }
 
-        /*********************************************************************************************************
-    * @description The list of SelectOptions for Relationship fields to sync
+    /*********************************************************************************************************
+    * @description The list of SelectOptions for Relationship fields to exclude from sync
     */
     public list<SelectOption> listSOSyncFieldOptions {
         get {
             if (listSOSyncFieldOptions == null) {
                 listSOSyncFieldOptions = new list<SelectOption>();
-                             
+                listSOSyncFieldOptions.add(new SelectOption('', Label.stgLabelNone));             
                 map<String, Schema.DescribeFieldResult> relFieldDescMap = UTIL_Describe.getAllFieldsDescribe('npe4__Relationship__c'); 
                
                 //only present editable custom fields not from NPSP
@@ -93,7 +93,8 @@ public with sharing class STG_PanelRel_CTRL extends STG_Panel {
                 }
                 
                 // insert disabled SelectOption if there are no valid fields    
-                if (listSOSyncFieldOptions.size() < 1){            
+                if (listSOSyncFieldOptions.size() == 1){            
+                    listSOSyncFieldOptions.clear();
                     listSOSyncFieldOptions.add(new SelectOption(strNoValidField, strNoValidField, true));
                 }
             }               
@@ -108,23 +109,18 @@ public with sharing class STG_PanelRel_CTRL extends STG_Panel {
     private static string strNoValidField = System.Label.stgLabelRelationshipSyncNoValidFields;
 
     
-    private Map<String,String> mapExcludedFieldLabel {
-        get {
-            if (mapExcludedFieldLabel == null) {
-                mapExcludedFieldLabel = new Map<String,String>();
-                for (string fieldName : UTIL_ListCustomSettingsFacade.getMapRelationshipFieldSyncSettings().keyset()) {
-                    mapExcludedFieldLabel.put(fieldname,getFieldLabel('npe4__Relationship__c',fieldName));
-                }
-            }
-            return mapExcludedFieldLabel; 
-        }
-        set;
-    }
-
+    /*********************************************************************************************************
+    * @description A smeicolon-delimited list of field labels exclude from sync for display in read-only 
+    */
     public String excludedLabels {
         get {
             if (excludedLabels == null) {
-                excludedLabels = String.join(mapExcludedFieldLabel.values(),';');
+                List<String> excludedLabelList = new List<String>();
+                for (string fieldName : new Set<String>(UTIL_ListCustomSettingsFacade.getMapRelationshipFieldSyncSettings().keyset())) {
+                    excludedLabelList.add(getFieldLabel('npe4__Relationship__c',fieldName));
+                }
+
+                excludedLabels = String.join(excludedLabelList,'; ');
             }
             return excludedLabels;
         }
@@ -133,23 +129,25 @@ public with sharing class STG_PanelRel_CTRL extends STG_Panel {
 
     /*********************************************************************************************************
     * @description The list of strings values databound to the object's field.  Setting this list will
-    * save those values into the object's field.
+    * save those values as custom setting records.
     */
     public list<string> listExcludedFields {
         get {
             if (listExcludedFields == null) {
-                listExcludedFields = new List<String>(mapExcludedFieldLabel.keyset());
+                listExcludedFields = new List<String>(UTIL_ListCustomSettingsFacade.getMapRelationshipFieldSyncSettings().keyset());
             }
             return listExcludedFields;
         }
         set {
             Set<String> oldFields = new Set<String>(listExcludedFields);
             listExcludedFields = value;
+            
+            // if the values changed, then create any new list setting records    
             if (!oldFields.equals(new Set<String>(listExcludedFields))) {
                 List<Relationship_Sync_Excluded_Fields__c> newFieldRecs = new List<Relationship_Sync_Excluded_Fields__c>();
                 for (string str : listExcludedFields) {
-                    if (!mapExcludedFieldLabel.containsKey(str)) {
-                        newFieldRecs.add(new Relationship_Sync_Excluded_Fields__c(Name = str, Field_Name__c = str));
+                    if (!oldFields.contains(str) && String.isNotBlank(str)) {
+                        newFieldRecs.add(new Relationship_Sync_Excluded_Fields__c(Name = str));
                     }
                 }
                 if (newFieldRecs.size() > 0 ) {
@@ -161,8 +159,10 @@ public with sharing class STG_PanelRel_CTRL extends STG_Panel {
                 if (oldFields.size() > 0) {
                     delete [SELECT Id, Name FROM Relationship_Sync_Excluded_Fields__c WHERE NAME IN :oldFields];
                 }
-                mapExcludedFieldLabel = null;
+                
+                // null out static variables to force a re-read on next call
                 excludedLabels = null;
+                UTIL_ListCustomSettingsFacade.mapRelationshipFieldSyncSettings = null;
             }
         }
     }
