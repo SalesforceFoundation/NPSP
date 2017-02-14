@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2014
+* @group Address Management
 * @description Class that generates mock HTTP responses for address validation/
 * normalization tests.
 */

@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2016
-* @group Util
+* @group Utilities
 * @description Tests for cascade delete of Contacts
 */
 @isTest
