@@ -81,19 +81,14 @@ public with sharing class STG_PanelRel_CTRL extends STG_Panel {
             if (listSOSyncFieldOptions == null) {
                 listSOSyncFieldOptions = new list<SelectOption>();
                              
-                map<String, Schema.SObjectField> relFieldTokenList = Schema.SObjectType.npe4__Relationship__c.fields.getMap(); 
+                map<String, Schema.DescribeFieldResult> relFieldDescMap = UTIL_Describe.getAllFieldsDescribe('npe4__Relationship__c'); 
                
-                //only get the describe information for custom fields (not from NPSP)
-                for (string fieldName : relFieldTokenList.keyset()) {
-                    if (fieldname.endsWith('__c') && !fieldname.startsWith('np')) {
+                //only present editable custom fields not from NPSP
+                for (string fieldName : relFieldDescMap.keyset()) {
+                    if (relFieldDescMap.get(fieldName).isCustom() && !fieldname.startsWith('npe4__')
+                        && !relFieldDescMap.get(fieldName).isCalculated() && !relFieldDescMap.get(fieldName).isAutoNumber()) {
                         
-                        // disallow formula fields and autonums
-                        Schema.DescribeFieldResult f = UTIL_Describe.getFieldDescribe('npe4__Relationship__c', fieldName);
-                        if (f.isCalculated() || f.isAutoNumber()) {
-                            continue;
-                        }
-
-                        listSOSyncFieldOptions.add(new SelectOption(fieldName, UTIL_Describe.getFieldLabel('npe4__Relationship__c', fieldName))); 
+                        listSOSyncFieldOptions.add(new SelectOption(fieldName, relFieldDescMap.get(fieldName).getLabel())); 
                     }               
                 }
                 
@@ -102,16 +97,39 @@ public with sharing class STG_PanelRel_CTRL extends STG_Panel {
                     listSOSyncFieldOptions.add(new SelectOption(strNoValidField, strNoValidField, true));
                 }
             }               
-            System.debug('Select opts: ' + listSOSyncFieldOptions);
             return listSOSyncFieldOptions;
         }
-        private set;
+        set;
     }
  
     /*********************************************************************************************************
     * @description A localized string to use if there is no valid field
     */
     private static string strNoValidField = System.Label.stgLabelRelationshipSyncNoValidFields;
+
+    
+    private Map<String,String> mapExcludedFieldLabel {
+        get {
+            if (mapExcludedFieldLabel == null) {
+                mapExcludedFieldLabel = new Map<String,String>();
+                for (string fieldName : UTIL_ListCustomSettingsFacade.getMapRelationshipFieldSyncSettings().keyset()) {
+                    mapExcludedFieldLabel.put(fieldname,getFieldLabel('npe4__Relationship__c',fieldName));
+                }
+            }
+            return mapExcludedFieldLabel; 
+        }
+        set;
+    }
+
+    public String excludedLabels {
+        get {
+            if (excludedLabels == null) {
+                excludedLabels = String.join(mapExcludedFieldLabel.values(),';');
+            }
+            return excludedLabels;
+        }
+        set;
+    }
 
     /*********************************************************************************************************
     * @description The list of strings values databound to the object's field.  Setting this list will
@@ -120,32 +138,35 @@ public with sharing class STG_PanelRel_CTRL extends STG_Panel {
     public list<string> listExcludedFields {
         get {
             if (listExcludedFields == null) {
-                //listStrValues = strValues.split(';',0);
-                listExcludedFields = new List<String>();
-                List<Relationship_Sync_Excluded_Fields__c> listRecs = [SELECT Name, Field_Name__c FROM Relationship_Sync_Excluded_Fields__c];
-                if (listRecs.size() > 0) {
-                    for (Relationship_Sync_Excluded_Fields__c f : listRecs) {
-                        listExcludedFields.add(f.Field_Name__c);
-                    }    
-                } 
+                listExcludedFields = new List<String>(mapExcludedFieldLabel.keyset());
             }
-            //have to make the setting record lower case
-            System.debug('Excluded fields: ' + listExcludedFields);
             return listExcludedFields;
         }
         set {
-            /* listStrValues = value;
-            strValues = '';
-            for (string str : listStrValues) {
-                strValues += str + ';';
+            Set<String> oldFields = new Set<String>(listExcludedFields);
+            listExcludedFields = value;
+            if (!oldFields.equals(new Set<String>(listExcludedFields))) {
+                List<Relationship_Sync_Excluded_Fields__c> newFieldRecs = new List<Relationship_Sync_Excluded_Fields__c>();
+                for (string str : listExcludedFields) {
+                    if (!mapExcludedFieldLabel.containsKey(str)) {
+                        newFieldRecs.add(new Relationship_Sync_Excluded_Fields__c(Name = str, Field_Name__c = str));
+                    }
+                }
+                if (newFieldRecs.size() > 0 ) {
+                    insert newFieldRecs;
+                }
+                
+                // delete list settings for any records that had them before but are no longer selected
+                oldFields.removeAll(listExcludedFields);
+                if (oldFields.size() > 0) {
+                    delete [SELECT Id, Name FROM Relationship_Sync_Excluded_Fields__c WHERE NAME IN :oldFields];
+                }
+                mapExcludedFieldLabel = null;
+                excludedLabels = null;
             }
-            if (strValues != '')
-                strValues = strValues.left(strValues.length()-1);
-            sobjBinding.put(strField, strValues);   */
         }
     }
- 
-  
+
     
     /*********************************************************************************************************
     * @description Returns a field's label.  cover over describe call to handle fields that no longer exist.

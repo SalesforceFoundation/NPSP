@@ -42,6 +42,7 @@ public with sharing class UTIL_ListCustomSettingsFacade {
     public static Map<String,npe01__Payment_Field_Mapping_Settings__c> mapPaymentFieldMappingSettings;
     public static Map<String,npe4__Relationship_Auto_Create__c> mapRelationshipAutoCreateSettings;
     public static Map<String,npe4__Relationship_Lookup__c> mapRelationshipLookupSettings;
+    public static Map<String,Relationship_Sync_Excluded_Fields__c> mapRelationshipFieldSyncSettings;
     public static Map<String,npo02__User_Rollup_Field_Settings__c> mapUserRollupFieldSettings;
 
     /*******************************************************************************************************
@@ -115,6 +116,19 @@ public with sharing class UTIL_ListCustomSettingsFacade {
         }
         return mapRelationshipLookupSettings;
     }
+
+    /*******************************************************************************************************
+    * @description Retrieves the existing relationship field sync setting, by returning a map of fields NOT
+    * to be synced across reciprocal pairs.
+    * @return Map<String,Relationship_Sync_Excluded_Fields__c> Map of existing relationship field sync settings.
+    **/
+    public static Map<String,Relationship_Sync_Excluded_Fields__c> getMapRelationshipFieldSyncSettings() {
+        if(mapRelationshipFieldSyncSettings == null) {
+            mapRelationshipFieldSyncSettings = Relationship_Sync_Excluded_Fields__c.getAll();
+        }
+        return mapRelationshipFieldSyncSettings;
+    }
+
 
     /*******************************************************************************************************
     * @description Retrieves the existing user rollup field list setting, creating user defined rollups from

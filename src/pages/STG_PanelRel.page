@@ -55,11 +55,10 @@
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.Relationship_Sync_Excluded_Fields__c.Label}" for="slCFSF" styleClass="col-md-4 slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <apex:outputText value="{!$Label.stgLabelNone}" rendered="{!isReadOnlyMode}" id="slCFSFO" html-aria-describedby="{!$Component.slCFSHelp}" styleClass="slds-form-element__static"/>
+                    <apex:outputText value="{!IF(excludedLabels == '', $Label.stgLabelNone, excludedLabels)}" rendered="{!isReadOnlyMode}" id="slCFSFO" html-aria-describedby="{!$Component.slCFSHelp}" styleClass="slds-form-element__static"/>
                     <apex:selectList value="{!listExcludedFields}" multiselect="true" size="5" rendered="{!isEditMode}" id="slCFSF" html-aria-describedby="{!$Component.slCFSFHelp}" styleClass="slds-select">
                         <apex:selectOptions value="{!listSOSyncFieldOptions}"/>
                     </apex:selectList>
-
                     <apex:outputPanel id="slCFSFHelp" layout="block">
                         <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRelSyncFields}" />
                     </apex:outputPanel>
