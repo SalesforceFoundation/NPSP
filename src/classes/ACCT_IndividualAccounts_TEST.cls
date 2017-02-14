@@ -1010,8 +1010,8 @@ private class ACCT_IndividualAccounts_TEST {
     
 /* TESTING PHONE NUMBER WORKFLOW -------------------------------------------------------
  
-    /// <name> createContactWithPhoneNoPref </name>
-    /// <summary> Test Method for creating a contact with a phone number and no preferences set. </summary>
+    /*********************************************************************************************************
+    * @description Test Method for creating a contact with a phone number and no preferences set. </summary>
     private static testMethod void createContactWithPhoneNoPref()
     {
         //with no other prefs, phone should land in npe01__workphone__c and set npe01__PreferredPhone__c to 'work'.
@@ -1029,8 +1029,8 @@ private class ACCT_IndividualAccounts_TEST {
         
     }
     
-    /// <name> createContactWithPhoneNoPrefAlsoHomePhone </name>
-    /// <summary> Test Method for creating a contact with a phone number and a home number. </summary>
+    /*********************************************************************************************************
+    * @description Test Method for creating a contact with a phone number and a home number.
     private static testMethod void createContactWithPhoneNoPrefAlsoHomePhone()
     {
         //with pref set to Home, HomePhone should land in Phone and set npe01__PreferredPhone__c to 'home'.
@@ -1050,8 +1050,8 @@ private class ACCT_IndividualAccounts_TEST {
         
     }
     
-    /// <name> createContactWithPhonePrefSet </name>
-    /// <summary> Test Method for creating a contact with a phone number in Phone and the preferred phone set. </summary>
+    /*********************************************************************************************************
+    * @description Test Method for creating a contact with a phone number in Phone and the preferred phone set.
     private static testMethod void createContactWithPhonePrefSet()
     {
         //with pref set to Home, HomePhone should land in Phone and set npe01__PreferredPhone__c to 'home'.
@@ -1105,9 +1105,8 @@ private class ACCT_IndividualAccounts_TEST {
         
     }
     
-    /// <name> createContactWithNumberAndPrefSet </name>
-    /// <summary> Test Method for creating a contact with a phone number in the correct field
-    /// and the preferred phone set. </summary>
+    /*********************************************************************************************************
+    * @description Test Method for creating a contact with a phone number in the correct field and the preferred phone set.
     private static testMethod void createContactWithNumberAndPrefSet()
     {
         //with pref set to Home, HomePhone should land in Phone and set npe01__PreferredPhone__c to 'home'.
@@ -1161,9 +1160,8 @@ private class ACCT_IndividualAccounts_TEST {
         
     }
     
-    /// <name> updateContactWithNumberAndPref </name>
-    /// <summary> Test Method for updating a contact with a phone number in the correct field
-    /// and the preferred phone set. </summary>
+    /*********************************************************************************************************
+    * @description Test Method for updating a contact with a phone number in the correct field and the preferred phone set. 
     private static testMethod void updateContactWithNumberAndPref()
     {
         //with pref set to Home, HomePhone should land in Phone and set npe01__PreferredPhone__c to 'home'.
@@ -1227,8 +1225,8 @@ private class ACCT_IndividualAccounts_TEST {
    */
 
 /* TESTING EMAIL WORKFLOW --------------------------------------------------------------
-    /// <name> createContactWithEmailNoPref </name>
-    /// <summary> Test Method for creating a contact with an email and no preferences set. </summary>
+    /*********************************************************************************************************
+    * @description Test Method for creating a contact with an email and no preferences set.
     private static testMethod void createContactWithEmailNoPref()
     {
         //with no other prefs, email should land in npe01__workemail__c and set npe01__Preferred_Email__c to 'work'.
@@ -1246,8 +1244,8 @@ private class ACCT_IndividualAccounts_TEST {
         
     }
     
-    /// <name> createContactWithEmailPersonalPrefAlsoPersonalEmail </name>
-    /// <summary> Test Method for creating a contact with a email and a personal email. </summary>
+    /*********************************************************************************************************
+    * @description Test Method for creating a contact with a email and a personal email. 
     private static testMethod void createContactWithEmailPersonalPrefAlsoPersonalEmail()
     {
         //with pref set to Personal, Personal email should land in email and set npe01__Preferred_Email__c to 'Personal'.
@@ -1266,8 +1264,8 @@ private class ACCT_IndividualAccounts_TEST {
         
     }
     
-    /// <name> createContactWithEmailPrefSet </name>
-    /// <summary> Test Method for creating a contact with an email in email and the preferred email set. </summary>
+    /*********************************************************************************************************
+    * @description Test Method for creating a contact with an email in email and the preferred email set. 
     private static testMethod void createContactWithEmailPrefSet()
     {
         //with pref set to Home, Personal Email should land in email and set npe01__Preferred_Email__c to 'Personal'.
@@ -1309,9 +1307,8 @@ private class ACCT_IndividualAccounts_TEST {
       
     }
     
-    /// <name> createContactWithEmailAndPrefSet </name>
-    /// <summary> Test Method for creating a contact with a email in the correct field
-    /// and the preferred email set. </summary>
+    /*********************************************************************************************************
+    * @description Test Method for creating a contact with a email in the correct field and the preferred email set. 
     private static testMethod void createContactWithEmailAndPrefSet()
     {
         //with pref set to Home, Personal Email should land in email and set npe01__Preferred_Email__c to 'Personal'.
@@ -1354,9 +1351,8 @@ private class ACCT_IndividualAccounts_TEST {
         
     }
     
-    /// <name> updateContactWithEmailAndPref </name>
-    /// <summary> Test Method for updating a contact with a email in the correct field
-    /// and the preferred email set. </summary>
+    /*********************************************************************************************************
+    * @description Test Method for updating a contact with a email in the correct field and the preferred email set. 
     private static testMethod void updateContactWithEmailAndPref()
     {
         //with pref set to Personal, Personal email should land in email and set npe01__Preferred_Email__c to 'Personal'.
@@ -1405,8 +1401,8 @@ private class ACCT_IndividualAccounts_TEST {
 /* TESTING DONATION HISTORY WEBSERVICES ------------------------------------------------*/
 /************************* DEPRECATE IN CUMULUS ***********************************    
 
-    /// <name> getContactDonationHistory </name>
-    /// <summary> Test Method for getContactDonationHistory</summary>
+    /*********************************************************************************************************
+    * @description Test Method for getContactDonationHistory
     private static testMethod void getContactDonationHistory()
     {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
@@ -1433,8 +1429,8 @@ private class ACCT_IndividualAccounts_TEST {
         Decimal sum = ACCT_IndividualAccounts.getContactDonationHistory(con.id);
     }
 
-    /// <name> getContactLastDonation </name>
-    /// <summary> Test Method for getContactLastDonation</summary>
+    /*********************************************************************************************************
+    * @description Test Method for getContactLastDonation
     private static testMethod void getContactLastDonation()
     {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
@@ -1465,9 +1461,8 @@ private class ACCT_IndividualAccounts_TEST {
         
     }
 
-
-/// <name> getContactDonationHistory </name>
-    /// <summary> Test Method for getContactDonationHistory</summary>
+    /*********************************************************************************************************
+    * @description Test Method for getContactDonationHistory
     private static testMethod void getContactDonationHistoryAmount()
     {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
@@ -1498,8 +1493,8 @@ private class ACCT_IndividualAccounts_TEST {
         system.assertEquals(system.label.npe01.DefaultContactTransactionCurrency + '500.00',ext.getContactDonationHistory());
     }
 
-    /// <name> getContactLastDonation </name>
-    /// <summary> Test Method for getContactLastDonation</summary>
+    /*********************************************************************************************************
+    * @description Test Method for getContactLastDonation
     private static testMethod void getContactLastDonationDate()
     {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));

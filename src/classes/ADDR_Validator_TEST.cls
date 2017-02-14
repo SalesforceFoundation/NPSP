@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2013
+* @group Address Management
 * @description Tests for the ADDR_Validator class. 
 */
 @isTest

@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2012 
+* @group Relationships
 * @description Provides process control to prevent relationship creation recursion in triggers 
 */
 public with sharing class REL_ProcessControl {

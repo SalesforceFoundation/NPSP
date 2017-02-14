@@ -30,7 +30,7 @@
 /**
  * @author Salesforce.org
  * @date 2017
- * @group Util
+ * @group Utilities
  * @description Extend this to allow cascade delete and undelete of child objects through lookup relationships.
  * 
  * The only differences in functionality with standard cascade deletion is that child records show up separately from

@@ -29,9 +29,12 @@
 */
 /**
 * @author Salesforce.org
-* @description Implements relationships behavior 
+* @date 2013
+* @group Relationships
+* @description Trigger Handler on CampaignMember that implements automatic relationship creation.
 */
 public class REL_Relationships_Cm_TDTM extends TDTM_Runnable {
+
 
     public override DmlWrapper run(List<SObject> newList, List<SObject> oldList, 
     TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {

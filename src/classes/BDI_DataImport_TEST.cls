@@ -30,7 +30,9 @@
 /**
 * @author Salesforce.org
 * @date 2014
-* @description tests specific to the Data Importer 
+* @group Batch Data Import
+* @group-content ../../ApexDocContent/BatchDataImport.htm
+* @description tests specific to the Batch Data Importer batch processing and record creation
 */
 
 @isTest
@@ -64,10 +66,10 @@ public with sharing class BDI_DataImport_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
-        import matching contacts within the same di record 
-    verify:
-        only one contact created
+    * @description operation
+    *     import matching contacts within the same di record 
+    * verify:
+    *     only one contact created
     **********************************************************************************************************/            
     static testMethod void OneDIDuplicateNewContacts() {
         if (strTestOnly != '*' && strTestOnly != 'OneDIDuplicateNewContacts') return;
@@ -97,10 +99,10 @@ public with sharing class BDI_DataImport_TEST {
     }
     
     /*********************************************************************************************************
-    operation:
-        import different contacts within the same di record 
-    verify:
-        two contacts created
+    * @description operation
+    *        import different contacts within the same di record  
+    * verify: 
+    *        two contacts created
     **********************************************************************************************************/            
     static testMethod void OneDITwoNewContacts() {
         if (strTestOnly != '*' && strTestOnly != 'OneDITwoNewContacts') return;
@@ -131,10 +133,10 @@ public with sharing class BDI_DataImport_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
-        import matching contacts within multiple di records in the same batch 
-    verify:
-        only one contact created
+    * @description operation
+    *        import matching contacts within multiple di records in the same batch  
+    * verify: 
+    *        only one contact created
     **********************************************************************************************************/            
     static testMethod void TwoDIDuplicateNewContacts() {
         if (strTestOnly != '*' && strTestOnly != 'TwoDIDuplicateNewContacts') return;
@@ -167,10 +169,10 @@ public with sharing class BDI_DataImport_TEST {
     }
     
     /*********************************************************************************************************
-    operation:
-        import different contacts within multiple di records in the same batch
-    verify:
-        two contacts created
+    * @description operation
+    *        import different contacts within multiple di records in the same batch 
+    * verify: 
+    *        two contacts created
     **********************************************************************************************************/            
     static testMethod void TwoDITwoNewContacts() {
         if (strTestOnly != '*' && strTestOnly != 'TwoDITwoNewContacts') return;
@@ -203,11 +205,11 @@ public with sharing class BDI_DataImport_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
-        import matching contacts within multiple di records in the same batch 
-    verify:
-        only two contacts created
-        only 1 household account created
+    * @description operation
+    *        import matching contacts within multiple di records in the same batch  
+    * verify: 
+    *        only two contacts created
+    *        only 1 household account created
     **********************************************************************************************************/            
     static testMethod void TwoDIDuplicateNewContactsDifferentOrder() {
         if (strTestOnly != '*' && strTestOnly != 'TwoDIDuplicateNewContactsDifferentOrder') return;
@@ -250,10 +252,10 @@ public with sharing class BDI_DataImport_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
-        import existing contacts within the same di record 
-    verify:
-        two contacts matched
+    * @description operation
+    *        import existing contacts within the same di record  
+    * verify: 
+    *        two contacts matched
     **********************************************************************************************************/            
     static testMethod void OneDITwoExistingContacts() {
         if (strTestOnly != '*' && strTestOnly != 'OneDITwoExistingContacts') return;
@@ -290,10 +292,10 @@ public with sharing class BDI_DataImport_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
-        import existing contacts that match a 1x1 contact
-    verify:
-        error given, di not processed.
+    * @description operation
+    *        import existing contacts that match a 1x1 contact 
+    * verify: 
+    *        error given, di not processed.
     **********************************************************************************************************/            
     static testMethod void OneDIExistingContacts1x1() {
         if (strTestOnly != '*' && strTestOnly != 'OneDIExistingContacts1x1') return;
@@ -337,10 +339,10 @@ public with sharing class BDI_DataImport_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
-        import different accounts within the same di record 
-    verify:
-        two accounts created
+    * @description operation
+    *        import different accounts within the same di record  
+    * verify: 
+    *        two accounts created
     **********************************************************************************************************/            
     static testMethod void OneDITwoNewAccounts() {
         if (strTestOnly != '*' && strTestOnly != 'OneDITwoNewAccounts') return;
@@ -369,10 +371,10 @@ public with sharing class BDI_DataImport_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
-        import matching accounts within the same di record 
-    verify:
-        one accounts created
+    * @description operation
+    *        import matching accounts within the same di record  
+    * verify: 
+    *        one accounts created
     **********************************************************************************************************/            
     static testMethod void OneDITwoSameAccounts() {
         if (strTestOnly != '*' && strTestOnly != 'OneDITwoSameAccounts') return;
@@ -400,10 +402,10 @@ public with sharing class BDI_DataImport_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
-        import matching accounts in different di records 
-    verify:
-        one account created
+    * @description operation
+    *        import matching accounts in different di records  
+    * verify: 
+    *        one account created
     **********************************************************************************************************/            
     static testMethod void TwoDISameAccounts() {
         if (strTestOnly != '*' && strTestOnly != 'TwoDISameAccounts') return;
@@ -432,10 +434,10 @@ public with sharing class BDI_DataImport_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
-        import existing accounts 
-    verify:
-        no accounts created, just matched
+    * @description operation
+    *        import existing accounts  
+    * verify: 
+    *        no accounts created, just matched
     **********************************************************************************************************/            
     static testMethod void TwoDIExistingAccounts() {
         if (strTestOnly != '*' && strTestOnly != 'TwoDIExistingAccounts') return;
@@ -469,10 +471,10 @@ public with sharing class BDI_DataImport_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
-        import existing accounts, matched by Salesforce Id 
-    verify:
-        no accounts created, just matched
+    * @description operation
+    *        import existing accounts, matched by Salesforce Id  
+    * verify: 
+    *        no accounts created, just matched
     **********************************************************************************************************/            
     static testMethod void TwoDIExistingAccountsSalesforceId() {
         if (strTestOnly != '*' && strTestOnly != 'TwoDIExistingAccountsSalesforceId') return;
@@ -511,9 +513,9 @@ public with sharing class BDI_DataImport_TEST {
 
     /*********************************************************************************************************
     operation:
-        import contacts with Preferred Email set
-    verify:
-        ensure the appropriate contact email field gets copied into the standard email field.
+    *        import contacts with Preferred Email set 
+    * verify: 
+    *        ensure the appropriate contact email field gets copied into the standard email field.
     **********************************************************************************************************/
     /** can't use this test because it relies on our workflow rules being active, which we can't enforce.
     static testMethod void ThreeDINewContactsWithPreferredEmail() {
@@ -550,12 +552,12 @@ public with sharing class BDI_DataImport_TEST {
     ***************/
 
     /*********************************************************************************************************
-    operation:
-        import contacts with accounts
-    verify:
-        contacts created
-        accounts created
-        affiliations created between contacts and accounts
+    * @description operation
+    *        import contacts with accounts 
+    * verify: 
+    *        contacts created
+    *        accounts created
+    *        affiliations created between contacts and accounts
     **********************************************************************************************************/            
     static testMethod void TwoDIAffiliations() {
         if (strTestOnly != '*' && strTestOnly != 'TwoDIAffiliations') return;
@@ -600,12 +602,12 @@ public with sharing class BDI_DataImport_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
-        import contacts with home addresses 
-    verify:
-        address objects created
-        contacts' mailing address set
-        hh accounts' billing address set
+    * @description operation
+    *        import contacts with home addresses  
+    * verify: 
+    *        address objects created
+    *        contacts' mailing address set
+    *        hh accounts' billing address set
     **********************************************************************************************************/            
     static testMethod void TwoDIHomeAddresses() {
         if (strTestOnly != '*' && strTestOnly != 'TwoDIHomeAddresses') return;
@@ -658,12 +660,12 @@ public with sharing class BDI_DataImport_TEST {
     }
     
     /*********************************************************************************************************
-    operation:
-        import duplicate contacts with duplicate home addresses 
-    verify:
-        no duplicate address objects created
-        contacts' mailing address set
-        hh accounts' billing address set
+    * @description operation
+    *        import duplicate contacts with duplicate home addresses  
+    * verify: 
+    *        no duplicate address objects created
+    *        contacts' mailing address set
+    *        hh accounts' billing address set
     **********************************************************************************************************/            
     static testMethod void ManyDISameHomeAddresses() {
         if (strTestOnly != '*' && strTestOnly != 'ManyDISameHomeAddresses') return;
@@ -741,12 +743,12 @@ public with sharing class BDI_DataImport_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
-        import contacts with home addresses, while address management is disabled
-    verify:
-        address objects NOT created
-        contacts' mailing address set
-        hh accounts' billing address set
+    * @description operation
+    *        import contacts with home addresses, while address management is disabled 
+    * verify: 
+    *        address objects NOT created
+    *    contacts' mailing address set
+    *    hh accounts' billing address set
     **********************************************************************************************************/            
     static testMethod void TwoDIHomeAddressesAddrMgmtOff() {
         if (strTestOnly != '*' && strTestOnly != 'TwoDIHomeAddressesAddrMgmtOff') return;
@@ -796,11 +798,11 @@ public with sharing class BDI_DataImport_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
-        import existing contacts with the same home address
-    verify:
-        contacts matched
-        address matched
+    * @description operation
+    *        import existing contacts with the same home address 
+    * verify: 
+    *        contacts matched
+    *        address matched
     **********************************************************************************************************/            
     static testMethod void TwoDIMixedAddresses() {
         if (strTestOnly != '*' && strTestOnly != 'TwoDIMixedAddresses') return;
@@ -850,13 +852,13 @@ public with sharing class BDI_DataImport_TEST {
     }
     
     /*********************************************************************************************************
-    operation:
-        import existing contacts with the same home address, with Address Management off
-    verify:
-        contacts matched
-        no addresses created
-        account addresses updated
-        contact addresses updated
+    * @description operation
+    *        import existing contacts with the same home address, with Address Management off 
+    * verify: 
+    *        contacts matched
+    *       no addresses created
+    *       account addresses updated
+    *       contact addresses updated
     **********************************************************************************************************/            
     static testMethod void TwoDIMixedAddressesAddrMgmtOff() {
         if (strTestOnly != '*' && strTestOnly != 'TwoDIMixedAddressesAddrMgmtOff') return;
@@ -902,14 +904,14 @@ public with sharing class BDI_DataImport_TEST {
     }
     
     /*********************************************************************************************************
-    operation:
-        import contacts with donation & payment information 
-    verify:
-        opportunity objects created
-        payment objects created
-        ocr's created
-        contacts' rollups updated
-        hh account's rollups updated
+    * @description operation
+    *        import contacts with donation & payment information  
+    * verify: 
+    *        opportunity objects created
+    *       payment objects created
+    *       ocr's created
+    *       contacts' rollups updated
+    *       hh account's rollups updated
     **********************************************************************************************************/            
     static testMethod void TwoDIWithDonations() {
         if (strTestOnly != '*' && strTestOnly != 'TwoDIWithDonations') return;
@@ -984,13 +986,13 @@ public with sharing class BDI_DataImport_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
-        import accounts with donation & payment information 
-    verify:
-        opportunity objects created
-        payment objects created
-        ocr's created
-        account's rollups updated
+    * @description operation
+    *        import accounts with donation & payment information  
+    * verify: 
+    *       opportunity objects created
+    *       payment objects created
+    *       ocr's created
+    *       account's rollups updated
     **********************************************************************************************************/            
     static testMethod void TwoDIWithAccountDonations() {
         if (strTestOnly != '*' && strTestOnly != 'TwoDIWithAccountDonations') return;
@@ -1048,11 +1050,11 @@ public with sharing class BDI_DataImport_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
-        import contacts with donation & campaign information 
-    verify:
-        opportunity objects created
-        opportunities added to campaigns
+    * @description operation
+    *        import contacts with donation & campaign information  
+    * verify: 
+    *        opportunity objects created
+    *    opportunities added to campaigns
     **********************************************************************************************************/            
     static testMethod void TwoDIWithDonationsAndCampaigns() {
         if (strTestOnly != '*' && strTestOnly != 'TwoDIWithDonationsAndCampaigns') return;
@@ -1106,11 +1108,11 @@ public with sharing class BDI_DataImport_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
-        import contacts with campaign information (no donation) 
-    verify:
-        opportunity objects created
-        opportunities added to campaigns
+    * @description operation
+    *        import contacts with campaign information (no donation)  
+    * verify: 
+    *        opportunity objects created
+    *    opportunities added to campaigns
     **********************************************************************************************************/            
     static testMethod void TwoDIWithCampaignMembers() {
         if (strTestOnly != '*' && strTestOnly != 'TwoDIWithCampaignMembers') return;
@@ -1153,10 +1155,10 @@ public with sharing class BDI_DataImport_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
-        import accounts with invalid donation information 
-    verify:
-        opportunity objects created only for valid di
+    * @description operation
+    *        import accounts with invalid donation information  
+    * verify: 
+    *        opportunity objects created only for valid di
     **********************************************************************************************************/            
     static testMethod void TwoDIWithDonationErrors() {
         if (strTestOnly != '*' && strTestOnly != 'TwoDIWithDonationErrors') return;
@@ -1198,10 +1200,10 @@ public with sharing class BDI_DataImport_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
-        import different contacts within multiple di records in the same batch setting Household fields
-    verify:
-        two contacts created
+    * @description operation
+    *        import different contacts within multiple di records in the same batch setting Household fields 
+    * verify: 
+    *        two contacts created
     **********************************************************************************************************/            
     static testMethod void TwoDITwoNewContactsHouseholdFields() {
         if (strTestOnly != '*' && strTestOnly != 'TwoDITwoNewContactsHouseholdFields') return;
@@ -1236,10 +1238,10 @@ public with sharing class BDI_DataImport_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
-        import new contacts into existing household accounts 
-    verify:
-        provided household account used
+    * @description operation
+    *        import new contacts into existing household accounts  
+    * verify: 
+    *        provided household account used
     **********************************************************************************************************/            
     static testMethod void TwoDINewContactsExistingsHousehold() {
         if (strTestOnly != '*' && strTestOnly != 'TwoDINewContactsExistingsHousehold') return;

@@ -30,7 +30,8 @@
 /**
 * @author Salesforce.org
 * @date 2011,2012
-* @description Enum for triggers and static utils for settings and collections
+* @group Relationships
+* @description Utility methods for Relationship management
 */
 public with sharing class REL_Utils {
 
@@ -70,8 +71,10 @@ public with sharing class REL_Utils {
         return cmAutoCreate;
     }}
        
-    //modified csv parser to load initial static resource for recip settings
-    //http://wiki.developerforce.com/page/Code_Samples#Parse_a_CSV_with_APEX
+    /*******************************************************************************************************
+    * @description modified csv parser to load initial static resource for recip settings
+    * http://wiki.developerforce.com/page/Code_Samples#Parse_a_CSV_with_APEX
+    */ 
     public static List<List<String>> parseCSV(String contents,Boolean skipHeaders) {
         List<List<String>> allFields = new List<List<String>>();
     

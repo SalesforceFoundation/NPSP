@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2014
+* @group Address Management
 * @description Class that provides address validation/normalization services
 * throught the SmartyStreets API.
  */
