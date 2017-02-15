@@ -2,7 +2,7 @@
     <apex:form id="form" styleClass="slds-m-around--x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavRecurringDonations}" pageLabel="{!$Label.stgNavRecurringDonations}" />
         <p class="slds-text-body--small slds-m-top--x-small">
-            <apex:outputText value="{!$Label.npe03__RecurringDonationSettingsDescription}" escape="false" />
+            <apex:outputText value="{!$Label.npe03__recurringdonationsettingsdescription}" escape="false" />
         </p>
         <c:UTIL_PageMessages />
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">

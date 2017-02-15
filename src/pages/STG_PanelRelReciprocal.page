@@ -3,7 +3,7 @@
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavRelationships}" pageLabel="{!$Label.stgNavRelReciprocal}" />
         <div class="slds-grid">
             <div class="slds-col slds-size--1-of-1 slds-m-around--medium">
-                <p class="slds-text-body--small slds-m-top--x-small"><apex:outputText value="{!$Label.npe4__RelationshipsLookupDescription}" escape="false"/></p>
+                <p class="slds-text-body--small slds-m-top--x-small"><apex:outputText value="{!$Label.npe4__relationshipslookupdescription}" escape="false"/></p>
             </div>
         </div>
         <c:UTIL_PageMessages />

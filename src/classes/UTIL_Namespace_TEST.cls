@@ -99,6 +99,7 @@ public with sharing class UTIL_Namespace_TEST {
         str = Label.Addr_Verify_Google_Help;
         str = Label.SmartyStreets_Help_Text;
         str = Label.stgHelpCiceroAddrVerification;
+        str = Label.stgHelpRDDisableScheduling;
         str = Label.stgHelpRDFieldMapOppField;
         str = Label.stgHelpRDFieldMapRDField;
         str = Label.CONV_Reload;
