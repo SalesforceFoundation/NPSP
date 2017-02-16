@@ -3,7 +3,7 @@
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavPeople}" pageLabel="{!$Label.stgNavAccountModel}" />
         <div class="slds-grid">
             <div class="slds-col slds-size--1-of-1 slds-m-around--medium">
-                <p class="slds-text-body--small slds-m-top--x-small"><apex:outputText escape="false" value="{!$Label.npe01__Contacts_Settings_Account_Model_Help_Text}"/></p>
+                <p class="slds-text-body--small slds-m-top--x-small"><apex:outputText escape="false" value="{!$Label.npe01__contacts_settings_account_model_help_text}"/></p>
             </div>        
         </div>
         <c:UTIL_PageMessages />
