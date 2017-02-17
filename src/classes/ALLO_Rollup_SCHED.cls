@@ -135,14 +135,14 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
         rs.subgroupExpression = strFiscalOrCalendarYear+'(Opportunity__r.CloseDate)';
         rs.subgroupValueToParentFieldnameMap = new map<string, map<object, string>> {
             'SUM(Amount__c)' => new map<object, string> { 
-                System.Today().Year() => UTIL_Namespace.StrTokenNSPrefix('Total_Allocations_This_Year__c'), 
-                System.Today().AddYears(-1).Year() => UTIL_Namespace.StrTokenNSPrefix('Total_Allocations_Last_Year__c'),
-                System.Today().AddYears(-2).Year() => UTIL_Namespace.StrTokenNSPrefix('Total_Allocations_Two_Years_Ago__c')
+                RLLP_OppRollup_UTIL.getCurrentFY() => UTIL_Namespace.StrTokenNSPrefix('Total_Allocations_This_Year__c'), 
+                RLLP_OppRollup_UTIL.getCurrentFY()-1 => UTIL_Namespace.StrTokenNSPrefix('Total_Allocations_Last_Year__c'),
+                RLLP_OppRollup_UTIL.getCurrentFY()-2 => UTIL_Namespace.StrTokenNSPrefix('Total_Allocations_Two_Years_Ago__c')
             },
             'COUNT_DISTINCT(ID)' => new map<object, string> { 
-                System.Today().Year() => UTIL_Namespace.StrTokenNSPrefix('Number_of_Allocations_This_Year__c'), 
-                System.Today().AddYears(-1).Year() => UTIL_Namespace.StrTokenNSPrefix('Number_of_Allocations_Last_Year__c'),
-                System.Today().AddYears(-2).Year() => UTIL_Namespace.StrTokenNSPrefix('Number_of_Allocations_Two_Years_Ago__c')
+                RLLP_OppRollup_UTIL.getCurrentFY() => UTIL_Namespace.StrTokenNSPrefix('Number_of_Allocations_This_Year__c'), 
+                RLLP_OppRollup_UTIL.getCurrentFY()-1 => UTIL_Namespace.StrTokenNSPrefix('Number_of_Allocations_Last_Year__c'),
+                RLLP_OppRollup_UTIL.getCurrentFY()-2 => UTIL_Namespace.StrTokenNSPrefix('Number_of_Allocations_Two_Years_Ago__c')
             }
         };
 
