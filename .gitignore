@@ -14,7 +14,6 @@ Referenced Packages
 /installedPackages
 /org_unpackaged
 /src.orig
-/src/objectTranslations/Data_Import_Settings__c*
 /unpackaged/*/*/*.zip
 /unpackaged/namespaced_zipped
 /unpackaged/zipped

@@ -37,7 +37,7 @@ for line in stdin:
 lines_written = 0
 
 for namespace, translations in translations_by_namespace.items():
-    with open(namespace + '_translations.stf', 'w') as out_file:
+    with open(namespace + '_' + language_code + '_translations.stf', 'w') as out_file:
         stderr.write(
             "{0}: {1} lines written for {2}\n".format(
                 argv[0],
