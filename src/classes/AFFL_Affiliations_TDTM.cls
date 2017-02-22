@@ -438,21 +438,34 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
         map<Id, Id> mapConIdAccIdPrimary = new map<Id, Id>();
         map<Id, Id> mapConIdAccIdUnprimary = new map<Id, Id>();
         
+        //holds primary affiliations that have been undeleted
+        map<Id, npe5__Affiliation__c> mapConIdAfflUndelete = new map<Id, npe5__Affiliation__c>();
+        
         //holds which primary affiliation is being used in case of multiple primary affiliations for a single contact
         map<Id, Id> mapConIdAfflIdPrimary = new map<Id, Id>();
         
-        for (integer i = 0; i<newlist.size(); i++) {
+        list<npe5__Affiliation__c> afflForUpdate = new list<npe5__Affiliation__c>();
+
+        // AFTER DELETE, remove Primary Affiliation from Contact if this affiliation is marked Primary
+        if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
+            for (npe5__Affiliation__c affl : (List<npe5__Affiliation__c>) oldlist) {
+                if (affl.npe5__Primary__c) {
+                    mapConIdAccIdUnprimary.put(affl.npe5__Contact__c, affl.npe5__Organization__c);                    
+                }
+            }
+        // newlist is null for after delete, so only iterate over newlist for other triggerActions
+        } else for (integer i = 0; i<newlist.size(); i++) {
             npe5__Affiliation__c affl = (npe5__Affiliation__c)newlist[i];
 
-            // AFTER INSERT
+            // AFTER INSERT, set contact primary affiliation field for primary affiliations
             if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-                if (affl.npe5__Primary__c && affl.npe5__Contact__c != null && affl.npe5__Organization__c != null) {
+                if (affl.npe5__Primary__c) {
                     mapConIdAccIdPrimary.put(affl.npe5__Contact__c, affl.npe5__Organization__c);
                     mapConIdAfflIdPrimary.put(affl.npe5__Contact__c, affl.Id);
                 }        
             }
             
-            // AFTER UPDATE
+            // AFTER UPDATE, update contact primary affiliation field for affiliations marked or unmarked primary
             if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                 npe5__Affiliation__c afflOld = (npe5__Affiliation__c)oldlist[i];
                 if (affl.npe5__Primary__c != afflOld.npe5__Primary__c) {
@@ -464,19 +477,27 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
                     }
                 }
             }
+
+            //AFTER UNDELETE, update contact primary affiliation if blank, otherwise uncheck primary
+            if (triggerAction == TDTM_Runnable.Action.AfterUndelete) {
+                if (affl.npe5__Primary__c) {
+                    mapConIdAfflUndelete.put(affl.npe5__Contact__c, affl);
+                }
+            }
         }
 
-        // update contacts' primary affiliation field as appropriate
+        // update contacts' primary affiliation field
         set<id> setAllContactIds = new set<id>();
         setAllContactIds.addAll(mapConIdAccIdPrimary.keySet());
         setAllContactIds.addAll(mapConIdAccIdUnprimary.keySet());
+        setAllContactIds.addAll(mapConIdAfflUndelete.keySet());
 
         if (!setAllContactIds.isEmpty()) {
             list<Contact> conForUpdate = new list<Contact>();
             list<Contact> queryCon = [SELECT Id, Primary_Affiliation__c FROM Contact WHERE Id IN :setAllContactIds];
             
             for (Contact con : queryCon) {
-                if (mapConIdAccIdPrimary.containsKey(con.id)) {
+                if (mapConIdAccIdPrimary.containsKey(con.id) && con.Primary_Affiliation__c != mapConIdAccIdPrimary.get(con.id)) {
                     con.Primary_Affiliation__c = mapConIdAccIdPrimary.get(con.id);
                     conForUpdate.add(con);
 
@@ -484,6 +505,17 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
                 } else if (mapConIdAccIdUnprimary.containsKey(con.id) && con.Primary_Affiliation__c == mapConIdAccIdUnprimary.get(con.id)) {
                     con.Primary_Affiliation__c = null;
                     conForUpdate.add(con);
+
+                //UNDELETE case: only update primary affiliation on contact if the lookup is blank, otherwise uncheck primary
+                } else if (mapConIdAfflUndelete.containsKey(con.id)) {
+                    npe5__Affiliation__c affl = mapConIdAfflUndelete.get(con.id);
+                    if (con.Primary_Affiliation__c == null) {
+                        con.Primary_Affiliation__c = affl.npe5__Organization__c;
+                        conForUpdate.add(con);
+                    } else {
+                        //Can't use record in trigger set for update, so create a new one
+                        afflForUpdate.add(new npe5__Affiliation__c(Id=affl.id, npe5__Primary__c=false));
+                    }
                 }
             }
 
@@ -495,17 +527,16 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
 
         if (!mapConIdAccIdPrimary.isEmpty()) {
             //uncheck any existing primary affiliations
-            list<npe5__Affiliation__c> afflForUpdate = new list<npe5__Affiliation__c>();
             list<npe5__Affiliation__c> queryAffl = [SELECT Id, npe5__Contact__c, npe5__Organization__c FROM npe5__Affiliation__c WHERE npe5__Primary__c = TRUE AND npe5__Contact__c IN :mapConIdAccIdPrimary.keySet() AND ID NOT IN :mapConIdAfflIdPrimary.values()];
         
             for (npe5__Affiliation__c affl : queryAffl) {
                 affl.npe5__Primary__c = false;
                 afflForUpdate.add(affl);
             }
+        }
 
-            if (!afflForUpdate.isEmpty()) {
-                dmlWrapper.objectsToUpdate.addAll((List<SObject>)afflForUpdate);
-            }
+        if (!afflForUpdate.isEmpty()) {
+            dmlWrapper.objectsToUpdate.addAll((List<SObject>)afflForUpdate);
         }
 
         return dmlWrapper;
