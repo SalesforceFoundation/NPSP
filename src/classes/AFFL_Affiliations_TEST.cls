@@ -770,4 +770,117 @@ public class AFFL_Affiliations_TEST {
         system.assertEquals(System.Today(), queryAffl[0].npe5__StartDate__c, 'The affiliation\'s start date should be today.');
 
     }
+
+    /*******************************************************************************************************
+    * @description Deletes a primary affiliation, verifies it's removed from the contact. Undeletes it,
+    * verifies it's added back to the contact.
+    */
+    static testMethod void deletePrimaryAffl() {
+        if (strTestOnly != '*' && strTestOnly != 'deletePrimaryAffl') return;
+
+        npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
+            new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true)
+        );
+
+        Account acc = new Account(Name='foo');
+        insert acc;
+        
+        Contact con = new Contact(
+            LastName='foo'
+        );
+        insert con;
+        
+        npe5__Affiliation__c affl = new npe5__Affiliation__c(
+            npe5__Contact__c = con.Id,
+            npe5__Organization__c = acc.Id,
+            npe5__StartDate__c = System.Today(),
+            npe5__Primary__c = true,
+            npe5__Status__c = system.label.npe5.DefaultCurrentStatus
+        );
+        Test.startTest();
+        insert affl;
+        Test.stopTest();
+
+        List<Error__c> errors = [SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c FROM Error__c];
+        System.assertEquals(0, errors.size(), errors);
+
+        Contact queryCon = [SELECT Id, Primary_Affiliation__c FROM Contact WHERE Id = :con.id];
+        system.assertEquals(acc.id, queryCon.Primary_Affiliation__c, 'Contact should have primary affiliation set.');
+
+        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
+        delete affl;
+        
+        errors = [SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c FROM Error__c];
+        System.assertEquals(0, errors.size(), errors);
+
+        queryCon = [SELECT Id, Primary_Affiliation__c FROM Contact WHERE Id = :con.id];
+        system.assertEquals(null, con.Primary_Affiliation__c, 'Contact primary affiliation should be blank.');
+
+        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
+        undelete affl;
+
+        queryCon = [SELECT Id, Primary_Affiliation__c FROM Contact WHERE Id = :con.id];
+        system.assertEquals(acc.id, queryCon.Primary_Affiliation__c, 'Contact should have primary affiliation set.');
+
+    }
+
+    /*******************************************************************************************************
+    * @description When undeleting a primary affiliation, if the contact has a new primary affiliation,
+    * the undeleted record should have primary unchecked, and the contact shouldn't be updated.
+    */
+    static testMethod void undeletePrimaryAfflNewAffl() {
+        if (strTestOnly != '*' && strTestOnly != 'undeletePrimaryAfflNewAffl') return;
+
+        npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
+            new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true)
+        );
+
+        Account acc = new Account(Name='foo');
+        insert acc;
+        
+        Contact con = new Contact(
+            LastName='foo',
+            Primary_Affiliation__c = acc.id
+        );
+        insert con;
+        
+        npe5__Affiliation__c queryAffl = [SELECT Id, npe5__Primary__c FROM npe5__Affiliation__c WHERE npe5__Contact__c = :con.id];
+        System.assert(queryAffl.npe5__Primary__c, 'Affiliation should be marked primary.');
+
+        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
+        delete queryAffl;
+
+        Contact queryCon = [SELECT Id, Primary_Affiliation__c FROM Contact WHERE Id = :con.id];
+        system.assertEquals(null, queryCon.Primary_Affiliation__c, 'Contact primary affiliation should be blank.');
+
+        Account newPrimary = new Account(Name='foo');
+        insert newPrimary;
+
+        npe5__Affiliation__c affl = new npe5__Affiliation__c(
+            npe5__Contact__c = con.Id,
+            npe5__Organization__c = newPrimary.Id,
+            npe5__StartDate__c = System.Today(),
+            npe5__Primary__c = true,
+            npe5__Status__c = system.label.npe5.DefaultCurrentStatus
+        );
+        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
+        
+        Test.startTest();
+        insert affl;
+        Test.stopTest();
+
+        queryCon = [SELECT Id, Primary_Affiliation__c FROM Contact WHERE Id = :con.id];
+        system.assertEquals(newPrimary.id, queryCon.Primary_Affiliation__c, 'Contact should have primary affiliation set.');
+
+        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
+
+        undelete queryAffl;
+
+        queryCon = [SELECT Id, Primary_Affiliation__c FROM Contact WHERE Id = :con.id];
+        system.assertEquals(newPrimary.id, queryCon.Primary_Affiliation__c, 'Contact primary affiliation should be unchanged.');
+
+        queryAffl = [SELECT Id, npe5__Primary__c FROM npe5__Affiliation__c WHERE npe5__Organization__c = :acc.id];
+        System.assert(!queryAffl.npe5__Primary__c, 'Undeleted Affiliation should NOT be marked primary.');
+
+    }
 }
