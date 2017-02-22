@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Address Verification Settings-DEPRECATED --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Address Verification Settings-DEPRECATED --></value>
+    </caseValues>
+    <fields>
+        <help>URL utilisée pour vérification d’adresse.</help>
+        <label><!-- Address Verification Endpoint-DEPRECATED --></label>
+        <name>Address_Verification_Endpoint__c</name>
+    </fields>
+    <fields>
+        <help>L’ID d’authentification de votre paire de clés secrètes.</help>
+        <label><!-- Auth ID-DEPRECATED --></label>
+        <name>Auth_ID__c</name>
+    </fields>
+    <fields>
+        <help>Le jeton d’authentification de votre paire de clés secrètes.</help>
+        <label><!-- Auth Token-DEPRECATED --></label>
+        <name>Auth_Token__c</name>
+    </fields>
+    <fields>
+        <help>Si coché, les adresses modifiées seront mises à jour automatiquement avec la réponse du service (lorsqu’un résultat vérifié existe).</help>
+        <label><!-- Auto-Update Addresses-DEPRECATED --></label>
+        <name>Auto_Update_Addresses__c</name>
+    </fields>
+    <fields>
+        <help>Classe Salesforce responsable de contacter l’API SmartyStreets et de vérifier les adresses.</help>
+        <label><!-- Class-DEPRECATED --></label>
+        <name>Class__c</name>
+    </fields>
+    <fields>
+        <help>Si coché, toute adresse de compte aux États-Unis marquée non livrable par le service sera automatiquement effacée. (Vous pouvez examiner la valeur invalide dans l’enregistrement d’adresse.)</help>
+        <label><!-- Clear Invalid Addresses-DEPRECATED --></label>
+        <name>Clear_Invalid_Addresses__c</name>
+    </fields>
+    <fields>
+        <help>Active la vérification automatique des nouvelles adresses.</help>
+        <label><!-- Enable Automatic Verification-DEPRECATED --></label>
+        <name>Enable_Automatic_Verification__c</name>
+    </fields>
+    <fields>
+        <help>Marque les adresses ambigües comme invalides, lorsque l’API renvoie plus d’une adresse. Si laissé non coché Salesforce acceptera la première adresse suggérée comme adresse valide.</help>
+        <label><!-- Reject Ambiguous Addresses-DEPRECATED --></label>
+        <name>Reject_Ambiguous_Addresses__c</name>
+    </fields>
+    <fields>
+        <help>Délai d’expiration d’appel en secondes</help>
+        <label><!-- Timeout-DEPRECATED --></label>
+        <name>Timeout__c</name>
+    </fields>
+    <fields>
+        <help>Indique si vous utilisez le service de vérification d’adresses SmartyStreets.</help>
+        <label><!-- Using SmartyStreets-DEPRECATED --></label>
+        <name>Using_SmartyStreets__c</name>
+    </fields>
+    <fields>
+        <help>URL utilisée pour la vérification de code postal.</help>
+        <label><!-- Zipcode Verification Endpoint-DEPRECATED --></label>
+        <name>Zipcode_Verification_Endpoint__c</name>
+    </fields>
+    <gender><!-- Masculine --></gender>
+    <startsWith><!-- Consonant --></startsWith>
+</CustomObjectTranslation>

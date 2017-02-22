@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Contacts And Orgs Settings --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Contacts And Orgs Settings --></value>
+    </caseValues>
+    <fields>
+        <help>Crée automatiquement un membre de campagne lorsqu’une opportunité ayant un contact principal avec une source de campagne principale associée est créée ou mise à jour avec une étape fermée gagnée.</help>
+        <label>Gestion auto de membre de campagne</label>
+        <name>Automatic_Campaign_Member_Management__c</name>
+    </fields>
+    <fields>
+        <help>Le statut automatique d’un membre de campagne pour des opportunités ouvertes ou fermées perdues ayant un contact principal et une source de campagne principale associée. Si laissé vide, Salesforce utilise le premier statut « Sans réponse ».</help>
+        <label>Statut « Sans réponse » de membre</label>
+        <name>Campaign_Member_Non_Responded_Status__c</name>
+    </fields>
+    <fields>
+        <help>Le statut automatique d’un membre de campagne pour des opportunités fermées gagnées ayant un contact principal et une source de campagne principale associée. Si laissé vide, Salesforce utilise le premier statut « Répondu ».</help>
+        <label>Statut « Répondu » de membre de campagne</label>
+        <name>Campaign_Member_Responded_Status__c</name>
+    </fields>
+    <fields>
+        <help>Renseigner ce paramètre créera automatiquement un rôle de contact pour les opportunités avec un contact honoraire. Si ce champ est laissé vide, la création automatique de rôle de contact honoraire sera désactivée.</help>
+        <label>Rôle honoraire de contact d’opportunité</label>
+        <name>Honoree_Opportunity_Contact_Role__c</name>
+    </fields>
+    <fields>
+        <help>Si sélectionné, désactive la gestion des adresses pour les comptes de foyers.</help>
+        <label>Adresses de compte de foyer désactivées</label>
+        <name>Household_Account_Addresses_Disabled__c</name>
+    </fields>
+    <fields>
+        <help>Détermine le nombre maximum de paiement disponibles dans l’assistant de création de paiement.</help>
+        <label>Nombre maximum de paiements</label>
+        <name>Max_Payments__c</name>
+    </fields>
+    <fields>
+        <help>Renseigner ce paramètre créera automatiquement un rôle de contact pour les opportunités avec un contact destinataire de notification. Si ce champ est laissé vide, la création automatique de rôle de contact destinataire de notification sera désactivée.</help>
+        <label>Rôle de destinataire de notification</label>
+        <name>Notification_Recipient_Opp_Contact_Role__c</name>
+    </fields>
+    <fields>
+        <help>Noms des types d’enregistrement d’opportunité à exclure de la création de paiements</help>
+        <label>Types d’enregistrement d’opp. exclus</label>
+        <name>Opp_RecTypes_Excluded_for_Payments__c</name>
+    </fields>
+    <fields>
+        <help>Valeurs du champ de type d’opportunité à exclure de la création de paiement.</help>
+        <label>Types d’opportunités exclus</label>
+        <name>Opp_Types_Excluded_for_Payments__c</name>
+    </fields>
+    <fields>
+        <help>Si sélectionné, active la gestion des adresses pour les comptes d’organisations.</help>
+        <label>Adresses de compte d’org. activées</label>
+        <name>Organizational_Account_Addresses_Enabled__c</name>
+    </fields>
+    <fields>
+        <help>Choisit l’étape à laquelle une opportunité est transférée automatiquement lorsque le montant du paiement atteint le montant de l’opportunité. Sans étape choisie, les opportunités ne sont pas transférées automatiquement lorsque les paiements sont terminés.</help>
+        <label>Étape d’opp. après paiement complet</label>
+        <name>Payments_Auto_Close_Stage_Name__c</name>
+    </fields>
+    <fields>
+        <help>Si coché, les modifications d’un seul champ d’adresse d’un contact ou d’un compte mettent à jour l’adresse existante, au lieu de créer une nouvelle adresse.</help>
+        <label>Simple modif. d’adresse traitée en m à j</label>
+        <name>Simple_Address_Change_Treated_as_Update__c</name>
+    </fields>
+    <gender><!-- Masculine --></gender>
+    <startsWith><!-- Consonant --></startsWith>
+</CustomObjectTranslation>

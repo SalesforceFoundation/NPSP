@@ -10,23 +10,23 @@
     </caseValues>
     <fields>
         <help><!-- The date on which this particular Deliverable is due. --></help>
-        <label>Fecha límite del hito del grant</label>
+        <label>Date d’échéance</label>
         <name>Grant_Deadline_Due_Date__c</name>
     </fields>
     <fields>
-        <help>Fecha en el que el entregable debe ser presentado</help>
-        <label>Fecha de cierre del entregable del grant</label>
+        <help>La date à laquelle le livrable a été effectivement soumis.</help>
+        <label>Date de fermeture</label>
         <name>Grant_Deliverable_Close_Date__c</name>
     </fields>
     <fields>
         <help><!-- Description of what is required for this deliverable. --></help>
-        <label>Requerimientos del entregable</label>
+        <label>Exigences</label>
         <name>Grant_Deliverable_Requirements__c</name>
     </fields>
     <fields>
-        <label>Oportunidad del Grant</label>
+        <label>Opportunité</label>
         <name>Opportunity__c</name>
-        <relationshipLabel>Hitos del grant</relationshipLabel>
+        <relationshipLabel>Livrables</relationshipLabel>
     </fields>
     <fields>
         <label><!-- Type --></label>
@@ -37,28 +37,29 @@
         </picklistValues>
         <picklistValues>
             <masterLabel>Final Report</masterLabel>
-            <translation><!-- Final Report --></translation>
+            <translation>Rapport final</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Interim Report</masterLabel>
-            <translation><!-- Interim Report --></translation>
+            <translation>Rapport intermédiaire</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>LOI</masterLabel>
             <translation><!-- LOI --></translation>
         </picklistValues>
     </fields>
-    <gender><!-- Feminine --></gender>
+    <gender><!-- Masculine --></gender>
     <layouts>
         <layout>Grant Deadline Layout</layout>
         <sections>
-            <label>Vínculos personalizados</label>
+            <label><!-- Custom Links --></label>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label>Requerimientos de los entregables</label>
+            <label>Exigences de livrables de subvention</label>
             <section>Grant Deliverable Requirements</section>
         </sections>
     </layouts>
     <nameFieldLabel><!-- Deliverable Name --></nameFieldLabel>
+    <startsWith><!-- Consonant --></startsWith>
 </CustomObjectTranslation>
