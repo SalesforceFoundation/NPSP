@@ -1,0 +1,1291 @@
+Language code: ja
+Type: Bilingual
+
+------------------TRANSLATED-------------------
+
+ButtonOrLink.Allocation__c.Manage_Allocations	Manage Allocations	割り当ての管理	-
+ButtonOrLink.General_Accounting_Unit__c.Recalculate_Rollups	Recalculate Rollups	積み上げ集計の再計算	-
+ButtonOrLink.DataImport__c.Delete_All_Data_Import_Records	Delete All Data Import Records	すべてのデータインポートレコードを削除	-
+ButtonOrLink.DataImport__c.Delete_Imported_Data_Import_Records	Delete Imported Data Import Records	インポート済みのデータインポートレコードを削除	-
+ButtonOrLink.DataImport__c.Process_Data_Import	Start Data Import	データインポートの開始	-
+ButtonOrLink.Address__c.Verify_Address	Verify Address	住所を検証	-
+ButtonOrLink.Partial_Soft_Credit__c.Manage_Soft_Credits	Manage Soft Credits	ソフトクレジットの管理	-
+ButtonOrLink.Account.Manage_Household	Manage Household	世帯の管理	-
+ButtonOrLink.Contact.Merge_Contacts	Merge Contacts	個人のマージ	-
+ButtonOrLink.Opportunity.Email_Acknowledgment	Email Acknowledgment	メール受領確認	-
+ButtonOrLink.Opportunity.Email_Acknowledgments	Email Acknowledgments	メール受領確認	-
+ButtonOrLink.Opportunity.Find_Matched_Gifts	Find Matched Gifts	マッチングされた支援の検索	-
+ButtonOrLink.Opportunity.Manage_Soft_Credits	Manage Soft Credits	ソフトクレジットの管理	-
+ButtonOrLink.Opportunity.Refresh_Name	Refresh Name	名前の更新	-
+CustomField.Allocation__c.Amount.FieldLabel	Amount	金額	-
+CustomField.Allocation__c.Amount.HelpText	Amount of the opportunity to allocate to this general accounting unit. Leave blank for percent based allocations.	この一般会計単位に割り当てる支援金額。パーセントベースの割り当ての場合は空白のままにします。	-
+CustomField.Allocation__c.Campaign.FieldLabel	Campaign	キャンペーン	-
+CustomField.Allocation__c.Campaign.HelpText	Optionally attributes allocations to a campaign. All new opportunities created with this campaign as primary campaign source will automatically be allocated in the same way.	必要に応じて、キャンペーンを割り当ての対象とします。主キャンペーンソースとしてこのキャンペーンを使用して作成されたすべての新しい支援は、自動的に同じ方法で割り当てられます。	-
+CustomField.Allocation__c.Campaign.RelatedListLabel	GAU Allocations	一般会計単位の割り当て	-
+CustomField.Allocation__c.General_Accounting_Unit.FieldLabel	General Accounting Unit	一般会計単位	-
+CustomField.Allocation__c.General_Accounting_Unit.HelpText	The general accounting unit to attribute this allocation. Only general accounting units marked as active are available for new allocations.	この割り当ての対象となる一般会計単位。新しい割り当てでは、有効としてマークされた一般会計単位のみを使用できます。	-
+CustomField.Allocation__c.General_Accounting_Unit.RelatedListLabel	GAU Allocations	一般会計単位の割り当て	-
+CustomField.Allocation__c.Opportunity.FieldLabel	Opportunity	支援	-
+CustomField.Allocation__c.Opportunity.HelpText	Attributes allocations to an opportunity. All opportunities in a closed and won stage will be rolled up to this allocation's general accounting unit.	支援を割り当ての対象とします。成立フェーズのすべての支援は、この割り当ての一般会計単位に積み上げ集計されます。	-
+CustomField.Allocation__c.Opportunity.RelatedListLabel	GAU Allocations	一般会計単位の割り当て	-
+CustomField.Allocation__c.Percent.FieldLabel	Percent	パーセント	-
+CustomField.Allocation__c.Percent.HelpText	Percent of opportunity amount to allocate to this general accounting unit. Modifying an opportunity amount of a percent based allocation will modify the allocation amount.	この一般会計単位に割り当てる支援金額のパーセント。パーセントベースの割り当ての支援金額を変更すると、割り当て金額が変更されます。	-
+CustomField.Allocation__c.Recurring_Donation.FieldLabel	Recurring Donation	継続支援	-
+CustomField.Allocation__c.Recurring_Donation.HelpText	Optionally attributes allocations to a recurring donation. All new opportunities created with this recurring donation schedule will automatically be allocated in the same way.	必要に応じて、継続支援を割り当ての対象とします。この継続支援スケジュールを使用して作成されたすべての新しい支援は、自動的に同じ方法で割り当てられます。	-
+CustomField.Allocation__c.Recurring_Donation.RelatedListLabel	GAU Allocations	一般会計単位の割り当て	-
+CustomField.General_Accounting_Unit__c.Active.FieldLabel	Active	有効	-
+CustomField.General_Accounting_Unit__c.Active.HelpText	Active general accounting units are available for selection on allocations. Inactive general accounting units can't have new allocations to them.	有効な一般会計単位は割り当ての選択で使用できます。無効な一般会計単位には新しい割り当てを適用できません。	-
+CustomField.General_Accounting_Unit__c.Average_Allocation.FieldLabel	Average Allocation	平均割り当て	-
+CustomField.General_Accounting_Unit__c.Average_Allocation.HelpText	The average of all allocations of all time to this general accounting unit.	この一般会計単位に対する全期間のすべての割り当ての平均。	-
+CustomField.General_Accounting_Unit__c.Description.FieldLabel	Description	説明	-
+CustomField.General_Accounting_Unit__c.Description.HelpText	Extra information about this general accounting unit.	この一般会計単位に関する追加情報。	-
+CustomField.General_Accounting_Unit__c.First_Allocation_Date.FieldLabel	First Allocation Date	最初の割り当て日	-
+CustomField.General_Accounting_Unit__c.First_Allocation_Date.HelpText	The first Opportunity Close Date of an allocation associated with this general accounting unit.	この一般会計単位に関連付けられた割り当ての最初の支援完了日。	-
+CustomField.General_Accounting_Unit__c.Largest_Allocation.FieldLabel	Largest Allocation	最大割り当て	-
+CustomField.General_Accounting_Unit__c.Largest_Allocation.HelpText	The largest allocation of all time to this general accounting unit.	この一般会計単位に対する全期間での最大割り当て。	-
+CustomField.General_Accounting_Unit__c.Last_Allocation_Date.FieldLabel	Last Allocation Date	前回の割り当て日	-
+CustomField.General_Accounting_Unit__c.Last_Allocation_Date.HelpText	The last Opportunity Close Date of an allocation associated with this general accounting unit.	この一般会計単位に関連付けられた割り当ての前回の支援完了日。	-
+CustomField.General_Accounting_Unit__c.Number_of_Allocations_Last_N_Days.FieldLabel	Number of Allocations Last N Days	過去 N 日間の割り当て数	-
+CustomField.General_Accounting_Unit__c.Number_of_Allocations_Last_N_Days.HelpText	Total number of allocations of opportunities in a closed and won stage in the last N days. The value of N can be modified in settings.	過去 N 日間の成立フェーズにある支援の割り当ての総数。N の値は設定で変更できます。	-
+CustomField.General_Accounting_Unit__c.Number_of_Allocations_Last_Year.FieldLabel	Number of Allocations Last Year	昨年の割り当て数	-
+CustomField.General_Accounting_Unit__c.Number_of_Allocations_Last_Year.HelpText	Total number of allocations of opportunities in a closed and won stage last year.	昨年の成立フェーズにある支援の割り当ての総数。	-
+CustomField.General_Accounting_Unit__c.Number_of_Allocations_This_Year.FieldLabel	Number of Allocations This Year	今年の割り当て数	-
+CustomField.General_Accounting_Unit__c.Number_of_Allocations_This_Year.HelpText	Total number of allocations of opportunities in a closed and won stage this year.	今年の成立フェーズにある支援の割り当ての総数。	-
+CustomField.General_Accounting_Unit__c.Number_of_Allocations_Two_Years_Ago.FieldLabel	Number of Allocations Two Years Ago	2 年前の割り当て数	-
+CustomField.General_Accounting_Unit__c.Number_of_Allocations_Two_Years_Ago.HelpText	Total number of allocations of opportunities in a closed and won stage two years ago.	2 年前の成立フェーズにある支援の割り当ての総数。	-
+CustomField.General_Accounting_Unit__c.Smallest_Allocation.FieldLabel	Smallest Allocation	最小割り当て	-
+CustomField.General_Accounting_Unit__c.Smallest_Allocation.HelpText	The smallest allocation of all time to this general accounting unit.	この一般会計単位に対する全期間での最小割り当て。	-
+CustomField.General_Accounting_Unit__c.Total_Allocations.FieldLabel	Total Allocations	合計割り当て	-
+CustomField.General_Accounting_Unit__c.Total_Allocations.HelpText	Sum total of all allocations of opportunities in a closed and won stage.	成立フェーズにある支援のすべての割り当て数の合計。	-
+CustomField.General_Accounting_Unit__c.Total_Allocations_Last_N_Days.FieldLabel	Total Allocations Last N Days	過去 N 日間の合計割り当て数	-
+CustomField.General_Accounting_Unit__c.Total_Allocations_Last_N_Days.HelpText	Sum total of all allocations of opportunities in a closed and won stage in the last N days. The value of N can be modified in settings.	過去 N 日間の成立フェーズにある支援のすべての割り当て数の合計。N の値は設定で変更できます。	-
+CustomField.General_Accounting_Unit__c.Total_Allocations_Last_Year.FieldLabel	Total Allocations Last Year	昨年の合計割り当て数	-
+CustomField.General_Accounting_Unit__c.Total_Allocations_Last_Year.HelpText	Sum total of all allocations of opportunities in a closed and won stage last year.	昨年の成立フェーズにある支援のすべての割り当て数の合計。	-
+CustomField.General_Accounting_Unit__c.Total_Allocations_This_Year.FieldLabel	Total Allocations This Year	今年の合計割り当て数	-
+CustomField.General_Accounting_Unit__c.Total_Allocations_This_Year.HelpText	Sum total of all allocations of opportunities in a closed and won stage this year.	今年の成立フェーズにある支援のすべての割り当て数の合計。	-
+CustomField.General_Accounting_Unit__c.Total_Allocations_Two_Years_Ago.FieldLabel	Total Allocations Two Years Ago	2 年前の合計割り当て数	-
+CustomField.General_Accounting_Unit__c.Total_Allocations_Two_Years_Ago.HelpText	Sum total of all allocations of opportunities in a closed and won stage two years ago.	2 年前の成立フェーズにある支援のすべての割り当て数の合計。	-
+CustomField.General_Accounting_Unit__c.Total_Number_of_Allocations.FieldLabel	Total Number of Allocations	割り当ての総数	-
+CustomField.General_Accounting_Unit__c.Total_Number_of_Allocations.HelpText	Total number of allocations of opportunities in a closed and won stage.	成立フェーズにある支援の割り当ての総数。	-
+CustomField.DataImport__c.Account1ImportStatus.FieldLabel	Account1 Import Status	インポート状況(団体1)	-
+CustomField.DataImport__c.Account1Imported.FieldLabel	Account1 Imported	インポート済み(団体1)	-
+CustomField.DataImport__c.Account1Imported.RelatedListLabel	NPSP Data Imports (Account1 Imported)	NPSP データインポート (団体1 インポート済み)	-
+CustomField.DataImport__c.Account1_City.FieldLabel	Account1 City	市区郡(団体1)	-
+CustomField.DataImport__c.Account1_Country.FieldLabel	Account1 Country	国(団体1)	-
+CustomField.DataImport__c.Account1_Name.FieldLabel	Account1 Name	名前(団体1)	-
+CustomField.DataImport__c.Account1_Phone.FieldLabel	Account1 Phone	電話(団体1)	-
+CustomField.DataImport__c.Account1_State_Province.FieldLabel	Account1 State/Province	都道府県(団体1)	-
+CustomField.DataImport__c.Account1_Street.FieldLabel	Account1 Street	町名・番地(団体1)	-
+CustomField.DataImport__c.Account1_Website.FieldLabel	Account1 Website	Web サイト(団体1)	-
+CustomField.DataImport__c.Account1_Zip_Postal_Code.FieldLabel	Account1 Zip/Postal Code	郵便番号(団体1)	-
+CustomField.DataImport__c.Account2ImportStatus.FieldLabel	Account2 Import Status	インポート状況(団体2)	-
+CustomField.DataImport__c.Account2Imported.FieldLabel	Account2 Imported	インポート済み(団体2)	-
+CustomField.DataImport__c.Account2Imported.RelatedListLabel	NPSP Data Imports (Account2 Imported)	NPSP データインポート (団体2 インポート済み)	-
+CustomField.DataImport__c.Account2_City.FieldLabel	Account2 City	市区郡(団体2)	-
+CustomField.DataImport__c.Account2_Country.FieldLabel	Account2 Country	国(団体2)	-
+CustomField.DataImport__c.Account2_Name.FieldLabel	Account2 Name	名前(団体2)	-
+CustomField.DataImport__c.Account2_Phone.FieldLabel	Account2 Phone	電話(団体2)	-
+CustomField.DataImport__c.Account2_State_Province.FieldLabel	Account2 State/Province	都道府県(団体2)	-
+CustomField.DataImport__c.Account2_Street.FieldLabel	Account2 Street	町名・番地(団体2)	-
+CustomField.DataImport__c.Account2_Website.FieldLabel	Account2 Website	Web サイト(団体2)	-
+CustomField.DataImport__c.Account2_Zip_Postal_Code.FieldLabel	Account2 Zip/Postal Code	郵便番号(団体2)	-
+CustomField.DataImport__c.ApexJobId.HelpText	The ApexJobID of the Batch Job that processed the record.	レコードを処理した一括処理ジョブの ApexJobID。	-
+CustomField.DataImport__c.Campaign_Member_Status.FieldLabel	Campaign Member Status	キャンペーンメンバーの状況	-
+CustomField.DataImport__c.Contact1ImportStatus.FieldLabel	Contact1 Import Status	インポート状況(個人1)	-
+CustomField.DataImport__c.Contact1Imported.FieldLabel	Contact1 Imported	インポート済み(個人1)	-
+CustomField.DataImport__c.Contact1Imported.RelatedListLabel	NPSP Data Imports (Contact1 Imported)	NPSP データインポート (Contact1 インポート済み)	-
+CustomField.DataImport__c.Contact1_Alternate_Email.FieldLabel	Contact1 Alternate Email	その他のメール(個人1)	-
+CustomField.DataImport__c.Contact1_Birthdate.FieldLabel	Contact1 Birthdate	誕生日(個人1)	-
+CustomField.DataImport__c.Contact1_Firstname.FieldLabel	Contact1 First Name	名(個人1)	-
+CustomField.DataImport__c.Contact1_Home_Phone.FieldLabel	Contact1 Home Phone	自宅電話(個人1)	-
+CustomField.DataImport__c.Contact1_Lastname.FieldLabel	Contact1 Last Name	性(個人1)	-
+CustomField.DataImport__c.Contact1_Mobile_Phone.FieldLabel	Contact1 Mobile Phone	携帯電話(個人1)	-
+CustomField.DataImport__c.Contact1_Other_Phone.FieldLabel	Contact1 Other Phone	その他の電話(個人1)	-
+CustomField.DataImport__c.Contact1_Personal_Email.FieldLabel	Contact1 Personal Email	個人メール(個人1)	-
+CustomField.DataImport__c.Contact1_Preferred_Email.FieldLabel	Contact1 Preferred Email	メール連絡先(個人1)	-
+CustomField.DataImport__c.Contact1_Preferred_Phone.FieldLabel	Contact1 Preferred Phone	電話連絡先(個人1)	-
+CustomField.DataImport__c.Contact1_Salutation.FieldLabel	Contact1 Salutation	敬称(個人1)	-
+CustomField.DataImport__c.Contact1_Title.FieldLabel	Contact1 Title	役職(個人1)	-
+CustomField.DataImport__c.Contact1_Work_Email.FieldLabel	Contact1 Work Email	勤務先メール(個人1)	-
+CustomField.DataImport__c.Contact1_Work_Phone.FieldLabel	Contact1 Work Phone	勤務先電話(個人1)	-
+CustomField.DataImport__c.Contact2ImportStatus.FieldLabel	Contact2 Import Status	インポート状況(個人2)	-
+CustomField.DataImport__c.Contact2Imported.FieldLabel	Contact2 Imported	インポート済み(個人2)	-
+CustomField.DataImport__c.Contact2Imported.RelatedListLabel	NPSP Data Imports (Contact2 Imported)	NPSP データインポート (Contact2 インポート済み)	-
+CustomField.DataImport__c.Contact2_Alternate_Email.FieldLabel	Contact2 Alternate Email	その他のメール(個人2)	-
+CustomField.DataImport__c.Contact2_Birthdate.FieldLabel	Contact2 Birthdate	誕生日(個人2)	-
+CustomField.DataImport__c.Contact2_Firstname.FieldLabel	Contact2 First Name	名(個人2)	-
+CustomField.DataImport__c.Contact2_Home_Phone.FieldLabel	Contact2 Home Phone	自宅電話(個人2)	-
+CustomField.DataImport__c.Contact2_Lastname.FieldLabel	Contact2 Last Name	性(個人2)	-
+CustomField.DataImport__c.Contact2_Mobile_Phone.FieldLabel	Contact2 Mobile Phone	携帯電話(個人2)	-
+CustomField.DataImport__c.Contact2_Other_Phone.FieldLabel	Contact2 Other Phone	その他の電話(個人2)	-
+CustomField.DataImport__c.Contact2_Personal_Email.FieldLabel	Contact2 Personal Email	個人メール(個人2)	-
+CustomField.DataImport__c.Contact2_Preferred_Email.FieldLabel	Contact2 Preferred Email	メール連絡先(個人2)	-
+CustomField.DataImport__c.Contact2_Preferred_Phone.FieldLabel	Contact2 Preferred Phone	電話連絡先(個人2)	-
+CustomField.DataImport__c.Contact2_Salutation.FieldLabel	Contact2 Salutation	敬称(個人2)	-
+CustomField.DataImport__c.Contact2_Title.FieldLabel	Contact2 Title	役職(個人2)	-
+CustomField.DataImport__c.Contact2_Work_Email.FieldLabel	Contact2 Work Email	勤務先メール(個人2)	-
+CustomField.DataImport__c.Contact2_Work_Phone.FieldLabel	Contact2 Work Phone	勤務先電話(個人2)	-
+CustomField.DataImport__c.DonationImportStatus.FieldLabel	Donation Import Status	インポート状況(支援)	-
+CustomField.DataImport__c.DonationImported.FieldLabel	Donation Imported	インポート済み(支援)	-
+CustomField.DataImport__c.DonationImported.RelatedListLabel	NPSP Data Imports	NPSP データインポート	-
+CustomField.DataImport__c.Donation_Amount.FieldLabel	Donation Amount	金額(支援)	-
+CustomField.DataImport__c.Donation_Campaign_Name.FieldLabel	Campaign Name	キャンペーン名	-
+CustomField.DataImport__c.Donation_Date.FieldLabel	Donation Date	日付(支援)	-
+CustomField.DataImport__c.Donation_Description.FieldLabel	Donation Description	説明(支援)	-
+CustomField.DataImport__c.Donation_Donor.FieldLabel	Donation Donor	支援者(支援)	-
+CustomField.DataImport__c.Donation_Donor.HelpText	Specifies whether the donation is an individual donation from Contact1, or an organizational donation from Account1.	支援が「個人1」からの個人支援であるか、「団体1」からの団体支援であるかを指定します。	-
+CustomField.DataImport__c.Donation_Member_Level.FieldLabel	Donation Member Level	会員レベル(支援)	-
+CustomField.DataImport__c.Donation_Membership_End_Date.FieldLabel	Donation Membership End Date	会員期限(支援)	-
+CustomField.DataImport__c.Donation_Membership_Origin.FieldLabel	Donation Membership Origin	会員状況(支援)	-
+CustomField.DataImport__c.Donation_Membership_Start_Date.FieldLabel	Donation Membership Start Date	会員開始日(支援)	-
+CustomField.DataImport__c.Donation_Name.FieldLabel	Donation Name	名前(支援)	-
+CustomField.DataImport__c.Donation_Record_Type_Name.FieldLabel	Donation Record Type Name	レコードタイプ名(支援)	-
+CustomField.DataImport__c.Donation_Record_Type_Name.HelpText	The Name of the Opportunity Record Type to use for the donation. Uses default Record Type if left blank.	支援に使用する支援レコードタイプの名前。空白のままにした場合、デフォルトのレコードタイプが使用されます。	-
+CustomField.DataImport__c.Donation_Stage.FieldLabel	Donation Stage	フェーズ(支援)	-
+CustomField.DataImport__c.Donation_Type.FieldLabel	Donation Type	種類(支援)	-
+CustomField.DataImport__c.FailureInformation.FieldLabel	Failure Information	失敗情報	-
+CustomField.DataImport__c.FailureInformation.HelpText	Description of what caused the Data Import record to fail to be imported.	データインポートレコードのインポートに失敗した理由の説明。	-
+CustomField.DataImport__c.HomeAddressImportStatus.FieldLabel	Home Address Import Status	インポート状況(自宅住所)	-
+CustomField.DataImport__c.HomeAddressImported.FieldLabel	Home Address Imported	インポート済み(自宅住所)	-
+CustomField.DataImport__c.HomeAddressImported.RelatedListLabel	NPSP Data Imports	NPSP データインポート	-
+CustomField.DataImport__c.Home_City.FieldLabel	Home City	市町村(自宅)	-
+CustomField.DataImport__c.Home_Country.FieldLabel	Home Country	国(自宅)	-
+CustomField.DataImport__c.Home_State_Province.FieldLabel	Home State/Province	都道府県(ホーム)	-
+CustomField.DataImport__c.Home_Street.FieldLabel	Home Street	番地(自宅)	-
+CustomField.DataImport__c.Home_Zip_Postal_Code.FieldLabel	Home Zip/Postal Code	郵便番号(自宅)	-
+CustomField.DataImport__c.HouseholdAccountImported.FieldLabel	Household Account Imported	インポート済み(世帯団体)	-
+CustomField.DataImport__c.HouseholdAccountImported.RelatedListLabel	NPSP Data Imports (Household Account Imported)	NPSP データインポート (世帯団体インポート済み)	-
+CustomField.DataImport__c.Household_Phone.FieldLabel	Household Phone	世帯電話	-
+CustomField.DataImport__c.ImportedDate.FieldLabel	Imported Date	インポート日	-
+CustomField.DataImport__c.ImportedDate.HelpText	When the Data Import record was successfully imported.	データインポートレコードが正常にインポートされた日付。	-
+CustomField.DataImport__c.Payment_Check_Reference_Number.FieldLabel	Payment Check/Reference Number	支払確認/参照番号	-
+CustomField.DataImport__c.Payment_Method.FieldLabel	Payment Method	支払方法	-
+CustomField.DataImport__c.Status.FieldLabel	Status	状況	-
+CustomField.DataImport__c.Status.HelpText	The status of importing the Data Import record.	データインポートレコードのインポート状況。	-
+CustomField.npe01__OppPayment__c.Payment_Acknowledged_Date.FieldLabel	Payment Acknowledged Date	支払受領確認日	-
+CustomField.npe01__OppPayment__c.Payment_Acknowledged_Date.HelpText	Date of acknowledgment	受領確認の日付。	-
+CustomField.npe01__OppPayment__c.Payment_Acknowledgment_Status.FieldLabel	Payment Acknowledgment Status	支払受領確認の状況	-
+CustomField.npe01__OppPayment__c.Payment_Acknowledgment_Status.HelpText	Status of Acknowledgment of this payment.	この支払の受領確認の状況。	-
+CustomField.Grant_Deadline__c.Grant_Deadline_Due_Date.FieldLabel	Due Date	助成金期限の期日	-
+CustomField.Grant_Deadline__c.Grant_Deliverable_Close_Date.FieldLabel	Close Date	助成金の提出書類完了日	-
+CustomField.Grant_Deadline__c.Grant_Deliverable_Close_Date.HelpText	The date on which the deliverable was actually submitted.	提出書類が実際に提出された日付。	-
+CustomField.Grant_Deadline__c.Grant_Deliverable_Requirements.FieldLabel	Requirements	助成金の提出書類要件	-
+CustomField.Grant_Deadline__c.Opportunity.FieldLabel	Opportunity	助成金支援	-
+CustomField.Grant_Deadline__c.Opportunity.RelatedListLabel	Deliverables	助成金期限	-
+CustomField.Address__c.API_Response.FieldLabel	API Response	API 応答	-
+CustomField.Address__c.API_Response.HelpText	Contains the raw response or an error message.	未加工の応答またはエラーメッセージが含まれます。	-
+CustomField.Address__c.Address_Type.FieldLabel	Address Type	住所の種類	-
+CustomField.Address__c.Administrative_Area.FieldLabel	Administrative Area	管理領域	-
+CustomField.Address__c.Administrative_Area.HelpText	Depending on the country and area, could be a city, township, municipality or other civic region associated with this address.	国と領域によって、市区郡、タウンシップ、市町村、その他のこの住所に関連付けられた都市地域。	-
+CustomField.Address__c.Ambiguous.FieldLabel	Ambiguous	あいまい	-
+CustomField.Address__c.Ambiguous.HelpText	Indicates whether more than on valid address was found when attempting to validate it through an external service.	外部サービスを使用して検証したときに複数の住所が検出されたかどうかを示します。	-
+CustomField.Address__c.Congressional_District.FieldLabel	Congressional District	下院選挙区	-
+CustomField.Address__c.Congressional_District.HelpText	The congressional district to which the address belongs pertains.	住所が属する下院選挙区。	-
+CustomField.Address__c.County_Name.FieldLabel	County Name	郡名	-
+CustomField.Address__c.County_Name.HelpText	Name of the county the address is located at.	住所が属する郡の名前。	-
+CustomField.Address__c.Default_Address.FieldLabel	Default Address	デフォルト住所	-
+CustomField.Address__c.Default_Address.HelpText	Is this the Default Address to use for the Household and its Contacts?	このデフォルト住所は世帯およびその個人が使用しますか?	-
+CustomField.Address__c.Formula_MailingAddress.FieldLabel	Mailing Address	住所(郵送先)	-
+CustomField.Address__c.Formula_MailingStreetAddress.FieldLabel	Mailing Street Address	町名・番地(郵送先)	-
+CustomField.Address__c.Geolocation.FieldLabel	Geolocation	地理位置情報	-
+CustomField.Address__c.Geolocation.HelpText	Location expressed as latitude and longitude.	緯度と経度で表された場所。	-
+CustomField.Address__c.Household_Account.FieldLabel	Account	団体	-
+CustomField.Address__c.Household_Account.HelpText	The Household Account this Address is for.	この住所を使用する団体。	-
+CustomField.Address__c.Household_Account.RelatedListLabel	Addresses	住所	-
+CustomField.Address__c.Latest_End_Date.FieldLabel	Latest End Date	最も遅い終了日	-
+CustomField.Address__c.Latest_End_Date.HelpText	The most recent ending date that this Address was used for this Household.	この世帯でこの住所が使用された最新の終了日。	-
+CustomField.Address__c.Latest_Start_Date.FieldLabel	Latest Start Date	最も遅い開始日	-
+CustomField.Address__c.Latest_Start_Date.HelpText	The most recent starting date that this Address was used for this Household.	この世帯でこの住所が使用された最新の開始日。	-
+CustomField.Address__c.MailingCity.FieldLabel	Mailing City	市区郡(郵送先)	-
+CustomField.Address__c.MailingCountry.FieldLabel	Mailing Country	国(郵送先)	-
+CustomField.Address__c.MailingPostalCode.FieldLabel	Mailing Zip/Postal Code	郵便番号(郵送先)	-
+CustomField.Address__c.MailingState.FieldLabel	Mailing State/Province	都道府県(郵送先)	-
+CustomField.Address__c.MailingStreet.FieldLabel	Mailing Street	町名・番地(郵送先)	-
+CustomField.Address__c.MailingStreet2.FieldLabel	Mailing Street2	町名・番地 2(郵送先)	-
+CustomField.Address__c.Pre_Verification_Address.FieldLabel	Pre-Verification Address	検証前の住所	-
+CustomField.Address__c.Pre_Verification_Address.HelpText	Stores the address as entered before verification with a remote service, in case any information is lost in the verification process.	検証処理で情報が失われてしまう場合に備えて、リモートサービスを使用して検証する前に入力した住所が保存されます。	-
+CustomField.Address__c.Seasonal_End_Day.FieldLabel	Seasonal End Day	季節性終了日	-
+CustomField.Address__c.Seasonal_End_Day.HelpText	The day of the month when this address no longer replaces the default address.	この住所がデフォルト住所として使用されなくなる日。	-
+CustomField.Address__c.Seasonal_End_Month.FieldLabel	Seasonal End Month	季節性終了月	-
+CustomField.Address__c.Seasonal_End_Month.HelpText	The month of the year when this address no longer replaces the default address.	この住所がデフォルト住所として使用されなくなる月。	-
+CustomField.Address__c.Seasonal_Start_Day.FieldLabel	Seasonal Start Day	季節性開始日	-
+CustomField.Address__c.Seasonal_Start_Day.HelpText	The day of the month when this address replaces the default address.	この住所がデフォルト住所として使用されるようになる日。	-
+CustomField.Address__c.Seasonal_Start_Month.FieldLabel	Seasonal Start Month	季節性開始月	-
+CustomField.Address__c.Seasonal_Start_Month.HelpText	The month of the year when this address replaces the default address.	この住所がデフォルト住所として使用されるようになる月。	-
+CustomField.Address__c.State_Lower_District.FieldLabel	State Lower District	州議会下院選挙区	-
+CustomField.Address__c.State_Lower_District.HelpText	The state lower district (such as a state assembly district) this address belongs to.	この住所が属する州議会下院選挙区。	-
+CustomField.Address__c.State_Upper_District.FieldLabel	State Upper District	州議会上院選挙区	-
+CustomField.Address__c.State_Upper_District.HelpText	The state upper district (such as state senate district) this address belongs to.	この住所が属する州議会上院選挙区。	-
+CustomField.Address__c.Verification_Status.FieldLabel	Verification Status	検証状況	-
+CustomField.Address__c.Verification_Status.HelpText	If this address requires verification, click the Verify Address button at the top of this page. Consult the Help documentation in the Power of Us Hub for more information.	この住所を検証する必要がある場合は、このページの上部にある [住所を検証] ボタンをクリックします。詳細は、Power of Us Hub のヘルプドキュメントを参照してください。	-
+CustomField.Address__c.Verified.FieldLabel	Verified	検証済み	-
+CustomField.Address__c.Verified.HelpText	Indicates whether the address has been verified by an external address verification service.	住所が外部住所検証サービスを使用して検証されているかどうかを示します。	-
+CustomField.npo02__Household__c.Number_of_Household_Members.FieldLabel	Number of Household Members	世帯メンバー数	-
+CustomField.npo02__Household__c.Number_of_Household_Members.HelpText	the number of Contacts in the Household.	世帯内の個人の数。	-
+CustomField.Batch__c.Batch_Status.FieldLabel	Batch Status	バッチ状況	-
+CustomField.Batch__c.Description.FieldLabel	Description	説明	-
+CustomField.Batch__c.Number_of_Items.FieldLabel	Number of Items	項目数	-
+CustomField.Batch__c.Object_Name.FieldLabel	Object Name	オブジェクト名	-
+CustomField.Batch__c.Object_Name.HelpText	API Name of the object of which this is a batch.	バッチであるオブジェクトの API 参照名。	-
+CustomField.npe01__Contacts_And_Orgs_Settings__c.Automatic_Campaign_Member_Management.FieldLabel	Automatic Campaign Member Management	キャンペーンメンバーの自動管理	-
+CustomField.npe01__Contacts_And_Orgs_Settings__c.Automatic_Campaign_Member_Management.HelpText	Automatically creates a Campaign Member when you create an Opportunity that has a Primary Contact and a Primary Campaign source associated with it, or update that Opportunity with a Closed/Won stage.	主個人と主キャンペーンソースが関連付けられている支援を作成するときに、キャンペーンメンバーを自動的に作成します。	-
+CustomField.npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Non_Responded_Status.FieldLabel	Campaign Member Non Responded Status	キャンペーンメンバーレスポンスなしの状況	-
+CustomField.npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Non_Responded_Status.HelpText	The automatic Status of a Campaign Member for Open or Closed/Lost opportunities that have a Primary Contact and a Primary Campaign Source associated with them. If left blank, Salesforce uses the first non-Responded status.	主個人と主キャンペーンソースが関連付けられている支援が進行中または不成立の場合にキャンペーンメンバーに自動的に設定される状況。空白のままにすると、最初のレスポンスなしの状況が使用されます。	-
+CustomField.npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Responded_Status.FieldLabel	Campaign Member Responded Status	キャンペーンメンバーレスポンスありの状況	-
+CustomField.npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Responded_Status.HelpText	The automatic Status of the Campaign Member for Closed/Won opportunities that have a Primary Contact and a Primary Campaign Source associated with them. If left blank, Salesforce uses the first Responded status.	主個人と主キャンペーンソースが関連付けられている支援が成立済みの場合にキャンペーンメンバーに自動的に設定される状況。空白のままにした場合、最初のレスポンスありの状況が使用されます。	-
+CustomField.npe01__Contacts_And_Orgs_Settings__c.Honoree_Opportunity_Contact_Role.FieldLabel	Honoree Opportunity Contact Role	名誉会員支援個人の役割	-
+CustomField.npe01__Contacts_And_Orgs_Settings__c.Honoree_Opportunity_Contact_Role.HelpText	Populating this setting will auto-create a contact role for opportunities with an honoree contact. Leaving this field blank will disable automatic contact role creation for the honoree.	この設定に入力すると、支援での個人の役割が名誉会員個人に対して自動作成されます。この項目を空白のままにした場合、名誉会員に対する個人の役割の自動作成は無効になります。	-
+CustomField.npe01__Contacts_And_Orgs_Settings__c.Household_Account_Addresses_Disabled.FieldLabel	Household Account Addresses Disabled	世帯団体住所の無効化	-
+CustomField.npe01__Contacts_And_Orgs_Settings__c.Household_Account_Addresses_Disabled.HelpText	Disables Address management for Household Accounts when selected.	選択すると、世帯団体の住所管理が無効になります。	-
+CustomField.npe01__Contacts_And_Orgs_Settings__c.Max_Payments.FieldLabel	Max Payments	最大支払回数	-
+CustomField.npe01__Contacts_And_Orgs_Settings__c.Max_Payments.HelpText	Determines the maximum number of payments available in the Payment Creation Wizard.	支払作成ウィザードで選択可能な支払の最大回数を指定します。	-
+CustomField.npe01__Contacts_And_Orgs_Settings__c.Notification_Recipient_Opp_Contact_Role.FieldLabel	Notification Recipient Opp Contact Role	通知受信者支援個人の役割	-
+CustomField.npe01__Contacts_And_Orgs_Settings__c.Notification_Recipient_Opp_Contact_Role.HelpText	Populating this setting will auto-create a contact role for opportunities with a notification recipient contact. Leaving this field blank will disable automatic contact role creation for the notification recipient.	この設定に入力すると、支援での個人の役割が通知受信者個人に対して自動作成されます。この項目を空白のままにした場合、通知受信者に対する個人の役割の自動作成は無効になります。	-
+CustomField.npe01__Contacts_And_Orgs_Settings__c.Opp_RecTypes_Excluded_for_Payments.FieldLabel	Excluded Opp Record Types	支払から除外する支援レコードタイプ	-
+CustomField.npe01__Contacts_And_Orgs_Settings__c.Opp_RecTypes_Excluded_for_Payments.HelpText	Names of Opportunity Record Types to exclude from creating Payments	支払の作成から除外する支援レコードタイプの名前。	-
+CustomField.npe01__Contacts_And_Orgs_Settings__c.Opp_Types_Excluded_for_Payments.FieldLabel	Excluded Opp Types	支払から除外する支援種別	-
+CustomField.npe01__Contacts_And_Orgs_Settings__c.Opp_Types_Excluded_for_Payments.HelpText	Values for the Opportunity Type field to exclude from creating Payments.	支払の作成から除外する支援種別項目の値。	-
+CustomField.npe01__Contacts_And_Orgs_Settings__c.Organizational_Account_Addresses_Enabled.FieldLabel	Organizational Account Addresses Enabled	組織団体住所の有効化	-
+CustomField.npe01__Contacts_And_Orgs_Settings__c.Organizational_Account_Addresses_Enabled.HelpText	Enables Address management for Organizational Accounts when selected.	選択すると、組織団体の住所管理が有効になります。	-
+CustomField.npe01__Contacts_And_Orgs_Settings__c.Payments_Auto_Close_Stage_Name.FieldLabel	Opportunity Stage for When Fully Paid	全額支払時の支援フェーズ	-
+CustomField.npe01__Contacts_And_Orgs_Settings__c.Payments_Auto_Close_Stage_Name.HelpText	Choose the stage that an opportunity should be automatically transitioned to when the total payment amount is equal to the opportunity amount.  If no stage is selected, then opportunities will not be transitioned automatically when payments are complete.	支払総額が支援金額と等しくなったときに支援が自動的に移行される移行先のフェーズを選択します。フェーズが選択されていない場合、支払の完了時に支援のフェーズは自動的に移行されません。	-
+CustomField.npe01__Contacts_And_Orgs_Settings__c.Simple_Address_Change_Treated_as_Update.FieldLabel	Simple Address Change Treated as Update	1 つの住所の変更を更新として処理	-
+CustomField.npe01__Contacts_And_Orgs_Settings__c.Simple_Address_Change_Treated_as_Update.HelpText	If checked, changes to a single Contact or Account address field update the existing Address, rather than creating a new Address.	オンの場合、1 つの個人または団体の住所項目を変更すると、新しい住所が作成される代わりに既存の住所が更新されます。	-
+CustomField.npo02__Households_Settings__c.Matched_Donor_Role.FieldLabel	Matched Donor Role	一致する支援者の役割	-
+CustomField.npo02__Households_Settings__c.Matched_Donor_Role.HelpText	The Role given to the Contacts whose should receive Soft Credit for a Matching Gift.	マッチングギフトのソフトクレジットを受け取る個人に割り当てられる役割。	-
+CustomField.Address_Verification_Settings__c.Address_Verification_Endpoint.HelpText	URL used for address verification.	住所検証に使用する URL。	-
+CustomField.Address_Verification_Settings__c.Auth_ID.HelpText	The Auth ID from your Secret Pair Key.	秘密鍵のペアからの認証 ID。	-
+CustomField.Address_Verification_Settings__c.Auth_Token.HelpText	The Auth Token from your Secret Pair Key.	秘密鍵のペアからの認証トークン。	-
+CustomField.Address_Verification_Settings__c.Auto_Update_Addresses.HelpText	If checked, changed addresses get updated automatically with the response from the service (when there is one verified result).	オンの場合、変更された住所はサービスからの応答で自動的に更新されます (検証済み結果が 1 つの場合)。	-
+CustomField.Address_Verification_Settings__c.Class.HelpText	Salesforce class responsible for contacting the SmartyStreets API and verifying addresses.	Salesforce クラスによって SmartyStreets API への接続と住所の検証が行われます。	-
+CustomField.Address_Verification_Settings__c.Clear_Invalid_Addresses.HelpText	If checked, any US account address that the service marks undeliverable will automatically get cleared out. (You can review the invalid entry in the Address record.)	オンの場合、サービスが配信不可とマークされた米国の団体住所は自動的にクリアされます(住所レコードで無効なエントリを確認できます)。	-
+CustomField.Address_Verification_Settings__c.Enable_Automatic_Verification.HelpText	Enables automatic address verification for new addresses.	新しい住所の自動住所検証を有効にします。	-
+CustomField.Address_Verification_Settings__c.Reject_Ambiguous_Addresses.HelpText	Marks ambiguous addresses as invalid, when the API returns more than one address. If left unselected, Salesforce will accept the first suggested address as the valid address.	API で複数の住所が返されたときに、あいまいな住所を無効としてマークします。未選択のままにすると、最初に提案された住所が有効な住所として受け入れられます。	-
+CustomField.Address_Verification_Settings__c.Timeout.HelpText	Callout timeout in seconds	コールアウトのタイムアウト (秒)	-
+CustomField.Address_Verification_Settings__c.Using_SmartyStreets.HelpText	Specifies whether or not you are using the SmartyStreets address verification service.	SmartyStreets 住所検証サービスを使用しているかどうかを指定します。	-
+CustomField.Address_Verification_Settings__c.Zipcode_Verification_Endpoint.HelpText	URL used for zip code verification.	郵便番号検証に使用される URL。	-
+CustomField.Batch_Data_Entry_Settings__c.Allow_Blank_Opportunity_Names.FieldLabel	Allow Blank Opportunity Names	空白の支援名を許可	-
+CustomField.Batch_Data_Entry_Settings__c.Allow_Blank_Opportunity_Names.HelpText	If set, then Batch Data Entry will never name Opportunities, even if they are blank (not included on the BDE page).	オンにすると、支援名が空白の場合 (バッチデータエントリページに含まれていない場合)、バッチデータエントリで支援に名前が付けられることはありません。	-
+CustomField.Batch_Data_Entry_Settings__c.Opportunity_Naming.FieldLabel	Opportunity Naming	支援の命名	-
+CustomField.Batch_Data_Entry_Settings__c.Opportunity_Naming.HelpText	This setting automatically generates the record name for batch entered Opportunity records based on the value of the entered fields.	この設定は、バッチ入力された支援レコードのレコード名を入力された項目値に基づいて自動的に生成します。	-
+CustomField.Error_Settings__c.Disable_Error_Handling.FieldLabel	Disable Error Handling	エラー処理の無効化	-
+CustomField.Error_Settings__c.Disable_Error_Handling.HelpText	If checked, NPSP's error handling framework is disabled.	オンにすると、NPSP のエラー処理フレームワークが無効になります。	-
+CustomField.Error_Settings__c.Enable_Debug.FieldLabel	Enable Debug	デバッグの有効化	-
+CustomField.Error_Settings__c.Enable_Debug.HelpText	Turn this on to enable debug statements in managed package code.	オンにすると、管理パッケージコードのデバッグステートメントが有効になります。	-
+CustomField.Error_Settings__c.Error_Notifications_On.FieldLabel	Error Notifications	エラー通知	-
+CustomField.Error_Settings__c.Error_Notifications_On.HelpText	Check this if you'd like the system to post notifications for certain type of errors.	特定の種類のエラーに関する通知をシステムに表示する場合にオンにします。	-
+CustomField.Error_Settings__c.Error_Notifications_To.FieldLabel	Error Notification Recipients	エラー通知受信者	-
+CustomField.Error_Settings__c.Error_Notifications_To.HelpText	Select the type of user to send notifications to.	通知を送信するユーザの種別を選択します。	-
+CustomField.Error_Settings__c.Store_Errors_On.FieldLabel	Store Errors	エラーの保存	-
+CustomField.Error_Settings__c.Store_Errors_On.HelpText	Check this if you'd like errors to be stored in the database.	エラーをデータベースに保存する場合にオンにします。	-
+CustomField.Error__c.Context_Type.FieldLabel	Context Type	コンテキスト種別	-
+CustomField.Error__c.Context_Type.HelpText	Context that generated the error, if known.	エラーが発生したコンテキスト (わかっている場合)。	-
+CustomField.Error__c.Datetime.FieldLabel	Datetime	日時	-
+CustomField.Error__c.Datetime.HelpText	Date & time the error occurred	エラーが発生した日時	-
+CustomField.Error__c.Email_Sent.FieldLabel	Email Sent	メール送信済み	-
+CustomField.Error__c.Email_Sent.HelpText	Indicates whether an email notification has been sent regarding this error.	このエラーに関するメール通知が送信されたかどうかを示します。	-
+CustomField.Error__c.Error_Type.FieldLabel	Error Type	エラーの種類	-
+CustomField.Error__c.Error_Type.HelpText	Type of error that occurred	発生したエラーの種類	-
+CustomField.Error__c.Full_Message.FieldLabel	Full Message	完全なメッセージ	-
+CustomField.Error__c.Full_Message.HelpText	Full text of the error message	エラーメッセージの完全なテキスト	-
+CustomField.Error__c.Object_Type.FieldLabel	Object Type	オブジェクト種別	-
+CustomField.Error__c.Object_Type.HelpText	Type of object on which the error occurred, if known.	エラーが発生したオブジェクト種別 (わかっている場合)。	-
+CustomField.Error__c.Posted_in_Chatter.FieldLabel	Posted in Chatter	Chatter で投稿済み	-
+CustomField.Error__c.Posted_in_Chatter.HelpText	Indicates whether the error has been posted in Chatter.	Chatter でエラーが投稿されたかどうかを示します。	-
+CustomField.Error__c.Record_URL.FieldLabel	Record URL	レコード URL	-
+CustomField.Error__c.Record_URL.HelpText	A link to the record which caused the error, if available.	エラーが発生したレコードへのリンク (使用可能な場合)。	-
+CustomField.Error__c.Stack_Trace.FieldLabel	Stack Trace	スタック追跡	-
+CustomField.Error__c.Stack_Trace.HelpText	Stack trace for the thrown error, if available at runtime.	発生したエラーのスタック追跡 (実行時に使用可能な場合)。	-
+CustomField.Schedulable__c.Active.FieldLabel	Active	有効	-
+CustomField.Schedulable__c.Active.HelpText	Determines if the job will be active or not.	ジョブが有効かどうかを判断します。	-
+CustomField.Schedulable__c.Class_Name.FieldLabel	Class Name	クラス名	-
+CustomField.Schedulable__c.Class_Name.HelpText	Class that will be scheduled to run at a certain frequency.	特定の頻度で実行するようにスケジュールされるクラス。	-
+CustomField.Schedulable__c.Frequency.FieldLabel	Frequency	頻度	-
+CustomField.Schedulable__c.Frequency.HelpText	How ofter to run the job.	ジョブの実行頻度。	-
+CustomField.Schedulable__c.Last_Time_Run.FieldLabel	Last Time Run	最終実行日時	-
+CustomField.Schedulable__c.Last_Time_Run.HelpText	Last time the job was run.	ジョブが最後に実行された日時。	-
+CustomField.Trigger_Handler__c.Active.FieldLabel	Active	有効	-
+CustomField.Trigger_Handler__c.Active.HelpText	Indicates that this module is active	このモジュールが有効であることを示します。	-
+CustomField.Trigger_Handler__c.Asynchronous.FieldLabel	Asynchronous After Events	非同期 After イベント	-
+CustomField.Trigger_Handler__c.Asynchronous.HelpText	Indicates that this module should be run asynchronously in this transaction	このモジュールのすべての After イベントはこのトランザクションで非同期に実行されることを示します。	-
+CustomField.Trigger_Handler__c.Class.FieldLabel	Class	クラス	-
+CustomField.Trigger_Handler__c.Class.HelpText	Name of the class to be run	実行されるクラス名	-
+CustomField.Trigger_Handler__c.Load_Order.FieldLabel	Load Order	読み込み順序	-
+CustomField.Trigger_Handler__c.Load_Order.HelpText	Order in which this module should be run, helps maintain dependencies in the modules and data.	このモジュールが実行される順序。モジュールとデータの連動関係の維持に役立ちます。	-
+CustomField.Trigger_Handler__c.Object.FieldLabel	Object	オブジェクト	-
+CustomField.Trigger_Handler__c.Object.HelpText	Name of the object this handler should be run for	このハンドラが実行されるオブジェクトの名前	-
+CustomField.Trigger_Handler__c.Trigger_Action.FieldLabel	Trigger Action	トリガアクション	-
+CustomField.Trigger_Handler__c.Trigger_Action.HelpText	Trigger Action in which this module should fire	このモジュールを起動するトリガアクション	-
+CustomField.Trigger_Handler__c.User_Managed.FieldLabel	User Managed	ユーザによる管理	-
+CustomField.Trigger_Handler__c.User_Managed.HelpText	Check it if you intent to manage the record yourself. Be aware that updates to the package won't update the record.	レコードを自分自身で管理する場合にオンにします。パッケージを更新してもレコードは更新されません。	-
+CustomField.Addr_Verification_Settings__c.Address_Verification_Endpoint.FieldLabel	Address Verification URL	住所検証 URL	-
+CustomField.Addr_Verification_Settings__c.Address_Verification_Endpoint.HelpText	URL used for address verification.	住所検証に使用する URL。	-
+CustomField.Addr_Verification_Settings__c.Auth_ID.FieldLabel	Auth ID	認証 ID	-
+CustomField.Addr_Verification_Settings__c.Auth_ID.HelpText	The Auth ID from your Secret Pair Key.	認証 ID。	-
+CustomField.Addr_Verification_Settings__c.Auth_Token.FieldLabel	Auth Token	認証トークン	-
+CustomField.Addr_Verification_Settings__c.Auth_Token.HelpText	The Auth Token from your Secret Pair Key.	認証トークン。	-
+CustomField.Addr_Verification_Settings__c.Class.FieldLabel	Verification Service	検証サービス	-
+CustomField.Addr_Verification_Settings__c.Class.HelpText	Salesforce class responsible for contacting the SmartyStreets API and verifying addresses.	Salesforce クラスによって Web サービスへの接続と住所の検証が行われます。	-
+CustomField.Addr_Verification_Settings__c.Enable_Automatic_Verification.FieldLabel	Enable Automatic Verification	自動検証の有効化	-
+CustomField.Addr_Verification_Settings__c.Enable_Automatic_Verification.HelpText	Enables automatic address verification for new addresses.	新しい住所の自動住所検証を有効にします。	-
+CustomField.Addr_Verification_Settings__c.Reject_Ambiguous_Addresses.FieldLabel	Reject Ambiguous Addresses	あいまいな住所の拒否	-
+CustomField.Addr_Verification_Settings__c.Reject_Ambiguous_Addresses.HelpText	Marks ambiguous addresses as invalid, when the API returns more than one address. If left unselected, Salesforce will accept the first suggested address as the valid address.	API で複数の住所が返されたときに、あいまいな住所を無効としてマークします。未選択のままにすると、最初に提案された住所が有効な住所として受け入れられます。	-
+CustomField.Addr_Verification_Settings__c.Timeout.FieldLabel	Timeout	タイムアウト	-
+CustomField.Addr_Verification_Settings__c.Timeout.HelpText	Callout timeout in seconds.	コールアウトのタイムアウト (秒)。	-
+CustomField.Addr_Verification_Settings__c.Using_SmartyStreets.HelpText	Specifies whether or not you are using the SmartyStreets address verification service.	SmartyStreets 住所検証サービスを使用しているかどうかを指定します。	-
+CustomField.Addr_Verification_Settings__c.Zipcode_Verification_Endpoint.FieldLabel	Zipcode Verification Endpoint	郵便番号検証エンドポイント	-
+CustomField.Addr_Verification_Settings__c.Zipcode_Verification_Endpoint.HelpText	URL used for zip code verification.	郵便番号検証に使用される URL。	-
+CustomField.Household_Naming_Settings__c.Contact_Overrun_Count.FieldLabel	Contact Overrun Count	個人超過数	-
+CustomField.Household_Naming_Settings__c.Contact_Overrun_Count.HelpText	Specifies the number of Contacts to explicitly list in a name.  After that amount, the Name Overrun will be used.	明示的にリストする個人の名前の数を指定します。この数を超えると、[超過時の名前] が使用されます。	-
+CustomField.Household_Naming_Settings__c.Formal_Greeting_Format.FieldLabel	Formal Greeting Format	公式の挨拶文形式	-
+CustomField.Household_Naming_Settings__c.Formal_Greeting_Format.HelpText	The format to use for the Household Formal Greeting.	世帯の公式の挨拶文に使用する形式。	-
+CustomField.Household_Naming_Settings__c.Household_Name_Format.FieldLabel	Household Name Format	世帯名形式	-
+CustomField.Household_Naming_Settings__c.Household_Name_Format.HelpText	The format to use for the Household Name.	世帯名に使用する形式。	-
+CustomField.Household_Naming_Settings__c.Implementing_Class.FieldLabel	Implementing Class	実装クラス	-
+CustomField.Household_Naming_Settings__c.Implementing_Class.HelpText	The name of a Class that implements the HH_INaming interface to use for Household Naming.	世帯命名で使用する HH_INaming インターフェースを実装するクラスの名前。	-
+CustomField.Household_Naming_Settings__c.Informal_Greeting_Format.FieldLabel	Informal Greeting Format	非公式の挨拶文形式	-
+CustomField.Household_Naming_Settings__c.Informal_Greeting_Format.HelpText	The format to use for the Household Informal Greeting.	世帯の非公式の挨拶文に使用する形式。	-
+CustomField.Household_Naming_Settings__c.Name_Connector.FieldLabel	Name Connector	名前コネクタ	-
+CustomField.Household_Naming_Settings__c.Name_Connector.HelpText	The string to use to connect pairs in a name.  For example, John & Jane, or John and Jane.	名前のペアの結合に使用する文字列。たとえば、「John & Jane」、「John と Jane」など。	-
+CustomField.Household_Naming_Settings__c.Name_Overrun.FieldLabel	Name Overrun	超過時の名前	-
+CustomField.Household_Naming_Settings__c.Name_Overrun.HelpText	The string to use when replacing long lists of names.	名前のリストが長いときに名前の置き換えに使用される文字列。	-
+CustomField.Data_Import_Settings__c.Account_Custom_Unique_ID.FieldLabel	Account Custom Unique ID	一意の団体カスタム ID	-
+CustomField.Data_Import_Settings__c.Account_Custom_Unique_ID.HelpText	An optional Unique Id field to use for Account matching	団体のマッチングに使用する任意の一意の ID 項目	-
+CustomField.Data_Import_Settings__c.Account_Matching_Rule.FieldLabel	Account Matching Rule	団体マッチングルール	-
+CustomField.Data_Import_Settings__c.Account_Matching_Rule.HelpText	Specifies which rule to follow when trying to match Accounts in Data Import records against existing Accounts.	既存の団体に対してデータインポートレコード内の団体を照合するときのルールを指定します。	-
+CustomField.Data_Import_Settings__c.Batch_Size.FieldLabel	Batch Size	バッチサイズ	-
+CustomField.Data_Import_Settings__c.Batch_Size.HelpText	The number of NPSP Data Import records to process in each batch.	各バッチで処理する NPSP データインポートレコードの数。	-
+CustomField.Data_Import_Settings__c.Contact_Custom_Unique_ID.FieldLabel	Contact Custom Unique ID	一意の個人カスタム ID	-
+CustomField.Data_Import_Settings__c.Contact_Custom_Unique_ID.HelpText	An optional Unique Id field to use for Contact matching	個人のマッチングに使用する任意の一意の ID 項目	-
+CustomField.Data_Import_Settings__c.Contact_Matching_Rule.FieldLabel	Contact Matching Rule	個人マッチングルール	-
+CustomField.Data_Import_Settings__c.Contact_Matching_Rule.HelpText	Specifies which rule to follow when trying to match Contacts in Data Import records against existing Contacts.	既存の個人に対してデータインポートレコード内の個人を照合するときのルールを指定します。	-
+CustomField.Allocations_Settings__c.Default.FieldLabel	Default General Accounting Unit	デフォルト一般会計単位	-
+CustomField.Allocations_Settings__c.Default.HelpText	Holds the ID of the default General Accounting Unit for creation of default allocations or for the allocation of non allocated amounts.	デフォルト割り当ての作成、または割り当てられていない金額の割り当てに使用する、デフォルト一般会計単位の ID を保持します。	-
+CustomField.Allocations_Settings__c.Default_Allocations_Enabled.FieldLabel	Default Allocations Enabled	デフォルト割り当ての有効化	-
+CustomField.Allocations_Settings__c.Default_Allocations_Enabled.HelpText	Enabling Default Allocations creates an Allocation object for each Opportunity. This enables reporting on allocations to a default General Accounting Unit, but uses more data storage.	デフォルト割り当てを有効にすると、各支援に割り当てオブジェクトが作成されます。これにより、デフォルト一般会計単位への割り当てに関するレポート作成が可能になりますが、より多くのデータストレージが使用されます。	-
+CustomField.Allocations_Settings__c.Excluded_Opp_RecTypes.FieldLabel	Excluded Opp RecTypes	除外する支援レコードタイプ	-
+CustomField.Allocations_Settings__c.Excluded_Opp_RecTypes.HelpText	Opportunity Record Types to exclude from calculations of Allocations rollups.	割り当て積み上げ集計の計算から除外する支援レコードタイプ。	-
+CustomField.Allocations_Settings__c.Excluded_Opp_Types.FieldLabel	Excluded Opp Types	除外する支援種別	-
+CustomField.Allocations_Settings__c.Excluded_Opp_Types.HelpText	Excluded Opportunity Types from Allocations rollups.	割り当て積み上げ集計から除外する支援種別。	-
+CustomField.Allocations_Settings__c.Rollup_N_Day_Value.FieldLabel	Rollup N Day Value	N 日間の積み上げ集計値	-
+CustomField.Allocations_Settings__c.Rollup_N_Day_Value.HelpText	This value affects the number of days to count for N Days Allocations rollup fields.	この値は、N 日間の割り当て積み上げ集計項目でカウントされる日数に影響します。	-
+CustomField.Allocations_Settings__c.Use_Fiscal_Year_for_Rollups.FieldLabel	Use Fiscal Year for Rollups	積み上げ集計に会計年度を使用	-
+CustomField.Allocations_Settings__c.Use_Fiscal_Year_for_Rollups.HelpText	Checking this box will cause Allocation rollup totals to respect fiscal year, instead of calendar years settings. To set Fiscal Year information, go to Setup->Company Profile->Fiscal Year. NOTE: Custom Fiscal Year Settings are NOT supported.	このボックスをオンにすると、割り当て積み上げ集計の合計にカレンダー年設定の代わりに会計年度が使用されます。会計年度情報を設定するには、[設定] -> [組織プロファイル] -> [会計年度] に移動します。注意: カスタム会計年度設定はサポートされていません。	-
+CustomField.Opportunity_Naming_Settings__c.Attribution.FieldLabel	Attribution	属性	-
+CustomField.Opportunity_Naming_Settings__c.Attribution.HelpText	Whether this setting applies to individual opportunities, organizational opportunities, or both.	この設定が個人支援、団体支援、またはその両方のいずれに適用されるか。	-
+CustomField.Opportunity_Naming_Settings__c.Date_Format.FieldLabel	Date Format	日付形式	-
+CustomField.Opportunity_Naming_Settings__c.Date_Format.HelpText	The format for dates included in this opportunity name.	この支援名に含まれる日付の形式。	-
+CustomField.Opportunity_Naming_Settings__c.Opportunity_Name_Format.FieldLabel	Opportunity Name Format	支援名形式	-
+CustomField.Opportunity_Naming_Settings__c.Opportunity_Name_Format.HelpText	The format to use for Opportunity naming.	支援の命名に使用する形式。	-
+CustomField.Opportunity_Naming_Settings__c.Opportunity_Record_Types.FieldLabel	Opportunity Record Types	支援レコードタイプ	-
+CustomField.Opportunity_Naming_Settings__c.Opportunity_Record_Types.HelpText	Specifies the opportunity record type that this naming scheme is for.	この命名方式が適用される支援レコードタイプを指定します。	-
+CustomField.Partial_Soft_Credit__c.Amount.FieldLabel	Amount	金額	-
+CustomField.Partial_Soft_Credit__c.Amount.HelpText	The amount to be soft credited.	ソフトクレジットされる金額	-
+CustomField.Partial_Soft_Credit__c.Contact.FieldLabel	Contact	個人	-
+CustomField.Partial_Soft_Credit__c.Contact.HelpText	The contact who gets this soft credit.	このソフトクレジットを受け取る個人	-
+CustomField.Partial_Soft_Credit__c.Contact.RelatedListLabel	Partial Soft Credits	部分的ソフトクレジット	-
+CustomField.Partial_Soft_Credit__c.Contact_Name.FieldLabel	Contact Name	個人名	-
+CustomField.Partial_Soft_Credit__c.Contact_Name.HelpText	The contact's full name.	個人の氏名	-
+CustomField.Partial_Soft_Credit__c.Contact_Role_ID.FieldLabel	Contact Role ID	個人の役割 ID	-
+CustomField.Partial_Soft_Credit__c.Contact_Role_ID.HelpText	The OpportunityContactRole this soft credit applies to.	このソフトクレジットが適用される OpportunityContactRole。	-
+CustomField.Partial_Soft_Credit__c.Opportunity.FieldLabel	Opportunity	支援	-
+CustomField.Partial_Soft_Credit__c.Opportunity.HelpText	The Opportunity this soft credit applies to.	このソフトクレジットが適用される支援。	-
+CustomField.Partial_Soft_Credit__c.Opportunity.RelatedListLabel	Partial Soft Credits	部分的ソフトクレジット	-
+CustomField.Partial_Soft_Credit__c.Role_Name.FieldLabel	Role Name	役割名	-
+CustomField.Partial_Soft_Credit__c.Role_Name.HelpText	The Role of this soft credit.	このソフトクレジットの役割。	-
+CustomField.Account.Batch.FieldLabel	Batch	一括処理	-
+CustomField.Account.Batch.HelpText	The batch this Account was created in.	この団体が作成されたバッチ。	-
+CustomField.Account.Batch.RelatedListLabel	Accounts	団体	-
+CustomField.Account.Funding_Focus.FieldLabel	Funding Focus	資金調達フォーカス	-
+CustomField.Account.Funding_Focus.HelpText	The general program area(s) that this organization funds.	この団体が資金調達する一般的プログラム領域。	-
+CustomField.Account.Grantmaker.FieldLabel	Grantmaker	助成金提供団体	-
+CustomField.Account.Grantmaker.HelpText	Indicates that this organization is a grant making organization. Can apply to foundations, government agencies, corporations, etc.	この団体が助成金提供団体であることを示します。財団、政府機関、法人などに適用できます。	-
+CustomField.Account.Matching_Gift_Administrator_Name.FieldLabel	Matching Gift Administrator Name	マッチングギフト 管理者名	-
+CustomField.Account.Matching_Gift_Administrator_Name.HelpText	The name of the company's matching gift administrator.	会社のマッチングギフト管理者の名前。	-
+CustomField.Account.Matching_Gift_Amount_Max.FieldLabel	Matching Gift Amount Max	マッチングギフト 最大金額	-
+CustomField.Account.Matching_Gift_Amount_Max.HelpText	The maximum amount the company will match on any single gift.	会社が 1 回の支援でマッチングする最大支援金額。	-
+CustomField.Account.Matching_Gift_Amount_Min.FieldLabel	Matching Gift Amount Min	マッチングギフト 最小金額	-
+CustomField.Account.Matching_Gift_Amount_Min.HelpText	The smallest gift the company will match.	会社がマッチングする最小支援金額。	-
+CustomField.Account.Matching_Gift_Annual_Employee_Max.FieldLabel	Matching Gift Annual Employee Max	マッチングギフト 年間従業員最大金額	-
+CustomField.Account.Matching_Gift_Annual_Employee_Max.HelpText	The maximum amount the company will match each year for an employee.	会社が 1 年間に従業員の支援金額とマッチングする最大支援金額。	-
+CustomField.Account.Matching_Gift_Comments.FieldLabel	Matching Gift Comments	マッチングギフト コメント	-
+CustomField.Account.Matching_Gift_Comments.HelpText	Additional notes about the company's matching gift program.	会社のマッチングギフトプログラムに関する追加メモ。	-
+CustomField.Account.Matching_Gift_Company.FieldLabel	Matching Gift Company	マッチングギフト 会社	-
+CustomField.Account.Matching_Gift_Company.HelpText	Is this a company that offers matching gifts?	マッチングギフトを提供する会社かどうか。	-
+CustomField.Account.Matching_Gift_Email.FieldLabel	Matching Gift Email	マッチングギフト メール	-
+CustomField.Account.Matching_Gift_Email.HelpText	Email of the company's matching gift administrator.	会社のマッチングギフト管理者のメール。	-
+CustomField.Account.Matching_Gift_Info_Updated.FieldLabel	Matching Gift Info Updated	マッチングギフト 情報更新日	-
+CustomField.Account.Matching_Gift_Info_Updated.HelpText	The date when the matching gift information was last updated.	マッチングギフト情報が最後に更新された日付。	-
+CustomField.Account.Matching_Gift_Percent.FieldLabel	Matching Gift Percent	マッチングギフト パーセント	-
+CustomField.Account.Matching_Gift_Percent.HelpText	The portion of a gift the company will match.	会社がマッチングする支援の割合。	-
+CustomField.Account.Matching_Gift_Phone.FieldLabel	Matching Gift Phone	マッチングギフト 電話	-
+CustomField.Account.Matching_Gift_Phone.HelpText	Phone for the matching gift administration office.	マッチングギフト管理事務所の電話番号。	-
+CustomField.Account.Matching_Gift_Request_Deadline.FieldLabel	Matching Gift Request Deadline	マッチングギフト 要求期限	-
+CustomField.Account.Matching_Gift_Request_Deadline.HelpText	Any restrictions on how old gifts can be to be eligible for matching.	どの程度古い支援をマッチングの対象とするかの制限。	-
+CustomField.Account.Membership_Span.FieldLabel	Membership Span	会員期間(年)	-
+CustomField.Account.Membership_Span.HelpText	Formula: The number of years for which this Household has had a Member.	数式: この世帯にメンバーがいる年数。	-
+CustomField.Account.Membership_Status.FieldLabel	Membership Status	会員状況	-
+CustomField.Account.Membership_Status.HelpText	Formula: Current, expired, or grace period.  Default grace period set in Household Settings.	数式: 期限内、期限切れ、または猶予期間。[世帯設定] で設定されるデフォルトの猶予期間。	-
+CustomField.Account.Number_of_Household_Members.FieldLabel	Number of Household Members	世帯メンバー数	-
+CustomField.Account.Number_of_Household_Members.HelpText	for Household Accounts, the number of Contacts in the Household.	世帯団体での世帯内の個人の数。	-
+CustomField.Contact.Address_Verification_Status.FieldLabel	Address Verification Status	住所検証状況	-
+CustomField.Contact.Address_Verification_Status.HelpText	If this address requires verification, click the Verify Address button at the top of the Address page. Consult the Help documentation in the Power of Us Hub for more information.	この住所を検証する必要がある場合は、住所ページの上部にある [住所を検証] ボタンをクリックします。詳細は、Power of Us Hub のヘルプドキュメントを参照してください。	-
+CustomField.Contact.Batch.FieldLabel	Batch	一括処理	-
+CustomField.Contact.Batch.HelpText	lookup to the Batch that this contact was created in.	この個人が作成されたバッチを参照します。	-
+CustomField.Contact.Batch.RelatedListLabel	Contacts	個人	-
+CustomField.Contact.Current_Address.FieldLabel	Current Address	現在の住所	-
+CustomField.Contact.Current_Address.HelpText	The current Address that the Contact's mailing fields are filled with.	個人の郵送先項目が入力された現在の住所。	-
+CustomField.Contact.Current_Address.RelatedListLabel	Contacts (Current Address)	個人 (現在の住所)	-
+CustomField.Contact.Deceased.FieldLabel	Deceased	死亡	-
+CustomField.Contact.Deceased.HelpText	When selected, this option marks the contact as deceased, and excludes them from household naming, emails, and phone calls.	このオプションを選択すると、個人が死亡とマークされ、世帯命名、メールの送信、および電話の発信から除外されます。	-
+CustomField.Contact.Do_Not_Contact.FieldLabel	Do Not Contact	連絡不可	-
+CustomField.Contact.Do_Not_Contact.HelpText	When selected, this option excludes the contact from emails and phone calls.	このオプションを選択すると、個人がメールの送信および電話の発信から除外されます。	-
+CustomField.Contact.Exclude_from_Household_Formal_Greeting.FieldLabel	Exclude from Household Formal Greeting	世帯の公式の挨拶から除外	-
+CustomField.Contact.Exclude_from_Household_Formal_Greeting.HelpText	Checking this box will exclude this contact from the Household Formal Greeting.	このボックスをオンにすると、この個人が世帯の公式の挨拶から除外されます。	-
+CustomField.Contact.Exclude_from_Household_Informal_Greeting.FieldLabel	Exclude from Household Informal Greeting	世帯の非公式の挨拶から除外	-
+CustomField.Contact.Exclude_from_Household_Informal_Greeting.HelpText	Checking this box will exclude this contact from the Household Informal Greeting.	このボックスをオンにすると、この個人が世帯の非公式の挨拶から除外されます。	-
+CustomField.Contact.Exclude_from_Household_Name.FieldLabel	Exclude from Household Name	世帯名から除外	-
+CustomField.Contact.Exclude_from_Household_Name.HelpText	Checking this box will exclude this contact from the Household Name.	このボックスをオンにすると、この個人が世帯名から除外されます。	-
+CustomField.Contact.First_Soft_Credit_Amount.FieldLabel	First Soft Credit Amount	最初のソフトクレジット額	-
+CustomField.Contact.First_Soft_Credit_Amount.HelpText	The amount of the earliest soft credit.	最初のソフトクレジットの金額。	-
+CustomField.Contact.First_Soft_Credit_Date.FieldLabel	First Soft Credit Date	最初のソフトクレジット日	-
+CustomField.Contact.First_Soft_Credit_Date.HelpText	The date of the earliest soft credit.	最初のソフトクレジットの日付。	-
+CustomField.Contact.HHId.HelpText	holds the ID of the current household, whether it is a Household Account, or a Household Object.	世帯団体または世帯オブジェクトの現在の世帯の ID を保持します。	-
+CustomField.Contact.Largest_Soft_Credit_Amount.FieldLabel	Largest Soft Credit Amount	最大ソフトクレジット額	-
+CustomField.Contact.Largest_Soft_Credit_Amount.HelpText	The amount of the largest soft credit.	最大ソフトクレジットの金額。	-
+CustomField.Contact.Largest_Soft_Credit_Date.FieldLabel	Largest Soft Credit Date	最大ソフトクレジット日	-
+CustomField.Contact.Largest_Soft_Credit_Date.HelpText	The date of the largest soft credit.	最大ソフトクレジットの日付。	-
+CustomField.Contact.Last_Soft_Credit_Amount.FieldLabel	Last Soft Credit Amount	前回のソフトクレジット額	-
+CustomField.Contact.Last_Soft_Credit_Amount.HelpText	The amount of the most recent soft credit.	最新のソフトクレジットの金額。	-
+CustomField.Contact.Last_Soft_Credit_Date.FieldLabel	Last Soft Credit Date	前回のソフトクレジット日	-
+CustomField.Contact.Last_Soft_Credit_Date.HelpText	The date of the most recent soft credit.	最新のソフトクレジットの日付。	-
+CustomField.Contact.Number_of_Soft_Credits.FieldLabel	Number of Soft Credits	ソフトクレジット数	-
+CustomField.Contact.Number_of_Soft_Credits.HelpText	The number of soft credits.	ソフトクレジットの数。	-
+CustomField.Contact.Number_of_Soft_Credits_Last_N_Days.FieldLabel	Number of Soft Credits Last N Days	過去 N 日間のソフトクレジット数	-
+CustomField.Contact.Number_of_Soft_Credits_Last_N_Days.HelpText	The number of soft credits, closed in the last number of days defined in NPSP Settings.	[NPSP 設定] で定義された過去の日数の間に完了したソフトクレジットの数。	-
+CustomField.Contact.Number_of_Soft_Credits_Last_Year.FieldLabel	Number of Soft Credits Last Year	昨年のソフトクレジット数	-
+CustomField.Contact.Number_of_Soft_Credits_Last_Year.HelpText	The number of soft credits last year.	昨年のソフトクレジットの数。	-
+CustomField.Contact.Number_of_Soft_Credits_This_Year.FieldLabel	Number of Soft Credits This Year	今年のソフトクレジット数	-
+CustomField.Contact.Number_of_Soft_Credits_This_Year.HelpText	The number of soft credits this year.	今年のソフトクレジットの数。	-
+CustomField.Contact.Number_of_Soft_Credits_Two_Years_Ago.FieldLabel	Number of Soft Credits Two Years Ago	2 年前のソフトクレジット数	-
+CustomField.Contact.Number_of_Soft_Credits_Two_Years_Ago.HelpText	The number of soft credits 2 years ago.	2 年前のソフトクレジットの数。	-
+CustomField.Contact.Primary_Affiliation.FieldLabel	Primary Affiliation	主アフィリエーション	-
+CustomField.Contact.Primary_Affiliation.HelpText	Used to track the account of the contact's Organization Affiliation record that is marked primary.	「主」とマークされた個人の関係する団体レコードの団体を追跡するために使用します。	-
+CustomField.Contact.Primary_Affiliation.RelatedListLabel	Do Not Use.  Use Organization Affiliations.	使用しないでください。[団体アフィリエーション] を使用します。	-
+CustomField.Contact.Primary_Contact.FieldLabel	Primary Contact	主個人	-
+CustomField.Contact.Primary_Contact.HelpText	This is is checked if the user is the Primary Contact on their Account.  The Primary Contact can be edited on the Account.	ユーザがユーザの団体の主個人である場合にオンにします。[団体] で [主個人] を編集できます。	-
+CustomField.Contact.Soft_Credit_Last_N_Days.FieldLabel	Soft Credit Last N Days	過去 N 日間のソフトクレジット	-
+CustomField.Contact.Soft_Credit_Last_N_Days.HelpText	The total amount of Soft Credit, closed in the last number of days defined in Household Settings.	[世帯設定] で定義された過去の日数の間に完了したソフトクレジットの総額。	-
+CustomField.Contact.is_Address_Override.FieldLabel	Address Override	住所の上書き	-
+CustomField.Contact.is_Address_Override.HelpText	If checked, the Contact's Current Address lookup overrides the Household's default Address or seasonal Address.	オンの場合、個人の現在の住所の検索で世帯のデフォルトが上書きされます。	-
+CustomField.Lead.Batch.FieldLabel	Batch	一括処理	-
+CustomField.Lead.Batch.HelpText	The batch this lead was created from.	このリードが作成されたバッチ。	-
+CustomField.Lead.Batch.RelatedListLabel	Leads	リード	-
+CustomField.Lead.CompanyCity.FieldLabel	Company City	市区郡(会社)	-
+CustomField.Lead.CompanyCountry.FieldLabel	Company Country	国(会社)	-
+CustomField.Lead.CompanyPostalCode.FieldLabel	Company Zip/Postal Code	郵便番号(会社)	-
+CustomField.Lead.CompanyState.FieldLabel	Company State/Province	都道府県(会社)	-
+CustomField.Lead.CompanyStreet.FieldLabel	Company Street	町名・番地(会社)	-
+CustomField.Opportunity.Acknowledgment_Date.FieldLabel	Acknowledgment Date	受領確認日	-
+CustomField.Opportunity.Acknowledgment_Date.HelpText	Date of acknowledgment	受領確認の日付。	-
+CustomField.Opportunity.Acknowledgment_Status.FieldLabel	Acknowledgment Status	受領確認の状況	-
+CustomField.Opportunity.Acknowledgment_Status.HelpText	Status of Acknowledgment of this gift.	この支援の受領確認の状況。	-
+CustomField.Opportunity.Batch.FieldLabel	Batch	一括処理	-
+CustomField.Opportunity.Batch.RelatedListLabel	Opportunities	支援	-
+CustomField.Opportunity.Fair_Market_Value.HelpText	The Fair Market Value of an In-Kind gift.	現物支援の公正な時価。	-
+CustomField.Opportunity.Grant_Contract_Date.FieldLabel	Grant Contract Date	助成金契約日付	-
+CustomField.Opportunity.Grant_Contract_Date.HelpText	The date of the grant's inception, according to the document or contract sent by the grant-making organization.	助成金提供団体から送信されたドキュメントまたは契約による、助成金の開始日付。	-
+CustomField.Opportunity.Grant_Contract_Number.FieldLabel	Grant Contract Number	助成金契約番号	-
+CustomField.Opportunity.Grant_Contract_Number.HelpText	Tracks unique numbers sometimes assigned by grant-making organizations.	助成金提供団体から割り当てられることがある一意の番号を追跡します。	-
+CustomField.Opportunity.Grant_Period_End_Date.FieldLabel	Grant Period End Date	助成金期間終了日	-
+CustomField.Opportunity.Grant_Period_Start_Date.FieldLabel	Grant Period Start Date	助成金期間開始日	-
+CustomField.Opportunity.Grant_Program_Area_s.FieldLabel	Program Areas	助成金プログラム領域	-
+CustomField.Opportunity.Grant_Program_Area_s.HelpText	Describes the funding areas for the grant. You can enter anything you want here. For example, you could enter the name of the program the grant applies to.	助成金の資金調達領域を説明します。ここには任意の内容を入力できます。たとえば、助成金が適用されるプログラムの名前を入力できます。	-
+CustomField.Opportunity.Grant_Requirements_Website.FieldLabel	Grant Requirements Website	助成金の要件 Web サイト	-
+CustomField.Opportunity.Grant_Requirements_Website.HelpText	A URL that points to the grant requirements on the grant-maker's website.	助成金提供団体の Web サイトにある助成金の要件を指し示す URL。	-
+CustomField.Opportunity.Honoree_Contact.FieldLabel	Honoree Contact	名誉会員個人	-
+CustomField.Opportunity.Honoree_Contact.HelpText	The existing Contact record of the honoree for this donation.	この支援の名誉会員の既存の個人レコード。	-
+CustomField.Opportunity.Honoree_Contact.RelatedListLabel	Opportunities (Honoree Contact)	支援 (名誉会員個人)	-
+CustomField.Opportunity.Honoree_Name.FieldLabel	Honoree Name	名誉会員名	-
+CustomField.Opportunity.Honoree_Name.HelpText	The honoree name as provided by the donor. If this field is left blank, and the Honoree Contact field contains a value, Salesforce automatically populates this field with that value.	支援者によって指定される名誉会員名。この項目が空白のままで [名誉会員個人] 項目に値がある場合、その値がこの項目に自動的に入力されます。	-
+CustomField.Opportunity.In_Kind_Description.FieldLabel	In-Kind Description	現物支援の説明	-
+CustomField.Opportunity.In_Kind_Description.HelpText	Holds any rich text description of the In-Kind Gift, including pictures.	現物支援のリッチテキストの説明 (写真を含む) を保持します。	-
+CustomField.Opportunity.In_Kind_Donor_Declared_Value.FieldLabel	In-Kind Donor Declared Value	現物支援者の申告価格	-
+CustomField.Opportunity.In_Kind_Donor_Declared_Value.HelpText	Checked if the donor provided the Fair Market Value for this In-Kind gift.	支援者がこの現物支援の適正な市場価格を入力している場合はオンにします。	-
+CustomField.Opportunity.In_Kind_Type.FieldLabel	In-Kind Type	現物種別	-
+CustomField.Opportunity.In_Kind_Type.HelpText	The type of In-Kind gift.	現物支援の種別。	-
+CustomField.Opportunity.Is_Grant_Renewal.FieldLabel	Is Grant Renewal	助成金の更新	-
+CustomField.Opportunity.Is_Grant_Renewal.HelpText	If selected, indicates that the grant is a renewal of a previous grant.	選択されている場合、助成金が以前の助成金の更新であることを示します。	-
+CustomField.Opportunity.Matching_Gift.FieldLabel	Matching Gift	マッチングギフト	-
+CustomField.Opportunity.Matching_Gift.RelatedListLabel	Matched Gifts	マッチングされたギフト	-
+CustomField.Opportunity.Matching_Gift_Account.FieldLabel	Matching Gift Account	マッチングギフトの団体	-
+CustomField.Opportunity.Matching_Gift_Account.RelatedListLabel	Matched Gifts	マッチングされたギフト	-
+CustomField.Opportunity.Matching_Gift_Employer.FieldLabel	Matching Gift Employer	マッチングギフト利用者	-
+CustomField.Opportunity.Matching_Gift_Status.FieldLabel	Matching Gift Status	マッチングギフトの状況	-
+CustomField.Opportunity.Next_Grant_Deadline_Due_Date.FieldLabel	Next Deliverable Date	次の助成金期日	-
+CustomField.Opportunity.Next_Grant_Deadline_Due_Date.HelpText	The NPSP updates this field automatically based on the next Grant Deadline record.	NPSP では、次の助成金期日レコードに基づいてこの項目が自動的に更新されます。	-
+CustomField.Opportunity.Notification_Message.FieldLabel	Notification Message	通知メッセージ	-
+CustomField.Opportunity.Notification_Message.HelpText	A personalized message for the notification recipient.	通知受信者のパーソナライズされたメッセージ。	-
+CustomField.Opportunity.Notification_Preference.FieldLabel	Notification Preference	通知設定	-
+CustomField.Opportunity.Notification_Preference.HelpText	How the notification recipient should be notified.	通知受信者の通知方法。	-
+CustomField.Opportunity.Notification_Recipient_Contact.FieldLabel	Notification Recipient Contact	通知受信者の連絡先	-
+CustomField.Opportunity.Notification_Recipient_Contact.HelpText	The existing Contact record of the person to be notified for this donation.	この支援について通知される個人の既存の連絡先レコード。	-
+CustomField.Opportunity.Notification_Recipient_Contact.RelatedListLabel	Opportunities (Notification Recipient)	支援 (通知受信者)	-
+CustomField.Opportunity.Notification_Recipient_Information.FieldLabel	Notification Recipient Information	通知受信者の情報	-
+CustomField.Opportunity.Notification_Recipient_Information.HelpText	The contact information (as provided by the donor) for the notification recipient.	通知受信者の連絡先情報 (支援者によって提供される)。	-
+CustomField.Opportunity.Notification_Recipient_Name.FieldLabel	Notification Recipient Name	通知受信者名	-
+CustomField.Opportunity.Notification_Recipient_Name.HelpText	The name (as provided by the donor) of the person who should be notified about this gift. If this field is left blank and the Notification Recipient Contact field contains a value, Salesforce automatically populates this field with that value.	この支援について通知される個人の名前 (支援者によって提供される)。この項目が空白のままで、[通知受信者の連絡先] 項目に値が指定されている場合、この項目にその値が自動的に入力されます。	-
+CustomField.Opportunity.Previous_Grant_Opportunity.FieldLabel	Previous Grant/Gift Opportunity	以前の助成金支援	-
+CustomField.Opportunity.Previous_Grant_Opportunity.HelpText	If this grant is a renewal of a previous grant, use this field to relate this record to the previous one.	この助成金が以前の助成金の更新である場合、この項目を使用してこのレコードを以前のレコードに関連付けます。	-
+CustomField.Opportunity.Previous_Grant_Opportunity.RelatedListLabel	Related Grants/Gifts	関連する助成金支援	-
+CustomField.Opportunity.Primary_Contact.FieldLabel	Primary Contact	主個人	-
+CustomField.Opportunity.Primary_Contact.HelpText	The primary contact for this opportunity. The primary contact role is kept in sync with this field. For individual donations, this denotes attribution for this opportunity.	この支援の主個人。主個人の役割は、この項目との同期が保たれます。個人の支援の場合、これはこの支援の帰属を意味します。	-
+CustomField.Opportunity.Primary_Contact.RelatedListLabel	Opportunities	支援	-
+CustomField.Opportunity.Primary_Contact_Campaign_Member_Status.FieldLabel	Primary Contact Campaign Member Status	主個人のキャンペーンメンバーの状況	-
+CustomField.Opportunity.Primary_Contact_Campaign_Member_Status.HelpText	The status to use when creating a campaign member for this opportunity's primary contact and primary campaign source. Leave blank to default to an responded status for closed/won opportunities, and a non-responded status for other opportunities.	この支援の主個人や主キャンペーンソースのキャンペーンメンバーを作成するときに使用する状況。デフォルト (成立した支援ではレスポンスありの状況、他の支援ではレスポンスなしの状況) に設定するには、空白のままにします。	-
+CustomField.Opportunity.Recurring_Donation_Installment_Name.FieldLabel	Recurring Donation Installment Name	継続支援の各支払の名前	-
+CustomField.Opportunity.Recurring_Donation_Installment_Name.HelpText	Installment name for inclusion in Opportunity Naming. Shows the installment number in parenthesis for open ended recurring donations, or the installment number out of the total for recurring donations with a set number of installments.	支援の命名規則に含まれる各支払の名前。無期限の継続支援では括弧内に回数が表示され、規定回数が設定されている継続支援では回数/総数が表示されます。	-
+CustomField.Opportunity.Recurring_Donation_Installment_Number.FieldLabel	Recurring Donation Installment Number	継続支援の回数	-
+CustomField.Opportunity.Recurring_Donation_Installment_Number.HelpText	The installment number of this opportunity's recurring donation schedule.	この支援でスケジュールされている継続支援の回数。	-
+CustomField.Opportunity.Requested_Amount.FieldLabel	Requested Amount	要求金額	-
+CustomField.Opportunity.Requested_Amount.HelpText	The amount you are requesting. This number might be different from the final award amount.	要求している金額。この金額は、最終的に獲得する金額と異なる可能性があります。	-
+CustomField.Opportunity.Tribute_Type.FieldLabel	Tribute Type	敬意/追悼種別	-
+CustomField.Opportunity.Tribute_Type.HelpText	Indicates whether the gift is in honor or memory of an individual.	支援が個人に敬意を表して行われるのか、個人を追悼して行われるのかを示します。	-
+CustomReportType.Contacts_Only.Name	Contacts Only	個人のみ	-
+CustomReportType.Contacts_Only.Description	Contacts without linking in any other object	他のオブジェクトにリンクがない個人	-
+CrtLayoutSection.Contacts_Only_1	Contacts	個人	-
+LayoutSection.General_Accounting_Unit__c.General Accounting Unit Layout.Allocation Information_1	Allocation Information	割り当て情報	-
+LayoutSection.General_Accounting_Unit__c.General Accounting Unit Layout.Allocation Totals_2	Allocation Totals	割り当て総額	-
+LayoutSection.DataImport__c.Data Import Layout.Contact1 Information_2	Contact1 Information	個人１情報	-
+LayoutSection.DataImport__c.Data Import Layout.Contact2 Information_5	Contact2 Information	個人２情報	-
+LayoutSection.DataImport__c.Data Import Layout.Donation Information_8	Donation Information	支援情報	-
+LayoutSection.DataImport__c.Data Import Layout.Home Address_7	Home Address	自宅住所	-
+LayoutSection.Grant_Deadline__c.Grant Deadline Layout.Grant Deliverable Requirements_1	Grant Deliverable Requirements	助成金の提出書類要件	-
+LayoutSection.Address__c.Address Layout.Seasonal Information_1	Seasonal Information	季節性情報	-
+LayoutSection.Account.Household Layout.Address_1	Address	住所	-
+LayoutSection.Account.Household Layout.Donation Information_3	Donation Information	支援情報	-
+LayoutSection.Account.Household Layout.Donation Totals_4	Donation Totals	支援総額	-
+LayoutSection.Account.Household Layout.Fields_0	Fields	項目	-
+LayoutSection.Account.Household Layout.Membership Information_5	Membership Information	会員情報	-
+LayoutSection.Account.Organization Layout.Address_1	Address	住所	-
+LayoutSection.Account.Organization Layout.Donation Information_3	Donation Information	支援情報	-
+LayoutSection.Account.Organization Layout.Donation Totals_4	Donation Totals	支援総額	-
+LayoutSection.Account.Organization Layout.Fields_0	Fields	項目	-
+LayoutSection.Account.Organization Layout.Grantmaking Information_6	Grantmaking Information	助成金提供情報	-
+LayoutSection.Account.Organization Layout.Membership Information_5	Membership Information	会員情報	-
+LayoutSection.Contact.Contact Layout.Contact Details_0	Contact Details	個人の詳細	-
+LayoutSection.Contact.Contact Layout.Donation Information_5	Donation Information	支援情報	-
+LayoutSection.Contact.Contact Layout.Donation Totals_6	Donation Totals	支援総額	-
+LayoutSection.Contact.Contact Layout.Household Address_4	Household Address	世帯の住所	-
+LayoutSection.Contact.Contact Layout.Household Donation Info_8	Household Donation Info	世帯の支援情報	-
+LayoutSection.Contact.Contact Layout.Membership Information_9	Membership Information	会員情報	-
+LayoutSection.Contact.Contact Layout.Misc_10	Misc	その他	-
+LayoutSection.Opportunity.Donation Layout.Donation Information_0	Donation Information	支援情報	-
+LayoutSection.Opportunity.Donation Layout.Payment Information_1	Payment Information	お支払い情報	-
+LayoutSection.Opportunity.Grant Layout.Donation Information_0	Donation Information	支援情報	-
+LayoutSection.Opportunity.Grant Layout.Grant Information_1	Grant Information	助成金情報	-
+LayoutSection.Opportunity.Grant Layout.Payment Information_2	Payment Information	お支払い情報	-
+LayoutSection.Opportunity.In-Kind Gift Layout.Donation Information_0	Donation Information	支援情報	-
+LayoutSection.Opportunity.In-Kind Gift Layout.In-Kind Information_1	In-Kind Information	現物情報	-
+LayoutSection.Opportunity.In-Kind Gift Layout.Tribute Information_2	Tribute Information	敬意/追悼情報	-
+LayoutSection.Opportunity.Matching Gift Layout.Donation Information_0	Donation Information	支援情報	-
+LayoutSection.Opportunity.Matching Gift Layout.Payment Information_1	Payment Information	お支払い情報	-
+LayoutSection.Opportunity.Membership Layout.Fields_0	Fields	項目	-
+LayoutSection.Opportunity.Membership Layout.Member Information_1	Member Information	メンバー情報	-
+LayoutSection.Opportunity.Membership Layout.Payment Information_2	Payment Information	お支払い情報	-
+LookupFilter.General_Accounting_Unit__c.Allocation__c.General_Accounting_Unit__c.ErrorMessage	Allocations can only be assigned to active general accounting units. Allocations assigned to inactive general accounting units cannot be modified.	割り当ては、有効な一般会計単位にのみ行うことができます。無効な一般会計単位への割り当ては変更できません。	-
+LookupFilter.General_Accounting_Unit__c.Allocation__c.General_Accounting_Unit__c.InfoMessage	Only active general accounting units can be selected.	選択できるのは有効な一般会計単位のみです。	-
+LookupFilter.Address__c.Contact.Current_Address__c.InfoMessage	To see all addresses for the Contact's household, enter A-* in the search window	個人の世帯のすべての住所を参照するには、検索ウィンドウに「A-*」と入力します	-
+PicklistValue.DataImport__c.Contact1_Preferred_Email.Alternate	Alternate	代替方法	-
+PicklistValue.DataImport__c.Contact1_Preferred_Email.Personal	Personal	個人	-
+PicklistValue.DataImport__c.Contact1_Preferred_Email.Work	Work	勤務先	-
+PicklistValue.DataImport__c.Contact1_Preferred_Phone.Home	Home	自宅	-
+PicklistValue.DataImport__c.Contact1_Preferred_Phone.Mobile	Mobile	携帯	-
+PicklistValue.DataImport__c.Contact1_Preferred_Phone.Other	Other	その他	-
+PicklistValue.DataImport__c.Contact1_Preferred_Phone.Work	Work	勤務先	-
+PicklistValue.DataImport__c.Contact2_Preferred_Email.Alternate	Alternate	代替方法	-
+PicklistValue.DataImport__c.Contact2_Preferred_Email.Personal	Personal	個人	-
+PicklistValue.DataImport__c.Contact2_Preferred_Email.Work	Work	勤務先	-
+PicklistValue.DataImport__c.Contact2_Preferred_Phone.Home	Home	自宅	-
+PicklistValue.DataImport__c.Contact2_Preferred_Phone.Mobile	Mobile	携帯	-
+PicklistValue.DataImport__c.Contact2_Preferred_Phone.Other	Other	その他	-
+PicklistValue.DataImport__c.Contact2_Preferred_Phone.Work	Work	勤務先	-
+PicklistValue.DataImport__c.Donation_Donor.Account1	Account1	団体 1	-
+PicklistValue.DataImport__c.Donation_Donor.Contact1	Contact1	個人 1	-
+PicklistValue.DataImport__c.Status.Failed	Failed	失敗	-
+PicklistValue.DataImport__c.Status.Imported	Imported	インポート済み	-
+PicklistValue.npe01__OppPayment__c.Payment_Acknowledgment_Status.Acknowledged	Acknowledged	承認済み	-
+PicklistValue.npe01__OppPayment__c.Payment_Acknowledgment_Status.Do Not Acknowledge	Do Not Acknowledge	承認しない	-
+PicklistValue.npe01__OppPayment__c.Payment_Acknowledgment_Status.To Be Acknowledged	To Be Acknowledged	承認予定	-
+PicklistValue.Address__c.Address_Type.Home	Home	自宅	-
+PicklistValue.Address__c.Address_Type.Other	Other	その他	-
+PicklistValue.Address__c.Address_Type.Vacation Residence	Vacation Residence	休暇中の住所	-
+PicklistValue.Address__c.Address_Type.Work	Work	勤務先	-
+PicklistValue.Batch__c.Batch_Status.Complete	Complete	完了	-
+PicklistValue.Batch__c.Batch_Status.In Progress	In Progress	進行中	-
+PicklistValue.Account.Funding_Focus.Animal Welfare	Animal Welfare	動物福祉	-
+PicklistValue.Account.Funding_Focus.Arts and Culture	Arts and Culture	芸術文化	-
+PicklistValue.Account.Funding_Focus.Capacity Building	Capacity Building	能力開発	-
+PicklistValue.Account.Funding_Focus.Education	Education	教育	-
+PicklistValue.Account.Funding_Focus.Environmental	Environmental	環境	-
+PicklistValue.Account.Funding_Focus.Health Services	Health Services	医療業	-
+PicklistValue.Account.Funding_Focus.Human Services	Human Services	福祉	-
+PicklistValue.Opportunity.Acknowledgment_Status.Acknowledged	Acknowledged	承認済み	-
+PicklistValue.Opportunity.Acknowledgment_Status.Do Not Acknowledge	Do Not Acknowledge	承認しない	-
+PicklistValue.Opportunity.Acknowledgment_Status.Email Acknowledgment Not Sent	Email Acknowledgment Not Sent	メール受領確認未送信	-
+PicklistValue.Opportunity.Acknowledgment_Status.Email Acknowledgment Now	Email Acknowledgment Now	今すぐメール受領確認	-
+PicklistValue.Opportunity.Acknowledgment_Status.To Be Acknowledged	To Be Acknowledged	承認予定	-
+PicklistValue.Opportunity.In_Kind_Type.Goods	Goods	商品	-
+PicklistValue.Opportunity.In_Kind_Type.Services	Services	サービス	-
+PicklistValue.Opportunity.Matching_Gift_Status.Potential	Potential	可能性	-
+PicklistValue.Opportunity.Matching_Gift_Status.Received	Received	受信済み	-
+PicklistValue.Opportunity.Matching_Gift_Status.Submitted	Submitted	送信済み	-
+PicklistValue.Opportunity.Notification_Preference.Do Not Notify	Do Not Notify	通知しない	-
+PicklistValue.Opportunity.Notification_Preference.Email	Email	メール	-
+PicklistValue.Opportunity.Notification_Preference.Phone	Phone	電話	-
+PicklistValue.Opportunity.Notification_Preference.Postal Mail	Postal Mail	郵便	-
+PicklistValue.Opportunity.Tribute_Type.Honor	Honor	名誉	-
+PicklistValue.Opportunity.Tribute_Type.Memorial	Memorial	追悼	-
+WebTab.Batch_Data_Entry	Batch Data Entry	バッチデータエントリ	-
+WebTab.Contact_Merge	Contact Merge	個人のマージ	-
+WebTab.NPSP_Resources	Getting Started	はじめよう	-
+WebTab.NPSP_Settings	NPSP Settings	NPSP 設定	-
+CustomLabel.Addr_Id_Error	Auth ID cannot be blank.	認証 ID は空白にできません。	-
+CustomLabel.Addr_No_Batch	The specified service does not support batch address verification.	指定したサービスではバッチ住所検証はサポートされていません。	-
+CustomLabel.Addr_Pending_Verification	Pending verification	検証待機中	-
+CustomLabel.Addr_Settings_API_Title	Verification API Account Settings	検証 API のアカウント設定	-
+CustomLabel.Addr_Settings_Intro_Body1	The Address Verification API lets you verify addresses as you add them to Salesforce. The API also lets you standardize addresses when you save them (for example, it converts any instance of Street to St in the saved record).	住所検証 API を使用して、Salesforce に住所を追加するときにその住所を検証できます。API では、住所を保存するときに標準化することもできます (たとえば、保存レコードの「Street」インスタンスを「St」に変換)。	-
+CustomLabel.Addr_Settings_Intro_Body2	<br/>To get started:<br/><br/>\n1. Open a third-party address verification account. (Some are free for nonprofits.)<br/>\n2. In your address verification service, create the required authentication ID and/or token.<br/>\n3. Return to this settings page, click the Edit button above, and paste the ID and/or token into the appropriate fields.<br/>\n4. Complete the remaining fields and click Save. The help text for each field provides more information. If you still need more help, see the <a href="https://powerofus.force.com/NPSP_Address_Verification">NPSP documentation</a>.	<br/>使用を開始するには: \n\n<ol>\n<li>サードパーティの住所検証アカウントを開きます(一部のアカウントは非営利団体では無料)。</li>\n\n<li>住所検証サービスで、必要な認証 ID やトークンを作成します。</li>\n\n<li>この設定ページに戻って上の [編集] ボタンをクリックし、ID やトークンを適切な項目に貼り付けます。</li>\n\n<li>残りの項目に入力して [保存] をクリックします。詳細は、各項目のヘルプテキストを参照してください。さらに詳しい情報が必要な場合は、<a href="https://powerofus.force.com/NPSP_Address_Verification">NPSP ドキュメント</a>を参照してください。</li>	-
+CustomLabel.Addr_Settings_Intro_Title	Introduction	はじめに	-
+CustomLabel.Addr_Settings_Notice	Address verification will only work for records you create from this point on. Verification does not apply to contact information that you've already entered in Salesforce.	住所検証は、この時点以降に作成したレコードのみで機能します。Salesforce ですでに入力済みの個人情報には適用されません。	-
+CustomLabel.Addr_Settings_Test_Body	To test your Secret Key Pair, enter any US Zip Code:	秘密鍵のペアをテストするため、任意の米国の郵便番号を入力:	-
+CustomLabel.Addr_Settings_Test_Response_Title	API Response	API 応答	-
+CustomLabel.Addr_Settings_Test_Title	Test My Settings	私の設定をテスト	-
+CustomLabel.Addr_Skip_Verified	Skip previously verified records	以前に検証済みのレコードはスキップ	-
+CustomLabel.Addr_Token_Error	Auth Token cannot be blank.	認証トークンは空白にできません。	-
+CustomLabel.Addr_Unauthorized_Endpoint	Unauthorized endpoint. Please add endpoint URL to your list of authorized Remote Sites, under Setup > Security > Remote Site.	未承認のエンドポイント。[設定] > [セキュリティ] > [リモートサイト] で、認証済みリモートサイトのリストにエンドポイント URL を追加してください。	-
+CustomLabel.Addr_Valid_Key_Pair	Your Secret Key Pair is valid.	この秘密鍵のペアは有効です。	-
+CustomLabel.Addr_Verification_Batch_Body	<p>Click Verify All Addresses to verify and standardize all addresses in your organization.\n        The mass verification process uses the settings from above.</p>\n <br/>	<p>団体のすべての住所を検証および標準化するには、[すべての住所を検証] をクリックします。\n        一括検証プロセスには上記の設定が使用されます。</p>\n <br/>	-
+CustomLabel.Addr_Verification_Batch_Not_Supported	The selected service does not support Batch Address Validation.	選択したサービスではバッチ住所検証はサポートされていません。	-
+CustomLabel.Addr_Verification_Batch_SmartyStreets_Message	SmartyStreets will verify addresses in batches of 100.	SmartyStreets では 100 件のバッチで住所が検証されます。	-
+CustomLabel.Addr_Verification_Batch_Status	Mass Verification Status	一括検証状況	-
+CustomLabel.Addr_Verification_Batch_Title	Mass Verify Existing Addresses	既存の住所の一括検証	-
+CustomLabel.Addr_Verification_Required	Verification required	検証が必要	-
+CustomLabel.Addr_Verification_Undefined_Class	Address verification class not defined in the settings. Cannot perform address verification.	設定で住所検証クラスが定義されていません。住所検証を実行できません。	-
+CustomLabel.Addr_Verification_Wrong_Class	No class with the specified name exists. Cannot perform address verification.	指定した名前のクラスは存在しません。住所検証を実行できません。	-
+CustomLabel.Addr_Verification_Wrong_Interface	The address validation class does not implement the required interface. Cannot perform address verification.	住所検証クラスに必要なインターフェースが実装されていません。住所検証を実行できません。	-
+CustomLabel.Addr_Verified	Verified	検証済み	-
+CustomLabel.Addr_Verify_Endpoint	Please enter the endpoint URL.	エンドポイント URL を入力してください。	-
+CustomLabel.Addr_Verify_Google_Help	The Google Geocoding API requires a value for Authentication Token only.  This can be found by going to Visit the APIs console at https://code.google.com/apis/console and log in with your Google Account. Click the Services link from the left-hand menu in the APIs Console, then activate the Geocoding API service. Once the service has been activated, your API key is available from the API Access page, in the Simple API Access section. More information on this service and what it provides can be found here: https://developers.google.com/maps/documentation/geocoding/.	Google Geocoding API には認証トークンのみの値が必要です。この API は、API コンソール (https://code.google.com/apis/console) にアクセスして Google アカウントでログインすることで入手できます。API コンソールの左側にあるメニューから [Services (サービス)] リンクをクリックし、Geocoding API サービスを有効にします。サービスを有効にしたら、[API Access (API アクセス)] ページの [Simple API Access (簡単な API アクセス)] セクションから API キーを入手できます。このサービスの詳細および提供内容は、https://developers.google.com/maps/documentation/geocoding/ を参照してください。	-
+CustomLabel.Addr_Verify_Settings	Please verify you have entered your credentials.	ログイン情報を入力していることを検証してください。	-
+CustomLabel.Addr_Verifying	Verifying addresses.	住所を検証しています。	-
+CustomLabel.Address_Not_Found	Address not found.	住所が見つかりません。	-
+CustomLabel.Address_StateCountry_Invalid_Error	'{0}' is not configured as a valid Country in your Organization.	「{0}」は団体で有効な国として設定されていません。	-
+CustomLabel.Address_Verification_Limit	You cannot verify more than 100 addresses at a time.	一度に 100 件を超える住所は検証できません。	-
+CustomLabel.CONV_Accept_Risk	I accept the risk associated with using this tool, including data loss and inconsistent data.	このツールの使用に伴う、データ損失、データの不整合などのリスクを受け入れます。	-
+CustomLabel.CONV_Account_Field	Account Field	団体の項目	-
+CustomLabel.CONV_Account_Field_For_Old_HH_ID	Account Field for Old Household Id	古い世帯 ID の団体項目	-
+CustomLabel.CONV_Activities_Reparented	Activities and tasks associated with 1x1 or Individual Accounts are transferred to the new Household Account	1 対 1 または個人の団体に関連付けられた活動および ToDo が新しい世帯団体に移行される	-
+CustomLabel.CONV_Address_Overrides_Set	Address overrides are set for any Contact whose address is different from the Household Address	住所が世帯住所と異なるすべての個人に対して住所の上書きが設定される	-
+CustomLabel.CONV_Addresses_Mapped	Addresses mapped from existing Household and Contacts to new Address objects, then attached to the Contact and Household Account	住所が既存の世帯および個人から新しい住所オブジェクトに対応付けられた後に、個人および世帯団体に関連付けられる	-
+CustomLabel.CONV_All_Backed_Up	My data has been backed-up by going to Setup | Data Management | Export Data	私のデータは [設定] | [データの管理] | [データのエクスポート] でバックアップされています。	-
+CustomLabel.CONV_All_Households_Selected	All existing Households are selected, along with their Contacts	すべての既存の世帯およびその個人が選択される	-
+CustomLabel.CONV_All_Required_Removed	All required field restrictions for custom fields have been removed.	カスタム項目でのすべての必須項目制限は削除されています。	-
+CustomLabel.CONV_All_Triggers_Disabled	All NPSP triggers are disabled (Your custom triggers are not disabled by the utility. For safety's sake, you should disable those too)	すべての NPSP トリガが無効になる (カスタムトリガはユーティリティによって無効化されません。安全性のため、カスタムトリガも無効にしてください)	-
+CustomLabel.CONV_All_Users_Logged_Out	All users have logged out of my Salesforce instance.	すべてのユーザが Salesforce インスタンスからログアウトしています。	-
+CustomLabel.CONV_All_WFR_Disabled	All workflows and any custom validation rules have been disabled.	すべてのワークフローおよびカスタム入力規則は無効化されています。	-
+CustomLabel.CONV_Batching_Explanation	This tool will process your existing Contacts with Households in batches of 200 Households at a time, attempting to convert them to Household Accounts. Any errors during the conversion will result in one or more failed batches of Contacts while other batches may succeed.  This could leave your data in an inconsistent state.  If this occurs, you will need to immediately resolve the issue and re-run the conversion utility. The following actions are taken by the batch job associated with this tool:	このツールは、一度に 200 件の世帯のバッチで世帯に関連付けられた既存の個人を処理し、それらを世帯団体に変換します。変換中にエラーが発生すると、1 つ以上の個人のバッチが失敗し、他のバッチは成功する場合があります。この場合、データが整合性のない状態になる可能性があります。この問題が発生した場合はすぐに問題を解決し、変換ユーティリティを再実行する必要があります。このツールに関連付けられた一括処理ジョブでは、次のアクションが実行されます。	-
+CustomLabel.CONV_Begin	Begin Conversion Process	変換プロセスの開始	-
+CustomLabel.CONV_Cancel	Cancel	キャンセル	-
+CustomLabel.CONV_Configuration_Options	Configuration Options	設定オプション	-
+CustomLabel.CONV_Contacts_Attached	Contacts are disconnected from their 1x1 or Individual Account, and attached to the newly created Household Account	個人が 1 対 1 または個人の団体から切断され、新しく作成された世帯団体に関連付けられる	-
+CustomLabel.CONV_Conversion_Process	Account Model Conversion Progress	団体モデル変換の進捗状況	-
+CustomLabel.CONV_Fundamental_Changes	You are about to make fundamental changes to your Salesforce data and data model. Reports, dashboards, and more may have to be modified to account for these changes. Salesforce.com and Salesforce.org are not responsible for any data or data integrity loss.  Do you still wish to proceed?	Salesforce データおよびデータモデルに根本的変更を加えようとしています。これらの変更では、レポート、ダッシュボード、その他の機能の変更が必要になる場合があります。Salesforce.com および Salesforce.org は、あらゆるデータ損失またはデータの不整合性について責任を負いません。続行しますか?	-
+CustomLabel.CONV_Important_Info_Header	Important Information	重要な情報	-
+CustomLabel.CONV_Local_Expert	I've consulted with my local Salesforce expert.	現地の Salesforce エキスパートに相談済みです。	-
+CustomLabel.CONV_Master_Address_Set	Master Household Address set or defined if none exists based on address frequency and Contact giving	マスタ世帯住所が存在しない場合、住所の頻度と指定された個人に基づいてマスタ世帯住所が設定または定義される	-
+CustomLabel.CONV_New_Affiliations	Non-1x1 Accounts associations to Contacts are removed, new Affiliations created, and Contact Primary Affiliation field is set	個人への 1 対 1 以外の団体の関連付けが削除され、新しいアフィリエーションが作成され、個人の主アフィリエーション項目が設定される	-
+CustomLabel.CONV_New_Households_Created	New Household Accounts are created for each existing Household	既存の各世帯に対して新しい世帯団体が作成される	-
+CustomLabel.CONV_Non_NPSP_Apps	All non-NPSP apps have been temporarily uninstalled or disabled.	NPSP 以外のすべてのアプリケーションは一時的にアンインストールまたは無効化されています。	-
+CustomLabel.CONV_Old_Household_Objects	Previous Household objects are left in place, and should be deleted manually after verifying the results of the conversion process.	以前の世帯オブジェクトはそのまま残されるため、変換プロセスの結果を検証した後に手動で削除する必要があります。	-
+CustomLabel.CONV_Only_Household_Contacts	I am aware this tool will only work for Contacts that currently have a Household associated.	このツールは現在世帯が関連付けられている個人でのみ機能することを理解しています。	-
+CustomLabel.CONV_Opportunities_Reparented	Opportunities are moved from the 1x1 or Individual Account and attached to the new Household Accounts and Contacts	支援が 1 対 1 または個人の団体から移動され、新しい世帯団体および個人に関連付けられる	-
+CustomLabel.CONV_Original_HH_Id	You can optionally select a custom field on your new Household Account to store the original Household object Id.  This can be useful for later reparenting of any lookups or child objects originally on the Household to the new Household Account.  Only unused custom fields that hold text are eligible to be selected.	必要に応じて新しい世帯団体のカスタム項目を選択し、元の世代オブジェクト ID を保存できます。これは、後で元の世帯にあるルックアップや子オブジェクトの親を新しい世帯団体に変更する場合に便利です。テキストを格納する未使用のカスタム項目のみを選択できます。	-
+CustomLabel.CONV_Page_Description	This page is designed to help you convert your organization from an existing 1x1 or Individual Account model to the new Household Account Model.	このページは、団体を既存の 1x1 または個人の団体モデルから新しい世帯団体モデルに変換できるように設計されています。	-
+CustomLabel.CONV_Page_Title	Account Model Conversion Utility	団体モデル変換ユーティリティ	-
+CustomLabel.CONV_Permanent_Change	This is a permanent change.  Please make sure to consult with your local expert before proceeding.  While the conversion is completing, your database functionality will be temporarily disabled to avoid accidentally modifying existing data.  Salesforce.com and Salesforce.org are not responsible for any data loss, modifications, or corruption that occur as a result of this operation. Please proceed at YOUR OWN RISK. Before beginning this process, you'll need to confirm the following steps have been taken:	これは永続的な変更です。続行する前に、各地域のエキスパートにご相談ください。変換が完了すると、既存のデータを誤って変更しないようにデータベース機能が一時的に無効になります。Salesforce.com および Salesforce.org は、この操作によるいかなるデータの損失、変更、破損の責任を負いません。自己責任で続行してください。この処理を開始する前に、次の手順が実行されていることを確認する必要があります:	-
+CustomLabel.CONV_Primary_Contacts_Set	Primary Contact values are set for all Households	すべての世帯で主個人の値が設定されています	-
+CustomLabel.CONV_Proceed	Proceed with Conversion	変換を続行する	-
+CustomLabel.CONV_Record_Ownership_Transferred	All record ownership has been transferred from any inactive users.	無効なユーザからすべてのレコード所有権が転送されました。	-
+CustomLabel.CONV_Reload	Reload the Converter	コンバータを再読み込み	-
+CustomLabel.CONV_Selected_Field_Bad	The selected field is not able to hold the Household Id information as required.  Please select a different Account field.	選択した項目で必要な世帯 ID 情報を格納できません。別の団体項目を選択してください。	-
+CustomLabel.CONV_Selected_Field_Verification_Failure	An error has occurred in attempting to verify the validity of the selected Account field.  The field selected was unable to be accurately verified.  Without this verification, it cannot be determined if your field mapping, and therefore your conversion will be successful.  You may proceed at your own risk, or may select a different field to hold the Household Id.	選択した団体項目の有効性を検証しようとしたときにエラーが発生しました。選択した項目を適切に検証できませんでした。この検証が行われていないと、項目の対応付け (変換) が成功するかどうか判別できません。自己責任で続行するか、世帯 ID を格納する別の項目を選択してください。	-
+CustomLabel.CONV_Tested_in_Sandbox	The conversion process has been tested in a fresh sandbox.	変換処理は最新の Sandbox でテストされました。	-
+CustomLabel.CONV_Triggers_Reenabled	All NPSP triggers are re-enabled (You'll need to manually re-enable any custom triggers you disabled for the conversion. Also, the utility re-enables <b>all</b> NPSP triggers, so if you selectively disabled any of them beforehand, you'll need to manually disable those again too)	すべての NPSP トリガは再度有効化されます。変換のために無効にしたカスタムトリガは手動で再度有効にする必要があります。また、ユーティリティによって<b>すべて</b>の NPSP トリガが再度有効化されるため、事前に選択的に無効にしたトリガも手動で再度無効にする必要があります。	-
+CustomLabel.CONV_Warning	Warning!	警告!	-
+CustomLabel.CONV_What_This_Tool_Does	What This Tool Does	このツールの機能	-
+CustomLabel.CampaignMemberStatusOmit	omit	除外	-
+CustomLabel.HiddenForSecurity	Hidden for security	非表示にしてセキュリティを確保	-
+CustomLabel.PageMessagesConfirm	Success	成功	-
+CustomLabel.PageMessagesError	Error	エラー	-
+CustomLabel.PageMessagesFatal	Error	エラー	-
+CustomLabel.PageMessagesWarning	Warning	警告	-
+CustomLabel.REL_Create_New_Relationship	Create New Relationship	新規リレーションを作成	-
+CustomLabel.REL_Former	Former	以前	-
+CustomLabel.REL_No_Relationships	There are no relationships for this contact.	この個人のリレーションがありません。	-
+CustomLabel.REL_RECenter	Re-Center on This Contact	この個人を再度主個人にする	-
+CustomLabel.REL_Return_to_Contact	Return to Contact	個人に戻る	-
+CustomLabel.REL_View_Contact_Record	View Contact Record	個人レコードを表示	-
+CustomLabel.RecurringDonationAccountAndContactError	Recurring Donations can only have an Organization or Contact specified, but not both.	継続支援には、団体または個人のいずれかのみを指定できます。	-
+CustomLabel.Saved	Saved.	保存されました。	-
+CustomLabel.Settings_not_Saved	Settings not saved	設定が保存されていません	-
+CustomLabel.SmartyStreets_Help_Text	Make sure you have entered both the Auth ID and Auth Token provided to you by SmartyStreets. You will find them in your SmartyStreets API Keys page.	SmartyStreets によって提供された認証 ID と認証トークンを入力したことを確認してください。これらは、SmartyStreets API キーのページにあります。	-
+CustomLabel.Zip_Not_Found	Zip code not found.	郵便番号が見つかりません。	-
+CustomLabel.Zipcode_Verification_Limit	You cannot verify more than 100 zipcodes at a time.	100 件を超える郵便番号の一括検証はできません。	-
+CustomLabel.addrCiceroMissingAPIKey	The Cicero API Key must be specified in the Auth Token setting in the Address Verification Settings.	住所検証設定の認証トークン設定で Cicero API キーを指定する必要があります。	-
+CustomLabel.addrCopyConAddBtnHHObjOnly	This button only supports Contacts with Household objects, not Household Accounts.	このボタンでサポートされるのは、世帯団体のある個人ではなく、世帯オブジェクトのある個人のみです。	-
+CustomLabel.addrGeneralSettings	General Address Settings	住所の一般設定	-
+CustomLabel.addrHHAccountOnly	Address objects are only supported on Household Accounts and Organizational Accounts (if enabled).	住所オブジェクトは、世帯団体と組織団体 (有効になっている場合) でのみサポートされます。	-
+CustomLabel.addrHHAddressAlwaysDefault	The Household Address will be copied to all Contacts that do not have an Address Override.	世帯住所は、[住所の上書き] が設定されていないすべての個人にコピーされます。	-
+CustomLabel.addrSeasonalOverlap	Seasonal addresses cannot overlap with any other seasonal address in the Household.	住所 (季節性) は、世帯の他の住所 (季節性) と重ならないようにする必要があります。	-
+CustomLabel.addrSeasonalPartial	An address must have all or none of its Seasonal fields set.	住所は、すべての季節性項目が設定されている状態か、1 つも設定されていない状態にする必要があります。	-
+CustomLabel.alloAddRow	Add Row	行を追加	-
+CustomLabel.alloAddRowAtPosition	Add Row at Position	位置を指定して行を追加	-
+CustomLabel.alloAmountOrPercent	Each allocation must have either an assigned amount or percent.	各割り当てには、金額またはパーセントのいずれかが設定されている必要があります。	-
+CustomLabel.alloBatchCreateDefault	Batch Create Default Allocations	デフォルトの割り当てをバッチ作成	-
+CustomLabel.alloBatchDefaultInfo	This utility runs a batch process that creates default Allocations for all existing Opportunities, except Opportunities excluded in the GAU Allocations Rollup Settings.\n<br/>\n<br/>\nTo run this utility, default Allocations must be enabled and a default General Accounting Unit must be selected. You only need to run this tool once after enabling default Allocations, as all new Opportunities will receive a default Allocation once enabled.\n<br/>\n<br/>\nTo check your GAU Allocation settings, go to Donations | GAU Allocations.	このボタンをクリックすると、割り当ての積み上げ集計設定で除外されている支援を除くすべての既存の支援のデフォルトの割り当てを作成するバッチ処理が開始されます。このツールを実行するには、デフォルトの割り当てが有効になっていて、デフォルトの一般会計単位が選択されている必要があります。デフォルトの割り当てを有効にすると、すべての新規支援にデフォルトの割り当てが設定されるため、このツールはデフォルトの割り当てを有効にした後に一度だけ実行する必要があります。	-
+CustomLabel.alloBtnCancel	Cancel	キャンセル	-
+CustomLabel.alloBtnSaveAndClose	Save	保存	-
+CustomLabel.alloCantAllocateNothing	You can only create allocations for opportunities with a positive amount.	正の金額でのみ支援の割り当てを作成できます。	-
+CustomLabel.alloDefaultGAUMissing	You've enabled Default Allocations. You also need to select a default General Accounting Unit.	デフォルトの割り当てが有効になりました。デフォルトの一般会計単位も選択する必要があります。	-
+CustomLabel.alloDefaultNotPercent	The default allocation cannot be percentage-based.	デフォルトの割り当てはパーセントベースにできません。	-
+CustomLabel.alloDeleteRow	Delete	削除	-
+CustomLabel.alloExceedsOppAmount	You need to update your allocations before you can reduce the amount of an opportunity. The allocations for this opportunity are currently greater than the opportunity amount.	支援の金額を減らすには、まず割り当てを更新する必要があります。現在、この支援の割り当てが支援金額より大きくなっています。	-
+CustomLabel.alloManageCampaignAllocations	Manage Campaign Allocations	キャンペーンの割り当てを管理	-
+CustomLabel.alloManageOppAllocations	Manage Opportunity Allocations	支援の割り当てを管理	-
+CustomLabel.alloManageRecurringDonationAllocations	Manage Recurring Donation Allocations	継続支援の割り当てを管理	-
+CustomLabel.alloModifyCurrency	You can't modify allocation currencies directly. An allocation's currency is updated when the parent Opportunity, Campaign, or Recurring Donation currency is modified.	割り当ての通貨は直接変更できません。割り当ての通貨は、親支援、キャンペーン、または継続支援の通貨が変更されると更新されます。	-
+CustomLabel.alloNegativeAmount	Allocations cannot have a negative amount.	割り当てに負の金額を設定することはできません。	-
+CustomLabel.alloNegativePercent	Allocations cannot have a negative percent.	割り当てに負のパーセントを設定することはできません。	-
+CustomLabel.alloPercentExceed100	Percent-based allocations cannot exceed 100%.	パーセントベースの割り当ては 100% 以下にしてください。	-
+CustomLabel.alloRemainder	Remainder:	残り:	-
+CustomLabel.alloSingleParent	Each allocation must have a single parent object: Opportunity, Recurring Donation, or Campaign.	各割り当てには、1 つのパーセントオブジェクト (支援、継続支援、またはキャンペーン) が設定されている必要があります。	-
+CustomLabel.alloTotalExceedsOppAmt	Opportunity allocation totals cannot exceed the amount of the opportunity.	支援の割り当ての総額は、支援の金額以下にしてください。	-
+CustomLabel.alloTotals	Totals:	計:	-
+CustomLabel.bdiAccountCustomIdError	The Account Custom Unique ID setting field {0} must have matching fields in the NPSP Data Import object whose API Names are {1} and {2}.	[一意の団体カスタム ID] 設定項目の {0} には、API 参照名が {1} および {2} の NPSP データインポートオブジェクトの一致項目が必要です。	-
+CustomLabel.bdiBatchException	An error occurred during the process.  The following status was the first reported error:	処理中にエラーが発生しました。次の状況は、最初に報告されたエラーです:	-
+CustomLabel.bdiBtnClose	Close	完了	-
+CustomLabel.bdiComplete	Completed	完了	-
+CustomLabel.bdiCompleteWithErrors	Errors	エラー	-
+CustomLabel.bdiContactCustomIdError	The Contact Custom Unique ID setting field {0} must have matching fields in the NPSP Data Import object whose API Names are {1} and {2}.	[一意の個人カスタム ID] 設定項目の {0} には、API 参照名が {1} および {2} の NPSP データインポートオブジェクトの一致項目が必要です。	-
+CustomLabel.bdiContactMatchEmail	Email only	メールのみ	-
+CustomLabel.bdiContactMatchFnameEmail	First Name and Email	名とメール	-
+CustomLabel.bdiContactMatchFnameLname	First Name and Last Name	名と姓	-
+CustomLabel.bdiContactMatchFnameLnameEmail	First Name, Last Name, and Email	名、姓、メールアドレス	-
+CustomLabel.bdiContactMatchLnameEmail	Last Name and Email	姓とメール	-
+CustomLabel.bdiCreated	Created	作成済み	-
+CustomLabel.bdiDataImporterConfigTitle	Configuration Options	設定オプション	-
+CustomLabel.bdiDataImporterDescription	The NPSP Data Importer helps you easily import your data into the Nonprofit Success Pack	NPSP データインポーターを使用すると、簡単にデータを Nonprofit Success Pack にインポートできます	-
+CustomLabel.bdiDataImporterInfoLine1	Each import record can contain up to 2 Contacts, up to 2 Organizations, an optional Home Address, and an optional Donation.	各インポートレコードには、最大 2 人の個人、最大 2 つの団体、1 つの自宅住所 (省略可能)、1 つの支援 (省略可能) を含めることができます。	-
+CustomLabel.bdiDataImporterInfoLine2	Salesforce will try to match existing Contacts and Organizations, and update their information, rather than creating duplicate records.	Salesforce は、既存の個人と団体を照合して、重複レコードを作成することなく情報を更新します。	-
+CustomLabel.bdiDataImporterInfoLine2b	In order to avoid reaching service limits, the NPSP Data Importer does not verify addresses through the verification service you may have specified in NPSP Settings.	サービスの制限に達することを回避するために、NPSP データインポーターは NPSP 設定で指定した可能性のある検証サービスを介して住所を検証しません。	-
+CustomLabel.bdiDataImporterInfoLine3	Salesforce will track any data import problems on individual import records. After resolving any issues, you can re-import those failed records without having to worry about creating duplicate records.	Salesforce は、各インポートレコードのデータインポートの問題を追跡します。問題が解決したら、失敗したこれらのレコードを再インポートできます。重複レコードは作成されません。	-
+CustomLabel.bdiDataImporterInfoLine4	The start of the data import may not begin immediately. Its processing depends on Salesforce's current activity.	データインポートはすぐに開始されないことがあります。この処理は、Salesforce の現在のアクティビティによって異なります。	-
+CustomLabel.bdiDataImporterInfoTitle	Important Information	重要な情報	-
+CustomLabel.bdiDataImporterNumToProcess	Number of Data Import records to process:	処理するデータインポートレコードの数:	-
+CustomLabel.bdiDataImporterTitle	NPSP Data Import	NPSP データインポート	-
+CustomLabel.bdiDonation	Donation	支援	-
+CustomLabel.bdiErrorInvalidCampaignName	Invalid Donation Campaign Name	無効な支援キャンペーン名	-
+CustomLabel.bdiErrorInvalidDonor	Invalid Donation Donor	無効な支援者	-
+CustomLabel.bdiErrorInvalidLastname	Last Name must be specified.	姓を指定する必要があります。	-
+CustomLabel.bdiErrorInvalidOppRTName	Invalid Donation Record Type Name	無効な支援レコードタイプ名	-
+CustomLabel.bdiErrorNonHHAccountContact	Matched an existing contact from a non-Household Account, which is not supported.	サポートされていない、世帯団体以外の既存の個人に一致しました。	-
+CustomLabel.bdiFailed	Failed	失敗	-
+CustomLabel.bdiHouseholdModelRequired	The NPSP Data Importer only works with the Household Account model.	NPSP データインポーターは、世帯団体モデルでのみ機能します。	-
+CustomLabel.bdiIgnored	Ignored	無視	-
+CustomLabel.bdiImported	Imported	インポート済み	-
+CustomLabel.bdiMatched	Matched	一致	-
+CustomLabel.bdiRecordsFailed	Records failed:	レコードが失敗しました:	-
+CustomLabel.bdiRecordsImported	Records imported:	レコードがインポートされました:	-
+CustomLabel.bdiRecordsProcessed	Records processed:	レコードが処理されました:	-
+CustomLabel.bdiRunBtn	Begin Data Import Process	データインポート処理を開始	-
+CustomLabel.bdiStatus	Current Status:	現在の状況:	-
+CustomLabel.bdiStatusProcessed	processed {0} of {1} total batches.	合計バッチ数の {0}/{1} が処理されました。	-
+CustomLabel.bdiStatusProcessing	is currently processing batch {0} of {1} total batches.	は、現在合計バッチ数の {0}/{1} を処理しています。	-
+CustomLabel.bdiTime	Time:	時間:	-
+CustomLabel.conMergeErrNoPersonAccounts	Person accounts are not supported.	個人団体はサポートされていません。	-
+CustomLabel.flsError	You do not have permissions to modify {0}.	{0} を変更する権限がありません。	-
+CustomLabel.healthButtonRun	Run Health Check	状態チェックを実行	-
+CustomLabel.healthDetailsAccOne2OneNoContacts	There are {0} One-to-One Accounts who have no Contacts.	個人が含まれていない 1 対 1 の団体が {0} 個あります。	-
+CustomLabel.healthDetailsAccountModel	There is no valid Account Model specified.	有効な団体モデルが指定されていません。	-
+CustomLabel.healthDetailsAccountProcessor	The Account Model is set to {0}, but Health Check has found that you're using a mixture of Account types.	団体モデルが {0} に設定されていますが、団体種別が混在して使用されています。	-
+CustomLabel.healthDetailsAccountRTIssue	{0} Account records using the {1} record type do not have their System fields correctly set.	{1} レコードタイプを使用している {0} 件の団体レコードのシステム項目が正しく設定されていません。	-
+CustomLabel.healthDetailsAutoRelCampaignTypeMissing	Campaign Type must be specified for Relationship Autocreation from CampaignMembers.	CampaignMembers のリレーション自動作成では、キャンペーン種別を指定する必要があります。	-
+CustomLabel.healthDetailsAutoRelFieldsMissing	Relationship Autocreation requires a valid Object, Field and Relationship Type specified.	リレーション自動作成では、有効なオブジェクト、項目およびリレーション種別を指定する必要があります。	-
+CustomLabel.healthDetailsAutoRelInvalidLookupField	Field {0} is not a lookup field.	項目 {0} は参照項目ではありません。	-
+CustomLabel.healthDetailsBadRDField	Recurring Donation field {0} does not exist.	継続支援項目 {0} が存在しません。	-
+CustomLabel.healthDetailsBadReportId	Invalid Report {0} specified.	無効なレポート {0} が指定されました。	-
+CustomLabel.healthDetailsContactData	There are {0} Contacts who have no Account.  These Contacts will be private to the user who created them.	団体のない個人が {0} 人います。これらの個人は、その個人を作成したユーザにのみ公開されます。	-
+CustomLabel.healthDetailsDuplicateAcctRT	You cannot specify the same Account Record Type for the Household Account Record Type and One-to-One Record Type.	世帯団体レコードタイプと 1 対 1 のレコードタイプに同じ団体レコードタイプを指定することはできません。	-
+CustomLabel.healthDetailsGenderField	Gender field {0} does not exist on Contact.	性別項目 {0} が個人に存在しません。	-
+CustomLabel.healthDetailsHHAccountModel	When using the Household Account Model, Household Rules must be set to No Contacts.	世帯団体モデルを使用している場合、[世帯ルール] を [個人なし] に設定する必要があります。	-
+CustomLabel.healthDetailsHHActNoContacts	There are {0} Household Accounts who have no Contacts.	個人のない世帯団体が {0} 個あります。	-
+CustomLabel.healthDetailsHHObNoContacts	There are {0} Household objects who have no Contacts.	個人のない世帯オブジェクトが {0} 個あります。	-
+CustomLabel.healthDetailsInvalidCMField	CampaignMember field {0} does not exist.	CampaignMember 項目 {0} が存在しません。	-
+CustomLabel.healthDetailsInvalidContactField	Contact field {0} does not exist.	個人項目 {0} が存在しません。	-
+CustomLabel.healthDetailsInvalidErrorChatterGroup	Invalid Chatter Group {0}.	Chatter グループ {0} が無効です。	-
+CustomLabel.healthDetailsInvalidErrorRecipient	Invalid Error Notification recipient.	エラー通知受信者が無効です。	-
+CustomLabel.healthDetailsInvalidErrorUser	Invalid User {0}.	ユーザ {0} が無効です。	-
+CustomLabel.healthDetailsInvalidFiscalYears	Fiscal Year Rollups are not supported when the organization is using Custom Fiscal Years.	組織でカスタム会計年度を使用している場合、会計年度の積み上げ集計はサポートされません。	-
+CustomLabel.healthDetailsInvalidObjectField	{0} field {1} does not exist.	{0} 項目 {1} が存在しません。	-
+CustomLabel.healthDetailsInvalidOppField	Opportunity field {0} does not exist.	支援項目 {0} が存在しません。	-
+CustomLabel.healthDetailsInvalidOppStage	The Opportunity stage {0} does not exist or is not active.	支援フェーズ {0} が存在しないか、有効ではありません。	-
+CustomLabel.healthDetailsInvalidPaymentField	Payment field {0} does not exist.	支払項目 {0} が存在しません。	-
+CustomLabel.healthDetailsInvalidRDCustomPeriod	Custom Installment Period {0} is not included in the picklist values for Recurring Donation field Installment Period.	継続支援項目の間隔の選択リスト値にカスタム間隔 {0} が含まれていません。	-
+CustomLabel.healthDetailsInvalidRDCustomPeriodPIcklist	Recurring Donation Installment Period picklist value {0} is not a valid Custom Installment Period.	継続支援の間隔の選択リスト値 {0} が有効なカスタム間隔ではありません。	-
+CustomLabel.healthDetailsInvalidRecordtypeId	Recordtype Id {0} is invalid.	Recordtype ID {0} が無効です。	-
+CustomLabel.healthDetailsInvalidRecordtypeName	Recordtype Name {0} is invalid.	Recordtype 名 {0} が無効です。	-
+CustomLabel.healthDetailsInvalidScheduledJob	The record {0} in the Schedulable__c object is not valid.	Schedulable__c オブジェクトのレコード {0} が無効です。	-
+CustomLabel.healthDetailsMailingListReportMissing	The NPSP_Campaign_Household_Mailing_List report is missing which is used by the Household Mailing List button.	[世帯郵送先名簿] ボタンで使用される NPSP_Campaign_Household_Mailing_List レポートがありません。	-
+CustomLabel.healthDetailsMissingOppPayments	{0} Opportunities that should have Payments are missing those Payments.	支払が設定されている必要のある {0} 個の支援に支払が設定されていません。	-
+CustomLabel.healthDetailsNothingScheduled	The NPSP default scheduled classes are not scheduled.	NPSP グローバルスケジュールクラスがスケジュールされていません。	-
+CustomLabel.healthDetailsOCRDupPrimary	There were {0} opportunities found that had more than one Opportunity Contact Role marked as Primary.	複数の支援個人の役割が [主] とマークされている支援が {0} 個見つかりました。	-
+CustomLabel.healthDetailsOCRDupPrimaryValid	No Opportunities were found with multiple Primary Opportunity Contact Roles.	複数の主支援個人の役割が割り当てられている支援が見つかりました。	-
+CustomLabel.healthDetailsPaymentMappingBadDataTypes	Payment field {0} and Opportunity field {1} are not of compatible data types.	支払項目 {0} と支援項目 {1} のデータ型に互換性がありません。	-
+CustomLabel.healthDetailsRDFieldsBadDatatypes	Recurring Donation field {0} and Opportunity field {1} are not of compatible data types.	継続支援項目 {0} と支援項目 {1} のデータ型に互換性がありません。	-
+CustomLabel.healthDetailsRelReciprocalInvalid	Reciprocal Relationship {0} should have a value in at least one of the fields for Male, Female, or Neutral.	相互関係 {0} の [男性]、[女性]、[どちらでもない] のいずれかの項目に値が必要です。	-
+CustomLabel.healthDetailsSaveAcctFailed	Unable to create new Account.	新規団体を作成できません。	-
+CustomLabel.healthDetailsSaveOppsFailed	Unable to create new Opportunities.	新規支援を作成できません。	-
+CustomLabel.healthDetailsScheduleJobs	One or more of the Opportunity Rollup, Recurring Donation, and Seasonal Address jobs are missing from the Schedulable__c object.	1 つ以上の支援積み上げ集計、継続支援、および住所 (季節性) のジョブが Schedulable__c オブジェクトにありません。	-
+CustomLabel.healthDetailsTriggerHandlerDuplicate	Trigger Handler {0} on object {1} with the same Handler fields is repeated multiple times and will affect NPSP behavior.	同じハンドラ項目のあるオブジェクト {1} のトリガハンドラ {0} が複数回繰り返されているため、NPSP の動作に影響します。	-
+CustomLabel.healthDetailsTriggerHandlerMismatch	Trigger Handler {0} on object {1} does not match the default NPSP configuration.	オブジェクト {1} のトリガハンドラ {0} がデフォルトの NPSP 設定に一致しません。	-
+CustomLabel.healthDetailsTriggerHandlerMissing	Trigger Handler {0} on object {1} is missing and will affect NPSP behavior.	オブジェクト {1} のトリガハンドラ {0} がないため、NPSP の動作に影響します。	-
+CustomLabel.healthDetailsUDFBadDatatypes	Opportunity field {0} and {1} field {2} are not of compatible data types.	支援項目 {0} と {1}　項目 {2} のデータ型に互換性がありません。	-
+CustomLabel.healthDetailsValidRDCustomPeriod	Recurring Donation Custom Installment Periods are valid.	継続支援のカスタム間隔は有効です。	-
+CustomLabel.healthLabelAccountData	Account Data	団体データ	-
+CustomLabel.healthLabelAccountModelData	Account Model Data	団体モデルデータ	-
+CustomLabel.healthLabelAccountRTIssueValid	Account system fields for any Household Accounts and One-to-One Accounts are set correctly.	世帯団体と 1 対 1 の団体の団体システム項目は正常に設定されています。	-
+CustomLabel.healthLabelAllTestsPassed	All Health Check tests have successfully passed.	すべての状態チェックテストに合格しました。	-
+CustomLabel.healthLabelAutoRelValid	Automatic Relationships valid.	自動リレーションは有効です。	-
+CustomLabel.healthLabelContactData	Contact Data	個人データ	-
+CustomLabel.healthLabelErrorRecipientValid	Error Notification recipient valid.	エラー通知受信者は有効です。	-
+CustomLabel.healthLabelFailed	Failed	失敗	-
+CustomLabel.healthLabelFiscalYearsValid	Custom Fiscal Years are not in use.	カスタム会計年度は使用されていません。	-
+CustomLabel.healthLabelHHAccData	Household Account Data	世帯団体データ	-
+CustomLabel.healthLabelHHData	Household Data	世帯データ	-
+CustomLabel.healthLabelHHObjData	Household Object Data	世帯オブジェクトデータ	-
+CustomLabel.healthLabelIntro	Health Check verifies that all of your NPSP Settings are valid and looks for problems in your account-related data. When complete, you can view the results, including detailed information for any failures.	状態チェックにより、すべての設定が有効であることが確認され、団体関連のデータに問題がないかどうか検索されます。	-
+CustomLabel.healthLabelLastRun	Last run: {0}	最終実行日: {0}	-
+CustomLabel.healthLabelNoMissingOppPayments	All Opportunities with Payments have expected Payments.	支払が設定されているすべての支援に支払が必要です。	-
+CustomLabel.healthLabelNone	(none)	(なし)	-
+CustomLabel.healthLabelOCRCheck	Opportunity Contact Roles	支援個人の役割	-
+CustomLabel.healthLabelOppPayments	Opportunity Payments	支援の支払	-
+CustomLabel.healthLabelPassed	Passed	合格	-
+CustomLabel.healthLabelPaymentMappingsValid	Payment Mappings valid.	支払の対応付けは有効です。	-
+CustomLabel.healthLabelRDOppsValid	New opportunities can be saved.	新規支援を保存できます。	-
+CustomLabel.healthLabelRDValid	Recurring Donation Field Mappings valid.	継続支援項目の対応付けは有効です。	-
+CustomLabel.healthLabelRelReciprocalValid	Reciprocal Relationships valid.	相互関係は有効です。	-
+CustomLabel.healthLabelScheduler	NPSP Default Scheduler	NPSP グローバルスケジューラ	-
+CustomLabel.healthLabelSchedulerValid	NPSP recurring jobs are scheduled.	NPSP グローバルスケジューラジョブがスケジュールされました。	-
+CustomLabel.healthLabelShowPassedTests	Show Passed Tests	合格したテストを表示	-
+CustomLabel.healthLabelTime	Detection time in seconds: {0}	検出時間 (秒): {0}	-
+CustomLabel.healthLabelTriggerHandlerCheck	Trigger Configuration	トリガ設定	-
+CustomLabel.healthLabelTriggerHandlersValid	Triggers are configured for NPSP default triggers.	NPSP のデフォルトトリガにトリガが設定されています。	-
+CustomLabel.healthLabelUDFValid	User Defined Rollups valid.	ユーザ定義積み上げ集計は有効です。	-
+CustomLabel.healthLabelWarning	Warning	警告	-
+CustomLabel.healthPaymentAutoCloseStageInvalid	The selected opportunity stage to be transitioned to when all payments are paid must be an active Closed/Won stage.	すべての支払が完了したときの移行先として選択する支援フェーズは、有効な成立フェーズである必要があります。	-
+CustomLabel.healthPaymentAutoCloseStageMustBeActiveClosedWonOrBlank	Either do not select an opportunity stage (thus disabling the feature) or update the setting to use an active Closed/Won opportunity stage.	支援フェーズを選択しないか (この機能は無効になる)、有効な成立支援フェーズを使用するように設定を更新してください。	-
+CustomLabel.healthPaymentAutoCloseStageValid	Either no opportunity stage was selected for transitioning to when all payments are received, or the selected stage is an active Closed/Won stage.	すべての支払が完了したときの移行先となる支援フェーズが選択されていないか、選択されたフェーズが有効な成立フェーズです。	-
+CustomLabel.healthSolutionAccOne2OneNoContacts	Consider deleting these unused One-to-One Accounts to save space.	これらの未使用の 1 対 1 の団体を削除して領域を節約することを検討してください。	-
+CustomLabel.healthSolutionAccountModel	All of your Accounts should use the same Account Model. View all of your Accounts and their types by running the <b>Individual Accounts by Account Type</b> report in the NPSP Health Check reports folder.	すべての各個人で同じ団体モデルを使用する必要があります。これらの個人を表示するには、NPSP 状態チェックレポートフォルダで<b>団体種別ごとの別各個人</b>レポートを実行します。	-
+CustomLabel.healthSolutionAccountRTIssue	For Household Accounts, make sure npe01__SYSTEM_AccountType__c is 'Household Account'. For One-to-One Accounts, make sure npe01__SYSTEM_AccountType__c is 'One-to-One Individual'. Also make sure for both, npe01__SYSTEMISINDIVIDUAL__c is true.	世帯団体の場合、npe01__SYSTEM_AccountType__c が「世帯団体」であることを確認します。1 対 1 の団体の場合、npe01__SYSTEM_AccountType__c が「1 対 1 の個人」であることを確認します。どちらの場合も、npe01__SYSTEMISINDIVIDUAL__c が true であることを確認します。	-
+CustomLabel.healthSolutionAutoRelFieldsMissing	On the NPSP Settings tab, click {0} | {1}, and delete the invalid Relationship Autocreation record.	[NPSP 設定] タブで、{0} | {1} をクリックし、無効なリレーション自動作成レコードを削除します。	-
+CustomLabel.healthSolutionAutoRelInvalidCMField	On the NPSP Settings tab, click {0} | {1}, and add the missing CampaignMember field, or delete the Relationships Autocreate record.	[NPSP 設定] タブで、{0} | {1} をクリックし、欠落している CampaignMember 項目を追加するか、リレーション自動作成レコードを削除します。	-
+CustomLabel.healthSolutionAutoRelInvalidContactField	On the NPSP Settings tab, click {0} | {1}, and add the missing Contact field, or delete the Relationships Autocreation record.	[NPSP 設定] タブで、{0} | {1} をクリックし、欠落している個人項目を追加するか、リレーション自動作成レコードを削除します。	-
+CustomLabel.healthSolutionAutoRelInvalidLookupField	On the NPSP Settings tab, click {0} | {1}, and delete the Relationship Autocreation record.	[NPSP 設定] タブで、{0} | {1} をクリックし、リレーション自動作成レコードを削除します。	-
+CustomLabel.healthSolutionBadRDField	On the NPSP Settings tab, click {0} | {1}, and add the missing Recurring Donation field, or delete the Recurring Donation Field Mapping record.	[NPSP 設定] タブで、{0} | {1} をクリックし、欠落している継続支援項目を追加するか、継続支援項目の対応付けレコードを削除します。	-
+CustomLabel.healthSolutionContactData	View these Contacts by running the <b>Contacts without Accounts</b> report in the NPSP Health Check reports folder.	これらの個人を表示するには、NPSP 状態チェックレポートフォルダで<b>団体が関連しない個人</b>レポートを実行します。	-
+CustomLabel.healthSolutionEditSetting	On the NPSP Settings tab, click {1} | {2}, and edit the {0} setting.	[NPSP 設定] タブで、{1} | {2} をクリックし、{0} 設定を編集します。	-
+CustomLabel.healthSolutionHHAccNoContacts	Consider deleting these unused Household Accounts to save space. View these Household Accounts by running the <b>Empty Household Accounts</b> report in the NPSP Health Check reports folder	これらの未使用の世帯団体を削除して領域を節約することを検討してください。これらの世帯団体を表示するには、NPSP 状態チェックレポートフォルダで<b>空の世帯団体</b>レポートを実行します	-
+CustomLabel.healthSolutionHHObjNoContacts	Consider deleting these unused Household objects to save space. If you have completed a conversion to the Household Account model and no longer need the data on the Household object records they can be deleted.  View these Household objects by running the <b>Empty Household Objects</b> report in the NPSP Health Check reports folder.	これらの未使用の世帯オブジェクトを削除して領域を節約することを検討してください。世帯団体モデルへの変換が完了し、世帯オブジェクトレコードのデータが必要なくなった場合、それらを削除できます。これらの世帯オブジェクトを表示するには、NPSP 状態チェックレポートフォルダで<b>空の世帯オブジェクト</b>レポートを実行します。	-
+CustomLabel.healthSolutionInvalidFiscalYears	Since Salesforce does not support turning off Custom Fiscal Years, NPSP Rollups will default to Calendar Year.	Salesforce では、カスタム会計年度の無効化がサポートされていないため、NPSP の積み上げ集計はデフォルトの [年] になります。	-
+CustomLabel.healthSolutionInvalidOppField	On the NPSP Settings tab, click {0} | {1}, and add the missing Opportunity field, or delete the Payment Mapping record.	[NPSP 設定] タブで、{0} | {1} をクリックし、欠落している支援項目を追加するか、支払の対応付けレコードを削除します。	-
+CustomLabel.healthSolutionInvalidOppStage	Add this Opportunity Stage value in Salesforce Setup.	Salesforce の [設定] でこの支援フェーズの値を追加します。	-
+CustomLabel.healthSolutionInvalidPaymentField	On the NPSP Settings tab, click {0} | {1}, and add the missing Payment field, or delete the Payment Mapping record.	[NPSP 設定] タブで、{0} | {1} をクリックし、欠落している支払項目を追加するか、支払の対応付けレコードを削除します。	-
+CustomLabel.healthSolutionInvalidRDCustomPeriod	Add this Recurring Donation Installment Period picklist value in Salesforce Setup.	Salesforce の [設定] でこの継続支援の間隔の選択リスト値を追加します。	-
+CustomLabel.healthSolutionInvalidRDCustomPeriodPicklist	On the NPSP Settings tab, click {0} | {1}, and add the missing Recurring Donation Custom Installment Period, or delete the picklist value from the Installment Period field.	[NPSP 設定] タブで、{0} | {1} をクリックし、欠落している継続支援のカスタム間隔を追加するか、間隔項目から選択リスト値を削除します。	-
+CustomLabel.healthSolutionInvalidScheduledJob	You must update the record to have a valid Class the implements the UTIL_MasterSchedulableHelper.UTIL_IRecurring interface.	有効なクラスで UTIL_MasterSchedulableHelper.UTIL_IRecurring インターフェースが実装されるようにレコードを更新する必要があります。	-
+CustomLabel.healthSolutionInvalidUDFObjectField	On the NPSP Settings tab, click {0} | {1}, and add the missing field, or delete the User Rollup record.	[NPSP 設定] タブで、{0} | {1} をクリックし、欠落している項目を追加するか、ユーザ積み上げ集計レコードを削除します。	-
+CustomLabel.healthSolutionMailingListReportMissing	Create a report based on Campaigns with Contacts, where Member Status does not contain Duplicate.  Then specify this report on the {0} > {1} tab in NPSP Settings.	[メンバーの状況] に [重複] が含まれていない、個人が関連するキャンペーンに基づいてレポートを作成します。次に、[NPSP 設定] の {0} > {1} タブでこのレポートを指定します。	-
+CustomLabel.healthSolutionMissingOppPayments	View these Opportunities by running the <b>Opportunities without Payments</b> report in the NPSP Health Check reports folder.  Note that you should add filter criteria on the report for any Opportunity Types and Opportunity RecTypes you've excluded in NPSP Payments Settings. You can create them using the Create Missing Payments button on NPSP Settings > Donations > Payments.	これらの支援を表示するには、NPSP 状態チェックレポートフォルダで<b>支払が関連しない支援</b>レポートを実行します。NPSP の支払設定で除外した支援種別や支援 RecTypes の場合、レポートに検索条件を追加する必要があります。これらを作成するには、[NPSP 設定] > [支援] > [支払] の [欠落している支払を作成] ボタンを使用します。	-
+CustomLabel.healthSolutionNothingScheduled	You must schedule the NPSP default scheduled classes to run.	{0} というジョブ名で毎日実行するようにクラス UTIL_MasterSchedulable をスケジュールする必要があります。	-
+CustomLabel.healthSolutionOCRDupPrimary	Having multiple OpportunityContactRoles marked Primary can cause Opportunity rollups, such as Total Gifts, to be incorrectly calculated.  View these Opportunities by running the <b>Opportunities with Primary Contact Roles</b> report in the NPSP Health Check reports folder, and looking at the records with 2 or more Primary Contact Roles.	複数の OpportunityContactRoles を [主] としてマークすると、これまでの支援総額などの支援積み上げ集計が誤って計算される可能性があります。これらの支援を表示するには、NPSP 状態チェックレポートフォルダで<b>主個人の役割が関連する支援</b>レポートを実行し、2 つ以上の主個人の役割のあるレコードを見つけます。	-
+CustomLabel.healthSolutionOCRException	If you have a large amount of Opportunties and Opportunity Contact Roles, over 50,000, you can safely ignore any error dealing with soql limits.	支援や支援個人の役割が 50,000 を超える場合、SOQL 制限の処理で発生したエラーを無視しても問題ありません。	-
+CustomLabel.healthSolutionPaymentMappingBadDataTypes	On the NPSP Settings tab, click {0} | {1}, and delete the Payment Mapping record.	[NPSP 設定] タブで、{0} | {1} をクリックし、支払の対応付けレコードを削除します。	-
+CustomLabel.healthSolutionRDBadOppField	On the NPSP Settings tab, click {0} | {1}, and add the missing Opportunity field, or delete the Recurring Donation Field Mapping record.	[NPSP 設定] タブで、{0} | {1} をクリックし、欠落している支援項目を追加するか、継続支援項目の対応付けレコードを削除します。	-
+CustomLabel.healthSolutionRDFieldsBadDatatypes	On the NPSP Settings tab, click {0} | {1}, and delete the Recurring Donation Field Mapping record.	[NPSP 設定] タブで、{0} | {1} をクリックし、継続支援項目の対応付けレコードを削除します。	-
+CustomLabel.healthSolutionRelReciprocalInvalid	On the NPSP Settings tab, click {0} | {1}, and delete the Reciprocal Relationship record, and create a new one with the required information.	[NPSP 設定] タブで、{0} | {1} をクリックし、相互関係レコードを削除して、必要な情報で新規相互関係レコードを作成します。	-
+CustomLabel.healthSolutionSaveOppsFailed	Make sure you have no Validation Rules, Required Fields, or Workflow Rules that would prevent an Opportunity or Account from being saved.	支援または団体が保存されないようにする入力規則、必須項目、またはワークフロールールがないことを確認します。	-
+CustomLabel.healthSolutionScheduleJobs	All NPSP scheduled classes should have records in Schedulable__c in order for these features to work correctly.	これらの機能が正常に動作するには、すべての NPSP のスケジュール済みクラスに Schedulable__c のレコードが含まれている必要があります。	-
+CustomLabel.healthSolutionTriggerHandlerMismatch	If the Trigger Handlers do not match the default NPSP configuration, functionality in NPSP may be disabled or modified.  Modifications should only be performed by someone knowledgable with the NPSP Trigger Handlers, and how changing them will affect system behavior.	トリガハンドラがデフォルトの NPSP 設定と一致しない場合、NPSP の機能が無効または変更されている可能性があります。変更は、NPSP トリガハンドラや、システムの動作に対する変更の影響について知識のあるユーザのみが行う必要があります。	-
+CustomLabel.healthSolutionUDFBadDatatypes	On the NPSP Settings tab, click {0} | {1}, and delete the User Rollup record.	[NPSP 設定] タブで、{0} | {1} をクリックし、ユーザ積み上げ集計レコードを削除します。	-
+CustomLabel.healthSolutionUDFOppField	On the NPSP Settings tab, click {0} | {1}, and add the missing Opportunity field, or delete the User Rollup record.	[NPSP 設定] タブで、{0} | {1} をクリックし、欠落している支援項目を追加するか、ユーザ積み上げ集計レコードを削除します。	-
+CustomLabel.hhCmpDedupLabelReturnToCmp	Return to Campaign	キャンペーンに戻る	-
+CustomLabel.hhCmpDedupeBatchMessage	Due to the size of this campaign, the process to identify household members is being done in batch, and may take several minutes to complete.  Once progress is complete, click on the link to open the report.	このキャンペーンのサイズが大きいため、世帯メンバーを特定する処理がバッチで実行されており、完了するまでに数分かかる場合があります。進行状況が完了したら、リンクをクリックしてレポートを開きます。	-
+CustomLabel.hhCmpDedupeBatchProgressTitle	Campaign Household Deduplication	キャンペーンの世帯の重複排除	-
+CustomLabel.hhCmpDedupeLabelOpenReport	Open Report	レポートを開く	-
+CustomLabel.hhCmpDedupeNoReport	Could not find report. Create a report with the Report Unique Name of  'NPSP_Campaign_Household_Mailing_List'. NOTE: Report type should be Campaigns with Contacts. Filter for Member Status does not contain 'Duplicate'.	レポートが見つかりませんでした。[レポートの一意の名前] が「NPSP_Campaign_Household_Mailing_List」のレポートを作成します。注意: [レポートタイプ] は [個人が関連するキャンペーン] である必要があります。[メンバーの状況] に [重複] が含まれていないものを抽出する検索条件。	-
+CustomLabel.hhCmpDedupeStatus	- Household Duplicate	#NAME?	-
+CustomLabel.labelListViewFirst	First	名	-
+CustomLabel.labelListViewLast	Last	姓	-
+CustomLabel.labelListViewNext	Next	次へ	-
+CustomLabel.labelListViewPageInfo	&nbsp;&nbsp;&nbsp;Page {0} of {1} &nbsp;&nbsp;({2} records)	&nbsp;&nbsp;&nbsp;{0}/{1} ページ&nbsp;&nbsp;({2} 件のレコード)	-
+CustomLabel.labelListViewPrevious	Previous	前へ	-
+CustomLabel.labelMessageLoading	Loading...	読み込み中...	-
+CustomLabel.labelShowMore	Show more	表示件数を増やす	-
+CustomLabel.lblNPSPSettings	NPSP Settings	NPSP 設定	-
+CustomLabel.leadConvertAccountName	Account	団体	-
+CustomLabel.leadConvertAffilationName	Affiliated Account	アフィリエイト団体	-
+CustomLabel.leadConvertAffiliateExistingAccount	Affiliate with Existing:	既存の団体とアフィリエイト:	-
+CustomLabel.leadConvertAffiliateNewAccount	Affiliate with New Account:	新規団体とアフィリエイト:	-
+CustomLabel.leadConvertAffiliatedAccount	Affiliated Account	アフィリエイト団体	-
+CustomLabel.leadConvertAttachBucketAccount	Attach to Individual Bucket Account	個人 (バケット) の団体に添付	-
+CustomLabel.leadConvertAttachExistingAccount	Attach to Existing:	既存の団体に添付:	-
+CustomLabel.leadConvertAutocreateHHAccount	Create Household Account	世帯団体を作成	-
+CustomLabel.leadConvertAutocreateOne2OneAccount	Create One-to-One Account	1 対 1 の団体を作成	-
+CustomLabel.leadConvertBtnCancel	Cancel	キャンセル	-
+CustomLabel.leadConvertBtnConvert	Convert	変換	-
+CustomLabel.leadConvertContactAccount	Contact Account	個人 団体	-
+CustomLabel.leadConvertCreateAccount	Create New Account:	新規団体を作成:	-
+CustomLabel.leadConvertCreateNewContact	Create New:	新規作成:	-
+CustomLabel.leadConvertMergeExistingContact	Merge with Existing:	既存の団体とマージ:	-
+CustomLabel.leadConvertNewOpp	Do not create a new {0} upon conversion.	変換時に新規{0}は作成しない。	-
+CustomLabel.leadConvertOwner	Record Owner	レコードの所有者	-
+CustomLabel.leadConvertPageTitle	Convert Lead:	リードの取引開始:	-
+CustomLabel.leadConvertSectionTitle	Convert Lead	リードの取引開始	-
+CustomLabel.leadConvertSendEmail	Send Email to the Owner	所有者にメールを送信する	-
+CustomLabel.leadConvertStatus	Converted Status	取引開始後の状況	-
+CustomLabel.leadConvertViewContactError	You can only view existing contacts.	参照できるのは既存の個人のみとなります。	-
+CustomLabel.mtchBtnSearch	Search	検索	-
+CustomLabel.mtchCloseDateEnd	Close Date End	完了予定日の終了	-
+CustomLabel.mtchCloseDateStart	Close Date Start	完了予定日の開始	-
+CustomLabel.mtchFindMatchedGiftsSectionHeader	Find Matched Gifts	マッチングされた支援の検索	-
+CustomLabel.mtchFindMoreGifts	Find More Gifts	他の支援を検索	-
+CustomLabel.mtchFindMoreGiftsInfo	Fill in one or more filters, and then click on Search.	1 つ以上の検索条件を入力し、[検索] をクリックします。	-
+CustomLabel.mtchItems	{0} items	{0} 個の項目	-
+CustomLabel.mtchSearchCriteriaEmpty	Please specify one or more filters in order to search.	検索するには、1 つ以上の検索条件を指定してください。	-
+CustomLabel.mtchSelectCbxTitle	Select	選択	-
+CustomLabel.mtchTotalMatchingGift	Total Matching Gift	マッチングギフトの総額	-
+CustomLabel.mtchTotalSelected	Total Selected	選択済みの総額	-
+CustomLabel.mtchTotalUnaccounted	Total Unaccounted	使途不明の総額	-
+CustomLabel.oppInstallmentsOf	of	/	-
+CustomLabel.oppNamingBoth	Both	両方	-
+CustomLabel.oppNamingIndividual	Contact Donations	個人支援	-
+CustomLabel.oppNamingOrganizational	Organization Donations	団体支援	-
+CustomLabel.pmtWizardBtnCalcPayments	Calculate Payments	支払を計算	-
+CustomLabel.pmtWizardBtnCreatePayments	Create Payments	支払を作成	-
+CustomLabel.pmtWizardBtnRemovePaidPayments	Remove Paid Payments	完了した支払を削除	-
+CustomLabel.pmtWizardClosedLost	NOTE: This opportunity is marked closed lost. To create payments, first edit the opportunity record and change the stage to an open or closed won stage.	注意: この支援は不成立としてマークされます。支払を作成するには、まず支援レコードを編集し、フェーズを進行中または成立に変更します。	-
+CustomLabel.pmtWizardCreateSchedule	Create a Payment Schedule	支払スケジュールを作成	-
+CustomLabel.pmtWizardFirstPaymentDate	Date of First Payment	最初の支払日	-
+CustomLabel.pmtWizardInterval	Interval	期間	-
+CustomLabel.pmtWizardMsgNoOppFound	No opportunity found.	支援が見つかりません。	-
+CustomLabel.pmtWizardNoUnpaidAmount	NOTE: This opportunity has no unpaid amount. To create payments, first edit the opportunity record and enter an amount or click the button to delete existing payments. If the opportunity is closed, you may need to reopen it.	注意: この支援には未払金額がありません。支払を作成するには、まず支援レコードを編集して金額を入力するか、既存の支払を削除するボタンをクリックします。支援が閉じられている場合、必要に応じて再度開きます。	-
+CustomLabel.pmtWizardNoWriteoffAmount	NOTE: This opportunity has no unpaid amount. To write off payments, first edit the opportunity record and enter an amount or delete existing payments.	注意: この支援には未払金額がありません。支払を取り消すには、まず支援レコードを編集して金額を入力するか、既存の支払を削除します。	-
+CustomLabel.pmtWizardNumberOfPayments	# of Payments	支払数	-
+CustomLabel.pmtWizardPaymentNumber	Payment Number	支払番号	-
+CustomLabel.pmtWizardPaymentsDisabled	You do not have NPSP Payments Enabled. To use the Payment Scheduling Wizard, please enable Payments on the NPSP Settings page.	NPSP の支払が有効になっていません。支払スケジュールウィザードを使用するには、[NPSP 設定] ページで支払を有効にしてください。	-
+CustomLabel.pmtWizardPaymentsDisabledTitle	NPSP Payments Not Enabled	NPSP の支払が有効になっていません	-
+CustomLabel.pmtWizardSectionTitle	Current Opportunity Info	現在の支援情報	-
+CustomLabel.pmtWizardSectionWriteoff	Write Off Remaining Balance	残高の消去	-
+CustomLabel.pmtWizardSectionWriteoffPayments	Write Off Payments	支払の消去	-
+CustomLabel.pmtWizardSubtitle	Create one or more Payments for this Opportunity	この支援の 1 つ以上の支払を作成します	-
+CustomLabel.pmtWizardToBeCreated	Payments to be Created	作成する支払	-
+CustomLabel.pmtWizardWarning	Warning	警告	-
+CustomLabel.pmtWizardWriteoffDate	Which date would you like to use?	どの日付を使用しますか?	-
+CustomLabel.pmtWizardWriteoffMessage	You are preparing to write off {0} Payment(s) totaling {1}.	{0} 件の支払 (合計 {1}) を消去する準備をしています。	-
+CustomLabel.pscManageSoftCreditsAdd	Add another soft credit	別のソフトクレジットを追加	-
+CustomLabel.pscManageSoftCreditsAmount	Amount	金額	-
+CustomLabel.pscManageSoftCreditsAmountMissing	Please enter a soft credit amount for all entries.	すべてのエントリのソフトクレジット金額を入力してください。	-
+CustomLabel.pscManageSoftCreditsAmountOrPercent	Amount or Percent	金額またはパーセント	-
+CustomLabel.pscManageSoftCreditsCantChangeCurrency	You can't modify partial soft credit currencies directly. A partial soft credit's currency is updated when the parent opportunity's currency is modified.	ソフトクレジット (一部) の通貨は直接変更できません。ソフトクレジット (一部) の通貨は、親支援の通貨が変更されると更新されます。	-
+CustomLabel.pscManageSoftCreditsFull	Full	フル	-
+CustomLabel.pscManageSoftCreditsInvalidContact	{0} is the Primary Contact for this Opportunity. You cannot add Soft Credit to this Contact.	{0} は、この支援の主個人です。この個人にソフトクレジットを追加できません。	-
+CustomLabel.pscManageSoftCreditsNoRoles	You have no Roles specified as Soft Credit Roles.  Under NPSP Settings, Donations, Contact Roles, you need to add the appropriate Roles to the Soft Credit Roles setting.	[ソフトクレジットの役割] に役割が指定されていません。[NPSP 設定]、[支援]、[個人の役割] で、適切な役割を [ソフトクレジットの役割] 設定に追加する必要があります。	-
+CustomLabel.pscManageSoftCreditsOppAmount	Total Amount	総額	-
+CustomLabel.pscManageSoftCreditsPSCAmount	Soft Credit Amount	ソフトクレジット金額	-
+CustomLabel.pscManageSoftCreditsPartial	Partial	一部	-
+CustomLabel.pscManageSoftCreditsPercent	Percent	パーセント	-
+CustomLabel.pscManageSoftCreditsPrimaryDonor	Primary Donor	主支援者	-
+CustomLabel.pscManageSoftCreditsReconcileFail	Total Soft Credit Amount must be less than or equal to the Opportunity Amount.  Check 'Allow Soft Credit Amount more than Total Amount' to override.	ソフトクレジットの総額は、支援金額以下である必要があります。上書きするには、[総額を超えるソフトクレジット金額を許可] をオンにします。	-
+CustomLabel.pscManageSoftCreditsRestrictions	Soft Credit Restrictions	ソフトクレジットの制限	-
+CustomLabel.pscManageSoftCreditsRoleMissing	You must specify a Role Name for all Soft Credits.	すべてのソフトクレジットの役割名を指定する必要があります。	-
+CustomLabel.pscManageSoftCreditsTitle	Manage Soft Credits	ソフトクレジットの管理	-
+CustomLabel.pscManageSoftCreditsType	Type	種別	-
+CustomLabel.pscManageSoftCreditsUnaccounted	Total Unaccounted	使途不明の総額	-
+CustomLabel.pscManageSoftCreditsValidateTotals	Allow Soft Credit Amount more than Total Amount	総額を超えるソフトクレジット金額を許可	-
+CustomLabel.sendAcknowledgmentFailedStatus	Email Acknowledgment Not Sent	メール受領確認未送信	-
+CustomLabel.sendAcknowledgmentFailureReasons	The following records were not acknowledged. Acknowledgements can fail if there is no workflow rule (Acknowledgement Status EQUALS 'Send Acknowledgement') activated to send the acknowledgement, or if the records did not meet additional criteria to trigger the workflow rule. For example, if Primary Contact is not set, or if the Primary Contact's email field is empty or invalid.	次のレコードは承認されませんでした。承認を送信するためのワークフロールール (「承認状況」「次の文字列と一致する」「承認の送信」) が有効化されていない場合、またはワークフロールールをトリガする追加条件をレコードが満たしていない場合、承認に失敗する可能性があります。たとえば、主個人が設定されていない場合や、主個人のメール項目が空または無効な場合です。	-
+CustomLabel.sendAcknowledgmentFireStatus	Email Acknowledgment Now	今すぐメール受領確認	-
+CustomLabel.sendAcknowledgmentNoneSelected	You must select one or more Opportunities before clicking Email Acknowledgments.	[メール承認] をクリックする前に 1 つ以上の支援を選択する必要があります。	-
+CustomLabel.sendAcknowledgmentNumberNoEmail	{0} acknowledgment(s) were not sent.	{0} 件の承認が送信されませんでした。	-
+CustomLabel.sendAcknowledgmentNumberSent	{0} acknowledgment(s) sent.	{0} 件の承認が送信されました。	-
+CustomLabel.sendAcknowledgmentPageTitle	Email Acknowledgments	メール受領確認	-
+CustomLabel.sendAcknowledgmentReturnLinkLabel	Return to Opportunity	支援に戻る	-
+CustomLabel.sendAcknowledgmentSucceeded	Acknowledged	承認済み	-
+CustomLabel.stgAddrMustChooseClass	You must choose a verification service in order to enable automatic verification.	自動検証を有効にするには、検証サービスを選択する必要があります。	-
+CustomLabel.stgBtnCancel	Cancel	キャンセル	-
+CustomLabel.stgBtnClearErrorLog	Clear Error Log	エラーログをクリア	-
+CustomLabel.stgBtnCreateAutoRel	Create Automatic Relationship	自動リレーションを作成	-
+CustomLabel.stgBtnCreateMapping	Create Custom Mapping	カスタム対応付けを作成	-
+CustomLabel.stgBtnCreateRDPeriod	Create Custom Installment Period	カスタム間隔を作成	-
+CustomLabel.stgBtnCreateRelReciprocal	Create Reciprocal Relationship	相互関係を作成	-
+CustomLabel.stgBtnCreateTH	Create Trigger Handler	トリガハンドラを作成	-
+CustomLabel.stgBtnCreateUDR	Create Rollup	積み上げ集計を作成	-
+CustomLabel.stgBtnEdit	Edit	編集	-
+CustomLabel.stgBtnHHAutoName	Refresh All Household Names	すべての世帯名を更新	-
+CustomLabel.stgBtnNewAutoRel	New Automatic Relationship	新規自動リレーション	-
+CustomLabel.stgBtnNewONS	New Opportunity Name	新規支援名設定	-
+CustomLabel.stgBtnNewPaymentMap	New Payment Field Mapping	新規支払項目の対応付け	-
+CustomLabel.stgBtnNewRDFieldMap	New Custom Field Mapping	新規カスタム項目の対応付け	-
+CustomLabel.stgBtnNewRDPeriod	New Custom Installment Period	新規カスタム間隔	-
+CustomLabel.stgBtnNewRelReciprocal	New Reciprocal Relationship	新規相互関係	-
+CustomLabel.stgBtnNewTH	New Trigger Handler	新規トリガハンドラ	-
+CustomLabel.stgBtnNewUDR	New User Defined Rollup	新規ユーザ定義積み上げ集計	-
+CustomLabel.stgBtnRDCreateNewMap	Create Custom Field Mapping	カスタム項目の対応付けを作成	-
+CustomLabel.stgBtnRefreshOpportunityNames	Refresh All Opportunity Names	すべての支援名を更新	-
+CustomLabel.stgBtnRefreshPrimaryContacts	Refresh All Opportunity Primary Contacts	すべての支援の主個人を更新	-
+CustomLabel.stgBtnRunBatch	Run Batch	バッチを実行	-
+CustomLabel.stgBtnSave	Save	保存	-
+CustomLabel.stgErrorINaming	Implementing Class does not implement interface HH_INaming.	実装クラスにインターフェース HH_INaming が実装されていません。	-
+CustomLabel.stgErrorInvalidClass	Invalid Implementing Class.	無効な実装クラスです。	-
+CustomLabel.stgErrorInvalidNameFormat	Error in {0}: {1}	{0} でエラーが発生しました: {1}	-
+CustomLabel.stgHHNameRefreshTitle	Refresh Household Names	世帯名を更新	-
+CustomLabel.stgHelpAccountModel	The Account model used by the Nonprofit Success Pack. This option controls what happens when you create a Contact with a blank Account field value. WARNING: The Record Type selected for the Account Model should not be used as the default Account Record Type for any Profile in your org. Using the same record type could cause various data issues.	団体モデルの設定。「世帯団体」、「1 対 1」、「個人」のいずれかを指定します。カスタム項目 Contact.SystemAccountProcessor__c の代わりに使用されます。「世帯団体」が推奨モデルです。	-
+CustomLabel.stgHelpAlloFiscalYearRollups	When checked, this option enables fiscal year settings, rather than calendar year settings, for allocation rollup totals. To set fiscal year information, go to Setup | Company Profile | Fiscal Year. NOTE: The Nonprofit Success Pack does not support custom fiscal year settings.	このオプションをオンにすると、割り当ての積み上げ集計総額に対してカレンダー年度設定ではなく会計年度設定が有効になります。会計年度情報を設定するには、[設定] | [組織プロファイル] | [会計年度] に移動します。注意: Nonprofit Success Pack では、カスタム会計年度設定はサポートされていません。	-
+CustomLabel.stgHelpAlloNDayValue	Sets the value for 'N day' rollups, where 'N' is the number of days from today into the past. This value defaults to rollup over the past 365 days.	「N 日間」の積み上げ集計の値を指定します。「N」は現在の日付から過去の日付までの日数です。この値のデフォルトは、過去 365 日間の積み上げ集計です。	-
+CustomLabel.stgHelpAutoAffil	When selected, this option tells Salesforce to create or update Affiliations for Contacts connected to Organization Accounts (Account record type = Organization) whenever the Contact's Account field or Primary Affiliation field changes.	団体項目または主アフィリエーション項目が変更されたときに、組織団体に結び付けられている個人のアフィリエーションを作成または更新します。	-
+CustomLabel.stgHelpAutoRelCampaignRT	List of eligible Campaign Types for this Campaign Member. (Blank for Contacts.)	このキャンペーンメンバーの自動作成で使用できるキャンペーン種別のリスト。(個人の自動作成では空白になります)。	-
+CustomLabel.stgHelpAutoRelField	The field that triggers the autocreation.	このリレーションの作成をトリガする項目の挿入または更新	-
+CustomLabel.stgHelpAutoRelObject	The Salesforce object associated with this Auto-Created Relationship.	この自動リレーションが関連付けられるオブジェクト	-
+CustomLabel.stgHelpAutoRelType	The Relationship Type that you want to create between the base Contact or Campaign Member, and the corresponding Contact or Campaign Member. The corresponding Contact or Campaign Member will receive a Reciprocal Relationship value, if one is available.	ベースオブジェクトと参照オブジェクト間で作成されるリレーション種別。参照オブジェクトには相互関係が割り当てられます (使用可能な場合)。	-
+CustomLabel.stgHelpBDEAllowBlankOppNames	If set, then Batch Data Entry will never name Opportunities, even if they are blank (not included on the BDE page).	オンにすると、支援名が空白の場合 (バッチデータエントリページに含まれていない場合)、バッチデータエントリで支援に名前が付けられることはありません。	-
+CustomLabel.stgHelpBDEOppNaming	This setting automatically generates the record name for batch entered Opportunity records based on the value of the entered fields.	この設定は、バッチ入力された支援レコードのレコード名を入力された項目値に基づいて自動的に生成します。	-
+CustomLabel.stgHelpBatchAlloRollup	This utility calculates rollup totals for all Closed Opportunities with Allocations and updates the relevant General Accounting Unit (GAU) records.\nThis process may take some time, but you can safely close this page and the process will continue in the background.	[バッチを実行] をクリックし、完了したすべての支援の総額を支援に設定された割り当てを使用して積み上げ集計します。結果は、一般会計単位レコードに保存されます。\nこのページはいつでも閉じることができます。このページを閉じても処理はバックグラウンドで実行されます。	-
+CustomLabel.stgHelpBatchOppRollup	This utility calculates rollup totals for all Closed Opportunities and updates the relevant Contacts, Households, and Accounts.\nThis process may take some time, but you can safely close this page and the process will continue in the background.	このページを使用して、完了したすべての支援の総額を積み上げ集計します。結果は個人、世帯、および団体レコードに保存されます。処理に時間がかかる場合があります。このページを閉じても処理はバックグラウンドで実行されます。	-
+CustomLabel.stgHelpBtnHHNaming	<b>WARNING:</b> Clicking this button will activate Automatic Household Naming, and populate your existing Household Names, Formal Greetings, and Informal Greetings with new names, according to the formats you've chosen. Every single Household Account (or Household object) in your Salesforce organization will be renamed (except those Households that do not have automatic naming enabled.)<br/><br/>\n\n<b>This is an irreversible process.</b> While you can deactivate Automatic Household Naming at any time, all newly populated names will remain. <br/><br/>\n\nBefore starting this process, we recommend disabling the following when they affect Households:\n<br/>\n<br/>\n● Custom Validation Rules<br/>\n● Workflow Rules<br/>\n● Process Builder<br/>\n● Visual Workflows<br/>\n● Custom Triggers<br/>\n\n<br/>\nOnce the process is 100% complete, you can safely leave or refresh this page.	<b>警告:</b> このボタンをクリックすると、自動世帯命名が有効化され、選択した形式に従って既存の世帯名、公式の挨拶文、および非公式の挨拶文に新しい名前が入力されます。Salesforce 組織の各世帯団体 (世帯オブジェクト) の名前が変更されます (自動命名が有効になっていない世帯は除く)。<br/><br/>\n\n<b>この処理は元に戻すことができません。</b>自動世帯命名はいつでも無効化できますが、新しく入力された名前はすべてそのまま残ります。 <br/><br/>\n\n世帯に影響する場合、この処理を開始する前に次の項目を無効にしておくことをお勧めします: \n<br/>\n<ul>\n<li>カスタム入力規則</li>\n<li>ワークフロールール</li>\n<li>プロセスビルダー</li>\n<li>Visual Workflow</li>\n<li>カスタムトリガ</li>\n</ul>\n<br/>\n処理が 100% 完了したら、このページから移動したり、このページを更新しても問題ありません。	-
+CustomLabel.stgHelpBtnOppNaming	<b>WARNING:</b> Clicking this button will activate batch opportunity renaming, and refresh all Opportunity Names according to the formats you've chosen. Salesforce will rename every opportunity in your organization except those opportunities whose Opportunity Name Formats you've specified as "Do Not Rename."<br/><br/>\n\n<b>This is an irreversible process.</b>\nBefore starting this process, we recommend that you back up your data. We also recommend disabling the following when they affect Opportunities: \n<br/>\n<br/>\n● Custom Validation Rules<br/>\n● Workflow Rules<br/>\n● Process Builder<br/>\n● Visual Workflows<br/>\n● Custom Triggers<br/><br/>\nOnce the process is 100% complete, you can safely leave or refresh this page.	<b>警告:</b> このボタンをクリックすると、支援名のバッチ変更が有効化され、選択した形式に従ってすべての支援名が更新されます。[支援名の形式] で [名前を変更しない] と指定した支援を除き、団体の各支援名が変更されます。<br/><br/>\n\n<b>この処理は元に戻すことができません。</b>\n支援に影響する場合、この処理を開始する前に次の項目を無効にしておくことをお勧めします: \n<br/>\n<ul>\n<li>カスタム入力規則</li>\n<li>ワークフロールール</li>\n<li>プロセスビルダー</li>\n<li>Visual Workflow</li>\n<li>カスタムトリガ</li>\n</ul>\n<br/>\n処理が 100% 完了したら、このページから移動したり、このページを更新しても問題ありません。	-
+CustomLabel.stgHelpChatterGroup	Chatter group where error notifications will be posted.	エラー通知が投稿される Chatter グループ。	-
+CustomLabel.stgHelpCiceroAddrVerification	Make sure you enter your Cicero API Key in the Auth Token settings field. You will find your API Key on your Cicero My Profile page at cicero.azavea.com	認証トークン設定項目に Cicero API キーを入力したことを確認してください。API キーは、Cicero の [My Profile (私のプロファイル)] ページ (cicero.azavea.com) にあります	-
+CustomLabel.stgHelpContactRTExcluded	The Contact Record Types you want to exclude from automatic Household Member Contact Role creation. For example, you might want to create a "child" record type for children Contacts in the Household, and enter it here. Salesforce would then exclude those Contacts from receiving the Household Member Contact Role when the Opportunity is created.	世帯の支援個人の役割作成から除外する個人レコードタイプ	-
+CustomLabel.stgHelpCreateMissingPayments	<b>WARNING:</b> Clicking this button will activate batch payment creation. Salesforce will create a payment for each Opportunity without Payments that: \n<br/>\n<br/> \n● has an amount greater than zero<br/> \n● is not marked Do Not Automatically Create Payment<br/> \n● is not excluded in the Donations | Payments settings<br/> \n<br/> \n\n<b>This is an irreversible process.</b> \nBefore starting this process, we recommend disabling the following when they affect Payments: \n<br/>\n<br/> \n● Custom Validation Rules<br/> \n● Workflow Rules<br/> \n● Process Builder<br/> \n● Visual Workflows<br/> \n● Custom Triggers<br/> \n\n<br/> \nOnce the process is 100% complete, you can safely leave or refresh this page.	<b>警告:</b> このボタンをクリックすると、支払のバッチ作成が有効化されます。次のような支払のない各支援で支払が作成されます:  \n<ul> \n<li>金額がゼロより大きい</li> \n<li>[支払を自動的に作成しない] とマークされていない</li> \n<li>上記の設定で除外されていない</li> \n</ul> \n\n<b>この処理は元に戻すことができません。</b> \n支払に影響する場合、この処理を開始する前に次の項目を無効にしておくことをお勧めします:  \n<br/> \n<ul> \n<li>カスタム入力規則</li> \n<li>ワークフロールール</li> \n<li>プロセスビルダー</li> \n<li>Visual Workflow</li> \n<li>カスタムトリガ</li> \n</ul> \n<br/> \n処理が 100% 完了したら、このページから移動したり、このページを更新しても問題ありません。	-
+CustomLabel.stgHelpDefaultAllocationsEnabled	Enables the automatic creation and management of GAU Allocation records to the default General Accounting Unit. This feature enables better reporting on the default General Accounting Unit, but uses more data storage.	デフォルトの一般会計単位に対して GAU 割り当てレコードの自動作成および管理を有効にします。この機能を使用すると、デフォルトの一般会計単位のレポートが向上しますが、より多くのデータストレージを使用します。	-
+CustomLabel.stgHelpDefaultGAU	When Default Allocations is enabled, Salesforce creates a GAU Allocation for all new Opportunities and assigns them to this General Accounting Unit. NOTE: This doesn't include existing unallocated Opportunities. You can allocate them to the default General Accounting Unit in NPSP Settings under Bulk Data Processes | Batch Create Default Allocations.	未割り当て支援のデフォルトの割り当てと部分的に割り当てられている支援の残りの割り当てのデフォルトの一般会計単位。	-
+CustomLabel.stgHelpDisableHHAccountAddr	Disables Address management for Household Accounts when selected.	選択すると、世帯団体の住所管理が無効になります。	-
+CustomLabel.stgHelpEnableSoftCreditRollups	Rolls up Closed/Won Opportunity totals to Contact records based on assigned Opportunity Contact Roles. Soft credit rollups only happen in nightly batches, but you can run them manually from the Rollup Donations Batch settings.	支援個人の役割に基づいて、完了した支援の合計を積み上げ集計できるようにします。ソフトクレジット積み上げ集計は、夜間一括処理ジョブでのみ実行され、トリガでは実行されません。[支援の積み上げ集計のバッチ] タブを使用して手動で実行できます。	-
+CustomLabel.stgHelpErrorNotifyOn	Check this if you'd like the system to post notifications for certain type of errors.	特定の種類のエラーに関する通知をシステムに表示する場合にオンにします。	-
+CustomLabel.stgHelpErrorNotifyTo	Select the type of user to send notifications to.	通知を送信するユーザの種別を選択します。	-
+CustomLabel.stgHelpFGFormat	The format Salesforce uses for the Formal Greeting.	公式の挨拶文で使用される形式。	-
+CustomLabel.stgHelpFiscalYearRollups	When checked, this option enables fiscal year settings, rather than calendar year settings, for Opportunity rollup totals. To set fiscal year information, go to Setup | Company Profile | Fiscal Year. NOTE: The Nonprofit Success Pack does not support custom fiscal year settings.	このボックスをオンにすると、支援積み上げ集計の合計にカレンダー年設定の代わりに会計年度が使用されます。会計年度情報を設定するには、[設定] -> [組織プロファイル] -> [会計年度] に移動します。注意: カスタム会計年度設定はサポートされていません。	-
+CustomLabel.stgHelpHHAccountRTID	The Account record type you want to use for new Accounts if you've selected the Household Account model above. You can select the default Household Account record type, or your own record type. If you select --None--, then Salesforce will use the default Account record type for the user who's creating the new Contact (and associated Account).	世帯団体で使用される団体レコードタイプ。何も選択しない場合、団体にはユーザのデフォルト団体レコードタイプが設定されます。	-
+CustomLabel.stgHelpHHExcludedRT	Specifies which Contact record types Salesforce will exclude from Household object creation. (Applies to One-to-One or Individual Account Models only.)	世帯オブジェクトの作成から除外される個人レコードタイプを指定します。(1 対 1 または個人の団体モデルにのみ適用されます)	-
+CustomLabel.stgHelpHHMailingListReport	The Household Mailing List Report deduplicates a Campaign that contains multiple Contacts from the same household in order to help prevent sending multiples of the same mailing to the same address. NPSP includes a report you can select called "NPSP Campaign Household Mailing List." If that report has been renamed or deleted, select a report that uses the Campaigns with Contacts report type, with a filter for: Member Status does not contain "Duplicate".	世帯の重複が排除されたキャンペーンの郵送先名で使用される世帯郵送先名簿レポート。[メンバーの状況] に [重複] が含まれていない、個人が関連するキャンペーンのレポートにする必要があります	-
+CustomLabel.stgHelpHHNameFormat	The format Salesforce uses for the Household Name.	世帯名で使用される形式。	-
+CustomLabel.stgHelpHHNaming	If selected, Salesforce automatically creates a name for the Household Account (or Household object), based on the name of the Contacts in the Household. Salesforce also automatically generates formal and informal greetings.	選択すると、世帯団体 (世帯オブジェクト) の名前が世帯の個人の名前に基づいて自動的に作成されます。また、公式の挨拶文と非公式の挨拶文も自動的に生成されます。	-
+CustomLabel.stgHelpHHOCROn	Automatically creates Contact Roles for Household members of the Opportunity's Primary Contact.	主個人の世帯メンバーの個人の役割を自動作成する場合はオンにします。	-
+CustomLabel.stgHelpHHObjectOverview	To learn more about the recommended Household account model, see the <a href="https://powerofus.force.com/NPSP_Account_Model" target="_blank">NPSP Documentation</a>.	Nonprofit Success Pack では、2 つの異なる方法で世帯を追跡できます。団体を個人の世帯として使用する世帯団体モデルを指定することをお勧めします。ただし、1 対 1 または個人の団体モデルを使用する場合、必要に応じて個々の世帯オブジェクトを個人の世帯として使用できます。\n<br/><br/>\n世帯オブジェクトとそれに関連付けられている団体モデルは推奨されなくなりました。ただし、以前のバージョンの Nonprofit Success Pack から 1 対 1 または個人 (「バケット」) の団体モデルを引き続き使用している場合、世帯オブジェクトの設定をここで変更できます。\n<br/><br/>\n推奨される世帯団体モデルについての詳細は、<a href="https://powerofus.force.com/NPSP_Documentation" target="_new">NPSP ドキュメント</a>を参照してください。	-
+CustomLabel.stgHelpHHRules	Specifies for which Contacts Salesforce will automatically create separate Household objects. (Applies to One-to-One or Individual Account Models only.)	個々の世帯オブジェクトを自動的に作成する個人を指定します。(1 対 1 または個人の団体モデルにのみ適用されます)	-
+CustomLabel.stgHelpIGFormat	The format Salesforce uses for the Informal Greeting.	非公式の挨拶文で使用される形式。	-
+CustomLabel.stgHelpINamingClass	The Apex Class that implements the HH_INaming interface for Household naming.	世帯命名の HH_INaming インターフェースを実装する Apex クラス。	-
+CustomLabel.stgHelpLeadConvert	Specifies the default behavior for Opportunity creation when you convert a Lead to a Contact. If left unselected, Salesforce will NOT automatically create an Opportunity when you convert Leads to Contacts. For more information, see the <a href="https://powerofus.force.com/NPSP_Leads" target="_blank">NPSP Documentation</a>.	リード取引開始時に支援を作成するかどうかを指定します。	-
+CustomLabel.stgHelpMatchedDonorRole	The Contact Role you want to use for matched donors. We recommend using "Matched Donor."	一致支援者の個人の役割を選択します。	-
+CustomLabel.stgHelpMaxPayments	Sets the maximum number of Payments allowed when scheduling Payments for an Opportunity. If no value is entered, the default is 12.	支払作成ウィザードで最大支払回数を設定します。	-
+CustomLabel.stgHelpMembershipGracePeriod	After a Membership ends, the length of the grace period (in days) before the Membership Status on the Account moves from Grace Period to Expired. Defaults to 30 days.	会員の期限が切れた (期限最終日) 後に状況が「猶予期間」から「期限切れ」に移行するまでの猶予期間 (日数)。デフォルトは 30 日です。	-
+CustomLabel.stgHelpMembershipRT	The Record Type used when creating Opportunities that track Membership Donations. We recommend using Membership. Opportunities with this record type roll up separately from other Opportunity Record Types.	他の支援レコードタイプから個別に積み上げ集計する、「会員」などの支援レコードタイプの名前。	-
+CustomLabel.stgHelpNameConnector	Specifies the name or character (such as &) that Salesforce uses to connect pairs in a name.	名前のペアの結合に使用する名前または文字 (& など) を指定します。	-
+CustomLabel.stgHelpNameOverrun	Specifies the text Salesforce uses to replace longer lists of names.	名前の長いリストを置き換えるために使用するテキストを指定します。	-
+CustomLabel.stgHelpNewRDFieldMap	First, select the Recurring Donation field you want to map. Then select the Opportunity field you want to map to. The Recurring Donation field you select will appear on all child opportunities for the Recurring Donation.\n\nIMPORTANT: Both of these fields must have the same data type.	まず、対応付ける継続支援項目を選択します。次に、対応付け先の支援項目を選択します。選択した継続支援項目が継続支援のすべての子支援に表示されます。\n\n重要: これらの両方の項目は同じデータ型である必要があります。	-
+CustomLabel.stgHelpNewUDR	Select the Opportunity field and corresponding rollup operation, then select the object and field to roll up to.	対応付ける支援項目と演算子、およびコピー先のオブジェクトと項目を選択します。	-
+CustomLabel.stgHelpNoUDR	No User Defined Rollups Have Been Defined	ユーザ定義積み上げ集計が定義されていません	-
+CustomLabel.stgHelpOCRDefaultRole	The default Contact Role automatically assigned to the Primary Contact for the Opportunity.	自動的に作成される主支援個人の役割のデフォルト役割。	-
+CustomLabel.stgHelpOCRRoleForHH	The Contact Role you want to use for Household Members.	世帯メンバーの個人の役割を選択	-
+CustomLabel.stgHelpOneToOneRTID	The Account record type you want to use for new Accounts if you've selected the One-to-One Account model above. NPSP does not come with a default record type for One-to-One Accounts, so you should create one (such as "Individual") before selecting this model. If you select --None--, then Salesforce will use the default Account record type for the user who's creating the new Contact (and associated One-to-One Account).	1 対 1 の団体で使用される団体レコードタイプ。何も選択しない場合、団体にはユーザのデフォルト団体レコードタイプが設定されます。	-
+CustomLabel.stgHelpOppNamingAttribution	Specifies whether you want to apply these settings to Contact donations (i.e. opportunities associated with Household, 1-to-1, or Individual "Bucket" accounts), Organization donations, or both Contact and Organization donations.	これらの設定を個人支援 (世帯、1 対 1 の団体、または個人「バケット」の団体に関連付けられている支援) に適用するのか、団体支援に適用するのか、あるいはその両方に適用するのかを指定します。	-
+CustomLabel.stgHelpOppNamingDateFormat	The date format used for any Date or DateTime fields referenced in the Opportunity Name Format. Choose a format, or choose "other" to create your own custom format following the Java SimpleDateFormat specification.	[支援名の形式] で参照される日付項目または日時項目で使用される日付形式。形式を選択するか、[その他] を選択して SimpleDateFormat 仕様に準拠した独自のカスタム形式を作成します。	-
+CustomLabel.stgHelpOppNamingFormat	The Opportunity Name format. Choose "other" to create your own. See the <a href="https://powerofus.force.com/NPSP_Opp_Names" target="_blank">NPSP Documentation</a> for details.	支援名の形式。独自の形式を作成するには、[その他] を選択します。詳細は、<a href="https://powerofus.force.com/NPSP_Opp_Names" target="_blank">NPSP ドキュメント</a>を参照してください。	-
+CustomLabel.stgHelpOppNamingRecTypes	The Opportunity record type(s) to which you want to apply this Opportunity Name. Control or Command click to select more than one record type. "--None--" applies the new naming to ALL record types.	この支援名を適用する支援レコードタイプ。複数のレコードタイプを選択するには、Ctrl キーまたは Command キーを押しながらクリックします。[なし] では、新しい命名規則がすべてのレコードタイプに適用されます。	-
+CustomLabel.stgHelpOppRecTypesNoPayments	Salesforce won't automatically create Payments for the selected Opportunity record types. Control or Command click to select more than one record type.	支払の作成から除外される支援レコードタイプの名前。	-
+CustomLabel.stgHelpOppTypesNoPayments	Salesforce won't automatically create Payments for Opportunities that have this value in the Type picklist.	支払の作成から除外する支援種別項目の値。	-
+CustomLabel.stgHelpOrgAccountAddressMgmt	Enables Address management for Organizational Accounts when selected.	選択すると、組織団体の住所管理が有効になります。	-
+CustomLabel.stgHelpOverrunCount	The number of Contacts Salesforce will explicitly name in Household names and greetings. After this number, Salesforce substitutes the Name Overrun value for names.	世帯名と挨拶文で明示される個人の人数。この人数を超えると、名前の代わりに [超過時の名前] の値が使用されます。	-
+CustomLabel.stgHelpPaymentMapOppField	The Opportunity field to copy from.	コピー元の支援項目。	-
+CustomLabel.stgHelpPaymentMapPaymentField	The Payment field to copy to.	コピー先の支払項目。	-
+CustomLabel.stgHelpPaymentMapping	Set up a mapping by selecting an Opportunity field, and then selecting the Payment field it maps to. NOTE: Payment mapping requires that you have two fields (one on Opportunity, one on Payment) of a matching data type.	対応付ける支援項目と対応付け先の支払項目を選択します。	-
+CustomLabel.stgHelpPaymentMappings	Map fields so that values from the Opportunity are automatically copied to the Payment. Mapping applies for auto-created Payments or Payments created through the Payment scheduler.	支援から支払に項目を対応付けます。これにより、自動支払作成または支払スケジューラで挿入されたときに支援の値が支払にコピーされます。	-
+CustomLabel.stgHelpPaymentsEnabled	If enabled, Salesforce automatically creates Payments for new Opportunities (Donations).	新しい支援で作成される自動支払を有効にします。	-
+CustomLabel.stgHelpPrimaryContactBatch	<b>WARNING:</b> Clicking this button will activate a batch Opportunity update to refresh the Primary Contact field. Salesforce will update Opportunity records where the Primary Contact field isn't the same value as the  Opportunity Contact Role record marked Primary.<br/><br/>\n\n<b>This is an irreversible process.</b>\nThis change updates Opportunity records. Before starting this process, we recommend that you back up your data. We also recommend disabling the following when they affect Opportunities: \n<br/>\n<br/>\n● Custom Validation Rules<br/>\n● Workflow Rules<br/>\n● Process Builder<br/>\n● Visual Workflows<br/>\n● Custom Triggers<br/><br/>\nOnce the process is 100% complete, you can safely leave or refresh this page.	<b>警告:</b> このボタンをクリックすると、支援のバッチ更新が有効化され、主個人項目が更新されます。主個人項目の値が、[主] とマークされている支援個人の役割レコードと同じでない支援レコードが更新されます。<br/><br/>\n\n<b>この処理は元に戻すことができません。</b>\nこの変更により、支援レコードが更新されます。支援に影響する場合、この処理を開始する前に次の項目を無効にしておくことをお勧めします: \n<br/>\n<ul>\n<li>カスタム入力規則</li>\n<li>ワークフロールール</li>\n<li>プロセスビルダー</li>\n<li>Visual Workflow</li>\n<li>カスタムトリガ</li>\n</ul>\n<br/>\n処理が 100% 完了したら、このページから移動したり、このページを更新しても問題ありません。	-
+CustomLabel.stgHelpRDAddCampaign	If selected, adds the campaign that you've specified for the Recurring Donation to all related (i.e. 'child') opportunities. If this option is not selected, the campaign appears on the Recurring Donation's first opportunity only.	選択した場合、継続支援で指定したキャンペーンをすべての関連 (子) 支援に追加します。このオプションを選択していないと、キャンペーンは継続支援の最初の支援にのみ表示されます。	-
+CustomLabel.stgHelpRDDisableScheduling	Prevents the scheduling of the nightly update to Recurring Donations.	継続支援の夜間更新がスケジュールされないようにします。[設定] | [監視] | [スケジュール済みジョブ] で既存のスケジュール済みジョブを削除する必要があります。	-
+CustomLabel.stgHelpRDFailures	Number of Recurring Donations unsuccessfully updated in the last batch operation.	前回の一括処理で継続支援の更新に失敗した回数。	-
+CustomLabel.stgHelpRDFieldMap	This setting lets you map fields from the Recurring Donation record to the Recurring Donation's child Opportunities.	この設定では、継続支援レコードから継続支援の子支援に項目を対応付けることができます。	-
+CustomLabel.stgHelpRDFieldMapOppField	no longer used.	使用されなくなりました。	-
+CustomLabel.stgHelpRDFieldMapRDField	no longer used.	使用されなくなりました。	-
+CustomLabel.stgHelpRDLastRun	The date and time of the last batch update of Recurring Donations.	継続支援の前回の一括更新の日時。	-
+CustomLabel.stgHelpRDMaxDonations	Restricts the total number of donations (installments) for Fixed-Length Recurring Donations. Default is 50.	固定期間の継続支援の支援の総数 (回数) を制限します。デフォルトは 50 です。	-
+CustomLabel.stgHelpRDOpenOppBehavior	Tells Salesforce what to do with any remaining open opportunities when you mark the status of a Open-Ended Recurring Donation as Closed.	無期限の継続支援の状況を [完了] とマークしたときに残りの進行中の支援をどのように処理するかを Salesforce に指示します。	-
+CustomLabel.stgHelpRDOppForecastMonths	Number of months' worth of open opportunities created for Open-Ended Recurring Donations. The default is 12, so after every month, Salesforce creates another month's worth of open opportunities (i.e., the total months' worth of open opportunities is always 12).	無期限の継続支援に作成された進行中の支援が計上される月数。デフォルトは 12 であるため、月が変わるたびに次のひと月分の進行中の支援が追加されます (進行中の支援が計上される合計月数は常に 12 です)。	-
+CustomLabel.stgHelpRDOppRT	The opportunity record type assigned to the Recurring Donation's child opportunities.	継続支援の子支援に割り当てられた支援レコードタイプ。	-
+CustomLabel.stgHelpRDPeriodFrequency	The amount of time the Custom Installment Period covers.	カスタム間隔の対象となる時間。	-
+CustomLabel.stgHelpRDPeriodName	The name of the new Custom Installment Period	新規カスタム間隔の名前	-
+CustomLabel.stgHelpRDPeriodType	The type of time period the Custom Installment Period covers.	カスタム間隔の対象となる期間の種類。	-
+CustomLabel.stgHelpRDSuccesses	Number of Recurring Donations successfully updated in the last batch run.	前回の一括処理で継続支援の更新に成功した回数。	-
+CustomLabel.stgHelpRelAutoCreatedDup	The NPSP de-duplicates Auto-Created Relationships automatically. Select this option if you want to disable automatic de-duplication, and allow multiple Relationships of the same Type to exist between two Contacts.	自動作成されたリレーションは、2 つの個人間で重複リレーションレコードが作成されることを避けるため、自動的に重複が排除されます。このボックスをオンにするとこの動作が無効になり、2 つの個人間で同じ種別の複数のリレーションが許可されます。	-
+CustomLabel.stgHelpRelGenderField	Custom field that specifies the gender of a Contact. Salesforce uses the value in this field to determine reciprocal relationships.	相互関係を判断するための個人の性別の定義に使用されるカスタム項目	-
+CustomLabel.stgHelpRelReciprocalFemale	The value Salesforce uses if the Contact's Gender field value is Female, or if the Contact's Salutation indicates gender.	個人の性別項目が女性カスタム表示ラベルの値に一致したときや、個人の敬称が性別を表しているときに使用される値。	-
+CustomLabel.stgHelpRelReciprocalMale	The value Salesforce uses if the Contact's Gender field value is Male, or if the Contact's Salutation indicates gender.	個人の性別項目が男性カスタム表示ラベルと一致する場合、または個人の敬称が性別を示す場合に使用される値。	-
+CustomLabel.stgHelpRelReciprocalMethod	Specifies the method used for generating reciprocal relationships. See the <a href="https://powerofus.force.com/NPSP_Relationships_Settings" target="_blank">NPSP Documentation</a> for more information.	相互関係の生成に使用される方法を決定します。性別のカスタム設定を使用する「リスト設定」、または必要に応じて種別を反転 (「親-子」から「子-親」) する「値反転」のいずれか。	-
+CustomLabel.stgHelpRelReciprocalName	The name of the relationship. This is the Type value the user selects when creating a relationship between contacts.	相互関係の名前	-
+CustomLabel.stgHelpRelReciprocalNeutral	The value Salesforce uses if it cannot determine the Contact's gender based on Gender field value or Salutation.	個人の性別項目が男性または女性カスタム表示ラベルに一致しなかったときや、個人の敬称が性別を表していないときに使用される値。	-
+CustomLabel.stgHelpRollupBatchSize	The number of records processed at a time when calculating donor statistics. The default size is 200. Reduce to a smaller number if the Opportunity Rollups are failing due to system limits.	支援者の統計情報の計算時に処理されるレコードの数。デフォルトサイズは 200 です。システムの制限により支援の積み上げ集計が失敗する場合は、この数値を小さくします。	-
+CustomLabel.stgHelpRollupExcludeAccountOppRT	Opportunities with the selected record types won't be included in rollups to the Account. Control or Command click to select more than one record type.	団体支援の積み上げ集計時に統計から除外する支援レコードタイプの名前。	-
+CustomLabel.stgHelpRollupExcludeAccountOppType	Opportunities that have this value in the Type picklist won't be included in rollups to the Account.	団体支援の積み上げ集計時に統計から除外する支援種別項目の値。	-
+CustomLabel.stgHelpRollupExcludeAlloOppRecType	GAU Allocations from Opportunities with the selected record types won't be included when rolling up to the General Accounting Unit record.	GAU 割り当ての積み上げ集計時に統計情報から除外される支援レコードタイプの名前。	-
+CustomLabel.stgHelpRollupExcludeAlloOppType	GAU Allocations from Opportunities that have this value in the Type picklist won't be included when rolling up to the General Accounting Unit record.	積み上げ集計時に統計情報から除外される支援種別項目の値。	-
+CustomLabel.stgHelpRollupExcludeContactOppRT	Opportunities with the selected record types won't be included in rollups to the Contact. Control or Command click to select more than one record type.	個人支援の積み上げ集計時に統計から除外する支援レコードタイプの名前。	-
+CustomLabel.stgHelpRollupExcludeContactOppType	Opportunities that have this value in the Type picklist won't be included in rollups to the Contact.	個人支援の積み上げ集計時に統計から除外する支援種別項目の値。	-
+CustomLabel.stgHelpRollupNDayValue	Sets the value for 'N day' rollups, where 'N' is the number of days from today into the past. This value defaults to rollup over the past 365 days.	「N 日間」の積み上げ集計の値を指定します。「N」は現在の日付から過去の日付までの日数です。この値のデフォルトは、過去 365 日間の積み上げ集計です。	-
+CustomLabel.stgHelpRollupPrimaryContact	When this option is selected, Salesforce will ALWAYS roll up donor data to the Opportunity's Primary Contact, and corresponding Household Account or record, even if the Opportunity is not from an individual (i.e., from a company, a foundation, and so on). If left unselected, and the Opportunity's Account is an organization, only the organization will receive credit for the Opportunity.	支援が個人によるものでない (会社や財団などからの) 場合でも、常に支援者の統計情報を支援の主個人の役割、および対応する世帯に積み上げ集計します。	-
+CustomLabel.stgHelpSimpleAddrChangeIsUpdate	A simple address change is a change (such as correcting a typo, or deleting white space) to a single Contact or Account address field. When this option is selected, Salesforce treats these changes as updates to the existing address (i.e., no new Address object is created).	1 つの個人または団体の住所項目の変更が既存の住所の更新として扱われます (新しい住所オブジェクトが作成されない)。また、空白や大文字/小文字の変更も更新として扱われます。	-
+CustomLabel.stgHelpSoftCreditRoles	Opportunity Contact Roles you want to include in Soft Credit rollups. Control or Command click to select multiple roles.	ソフトクレジット積み上げ集計に含める支援個人の役割のリスト。	-
+CustomLabel.stgHelpStoreErrorsOn	Check this if you'd like errors to be stored in the database.	エラーをデータベースに保存する場合にオンにします。	-
+CustomLabel.stgHelpTHActive	Indicates that this Trigger Handler is active and will run when Trigger Action criteria is met.	このモジュールが有効であることを示します。	-
+CustomLabel.stgHelpTHAsync	Indicates that this trigger handler's After Events should run asynchronously. WARNING: If the specified Apex Class doesn't support asynchronous processing and you select this checkbox, the class may not work properly.	このモジュールの After イベントはこのトランザクションで非同期に実行される必要があることを示します	-
+CustomLabel.stgHelpTHClass	The Apex class to run.	実行されるクラス名	-
+CustomLabel.stgHelpTHLoadOrder	Order in which this trigger should be run. If the records that this trigger handler processes have related records, the load order ensures that they're created or updated in the correct order.	このモジュールが実行される順序。モジュールとデータの連動関係の維持に役立ちます。	-
+CustomLabel.stgHelpTHObject	The object related to this trigger handler.	このハンドラが実行されるオブジェクトの名前	-
+CustomLabel.stgHelpTHTriggerAction	Actions that fire this trigger. Ctrl and Command click to select more than one action.	このモジュールを起動するトリガアクション	-
+CustomLabel.stgHelpTriggerHandlers	These triggers control core functionality in the Nonprofit Success Pack, so please exercise extreme caution when creating or modifying them.	これらのトリガで Nonprofit Success Pack のコア機能が制御されるため、これらを変更する場合は細心の注意を払ってください。	-
+CustomLabel.stgHelpTriggerHandlersAsync	Marking any Trigger Handler to run Asynchronously can have unintended consequences, and should be fully tested before deploying in production.	トリガハンドラを非同期で実行すると、意図しない結果になる可能性があるため、本番環境にリリースする前に完全にテストする必要があります。	-
+CustomLabel.stgHelpUDROperation	Determines how the field should roll up. Only operations that are valid for the selected Opportunity field are listed.	この項目の有効な積み上げ集計操作を選択してください	-
+CustomLabel.stgHelpUDROppField	The Opportunity field to roll up.	積み上げ集計する支援項目を選択してください	-
+CustomLabel.stgHelpUDRTargetObject	The object on which the rollup information will appear.	積み上げ集計するオブジェクトを選択してください	-
+CustomLabel.stgInstallScriptError	Your installation was successful, but we detected a slight problem. To fix the problem, simply load the NPSP Settings page in Salesforce.\n\nNote: The NPSP Settings tab is visible in the Nonprofit Success Pack application. If you don't see the tab, select Nonprofit Success Pack from the app menu in the upper-right corner.	インストールに成功しましたが、軽微な問題が検出されました。問題を修正するには、Salesforce で [NPSP 設定] ページを読み込みます。\n\n注意: [NPSP 設定] が Nonprofit Success Pack アプリケーションに表示されます。タブが表示されない場合は、右上隅のアプリケーションメニューから [Nonprofit Success Pack] を選択します。	-
+CustomLabel.stgLabelActionColumn	Action	アクション	-
+CustomLabel.stgLabelAddressVerification	Address Settings	住所設定	-
+CustomLabel.stgLabelAfflSettings	Affiliations Settings	アフィリエーション設定	-
+CustomLabel.stgLabelAllRecordTypes	- all record types -	すべてのレコードタイプ	-
+CustomLabel.stgLabelAlloBatchProgress	Rollup Allocations Batch Progress	割り当ての積み上げ集計のバッチの進行状況	-
+CustomLabel.stgLabelAllocationsRollupSettings	GAU Allocations Rollup Settings	GAU 割り当ての積み上げ集計設定	-
+CustomLabel.stgLabelAllocationsSettings	Default Allocations Settings	デフォルトの割り当て設定	-
+CustomLabel.stgLabelAreYouSure	Are you sure?	実行してよろしいですか?	-
+CustomLabel.stgLabelAutoContactRoles	Automatic Contact Roles	自動的に作成される個人の役割	-
+CustomLabel.stgLabelBDESettings	Batch Data Entry Settings	バッチデータエントリ設定	-
+CustomLabel.stgLabelBatchStatus	Batch Status	バッチ状況	-
+CustomLabel.stgLabelCreateMissingPayments	Create Missing Payments	欠落している支払を作成	-
+CustomLabel.stgLabelCurrentUDR	Current User Defined Rollups	現在のユーザ定義積み上げ集計	-
+CustomLabel.stgLabelDoNotRename	- do not rename -	名前を変更しない	-
+CustomLabel.stgLabelErrorNotify	Error Notification Settings	エラー通知設定	-
+CustomLabel.stgLabelExamplesFGFormat	Examples for Formal Greeting Format	公式の挨拶文形式の例	-
+CustomLabel.stgLabelExamplesHHNameFOrmat	Examples for Household Name Format	世帯名形式の例	-
+CustomLabel.stgLabelExamplesIGFormat	Examples for Informal Greeting Format	非公式の挨拶文形式の例	-
+CustomLabel.stgLabelHHGeneral	General Settings	一般設定	-
+CustomLabel.stgLabelHHNaming	Household Name Settings	世帯名設定	-
+CustomLabel.stgLabelHHNamingProgress	Naming Activation Progress	命名の有効化の進行状況	-
+CustomLabel.stgLabelHHOCR	Household Opportunity Contact Roles	世帯支援個人の役割	-
+CustomLabel.stgLabelHHObject	Household Object	世帯オブジェクト	-
+CustomLabel.stgLabelHHSettings	Household Settings	世帯設定	-
+CustomLabel.stgLabelHonoreeNotificationHelpText	Create automatic Opportunity Contact Roles for Honoree and Notification Recipient contacts	名誉会員および通知受信者の連絡先の自動的に作成される支援個人の役割を作成	-
+CustomLabel.stgLabelHonoreeNotificationOCR	Honoree and Notification Recipient Opportunity Contact Roles	名誉会員および通知受信者の支援個人の役割	-
+CustomLabel.stgLabelLeadSettings	Lead Settings	リードの設定	-
+CustomLabel.stgLabelMembershipSettings	Membership Settings	会員設定	-
+CustomLabel.stgLabelNewAutoRel	New Automatic Relationship	新規自動リレーション	-
+CustomLabel.stgLabelNewPaymentMapping	New Payment Field Mapping	新規支払項目の対応付け	-
+CustomLabel.stgLabelNewRDFieldMap	New Custom Field Mapping	新規カスタム項目の対応付け	-
+CustomLabel.stgLabelNewRelReciprocal	New Reciprocal Relationship	新規相互関係	-
+CustomLabel.stgLabelNewTH	New Trigger Handler	新規トリガハンドラ	-
+CustomLabel.stgLabelNewUDR	New User Defined Rollup	新規ユーザ定義積み上げ集計	-
+CustomLabel.stgLabelNone	--None--	なし	-
+CustomLabel.stgLabelONS	Opportunity Name Settings	支援名設定	-
+CustomLabel.stgLabelOppBatchProgress	Rollup Donations Batch Progress	支援の積み上げ集計のバッチの進行状況	-
+CustomLabel.stgLabelOppCampMembers	Campaign Members	キャンペーンメンバー	-
+CustomLabel.stgLabelOppNamingRefreshTitle	Refresh Opportunity Names	支援名を更新	-
+CustomLabel.stgLabelOppNamingSettings	Opportunity Names	支援名	-
+CustomLabel.stgLabelOppPrimaryContactTitle	Refresh Opportunity Primary Contact	支援の主個人を更新	-
+CustomLabel.stgLabelOppRollupRT	Opportunity Rollup Record Types	支援積み上げ集計のレコードタイプ	-
+CustomLabel.stgLabelOppRollups	Opportunity Rollups	支援積み上げ集計	-
+CustomLabel.stgLabelOppUpdatePrimaryContact	Batch Update Primary Contact	主個人をバッチ更新	-
+CustomLabel.stgLabelOther	other	その他	-
+CustomLabel.stgLabelOtherDateFormat	Other Date Format	その他の日付形式	-
+CustomLabel.stgLabelOtherFormalGreetingFormat	Other Formal Greeting Format	その他の公式の挨拶文形式	-
+CustomLabel.stgLabelOtherHHNameFormat	Other Household Name Format	その他の世帯名形式	-
+CustomLabel.stgLabelOtherInformalGreetingFormat	Other Informal Greeting Format	その他の非公式の挨拶文形式	-
+CustomLabel.stgLabelOtherOpportunigyNamingFormat	Other Opportunigy Naming Format	その他の支援命名形式	-
+CustomLabel.stgLabelPaymentMapNoValidFields	No Valid Field Available	使用できる有効な項目がありません	-
+CustomLabel.stgLabelPaymentSettings	Payment Settings	支払設定	-
+CustomLabel.stgLabelRDFieldMap	Custom Field Mappings	カスタム項目の対応付け	-
+CustomLabel.stgLabelRDNewPeriod	New Installment Period	新規間隔	-
+CustomLabel.stgLabelRDPeriod	Custom Installment Periods	カスタム間隔	-
+CustomLabel.stgLabelRDSettings	Recurring Donation Settings	継続支援設定	-
+CustomLabel.stgLabelRDStatus	Updating Recurring Donation Opportunities	継続支援の支援を更新しています	-
+CustomLabel.stgLabelRelSettings	General Settings	一般設定	-
+CustomLabel.stgLabelSelectChatterGroup	Select Chatter Group	Chatter グループを選択	-
+CustomLabel.stgLabelSoftCredit	Soft Credit Settings	ソフトクレジット設定	-
+CustomLabel.stgLabelTriggerHandlers	Trigger Handlers	トリガハンドラ	-
+CustomLabel.stgLabelTypeAhead	Start typing...	入力開始...	-
+CustomLabel.stgLabelUDRNoOppFields	No valid Opportunity fields found.	有効な支援項目が見つかりません。	-
+CustomLabel.stgLabelUDROp	Rollup Operation	積み上げ集計操作	-
+CustomLabel.stgLabelUDROppField	Opportunity Field	支援の項目	-
+CustomLabel.stgLabelUDRTargetField	Target Field	対象項目	-
+CustomLabel.stgLabelUDRTargetObject	Target Object	対象オブジェクト	-
+CustomLabel.stgLinkDelete	Del	削除	-
+CustomLabel.stgNPSPSettingsTitle	Nonprofit Success Pack Settings	Nonprofit Success Pack 設定	-
+CustomLabel.stgNavAccountModel	Account Model	団体モデル	-
+CustomLabel.stgNavAddressVerification	Addresses	住所	-
+CustomLabel.stgNavAffiliations	Affiliations	所属	-
+CustomLabel.stgNavAllocations	GAU Allocations	一般会計単位の割り当て	-
+CustomLabel.stgNavBDE	Batch Data Entry	バッチデータエントリ	-
+CustomLabel.stgNavBulkProcesses	Bulk Data Processes	一括データ処理	-
+CustomLabel.stgNavConnections	Connections	接続	-
+CustomLabel.stgNavContactRoles	Contact Roles	個人の役割	-
+CustomLabel.stgNavContacts	Contacts	個人	-
+CustomLabel.stgNavDonations	Donations	支援	-
+CustomLabel.stgNavDonorStatistics	Donor Statistics	支援者の統計情報	-
+CustomLabel.stgNavErrorLog	Error Log	エラーログ	-
+CustomLabel.stgNavErrorNotify	Error Notifications	エラー通知	-
+CustomLabel.stgNavHealthCheck	Health Check	状態チェック	-
+CustomLabel.stgNavHouseholds	Households	世帯	-
+CustomLabel.stgNavLeads	Leads	リード	-
+CustomLabel.stgNavMembership	Membership	会員	-
+CustomLabel.stgNavPaymentMappings	Payment Mappings	支払の対応付け	-
+CustomLabel.stgNavPayments	Payments	支払	-
+CustomLabel.stgNavPeople	People	人	-
+CustomLabel.stgNavRDBatch	Recurring Donations Batch	継続支援のバッチ	-
+CustomLabel.stgNavRDFieldMap	Recurring Donation Custom Field Mappings	継続支援のカスタム項目の対応付け	-
+CustomLabel.stgNavRDInstallmentPeriods	Recurring Donation Custom Installment Periods	継続支援のカスタム間隔	-
+CustomLabel.stgNavRecurringDonations	Recurring Donations	継続支援	-
+CustomLabel.stgNavRelAutoCreate	Relationships Autocreation	リレーションの自動作成	-
+CustomLabel.stgNavRelReciprocal	Relationship Reciprocal Settings	相互関係設定	-
+CustomLabel.stgNavRelationships	Relationships	リレーション	-
+CustomLabel.stgNavRollupAlloBatch	Rollup Allocations Batch	割り当ての積み上げ集計のバッチ	-
+CustomLabel.stgNavRollupBatch	Rollup Donations Batch	支援の積み上げ集計のバッチ	-
+CustomLabel.stgNavSystem	System Tools	システムツール	-
+CustomLabel.stgNavTriggerConfig	Trigger Configuration	トリガ設定	-
+CustomLabel.stgNavUserDefinedRollups	User Defined Rollups	ユーザ定義積み上げ集計	-
+CustomLabel.stgValidationHHAccountHHRules	The Account Model is set to 'Household Account', which requires Household Rules to be set to 'No Contacts'.   When using Household Accounts, there is no need to have an additional Household Object.	[団体モデル] が [世帯団体] に設定されているため、[世帯ルール] を [個人なし] に設定する必要があります。世帯団体を使用している場合、追加の世帯オブジェクトを設定する必要はありません。	-
+QuickAction.npe01__OppPayment__c.Quick_Update	Quick Update	クイック更新	-
+QuickAction.npe03__Recurring_Donation__c.New_Opportunity	New Opportunity	新規支援	-
+QuickAction.npe03__Recurring_Donation__c.Quick_Update	Quick Update	クイック更新	-
+QuickAction.Address__c.Update_Address	Update Address	住所を更新	-
+QuickAction.npo02__Household__c.Update_Household	Update Household	世帯を更新	-
+QuickAction.Account.New_Address	New Address	新しい住所	-
+QuickAction.Account.New_Affiliation	New Affiliation	新規アフィリエーション	-
+QuickAction.Account.Quick_Household_Update	Quick Update	クイック更新	-
+QuickAction.Account.Quick_Organization_Update	Quick Update	クイック更新	-
+QuickAction.Contact.New_Affiliation	New Affiliation	新規アフィリエーション	-
+QuickAction.Contact.New_Recurring_Donation	New Recurring Donation	新規継続支援	-
+QuickAction.Contact.New_Relationship	New Relationship	新規リレーション	-
+QuickAction.Contact.Quick_Update	Quick Update	クイック更新	-
+QuickAction.New_Campaign	New Campaign	新規キャンペーン	-
+QuickAction.New_Recurring_Donation	New Recurring Donation	新規継続支援	-
+QuickAction.Opportunity.New_Payment	New Payment	新規支払	-
+QuickAction.Opportunity.Quick_Update	Quick Update	クイック更新	-
