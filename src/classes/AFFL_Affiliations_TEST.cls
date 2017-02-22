@@ -879,7 +879,7 @@ public class AFFL_Affiliations_TEST {
         queryCon = [SELECT Id, Primary_Affiliation__c FROM Contact WHERE Id = :con.id];
         system.assertEquals(newPrimary.id, queryCon.Primary_Affiliation__c, 'Contact primary affiliation should be unchanged.');
 
-        queryAffl = [SELECT Id, npe5__Primary__c FROM npe5__Affiliation__c WHERE Id = :affl.id];
+        queryAffl = [SELECT Id, npe5__Primary__c FROM npe5__Affiliation__c WHERE npe5__Organization__c = :acc.id];
         System.assert(!queryAffl.npe5__Primary__c, 'Undeleted Affiliation should NOT be marked primary.');
 
     }
