@@ -325,8 +325,16 @@
             <section>Major Gift Information</section>
         </sections>
         <sections>
+            <label><!-- Matching Gift Information --></label>
+            <section>Matching Gift Information</section>
+        </sections>
+        <sections>
             <label><!-- Payment Information --></label>
             <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label><!-- Tribute Information --></label>
+            <section>Tribute Information</section>
         </sections>
     </layouts>
     <layouts>

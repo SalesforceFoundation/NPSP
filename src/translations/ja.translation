@@ -104,6 +104,10 @@
         <name>Addr_Verification_Batch_Title</name>
     </customLabels>
     <customLabels>
+        <label><!-- Unable to load verification class when visiting settings page --></label>
+        <name>Addr_Verification_Cant_Load_Class</name>
+    </customLabels>
+    <customLabels>
         <label>検証が必要</label>
         <name>Addr_Verification_Required</name>
     </customLabels>
@@ -178,6 +182,10 @@
     <customLabels>
         <label>私のデータは [設定] | [データの管理] | [データのエクスポート] でバックアップされています。</label>
         <name>CONV_All_Backed_Up</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- CONV_All_Dup_Rules_Disabled --></label>
+        <name>CONV_All_Dup_Rules_Disabled</name>
     </customLabels>
     <customLabels>
         <label>すべての既存の世帯およびその個人が選択される</label>
@@ -324,8 +332,64 @@
         <name>CampaignMemberStatusOmit</name>
     </customLabels>
     <customLabels>
+        <label><!-- CascadeDeletionError --></label>
+        <name>CascadeDeletionError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- ClosedWonOpportunities --></label>
+        <name>ClosedWonOpportunities</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- ConfirmDeleteAccount --></label>
+        <name>ConfirmDeleteAccount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- EPAddDependentTask --></label>
+        <name>EPAddDependentTask</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Engagement Plan&apos;s Add Task button label --></label>
+        <name>EPAddTask</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- EPDeleteTask --></label>
+        <name>EPDeleteTask</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- EPManageTasks --></label>
+        <name>EPManageTasks</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- EPManageTemplate --></label>
+        <name>EPManageTemplate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- EPTaskDependency --></label>
+        <name>EPTaskDependency</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- EPTaskTemplate --></label>
+        <name>EPTaskTemplate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- to, as in &quot;Add depend task to task 1&quot; --></label>
+        <name>EPTo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- ErrorEmailMessage --></label>
+        <name>ErrorEmailMessage</name>
+    </customLabels>
+    <customLabels>
         <label>非表示にしてセキュリティを確保</label>
         <name>HiddenForSecurity</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- NameRequired --></label>
+        <name>NameRequired</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- OrganizationalOpportunities --></label>
+        <name>OrganizationalOpportunities</name>
     </customLabels>
     <customLabels>
         <label>成功</label>
@@ -560,6 +624,10 @@
         <name>bdiContactMatchFnameLnameEmail</name>
     </customLabels>
     <customLabels>
+        <label><!-- Data Importer Contact matching option for Fname, Lname, Phone --></label>
+        <name>bdiContactMatchFnameLnamePhone</name>
+    </customLabels>
+    <customLabels>
         <label>姓とメール</label>
         <name>bdiContactMatchLnameEmail</name>
     </customLabels>
@@ -700,8 +768,32 @@
         <name>campaignMemberStatusResponded</name>
     </customLabels>
     <customLabels>
+        <label><!-- Used when NPSP hits an error trying to create an account for a contact --></label>
+        <name>conFailedAccountCreate</name>
+    </customLabels>
+    <customLabels>
         <label>個人団体はサポートされていません。</label>
         <name>conMergeErrNoPersonAccounts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- engagementPlanCantEdit --></label>
+        <name>engagementPlanCantEdit</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- engagementPlanNoLookups --></label>
+        <name>engagementPlanNoLookups</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- engagementPlanTwoLookups --></label>
+        <name>engagementPlanTwoLookups</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- exceptionRequiredField --></label>
+        <name>exceptionRequiredField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- exceptionValidationRule --></label>
+        <name>exceptionValidationRule</name>
     </customLabels>
     <customLabels>
         <label>{0} を変更する権限がありません。</label>
@@ -796,8 +888,20 @@
         <name>healthDetailsInvalidErrorUser</name>
     </customLabels>
     <customLabels>
+        <label><!-- Health Check error if a Level refers to an invalid field --></label>
+        <name>healthDetailsInvalidFieldNumeric</name>
+    </customLabels>
+    <customLabels>
         <label>組織でカスタム会計年度を使用している場合、会計年度の積み上げ集計はサポートされません。</label>
         <name>healthDetailsInvalidFiscalYears</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Health Check error if a Level refers to an invalid field --></label>
+        <name>healthDetailsInvalidLevelField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Health Check error if a Level refers to an invalid field --></label>
+        <name>healthDetailsInvalidLevelFieldReference</name>
     </customLabels>
     <customLabels>
         <label>{0} 項目 {1} が存在しません。</label>
@@ -848,12 +952,24 @@
         <name>healthDetailsNothingScheduled</name>
     </customLabels>
     <customLabels>
+        <label><!-- healthDetailsOCR --></label>
+        <name>healthDetailsOCR</name>
+    </customLabels>
+    <customLabels>
         <label>複数の支援個人の役割が [主] とマークされている支援が {0} 個見つかりました。</label>
         <name>healthDetailsOCRDupPrimary</name>
     </customLabels>
     <customLabels>
         <label>複数の主支援個人の役割が割り当てられている支援が見つかりました。</label>
         <name>healthDetailsOCRDupPrimaryValid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsOCRSettingsResolution --></label>
+        <name>healthDetailsOCRSettingsResolution</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsOCRSettingsValid --></label>
+        <name>healthDetailsOCRSettingsValid</name>
     </customLabels>
     <customLabels>
         <label>支払項目 {0} と支援項目 {1} のデータ型に互換性がありません。</label>
@@ -976,6 +1092,10 @@
         <name>healthLabelOCRCheck</name>
     </customLabels>
     <customLabels>
+        <label><!-- healthLabelOCRSettings --></label>
+        <name>healthLabelOCRSettings</name>
+    </customLabels>
+    <customLabels>
         <label>支援の支払</label>
         <name>healthLabelOppPayments</name>
     </customLabels>
@@ -1026,6 +1146,14 @@
     <customLabels>
         <label>ユーザ定義積み上げ集計は有効です。</label>
         <name>healthLabelUDFValid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Health Check title for Levels --></label>
+        <name>healthLabelVerifyLevels</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Health Check message when all Levels verify ok --></label>
+        <name>healthLabelVerifyLevelsSuccess</name>
     </customLabels>
     <customLabels>
         <label>警告</label>
@@ -1098,6 +1226,10 @@
     <customLabels>
         <label>Salesforce では、カスタム会計年度の無効化がサポートされていないため、NPSP の積み上げ集計はデフォルトの [年] になります。</label>
         <name>healthSolutionInvalidFiscalYears</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Health Check Solution for an invalid Level field --></label>
+        <name>healthSolutionInvalidLevelField</name>
     </customLabels>
     <customLabels>
         <label>[NPSP 設定] タブで、{0} | {1} をクリックし、欠落している支援項目を追加するか、支払の対応付けレコードを削除します。</label>
@@ -1208,6 +1340,10 @@
         <name>hhCmpDedupeStatus</name>
     </customLabels>
     <customLabels>
+        <label><!-- isARequiredField --></label>
+        <name>isARequiredField</name>
+    </customLabels>
+    <customLabels>
         <label>名</label>
         <name>labelListViewFirst</name>
     </customLabels>
@@ -1254,6 +1390,10 @@
     <customLabels>
         <label><!-- lblCity --></label>
         <name>lblCity</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblCloned --></label>
+        <name>lblCloned</name>
     </customLabels>
     <customLabels>
         <label><!-- lblCountry --></label>
@@ -1320,6 +1460,10 @@
         <name>lblPostalCode</name>
     </customLabels>
     <customLabels>
+        <label><!-- lblRequired --></label>
+        <name>lblRequired</name>
+    </customLabels>
+    <customLabels>
         <label><!-- lblSalutation --></label>
         <name>lblSalutation</name>
     </customLabels>
@@ -1380,6 +1524,10 @@
         <name>leadConvertContactAccount</name>
     </customLabels>
     <customLabels>
+        <label><!-- leadConvertContactSelection --></label>
+        <name>leadConvertContactSelection</name>
+    </customLabels>
+    <customLabels>
         <label>新規団体を作成:</label>
         <name>leadConvertCreateAccount</name>
     </customLabels>
@@ -1404,6 +1552,10 @@
         <name>leadConvertPageTitle</name>
     </customLabels>
     <customLabels>
+        <label><!-- leadConvertRecordTypeWarning --></label>
+        <name>leadConvertRecordTypeWarning</name>
+    </customLabels>
+    <customLabels>
         <label>リードの取引開始</label>
         <name>leadConvertSectionTitle</name>
     </customLabels>
@@ -1418,6 +1570,38 @@
     <customLabels>
         <label>参照できるのは既存の個人のみとなります。</label>
         <name>leadConvertViewContactError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Save &amp; New button on the Level Edit page --></label>
+        <name>lvlBtnSaveAndNew</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error when the Level has the same lookup field  specified for level and previous --></label>
+        <name>lvlErrorDuplicateLookups</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error when a name of a level is duplicated --></label>
+        <name>lvlErrorDuplicateName</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error when Level Assignment fails to save its current or previous level --></label>
+        <name>lvlErrorInvalidLookupField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error if level&apos;s source field isn&apos;t valid --></label>
+        <name>lvlErrorInvalidSourceField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error if the Level Minimum is &gt; than Level Maximum --></label>
+        <name>lvlErrorMinGTMax</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error when we detect the minimum amount overlaps another level --></label>
+        <name>lvlErrorMinOverlap</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error if both min and max are empty on a level --></label>
+        <name>lvlErrorNoMinMax</name>
     </customLabels>
     <customLabels>
         <label>検索</label>
@@ -1572,6 +1756,10 @@
         <name>pmtWizardWriteoffMessage</name>
     </customLabels>
     <customLabels>
+        <label><!-- pscDeleteRow --></label>
+        <name>pscDeleteRow</name>
+    </customLabels>
+    <customLabels>
         <label>別のソフトクレジットを追加</label>
         <name>pscManageSoftCreditsAdd</name>
     </customLabels>
@@ -1688,6 +1876,18 @@
         <name>sendAcknowledgmentSucceeded</name>
     </customLabels>
     <customLabels>
+        <label><!-- statusCompleted --></label>
+        <name>statusCompleted</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- statusInProgress --></label>
+        <name>statusInProgress</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- statusNotStarted --></label>
+        <name>statusNotStarted</name>
+    </customLabels>
+    <customLabels>
         <label><!-- stgAddrGeneralSettingsIntro --></label>
         <name>stgAddrGeneralSettingsIntro</name>
     </customLabels>
@@ -1790,6 +1990,10 @@
     <customLabels>
         <label><!-- stgDocumentation --></label>
         <name>stgDocumentation</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgDontAutoScheduleHelpText --></label>
+        <name>stgDontAutoScheduleHelpText</name>
     </customLabels>
     <customLabels>
         <label>実装クラスにインターフェース HH_INaming が実装されていません。</label>
@@ -1958,6 +2162,10 @@
         <name>stgHelpErrorNotifyTo</name>
     </customLabels>
     <customLabels>
+        <label><!-- displayed in the Example household names box --></label>
+        <name>stgHelpExampleHHNames</name>
+    </customLabels>
+    <customLabels>
         <label>公式の挨拶文で使用される形式。</label>
         <name>stgHelpFGFormat</name>
     </customLabels>
@@ -2016,6 +2224,10 @@
     <customLabels>
         <label>リード取引開始時に支援を作成するかどうかを指定します。</label>
         <name>stgHelpLeadConvert</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- help text displayed on the Level Assignment Batch page --></label>
+        <name>stgHelpLvlAssignBatch</name>
     </customLabels>
     <customLabels>
         <label>一致支援者の個人の役割を選択します。</label>
@@ -2467,6 +2679,10 @@
         <name>stgLabelLeadSettings</name>
     </customLabels>
     <customLabels>
+        <label><!-- menu title for the Level Assignment Batch in NPSP Settings --></label>
+        <name>stgLabelLvlAssignBatchTitle</name>
+    </customLabels>
+    <customLabels>
         <label>会員設定</label>
         <name>stgLabelMembershipSettings</name>
     </customLabels>
@@ -2767,6 +2983,10 @@
         <name>stgNavRollupBatch</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgNavSchedule --></label>
+        <name>stgNavSchedule</name>
+    </customLabels>
+    <customLabels>
         <label>システムツール</label>
         <name>stgNavSystem</name>
     </customLabels>
@@ -2811,11 +3031,11 @@
         <name>NPSP_Settings</name>
     </customTabs>
     <quickActions>
-        <label><!-- LogACall --></label>
+        <label><!-- Log a Call --></label>
         <name>LogACall</name>
     </quickActions>
     <quickActions>
-        <label><!-- NewAccount --></label>
+        <label><!-- New Account --></label>
         <name>NewAccount</name>
     </quickActions>
     <quickActions>
@@ -2823,7 +3043,7 @@
         <name>NewContact</name>
     </quickActions>
     <quickActions>
-        <label><!-- NewNote --></label>
+        <label><!-- New Note --></label>
         <name>NewNote</name>
     </quickActions>
     <quickActions>
@@ -2831,7 +3051,7 @@
         <name>NewOpportunity</name>
     </quickActions>
     <quickActions>
-        <label><!-- NewTask --></label>
+        <label><!-- New Task --></label>
         <name>NewTask</name>
     </quickActions>
     <quickActions>

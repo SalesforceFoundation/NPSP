@@ -5,9 +5,19 @@
         <value><!-- Error Settings --></value>
     </caseValues>
     <fields>
+        <help><!-- Used to keep track of the most recent execution of the Async job error logger --></help>
+        <label><!-- Async Error Check Last Run --></label>
+        <name>Async_Error_Check_Last_Run__c</name>
+    </fields>
+    <fields>
         <help>オンにすると、NPSP のエラー処理フレームワークが無効になります。</help>
         <label>エラー処理の無効化</label>
         <name>Disable_Error_Handling__c</name>
+    </fields>
+    <fields>
+        <help><!-- When checked, NPSP won&apos;t automatically schedule default recurring jobs. These recurring jobs calculate rollups, update recurring donations and seasonal address, and perform error handling. --></help>
+        <label><!-- Don&apos;t Auto Schedule Default NPSP Jobs --></label>
+        <name>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
     </fields>
     <fields>
         <help>オンにすると、管理パッケージコードのデバッグステートメントが有効になります。</help>

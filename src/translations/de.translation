@@ -104,6 +104,10 @@
         <name>Addr_Verification_Batch_Title</name>
     </customLabels>
     <customLabels>
+        <label><!-- Unable to load verification class when visiting settings page --></label>
+        <name>Addr_Verification_Cant_Load_Class</name>
+    </customLabels>
+    <customLabels>
         <label>Überprüfung erforderlich</label>
         <name>Addr_Verification_Required</name>
     </customLabels>
@@ -328,6 +332,18 @@
         <name>CampaignMemberStatusOmit</name>
     </customLabels>
     <customLabels>
+        <label><!-- CascadeDeletionError --></label>
+        <name>CascadeDeletionError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- ClosedWonOpportunities --></label>
+        <name>ClosedWonOpportunities</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- ConfirmDeleteAccount --></label>
+        <name>ConfirmDeleteAccount</name>
+    </customLabels>
+    <customLabels>
         <label><!-- EPAddDependentTask --></label>
         <name>EPAddDependentTask</name>
     </customLabels>
@@ -340,6 +356,14 @@
         <name>EPDeleteTask</name>
     </customLabels>
     <customLabels>
+        <label><!-- EPManageTasks --></label>
+        <name>EPManageTasks</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- EPManageTemplate --></label>
+        <name>EPManageTemplate</name>
+    </customLabels>
+    <customLabels>
         <label><!-- EPTaskDependency --></label>
         <name>EPTaskDependency</name>
     </customLabels>
@@ -348,8 +372,24 @@
         <name>EPTaskTemplate</name>
     </customLabels>
     <customLabels>
+        <label><!-- to, as in &quot;Add depend task to task 1&quot; --></label>
+        <name>EPTo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- ErrorEmailMessage --></label>
+        <name>ErrorEmailMessage</name>
+    </customLabels>
+    <customLabels>
         <label>Aus Sicherheitsgründen ausgeblendet</label>
         <name>HiddenForSecurity</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- NameRequired --></label>
+        <name>NameRequired</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- OrganizationalOpportunities --></label>
+        <name>OrganizationalOpportunities</name>
     </customLabels>
     <customLabels>
         <label>Erfolg</label>
@@ -584,6 +624,10 @@
         <name>bdiContactMatchFnameLnameEmail</name>
     </customLabels>
     <customLabels>
+        <label><!-- Data Importer Contact matching option for Fname, Lname, Phone --></label>
+        <name>bdiContactMatchFnameLnamePhone</name>
+    </customLabels>
+    <customLabels>
         <label>Nachname und E-Mail-Adresse</label>
         <name>bdiContactMatchLnameEmail</name>
     </customLabels>
@@ -724,8 +768,16 @@
         <name>campaignMemberStatusResponded</name>
     </customLabels>
     <customLabels>
+        <label><!-- Used when NPSP hits an error trying to create an account for a contact --></label>
+        <name>conFailedAccountCreate</name>
+    </customLabels>
+    <customLabels>
         <label>Personen-Accounts werden nicht unterstützt.</label>
         <name>conMergeErrNoPersonAccounts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- engagementPlanCantEdit --></label>
+        <name>engagementPlanCantEdit</name>
     </customLabels>
     <customLabels>
         <label><!-- engagementPlanNoLookups --></label>
@@ -734,6 +786,14 @@
     <customLabels>
         <label><!-- engagementPlanTwoLookups --></label>
         <name>engagementPlanTwoLookups</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- exceptionRequiredField --></label>
+        <name>exceptionRequiredField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- exceptionValidationRule --></label>
+        <name>exceptionValidationRule</name>
     </customLabels>
     <customLabels>
         <label>Sie verfügen nicht über die notwendigen Berechtigungen zum Bearbeiten von {0}.</label>
@@ -828,12 +888,20 @@
         <name>healthDetailsInvalidErrorUser</name>
     </customLabels>
     <customLabels>
+        <label><!-- Health Check error if a Level refers to an invalid field --></label>
+        <name>healthDetailsInvalidFieldNumeric</name>
+    </customLabels>
+    <customLabels>
         <label>Geschäftsjahr-Rollups werden nicht unterstützt, wenn die Organisation benutzerdefinierte Geschäftsjahre verwendet.</label>
         <name>healthDetailsInvalidFiscalYears</name>
     </customLabels>
     <customLabels>
         <label><!-- Health Check error if a Level refers to an invalid field --></label>
         <name>healthDetailsInvalidLevelField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Health Check error if a Level refers to an invalid field --></label>
+        <name>healthDetailsInvalidLevelFieldReference</name>
     </customLabels>
     <customLabels>
         <label>{0}-Feld {1} ist nicht vorhanden.</label>
@@ -884,12 +952,24 @@
         <name>healthDetailsNothingScheduled</name>
     </customLabels>
     <customLabels>
+        <label><!-- healthDetailsOCR --></label>
+        <name>healthDetailsOCR</name>
+    </customLabels>
+    <customLabels>
         <label>Es wurden {0} Opportunities gefunden, bei denen mehr als eine Opportunity-Kontaktrolle mit &quot;Primär&quot; gekennzeichnet sind.</label>
         <name>healthDetailsOCRDupPrimary</name>
     </customLabels>
     <customLabels>
         <label>Es wurden keine Opportunities mit mehreren primären Opportunity-Kontaktrollen gefunden.</label>
         <name>healthDetailsOCRDupPrimaryValid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsOCRSettingsResolution --></label>
+        <name>healthDetailsOCRSettingsResolution</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsOCRSettingsValid --></label>
+        <name>healthDetailsOCRSettingsValid</name>
     </customLabels>
     <customLabels>
         <label>Die Datentypen in Zahlungsfeld {0} und Opportunity-Feld {1} sind nicht kompatibel.</label>
@@ -1010,6 +1090,10 @@
     <customLabels>
         <label>Opportunity-Kontaktrollen</label>
         <name>healthLabelOCRCheck</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelOCRSettings --></label>
+        <name>healthLabelOCRSettings</name>
     </customLabels>
     <customLabels>
         <label>Opportunity-Zahlungen</label>
@@ -1256,6 +1340,10 @@
         <name>hhCmpDedupeStatus</name>
     </customLabels>
     <customLabels>
+        <label><!-- isARequiredField --></label>
+        <name>isARequiredField</name>
+    </customLabels>
+    <customLabels>
         <label>Vorname</label>
         <name>labelListViewFirst</name>
     </customLabels>
@@ -1302,6 +1390,10 @@
     <customLabels>
         <label><!-- lblCity --></label>
         <name>lblCity</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblCloned --></label>
+        <name>lblCloned</name>
     </customLabels>
     <customLabels>
         <label><!-- lblCountry --></label>
@@ -1368,6 +1460,10 @@
         <name>lblPostalCode</name>
     </customLabels>
     <customLabels>
+        <label><!-- lblRequired --></label>
+        <name>lblRequired</name>
+    </customLabels>
+    <customLabels>
         <label><!-- lblSalutation --></label>
         <name>lblSalutation</name>
     </customLabels>
@@ -1428,6 +1524,10 @@
         <name>leadConvertContactAccount</name>
     </customLabels>
     <customLabels>
+        <label><!-- leadConvertContactSelection --></label>
+        <name>leadConvertContactSelection</name>
+    </customLabels>
+    <customLabels>
         <label>Neuen Account erstellen</label>
         <name>leadConvertCreateAccount</name>
     </customLabels>
@@ -1452,6 +1552,10 @@
         <name>leadConvertPageTitle</name>
     </customLabels>
     <customLabels>
+        <label><!-- leadConvertRecordTypeWarning --></label>
+        <name>leadConvertRecordTypeWarning</name>
+    </customLabels>
+    <customLabels>
         <label>Lead konvertieren</label>
         <name>leadConvertSectionTitle</name>
     </customLabels>
@@ -1466,6 +1570,38 @@
     <customLabels>
         <label>Sie können nur bestehende Kontakte anzeigen.</label>
         <name>leadConvertViewContactError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Save &amp; New button on the Level Edit page --></label>
+        <name>lvlBtnSaveAndNew</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error when the Level has the same lookup field  specified for level and previous --></label>
+        <name>lvlErrorDuplicateLookups</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error when a name of a level is duplicated --></label>
+        <name>lvlErrorDuplicateName</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error when Level Assignment fails to save its current or previous level --></label>
+        <name>lvlErrorInvalidLookupField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error if level&apos;s source field isn&apos;t valid --></label>
+        <name>lvlErrorInvalidSourceField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error if the Level Minimum is &gt; than Level Maximum --></label>
+        <name>lvlErrorMinGTMax</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error when we detect the minimum amount overlaps another level --></label>
+        <name>lvlErrorMinOverlap</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error if both min and max are empty on a level --></label>
+        <name>lvlErrorNoMinMax</name>
     </customLabels>
     <customLabels>
         <label>Suche</label>
@@ -1620,6 +1756,10 @@
         <name>pmtWizardWriteoffMessage</name>
     </customLabels>
     <customLabels>
+        <label><!-- pscDeleteRow --></label>
+        <name>pscDeleteRow</name>
+    </customLabels>
+    <customLabels>
         <label>Weiteren weichen Kredit hinzufügen</label>
         <name>pscManageSoftCreditsAdd</name>
     </customLabels>
@@ -1736,6 +1876,18 @@
         <name>sendAcknowledgmentSucceeded</name>
     </customLabels>
     <customLabels>
+        <label><!-- statusCompleted --></label>
+        <name>statusCompleted</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- statusInProgress --></label>
+        <name>statusInProgress</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- statusNotStarted --></label>
+        <name>statusNotStarted</name>
+    </customLabels>
+    <customLabels>
         <label><!-- stgAddrGeneralSettingsIntro --></label>
         <name>stgAddrGeneralSettingsIntro</name>
     </customLabels>
@@ -1838,6 +1990,10 @@
     <customLabels>
         <label><!-- stgDocumentation --></label>
         <name>stgDocumentation</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgDontAutoScheduleHelpText --></label>
+        <name>stgDontAutoScheduleHelpText</name>
     </customLabels>
     <customLabels>
         <label>Durch die Implementierung der Klasse wird nicht die Schnittstelle HH-INaming implementiert.</label>
@@ -2004,6 +2160,10 @@ Wenn der Vorgang zu 100 % abgeschlossen ist, können Sie die Seite bedenkenlos 
     <customLabels>
         <label>Wählen Sie den Benutzertyp aus, an den Benachrichtigungen gesendet werden sollen.</label>
         <name>stgHelpErrorNotifyTo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- displayed in the Example household names box --></label>
+        <name>stgHelpExampleHHNames</name>
     </customLabels>
     <customLabels>
         <label>Das Format von Salesforce für die formelle Anrede</label>
@@ -2823,6 +2983,10 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <name>stgNavRollupBatch</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgNavSchedule --></label>
+        <name>stgNavSchedule</name>
+    </customLabels>
+    <customLabels>
         <label>Systemtools</label>
         <name>stgNavSystem</name>
     </customLabels>
@@ -2867,11 +3031,11 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <name>NPSP_Settings</name>
     </customTabs>
     <quickActions>
-        <label><!-- LogACall --></label>
+        <label><!-- Log a Call --></label>
         <name>LogACall</name>
     </quickActions>
     <quickActions>
-        <label><!-- NewAccount --></label>
+        <label><!-- New Account --></label>
         <name>NewAccount</name>
     </quickActions>
     <quickActions>
@@ -2879,7 +3043,7 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <name>NewContact</name>
     </quickActions>
     <quickActions>
-        <label><!-- NewNote --></label>
+        <label><!-- New Note --></label>
         <name>NewNote</name>
     </quickActions>
     <quickActions>
@@ -2887,7 +3051,7 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <name>NewOpportunity</name>
     </quickActions>
     <quickActions>
-        <label><!-- NewTask --></label>
+        <label><!-- New Task --></label>
         <name>NewTask</name>
     </quickActions>
     <quickActions>
