@@ -433,8 +433,6 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
     private DmlWrapper runAfflTriggerHandler(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        System.debug('njjc: Running Affl trigger handler ' + triggerAction);
-
         DmlWrapper dmlWrapper = new DmlWrapper();
         
         map<Id, Id> mapConIdAccIdPrimary = new map<Id, Id>();
@@ -508,15 +506,15 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
                     con.Primary_Affiliation__c = null;
                     conForUpdate.add(con);
 
-                //undelete case: only update primary affiliation on contact if the lookup is blank, otherwise uncheck primary
+                //UNDELETE case: only update primary affiliation on contact if the lookup is blank, otherwise uncheck primary
                 } else if (mapConIdAfflUndelete.containsKey(con.id)) {
                     npe5__Affiliation__c affl = mapConIdAfflUndelete.get(con.id);
                     if (con.Primary_Affiliation__c == null) {
                         con.Primary_Affiliation__c = affl.npe5__Organization__c;
                         conForUpdate.add(con);
                     } else {
-                        affl.npe5__Primary__c = false;
-                        afflForUpdate.add(affl);
+                        //Can't use record in trigger set for update, so create a new one
+                        afflForUpdate.add(new npe5__Affiliation__c(Id=affl.id, npe5__Primary__c=false));
                     }
                 }
             }
@@ -541,7 +539,6 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
             dmlWrapper.objectsToUpdate.addAll((List<SObject>)afflForUpdate);
         }
 
-        System.debug('njjc: Finishing Affl trigger hanlder, dmlWrapper: ' + dmlWrapper);
         return dmlWrapper;
     }
     
