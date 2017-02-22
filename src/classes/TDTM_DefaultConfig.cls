@@ -127,7 +127,7 @@ public without sharing class TDTM_DefaultConfig {
         // Affiliations on Affiliation
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
               Class__c = 'AFFL_Affiliations_TDTM', Load_Order__c = 1, Object__c = 'npe5__Affiliation__c',
-              Trigger_Action__c = 'AfterInsert;AfterUpdate'));
+              Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete;AfterUndelete'));
 
         // Relationships on CampaignMember
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
