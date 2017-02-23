@@ -527,11 +527,17 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
 
         if (!mapConIdAccIdPrimary.isEmpty()) {
             //uncheck any existing primary affiliations
-            list<npe5__Affiliation__c> queryAffl = [SELECT Id, npe5__Contact__c, npe5__Organization__c FROM npe5__Affiliation__c WHERE npe5__Primary__c = TRUE AND npe5__Contact__c IN :mapConIdAccIdPrimary.keySet() AND ID NOT IN :mapConIdAfflIdPrimary.values()];
-        
+            list<npe5__Affiliation__c> queryAffl = [SELECT Id, npe5__Contact__c, npe5__Organization__c FROM npe5__Affiliation__c 
+                                                    WHERE npe5__Primary__c = TRUE AND npe5__Contact__c IN :mapConIdAccIdPrimary.keySet()];
+            
+            //filtering out any current primary affiliations manually to avoid a query using NOT IN, 
+            //which causes an inefficient table scan that can fail on large data volumes
+            Set<Id> currentPrimaryAffl = new Set<Id>(mapConIdAfflIdPrimary.values());
             for (npe5__Affiliation__c affl : queryAffl) {
-                affl.npe5__Primary__c = false;
-                afflForUpdate.add(affl);
+                if (!currentPrimaryAffl.contains(affl.id)) {
+                    affl.npe5__Primary__c = false;
+                    afflForUpdate.add(affl);
+                }
             }
         }
 
