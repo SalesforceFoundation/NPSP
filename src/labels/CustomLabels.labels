@@ -588,14 +588,6 @@
         <value>omit</value>
     </labels>
     <labels>
-        <fullName>CascadeDeleteOrReassociate</fullName>
-        <categories>Error</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>CascadeDeleteOrReassociate</shortDescription>
-        <value>Delete or re-associate these records and then try deleting {0} again.</value>
-    </labels>
-    <labels>
         <fullName>CascadeDeletionError</fullName>
         <categories>Error</categories>
         <language>en_US</language>
@@ -1520,7 +1512,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>exceptionRequiredField</shortDescription>
-        <value>Required fields are missing: </value>
+        <value>Required fields are missing:</value>
     </labels>
     <labels>
         <fullName>exceptionValidationRule</fullName>

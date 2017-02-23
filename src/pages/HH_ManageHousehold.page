@@ -1,4 +1,4 @@
-<apex:page standardController="npo02__Household__c" extensions="HH_ManageHH_CTRL" title="{!$Label.npo02__ManageHousehold}" 
+<apex:page standardController="npo02__Household__c" extensions="HH_ManageHH_CTRL" title="{!$Label.npo02__managehousehold}" 
     standardStylesheets="true" showHeader="true" docType="html-5.0" action="{!handleNewHousehold}"  >
         
 	<apex:include pageName="HH_ManageHH"/>
