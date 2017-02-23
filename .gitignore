@@ -24,5 +24,3 @@ Referenced Packages
 /venv
 .*.swp
 *.pyc
-*.sublime-*
-/config
