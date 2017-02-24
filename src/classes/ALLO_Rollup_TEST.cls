@@ -96,7 +96,7 @@ private with sharing class ALLO_Rollup_TEST {
         system.assertEquals(system.today(), queryGAU[0].Last_Allocation_Date__c, 'Last allocation should be today.');
         system.assertEquals(system.today().addYears(-2), queryGAU[0].First_Allocation_Date__c, 'First allocation should be two years ago.');
         system.assertEquals(8, queryGAU[0].Total_Allocations_This_Year__c, 'Total allocations this year should equal 8.' + queryGAU[0]);
-        system.assertEquals(0, queryGAU[0].Total_Allocations_Last_Year__c, 'Total allocations this year should equal 0.');
+        system.assertEquals(0, queryGAU[0].Total_Allocations_Last_Year__c, 'Total allocations last year should equal 0.');
         system.assertEquals(8, queryGAU[0].Total_Allocations_Two_Years_Ago__c, 'Total allocations two years ago should equal 8.');
         system.assertEquals(8, queryGAU[0].Total_Allocations_Last_N_Days__c, 'Total allocations last 365 days should equal 8.');
 
@@ -138,7 +138,7 @@ private with sharing class ALLO_Rollup_TEST {
         system.assertEquals(system.today(), queryGAU[0].Last_Allocation_Date__c, 'Last allocation should be today.');
         system.assertEquals(system.today().addYears(-2), queryGAU[0].First_Allocation_Date__c, 'First allocation should be two years ago.');
         system.assertEquals(8, queryGAU[0].Total_Allocations_This_Year__c, 'Total allocations this year should equal 8.' + queryGAU[0]);
-        system.assertEquals(0, queryGAU[0].Total_Allocations_Last_Year__c, 'Total allocations this year should equal 0.');
+        system.assertEquals(0, queryGAU[0].Total_Allocations_Last_Year__c, 'Total allocations last year should equal 0.');
         system.assertEquals(8, queryGAU[0].Total_Allocations_Two_Years_Ago__c, 'Total allocations two years ago should equal 8.');
         system.assertEquals(8, queryGAU[0].Total_Allocations_Last_N_Days__c, 'Total allocations last 365 days should equal 8.');
 
