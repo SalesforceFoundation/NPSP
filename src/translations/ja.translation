@@ -104,7 +104,7 @@
         <name>Addr_Verification_Batch_Title</name>
     </customLabels>
     <customLabels>
-        <label><!-- Unable to load verification class when visiting settings page --></label>
+        <label>検証クラス {0} の読み込み中にエラーが発生しました</label>
         <name>Addr_Verification_Cant_Load_Class</name>
     </customLabels>
     <customLabels>
@@ -184,7 +184,7 @@
         <name>CONV_All_Backed_Up</name>
     </customLabels>
     <customLabels>
-        <label><!-- CONV_All_Dup_Rules_Disabled --></label>
+        <label>すべての Data.com 重複管理ルールが無効になっています。</label>
         <name>CONV_All_Dup_Rules_Disabled</name>
     </customLabels>
     <customLabels>
@@ -344,39 +344,43 @@
         <name>ConfirmDeleteAccount</name>
     </customLabels>
     <customLabels>
-        <label><!-- EPAddDependentTask --></label>
+        <label>連動 ToDo を追加</label>
         <name>EPAddDependentTask</name>
     </customLabels>
     <customLabels>
-        <label><!-- Engagement Plan&apos;s Add Task button label --></label>
+        <label>ToDo を追加</label>
         <name>EPAddTask</name>
     </customLabels>
     <customLabels>
-        <label><!-- EPDeleteTask --></label>
+        <label>ToDo を削除</label>
         <name>EPDeleteTask</name>
     </customLabels>
     <customLabels>
-        <label><!-- EPManageTasks --></label>
+        <label>エンゲージメント計画 ToDo を管理</label>
         <name>EPManageTasks</name>
     </customLabels>
     <customLabels>
-        <label><!-- EPManageTemplate --></label>
+        <label>エンゲージメント計画 ToDo を管理</label>
         <name>EPManageTemplate</name>
     </customLabels>
     <customLabels>
-        <label><!-- EPTaskDependency --></label>
+        <label>エンゲージメント計画 ToDo の連動関係で再帰的な連動関係ループを作成できません。</label>
         <name>EPTaskDependency</name>
     </customLabels>
     <customLabels>
-        <label><!-- EPTaskTemplate --></label>
+        <label>エンゲージメント計画 ToDo は、同じエンゲージメント計画テンプレートに属する他のエンゲージメント計画 ToDo にのみ連動できます。</label>
         <name>EPTaskTemplate</name>
     </customLabels>
     <customLabels>
-        <label><!-- to, as in &quot;Add depend task to task 1&quot; --></label>
+        <label>-&gt;</label>
         <name>EPTo</name>
     </customLabels>
     <customLabels>
-        <label><!-- ErrorEmailMessage --></label>
+        <label>NPSP がその一括処理ジョブを実行しようとしたとき、またはエラーメッセージを直接ユーザに表示できなかったときに Salesforce で次のエラーが報告されました。NPSP が団体および個人の集計項目を更新しようとしましたが、特定のレコードを保存できなかったようです。このエラーは、カスタムコードや入力規則など、NPSP に関係ないさまざまな問題が原因で発生した可能性があります。
+
+これらのスケジュール済みジョブの動作については、Power of Us Hub の記事 (https://powerofus.force.com/NPSP_Scheduled_Jobs) を参照してください
+
+これらのエラーを解決する方法がわからない場合は、Power of Us Hub の Nonprofit Success Pack グループ (https://powerofus.force.com/HUB_NPSP_Group) にメッセージを投稿してください</label>
         <name>ErrorEmailMessage</name>
     </customLabels>
     <customLabels>
@@ -384,7 +388,7 @@
         <name>HiddenForSecurity</name>
     </customLabels>
     <customLabels>
-        <label><!-- NameRequired --></label>
+        <label>[件名] は必須項目です。</label>
         <name>NameRequired</name>
     </customLabels>
     <customLabels>
@@ -512,7 +516,7 @@
         <name>alloBtnSaveAndClose</name>
     </customLabels>
     <customLabels>
-        <label><!-- alloCampaignExceedsOppAmount --></label>
+        <label>キャンペーンの割り当てが作成されませんでした。支援のキャンペーンの割り当てが支援金額を超えました。</label>
         <name>alloCampaignExceedsOppAmount</name>
     </customLabels>
     <customLabels>
@@ -580,7 +584,7 @@
         <name>alloTotals</name>
     </customLabels>
     <customLabels>
-        <label><!-- alloUnallocated --></label>
+        <label>未割り当て</label>
         <name>alloUnallocated</name>
     </customLabels>
     <customLabels>
@@ -752,7 +756,7 @@
         <name>bdiTime</name>
     </customLabels>
     <customLabels>
-        <label><!-- button label on the Remove Contact popup --></label>
+        <label>削除</label>
         <name>btnRemove</name>
     </customLabels>
     <customLabels>
@@ -768,7 +772,7 @@
         <name>campaignMemberStatusResponded</name>
     </customLabels>
     <customLabels>
-        <label><!-- Used when NPSP hits an error trying to create an account for a contact --></label>
+        <label>個人 {0} {1} の団体を作成できませんでした。{2}</label>
         <name>conFailedAccountCreate</name>
     </customLabels>
     <customLabels>
@@ -776,23 +780,23 @@
         <name>conMergeErrNoPersonAccounts</name>
     </customLabels>
     <customLabels>
-        <label><!-- engagementPlanCantEdit --></label>
+        <label>このエンゲージメント計画を新しいオブジェクトに割り当てることができません。新しいエンゲージメント計画を作成してください。</label>
         <name>engagementPlanCantEdit</name>
     </customLabels>
     <customLabels>
-        <label><!-- engagementPlanNoLookups --></label>
+        <label>エンゲージメント計画ごとに 1 つのオブジェクトルックアップを入力する必要があります。</label>
         <name>engagementPlanNoLookups</name>
     </customLabels>
     <customLabels>
-        <label><!-- engagementPlanTwoLookups --></label>
+        <label>エンゲージメント計画ごとに入力できるオブジェクトルックアップは 1 つのみです。</label>
         <name>engagementPlanTwoLookups</name>
     </customLabels>
     <customLabels>
-        <label><!-- exceptionRequiredField --></label>
+        <label>必須項目が入力されていません:</label>
         <name>exceptionRequiredField</name>
     </customLabels>
     <customLabels>
-        <label><!-- exceptionValidationRule --></label>
+        <label>入力規則が原因でレコードを保存できません:</label>
         <name>exceptionValidationRule</name>
     </customLabels>
     <customLabels>
@@ -848,7 +852,7 @@
         <name>healthDetailsDuplicateAcctRT</name>
     </customLabels>
     <customLabels>
-        <label><!-- The details displayed when the duplicate contact roles health check fails --></label>
+        <label>個人および積み上げ集計の値が重複している支援が状態チェックで見つかりました。</label>
         <name>healthDetailsDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
@@ -888,7 +892,7 @@
         <name>healthDetailsInvalidErrorUser</name>
     </customLabels>
     <customLabels>
-        <label><!-- Health Check error if a Level refers to an invalid field --></label>
+        <label>レベル {0} で {2} の無効な数値項目 {1} が参照されています。</label>
         <name>healthDetailsInvalidFieldNumeric</name>
     </customLabels>
     <customLabels>
@@ -896,11 +900,11 @@
         <name>healthDetailsInvalidFiscalYears</name>
     </customLabels>
     <customLabels>
-        <label><!-- Health Check error if a Level refers to an invalid field --></label>
+        <label>レベル {0} で {2} の無効な項目 {1} が参照されています。</label>
         <name>healthDetailsInvalidLevelField</name>
     </customLabels>
     <customLabels>
-        <label><!-- Health Check error if a Level refers to an invalid field --></label>
+        <label>レベル {0} で {2} の無効なレベル参照項目 {1} が参照されています。</label>
         <name>healthDetailsInvalidLevelFieldReference</name>
     </customLabels>
     <customLabels>
@@ -952,7 +956,7 @@
         <name>healthDetailsNothingScheduled</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsOCR --></label>
+        <label>{0} と {1} で同じ役割値を使用できません。</label>
         <name>healthDetailsOCR</name>
     </customLabels>
     <customLabels>
@@ -964,11 +968,11 @@
         <name>healthDetailsOCRDupPrimaryValid</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsOCRSettingsResolution --></label>
+        <label>[NPSP 設定] タブで、[支援] | [個人の役割] をクリックし、上の設定値を編集します。</label>
         <name>healthDetailsOCRSettingsResolution</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsOCRSettingsValid --></label>
+        <label>NPSP の [支援個人の役割] 設定が有効になっています。</label>
         <name>healthDetailsOCRSettingsValid</name>
     </customLabels>
     <customLabels>
@@ -1040,7 +1044,7 @@
         <name>healthLabelContactData</name>
     </customLabels>
     <customLabels>
-        <label><!-- Label for Duplicate Contact Role health check --></label>
+        <label>個人および積み上げ集計の値が重複しています</label>
         <name>healthLabelDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
@@ -1076,7 +1080,7 @@
         <name>healthLabelLastRun</name>
     </customLabels>
     <customLabels>
-        <label><!-- The message displayed when the duplicate contact roles health check passes --></label>
+        <label>個人または積み上げ集計の値が重複している支援が状態チェックで見つかりませんでした。</label>
         <name>healthLabelNoDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
@@ -1092,7 +1096,7 @@
         <name>healthLabelOCRCheck</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelOCRSettings --></label>
+        <label>[支援個人の役割] 設定</label>
         <name>healthLabelOCRSettings</name>
     </customLabels>
     <customLabels>
@@ -1148,11 +1152,11 @@
         <name>healthLabelUDFValid</name>
     </customLabels>
     <customLabels>
-        <label><!-- Health Check title for Levels --></label>
+        <label>レベル</label>
         <name>healthLabelVerifyLevels</name>
     </customLabels>
     <customLabels>
-        <label><!-- Health Check message when all Levels verify ok --></label>
+        <label>すべてのレベルのすべての項目参照が有効になっています。</label>
         <name>healthLabelVerifyLevelsSuccess</name>
     </customLabels>
     <customLabels>
@@ -1208,7 +1212,9 @@
         <name>healthSolutionContactData</name>
     </customLabels>
     <customLabels>
-        <label><!-- The recommended solution for when the duplicate contact roles health check fails --></label>
+        <label>これまでは、2 つの異なる支援個人の役割で支援に 2 回関連付けられた個人のソフトクレジットの積み上げ集計値が NPSP で二重にカウントされていました。支援の個人の関連付けの数に関係なく、このような積み上げ集計値が NPSP で 1 回のみカウントされるようになりました。&lt;br/&gt;
+&lt;br/&gt;
+以前にこのように積み上げ集計値が二重にカウントされていた支援を確認するには、開発者コンソールで「SELECT Count(Id), OpportunityId, Opportunity.Name OpportunityName, ContactId, Contact.Name ContactName FROM OpportunityContactRole WHERE Opportunity.IsWon = true AND Role IN ({0}) GROUP BY OpportunityId, Opportunity.Name, ContactId, Contact.Name HAVING Count(Id) &gt; 1」という SOQL クエリを実行します</label>
         <name>healthSolutionDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
@@ -1228,7 +1234,7 @@
         <name>healthSolutionInvalidFiscalYears</name>
     </customLabels>
     <customLabels>
-        <label><!-- Health Check Solution for an invalid Level field --></label>
+        <label>[レベル] タブに移動し、レベル {0} の無効な項目参照を更新します。</label>
         <name>healthSolutionInvalidLevelField</name>
     </customLabels>
     <customLabels>
@@ -1340,7 +1346,7 @@
         <name>hhCmpDedupeStatus</name>
     </customLabels>
     <customLabels>
-        <label><!-- isARequiredField --></label>
+        <label>は必須項目です。</label>
         <name>isARequiredField</name>
     </customLabels>
     <customLabels>
@@ -1372,79 +1378,79 @@
         <name>labelShowMore</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblAddressOverride --></label>
+        <label>(住所の上書き)</label>
         <name>lblAddressOverride</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblBtnAddAllHHMembers --></label>
+        <label>すべてのメンバーを追加</label>
         <name>lblBtnAddAllHHMembers</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblBtnAddContact --></label>
+        <label>{0}を追加</label>
         <name>lblBtnAddContact</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblCCardExcludeFrom --></label>
+        <label>次から除外:</label>
         <name>lblCCardExcludeFrom</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblCity --></label>
+        <label>市区郡</label>
         <name>lblCity</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblCloned --></label>
+        <label>コピー済み</label>
         <name>lblCloned</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblCountry --></label>
+        <label>国</label>
         <name>lblCountry</name>
     </customLabels>
     <customLabels>
-        <label><!-- caption of Remove Contact popup --></label>
+        <label>個人を削除</label>
         <name>lblDeleteContact</name>
     </customLabels>
     <customLabels>
-        <label><!-- prompt for the Remove Contact Popup --></label>
+        <label>保存時にこの個人をこの世帯から削除しますか?</label>
         <name>lblDeleteContactPrompt</name>
     </customLabels>
     <customLabels>
-        <label><!-- autocomplete&apos;s label for &quot;smith in Contacts&quot; --></label>
+        <label>個人内</label>
         <name>lblFindInContacts</name>
     </customLabels>
     <customLabels>
-        <label><!-- string displayed in the autocomplete control when empty --></label>
+        <label>個人を検索するか、新規個人を世帯に追加する</label>
         <name>lblFindOrAddContact</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblFirstName --></label>
+        <label>名</label>
         <name>lblFirstName</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblFormalGreeting --></label>
+        <label>公式の挨拶</label>
         <name>lblFormalGreeting</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblHousehold --></label>
+        <label>世帯</label>
         <name>lblHousehold</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblHouseholdName --></label>
+        <label>世帯名</label>
         <name>lblHouseholdName</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblInformalGreeting --></label>
+        <label>非公式の挨拶</label>
         <name>lblInformalGreeting</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblLastName --></label>
+        <label>姓</label>
         <name>lblLastName</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblMergeHHPrompt --></label>
+        <label>{0} の世帯には他のメンバーが含まれます。{0} のみを追加しますか、それとも世帯のすべてのメンバーを追加しますか?</label>
         <name>lblMergeHHPrompt</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblMergeHHTitle --></label>
+        <label>世帯をマージ</label>
         <name>lblMergeHHTitle</name>
     </customLabels>
     <customLabels>
@@ -1452,11 +1458,11 @@
         <name>lblNPSPSettings</name>
     </customLabels>
     <customLabels>
-        <label><!-- error displayed when required perms missing to add a contact and its household --></label>
+        <label>既存の個人を世帯に追加するには、世帯 (団体) に対する権限を更新および削除しておく必要があります。</label>
         <name>lblNoHHMergePermissions</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblPostalCode --></label>
+        <label>郵便番号</label>
         <name>lblPostalCode</name>
     </customLabels>
     <customLabels>
@@ -1464,15 +1470,15 @@
         <name>lblRequired</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblSalutation --></label>
+        <label>敬称</label>
         <name>lblSalutation</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblState --></label>
+        <label>都道府県</label>
         <name>lblState</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblStreet --></label>
+        <label>町名・番地</label>
         <name>lblStreet</name>
     </customLabels>
     <customLabels>
@@ -1524,7 +1530,7 @@
         <name>leadConvertContactAccount</name>
     </customLabels>
     <customLabels>
-        <label><!-- leadConvertContactSelection --></label>
+        <label>[個人] ボックスでオプションを選択する必要があります。</label>
         <name>leadConvertContactSelection</name>
     </customLabels>
     <customLabels>
@@ -1552,7 +1558,7 @@
         <name>leadConvertPageTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- leadConvertRecordTypeWarning --></label>
+        <label>あなたのプロファイルのデフォルトの団体レコードタイプが、[NPSP 設定] で [団体モデル] として設定されているレコードタイプと同じです。このため、データに関するさまざまな問題が発生する可能性があります。すべてのプロファイルに対して団体のデフォルトのレコードタイプを異なる値に変更することをお勧めします。</label>
         <name>leadConvertRecordTypeWarning</name>
     </customLabels>
     <customLabels>
@@ -1572,31 +1578,31 @@
         <name>leadConvertViewContactError</name>
     </customLabels>
     <customLabels>
-        <label><!-- Save &amp; New button on the Level Edit page --></label>
+        <label>保存 &amp; 新規</label>
         <name>lvlBtnSaveAndNew</name>
     </customLabels>
     <customLabels>
-        <label><!-- Error when the Level has the same lookup field  specified for level and previous --></label>
+        <label>レベル項目と以前のレベル項目では、{0} の参照項目に異なる項目を指定する必要があります。</label>
         <name>lvlErrorDuplicateLookups</name>
     </customLabels>
     <customLabels>
-        <label><!-- error when a name of a level is duplicated --></label>
+        <label>{0} というレベル名はすでに存在します。対象およびレベル項目が同じ場合、名前が一意である必要があります。</label>
         <name>lvlErrorDuplicateName</name>
     </customLabels>
     <customLabels>
-        <label><!-- error when Level Assignment fails to save its current or previous level --></label>
+        <label>レベル {1} に指定した項目 {0} は、レベルオブジェクトへの有効な参照ではありません。</label>
         <name>lvlErrorInvalidLookupField</name>
     </customLabels>
     <customLabels>
-        <label><!-- error if level&apos;s source field isn&apos;t valid --></label>
+        <label>レベル {1} に指定した項目 {0} は、有効な数値項目ではありません。</label>
         <name>lvlErrorInvalidSourceField</name>
     </customLabels>
     <customLabels>
-        <label><!-- error if the Level Minimum is &gt; than Level Maximum --></label>
+        <label>最小値はレベル {0} の最大値未満である必要があります。</label>
         <name>lvlErrorMinGTMax</name>
     </customLabels>
     <customLabels>
-        <label><!-- error when we detect the minimum amount overlaps another level --></label>
+        <label>レベル {0} の最小値から最大値までの範囲がレベル {1} の最小値から最大値までの範囲と重複しています。</label>
         <name>lvlErrorMinOverlap</name>
     </customLabels>
     <customLabels>
@@ -1756,7 +1762,7 @@
         <name>pmtWizardWriteoffMessage</name>
     </customLabels>
     <customLabels>
-        <label><!-- pscDeleteRow --></label>
+        <label>行を削除</label>
         <name>pscDeleteRow</name>
     </customLabels>
     <customLabels>
@@ -1876,19 +1882,19 @@
         <name>sendAcknowledgmentSucceeded</name>
     </customLabels>
     <customLabels>
-        <label><!-- statusCompleted --></label>
+        <label>完了</label>
         <name>statusCompleted</name>
     </customLabels>
     <customLabels>
-        <label><!-- statusInProgress --></label>
+        <label>進行中</label>
         <name>statusInProgress</name>
     </customLabels>
     <customLabels>
-        <label><!-- statusNotStarted --></label>
+        <label>未開始</label>
         <name>statusNotStarted</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgAddrGeneralSettingsIntro --></label>
+        <label>世帯および組織団体の管理では、団体への複数の住所の追加、デフォルト住所の指定、住所 (季節性) の指定ができます。住所管理は、世帯団体モデルを備えた NPSP3 以降でのみ利用できます。</label>
         <name>stgAddrGeneralSettingsIntro</name>
     </customLabels>
     <customLabels>
@@ -1988,11 +1994,20 @@
         <name>stgBtnSave</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgDocumentation --></label>
+        <label>ドキュメント</label>
         <name>stgDocumentation</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgDontAutoScheduleHelpText --></label>
+        <label>オンになっていると、NPSP は自動的にデフォルトの定期的なジョブをスケジュールしません。 
+&lt;br/&gt; 
+&lt;br/&gt; 
+これらの定期的なジョブは、積み上げ集計の計算、継続支援や住所 (季節性) の更新、エラー処理の実行を行います。 
+&lt;br/&gt; 
+&lt;br/&gt; 
+オフにした場合、NPSP 設定ページにアクセスするたびに NPSP はデフォルトの定期的なジョブがスケジュールされていることを確認します。再スケジュールは、更新されたジョブではなく、欠落しているジョブにのみ適用されます。 
+&lt;br/&gt; 
+&lt;br/&gt; 
+このジョブを表示するには、Salesforce の設定でスケジュール済みジョブを検索します。</label>
         <name>stgDontAutoScheduleHelpText</name>
     </customLabels>
     <customLabels>
@@ -2057,7 +2072,7 @@
         <name>stgHelpBatchAlloRollup</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpBatchCreateDefault --></label>
+        <label>このボタンをクリックすると、割り当ての積み上げ集計設定で除外されている支援を除くすべての既存の支援のデフォルトの割り当てを作成するバッチ処理が開始されます。このツールを実行するには、デフォルトの割り当てが有効になっていて、デフォルトの一般会計単位が選択されている必要があります。</label>
         <name>stgHelpBatchCreateDefault</name>
     </customLabels>
     <customLabels>
@@ -2150,7 +2165,7 @@
         <name>stgHelpEnableSoftCreditRollups</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpErrorLog --></label>
+        <label>エラーログには、デバッグを目的とする詳細なエラーリストが表示されます。ログにエラーが記録されるのは、[システムツール] | [エラー通知] で [エラー処理] オプションと [エラーの保存] オプションが有効になっている場合のみです。</label>
         <name>stgHelpErrorLog</name>
     </customLabels>
     <customLabels>
@@ -2162,7 +2177,7 @@
         <name>stgHelpErrorNotifyTo</name>
     </customLabels>
     <customLabels>
-        <label><!-- displayed in the Example household names box --></label>
+        <label>&lt;b&gt;注意:&lt;/b&gt; 上記のプレビュー例では、名、姓、または敬称以外の項目の情報をプレビューできません(たとえば、非公式の挨拶で使用するニックネーム用のカスタム項目を作成した場合、そのカスタム項目はここに表示されません)。名、姓、および敬称以外の項目は [世帯の管理] ページの挨拶項目にも表示されませんが、[世帯の管理] ページで個人情報を保存すると、世帯の命名規則が正しく表示されます。</label>
         <name>stgHelpExampleHHNames</name>
     </customLabels>
     <customLabels>
@@ -2210,7 +2225,7 @@
         <name>stgHelpHHRules</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpHealthCheck --></label>
+        <label>&lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelHealthCheck&apos;);return false;&quot;&gt;状態チェック&lt;/a&gt;を使用して NPSP 設定を検証してください!</label>
         <name>stgHelpHealthCheck</name>
     </customLabels>
     <customLabels>
@@ -2226,7 +2241,10 @@
         <name>stgHelpLeadConvert</name>
     </customLabels>
     <customLabels>
-        <label><!-- help text displayed on the Level Assignment Batch page --></label>
+        <label>このユーティリティは、レベルが割り当てられているすべての Salesforce オブジェクト (通常は団体と個人であるがそれだけでなくカスタムオブジェクトも含む) のレベル割り当てを計算します。処理に時間がかかる場合がありますが、このページを安全に閉じることができます。処理は引き続きバックグラウンドで実行されます。
+&lt;br/&gt;&lt;br/&gt;
+
+&lt;b&gt;重要:&lt;/b&gt; Salesforce は他の一括データ処理から更新された項目に対してレベルを頻繁に評価しています。そのため、まずこの処理を実行することをお勧めします。</label>
         <name>stgHelpLvlAssignBatch</name>
     </customLabels>
     <customLabels>
@@ -2246,11 +2264,11 @@
         <name>stgHelpMembershipRT</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpNPSPDoc --></label>
+        <label>NPSP ドキュメント</label>
         <name>stgHelpNPSPDoc</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpNPSPSettings --></label>
+        <label>組織のニーズに合わせて Nonprofit Success Pack を設定します。Salesforce 組織の状態を監視したり、バッチ処理を実行してデータを更新したりできます。</label>
         <name>stgHelpNPSPSettings</name>
     </customLabels>
     <customLabels>
@@ -2276,7 +2294,7 @@
         <name>stgHelpNoUDR</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpOCR --></label>
+        <label>ソフトクレジット、 個人の役割、およびマッチングギフトはいくつかの重要な点で相互に関連します。これらの概念および相互関係をよく理解していない場合は、この設定を調整する前に &lt;a href=&quot;https://powerofus.force.com/NPSP_SCMG&quot; target=&quot;_blank&quot;&gt;NPSP ドキュメント&lt;/a&gt;全体を読む必要があります。</label>
         <name>stgHelpOCR</name>
     </customLabels>
     <customLabels>
@@ -2344,7 +2362,7 @@
         <name>stgHelpPaymentsEnabled</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpPowerOfUsHub --></label>
+        <label>質問を受けましたか? ハブに答えがあります! NPSP に関する質問には、&lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;「Nonprofit Success Pack」&lt;/a&gt;グループをお試しください。Salesforce の管理と設定に関する質問には、&lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;「System Administrators (システム管理者)」&lt;/a&gt;グループをお試しください。&lt;br/&gt;&lt;br/&gt;最新の NPSP リリースノートについては、&lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;「NPSP Release Announcements (NPSP リリースのお知らせ)」&lt;/a&gt;グループで確認できます。</label>
         <name>stgHelpPowerOfUsHub</name>
     </customLabels>
     <customLabels>
@@ -2369,7 +2387,13 @@
         <name>stgHelpRDAddCampaign</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRDBatch --></label>
+        <label>このユーティリティは、すべての無期限の継続支援のバッチ処理を実行し、支援の売上予測月数に基づきます。
+&lt;br/&gt;
+&lt;br/&gt; 
+● 新規支援を作成する&lt;br/&gt;
+● 回数と既払額を更新する&lt;br/&gt;
+&lt;br/&gt;
+処理に時間がかかる場合がありますが、このページを閉じることができます。処理は引き続きバックグラウンドで実行されます。</label>
         <name>stgHelpRDBatch</name>
     </customLabels>
     <customLabels>
@@ -2429,7 +2453,7 @@
         <name>stgHelpRDSuccesses</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRecDon --></label>
+        <label>この設定を使用すると、NPSP に付属するデフォルトの期間 (月、四半期、年など) とは異なる、継続支援のカスタム期間を作成できます。</label>
         <name>stgHelpRecDon</name>
     </customLabels>
     <customLabels>
@@ -2461,7 +2485,7 @@
         <name>stgHelpRelReciprocalNeutral</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpReviewErrorLog --></label>
+        <label>&lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelErrorLog&apos;);return false;&quot;&gt;エラーログ&lt;/a&gt;で、問題があるかどうかを確認してください。</label>
         <name>stgHelpReviewErrorLog</name>
     </customLabels>
     <customLabels>
@@ -2501,7 +2525,7 @@
         <name>stgHelpRollupPrimaryContact</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpSalesforceSetup --></label>
+        <label>ページレイアウトのカスタマイズ、項目の追加、またはユーザの追加を行いますか?  &lt;a href=&quot;/setup/forcecomHomepage.apexp?setupid=ForceCom&quot; target=&quot;_blank&quot;&gt;「Salesforce Setup (Salesforce の設定)」&lt;/a&gt;ページをお試しください。</label>
         <name>stgHelpSalesforceSetup</name>
     </customLabels>
     <customLabels>
@@ -2517,7 +2541,7 @@
         <name>stgHelpStoreErrorsOn</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpTDTM --></label>
+        <label>トリガハンドラには、特定のトリガイベントに対して実行する必要がある実際のビジネスロジックが含まれます。</label>
         <name>stgHelpTDTM</name>
     </customLabels>
     <customLabels>
@@ -2679,7 +2703,7 @@
         <name>stgLabelLeadSettings</name>
     </customLabels>
     <customLabels>
-        <label><!-- menu title for the Level Assignment Batch in NPSP Settings --></label>
+        <label>レベル割り当てバッチ</label>
         <name>stgLabelLvlAssignBatchTitle</name>
     </customLabels>
     <customLabels>
@@ -2839,7 +2863,7 @@
         <name>stgLabelUDRTargetField</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelUDRTargetFieldHelp --></label>
+        <label>カスタム積み上げ集計を表示する対象オブジェクトのカスタム項目。この項目は、積み上げている支援項目と同じ種別である必要があります。</label>
         <name>stgLabelUDRTargetFieldHelp</name>
     </customLabels>
     <customLabels>
@@ -2851,11 +2875,11 @@
         <name>stgLinkDelete</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNPSPGuideImportData --></label>
+        <label>データのインポートに関する NPSP ガイド</label>
         <name>stgNPSPGuideImportData</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNPSPSettings --></label>
+        <label>Nonprofit Success Pack アプリケーション設定</label>
         <name>stgNPSPSettings</name>
     </customLabels>
     <customLabels>
@@ -2863,7 +2887,7 @@
         <name>stgNPSPSettingsTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNPSPWorkbook --></label>
+        <label>NPSP 活動資金集めのトレイル</label>
         <name>stgNPSPWorkbook</name>
     </customLabels>
     <customLabels>
@@ -2983,7 +3007,7 @@
         <name>stgNavRollupBatch</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavSchedule --></label>
+        <label>プロセススケジューラ</label>
         <name>stgNavSchedule</name>
     </customLabels>
     <customLabels>
@@ -2999,7 +3023,7 @@
         <name>stgNavUserDefinedRollups</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgOppNamingDescription --></label>
+        <label>支援を作成すると、デフォルトの命名規則を使用して名前が自動的に入力されます。カスタム支援名を作成することで、命名規則をカスタマイズできます。</label>
         <name>stgOppNamingDescription</name>
     </customLabels>
     <customLabels>
@@ -3007,7 +3031,7 @@
         <name>stgPowerOfUsHub</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgTools --></label>
+        <label>ツール</label>
         <name>stgTools</name>
     </customLabels>
     <customLabels>
