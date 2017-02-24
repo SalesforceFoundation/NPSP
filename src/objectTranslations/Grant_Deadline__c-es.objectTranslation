@@ -10,12 +10,12 @@
     </caseValues>
     <fields>
         <help><!-- The date on which this particular Deliverable is due. --></help>
-        <label>Fecha límite del hito del grant</label>
+        <label>Fecha de vencimiento del hito</label>
         <name>Grant_Deadline_Due_Date__c</name>
     </fields>
     <fields>
-        <help>Fecha en el que el entregable debe ser presentado</help>
-        <label>Fecha de cierre del entregable del grant</label>
+        <help>Fecha en la cual se envió el entregable.</help>
+        <label>Fecha de entrega</label>
         <name>Grant_Deliverable_Close_Date__c</name>
     </fields>
     <fields>
@@ -24,7 +24,7 @@
         <name>Grant_Deliverable_Requirements__c</name>
     </fields>
     <fields>
-        <label>Oportunidad del Grant</label>
+        <label>Oportunidad</label>
         <name>Opportunity__c</name>
         <relationshipLabel>Hitos del grant</relationshipLabel>
     </fields>

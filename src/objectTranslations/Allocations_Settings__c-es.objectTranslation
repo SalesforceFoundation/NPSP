@@ -34,7 +34,7 @@
         <name>Rollup_N_Day_Value__c</name>
     </fields>
     <fields>
-        <help>Esta casilla causa que los totales de las asignaciones respeten el año fiscal, en vez del año calendario. Para configurar el AF , ir a Configuración -&gt; Perfil de la compañía -&gt; Año fiscal.  Nota: NO funciona con una configuración personalizada del AF.</help>
+        <help>Esta casilla causa que los totales de las asignaciones respeten el año fiscal, en vez del año calendario. Para configurar el AF , ir a Configuración -&gt; Perfil de la compañía -&gt; Año fiscal. Nota: NO funciona con una configuración personalizada del AF.</help>
         <label>Usar año fiscal en totales</label>
         <name>Use_Fiscal_Year_for_Rollups__c</name>
     </fields>

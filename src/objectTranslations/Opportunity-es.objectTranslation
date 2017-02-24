@@ -27,7 +27,7 @@
         </picklistValues>
         <picklistValues>
             <masterLabel>To Be Acknowledged</masterLabel>
-            <translation>A enviar</translation>
+            <translation>Acuse de recibo pendiente</translation>
         </picklistValues>
     </fields>
     <fields>

@@ -17,7 +17,7 @@
         <name>Addr_Pending_Verification</name>
     </customLabels>
     <customLabels>
-        <label>DEPRECADA (dada de baja)  - Configuración de API de Cuentas.</label>
+        <label>DEPRECADA (dada de baja) - Configuración de API de Cuentas.</label>
         <name>Addr_Settings_API_Body</name>
     </customLabels>
     <customLabels>
@@ -42,7 +42,7 @@
 
 &lt;li&gt;Volver a la página de configuración y hacer click en el botón de Editar y pegar el ID o token de autenticación en el campo apropiado.&lt;/li&gt;
 
-&lt;li&gt;Completar los campos restantes y hacer click en Guardar. El texto de ayuda para cada campo provee más información. Si todavía necesita ayuda ir a  &lt;a href=&quot;https://powerofus.force.com/NPSP_Address_Verification&quot;&gt;NPSP documentation&lt;/a&gt;.&lt;/li&gt;</label>
+&lt;li&gt;Completar los campos restantes y hacer click en Guardar. El texto de ayuda para cada campo provee más información. Si todavía necesita ayuda ir a &lt;a href=&quot;https://powerofus.force.com/NPSP_Address_Verification&quot;&gt;NPSP documentation&lt;/a&gt;.&lt;/li&gt;</label>
         <name>Addr_Settings_Intro_Body2</name>
     </customLabels>
     <customLabels>
@@ -70,7 +70,7 @@
         <name>Addr_Skip_Verified</name>
     </customLabels>
     <customLabels>
-        <label>El Token de autenticidad on puede estar vacío.</label>
+        <label>El Token de autenticidad no puede estar vacío.</label>
         <name>Addr_Token_Error</name>
     </customLabels>
     <customLabels>
@@ -90,7 +90,7 @@
         <name>Addr_Verification_Batch_Not_Supported</name>
     </customLabels>
     <customLabels>
-        <label>SmartyStreets  va a verificar direcciones en lotes de 100.</label>
+        <label>SmartyStreets va a verificar direcciones en lotes de 100.</label>
         <name>Addr_Verification_Batch_SmartyStreets_Message</name>
     </customLabels>
     <customLabels>
@@ -146,7 +146,7 @@
         <name>Address_Not_Found</name>
     </customLabels>
     <customLabels>
-        <label>&apos;{0}&apos;  no está configurado como un País válido en su organización.</label>
+        <label>{0}&apos; no está configurado como un País válido en su organización.</label>
         <name>Address_StateCountry_Invalid_Error</name>
     </customLabels>
     <customLabels>
@@ -534,15 +534,15 @@
         <name>alloExceedsOppAmount</name>
     </customLabels>
     <customLabels>
-        <label>Manejar Campañas de Asignaciones.</label>
+        <label>Gestionar asignaciones de campañas</label>
         <name>alloManageCampaignAllocations</name>
     </customLabels>
     <customLabels>
-        <label>Manejar Asignaciones de Oportunidades.</label>
+        <label>Gestionar asignaciones de oportunidades</label>
         <name>alloManageOppAllocations</name>
     </customLabels>
     <customLabels>
-        <label>Manejar asignaciones de Donaciones Recurrentes.</label>
+        <label>Gestionar asignaciones de donaciones recurrentes</label>
         <name>alloManageRecurringDonationAllocations</name>
     </customLabels>
     <customLabels>
@@ -1842,7 +1842,7 @@
         <name>sendAcknowledgmentFailedStatus</name>
     </customLabels>
     <customLabels>
-        <label>Los siguientes registros no fueron reconocidos. Los acuses de recibo pueden fallar si no hay una regla de flujo de trabajo (Acuse de estado igual a &quot; Enviar acuse de recibo &apos; ) activada para enviar el acuse de recibo , o si los registros no cumplen con los criterios adicionales para activar la regla de flujo de trabajo . Por ejemplo, si no está establecido el  &quot;Contacto Principal&quot;, o si el campo &quot;Correo electrónico&quot; del Contacto principal está vacío o no es  válido.</label>
+        <label>Los siguientes registros no fueron reconocidos. Los acuses de recibo pueden fallar si no hay una regla de flujo de trabajo (Acuse de estado igual a &quot; Enviar acuse de recibo &apos; ) activada para enviar el acuse de recibo , o si los registros no cumplen con los criterios adicionales para activar la regla de flujo de trabajo . Por ejemplo, si no está establecido el &quot;Contacto Principal&quot;, o si el campo &quot;Correo electrónico&quot; del Contacto principal está vacío o no es válido.</label>
         <name>sendAcknowledgmentFailureReasons</name>
     </customLabels>
     <customLabels>
@@ -1930,7 +1930,7 @@
         <name>stgBtnEdit</name>
     </customLabels>
     <customLabels>
-        <label>Renombrar todos los nombres de las Familias</label>
+        <label>Actualizar todos los nombres en familias</label>
         <name>stgBtnHHAutoName</name>
     </customLabels>
     <customLabels>
@@ -1942,15 +1942,15 @@
         <name>stgBtnNewONS</name>
     </customLabels>
     <customLabels>
-        <label>Nuevo Mapeo de campos de Pagos</label>
+        <label>Nueva asignación de campos de pago</label>
         <name>stgBtnNewPaymentMap</name>
     </customLabels>
     <customLabels>
-        <label>Nuevo Mapeo de Campo personalizado</label>
+        <label>Nueva asignación de campos personalizados</label>
         <name>stgBtnNewRDFieldMap</name>
     </customLabels>
     <customLabels>
-        <label>Nuevo Período de Pagos/Cuotas personalizado</label>
+        <label>Nueva frecuencia personalizada</label>
         <name>stgBtnNewRDPeriod</name>
     </customLabels>
     <customLabels>
@@ -1970,11 +1970,11 @@
         <name>stgBtnRDCreateNewMap</name>
     </customLabels>
     <customLabels>
-        <label>Actualizar todas las Oportunidades</label>
+        <label>Actualizar todos los nombres de las oportunidades</label>
         <name>stgBtnRefreshOpportunityNames</name>
     </customLabels>
     <customLabels>
-        <label>Actualizar todos los Contactos Primarios de las Oportunidades</label>
+        <label>Actualizar todos los contactos principales en las oportunidades</label>
         <name>stgBtnRefreshPrimaryContacts</name>
     </customLabels>
     <customLabels>
@@ -2010,13 +2010,13 @@
         <name>stgHHNameRefreshTitle</name>
     </customLabels>
     <customLabels>
-        <label>Configuración para el modelo de Cuenta. Debe ser &quot;Cuenta Familia&quot; , &quot;Uno a Uno &quot; , o &quot;Individual&quot;.  Reemplaza el campo personalizado Contact.SystemAccountProcessor__c . &quot;Cuenta Familia&quot; es el modelo recomendado.</label>
+        <label>Configuración para el modelo de Cuenta. Debe ser &quot;Cuenta Familia&quot; , &quot;Uno a Uno &quot; , o &quot;Individual&quot;. Reemplaza el campo personalizado Contact.SystemAccountProcessor__c . &quot;Cuenta Familia&quot; es el modelo recomendado.</label>
         <name>stgHelpAccountModel</name>
     </customLabels>
     <customLabels>
         <label>Al seleccionar esta opción se activa el período de año fiscal, en lugar de año calendario, para los totales acumulativos. 
 Para configurar la información de ejercicio o período, vaya a Configuración | Perfil de la empresa | Año fiscal. 
-NOTA : El paquete Non Profit Starter Pack no es compatible con la configuración personalizada del año fiscal .</label>
+NOTA : El paquete Non Profit Success Pack no es compatible con la configuración personalizada del año fiscal .</label>
         <name>stgHelpAlloFiscalYearRollups</name>
     </customLabels>
     <customLabels>
@@ -2044,7 +2044,7 @@ NOTA : El paquete Non Profit Starter Pack no es compatible con la configuración
         <name>stgHelpAutoRelType</name>
     </customLabels>
     <customLabels>
-        <label>Si seleccionado, nunca se agregará nombre a las oportunidades,  incluso si esta en blanco</label>
+        <label>Si seleccionado, nunca se agregará nombre a las oportunidades, incluso si esta en blanco</label>
         <name>stgHelpBDEAllowBlankOppNames</name>
     </customLabels>
     <customLabels>
@@ -2578,11 +2578,11 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgLabelActionColumn</name>
     </customLabels>
     <customLabels>
-        <label>Ajustes de Dirección</label>
+        <label>Configuración de dirección</label>
         <name>stgLabelAddressVerification</name>
     </customLabels>
     <customLabels>
-        <label>Ajustes de Afiliaciones</label>
+        <label>Configuración de Afiliaciones</label>
         <name>stgLabelAfflSettings</name>
     </customLabels>
     <customLabels>
@@ -2598,7 +2598,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgLabelAllocationsRollupSettings</name>
     </customLabels>
     <customLabels>
-        <label>Ajustes de Asignaciones por defecto</label>
+        <label>Configuración de Asignaciones por defecto</label>
         <name>stgLabelAllocationsSettings</name>
     </customLabels>
     <customLabels>
@@ -2618,7 +2618,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgLabelBatchStatus</name>
     </customLabels>
     <customLabels>
-        <label>Crear Pagos Perdidos</label>
+        <label>Crear pagos faltantes</label>
         <name>stgLabelCreateMissingPayments</name>
     </customLabels>
     <customLabels>
@@ -2630,7 +2630,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgLabelDoNotRename</name>
     </customLabels>
     <customLabels>
-        <label>Ajustes de Error de Notificación</label>
+        <label>Configuración de Error de Notificación</label>
         <name>stgLabelErrorNotify</name>
     </customLabels>
     <customLabels>
@@ -2638,7 +2638,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgLabelExamplesFGFormat</name>
     </customLabels>
     <customLabels>
-        <label>Ejemplos para formatos  de Nombre de Familia</label>
+        <label>Ejemplos para formatos de Nombre de Familia</label>
         <name>stgLabelExamplesHHNameFOrmat</name>
     </customLabels>
     <customLabels>
@@ -2646,11 +2646,11 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgLabelExamplesIGFormat</name>
     </customLabels>
     <customLabels>
-        <label>Ajustes Generales</label>
+        <label>Configuración General</label>
         <name>stgLabelHHGeneral</name>
     </customLabels>
     <customLabels>
-        <label>Ajustes del nombre de Familia</label>
+        <label>Configuración del nombre de Familia</label>
         <name>stgLabelHHNaming</name>
     </customLabels>
     <customLabels>
@@ -2658,7 +2658,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgLabelHHNamingProgress</name>
     </customLabels>
     <customLabels>
-        <label>Roles del Contacto en la  Oportunidad de Familia</label>
+        <label>Roles del Contacto en la Oportunidad de Familia</label>
         <name>stgLabelHHOCR</name>
     </customLabels>
     <customLabels>
@@ -2666,7 +2666,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgLabelHHObject</name>
     </customLabels>
     <customLabels>
-        <label>Ajustes de Familia</label>
+        <label>Configuración de Familia</label>
         <name>stgLabelHHSettings</name>
     </customLabels>
     <customLabels>
@@ -2678,7 +2678,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgLabelHonoreeNotificationOCR</name>
     </customLabels>
     <customLabels>
-        <label>Ajustes de Candidatos</label>
+        <label>Configuración de Candidatos</label>
         <name>stgLabelLeadSettings</name>
     </customLabels>
     <customLabels>
@@ -2686,7 +2686,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgLabelLvlAssignBatchTitle</name>
     </customLabels>
     <customLabels>
-        <label>Ajustes de Suscripción</label>
+        <label>Configuración de Membresía</label>
         <name>stgLabelMembershipSettings</name>
     </customLabels>
     <customLabels>
@@ -2694,11 +2694,11 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgLabelNewAutoRel</name>
     </customLabels>
     <customLabels>
-        <label>Nuevo Mapeo de Campo de Pago</label>
+        <label>Nueva asignación de campos de pago</label>
         <name>stgLabelNewPaymentMapping</name>
     </customLabels>
     <customLabels>
-        <label>Nuevo Mapeo de Campo Personalizado</label>
+        <label>Nueva asignación de campos personalizados</label>
         <name>stgLabelNewRDFieldMap</name>
     </customLabels>
     <customLabels>
@@ -2718,7 +2718,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgLabelNone</name>
     </customLabels>
     <customLabels>
-        <label>Ajustes de Nombre de Oportunidades</label>
+        <label>Configuración de Nombre de Oportunidades</label>
         <name>stgLabelONS</name>
     </customLabels>
     <customLabels>
@@ -2726,7 +2726,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgLabelOppBatchProgress</name>
     </customLabels>
     <customLabels>
-        <label>Miembros de Campaña</label>
+        <label>Miembros de campaña</label>
         <name>stgLabelOppCampMembers</name>
     </customLabels>
     <customLabels>
@@ -2782,7 +2782,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgLabelPaymentMapNoValidFields</name>
     </customLabels>
     <customLabels>
-        <label>Ajustes de Pagos</label>
+        <label>Configuración de Pagos</label>
         <name>stgLabelPaymentSettings</name>
     </customLabels>
     <customLabels>
@@ -2798,7 +2798,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgLabelRDPeriod</name>
     </customLabels>
     <customLabels>
-        <label>Ajustes de las Donaciones Recurrentes</label>
+        <label>Configuración de Donaciones recurrentes</label>
         <name>stgLabelRDSettings</name>
     </customLabels>
     <customLabels>
@@ -2806,7 +2806,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgLabelRDStatus</name>
     </customLabels>
     <customLabels>
-        <label>Ajustes Generales</label>
+        <label>Configuración general</label>
         <name>stgLabelRelSettings</name>
     </customLabels>
     <customLabels>
@@ -2862,7 +2862,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgNPSPSettings</name>
     </customLabels>
     <customLabels>
-        <label>Ajustes del Non Profit Starter Pack</label>
+        <label>Configuración del Non Profit Success Pack</label>
         <name>stgNPSPSettingsTitle</name>
     </customLabels>
     <customLabels>
@@ -2870,7 +2870,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgNPSPWorkbook</name>
     </customLabels>
     <customLabels>
-        <label>Modelo  de Cuenta</label>
+        <label>Modelo de Cuenta</label>
         <name>stgNavAccountModel</name>
     </customLabels>
     <customLabels>
@@ -2898,7 +2898,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgNavConnections</name>
     </customLabels>
     <customLabels>
-        <label>Roles del Contacto</label>
+        <label>Funciones del contacto</label>
         <name>stgNavContactRoles</name>
     </customLabels>
     <customLabels>
@@ -2910,11 +2910,11 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgNavDonations</name>
     </customLabels>
     <customLabels>
-        <label>Estadísticas del Donante</label>
+        <label>Estadísticas en el donante</label>
         <name>stgNavDonorStatistics</name>
     </customLabels>
     <customLabels>
-        <label>Registro de Errores</label>
+        <label>Registro de errores</label>
         <name>stgNavErrorLog</name>
     </customLabels>
     <customLabels>
@@ -2934,11 +2934,11 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgNavLeads</name>
     </customLabels>
     <customLabels>
-        <label>Suscripción</label>
+        <label>Membresía</label>
         <name>stgNavMembership</name>
     </customLabels>
     <customLabels>
-        <label>Mapeo de Campos de Pagos</label>
+        <label>Asignación de campos de pagos</label>
         <name>stgNavPaymentMappings</name>
     </customLabels>
     <customLabels>
@@ -2946,7 +2946,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgNavPayments</name>
     </customLabels>
     <customLabels>
-        <label>Persona</label>
+        <label>Personas</label>
         <name>stgNavPeople</name>
     </customLabels>
     <customLabels>
@@ -2954,15 +2954,15 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgNavRDBatch</name>
     </customLabels>
     <customLabels>
-        <label>Asignación de los Campos Customizados de Donaciones Recurrentes</label>
+        <label>Asignación de campos personalizados</label>
         <name>stgNavRDFieldMap</name>
     </customLabels>
     <customLabels>
-        <label>Períodos Customizados de las Cuotas de las Donaciones Recurrente</label>
+        <label>Frecuencias personalizadas</label>
         <name>stgNavRDInstallmentPeriods</name>
     </customLabels>
     <customLabels>
-        <label>Donaciones Recurrentes</label>
+        <label>Donaciones recurrentes</label>
         <name>stgNavRecurringDonations</name>
     </customLabels>
     <customLabels>
@@ -2970,7 +2970,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgNavRelAutoCreate</name>
     </customLabels>
     <customLabels>
-        <label>Ajustes de las Relaciones recíprocas</label>
+        <label>Configuración de las Relaciones recíprocas</label>
         <name>stgNavRelReciprocal</name>
     </customLabels>
     <customLabels>
@@ -2990,7 +2990,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgNavSchedule</name>
     </customLabels>
     <customLabels>
-        <label>Herramientas del Sistema</label>
+        <label>Herramientas del sistema</label>
         <name>stgNavSystem</name>
     </customLabels>
     <customLabels>
@@ -3014,7 +3014,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgTools</name>
     </customLabels>
     <customLabels>
-        <label>Al establecer el Modelo Cuenta en &apos; Cuenta Familiar &apos;, se requieren que la Regla de Familia se establezca en  &apos;No Contactos&apos; . Al utilizar este modelo, no hay necesidad de tener un objeto adicional Familia.</label>
+        <label>Al establecer el Modelo Cuenta en &apos; Cuenta Familiar &apos;, se requieren que la Regla de Familia se establezca en &apos;No Contactos&apos; . Al utilizar este modelo, no hay necesidad de tener un objeto adicional Familia.</label>
         <name>stgValidationHHAccountHHRules</name>
     </customLabels>
     <customTabs>
