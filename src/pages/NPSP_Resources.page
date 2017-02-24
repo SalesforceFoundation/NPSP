@@ -82,7 +82,7 @@
                 <div class="pull-left"><a href="https://powerofus.force.com" target="_blank"><img class="media-object" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/power-of-us-hub_rgb.png')}" width="130" alt="Power of Us Hub"/></a>
                 </div>
                 <div class="media-body"><h4 class="media-heading">Power of Us Hub Community</h4><p>Get answers and access nonprofit specific resources in this vibrant, online community.</p>
-<a href="https://powerofus.force.com" target="_blank"><button type="button" class="btn btn-primary">Login now &raquo;</button></a>
+<a href="https://powerofus.force.com/PUBAppLanding" target="_blank"><button type="button" class="btn btn-primary">Login now &raquo;</button></a>
                 </div>
         </div>
 
