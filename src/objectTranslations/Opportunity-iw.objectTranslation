@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <help><!-- Date of acknowledgment --></help>
+        <label><!-- Acknowledgment Date --></label>
+        <name>Acknowledgment_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- Status of Acknowledgment of this gift. --></help>
+        <label><!-- Acknowledgment Status --></label>
+        <name>Acknowledgment_Status__c</name>
+        <picklistValues>
+            <masterLabel>Acknowledged</masterLabel>
+            <translation><!-- Acknowledged --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Do Not Acknowledge</masterLabel>
+            <translation><!-- Do Not Acknowledge --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Email Acknowledgment Not Sent</masterLabel>
+            <translation><!-- Email Acknowledgment Not Sent --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Email Acknowledgment Now</masterLabel>
+            <translation><!-- Email Acknowledgment Now --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>To Be Acknowledged</masterLabel>
+            <translation><!-- To Be Acknowledged --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- The date when the donor was specifically asked for the donation, as opposed to the Opportunity Close Date that the organization may set to either when the Opportunity was first created, or when the Opportunity was won. --></help>
+        <label><!-- Ask Date --></label>
+        <name>Ask_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Batch --></label>
+        <name>Batch__c</name>
+        <relationshipLabel><!-- Opportunities --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Notes on why the donation ask was not successful. --></help>
+        <label><!-- Closed Lost Reason --></label>
+        <name>Closed_Lost_Reason__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Fair Market Value of an In-Kind gift. --></help>
+        <label><!-- Fair Market Value --></label>
+        <name>Fair_Market_Value__c</name>
+    </fields>
+    <fields>
+        <help><!-- Categorizes the type of ask for this opportunity. --></help>
+        <label><!-- Gift Strategy --></label>
+        <name>Gift_Strategy__c</name>
+        <picklistValues>
+            <masterLabel>New Donor</masterLabel>
+            <translation><!-- New Donor --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Renewal</masterLabel>
+            <translation><!-- Renewal --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Upgrade</masterLabel>
+            <translation><!-- Upgrade --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- The date of the grant&apos;s inception, according to the document or contract sent by the grant-making organization. --></help>
+        <label><!-- Grant Contract Date --></label>
+        <name>Grant_Contract_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- Tracks unique numbers sometimes assigned by grant-making organizations. --></help>
+        <label><!-- Grant Contract Number --></label>
+        <name>Grant_Contract_Number__c</name>
+    </fields>
+    <fields>
+        <label><!-- Grant Period End Date --></label>
+        <name>Grant_Period_End_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Grant Period Start Date --></label>
+        <name>Grant_Period_Start_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- Describes the funding areas for the grant/gift. You can enter anything you want here. For example, you could enter the name of the program the grant/gift applies to. --></help>
+        <label><!-- Program Areas --></label>
+        <name>Grant_Program_Area_s__c</name>
+    </fields>
+    <fields>
+        <help><!-- A URL that points to the grant requirements on the grant-maker&apos;s website. --></help>
+        <label><!-- Grant Requirements Website --></label>
+        <name>Grant_Requirements_Website__c</name>
+    </fields>
+    <fields>
+        <help><!-- The existing Contact record of the honoree for this donation. --></help>
+        <label><!-- Honoree Contact --></label>
+        <name>Honoree_Contact__c</name>
+        <relationshipLabel><!-- Opportunities (Honoree Contact) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The honoree name as provided by the donor. If this field is left blank, and the Honoree Contact field contains a value, Salesforce automatically populates this field with that value. --></help>
+        <label><!-- Honoree Name --></label>
+        <name>Honoree_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- Holds any rich text description of the In-Kind Gift, including pictures. --></help>
+        <label><!-- In-Kind Description --></label>
+        <name>In_Kind_Description__c</name>
+    </fields>
+    <fields>
+        <help><!-- Checked if the donor provided the Fair Market Value for this In-Kind gift. --></help>
+        <label><!-- In-Kind Donor Declared Value --></label>
+        <name>In_Kind_Donor_Declared_Value__c</name>
+    </fields>
+    <fields>
+        <help><!-- The type of In-Kind gift. --></help>
+        <label><!-- In-Kind Type --></label>
+        <name>In_Kind_Type__c</name>
+        <picklistValues>
+            <masterLabel>Goods</masterLabel>
+            <translation><!-- Goods --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Services</masterLabel>
+            <translation><!-- Services --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- If selected, indicates that the grant is a renewal of a previous grant. --></help>
+        <label><!-- Is Grant Renewal --></label>
+        <name>Is_Grant_Renewal__c</name>
+    </fields>
+    <fields>
+        <help><!-- The account of the company who will match this gift. --></help>
+        <label><!-- Matching Gift Account --></label>
+        <name>Matching_Gift_Account__c</name>
+        <relationshipLabel><!-- Matched Gifts --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The name of the company who will match this gift. --></help>
+        <label><!-- Matching Gift Employer --></label>
+        <name>Matching_Gift_Employer__c</name>
+    </fields>
+    <fields>
+        <help><!-- The status of this gift being matched. --></help>
+        <label><!-- Matching Gift Status --></label>
+        <name>Matching_Gift_Status__c</name>
+        <picklistValues>
+            <masterLabel>Potential</masterLabel>
+            <translation><!-- Potential --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Received</masterLabel>
+            <translation><!-- Received --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Submitted</masterLabel>
+            <translation><!-- Submitted --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- The employer&apos;s matching gift for this employee&apos;s gift. --></help>
+        <label><!-- Matching Gift --></label>
+        <name>Matching_Gift__c</name>
+        <relationshipLabel><!-- Matched Gifts --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The NPSP updates this field automatically based on the next Deliverable record. --></help>
+        <label><!-- Next Deliverable Date --></label>
+        <name>Next_Grant_Deadline_Due_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- A personalized message for the notification recipient. --></help>
+        <label><!-- Notification Message --></label>
+        <name>Notification_Message__c</name>
+    </fields>
+    <fields>
+        <help><!-- How the notification recipient should be notified. --></help>
+        <label><!-- Notification Preference --></label>
+        <name>Notification_Preference__c</name>
+        <picklistValues>
+            <masterLabel>Do Not Notify</masterLabel>
+            <translation><!-- Do Not Notify --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Email</masterLabel>
+            <translation><!-- Email --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Phone</masterLabel>
+            <translation><!-- Phone --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Postal Mail</masterLabel>
+            <translation><!-- Postal Mail --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- The existing Contact record of the person to be notified for this donation. --></help>
+        <label><!-- Notification Recipient Contact --></label>
+        <name>Notification_Recipient_Contact__c</name>
+        <relationshipLabel><!-- Opportunities (Notification Recipient) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The contact information (as provided by the donor) for the notification recipient. --></help>
+        <label><!-- Notification Recipient Information --></label>
+        <name>Notification_Recipient_Information__c</name>
+    </fields>
+    <fields>
+        <help><!-- The name (as provided by the donor) of the person who should be notified about this gift. If this field is left blank and the Notification Recipient Contact field contains a value, Salesforce automatically populates this field with that value. --></help>
+        <label><!-- Notification Recipient Name --></label>
+        <name>Notification_Recipient_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- If this grant/gift is a renewal of a previous grant/gift, use this field to relate this record to the previous one. --></help>
+        <label><!-- Previous Grant/Gift Opportunity --></label>
+        <name>Previous_Grant_Opportunity__c</name>
+        <relationshipLabel><!-- Related Grants/Gifts --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The status to use when creating a campaign member for this opportunity&apos;s primary contact and primary campaign source. Leave blank to default to an responded status for closed/won opportunities, and a non-responded status for other opportunities. --></help>
+        <label><!-- Primary Contact Campaign Member Status --></label>
+        <name>Primary_Contact_Campaign_Member_Status__c</name>
+    </fields>
+    <fields>
+        <help><!-- The primary contact for this opportunity. The primary contact role is kept in sync with this field. For individual donations, this denotes attribution for this opportunity. --></help>
+        <label><!-- Primary Contact --></label>
+        <name>Primary_Contact__c</name>
+        <relationshipLabel><!-- Opportunities --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The date this donor was identified as qualifying for this donation. --></help>
+        <label><!-- Qualified Date --></label>
+        <name>Qualified_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- Installment name for inclusion in Opportunity Naming. Shows the installment number in parenthesis for open ended recurring donations, or the installment number out of the total for recurring donations with a set number of installments. --></help>
+        <label><!-- Recurring Donation Installment Name --></label>
+        <name>Recurring_Donation_Installment_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- The installment number of this opportunity&apos;s recurring donation schedule. --></help>
+        <label><!-- Recurring Donation Installment Number --></label>
+        <name>Recurring_Donation_Installment_Number__c</name>
+    </fields>
+    <fields>
+        <help><!-- The amount you are requesting. This number might be different from the final award amount. --></help>
+        <label><!-- Requested Amount --></label>
+        <name>Requested_Amount__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicates whether the gift is in honor or memory of an individual. --></help>
+        <label><!-- Tribute Type --></label>
+        <name>Tribute_Type__c</name>
+        <picklistValues>
+            <masterLabel>Honor</masterLabel>
+            <translation><!-- Honor --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Memorial</masterLabel>
+            <translation><!-- Memorial --></translation>
+        </picklistValues>
+    </fields>
+    <layouts>
+        <layout>Donation Layout</layout>
+        <sections>
+            <label><!-- Donation Information --></label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label><!-- Matching Gift Information --></label>
+            <section>Matching Gift Information</section>
+        </sections>
+        <sections>
+            <label><!-- Payment Information --></label>
+            <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label><!-- Tribute Information --></label>
+            <section>Tribute Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Grant Layout</layout>
+        <sections>
+            <label><!-- Donation Information --></label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label><!-- Grant Information --></label>
+            <section>Grant Information</section>
+        </sections>
+        <sections>
+            <label><!-- Payment Information --></label>
+            <section>Payment Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>In-Kind Gift Layout</layout>
+        <sections>
+            <label><!-- Donation Information --></label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label><!-- In-Kind Information --></label>
+            <section>In-Kind Information</section>
+        </sections>
+        <sections>
+            <label><!-- Tribute Information --></label>
+            <section>Tribute Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Major Gift Layout</layout>
+        <sections>
+            <label><!-- Donation Information --></label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label><!-- Major Gift Information --></label>
+            <section>Major Gift Information</section>
+        </sections>
+        <sections>
+            <label><!-- Matching Gift Information --></label>
+            <section>Matching Gift Information</section>
+        </sections>
+        <sections>
+            <label><!-- Payment Information --></label>
+            <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label><!-- Tribute Information --></label>
+            <section>Tribute Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Matching Gift Layout</layout>
+        <sections>
+            <label><!-- Donation Information --></label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label><!-- Payment Information --></label>
+            <section>Payment Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Membership Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Fields --></label>
+            <section>Fields</section>
+        </sections>
+        <sections>
+            <label><!-- Member Information --></label>
+            <section>Member Information</section>
+        </sections>
+        <sections>
+            <label><!-- Payment Information --></label>
+            <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label><!-- System Information --></label>
+            <section>System Information</section>
+        </sections>
+    </layouts>
+    <quickActions>
+        <label><!-- New Payment --></label>
+        <name>New_Payment</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- Quick Update --></label>
+        <name>Quick_Update</name>
+    </quickActions>
+    <webLinks>
+        <label><!-- Email_Acknowledgment --></label>
+        <name>Email_Acknowledgment</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Email_Acknowledgments --></label>
+        <name>Email_Acknowledgments</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Find_Matched_Gifts --></label>
+        <name>Find_Matched_Gifts</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Manage_Soft_Credits --></label>
+        <name>Manage_Soft_Credits</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Refresh_Name --></label>
+        <name>Refresh_Name</name>
+    </webLinks>
+</CustomObjectTranslation>
