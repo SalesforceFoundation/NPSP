@@ -21,14 +21,14 @@
         <value><!-- הHousehold --></value>
     </caseValues>
     <fields>
-        <help><!-- the number of Contacts in the Household. --></help>
-        <label><!-- Number of Household Members --></label>
+        <help>מספר אנשי הקשר במשק הבית.</help>
+        <label>מספר חברים במשק בית</label>
         <name>Number_of_Household_Members__c</name>
     </fields>
     <gender><!-- Masculine --></gender>
     <nameFieldLabel><!-- Household Name --></nameFieldLabel>
     <quickActions>
-        <label><!-- Update Household --></label>
+        <label>עדכן משק בית</label>
         <name>Update_Household</name>
     </quickActions>
 </CustomObjectTranslation>

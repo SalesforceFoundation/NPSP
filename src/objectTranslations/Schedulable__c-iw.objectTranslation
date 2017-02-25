@@ -21,18 +21,18 @@
         <value><!-- הDEPRECATED-Schedulable --></value>
     </caseValues>
     <fields>
-        <help><!-- Determines if the job will be active or not. --></help>
-        <label><!-- Active --></label>
+        <help>קובע אם המשימה תהיה פעילה.</help>
+        <label>פעיל</label>
         <name>Active__c</name>
     </fields>
     <fields>
-        <help><!-- Class that will be scheduled to run at a certain frequency. --></help>
-        <label><!-- Class Name --></label>
+        <help>המחלקה שתתוזמן לפעול בתדירות מסוימת.</help>
+        <label>שם מחלקה</label>
         <name>Class_Name__c</name>
     </fields>
     <fields>
-        <help><!-- How ofter to run the job. --></help>
-        <label><!-- Frequency --></label>
+        <help>תדירות הפעלת המשימה.</help>
+        <label>תדירות</label>
         <name>Frequency__c</name>
         <picklistValues>
             <masterLabel>Daily</masterLabel>
@@ -56,8 +56,8 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- Last time the job was run. --></help>
-        <label><!-- Last Time Run --></label>
+        <help>המועד האחרון שבו הופעלה המשימה.</help>
+        <label>זמן הפעלה אחרונה</label>
         <name>Last_Time_Run__c</name>
     </fields>
     <gender><!-- Masculine --></gender>

@@ -21,8 +21,8 @@
         <value><!-- הHouseholds Settings --></value>
     </caseValues>
     <fields>
-        <help><!-- The Contact Role you want to use for matched donors. We recommend using &quot;Matched Donor.&quot; --></help>
-        <label><!-- Matched Donor Role --></label>
+        <help>התפקיד הניתן לאנשי הקשר שצריכים לקבל קרדיט עבור השוואת תרומה.</help>
+        <label>סוג תורם השוואה</label>
         <name>Matched_Donor_Role__c</name>
     </fields>
     <gender><!-- Masculine --></gender>

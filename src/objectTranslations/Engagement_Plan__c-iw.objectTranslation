@@ -21,54 +21,54 @@
         <value><!-- הEngagement Plan --></value>
     </caseValues>
     <fields>
-        <label><!-- Account --></label>
+        <label>חשבון</label>
         <name>Account__c</name>
-        <relationshipLabel><!-- Engagement Plans --></relationshipLabel>
+        <relationshipLabel>תוכניות מעורבות</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Campaign --></label>
+        <label>מבצע</label>
         <name>Campaign__c</name>
-        <relationshipLabel><!-- Engagement Plans --></relationshipLabel>
+        <relationshipLabel>תוכניות מעורבות</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Case --></label>
+        <label>מקרה</label>
         <name>Case__c</name>
-        <relationshipLabel><!-- Engagement Plans --></relationshipLabel>
+        <relationshipLabel>תוכניות מעורבות</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Completed Tasks --></label>
+        <label>משימות שהושלמו</label>
         <name>Completed_Tasks__c</name>
     </fields>
     <fields>
-        <label><!-- Contact --></label>
+        <label>איש קשר</label>
         <name>Contact__c</name>
-        <relationshipLabel><!-- Engagement Plans --></relationshipLabel>
+        <relationshipLabel>תוכניות מעורבות</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Engagement Plan Template --></label>
+        <label>תבנית תוכנית מעורבות</label>
         <name>Engagement_Plan_Template__c</name>
-        <relationshipLabel><!-- Engagement Plans --></relationshipLabel>
+        <relationshipLabel>תוכניות מעורבות</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Opportunity --></label>
+        <label>תרומה</label>
         <name>Opportunity__c</name>
-        <relationshipLabel><!-- Engagement Plans --></relationshipLabel>
+        <relationshipLabel>תוכניות מעורבות</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Recurring Donation --></label>
+        <label>תרומה חוזרת</label>
         <name>Recurring_Donation__c</name>
-        <relationshipLabel><!-- Engagement Plans --></relationshipLabel>
+        <relationshipLabel>תוכניות מעורבות</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Status --></label>
+        <label>מצב</label>
         <name>Status__c</name>
     </fields>
     <fields>
-        <label><!-- Total EP Tasks --></label>
+        <label>סה&quot;כ משימות ת&quot;מ</label>
         <name>Total_EP_Tasks__c</name>
     </fields>
     <fields>
-        <label><!-- Total Tasks --></label>
+        <label>סה&quot;כ משימות</label>
         <name>Total_Tasks__c</name>
     </fields>
     <gender><!-- Masculine --></gender>

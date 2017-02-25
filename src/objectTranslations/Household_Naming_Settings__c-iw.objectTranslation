@@ -21,38 +21,38 @@
         <value><!-- הHousehold Naming Settings --></value>
     </caseValues>
     <fields>
-        <help><!-- Specifies the number of Contacts to explicitly list in a name.  After that amount, the Name Overrun will be used. --></help>
-        <label><!-- Contact Overrun Count --></label>
+        <help>מציין את מספר אנשי הקשר שניתן להוסיף לשם באופן מפורש.  לאחר מספר זה, יתבצע שימוש בגלישת השמות.</help>
+        <label>ספירה לגלישת אנשי קשר</label>
         <name>Contact_Overrun_Count__c</name>
     </fields>
     <fields>
-        <help><!-- The format to use for the Household Formal Greeting. --></help>
-        <label><!-- Formal Greeting Format --></label>
+        <help>התבנית שתשמש עבור הברכה הרשמית של משק הבית.</help>
+        <label>תבנית ברכה רשמית</label>
         <name>Formal_Greeting_Format__c</name>
     </fields>
     <fields>
-        <help><!-- The format to use for the Household Name. --></help>
-        <label><!-- Household Name Format --></label>
+        <help>התבנית שתשמש עבור השם של משק הבית.</help>
+        <label>תבנית שם משק בית</label>
         <name>Household_Name_Format__c</name>
     </fields>
     <fields>
-        <help><!-- The name of a Class that implements the HH_INaming interface to use for Household Naming. --></help>
-        <label><!-- Implementing Class --></label>
+        <help>שם המחלקה שמיישמת את ממשק HH_INaming לצורך מתן שמות למשקי בית.</help>
+        <label>מחלקת יישום</label>
         <name>Implementing_Class__c</name>
     </fields>
     <fields>
-        <help><!-- The format to use for the Household Informal Greeting. --></help>
-        <label><!-- Informal Greeting Format --></label>
+        <help>התבנית שתשמש עבור הברכה הלא רשמית של משק הבית.</help>
+        <label>תבנית ברכה לא רשמית</label>
         <name>Informal_Greeting_Format__c</name>
     </fields>
     <fields>
-        <help><!-- The string to use to connect pairs in a name.  For example, John &amp; Jane, or John and Jane. --></help>
-        <label><!-- Name Connector --></label>
+        <help>המחרוזת שתשמש לקישור זוגות בשם.  לדוגמה, אלון + אלה, או אלון ואלה.</help>
+        <label>מחבר שם</label>
         <name>Name_Connector__c</name>
     </fields>
     <fields>
-        <help><!-- The string to use when replacing long lists of names. --></help>
-        <label><!-- Name Overrun --></label>
+        <help>המחרוזת שתשמש להחלפת רשימות ארוכות של שמות.</help>
+        <label>גלישת שמות</label>
         <name>Name_Overrun__c</name>
     </fields>
     <gender><!-- Masculine --></gender>

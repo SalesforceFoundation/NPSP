@@ -21,57 +21,57 @@
         <value><!-- הAddress Verification Settings-DEPRECATED --></value>
     </caseValues>
     <fields>
-        <help><!-- URL used for address verification. --></help>
+        <help>כתובת URL המשמשת לאימות כתובת.</help>
         <label><!-- Address Verification Endpoint-DEPRECATED --></label>
         <name>Address_Verification_Endpoint__c</name>
     </fields>
     <fields>
-        <help><!-- The Auth ID from your Secret Pair Key. --></help>
+        <help>מזהה האימות מתוך מפתח הזוג הסודי שלך.</help>
         <label><!-- Auth ID-DEPRECATED --></label>
         <name>Auth_ID__c</name>
     </fields>
     <fields>
-        <help><!-- The Auth Token from your Secret Pair Key. --></help>
+        <help>אסימון האימות מתוך מפתח הזוג הסודי שלך.</help>
         <label><!-- Auth Token-DEPRECATED --></label>
         <name>Auth_Token__c</name>
     </fields>
     <fields>
-        <help><!-- If checked, changed addresses get updated automatically with the response from the service (when there is one verified result). --></help>
+        <help>אם אפשרות זו מסומנת, כתובות שהשתנו מעודכנות אוטומטית בתגובה מהשירות (כאשר קיימת תוצאה מאומתת אחת).</help>
         <label><!-- Auto-Update Addresses-DEPRECATED --></label>
         <name>Auto_Update_Addresses__c</name>
     </fields>
     <fields>
-        <help><!-- Salesforce class responsible for contacting the SmartyStreets API and verifying addresses. --></help>
+        <help>מחלקת Salesforce האחראית ליצירת קשר עם SmartyStreets API ולאימות כתובות.</help>
         <label><!-- Class-DEPRECATED --></label>
         <name>Class__c</name>
     </fields>
     <fields>
-        <help><!-- If checked, any US account address that the service marks undeliverable will automatically get cleared out. (You can review the invalid entry in the Address record.) --></help>
+        <help>אם אפשרות זו מסומנת, כל כתובת של חשבון בארה&quot;ב שהשירות מסמן כלא מתאימה למשלוח תימחק באופן אוטומטי. (תוכל לעיין בערך הלא חוקי ברשומת הכתובת.)</help>
         <label><!-- Clear Invalid Addresses-DEPRECATED --></label>
         <name>Clear_Invalid_Addresses__c</name>
     </fields>
     <fields>
-        <help><!-- Enables automatic address verification for new addresses. --></help>
+        <help>מאפשר אימות אוטומטי של כתובות חדשות.</help>
         <label><!-- Enable Automatic Verification-DEPRECATED --></label>
         <name>Enable_Automatic_Verification__c</name>
     </fields>
     <fields>
-        <help><!-- Marks ambiguous addresses as invalid, when the API returns more than one address. If left unselected, Salesforce will accept the first suggested address as the valid address. --></help>
+        <help>מסמן כתובות רב-משמעיות כבלתי חוקיות, כאשר ה-API מחזיר יותר מכתובת אחת. אם אפשרות זו אינה מסומנת, Salesforce תקבל את הכתובת הראשונה שהוצעה בתור הכתובת החוקית.</help>
         <label><!-- Reject Ambiguous Addresses-DEPRECATED --></label>
         <name>Reject_Ambiguous_Addresses__c</name>
     </fields>
     <fields>
-        <help><!-- Callout timeout in seconds --></help>
+        <help>זמן קצוב בשניות להסבר</help>
         <label><!-- Timeout-DEPRECATED --></label>
         <name>Timeout__c</name>
     </fields>
     <fields>
-        <help><!-- Specifies whether or not you are using the SmartyStreets address verification service. --></help>
+        <help>מציין אם אתה משתמש בשירות SmartyStreets לאימות כתובות.</help>
         <label><!-- Using SmartyStreets-DEPRECATED --></label>
         <name>Using_SmartyStreets__c</name>
     </fields>
     <fields>
-        <help><!-- URL used for zip code verification. --></help>
+        <help>כתובת URL המשמשת לאימות מיקוד.</help>
         <label><!-- Zipcode Verification Endpoint-DEPRECATED --></label>
         <name>Zipcode_Verification_Endpoint__c</name>
     </fields>

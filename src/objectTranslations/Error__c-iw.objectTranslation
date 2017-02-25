@@ -21,48 +21,48 @@
         <value><!-- הError --></value>
     </caseValues>
     <fields>
-        <help><!-- Context that generated the error, if known. --></help>
-        <label><!-- Context Type --></label>
+        <help>ההקשר שיצר את השגיאה, אם ידוע.</help>
+        <label>סוג הקשר</label>
         <name>Context_Type__c</name>
     </fields>
     <fields>
-        <help><!-- Date &amp; time the error occurred --></help>
+        <help>התאריך והשעה בהם התרחשה השגיאה</help>
         <label><!-- Datetime --></label>
         <name>Datetime__c</name>
     </fields>
     <fields>
-        <help><!-- Indicates whether an email notification has been sent regarding this error. --></help>
-        <label><!-- Email Sent --></label>
+        <help>מציין אם נשלחה הודעת דואר אלקטרוני בנוגע לשגיאה.</help>
+        <label>דואר אלקטרוני נשלח</label>
         <name>Email_Sent__c</name>
     </fields>
     <fields>
-        <help><!-- Type of error that occurred --></help>
-        <label><!-- Error Type --></label>
+        <help>סוג השגיאה שהתרחשה</help>
+        <label>סוג שגיאה</label>
         <name>Error_Type__c</name>
     </fields>
     <fields>
-        <help><!-- Full text of the error message --></help>
-        <label><!-- Full Message --></label>
+        <help>הטקסט המלא של הודעת השגיאה</help>
+        <label>הודעה מלאה</label>
         <name>Full_Message__c</name>
     </fields>
     <fields>
-        <help><!-- Type of object on which the error occurred, if known. --></help>
-        <label><!-- Object Type --></label>
+        <help>סוג האובייקט שבו התרחשה השגיאה, אם ידוע.</help>
+        <label>סוג אובייקט</label>
         <name>Object_Type__c</name>
     </fields>
     <fields>
-        <help><!-- Indicates whether the error has been posted in Chatter. --></help>
-        <label><!-- Posted in Chatter --></label>
+        <help>מציין אם השגיאה פורסמה ב-Chatter.</help>
+        <label>פורסם ב-Chatter</label>
         <name>Posted_in_Chatter__c</name>
     </fields>
     <fields>
-        <help><!-- A link to the record which caused the error, if available. --></help>
-        <label><!-- Record URL --></label>
+        <help>קישור אל הרשומה שבה התרחשה השגיאה, אם זמינה.</help>
+        <label>כתובת URL של רשומה</label>
         <name>Record_URL__c</name>
     </fields>
     <fields>
-        <help><!-- Stack trace for the thrown error, if available at runtime. --></help>
-        <label><!-- Stack Trace --></label>
+        <help>מעקב המחסנית של השגיאה שהתרחשה, אם זמין בזמן הריצה.</help>
+        <label>מעקב מחסנית</label>
         <name>Stack_Trace__c</name>
     </fields>
     <gender><!-- Masculine --></gender>

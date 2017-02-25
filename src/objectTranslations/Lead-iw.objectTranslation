@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
-        <help><!-- The batch this lead was created from. --></help>
-        <label><!-- Batch --></label>
+        <help>האצווה שממנה הפניה זו נוצרה.</help>
+        <label>אצווה</label>
         <name>Batch__c</name>
-        <relationshipLabel><!-- Leads --></relationshipLabel>
+        <relationshipLabel>הפניות</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Company City --></label>
+        <label>עיר החברה</label>
         <name>CompanyCity__c</name>
     </fields>
     <fields>
-        <label><!-- Company Country --></label>
+        <label>ארץ החברה</label>
         <name>CompanyCountry__c</name>
     </fields>
     <fields>
-        <label><!-- Company Zip/Postal Code --></label>
+        <label>מיקוד החברה</label>
         <name>CompanyPostalCode__c</name>
     </fields>
     <fields>
-        <label><!-- Company State/Province --></label>
+        <label>מדינה/מחוז החברה</label>
         <name>CompanyState__c</name>
     </fields>
     <fields>
-        <label><!-- Company Street --></label>
+        <label>רחוב החברה</label>
         <name>CompanyStreet__c</name>
     </fields>
 </CustomObjectTranslation>

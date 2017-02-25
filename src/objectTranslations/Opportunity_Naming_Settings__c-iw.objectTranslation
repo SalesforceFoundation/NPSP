@@ -21,23 +21,23 @@
         <value><!-- הOpportunity Naming Settings --></value>
     </caseValues>
     <fields>
-        <help><!-- Whether this setting applies to individual opportunities, organizational opportunities, or both. --></help>
-        <label><!-- Attribution --></label>
+        <help>האם הגדרה זו חלה על הזדמנויות אישיות, הזדמנויות ארגוניות או שתיהן.</help>
+        <label>שיוך</label>
         <name>Attribution__c</name>
     </fields>
     <fields>
-        <help><!-- The format for dates included in this opportunity name. --></help>
-        <label><!-- Date Format --></label>
+        <help>תבנית עבור תאריכים הנכללים בשם של הזדמנות זו.</help>
+        <label>תבנית תאריך</label>
         <name>Date_Format__c</name>
     </fields>
     <fields>
-        <help><!-- The format to use for Opportunity naming. --></help>
-        <label><!-- Opportunity Name Format --></label>
+        <help>התבנית שתשמש למתן שמות להזדמנויות.</help>
+        <label>תבנית שם הזדמנות</label>
         <name>Opportunity_Name_Format__c</name>
     </fields>
     <fields>
-        <help><!-- Specifies the opportunity record type that this naming scheme is for. --></help>
-        <label><!-- Opportunity Record Types --></label>
+        <help>סוג רשומת ההזדמנות ששיטת מתן שמות זו מיועדת עבורו.</help>
+        <label>סוגי רשומות הזדמנות</label>
         <name>Opportunity_Record_Types__c</name>
     </fields>
     <gender><!-- Masculine --></gender>

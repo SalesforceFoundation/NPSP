@@ -21,116 +21,116 @@
         <value><!-- הAddress --></value>
     </caseValues>
     <fields>
-        <help><!-- Contains the raw response or an error message. --></help>
-        <label><!-- API Response --></label>
+        <help>מכילה את התגובה הגולמית או הודעת שגיאה.</help>
+        <label>תגובת API</label>
         <name>API_Response__c</name>
     </fields>
     <fields>
-        <label><!-- Address Type --></label>
+        <label>סוג כתובת</label>
         <name>Address_Type__c</name>
         <picklistValues>
             <masterLabel>Home</masterLabel>
-            <translation><!-- Home --></translation>
+            <translation>בית</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Other</masterLabel>
-            <translation><!-- Other --></translation>
+            <translation>אחר</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Vacation Residence</masterLabel>
-            <translation><!-- Vacation Residence --></translation>
+            <translation>מגורים בחופשה</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Work</masterLabel>
-            <translation><!-- Work --></translation>
+            <translation>עבודה</translation>
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- Depending on the country and area, could be a city, township, municipality or other civic region associated with this address. --></help>
-        <label><!-- Administrative Area --></label>
+        <help>בהתאם לארץ והאזור, יכול להיות עיר, ישוב, רשות מקומית או אזור אחר המשויך לכתובת זו.</help>
+        <label>אזור מנהלי</label>
         <name>Administrative_Area__c</name>
     </fields>
     <fields>
-        <help><!-- Indicates whether more than on valid address was found when attempting to validate it through an external service. --></help>
-        <label><!-- Ambiguous --></label>
+        <help>מציין אם נמצאה יותר מכתובת חוקית אחת בעת ניסיון לאמת אותה באמצעות שירות חיצוני.</help>
+        <label>רב-משמעית</label>
         <name>Ambiguous__c</name>
     </fields>
     <fields>
-        <help><!-- The congressional district to which the address belongs pertains. --></help>
-        <label><!-- Congressional District --></label>
+        <help>מציין את מחוז הקונגרס (בארה&quot;ב) שאליו שייכת הכתובת.</help>
+        <label>מחוז קונגרס</label>
         <name>Congressional_District__c</name>
     </fields>
     <fields>
-        <help><!-- Name of the county the address is located at. --></help>
-        <label><!-- County Name --></label>
+        <help>שם הארץ שבה הכתובת ממוקמת.</help>
+        <label>שם ארץ</label>
         <name>County_Name__c</name>
     </fields>
     <fields>
-        <help><!-- Is this the Default Address to use for the Household and its Contacts? --></help>
-        <label><!-- Default Address --></label>
+        <help>האם זו כתובת ברירת המחדל שבה יש להשתמש עבור משק הבית ואנשי הקשר שלו?</help>
+        <label>כתובת ברירת מחדל</label>
         <name>Default_Address__c</name>
     </fields>
     <fields>
-        <label><!-- Mailing Address --></label>
+        <label>כתובת למשלוח דואר</label>
         <name>Formula_MailingAddress__c</name>
     </fields>
     <fields>
-        <label><!-- Mailing Street Address --></label>
+        <label>רחוב למשלוח דואר</label>
         <name>Formula_MailingStreetAddress__c</name>
     </fields>
     <fields>
-        <help><!-- Location expressed as latitude and longitude. --></help>
-        <label><!-- Geolocation --></label>
+        <help>מיקום המבוטא כקו אורך ורוחב.</help>
+        <label>מיקום גיאוגרפי</label>
         <name>Geolocation__c</name>
     </fields>
     <fields>
-        <help><!-- The Account this Address is for. --></help>
-        <label><!-- Account --></label>
+        <help>חשבון משק הבית שכתובת זו מייצגת.</help>
+        <label>חשבון</label>
         <name>Household_Account__c</name>
-        <relationshipLabel><!-- Addresses --></relationshipLabel>
+        <relationshipLabel>כתובות</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- The most recent ending date that this address was used. Generally used with Latest Start Date to track a date range for an address that&apos;s no longer in use. --></help>
-        <label><!-- Latest End Date --></label>
+        <help>תאריך הסיום האחרון שבו כתובת זו שימשה עבור משק בית זה.</help>
+        <label>תאריך סיום אחרון</label>
         <name>Latest_End_Date__c</name>
     </fields>
     <fields>
-        <help><!-- The most recent starting date that this address was used. Generally used with Latest End Date to track a date range for an address that&apos;s no longer in use. --></help>
-        <label><!-- Latest Start Date --></label>
+        <help>תאריך ההתחלה האחרון שבו כתובת זו שימשה עבור משק בית זה.</help>
+        <label>תאריך התחלה אחרון</label>
         <name>Latest_Start_Date__c</name>
     </fields>
     <fields>
-        <label><!-- Mailing City --></label>
+        <label>עיר למשלוח דואר</label>
         <name>MailingCity__c</name>
     </fields>
     <fields>
-        <label><!-- Mailing Country --></label>
+        <label>ארץ למשלוח דואר</label>
         <name>MailingCountry__c</name>
     </fields>
     <fields>
-        <label><!-- Mailing Zip/Postal Code --></label>
+        <label>מיקוד למשלוח דואר</label>
         <name>MailingPostalCode__c</name>
     </fields>
     <fields>
-        <label><!-- Mailing State/Province --></label>
+        <label>מדינה/מחוז למשלוח דואר</label>
         <name>MailingState__c</name>
     </fields>
     <fields>
-        <label><!-- Mailing Street2 --></label>
+        <label>רחוב למשלוח דואר 2</label>
         <name>MailingStreet2__c</name>
     </fields>
     <fields>
-        <label><!-- Mailing Street --></label>
+        <label>רחוב למשלוח דואר</label>
         <name>MailingStreet__c</name>
     </fields>
     <fields>
-        <help><!-- Stores the address as entered before verification with a remote service, in case any information is lost in the verification process. --></help>
-        <label><!-- Pre-Verification Address --></label>
+        <help>שמירת הכתובת כפי שהוזנה לפני האימות באמצעות שירות מרוחק, למקרה של אובדן מידע בתהליך האימות.</help>
+        <label>כתובת לפני האימות</label>
         <name>Pre_Verification_Address__c</name>
     </fields>
     <fields>
-        <help><!-- The day of the month when this address no longer replaces the default address. --></help>
-        <label><!-- Seasonal End Day --></label>
+        <help>היום בחודש שבו כתובת זו מפסיקה להחליף את כתובת ברירת המחדל.</help>
+        <label>יום סיום עונה</label>
         <name>Seasonal_End_Day__c</name>
         <picklistValues>
             <masterLabel>1</masterLabel>
@@ -258,8 +258,8 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The month of the year when this address no longer replaces the default address. --></help>
-        <label><!-- Seasonal End Month --></label>
+        <help>החודש בשנה שבו כתובת זו מפסיקה להחליף את כתובת ברירת המחדל.</help>
+        <label>חודש סיום עונה</label>
         <name>Seasonal_End_Month__c</name>
         <picklistValues>
             <masterLabel>1</masterLabel>
@@ -311,8 +311,8 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The day of the month when this address replaces the default address. --></help>
-        <label><!-- Seasonal Start Day --></label>
+        <help>היום בחודש שבו כתובת זו מחליפה את כתובת ברירת המחדל.</help>
+        <label>יום התחלת עונה</label>
         <name>Seasonal_Start_Day__c</name>
         <picklistValues>
             <masterLabel>1</masterLabel>
@@ -440,8 +440,8 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The month of the year when this address replaces the default address. --></help>
-        <label><!-- Seasonal Start Month --></label>
+        <help>החודש בשנה שבו כתובת זו מחליפה את כתובת ברירת המחדל.</help>
+        <label>חודש התחלת עונה</label>
         <name>Seasonal_Start_Month__c</name>
         <picklistValues>
             <masterLabel>1</masterLabel>
@@ -493,23 +493,23 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The state lower district (such as a state assembly district) this address belongs to. --></help>
-        <label><!-- State Lower District --></label>
+        <help>מחוז המדינה התחתון (מחוז בחירה בארה&quot;ב, כגון מחוז מועצת המדינה) שאליו שייכת כתובת זו.</help>
+        <label>מחוז מדינה תחתון</label>
         <name>State_Lower_District__c</name>
     </fields>
     <fields>
-        <help><!-- The state upper district (such as state senate district) this address belongs to. --></help>
-        <label><!-- State Upper District --></label>
+        <help>מחוז המדינה העליון (מחוז בחירה בארה&quot;ב, כגון מחוז הסנאט של מדינה) שאליו שייכת כתובת זו.</help>
+        <label>מחוז מדינה עליון</label>
         <name>State_Upper_District__c</name>
     </fields>
     <fields>
-        <help><!-- If this address requires verification, click the Verify Address button at the top of this page. Consult the Help documentation in the Power of Us Hub for more information. --></help>
-        <label><!-- Verification Status --></label>
+        <help>אם כתובת זו מחייבת אימות, לחץ על &apos;אמת כתובת&apos; בראש דף זה. עיין במסמכי העזרה ב-Power of Us Hub לקבלת מידע נוסף.</help>
+        <label>מצב אימות</label>
         <name>Verification_Status__c</name>
     </fields>
     <fields>
-        <help><!-- Indicates whether the address has been verified by an external address verification service. --></help>
-        <label><!-- Verified --></label>
+        <help>מציין אם הכתובת אומתה על-ידי שירות חיצוני לאימות כתובות.</help>
+        <label>מאומת</label>
         <name>Verified__c</name>
     </fields>
     <gender><!-- Masculine --></gender>
@@ -520,17 +520,17 @@
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- Seasonal Information --></label>
+            <label>פרטים עונתיים</label>
             <section>Seasonal Information</section>
         </sections>
     </layouts>
     <nameFieldLabel><!-- Address ID --></nameFieldLabel>
     <quickActions>
-        <label><!-- Update Address --></label>
+        <label>עדכן כתובת</label>
         <name>Update_Address</name>
     </quickActions>
     <webLinks>
-        <label><!-- Verify_Address --></label>
+        <label>אימות כתובת</label>
         <name>Verify_Address</name>
     </webLinks>
 </CustomObjectTranslation>

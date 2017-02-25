@@ -21,63 +21,63 @@
         <value><!-- הContacts And Orgs Settings --></value>
     </caseValues>
     <fields>
-        <help><!-- Automatically creates a Campaign Member when you create an Opportunity that has a Primary Contact and a Primary Campaign source associated with it, or update that Opportunity with a Closed/Won stage. --></help>
-        <label><!-- Automatic Campaign Member Management --></label>
+        <help>יוצר חבר מבצע באופן אוטומטי כאשר אתה יוצר הזדמנות שמשויך אליה מקור של איש קשר ראשי ומבצע ראשי, או מעדכן את ההזדמנות עם שלב של סגירה/זכייה.</help>
+        <label>ניהול אוטומטי של חברי מבצע</label>
         <name>Automatic_Campaign_Member_Management__c</name>
     </fields>
     <fields>
-        <help><!-- The automatic Status of a Campaign Member for Open or Closed/Lost opportunities that have a Primary Contact and a Primary Campaign Source associated with them. If left blank, Salesforce uses the first non-Responded status. --></help>
-        <label><!-- Campaign Member Non Responded Status --></label>
+        <help>המצב האוטומטי של חבר מבצע עבור הזדמנויות פתוחות או סגורות/ללא זכייה, אשר משויך אליהן מקור של איש קשר ראשי ומבצע ראשי. אם ריק, מערכת Salesforce תשתמש במצב &apos;לא הגיב&apos; הראשון.</help>
+        <label>מצב &apos;לא הגיב&apos; של חבר מבצע</label>
         <name>Campaign_Member_Non_Responded_Status__c</name>
     </fields>
     <fields>
-        <help><!-- The automatic Status of the Campaign Member for Closed/Won opportunities that have a Primary Contact and a Primary Campaign Source associated with them. If left blank, Salesforce uses the first Responded status. --></help>
-        <label><!-- Campaign Member Responded Status --></label>
+        <help>המצב האוטומטי של חבר מבצע עבור הזדמנויות סגורות/זכייה, אשר משויך אליהן מקור של איש קשר ראשי ומבצע ראשי. אם ריק, מערכת Salesforce תשתמש במצב &apos;הגיב&apos; הראשון.</help>
+        <label>מצב &apos;הגיב&apos; של חבר מבצע</label>
         <name>Campaign_Member_Responded_Status__c</name>
     </fields>
     <fields>
-        <help><!-- Populating this setting will automatically create a Contact Role for Opportunities with an honoree Contact. Leaving this field blank will disable automatic Contact Role creation for the honoree. --></help>
-        <label><!-- Honoree Opportunity Contact Role --></label>
+        <help>מילוי הגדרה זו יביא ליצירה אוטומטית של תפקיד איש קשר עבור הזדמנויות עם איש קשר המקבל הוקרה. השאר שדה זה ריק כדי להשבית יצירה אוטומטית של תפקיד איש קשר עבור מקבל ההוקרה.</help>
+        <label>תפקיד איש קשר בתרומה של מקבל הוקרה</label>
         <name>Honoree_Opportunity_Contact_Role__c</name>
     </fields>
     <fields>
-        <help><!-- Disables Address management for Household Accounts when selected. --></help>
-        <label><!-- Household Account Addresses Disabled --></label>
+        <help>סמן אפשרות זו כדי להשבית ניהול כתובות עבור חשבונות משק בית.</help>
+        <label>כתובות חשבון משק בית מושבתות</label>
         <name>Household_Account_Addresses_Disabled__c</name>
     </fields>
     <fields>
-        <help><!-- Determines the maximum number of payments available in the Payment Creation Wizard. --></help>
-        <label><!-- Max Payments --></label>
+        <help>מספר התשלומים המרבי הזמין באשף יצירת התשלומים.</help>
+        <label>תשלומים מרביים</label>
         <name>Max_Payments__c</name>
     </fields>
     <fields>
-        <help><!-- Populating this setting will automatically create a Contact Role for Opportunities with a notification recipient Contact. Leaving this field blank will disable automatic Contact Role creation for the notification recipient. --></help>
-        <label><!-- Notification Recipient Opp Contact Role --></label>
+        <help>מילוי הגדרה זו יביא ליצירה אוטומטית של תפקיד איש קשר עבור הזדמנויות עם איש קשר לקבלת הודעות. השאר שדה זה ריק כדי להשבית יצירה אוטומטית של תפקיד איש קשר עבור מקבל ההודעות.</help>
+        <label>תפקיד איש קשר לקבלת הודעות בתרומה</label>
         <name>Notification_Recipient_Opp_Contact_Role__c</name>
     </fields>
     <fields>
-        <help><!-- Salesforce won&apos;t automatically create Payments for the selected Opportunity record types. Control or Command click to select more than one record type. --></help>
-        <label><!-- Excluded Opp Record Types --></label>
+        <help>שמות סוגי רשומות ההזדמנות שאין לכלול ביצירת תשלומים</help>
+        <label>סוגי רשומות תרומות לאי-הכללה</label>
         <name>Opp_RecTypes_Excluded_for_Payments__c</name>
     </fields>
     <fields>
-        <help><!-- Salesforce won&apos;t automatically create Payments for Opportunities that have this value in the Type picklist. --></help>
-        <label><!-- Excluded Opp Types --></label>
+        <help>ערכים של שדה סוג ההזדמנות שאין לכלול ביצירת תשלומים.</help>
+        <label>סוגי תרומות לאי-הכללה</label>
         <name>Opp_Types_Excluded_for_Payments__c</name>
     </fields>
     <fields>
-        <help><!-- Enables Address management for Organizational Accounts when selected. --></help>
-        <label><!-- Organizational Account Addresses Enabled --></label>
+        <help>סמן אפשרות זו כדי לאפשר ניהול כתובות עבור חשבונות ארגוניים.</help>
+        <label>כתובות של חשבונות ארגוניים מופעלות</label>
         <name>Organizational_Account_Addresses_Enabled__c</name>
     </fields>
     <fields>
-        <help><!-- Salesforce automatically sets an Opportunity&apos;s Stage to this value when the Payment Amount Received is equal to the Opportunity Amount. If no stage is selected, the Opportunity Stage won&apos;t change when payments are complete. --></help>
-        <label><!-- Opportunity Stage for When Fully Paid --></label>
+        <help>בחר את השלב שאליו יש להעביר הזדמנות באופן אוטומטי כאשר סכום התשלום המלא שווה לסכום ההזדמנות.  אם לא נבחר שלב, ההזדמנויות לא יועברו באופן אוטומטי עם השלמת התשלומים.</help>
+        <label>שלב תרומה עבור תשלום מלא</label>
         <name>Payments_Auto_Close_Stage_Name__c</name>
     </fields>
     <fields>
-        <help><!-- If checked, changes to a single Contact or Account address field update the existing Address, rather than creating a new Address. --></help>
-        <label><!-- Simple Address Change Treated as Update --></label>
+        <help>אם אפשרות זו מסומנת, שינויים בשדה הכתובת של איש קשר או חשבון יחיד מעדכנים את הכתובת הקיימת, במקום ליצור כתובת חדשה.</help>
+        <label>שינוי כתובת פשוט מטופל כעדכון</label>
         <name>Simple_Address_Change_Treated_as_Update__c</name>
     </fields>
     <gender><!-- Masculine --></gender>

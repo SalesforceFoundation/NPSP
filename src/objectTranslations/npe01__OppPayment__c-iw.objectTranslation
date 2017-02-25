@@ -21,31 +21,31 @@
         <value><!-- הPayment --></value>
     </caseValues>
     <fields>
-        <help><!-- Date of acknowledgment --></help>
-        <label><!-- Payment Acknowledged Date --></label>
+        <help>תאריך אישור</help>
+        <label>תאריך אישור תשלום</label>
         <name>Payment_Acknowledged_Date__c</name>
     </fields>
     <fields>
-        <help><!-- Status of Acknowledgment of this payment. --></help>
-        <label><!-- Payment Acknowledgment Status --></label>
+        <help>מצב האישור של תשלום זה.</help>
+        <label>מצב אישור תשלום</label>
         <name>Payment_Acknowledgment_Status__c</name>
         <picklistValues>
             <masterLabel>Acknowledged</masterLabel>
-            <translation><!-- Acknowledged --></translation>
+            <translation>אושר</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Do Not Acknowledge</masterLabel>
-            <translation><!-- Do Not Acknowledge --></translation>
+            <translation>אל תאשר</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>To Be Acknowledged</masterLabel>
-            <translation><!-- To Be Acknowledged --></translation>
+            <translation>לאישור</translation>
         </picklistValues>
     </fields>
     <gender><!-- Masculine --></gender>
     <nameFieldLabel><!-- Payment Number --></nameFieldLabel>
     <quickActions>
-        <label><!-- Quick Update --></label>
+        <label>עדכון מהיר</label>
         <name>Quick_Update</name>
     </quickActions>
 </CustomObjectTranslation>

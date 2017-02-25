@@ -1,181 +1,184 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
-        <help><!-- If this address requires verification, click the Verify Address button at the top of the Address page. Consult the Help documentation in the Power of Us Hub for more information. --></help>
-        <label><!-- Address Verification Status --></label>
+        <help>אם כתובת זו מחייבת אימות, לחץ על &apos;אמת כתובת&apos; בראש דף הכתובת. עיין במסמכי העזרה ב-Power of Us Hub לקבלת מידע נוסף.</help>
+        <label>מצב אימות כתובת</label>
         <name>Address_Verification_Status__c</name>
     </fields>
     <fields>
-        <help><!-- lookup to the Batch that this contact was created in. --></help>
-        <label><!-- Batch --></label>
+        <help>חיפוש באצווה שבה איש קשר זה נוצר.</help>
+        <label>אצווה</label>
         <name>Batch__c</name>
-        <relationshipLabel><!-- Contacts --></relationshipLabel>
+        <relationshipLabel>אנשי קשר</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- The current Address that the Contact&apos;s mailing fields are filled with. --></help>
-        <label><!-- Current Address --></label>
+        <help>הכתובת הנוכחית שרשומה בשדות הכתובת למשלוח דואר של איש הקשר.</help>
+        <label>כתובת נוכחית</label>
+        <lookupFilter>
+            <informationalMessage>כדי לראות את כל הכתובות עבור משק הבית של איש הקשר, הזן A-*‎ בחלון החיפוש</informationalMessage>
+        </lookupFilter>
         <name>Current_Address__c</name>
-        <relationshipLabel><!-- Contacts (Current Address) --></relationshipLabel>
+        <relationshipLabel>אנשי קשר (כתובת נוכחית)</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- When selected, this option marks the contact as deceased, and excludes them from household naming, emails, and phone calls. --></help>
-        <label><!-- Deceased --></label>
+        <help>כשהיא נבחרת, אפשרות זו מסמנת את איש הקשר כנפטר ומונעת את הכללתו בשמות, הודעות דואר אלקטרוני ושיחות טלפון של משק הבית.</help>
+        <label>נפטר</label>
         <name>Deceased__c</name>
     </fields>
     <fields>
-        <help><!-- When selected, this option excludes the contact from emails and phone calls. --></help>
-        <label><!-- Do Not Contact --></label>
+        <help>כשהיא נבחרת, אפשרות זו מונעת הכללה של איש הקשר בהודעות דואר אלקטרוני ושיחות טלפון.</help>
+        <label>לא ליצור קשר</label>
         <name>Do_Not_Contact__c</name>
     </fields>
     <fields>
-        <help><!-- Checking this box will exclude this contact from the Household Formal Greeting. --></help>
-        <label><!-- Exclude from Household Formal Greeting --></label>
+        <help>סימון תיבה זו ימנע הכללה של איש קשר זה בברכה הרשמית של משק הבית.</help>
+        <label>אל תכלול בברכה רשמית של משק בית</label>
         <name>Exclude_from_Household_Formal_Greeting__c</name>
     </fields>
     <fields>
-        <help><!-- Checking this box will exclude this contact from the Household Informal Greeting. --></help>
-        <label><!-- Exclude from Household Informal Greeting --></label>
+        <help>סימון תיבה זו ימנע הכללה של איש קשר זה בברכה הלא רשמית של משק הבית.</help>
+        <label>אל תכלול בברכה לא רשמית של משק בית</label>
         <name>Exclude_from_Household_Informal_Greeting__c</name>
     </fields>
     <fields>
-        <help><!-- Checking this box will exclude this contact from the Household Name. --></help>
-        <label><!-- Exclude from Household Name --></label>
+        <help>סימון תיבה זו ימנע הכללה של איש קשר זה בשם משק הבית.</help>
+        <label>אל תכלול בשם משק בית</label>
         <name>Exclude_from_Household_Name__c</name>
     </fields>
     <fields>
-        <help><!-- The amount of the earliest soft credit. --></help>
-        <label><!-- First Soft Credit Amount --></label>
+        <help>סכום הקרדיט המוקדם ביותר.</help>
+        <label>סכום קרדיט ראשון</label>
         <name>First_Soft_Credit_Amount__c</name>
     </fields>
     <fields>
-        <help><!-- The date of the earliest soft credit. --></help>
-        <label><!-- First Soft Credit Date --></label>
+        <help>תאריך הקרדיט המוקדם ביותר.</help>
+        <label>תאריך קרדיט ראשון</label>
         <name>First_Soft_Credit_Date__c</name>
     </fields>
     <fields>
-        <help><!-- holds the ID of the current household, whether it is a Household Account, or a Household Object. --></help>
+        <help>מכיל את המזהה של משק הבית הנוכחי, בין אם זהו חשבון משק בית או אובייקט משק בית.</help>
         <label><!-- HHId --></label>
         <name>HHId__c</name>
     </fields>
     <fields>
-        <help><!-- The amount of the largest soft credit. --></help>
-        <label><!-- Largest Soft Credit Amount --></label>
+        <help>סכום הקרדיט הגדול ביותר.</help>
+        <label>סכום תרומה מערכתית גדולה ביותר</label>
         <name>Largest_Soft_Credit_Amount__c</name>
     </fields>
     <fields>
-        <help><!-- The date of the largest soft credit. --></help>
-        <label><!-- Largest Soft Credit Date --></label>
+        <help>תאריך הקרדיט הגדול ביותר.</help>
+        <label>תאריך תרומה מערכתית גדולה ביותר</label>
         <name>Largest_Soft_Credit_Date__c</name>
     </fields>
     <fields>
-        <help><!-- The amount of the most recent soft credit. --></help>
-        <label><!-- Last Soft Credit Amount --></label>
+        <help>סכום הקרדיט האחרון שהוענק.</help>
+        <label>סכום תרומה מערכתית אחרונה</label>
         <name>Last_Soft_Credit_Amount__c</name>
     </fields>
     <fields>
-        <help><!-- The date of the most recent soft credit. --></help>
-        <label><!-- Last Soft Credit Date --></label>
+        <help>תאריך הקרדיט האחרון שהוענק.</help>
+        <label>תאריך תרומה מערכתית אחרונה</label>
         <name>Last_Soft_Credit_Date__c</name>
     </fields>
     <fields>
-        <help><!-- Total amount for all soft credits that closed in the last N days. The value of N is defined in the NPSP Settings tab. --></help>
-        <label><!-- Number of Soft Credits Last N Days --></label>
+        <help>מספר הקרדיטים, שנסגרו במספר הימים האחרונים שנקבע בהגדרות NPSP.</help>
+        <label>מספר תרומות מערכתיות ב-N הימים האחרונים</label>
         <name>Number_of_Soft_Credits_Last_N_Days__c</name>
     </fields>
     <fields>
-        <help><!-- The number of soft credits last year. --></help>
-        <label><!-- Number of Soft Credits Last Year --></label>
+        <help>מספר הקרדיטים בשנה שעברה.</help>
+        <label>מספר תרומות מערכתיות בשנה שעברה</label>
         <name>Number_of_Soft_Credits_Last_Year__c</name>
     </fields>
     <fields>
-        <help><!-- The number of soft credits this year. --></help>
-        <label><!-- Number of Soft Credits This Year --></label>
+        <help>מספר הקרדיטים בשנה הנוכחית.</help>
+        <label>מספר תרומות מערכתיות בשנה הנוכחית</label>
         <name>Number_of_Soft_Credits_This_Year__c</name>
     </fields>
     <fields>
-        <help><!-- The number of soft credits 2 years ago. --></help>
-        <label><!-- Number of Soft Credits Two Years Ago --></label>
+        <help>מספר הקרדיטים לפני שנתיים.</help>
+        <label>מספר תרומות מערכתיות לפני שנתיים</label>
         <name>Number_of_Soft_Credits_Two_Years_Ago__c</name>
     </fields>
     <fields>
-        <help><!-- The number of soft credits. --></help>
-        <label><!-- Number of Soft Credits --></label>
+        <help>מספר הקרדיטים.</help>
+        <label>מספר תרומות מערכתיות</label>
         <name>Number_of_Soft_Credits__c</name>
     </fields>
     <fields>
-        <help><!-- Used to track the account of the contact&apos;s Organization Affiliation record that is marked primary. --></help>
-        <label><!-- Primary Affiliation --></label>
+        <help>משמשת למעקב אחר החשבון של רשומת ההשתייכות לארגונים של איש הקשר, המסומנת כראשית.</help>
+        <label>השתייכות ראשית</label>
         <name>Primary_Affiliation__c</name>
-        <relationshipLabel><!-- Do Not Use.  Use Organization Affiliations. --></relationshipLabel>
+        <relationshipLabel>לא לשימוש.  השתמש בהשתייכות לארגונים.</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- This is is checked if the user is the Primary Contact on their Account.  The Primary Contact can be edited on the Account. --></help>
-        <label><!-- Primary Contact --></label>
+        <help>אפשרות זו מסומנת אם המשתמש הוא איש הקשר הראשי בחשבון שלו.  ניתן לערוך בחשבון את איש הקשר הראשי.</help>
+        <label>איש קשר ראשי</label>
         <name>Primary_Contact__c</name>
     </fields>
     <fields>
-        <help><!-- The total amount of Soft Credit, closed in the last number of days defined in NPSP Settings. --></help>
-        <label><!-- Soft Credit Last N Days --></label>
+        <help>סכום הקרדיט הכולל, שנסגר במספר הימים האחרונים שנקבע בהגדרות משק הבית.</help>
+        <label>תרומות מערכתיות ב-N הימים האחרונים</label>
         <name>Soft_Credit_Last_N_Days__c</name>
     </fields>
     <fields>
-        <help><!-- If checked, the Contact&apos;s Current Address lookup overrides the Household&apos;s default Address or seasonal Address. --></help>
-        <label><!-- Address Override --></label>
+        <help>אם אפשרות זו מסומנת, חיפוש הכתובת הנוכחית של איש הקשר עוקף את כתובת ברירת המחדל של משק הבית או הכתובת העונתית.</help>
+        <label>עקיפת כתובת</label>
         <name>is_Address_Override__c</name>
     </fields>
     <layouts>
         <layout>Contact Layout</layout>
         <sections>
-            <label><!-- Contact Details --></label>
+            <label>פרטי איש קשר</label>
             <section>Contact Details</section>
         </sections>
         <sections>
-            <label><!-- Donation Information --></label>
+            <label>פרטי תרומה</label>
             <section>Donation Information</section>
         </sections>
         <sections>
-            <label><!-- Donation Totals --></label>
+            <label>סכומי תרומה כוללים</label>
             <section>Donation Totals</section>
         </sections>
         <sections>
-            <label><!-- Household Address --></label>
+            <label>כתובת משק הבית</label>
             <section>Household Address</section>
         </sections>
         <sections>
-            <label><!-- Household Donation Info --></label>
+            <label>פרטי תרומת משק הבית</label>
             <section>Household Donation Info</section>
         </sections>
         <sections>
-            <label><!-- Membership Information --></label>
+            <label>פרטי חברות</label>
             <section>Membership Information</section>
         </sections>
         <sections>
-            <label><!-- Misc --></label>
+            <label>שונות</label>
             <section>Misc</section>
         </sections>
         <sections>
-            <label><!-- Soft Credit Totals --></label>
+            <label>סה״כ זכות מערכתית</label>
             <section>Soft Credit Totals</section>
         </sections>
     </layouts>
     <quickActions>
-        <label><!-- New Affiliation --></label>
+        <label>השתייכות חדשה</label>
         <name>New_Affiliation</name>
     </quickActions>
     <quickActions>
-        <label><!-- New Recurring Donation --></label>
+        <label>תרומה חוזרת חדשה</label>
         <name>New_Recurring_Donation</name>
     </quickActions>
     <quickActions>
-        <label><!-- New Relationship --></label>
+        <label>קשר חדש</label>
         <name>New_Relationship</name>
     </quickActions>
     <quickActions>
-        <label><!-- Quick Update --></label>
+        <label>עדכון מהיר</label>
         <name>Quick_Update</name>
     </quickActions>
     <webLinks>
-        <label><!-- Merge_Contacts --></label>
+        <label>מזג אנשי קשר</label>
         <name>Merge_Contacts</name>
     </webLinks>
 </CustomObjectTranslation>

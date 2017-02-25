@@ -21,99 +21,99 @@
         <value><!-- הGeneral Accounting Unit --></value>
     </caseValues>
     <fields>
-        <help><!-- Active general accounting units are available for selection on allocations. Inactive general accounting units can&apos;t have new allocations to them. --></help>
-        <label><!-- Active --></label>
+        <help>יחידות חשבונאיות כלליות זמינות לבחירה בהקצאות. לא ניתן לשייך הקצאות חדשות ליחידות חשבונאיות לא פעילות.</help>
+        <label>פעיל</label>
         <name>Active__c</name>
     </fields>
     <fields>
-        <help><!-- The average of all allocations of all time to this general accounting unit. --></help>
-        <label><!-- Average Allocation --></label>
+        <help>ממוצע כל ההקצאות בכל הזמנים ליחידה חשבונאית כללית זו.</help>
+        <label>הקצאה ממוצעת</label>
         <name>Average_Allocation__c</name>
     </fields>
     <fields>
-        <help><!-- Extra information about this general accounting unit. --></help>
-        <label><!-- Description --></label>
+        <help>מידע נוסף על יחידה חשבונאית כללית זו.</help>
+        <label>תיאור</label>
         <name>Description__c</name>
     </fields>
     <fields>
-        <help><!-- The first Opportunity Close Date of an allocation associated with this general accounting unit. --></help>
-        <label><!-- First Allocation Date --></label>
+        <help>תאריך סגירת ההזדמנות הראשון של הקצאה המשויכת ליחידה חשבונאית כללית זו.</help>
+        <label>תאריך הקצאה ראשונה</label>
         <name>First_Allocation_Date__c</name>
     </fields>
     <fields>
-        <help><!-- The largest allocation of all time to this general accounting unit. --></help>
-        <label><!-- Largest Allocation --></label>
+        <help>ההקצאה הגדולה ביותר בכל הזמנים ליחידה חשבונאית כללית זו.</help>
+        <label>ההקצאה הגדולה ביותר</label>
         <name>Largest_Allocation__c</name>
     </fields>
     <fields>
-        <help><!-- The last Opportunity Close Date of an allocation associated with this general accounting unit. --></help>
-        <label><!-- Last Allocation Date --></label>
+        <help>תאריך סגירת ההזדמנות האחרון של הקצאה המשויכת ליחידה חשבונאית כללית זו.</help>
+        <label>תאריך הקצאה אחרונה</label>
         <name>Last_Allocation_Date__c</name>
     </fields>
     <fields>
-        <help><!-- Total number of allocations of opportunities in a closed and won stage in the last N days. The value of N can be modified in settings. --></help>
-        <label><!-- Number of Allocations Last N Days --></label>
+        <help>המספר הכולל של הקצאות של הזדמנויות בשלב סגירה וזכייה ב-N הימים האחרונים. ניתן לשנות את הערך של N בהגדרות.</help>
+        <label>מספר הקצאות ב-N הימים האחרונים</label>
         <name>Number_of_Allocations_Last_N_Days__c</name>
     </fields>
     <fields>
-        <help><!-- Total number of allocations of opportunities in a closed and won stage last year. --></help>
-        <label><!-- Number of Allocations Last Year --></label>
+        <help>המספר הכולל של הקצאות של הזדמנויות בשלב סגירה וזכייה בשנה שעברה.</help>
+        <label>מספר הקצאות בשנה שעברה</label>
         <name>Number_of_Allocations_Last_Year__c</name>
     </fields>
     <fields>
-        <help><!-- Total number of allocations of opportunities in a closed and won stage this year. --></help>
-        <label><!-- Number of Allocations This Year --></label>
+        <help>המספר הכולל של הקצאות של הזדמנויות בשלב סגירה וזכייה בשנה הנוכחית.</help>
+        <label>מספר הקצאות בשנה הנוכחית</label>
         <name>Number_of_Allocations_This_Year__c</name>
     </fields>
     <fields>
-        <help><!-- Total number of allocations of opportunities in a closed and won stage two years ago. --></help>
-        <label><!-- Number of Allocations Two Years Ago --></label>
+        <help>המספר הכולל של הקצאות של הזדמנויות בשלב סגירה וזכייה לפני שנתיים.</help>
+        <label>מספר הקצאות לפני שנתיים</label>
         <name>Number_of_Allocations_Two_Years_Ago__c</name>
     </fields>
     <fields>
-        <help><!-- The smallest allocation of all time to this general accounting unit. --></help>
-        <label><!-- Smallest Allocation --></label>
+        <help>ההקצאה הקטנה ביותר בכל הזמנים ליחידה חשבונאית כללית זו.</help>
+        <label>ההקצאה הקטנה ביותר</label>
         <name>Smallest_Allocation__c</name>
     </fields>
     <fields>
-        <help><!-- Sum total of all allocations of opportunities in a closed and won stage in the last N days. The value of N can be modified in settings. --></help>
-        <label><!-- Total Allocations Last N Days --></label>
+        <help>סך כל ההקצאות של הזדמנויות בשלב סגירה וזכייה ב-N הימים האחרונים. ניתן לשנות את הערך של N בהגדרות.</help>
+        <label>סה&quot;כ הקצאות ב-N הימים האחרונים</label>
         <name>Total_Allocations_Last_N_Days__c</name>
     </fields>
     <fields>
-        <help><!-- Sum total of all allocations of opportunities in a closed and won stage last year. --></help>
-        <label><!-- Total Allocations Last Year --></label>
+        <help>סך כל ההקצאות של הזדמנויות בשלב של סגירה וזכייה בשנה שעברה.</help>
+        <label>סה&quot;כ הקצאות בשנה שעברה</label>
         <name>Total_Allocations_Last_Year__c</name>
     </fields>
     <fields>
-        <help><!-- Sum total of all allocations of opportunities in a closed and won stage this year. --></help>
-        <label><!-- Total Allocations This Year --></label>
+        <help>סך כל ההקצאות של הזדמנויות בשלב של סגירה וזכייה בשנה הנוכחית.</help>
+        <label>סה&quot;כ הקצאות בשנה הנוכחית</label>
         <name>Total_Allocations_This_Year__c</name>
     </fields>
     <fields>
-        <help><!-- Sum total of all allocations of opportunities in a closed and won stage two years ago. --></help>
-        <label><!-- Total Allocations Two Years Ago --></label>
+        <help>סך כל ההקצאות של הזדמנויות בשלב של סגירה וזכייה לפני שנתיים.</help>
+        <label>סה&quot;כ הקצאות לפני שנתיים</label>
         <name>Total_Allocations_Two_Years_Ago__c</name>
     </fields>
     <fields>
-        <help><!-- Sum total of all allocations of opportunities in a closed and won stage. --></help>
-        <label><!-- Total Allocations --></label>
+        <help>סך כל ההקצאות של הזדמנויות בשלב של סגירה וזכייה.</help>
+        <label>סה&quot;כ הקצאות</label>
         <name>Total_Allocations__c</name>
     </fields>
     <fields>
-        <help><!-- Total number of allocations of opportunities in a closed and won stage. --></help>
-        <label><!-- Total Number of Allocations --></label>
+        <help>המספר הכולל של הקצאות של הזדמנויות בשלב סגירה וזכייה.</help>
+        <label>מספר הקצאות כולל</label>
         <name>Total_Number_of_Allocations__c</name>
     </fields>
     <gender><!-- Masculine --></gender>
     <layouts>
         <layout>General Accounting Unit Layout</layout>
         <sections>
-            <label><!-- Allocation Information --></label>
+            <label>פרטי הקצאה</label>
             <section>Allocation Information</section>
         </sections>
         <sections>
-            <label><!-- Allocation Totals --></label>
+            <label>סכומי הקצאה כוללים</label>
             <section>Allocation Totals</section>
         </sections>
         <sections>
@@ -123,7 +123,7 @@
     </layouts>
     <nameFieldLabel><!-- General Accounting Unit Name --></nameFieldLabel>
     <webLinks>
-        <label><!-- Recalculate_Rollups --></label>
+        <label>חשב מחדש סיכומים</label>
         <name>Recalculate_Rollups</name>
     </webLinks>
 </CustomObjectTranslation>

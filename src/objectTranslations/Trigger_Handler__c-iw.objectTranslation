@@ -21,33 +21,33 @@
         <value><!-- הTrigger Handler --></value>
     </caseValues>
     <fields>
-        <help><!-- Indicates that this module is active --></help>
-        <label><!-- Active --></label>
+        <help>מציין שמודול זה פעיל</help>
+        <label>פעיל</label>
         <name>Active__c</name>
     </fields>
     <fields>
-        <help><!-- Indicates that this module should be run asynchronously in this transaction, for any of its After events. --></help>
-        <label><!-- Asynchronous After Events --></label>
+        <help>מציין שיש להפעיל מודול זה באופן אסינכרוני בעסקה זו</help>
+        <label>אסינכרוני לאחר אירועים</label>
         <name>Asynchronous__c</name>
     </fields>
     <fields>
-        <help><!-- Name of the class to be run --></help>
-        <label><!-- Class --></label>
+        <help>שם המחלקה שיש להפעיל</help>
+        <label>מחלקה</label>
         <name>Class__c</name>
     </fields>
     <fields>
-        <help><!-- Order in which this module should be run, helps maintain dependencies in the modules and data. --></help>
-        <label><!-- Load Order --></label>
+        <help>הסדר שבו יש להפעיל מודול זה, מסייע לשמירה על יחסי תלות במודולים ובנתונים.</help>
+        <label>סדר טעינה</label>
         <name>Load_Order__c</name>
     </fields>
     <fields>
-        <help><!-- Name of the object this handler should be run for --></help>
-        <label><!-- Object --></label>
+        <help>שם האובייקט שעבורו יש להפעיל מטפל זה</help>
+        <label>אובייקט</label>
         <name>Object__c</name>
     </fields>
     <fields>
-        <help><!-- Trigger Action in which this module should fire --></help>
-        <label><!-- Trigger Action --></label>
+        <help>הפעולה שבה מודול זה צריך לפעול</help>
+        <label>פעולה מפעילה</label>
         <name>Trigger_Action__c</name>
         <picklistValues>
             <masterLabel>AfterDelete</masterLabel>
@@ -79,8 +79,8 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- Check it if you intent to manage the record yourself. Be aware that updates to the package won&apos;t update the record. --></help>
-        <label><!-- User Managed --></label>
+        <help>סמן אפשרות זו אם בכוונתך לנהל את הרשומה בעצמך. זכור שעדכונים לחבילה לא יעדכנו את הרשומה.</help>
+        <label>בניהול משתמש</label>
         <name>User_Managed__c</name>
     </fields>
     <gender><!-- Masculine --></gender>

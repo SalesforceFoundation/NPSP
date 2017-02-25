@@ -21,38 +21,38 @@
         <value><!-- הError Settings --></value>
     </caseValues>
     <fields>
-        <help><!-- Used to keep track of the most recent execution of the Async job error logger --></help>
-        <label><!-- Async Error Check Last Run --></label>
+        <help>משמש למעקב אחר הביצוע האחרון של יומן השגיאות של משימות Async</help>
+        <label>שגיאת Async בדוק הפעלה אחרונה</label>
         <name>Async_Error_Check_Last_Run__c</name>
     </fields>
     <fields>
-        <help><!-- If checked, NPSP&apos;s error handling framework is disabled. --></help>
-        <label><!-- Disable Error Handling --></label>
+        <help>אם אפשרות זו מסומנת, מסגרת הטיפול בשגיאות של NPSP מושבתת.</help>
+        <label>השבת טיפול בשגיאות</label>
         <name>Disable_Error_Handling__c</name>
     </fields>
     <fields>
-        <help><!-- When checked, NPSP won&apos;t automatically schedule default recurring jobs. These recurring jobs calculate rollups, update recurring donations and seasonal address, and perform error handling. --></help>
-        <label><!-- Don&apos;t Auto Schedule Default NPSP Jobs --></label>
+        <help>כאשר אפשרות זו מסומנת, NPSP לא תתזמן משימות ברירת מחדל חוזרות באופן אוטומטי. משימות חוזרות אלה מחשבות סיכומים, מעדכנות תרומות חוזרות וכתובות עונתיות, ומטפלות בשגיאות.</help>
+        <label>אל תתזמן משימות ב. מחדל של NPSP אוטומטית</label>
         <name>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
     </fields>
     <fields>
-        <help><!-- Turn this on to enable debug statements in managed package code. --></help>
-        <label><!-- Enable Debug --></label>
+        <help>הפעל אפשרות זו כדי לאפשר משפטי תיקון באגים בקוד החבילה המנוהלת.</help>
+        <label>הפעל תיקון באגים</label>
         <name>Enable_Debug__c</name>
     </fields>
     <fields>
-        <help><!-- Check this if you&apos;d like the system to post notifications for certain type of errors. --></help>
-        <label><!-- Error Notifications --></label>
+        <help>סמן אפשרות זו אם תרצה שהמערכת תפרסם הודעות עבור סוגי שגיאות מסוימים.</help>
+        <label>הודעות שגיאה</label>
         <name>Error_Notifications_On__c</name>
     </fields>
     <fields>
-        <help><!-- Select the type of user to send notifications to. --></help>
-        <label><!-- Error Notification Recipients --></label>
+        <help>בחר את סוג המשתמש שאליו יישלחו הודעות.</help>
+        <label>נמעני הודעות שגיאה</label>
         <name>Error_Notifications_To__c</name>
     </fields>
     <fields>
-        <help><!-- Check this if you&apos;d like errors to be stored in the database. --></help>
-        <label><!-- Store Errors --></label>
+        <help>סמן אפשרות זו אם ברצונך לשמור שגיאות במסד הנתונים.</help>
+        <label>שמור שגיאות</label>
         <name>Store_Errors_On__c</name>
     </fields>
     <gender><!-- Masculine --></gender>

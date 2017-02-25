@@ -21,51 +21,51 @@
         <value><!-- הEngagement Plan Template --></value>
     </caseValues>
     <fields>
-        <help><!-- Recalculates a child Task&apos;s due date based on when the parent Task was actually completed. --></help>
-        <label><!-- Automatically Update Child Task Due Date --></label>
+        <help>חישוב מחדש של תאריך היעד של משימת צאצא לפי המועד שבו משימת האב הושלמה בפועל.</help>
+        <label>עדכן אוטומטית תאריך יעד של משימת צאצא</label>
         <name>Automatically_Update_Child_Task_Due_Date__c</name>
     </fields>
     <fields>
-        <help><!-- When an Engagement Plan Task&apos;s Assigned To field is left blank, who should the Task be assigned to? --></help>
-        <label><!-- Default Assignee --></label>
+        <help>כאשר השדה &apos;הוקצה ל-&apos; של משימת תוכנית מעורבות נשאר ריק, למי יש להפנות את המשימה?</help>
+        <label>מוקצה ברירת מחדל</label>
         <name>Default_Assignee__c</name>
         <picklistValues>
             <masterLabel>Owner of Object for Engagement Plan</masterLabel>
-            <translation><!-- Owner of Object for Engagement Plan --></translation>
+            <translation>בעלים של אובייקט עבור תוכנית מעורבות</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>User Creating Engagement Plan</masterLabel>
-            <translation><!-- User Creating Engagement Plan --></translation>
+            <translation>משתמש היוצר תוכנית מעורבות</translation>
         </picklistValues>
     </fields>
     <fields>
-        <label><!-- Description --></label>
+        <label>תיאור</label>
         <name>Description__c</name>
     </fields>
     <fields>
-        <help><!-- Should Tasks with Due Dates on a weekend day be scheduled for the Friday before the weekend or the Monday after? This applies only if Skip Weekend is selected. --></help>
-        <label><!-- Reschedule To --></label>
+        <help>האם משימות שתאריך היעד שלהן בסוף השבוע צריכות להיות מתוזמנות ליום שישי שלפני סוף השבוע, או ליום שני שאחריו? אפשרות זו תקפה רק אם האפשרות &apos;דלג על סופי שבוע&apos; מסומנת.</help>
+        <label>תזמן מחדש ל-</label>
         <name>Reschedule_To__c</name>
         <picklistValues>
             <masterLabel>Friday</masterLabel>
-            <translation><!-- Friday --></translation>
+            <translation>שישי</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Monday</masterLabel>
-            <translation><!-- Monday --></translation>
+            <translation>שני</translation>
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- If selected, Tasks created in this Engagement Plan will not have Due Dates that fall on Saturday or Sunday. --></help>
-        <label><!-- Skip Weekends --></label>
+        <help>אם אפשרות זו מסומנת, תאריכי היעד של משימות שייווצרו בתוכנית מעורבות זו לא יהיו בימי שבת או ראשון.</help>
+        <label>דלג על סופי שבוע</label>
         <name>Skip_Weekends__c</name>
     </fields>
     <fields>
-        <label><!-- Total Engagement Plans --></label>
+        <label>סה&quot;כ תוכניות מעורבות</label>
         <name>Total_Engagement_Plans__c</name>
     </fields>
     <fields>
-        <label><!-- Total Tasks --></label>
+        <label>סה&quot;כ משימות</label>
         <name>Total_Tasks__c</name>
     </fields>
     <gender><!-- Masculine --></gender>
@@ -78,7 +78,7 @@
     </layouts>
     <nameFieldLabel><!-- Engagement Plan Template Name --></nameFieldLabel>
     <webLinks>
-        <label><!-- Manage_Template --></label>
+        <label>נהל תבנית</label>
         <name>Manage_Template</name>
     </webLinks>
 </CustomObjectTranslation>

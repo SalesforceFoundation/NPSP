@@ -21,57 +21,57 @@
         <value><!-- הLevel --></value>
     </caseValues>
     <fields>
-        <help><!-- Whether this Level is currently in use. --></help>
-        <label><!-- Active --></label>
+        <help>האם רמה זו נמצאת כעת בשימוש.</help>
+        <label>פעיל</label>
         <name>Active__c</name>
     </fields>
     <fields>
-        <help><!-- Describes what this Level is for, or what it means to achieve this Level. --></help>
-        <label><!-- Description --></label>
+        <help>מתאר את הייעוד של רמה זו, או את המשמעות של הגעה לרמה זו.</help>
+        <label>תיאור</label>
         <name>Description__c</name>
     </fields>
     <fields>
-        <help><!-- The Engagement Plan Template to apply to the Target Object when this Level is achieved. --></help>
-        <label><!-- Engagement Plan Template --></label>
+        <help>תבנית תוכנית המעורבות שתחול על אובייקט היעד לאחר הגעה לרמה זו.</help>
+        <label>תבנית תוכנית מעורבות</label>
         <name>Engagement_Plan_Template__c</name>
-        <relationshipLabel><!-- Levels --></relationshipLabel>
+        <relationshipLabel>רמות</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- The field (developer name) on the Target object to store the lookup to the current Level.  Note that this field implicitly defines the “Ladder” that this Level is part of. --></help>
-        <label><!-- Level Field --></label>
+        <help>השדה (שם מפתח) באובייקט היעד המשמש לשמירת החיפוש ברמה הנוכחית.  שים לב ששדה זה מגדיר באופן משתמע את &quot;הסולם&quot; שאליו שייך שלב זה.</help>
+        <label>שדה רמה</label>
         <name>Level_Field__c</name>
     </fields>
     <fields>
-        <help><!-- The maximum amount the value must be below to be assigned this Level.  If empty, then any amount greater than or equal to this Level&apos;s Minimum Amount will assign this Level. --></help>
-        <label><!-- Maximum Amount (&lt;) --></label>
+        <help>הסכום המרבי שהערך צריך להיות נמוך ממנו לצורך הקצאה לרמה זו.  אם ריק, כל סכום הגדול או שווה לסכום המינימלי של רמה זו יביא להקצאה לרמה זו.</help>
+        <label>סכום מרבי (&lt;)</label>
         <name>Maximum_Amount__c</name>
     </fields>
     <fields>
-        <help><!-- The minimum amount to be assigned this Level.  If empty, then any amount less than this Level&apos;s Maximum Amount will assign this Level. --></help>
-        <label><!-- Minimum Amount (&gt;=) --></label>
+        <help>הסכום המינימלי הנדרש להקצאה לרמה זו.  אם ריק, כל סכום הנמוך מהסכום המרבי של רמה זו יביא להקצאה לרמה זו.</help>
+        <label>סכום מינימלי (=)</label>
         <name>Minimum_Amount__c</name>
     </fields>
     <fields>
-        <help><!-- The field (developer name) on the Target object to store the lookup to the previous Level the object had.  Optional. --></help>
-        <label><!-- Previous Level Field --></label>
+        <help>השדה (שם מפתח) באובייקט היעד המשמש לשמירת החיפוש ברמה הקודמת של האובייקט.  אופציונלי.</help>
+        <label>שדה רמה קודמת</label>
         <name>Previous_Level_Field__c</name>
     </fields>
     <fields>
-        <help><!-- The target object&apos;s field (developer name) that defines the amount and timeframe to base this Level on. --></help>
-        <label><!-- Source Field --></label>
+        <help>השדה באובייקט היעד (שם מפתח) המגדיר את הסכום ומסגרת הזמן שעליהם מבוססת רמה זו.</help>
+        <label>שדה מקור</label>
         <name>Source_Field__c</name>
     </fields>
     <fields>
-        <help><!-- The object that this Level applies to. --></help>
-        <label><!-- Target --></label>
+        <help>האובייקט שרמה זו חלה עליו.</help>
+        <label>יעד</label>
         <name>Target__c</name>
         <picklistValues>
             <masterLabel>Account</masterLabel>
-            <translation><!-- Account --></translation>
+            <translation>חשבון</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Contact</masterLabel>
-            <translation><!-- Contact --></translation>
+            <translation>איש קשר</translation>
         </picklistValues>
     </fields>
     <gender><!-- Masculine --></gender>
@@ -82,13 +82,13 @@
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- long text section --></label>
+            <label>סעיף טקסט ארוך</label>
             <section>long text section</section>
         </sections>
     </layouts>
     <nameFieldLabel><!-- Level Name --></nameFieldLabel>
     <validationRules>
-        <errorMessage><!-- Target is a required field on Level.  Please specify the Target object for this Level. --></errorMessage>
+        <errorMessage>היעד הוא שדה נדרש ברמה זו.  ציין את אובייקט היעד עבור רמה זו.</errorMessage>
         <name>Target_Required</name>
     </validationRules>
 </CustomObjectTranslation>

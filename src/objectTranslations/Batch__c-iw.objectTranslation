@@ -21,28 +21,28 @@
         <value><!-- הBatch --></value>
     </caseValues>
     <fields>
-        <label><!-- Batch Status --></label>
+        <label>מצב אצווה</label>
         <name>Batch_Status__c</name>
         <picklistValues>
             <masterLabel>Complete</masterLabel>
-            <translation><!-- Complete --></translation>
+            <translation>השלמה</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>In Progress</masterLabel>
-            <translation><!-- In Progress --></translation>
+            <translation>בביצוע</translation>
         </picklistValues>
     </fields>
     <fields>
-        <label><!-- Description --></label>
+        <label>תיאור</label>
         <name>Description__c</name>
     </fields>
     <fields>
-        <label><!-- Number of Items --></label>
+        <label>מספר פריטים</label>
         <name>Number_of_Items__c</name>
     </fields>
     <fields>
-        <help><!-- API Name of the object of which this is a batch. --></help>
-        <label><!-- Object Name --></label>
+        <help>שם ה-API של אובייקט האצווה.</help>
+        <label>שם אובייקט</label>
         <name>Object_Name__c</name>
     </fields>
     <gender><!-- Masculine --></gender>

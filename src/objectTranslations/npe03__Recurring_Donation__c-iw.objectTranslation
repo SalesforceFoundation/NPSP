@@ -23,11 +23,11 @@
     <gender><!-- Masculine --></gender>
     <nameFieldLabel><!-- Recurring Donation Name --></nameFieldLabel>
     <quickActions>
-        <label><!-- New Opportunity --></label>
+        <label>הזדמנות חדשה</label>
         <name>New_Opportunity</name>
     </quickActions>
     <quickActions>
-        <label><!-- Quick Update --></label>
+        <label>עדכון מהיר</label>
         <name>Quick_Update</name>
     </quickActions>
 </CustomObjectTranslation>
