@@ -559,11 +559,13 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals('',panel.excludedLabels,'Excluded Labels is not blank.');
         // add a value to listExcludedFields and confirm that correct setting was added
         panel.listExcludedFields = new List<String>{'npe4__description__c'};
+        panel.saveSettings();
         system.assertEquals(1,UTIL_ListCustomSettingsFacade.getMapRelationshipFieldSyncSettings().size());
         system.assertEquals(UTIL_Describe.getFieldLabel('npe4__Relationship__c','npe4__description__c'),panel.excludedLabels.trim());
 
         // cause deletion of that setting record by setting empty string, confirm results
         panel.listExcludedFields = new List<String>();
+        panel.saveSettings();
         system.assertEquals(0,UTIL_ListCustomSettingsFacade.getMapRelationshipFieldSyncSettings().size(),'Exclusion field map not empty.');
 
         // these SelectOption lists will always have at least the ---None--- entry
