@@ -34,7 +34,7 @@
 * @description Batch class to merge multiple contacts.
 */
 
-global class CON_ContactMerge_BATCH implements Database.Batchable<SObject>{
+public class CON_ContactMerge_BATCH implements Database.Batchable<SObject>{
 	
 	/*******************************************************************************************************
     * @description masterContact holds the master contact where all losers are merged into. 
@@ -51,7 +51,7 @@ global class CON_ContactMerge_BATCH implements Database.Batchable<SObject>{
     * @param master masterContact 
     * @param losers List<Id> containing all loserids.
     */
-	global CON_ContactMerge_BATCH(Contact master, List<Id> losers) {
+	public CON_ContactMerge_BATCH(Contact master, List<Id> losers) {
 		this.masterContact = master;
 		this.loserIds = losers;
 	}
@@ -60,7 +60,7 @@ global class CON_ContactMerge_BATCH implements Database.Batchable<SObject>{
     * @description Start of batch process. Fetches all the loser contacts. 
     * @param bc BatchableContext passed by the system call
     */
-	global database.Querylocator start(Database.BatchableContext bc) {
+	public database.Querylocator start(Database.BatchableContext bc) {
         if (Test.isRunningTest()) {
         	return Database.getQueryLocator([Select Id, Name FROM Contact WHERE Id IN :this.loserIds LIMIT 1]);
         } 
@@ -72,7 +72,7 @@ global class CON_ContactMerge_BATCH implements Database.Batchable<SObject>{
     * @param bc BatchableContext passed by the system call
     * @param scope List of Contacts passed by the system call. 
     */
-    global void execute(Database.BatchableContext bc, List<Contact> scope) {
+    public void execute(Database.BatchableContext bc, List<Contact> scope) {
     	for (Contact loser : scope) {
     		Savepoint sp = Database.setSavepoint();
     		try {
@@ -87,7 +87,7 @@ global class CON_ContactMerge_BATCH implements Database.Batchable<SObject>{
     * @description End of Batch Contact Merge, nothing happens here. 
     * @param bc BatchableContext passed by the system call
     */
-    global void finish(Database.BatchableContext bc) {
+    public void finish(Database.BatchableContext bc) {
     	
     }
 	
