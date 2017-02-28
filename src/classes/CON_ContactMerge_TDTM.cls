@@ -63,7 +63,15 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
             }
             
             if (listMergeKey.size() > 0)
-                handleContactMergeFixupsFuture(listMergeKey);
+            	
+            	// If is in batch, future or queueable process fixups directly. 
+            	if (System.isBatch() || System.isFuture() || System.isQueueable()) {
+            		handleContactMergeFixups(listMergeKey);
+            	} else {
+            		handleContactMergeFixupsFuture(listMergeKey);
+            	}
+            
+                
         }        
         
         return dmlWrapper; 
@@ -107,8 +115,24 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
     * @param listMergeKey The list of mergeKeys that provide contactIdLoser, accountIdLoser, and contactIdWinner
     * @return null
     ********************************************************************************************************/
-    @Future    
+    @Future
     private static void handleContactMergeFixupsFuture(list<string> listMergeKey) {
+    	handleContactMergeFixups(listMergeKey);
+    }
+    
+    
+    /*******************************************************************************************************
+    * @description After a Contact Merge, call this routine to perform assorted fixups that need to
+    * occur which include:
+    *   - update the Account name and greetings 
+    *   - move Opps to the Winner's Account 
+    *   - recalculate Household Soft Credit OCRs 
+    *   - recalculate Opportunity Rollups
+    *
+    * @param listMergeKey The list of mergeKeys that provide contactIdLoser, accountIdLoser, and contactIdWinner
+    * @return null
+    ********************************************************************************************************/
+    private static void handleContactMergeFixups(list<string> listMergeKey) {
     
         list<string> listContactIdLoser = new list<string>();
         list<string> listAccountIdLoser = new list<string>();
