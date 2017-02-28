@@ -176,7 +176,7 @@ Insert OpportunityContactRoles:
         OpportunityId:
             key_field: opportunity_id
             table: opportunities
-            join_field: opportunity_id
+            join_field: id
             value_field: sf_id
 Insert Payments:
     sf_object: npe01__OppPayment__c
@@ -189,7 +189,7 @@ Insert Payments:
         npe01__Opportunity__c:
             key_field: opportunity_id
             table: opportunities
-            join_field: opportunity_id
+            join_field: id
             value_field: sf_id
 Insert Partial Soft Credits:
     sf_object: Partial_Soft_Credit__c
@@ -207,7 +207,7 @@ Insert Partial Soft Credits:
         Opportunity__c:
             key_field: opportunity_id
             table: opportunities
-            join_field: opportunity_id
+            join_field: id
             value_field: sf_id
 Insert GAUs:
     sf_object: General_Accounting_Unit__c
@@ -225,7 +225,7 @@ Insert Allocations:
         Opportunity__c:
             key_field: opportunity_id
             table: opportunities
-            join_field: opportunity_id
+            join_field: id
             value_field: sf_id
         General_Accounting_Unit__c:
             key_field: gau_id
