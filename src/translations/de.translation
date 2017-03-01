@@ -104,7 +104,7 @@
         <name>Addr_Verification_Batch_Title</name>
     </customLabels>
     <customLabels>
-        <label><!-- Unable to load verification class when visiting settings page --></label>
+        <label>Beim Laden der Validierungsklasse {0} ist ein Fehler aufgetreten</label>
         <name>Addr_Verification_Cant_Load_Class</name>
     </customLabels>
     <customLabels>
@@ -184,7 +184,7 @@
         <name>CONV_All_Backed_Up</name>
     </customLabels>
     <customLabels>
-        <label><!-- CONV_All_Dup_Rules_Disabled --></label>
+        <label>Alle Duplikatverwaltungsregeln von Data.com wurden deaktiviert.</label>
         <name>CONV_All_Dup_Rules_Disabled</name>
     </customLabels>
     <customLabels>
@@ -344,39 +344,43 @@
         <name>ConfirmDeleteAccount</name>
     </customLabels>
     <customLabels>
-        <label><!-- EPAddDependentTask --></label>
+        <label>Abhängige Aufgabe hinzufügen</label>
         <name>EPAddDependentTask</name>
     </customLabels>
     <customLabels>
-        <label><!-- Engagement Plan&apos;s Add Task button label --></label>
+        <label>Aufgabe hinzufügen</label>
         <name>EPAddTask</name>
     </customLabels>
     <customLabels>
-        <label><!-- EPDeleteTask --></label>
+        <label>Aufgabe löschen</label>
         <name>EPDeleteTask</name>
     </customLabels>
     <customLabels>
-        <label><!-- EPManageTasks --></label>
+        <label>Engagementplan-Aufgaben verwalten</label>
         <name>EPManageTasks</name>
     </customLabels>
     <customLabels>
-        <label><!-- EPManageTemplate --></label>
+        <label>Engagementplan-Vorlage verwalten</label>
         <name>EPManageTemplate</name>
     </customLabels>
     <customLabels>
-        <label><!-- EPTaskDependency --></label>
+        <label>Abhängigkeiten in Engagementplan-Aufgaben können keine rekursiven Abhängigkeitsschleifen bilden.</label>
         <name>EPTaskDependency</name>
     </customLabels>
     <customLabels>
-        <label><!-- EPTaskTemplate --></label>
+        <label>Engagementplan-Aufgaben können nur von anderen Engagementplan-Aufgaben abhängen, die zur gleichen Engagementplan-Vorlage gehören.</label>
         <name>EPTaskTemplate</name>
     </customLabels>
     <customLabels>
-        <label><!-- to, as in &quot;Add depend task to task 1&quot; --></label>
+        <label>bis</label>
         <name>EPTo</name>
     </customLabels>
     <customLabels>
-        <label><!-- ErrorEmailMessage --></label>
+        <label>Salesforce hat die untenstehenden Fehler festgestellt, die bei dem Versuch auftraten, Batchaufträge in NPSP auszuführen, oder zu einem Zeitpunkt entstanden, an dem Fehlermeldungen dem Benutzer nicht direkt angezeigt werden konnten. NPSP hat wahrscheinlich versucht, Zusammenfassungsfelder für Accounts und Kontakte zu aktualisieren, konnte aber bestimmte Datensätze nicht speichern. Der Grund dafür können verschiedene Probleme sein, die nicht mit NPSP in Zusammenhang stehen, wie benutzerdefinierter Code oder Validierungsregeln.
+
+Lesen Sie diesen Artikel im &quot;Power of Us&quot;-Hub, um zu erfahren wie die geplanten Aufträge funktionieren: https://powerofus.force.com/NPSP_Scheduled_Jobs
+
+Wenn Sie nicht wissen, wie diese Fehler behoben werden, senden Sie eine Nachricht an die Gruppe &quot;Nonprofit Success Pack&quot; im &quot;Power of Us&quot;-Hub: https://powerofus.force.com/HUB_NPSP_Group</label>
         <name>ErrorEmailMessage</name>
     </customLabels>
     <customLabels>
@@ -384,7 +388,7 @@
         <name>HiddenForSecurity</name>
     </customLabels>
     <customLabels>
-        <label><!-- NameRequired --></label>
+        <label>Betreff ist ein erforderliches Feld.</label>
         <name>NameRequired</name>
     </customLabels>
     <customLabels>
@@ -512,7 +516,7 @@
         <name>alloBtnSaveAndClose</name>
     </customLabels>
     <customLabels>
-        <label><!-- alloCampaignExceedsOppAmount --></label>
+        <label>Ihre Kampagnenzuordnungen wurden nicht erstellt. Die Kampagnenzuordnungen für die Opportunity überschreiten den Opportunity-Betrag.</label>
         <name>alloCampaignExceedsOppAmount</name>
     </customLabels>
     <customLabels>
@@ -580,7 +584,7 @@
         <name>alloTotals</name>
     </customLabels>
     <customLabels>
-        <label><!-- alloUnallocated --></label>
+        <label>nicht zugeordnet</label>
         <name>alloUnallocated</name>
     </customLabels>
     <customLabels>
@@ -752,7 +756,7 @@
         <name>bdiTime</name>
     </customLabels>
     <customLabels>
-        <label><!-- button label on the Remove Contact popup --></label>
+        <label>Entfernen</label>
         <name>btnRemove</name>
     </customLabels>
     <customLabels>
@@ -768,7 +772,7 @@
         <name>campaignMemberStatusResponded</name>
     </customLabels>
     <customLabels>
-        <label><!-- Used when NPSP hits an error trying to create an account for a contact --></label>
+        <label>Account für Kontakt {0} {1} konnte nicht erstellt werden. {2}</label>
         <name>conFailedAccountCreate</name>
     </customLabels>
     <customLabels>
@@ -776,23 +780,23 @@
         <name>conMergeErrNoPersonAccounts</name>
     </customLabels>
     <customLabels>
-        <label><!-- engagementPlanCantEdit --></label>
+        <label>Sie können diesen Engagementplan keinem neuen Objekt zuweisen. Erstellen Sie einen neuen Engagementplan.</label>
         <name>engagementPlanCantEdit</name>
     </customLabels>
     <customLabels>
-        <label><!-- engagementPlanNoLookups --></label>
+        <label>Eine Objektsuche muss für jeden Engagementplan ausgefüllt werden.</label>
         <name>engagementPlanNoLookups</name>
     </customLabels>
     <customLabels>
-        <label><!-- engagementPlanTwoLookups --></label>
+        <label>Nur eine Objektsuche kann pro Engagementplan ausgefüllt werden.</label>
         <name>engagementPlanTwoLookups</name>
     </customLabels>
     <customLabels>
-        <label><!-- exceptionRequiredField --></label>
+        <label>Erforderliche Felder fehlen:</label>
         <name>exceptionRequiredField</name>
     </customLabels>
     <customLabels>
-        <label><!-- exceptionValidationRule --></label>
+        <label>Eine Validierungsregel verhindert, dass der Datensatz gespeichert wird:</label>
         <name>exceptionValidationRule</name>
     </customLabels>
     <customLabels>
@@ -848,7 +852,7 @@
         <name>healthDetailsDuplicateAcctRT</name>
     </customLabels>
     <customLabels>
-        <label><!-- The details displayed when the duplicate contact roles health check fails --></label>
+        <label>Die Statusprüfung hat Opportunities mit doppelten Kontakten und Rollup-Werten gefunden.</label>
         <name>healthDetailsDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
@@ -888,7 +892,7 @@
         <name>healthDetailsInvalidErrorUser</name>
     </customLabels>
     <customLabels>
-        <label><!-- Health Check error if a Level refers to an invalid field --></label>
+        <label>Ebene {0} bezieht sich auf ein ungültiges numerisches Feld {1} auf {2}.</label>
         <name>healthDetailsInvalidFieldNumeric</name>
     </customLabels>
     <customLabels>
@@ -896,11 +900,11 @@
         <name>healthDetailsInvalidFiscalYears</name>
     </customLabels>
     <customLabels>
-        <label><!-- Health Check error if a Level refers to an invalid field --></label>
+        <label>Ebene {0} bezieht sich auf ein ungültiges Feld {1} auf {2}.</label>
         <name>healthDetailsInvalidLevelField</name>
     </customLabels>
     <customLabels>
-        <label><!-- Health Check error if a Level refers to an invalid field --></label>
+        <label>Ebene {0} bezieht sich auf ein ungültiges Ebenensuchfeld {1} auf {2}.</label>
         <name>healthDetailsInvalidLevelFieldReference</name>
     </customLabels>
     <customLabels>
@@ -952,7 +956,7 @@
         <name>healthDetailsNothingScheduled</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsOCR --></label>
+        <label>{0} und {1} dürfen nicht den gleichen Rollenwert verwenden.</label>
         <name>healthDetailsOCR</name>
     </customLabels>
     <customLabels>
@@ -964,11 +968,11 @@
         <name>healthDetailsOCRDupPrimaryValid</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsOCRSettingsResolution --></label>
+        <label>Klicken Sie auf der Registerkarte &quot;NPSP-Einstellungen&quot; auf &quot;Spenden&quot; | &quot;Kontaktrollen&quot; und bearbeiten Sie die obenstehenden Einstellungswerte.</label>
         <name>healthDetailsOCRSettingsResolution</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsOCRSettingsValid --></label>
+        <label>Die Einstellungen für NPSP-Opportunity-Kontaktrollen sind gültig.</label>
         <name>healthDetailsOCRSettingsValid</name>
     </customLabels>
     <customLabels>
@@ -1040,7 +1044,7 @@
         <name>healthLabelContactData</name>
     </customLabels>
     <customLabels>
-        <label><!-- Label for Duplicate Contact Role health check --></label>
+        <label>Doppelte Kontakte und Rollup-Werte</label>
         <name>healthLabelDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
@@ -1076,7 +1080,7 @@
         <name>healthLabelLastRun</name>
     </customLabels>
     <customLabels>
-        <label><!-- The message displayed when the duplicate contact roles health check passes --></label>
+        <label>Die Statusprüfung hat keine Opportunities mit doppelten Kontakten und Rollup-Werten gefunden.</label>
         <name>healthLabelNoDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
@@ -1092,7 +1096,7 @@
         <name>healthLabelOCRCheck</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelOCRSettings --></label>
+        <label>Einstellungen für Opportunity-Kontaktrollen</label>
         <name>healthLabelOCRSettings</name>
     </customLabels>
     <customLabels>
@@ -1148,11 +1152,11 @@
         <name>healthLabelUDFValid</name>
     </customLabels>
     <customLabels>
-        <label><!-- Health Check title for Levels --></label>
+        <label>Ebenen</label>
         <name>healthLabelVerifyLevels</name>
     </customLabels>
     <customLabels>
-        <label><!-- Health Check message when all Levels verify ok --></label>
+        <label>Die Feldverweise auf allen Ebenen sind gültig.</label>
         <name>healthLabelVerifyLevelsSuccess</name>
     </customLabels>
     <customLabels>
@@ -1208,7 +1212,9 @@
         <name>healthSolutionContactData</name>
     </customLabels>
     <customLabels>
-        <label><!-- The recommended solution for when the duplicate contact roles health check fails --></label>
+        <label>In der Vergangenheit hat NPSP Rollup-Werte von indirekten Gutschriften für Kontakte doppelt gezählt, die einer Opportunity durch zwei unterschiedliche Opportunity-Kontaktrollen zweimal zugewiesen waren. NPSP zählt diese Rollup-Werte nun nur noch einmal, unabhängig von der Anzahl der Zuweisungen des Kontakts zu einer Opportunity.&lt;br/&gt;
+&lt;br/&gt;
+Wenn Sie wissen möchten, für welche Opportunities Rollup-Werte zuvor doppelt gezählt wurden, führen Sie diese SOQL-Abfrage in der Entwicklerkonsole aus: &apos;&apos;SELECT Count(Id), OpportunityId, Opportunity.Name OpportunityName, ContactId, Contact.Name ContactName FROM OpportunityContactRole WHERE Opportunity.IsWon = true AND Role IN ({0}) GROUP BY OpportunityId, Opportunity.Name, ContactId, Contact.Name HAVING Count(Id) &gt; 1&apos;&apos;</label>
         <name>healthSolutionDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
@@ -1228,7 +1234,7 @@
         <name>healthSolutionInvalidFiscalYears</name>
     </customLabels>
     <customLabels>
-        <label><!-- Health Check Solution for an invalid Level field --></label>
+        <label>Rufen Sie die Registerkarte &quot;Ebenen&quot; auf und aktualisieren Sie den ungültigen Feldverweis auf Ebene {0}.</label>
         <name>healthSolutionInvalidLevelField</name>
     </customLabels>
     <customLabels>
@@ -1340,7 +1346,7 @@
         <name>hhCmpDedupeStatus</name>
     </customLabels>
     <customLabels>
-        <label><!-- isARequiredField --></label>
+        <label>ist ein erforderliches Feld.</label>
         <name>isARequiredField</name>
     </customLabels>
     <customLabels>
@@ -1372,79 +1378,79 @@
         <name>labelShowMore</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblAddressOverride --></label>
+        <label>(Überschreiben der Adresse)</label>
         <name>lblAddressOverride</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblBtnAddAllHHMembers --></label>
+        <label>Alle Mitglieder hinzufügen</label>
         <name>lblBtnAddAllHHMembers</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblBtnAddContact --></label>
+        <label>{0} hinzufügen</label>
         <name>lblBtnAddContact</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblCCardExcludeFrom --></label>
+        <label>Ausschließen aus:</label>
         <name>lblCCardExcludeFrom</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblCity --></label>
+        <label>Stadt</label>
         <name>lblCity</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblCloned --></label>
+        <label>Geklont</label>
         <name>lblCloned</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblCountry --></label>
+        <label>Land</label>
         <name>lblCountry</name>
     </customLabels>
     <customLabels>
-        <label><!-- caption of Remove Contact popup --></label>
+        <label>Kontakt entfernen</label>
         <name>lblDeleteContact</name>
     </customLabels>
     <customLabels>
-        <label><!-- prompt for the Remove Contact Popup --></label>
+        <label>Möchten Sie diesen Kontakt beim Speichern aus diesem Haushalt entfernen?</label>
         <name>lblDeleteContactPrompt</name>
     </customLabels>
     <customLabels>
-        <label><!-- autocomplete&apos;s label for &quot;smith in Contacts&quot; --></label>
+        <label>in Kontakte</label>
         <name>lblFindInContacts</name>
     </customLabels>
     <customLabels>
-        <label><!-- string displayed in the autocomplete control when empty --></label>
+        <label>Suchen Sie einen Kontakt oder fügen Sie einen neuen Kontakt dem Haushalt zu</label>
         <name>lblFindOrAddContact</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblFirstName --></label>
+        <label>Vorname</label>
         <name>lblFirstName</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblFormalGreeting --></label>
+        <label>Formelle Anrede</label>
         <name>lblFormalGreeting</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblHousehold --></label>
+        <label>Haushalt</label>
         <name>lblHousehold</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblHouseholdName --></label>
+        <label>Haushalt-Name</label>
         <name>lblHouseholdName</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblInformalGreeting --></label>
+        <label>Informelle Anrede</label>
         <name>lblInformalGreeting</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblLastName --></label>
+        <label>Nachname</label>
         <name>lblLastName</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblMergeHHPrompt --></label>
+        <label>{0} wohnt in einem Haushalt mit anderen Mitgliedern.  Möchten Sie nur {0} hinzufügen oder die anderen Mitglieder des Haushalts ebenfalls?</label>
         <name>lblMergeHHPrompt</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblMergeHHTitle --></label>
+        <label>Haushalte zusammenführen</label>
         <name>lblMergeHHTitle</name>
     </customLabels>
     <customLabels>
@@ -1452,11 +1458,11 @@
         <name>lblNPSPSettings</name>
     </customLabels>
     <customLabels>
-        <label><!-- error displayed when required perms missing to add a contact and its household --></label>
+        <label>Sie benötigen die Berechtigungen zum Aktualisieren und Löschen von Haushalten (Accounts), um einen vorhandenen Kontakt dem Haushalt hinzuzufügen.</label>
         <name>lblNoHHMergePermissions</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblPostalCode --></label>
+        <label>Postleitzahl</label>
         <name>lblPostalCode</name>
     </customLabels>
     <customLabels>
@@ -1464,15 +1470,15 @@
         <name>lblRequired</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblSalutation --></label>
+        <label>Anrede</label>
         <name>lblSalutation</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblState --></label>
+        <label>Land</label>
         <name>lblState</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblStreet --></label>
+        <label>Straße</label>
         <name>lblStreet</name>
     </customLabels>
     <customLabels>
@@ -1524,7 +1530,7 @@
         <name>leadConvertContactAccount</name>
     </customLabels>
     <customLabels>
-        <label><!-- leadConvertContactSelection --></label>
+        <label>Sie müssen eine Option im Kontaktfeld auswählen.</label>
         <name>leadConvertContactSelection</name>
     </customLabels>
     <customLabels>
@@ -1552,7 +1558,7 @@
         <name>leadConvertPageTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- leadConvertRecordTypeWarning --></label>
+        <label>Der standardmäßige Account-Datensatztyp für Ihr Profil entspricht dem Datensatztyp, der in den NPSP-Einstellungen als Account-Modell festgelegt wurde. Dies kann zu verschiedenen Datenproblemen führen. Es wird empfohlen, den standardmäßigen Account-Datensatztyp in einen anderen Wert für alle Profile zu ändern.</label>
         <name>leadConvertRecordTypeWarning</name>
     </customLabels>
     <customLabels>
@@ -1572,31 +1578,31 @@
         <name>leadConvertViewContactError</name>
     </customLabels>
     <customLabels>
-        <label><!-- Save &amp; New button on the Level Edit page --></label>
+        <label>Speichern und neu</label>
         <name>lvlBtnSaveAndNew</name>
     </customLabels>
     <customLabels>
-        <label><!-- Error when the Level has the same lookup field  specified for level and previous --></label>
+        <label>Sie müssen auf {0} andere Suchfelder für &quot;Ebenenfeld&quot; und &quot;Vorhergehendes Ebenenfeld&quot; angeben.</label>
         <name>lvlErrorDuplicateLookups</name>
     </customLabels>
     <customLabels>
-        <label><!-- error when a name of a level is duplicated --></label>
+        <label>Ebenenname {0} ist bereits vorhanden.  Die Namen für dasselbe Ziel und Ebenenfeld müssen eindeutig sein.</label>
         <name>lvlErrorDuplicateName</name>
     </customLabels>
     <customLabels>
-        <label><!-- error when Level Assignment fails to save its current or previous level --></label>
+        <label>Feld {0} auf Ebene {1} ist kein gültiges Suchfeld für ein Ebenenobjekt.</label>
         <name>lvlErrorInvalidLookupField</name>
     </customLabels>
     <customLabels>
-        <label><!-- error if level&apos;s source field isn&apos;t valid --></label>
+        <label>Feld {0} auf Ebene {1} ist kein gültiges Zahlenfeld.</label>
         <name>lvlErrorInvalidSourceField</name>
     </customLabels>
     <customLabels>
-        <label><!-- error if the Level Minimum is &gt; than Level Maximum --></label>
+        <label>Der Mindestbetrag muss kleiner als der Höchstbetrag für Ebene {0} sein.</label>
         <name>lvlErrorMinGTMax</name>
     </customLabels>
     <customLabels>
-        <label><!-- error when we detect the minimum amount overlaps another level --></label>
+        <label>Der Bereich zwischen Mindest- und Höchstwert auf Ebene {0} überschneidet sich mit dem Bereich zwischen Mindest- und Höchstwert auf Ebene {1}</label>
         <name>lvlErrorMinOverlap</name>
     </customLabels>
     <customLabels>
@@ -1756,7 +1762,7 @@
         <name>pmtWizardWriteoffMessage</name>
     </customLabels>
     <customLabels>
-        <label><!-- pscDeleteRow --></label>
+        <label>Zeile löschen</label>
         <name>pscDeleteRow</name>
     </customLabels>
     <customLabels>
@@ -1876,19 +1882,19 @@
         <name>sendAcknowledgmentSucceeded</name>
     </customLabels>
     <customLabels>
-        <label><!-- statusCompleted --></label>
+        <label>Abgeleistet</label>
         <name>statusCompleted</name>
     </customLabels>
     <customLabels>
-        <label><!-- statusInProgress --></label>
+        <label>In Bearbeitung</label>
         <name>statusInProgress</name>
     </customLabels>
     <customLabels>
-        <label><!-- statusNotStarted --></label>
+        <label>Nicht gestartet</label>
         <name>statusNotStarted</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgAddrGeneralSettingsIntro --></label>
+        <label>In der Verwaltung für Haushalts- und Organisationsaccounts können Sie einem Account mehrere Adressen hinzufügen sowie Standardadressen und saisonale Adressen angeben. Die Adressenverwaltung ist nur im Haushaltsaccount-Modell von NPSP3 und höher verfügbar.</label>
         <name>stgAddrGeneralSettingsIntro</name>
     </customLabels>
     <customLabels>
@@ -1988,11 +1994,20 @@
         <name>stgBtnSave</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgDocumentation --></label>
+        <label>Dokumentation</label>
         <name>stgDocumentation</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgDontAutoScheduleHelpText --></label>
+        <label>Wenn diese Option aktiviert wird, plant NPSP wiederkehrende Standardaufträge nicht automatisch. 
+&lt;br/&gt; 
+&lt;br/&gt; 
+Mit diesen wiederkehrenden Aufträgen werden Rollups berechnet, wiederkehrende Spenden und saisonale Adressen aktualisiert sowie die Fehlerbehandlung durchgeführt. 
+&lt;br/&gt; 
+&lt;br/&gt; 
+Wenn die Option deaktiviert ist, prüft NPSP, ob die wiederkehrenden Standardaufträge geplant sind, sobald Sie die Seite &quot;NPSP-Einstellungen&quot; aufrufen. Die Neuplanung wird nur für fehlende Aufträge angewendet, nicht für aktualisierte Aufträge. 
+&lt;br/&gt; 
+&lt;br/&gt; 
+Um diese Aufträge anzuzeigen, suchen Sie in Salesforce-Setup nach geplanten Aufträgen.</label>
         <name>stgDontAutoScheduleHelpText</name>
     </customLabels>
     <customLabels>
@@ -2057,7 +2072,7 @@ Sie können diese Seite jederzeit schließen und der Vorgang wird im Hintergrund
         <name>stgHelpBatchAlloRollup</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpBatchCreateDefault --></label>
+        <label>Durch Klicken auf diese Schaltfläche wird ein Batchvorgang gestartet, bei dem Standardzuordnungen für alle bestehenden Opportunities erstellt werden, mit Ausnahme der Opportunities, die in den Zuordnungs-Rollup-Einstellungen ausgeschlossen sind. Zur Ausführung dieses Tools müssen Standardzuordnungen aktiviert und eine standardmäßige allgemeine Verrechnungseinheit ausgewählt sein.</label>
         <name>stgHelpBatchCreateDefault</name>
     </customLabels>
     <customLabels>
@@ -2150,7 +2165,7 @@ Wenn der Vorgang zu 100 % abgeschlossen ist, können Sie die Seite bedenkenlos 
         <name>stgHelpEnableSoftCreditRollups</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpErrorLog --></label>
+        <label>Das Fehlerprotokoll zeigt eine detaillierte Liste von Fehlern zur Fehlerbehandlung. Fehler werden nur protokolliert, wenn unter &quot;Systemtools&quot; | &quot;Fehlerbenachrichtigungen&quot; die Optionen &quot;Fehlerbehandlung&quot; und &quot;Fehler speichern&quot; aktiviert sind.</label>
         <name>stgHelpErrorLog</name>
     </customLabels>
     <customLabels>
@@ -2162,7 +2177,7 @@ Wenn der Vorgang zu 100 % abgeschlossen ist, können Sie die Seite bedenkenlos 
         <name>stgHelpErrorNotifyTo</name>
     </customLabels>
     <customLabels>
-        <label><!-- displayed in the Example household names box --></label>
+        <label>&lt;b&gt;HINWEIS:&lt;/b&gt; Mit den obenstehenden Vorschaubeispielen können nur Vorschauinformationen für die Felder &quot;Vorname&quot;, &quot;Nachname&quot; oder &quot;Anrede&quot; angezeigt werden. (Wenn Sie beispielsweise ein benutzerdefiniertes Feld für den Kurznamen erstellt haben, den Sie in der informellen Anrede verwenden möchten, wird dieses hier nicht angezeigt.) Andere Felder als &quot;Vorname&quot;, &quot;Nachname&quot; und &quot;Anrede&quot; sind in den Anredefeldern der Seite &quot;Haushalt verwalten&quot; nicht sichtbar, wenn Sie jedoch Kontaktinformationen auf der Seite &quot;Haushalt verwalten&quot; speichern, werden Ihre Haushaltsbenennungskonventionen korrekt angezeigt.</label>
         <name>stgHelpExampleHHNames</name>
     </customLabels>
     <customLabels>
@@ -2210,7 +2225,7 @@ Weitere Informationen zum empfohlenen Haushalt-Account-Modell finden Sie in der 
         <name>stgHelpHHRules</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpHealthCheck --></label>
+        <label>Verwenden Sie die &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelHealthCheck&apos;);return false;&quot;&gt;Statusprüfung&lt;/a&gt;, um Ihre NPSP-Konfiguration zu prüfen.</label>
         <name>stgHelpHealthCheck</name>
     </customLabels>
     <customLabels>
@@ -2226,7 +2241,10 @@ Weitere Informationen zum empfohlenen Haushalt-Account-Modell finden Sie in der 
         <name>stgHelpLeadConvert</name>
     </customLabels>
     <customLabels>
-        <label><!-- help text displayed on the Level Assignment Batch page --></label>
+        <label>Dieses Dienstprogramm prüft Ebenenzuweisungen für alle Salesforce-Objekte (normalerweise Accounts und Kontakte, jedoch auch benutzerdefinierte Objekte), denen Ebenen zugewiesen sind. Dieser Vorgang kann etwas Zeit in Anspruch nehmen. Sie können die Seite jedoch ohne Bedenken schließen, um den Vorgang im Hintergrund auszuführen.
+&lt;br/&gt;&lt;br/&gt;
+
+&lt;b&gt;WICHTIG:&lt;/b&gt; Da Salesforce oft Ebenen anhand von Feldern auswertet, die mit anderen Massendatenvorgängen aktualisiert werden, sollten Sie diese Vorgänge zuerst ausführen.</label>
         <name>stgHelpLvlAssignBatch</name>
     </customLabels>
     <customLabels>
@@ -2246,11 +2264,11 @@ Weitere Informationen zum empfohlenen Haushalt-Account-Modell finden Sie in der 
         <name>stgHelpMembershipRT</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpNPSPDoc --></label>
+        <label>NPSP-Dokumentation</label>
         <name>stgHelpNPSPDoc</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpNPSPSettings --></label>
+        <label>Konfigurieren Sie das Nonprofit Success Pack entsprechend der Anforderungen Ihrer Organisation. Sie können auch den Status Ihrer Salesforce-Organisation überwachen oder Batchvorgänge zum Aktualisieren von Daten ausführen.</label>
         <name>stgHelpNPSPSettings</name>
     </customLabels>
     <customLabels>
@@ -2276,7 +2294,7 @@ WICHTIG: Die Datentypen beider Felder müssen identisch sein.</label>
         <name>stgHelpNoUDR</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpOCR --></label>
+        <label>Zwischen indirekten Gutschriften, Kontaktrollen und ergänzenden Geschenken bestehen wichtige Beziehungen. Wenn Sie mit diesen Konzepten und den Beziehungen zwischen ihnen nicht vertraut sind, lesen Sie die &lt;a href=&quot;https://powerofus.force.com/NPSP_SCMG&quot; target=&quot;_blank&quot;&gt;NPSP-Dokumentation&lt;/a&gt;, bevor Sie diese Einstellungen ändern.</label>
         <name>stgHelpOCR</name>
     </customLabels>
     <customLabels>
@@ -2344,7 +2362,7 @@ WICHTIG: Die Datentypen beider Felder müssen identisch sein.</label>
         <name>stgHelpPaymentsEnabled</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpPowerOfUsHub --></label>
+        <label>Haben Sie Fragen? Auf dem Hub finden Sie Antworten. Antworten zu Fragen über NPSP können Sie in der Gruppe &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; finden. Antworten zu Fragen über die Verwaltung und Konfiguration von Salesforce können Sie in der Gruppe &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; finden.&lt;br/&gt;&lt;br/&gt;Lesen Sie die NPSP-Versionshinweise in der Gruppe &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt;, um auf dem Laufenden zu bleiben.</label>
         <name>stgHelpPowerOfUsHub</name>
     </customLabels>
     <customLabels>
@@ -2369,7 +2387,13 @@ Wenn der Vorgang zu 100 % abgeschlossen ist, können Sie die Seite bedenkenlos 
         <name>stgHelpRDAddCampaign</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRDBatch --></label>
+        <label>Dieses Dienstprogramm führt einen Batchvorgang für alle unbefristeten wiederkehrenden Spenden aus und nimmt Folgendes basierend auf dem Wert in &quot;Opportunity-Vorschau in Monaten&quot; vor:
+&lt;br/&gt;
+&lt;br/&gt; 
+● erstellt neue Opportunities&lt;br/&gt;
+● aktualisiert die Anzahl der Raten und bezahlten Beträge&lt;br/&gt;
+&lt;br/&gt;
+Dieser Vorgang kann etwas Zeit in Anspruch nehmen, Sie können die Seite jedoch schließen, um den Vorgang im Hintergrund auszuführen.</label>
         <name>stgHelpRDBatch</name>
     </customLabels>
     <customLabels>
@@ -2429,7 +2453,7 @@ Wenn der Vorgang zu 100 % abgeschlossen ist, können Sie die Seite bedenkenlos 
         <name>stgHelpRDSuccesses</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRecDon --></label>
+        <label>Diese Einstellung ermöglicht Ihnen, benutzerdefinierte Ratenlaufzeiten für wiederkehrende Spenden zu erstellen, die sich von den Standard-Ratenlaufzeiten (monatlich, vierteljährlich, jährlich usw.) in NPSP unterscheiden.</label>
         <name>stgHelpRecDon</name>
     </customLabels>
     <customLabels>
@@ -2461,7 +2485,7 @@ Wenn der Vorgang zu 100 % abgeschlossen ist, können Sie die Seite bedenkenlos 
         <name>stgHelpRelReciprocalNeutral</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpReviewErrorLog --></label>
+        <label>Lesen Sie &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelErrorLog&apos;);return false;&quot;&gt;Fehlerprotokolle&lt;/a&gt;, um zu sehen, ob Probleme vorhanden sind.</label>
         <name>stgHelpReviewErrorLog</name>
     </customLabels>
     <customLabels>
@@ -2501,7 +2525,7 @@ Wenn der Vorgang zu 100 % abgeschlossen ist, können Sie die Seite bedenkenlos 
         <name>stgHelpRollupPrimaryContact</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpSalesforceSetup --></label>
+        <label>Möchten Sie Seitenlayouts anpassen, Felder oder Benutzer hinzufügen?  Versuchen Sie es auf den &lt;a href=&quot;/setup/forcecomHomepage.apexp?setupid=ForceCom&quot; target=&quot;_blank&quot;&gt;Salesforce-Setup&lt;/a&gt;-Seiten.</label>
         <name>stgHelpSalesforceSetup</name>
     </customLabels>
     <customLabels>
@@ -2517,7 +2541,7 @@ Wenn der Vorgang zu 100 % abgeschlossen ist, können Sie die Seite bedenkenlos 
         <name>stgHelpStoreErrorsOn</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpTDTM --></label>
+        <label>Die Auslöserverarbeitung enthält die eigentliche Geschäftslogik, die für ein bestimmtes Auslöserereignis ausgeführt werden muss.</label>
         <name>stgHelpTDTM</name>
     </customLabels>
     <customLabels>
@@ -2679,7 +2703,7 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <name>stgLabelLeadSettings</name>
     </customLabels>
     <customLabels>
-        <label><!-- menu title for the Level Assignment Batch in NPSP Settings --></label>
+        <label>Ebenenzuweisungs-Batch</label>
         <name>stgLabelLvlAssignBatchTitle</name>
     </customLabels>
     <customLabels>
@@ -2839,7 +2863,7 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <name>stgLabelUDRTargetField</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelUDRTargetFieldHelp --></label>
+        <label>Das benutzerdefinierte Feld des Zielobjekts, in dem Ihre benutzerdefinierte Rollup-Zusammenfassung angezeigt wird. Dieses Feld muss den gleichen Typ wie das Opportunity-Feld haben, für das Sie ein Rollup durchführen.</label>
         <name>stgLabelUDRTargetFieldHelp</name>
     </customLabels>
     <customLabels>
@@ -2851,11 +2875,11 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <name>stgLinkDelete</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNPSPGuideImportData --></label>
+        <label>NPSP-Leitfaden zum Importieren von Daten</label>
         <name>stgNPSPGuideImportData</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNPSPSettings --></label>
+        <label>Nonprofit Success Pack-Anwendungseinstellungen</label>
         <name>stgNPSPSettings</name>
     </customLabels>
     <customLabels>
@@ -2863,7 +2887,7 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <name>stgNPSPSettingsTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNPSPWorkbook --></label>
+        <label>Trail für NPSP-Spendenaktionen</label>
         <name>stgNPSPWorkbook</name>
     </customLabels>
     <customLabels>
@@ -2983,7 +3007,7 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <name>stgNavRollupBatch</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavSchedule --></label>
+        <label>Vorgangsplanung</label>
         <name>stgNavSchedule</name>
     </customLabels>
     <customLabels>
@@ -2999,11 +3023,11 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <name>stgNavUserDefinedRollups</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgOppNamingDescription --></label>
+        <label>Wenn Sie eine Opportunity erstellen, wird der Name automatisch mithilfe einer Standard-Benennungskonvention ausgefüllt. Sie können die Benennungskonvention durch Erstellen benutzerdefinierter Opportunity-Namen anpassen.</label>
         <name>stgOppNamingDescription</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgPowerOfUsHub --></label>
+        <label>Power of Us-Hub</label>
         <name>stgPowerOfUsHub</name>
     </customLabels>
     <customLabels>
