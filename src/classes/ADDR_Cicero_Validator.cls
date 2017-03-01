@@ -180,6 +180,8 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
                     // more than one candidate means should mark as ambiguous
                     if (listCandidates.size() > 1) {
                         addr.Ambiguous__c = true;
+                    } else {
+                        addr.Ambiguous__c = false;
                     }
                     // find the congressional legislative district
                     if (listCandidates.size() == 1 || (listCandidates.size() > 1 && !settings.Reject_Ambiguous_Addresses__c)) {
