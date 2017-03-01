@@ -112,7 +112,7 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
     private Address__c verifyAddress(Address__c addr, Addr_Verification_Settings__c settings) {
     
         String strRequest = '?';
-        String subpremise = '';
+        String lastFourPostalDigits;
 
         //replacing formula with actual fields, as formula was null for tests
         String mailingAddress = '';
@@ -120,23 +120,21 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
             mailingAddress += addr.MailingStreet__c.trim();
         if (addr.MailingStreet2__c!=null)
             mailingAddress += ' ' + addr.MailingStreet2__c.trim();
-
-        if (mailingAddress!='') {
-            //if our address has a comma, split it off and append it after verification
-            if (mailingAddress.contains(',')) {
-                list<string> split = mailingAddress.split(',',2);
-                strRequest += 'search_address=' + EncodingUtil.urlEncode(split[0],'UTF-8') + '&';
-                subpremise = split[1];
-            } else {
-                strRequest += 'search_address=' + EncodingUtil.urlEncode(mailingAddress,'UTF-8') + '&';
-            }
-        }
+        if (mailingAddress!='')
+            strRequest += 'search_address=' + EncodingUtil.urlEncode(mailingAddress,'UTF-8') + '&';
         if (addr.MailingCity__c != null)
             strRequest += 'search_city=' + EncodingUtil.urlEncode(addr.MailingCity__c,'UTF-8') + '&';
         if (addr.MailingState__c != null)
             strRequest += 'search_state=' + EncodingUtil.urlEncode(addr.MailingState__c,'UTF-8') + '&';
-        if (addr.MailingPostalCode__c != null)
-            strRequest += 'search_postal=' + EncodingUtil.urlEncode(addr.MailingPostalCode__c,'UTF-8') + '&';
+        if (addr.MailingPostalCode__c != null) {
+            if (addr.MailingPostalCode__c.contains('-')) {
+                List<String> splitPostal = addr.MailingPostalCode__c.split('-');
+                lastFourPostalDigits = splitPostal[1];
+                strRequest += 'search_postal=' + EncodingUtil.urlEncode(splitPostal[0],'UTF-8') + '&';
+            } else {
+                strRequest += 'search_postal=' + EncodingUtil.urlEncode(addr.MailingPostalCode__c,'UTF-8') + '&';
+            }
+        }
         if (addr.MailingCountry__c != null)
             strRequest += 'search_country=' + EncodingUtil.urlEncode(addr.MailingCountry__c,'UTF-8') + '&';
 
@@ -200,22 +198,20 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
                                 addr.State_Lower_District__c = district.district_id;
                         }
                     
-                        // parse match_addr to get normalized form
-                        // we assume it looks like 'street, city, state, zip'
-                        list<string> listParts = candidate.match_addr.split(',');
-                        if (listParts.size() == 4) {
-                            addr.MailingStreet__c = listParts[0].trim();
-                            if (subpremise!='')
-                                addr.MailingStreet__c+=',' + subpremise;
-                            ADDR_Addresses_TDTM.handleMultilineStreet(addr);
-                            addr.MailingCity__c = listParts[1].trim();
-                            addr.MailingState__c = listParts[2].trim();
-                            addr.MailingPostalCode__c = listParts[3].trim();
+                        addr.MailingStreet__c = candidate.match_addr.split(',')[0].trim();
+                        addr.MailingCity__c = candidate.match_city;
+                        addr.MailingState__c = candidate.match_region;
+                        addr.MailingPostalCode__c = candidate.match_postal;
+                        if (!String.isBlank(lastFourPostalDigits)) {
+                            addr.MailingPostalCode__c += '-' + lastFourPostalDigits;
                         }
+                        addr.County_Name__c  = candidate.match_subregion;
+
+                        ADDR_Addresses_TDTM.handleMultilineStreet(addr);
                     
-                    // save location
-                    addr.Geolocation__Latitude__s = decimal.valueOf(candidate.y);
-                    addr.Geolocation__Longitude__s = decimal.valueOf(candidate.x);
+                        // save location
+                        addr.Geolocation__Latitude__s = decimal.valueOf(candidate.y);
+                        addr.Geolocation__Longitude__s = decimal.valueOf(candidate.x);
                     }
                 }   
                 addr.Verified__c = foundData;
@@ -280,7 +276,7 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
         /** @description county of the matched address -- the upstream geocoder is very spotty with populating this and it is not reliable; may be used more for addresses outside the U.S. */        
         public string match_subregion; 
 
-        /** @description state of the matched address - doesn't seem to be part of the response, even though I was told it would be. */
+        /** @description state of the matched address */
         public string match_region; 
         
         /** @description country of the matched address. seems to be UN 3 character code, so I left getting country 2 digit ISO code from district. */        
