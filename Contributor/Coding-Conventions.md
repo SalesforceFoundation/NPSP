@@ -16,7 +16,7 @@ layout: default
 	- _TDTM for classes that implement Table-Driven Trigger Management 
 	- _BATCH for classes implementing ```Database.Batchable```
 	- _SCHED for classes implementing ```System.Schedulable```
-	- _UTIL for classes of utility methods called by other classes
+	- _UTIL for classes of utility methods called by other classes (unless they are already using the UTIL_ prefix)
 	- _TEST for test classes
 4. Visualforce pages should have the same name as their controller or extension (except for the _CTRL suffix). Pages invoked by a custom button should end with "BTN", without a preceding underscore.
 5. Methods, properties and variables should have descriptive names using lowerCamelCase.
@@ -43,7 +43,7 @@ Classes' ApexDoc block is located in the lines above the class declaration.  The
 
 Example
 ```
-/**
+/*******************************************************************************************************
 * @author Salesforce.com Foundation
 * @date 2014
 *
