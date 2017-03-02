@@ -35,7 +35,7 @@
 * @description When a Task created by an Engagement Plan is given a Closed status, checks for dependent Tasks
 * and updates them by changing the status, updating the due date, and sending email.
 */
-public with sharing class EP_TaskDependency_TDTM extends TDTM_Runnable {
+public class EP_TaskDependency_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
     * @description Trigger Handler on Task that checks for dependent Tasks based on EP Task dependencies,
