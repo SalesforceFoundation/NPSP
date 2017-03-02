@@ -28,7 +28,7 @@ Please comment your code well! Comments describing what you are doing and the ex
 Classes, methods, and attributes should also include comments at the top that will generate [ApexDoc documentation](http://developer.salesforcefoundation.org/Cumulus/ApexDocumentation/). You can read the full documentation on the [ApexDoc repository](https://github.com/SalesforceFoundation/ApexDoc), but the basics are as follows:
 
 ## ApexDoc Comment Blocks
-ApexDoc comment blocks must always begin with /** (NPSP standard is to coninue the asterisks across the whole line) and can cover multiple lines. Each line must start with * (or whitespace and then *). The comment block ends with */.  Within the block, special tokens, called out with ```@token```, identify the documentation to include for a given class, property, or method. 
+ApexDoc comment blocks must always begin with /** (NPSP standard is to continue the asterisks across the whole line) and can cover multiple lines. Each line must start with * (or whitespace and then *). The comment block ends with */.  Within the block, special tokens, called out with ```@token```, identify the documentation to include for a given class, property, or method. 
 
 ### Classes
 Classes' ApexDoc block is located in the lines above the class declaration.  The special tokens are all technically optional, but for NPSP contributions, please include ```@author```, ```@date```,  ```@description``` and ```@group```. The ```@group``` value should usually be one of the existing groups - see the left-hand navigation of the [current ApexDocs](http://developer.salesforce.org/Cumulus/ApexDocumentation/). 
@@ -102,19 +102,19 @@ NPSP uses [TDTM](http://developer.salesforcefoundation.org/index.html#blog/post/
 
 1. No new triggers should be added for existing objects. 
 2. If you are adding a new custom object for which triggers should fire, create a single new ```TDTM_[ObjectName].trigger``` that handles all trigger events. Use an existing trigger as a model.
-3. Before adding a new TDTM class, consider whether the trigger functionality would be more appropriate in an existing class. If the function should be able to be en/disabled separately from other trigger functions, that's a good indicator that a new class is needed. This is a good topic to discuss on the Hub or on a ticket before proceeding, though.
+3. Before adding a new TDTM class, consider whether the trigger functionality would be more appropriate in an existing class. If the function should be able to be en/disabled separately from other trigger functions, that's a good indicator that a new class is needed. This is a good topic to discuss on the Hub or on a GitHub issue before proceeding, though.
 4. Consider existing trigger classes on the object, and determine where a new class should go in the load order.
-5. Any new TDTM classes should be added to the [TDTM_DefaultConfig.getDefaultRecords() method](http://developer.salesforce.org/Cumulus/ApexDocumentation/TDTM_DefaultConfig.html#getDefaultRecords). 
+5. Any new TDTM classes should be added to the [TDTM_DefaultConfig.getDefaultRecords() method](http://developer.salesforce.org/Cumulus/ApexDocumentation/TDTM_DefaultConfig.html#getDefaultRecords) so that the necessary Trigger_Handler__c record will be loaded when orgs install or upgrade. 
 
 # Custom Labels
 
 All user-facing text should support translation.
-1. Object & field names should always be shown to users by their Labels.
+1. Object & field names should always be displayed to users by their Labels.
 2. All other user-facing text should be stored in Custom Labels.
 	- new Custom Labels should be created in English as the default
 	- Name and Short Description should be the same value, using lowerCamelCase. The first word should indicate the general category of functionality. 
-	- Observe existing Categories of Custom Label and apply them as appropriate for easier filtering by end users.
-	- Unless there is a specific need, new Custom Labels should not be Protected Components
+	- Observe existing Categories on Custom Labels and apply them as appropriate for easier filtering by end users.
+	- Unless there is a specific need, new Custom Labels should not be Protected Components.
 
 # NPSP Settings
 
