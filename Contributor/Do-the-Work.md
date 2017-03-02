@@ -24,7 +24,7 @@ When you clone your fork of the Cumulus repository onto your local computer, you
 
 Your branch name should start with 'feature/'. If you're working on a specific GitHub issue, put that next. Your branch name shouldn't have spaces or special characters. Then put a 2-3 word summary of what you're working on - abbreviations are fine. 
 
-Commit all your changes to this branch 
+Commit all your changes to this branch - it will make it much easier when it comes time to submit your pull request.
 
 # NPSP Apex Documentation
 
