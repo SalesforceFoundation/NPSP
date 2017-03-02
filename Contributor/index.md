@@ -4,11 +4,11 @@ layout: default
 ---
 # How to Contribute Code to the Nonprofit Success Pack
 
-The Nonprofit Success Pack (NPSP) is an application that integrates directly with Salesforce to help nonprofits and higher ed institutions use Salesforce more effectively. The NPSP is an open-source project that thrives on the generosity of its developer community. Along with the information in these documents, **please read [Contributing to the Nonprofit Success Pack] 
+The Nonprofit Success Pack (NPSP) is an application that integrates directly with Salesforce to help nonprofits and higher ed institutions use Salesforce more effectively. The NPSP is an open-source project that thrives on the generosity of its developer community. Along with the information in these documents, **please read [Contributing to the Nonprofit Success Pack](http://www.salesforce.org/help/contribute-nonprofit-success-pack/)**. 
 
-This document outlines everything you need to know to start contributing code to the NPSP. We’ll show you how to set up your development environment, how to develop in the NPSP code base, and how to submit changes to the Salesforce Foundation for review. We're assuming you're using a unix environment, such as Linux or OS X. If you're a windows user, you may need to set up a unix command line such as the new [Windows Subsystem for Linux](https://msdn.microsoft.com/en-us/commandline/wsl/about), aka *Bash on Ubuntu on Windows* (Windows 10 only), or [Cygwin](https://www.cygwin.com/).
+This document outlines everything you need to know to start contributing code to the NPSP. We’ll show you how to set up your development environment, how to develop in the NPSP code base, and how to submit changes to the Salesforce Foundation for review. We're assuming you're using a unix environment, such as Linux or OS X. If you're a windows user, you may need to set up a unix command line such as the new [Windows Subsystem for Linux](https://msdn.microsoft.com/en-us/commandline/wsl/about), aka *Bash on Ubuntu on Windows* (Windows 10 only), or [Cygwin](https://www.cygwin.com/). It is possible to use Git and CumulusCI from a Windows cmd.exe or Powershell command line, but the specifics of doing so are beyond the scope of this documentation. 
 
-# GIT and Initial Setup
+# Git and Initial Setup
 
 1.  [Set up git and github](Github.html)
     - Create a github account
@@ -18,7 +18,7 @@ This document outlines everything you need to know to start contributing code to
         - ```git clone git@github.com:[YourUserName]/Cumulus.git``` (ssh) *or*
         - ```git clone https://github.com/[YourUserName]/Cumulus.git``` (https) 
 2. [Set up Salesforce Developer Edition](Developer-Edition-Salesforce-Instance.html)
-3. [Set up Cumulus CI](http://cumulusci.readthedocs.io/en/latest/tutorial.html)
+3. [Set up Cumulus CI 2](http://cumulusci.readthedocs.io/en/latest/tutorial.html)
     - Install prerequisites and CumulusCI
     - Set CUMULUSCI_KEY environment variable
     - **Skip** Project Initialization steps - the cloned repo is already set up for CumulusCI
@@ -39,21 +39,4 @@ This document outlines everything you need to know to start contributing code to
 
 5. [Submit the work](Submit-Your-Feature.html)
 
-# Legacy CumulusCI 1.x instructions 
-    - Create a build.properties file at the root of your git repository, with these lines:
-        - ```sf.serverurl=https://login.salesforce.com```
-        - ```sf.username=your_de_login@salesforce.com```
-        - ```sf.password=passwordAndSecurityToken```
-   - Create the Cumulus Unmanaged Package
-        - Each time new metadata is added through the UI or created via your IDE, it must be added to the unmanaged package.
-        - Note: ANT scripts are not currently configured to handle all metadata types (weblinks and others are not yet supported)
-    - Use ant build target to set up your DE org
-        - ```ant deployDevOrg```
-    - Ant build targets
-        - To update metadata added through the UI and in the Cumulus unmanaged package:
-            - ```ant retrievePackagedToSrc```
-            - ```ant updatePackageXml```
-
-        - After a pull, to update your dev environment with any changes pulled down from github:
-            - ```ant updatePackageXml```
-            - ```ant deployWithoutTest```
+_Looking for the CumulusCI 1.x (Ant-based) information that used to be here? It's strongly recommended to switch to CumulusCI 2, but you can find that information [here](Legacy-CumulusCI.html)._ 
