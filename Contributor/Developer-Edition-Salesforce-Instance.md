@@ -26,7 +26,7 @@ From your git repository, run this command:
 ant deployCI
 ~~~
 
-What’s deployCI?  That’s an NPSP-specific command that runs a set of commands to deploy the Starter Pack most efficiently into your org.  For more info on the various ant targets, check out [this writeup from Jason Lantz](https://github.com/SalesforceFoundation/CumulusCI#build-targets).
+What’s deployCI?  That’s an NPSP-specific command that runs a set of commands to deploy the Success Pack most efficiently into your org.  For more info on the various ant targets, check out [this writeup from Jason Lantz](https://github.com/SalesforceFoundation/CumulusCI#build-targets).
 
 At this point, we’ve got some heavy lifting to do here, so its going to take a little bit.  (15 minutes or so) While you’re waiting, here’s a quick explanation of what this is actually doing.
 
@@ -48,7 +48,7 @@ Back in your DE Org, navigate to Setup > Create > Packages. You should have an u
 
 ![Cumulus Package Contents Example](img/cumulus-package-example.png)
 
-Depending on what we’re doing, we can make the org functional by adding the overrides, etc. from the [post-install instructions](https://powerofus.force.com/articles/Resource/NPSP-Nonprofit-Starter-Pack-Post-Install-Checklist), or we can just leave it.  For now, we’ll leave it.
+Depending on what we’re doing, we can make the org functional by adding the overrides, etc. from the [post-install instructions](https://powerofus.force.com/articles/Resource/NPSP-Post-Install-Checklist), or we can just leave it.  For now, we’ll leave it.
 
 # Yay!
 

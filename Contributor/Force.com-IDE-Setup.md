@@ -4,7 +4,7 @@ layout: default
 ---
 # [Home](http://developer.salesforcefoundation.org/Cumulus/Contributor/) > Setup the Project in the Force.com IDE
 
-If you haven’t done so already, install the Force.com IDE for Eclipse. [Here are instructions on setting up the Force.com IDE up from scratch.](https://developer.salesforce.com/page/Force.com_IDE_Installation)
+If you haven’t done so already, install the Force.com IDE for Eclipse. [Here are instructions on setting up the Force.com IDE up from scratch.](https://developer.salesforce.com/docs/atlas.en-us.eclipse.meta/eclipse/ide_install.htm)
 
 In the Force.com IDE, you want to uncheck ‘Build Automatically’ under ‘Project’.   We don’t want the IDE to start sending random pieces of metadata up to the cloud until we’ve configured everything properly.
 
@@ -27,7 +27,7 @@ After entering the credentials for your DE org, click apply, but make sure that 
 
 ![Eclipse Overwrite Components Dialog](img/eclipse-overwrite-components.png)
 
-Now you can finally go back into your IDE and turn back on the Build Automatically setting.  Your Force.com IDE should now be fully configured to do some actual coding on the Nonprofit Starter Pack codebase!
+Now you can finally go back into your IDE and turn back on the Build Automatically setting.  Your Force.com IDE should now be fully configured to do some actual coding on the Nonprofit Success Pack codebase!
 
 # Hooray!
 
