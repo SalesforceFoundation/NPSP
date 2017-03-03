@@ -33,9 +33,11 @@
 * @group Engagement Plans
 * @group-content ../../ApexDocContent/EngagementPlans.htm
 * @description EP Task and Task utilities for Engagement Plans. Constructor creates maps of EP Tasks and EP Templates.
-* Methods to create and update tasks, calculate 
+* Methods to create and update tasks, calculate dates and reminders, and to assign Task ownership.
+*
+* This class is not marked with sharing as it needs access to dependent Tasks that are potentially owned by other users.
 */
-public with sharing class EP_Task_UTIL {
+public class EP_Task_UTIL {
 
     /** @description Default status for active tasks. */
     public static String defaultTaskStatus {
@@ -138,7 +140,7 @@ public with sharing class EP_Task_UTIL {
             [SELECT Id, Name, Engagement_Plan_Template__c, Assigned_To__c, Comments__c, Days_After__c, Type__c, 
             Parent_Task__c, Priority__c, Reminder__c, Reminder_Time__c, Send_Email__c, Status__c,
                 (SELECT Id FROM Engagement_Plan_Tasks__r)
-            FROM Engagement_Plan_Task__c WHERE Engagement_Plan_Template__c IN :templateIds]
+            FROM Engagement_Plan_Task__c WHERE Engagement_Plan_Template__c IN :templateIds ORDER BY Days_After__c ASC NULLS FIRST]
         );        
     }
 

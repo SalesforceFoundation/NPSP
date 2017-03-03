@@ -34,8 +34,11 @@
 * @group-content ../../ApexDocContent/EngagementPlans.htm
 * @description When a Task created by an Engagement Plan is given a Closed status, checks for dependent Tasks
 * and updates them by changing the status, updating the due date, and sending email.
+*
+* This class is not marked with sharing as it needs access to Tasks dependent on those in the trigger 
+* set that are potentially owned by other users.
 */
-public with sharing class EP_TaskDependency_TDTM extends TDTM_Runnable {
+public class EP_TaskDependency_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
     * @description Trigger Handler on Task that checks for dependent Tasks based on EP Task dependencies,
@@ -76,8 +79,21 @@ public with sharing class EP_TaskDependency_TDTM extends TDTM_Runnable {
     private Map<Id, Engagement_Plan_Task__c> directDependentEPTasks = new Map<Id, Engagement_Plan_Task__c>();
     /** @description Map of EP Tasks that are indirect dependents of Tasks in the trigger set, i.e. grandchildren. */
     private Map<Id, Engagement_Plan_Task__c> indirectDependentEPTasks = new Map<Id, Engagement_Plan_Task__c>();
+    /** @description A set of EP Task IDs in the above dependent tasks, to avoir OR in the query.*/
+    private Set<Id> allDependentEPTasksForQuery {
+        get {
+            Set<Id> results = new Set<Id>();
+            results.addAll(directDependentEPTasks.keySet());
+            results.addAll(indirectDependentEPTasks.keySet());
+            return results;
+        }
+    }
+
+
     /** @description Task utilities class. */
     private EP_Task_UTIL taskUtil;
+
+
 
     /*******************************************************************************************************
     * @description For a list of Tasks that have just been given a closed status, queries for all tasks
@@ -117,8 +133,7 @@ public with sharing class EP_TaskDependency_TDTM extends TDTM_Runnable {
         Map<Id, List<Task>> mapEpTaskIdTasks = new Map<Id, List<Task>>();
         for (Task taskForUpdate :  [SELECT Id, ActivityDate, Engagement_Plan_Task__c, Engagement_Plan__c
                                     FROM Task WHERE Engagement_Plan__c IN :engagementPlanIds AND
-                                    (Engagement_Plan_Task__c IN :directDependentEPTasks.values() OR 
-                                    Engagement_Plan_Task__c IN :indirectDependentEPTasks.values())]) {
+                                    Engagement_Plan_Task__c IN :allDependentEPTasksForQuery]) {
             if (!mapEpTaskIdTasks.containsKey(taskForUpdate.Engagement_Plan_Task__c)) {
                 mapEpTaskIdTasks.put(taskForUpdate.Engagement_Plan_Task__c, new List<Task>{taskForUpdate});
             } else {
@@ -128,15 +143,15 @@ public with sharing class EP_TaskDependency_TDTM extends TDTM_Runnable {
         
         //update directly dependent tasks that are now active; send email per the task setting
         for (Engagement_Plan_Task__c epTask : directDependentEPTasks.values()) {
-            
-            for (Task taskForUpdate : mapEpTaskIdTasks.get(epTask.Id)) {
-
-                taskUtil.updateActivateTask(taskForUpdate);
-
-                if (epTask.Send_Email__c) {
-                    taskUpdateEmail.add(taskForUpdate);
-                } else {
-                    taskUpdateNoEmail.add(taskForUpdate);
+            //avoid EP Tasks whose Task has been deleted
+            if (mapEpTaskIdTasks.containsKey(epTask.Id)) {
+                for (Task taskForUpdate : mapEpTaskIdTasks.get(epTask.Id)) {
+                    taskUtil.updateActivateTask(taskForUpdate);
+                    if (epTask.Send_Email__c) {
+                        taskUpdateEmail.add(taskForUpdate);
+                    } else {
+                        taskUpdateNoEmail.add(taskForUpdate);
+                    }
                 }
             }
         }
@@ -144,7 +159,8 @@ public with sharing class EP_TaskDependency_TDTM extends TDTM_Runnable {
         //update indirect dependent Tasks if the template's delay type says to
         for (Engagement_Plan_Task__c epTask : indirectDependentEPTasks.values()) {
             Engagement_Plan_Template__c template = taskUtil.templateMap.get(epTask.Engagement_Plan_Template__c);
-            if (template.Automatically_Update_Child_Task_Due_Date__c) {
+            //avoid EP Tasks whose Task has been deleted
+            if (template.Automatically_Update_Child_Task_Due_Date__c && mapEpTaskIdTasks.containsKey(epTask.id)) {
                 for (Task indirectDependentTask : mapEpTaskIdTasks.get(epTask.id)) {
                     taskUtil.updateInactiveTask(indirectDependentTask);
                     taskUpdateNoEmail.add(indirectDependentTask);
