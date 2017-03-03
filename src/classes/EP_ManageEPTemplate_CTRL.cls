@@ -200,6 +200,12 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     public pageReference saveClose() {
 
         try {
+            //manual validation that the Name field is populated to avoid visualforce refresh issues when required attribute is set
+            if (String.isBlank(template.Name)) {
+                template.Name.addError(Label.NameRequired);
+                return null;
+            }
+
             upsert template;
 
             delete tasksToDelete;
