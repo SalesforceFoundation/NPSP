@@ -82,7 +82,10 @@ public class EP_TaskDependency_TDTM extends TDTM_Runnable {
     /** @description A set of EP Task IDs in the above dependent tasks, to avoir OR in the query.*/
     private Set<Id> allDependentEPTasksForQuery {
         get {
-            return new Set<Id>().addAll(directDependentEPTasks.keySet()).addAll(indirectDependentEPTasks.keySet());
+            Set<Id> results = new Set<Id>();
+            results.addAll(directDependentEPTasks.keySet());
+            results.addAll(indirectDependentEPTasks.keySet());
+            return results;
         }
     }
 
