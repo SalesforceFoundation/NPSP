@@ -11,56 +11,21 @@ Next, we need to fork the latest NPSP code and create our own repository.  Login
 
 Since this is our own copy of the repository, we can modify this as much as we’d like without affecting anything else in the main repo.
 
+# Setting up SSH 
+
+SSH is a security protocol, similar to HTTPS used primarily by web browsers. Setting up SSH for your GitHub account will make the process of pulling and pushing metadata between your computer and GitHub a lot smoother. Especially when there are large files involved, like some of the Static Resources. Rather than go through the details here, we'll refer you to [GitHub's excellent documentation](https://help.github.com/articles/connecting-to-github-with-ssh/) of the topic. The GitHub repository URLs in this documentation assume use of SSH. If you are using HTTPS instead, your ```git clone``` commands will use ```https://github.com/``` instead of ```git@github.com:```.  
+
 # Get the NPSP code onto your computer
 
 Now, lets pull the repo down into a local repository on our machine using git clone.  At the command lane change into the directory where you want your code to live, then run:
 
 ~~~
-git clone https://github.com/<user_name>/Cumulus.git
+git clone git@github.com:<user_name>/Cumulus.git
 ~~~
-
-If you have trouble cloning the repository, you may need to setup github ssh access. Remember the directory where you have cloned the repository as we’ll be coming back here often throughout the process.
 
 ### Cloning…
 
 ![using git clone](img/git-clone-example.png)
-
-# Get the CumulusCI repository onto your computer
-
-CumulusCI is a continuous integration system that aids in our development process. To set it up, you'll need to clone another github repository onto your local machine, then setup an environment variable so that we know where to find that code.
-
-### Cloning CumulusCI.
-
-In the command line, go to another directory where you'd like to store CumulusCI, and run:
-
-~~~
-git clone https://github.com/SalesforceFoundation/CumulusCI.git
-~~~
-
-Make sure to take note of this directory as we'll need it later. We're not creating a fork here as we're not expecting to make any changes to CumulusCI, although if you want to contribute to our continuous integration system, that's more than welcome.
-
-# One last thing...
-
-We need to add the environment variable CUMULUSCI_PATH with the path to our local CumulusCI repository.
-
-First, open your ~/.bash_profile file, creating one first if you don't have one:
-
-~~~
-touch ~/.bash_profile
-open ~/.bash_profile
-~~~
-
-Then, put the following line in your file:
-
-~~~
-export CUMULUSCI_PATH=~/Documents/dev/CumulusCI/
-~~~
-
-Lastly, back in the command line, run:
-
-~~~
-source ~/.bash_profile
-~~~
 
 # Woot!
 
