@@ -34,6 +34,9 @@
 * @group-content ../../ApexDocContent/EngagementPlans.htm
 * @description When a Task created by an Engagement Plan is given a Closed status, checks for dependent Tasks
 * and updates them by changing the status, updating the due date, and sending email.
+*
+* This class is not marked with sharing as it needs access to Tasks dependent on those in the trigger 
+* set that are potentially owned by other users.
 */
 public class EP_TaskDependency_TDTM extends TDTM_Runnable {
 
