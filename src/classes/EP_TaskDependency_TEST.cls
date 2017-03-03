@@ -352,9 +352,7 @@ private with sharing class EP_TaskDependency_TEST {
             Engagement_Plan_Template__c = template.id
         );
 
-        Test.startTest();
         insert plan;
-        Test.stopTest();
 
         List<Task> results = [SELECT Id, OwnerId, WhoId, Type, Status, Subject, ActivityDate, Priority, Description,
                             IsReminderSet, ReminderDateTime FROM Task WHERE WhoId = :con.id ORDER BY ActivityDate];
@@ -367,7 +365,9 @@ private with sharing class EP_TaskDependency_TEST {
         parentTask.Status = UTIL_UnitTestData_TEST.getClosedTaskStatus();
 
         try {
+            Test.startTest();
             update parentTask;
+            Test.stopTest();
         } catch (Exception ex) {
             System.assert(false, 'No exception should have been thrown: ' + ex);
         }
