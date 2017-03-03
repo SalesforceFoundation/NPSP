@@ -17,21 +17,11 @@ This document outlines everything you need to know to start contributing code to
     - Copy your forked repository to your local machine
         - ```git clone git@github.com:[YourUserName]/Cumulus.git``` (ssh) *or*
         - ```git clone https://github.com/[YourUserName]/Cumulus.git``` (https) 
-2. [Set up Salesforce Developer Edition](Developer-Edition-Salesforce-Instance.html)
-3. [Set up Cumulus CI 2](http://cumulusci.readthedocs.io/en/latest/tutorial.html)
-    - Install prerequisites and CumulusCI
-    - Set CUMULUSCI_KEY environment variable
-    - **Skip** Project Initialization steps - the cloned repo is already set up for CumulusCI
-    - Create Connected App
-    - Connect the Developer Edition org you created in and set as default.
-    - Run the ```dev_org``` CCI flow
-        - ```cci flow run dev_org```
-    - Run the ```test_data_dev_org``` flow to get some NPSP test data in there (optional but recommended)
-        - ```cci flow run test_data_dev_org```
-4. Set up an IDE
+2. [Set up Salesforce Developer Edition and CumulusCI](Developer-Edition-Salesforce-Instance.html)
+3. Set up an IDE
     - [Force.com IDE](Force.com-IDE-Setup.html)
     - [Alternate IDEs](Alternate-IDEs.html) (MavensMate, et al.)
-5. [Do the work!](Do-the-Work.html)
+4. [Do the work!](Do-the-Work.html)
     - [ApexDoc](http://developer.salesforcefoundation.org/Cumulus/ApexDocumentation/) - documentation of the NPSP codebase
     - [Coding conventions](Coding-Conventions.html) 
     - [TDTM](http://developer.salesforcefoundation.org/index.html#blog/post/2014/11/24/table-driven-trigger-management.html) - explanation of the Table-Driven Trigger Management used in NPSP  

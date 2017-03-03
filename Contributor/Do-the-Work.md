@@ -16,6 +16,8 @@ We recommend always posting on the issue to see if it makes sense to pick it up,
 
 You may have your own ideas for features or feature enhancements that you want to create and make available to the world. That’s great! The first step is to read this [list of considerations](http://www.salesforce.org/help/contribute-nonprofit-success-pack/#developer) to make sure that your idea is appropriate. If your idea meets those criteria, the best next step is to [create an Idea in the Hub](https://powerofus.force.com/hub-ideas) that describes what you want to build. You can also post to the [Power of Us Hub’s Nonprofit Success Pack Contributors group](https://powerofus.force.com/0F980000000CtL2) to discuss ideas or find inspiration from the community. Ideas for features that have support from others in the community and meet all the contribution criteria are the most likely to be accepted and incorporated into the Nonprofit Success Pack.
 
+If your idea is not suitable for inclusion in the core NPSP package, but is still applicable to a substantial group of users, you may want to create an [extension package](https://help.salesforce.com/apex/HTViewHelpDoc?id=publish_extensions.htm&language=en). There is a GitHub repository with a [template for NPSP extension packages](https://github.com/SalesforceFoundation/NPSP-Extension-Template) that you can use as a starting point.
+
 # Git branching
 
 When you clone your fork of the Cumulus repository onto your local computer, you'll be in the 'dev' branch. For each new feature or issue that you work on, you'll want to create a new branch. You can create and "checkout" (ie, start to work on) a new branch like so:

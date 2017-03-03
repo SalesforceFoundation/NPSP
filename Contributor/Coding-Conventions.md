@@ -30,7 +30,7 @@ Classes, methods, and attributes should also include comments at the top that wi
 ## ApexDoc Comment Blocks
 ApexDoc comment blocks must always begin with /** (NPSP standard is to continue the asterisks across the whole line) and can cover multiple lines. Each line must start with * (or whitespace and then *). The comment block ends with */.  Within the block, special tokens, called out with ```@token```, identify the documentation to include for a given class, property, or method. 
 
-### Classes
+### Class comments
 Classes' ApexDoc block is located in the lines above the class declaration.  The special tokens are all technically optional, but for NPSP contributions, please include ```@author```, ```@date```,  ```@description``` and ```@group```. The ```@group``` value should usually be one of the existing groups - see the left-hand navigation of the [current ApexDocs](http://developer.salesforce.org/Cumulus/ApexDocumentation/). 
 
 | token | description |
@@ -96,7 +96,14 @@ Example
         get {
 ```
 
-# Table-driven Trigger Management (TDTM)
+# Other Code Conventions
+
+1. Use whitespace to make code more readable. Put a space:
+    - between ```if``` or ```for``` and their condition: ```if (foo)``` **not** ```if(foo)```
+    - on either side of an assignment or comparison operator: ```foo >= 3``` **not** ```foo >= 3```
+2. Individual test methods should use the ```testmethod``` scope in their declaration, rather than the ```@isTest``` annotation. This is to support proper parsing by ApexDoc. 
+
+# Table-Driven Trigger Management (TDTM)
 
 NPSP uses [TDTM](http://developer.salesforcefoundation.org/index.html#blog/post/2014/11/24/table-driven-trigger-management.html) to handle all trigger-based functionality. Please read the blog post and look at existing classes and triggers before starting on any new trigger functionality. The following principles apply:
 
@@ -109,6 +116,7 @@ NPSP uses [TDTM](http://developer.salesforcefoundation.org/index.html#blog/post/
 # Custom Labels
 
 All user-facing text should support translation.
+
 1. Object & field names should always be displayed to users by their Labels.
 2. All other user-facing text should be stored in Custom Labels.
 	- new Custom Labels should be created in English as the default
@@ -122,4 +130,4 @@ If your functionality requires or allows configuration by admins, you'll need to
 
 # NPSP Utility Classes
 
-The NPSP codebase includes a number of [Utility classes](http://developer.salesforce.org/Cumulus/ApexDocumentation/Utilities.html). Familiarize yourself with them and make use of them in your code.  
+The NPSP codebase includes a number of [Utility classes](http://developer.salesforce.org/Cumulus/ApexDocumentation/Utilities.html). Familiarize yourself with them and make use of them in your code. 
