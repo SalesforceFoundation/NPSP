@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Level --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Level --></value>
+    </caseValues>
+    <fields>
+        <help>Indique si ce niveau est utilisé actuellement.</help>
+        <label>Actif</label>
+        <name>Active__c</name>
+    </fields>
+    <fields>
+        <help>Décrit à quoi correspond ce niveau, ou ce que cela signifie d’atteindre ce niveau.</help>
+        <label><!-- Description --></label>
+        <name>Description__c</name>
+    </fields>
+    <fields>
+        <help>Le modèle de plan d’engagement à appliquer à l’objet cible lorsque ce niveau est atteint.</help>
+        <label>Modèle de plan d’engagement</label>
+        <name>Engagement_Plan_Template__c</name>
+        <relationshipLabel>Niveaux</relationshipLabel>
+    </fields>
+    <fields>
+        <help>Le champ (nom de développement) sur l’objet cible vers lequel enregistrer le lien vers le niveau actuel.  Notez que ce champ définit implicitement « l’échelon » auquel ce niveau appartient.</help>
+        <label>Champ de niveau</label>
+        <name>Level_Field__c</name>
+    </fields>
+    <fields>
+        <help>Le montant maximal sous lequel la valeur doit rester pour que ce niveau lui soit attribué.  Si vide, alors tout montant supérieur ou égal au montant minimal attribuera ce niveau.</help>
+        <label>Montant maximal (&lt;)</label>
+        <name>Maximum_Amount__c</name>
+    </fields>
+    <fields>
+        <help>Le montant minimal pour que ce niveau soit attribué.  Si vide, alors tout montant inférieur au montant maximal attribuera ce niveau.</help>
+        <label>Montant minimal (&gt;=)</label>
+        <name>Minimum_Amount__c</name>
+    </fields>
+    <fields>
+        <help>Le champ (nom de développement) sur l’objet cible vers lequel enregistrer le lien vers le niveau précédent de l’objet.  Facultatif.</help>
+        <label>Champ de niveau précédent</label>
+        <name>Previous_Level_Field__c</name>
+    </fields>
+    <fields>
+        <help>Le champ (nom de développement) de l’objet cible qui définit le montant et la période sur lesquels ce niveau est basé.</help>
+        <label>Champ source</label>
+        <name>Source_Field__c</name>
+    </fields>
+    <fields>
+        <help>L’objet auquel ce niveau s’applique.</help>
+        <label>Cible</label>
+        <name>Target__c</name>
+        <picklistValues>
+            <masterLabel>Account</masterLabel>
+            <translation>Compte</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Contact</masterLabel>
+            <translation><!-- Contact --></translation>
+        </picklistValues>
+    </fields>
+    <gender><!-- Masculine --></gender>
+    <layouts>
+        <layout>Level Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>section de texte longue</label>
+            <section>long text section</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Level Name --></nameFieldLabel>
+    <startsWith><!-- Consonant --></startsWith>
+    <validationRules>
+        <errorMessage>La cible est un champ obligatoire du niveau.  Veuillez indiquer l’objet cible pour ce niveau.</errorMessage>
+        <name>Target_Required</name>
+    </validationRules>
+</CustomObjectTranslation>
