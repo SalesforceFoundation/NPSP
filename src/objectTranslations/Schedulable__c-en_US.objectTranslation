@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value>Schedulable</value>
+        <value>DEPRECATED-Schedulable</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value>Schedulabls</value>
+        <value>DEPRECATED-Schedulables</value>
     </caseValues>
     <fields>
         <help><!-- Determines if the job will be active or not. --></help>

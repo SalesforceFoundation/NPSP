@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- NPSP Data Import --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- NPSP Data Import --></value>
+    </caseValues>
+    <fields>
+        <label>Statut d’importation du Account1</label>
+        <name>Account1ImportStatus__c</name>
+    </fields>
+    <fields>
+        <label>Account1 importé</label>
+        <name>Account1Imported__c</name>
+        <relationshipLabel>Importation de données NPSP (Account1 importé)</relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Account1.BillingCity --></help>
+        <label>Ville du Account1</label>
+        <name>Account1_City__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account1.BillingCountry --></help>
+        <label>Pays du Account1</label>
+        <name>Account1_Country__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account1.Name --></help>
+        <label>Nom du Account1</label>
+        <name>Account1_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account1.Phone --></help>
+        <label>Téléphone du Account1</label>
+        <name>Account1_Phone__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account1.BillingState --></help>
+        <label>Région/Province du Account1</label>
+        <name>Account1_State_Province__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account1.BillingStreet --></help>
+        <label>Adresse du Account1</label>
+        <name>Account1_Street__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account1.Website --></help>
+        <label>Site Web du Account1</label>
+        <name>Account1_Website__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account1.BillingPostalCode --></help>
+        <label>Code postal du Account1</label>
+        <name>Account1_Zip_Postal_Code__c</name>
+    </fields>
+    <fields>
+        <label>Statut d’importation du Account2</label>
+        <name>Account2ImportStatus__c</name>
+    </fields>
+    <fields>
+        <label>Account2 importé</label>
+        <name>Account2Imported__c</name>
+        <relationshipLabel>Importation de données NPSP (Account2 importé)</relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Account2.BillingCity --></help>
+        <label>Ville du Account2</label>
+        <name>Account2_City__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account2.BillingCountry --></help>
+        <label>Pays du Account2</label>
+        <name>Account2_Country__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account2.Name --></help>
+        <label>Nom du Account2</label>
+        <name>Account2_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account2.Phone --></help>
+        <label>Téléphone du Account2</label>
+        <name>Account2_Phone__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account2.BillingState --></help>
+        <label>Région/Province du Account2</label>
+        <name>Account2_State_Province__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account2.BillingStreet --></help>
+        <label>Adresse du Account2</label>
+        <name>Account2_Street__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account2.Website --></help>
+        <label>Site Web du Account2</label>
+        <name>Account2_Website__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account2.BillingPostalCode --></help>
+        <label>Code postal du Account2</label>
+        <name>Account2_Zip_Postal_Code__c</name>
+    </fields>
+    <fields>
+        <help>L’identifiant ApexJobId de la tâche par lot ayant traité l’enregistrement.</help>
+        <label><!-- ApexJobId --></label>
+        <name>ApexJobId__c</name>
+    </fields>
+    <fields>
+        <label>Statut de membre de campagne</label>
+        <name>Campaign_Member_Status__c</name>
+    </fields>
+    <fields>
+        <label>Statut d’importation du Contact1</label>
+        <name>Contact1ImportStatus__c</name>
+    </fields>
+    <fields>
+        <label>Contact1 importé</label>
+        <name>Contact1Imported__c</name>
+        <relationshipLabel>Importation de données NPSP (Contact1 importé)</relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Contact1.npe01__AlternateEmail__c --></help>
+        <label>E-mail secondaire du Contact1</label>
+        <name>Contact1_Alternate_Email__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.Birthdate --></help>
+        <label>Date de naissance du Contact1</label>
+        <name>Contact1_Birthdate__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.Firstname --></help>
+        <label>Prénom du Contact1</label>
+        <name>Contact1_Firstname__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.HomePhone --></help>
+        <label>Téléphone domicile du Contact1</label>
+        <name>Contact1_Home_Phone__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.Lastname --></help>
+        <label>Nom de famille du Contact1</label>
+        <name>Contact1_Lastname__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.MobilePhone --></help>
+        <label>Téléphone mobile du Contact1</label>
+        <name>Contact1_Mobile_Phone__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.OtherPhone --></help>
+        <label>Autre téléphone du Contact1</label>
+        <name>Contact1_Other_Phone__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.npe01__HomeEmail__c --></help>
+        <label>E-mail personnel du Contact1</label>
+        <name>Contact1_Personal_Email__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.npe01__Preferred_Email__c --></help>
+        <label>E-mail préféré du Contact1</label>
+        <name>Contact1_Preferred_Email__c</name>
+        <picklistValues>
+            <masterLabel>Alternate</masterLabel>
+            <translation>Autre</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Personal</masterLabel>
+            <translation>Personnel</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>Travail</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Contact1.npe01__PreferredPhone__c --></help>
+        <label>Téléphone préféré du Contact1</label>
+        <name>Contact1_Preferred_Phone__c</name>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation>Domicile</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mobile</masterLabel>
+            <translation><!-- Mobile --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation>Autre</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>Travail</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Contact1.Salutation --></help>
+        <label>Formule de salutation du Contact1</label>
+        <name>Contact1_Salutation__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.Title --></help>
+        <label>Titre du Contact1</label>
+        <name>Contact1_Title__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.npe01__WorkEmail__c --></help>
+        <label>E-mail professionnel du Contact1</label>
+        <name>Contact1_Work_Email__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.npe01__WorkPhone__c --></help>
+        <label>Téléphone professionnel du Contact1</label>
+        <name>Contact1_Work_Phone__c</name>
+    </fields>
+    <fields>
+        <label>Statut d’importation du Contact2</label>
+        <name>Contact2ImportStatus__c</name>
+    </fields>
+    <fields>
+        <label>Contact2 importé</label>
+        <name>Contact2Imported__c</name>
+        <relationshipLabel>Importation de données NPSP (Contact2 importé)</relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Contact2.npe01__AlternateEmail__c --></help>
+        <label>E-mail secondaire du Contact2</label>
+        <name>Contact2_Alternate_Email__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.Birthdate --></help>
+        <label>Date de naissance du Contact2</label>
+        <name>Contact2_Birthdate__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.Firstname --></help>
+        <label>Prénom du Contact2</label>
+        <name>Contact2_Firstname__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.HomePhone --></help>
+        <label>Téléphone domicile du Contact2</label>
+        <name>Contact2_Home_Phone__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.Lastname --></help>
+        <label>Nom de famille du Contact2</label>
+        <name>Contact2_Lastname__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.MobilePhone --></help>
+        <label>Téléphone mobile du Contact2</label>
+        <name>Contact2_Mobile_Phone__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.OtherPhone --></help>
+        <label>Autre téléphone du Contact2</label>
+        <name>Contact2_Other_Phone__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.npe01__HomeEmail__c --></help>
+        <label>E-mail personnel du Contact2</label>
+        <name>Contact2_Personal_Email__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.npe01__Preferred_Email__c --></help>
+        <label>E-mail préféré du Contact2</label>
+        <name>Contact2_Preferred_Email__c</name>
+        <picklistValues>
+            <masterLabel>Alternate</masterLabel>
+            <translation>Autre</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Personal</masterLabel>
+            <translation>Personnel</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>Travail</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Contact2.npe01__PreferredPhone__c --></help>
+        <label>Téléphone préféré du Contact2</label>
+        <name>Contact2_Preferred_Phone__c</name>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation>Domicile</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mobile</masterLabel>
+            <translation><!-- Mobile --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation>Autre</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>Travail</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Contact2.Salutation --></help>
+        <label>Formule de salutation du Contact2</label>
+        <name>Contact2_Salutation__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.Title --></help>
+        <label>Titre du Contact2</label>
+        <name>Contact2_Title__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.npe01__WorkEmail__c --></help>
+        <label>E-mail professionnel du Contact2</label>
+        <name>Contact2_Work_Email__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.npe01__WorkPhone__c --></help>
+        <label>Téléphone professionnel du Contact2</label>
+        <name>Contact2_Work_Phone__c</name>
+    </fields>
+    <fields>
+        <label>Statut d’importation du don</label>
+        <name>DonationImportStatus__c</name>
+    </fields>
+    <fields>
+        <label>Don importé</label>
+        <name>DonationImported__c</name>
+        <relationshipLabel>Importations de données NPSP</relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.Amount --></help>
+        <label>Montant du don</label>
+        <name>Donation_Amount__c</name>
+    </fields>
+    <fields>
+        <label>Nom de la campagne</label>
+        <name>Donation_Campaign_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.CloseDate --></help>
+        <label>Date du don</label>
+        <name>Donation_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.Description --></help>
+        <label>Description du don</label>
+        <name>Donation_Description__c</name>
+    </fields>
+    <fields>
+        <help>Indique si le don est un don individuel du Contact1, ou un don organisationnel du Account1.</help>
+        <label>Donateur</label>
+        <name>Donation_Donor__c</name>
+        <picklistValues>
+            <masterLabel>Account1</masterLabel>
+            <translation><!-- Account1 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Contact1</masterLabel>
+            <translation><!-- Contact1 --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.npe01__Member_Level__c --></help>
+        <label>Niveau de membre du don</label>
+        <name>Donation_Member_Level__c</name>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.npe01__Membership_End_Date__c --></help>
+        <label>Date de fin d’adhésion du don</label>
+        <name>Donation_Membership_End_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.npe01__Membership_Origin__c --></help>
+        <label>Origine d’adhésion du don</label>
+        <name>Donation_Membership_Origin__c</name>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.npe01__Membership_Start_Date__c --></help>
+        <label>Date de début d’adhésion du don</label>
+        <name>Donation_Membership_Start_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.Name --></help>
+        <label>Nom du don</label>
+        <name>Donation_Name__c</name>
+    </fields>
+    <fields>
+        <help>Le nom du type d’enregistrement d’opportunité à utiliser pour le don. Le type d’enregistrement par défaut sera utilisé si ce nom est laissé vide.</help>
+        <label>Nom de type d’enregistrement du don</label>
+        <name>Donation_Record_Type_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.StageName --></help>
+        <label>Étape du don</label>
+        <name>Donation_Stage__c</name>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.Type --></help>
+        <label>Type de don</label>
+        <name>Donation_Type__c</name>
+    </fields>
+    <fields>
+        <help>Description de ce qui a empêché l’importation de l’enregistrement d’importation de données.</help>
+        <label>Information d’échec</label>
+        <name>FailureInformation__c</name>
+    </fields>
+    <fields>
+        <label>Statut d’importation adresse de domicile</label>
+        <name>HomeAddressImportStatus__c</name>
+    </fields>
+    <fields>
+        <label>Adresse de domicile importée</label>
+        <name>HomeAddressImported__c</name>
+        <relationshipLabel>Importations de données NPSP</relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Address.npsp__MailingCity__c --></help>
+        <label>Ville (domicile)</label>
+        <name>Home_City__c</name>
+    </fields>
+    <fields>
+        <help><!-- Address.npsp__MailingCountry__c --></help>
+        <label>Pays (domicile)</label>
+        <name>Home_Country__c</name>
+    </fields>
+    <fields>
+        <help><!-- Address.npsp__MailingState__c --></help>
+        <label>Région/Province (domicile)</label>
+        <name>Home_State_Province__c</name>
+    </fields>
+    <fields>
+        <help><!-- Address.npsp__MailingStreet__c --></help>
+        <label>Rue (domicile)</label>
+        <name>Home_Street__c</name>
+    </fields>
+    <fields>
+        <help><!-- Address.npsp__MailingPostalCode__c --></help>
+        <label>Code postal du domicile</label>
+        <name>Home_Zip_Postal_Code__c</name>
+    </fields>
+    <fields>
+        <label>Compte de foyer importé</label>
+        <name>HouseholdAccountImported__c</name>
+        <relationshipLabel>Importation de données NPSP (compte de foyer importé)</relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Household.Phone --></help>
+        <label>Téléphone de foyer</label>
+        <name>Household_Phone__c</name>
+    </fields>
+    <fields>
+        <help>Date à laquelle l’enregistrement d’importation de données a été importé avec succès.</help>
+        <label>Date d’importation</label>
+        <name>ImportedDate__c</name>
+    </fields>
+    <fields>
+        <help><!-- Payment.npe01__Check_Reference_Number__c --></help>
+        <label>Chèque de paiement / Numéro de référence</label>
+        <name>Payment_Check_Reference_Number__c</name>
+    </fields>
+    <fields>
+        <help><!-- Payment.npe01__Payment_Method__c --></help>
+        <label>Mode de paiement</label>
+        <name>Payment_Method__c</name>
+    </fields>
+    <fields>
+        <help>Le statut de l’importation de l’enregistrement d’importation de données.</help>
+        <label>Statut</label>
+        <name>Status__c</name>
+        <picklistValues>
+            <masterLabel>Failed</masterLabel>
+            <translation>Échec</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Imported</masterLabel>
+            <translation>Importé</translation>
+        </picklistValues>
+    </fields>
+    <gender><!-- Masculine --></gender>
+    <layouts>
+        <layout>Data Import Layout</layout>
+        <sections>
+            <label>Informations sur le Account1</label>
+            <section>Account1 Organization Information</section>
+        </sections>
+        <sections>
+            <label>Informations sur le Account2</label>
+            <section>Account2 Organization Information</section>
+        </sections>
+        <sections>
+            <label><!-- Campaign Information --></label>
+            <section>Campaign Information</section>
+        </sections>
+        <sections>
+            <label>Informations sur le Contact1</label>
+            <section>Contact1 Information</section>
+        </sections>
+        <sections>
+            <label>Informations sur le Contact2</label>
+            <section>Contact2 Information</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>Informations sur les dons</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Adresse de domicile</label>
+            <section>Home Address</section>
+        </sections>
+        <sections>
+            <label><!-- Household Account Information --></label>
+            <section>Household Account Information</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Data Import ID --></nameFieldLabel>
+    <startsWith><!-- Consonant --></startsWith>
+    <webLinks>
+        <label>Supprimer tous les enregistrements d’importation de données</label>
+        <name>Delete_All_Data_Import_Records</name>
+    </webLinks>
+    <webLinks>
+        <label>Supprimer les enregistrements d’importation de données importés</label>
+        <name>Delete_Imported_Data_Import_Records</name>
+    </webLinks>
+    <webLinks>
+        <label>Démarrer l’importation de données</label>
+        <name>Process_Data_Import</name>
+    </webLinks>
+</CustomObjectTranslation>

@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <help>Date de confirmation</help>
+        <label>Date de confirmation</label>
+        <name>Acknowledgment_Date__c</name>
+    </fields>
+    <fields>
+        <help>Statut de la confirmation de ce don.</help>
+        <label>Statut de confirmation</label>
+        <name>Acknowledgment_Status__c</name>
+        <picklistValues>
+            <masterLabel>Acknowledged</masterLabel>
+            <translation>Confirmé</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Do Not Acknowledge</masterLabel>
+            <translation>Ne pas confirmer</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Email Acknowledgment Not Sent</masterLabel>
+            <translation>E-mail de confirmation non envoyé</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Email Acknowledgment Now</masterLabel>
+            <translation>E-mail de confirmation maintenant</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>To Be Acknowledged</masterLabel>
+            <translation>À confirmer</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>La date à laquelle ce don a été spécifiquement demandé à ce donateur, différente de la date de fermeture de l’opportunité qui peut avoir été définie soit lors de la création de l’opportunité soit lorsque l’opportunité a été gagnée.</help>
+        <label>Date de demande</label>
+        <name>Ask_Date__c</name>
+    </fields>
+    <fields>
+        <label>Lot</label>
+        <name>Batch__c</name>
+        <relationshipLabel>Opportunités</relationshipLabel>
+    </fields>
+    <fields>
+        <help>Notes sur les raisons pour lesquelles la demande de don n’a pas eu de réponse positive.</help>
+        <label>Motif de fermeture - perte</label>
+        <name>Closed_Lost_Reason__c</name>
+    </fields>
+    <fields>
+        <help>La valeur marchande d’un don en nature.</help>
+        <label>Valeur marchande</label>
+        <name>Fair_Market_Value__c</name>
+    </fields>
+    <fields>
+        <help>Catégorise le type de demande pour cette opportunité.</help>
+        <label>Stratégie de don</label>
+        <name>Gift_Strategy__c</name>
+        <picklistValues>
+            <masterLabel>New Donor</masterLabel>
+            <translation>Nouveau donneur</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Renewal</masterLabel>
+            <translation>Renouvellement</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Upgrade</masterLabel>
+            <translation>Mettre à niveau</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>La date de commencement de la subvention, selon le document ou contrat envoyé par l’organisation source de la subvention</help>
+        <label>Date de contrat de subvention</label>
+        <name>Grant_Contract_Date__c</name>
+    </fields>
+    <fields>
+        <help>Enregistre les numéros uniques qui peuvent être attribués par les organisations octroyant des subventions.</help>
+        <label>Numéro de contrat de subvention</label>
+        <name>Grant_Contract_Number__c</name>
+    </fields>
+    <fields>
+        <label>Date de fin de la période de subvention</label>
+        <name>Grant_Period_End_Date__c</name>
+    </fields>
+    <fields>
+        <label>Date de début de période de subvention</label>
+        <name>Grant_Period_Start_Date__c</name>
+    </fields>
+    <fields>
+        <help>Décrit les zones de financement pour la subvention. Vous pouvez saisir ce que vous souhaitez ici. Vous pouvez par exemple écrire le nom du programme auquel la subvention s’applique.</help>
+        <label>Zones de programme</label>
+        <name>Grant_Program_Area_s__c</name>
+    </fields>
+    <fields>
+        <help>Une URL pointant vers les exigences de subvention sur le site Web du pourvoyeur de la subvention.</help>
+        <label>Site Web des exigences de subventions</label>
+        <name>Grant_Requirements_Website__c</name>
+    </fields>
+    <fields>
+        <help>L’enregistrement de contact honoraire existant pour ce don.</help>
+        <label>Contact honoraire</label>
+        <name>Honoree_Contact__c</name>
+        <relationshipLabel>Opportunités (contact honoraire)</relationshipLabel>
+    </fields>
+    <fields>
+        <help>Le nom du représentant honoraire tel que fourni par le donateur. Si ce champ est laissé vide, et que le champ de contact honoraire contient une valeur, Salesforce remplit automatiquement ce champ avec cette valeur.</help>
+        <label>Nom du représentant honoraire</label>
+        <name>Honoree_Name__c</name>
+    </fields>
+    <fields>
+        <help>Contient une description en texte enrichi du don en nature, pouvant inclure des images.</help>
+        <label>Description de don en nature</label>
+        <name>In_Kind_Description__c</name>
+    </fields>
+    <fields>
+        <help>Coché si le donneur a fourni la valeur marchande pour ce don en nature.</help>
+        <label>Valeur déclarée par le donneur</label>
+        <name>In_Kind_Donor_Declared_Value__c</name>
+    </fields>
+    <fields>
+        <help>Le type de don en nature.</help>
+        <label>Type de don en nature</label>
+        <name>In_Kind_Type__c</name>
+        <picklistValues>
+            <masterLabel>Goods</masterLabel>
+            <translation>Biens</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Services</masterLabel>
+            <translation><!-- Services --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Si sélectionné, indique que la subvention est un renouvellement d’une subvention antérieure.</help>
+        <label>Renouvellement de subvention</label>
+        <name>Is_Grant_Renewal__c</name>
+    </fields>
+    <fields>
+        <help><!-- The account of the company who will match this gift. --></help>
+        <label>Compte de don jumelé</label>
+        <name>Matching_Gift_Account__c</name>
+        <relationshipLabel>Dons jumelés</relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The name of the company who will match this gift. --></help>
+        <label>Employeur de don jumelé</label>
+        <name>Matching_Gift_Employer__c</name>
+    </fields>
+    <fields>
+        <help><!-- The status of this gift being matched. --></help>
+        <label>Statut de don jumelé</label>
+        <name>Matching_Gift_Status__c</name>
+        <picklistValues>
+            <masterLabel>Potential</masterLabel>
+            <translation>Potentiel</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Received</masterLabel>
+            <translation>Reçu</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Submitted</masterLabel>
+            <translation>Soumis</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- The employer&apos;s matching gift for this employee&apos;s gift. --></help>
+        <label>Don jumelé</label>
+        <name>Matching_Gift__c</name>
+        <relationshipLabel>Dons jumelés</relationshipLabel>
+    </fields>
+    <fields>
+        <help>NPSP met à jour ce champ automatiquement en fonction de l’enregistrement de prochaine échéance de subvention.</help>
+        <label>Date du prochain livrable</label>
+        <name>Next_Grant_Deadline_Due_Date__c</name>
+    </fields>
+    <fields>
+        <help>Un message personnalisé pour le destinataire de la notification.</help>
+        <label>Message de notification</label>
+        <name>Notification_Message__c</name>
+    </fields>
+    <fields>
+        <help>Comment contacter le destinataire de la notification.</help>
+        <label>Préférence de notification</label>
+        <name>Notification_Preference__c</name>
+        <picklistValues>
+            <masterLabel>Do Not Notify</masterLabel>
+            <translation>Ne pas notifier</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Email</masterLabel>
+            <translation>E-mail</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Phone</masterLabel>
+            <translation>Téléphone</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Postal Mail</masterLabel>
+            <translation>Courrier postal</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>L’enregistrement de contact existant de la personne à notifier pour ce don.</help>
+        <label>Contact destinataire de notification</label>
+        <name>Notification_Recipient_Contact__c</name>
+        <relationshipLabel>Opportunités (destinataire de notification)</relationshipLabel>
+    </fields>
+    <fields>
+        <help>Les informations sur le contact pour le destinataire de la notification, fournies par le donateur.</help>
+        <label>Infos sur destinataire de notification</label>
+        <name>Notification_Recipient_Information__c</name>
+    </fields>
+    <fields>
+        <help>Le nom de la personne devant être notifiée à propos de ce don, fourni par le donneur. Si ce champ est laissé vide et que le champ du destinataire de la notification contient une valeur, Salesforce remplit automatiquement ce champ avec cette valeur.</help>
+        <label>Nom du destinataire de notification</label>
+        <name>Notification_Recipient_Name__c</name>
+    </fields>
+    <fields>
+        <help>Si cette subvention est un renouvellement d’une subvention passée, utilisez ce champ pour relier cet enregistrement au précédent.</help>
+        <label>Opportunité de subvention/don précédente</label>
+        <name>Previous_Grant_Opportunity__c</name>
+        <relationshipLabel>Subventions/dons associés</relationshipLabel>
+    </fields>
+    <fields>
+        <help>Statut utilisé lors de la création d’un membre de campagne pour le contact principal de cette opp. et la source principale de campagne. Si vide, utilise par défaut un statut répondu pour les opp. fermées gagnées et un statut non répondu pour les autres.</help>
+        <label>Statut contact principal membre camp.</label>
+        <name>Primary_Contact_Campaign_Member_Status__c</name>
+    </fields>
+    <fields>
+        <help>Le contact principal pour cette opportunité. Le rôle de contact principal est synchronisé avec ce champ. Pour les dons individuels, ceci indique l’attribution pour cette opportunité.</help>
+        <label>Contact principal</label>
+        <name>Primary_Contact__c</name>
+        <relationshipLabel>Opportunités</relationshipLabel>
+    </fields>
+    <fields>
+        <help>La date à laquelle ce donateur a été identifié comme valide pour ce don.</help>
+        <label>Date de qualification</label>
+        <name>Qualified_Date__c</name>
+    </fields>
+    <fields>
+        <help>Nom de versement à inclure dans la dénomination de l’opp. Indique le numéro de versement entre parenthèses pour les dons réguliers sans date de fin, ou le numéro de versement par rapport au total pour les dons réguliers avec un nb de versements déterminé.</help>
+        <label>Nom de versement de don régulier</label>
+        <name>Recurring_Donation_Installment_Name__c</name>
+    </fields>
+    <fields>
+        <help>Le numéro de versement du calendrier du don régulier de cette opportunité.</help>
+        <label>Numéro de versement de don régulier</label>
+        <name>Recurring_Donation_Installment_Number__c</name>
+    </fields>
+    <fields>
+        <help>Le montant que vous demandez. Il peut être différent du montant final offert.</help>
+        <label>Montant demandé</label>
+        <name>Requested_Amount__c</name>
+    </fields>
+    <fields>
+        <help>Indique si le don est en l’honneur ou à la mémoire d’un individu.</help>
+        <label>Type d’hommage.</label>
+        <name>Tribute_Type__c</name>
+        <picklistValues>
+            <masterLabel>Honor</masterLabel>
+            <translation>Hommage</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Memorial</masterLabel>
+            <translation>Commémoration</translation>
+        </picklistValues>
+    </fields>
+    <layouts>
+        <layout>Donation Layout</layout>
+        <sections>
+            <label>Informations sur les dons</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label><!-- Matching Gift Information --></label>
+            <section>Matching Gift Information</section>
+        </sections>
+        <sections>
+            <label>Informations sur le paiement</label>
+            <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label><!-- Tribute Information --></label>
+            <section>Tribute Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Grant Layout</layout>
+        <sections>
+            <label>Informations sur les dons</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Informations sur la subvention</label>
+            <section>Grant Information</section>
+        </sections>
+        <sections>
+            <label>Informations sur le paiement</label>
+            <section>Payment Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>In-Kind Gift Layout</layout>
+        <sections>
+            <label>Informations sur les dons</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Informations sur le don en nature</label>
+            <section>In-Kind Information</section>
+        </sections>
+        <sections>
+            <label>Informations sur l’hommage</label>
+            <section>Tribute Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Major Gift Layout</layout>
+        <sections>
+            <label>Informations sur les dons</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Informations sur le don important</label>
+            <section>Major Gift Information</section>
+        </sections>
+        <sections>
+            <label><!-- Matching Gift Information --></label>
+            <section>Matching Gift Information</section>
+        </sections>
+        <sections>
+            <label>Informations sur le paiement</label>
+            <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label><!-- Tribute Information --></label>
+            <section>Tribute Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Matching Gift Layout</layout>
+        <sections>
+            <label>Informations sur les dons</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Informations sur le paiement</label>
+            <section>Payment Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Membership Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>Champs</label>
+            <section>Fields</section>
+        </sections>
+        <sections>
+            <label>Informations sur les membres</label>
+            <section>Member Information</section>
+        </sections>
+        <sections>
+            <label>Informations sur le paiement</label>
+            <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label><!-- System Information --></label>
+            <section>System Information</section>
+        </sections>
+    </layouts>
+    <quickActions>
+        <label>Nouveau paiement</label>
+        <name>New_Payment</name>
+    </quickActions>
+    <quickActions>
+        <label>Mise à jour rapide</label>
+        <name>Quick_Update</name>
+    </quickActions>
+    <webLinks>
+        <label>E-mail de confirmation</label>
+        <name>Email_Acknowledgment</name>
+    </webLinks>
+    <webLinks>
+        <label>E-mails de confirmation</label>
+        <name>Email_Acknowledgments</name>
+    </webLinks>
+    <webLinks>
+        <label>Trouver des dons jumelés</label>
+        <name>Find_Matched_Gifts</name>
+    </webLinks>
+    <webLinks>
+        <label>Gérer des crédits de groupe</label>
+        <name>Manage_Soft_Credits</name>
+    </webLinks>
+    <webLinks>
+        <label>Rafraîchir un nom</label>
+        <name>Refresh_Name</name>
+    </webLinks>
+</CustomObjectTranslation>

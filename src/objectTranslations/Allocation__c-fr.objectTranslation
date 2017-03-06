@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- GAU Allocation --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- GAU Allocation --></value>
+    </caseValues>
+    <fields>
+        <help>Montant de l’opportunité à allouer à cette unité comptable générale. Laissez blanc pour des allocations par pourcentages.</help>
+        <label>Montant</label>
+        <name>Amount__c</name>
+    </fields>
+    <fields>
+        <help>Optionnel, affecte les allocations à une campagne. Toutes les nouvelles opportunités créées avec cette campagne comme source de campagne principale seront automatiquement allouées de la même manière.</help>
+        <label>Campagne</label>
+        <name>Campaign__c</name>
+        <relationshipLabel>Allocations UCG</relationshipLabel>
+    </fields>
+    <fields>
+        <help>L’unité comptable générale à laquelle attribuer cette allocation. Seules les unités comptables marquées comme actives seront disponibles pour les nouvelles allocations.</help>
+        <label>Unité comptable générale</label>
+        <lookupFilter>
+            <errorMessage>Les allocations ne peuvent être assignées qu’à des unités comptables générales actives. Les allocations assignées à des unités comptables générales inactives ne peuvent pas être modifiées.</errorMessage>
+            <informationalMessage>Seules les unités comptables générales actives peuvent être sélectionnées.</informationalMessage>
+        </lookupFilter>
+        <name>General_Accounting_Unit__c</name>
+        <relationshipLabel>Allocations UCG</relationshipLabel>
+    </fields>
+    <fields>
+        <help>Attribue les allocations à une opportunité. Toutes les opportunités à une étape fermée et gagnée seront cumulées à l’unité comptable générale de cette allocation.</help>
+        <label>Opportunité</label>
+        <name>Opportunity__c</name>
+        <relationshipLabel>Allocations UCG</relationshipLabel>
+    </fields>
+    <fields>
+        <help>Pourcentage du montant de l’opportunité à allouer à cette unité comptable générale. La modification du montant de l’opportunité d’une allocation par pourcentage modifiera le montant de l’allocation.</help>
+        <label>Pourcentage</label>
+        <name>Percent__c</name>
+    </fields>
+    <fields>
+        <help>Optionnel, affecte les allocations à un don régulier. Toutes les nouvelles opportunités créées avec le calendrier de ce don régulier seront automatiquement allouées de la même manière.</help>
+        <label>Don régulier</label>
+        <name>Recurring_Donation__c</name>
+        <relationshipLabel>Allocations UCG</relationshipLabel>
+    </fields>
+    <gender><!-- Masculine --></gender>
+    <layouts>
+        <layout>Allocation Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- GAU Allocation Name --></nameFieldLabel>
+    <startsWith><!-- Consonant --></startsWith>
+    <webLinks>
+        <label>Gérer des allocations</label>
+        <name>Manage_Allocations</name>
+    </webLinks>
+</CustomObjectTranslation>

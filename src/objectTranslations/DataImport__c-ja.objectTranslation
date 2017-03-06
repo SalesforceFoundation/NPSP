@@ -486,11 +486,11 @@
     <layouts>
         <layout>Data Import Layout</layout>
         <sections>
-            <label>団体１情報</label>
+            <label>団体 1 情報</label>
             <section>Account1 Organization Information</section>
         </sections>
         <sections>
-            <label>団体２情報</label>
+            <label>団体 2 情報</label>
             <section>Account2 Organization Information</section>
         </sections>
         <sections>
