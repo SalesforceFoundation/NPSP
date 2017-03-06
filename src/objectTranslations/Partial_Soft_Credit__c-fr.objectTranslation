@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Partial Soft Credit --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Partial Soft Credit --></value>
+    </caseValues>
+    <fields>
+        <help>Le montant de crédit de groupe à créditer</help>
+        <label>Montant</label>
+        <name>Amount__c</name>
+    </fields>
+    <fields>
+        <help>Le nom complet du contact.</help>
+        <label>Nom du contact</label>
+        <name>Contact_Name__c</name>
+    </fields>
+    <fields>
+        <help>Le rôle de contact d’opportunité auquel ce crédit de groupe s’applique.</help>
+        <label>ID du rôle de contact</label>
+        <name>Contact_Role_ID__c</name>
+    </fields>
+    <fields>
+        <help>Le contact recevant ce crédit de groupe.</help>
+        <label><!-- Contact --></label>
+        <name>Contact__c</name>
+        <relationshipLabel>Crédits de groupe partiels</relationshipLabel>
+    </fields>
+    <fields>
+        <help>L’opportunité à laquelle ce crédit de groupe s’applique.</help>
+        <label>Opportunité</label>
+        <name>Opportunity__c</name>
+        <relationshipLabel>Crédits de groupe partiels</relationshipLabel>
+    </fields>
+    <fields>
+        <help>Le rôle de ce crédit de groupe</help>
+        <label>Nom de rôle</label>
+        <name>Role_Name__c</name>
+    </fields>
+    <gender><!-- Masculine --></gender>
+    <layouts>
+        <layout>Partial Soft Credit Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Partial Soft Credit Name --></nameFieldLabel>
+    <startsWith><!-- Consonant --></startsWith>
+    <webLinks>
+        <label>Gérer des crédits de groupe</label>
+        <name>Manage_Soft_Credits</name>
+    </webLinks>
+</CustomObjectTranslation>

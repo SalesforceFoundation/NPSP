@@ -9,61 +9,61 @@
         <value><!-- Engagement Plan --></value>
     </caseValues>
     <fields>
-        <label><!-- Account --></label>
+        <label>Cuenta</label>
         <name>Account__c</name>
-        <relationshipLabel><!-- Engagement Plans --></relationshipLabel>
+        <relationshipLabel>Planes de acción</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Campaign --></label>
+        <label>Campaña</label>
         <name>Campaign__c</name>
-        <relationshipLabel><!-- Engagement Plans --></relationshipLabel>
+        <relationshipLabel>Planes de acción</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Case --></label>
+        <label>Caso</label>
         <name>Case__c</name>
-        <relationshipLabel><!-- Engagement Plans --></relationshipLabel>
+        <relationshipLabel>Planes de acción</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Completed Tasks --></label>
+        <label>Tareas completas</label>
         <name>Completed_Tasks__c</name>
     </fields>
     <fields>
-        <label><!-- Contact --></label>
+        <label>Contacto</label>
         <name>Contact__c</name>
-        <relationshipLabel><!-- Engagement Plans --></relationshipLabel>
+        <relationshipLabel>Planes de acción</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Engagement Plan Template --></label>
+        <label>Plantilla de plan de acción</label>
         <name>Engagement_Plan_Template__c</name>
-        <relationshipLabel><!-- Engagement Plans --></relationshipLabel>
+        <relationshipLabel>Planes de acción</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Opportunity --></label>
+        <label>Oportunidad</label>
         <name>Opportunity__c</name>
-        <relationshipLabel><!-- Engagement Plans --></relationshipLabel>
+        <relationshipLabel>Planes de acción</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Recurring Donation --></label>
+        <label>Donación recurrente</label>
         <name>Recurring_Donation__c</name>
-        <relationshipLabel><!-- Engagement Plans --></relationshipLabel>
+        <relationshipLabel>Planes de acción</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Status --></label>
+        <label>Estado</label>
         <name>Status__c</name>
     </fields>
     <fields>
-        <label><!-- Total EP Tasks --></label>
+        <label>Cantidad de tareas en el plan</label>
         <name>Total_EP_Tasks__c</name>
     </fields>
     <fields>
-        <label><!-- Total Tasks --></label>
+        <label>Cantidad de tareas</label>
         <name>Total_Tasks__c</name>
     </fields>
     <gender><!-- Feminine --></gender>
     <layouts>
         <layout>Engagement Plan Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Vínculos personalizados</label>
             <section>Custom Links</section>
         </sections>
     </layouts>
