@@ -13,16 +13,16 @@ project:
         prefix_release: rel/
     dependencies:
         - namespace: npo02
-          version: 3.6
+          version: 3.7
           dependencies:
             - namespace: npe01
-              version: 3.4
+              version: 3.5
         - namespace: npe03
-          version: 3.5
+          version: 3.6
         - namespace: npe4
-          version: 3.3
+          version: 3.4
         - namespace: npe5
-          version: 3.3
+          version: 3.4
 
 tasks:
     download_browser_tests:
