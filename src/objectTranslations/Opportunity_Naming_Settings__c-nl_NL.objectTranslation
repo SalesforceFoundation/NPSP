@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Opportunity Naming Settings --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Opportunity Naming Settings --></value>
+    </caseValues>
+    <fields>
+        <help>Of deze instelling geldt voor individuele opportunities, organizational opportunities, of allebei.</help>
+        <label>Attributie</label>
+        <name>Attribution__c</name>
+    </fields>
+    <fields>
+        <help>Het formaat voor data ingesloten in deze opportunity naam.</help>
+        <label>Datum Formaat</label>
+        <name>Date_Format__c</name>
+    </fields>
+    <fields>
+        <help>Het formaat wat gebruikt moet worden voor het benoemen van een Opportunity.</help>
+        <label>Opportunity Naam Formaat</label>
+        <name>Opportunity_Name_Format__c</name>
+    </fields>
+    <fields>
+        <help>Specificeert het opportunity record type waar dit naamgeving schema voor is.</help>
+        <label><!-- Opportunity Record Types --></label>
+        <name>Opportunity_Record_Types__c</name>
+    </fields>
+    <gender><!-- Neuter --></gender>
+</CustomObjectTranslation>

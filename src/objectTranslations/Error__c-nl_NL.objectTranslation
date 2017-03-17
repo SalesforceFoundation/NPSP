@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Error --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Error --></value>
+    </caseValues>
+    <fields>
+        <help>Context die de fout gegenereerde, indien bekend.</help>
+        <label><!-- Context Type --></label>
+        <name>Context_Type__c</name>
+    </fields>
+    <fields>
+        <help>Datum en tijd wanneer de fout is opgetreden</help>
+        <label>Datum Tijd</label>
+        <name>Datetime__c</name>
+    </fields>
+    <fields>
+        <help>Geeft aan of een e-mail notificatie is verzonden met betrekking tot deze fout.</help>
+        <label>Email Verzonden</label>
+        <name>Email_Sent__c</name>
+    </fields>
+    <fields>
+        <help>Type fout die is opgetreden</help>
+        <label>Fouttype</label>
+        <name>Error_Type__c</name>
+    </fields>
+    <fields>
+        <help>Volledige Tekst van het foutbericht</help>
+        <label>Volledige Bericht</label>
+        <name>Full_Message__c</name>
+    </fields>
+    <fields>
+        <help>Type object waar de fout is opgetreden, indien bekend.</help>
+        <label>Type Object</label>
+        <name>Object_Type__c</name>
+    </fields>
+    <fields>
+        <help>Geeft aan of de fout is gepost in Chatter</help>
+        <label>Geplaatst in Chatter</label>
+        <name>Posted_in_Chatter__c</name>
+    </fields>
+    <fields>
+        <help>Een link naar het record die de fout veroorzaakte, indien beschikbaar.</help>
+        <label><!-- Record URL --></label>
+        <name>Record_URL__c</name>
+    </fields>
+    <fields>
+        <help>Stack trace for the geworpen fout, indien beschikbaar tijdens looptijd</help>
+        <label><!-- Stack Trace --></label>
+        <name>Stack_Trace__c</name>
+    </fields>
+    <gender><!-- Neuter --></gender>
+    <layouts>
+        <layout>Error Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Error Number --></nameFieldLabel>
+</CustomObjectTranslation>

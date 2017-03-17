@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Household --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Household --></value>
+    </caseValues>
+    <fields>
+        <help>het aantal Contactpersonen van het Huishouden</help>
+        <label>Aantal Leden Huishouden</label>
+        <name>Number_of_Household_Members__c</name>
+    </fields>
+    <gender><!-- Neuter --></gender>
+    <nameFieldLabel><!-- Household Name --></nameFieldLabel>
+    <quickActions>
+        <label>Update Huishouden</label>
+        <name>Update_Household</name>
+    </quickActions>
+</CustomObjectTranslation>

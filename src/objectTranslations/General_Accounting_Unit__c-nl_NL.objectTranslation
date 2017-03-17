@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- General Accounting Unit --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- General Accounting Unit --></value>
+    </caseValues>
+    <fields>
+        <help>Actieve standaard accounting units zijn beschikbaar bij allocaties. Inactieve standaard accounting units kunnen geen nieuwe allocaties hebben.</help>
+        <label>Actief</label>
+        <name>Active__c</name>
+    </fields>
+    <fields>
+        <help>Het gemiddelde van alle allocaties van alle tijden die bij deze standaard accounting unit horen</help>
+        <label>Gemiddelde Allocatie</label>
+        <name>Average_Allocation__c</name>
+    </fields>
+    <fields>
+        <help>Extra informatie over deze standaard accounting unit.</help>
+        <label>Beschrijving</label>
+        <name>Description__c</name>
+    </fields>
+    <fields>
+        <help>De eerste Opportunity sluitingsdatum van een allocatie geassocieerd met deze standaard accounting unit.</help>
+        <label>Eerste Allocatie Datum</label>
+        <name>First_Allocation_Date__c</name>
+    </fields>
+    <fields>
+        <help>De grootste allocatie van alle tijden die bij deze standaard accounting unit hoort.</help>
+        <label>Grootste Allocatie</label>
+        <name>Largest_Allocation__c</name>
+    </fields>
+    <fields>
+        <help>De laatste Opportunity sluitingsdatum van een allocatie geassocieerd met deze standaard accounting unit.</help>
+        <label>Laatste Allocatie Datum</label>
+        <name>Last_Allocation_Date__c</name>
+    </fields>
+    <fields>
+        <help>Totaal aantal allocaties van opportunities in een gesloten en gewonnen fase in de laatste N dagen. De waarde van N kan gewijzigd worden bij instellingen.</help>
+        <label>Aantal Allocaties Laatste N Dagen</label>
+        <name>Number_of_Allocations_Last_N_Days__c</name>
+    </fields>
+    <fields>
+        <help>Totaal aantal allocaties van opportunities in een gesloten en gewonnen fase van Vorig Jaar.</help>
+        <label>Aantal Allocaties Vorig Jaar</label>
+        <name>Number_of_Allocations_Last_Year__c</name>
+    </fields>
+    <fields>
+        <help>Totaal aantal allocaties van opportunities in een gesloten en gewonnen fase van Huidig Jaar</help>
+        <label>Aantal Allocaties Huidig Jaar</label>
+        <name>Number_of_Allocations_This_Year__c</name>
+    </fields>
+    <fields>
+        <help>Totaal aantal allocaties van opportunities in een gesloten en gewonnen fase van Twee Jaar Geleden</help>
+        <label>Aantal Allocaties Twee Jaar Geleden</label>
+        <name>Number_of_Allocations_Two_Years_Ago__c</name>
+    </fields>
+    <fields>
+        <help>De kleinste allocatie van alle tijden van deze standaard accounting unit.</help>
+        <label>Kleinste Allocatie</label>
+        <name>Smallest_Allocation__c</name>
+    </fields>
+    <fields>
+        <help>Som Totaal van alle allocaties van opportunities in een gesloten en gewonnen fase in de laatste N dagen. De waarde van N kan gewijzigd worden bij instellingen.</help>
+        <label>Allocaties Laatste N Dagen Totaal</label>
+        <name>Total_Allocations_Last_N_Days__c</name>
+    </fields>
+    <fields>
+        <help>Som Totaal van alle allocaties van opportunities in een gesloten en gewonnen fase van Vorig Jaar</help>
+        <label>Allocaties Vorig Jaar Totaal</label>
+        <name>Total_Allocations_Last_Year__c</name>
+    </fields>
+    <fields>
+        <help>Som Totaal van alle allocaties van opportunities in een gesloten en gewonnen fase van Huidig Jaar</help>
+        <label>Allocaties Huidig Jaar Totaal</label>
+        <name>Total_Allocations_This_Year__c</name>
+    </fields>
+    <fields>
+        <help>Som Totaal van alle allocaties van opportunities in een gesloten en gewonnen fase van Twee Jaar Geleden</help>
+        <label>Allocaties Twee Jaar Geleden Totaal</label>
+        <name>Total_Allocations_Two_Years_Ago__c</name>
+    </fields>
+    <fields>
+        <help>Som Totaal van alle allocaties van opportunities in een gesloten en gewonnen fase.</help>
+        <label>Allocaties Totaal</label>
+        <name>Total_Allocations__c</name>
+    </fields>
+    <fields>
+        <help>Totaal aantal allocaties van opportunities in een gesloten en gewonnen fase.</help>
+        <label>Totaal Aantal Allocaties</label>
+        <name>Total_Number_of_Allocations__c</name>
+    </fields>
+    <gender><!-- Neuter --></gender>
+    <layouts>
+        <layout>General Accounting Unit Layout</layout>
+        <sections>
+            <label>Allocatie Informatie</label>
+            <section>Allocation Information</section>
+        </sections>
+        <sections>
+            <label>Allocatie Totalen</label>
+            <section>Allocation Totals</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- General Accounting Unit Name --></nameFieldLabel>
+    <webLinks>
+        <label>Roll-ups Herberekenen</label>
+        <name>Recalculate_Rollups</name>
+    </webLinks>
+</CustomObjectTranslation>

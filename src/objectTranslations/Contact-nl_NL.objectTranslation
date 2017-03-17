@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <help>Als dit adres verificatie vereist, klik de Verifieer Adres knop bovenin de Adres pagina. Zie de Help documentatie in de &quot;Power of Us Hub&quot; voor meer informatie</help>
+        <label>Adres Verificatie Status</label>
+        <name>Address_Verification_Status__c</name>
+    </fields>
+    <fields>
+        <help>Opzoekrelatie naar de Batch waarin dit contact is gemaakt.</help>
+        <label><!-- Batch --></label>
+        <name>Batch__c</name>
+        <relationshipLabel>Contactpersonen</relationshipLabel>
+    </fields>
+    <fields>
+        <help>Het huidige Postadres van de Contactpersoon.</help>
+        <label>Huidig Adres</label>
+        <lookupFilter>
+            <informationalMessage>Om alle adressen te zien van de Contactpersoon zijn huishouden, voer in A-&apos; in het zoekvenster</informationalMessage>
+        </lookupFilter>
+        <name>Current_Address__c</name>
+        <relationshipLabel>Contactpersonen (Huidig Adres)</relationshipLabel>
+    </fields>
+    <fields>
+        <help>Indien aangevinkt, deze optie markeert het contact als overleden, en sluit deze persoon uit van huishoud benaming, e-mails, en telefoongesprekken</help>
+        <label>Overleden</label>
+        <name>Deceased__c</name>
+    </fields>
+    <fields>
+        <help>Indien aangevinkt wordt deze contactpersoon uitgesloten van e-mails en telefoongesprekken.</help>
+        <label>Neem Geen Contact Op</label>
+        <name>Do_Not_Contact__c</name>
+    </fields>
+    <fields>
+        <help>Indien aangevinkt wordt de Contactpersoon uitgesloten van de Formele Begroeting.</help>
+        <label>Weren Formele Begroeting Huishouden</label>
+        <name>Exclude_from_Household_Formal_Greeting__c</name>
+    </fields>
+    <fields>
+        <help>Indien aangevinkt wordt de Contactpersoon uitgesloten van de Informele Begroeting.</help>
+        <label>Weren Informele Begroeting Huishouden</label>
+        <name>Exclude_from_Household_Informal_Greeting__c</name>
+    </fields>
+    <fields>
+        <help>Indien aangevinkt wordt de Contactpersoon uitgesloten van de Naam van het Huishouden.</help>
+        <label>Uitsluiten van Naam van Huishouden</label>
+        <name>Exclude_from_Household_Name__c</name>
+    </fields>
+    <fields>
+        <help>De hoeveelheid van de eerste soft credit</help>
+        <label>Eerste Soft Credit hoeveelheid</label>
+        <name>First_Soft_Credit_Amount__c</name>
+    </fields>
+    <fields>
+        <help>De datum van de eerste soft credit.</help>
+        <label>Eerste Soft Credit Datum</label>
+        <name>First_Soft_Credit_Date__c</name>
+    </fields>
+    <fields>
+        <help>Houdt het ID van het huidige huishouden, of het nu een Huishoud Account is of een Huishoud Object.</help>
+        <label><!-- HHId --></label>
+        <name>HHId__c</name>
+    </fields>
+    <fields>
+        <help>De hoeveelheid van de grootste soft credit.</help>
+        <label>Grootste Soft Credit Bedrag</label>
+        <name>Largest_Soft_Credit_Amount__c</name>
+    </fields>
+    <fields>
+        <help>De datum van de grootste soft credit.</help>
+        <label>Grootste Soft Credit Datum</label>
+        <name>Largest_Soft_Credit_Date__c</name>
+    </fields>
+    <fields>
+        <help>De hoeveelheid van de meest recente soft credit.</help>
+        <label>Laatste Soft Credit Bedrag</label>
+        <name>Last_Soft_Credit_Amount__c</name>
+    </fields>
+    <fields>
+        <help>De datum van de meest recente soft credit</help>
+        <label>Laatste Soft Credit Datum</label>
+        <name>Last_Soft_Credit_Date__c</name>
+    </fields>
+    <fields>
+        <help>Het aantal soft credits, gesloten in de laatste nummer van dagen gedefinieerd in de NPSP Instellingen.</help>
+        <label>Aantal Soft Credits Laatste N Dagen</label>
+        <name>Number_of_Soft_Credits_Last_N_Days__c</name>
+    </fields>
+    <fields>
+        <help>Het aantal soft credits van vorig jaar.</help>
+        <label>Aantal Soft Credits Vorig Jaar</label>
+        <name>Number_of_Soft_Credits_Last_Year__c</name>
+    </fields>
+    <fields>
+        <help>Het aantal soft credits van dit jaar.</help>
+        <label>Aantal Soft Credits Huidig Jaar</label>
+        <name>Number_of_Soft_Credits_This_Year__c</name>
+    </fields>
+    <fields>
+        <help>Het aantal soft credits van twee jaar geleden.</help>
+        <label>Aantal Soft Credits Twee Jaar Geleden</label>
+        <name>Number_of_Soft_Credits_Two_Years_Ago__c</name>
+    </fields>
+    <fields>
+        <help>Het aantal soft credits.</help>
+        <label>Aantal Soft Credits</label>
+        <name>Number_of_Soft_Credits__c</name>
+    </fields>
+    <fields>
+        <help>Wordt gebruikt om het primaire verwante account te volgen van de desbetreffende contactpersoon.</help>
+        <label>Primaire Connctie</label>
+        <name>Primary_Affiliation__c</name>
+        <relationshipLabel>Gebruik niet. Gebruik Verwante Organisaties.</relationshipLabel>
+    </fields>
+    <fields>
+        <help>Deze is aangevinkt wanneer de gebruiker de primaire contact is op zijn Account. De primaire contactpersoon kan gewijzigd worden op de account.</help>
+        <label>Primaire Contactpersoon</label>
+        <name>Primary_Contact__c</name>
+    </fields>
+    <fields>
+        <help>De totale hoeveelheid van soft credit, gesloten in het laatste nummer van dagen gedefinieerd in de Huishoud Instellingen.</help>
+        <label>Soft Credit Laatste N Dagen</label>
+        <name>Soft_Credit_Last_N_Days__c</name>
+    </fields>
+    <fields>
+        <help>Indien aangevinkt, dan overschrijft het huidige adres opzoekrelatie van de contactpersoon het adres van het Huishouden of het seizoensgebonden adres.</help>
+        <label>Adresoverschrijving</label>
+        <name>is_Address_Override__c</name>
+    </fields>
+    <layouts>
+        <layout>Contact Layout</layout>
+        <sections>
+            <label>Contactpersoon Details</label>
+            <section>Contact Details</section>
+        </sections>
+        <sections>
+            <label><!-- Donation Information --></label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label><!-- Donation Totals --></label>
+            <section>Donation Totals</section>
+        </sections>
+        <sections>
+            <label><!-- Household Address --></label>
+            <section>Household Address</section>
+        </sections>
+        <sections>
+            <label><!-- Household Donation Info --></label>
+            <section>Household Donation Info</section>
+        </sections>
+        <sections>
+            <label><!-- Membership Information --></label>
+            <section>Membership Information</section>
+        </sections>
+        <sections>
+            <label><!-- Misc --></label>
+            <section>Misc</section>
+        </sections>
+        <sections>
+            <label><!-- Soft Credit Totals --></label>
+            <section>Soft Credit Totals</section>
+        </sections>
+    </layouts>
+    <quickActions>
+        <label>Nieuwe Connectie</label>
+        <name>New_Affiliation</name>
+    </quickActions>
+    <quickActions>
+        <label>Nieuwe Terugkerende Donatie</label>
+        <name>New_Recurring_Donation</name>
+    </quickActions>
+    <quickActions>
+        <label>Nieuwe Relatie</label>
+        <name>New_Relationship</name>
+    </quickActions>
+    <quickActions>
+        <label>Snelle Update</label>
+        <name>Quick_Update</name>
+    </quickActions>
+    <webLinks>
+        <label>Contactpersonen Samenvoegen</label>
+        <name>Merge_Contacts</name>
+    </webLinks>
+</CustomObjectTranslation>

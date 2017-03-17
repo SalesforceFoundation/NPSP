@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Engagement Plan Template --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Engagement Plan Template --></value>
+    </caseValues>
+    <fields>
+        <help>Herberekent een onderliggende taak zijn vervaldatum gebaseerd om wanneer de bovenliggende taak wordt voltooid.</help>
+        <label>Automatisch Update childtaak vervaldatum</label>
+        <name>Automatically_Update_Child_Task_Due_Date__c</name>
+    </fields>
+    <fields>
+        <help>Wanneer het Betrokkenheid Plan &quot;Taak toegewezen aan&quot; veld is leeg gelaten, aan wie zou de taak moeten worden toegewezen?</help>
+        <label>Standaard Toegewezen persoon</label>
+        <name>Default_Assignee__c</name>
+        <picklistValues>
+            <masterLabel>Owner of Object for Engagement Plan</masterLabel>
+            <translation>Eigenaar van Object voor Betrokkenheidsplan</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>User Creating Engagement Plan</masterLabel>
+            <translation>Gebruiker Maakt Betrokkenheidsplan</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label>Beschrijving</label>
+        <name>Description__c</name>
+    </fields>
+    <fields>
+        <help>Als taken met een Verloopdatum in het weekend staan gepland moeten ze dan gepland worden vrijdag voor of maandag na het weekend? Dit geld alleen als overslaan weekend staat geselecteerd.</help>
+        <label>Opnieuw plannen om</label>
+        <name>Reschedule_To__c</name>
+        <picklistValues>
+            <masterLabel>Friday</masterLabel>
+            <translation>Vrijdag</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Monday</masterLabel>
+            <translation>Maandag</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Indien geselecteerd, Taken die gecreëerd zijn in dit betrokkenheidsplan hebben geen vervaldatum die op een zaterdag of zondag vallen.</help>
+        <label>Sla weekenden over</label>
+        <name>Skip_Weekends__c</name>
+    </fields>
+    <fields>
+        <label>Totaal aantal betrokkenheid plannen</label>
+        <name>Total_Engagement_Plans__c</name>
+    </fields>
+    <fields>
+        <label>Totaal aantal Taken</label>
+        <name>Total_Tasks__c</name>
+    </fields>
+    <gender><!-- Neuter --></gender>
+    <layouts>
+        <layout>Engagement Plan Template Layout</layout>
+        <sections>
+            <label>Aangepaste Koppelingen</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Engagement Plan Template Name --></nameFieldLabel>
+    <webLinks>
+        <label>Beheer Sjabloon</label>
+        <name>Manage_Template</name>
+    </webLinks>
+</CustomObjectTranslation>
