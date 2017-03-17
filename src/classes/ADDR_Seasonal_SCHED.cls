@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,37 +28,19 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
 * @group Address Management
 * @description Supports the automatic scheduling of Seasonal Address updates  
 */ 
-public with sharing class ADDR_Seasonal_SCHED implements Database.Batchable<SObject>, UTIL_MasterSchedulableHelper.UTIL_IRecurring {
+public class ADDR_Seasonal_SCHED implements Database.Batchable<SObject>, Schedulable {
 
     /*******************************************************************************************************
-    * @description holds the soql string that queries all Addresses in the current month and day
-    */
-    public String strQuery { get; set; }
-    
-    /*******************************************************************************************************
-    * @description executes the batch job
-    * @return boolean. true if the batch runs, false if the batch cannot run.  
+    * @description Schedulable execute method executes this batch job.
     ********************************************************************************************************/
-    public Boolean executeReturnStatus() { 
-    	//call the batch job, processing 10 at a time
-        if(UTIL_JobScheduler.canRunBatch()) {
-	    	integer iMonth = system.today().month();
-	    	integer iDay = system.today().day();
-	        
-	        strQuery = 'select Id, Household_Account__c, Default_Address__c ' +
-	            ' from Address__c ' +
-	            ' where Seasonal_Start_Month__c = \'' + string.valueOf(iMonth) + '\'' +
-	            ' and Seasonal_Start_Day__c = \'' + string.valueOf(iDay) + '\'';
-        
-            Id batchInstanceId = Database.executeBatch(this, 10);
-            return true;
-        }
-        return false;
+    public void execute(SchedulableContext context) {
+        //call the batch job, processing 10 at a time
+        Id batchInstanceId = Database.executeBatch(new ADDR_Seasonal_SCHED(), 10);
     }
 
     /*******************************************************************************************************
@@ -66,18 +48,34 @@ public with sharing class ADDR_Seasonal_SCHED implements Database.Batchable<SObj
     * @param bc the BatchableContext
     * @return database.Querylocator  
     ********************************************************************************************************/
-    public database.Querylocator start(Database.BatchableContext bc){       
-        return Database.getQueryLocator(strQuery);      
+    public database.Querylocator start(Database.BatchableContext bc) {       
+            
+        // find all seasonal addresses, so we can see which accounts might need updating
+        list<Address__c> listAddr = [select Id, Household_Account__c from Address__c where Seasonal_Start_Month__c != null];
+        list<ID> listAccId = new list<ID>();
+        for (Address__c addr : listAddr) {
+            listAccId.add(addr.Household_Account__c);
+        }
+            
+        // find all Accounts who have any Seasonal Address, since it may need to now
+        // become current or inactive, and we don't want to assume the last time this ran.
+        // make sure to include all Billing Address fields, that we will need to look at
+        string strSoql = 'select Id, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLongitude, BillingLatitude';
+        if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
+            strSoql += ', BillingStateCode, BillingCountryCode';
+        }
+        strSoql += ' from Account where Id in :listAccId';
+        return Database.getQueryLocator(strSoql);      
     }
     
     /*******************************************************************************************************
     * @description execute Method for the Database.Batchable interface
     * @param bc the BatchableContext
-    * @param listSobj the list of Address objects to process
+    * @param listSobj the list of Account objects to process
     * @return void  
     ********************************************************************************************************/
     public void execute(Database.BatchableContext bc, Sobject[] listSobj) {
-    	ADDR_Addresses_TDTM.batchSeasonalUpdate((list<Address__c>) listSobj);        
+        ADDR_Addresses_TDTM.batchSeasonalUpdate((list<Account>) listSobj);        
     }
 
     /*******************************************************************************************************

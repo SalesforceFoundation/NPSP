@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2011, Salesforce.com Foundation
+    Copyright (c) 2011, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2011 (1.x)
 * @group Households
 * @description This class contains unit tests for validating the behavior of the Household Opportunity Contact Role class
@@ -56,6 +56,7 @@ private class HH_OppContactRoles_TEST {
     }
     /*********************************************************************************************************
     * @description Tests that household Opportunity Contact Roles are created under the different account models.
+    * Verifies deceased contacts are not included.
     * @param strProcessor Which account model processor to test under.
     * @return void
     */
@@ -97,6 +98,18 @@ private class HH_OppContactRoles_TEST {
             npo02__Household__c = householdId
         );
         insert con2;
+        Contact con3 = new Contact(
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
+            Deceased__c = true,
+            AccountId = (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR ? accountId : null),
+            npo02__Household__c = householdId
+        );
+        insert con3;
         //create opportunity
         Opportunity o = new Opportunity(
             Name='test oppty',
@@ -105,7 +118,9 @@ private class HH_OppContactRoles_TEST {
             Amount=100,
             AccountId=accountId
         );
+        Test.startTest();
         insert o;
+        Test.stopTest();
         //check for contact roles
         List<OpportunityContactRole> createdRoles = [select Role, ContactId, IsPrimary from OpportunityContactRole where OpportunityId = :o.id order by ContactId];
 
@@ -181,7 +196,9 @@ private class HH_OppContactRoles_TEST {
             Amount=100,
             AccountId=accountId
         );
+        Test.startTest();
         insert o;
+        Test.stopTest();
         //check for contact roles
         List<OpportunityContactRole> createdRoles = [select Role, ContactId, IsPrimary from OpportunityContactRole where OpportunityId = :o.id order by ContactId];
         if (strProcessor == CAO_Constants.BUCKET_PROCESSOR)
@@ -248,7 +265,9 @@ private class HH_OppContactRoles_TEST {
             Amount=100,
             AccountId=accountId
         );
+        Test.startTest();
         insert o;
+        Test.stopTest();
         //check for contact roles
         List<OpportunityContactRole> createdRoles = [select Role, ContactId, IsPrimary from OpportunityContactRole where OpportunityId = :o.id order by ContactId];
         system.AssertEquals(1,createdRoles.size());
@@ -307,7 +326,9 @@ private class HH_OppContactRoles_TEST {
             Amount=100,
             AccountId=accountId
         );
+        Test.startTest();
         insert o;
+        Test.stopTest();
         //check for contact roles
         List<OpportunityContactRole> createdRoles = [select Role, ContactId, IsPrimary from OpportunityContactRole where OpportunityId = :o.id order by ContactId];
         system.AssertEquals(0,createdRoles.size());
@@ -332,19 +353,21 @@ private class HH_OppContactRoles_TEST {
         insert con1;
         insert con2;
 
+        Test.startTest();
         Opportunity o1 = new Opportunity(
             Name = 'o1',
             StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
             CloseDate = System.today(),
-            npe01__Contact_Id_for_Role__c = (string)con1.id);
+            Primary_Contact__c = (string)con1.id);
         insert o1;
         Opportunity o2 = new Opportunity(
             Name = 'o2',
             StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
             CloseDate = System.today(),
-            npe01__Contact_Id_for_Role__c = (string)con2.id);
+            Primary_Contact__c = (string)con2.id);
         insert o2;        
-
+        Test.stopTest();
+        
         system.assertequals(2,(integer)[select count() from Opportunity]);
         system.assertequals(2,(integer)[select count() from OpportunityContactRole]);
     }  
@@ -385,7 +408,6 @@ private class HH_OppContactRoles_TEST {
                 npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                 npo02__Household_Contact_Roles_On__c = true,
                 npo02__Household_Member_Contact_Role__c='Household Member'));
-        //UNDONE: add setting strRefresh into custom settings
         HH_OppContactRoles_TDTM.strRefreshSetting = strRefresh;
                 
         list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(5);
@@ -416,7 +438,9 @@ private class HH_OppContactRoles_TEST {
         
         // now let's move a contact to a different household
         listCon[0].AccountId = listAcc[1].Id;
+        Test.startTest();
         update listCon[0];
+        Test.stopTest();
         
         List<OpportunityContactRole> listOCR2 = [select OpportunityId, Role, ContactId, IsPrimary from OpportunityContactRole];
         list<integer> listPrimary = new integer[5];
@@ -480,5 +504,143 @@ private class HH_OppContactRoles_TEST {
             system.assertEquals(0, listSoft[4]);
         }
     }
-       
+
+    /*********************************************************************************************************
+    * @description Tests that an Opportunity Contact Role is created when the deceased member is set as the primary
+    * @return void
+    */
+    private static testMethod void opportunityDeceasedPrimaryAccount() {
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'));
+        
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (
+                npo02__Household_Contact_Roles_On__c = true,
+                npo02__Household_Member_Contact_Role__c='Household Member'));
+
+        UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.HH_ACCOUNT_TYPE, 1, 1, 1);
+        Account acct = UTIL_UnitTestData_TEST.listAccT[0];
+        Contact con = UTIL_UnitTestData_TEST.listConT[0];        
+        con.Deceased__c = true;  
+        update con;
+                
+        //create opportunity
+        Opportunity o = new Opportunity(
+            Name='test oppty',
+            CloseDate=date.newInstance(2001,12,12),
+            StageName=UTIL_UnitTestData_TEST.getClosedWonStage(),
+            Amount=100,
+            AccountId=acct.Id,
+            Primary_Contact__c = con.Id
+        );
+        
+        Test.startTest();
+        insert o;
+        Test.stopTest();
+        //check for contact roles
+        List<OpportunityContactRole> createdRoles = [select Role, ContactId, IsPrimary from OpportunityContactRole where OpportunityId = :o.id order by ContactId];
+        System.assertEquals(1, createdRoles.size(), 'The deceased contact should be added as the primary Contact Role for the Opportunity.');
+        System.assertEquals(contactSettingsForTests.npe01__Opportunity_Contact_Role_Default_role__c, createdRoles[0].Role, 'The Role should match the default contact role.');
+        System.assert(createdRoles[0].IsPrimary, 'The Contact Role should be flagged as primary.');
+    }
+
+    /*******************************************************************************************************
+    * @description Move an Opportunity to a different HH Account and verifies primary OCR remains
+    */ 
+    static testmethod void testOppsAcctChangeHHToHH() {
+        if (strTestOnly != '*' && strTestOnly != 'testOppsAcctChangeHHToHH') return;
+        testOppsAcctChange(CAO_Constants.HH_ACCOUNT_TYPE, CAO_Constants.HH_ACCOUNT_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description Move an Opportunity to a different One2One Account and verifies primary OCR remains
+    */ 
+    static testmethod void testOppsAcctChangeOne2OneToOne2One() {
+        if (strTestOnly != '*' && strTestOnly != 'testOppsAcctChangeOne2OneToOne2One') return;
+        testOppsAcctChange(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description MMove an Opportunity from Org to HH Account and verifies primary OCR remains
+    */ 
+    static testmethod void testOppsAcctChangeOrgToHH() {
+        if (strTestOnly != '*' && strTestOnly != 'testOppsAcctChangeOrgToHH') return;
+        testOppsAcctChange(null, CAO_Constants.HH_ACCOUNT_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description Move an Opportunity from HH to Org Account and verifies primary OCR remains
+    */ 
+    static testmethod void testOppsAcctChangeHHToOrg() {
+        if (strTestOnly != '*' && strTestOnly != 'testOppsAcctChangeHHToOrg') return;
+        testOppsAcctChange(CAO_Constants.HH_ACCOUNT_TYPE, null);
+    }
+
+    /*******************************************************************************************************
+    * @description Move an Opportunity from Org to One2One Account and verifies primary OCR remains
+    */ 
+    static testmethod void testOppsAcctChangeOrgToOne2One() {
+        if (strTestOnly != '*' && strTestOnly != 'testOppsAcctChangeOrgToOne2One') return;
+        testOppsAcctChange(null, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description Move an Opportunity frome One2One to Org Account and verifies primary OCR remains
+    */ 
+    static testmethod void testOppsAcctChangeOne2OneToOrg() {
+        if (strTestOnly != '*' && strTestOnly != 'testOppsAcctChangeOne2OneToOrg') return;
+        testOppsAcctChange(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, null);
+    }
+    
+    /*******************************************************************************************************
+    * @description Move an Opportunity to a different Account type and verifies primary OCR remains
+    */
+    static void testOppsAcctChange(string accTypeSrc, string accTypeDst) {
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'));
+        
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (
+                npo02__Household_Contact_Roles_On__c = true,
+                npo02__Household_Member_Contact_Role__c='Donor'));
+
+        // create our source account and contacts
+        UTIL_UnitTestData_TEST.createAccountContactTestData(accTypeSrc, 1, 2, 1);
+        Account accSrc = UTIL_UnitTestData_TEST.listAccT[0];
+        list<Contact> listConSrc = UTIL_UnitTestData_TEST.listConT;        
+        
+        // create our destination account and contacts
+        UTIL_UnitTestData_TEST.createAccountContactTestData(accTypeDst, 1, 2, 3);
+        Account accDst = UTIL_UnitTestData_TEST.listAccT[0];
+        list<Contact> listConDst = UTIL_UnitTestData_TEST.listConT;        
+        
+        // create an opp for each contact
+        list<Contact> listConAll = new list<Contact>();
+        listConAll.addAll(listConSrc);
+        listConAll.addAll(listConDst);
+        list<Opportunity> listOpp = UTIL_UnitTestData_TEST.OppsForContactList(listConAll, null, 
+            UTIL_UnitTestData_TEST.getclosedWonStage(), system.Today(), 100, null, null);
+        insert listOpp;
+
+        // move the first opportunity in the first account to the other account.
+        Opportunity opp = listOpp[0];
+
+        List<OpportunityContactRole> createdRoles = [select Role, ContactId, IsPrimary from OpportunityContactRole
+            where OpportunityId = :opp.id and isPrimary = true order by ContactId];
+        
+        opp.AccountId = accDst.Id;
+        Test.startTest();
+        update opp;
+        Test.stopTest();
+
+        List<OpportunityContactRole> updatedRoles = [select Role, ContactId, IsPrimary from OpportunityContactRole
+            where OpportunityId = :opp.id and isPrimary = true order by ContactId];
+            
+        // verify the primary ocr has not changed.
+        System.assertEquals(createdRoles[0].ContactId, updatedRoles[0].ContactId);
+    }
 }

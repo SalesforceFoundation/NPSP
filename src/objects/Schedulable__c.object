@@ -44,6 +44,7 @@
         <actionName>View</actionName>
         <type>Default</type>
     </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
     <description>Stores those classes that we want to schedule with a certain frequency.</description>
@@ -52,6 +53,7 @@
     <enableFeeds>false</enableFeeds>
     <enableHistory>false</enableHistory>
     <enableReports>false</enableReports>
+    <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
     <fields>
@@ -105,6 +107,7 @@
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
     </fields>
@@ -118,12 +121,12 @@
         <trackTrending>false</trackTrending>
         <type>DateTime</type>
     </fields>
-    <label>Schedulable</label>
+    <label>DEPRECATED-Schedulable</label>
     <nameField>
         <label>Job Name</label>
         <type>Text</type>
     </nameField>
-    <pluralLabel>Schedulabls</pluralLabel>
+    <pluralLabel>DEPRECATED-Schedulables</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
 </CustomObject>

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009, Salesforce.com Foundation
+    Copyright (c) 2009, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,8 +28,10 @@
     POSSIBILITY OF SUCH DAMAGE.  
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2011
+* @group Rollups
+* @group-content ../../ApexDocContent/Rollups.htm
 * @description test the batchable wrapper for Opportunity Rollup functionality
 */
 
@@ -69,7 +71,7 @@ private class RLLP_OppRollupBATCH_TEST {
     	setup();
     	
         //The record type is an optional parameter when creating opps
-        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType);
          
         // create & insert contact
         Contact contact = UTIL_UnitTestData_TEST.getContact(); 
@@ -98,7 +100,7 @@ private class RLLP_OppRollupBATCH_TEST {
         setup();
         
         //The record type is an optional parameter when creating opps
-        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType);
          
         // create & insert contact
         Contact contact = UTIL_UnitTestData_TEST.getContact(); 
@@ -133,7 +135,7 @@ private class RLLP_OppRollupBATCH_TEST {
         if (strTestOnly != '*' && strTestOnly != 'testOppSoftCreditRollupBatch') return;
         setup();
         
-        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType);
          
         // create & insert contact
         Contact contact18 = UTIL_UnitTestData_TEST.getContact();
@@ -160,11 +162,62 @@ private class RLLP_OppRollupBATCH_TEST {
         Test.startTest();
         Database.executeBatch(batch);
         Test.stopTest();
+        UTIL_Debug.debugWithInfo('DJH: testOppSoftCreditRollupBatch');
 
         contact18 = [select npo02__Soft_Credit_This_Year__c, npo02__Soft_Credit_Total__c,
-            npe01__Lifetime_Giving_History_Amount__c, npo02__OppsClosedThisYear__c, npo02__TotalOppAmount__c
+                     npo02__OppsClosedThisYear__c, npo02__TotalOppAmount__c
                             from Contact where Id=:contact18.Id];
         System.assertEquals(giftAmount, contact18.npo02__Soft_Credit_This_Year__c);
         System.assertEquals(giftAmount, contact18.npo02__Soft_Credit_Total__c);
     }
+
+    static testMethod void testOppPartialSoftCreditRollupBatch() {
+        if (strTestOnly != '*' && strTestOnly != 'testOppPartialSoftCreditRollupBatch') return;
+        setup();
+        
+        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType);
+         
+        // create & insert contact
+        Contact contact18 = UTIL_UnitTestData_TEST.getContact();
+        Contact contact19 = UTIL_UnitTestData_TEST.getContact();
+        insert new Contact[] {contact18, contact19};
+        
+        Integer giftAmount = 100;
+        // create new opps
+        Opportunity[] opps = UTIL_UnitTestData_TEST.OppsForContactList(new Contact[]{contact19}, null, 
+                UTIL_UnitTestData_TEST.getClosedWonStage(), System.Today(), giftAmount, 
+                giftRecordTypeNameForTests, null);   
+        insert opps;
+        
+        //give soft credit to contact2
+        OpportunityContactRole[] oppRoles = new OpportunityContactRole[]{}; 
+        for(Opportunity opp : opps) {
+            oppRoles.add(new OpportunityContactRole(ContactId = contact18.Id, OpportunityId = opp.Id, 
+                           Role = 'Influencer')); 
+        }
+        insert oppRoles;
+        //insert partial soft credits
+        Partial_Soft_Credit__c[] oppPartialRoles = new Partial_Soft_Credit__c[]{}; 
+        for(Opportunity opp : opps) {
+            oppPartialRoles.add(new Partial_Soft_Credit__c(Contact__c = contact18.Id, Opportunity__c = opp.Id, 
+                           Role_Name__c = 'Influencer', Amount__c = giftAmount/2, Contact_Role_ID__c = oppRoles[0].Id)); 
+        }
+        insert oppPartialRoles;
+        
+        RLLP_OppSoftCreditRollup_BATCH batch = new RLLP_OppSoftCreditRollup_BATCH();
+        
+        Test.startTest();
+        Database.executeBatch(batch);
+        Test.stopTest();
+        UTIL_Debug.debugWithInfo('DJH: testOppPartialSoftCreditRollupBatch');
+
+        contact18 = [select npo02__Soft_Credit_This_Year__c, npo02__Soft_Credit_Total__c,
+            Number_of_Soft_Credits_This_Year__c, Number_of_Soft_Credits__c
+                            from Contact where Id=:contact18.Id];
+        System.assertEquals(giftAmount/2, contact18.npo02__Soft_Credit_This_Year__c);
+        System.assertEquals(giftAmount/2, contact18.npo02__Soft_Credit_Total__c);
+        system.assertEquals(1, contact18.Number_of_Soft_Credits__c);
+        system.assertEquals(1, contact18.Number_of_Soft_Credits_This_Year__c);
+    }
+    
 }

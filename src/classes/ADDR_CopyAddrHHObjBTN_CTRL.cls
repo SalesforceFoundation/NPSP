@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2011, Salesforce.com Foundation
+    Copyright (c) 2011, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2011 (2.3)
 * @group Address Management
 * @description The controller for the VF page invoked by using the address copy button. 
@@ -62,7 +62,7 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
     /*******************************************************************************************************
     * @description whether to redirect on success, or stay on the page for errors.
     */
-    private boolean redirectPage = true;
+    public boolean redirectPage { get; set; }
     
     /*******************************************************************************************************
     * @description Constructor for the class
@@ -73,6 +73,7 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
         strSrcObject = null;
         returnurl = null;
         resulttext = null;
+        redirectPage = true;
         String id = ApexPages.currentPage().getParameters().get('id');
         if (id != null && id != '') {        	
         	if (UTIL_Describe.isObjectIdThisType(id, 'Contact')) {
@@ -91,7 +92,7 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
     
     /*******************************************************************************************************
     * @description Action method called when the user clicks on the copy button.
-    * @return PageReference
+    * @return PageReference - null
     */
     public PageReference buttonClick(){
         
@@ -210,15 +211,7 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
             showMsg(resulttext, ApexPages.Severity.ERROR);
         }
         
-        //decide how to handle the redirect
-        if (redirectPage){
-            PageReference pageRef = new PageReference('/' + obj.id);
-            pageRef.setRedirect(true);
-            return pageRef;
-        }        
-        else{
-            return null;
-        }
+        return null;
     }
     
     /*******************************************************************************************************

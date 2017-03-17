@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
 
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
 * @group Settings
 * @description Test class for the Uninstall Script for the NPSP package. 
@@ -37,21 +37,21 @@
 public with sharing class STG_UninstallScript_TEST {
 
     public testmethod static void rununinstall() {
-    	//The scheduled jobs are being set when the settings page loads
-    	STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL(); 
-    	ctrl.setTriggerSchedConfig();
-    	
-    	//Check jobs were scheduled
-    	List<CronTrigger> scheduledJobs = [select Id, CronJobDetail.Id from CronTrigger 
-           where CronJobDetail.Name IN :UTIL_MasterSchedulableHelper.scheduledJobs and CronJobDetail.JobType = '7'];
-    	System.assertEquals(3, scheduledJobs.size());
-    	
-    	//Run uninstall script
-    	Test.testUninstall(new STG_UninstallScript());
-    	
-    	//Confirm scheduled job was deleted
-    	scheduledJobs = [select Id, CronJobDetail.Id from CronTrigger 
-           where CronJobDetail.Name IN :UTIL_MasterSchedulableHelper.scheduledJobs  and CronJobDetail.JobType = '7'];
+        //The scheduled jobs are being set when the settings page loads
+        STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL(); 
+        ctrl.setTriggerSchedConfig();
+        
+        //Check jobs were scheduled
+        List<CronTrigger> scheduledJobs = [SELECT Id, CronJobDetail.Id FROM CronTrigger 
+           WHERE CronJobDetail.Name IN :UTIL_MasterSchedulableHelper.defaultScheduledJobs.keySet() AND CronJobDetail.JobType = '7'];
+        System.assertEquals(UTIL_MasterSchedulableHelper.defaultScheduledJobs.size(), scheduledJobs.size());
+        
+        //Run uninstall script
+        Test.testUninstall(new STG_UninstallScript());
+        
+        //Confirm scheduled job was deleted
+        scheduledJobs = [SELECT Id, CronJobDetail.Id FROM CronTrigger 
+           WHERE CronJobDetail.Name IN :UTIL_MasterSchedulableHelper.defaultScheduledJobs.keySet() AND CronJobDetail.JobType = '7'];
         System.assertEquals(0, scheduledJobs.size());
     }
 }

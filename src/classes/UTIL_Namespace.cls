@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014 Salesforce.com Foundation
+    Copyright (c) 2014 Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,14 +28,14 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014 
 * @group Utilities
 * @description Class which holds static methods for common utilities, 
 * such as detecting whether we are in a managed package, and some string helpers.
 */
 
-public without sharing class UTIL_Namespace { 
+public class UTIL_Namespace { 
 
     /******************************************************************************************************
     * @description String helper property for getNamespace() method.
@@ -89,9 +89,10 @@ public without sharing class UTIL_Namespace {
     * @return token name, with namespace prefix removed, if present.
     ********************************************************************************************************/
     public static string StrTokenRemoveNSPrefix(string str) {
-        str = str.replace('npsp__', '');
-        if (getNamespace() != '') 
-            str = str.replace(getNamespace() + '__', '');
+        if(str.startsWith('npsp__'))
+            str = str.replaceFirst('npsp__', '');
+        if (getNamespace() != '' && str.startsWith(getNamespace() + '__'))
+            str = str.replaceFirst(getNamespace() + '__', '');
         return str;
     }
     

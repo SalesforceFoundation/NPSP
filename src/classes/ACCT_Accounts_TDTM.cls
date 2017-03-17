@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014 Salesforce.com Foundation
+    Copyright (c) 2014 Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
 *
 * @group Accounts
@@ -38,7 +38,7 @@
 * our special accounts (Household, One-to-One), and also detects changes on Household Account that requires
 * name updating.
 */
-public with sharing class ACCT_Accounts_TDTM extends TDTM_Runnable {
+public class ACCT_Accounts_TDTM extends TDTM_Runnable {
         
     
     /*******************************************************************************************************
@@ -67,25 +67,32 @@ public with sharing class ACCT_Accounts_TDTM extends TDTM_Runnable {
         for (SObject so : listNew) {
             Account acc = (Account)so;
             
-	        if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-	            if (acc.RecordTypeId == rtIdAccountHH && acc.RecordTypeId != null && 
-	               (acc.npe01__SYSTEM_AccountType__c == null || acc.npe01__SYSTEMISINDIVIDUAL__c != true)) {
-	            	acc.npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE;
-	            	acc.Type = CAO_Constants.HH_TYPE;
-	            	acc.npe01__SYSTEMISINDIVIDUAL__c = true; 
-	            } else if (acc.RecordTypeId == rtIdAccountOne2One && acc.RecordTypeId != null && 
-	               (acc.npe01__SYSTEM_AccountType__c == null || acc.npe01__SYSTEMISINDIVIDUAL__c != true)) {
-	                acc.npe01__SYSTEM_AccountType__c = CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
-	                acc.npe01__SYSTEMISINDIVIDUAL__c = true; 
-	            }    
-	        }
-	        
-	        if (triggerAction == TDTM_Runnable.Action.BeforeUpdate || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-	           if (acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
-	               listHHNew.add(acc);
-	               listHHOld.add((Account)listOld[i]);
-	           }
-	        }
+            if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+                if (acc.RecordTypeId == rtIdAccountHH && acc.RecordTypeId != null) {
+                   if (acc.npe01__SYSTEM_AccountType__c == null || acc.npe01__SYSTEMISINDIVIDUAL__c != true) {
+                        acc.npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE;
+                        acc.Type = CAO_Constants.HH_TYPE;
+                        acc.npe01__SYSTEMISINDIVIDUAL__c = true; 
+                    }
+                } else if (acc.RecordTypeId == rtIdAccountOne2One && acc.RecordTypeId != null) {
+                   if (acc.npe01__SYSTEM_AccountType__c == null || acc.npe01__SYSTEMISINDIVIDUAL__c != true) {
+                        acc.npe01__SYSTEM_AccountType__c = CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
+                        acc.npe01__SYSTEMISINDIVIDUAL__c = true; 
+                    }
+                } else if (!(CAO_Constants.isBucketModel() && acc.Name == CAO_Constants.BUCKET_ACCOUNT_NAME)) {
+                    if (triggerAction == TDTM_Runnable.Action.BeforeUpdate && acc.RecordTypeId != listOld[i].get('RecordTypeId')) {
+                        acc.npe01__SYSTEMISINDIVIDUAL__c = false;
+                        acc.npe01__SYSTEM_AccountType__c = null;
+                    }
+                }
+            }
+            
+            if (triggerAction == TDTM_Runnable.Action.BeforeUpdate || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
+               if (acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
+                   listHHNew.add(acc);
+                   listHHOld.add((Account)listOld[i]);
+               }
+            }
         i++;
         }
         

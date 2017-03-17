@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014 Salesforce.com Foundation
+    Copyright (c) 2014 Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
 
@@ -27,7 +27,7 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 /**
-* @author Salesforce Foundation
+* @author Salesforce.org
 * @date 2014
 * @group Utilities
 * @description This class allows easy access to object and field description information from within other classes.
@@ -38,7 +38,7 @@
 * that are made, making the total transaction more efficient.
 */
 
-public with sharing class UTIL_Describe {
+public class UTIL_Describe {
 
     // throw custom exceptions when a bogus object or field is provided.
     public class SchemaDescribeException extends Exception {}
@@ -179,11 +179,33 @@ public with sharing class UTIL_Describe {
     */
     public static Map<String, Schema.DescribeFieldResult> getAllFieldsDescribe(String objectName) {
 
-        // make sure we have this field's schema mapped
+        // make sure we have this object's schema mapped
         fillFieldMapsForObject(objectName);
 
         Map<String, Schema.DescribeFieldResult> fieldMap = fieldDescribes.get(objectName);
         return fieldMap;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns the Name field of any given object.
+    * @param objectName the name of the object to look up
+    * @return String the API name of the Name field
+    */
+    public static String getNameField(String objectName) {
+        String nameField = 'Name';
+
+        Map<String, Schema.DescribeFieldResult> mapObjectFields = getAllFieldsDescribe(objectName);
+
+        if (!mapObjectFields.containsKey(nameField)) {
+            nameField = null;
+            for (String relatedFieldName : mapObjectFields.keySet()) {
+                if (mapObjectFields.get(relatedFieldName).isNameField()) {
+                    return relatedFieldName;
+                }
+            }
+        }
+        
+        return nameField;
     }
 
     /*******************************************************************************************************
@@ -194,9 +216,6 @@ public with sharing class UTIL_Describe {
     * @return string the name of the of the field's type
     */
     public static string getFieldType(String objectName, String fieldName) {
-        // fields in our own package must not have their prefix for the Describe Field Map
-        fieldName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldName);
-
         // make sure we have this field's schema mapped
         if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName))
             fillFieldMapsForObject(objectName, fieldName);
@@ -213,9 +232,6 @@ public with sharing class UTIL_Describe {
     * @return Displaytype the Displaytype of the field
     */
     public static Schema.Displaytype getFieldDisplaytype(String objectName, String fieldName) {
-        // fields in our own package must not have their prefix for the Describe Field Map
-        fieldName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldName);
-
         // make sure we have this field's schema mapped
         if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName))
             fillFieldMapsForObject(objectName, fieldName);
@@ -231,9 +247,6 @@ public with sharing class UTIL_Describe {
     * @return Schema.DescribeFieldResult the describe field result for the given field
     */
     public static Schema.DescribeFieldResult getFieldDescribe(String objectName, String fieldName) {
-        // fields in our own package must not have their prefix for the Describe Field Map
-        fieldName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldName);
-
         // make sure we have this field's schema mapped
         if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName))
             fillFieldMapsForObject(objectName, fieldName);
@@ -249,9 +262,6 @@ public with sharing class UTIL_Describe {
     * @return string the label of the field
     */
     public static string getFieldLabel(String objectName, String fieldName) {
-        // fields in our own package must not have their prefix for the Describe Field Map
-        fieldName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldName);
-
         // make sure we have this field's schema mapped
         if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName))
             fillFieldMapsForObject(objectName, fieldName);
@@ -281,9 +291,6 @@ public with sharing class UTIL_Describe {
     * @return boolean whether the field exists
     */
     public static boolean isValidField(String objectName, String fieldName) {
-        // fields in our own package must not have their prefix for the Describe Field Map
-        fieldName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldName);
-
         // make sure we have this field's schema mapped
         try {
             if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName))
@@ -369,4 +376,83 @@ public with sharing class UTIL_Describe {
         }
         return strFields.substring(0, strFields.length()-1);
     }
+
+    /*******************************************************************************************************
+    * @description copies the specified fields, make sure the user has apppropriate permissions
+    * @param strObject the name of the object
+    * @param src the Source object
+    * @param dst the Destination object
+    * @param listStrF the list of field names to check FLS and copy data from
+    * @return void
+    */
+    public static void copyObjectFLS(string strObject, SObject src, SObject dst, list<String> listStrF) {
+        for (String strF : listStrF) {
+            DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(strObject, strF);
+            if (dfr == null || !dfr.isCreateable() || !dfr.isUpdateable())
+                throw (new permsException(string.format(label.flsError, new string[]{strObject + '.' + strF})));
+            
+            // don't copy null for checkbox fields, or they will give an error on update
+            if (dfr.isNillable() || src.get(strF)!= null) {    
+                dst.put(strF, src.get(strF));
+            }
+        }
+    }
+
+    /** @description Returns a list of SelectOptions for a given object and picklist field name.
+    * @param objectName The name of the object.
+    * @param fieldName The name of the field.
+    * @return List<SelectOption> The select options for this picklist field.
+    */
+
+    public static List<SelectOption> getSelectOptions(String objectName, String fieldName) {
+        Schema.DescribeFieldResult describeField = UTIL_Describe.getFieldDescribe(objectName, fieldName);
+        List<SelectOption> result = new List<SelectOption>();
+        if (describeField.getType() == Schema.DisplayType.PICKLIST) {
+            for (Schema.PicklistEntry entry : describeField.getPicklistValues()) {
+                if (entry.isActive()) {
+                    result.add(new SelectOption(entry.getLabel(), entry.getValue()));
+                }
+            }
+        }
+        return result;
+    }
+
+    /** @description Returns the default SelectOption for a given object and picklist field name.
+    * @param objectName The name of the object.
+    * @param fieldName The name of the field.
+    * @return String The default select option for this picklist field.
+    */
+    public static String getDefaultSelectOption(String objectName, String fieldName) {
+        Schema.DescribeFieldResult describeField = getFieldDescribe(objectName, fieldName);
+        if (describeField.getType() == Schema.DisplayType.PICKLIST) {
+            for (Schema.PicklistEntry entry : describeField.getPicklistValues()) {
+                if (entry.isDefaultValue()) {
+                    return entry.getValue();
+                }
+            }
+        }
+        return null;
+    }
+
+    /** @description For a given object and field, verifies that the field is accessible and updateable,
+    * throwing an exception if it isn't.*/
+    public static void checkFieldFLS(String objectName, String fieldName) {
+        DescribeFieldResult dfr = getFieldDescribe(
+            UTIL_Namespace.StrTokenNSPrefix(objectName), 
+            fieldName.endsWith('__c')?UTIL_Namespace.StrTokenNSPrefix(fieldName):fieldName
+        );
+        if (dfr == null || !dfr.isAccessible() || !dfr.isUpdateable()) {
+            throw (new permsException(
+                string.format(
+                    label.flsError, 
+                    new string[]{UTIL_Namespace.StrTokenNSPrefix(objectName) + '.' + 
+                                 UTIL_Namespace.StrTokenNSPrefix(fieldName)}
+                )
+            ));
+        }
+    }
+
+    /** @description our exception object for Field Level & Object Security errors. */
+    private class permsException extends Exception {}
+    
 }

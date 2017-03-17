@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2013, Salesforce.com Foundation
+    Copyright (c) 2013, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
 
@@ -29,7 +29,7 @@
 */
 
 /**
- * @author Salesforce.com Foundation
+ * @author Salesforce.org
  * @date 2014
  * @group TDTM
  * @group-content ../../ApexDocContent/TDTM.htm
@@ -82,8 +82,12 @@ global abstract class TDTM_Runnable {
         qn += ' ' + allFields[allFields.size() - 1]; //add last field to query
         qn += ' from ' + objectName + ' where id IN ';
 
-        List<SObject> newlist = Database.query(qn + ':newIds');
-        List<SObject> oldlist = Database.query(qn + ':oldIds');
+        List<SObject> newlist;
+        if (newIds != null) 
+            newlist = Database.query(qn + ':newIds order by Id');
+        List<SObject> oldlist;
+        if (oldIds != null)
+            oldlist = Database.query(qn + ':oldIds order by Id');
 
         //Call the non-future method
         Type classType = Type.forName(classToRunName);
@@ -143,65 +147,26 @@ global abstract class TDTM_Runnable {
         * @return List<SObject> A list with the records passed as parameters ordered by type. Duplicates removed.
         */
         private List<SObject> groupSObjects(List<SObject> sobjects) {
-        	//First remove duplicates to avoid the "Duplicate id in list" error
-        	sobjects = new List<SObject>(new Set<SObject>(sobjects));
-        	        	
-        	List<SObject> sorted = new List<SObject>();
-        	
-        	List<SObject> accounts = new List<SObject>();
-            List<SObject> contacts = new List<SObject>();
-            List<SObject> opps = new List<SObject>();
-            List<SObject> addresses = new List<SObject>();
-            List<SObject> affiliations = new List<SObject>();
-            List<SObject> errors = new List<SObject>();
-            List<SObject> households = new List<SObject>();
-            List<SObject> payments = new List<SObject>();
-            List<SObject> recDonations = new List<SObject>();
-            List<SObject> relationships = new List<SObject>();
-            list<SObject> allocations = new list<SObject>();
-            List<SObject> unknown = new List<SObject>();
-            
-            for(SObject o : sobjects) {
-                if(o instanceof Account) {
-                	accounts.add(o);
-                } else if(o instanceof Contact) {
-                	contacts.add(o);
-                } else if(o instanceof Opportunity) {
-                	opps.add(o);
-                } else if(o instanceof Address__c) {
-                    addresses.add(o);
-                } else if(o instanceof npe5__Affiliation__c) {
-                    affiliations.add(o);
-                } else if(o instanceof Error__c) {
-                    errors.add(o);
-                } else if(o instanceof npo02__Household__c) {
-                    households.add(o);
-                } else if(o instanceof npe01__OppPayment__c) {
-                    payments.add(o);
-                } else if(o instanceof npe03__Recurring_Donation__c) {
-                    recDonations.add(o);
-                } else if(o instanceof npe4__Relationship__c) {
-                    relationships.add(o);
-                } else if(o instanceof Allocation__c) {
-                    allocations.add(o);
+                        
+            map<string,list<SObject>> mapNameToListSObject = new map<string,list<SObject>>();
+            list<SObject> sorted = new list<SObject>();
+
+            //First remove duplicates to avoid the "Duplicate id in list" error
+            sobjects = new list<SObject>(new set<SObject>(sobjects));
+
+            for (SObject SObj : sobjects) {
+                string objName = SObj.getSObjectType().getDescribe().getName();
+                if (mapNameToListSObject.containsKey(objName)) {
+                    mapNameToListSObject.get(objName).add(SObj);
                 } else {
-                	UTIL_Debug.debug(LoggingLevel.WARN, '****Not one of our basic object types');
-                	unknown.add(o);
+                    mapNameToListSObject.put(objName, new list<SObject>{SObj});
                 }
             }
-            sorted.addAll(accounts);
-            sorted.addAll(contacts);
-            sorted.addAll(opps);
-            sorted.addAll(addresses);
-            sorted.addAll(affiliations);
-            sorted.addAll(errors);
-            sorted.addAll(households);
-            sorted.addAll(payments);
-            sorted.addAll(recDonations);
-            sorted.addAll(relationships);
-            sorted.addAll(allocations);
-            sorted.addAll(unknown);
-            
+
+
+            for (list<SObject> groupedObjects : mapNameToListSObject.values())
+                sorted.addAll(groupedObjects);
+
             return sorted;
         }
     }

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014 Salesforce.com Foundation
+    Copyright (c) 2014 Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014 
 * @group Utilities
 * @description test Class which holds test methods for common utilities, 
@@ -53,7 +53,9 @@ public with sharing class UTIL_Namespace_TEST {
             system.assertEquals('foo__c', UTIL_Namespace.StrAllNSPrefix('foo__c'));
             system.assertEquals('foo_bar_baz__c', UTIL_Namespace.StrAllNSPrefix('foo_bar_baz__c'));
             system.assertEquals('select foo__c, bar, baz1__c, biz_buz__c from Contact', UTIL_Namespace.StrAllNSPrefix('select foo__c, bar, baz1__c, biz_buz__c from Contact'));           
-        }       
+        }
+        system.assertEquals('foo__c', UTIL_Namespace.StrTokenRemoveNSPrefix('npsp__foo__c'));
+        system.assertEquals('foo_npsp__c', UTIL_Namespace.StrTokenRemoveNSPrefix('foo_npsp__c'));
     }               
 
     static testmethod void testSandboxEmailToRealEmail() {
@@ -90,9 +92,72 @@ public with sharing class UTIL_Namespace_TEST {
         str = Label.stgLabelTriggerHandlers;
         str = Label.stgNavContacts;
         str = Label.stgLabelHHNamingProgress;
+        str = Label.statusNotStarted;
+        str = Label.statusInProgress;
+        str = Label.statusCompleted;
         str = Label.Address_StateCountry_Invalid_Error;
         str = Label.Addr_Verify_Google_Help;
         str = Label.SmartyStreets_Help_Text;
         str = Label.stgHelpCiceroAddrVerification;
+        str = Label.stgHelpRDDisableScheduling;
+        str = Label.stgHelpRDFieldMapOppField;
+        str = Label.stgHelpRDFieldMapRDField;
+        str = Label.CONV_Reload;
+        str = Label.stgLabelOppUpdatePrimaryContact;
+        str = Label.stgHelpNoUDR;
+        str = Label.alloRemainder;
+        str = Label.alloTotals;
+        str = Label.alloCampaignExceedsOppAmount;
+        str = Label.alloUnallocated;
+        str = Label.stgHelpBatchCreateDefault;
+        str = Label.addrHHAddressAlwaysDefault;
+        str = Label.Addr_Verification_Cant_Load_Class;
+
+        // The following labels are referenced because the spider was having
+        // issues resolving references to them and they need to be directly
+        // referenced here to avoid build issues in the packaging org
+        str = Label.PageMessagesConfirm;
+        str = Label.PageMessagesError;
+        str = Label.PageMessagesFatal;
+        str = Label.PageMessagesWarning;
+        str = Label.mtchBtnSearch;
+        str = Label.mtchCloseDateEnd;
+        str = Label.mtchCloseDateStart;
+        str = Label.mtchFindMatchedGiftsSectionHeader;
+        str = Label.mtchFindMoreGifts;
+        str = Label.mtchFindMoreGiftsInfo;
+        str = Label.mtchItems;
+        str = Label.mtchSearchCriteriaEmpty;
+        str = Label.mtchSelectCbxTitle;
+        str = Label.mtchTotalMatchingGift;
+        str = Label.mtchTotalSelected;
+        str = Label.mtchTotalUnaccounted;
+        str = Label.pscManageSoftCreditsAdd;
+        str = Label.pscManageSoftCreditsAmount;
+        str = Label.pscManageSoftCreditsAmountMissing;
+        str = Label.pscManageSoftCreditsAmountOrPercent;
+        str = Label.pscManageSoftCreditsCantChangeCurrency;
+        str = Label.pscManageSoftCreditsFull;
+        str = Label.pscManageSoftCreditsInvalidContact;
+        str = Label.pscManageSoftCreditsNoRoles;
+        str = Label.pscManageSoftCreditsOppAmount;
+        str = Label.pscManageSoftCreditsPSCAmount;
+        str = Label.pscManageSoftCreditsPartial;
+        str = Label.pscManageSoftCreditsPercent;
+        str = Label.pscManageSoftCreditsPrimaryDonor;
+        str = Label.pscManageSoftCreditsReconcileFail;
+        str = Label.pscManageSoftCreditsRestrictions;
+        str = Label.pscManageSoftCreditsRoleMissing;
+        str = Label.pscManageSoftCreditsTitle;
+        str = Label.pscManageSoftCreditsType;
+        str = Label.pscManageSoftCreditsUnaccounted;
+        str = Label.pscManageSoftCreditsValidateTotals;
+        str = Label.stgHelpMatchedDonorRole;
+        str = Label.stgNavBulkProcesses;
+        str = Label.EPAddTask;
+        str = Label.healthDetailsInvalidScheduledJob;
+        str = Label.healthSolutionInvalidScheduledJob;
+        str = Label.healthDetailsScheduleJobs;
+        str = Label.healthSolutionScheduleJobs;
     }
 }

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,57 +28,29 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
 * @group Settings
 * @description Controller for the Households panel.
 */
 public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
-	
+    
     /*********************************************************************************************************
     * @description The panel's constructor 
     */
-	public STG_PanelHouseholds_CTRL() {
-		isRunningBatch = false;
-	}
-	    
+    public STG_PanelHouseholds_CTRL() {}
+        
     /*********************************************************************************************************
     * @description Returns the string Id of the Households panel. 
     */
     public override string idPanel() { return 'idPanelHH'; }
 
-    /*********************************************************************************************************
-    * @description Whether we are running the Update Household Names batch process 
-    */
-    public boolean isRunningBatch { get; set; }
-
-    /*********************************************************************************************************
-    * @description Action Method to save settings and invoke the Update Household Names batch process 
-    * @return null
-    */
-    public PageReference activateHouseholdNaming() {
-        boolean isActivation = (UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c == false);
-                
-        STG_Panel.stgService.stgHH.npo02__Advanced_Household_Naming__c = true;
-
-        // make sure any custom name formats are valid.
-		if (!isValidNameFormats()) {
-			return null;        			
-		}
-
-        saveSettings();
-        
-        isRunningBatch = true; 
-        HH_HouseholdNaming.refreshAllHouseholdNaming(isActivation);        
-        return null;
-    }
 
     /*********************************************************************************************************
     * @description Action Method to enter Edit mode
     * @return null 
     */
     public override PageReference editSettings() {
-        isRunningBatch = false;
         return super.editSettings();
     }
     
@@ -87,25 +59,25 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
     * any errors.
     * @return boolean 
     */
-    private boolean isValidNameFormats() {
+    public boolean isValidNameFormats() {
         // make sure any custom name formats are valid.
         if (STG_Panel.stgService.stgHH.npo02__Advanced_Household_Naming__c) {
-	        string strSetting;        
-			try {
-				strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), 'Household_Name_Format__c');     
-	            strNameSpecExample(STG_Panel.stgService.stgHN, 'Household_Name_Format__c', 2); 
-				strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), 'Formal_Greeting_Format__c');     
-	            strNameSpecExample(STG_Panel.stgService.stgHN, 'Formal_Greeting_Format__c', 2); 
-				strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), 'Informal_Greeting_Format__c');     
-	            strNameSpecExample(STG_Panel.stgService.stgHN, 'Informal_Greeting_Format__c', 2);
-	            return true; 
-			} catch (Exception ex) {
-	            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 
-	            	string.format(label.stgErrorInvalidNameFormat, new string[]{strSetting, ex.getMessage()})));
-	            return false;			
-			}        
+            string strSetting;        
+            try {
+                strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), UTIL_Namespace.StrTokenNSPrefix('Household_Name_Format__c'));
+                strNameSpecExample(STG_Panel.stgService.stgHN, 'Household_Name_Format__c', 2); 
+                strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), UTIL_Namespace.StrTokenNSPrefix('Formal_Greeting_Format__c'));
+                strNameSpecExample(STG_Panel.stgService.stgHN, 'Formal_Greeting_Format__c', 2); 
+                strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), UTIL_Namespace.StrTokenNSPrefix('Informal_Greeting_Format__c'));     
+                strNameSpecExample(STG_Panel.stgService.stgHN, 'Informal_Greeting_Format__c', 2);
+                return true; 
+            } catch (Exception ex) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 
+                    string.format(label.stgErrorInvalidNameFormat, new string[]{strSetting, ex.getMessage()})));
+                return false;           
+            }        
         } 
-        return true;   	
+        return true;    
     }
 
     /*********************************************************************************************************
@@ -113,17 +85,17 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
     * @return null 
     */
     public override PageReference saveSettings() {
-    	
-    	// add some extra error detection
-    	if (STG_Panel.stgService.stgHH.npo02__Household_Rules__c != HH_Households.NO_HOUSEHOLDS_PROCESSOR &&
-    	   STG_Panel.stgService.stgCon.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
+        
+        // add some extra error detection
+        if (STG_Panel.stgService.stgHH.npo02__Household_Rules__c != HH_Households.NO_HOUSEHOLDS_PROCESSOR &&
+           STG_Panel.stgService.stgCon.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, system.Label.stgValidationHHAccountHHRules));
             return null;
         }
 
         // make sure any custom name formats are valid.
-		if (!isValidNameFormats())
-			return null;        
+        if (!isValidNameFormats())
+            return null;        
                 
         return super.saveSettings();
     }
@@ -134,12 +106,12 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
     static public string strMailingReport {
         get {
             if (strMailingReport == null) {
-            	ID id = STG_Panel.stgService.stgHH.npo02__Household_Mailing_List_ID__c;
-            	if (id != null) {
-	                list<Report> listRpt = [select Id, Name from Report where id = :id];
-	                if (listRpt.size() > 0)
-	                   strMailingReport = listRpt[0].Name;
-            	}
+                ID id = STG_Panel.stgService.stgHH.npo02__Household_Mailing_List_ID__c;
+                if (id != null) {
+                    list<Report> listRpt = [select Id, Name from Report where id = :id];
+                    if (listRpt.size() > 0)
+                       strMailingReport = listRpt[0].Name;
+                }
             }
             return strMailingReport;
         }
@@ -160,6 +132,9 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
                 listSOHouseholdNameFormats.add(new SelectOption('{!LastName} Family', '{!LastName} Family'));
                 listSOHouseholdNameFormats.add(new SelectOption('{!{!FirstName}} {!LastName} Family', '{!{!FirstName}} {!LastName} Family'));
                 listSOHouseholdNameFormats.add(new SelectOption('{!LastName} ({!{!FirstName}}) Family', '{!LastName} ({!{!FirstName}}) Family'));
+                listSOHouseholdNameFormats.add(new SelectOption('{!{!Salutation}} {!FirstName} {!LastName} Family', '{!{!Salutation}} {!FirstName} {!LastName} Family'));
+                listSOHouseholdNameFormats.add(new SelectOption('{!Account.npe01__One2OneContact__r.LastName} Family', '{!Account.npe01__One2OneContact__r.LastName} Family'));
+                listSOHouseholdNameFormats.add(new SelectOption('{!LastName} ({!Account.BillingCity}) Family', '{!LastName}  ({!Account.BillingCity}) Family'));
                 listSOHouseholdNameFormats.add(new SelectOption(Label.stgLabelOther, Label.stgLabelOther));
             }
             return listSOHouseholdNameFormats;
@@ -177,6 +152,7 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
                 listSOFormalGreetingFormats.add(new SelectOption('', Label.stgLabelNone));
                 listSOFormalGreetingFormats.add(new SelectOption('{!{!FirstName}} {!LastName}', '{!{!FirstName}} {!LastName}'));
                 listSOFormalGreetingFormats.add(new SelectOption('{!{!Salutation} {!FirstName}} {!LastName}', '{!{!Salutation} {!FirstName}} {!LastName}'));
+                listSOFormalGreetingFormats.add(new SelectOption('{!{!Salutation}} {!FirstName} {!LastName}', '{!{!Salutation}} {!FirstName} {!LastName}'));
                 listSOFormalGreetingFormats.add(new SelectOption(Label.stgLabelOther, Label.stgLabelOther));
             }
             return listSOFormalGreetingFormats;
@@ -205,17 +181,27 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
     * @description The list of Contacts to use when construction sample name examples 
     */
     private static list<Contact> listConExamples {
-    	get {
+        get {
             if (listConExamples == null) {
+                    // create a fake household account to use
+                    Account acc = new Account(
+                        Name = 'Sample',
+                        BillingCity = 'Seattle'
+                    );
+                                            
+                    // create fake contacts in memory only
                     listConExamples = new list<Contact>();
                     Contact con = new Contact();
+                    con.Account = acc;
                     con.FirstName = 'Sam';
                     con.LastName = 'Smith';
                     con.Salutation = 'Dr.';
                     con.MailingCity = 'Seattle';
                     listConExamples.add(con);
+                    acc.npe01__One2OneContact__r = con;
                     
                     con = new Contact();
+                    con.Account = acc;
                     con.FirstName = 'Sally';
                     con.LastName = 'Smith';
                     con.Salutation = 'Mrs.';
@@ -223,11 +209,13 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
                     listConExamples.add(con);
                     
                     con = new Contact();
+                    con.Account = acc;
                     con.FirstName = 'Suzie';
                     con.LastName = 'Smith';
                     listConExamples.add(con);
 
                     con = new Contact();
+                    con.Account = acc;
                     con.FirstName = 'Daphne';
                     con.LastName = 'Doe';
                     con.Salutation = 'Ms.';
@@ -235,6 +223,7 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
                     listConExamples.add(con);
 
                     con = new Contact();
+                    con.Account = acc;
                     con.FirstName = 'Donald';
                     con.LastName = 'Doe';
                     con.Salutation = 'Mr.';
@@ -243,7 +232,7 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
                 }
             return listConExamples;
         }
-    	private set;
+        private set;
     }
     
     /*********************************************************************************************************
@@ -259,8 +248,8 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
     
         list<Contact> listCon = new list<Contact>();
         for (integer i = 0; i < cContact && i < listConExamples.size(); i++)
-        	listCon.add(listConExamples[i]);
-        	
+            listCon.add(listConExamples[i]);
+            
         // call INaming interface dynamically  
         string strClass = hns.Implementing_Class__c;  
         if (strClass == null || strClass == '') strClass = 'HH_NameSpec';   
@@ -271,10 +260,27 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
                 HH_INaming n = (HH_INaming)classInstance;
                 return n.getExampleName(hns, strField, listCon);
             } else {
-            	return label.stgErrorINaming;
+                return label.stgErrorINaming;
             }
         } else {
-        	return label.stgErrorInvalidClass;
+            return label.stgErrorInvalidClass;
         }
     }    
+
+    /**
+     * @description A user friendly rendering of record type ids by record type
+     * name for Household Creation Excluded Record Types
+     */
+    static public String strHouseholdCreationExcludedRecTypesReadOnly {
+        get {
+            if (strHouseholdCreationExcludedRecTypesReadOnly == null) {
+                strHouseholdCreationExcludedRecTypesReadOnly = STG_Panel.getRecordTypeNamesFromPicklistString(
+                    Contact.sObjectType,
+                    STG_Panel.stgService.stgHH.npo02__Household_Creation_Excluded_Recordtypes__c
+                );
+            }
+            return strHouseholdCreationExcludedRecTypesReadOnly;
+        }
+        private set;
+    }
 }

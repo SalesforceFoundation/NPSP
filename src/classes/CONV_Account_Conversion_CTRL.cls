@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distributio
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permissio
 
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
 * @group Account Model Converter
 * @description The controller for the VF page invoked by using the bulk Account model conversion utility.  This controller handles basic logic for checking the user setup and any invalid states prior to allowing the utility to run.
@@ -122,7 +122,7 @@ public with sharing class CONV_Account_Conversion_CTRL {
         'npo02__Informal_Greeting__c', 'npo02__Household_ID__c', 'npo02__HouseholdPhone__c', 'npo02__HouseholdEmail__c', +
         'npo02__Formula_MailingAddress__c', 'npo02__Formal_Greeting__c', 'npo02__FirstCloseDate__c', 'npo02__Best_Gift_Year__c', +
         'npo02__Best_Gift_Year_Total__c', 'npo02__AverageAmount__c', 'npo02__Always_Anonymous__c', 'npo02__Addressee__c', +
-        'OwnerId '
+        'OwnerId ', 'CreatedById', 'CreatedDate', 'LastModifiedById', 'LastModifiedDate'
     };
     /*******************************************************************************************************
     * @description Set of Account fields invalid for storing the Household Account Id - helps to cull list displayed to the user
@@ -231,24 +231,25 @@ public with sharing class CONV_Account_Conversion_CTRL {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, errorString));
         }
 
+
         List<User> inactiveUsers = new List<User>();
         inactiveUsers = [select id from User where isActive = false order by LastModifiedDate desc limit 9999];
-        Integer accountCount = [select count() from Account where OwnerId IN :inactiveUsers limit 200];
+  //      Integer accountCount = [select count() from Account where OwnerId IN :inactiveUsers limit 200];
         Integer contactCount = [select count() from Contact where OwnerId IN :inactiveUsers limit 200];
-        Integer opptyCount = [select count() from Opportunity where OwnerId IN :inactiveUsers limit 200];
+  //      Integer opptyCount = [select count() from Opportunity where OwnerId IN :inactiveUsers limit 200];
         Integer taskCount = [select count() from Task where OwnerId IN :inactiveUsers limit 200];
 
         String inactiveUserWarning = 'You have records owned by inactive Users.  You will need to transfer these records to an active user prior to running the conversion process.  The conversion process will not be available until these records have been reassigned.';
-        if (accountCount > 0)
-            inactiveUserWarning += '\n ' + accountCount + ' Accounts are currently owned by an inactive user. ';
+//        if (accountCount > 0)
+  //          inactiveUserWarning += '\n ' + accountCount + ' Accounts are currently owned by an inactive user. ';
         if (contactCount > 0)
             inactiveUserWarning += '\n ' + contactCount + ' Contacts are currently owned by an inactive user. ';
-        if (opptyCount > 0)
-            inactiveUserWarning += '\n ' + opptyCount + ' Opportunities are currently owned by an inactive user. ';
+      //  if (opptyCount > 0)
+    //        inactiveUserWarning += '\n ' + opptyCount + ' Opportunities are currently owned by an inactive user. ';
         if (taskCount > 0)
             inactiveUserWarning += '\n ' + taskCount + ' Tasks are currently owned by an inactive user. ';
 
-        if ((accountCount + contactCount + opptyCount + taskCount) > 0){
+        if ((contactCount + taskCount /* accountCount + opptyCount */) > 0){
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, inactiveUserWarning));
             runCheckErrorState = true;
         }

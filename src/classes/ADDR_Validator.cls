@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,15 +28,29 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
+* @group Address Management
 * @description Class that asynchronously starts the address verification calls
 * and processes the results.
 */
 public with sharing class ADDR_Validator {
 
-    //get verification settings
+    /** @description Gets verification settings.*/
     private static Addr_Verification_Settings__c settings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
+
+    /** @description Controller for verify address button, does nothing.*/
+    public ADDR_Validator(ApexPages.StandardController standardController) {}
+
+    /** @description Action method for verify address button, verifies address.*/
+    public PageReference verifyAddressButton() {
+        id addrId = ApexPages.currentPage().getParameters().get('id');
+        if (addrId != null) {
+            set<id> setAddrId = new Set<Id>{addrId};
+            verifyRecords(setAddrId);
+        }
+        return null;
+    }
 
     /*******************************************************************************************************
     * @description Verifies a set of address records in a future.
@@ -58,7 +72,7 @@ public with sharing class ADDR_Validator {
         //query for all the indicated verification records
         list<Address__c> avList = [ select Id, Name, CreatedDate, LastModifiedDate, 
             MailingStreet__c, MailingStreet2__c, Formula_MailingStreetAddress__c, MailingCity__c, MailingCountry__c, MailingState__c, MailingPostalCode__c, 
-            Verified__c, API_Response__c, Geolocation__Latitude__s, Geolocation__Longitude__s, 
+            Verified__c, API_Response__c, Geolocation__Latitude__s, Geolocation__Longitude__s, Formula_MailingAddress__c,
             Congressional_District__c, County_Name__c from Address__c where id in : recordIds];
 
         verifyAddressRecords(avList);

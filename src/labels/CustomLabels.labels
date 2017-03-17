@@ -61,16 +61,11 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Settings Intro Body</shortDescription>
-        <value>&lt;br/&gt;To get started:
-
-&lt;ol&gt;
-&lt;li&gt;Open a third-party address verification account. (Some are free for nonprofits.)&lt;/li&gt;
-
-&lt;li&gt;In your address verification service, create the required authentication ID and/or token.&lt;/li&gt;
-
-&lt;li&gt;Return to this settings page, click the Edit button above, and paste the ID and/or token into the appropriate fields.&lt;/li&gt;
-
-&lt;li&gt;Complete the remaining fields and click Save. The help text for each field provides more information. If you still need more help, see the &lt;a href=&quot;https://powerofus.force.com/NPSP_Address_Verification&quot;&gt;NPSP documentation&lt;/a&gt;.&lt;/li&gt;</value>
+        <value>&lt;br/&gt;To get started:&lt;br/&gt;&lt;br/&gt;
+1. Open a third-party address verification account. (Some are free for nonprofits.)&lt;br/&gt;
+2. In your address verification service, create the required authentication ID and/or token.&lt;br/&gt;
+3. Return to this settings page, click the Edit button above, and paste the ID and/or token into the appropriate fields.&lt;br/&gt;
+4. Complete the remaining fields and click Save. The help text for each field provides more information. If you still need more help, see the &lt;a href=&quot;https://powerofus.force.com/NPSP_Address_Verification&quot;&gt;NPSP documentation&lt;/a&gt;.</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_Intro_Title</fullName>
@@ -147,7 +142,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Verification Batch Body</shortDescription>
-        <value>&lt;p&gt;Click Verify All Addresses to verify and standardize all addresses in your organization. 
+        <value>&lt;p&gt;Click Verify All Addresses to verify and standardize all addresses in your organization.
         The mass verification process uses the settings from above.&lt;/p&gt;
  &lt;br/&gt;</value>
     </labels>
@@ -182,6 +177,14 @@
         <protected>true</protected>
         <shortDescription>Addr Verification Batch Title</shortDescription>
         <value>Mass Verify Existing Addresses</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Verification_Cant_Load_Class</fullName>
+        <categories>address</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Unable to load verification class when visiting settings page</shortDescription>
+        <value>There was an error loading the validator class {0}</value>
     </labels>
     <labels>
         <fullName>Addr_Verification_Required</fullName>
@@ -276,12 +279,517 @@
         <value>You cannot verify more than 100 addresses at a time.</value>
     </labels>
     <labels>
+        <fullName>CONV_Accept_Risk</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Risk Accepted</shortDescription>
+        <value>I accept the risk associated with using this tool, including data loss and inconsistent data.</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Account_Field</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Account Field</shortDescription>
+        <value>Account Field</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Account_Field_For_Old_HH_ID</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Account Field For Old HH ID</shortDescription>
+        <value>Account Field for Old Household Id</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Activities_Reparented</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Activites Reparented</shortDescription>
+        <value>Activities and tasks associated with 1x1 or Individual Accounts are transferred to the new Household Account</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Address_Overrides_Set</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Address Overrides</shortDescription>
+        <value>Address overrides are set for any Contact whose address is different from the Household Address</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Addresses_Mapped</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Addresses Mapped</shortDescription>
+        <value>Addresses mapped from existing Household and Contacts to new Address objects, then attached to the Contact and Household Account</value>
+    </labels>
+    <labels>
+        <fullName>CONV_All_Backed_Up</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>All Data Backed Up</shortDescription>
+        <value>My data has been backed-up by going to Setup | Data Management | Export Data</value>
+    </labels>
+    <labels>
+        <fullName>CONV_All_Dup_Rules_Disabled</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>CONV_All_Dup_Rules_Disabled</shortDescription>
+        <value>All Data.com Duplication Management Rules have been disabled.</value>
+    </labels>
+    <labels>
+        <fullName>CONV_All_Households_Selected</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>All Households Selected</shortDescription>
+        <value>All existing Households are selected, along with their Contacts</value>
+    </labels>
+    <labels>
+        <fullName>CONV_All_Required_Removed</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>All Required Removed</shortDescription>
+        <value>All required field restrictions for custom fields have been removed.</value>
+    </labels>
+    <labels>
+        <fullName>CONV_All_Triggers_Disabled</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>All Triggers disabled</shortDescription>
+        <value>All NPSP triggers are disabled (Your custom triggers are not disabled by the utility. For safety&apos;s sake, you should disable those too)</value>
+    </labels>
+    <labels>
+        <fullName>CONV_All_Users_Logged_Out</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>All Users Logged Out</shortDescription>
+        <value>All users have logged out of my Salesforce instance.</value>
+    </labels>
+    <labels>
+        <fullName>CONV_All_WFR_Disabled</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>All WFR and VR Disabled</shortDescription>
+        <value>All workflows and any custom validation rules have been disabled.</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Batching_Explanation</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Batching Explanation</shortDescription>
+        <value>This tool will process your existing Contacts with Households in batches of 200 Households at a time, attempting to convert them to Household Accounts. Any errors during the conversion will result in one or more failed batches of Contacts while other batches may succeed.  This could leave your data in an inconsistent state.  If this occurs, you will need to immediately resolve the issue and re-run the conversion utility. The following actions are taken by the batch job associated with this tool:</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Begin</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Begin Conversion</shortDescription>
+        <value>Begin Conversion Process</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Cancel</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Cancel</shortDescription>
+        <value>Cancel</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Configuration_Options</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Configuration Options</shortDescription>
+        <value>Configuration Options</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Contacts_Attached</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Contacts Attached to Household</shortDescription>
+        <value>Contacts are disconnected from their 1x1 or Individual Account, and attached to the newly created Household Account</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Conversion_Process</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Account Model Conversion Progress</shortDescription>
+        <value>Account Model Conversion Progress</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Fundamental_Changes</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Fundamental Changes</shortDescription>
+        <value>You are about to make fundamental changes to your Salesforce data and data model. Reports, dashboards, and more may have to be modified to account for these changes. Salesforce.com and Salesforce.org are not responsible for any data or data integrity loss.  Do you still wish to proceed?</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Important_Info_Header</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Important Information Header</shortDescription>
+        <value>Important Information</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Local_Expert</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Local Expert</shortDescription>
+        <value>I&apos;ve consulted with my local Salesforce expert.</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Master_Address_Set</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Master Address Set</shortDescription>
+        <value>Master Household Address set or defined if none exists based on address frequency and Contact giving</value>
+    </labels>
+    <labels>
+        <fullName>CONV_New_Affiliations</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>New Affiliations Created</shortDescription>
+        <value>Non-1x1 Accounts associations to Contacts are removed, new Affiliations created, and Contact Primary Affiliation field is set</value>
+    </labels>
+    <labels>
+        <fullName>CONV_New_Households_Created</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>New Households Created</shortDescription>
+        <value>New Household Accounts are created for each existing Household</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Non_NPSP_Apps</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Non-NPSP Apps</shortDescription>
+        <value>All non-NPSP apps have been temporarily uninstalled or disabled.</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Old_Household_Objects</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Old Household Objects</shortDescription>
+        <value>Previous Household objects are left in place, and should be deleted manually after verifying the results of the conversion process.</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Only_Household_Contacts</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Only Household Contacts</shortDescription>
+        <value>I am aware this tool will only work for Contacts that currently have a Household associated.</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Opportunities_Reparented</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Opportunities Reparented</shortDescription>
+        <value>Opportunities are moved from the 1x1 or Individual Account and attached to the new Household Accounts and Contacts</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Original_HH_Id</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Original HH Id</shortDescription>
+        <value>You can optionally select a custom field on your new Household Account to store the original Household object Id.  This can be useful for later reparenting of any lookups or child objects originally on the Household to the new Household Account.  Only unused custom fields that hold text are eligible to be selected.</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Page_Description</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Page Description</shortDescription>
+        <value>This page is designed to help you convert your organization from an existing 1x1 or Individual Account model to the new Household Account Model.</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Page_Title</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Page Title</shortDescription>
+        <value>Account Model Conversion Utility</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Permanent_Change</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Permanent Change Info</shortDescription>
+        <value>This is a permanent change.  Please make sure to consult with your local expert before proceeding.  While the conversion is completing, your database functionality will be temporarily disabled to avoid accidentally modifying existing data.  Salesforce.com and Salesforce.org are not responsible for any data loss, modifications, or corruption that occur as a result of this operation. Please proceed at YOUR OWN RISK. Before beginning this process, you&apos;ll need to confirm the following steps have been taken:</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Primary_Contacts_Set</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Primary Contacts Set</shortDescription>
+        <value>Primary Contact values are set for all Households</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Proceed</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Proceed</shortDescription>
+        <value>Proceed with Conversion</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Record_Ownership_Transferred</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Record Ownership Transferred</shortDescription>
+        <value>All record ownership has been transferred from any inactive users.</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Reload</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Reload</shortDescription>
+        <value>Reload the Converter</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Selected_Field_Bad</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Selected Field Not Able to Hold ID</shortDescription>
+        <value>The selected field is not able to hold the Household Id information as required.  Please select a different Account field.</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Selected_Field_Verification_Failure</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Selected Field Not Verified for Id</shortDescription>
+        <value>An error has occurred in attempting to verify the validity of the selected Account field.  The field selected was unable to be accurately verified.  Without this verification, it cannot be determined if your field mapping, and therefore your conversion will be successful.  You may proceed at your own risk, or may select a different field to hold the Household Id.</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Tested_in_Sandbox</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Tested in Sandbox</shortDescription>
+        <value>The conversion process has been tested in a fresh sandbox.</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Triggers_Reenabled</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Triggers ReEnabled</shortDescription>
+        <value>All NPSP triggers are re-enabled (You&apos;ll need to manually re-enable any custom triggers you disabled for the conversion. Also, the utility re-enables &lt;b&gt;all&lt;/b&gt; NPSP triggers, so if you selectively disabled any of them beforehand, you&apos;ll need to manually disable those again too)</value>
+    </labels>
+    <labels>
+        <fullName>CONV_Warning</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Warning</shortDescription>
+        <value>Warning!</value>
+    </labels>
+    <labels>
+        <fullName>CONV_What_This_Tool_Does</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>What This Tool Does</shortDescription>
+        <value>What This Tool Does</value>
+    </labels>
+    <labels>
+        <fullName>CampaignMemberStatusOmit</fullName>
+        <categories>Opportunity, Campaign Member</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>CampaignMemberStatusOmit</shortDescription>
+        <value>omit</value>
+    </labels>
+    <labels>
+        <fullName>CascadeDeletionError</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CascadeDeletionError</shortDescription>
+        <value>Your attempt to delete {0} could not be completed because it is associated with the following records. Delete or re-associate these records and then try deleting {0} again.</value>
+    </labels>
+    <labels>
+        <fullName>ClosedWonOpportunities</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ClosedWonOpportunities</shortDescription>
+        <value>Closed Won Opportunities</value>
+    </labels>
+    <labels>
+        <fullName>ConfirmDeleteAccount</fullName>
+        <categories>Error, Delete</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ConfirmDeleteAccount</shortDescription>
+        <value>{0} is the only contact in the {1} account. Deleting this contact would leave an empty account. Would you like to delete {1} instead?</value>
+    </labels>
+    <labels>
+        <fullName>EPAddDependentTask</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>EPAddDependentTask</shortDescription>
+        <value>Add Dependent Task</value>
+    </labels>
+    <labels>
+        <fullName>EPAddTask</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Engagement Plan&apos;s Add Task button label</shortDescription>
+        <value>Add Task</value>
+    </labels>
+    <labels>
+        <fullName>EPDeleteTask</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>EPDeleteTask</shortDescription>
+        <value>Delete Task</value>
+    </labels>
+    <labels>
+        <fullName>EPManageTasks</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>EPManageTasks</shortDescription>
+        <value>Manage Engagement Plan Tasks</value>
+    </labels>
+    <labels>
+        <fullName>EPManageTemplate</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>EPManageTemplate</shortDescription>
+        <value>Manage Engagement Plan Template</value>
+    </labels>
+    <labels>
+        <fullName>EPTaskDependency</fullName>
+        <categories>Engagement Plan, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>EPTaskDependency</shortDescription>
+        <value>Engagement Plan Task dependencies cannot make recursive dependency loops.</value>
+    </labels>
+    <labels>
+        <fullName>EPTaskTemplate</fullName>
+        <categories>Engagement Plan, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>EPTaskTemplate</shortDescription>
+        <value>Engagement Plan Tasks can only be dependent on other Engagement Plan Tasks that belong to the same Engagement Plan Template.</value>
+    </labels>
+    <labels>
+        <fullName>EPTo</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>to, as in &quot;Add depend task to task 1&quot;</shortDescription>
+        <value>to</value>
+    </labels>
+    <labels>
+        <fullName>ErrorEmailMessage</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ErrorEmailMessage</shortDescription>
+        <value>Salesforce reported the below errors as NPSP was attempting to execute its batch jobs, or at a time when it was unable to display error messages directly to a user. It’s likely that NPSP was attempting to update summary fields on Accounts and Contacts, but was unable to save certain records. This failure might have been caused by a variety of issues unrelated to NPSP, such as custom code or validation rules.
+
+Read this article on the Power of Us Hub to learn how these Scheduled Jobs work: https://powerofus.force.com/NPSP_Scheduled_Jobs
+
+If you’re not sure how to resolve these errors, post a message in the Nonprofit Success Pack group in the Power of Us Hub: https://powerofus.force.com/HUB_NPSP_Group</value>
+    </labels>
+    <labels>
         <fullName>HiddenForSecurity</fullName>
         <categories>settings</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>HiddenForSecurity</shortDescription>
         <value>Hidden for security</value>
+    </labels>
+    <labels>
+        <fullName>NameRequired</fullName>
+        <categories>Engagement Plans, Errors</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>NameRequired</shortDescription>
+        <value>Subject is a required field.</value>
+    </labels>
+    <labels>
+        <fullName>OrganizationalOpportunities</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrganizationalOpportunities</shortDescription>
+        <value>Organizational Opportunities</value>
+    </labels>
+    <labels>
+        <fullName>PageMessagesConfirm</fullName>
+        <categories>PageMessages</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Confirm</shortDescription>
+        <value>Success</value>
+    </labels>
+    <labels>
+        <fullName>PageMessagesError</fullName>
+        <categories>PageMessages</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error</shortDescription>
+        <value>Error</value>
+    </labels>
+    <labels>
+        <fullName>PageMessagesFatal</fullName>
+        <categories>PageMessages</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Fatal</shortDescription>
+        <value>Error</value>
+    </labels>
+    <labels>
+        <fullName>PageMessagesWarning</fullName>
+        <categories>PageMessages</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning</shortDescription>
+        <value>Warning</value>
+    </labels>
+    <labels>
+        <fullName>REL_Create_New_Relationship</fullName>
+        <categories>Relationships, relationship-viewer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Relationship Viewer - Create</shortDescription>
+        <value>Create New Relationship</value>
+    </labels>
+    <labels>
+        <fullName>REL_Former</fullName>
+        <categories>Relationships, relationship-viewer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Relationship Viewer - Former</shortDescription>
+        <value>Former</value>
+    </labels>
+    <labels>
+        <fullName>REL_No_Relationships</fullName>
+        <categories>Relationships, relationship-viewer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Relationship Viewer - No Relationship</shortDescription>
+        <value>There are no relationships for this contact.</value>
+    </labels>
+    <labels>
+        <fullName>REL_RECenter</fullName>
+        <categories>Relationships, relationship-viewer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Relationship Viewer - Re-center</shortDescription>
+        <value>Re-Center on This Contact</value>
+    </labels>
+    <labels>
+        <fullName>REL_Return_to_Contact</fullName>
+        <categories>Relationships, relationship-viewer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Relationship Viewer - Return to Contact</shortDescription>
+        <value>Return to Contact</value>
+    </labels>
+    <labels>
+        <fullName>REL_View_Contact_Record</fullName>
+        <categories>Relationships, relationship-viewer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Relationship Viewer - View Contact Record</shortDescription>
+        <value>View Contact Record</value>
     </labels>
     <labels>
         <fullName>RecurringDonationAccountAndContactError</fullName>
@@ -422,7 +930,13 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloBatchDefaultInfo</shortDescription>
-        <value>Clicking this button starts a batch process that creates default allocations for all existing opportunities, except opportunities excluded in the Allocations Rollup Settings. Default allocations must be enabled and a default General Accounting Unit selected to run this tool. You only need to run this tool once after enabling default allocations, as all new opportunities will receive a default allocation once enabled.</value>
+        <value>This utility runs a batch process that creates default Allocations for all existing Opportunities, except Opportunities excluded in the GAU Allocations Rollup Settings.
+&lt;br/&gt;
+&lt;br/&gt;
+To run this utility, default Allocations must be enabled and a default General Accounting Unit must be selected. You only need to run this tool once after enabling default Allocations, as all new Opportunities will receive a default Allocation once enabled.
+&lt;br/&gt;
+&lt;br/&gt;
+To check your GAU Allocation settings, go to Donations | GAU Allocations.</value>
     </labels>
     <labels>
         <fullName>alloBtnCancel</fullName>
@@ -438,7 +952,23 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloBtnSaveAndClose</shortDescription>
-        <value>Save &amp; Close</value>
+        <value>Save</value>
+    </labels>
+    <labels>
+        <fullName>alloCampaignExceedsOppAmount</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>alloCampaignExceedsOppAmount</shortDescription>
+        <value>Your campaign allocations were not created. Campaign allocations for the opportunity exceeded the opportunity amount.</value>
+    </labels>
+    <labels>
+        <fullName>alloCantAllocateNothing</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>alloCantAllocateNothing</shortDescription>
+        <value>You can only create allocations for opportunities with a positive amount.</value>
     </labels>
     <labels>
         <fullName>alloDefaultGAUMissing</fullName>
@@ -462,7 +992,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloDeleteRow</shortDescription>
-        <value>Delete Row</value>
+        <value>Delete</value>
     </labels>
     <labels>
         <fullName>alloExceedsOppAmount</fullName>
@@ -561,6 +1091,14 @@
         <value>Totals:</value>
     </labels>
     <labels>
+        <fullName>alloUnallocated</fullName>
+        <categories>Allocation</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>alloUnallocated</shortDescription>
+        <value>unallocated</value>
+    </labels>
+    <labels>
         <fullName>bdiAccountCustomIdError</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -590,7 +1128,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiComplete</shortDescription>
-        <value>- Completed</value>
+        <value>Completed</value>
     </labels>
     <labels>
         <fullName>bdiCompleteWithErrors</fullName>
@@ -598,7 +1136,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiCompleteWithErrors</shortDescription>
-        <value>- Errors</value>
+        <value>Errors</value>
     </labels>
     <labels>
         <fullName>bdiContactCustomIdError</fullName>
@@ -641,6 +1179,14 @@
         <value>First Name, Last Name, and Email</value>
     </labels>
     <labels>
+        <fullName>bdiContactMatchFnameLnamePhone</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Data Importer Contact matching option for Fname, Lname, Phone</shortDescription>
+        <value>First Name, Last Name, and Phone</value>
+    </labels>
+    <labels>
         <fullName>bdiContactMatchLnameEmail</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -670,7 +1216,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiDataImporterDescription</shortDescription>
-        <value>The NPSP Data Importer helps you easily import your data into the Nonprofit Starter Pack</value>
+        <value>The NPSP Data Importer helps you easily import your data into the Nonprofit Success Pack</value>
     </labels>
     <labels>
         <fullName>bdiDataImporterInfoLine1</fullName>
@@ -777,12 +1323,28 @@
         <value>Invalid Donation Record Type Name</value>
     </labels>
     <labels>
+        <fullName>bdiErrorNonHHAccountContact</fullName>
+        <categories>NPSP Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiErrorNonHHAccountContact</shortDescription>
+        <value>Matched an existing contact from a non-Household Account, which is not supported.</value>
+    </labels>
+    <labels>
         <fullName>bdiFailed</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiFailed</shortDescription>
         <value>Failed</value>
+    </labels>
+    <labels>
+        <fullName>bdiHouseholdModelRequired</fullName>
+        <categories>NPSP Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiHouseholdModelRequired</shortDescription>
+        <value>The NPSP Data Importer only works with the Household Account model.</value>
     </labels>
     <labels>
         <fullName>bdiIgnored</fullName>
@@ -873,12 +1435,100 @@
         <value>Time:</value>
     </labels>
     <labels>
+        <fullName>btnRemove</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>button label on the Remove Contact popup</shortDescription>
+        <value>Remove</value>
+    </labels>
+    <labels>
+        <fullName>campaignMemberStatusDefault</fullName>
+        <categories>Campaign Member</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>campaignMemberStatusDefault</shortDescription>
+        <value>campaignMemberStatusDefault</value>
+    </labels>
+    <labels>
+        <fullName>campaignMemberStatusNonResponded</fullName>
+        <categories>Opportunity, Campaign Member</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>campaignMemberStatusNonResponded</shortDescription>
+        <value>campaignMemberStatusNonResponded</value>
+    </labels>
+    <labels>
+        <fullName>campaignMemberStatusResponded</fullName>
+        <categories>Opportunity, Campaign Member</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>campaignMemberStatusResponded</shortDescription>
+        <value>campaignMemberStatusResponded</value>
+    </labels>
+    <labels>
+        <fullName>conFailedAccountCreate</fullName>
+        <categories>Data Import, Contacts</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used when NPSP hits an error trying to create an account for a contact</shortDescription>
+        <value>Failed to create Account for Contact {0} {1}. {2}</value>
+    </labels>
+    <labels>
         <fullName>conMergeErrNoPersonAccounts</fullName>
         <categories>Contact Merge</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>conMergeErrNoPersonAccounts</shortDescription>
         <value>Person accounts are not supported.</value>
+    </labels>
+    <labels>
+        <fullName>engagementPlanCantEdit</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>engagementPlanCantEdit</shortDescription>
+        <value>You can&apos;t assign this Engagement Plan to a new object. Please create a new Engagement Plan.</value>
+    </labels>
+    <labels>
+        <fullName>engagementPlanNoLookups</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>engagementPlanNoLookups</shortDescription>
+        <value>One object lookup must be populated for each Engagement Plan.</value>
+    </labels>
+    <labels>
+        <fullName>engagementPlanTwoLookups</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>engagementPlanTwoLookups</shortDescription>
+        <value>Only one object lookup can be populated per Engagement Plan.</value>
+    </labels>
+    <labels>
+        <fullName>exceptionRequiredField</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>exceptionRequiredField</shortDescription>
+        <value>Required fields are missing:</value>
+    </labels>
+    <labels>
+        <fullName>exceptionValidationRule</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>exceptionValidationRule</shortDescription>
+        <value>A validation rule is preventing the record from saving:</value>
+    </labels>
+    <labels>
+        <fullName>flsError</fullName>
+        <categories>Batch Data Import</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>flsError</shortDescription>
+        <value>You do not have permissions to modify {0}.</value>
     </labels>
     <labels>
         <fullName>healthButtonRun</fullName>
@@ -910,7 +1560,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthDetailsAccountProcessor</shortDescription>
-        <value>The Account Model is set to {0}, but there are a mixture of Account types being used.</value>
+        <value>The Account Model is set to {0}, but Health Check has found that you&apos;re using a mixture of Account types.</value>
     </labels>
     <labels>
         <fullName>healthDetailsAccountRTIssue</fullName>
@@ -966,6 +1616,22 @@
         <protected>false</protected>
         <shortDescription>healthDetailsContactData</shortDescription>
         <value>There are {0} Contacts who have no Account.  These Contacts will be private to the user who created them.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsDuplicateAcctRT</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsDuplicateAcctRT</shortDescription>
+        <value>You cannot specify the same Account Record Type for the Household Account Record Type and One-to-One Record Type.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsDuplicateContactRoles</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The details displayed when the duplicate contact roles health check fails</shortDescription>
+        <value>Health Check found Opportunities with duplicate Contacts and rollup values.</value>
     </labels>
     <labels>
         <fullName>healthDetailsGenderField</fullName>
@@ -1040,12 +1706,36 @@
         <value>Invalid User {0}.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsInvalidFieldNumeric</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Health Check error if a Level refers to an invalid field</shortDescription>
+        <value>Level {0} refers to an invalid numeric field {1} on {2}.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsInvalidFiscalYears</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthDetailsInvalidFiscalYears</shortDescription>
         <value>Fiscal Year Rollups are not supported when the organization is using Custom Fiscal Years.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidLevelField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Health Check error if a Level refers to an invalid field</shortDescription>
+        <value>Level {0} refers to an invalid field {1} on {2}.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidLevelFieldReference</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Health Check error if a Level refers to an invalid field</shortDescription>
+        <value>Level {0} refers to an invalid Level Lookup field {1} on {2}.</value>
     </labels>
     <labels>
         <fullName>healthDetailsInvalidObjectField</fullName>
@@ -1128,12 +1818,28 @@
         <value>The NPSP_Campaign_Household_Mailing_List report is missing which is used by the Household Mailing List button.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsMissingOppPayments</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsMissingOppPayments</shortDescription>
+        <value>{0} Opportunities that should have Payments are missing those Payments.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsNothingScheduled</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthDetailsNothingScheduled</shortDescription>
-        <value>The NPSP Global Scheduled class is not scheduled.</value>
+        <value>The NPSP default scheduled classes are not scheduled.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsOCR</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthDetailsOCR</shortDescription>
+        <value>{0} and {1} cannot use the same role value.</value>
     </labels>
     <labels>
         <fullName>healthDetailsOCRDupPrimary</fullName>
@@ -1150,6 +1856,22 @@
         <protected>false</protected>
         <shortDescription>healthDetailsOCRDupPrimaryValid</shortDescription>
         <value>No Opportunities were found with multiple Primary Opportunity Contact Roles.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsOCRSettingsResolution</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthDetailsOCRSettingsResolution</shortDescription>
+        <value>On the NPSP Settings tab, click Donations | Contact Roles, and edit the above settings values.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsOCRSettingsValid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthDetailsOCRSettingsValid</shortDescription>
+        <value>NPSP Opportunity Contact Roles settings are valid.</value>
     </labels>
     <labels>
         <fullName>healthDetailsPaymentMappingBadDataTypes</fullName>
@@ -1176,12 +1898,52 @@
         <value>Reciprocal Relationship {0} should have a value in at least one of the fields for Male, Female, or Neutral.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsSaveAcctFailed</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsSaveAcctFailed</shortDescription>
+        <value>Unable to create new Account.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsSaveOppsFailed</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsSaveOppsFailed</shortDescription>
+        <value>Unable to create new Opportunities.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsScheduleJobs</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthDetailsScheduleJobs</shortDescription>
         <value>One or more of the Opportunity Rollup, Recurring Donation, and Seasonal Address jobs are missing from the Schedulable__c object.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsTriggerHandlerDuplicate</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsTriggerHandlerDuplicate</shortDescription>
+        <value>Trigger Handler {0} on object {1} with the same Handler fields is repeated multiple times and will affect NPSP behavior.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsTriggerHandlerMismatch</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsTriggerHandlerMismatch</shortDescription>
+        <value>Trigger Handler {0} on object {1} does not match the default NPSP configuration.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsTriggerHandlerMissing</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsTriggerHandlerMissing</shortDescription>
+        <value>Trigger Handler {0} on object {1} is missing and will affect NPSP behavior.</value>
     </labels>
     <labels>
         <fullName>healthDetailsUDFBadDatatypes</fullName>
@@ -1248,6 +2010,14 @@
         <value>Contact Data</value>
     </labels>
     <labels>
+        <fullName>healthLabelDuplicateContactRoles</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Duplicate Contact Role health check</shortDescription>
+        <value>Duplicate Contacts and Rollup Values</value>
+    </labels>
+    <labels>
         <fullName>healthLabelErrorRecipientValid</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -1301,7 +2071,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthLabelIntro</shortDescription>
-        <value>Health Check will verify that all of your settings are valid, and look for problems in your account related data.</value>
+        <value>Health Check verifies that all of your NPSP Settings are valid and looks for problems in your account-related data. When complete, you can view the results, including detailed information for any failures.</value>
     </labels>
     <labels>
         <fullName>healthLabelLastRun</fullName>
@@ -1310,6 +2080,22 @@
         <protected>false</protected>
         <shortDescription>healthLabelLastRun</shortDescription>
         <value>Last run: {0}</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelNoDuplicateContactRoles</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The message displayed when the duplicate contact roles health check passes</shortDescription>
+        <value>Health Check did not find any Opportunities with duplicate Contacts or rollup values.</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelNoMissingOppPayments</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelNoMissingOppPayments</shortDescription>
+        <value>All Opportunities with Payments have expected Payments.</value>
     </labels>
     <labels>
         <fullName>healthLabelNone</fullName>
@@ -1326,6 +2112,22 @@
         <protected>false</protected>
         <shortDescription>healthLabelOCRCheck</shortDescription>
         <value>Opportunity Contact Roles</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelOCRSettings</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthLabelOCRSettings</shortDescription>
+        <value>Opportunity Contact Roles Settings</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelOppPayments</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelOppPayments</shortDescription>
+        <value>Opportunity Payments</value>
     </labels>
     <labels>
         <fullName>healthLabelPassed</fullName>
@@ -1349,7 +2151,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthLabelRDOppsValid</shortDescription>
-        <value>Recurring Donation Opportunities can be saved.</value>
+        <value>New opportunities can be saved.</value>
     </labels>
     <labels>
         <fullName>healthLabelRDValid</fullName>
@@ -1373,7 +2175,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthLabelScheduler</shortDescription>
-        <value>NPSP Global Scheduler</value>
+        <value>NPSP Default Scheduler</value>
     </labels>
     <labels>
         <fullName>healthLabelSchedulerValid</fullName>
@@ -1381,7 +2183,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthLabelSchedulerValid</shortDescription>
-        <value>NPSP Global Scheduler job scheduled.</value>
+        <value>NPSP recurring jobs are scheduled.</value>
     </labels>
     <labels>
         <fullName>healthLabelShowPassedTests</fullName>
@@ -1400,6 +2202,22 @@
         <value>Detection time in seconds: {0}</value>
     </labels>
     <labels>
+        <fullName>healthLabelTriggerHandlerCheck</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelTriggerHandlerCheck</shortDescription>
+        <value>Trigger Configuration</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelTriggerHandlersValid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelTriggerHandlersValid</shortDescription>
+        <value>Triggers are configured for NPSP default triggers.</value>
+    </labels>
+    <labels>
         <fullName>healthLabelUDFValid</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -1408,12 +2226,68 @@
         <value>User Defined Rollups valid.</value>
     </labels>
     <labels>
+        <fullName>healthLabelVerifyLevels</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Health Check title for Levels</shortDescription>
+        <value>Levels</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelVerifyLevelsSuccess</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Health Check message when all Levels verify ok</shortDescription>
+        <value>All field references on all Levels are valid.</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelWarning</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelWarning</shortDescription>
+        <value>Warning</value>
+    </labels>
+    <labels>
+        <fullName>healthPaymentAutoCloseStageInvalid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthPaymentAutoCloseStageInvalid</shortDescription>
+        <value>The selected opportunity stage to be transitioned to when all payments are paid must be an active Closed/Won stage.</value>
+    </labels>
+    <labels>
+        <fullName>healthPaymentAutoCloseStageMustBeActiveClosedWonOrBlank</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthPaymentAutoCloseStageMustBeActiveClosedWonOrBlank</shortDescription>
+        <value>Either do not select an opportunity stage (thus disabling the feature) or update the setting to use an active Closed/Won opportunity stage.</value>
+    </labels>
+    <labels>
+        <fullName>healthPaymentAutoCloseStageValid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthPaymentAutoCloseStageValid</shortDescription>
+        <value>Either no opportunity stage was selected for transitioning to when all payments are received, or the selected stage is an active Closed/Won stage.</value>
+    </labels>
+    <labels>
         <fullName>healthSolutionAccOne2OneNoContacts</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionAccOne2OneNoContacts</shortDescription>
         <value>Consider deleting these unused One-to-One Accounts to save space.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionAccountModel</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionAccountModel</shortDescription>
+        <value>All of your Accounts should use the same Account Model. View all of your Accounts and their types by running the &lt;b&gt;Individual Accounts by Account Type&lt;/b&gt; report in the NPSP Health Check reports folder.</value>
     </labels>
     <labels>
         <fullName>healthSolutionAccountRTIssue</fullName>
@@ -1463,6 +2337,24 @@
         <value>On the NPSP Settings tab, click {0} | {1}, and add the missing Recurring Donation field, or delete the Recurring Donation Field Mapping record.</value>
     </labels>
     <labels>
+        <fullName>healthSolutionContactData</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionContactData</shortDescription>
+        <value>View these Contacts by running the &lt;b&gt;Contacts without Accounts&lt;/b&gt; report in the NPSP Health Check reports folder.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionDuplicateContactRoles</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The recommended solution for when the duplicate contact roles health check fails</shortDescription>
+        <value>In the past, the NPSP double-counted soft credit rollup values for Contacts that were twice associated with an Opportunity through two different Opportunity Contact Roles. The NPSP now only counts these rollup values once, regardless of how many associations a Contact has on an Opportunity.&lt;br/&gt;
+&lt;br/&gt;
+If you want to know which Opportunities would have previously included this double rollup value counting, run this SOQL query in the Developer Console: &apos;&apos;SELECT Count(Id), OpportunityId, Opportunity.Name OpportunityName, ContactId, Contact.Name ContactName FROM OpportunityContactRole WHERE Opportunity.IsWon = true AND Role IN ({0}) GROUP BY OpportunityId, Opportunity.Name, ContactId, Contact.Name HAVING Count(Id) &gt; 1&apos;&apos;</value>
+    </labels>
+    <labels>
         <fullName>healthSolutionEditSetting</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -1476,7 +2368,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionHHAccNoContacts</shortDescription>
-        <value>Consider deleting these unused Household Accounts to save space.</value>
+        <value>Consider deleting these unused Household Accounts to save space. View these Household Accounts by running the &lt;b&gt;Empty Household Accounts&lt;/b&gt; report in the NPSP Health Check reports folder</value>
     </labels>
     <labels>
         <fullName>healthSolutionHHObjNoContacts</fullName>
@@ -1484,7 +2376,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionHHObjNoContacts</shortDescription>
-        <value>Consider deleting these unused Household objects to save space. If you have completed a conversion to the Household Account model and no longer need the data on the Household object records they can be deleted.</value>
+        <value>Consider deleting these unused Household objects to save space. If you have completed a conversion to the Household Account model and no longer need the data on the Household object records they can be deleted.  View these Household objects by running the &lt;b&gt;Empty Household Objects&lt;/b&gt; report in the NPSP Health Check reports folder.</value>
     </labels>
     <labels>
         <fullName>healthSolutionInvalidFiscalYears</fullName>
@@ -1493,6 +2385,14 @@
         <protected>false</protected>
         <shortDescription>healthSolutionInvalidFiscalYears</shortDescription>
         <value>Since Salesforce does not support turning off Custom Fiscal Years, NPSP Rollups will default to Calendar Year.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionInvalidLevelField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Health Check Solution for an invalid Level field</shortDescription>
+        <value>Go to the Levels Tab, and update the invalid field reference on Level {0}.</value>
     </labels>
     <labels>
         <fullName>healthSolutionInvalidOppField</fullName>
@@ -1559,12 +2459,20 @@
         <value>Create a report based on Campaigns with Contacts, where Member Status does not contain Duplicate.  Then specify this report on the {0} &gt; {1} tab in NPSP Settings.</value>
     </labels>
     <labels>
+        <fullName>healthSolutionMissingOppPayments</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionMissingOppPayments</shortDescription>
+        <value>View these Opportunities by running the &lt;b&gt;Opportunities without Payments&lt;/b&gt; report in the NPSP Health Check reports folder.  Note that you should add filter criteria on the report for any Opportunity Types and Opportunity RecTypes you&apos;ve excluded in NPSP Payments Settings. You can create them using the Create Missing Payments button on NPSP Settings &gt; Donations &gt; Payments.</value>
+    </labels>
+    <labels>
         <fullName>healthSolutionNothingScheduled</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionNothingScheduled</shortDescription>
-        <value>You must schedule the class UTIL_MasterSchedulable to run daily with the job name {0}.</value>
+        <value>You must schedule the NPSP default scheduled classes to run.</value>
     </labels>
     <labels>
         <fullName>healthSolutionOCRDupPrimary</fullName>
@@ -1572,7 +2480,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionOCRDupPrimary</shortDescription>
-        <value>Having multiple OpportunityContactRoles marked Primary can cause Opportunity rollups, such as Total Gifts, to be incorrectly calculated.  Use a report to find the Opportunities with mulitple Primary OpportunityContactRoles.</value>
+        <value>Having multiple OpportunityContactRoles marked Primary can cause Opportunity rollups, such as Total Gifts, to be incorrectly calculated.  View these Opportunities by running the &lt;b&gt;Opportunities with Primary Contact Roles&lt;/b&gt; report in the NPSP Health Check reports folder, and looking at the records with 2 or more Primary Contact Roles.</value>
     </labels>
     <labels>
         <fullName>healthSolutionOCRException</fullName>
@@ -1614,12 +2522,28 @@
         <value>On the NPSP Settings tab, click {0} | {1}, and delete the Reciprocal Relationship record, and create a new one with the required information.</value>
     </labels>
     <labels>
+        <fullName>healthSolutionSaveOppsFailed</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionSaveOppsFailed</shortDescription>
+        <value>Make sure you have no Validation Rules, Required Fields, or Workflow Rules that would prevent an Opportunity or Account from being saved.</value>
+    </labels>
+    <labels>
         <fullName>healthSolutionScheduleJobs</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionScheduleJobs</shortDescription>
-        <value>You must add records for RLLP_OppRollup_SCHED, RD_RecurringDonations_SCHED, and ADDR_SEASONAL_SCHED to Schedulable__c in order for these features to work correctly.</value>
+        <value>All NPSP scheduled classes should have records in Schedulable__c in order for these features to work correctly.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionTriggerHandlerMismatch</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionTriggerHandlerMismatch</shortDescription>
+        <value>If the Trigger Handlers do not match the default NPSP configuration, functionality in NPSP may be disabled or modified.  Modifications should only be performed by someone knowledgable with the NPSP Trigger Handlers, and how changing them will affect system behavior.</value>
     </labels>
     <labels>
         <fullName>healthSolutionUDFBadDatatypes</fullName>
@@ -1686,6 +2610,13 @@
         <value>- Household Duplicate</value>
     </labels>
     <labels>
+        <fullName>isARequiredField</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>isARequiredField</shortDescription>
+        <value>is a required field.</value>
+    </labels>
+    <labels>
         <fullName>labelListViewFirst</fullName>
         <categories>SoqlListView</categories>
         <language>en_US</language>
@@ -1742,12 +2673,595 @@
         <value>Show more</value>
     </labels>
     <labels>
+        <fullName>lblAddressOverride</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblAddressOverride</shortDescription>
+        <value>(address override)</value>
+    </labels>
+    <labels>
+        <fullName>lblBtnAddAllHHMembers</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblBtnAddAllHHMembers</shortDescription>
+        <value>Add All Members</value>
+    </labels>
+    <labels>
+        <fullName>lblBtnAddContact</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblBtnAddContact</shortDescription>
+        <value>Add {0}</value>
+    </labels>
+    <labels>
+        <fullName>lblCCardExcludeFrom</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblCCardExcludeFrom</shortDescription>
+        <value>Exclude from:</value>
+    </labels>
+    <labels>
+        <fullName>lblCity</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblCity</shortDescription>
+        <value>City</value>
+    </labels>
+    <labels>
+        <fullName>lblCloned</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblCloned</shortDescription>
+        <value>Cloned</value>
+    </labels>
+    <labels>
+        <fullName>lblCountry</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblCountry</shortDescription>
+        <value>Country</value>
+    </labels>
+    <labels>
+        <fullName>lblDeleteContact</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>caption of Remove Contact popup</shortDescription>
+        <value>Remove Contact</value>
+    </labels>
+    <labels>
+        <fullName>lblDeleteContactPrompt</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>prompt for the Remove Contact Popup</shortDescription>
+        <value>Do you want to remove this Contact from this Household on Save?</value>
+    </labels>
+    <labels>
+        <fullName>lblFindInContacts</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>autocomplete&apos;s label for &quot;smith in Contacts&quot;</shortDescription>
+        <value>in Contacts</value>
+    </labels>
+    <labels>
+        <fullName>lblFindOrAddContact</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>string displayed in the autocomplete control when empty</shortDescription>
+        <value>Find a contact or add a new contact to the household</value>
+    </labels>
+    <labels>
+        <fullName>lblFirstName</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblFirstName</shortDescription>
+        <value>First Name</value>
+    </labels>
+    <labels>
+        <fullName>lblFormalGreeting</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblFormalGreeting</shortDescription>
+        <value>Formal Greeting</value>
+    </labels>
+    <labels>
+        <fullName>lblHousehold</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblHousehold</shortDescription>
+        <value>Household</value>
+    </labels>
+    <labels>
+        <fullName>lblHouseholdName</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblHouseholdName</shortDescription>
+        <value>Household Name</value>
+    </labels>
+    <labels>
+        <fullName>lblInformalGreeting</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblInformalGreeting</shortDescription>
+        <value>Informal Greeting</value>
+    </labels>
+    <labels>
+        <fullName>lblLastName</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblLastName</shortDescription>
+        <value>Last Name</value>
+    </labels>
+    <labels>
+        <fullName>lblMergeHHPrompt</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblMergeHHPrompt</shortDescription>
+        <value>{0} is in a Household with other members.  Do you want to just add {0}, or add all members from the Household?</value>
+    </labels>
+    <labels>
+        <fullName>lblMergeHHTitle</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblMergeHHTitle</shortDescription>
+        <value>Merge Households</value>
+    </labels>
+    <labels>
         <fullName>lblNPSPSettings</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>lblNPSPSettings</shortDescription>
         <value>NPSP Settings</value>
+    </labels>
+    <labels>
+        <fullName>lblNoHHMergePermissions</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>error displayed when required perms missing to add a contact and its household</shortDescription>
+        <value>You must have update and delete permissions on Households (Accounts) in order to add an existing contact to the Household.</value>
+    </labels>
+    <labels>
+        <fullName>lblPostalCode</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblPostalCode</shortDescription>
+        <value>Postal Code</value>
+    </labels>
+    <labels>
+        <fullName>lblRequired</fullName>
+        <categories>Engagement Plan, UTIL_FormField</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>lblRequired</shortDescription>
+        <value>Required</value>
+    </labels>
+    <labels>
+        <fullName>lblSalutation</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblSalutation</shortDescription>
+        <value>Salutation</value>
+    </labels>
+    <labels>
+        <fullName>lblState</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblState</shortDescription>
+        <value>State</value>
+    </labels>
+    <labels>
+        <fullName>lblStreet</fullName>
+        <categories>Manage Household UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblStreet</shortDescription>
+        <value>Street</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertAccountName</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertAccountName</shortDescription>
+        <value>Account</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertAffilationName</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertAffilationName</shortDescription>
+        <value>Affiliated Account</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertAffiliateExistingAccount</fullName>
+        <categories>Lead Convert</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertAffiliateExistingAccount</shortDescription>
+        <value>Affiliate with Existing:</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertAffiliateNewAccount</fullName>
+        <categories>Lead Convert</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertAffiliateNewAccount</shortDescription>
+        <value>Affiliate with New Account:</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertAffiliatedAccount</fullName>
+        <categories>Lead Convert</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertAffiliatedAccount</shortDescription>
+        <value>Affiliated Account</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertAttachBucketAccount</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertAttachBucketAccount</shortDescription>
+        <value>Attach to Individual Bucket Account</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertAttachExistingAccount</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertAttachExistingAccount</shortDescription>
+        <value>Attach to Existing:</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertAutocreateHHAccount</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertAutocreateHHAccount</shortDescription>
+        <value>Create Household Account</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertAutocreateOne2OneAccount</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertAutocreateOne2OneAccount</shortDescription>
+        <value>Create One-to-One Account</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertBtnCancel</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertBtnCancel</shortDescription>
+        <value>Cancel</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertBtnConvert</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertBtnConvert</shortDescription>
+        <value>Convert</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertContactAccount</fullName>
+        <categories>Lead Convert</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertContactAccount</shortDescription>
+        <value>Contact Account</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertContactSelection</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>leadConvertContactSelection</shortDescription>
+        <value>You must select an option in the Contact box.</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertCreateAccount</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertCreateAccount</shortDescription>
+        <value>Create New Account:</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertCreateNewContact</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertCreateNewContact</shortDescription>
+        <value>Create New:</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertMergeExistingContact</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertMergeExistingContact</shortDescription>
+        <value>Merge with Existing:</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertNewOpp</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertNewOpp</shortDescription>
+        <value>Do not create a new {0} upon conversion.</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertOwner</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertOwner</shortDescription>
+        <value>Record Owner</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertPageTitle</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertPageTitle</shortDescription>
+        <value>Convert Lead:</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertRecordTypeWarning</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>leadConvertRecordTypeWarning</shortDescription>
+        <value>The default Account Record Type for your Profile is the same Record Type set as the Account Model in NPSP Settings, which could cause various data issues. We recommend changing the Account Record Type default to a different value for all profile(s).</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertSectionTitle</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertSectionTitle</shortDescription>
+        <value>Convert Lead</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertSendEmail</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertSendEmail</shortDescription>
+        <value>Send Email to the Owner</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertStatus</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertStatus</shortDescription>
+        <value>Converted Status</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertViewContactError</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertViewContactError</shortDescription>
+        <value>You can only view existing contacts.</value>
+    </labels>
+    <labels>
+        <fullName>lvlBtnSaveAndNew</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Save &amp; New button on the Level Edit page</shortDescription>
+        <value>Save &amp; New</value>
+    </labels>
+    <labels>
+        <fullName>lvlErrorDuplicateLookups</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when the Level has the same lookup field  specified for level and previous</shortDescription>
+        <value>You must specify different lookup fields on {0} for Level Field and Previous Level Field.</value>
+    </labels>
+    <labels>
+        <fullName>lvlErrorDuplicateName</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>error when a name of a level is duplicated</shortDescription>
+        <value>Level name {0} already exists.  Names for the same Target and Level Field must be unique.</value>
+    </labels>
+    <labels>
+        <fullName>lvlErrorInvalidLookupField</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>error when Level Assignment fails to save its current or previous level</shortDescription>
+        <value>Field {0} specified in Level {1} is not a valid lookup to a Level object.</value>
+    </labels>
+    <labels>
+        <fullName>lvlErrorInvalidSourceField</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>error if level&apos;s source field isn&apos;t valid</shortDescription>
+        <value>Field {0} specified in Level {1} is not a valid number field.</value>
+    </labels>
+    <labels>
+        <fullName>lvlErrorMinGTMax</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error if the Level Minimum is &gt; than Level Maximum</shortDescription>
+        <value>The Minimum Amount must be less than the Maximum Amount on level {0}.</value>
+    </labels>
+    <labels>
+        <fullName>lvlErrorMinOverlap</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error when we detect the minimum amount overlaps another level</shortDescription>
+        <value>The Minimum Amount to Maximum Amount range on Level {0} overlaps with the Minimum Amount to Maximum Amount range on Level {1}</value>
+    </labels>
+    <labels>
+        <fullName>lvlErrorNoMinMax</fullName>
+        <categories>Levels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error if both min and max are empty on a level</shortDescription>
+        <value>The {0} level must have either a Minimum Amount or a Maximum Amount.</value>
+    </labels>
+    <labels>
+        <fullName>mtchBtnSearch</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>mtchBtnSearch</shortDescription>
+        <value>Search</value>
+    </labels>
+    <labels>
+        <fullName>mtchCloseDateEnd</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>mtchCloseDateEnd</shortDescription>
+        <value>Close Date End</value>
+    </labels>
+    <labels>
+        <fullName>mtchCloseDateStart</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>mtchCloseDateStart</shortDescription>
+        <value>Close Date Start</value>
+    </labels>
+    <labels>
+        <fullName>mtchFindMatchedGiftsSectionHeader</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>mtchFindMatchedGiftsSectionHeader</shortDescription>
+        <value>Find Matched Gifts</value>
+    </labels>
+    <labels>
+        <fullName>mtchFindMoreGifts</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>mtchFindMoreGifts</shortDescription>
+        <value>Find More Gifts</value>
+    </labels>
+    <labels>
+        <fullName>mtchFindMoreGiftsInfo</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>mtchFindMoreGiftsInfo</shortDescription>
+        <value>Fill in one or more filters, and then click on Search.</value>
+    </labels>
+    <labels>
+        <fullName>mtchItems</fullName>
+        <categories>Find Matching Gifts, Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>mtchItems</shortDescription>
+        <value>{0} items</value>
+    </labels>
+    <labels>
+        <fullName>mtchSearchCriteriaEmpty</fullName>
+        <categories>Find Matching Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>mtchSearchCriteriaEmpty</shortDescription>
+        <value>Please specify one or more filters in order to search.</value>
+    </labels>
+    <labels>
+        <fullName>mtchSelectCbxTitle</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>mtchSelectCbxTitle</shortDescription>
+        <value>Select</value>
+    </labels>
+    <labels>
+        <fullName>mtchTotalMatchingGift</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>mtchTotalMatchingGift</shortDescription>
+        <value>Total Matching Gift</value>
+    </labels>
+    <labels>
+        <fullName>mtchTotalSelected</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>mtchTotalSelected</shortDescription>
+        <value>Total Selected</value>
+    </labels>
+    <labels>
+        <fullName>mtchTotalUnaccounted</fullName>
+        <categories>Find Matched Gifts</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>mtchTotalUnaccounted</shortDescription>
+        <value>Total Unaccounted</value>
+    </labels>
+    <labels>
+        <fullName>oppInstallmentsOf</fullName>
+        <categories>OppNaming</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>oppInstallmentsOf</shortDescription>
+        <value>of</value>
+    </labels>
+    <labels>
+        <fullName>oppNamingBoth</fullName>
+        <categories>OppNaming</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>oppNamingBoth</shortDescription>
+        <value>Both</value>
+    </labels>
+    <labels>
+        <fullName>oppNamingIndividual</fullName>
+        <categories>OppNaming</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>oppNamingIndividual</shortDescription>
+        <value>Contact Donations</value>
+    </labels>
+    <labels>
+        <fullName>oppNamingOrganizational</fullName>
+        <categories>OppNaming</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>oppNamingOrganizational</shortDescription>
+        <value>Organization Donations</value>
     </labels>
     <labels>
         <fullName>pmtWizardBtnCalcPayments</fullName>
@@ -1772,6 +3286,14 @@
         <protected>false</protected>
         <shortDescription>pmtWizardBtnRemovePaidPayments</shortDescription>
         <value>Remove Paid Payments</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardClosedLost</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardClosedLost</shortDescription>
+        <value>NOTE: This opportunity is marked closed lost. To create payments, first edit the opportunity record and change the stage to an open or closed won stage.</value>
     </labels>
     <labels>
         <fullName>pmtWizardCreateSchedule</fullName>
@@ -1819,7 +3341,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>pmtWizardNoWriteoffAmount</shortDescription>
-        <value>NOTE: This opportunity has no unpaid amount. To writeoff payments, first edit the opportunity record and enter an amount or delete existing payments.</value>
+        <value>NOTE: This opportunity has no unpaid amount. To write off payments, first edit the opportunity record and enter an amount or delete existing payments.</value>
     </labels>
     <labels>
         <fullName>pmtWizardNumberOfPayments</fullName>
@@ -1867,7 +3389,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>pmtWizardSectionWriteoff</shortDescription>
-        <value>Writeoff Remaining Balance</value>
+        <value>Write Off Remaining Balance</value>
     </labels>
     <labels>
         <fullName>pmtWizardSectionWriteoffPayments</fullName>
@@ -1875,7 +3397,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>pmtWizardSectionWriteoffPayments</shortDescription>
-        <value>Writeoff Payments</value>
+        <value>Write Off Payments</value>
     </labels>
     <labels>
         <fullName>pmtWizardSubtitle</fullName>
@@ -1915,7 +3437,287 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>pmtWizardWriteoffMessage</shortDescription>
-        <value>You are preparing to writeoff {0} Payment(s) totaling {1}.</value>
+        <value>You are preparing to write off {0} Payment(s) totaling {1}.</value>
+    </labels>
+    <labels>
+        <fullName>pscDeleteRow</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pscDeleteRow</shortDescription>
+        <value>Delete Row</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsAdd</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsAdd</shortDescription>
+        <value>Add another soft credit</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsAmount</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsAmount</shortDescription>
+        <value>Amount</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsAmountMissing</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsAmountMissing</shortDescription>
+        <value>Please enter a soft credit amount for all entries.</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsAmountOrPercent</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsAmountOrPercent</shortDescription>
+        <value>Amount or Percent</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsCantChangeCurrency</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsCantChangeCurrency</shortDescription>
+        <value>You can&apos;t modify partial soft credit currencies directly. A partial soft credit&apos;s currency is updated when the parent opportunity&apos;s currency is modified.</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsFull</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsFull</shortDescription>
+        <value>Full</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsInvalidContact</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsInvalidContact</shortDescription>
+        <value>{0} is the Primary Contact for this Opportunity. You cannot add Soft Credit to this Contact.</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsNoRoles</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsNoRoles</shortDescription>
+        <value>You have no Roles specified as Soft Credit Roles.  Under NPSP Settings, Donations, Contact Roles, you need to add the appropriate Roles to the Soft Credit Roles setting.</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsOppAmount</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsOppAmount</shortDescription>
+        <value>Total Amount</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsPSCAmount</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsPSCAmount</shortDescription>
+        <value>Soft Credit Amount</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsPartial</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsPartial</shortDescription>
+        <value>Partial</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsPercent</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsPercent</shortDescription>
+        <value>Percent</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsPrimaryDonor</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsPrimaryDonor</shortDescription>
+        <value>Primary Donor</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsReconcileFail</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsReconcileFail</shortDescription>
+        <value>Total Soft Credit Amount must be less than or equal to the Opportunity Amount.  Check &apos;Allow Soft Credit Amount more than Total Amount&apos; to override.</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsRestrictions</fullName>
+        <categories>Manage Soft Creditds</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsRestrictions</shortDescription>
+        <value>Soft Credit Restrictions</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsRoleMissing</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsRoleMissing</shortDescription>
+        <value>You must specify a Role Name for all Soft Credits.</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsTitle</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsTitle</shortDescription>
+        <value>Manage Soft Credits</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsType</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsType</shortDescription>
+        <value>Type</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsUnaccounted</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsUnaccounted</shortDescription>
+        <value>Total Unaccounted</value>
+    </labels>
+    <labels>
+        <fullName>pscManageSoftCreditsValidateTotals</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsValidateTotals</shortDescription>
+        <value>Allow Soft Credit Amount more than Total Amount</value>
+    </labels>
+    <labels>
+        <fullName>sendAcknowledgmentFailedStatus</fullName>
+        <categories>Send Acknowledgment button</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>sendAcknowledgmentFailedStatus</shortDescription>
+        <value>Email Acknowledgment Not Sent</value>
+    </labels>
+    <labels>
+        <fullName>sendAcknowledgmentFailureReasons</fullName>
+        <categories>Send Acknowledgment Button</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>sendAcknowledgmentFailureReasons</shortDescription>
+        <value>The following records were not acknowledged. Acknowledgements can fail if there is no workflow rule (Acknowledgement Status EQUALS &apos;Send Acknowledgement&apos;) activated to send the acknowledgement, or if the records did not meet additional criteria to trigger the workflow rule. For example, if Primary Contact is not set, or if the Primary Contact&apos;s email field is empty or invalid.</value>
+    </labels>
+    <labels>
+        <fullName>sendAcknowledgmentFireStatus</fullName>
+        <categories>Send Acknowledgment Button</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>sendAcknowledgmentFireStatus</shortDescription>
+        <value>Email Acknowledgment Now</value>
+    </labels>
+    <labels>
+        <fullName>sendAcknowledgmentNoneSelected</fullName>
+        <categories>Send Acknowledgment button</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>sendAcknowledgmentNoneSelected</shortDescription>
+        <value>You must select one or more Opportunities before clicking Email Acknowledgments.</value>
+    </labels>
+    <labels>
+        <fullName>sendAcknowledgmentNumberNoEmail</fullName>
+        <categories>Send Acknowledgment Button</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>sendAcknowledgmentNumberNoEmail</shortDescription>
+        <value>{0} acknowledgment(s) were not sent.</value>
+    </labels>
+    <labels>
+        <fullName>sendAcknowledgmentNumberSent</fullName>
+        <categories>Send Acknowledgment Button</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>sendAcknowledgmentNumberSent</shortDescription>
+        <value>{0} acknowledgment(s) sent.</value>
+    </labels>
+    <labels>
+        <fullName>sendAcknowledgmentPageTitle</fullName>
+        <categories>Send Acknowledgment Button</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>sendAcknowledgmentPageTitle</shortDescription>
+        <value>Email Acknowledgments</value>
+    </labels>
+    <labels>
+        <fullName>sendAcknowledgmentReturnLinkLabel</fullName>
+        <categories>Send Acknowledgment Button</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>sendAcknowledgmentReturnLinkLabel</shortDescription>
+        <value>Return to Opportunity</value>
+    </labels>
+    <labels>
+        <fullName>sendAcknowledgmentSucceeded</fullName>
+        <categories>Send Acknowledgment button</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>sendAcknowledgmentSucceeded</shortDescription>
+        <value>Acknowledged</value>
+    </labels>
+    <labels>
+        <fullName>statusCompleted</fullName>
+        <categories>Status</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>statusCompleted</shortDescription>
+        <value>Completed</value>
+    </labels>
+    <labels>
+        <fullName>statusInProgress</fullName>
+        <categories>Status</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>statusInProgress</shortDescription>
+        <value>In Progress</value>
+    </labels>
+    <labels>
+        <fullName>statusNotStarted</fullName>
+        <categories>Status</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>statusNotStarted</shortDescription>
+        <value>Not Started</value>
+    </labels>
+    <labels>
+        <fullName>stgAddrGeneralSettingsIntro</fullName>
+        <categories>Settings, address</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgAddrGeneralSettingsIntro</shortDescription>
+        <value>Household and Organization Account Management lets you add multiple addresses to an Account, specify default addresses, and specify seasonal addresses. Address Management is only available in NPSP3 and later with the Household Account model.</value>
+    </labels>
+    <labels>
+        <fullName>stgAddrMustChooseClass</fullName>
+        <categories>Settings, address</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgAddrMustChooseClass</shortDescription>
+        <value>You must choose a verification service in order to enable automatic verification.</value>
     </labels>
     <labels>
         <fullName>stgBtnCancel</fullName>
@@ -2006,6 +3808,14 @@
         <value>New Automatic Relationship</value>
     </labels>
     <labels>
+        <fullName>stgBtnNewONS</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnNewONS</shortDescription>
+        <value>New Opportunity Name</value>
+    </labels>
+    <labels>
         <fullName>stgBtnNewPaymentMap</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -2062,6 +3872,22 @@
         <value>Create Custom Field Mapping</value>
     </labels>
     <labels>
+        <fullName>stgBtnRefreshOpportunityNames</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnRefreshOpportunityNames</shortDescription>
+        <value>Refresh All Opportunity Names</value>
+    </labels>
+    <labels>
+        <fullName>stgBtnRefreshPrimaryContacts</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnRefreshPrimaryContacts</shortDescription>
+        <value>Refresh All Opportunity Primary Contacts</value>
+    </labels>
+    <labels>
         <fullName>stgBtnRunBatch</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -2076,6 +3902,31 @@
         <protected>false</protected>
         <shortDescription>stgBtnSave</shortDescription>
         <value>Save</value>
+    </labels>
+    <labels>
+        <fullName>stgDocumentation</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgDocumentation</shortDescription>
+        <value>Documentation</value>
+    </labels>
+    <labels>
+        <fullName>stgDontAutoScheduleHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgDontAutoScheduleHelpText</shortDescription>
+        <value>When checked, NPSP won&apos;t automatically schedule default recurring jobs. 
+&lt;br/&gt; 
+&lt;br/&gt; 
+These recurring jobs calculate rollups, update recurring donations and seasonal address, and perform error handling. 
+&lt;br/&gt; 
+&lt;br/&gt; 
+When unchecked, every time you visit the NPSP Settings page, NPSP verifies that the default recurring jobs are scheduled. Rescheduling only applies to missing jobs, not updated jobs. 
+&lt;br/&gt; 
+&lt;br/&gt; 
+To view these jobs, search for Scheduled Jobs in Salesforce Setup.</value>
     </labels>
     <labels>
         <fullName>stgErrorINaming</fullName>
@@ -2115,7 +3966,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpAccountModel</shortDescription>
-        <value>Setting for the Account model. Should be &quot;Household Account&quot;, &quot;One-to-One&quot;, or &quot;Individual&quot;. Replaces the custom field Contact.SystemAccountProcessor__c. &quot;Household Account&quot; is the recommended model.</value>
+        <value>The Account model used by the Nonprofit Success Pack. This option controls what happens when you create a Contact with a blank Account field value. WARNING: The Record Type selected for the Account Model should not be used as the default Account Record Type for any Profile in your org. Using the same record type could cause various data issues.</value>
     </labels>
     <labels>
         <fullName>stgHelpAlloFiscalYearRollups</fullName>
@@ -2123,7 +3974,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpAlloFiscalYearRollups</shortDescription>
-        <value>When checked, this option enables fiscal year settings, rather than calendar year settings, for allocation rollup totals. To set fiscal year information, go to Setup | Company Profile | Fiscal Year. NOTE: The Nonprofit Starter Pack does not support custom fiscal year settings.</value>
+        <value>When checked, this option enables fiscal year settings, rather than calendar year settings, for allocation rollup totals. To set fiscal year information, go to Setup | Company Profile | Fiscal Year. NOTE: The Nonprofit Success Pack does not support custom fiscal year settings.</value>
     </labels>
     <labels>
         <fullName>stgHelpAlloNDayValue</fullName>
@@ -2131,7 +3982,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpAlloNDayValue</shortDescription>
-        <value>Provide a value for &apos;N day&apos; rollups, where &apos;N&apos; is the number of days from today into the past. This value defaults to rollup over the past 365 days.</value>
+        <value>Sets the value for &apos;N day&apos; rollups, where &apos;N&apos; is the number of days from today into the past. This value defaults to rollup over the past 365 days.</value>
     </labels>
     <labels>
         <fullName>stgHelpAutoAffil</fullName>
@@ -2139,7 +3990,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpAutoAffil</shortDescription>
-        <value>Create or update Affiliations for Contacts connected to Organization Accounts when their Organization field or Primary Affiliation field is changed.</value>
+        <value>When selected, this option tells Salesforce to create or update Affiliations for Contacts connected to Organization Accounts (Account record type = Organization) whenever the Contact&apos;s Account field or Primary Affiliation field changes.</value>
     </labels>
     <labels>
         <fullName>stgHelpAutoRelCampaignRT</fullName>
@@ -2147,7 +3998,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpAutoRelCampaignRT</shortDescription>
-        <value>List of eligible Campaign types for this Campaign Member auto-create. (Will be blank for Contact auto-create)</value>
+        <value>List of eligible Campaign Types for this Campaign Member. (Blank for Contacts.)</value>
     </labels>
     <labels>
         <fullName>stgHelpAutoRelField</fullName>
@@ -2155,7 +4006,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpAutoRelField</shortDescription>
-        <value>The field insert or update that triggers the creation of this Relationship</value>
+        <value>The field that triggers the autocreation.</value>
     </labels>
     <labels>
         <fullName>stgHelpAutoRelObject</fullName>
@@ -2163,7 +4014,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpAutoRelObject</shortDescription>
-        <value>The object this Auto-Relationship is associated with</value>
+        <value>The Salesforce object associated with this Auto-Created Relationship.</value>
     </labels>
     <labels>
         <fullName>stgHelpAutoRelType</fullName>
@@ -2171,7 +4022,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpAutoRelType</shortDescription>
-        <value>The Relationship type to be created between the base object and the lookup object. The lookup object will receive the reciprocal Relationship, if one is available.</value>
+        <value>The Relationship Type that you want to create between the base Contact or Campaign Member, and the corresponding Contact or Campaign Member. The corresponding Contact or Campaign Member will receive a Reciprocal Relationship value, if one is available.</value>
     </labels>
     <labels>
         <fullName>stgHelpBDEAllowBlankOppNames</fullName>
@@ -2195,8 +4046,16 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpBatchAlloRollup</shortDescription>
-        <value>Click Run Batch to roll up totals for all closed opportunities with allocations assigned to them. The results will be saved in General Accounting Unit records.
-You can close this page at any time and the process will still run in the background.</value>
+        <value>This utility calculates rollup totals for all Closed Opportunities with Allocations and updates the relevant General Accounting Unit (GAU) records.
+This process may take some time, but you can safely close this page and the process will continue in the background.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpBatchCreateDefault</fullName>
+        <categories>Allocation, Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpBatchCreateDefault</shortDescription>
+        <value>Clicking this button starts a batch process that creates default allocations for all existing opportunities, except opportunities excluded in the Allocations Rollup Settings. Default allocations must be enabled and a default General Accounting Unit selected to run this tool.</value>
     </labels>
     <labels>
         <fullName>stgHelpBatchOppRollup</fullName>
@@ -2204,7 +4063,8 @@ You can close this page at any time and the process will still run in the backgr
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpBatchOppRollup</shortDescription>
-        <value>Use this page to rollup totals for all closed Opportunities, saving the results in Contact, Household, and Organization records.  The process may take some time; you can close this page and the process will continue in the background.</value>
+        <value>This utility calculates rollup totals for all Closed Opportunities and updates the relevant Contacts, Households, and Accounts.
+This process may take some time, but you can safely close this page and the process will continue in the background.</value>
     </labels>
     <labels>
         <fullName>stgHelpBtnHHNaming</fullName>
@@ -2214,11 +4074,38 @@ You can close this page at any time and the process will still run in the backgr
         <shortDescription>stgHelpBtnHHNaming</shortDescription>
         <value>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate Automatic Household Naming, and populate your existing Household Names, Formal Greetings, and Informal Greetings with new names, according to the formats you&apos;ve chosen. Every single Household Account (or Household object) in your Salesforce organization will be renamed (except those Households that do not have automatic naming enabled.)&lt;br/&gt;&lt;br/&gt;
 
-&lt;b&gt;THIS IS AN IRREVERSIBLE PROCESS.&lt;/b&gt; While you can deactivate Automatic Household Naming at any time, all newly populated names will remain. &lt;br/&gt;&lt;br/&gt;
+&lt;b&gt;This is an irreversible process.&lt;/b&gt; While you can deactivate Automatic Household Naming at any time, all newly populated names will remain. &lt;br/&gt;&lt;br/&gt;
 
-&lt;b&gt;DISABLE ALL CUSTOM VALIDATION RULES ON HOUSEHOLDS BEFORE ACTIVATING.&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;
+Before starting this process, we recommend disabling the following when they affect Households:
+&lt;br/&gt;
+&lt;br/&gt;
+● Custom Validation Rules&lt;br/&gt;
+● Workflow Rules&lt;br/&gt;
+● Process Builder&lt;br/&gt;
+● Visual Workflows&lt;br/&gt;
+● Custom Triggers&lt;br/&gt;
 
-Once the renaming process is 100% complete, you can safely leave or refresh this page.</value>
+&lt;br/&gt;
+Once the process is 100% complete, you can safely leave or refresh this page.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpBtnOppNaming</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpBtnOppNaming</shortDescription>
+        <value>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate batch opportunity renaming, and refresh all Opportunity Names according to the formats you&apos;ve chosen. Salesforce will rename every opportunity in your organization except those opportunities whose Opportunity Name Formats you&apos;ve specified as &quot;Do Not Rename.&quot;&lt;br/&gt;&lt;br/&gt;
+
+&lt;b&gt;This is an irreversible process.&lt;/b&gt;
+Before starting this process, we recommend that you back up your data. We also recommend disabling the following when they affect Opportunities: 
+&lt;br/&gt;
+&lt;br/&gt;
+● Custom Validation Rules&lt;br/&gt;
+● Workflow Rules&lt;br/&gt;
+● Process Builder&lt;br/&gt;
+● Visual Workflows&lt;br/&gt;
+● Custom Triggers&lt;br/&gt;&lt;br/&gt;
+Once the process is 100% complete, you can safely leave or refresh this page.</value>
     </labels>
     <labels>
         <fullName>stgHelpChatterGroup</fullName>
@@ -2242,7 +4129,34 @@ Once the renaming process is 100% complete, you can safely leave or refresh this
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpContactRTExcluded</shortDescription>
-        <value>Contact Record Types excluded from Household Opportunity Contact Role creation</value>
+        <value>The Contact Record Types you want to exclude from automatic Household Member Contact Role creation. For example, you might want to create a &quot;child&quot; record type for children Contacts in the Household, and enter it here. Salesforce would then exclude those Contacts from receiving the Household Member Contact Role when the Opportunity is created.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpCreateMissingPayments</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpCreateMissingPayments</shortDescription>
+        <value>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate batch payment creation. Salesforce will create a payment for each Opportunity without Payments that: 
+&lt;br/&gt;
+&lt;br/&gt; 
+● has an amount greater than zero&lt;br/&gt; 
+● is not marked Do Not Automatically Create Payment&lt;br/&gt; 
+● is not excluded in the Donations | Payments settings&lt;br/&gt; 
+&lt;br/&gt; 
+
+&lt;b&gt;This is an irreversible process.&lt;/b&gt; 
+Before starting this process, we recommend disabling the following when they affect Payments: 
+&lt;br/&gt;
+&lt;br/&gt; 
+● Custom Validation Rules&lt;br/&gt; 
+● Workflow Rules&lt;br/&gt; 
+● Process Builder&lt;br/&gt; 
+● Visual Workflows&lt;br/&gt; 
+● Custom Triggers&lt;br/&gt; 
+
+&lt;br/&gt; 
+Once the process is 100% complete, you can safely leave or refresh this page.</value>
     </labels>
     <labels>
         <fullName>stgHelpDefaultAllocationsEnabled</fullName>
@@ -2258,7 +4172,7 @@ Once the renaming process is 100% complete, you can safely leave or refresh this
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpDefaultGAU</shortDescription>
-        <value>Default General Accounting Unit for default allocation of unallocated Opportunities, and remainders of partially allocated Opportunities.</value>
+        <value>When Default Allocations is enabled, Salesforce creates a GAU Allocation for all new Opportunities and assigns them to this General Accounting Unit. NOTE: This doesn&apos;t include existing unallocated Opportunities. You can allocate them to the default General Accounting Unit in NPSP Settings under Bulk Data Processes | Batch Create Default Allocations.</value>
     </labels>
     <labels>
         <fullName>stgHelpDisableHHAccountAddr</fullName>
@@ -2274,7 +4188,15 @@ Once the renaming process is 100% complete, you can safely leave or refresh this
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpEnableSoftCreditRollups</shortDescription>
-        <value>Allows you to rollup closed Opportunity totals based on Opportunity Contact Role Roles. Soft credit rollups happen only in the nightly batch job, and not on triggers. They can be manually run using the Rollup Donations Batch tab.</value>
+        <value>Rolls up Closed/Won Opportunity totals to Contact records based on assigned Opportunity Contact Roles. Soft credit rollups only happen in nightly batches, but you can run them manually from the Rollup Donations Batch settings.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpErrorLog</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpErrorLog</shortDescription>
+        <value>The Error Log shows a detailed list of errors for debugging purposes. Errors are logged only if Error Handling and the Store Errors options are enabled in System Tools | Error Notifications.</value>
     </labels>
     <labels>
         <fullName>stgHelpErrorNotifyOn</fullName>
@@ -2293,6 +4215,14 @@ Once the renaming process is 100% complete, you can safely leave or refresh this
         <value>Select the type of user to send notifications to.</value>
     </labels>
     <labels>
+        <fullName>stgHelpExampleHHNames</fullName>
+        <categories>NPSP Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>displayed in the Example household names box</shortDescription>
+        <value>&lt;b&gt;NOTE:&lt;/b&gt; The above preview examples cannot preview information for fields other than First Name, Last Name, or Salutation. (For example, if you&apos;ve created a custom field for nickname that you want to use in the Informal Greeting, that custom field would not show up here.) Fields other than First Name, Last Name, and Salutation don&apos;t show up in the greetings fields of the Manage Household page either, but when you save Contact information from the Manage Household page, your Household naming conventions will appear correctly.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpFGFormat</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -2306,7 +4236,7 @@ Once the renaming process is 100% complete, you can safely leave or refresh this
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpFiscalYearRollups</shortDescription>
-        <value>Checking this box will cause Opportunity rollup totals to respect fiscal year, instead of calendar years settings. To set Fiscal Year information, go to Setup-&gt;Company Profile-&gt;Fiscal Year. NOTE: Custom Fiscal Year Settings are NOT supported.</value>
+        <value>When checked, this option enables fiscal year settings, rather than calendar year settings, for Opportunity rollup totals. To set fiscal year information, go to Setup | Company Profile | Fiscal Year. NOTE: The Nonprofit Success Pack does not support custom fiscal year settings.</value>
     </labels>
     <labels>
         <fullName>stgHelpHHAccountRTID</fullName>
@@ -2314,7 +4244,7 @@ Once the renaming process is 100% complete, you can safely leave or refresh this
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHHAccountRTID</shortDescription>
-        <value>The Account Record Type to be used for Household Accounts. If none is selected, the Account will default to the user&apos;s default Account Record Type.</value>
+        <value>The Account record type you want to use for new Accounts if you&apos;ve selected the Household Account model above. You can select the default Household Account record type, or your own record type. If you select --None--, then Salesforce will use the default Account record type for the user who&apos;s creating the new Contact (and associated Account).</value>
     </labels>
     <labels>
         <fullName>stgHelpHHExcludedRT</fullName>
@@ -2330,7 +4260,7 @@ Once the renaming process is 100% complete, you can safely leave or refresh this
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHHMailingListReport</shortDescription>
-        <value>The Household Mailing List Report used for Household-deduplicated Campaign mailing lists. The report should be of Campaigns with Contacts, where Member Status does not contain &apos;Duplicate&apos;</value>
+        <value>The Household Mailing List Report deduplicates a Campaign that contains multiple Contacts from the same household in order to help prevent sending multiples of the same mailing to the same address. NPSP includes a report you can select called &quot;NPSP Campaign Household Mailing List.&quot; If that report has been renamed or deleted, select a report that uses the Campaigns with Contacts report type, with a filter for: Member Status does not contain &quot;Duplicate&quot;.</value>
     </labels>
     <labels>
         <fullName>stgHelpHHNameFormat</fullName>
@@ -2354,7 +4284,7 @@ Once the renaming process is 100% complete, you can safely leave or refresh this
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHHOCROn</shortDescription>
-        <value>Check this field to create automatic Contact Roles for Household members of the Primary Contact</value>
+        <value>Automatically creates Contact Roles for Household members of the Opportunity&apos;s Primary Contact.</value>
     </labels>
     <labels>
         <fullName>stgHelpHHObjectOverview</fullName>
@@ -2362,11 +4292,7 @@ Once the renaming process is 100% complete, you can safely leave or refresh this
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHHObjectOverview</shortDescription>
-        <value>The Nonprofit Starter Pack supports two different ways to track households.  The recommended way is to specify the Household Account Model, which will use an Account as the Contact&apos;s Household.  If, however, you are using either the One-to-One or Individual Account Models, you can optionally use a separate Household Object as the Contact&apos;s Household.
-&lt;br/&gt;&lt;br/&gt;
-The Household Object and its associated account models are no longer recommended. However, if you are still using the One-to-One or Individual (&quot;Bucket&quot;) account models from previous versions of the Nonprofit Starter Pack, you can change settings for the Household Object here.
-&lt;br/&gt;&lt;br/&gt;
-To learn more about the recommended Household account model, see the &lt;a href=&quot;https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-3-Documentation&quot; target=&quot;_new&quot;&gt;NPSP Documentation&lt;/a&gt;.</value>
+        <value>To learn more about the recommended Household account model, see the &lt;a href=&quot;https://powerofus.force.com/NPSP_Account_Model&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</value>
     </labels>
     <labels>
         <fullName>stgHelpHHRules</fullName>
@@ -2374,7 +4300,15 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHHRules</shortDescription>
-        <value>Specifies for which contacts Salesforce will automatically create separate Household objects. (Applies to One-to-One or Individual Account Models only.)</value>
+        <value>Specifies for which Contacts Salesforce will automatically create separate Household objects. (Applies to One-to-One or Individual Account Models only.)</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpHealthCheck</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpHealthCheck</shortDescription>
+        <value>Use &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelHealthCheck&apos;);return false;&quot;&gt;Health Check&lt;/a&gt; to verify your NPSP configuration!</value>
     </labels>
     <labels>
         <fullName>stgHelpIGFormat</fullName>
@@ -2398,7 +4332,26 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpLeadConvert</shortDescription>
-        <value>Specifies whether to create an Opportunity during Lead conversion.</value>
+        <value>Specifies the default behavior for Opportunity creation when you convert a Lead to a Contact. If left unselected, Salesforce will NOT automatically create an Opportunity when you convert Leads to Contacts. For more information, see the &lt;a href=&quot;https://powerofus.force.com/NPSP_Leads&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpLvlAssignBatch</fullName>
+        <categories>NPSP Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>help text displayed on the Level Assignment Batch page</shortDescription>
+        <value>This utility calculates Level Assignments for all Salesforce objects (typically Accounts and Contacts, but also any custom objects) that have Levels assigned to them. This process may take some time, but you can safely close this page and the process will continue in the background.
+&lt;br/&gt;&lt;br/&gt;
+
+&lt;b&gt;IMPORTANT:&lt;/b&gt; Since Salesforce is often evaluating Levels against updated fields from other bulk data processes, you may want to run those processes first.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpMatchedDonorRole</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpMatchedDonorRole</shortDescription>
+        <value>The Contact Role you want to use for matched donors. We recommend using &quot;Matched Donor.&quot;</value>
     </labels>
     <labels>
         <fullName>stgHelpMaxPayments</fullName>
@@ -2406,7 +4359,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgHelpMaxPayments</shortDescription>
-        <value>Set the maximum number of payments available in the Payment Creation Wizard.</value>
+        <value>Sets the maximum number of Payments allowed when scheduling Payments for an Opportunity. If no value is entered, the default is 12.</value>
     </labels>
     <labels>
         <fullName>stgHelpMembershipGracePeriod</fullName>
@@ -2414,7 +4367,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpMembershipGracePeriod</shortDescription>
-        <value>The length of the grace period (in days) after a membership expires (last end date) before the status moves from &apos;Grace Period&apos; to &apos;Expired&apos;. Defaults to 30 days.</value>
+        <value>After a Membership ends, the length of the grace period (in days) before the Membership Status on the Account moves from Grace Period to Expired. Defaults to 30 days.</value>
     </labels>
     <labels>
         <fullName>stgHelpMembershipRT</fullName>
@@ -2422,7 +4375,23 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpMembershipRT</shortDescription>
-        <value>Names of Opportunity Record Types, such as Membership, that you want to roll up separately from other Opportunity Record Types.</value>
+        <value>The Record Type used when creating Opportunities that track Membership Donations. We recommend using Membership. Opportunities with this record type roll up separately from other Opportunity Record Types.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpNPSPDoc</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpNPSPDoc</shortDescription>
+        <value>NPSP Documentation</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpNPSPSettings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpNPSPSettings</shortDescription>
+        <value>Configure the Nonprofit Success Pack to meet your organization&apos;s needs. You can also monitor the health of your Salesforce organization, or run batch processes to update data.</value>
     </labels>
     <labels>
         <fullName>stgHelpNameConnector</fullName>
@@ -2446,7 +4415,9 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpNewRDFieldMap</shortDescription>
-        <value>Select the Recurring Donation field to be mapped, and the Opportunity field it maps to.</value>
+        <value>First, select the Recurring Donation field you want to map. Then select the Opportunity field you want to map to. The Recurring Donation field you select will appear on all child opportunities for the Recurring Donation.
+
+IMPORTANT: Both of these fields must have the same data type.</value>
     </labels>
     <labels>
         <fullName>stgHelpNewUDR</fullName>
@@ -2454,7 +4425,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpNewUDR</shortDescription>
-        <value>Select the Opportunity field and operator to be mapped, and the object and field to copy into.</value>
+        <value>Select the Opportunity field and corresponding rollup operation, then select the object and field to roll up to.</value>
     </labels>
     <labels>
         <fullName>stgHelpNoUDR</fullName>
@@ -2465,12 +4436,20 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <value>No User Defined Rollups Have Been Defined</value>
     </labels>
     <labels>
+        <fullName>stgHelpOCR</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpOCR</shortDescription>
+        <value>Soft Credits, Contact Roles, and Matching Gifts relate to each other in important ways. If you&apos;re not familiar with these concepts and how they interact, you should read through the &lt;a href=&quot;https://powerofus.force.com/NPSP_SCMG&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt; before making any adjustments to these settings.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpOCRDefaultRole</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpOCRDefaultRole</shortDescription>
-        <value>The default role for the primary Opportunity Contact Role that gets automatically created.</value>
+        <value>The default Contact Role automatically assigned to the Primary Contact for the Opportunity.</value>
     </labels>
     <labels>
         <fullName>stgHelpOCRRoleForHH</fullName>
@@ -2478,7 +4457,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpOCRRoleForHH</shortDescription>
-        <value>Select the Contact Role for Household Members</value>
+        <value>The Contact Role you want to use for Household Members.</value>
     </labels>
     <labels>
         <fullName>stgHelpOneToOneRTID</fullName>
@@ -2486,7 +4465,55 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpOneToOneRTID</shortDescription>
-        <value>The Account Record Type to be used for One-to-One Accounts. If none is selected, the Account will default to the user&apos;s default Account Record Type.</value>
+        <value>The Account record type you want to use for new Accounts if you&apos;ve selected the One-to-One Account model above. NPSP does not come with a default record type for One-to-One Accounts, so you should create one (such as &quot;Individual&quot;) before selecting this model. If you select --None--, then Salesforce will use the default Account record type for the user who&apos;s creating the new Contact (and associated One-to-One Account).</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpOppNamingAttribution</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpOppNamingAttribution</shortDescription>
+        <value>Specifies whether you want to apply these settings to Contact donations (i.e. opportunities associated with Household, 1-to-1, or Individual &quot;Bucket&quot; accounts), Organization donations, or both Contact and Organization donations.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpOppNamingDateFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpOppNamingDateFormat</shortDescription>
+        <value>The date format used for any Date or DateTime fields referenced in the Opportunity Name Format. Choose a format, or choose &quot;other&quot; to create your own custom format following the Java SimpleDateFormat specification.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpOppNamingFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpOppNamingFormat</shortDescription>
+        <value>The Opportunity Name format. Choose &quot;other&quot; to create your own. See the &lt;a href=&quot;https://powerofus.force.com/NPSP_Opp_Names&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt; for details.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpOppNamingRecTypes</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpOppNamingRecTypes</shortDescription>
+        <value>The Opportunity record type(s) to which you want to apply this Opportunity Name. Control or Command click to select more than one record type. &quot;--None--&quot; applies the new naming to ALL record types.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpOppRecTypesNoPayments</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpOppRecTypesNoPayments</shortDescription>
+        <value>Salesforce won&apos;t automatically create Payments for the selected Opportunity record types. Control or Command click to select more than one record type.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpOppTypesNoPayments</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpOppTypesNoPayments</shortDescription>
+        <value>Salesforce won&apos;t automatically create Payments for Opportunities that have this value in the Type picklist.</value>
     </labels>
     <labels>
         <fullName>stgHelpOrgAccountAddressMgmt</fullName>
@@ -2518,7 +4545,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpPaymentMapPaymentField</shortDescription>
-        <value>The Payment field to copy into.</value>
+        <value>The Payment field to copy to.</value>
     </labels>
     <labels>
         <fullName>stgHelpPaymentMapping</fullName>
@@ -2526,7 +4553,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpPaymentMapping</shortDescription>
-        <value>Select the Opportunity field to be mapped, and the Payment field it maps to.</value>
+        <value>Set up a mapping by selecting an Opportunity field, and then selecting the Payment field it maps to. NOTE: Payment mapping requires that you have two fields (one on Opportunity, one on Payment) of a matching data type.</value>
     </labels>
     <labels>
         <fullName>stgHelpPaymentMappings</fullName>
@@ -2534,7 +4561,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpPaymentMappings</shortDescription>
-        <value>Map fields from Opportunity to Payment.  This will copy Opportunity values to the Payment when inserted via the automatic payment creation or payment scheduler.</value>
+        <value>Map fields so that values from the Opportunity are automatically copied to the Payment. Mapping applies for auto-created Payments or Payments created through the Payment scheduler.</value>
     </labels>
     <labels>
         <fullName>stgHelpPaymentsEnabled</fullName>
@@ -2542,7 +4569,34 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpPaymentsEnabled</shortDescription>
-        <value>Enables automatic Payments created for new Opportunities/Donations.</value>
+        <value>If enabled, Salesforce automatically creates Payments for new Opportunities (Donations).</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpPowerOfUsHub</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpPowerOfUsHub</shortDescription>
+        <value>Got questions? The Hub has answers! Try the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; group for questions about NPSP and the &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; group for questions about Salesforce administration and cofiguration.&lt;br/&gt;&lt;br/&gt;Keep up with the latest NPSP release notes in the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt; group.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpPrimaryContactBatch</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpPrimaryContactBatch</shortDescription>
+        <value>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate a batch Opportunity update to refresh the Primary Contact field. Salesforce will update Opportunity records where the Primary Contact field isn&apos;t the same value as the  Opportunity Contact Role record marked Primary.&lt;br/&gt;&lt;br/&gt;
+
+&lt;b&gt;This is an irreversible process.&lt;/b&gt;
+This change updates Opportunity records. Before starting this process, we recommend that you back up your data. We also recommend disabling the following when they affect Opportunities: 
+&lt;br/&gt;
+&lt;br/&gt;
+● Custom Validation Rules&lt;br/&gt;
+● Workflow Rules&lt;br/&gt;
+● Process Builder&lt;br/&gt;
+● Visual Workflows&lt;br/&gt;
+● Custom Triggers&lt;br/&gt;&lt;br/&gt;
+Once the process is 100% complete, you can safely leave or refresh this page.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDAddCampaign</fullName>
@@ -2550,7 +4604,21 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDAddCampaign</shortDescription>
-        <value>If selected, all Opportunities for Recurring Donations will use the Campaign on the Recurring Donation. Otherwise, only the first Opportunity will have the Campaign.</value>
+        <value>If selected, adds the campaign that you&apos;ve specified for the Recurring Donation to all related (i.e. &apos;child&apos;) opportunities. If this option is not selected, the campaign appears on the Recurring Donation&apos;s first opportunity only.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRDBatch</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRDBatch</shortDescription>
+        <value>This utility runs a batch process for all open-ended Recurring Donations, and based on the number of Opportunity Forecast Months:
+&lt;br/&gt;
+&lt;br/&gt; 
+● creates new opportunities&lt;br/&gt;
+● updates the number of Installments and Paid Amount&lt;br/&gt;
+&lt;br/&gt;
+This process may take some time, but you can close this page and the process will continue in the background.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDDisableScheduling</fullName>
@@ -2558,7 +4626,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDDisableScheduling</shortDescription>
-        <value>Prevents the scheduling of the nightly update to Recurring Donations. Any existing scheduled job will need to be removed through Setup-&gt;Monitoring-&gt;Scheduled Jobs</value>
+        <value>Prevents the scheduling of the nightly update to Recurring Donations.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDFailures</fullName>
@@ -2574,7 +4642,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDFieldMap</shortDescription>
-        <value>Map fields from Recurring Donations to Opportunities.  This will copy Recurring Donation fields to the Opportunities created for the Recurring Donation.</value>
+        <value>This setting lets you map fields from the Recurring Donation record to the Recurring Donation&apos;s child Opportunities.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDFieldMapOppField</fullName>
@@ -2582,7 +4650,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDFieldMapOppField</shortDescription>
-        <value>The Opportunity field to receive the value from the Recurring Donation field. Note that these fields must have the same data type.</value>
+        <value>no longer used.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDFieldMapRDField</fullName>
@@ -2590,7 +4658,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDFieldMapRDField</shortDescription>
-        <value>The Recurring Donation field to copy to the Opportunity field. Note that these fields must have the same data type.</value>
+        <value>no longer used.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDLastRun</fullName>
@@ -2606,7 +4674,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDMaxDonations</shortDescription>
-        <value>Restricts the total number of donations created for non-open-ended Recurring Donations. Default is 50.</value>
+        <value>Restricts the total number of donations (installments) for Fixed-Length Recurring Donations. Default is 50.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDOpenOppBehavior</fullName>
@@ -2614,7 +4682,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDOpenOppBehavior</shortDescription>
-        <value>Determines the behavior of any remaining open Opportunities when an open-ended Recurring Donation is moved to a closed status.</value>
+        <value>Tells Salesforce what to do with any remaining open opportunities when you mark the status of a Open-Ended Recurring Donation as Closed.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDOppForecastMonths</fullName>
@@ -2622,7 +4690,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDOppForecastMonths</shortDescription>
-        <value>Number of months from today worth of open Opportunities to be created when using open-ended Recurring Donations. WARNING: Reducing this value will result in extra Opportunities being deleted. Increasing it will launch a batch process to add Opportunities</value>
+        <value>Number of months&apos; worth of open opportunities created for Open-Ended Recurring Donations. The default is 12, so after every month, Salesforce creates another month&apos;s worth of open opportunities (i.e., the total months&apos; worth of open opportunities is always 12).</value>
     </labels>
     <labels>
         <fullName>stgHelpRDOppRT</fullName>
@@ -2630,7 +4698,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDOppRT</shortDescription>
-        <value>Opportunity Record Type used when Recurring Donation Opportunities are created.</value>
+        <value>The opportunity record type assigned to the Recurring Donation&apos;s child opportunities.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDPeriodFrequency</fullName>
@@ -2665,12 +4733,20 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <value>Number of Recurring Donations successfully updated in the last batch run.</value>
     </labels>
     <labels>
+        <fullName>stgHelpRecDon</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRecDon</shortDescription>
+        <value>This setting lets you create custom installment periods for Recurring Donations, different from the default installment periods (monthly, quarterly, yearly, and so on) that come with the NPSP.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpRelAutoCreatedDup</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRelAutoCreatedDup</shortDescription>
-        <value>Auto-created Relationships are auto-deduplicated to prevent duplicate Relationship records from being created between two Contacts. Check this box to disable this behavior &amp; allow multiple Relationships of the same Type to be created between two Contacts</value>
+        <value>The NPSP de-duplicates Auto-Created Relationships automatically. Select this option if you want to disable automatic de-duplication, and allow multiple Relationships of the same Type to exist between two Contacts.</value>
     </labels>
     <labels>
         <fullName>stgHelpRelGenderField</fullName>
@@ -2678,7 +4754,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRelGenderField</shortDescription>
-        <value>The custom field used to define the gender of a Contact for determining reciprocal relationships</value>
+        <value>Custom field that specifies the gender of a Contact. Salesforce uses the value in this field to determine reciprocal relationships.</value>
     </labels>
     <labels>
         <fullName>stgHelpRelReciprocalFemale</fullName>
@@ -2686,7 +4762,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRelReciprocalFemale</shortDescription>
-        <value>The value used if the Contact&apos;s gender field matches the values in the Female Custom Label or the Contact&apos;s salutation indicates gender.</value>
+        <value>The value Salesforce uses if the Contact&apos;s Gender field value is Female, or if the Contact&apos;s Salutation indicates gender.</value>
     </labels>
     <labels>
         <fullName>stgHelpRelReciprocalMale</fullName>
@@ -2694,7 +4770,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRelReciprocalMale</shortDescription>
-        <value>The value used if the Contact&apos;s gender field matches the values in the Male Custom Label or the Contact&apos;s Salutation indicates gender.</value>
+        <value>The value Salesforce uses if the Contact&apos;s Gender field value is Male, or if the Contact&apos;s Salutation indicates gender.</value>
     </labels>
     <labels>
         <fullName>stgHelpRelReciprocalMethod</fullName>
@@ -2702,7 +4778,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRelReciprocalMethod</shortDescription>
-        <value>Determines method used to generate the reciprocal relationship. Either List Setting which uses custom settings by gender (see Reciprocal Relationships tab), or Value Inversion, which inverts the type if appropriate (&quot;Parent-Child&quot; to &quot;Child-Parent&quot;)</value>
+        <value>Specifies the method used for generating reciprocal relationships. See the &lt;a href=&quot;https://powerofus.force.com/NPSP_Relationships_Settings&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt; for more information.</value>
     </labels>
     <labels>
         <fullName>stgHelpRelReciprocalName</fullName>
@@ -2710,7 +4786,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRelReciprocalName</shortDescription>
-        <value>The Name of the Reciprocal Relationship</value>
+        <value>The name of the relationship. This is the Type value the user selects when creating a relationship between contacts.</value>
     </labels>
     <labels>
         <fullName>stgHelpRelReciprocalNeutral</fullName>
@@ -2718,7 +4794,15 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRelReciprocalNeutral</shortDescription>
-        <value>The value used if the Contact&apos;s gender field does not match either the Male or Female Custom Labels, and the Contact&apos;s salutation does not infer gender.</value>
+        <value>The value Salesforce uses if it cannot determine the Contact&apos;s gender based on Gender field value or Salutation.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpReviewErrorLog</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpReviewErrorLog</shortDescription>
+        <value>Review &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelErrorLog&apos;);return false;&quot;&gt;Error Logs&lt;/a&gt; to see if there are issues.</value>
     </labels>
     <labels>
         <fullName>stgHelpRollupBatchSize</fullName>
@@ -2734,7 +4818,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRollupExcludeAccountOppRT</shortDescription>
-        <value>Names of Opportunity Record Types to exclude from statistics when rolling up Account Opportunities.</value>
+        <value>Opportunities with the selected record types won&apos;t be included in rollups to the Account. Control or Command click to select more than one record type.</value>
     </labels>
     <labels>
         <fullName>stgHelpRollupExcludeAccountOppType</fullName>
@@ -2742,7 +4826,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRollupExcludeAccountOppType</shortDescription>
-        <value>Values for the Opportunity Type field to exclude from statistics when rolling up Account Opportunities.</value>
+        <value>Opportunities that have this value in the Type picklist won&apos;t be included in rollups to the Account.</value>
     </labels>
     <labels>
         <fullName>stgHelpRollupExcludeAlloOppRecType</fullName>
@@ -2750,7 +4834,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRollupExcludeAlloOppRecType</shortDescription>
-        <value>Names of Opportunity Record Types to exclude from statistics when rolling up GAU Allocations.</value>
+        <value>GAU Allocations from Opportunities with the selected record types won&apos;t be included when rolling up to the General Accounting Unit record.</value>
     </labels>
     <labels>
         <fullName>stgHelpRollupExcludeAlloOppType</fullName>
@@ -2758,7 +4842,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRollupExcludeAlloOppType</shortDescription>
-        <value>Values for the Opportunity Type field to exclude from statistics when rolling up.</value>
+        <value>GAU Allocations from Opportunities that have this value in the Type picklist won&apos;t be included when rolling up to the General Accounting Unit record.</value>
     </labels>
     <labels>
         <fullName>stgHelpRollupExcludeContactOppRT</fullName>
@@ -2766,7 +4850,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRollupExcludeContactOppRT</shortDescription>
-        <value>Names of Opportunity Record Types to exclude from statistics when rolling up Contact Opportunities.</value>
+        <value>Opportunities with the selected record types won&apos;t be included in rollups to the Contact. Control or Command click to select more than one record type.</value>
     </labels>
     <labels>
         <fullName>stgHelpRollupExcludeContactOppType</fullName>
@@ -2774,7 +4858,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRollupExcludeContactOppType</shortDescription>
-        <value>Values for the Opportunity Type field to exclude from statistics when rolling up Contact Opportunities.</value>
+        <value>Opportunities that have this value in the Type picklist won&apos;t be included in rollups to the Contact.</value>
     </labels>
     <labels>
         <fullName>stgHelpRollupNDayValue</fullName>
@@ -2782,7 +4866,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRollupNDayValue</shortDescription>
-        <value>Provide a value for &apos;N day&apos; rollups, where &apos;N&apos; is the number of days from today into the past. This value defaults to rollup over the past 365 days.</value>
+        <value>Sets the value for &apos;N day&apos; rollups, where &apos;N&apos; is the number of days from today into the past. This value defaults to rollup over the past 365 days.</value>
     </labels>
     <labels>
         <fullName>stgHelpRollupPrimaryContact</fullName>
@@ -2790,7 +4874,15 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRollupPrimaryContact</shortDescription>
-        <value>Always rollup donor statistics to the primary Contact Role, and corresponding household, on an opportunity, even if the opportunity is not from an individual (i.e. from a company, foundation, etc.)</value>
+        <value>When this option is selected, Salesforce will ALWAYS roll up donor data to the Opportunity&apos;s Primary Contact, and corresponding Household Account or record, even if the Opportunity is not from an individual (i.e., from a company, a foundation, and so on). If left unselected, and the Opportunity&apos;s Account is an organization, only the organization will receive credit for the Opportunity.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpSalesforceSetup</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpSalesforceSetup</shortDescription>
+        <value>Looking to customize page layouts, add fields, or add users?  Try the &lt;a href=&quot;/setup/forcecomHomepage.apexp?setupid=ForceCom&quot; target=&quot;_blank&quot;&gt;Salesforce Setup&lt;/a&gt; pages.</value>
     </labels>
     <labels>
         <fullName>stgHelpSimpleAddrChangeIsUpdate</fullName>
@@ -2798,7 +4890,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpSimpleAddrChangeIsUpdate</shortDescription>
-        <value>Treats changes to single Contact or Account address fields as updates to the existing address (i.e., no new Address object is created). Also causes white space and case changes to be treated as updates.</value>
+        <value>A simple address change is a change (such as correcting a typo, or deleting white space) to a single Contact or Account address field. When this option is selected, Salesforce treats these changes as updates to the existing address (i.e., no new Address object is created).</value>
     </labels>
     <labels>
         <fullName>stgHelpSoftCreditRoles</fullName>
@@ -2806,7 +4898,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpSoftCreditRoles</shortDescription>
-        <value>List of Opportunity Contact Role roles to include in soft credit rollups.</value>
+        <value>Opportunity Contact Roles you want to include in Soft Credit rollups. Control or Command click to select multiple roles.</value>
     </labels>
     <labels>
         <fullName>stgHelpStoreErrorsOn</fullName>
@@ -2817,12 +4909,20 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <value>Check this if you&apos;d like errors to be stored in the database.</value>
     </labels>
     <labels>
+        <fullName>stgHelpTDTM</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpTDTM</shortDescription>
+        <value>Trigger Handlers contain the actual business logic that needs to be executed for a particular trigger event.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpTHActive</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpTHActive</shortDescription>
-        <value>Indicates that this module is active</value>
+        <value>Indicates that this Trigger Handler is active and will run when Trigger Action criteria is met.</value>
     </labels>
     <labels>
         <fullName>stgHelpTHAsync</fullName>
@@ -2830,7 +4930,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpTHAsync</shortDescription>
-        <value>Indicates that this module should be run asynchronously in this transaction</value>
+        <value>Indicates that this trigger handler&apos;s After Events should run asynchronously. WARNING: If the specified Apex Class doesn&apos;t support asynchronous processing and you select this checkbox, the class may not work properly.</value>
     </labels>
     <labels>
         <fullName>stgHelpTHClass</fullName>
@@ -2838,7 +4938,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpTHClass</shortDescription>
-        <value>Name of the class to be run</value>
+        <value>The Apex class to run.</value>
     </labels>
     <labels>
         <fullName>stgHelpTHLoadOrder</fullName>
@@ -2846,7 +4946,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpTHLoadOrder</shortDescription>
-        <value>Order in which this module should be run, helps maintain dependencies in the modules and data.</value>
+        <value>Order in which this trigger should be run. If the records that this trigger handler processes have related records, the load order ensures that they&apos;re created or updated in the correct order.</value>
     </labels>
     <labels>
         <fullName>stgHelpTHObject</fullName>
@@ -2854,7 +4954,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpTHObject</shortDescription>
-        <value>Name of the object this handler should be run for</value>
+        <value>The object related to this trigger handler.</value>
     </labels>
     <labels>
         <fullName>stgHelpTHTriggerAction</fullName>
@@ -2862,7 +4962,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpTHTriggerAction</shortDescription>
-        <value>Trigger Action in which this module should fire</value>
+        <value>Actions that fire this trigger. Ctrl and Command click to select more than one action.</value>
     </labels>
     <labels>
         <fullName>stgHelpTriggerHandlers</fullName>
@@ -2870,7 +4970,15 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpTriggerHandlers</shortDescription>
-        <value>These triggers control core functionality in the Nonprofit Starter Pack, so please exercise extreme caution in modifying them.</value>
+        <value>These triggers control core functionality in the Nonprofit Success Pack, so please exercise extreme caution when creating or modifying them.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpTriggerHandlersAsync</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpTriggerHandlersAsync</shortDescription>
+        <value>Marking any Trigger Handler to run Asynchronously can have unintended consequences, and should be fully tested before deploying in production.</value>
     </labels>
     <labels>
         <fullName>stgHelpUDROperation</fullName>
@@ -2878,7 +4986,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpUDROperation</shortDescription>
-        <value>Select the valid rollup operation for this field</value>
+        <value>Determines how the field should roll up. Only operations that are valid for the selected Opportunity field are listed.</value>
     </labels>
     <labels>
         <fullName>stgHelpUDROppField</fullName>
@@ -2886,7 +4994,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpUDROppField</shortDescription>
-        <value>Select the Opportunity field you wish to rollup</value>
+        <value>The Opportunity field to roll up.</value>
     </labels>
     <labels>
         <fullName>stgHelpUDRTargetObject</fullName>
@@ -2894,7 +5002,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpUDRTargetObject</shortDescription>
-        <value>Select the object you wish to rollup to</value>
+        <value>The object on which the rollup information will appear.</value>
     </labels>
     <labels>
         <fullName>stgInstallScriptError</fullName>
@@ -2903,7 +5011,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <shortDescription>stgInstallScriptError</shortDescription>
         <value>Your installation was successful, but we detected a slight problem. To fix the problem, simply load the NPSP Settings page in Salesforce.
 
-Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application. If you don&apos;t see the tab, select Nonprofit Starter Pack from the app menu in the upper-right corner.</value>
+Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application. If you don&apos;t see the tab, select Nonprofit Success Pack from the app menu in the upper-right corner.</value>
     </labels>
     <labels>
         <fullName>stgLabelActionColumn</fullName>
@@ -2928,6 +5036,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgLabelAfflSettings</shortDescription>
         <value>Affiliations Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelAllRecordTypes</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelAllRecordTypes</shortDescription>
+        <value>- all record types -</value>
     </labels>
     <labels>
         <fullName>stgLabelAlloBatchProgress</fullName>
@@ -2986,12 +5102,28 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Batch Status</value>
     </labels>
     <labels>
+        <fullName>stgLabelCreateMissingPayments</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelCreateMissingPayments</shortDescription>
+        <value>Create Missing Payments</value>
+    </labels>
+    <labels>
         <fullName>stgLabelCurrentUDR</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgLabelCurrentUDR</shortDescription>
         <value>Current User Defined Rollups</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelDoNotRename</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelDoNotRename</shortDescription>
+        <value>- do not rename -</value>
     </labels>
     <labels>
         <fullName>stgLabelErrorNotify</fullName>
@@ -3074,12 +5206,36 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Household Settings</value>
     </labels>
     <labels>
+        <fullName>stgLabelHonoreeNotificationHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelHonoreeNotificationHelpText</shortDescription>
+        <value>Create automatic Opportunity Contact Roles for Honoree and Notification Recipient contacts</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelHonoreeNotificationOCR</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelHonoreeNotificationOCR</shortDescription>
+        <value>Honoree and Notification Recipient Opportunity Contact Roles</value>
+    </labels>
+    <labels>
         <fullName>stgLabelLeadSettings</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgLabelLeadSettings</shortDescription>
         <value>Lead Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelLvlAssignBatchTitle</fullName>
+        <categories>NPSP Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>menu title for the Level Assignment Batch in NPSP Settings</shortDescription>
+        <value>Level Assignment Batch</value>
     </labels>
     <labels>
         <fullName>stgLabelMembershipSettings</fullName>
@@ -3143,7 +5299,15 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgLabelNone</shortDescription>
-        <value>- none -</value>
+        <value>--None--</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelONS</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelONS</shortDescription>
+        <value>Opportunity Name Settings</value>
     </labels>
     <labels>
         <fullName>stgLabelOppBatchProgress</fullName>
@@ -3152,6 +5316,38 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgLabelOppBatchProgress</shortDescription>
         <value>Rollup Donations Batch Progress</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelOppCampMembers</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOppCampMembers</shortDescription>
+        <value>Campaign Members</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelOppNamingRefreshTitle</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOppNamingRefreshTitle</shortDescription>
+        <value>Refresh Opportunity Names</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelOppNamingSettings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOppNamingSettings</shortDescription>
+        <value>Opportunity Names</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelOppPrimaryContactTitle</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOppPrimaryContactTitle</shortDescription>
+        <value>Refresh Opportunity Primary Contact</value>
     </labels>
     <labels>
         <fullName>stgLabelOppRollupRT</fullName>
@@ -3170,12 +5366,28 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Opportunity Rollups</value>
     </labels>
     <labels>
+        <fullName>stgLabelOppUpdatePrimaryContact</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOppUpdatePrimaryContact</shortDescription>
+        <value>Batch Update Primary Contact</value>
+    </labels>
+    <labels>
         <fullName>stgLabelOther</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgLabelOther</shortDescription>
         <value>other</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelOtherDateFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOtherDateFormat</shortDescription>
+        <value>Other Date Format</value>
     </labels>
     <labels>
         <fullName>stgLabelOtherFormalGreetingFormat</fullName>
@@ -3200,6 +5412,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgLabelOtherInformalGreetingFormat</shortDescription>
         <value>Other Informal Greeting Format</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelOtherOpportunigyNamingFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOtherOpportunigyNamingFormat</shortDescription>
+        <value>Other Opportunigy Naming Format</value>
     </labels>
     <labels>
         <fullName>stgLabelPaymentMapNoValidFields</fullName>
@@ -3330,6 +5550,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Target Field</value>
     </labels>
     <labels>
+        <fullName>stgLabelUDRTargetFieldHelp</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgLabelUDRTargetFieldHelp</shortDescription>
+        <value>The custom field on the target object that will display your custom rollup summary. This field must be of the same type as the Opportunity field you&apos;re rolling up.</value>
+    </labels>
+    <labels>
         <fullName>stgLabelUDRTargetObject</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -3346,12 +5574,36 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Del</value>
     </labels>
     <labels>
+        <fullName>stgNPSPGuideImportData</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNPSPGuideImportData</shortDescription>
+        <value>NPSP Guide to Importing Data</value>
+    </labels>
+    <labels>
+        <fullName>stgNPSPSettings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNPSPSettings</shortDescription>
+        <value>Nonprofit Success Pack Application Settings</value>
+    </labels>
+    <labels>
         <fullName>stgNPSPSettingsTitle</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgNPSPSettingsTitle</shortDescription>
-        <value>Nonprofit Starter Pack Settings</value>
+        <value>Nonprofit Success Pack Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgNPSPWorkbook</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNPSPWorkbook</shortDescription>
+        <value>NPSP Fundraising Trail</value>
     </labels>
     <labels>
         <fullName>stgNavAccountModel</fullName>
@@ -3392,6 +5644,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgNavBDE</shortDescription>
         <value>Batch Data Entry</value>
+    </labels>
+    <labels>
+        <fullName>stgNavBulkProcesses</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavBulkProcesses</shortDescription>
+        <value>Bulk Data Processes</value>
     </labels>
     <labels>
         <fullName>stgNavConnections</fullName>
@@ -3578,6 +5838,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Rollup Donations Batch</value>
     </labels>
     <labels>
+        <fullName>stgNavSchedule</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavSchedule</shortDescription>
+        <value>Process Scheduler</value>
+    </labels>
+    <labels>
         <fullName>stgNavSystem</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -3600,6 +5868,30 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgNavUserDefinedRollups</shortDescription>
         <value>User Defined Rollups</value>
+    </labels>
+    <labels>
+        <fullName>stgOppNamingDescription</fullName>
+        <categories>Settings, OppNaming</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgOppNamingDescription</shortDescription>
+        <value>When you create an Opportunity, the Name is automatically populated using a default naming convention. You can customize the naming convention by creating custom Opportunity Names.</value>
+    </labels>
+    <labels>
+        <fullName>stgPowerOfUsHub</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgPowerOfUsHub</shortDescription>
+        <value>Power of Us Hub</value>
+    </labels>
+    <labels>
+        <fullName>stgTools</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgTools</shortDescription>
+        <value>Tools</value>
     </labels>
     <labels>
         <fullName>stgValidationHHAccountHHRules</fullName>

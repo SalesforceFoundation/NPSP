@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
 * @group Settings
 * @description Controller for the User Defined Rollups panel.
@@ -55,11 +55,45 @@ public with sharing class STG_PanelOppRollups_CTRL extends STG_Panel {
                 
             //if org has customFY records, disable FY settings
             if (hasCustomFYRecord > 0) {
-                ctrl.createDR(strSetting, 'Error', label.healthDetailsInvalidFiscalYears, label.healthSolutionInvalidFiscalYears);
+                ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, label.healthDetailsInvalidFiscalYears, label.healthSolutionInvalidFiscalYears);
                 return;
             }            
         }
-        ctrl.createDR(strSetting, 'Success', null, label.healthLabelFiscalYearsValid);            
+        ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusSuccess, null, label.healthLabelFiscalYearsValid);            
     }        
-    
+
+    /**
+     * @description A user friendly rendering of record type ids by record type
+     * name for Excluded Account Opp RecTypes
+     */
+    static public String strExcludedAccountOppRecTypesReadOnly {
+        get {
+            if (strExcludedAccountOppRecTypesReadOnly == null) {
+                strExcludedAccountOppRecTypesReadOnly = STG_Panel.getRecordTypeNamesFromPicklistString(
+                    Opportunity.sObjectType,
+                    STG_Panel.stgService.stgHH.npo02__Excluded_Account_Opp_Rectypes__c
+                );
+            }
+            return strExcludedAccountOppRecTypesReadOnly;
+        }
+        private set;
+    }
+
+    /**
+     * @description A user friendly rendering of record type ids by record type
+     * name for Excluded Contact Opp RecTypes
+     */
+    static public String strExcludedContactOppRecTypesReadOnly {
+        get {
+            if (strExcludedContactOppRecTypesReadOnly == null) {
+                strExcludedContactOppRecTypesReadOnly = STG_Panel.getRecordTypeNamesFromPicklistString(
+                    Opportunity.sObjectType,
+                    STG_Panel.stgService.stgHH.npo02__Excluded_Contact_Opp_Rectypes__c
+                );
+            }
+            return strExcludedContactOppRecTypesReadOnly;
+        }
+        private set;
+    }
+
 }

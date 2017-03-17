@@ -1,5 +1,5 @@
 /* 
-    Copyright (c) 2012, Salesforce.com Foundation
+    Copyright (c) 2012, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2012 (2.0)
 * @group Settings
 * @description The controller for the Recurring Donations Custom Field Mapping panel 
@@ -78,8 +78,7 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
         	fmNew.Name = 'FieldMapping-' + system.now();
             insert fmNew;
             isEditMode = false;
-            STG_Panel.stgService.listRDCustomFieldMapping = null;
-            listRDCustomFieldMapping = null;
+            resetFieldMappingSettings();
             fmNew = null;
         } catch(Exception e) {
             Database.rollback(sp);
@@ -139,8 +138,7 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
                 npe03__Custom_Field_Mapping__c fm = new npe03__Custom_Field_Mapping__c(Id = fmIdDelete);
                 delete fm;
                 // force reload.
-                STG_Panel.stgService.listRDCustomFieldMapping = null;
-                listRDCustomFieldMapping = null;
+                resetFieldMappingSettings();
             }
         } catch(Exception e) {
             Database.rollback(sp);
@@ -148,6 +146,15 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
         }
         return null;
+    }
+
+    /*********************************************************************************************************
+    * @description Resets RD custom field mappings so that they are reloaded and the cached version isn't used.
+    */
+    public void resetFieldMappingSettings() {
+        UTIL_ListCustomSettingsFacade.mapCustomFieldMappings = null;
+        STG_Panel.stgService.listRDCustomFieldMapping = null;
+        listRDCustomFieldMapping = null;
     }
 
     /*********************************************************************************************************
@@ -179,13 +186,13 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
     * @return string
     */
     private string getFieldLabel(string strObj, string strField) {
-        try {
-            return UTIL_Describe.getFieldLabel(strObj, strField);                   
-        } catch (Exception e) {
+        if (UTIL_Describe.isValidField(strObj, strField)) {
+            return UTIL_Describe.getFieldLabel(strObj, strField);
+        } else {
             return strField;
-        }       
+        }
     }
-        
+
     /*********************************************************************************************************
     * @description Set of invalid fields for opp mappings
     */
@@ -253,7 +260,7 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
     */
     public static void verifyRDMappings(STG_PanelHealthCheck_CTRL ctrl) {
         
-        map<string, npe03__Custom_Field_Mapping__c> mapRDCustomField = npe03__Custom_Field_Mapping__c.getAll();
+        map<string, npe03__Custom_Field_Mapping__c> mapRDCustomField = UTIL_ListCustomSettingsFacade.getMapCustomFieldMappings();
         string strSetting = Schema.Sobjecttype.npe03__Custom_Field_Mapping__c.getLabel(); 
         boolean isValid = true;
         
@@ -267,7 +274,7 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
             opportunityField = Schema.sObjectType.Opportunity.fields.getMap().get(cfm.npe03__Opportunity_Field__c);
             if (opportunityField == null) {
                 isValid = false;
-                ctrl.createDR(strSetting, 'Error', 
+                ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
                     string.format(label.healthDetailsInvalidOppField, new string[]{cfm.npe03__Opportunity_Field__c}), 
                     string.format(label.healthSolutionRDBadOppField, new string[]{Label.stgNavDonations, label.stgNavRDFieldMap}));
             }               
@@ -276,7 +283,7 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
             RDField = Schema.sObjectType.npe03__Recurring_Donation__c.fields.getMap().get(cfm.npe03__Recurring_Donation_Field__c);
             if (RDField == null) {
                 isValid = false;
-                ctrl.createDR(strSetting, 'Error', 
+                ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
                     string.format(label.healthDetailsBadRDField, new string[]{cfm.npe03__Recurring_Donation_Field__c}), 
                     string.format(label.healthSolutionBadRDField, new string[]{Label.stgNavDonations, label.stgNavRDFieldMap}));
             }               
@@ -288,7 +295,7 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
                 Schema.Displaytype dtOpp = UTIL_Describe.getFieldDisplaytype('Opportunity', cfm.npe03__Opportunity_Field__c);
                 if (!UTIL_Describe.canDisplaytypesCopy(dtRD, dtOpp)) { 
                     isValid = false;
-                    ctrl.createDR(strSetting, 'Error', 
+                    ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
                         string.format(label.healthDetailsRDFieldsBadDatatypes, new string[]{cfm.npe03__Recurring_Donation_Field__c, cfm.npe03__Opportunity_Field__c}), 
                         string.format(label.healthSolutionRDFieldsBadDatatypes, new string[]{Label.stgNavDonations, label.stgNavRDFieldMap}));
                 }               
@@ -296,7 +303,7 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
         }
 
         if (isValid) {
-            ctrl.createDR(strSetting, 'Success', null, label.healthLabelRDValid);            
+            ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusSuccess, null, label.healthLabelRDValid);            
         }                           
     }           
 

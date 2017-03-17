@@ -1,5 +1,5 @@
 /* 
-    Copyright (c) 2012, Salesforce.com Foundation
+    Copyright (c) 2012, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2012 (2.0)
 * @group Settings
 * @description The controller for the Recurring Donations Custom Installments panel 
@@ -70,7 +70,7 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
         try {
 	        insert ciNew;
             isEditMode = false;
-	        STG_Panel.stgService.listRDCustomInstallment = null;
+	        resetCustomInstallmentSettings();
 	        ciNew = null;
 	        string strPostSaveMessage = 'After saving the Installment Period record, you will also need to add your Installment Period Name to the Recurring Donation\'s Installment Period picklist. To edit the picklist, go to Setup, Create, Objects, then select Recurring Donations. Click on the Installment Period picklist, and then edit the picklist values.';
 	        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, strPostSaveMessage));
@@ -93,6 +93,14 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
     }
     
     /*********************************************************************************************************
+    * @description Resets custom installment settings so that they are reloaded and the cached version isn't used.
+    */
+    public void resetCustomInstallmentSettings() {
+        UTIL_ListCustomSettingsFacade.mapCustomInstallmentSettings = null;
+        STG_Panel.stgService.listRDCustomInstallment = null;
+    }
+
+    /*********************************************************************************************************
     * @description string to hold the Id of an existing ci to delete 
     */
     public string ciIdDelete { get; set; }
@@ -109,7 +117,7 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
                 npe03__Custom_Installment_Settings__c ci = new npe03__Custom_Installment_Settings__c(Id = ciIdDelete);
 	            delete ci;
 	            // force reload.
-	            STG_Panel.stgService.listRDCustomInstallment = null;
+	            resetCustomInstallmentSettings();
                 string strPostSaveMessage = 'After deleting the Installment Period record, you will also need to remove your Installment Period Name from the Recurring Donation\'s Installment Period picklist. To edit the picklist, go to Setup, Create, Objects, then select Recurring Donations. Click on the Installment Period picklist, and then edit the picklist values.  You will also need to update any open Recurring Donations that were using the Installment Period to use a new Installment Period value, and you will need to refresh the Recurring Donation\'s Opportunities.';
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, strPostSaveMessage));
 	        }
@@ -160,7 +168,7 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
         	setPeriods.add(ci.Name);
         	if (!setValues.contains(ci.Name)) {
         		isValid = false;
-	            ctrl.createDR(label.stgNavRecurringDonations, 'Error', 
+	            ctrl.createDR(label.stgNavRecurringDonations, STG_PanelHealthCheck_CTRL.statusError, 
 	                string.format(label.healthDetailsInvalidRDCustomPeriod, new string[]{ci.Name}), 
 	                label.healthSolutionInvalidRDCustomPeriod);
         	}
@@ -174,20 +182,20 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
         for (Schema.PicklistEntry plistentry: P) {
             if (!setPeriods.contains(plistentry.getLabel())) {
             	isValid = false;
-                ctrl.createDR(label.stgNavRecurringDonations, 'Error', 
+                ctrl.createDR(label.stgNavRecurringDonations, STG_PanelHealthCheck_CTRL.statusError, 
                     string.format(label.healthDetailsInvalidRDCustomPeriodPIcklist, new string[]{plistentry.getLabel()}), 
                     string.format(label.healthSolutionInvalidRDCustomPeriodPicklist, new string[]{label.stgNavRecurringDonations, label.stgNavRDInstallmentPeriods}));            	
             }
         }       
         if (isValid)
-            ctrl.createDR(label.stgNavRecurringDonations, 'Success', null, label.healthDetailsValidRDCustomPeriod);
+            ctrl.createDR(label.stgNavRecurringDonations, STG_PanelHealthCheck_CTRL.statusSuccess, null, label.healthDetailsValidRDCustomPeriod);
         
         //test closed lost opp settings        
         string closedoppstage = system.label.npe03.RecurringDonationClosedLostOpportunityStage;
         integer x = 0;
         x = [select count() from OpportunityStage where MasterLabel = :closedoppstage and isClosed = true and isActive = true and isWon = false];
         if (x == 0) {
-            ctrl.createDR(label.stgNavRecurringDonations, 'Error', 
+            ctrl.createDR(label.stgNavRecurringDonations, STG_PanelHealthCheck_CTRL.statusError, 
                 string.format(label.healthDetailsInvalidOppStage, new string[]{closedoppstage}), 
                 label.npe03.RecurringDonationBadLabelWarning);
         }
@@ -196,7 +204,7 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
         string strPledged = system.label.npe03.RecurringDonationStageName;  // pledged
         x = [select count() from OpportunityStage where MasterLabel = :strPledged and isActive = true];
         if (x == 0) {
-            ctrl.createDR(label.stgNavRecurringDonations, 'Error', 
+            ctrl.createDR(label.stgNavRecurringDonations, STG_PanelHealthCheck_CTRL.statusError, 
                 string.format(label.healthDetailsInvalidOppStage, new string[]{strPledged}), 
                 label.healthSolutionInvalidOppStage);
         }
@@ -205,8 +213,12 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
             
         // create a test account and test opportunity
         Account acc = new Account(name='test account');
-        insert acc;
-        
+        try {
+            insert acc;
+        } catch (exception ex) {
+            ctrl.createDR(label.stgNavDonations, STG_PanelHealthCheck_CTRL.statusError, label.healthDetailsSaveAcctFailed + ' ' + ex.getMessage(), label.healthSolutionSaveOppsFailed);
+            return;                            
+        }
         Opportunity testOpp = new Opportunity();
         testOpp.AccountID = acc.id;
         testOpp.Amount = 100;
@@ -238,9 +250,9 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
                 }                                   
             }
 
-            ctrl.createDR(label.stgNavRecurringDonations, 'Error', strError, null);                            
+            ctrl.createDR(label.stgNavDonations, STG_PanelHealthCheck_CTRL.statusError, label.healthDetailsSaveOppsFailed + ' ' + strError, label.healthSolutionSaveOppsFailed);                            
         } else {   
-            ctrl.createDR(label.stgNavRecurringDonations, 'Success', null, label.healthLabelRDOppsValid);
+            ctrl.createDR(label.stgNavDonations, STG_PanelHealthCheck_CTRL.statusSuccess, null, label.healthLabelRDOppsValid);
         }                            
     }
 }

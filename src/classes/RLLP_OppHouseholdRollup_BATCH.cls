@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
 
@@ -28,31 +28,23 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups.htm
 * @description Batch class for opportunity household rollups. 
 */
-public with sharing class RLLP_OppHouseholdRollup_BATCH implements Database.Batchable<SObject>, UTIL_MasterSchedulableHelper.UTIL_IRecurring {
+public class RLLP_OppHouseholdRollup_BATCH implements Database.Batchable<SObject>, Schedulable {
     
     /*******************************************************************************************************
-    * @description Implementation of UTIL_MasterSchedulableHelper.UTIL_IRecurring, to allow nightly 
-    * scheduling. Attempts to start allocations rollup batch job.
-    * @return Boolean Whether the batch job started successfully. 
+    * @description Schedulable execute method executes this batch job.
     ********************************************************************************************************/
-    public Boolean executeReturnStatus() {
-        if(UTIL_JobScheduler.canRunBatch()) {
-        	Savepoint sp = Database.setSavepoint();
-            try {
-	            Database.executeBatch(this);
-	            return true;
-	        } catch(Exception e) {
-                Database.rollback(sp);
-                ERR_Handler.processError(e, ERR_Handler_API.Context.RLLP);
-            }
+    public void execute(SchedulableContext context) {
+        try {
+            Database.executeBatch(new RLLP_OppHouseholdRollup_BATCH(), RLLP_OppRollup_UTIL.BATCH_SIZE);
+        } catch(Exception e) {
+            ERR_Handler.processError(e, ERR_Handler_API.Context.RLLP);
         }
-        return false;
     }
     
     /*******************************************************************************************************

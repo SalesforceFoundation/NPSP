@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009, Salesforce.com Foundation
+    Copyright (c) 2009, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -30,24 +30,114 @@
 /**
 * @author Nick Bailey 
 * @date 2011 (2.1)
+* @group Payments
 * @description Controls the creation of payment objects from Opportunity trigger
 */
-public without sharing class PMT_PaymentCreator {
+public class PMT_PaymentCreator {
 
-    //user defined rollups in list settings
-    public static map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappings = new map<string, npe01__Payment_Field_Mapping_Settings__c>();
-    public static map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappingsAll = new map<string, npe01__Payment_Field_Mapping_Settings__c>();
-    public static map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappingsToRemove = new map<string, npe01__Payment_Field_Mapping_Settings__c>();
+    /*******************************************************************************************************
+    * @description map of Opportunity to Payment field mappings, validated to only contain mappings that
+    * are of compatible types.
+    */ 
+    public static map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappings {
+        get {
+            if (paymentMappings == null) {
+                //load custom field mapping settings - if they exist        
+                map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappingsAll = UTIL_ListCustomSettingsFacade.getMapPaymentFieldMappingSettings().clone();
+                paymentMappings = UTIL_ListCustomSettingsFacade.getMapPaymentFieldMappingSettings().clone();
+            
+                for (string s : paymentMappingsAll.keySet()){
+                    npe01__Payment_Field_Mapping_Settings__c pfms = paymentMappingsAll.get(s); 
+                
+                    SobjectField opportunityField;
+                    SobjectField paymentField;
+                    boolean isValid = true; 
+                                
+                    //check Opp fields
+                    opportunityField = Schema.sObjectType.Opportunity.fields.getMap().get(pfms.npe01__Opportunity_Field__c);
+                              
+                    //check Payment fields            
+                    paymentField = Schema.sObjectType.npe01__OppPayment__c.fields.getMap().get(pfms.npe01__Payment_Field__c);
+                        
+                    if (paymentField != null && opportunityField != null) {
+                        Schema.DisplayType payF = paymentField.getDescribe().getType();
+                        Schema.DisplayType oppF = opportunityField.getDescribe().getType();
+                        isValid = UTIL_Describe.canDisplaytypesCopy(oppF, payF);
+                    } else {
+                        isValid = false;
+                    }
+    
+                    if (isValid == false) paymentMappings.keyset().remove(s);                         
+                }
+                
+            }
+            return paymentMappings;
+        }
+        set;
+    }
+    
+    /*******************************************************************************************************
+    * @description set of Opportunity Recordtype Id's to not create Payments for.
+    */ 
+    public static set<id> setOppRecordTypeIdNoPayment {
+        get {
+            if (setOppRecordTypeIdNoPayment == null) {
+                string strProp = UTIL_CustomSettingsFacade.getContactsSettings().Opp_RecTypes_Excluded_for_Payments__c;
+                if (strProp != null) {
+                    setOppRecordTypeIdNoPayment = new Set<Id>((List<Id>)strProp.split(';'));
+                } else {
+                    setOppRecordTypeIdNoPayment = new set<Id>();
+                }
+            }
+            return setOppRecordTypeIdNoPayment;
+        }
+        set;
+    }
 
-    //list of payments
-    list<npe01__OppPayment__c> newPayments = new list<npe01__OppPayment__c>();
+    /*******************************************************************************************************
+    * @description set of Opportunity Type values to not create Payments for.
+    */ 
+    public static set<string> setOppTypeNoPayment {
+        get {
+            if (setOppTypeNoPayment == null) {
+                string strProp = UTIL_CustomSettingsFacade.getContactsSettings().Opp_Types_Excluded_for_Payments__c;
+                if (strProp != null) {
+                    setOppTypeNoPayment = new set<string>(strProp.split(';'));    
+                } else {
+                    setOppTypeNoPayment = new set<string>();
+                }
+            }
+            return setOppTypeNoPayment;
+        }
+        set;
+    }
 
-    public npe01__Contacts_And_Orgs_Settings__c ContactSettings;
-
-    //constructor gets opps from trigger??
-    public PMT_PaymentCreator(Map<id, Opportunity> newOppsMap, Map<id, Opportunity> oldOppsMap, TDTM_Runnable.Action ta, TDTM_Runnable.DMLWrapper dmlWrapper) {
+    /*******************************************************************************************************
+    * @description specifies whether Payments should be excluded for the Opportunity
+    * @param opp the Opportunity to test.
+    * @return boolean true if Payments excluded for the Opportunity
+    */ 
+    private static boolean isNoPaymentForOpp(Opportunity opp) {
+        if (opp.npe01__Do_Not_Automatically_Create_Payment__c)
+            return true;
+        if (setOppTypeNoPayment.contains(opp.Type))
+            return true;
+        if (setOppRecordTypeIdNoPayment.contains((id)opp.get('RecordTypeId')))
+            return true;
+        return false;
+    }    
+                
+    /*******************************************************************************************************
+    * @description Constructor that gets called by the PMT_Payment_TDTM trigger handler.
+    * @param newOppsMap the map of Opps from trigger new. 
+    * @param oldOppsMap the map of Opps from trigger old. 
+    * @param ta which trigger event (BeforeInsert, AfterInsert, etc.). 
+    * @param dmlWrapper to hold any payments that need to be inserted, updated, or deleted.  
+    ********************************************************************************************************/
+    public PMT_PaymentCreator(Map<id, Opportunity> newOppsMap, Map<id, Opportunity> oldOppsMap, TDTM_Runnable.Action ta, 
+        TDTM_Runnable.DMLWrapper dmlWrapper) {
         
-        ContactSettings = UTIL_CustomSettingsFacade.getContactsSettings();
+        npe01__Contacts_And_Orgs_Settings__c ContactSettings = UTIL_CustomSettingsFacade.getContactsSettings();
                     
         if (ContactSettings != null && ContactSettings.npe01__Payments_Enabled__c == true){
             list<Opportunity> newOpps = newOppsMap.values();
@@ -56,49 +146,39 @@ public without sharing class PMT_PaymentCreator {
             list<npe01__OppPayment__c> paymentsToDelete = new list<npe01__OppPayment__c>();
             list<Opportunity> updatedOpps = new list<Opportunity>();
             
-            //load custom field mapping settings - if they exist        
-            paymentMappingsAll = npe01__Payment_Field_Mapping_Settings__c.getAll().clone();
-            paymentMappings = npe01__Payment_Field_Mapping_Settings__c.getAll().clone();
-            
             // James Melville Added to support multi-currency sfdc.  */
             // CurrencyIsoCode doesn't exist in non-multi-currency orgs
             SObjectField OppCurrencyField = Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode');
             SObjectField PaymentCurrencyField = Schema.sObjectType.npe01__OppPayment__c.fields.getMap().get('CurrencyIsoCode');    
-            
-            for (string s : paymentMappingsAll.keySet()){
-                npe01__Payment_Field_Mapping_Settings__c pfms = paymentMappingsAll.get(s); 
-            
-                SobjectField opportunityField;
-                SobjectField paymentField;
-                boolean isValid = true;
-            
-                //check Opp fields
-                opportunityField = Schema.sObjectType.Opportunity.fields.getMap().get(pfms.npe01__Opportunity_Field__c);
-                          
-                //check Payment fields            
-                paymentField = Schema.sObjectType.npe01__OppPayment__c.fields.getMap().get(pfms.npe01__Payment_Field__c);
-                    
-                if (paymentField != null && opportunityField != null) {
-                	Schema.DisplayType payF = paymentField.getDescribe().getType();
-                	Schema.DisplayType oppF = opportunityField.getDescribe().getType();
-                	isValid = UTIL_Describe.canDisplaytypesCopy(oppF, payF);
-                } else {
-                    isValid = false;
-                }
+            SObjectField OppRecordTypeId = Schema.sObjectType.Opportunity.fields.getMap().get('RecordTypeId');
 
-                if (isValid == false) paymentMappings.keyset().remove(s);                         
+            if (TDTM_Runnable.Action.BeforeUpdate == ta) {
+                if (!String.isEmpty(ContactSettings.Payments_Auto_Close_Stage_Name__c)) {
+                    String closedStageName = ContactSettings.Payments_Auto_Close_Stage_Name__c;
+                    for (Opportunity opp : newOppsMap.values()) {
+                        closeOpportunityIfAllPaymentsReceived(
+                            oldOppsMap.get(opp.Id),
+                            opp,
+                            closedStageName
+                        );
+                    }
+                }
             }
-            
+
             //SOQL for Updated Opps and Related Payments.  Queries for known fields and field in custom Payment Field Mappings.
             if (ta == TDTM_Runnable.Action.AfterUpdate){
                 String soqlStatement = '';
-                soqlStatement += 'select id, CloseDate, Amount, isClosed, isWon, ';
+                soqlStatement += 'select id, CloseDate, Amount, isClosed, isWon, npe01__Do_Not_Automatically_Create_Payment__c, Type, ';
+                if (OppRecordTypeId != null)
+                    soqlStatement += 'RecordTypeId, ';
                 for (string s : paymentMappings.keyset()) {
                     npe01__Payment_Field_Mapping_Settings__c pfms = paymentMappings.get(s);
                     if (!soqlStatement.contains(pfms.npe01__Opportunity_Field__c)) {               
                         soqlStatement += pfms.npe01__Opportunity_Field__c + ', ';
                     }   
                 }
+                if (OppCurrencyField!=null)
+                    soqlStatement += 'CurrencyIsoCode, ';
                 soqlStatement += 'npe01__payments_made__c, ';
                 string soqlSub = '(SELECT id, npe01__Paid__c, npe01__Payment_Amount__c, npe01__Payment_Date__c, npe01__Written_Off__c, ';
                 for (string s : paymentMappings.keyset()) {
@@ -116,13 +196,16 @@ public without sharing class PMT_PaymentCreator {
             //IF Trigger is Insert, Create a new Payment
             if( ta == TDTM_Runnable.Action.AfterInsert){
                 for (Opportunity thisOpp : newOpps){
+                    
+                    if (isNoPaymentForOpp(thisOpp))
+                        continue;
+                        
                     // if opp is closed won with no payments scheduled or made, add an automatic payment
                         if ( /*(thisOpp.IsClosed && thisOpp.IsWon) && */
-                                        thisOpp.amount > 0 && thisOpp.npe01__payments_made__c == 0 && thisOpp.npe01__Number_of_Payments__c == 0 && !thisOpp.npe01__Do_Not_Automatically_Create_Payment__c) {
+                                        thisOpp.amount > 0 && thisOpp.npe01__payments_made__c == 0 && thisOpp.npe01__Number_of_Payments__c == 0) {
                                 npe01__oppPayment__c op = new npe01__oppPayment__c(
                                     npe01__opportunity__c = thisOpp.id
                                 );
-                                
                                 
                                 //in multicurrency SFDC set the payment currency field to equal to the opp currency
                                 if(PaymentCurrencyField != null && OppCurrencyField != null)
@@ -163,16 +246,9 @@ public without sharing class PMT_PaymentCreator {
                         }
                         */
                 }
-                try{
-                    // put in the payment for closed opps       
-                    if (!paymentsToInsert.isEmpty()) 
-                        dmlWrapper.objectsToInsert.addAll((list<SObject>) paymentsToInsert);
-                }
-                catch (DMLException e){
-                    for (npe01__OppPayment__c opay : paymentsToInsert) {
-                      opay.addError('There was a problem inserting a payment');
-                    }
-                }
+                // put in the payment for closed opps       
+                if (!paymentsToInsert.isEmpty()) 
+                    dmlWrapper.objectsToInsert.addAll((list<SObject>) paymentsToInsert);
             }
             
             
@@ -240,7 +316,8 @@ public without sharing class PMT_PaymentCreator {
                     }
                     
                     // we may need to add payments if the open opp amount has been changed from $0
-                    else if (thisOpp.Amount != 0 && (oldOpp.Amount == 0 || oldOpp.Amount == null ) && !thisOpp.isClosed){ // changed added "|| oldOpp.Amount==null" condition to fix BUG #1285
+                    else if (thisOpp.Amount != 0 && thisOpp.Amount != null && (oldOpp.Amount == 0 || oldOpp.Amount == null ) 
+                        && !thisOpp.isClosed && !isNoPaymentForOpp(thisOpp)){
                         npe01__oppPayment__c op = new npe01__oppPayment__c(
                             npe01__opportunity__c = thisOpp.id,
                             npe01__Paid__c = false,
@@ -263,21 +340,42 @@ public without sharing class PMT_PaymentCreator {
                         paymentsToInsert.add(op);                                              
                     }   
                 }
-                //try{
-                    // update or delete payments     
-                    if (!paymentsToUpdate.isEmpty())
-                        dmlWrapper.objectsToUpdate.addAll((list<SObject>)paymentsToUpdate);
-                    if (!paymentsToDelete.isEmpty())
-                        dmlWrapper.objectsToDelete.addAll((list<SObject>)paymentsToDelete);
-                    if (!paymentsToInsert.isEmpty())
-                        dmlWrapper.objectsToInsert.addAll((list<SObject>)paymentsToInsert);
-                //}
-                /*catch (DMLException e){
-                    for (npe01__OppPayment__c opay : paymentsToUpdate) {
-                      opay.addError('There was a problem updating a payment');
-                    }
-                }*/
+                // update or delete payments     
+                if (!paymentsToUpdate.isEmpty())
+                    dmlWrapper.objectsToUpdate.addAll((list<SObject>)paymentsToUpdate);
+                if (!paymentsToDelete.isEmpty())
+                    dmlWrapper.objectsToDelete.addAll((list<SObject>)paymentsToDelete);
+                if (!paymentsToInsert.isEmpty())
+                    dmlWrapper.objectsToInsert.addAll((list<SObject>)paymentsToInsert);
             }
+        }
+    }
+
+    /**
+     * @description Close an opportunity if all payments have been received.
+     * This will update the StageName of newOpp, in place, if "all payments
+     * received" conditions are satisfied.
+     * @param oldOpp The opportunity before being updated
+     * @param newOpp The opportunity after being updated
+     * @param closedStageName The name of an opportunity stage that corresponds to Closed/Won to transition to if all payments are determined to be received
+     * @return void
+     */
+    private void closeOpportunityIfAllPaymentsReceived(Opportunity oldOpp, Opportunity newOpp, String closedStageName) {
+        Boolean amountUpdated = (oldOpp.Amount != newOpp.Amount);
+        Boolean paymentAmountReceivedUpdated = (oldOpp.npe01__Payments_Made__c != newOpp.npe01__Payments_Made__c);
+        Boolean amountPositive = (newOpp.Amount > 0);
+        Boolean isNotAndWasNotClosed = (!oldOpp.IsClosed && !newOpp.IsClosed);
+        Boolean amountEqualPaymentReceived = (newOpp.Amount == newOpp.npe01__Payments_Made__c);
+        Boolean stageNameSpecified = !String.isEmpty(closedStageName);
+
+        if (
+            (amountUpdated || paymentAmountReceivedUpdated)
+            && amountPositive
+            && isNotAndWasNotClosed
+            && amountEqualPaymentReceived
+            && stageNameSpecified
+        ) {
+            newOpp.StageName = closedStageName;
         }
     }
 }

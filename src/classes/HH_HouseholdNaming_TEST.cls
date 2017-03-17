@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009, Salesforce.com Foundation
+    Copyright (c) 2009, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2011 (2.3)
 * @group Households
 * @description test class for Household naming functionality.
@@ -323,7 +323,6 @@ public class HH_HouseholdNaming_TEST {
 
         
         //test various re-orderings of names
-        Test.startTest();
         
         HH_HouseholdNaming hn = new HH_HouseholdNaming();
         
@@ -372,10 +371,13 @@ public class HH_HouseholdNaming_TEST {
         con0.npo02__Household_Naming_Order__c = null;
         con1.npo02__Household_Naming_Order__c = 2;
         
+        // system limit profiling around this smaller scope of work.
+        Test.startTest();
         update con0;
         update con1;
         
         hn.UpdateNames(new list<Id>{hh.id});
+        Test.stopTest();
         
         hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c from npo02__Household__c where id = :hh.id LIMIT 1][0];
         
@@ -383,8 +385,72 @@ public class HH_HouseholdNaming_TEST {
         system.assertequals('Jim ' + system.label.npo02.HouseholdNameConnector  + ' Joe Test ' + system.label.npo02.HouseholdNameConnector + ' John Jones', hh.npo02__Formal_greeting__c);
         system.assertequals('Jim, Joe ' + system.label.npo02.HouseholdNameConnector + ' John', hh.npo02__Informal_greeting__c);
         
-        Test.stopTest();
         
     }  
 
+    
+    /*********************************************************************************************************
+    * @description tests that case sensitive name changes on contacts update the Household name and greetings
+    */
+    public static testMethod void testCaseChanges() {
+        if (strTestOnly != '*' && strTestOnly != 'testCaseChanges') return;
+  
+        Contact con = new Contact(firstname='joe', lastname='smith');
+        insert con;
+  
+        Account hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c from Account];
+    
+        system.assertEquals('smith ' + system.label.npo02.DefaultHouseholdName, hh.Name);
+        system.assertEquals('joe smith', hh.npo02__Formal_greeting__c);
+        system.assertEquals('joe', hh.npo02__Informal_greeting__c);
+  
+        con.firstname = 'Joe';
+        con.lastname = 'Smith';
+        Test.startTest();
+        update con;
+        Test.stopTest();
+  
+        hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c from Account];
+    
+        system.assertEquals('Smith ' + system.label.npo02.DefaultHouseholdName, hh.Name);
+        system.assertEquals('Joe Smith', hh.npo02__Formal_greeting__c);
+        system.assertEquals('Joe', hh.npo02__Informal_greeting__c);
+    }
+    
+    /*********************************************************************************************************
+    * @description tests name ordering since we changed to not force primary first
+    */
+    public static testMethod void testNamingOrder2() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamingOrder2') return;
+  
+        Contact con0 = new Contact(FirstName='c0', LastName='smith');
+        insert con0;
+        con0 = [Select Id, FirstName, LastName, AccountId from Contact];
+        system.assertNotEquals(null, con0.AccountId);
+        
+        Contact con1 = new Contact(FirstName='c1', LastName='smith', AccountId=con0.AccountId);
+        Contact con2 = new Contact(FirstName='c2', LastName='smith', AccountId=con0.AccountId);
+        Test.startTest();
+        insert new list<Contact>{con1,con2};
+        Test.stopTest();
+        
+        // primary contact defaults to first in order  
+        Account hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c, npe01__One2OneContact__c, Number_of_Household_Members__c from Account];
+        system.assertEquals(con0.Id, hh.npe01__One2OneContact__c);
+        system.assertEquals(3, hh.Number_of_Household_Members__c);
+        system.assertEquals('smith ' + system.label.npo02.DefaultHouseholdName, hh.Name);
+        system.assertEquals('c0, c1 and c2 smith', hh.npo02__Formal_greeting__c);
+        system.assertEquals('c0, c1 and c2', hh.npo02__Informal_greeting__c);
+  
+        con1.npo02__Household_Naming_Order__c = 0;
+        update con1;
+
+        // naming order overrides primary contact  
+        hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c, npe01__One2OneContact__c from Account];
+        system.assertEquals(con0.Id, hh.npe01__One2OneContact__c);
+        system.assertEquals('smith ' + system.label.npo02.DefaultHouseholdName, hh.Name);
+        system.assertEquals('c1, c0 and c2 smith', hh.npo02__Formal_greeting__c);
+        system.assertEquals('c1, c0 and c2', hh.npo02__Informal_greeting__c);
+  
+    }
 }

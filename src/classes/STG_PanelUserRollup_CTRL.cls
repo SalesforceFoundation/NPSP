@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2011, Salesforce.com Foundation
+    Copyright (c) 2011, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2011 (2.3)
 * @group Settings
 * @description Controller class for the User Rollup Settings panel  
@@ -75,7 +75,7 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
     public list<UDR> udrList {
     	get {
     		if (udrList == null) {
-		        list<npo02__User_Rollup_Field_Settings__c> thisList = npo02__User_Rollup_Field_Settings__c.getAll().values(); 
+		        list<npo02__User_Rollup_Field_Settings__c> thisList = UTIL_ListCustomSettingsFacade.getMapUserRollupFieldSettings().values(); 
 		        udrList = new list<UDR>();
 		        for (npo02__User_Rollup_Field_Settings__c udr : thisList) {
 		            udrList.add(new UDR(udr, this));
@@ -84,7 +84,7 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
     		}
             return udrList;
     	}
-    	private set;
+    	set;
     }
     
     /*********************************************************************************************************
@@ -164,7 +164,7 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
 	        map<string, Schema.Sobjectfield> targetTokenMap = new map<string, Schema.Sobjectfield>();        
 	        //need to load current settings to not allow the user to point to the same target field
 	        //twice
-	        map<string, npo02__User_Rollup_Field_Settings__c> currentURFSMap = npo02__User_Rollup_Field_Settings__c.getAll();
+	        map<string, npo02__User_Rollup_Field_Settings__c> currentURFSMap = UTIL_ListCustomSettingsFacade.getMapUserRollupFieldSettings();
 	        set<string> currentTargetFieldSet = new set<string>();
 	        for (string s : currentURFSMap.keySet()){
 	            if (currentURFSMap.get(s).npo02__Object_Name__c == activeUDR.TargetObject && currentURFSMap.get(s).npo02__Target_Field__c != activeUDR.TargetField) {
@@ -309,7 +309,7 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
         boolean isValid = true;
         boolean isValidAll = true;
         
-        map<string, npo02__User_Rollup_Field_Settings__c> userRollups = npo02__User_Rollup_Field_Settings__c.getAll(); 
+        map<string, npo02__User_Rollup_Field_Settings__c> userRollups = UTIL_ListCustomSettingsFacade.getMapUserRollupFieldSettings(); 
         string strSetting = Schema.Sobjecttype.npo02__User_Rollup_Field_Settings__c.getLabel(); 
     
         for (string s : userRollups.keySet()) {
@@ -322,7 +322,7 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
             sourceField = Schema.sObjectType.Opportunity.fields.getMap().get(urfs.npo02__Source_Field__c);
             if (sourceField == null) {
                 isValid = false;
-                ctrl.createDR(strSetting, 'Error', 
+                ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
                     string.format(label.healthDetailsInvalidOppField, new string[]{urfs.npo02__Source_Field__c}), 
                     string.format(label.healthSolutionUDFOppField, new string[]{label.stgNavDonations, label.stgNavUserDefinedRollups}));
             }               
@@ -345,7 +345,7 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
             
             if (!isValidTarget) {
             	isValid = false;
-                ctrl.createDR(strSetting, 'Error', 
+                ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
                     string.format(label.healthDetailsInvalidObjectField, new string[]{urfs.npo02__Object_Name__c, urfs.npo02__Target_Field__c}), 
                     string.format(label.healthSolutionInvalidUDFObjectField, new string[]{label.stgNavDonations, label.stgNavUserDefinedRollups}));
             }
@@ -357,7 +357,7 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
                 Schema.Displaytype dtTgt = UTIL_Describe.getFieldDisplaytype(urfs.npo02__Object_Name__c, urfs.npo02__Target_Field__c);
                 if (!UTIL_Describe.canDisplaytypesCopy(dtSrc, dtTgt)) { 
                     isValid = false;
-                    ctrl.createDR(strSetting, 'Error', 
+                    ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
                         string.format(label.healthDetailsUDFBadDatatypes, new string[]{urfs.npo02__Source_Field__c, urfs.npo02__Object_Name__c, urfs.npo02__Target_Field__c}), 
                         string.format(label.healthSolutionUDFBadDatatypes, new string[]{label.stgNavDonations, label.stgNavUserDefinedRollups}));
                 }               
@@ -368,7 +368,7 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
             
         }    
         if (isValidAll) {
-            ctrl.createDR(strSetting, 'Success', null, label.healthLabelUDFValid);                    	
+            ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusSuccess, null, label.healthLabelUDFValid);                    	
         }
     }           
         

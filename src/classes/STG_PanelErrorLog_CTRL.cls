@@ -1,5 +1,5 @@
 /* 
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
 * @group Settings
 * @description The controller for the Error Log panel 
@@ -76,7 +76,7 @@ public with sharing class STG_PanelErrorLog_CTRL extends STG_Panel implements UT
     */
     public list<string> getstrFields()
         { 
-    	   return new list<string> { 'Context_Type__c', 'Datetime__c', 'Error_Type__c', 'Full_Message__c', 
+    	   return new list<string> { 'Datetime__c', 'Error_Type__c', 'Full_Message__c', 
                     'Object_Type__c', 'Record_URL__c', 'Stack_Trace__c' };  // can't include  ', CreatedBy.Name'  unfortunately!
         } 
     
@@ -120,7 +120,7 @@ public with sharing class STG_PanelErrorLog_CTRL extends STG_Panel implements UT
     * @return null 
     */
     public PageReference clearErrorLog() {
-    	delete [select Id from Error__c];
+    	delete [select Id from Error__c LIMIT 10000];
     	//listError = null;
     	ctrlSoqlListView.setCon = null;
     	return null;

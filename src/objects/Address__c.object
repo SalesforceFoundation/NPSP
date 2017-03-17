@@ -44,6 +44,7 @@
         <actionName>View</actionName>
         <type>Default</type>
     </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
     <compactLayoutAssignment>NPSP_Address_Compact_Layout</compactLayoutAssignment>
     <compactLayouts>
         <fullName>NPSP_Address_Compact_Layout</fullName>
@@ -53,12 +54,13 @@
         <label>NPSP Address Compact Layout</label>
     </compactLayouts>
     <deploymentStatus>Deployed</deploymentStatus>
-    <description>Custom object for storing additional addresses for Household Accounts in the Nonprofit Starter Pack.</description>
+    <description>Custom object for storing additional addresses for Household Accounts in the Nonprofit Success Pack.</description>
     <enableActivities>false</enableActivities>
     <enableBulkApi>true</enableBulkApi>
     <enableFeeds>true</enableFeeds>
     <enableHistory>false</enableHistory>
     <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
     <fields>
@@ -96,6 +98,7 @@
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
@@ -177,7 +180,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
     <fields>
         <fullName>Formula_MailingStreetAddress__c</fullName>
         <externalId>false</externalId>
-        <formula>MailingStreet__c + IF(ISNULL(MailingStreet2__c), &apos;&apos;, &apos;, &apos; + TRIM(MailingStreet2__c))</formula>
+        <formula>MailingStreet__c + IF(ISBLANK(MailingStreet2__c), &apos;&apos;, &apos;, &apos; + TRIM(MailingStreet2__c))</formula>
         <label>Mailing Street Address</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -200,8 +203,8 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
     <fields>
         <fullName>Household_Account__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>The Household Account this Address is for.</inlineHelpText>
-        <label>Household Account</label>
+        <inlineHelpText>The Account this Address is for.</inlineHelpText>
+        <label>Account</label>
         <referenceTo>Account</referenceTo>
         <relationshipLabel>Addresses</relationshipLabel>
         <relationshipName>Addresses</relationshipName>
@@ -215,7 +218,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
     <fields>
         <fullName>Latest_End_Date__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>The most recent ending date that this Address was used for this Household.</inlineHelpText>
+        <inlineHelpText>The most recent ending date that this address was used. Generally used with Latest Start Date to track a date range for an address that&apos;s no longer in use.</inlineHelpText>
         <label>Latest End Date</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
@@ -225,7 +228,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
     <fields>
         <fullName>Latest_Start_Date__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>The most recent starting date that this Address was used for this Household.</inlineHelpText>
+        <inlineHelpText>The most recent starting date that this address was used. Generally used with Latest End Date to track a date range for an address that&apos;s no longer in use.</inlineHelpText>
         <label>Latest Start Date</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
@@ -295,6 +298,17 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Pre_Verification_Address__c</fullName>
+        <description>Stores the address as entered before verification with a remote service, in case any information is lost in the verification process.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Stores the address as entered before verification with a remote service, in case any information is lost in the verification process.</inlineHelpText>
+        <label>Pre-Verification Address</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
     </fields>
     <fields>
         <fullName>Seasonal_End_Day__c</fullName>
@@ -428,6 +442,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
@@ -488,6 +503,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
@@ -624,6 +640,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
@@ -684,9 +701,36 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>State_Lower_District__c</fullName>
+        <description>The state lower district (such as a state assembly district) this address belongs to.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The state lower district (such as a state assembly district) this address belongs to.</inlineHelpText>
+        <label>State Lower District</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>State_Upper_District__c</fullName>
+        <description>The state upper district (such as state senate district) this address belongs to.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The state upper district (such as state senate district) this address belongs to.</inlineHelpText>
+        <label>State Upper District</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Verification_Status__c</fullName>
@@ -738,17 +782,11 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <availability>online</availability>
         <description>Verify the current address record.</description>
         <displayType>button</displayType>
-        <linkType>javascript</linkType>
+        <height>600</height>
+        <linkType>page</linkType>
         <masterLabel>Verify Address</masterLabel>
-        <openType>onClickJavaScript</openType>
+        <openType>sidebar</openType>
+        <page>ADDR_ValidatorBTN</page>
         <protected>false</protected>
-        <url>{!requireScript(&quot;/soap/ajax/20.0/connection.js&quot;)} 
-{!requireScript(&quot;/soap/ajax/20.0/apex.js&quot;)}
-try {
-  sforce.apex.execute(&apos;npsp.ADDR_Validator_REST&apos;, &apos;verifyRecord&apos;, {addressId : &apos;{!Address__c.Id}&apos;});
-} catch(exception) {
-  sforce.apex.execute(&apos;ADDR_Validator_REST&apos;, &apos;verifyRecord&apos;, {addressId : &apos;{!Address__c.Id}&apos;});
-}
-window.location.reload();</url>
     </webLinks>
 </CustomObject>

@@ -44,14 +44,16 @@
         <actionName>View</actionName>
         <type>Default</type>
     </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
-    <description>Custom object to hold denormalized data records that can be imported into the Nonprofit Starter Pack.</description>
+    <description>Custom object to hold denormalized data records that can be imported into the Nonprofit Success Pack.</description>
     <enableActivities>false</enableActivities>
     <enableBulkApi>true</enableBulkApi>
     <enableFeeds>false</enableFeeds>
     <enableHistory>false</enableHistory>
     <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
     <fields>
@@ -273,6 +275,16 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Campaign_Member_Status__c</fullName>
+        <externalId>false</externalId>
+        <label>Campaign Member Status</label>
+        <length>40</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Contact1ImportStatus__c</fullName>
         <externalId>false</externalId>
         <label>Contact1 Import Status</label>
@@ -391,6 +403,7 @@
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
     </fields>
@@ -418,6 +431,7 @@
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
     </fields>
@@ -581,6 +595,7 @@
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
     </fields>
@@ -608,6 +623,7 @@
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
     </fields>
@@ -687,7 +703,7 @@
     <fields>
         <fullName>Donation_Campaign_Name__c</fullName>
         <externalId>false</externalId>
-        <label>Donation Campaign Name</label>
+        <label>Campaign Name</label>
         <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -730,6 +746,7 @@
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
     </fields>
@@ -918,6 +935,15 @@
         <type>Lookup</type>
     </fields>
     <fields>
+        <fullName>Household_Phone__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Household.Phone</inlineHelpText>
+        <label>Household Phone</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Phone</type>
+    </fields>
+    <fields>
         <fullName>ImportedDate__c</fullName>
         <description>When the Data Import record was successfully imported.</description>
         <externalId>false</externalId>
@@ -966,6 +992,7 @@
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
     </fields>

@@ -1,33 +1,34 @@
 /*
-Copyright (c) 2014 salesforce.com foundation, Inc.
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without modification, 
-are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice, 
-    this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright notice, 
-    this list of conditions and the following disclaimer in the documentation 
-    and/or other materials provided with the distribution.
-    * Neither the name of the salesforce.com foundation. nor the names of its contributors 
-    may be used to endorse or promote products derived from this software 
-    without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
-LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
-OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
-OF THE POSSIBILITY OF SUCH DAMAGE.
-
+    Copyright (c) 2015 Salesforce.org
+    All rights reserved.
+    
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+    
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Salesforce.org nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+ 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce Foundation
+* @author Salesforce.org
 * @date 01/13/2014
 * @group Settings
 * @description test code for all of Settings
@@ -63,13 +64,10 @@ public with sharing class STG_SettingsManager_TEST {
         Test.startTest();
         ctrl.setTriggerSchedConfig();
         Test.stopTest();
-        
-        List<Schedulable__c> scheduledJobs = [select Class_Name__c from Schedulable__c];
-        System.assertEquals(6, scheduledJobs.size());
-        
+                
         List<CronTrigger> masterJobs = [select Id, CronJobDetail.Id from CronTrigger where CronJobDetail.Name IN 
-        :UTIL_MasterSchedulableHelper.scheduledJobs and CronJobDetail.JobType = '7'];
-        System.assertEquals(3, masterJobs.size());
+        :UTIL_MasterSchedulableHelper.defaultScheduledJobs.keySet() and CronJobDetail.JobType = '7'];
+        System.assertEquals(UTIL_MasterSchedulableHelper.defaultScheduledJobs.keySet().size(), masterJobs.size());
     }
      
     /*********************************************************************************************************
@@ -126,7 +124,7 @@ public with sharing class STG_SettingsManager_TEST {
     }
     
     /*********************************************************************************************************
-    * @description Tests that the Settings Service has each settins object loaded
+    * @description Tests that the Settings Service has each settings object loaded
     * @return void
     */
     public static testMethod void testSettingsService() {
@@ -168,16 +166,19 @@ public with sharing class STG_SettingsManager_TEST {
     */
     public static testMethod void testPanelAllo() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelAllo') return;
+        
+        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(name='foo');
+        insert gau;
+
         STG_PanelAllocations_CTRL panel = new STG_PanelAllocations_CTRL();
         system.assertEquals('idPanelAllocations', panel.idPanel());
         STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c = true;
-        //this call creates a General fund when one doesn't exist
-        panel.enableDefaultAllocations();
-        //set the default accounting unit. this is normally selected automatically through the picklist in the UI.
-        STG_Panel.stgService.stgAllo.Default__c = STG_PanelAllocations_CTRL.listSOGeneralAccountingUnitIds[0].getValue();
+        STG_Panel.stgService.stgAllo.Default__c = gau.id;
+
         panel.saveSettings();
         system.assertEquals(true, UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Default_Allocations_Enabled__c, 'Settings should save successfully.');
         system.assertNotEquals(null,UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Default__c, 'Default should be filled with the Id of the created General Accounting Unit.');
+
         STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c = false;
         panel.saveSettings();
         system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Default_Allocations_Enabled__c);
@@ -211,8 +212,12 @@ public with sharing class STG_SettingsManager_TEST {
         panel.saveSettings();
         system.assertEquals(true, UTIL_CustomSettingsFacade.getOrgContactsSettings().npe01__Enable_Opportunity_Contact_Role_Trigger__c);
         STG_Panel.stgService.stgCon.npe01__Enable_Opportunity_Contact_Role_Trigger__c = false;
+        STG_Panel.stgService.stgCon.npe01__Opportunity_Contact_Role_Default_role__c = 'Decision Maker';
+        STG_Panel.stgService.stgHH.npo02__Household_Contact_Roles_On__c = true;
+        STG_Panel.stgService.stgHH.npo02__Household_Member_Contact_Role__c = 'Decision Maker';
+        STG_Panel.stgService.stgHH.npo02__Soft_Credit_Roles__c = 'Decision Maker;Something Else';
         panel.saveSettings();
-        system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgContactsSettings().npe01__Enable_Opportunity_Contact_Role_Trigger__c);
+        system.assertEquals(2, ApexPages.getMessages().size(), 'Two error messages should be created for identical the role values.' + ApexPages.getMessages());
     }
 
     /*********************************************************************************************************
@@ -239,12 +244,35 @@ public with sharing class STG_SettingsManager_TEST {
         if (strTestOnly != '*' && strTestOnly != 'testPanelHouseholds') return;
         STG_PanelHouseholds_CTRL panel = new STG_PanelHouseholds_CTRL();
         system.assertEquals('idPanelHH', panel.idPanel());
-        system.assertEquals(false, panel.isRunningBatch);
         STG_Panel.stgService.stgHH.npo02__Advanced_Household_Naming__c = false;
         panel.saveSettings();
-        system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgHouseholdsSettings().npo02__Advanced_Household_Naming__c);        
-        panel.activateHouseholdNaming();
-        system.assertEquals(true, UTIL_CustomSettingsFacade.getOrgHouseholdsSettings().npo02__Advanced_Household_Naming__c);
+        system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgHouseholdsSettings().npo02__Advanced_Household_Naming__c);
+    }
+
+    /*********************************************************************************************************
+    * @description Tests that the name specs are valid in the Households panel
+    * @return void
+    */
+    public static testMethod void testNameSpecs() {
+        if (strTestOnly != '*' && strTestOnly != 'testNameSpecs') return;
+        STG_PanelHouseholds_CTRL panel = new STG_PanelHouseholds_CTRL();
+        
+        STG_Panel.stgService.stgHH.npo02__Advanced_Household_Naming__c = true;
+        system.assertEquals(true, panel.isValidNameFormats());        
+
+        STG_Panel.stgService.stgHN.Household_Name_Format__c = '{!{!bogus}}';
+        system.assertEquals(false, panel.isValidNameFormats());        
+        STG_Panel.stgService.stgHN.Household_Name_Format__c = '{!{!FirstName}} {!LastName} Family';
+        
+        STG_Panel.stgService.stgHN.Formal_Greeting_Format__c = '{!{!bogus}}';
+        system.assertEquals(false, panel.isValidNameFormats());        
+        STG_Panel.stgService.stgHN.Formal_Greeting_Format__c = '{!{!Salutation} {!FirstName}} {!LastName}';
+               
+        STG_Panel.stgService.stgHN.Informal_Greeting_Format__c = '{!{!bogus}}';
+        system.assertEquals(false, panel.isValidNameFormats());        
+        STG_Panel.stgService.stgHN.Informal_Greeting_Format__c = '{!{!FirstName}}';
+
+        system.assertEquals(true, panel.isValidNameFormats());        
     }
 
     /*********************************************************************************************************
@@ -325,6 +353,23 @@ public with sharing class STG_SettingsManager_TEST {
     }
 
     /*********************************************************************************************************
+    * @description Tests the opportunity naming panel
+    * @return void
+    */
+    public static testMethod void testPanelOppNaming() {
+        if (strTestOnly != '*' && strTestOnly != 'testPanelOppNaming') return;
+
+        STG_PanelOppNaming_CTRL panel = new STG_PanelOppNaming_CTRL();
+        system.assertEquals('idPanelOppNaming', panel.idPanel());
+        panel.newONS();
+        panel.currentONS.Date_Format__c = 'YYYY-MM-dd';
+        panel.currentONS.Opportunity_Name_Format__c = '{!Contact.LastName} {!CloseDate}';
+        system.assert(panel.isValidNameFormats(), 'Validation should pass.');
+        panel.saveONS();
+        system.assertEquals(1, panel.mapOppNameSettings.size(), 'The opportunity naming setting should be saved.');
+    }
+
+    /*********************************************************************************************************
     * @description Tests the Payment Mappings panel
     * @return void
     */
@@ -377,26 +422,21 @@ public with sharing class STG_SettingsManager_TEST {
     */
     public static testMethod void testPanelRD() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelRD') return;
-    	insert new Schedulable__c(Name = 'Recurring Donation Updates', 
-            Class_Name__c = 'RD_RecurringDonations_SCHED', Active__c = true, Frequency__c = 'Daily');
         STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
         system.assertEquals('idPanelRD', panel.idPanel());
         panel.init();
-        system.assertEquals(true, panel.rdSched.Active__c);
         system.assertNotEquals(null, panel.listSORDCloseOptions);
         system.assertNotEquals(null, panel.listSORDCloseOptions);
         STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c = 10;
-        panel.isRDScheduleDisabled = true;
         system.assertEquals(null, panel.saveSettings());
         system.assertEquals(10, STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c);
-        system.assertEquals(false, [select Active__c from Schedulable__c
-            where Class_Name__c = 'RD_RecurringDonations_SCHED'][0].Active__c);
         STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c = 5;
         system.assertEquals(null, panel.saveSettings());
         system.assertEquals(5, STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c);
         STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c = 15;
         system.assertEquals(null, panel.saveSettings());
         system.assertEquals(15, STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c);
+        system.assertEquals(15, UTIL_CustomSettingsFacade.getOrgRecurringDonationsSettings().npe03__Opportunity_Forecast_Months__c);
     }
 
     /*********************************************************************************************************
@@ -636,11 +676,15 @@ public with sharing class STG_SettingsManager_TEST {
         panel.activeUDR.save();
         system.assertEquals(false, panel.isEditMode);
         system.assertNotEquals(null, panel.udrlist);
+        panel.udrList = null;
+        UTIL_ListCustomSettingsFacade.mapUserRollupFieldSettings = null;
         system.assertEquals(1, panel.udrlist.size());
         panel.startBuild();
         system.assertNotEquals(null, panel.getTargetFields());
         panel.activeUDR = panel.udrlist[0];
         panel.activeUDR.deleteMe();
+        panel.udrList = null;
+        UTIL_ListCustomSettingsFacade.mapUserRollupFieldSettings = null;
         system.assertNotEquals(null, panel.udrlist);
         system.assertEquals(0, panel.udrlist.size());  
         
@@ -696,6 +740,10 @@ public with sharing class STG_SettingsManager_TEST {
         //run through the loop with a newly inserted UDR
         targetFieldList = controller.getTargetFields();
         
+        //blank out settings so they are queried again
+        controller.udrList = null;
+        UTIL_ListCustomSettingsFacade.mapUserRollupFieldSettings = null;
+
         //existing invalid rollups will cause test failure
         system.assertEquals(controller.activeUDR.getisValid(), true);
         list<STG_PanelUserRollup_CTRL.UDR> udrlist = controller.udrList;
@@ -748,10 +796,24 @@ public with sharing class STG_SettingsManager_TEST {
         npo02__Field_Action__c = 'TEST'
         );        
         insert badobject;
-        
-        
     }
     
+    /*********************************************************************************************************
+    * @description Tests the Schedule panel
+    * @return void
+    */
+    public static testMethod void testPanelSchedule() {
+        if (strTestOnly != '*' && strTestOnly != 'testPanelLeads') return;
+        STG_PanelSchedule_CTRL panel = new STG_PanelSchedule_CTRL();
+        system.assertEquals('idPanelSchedule', panel.idPanel());
+        STG_Panel.stgService.stgErr.Don_t_Auto_Schedule_Default_NPSP_Jobs__c = true;
+        panel.saveSettings();
+        system.assertEquals(true, UTIL_CustomSettingsFacade.getOrgErrorSettings().Don_t_Auto_Schedule_Default_NPSP_Jobs__c);
+        STG_Panel.stgService.stgErr.Don_t_Auto_Schedule_Default_NPSP_Jobs__c = false;
+        panel.saveSettings();
+        system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgErrorSettings().Don_t_Auto_Schedule_Default_NPSP_Jobs__c);
+    }
+
     /*********************************************************************************************************
     * @description Tests the Trigger Handler panel
     * @return void
@@ -840,5 +902,18 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals('idPanelHealthCheck', panel.idPanel());
         system.assertEquals(null, panel.runDetector());
     }
-    
+
+    /*********************************************************************************************************
+    * @description Tests the Level Assignment Batch panel
+    * @return void
+    */
+    public static testMethod void testPanelLvlAssignBatch() {
+        if (strTestOnly != '*' && strTestOnly != 'testPanelLvlAssignBatch') return;
+        STG_PanelLvlAssignBatch_CTRL panel = new STG_PanelLvlAssignBatch_CTRL();
+        system.assertEquals('idPanelLvlAssignBatch', panel.idPanel());
+        system.assertEquals(false, panel.isRunningBatch);
+        panel.runBatch();
+        system.assertEquals(true, panel.isRunningBatch);
+    }
+
 }

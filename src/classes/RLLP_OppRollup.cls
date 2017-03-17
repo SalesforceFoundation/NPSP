@@ -1,5 +1,5 @@
 /*  
-    Copyright (c) 2011, Salesforce.com Foundation
+    Copyright (c) 2011, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
   
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation 
+* @author Salesforce.org 
 * @date 2011 (2.0) 
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups.htm
@@ -97,7 +97,7 @@ public without sharing class RLLP_OppRollup {
                 rollupAccounts(amap);                               
             }   
             //do it @future
-            else if (Limits.getFutureCalls() < Limits.getLimitFutureCalls()){
+            else if (Limits.getAsyncCalls() < Limits.getLimitAsyncCalls()){
                 rollupAccountsFuture(amap.keySet());
             }                       
         }
@@ -118,13 +118,7 @@ public without sharing class RLLP_OppRollup {
     ********************************************************************************************************/
     @future 
     public static void rollupContactsandHouseholdsForTriggerFuture(set<id> OppIds) {
-    	Savepoint sp = Database.setSavepoint();
-        try {
-            rollupContactsandHouseholdsForTrigger(OppIds);
-        } catch(Exception e) {
-            Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler_API.Context.RLLP);
-        }
+        rollupContactsandHouseholdsForTrigger(OppIds);
     }
 
     /*******************************************************************************************************
@@ -166,22 +160,15 @@ public without sharing class RLLP_OppRollup {
     ********************************************************************************************************/
     @future 
     public static void rollupAccountsFuture( set<id> acctIds ) {
-        Savepoint sp = Database.setSavepoint();
-        try {
-	        if (acctIds != null && !acctIds.isEmpty()) {
-	        	RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
-	            map<id, Account> amap = new map<id, account>((list<Account>)Database.query(oppRollupUtil.buildAccountQuery() + 
-	                                                           ' where id IN :acctIds')); 
-	            RLLP_OppRollup rg = new RLLP_OppRollup();
-	            rg.rollupAccounts(amap);
-	           
-	        }
-        } catch(Exception e) {
-            Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler_API.Context.RLLP);
+        if (acctIds != null && !acctIds.isEmpty()) {
+            RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+            map<id, Account> amap = new map<id, account>((list<Account>)Database.query(oppRollupUtil.buildAccountQuery() + 
+                                                           ' where id IN :acctIds')); 
+            RLLP_OppRollup rg = new RLLP_OppRollup();
+            rg.rollupAccounts(amap);
         }
     }
-    
+
     /*******************************************************************************************************
     * @description Future wrapper method for updating contact rollups from a set of contact IDs.
     * @param acctIds A set of contact ids.
@@ -189,19 +176,13 @@ public without sharing class RLLP_OppRollup {
     ********************************************************************************************************/
     @future
     public static void rollupContactsFuture (set<id> conIDs){
-        Savepoint sp = Database.setSavepoint();
-        try {
-	        if (conIds != null && !conIDs.isEmpty()){
-	        	RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
-	            map<id, Contact> cmap = new map<id, Contact>((list<Contact>)Database.query(oppRollupUtil.buildContactQuery() +
-	                                                          ' where id IN :conIds'));
-	            RLLP_OppRollup rg = new RLLP_OppRollup();
-	            rg.rollupContacts(cmap);
-	        }
-	    } catch(Exception e) {
-            Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler_API.Context.RLLP);
-        }     
+        if (conIds != null && !conIDs.isEmpty()){
+            RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+            map<id, Contact> cmap = new map<id, Contact>((list<Contact>)Database.query(oppRollupUtil.buildContactQuery() +
+                                                          ' where id IN :conIds'));
+            RLLP_OppRollup rg = new RLLP_OppRollup();
+            rg.rollupContacts(cmap);
+        }
     }
 
     /*******************************************************************************************************
@@ -211,20 +192,14 @@ public without sharing class RLLP_OppRollup {
     ********************************************************************************************************/
     @future
     public static void rollupHouseholdsFuture (set<id> hhIDs){
-    	Savepoint sp = Database.setSavepoint();
-        try {
-	        if (hhIds != null && !hhIds.isEmpty()){
-	        	RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
-	            map<id, npo02__Household__c> hhmap = new map<id, npo02__Household__c>((list<npo02__Household__c>)Database.query(oppRollupUtil.buildHouseholdQuery() +
-	                                                                            ' where id IN :hhIDs'));
-	            RLLP_OppRollup rg = new RLLP_OppRollup();
-	            rg.rollupHouseholds(hhmap);                                                                         
-	        }
-	    } catch(Exception e) {
-            Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler_API.Context.RLLP);
-        }       
-    } 
+        if (hhIds != null && !hhIds.isEmpty()){
+            RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+            map<id, npo02__Household__c> hhmap = new map<id, npo02__Household__c>((list<npo02__Household__c>)Database.query(oppRollupUtil.buildHouseholdQuery() +
+                                                                            ' where id IN :hhIDs'));
+            RLLP_OppRollup rg = new RLLP_OppRollup();
+            rg.rollupHouseholds(hhmap);
+        }
+    }
 
     /*******************************************************************************************************
     * @description Runs opportunity rollups for accounts.
@@ -346,16 +321,21 @@ public without sharing class RLLP_OppRollup {
                     a1.npo02__OppsClosedLastNDays__c == a2.npo02__OppsClosedLastNDays__c &&
                     a1.npo02__OppsClosed2YearsAgo__c == a2.npo02__OppsClosed2YearsAgo__c &&
                     a1.npo02__OppAmountLastYear__c == a2.npo02__OppAmountLastYear__c &&
-                    a1.npo02__OppAmount2YearsAgo__c == a2.npo02__OppAmount2YearsAgo__c &&                      
+                    a1.npo02__OppAmount2YearsAgo__c == a2.npo02__OppAmount2YearsAgo__c &&
                     a1.npo02__OppAmountThisYear__c == a2.npo02__OppAmountThisYear__c &&
                     a1.npo02__OppAmountLastNDays__c == a2.npo02__OppAmountLastNDays__c &&
-                    a1.npo02__TotalMembershipOppAmount__c == a2.npo02__TotalMembershipOppAmount__c &&
+                    a1.npo02__FirstCloseDate__c == a2.npo02__FirstCloseDate__c &&
                     a1.npo02__LastCloseDate__c == a2.npo02__LastCloseDate__c && 
+                    a1.npo02__TotalMembershipOppAmount__c == a2.npo02__TotalMembershipOppAmount__c &&
                     a1.npo02__LastMembershipLevel__c == a2.npo02__LastMembershipLevel__c &&
+                    a1.npo02__LastMembershipDate__c == a2.npo02__LastMembershipDate__c &&
+                    a1.npo02__MembershipJoinDate__c == a2.npo02__MembershipJoinDate__c &&
+                    a1.npo02__MembershipEndDate__c == a2.npo02__MembershipEndDate__c &&
                     a1.npo02__Best_Gift_Year__c == a2.npo02__Best_Gift_Year__c &&
                     a1.npo02__Best_Gift_Year_Total__c == a2.npo02__Best_Gift_Year_Total__c &&
-                    a1.npo02__MembershipEndDate__c == a2.npo02__MembershipEndDate__c &&
-                    a1.npo02__MembershipJoinDate__c == a2.npo02__MembershipJoinDate__c
+                    a1.npo02__AverageAmount__c == a2.npo02__AverageAmount__c &&
+                    a1.npo02__LargestAmount__c == a2.npo02__LargestAmount__c &&
+                    a1.npo02__SmallestAmount__c == a2.npo02__SmallestAmount__c
                     ){ 
                          
                 if (UDRFieldMap.size() > 0){
@@ -495,17 +475,26 @@ public without sharing class RLLP_OppRollup {
             contact c2 = contactsToUpdate.get(cid);
             
             if (c1.npo02__TotalOppAmount__c == c2.npo02__TotalOppAmount__c &&
-                    c1.npo02__OppAmountLastYear__c == c2.npo02__OppAmountLastYear__c && 
+                    c1.npo02__OppsClosedThisYear__c == c2.npo02__OppsClosedThisYear__c &&
+                    c1.npo02__OppsClosedLastYear__c == c2.npo02__OppsClosedLastYear__c &&
+                    c1.npo02__OppsClosedLastNDays__c == c2.npo02__OppsClosedLastNDays__c &&
+                    c1.npo02__OppsClosed2YearsAgo__c == c2.npo02__OppsClosed2YearsAgo__c &&
+                    c1.npo02__OppAmountLastYear__c == c2.npo02__OppAmountLastYear__c &&
                     c1.npo02__OppAmount2YearsAgo__c == c2.npo02__OppAmount2YearsAgo__c &&
-                    c1.npo02__OppAmountLastNDays__c == c2.npo02__OppAmountLastNDays__c &&
                     c1.npo02__OppAmountThisYear__c == c2.npo02__OppAmountThisYear__c &&
+                    c1.npo02__OppAmountLastNDays__c == c2.npo02__OppAmountLastNDays__c &&
+                    c1.npo02__FirstCloseDate__c == c2.npo02__FirstCloseDate__c &&
+                    c1.npo02__LastCloseDate__c == c2.npo02__LastCloseDate__c && 
                     c1.npo02__TotalMembershipOppAmount__c == c2.npo02__TotalMembershipOppAmount__c &&
-                    c1.npo02__LastCloseDate__c == c2.npo02__LastCloseDate__c &&
-                    c1.npo02__MembershipEndDate__c == c2.npo02__MembershipEndDate__c &&
-                    c1.npo02__MembershipJoinDate__c == c2.npo02__MembershipJoinDate__c &&
                     c1.npo02__LastMembershipLevel__c == c2.npo02__LastMembershipLevel__c &&
+                    c1.npo02__LastMembershipDate__c == c2.npo02__LastMembershipDate__c &&
+                    c1.npo02__MembershipJoinDate__c == c2.npo02__MembershipJoinDate__c &&
+                    c1.npo02__MembershipEndDate__c == c2.npo02__MembershipEndDate__c &&
                     c1.npo02__Best_Gift_Year__c == c2.npo02__Best_Gift_Year__c &&
-                    c1.npo02__Best_Gift_Year_Total__c == c2.npo02__Best_Gift_Year_Total__c
+                    c1.npo02__Best_Gift_Year_Total__c == c2.npo02__Best_Gift_Year_Total__c &&
+                    c1.npo02__AverageAmount__c == c2.npo02__AverageAmount__c &&
+                    c1.npo02__LargestAmount__c == c2.npo02__LargestAmount__c &&
+                    c1.npo02__SmallestAmount__c == c2.npo02__SmallestAmount__c
                     ){
                     
                 if (UDRFieldMap.size() > 0){
@@ -641,17 +630,26 @@ public without sharing class RLLP_OppRollup {
             npo02__Household__c h2 = householdsToUpdate.get(hhid);
             
             if (h1.npo02__TotalOppAmount__c == h2.npo02__TotalOppAmount__c &&
-                    h1.npo02__OppAmountLastYear__c == h2.npo02__OppAmountLastYear__c && 
+                    h1.npo02__OppsClosedThisYear__c == h2.npo02__OppsClosedThisYear__c &&
+                    h1.npo02__OppsClosedLastYear__c == h2.npo02__OppsClosedLastYear__c &&
+                    h1.npo02__OppsClosedLastNDays__c == h2.npo02__OppsClosedLastNDays__c &&
+                    h1.npo02__OppsClosed2YearsAgo__c == h2.npo02__OppsClosed2YearsAgo__c &&
+                    h1.npo02__OppAmountLastYear__c == h2.npo02__OppAmountLastYear__c &&
                     h1.npo02__OppAmount2YearsAgo__c == h2.npo02__OppAmount2YearsAgo__c &&
-                    h1.npo02__OppAmountLastNDays__c == h2.npo02__OppAmountLastNDays__c &&
                     h1.npo02__OppAmountThisYear__c == h2.npo02__OppAmountThisYear__c &&
+                    h1.npo02__OppAmountLastNDays__c == h2.npo02__OppAmountLastNDays__c &&
+                    h1.npo02__FirstCloseDate__c == h2.npo02__FirstCloseDate__c &&
+                    h1.npo02__LastCloseDate__c == h2.npo02__LastCloseDate__c && 
                     h1.npo02__TotalMembershipOppAmount__c == h2.npo02__TotalMembershipOppAmount__c &&
-                    h1.npo02__LastCloseDate__c == h2.npo02__LastCloseDate__c &&
-                    h1.npo02__MembershipEndDate__c == h2.npo02__MembershipEndDate__c &&
-                    h1.npo02__MembershipJoinDate__c == h2.npo02__MembershipJoinDate__c &&
                     h1.npo02__LastMembershipLevel__c == h2.npo02__LastMembershipLevel__c &&
+                    h1.npo02__LastMembershipDate__c == h2.npo02__LastMembershipDate__c &&
+                    h1.npo02__MembershipJoinDate__c == h2.npo02__MembershipJoinDate__c &&
+                    h1.npo02__MembershipEndDate__c == h2.npo02__MembershipEndDate__c &&
                     h1.npo02__Best_Gift_Year__c == h2.npo02__Best_Gift_Year__c &&
-                    h1.npo02__Best_Gift_Year_Total__c == h2.npo02__Best_Gift_Year_Total__c                    
+                    h1.npo02__Best_Gift_Year_Total__c == h2.npo02__Best_Gift_Year_Total__c &&
+                    h1.npo02__AverageAmount__c == h2.npo02__AverageAmount__c &&
+                    h1.npo02__LargestAmount__c == h2.npo02__LargestAmount__c &&
+                    h1.npo02__SmallestAmount__c == h2.npo02__SmallestAmount__c
                     ){
                                                 
             if (UDRFieldMap.size() > 0){
@@ -676,10 +674,19 @@ public without sharing class RLLP_OppRollup {
     
     /*******************************************************************************************************
     * @description Runs opportunity soft credit rollups for contacts.
-    * @param cmap A map of contact IDs to contacts.
+    * @param list The list of contacts to rollup to.
     * @return void This method does updates directly and returns nothing.
     ********************************************************************************************************/
-    public void rollupSoftCredits(map<id, Contact> cmap){      
+    public void rollupSoftCreditsWithPartialSupport(list<Contact> listCon) {
+        RLLP_OppPartialSoftCreditRollup.rollupPartialSoftCredits(listCon);      
+    }
+    
+    /*******************************************************************************************************
+    * @description Runs opportunity soft credit rollups for contacts. 
+    * NO LONGER USED SINCE DOES NOT SUPPORT PARTIAL SOFT CREDITS.  Can be removed once we are done testing.
+    * @param cmap A map of contact IDs to contacts.
+    * @return void This method does updates directly and returns nothing.
+    public void rollupSoftCreditsOLDNoPartialSupport(map<id, Contact> cmap){      
         //arg used by multi currency for rollup field currencies
         map<Id,Opportunity> opptyCurrencies;
         // copy the contacts to a zeroed out version
@@ -737,6 +744,7 @@ public without sharing class RLLP_OppRollup {
         
         update contactsToUpdate.values();  
     }
+    ********************************************************************************************************/
        
     /*******************************************************************************************************
     * @description Runs all batch opportunity rollups for all records on all objects.
@@ -933,7 +941,6 @@ public without sharing class RLLP_OppRollup {
     * @param r The aggregate result object.
     * @param opptyCurrencies Holds opportunity currency codes for multicurrency orgs.
     * @return void This method does updates directly and returns nothing.
-    ********************************************************************************************************/
     public static void updateSoftCreditFromResult(sobject obj, sobject r, map<id, Opportunity> opptyCurrencies){
          // get the fiscal year, total amount, and opp count for this result row     
         integer fy = (integer)(r.get('CalendarYr'));
@@ -967,6 +974,7 @@ public without sharing class RLLP_OppRollup {
             obj.put('npo02__Soft_Credit_Total__c', amt);        
         }
     }
+    ********************************************************************************************************/
 
      /*******************************************************************************************************
     * @description Method writes soft credit last N days rollup fields from AggregateResults to an object 
@@ -974,7 +982,6 @@ public without sharing class RLLP_OppRollup {
     * @param obj The object to roll up to.
     * @param r The aggregate result object.
     * @return void This method does updates directly and returns nothing.
-    ********************************************************************************************************/
    public static void updateSoftCreditRollupFromResultLastNDays(sobject obj, sobject r){
            
         // get the total amount for this result row     
@@ -986,4 +993,5 @@ public without sharing class RLLP_OppRollup {
         
         obj.put('Soft_Credit_Last_N_Days__c', amt);               
     }
+    ********************************************************************************************************/
 }

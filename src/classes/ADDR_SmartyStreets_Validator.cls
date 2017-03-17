@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,8 +28,9 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
+* @group Address Management
 * @description Class that provides address validation/normalization services
 * throught the SmartyStreets API.
  */
@@ -58,7 +59,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
     * @return String The URL to send requests to for zicode validation.
     */
     public String getDefaultZipcodeURL() {
-        return 'https://api.smartystreets.com/zipcode';  
+        return 'https://us-zipcode.api.smartystreets.com/lookup';  
     }
 
     /*******************************************************************************************************
@@ -153,7 +154,11 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                    if (sr.candidate_index == 0) {
 	                        responseGroup = new List<ADDR_SmartyStreets_Gateway.AddressResponse>{ sr };
 	                        UTIL_Debug.debug('****Flagging address as verified. Address ID: ' + av.Id);
-	                        av.Verified__c = true;
+	                        
+                            if (!String.isBlank(av.Formula_MailingAddress__c))
+                                av.Pre_Verification_Address__c = av.Formula_MailingAddress__c.replace('<br>','\r\n');
+
+                            av.Verified__c = true;
 	                        av.MailingStreet__c = sr.delivery_line_1;
 	                        av.MailingStreet2__c = sr.delivery_line_2;
 	                        av.MailingCity__c = sr.components.city_name;

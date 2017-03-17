@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2011, Salesforce.com Foundation
+    Copyright (c) 2011, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2011 (2.3)
 * @group Address Management
 * @description test class for the Copy Address button controller
@@ -73,7 +73,7 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         system.currentPageReference().getParameters().put('id', cc.id);
         ADDR_CopyAddrHHObjBTN_CTRL cacbc = new ADDR_CopyAddrHHObjBTN_CTRL();
         PageReference prc = cacbc.buttonClick();
-        system.assert(prc.getUrl().contains(cc.id));
+        system.assertEquals(null, prc);
         npo02__Household__c h = [select id, npo02__MailingStreet__c, npo02__MailingState__c, npo02__MailingPostalCode__c, npo02__MailingCity__c, 
             npo02__MailingCountry__c from npo02__Household__c where id = :hh.id];
         system.assertEquals(h.npo02__MailingStreet__c, cc.MailingStreet);
@@ -88,7 +88,7 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         system.currentPageReference().getParameters().put('id', hh.id);
         cacbc = new ADDR_CopyAddrHHObjBTN_CTRL();
         prc = cacbc.buttonClick();
-        system.assert(prc.getUrl().contains(hh.id));
+        system.assertEquals(null, prc);
         Contact c1 = [select id, MailingStreet from Contact where npo02__Household__c = :hh.id]; 
         system.assertEquals(hh.npo02__MailingStreet__c, c1.MailingStreet);
         system.assertEquals(1, [select count() from Note where ParentID = :c1.id]);

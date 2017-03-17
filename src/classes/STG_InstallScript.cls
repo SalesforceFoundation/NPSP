@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
 
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
 * @group Settings
 * @description Install Script for the NPSP package. 
@@ -42,27 +42,27 @@ global without sharing class STG_InstallScript implements InstallHandler {
     */
     global void onInstall(InstallContext context) {
         try { 
+            database.executeBatch(new RD_InstallScript_BATCH(), 10); 
             //First install of Cumulus. NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
             if(context.previousVersion() == null) {
                 runNewOrgScript();
-                UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
-                UTIL_MasterSchedulableHelper.setSchedulableTable();    
             } else if(context.isUpgrade()) {
-                List<Trigger_Handler__c> defaultHandlers = TDTM_DefaultConfig.getDefaultRecords(); 
-                insertTdtmDefaults(defaultHandlers);
-                UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
-                UTIL_MasterSchedulableHelper.setSchedulableTable(); 
+                insertTdtmDefaults(null);
             } else if(context.isPush()) {
-                List<Trigger_Handler__c> defaultHandlers = TDTM_DefaultConfig.getDefaultRecords(); 
-                insertTdtmDefaults(defaultHandlers);
-                UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
-                UTIL_MasterSchedulableHelper.setSchedulableTable();
+                insertTdtmDefaults(null);
             }
+            UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
+            UTIL_MasterSchedulableHelper.scheduleJobsFromOldObject();
         } catch(Exception e) {
-            ERR_Notifier.sendEmailOnInstallError(e, context);
+            sendEmailOnInstallError(e, context);
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             //We won't rethrow the exception, to avoid package failure installation due to install script error
-       }
+            return;
+        }
+        if (context.previousVersion() == null || context.previousVersion().compareTo(new Version(3, 79)) < 0) {
+            // update record type settings ONLY if upgrading from a version prior to 3.78
+            UTIL_RecordTypeSettingsUpdate.getInstance().updateSettings();
+        }
     }
 
     /*******************************************************************************************************
@@ -87,12 +87,13 @@ global without sharing class STG_InstallScript implements InstallHandler {
         npe03__Recurring_Donations_Settings__c npe03Settings = UTIL_CustomSettingsFacade.getOrgRecurringDonationsSettings();
         npe4__Relationship_Settings__c npe04Settings = UTIL_CustomSettingsFacade.getOrgRelationshipSettings();
         npe5__Affiliations_Settings__c npe05Settings = UTIL_CustomSettingsFacade.getOrgAffiliationsSettings();
+        UTIL_CustomSettingsFacade.getOrgHouseholdNamingSettings();
         UTIL_CustomSettingsFacade.getOrgErrorSettings();
         UTIL_CustomSettingsFacade.getOrgAddressVerificationSettings();
-        UTIL_CustomSettingsFacade.getOrgBDESettings(); 
+        UTIL_CustomSettingsFacade.getOrgBDESettings();
         UTIL_CustomSettingsFacade.getOrgAllocationsSettings();
+        UTIL_CustomSettingsFacade.getOrgDataImportSettings();
 
-        
         UTIL_Debug.debug('****NPSP-to-Cumulus Map: ' + JSON.serializePretty(npspToCumulusMap));
  
         for(String setting : npspToCumulusMap.keySet()) {
@@ -144,9 +145,8 @@ global without sharing class STG_InstallScript implements InstallHandler {
     }
     
     private void setupTdtmConfig(Map<String, String> npspToCumulusMap, Map<String, Boolean> existingTriggerConfig) {        
-        List<Trigger_Handler__c> defaultHandlers = TDTM_DefaultConfig.getDefaultRecords();  
         //First we insert all TDTM records as active
-        insertTdtmDefaults(defaultHandlers);   
+        insertTdtmDefaults(null);   
         //Now we can deactive only those that were flagged as inactive in NPSP
         deactivateMatchingTdtm(npspToCumulusMap, existingTriggerConfig);
     }
@@ -154,20 +154,31 @@ global without sharing class STG_InstallScript implements InstallHandler {
     /*******************************************************************************************************
     * @description Inserts the default TDTM records, if necessary. Updates those that need to be updated, since the last package
     * upgradade. Public just for testing purposes (it should otherwise be private).
-    * @param defaultHandlers The default TDTM records.
     * @return void
     */
     public static void insertTdtmDefaults(List<Trigger_Handler__c> defaultHandlers) {
+        if (defaultHandlers == null) defaultHandlers = TDTM_DefaultConfig.getDefaultRecords();  
         List<Trigger_Handler__c> existingHandlers = [select Class__c, Object__c, Load_Order__c, Trigger_Action__c, User_Managed__c 
                                                        from Trigger_Handler__c];
 
         List<Trigger_Handler__c> handlersToInsert = new List<Trigger_Handler__c>();
         List<Trigger_Handler__c> handlersToUpdate = new List<Trigger_Handler__c>();
+        List<Trigger_Handler__c> handlersToDelete = new List<Trigger_Handler__c>();
+
+        //First, find handlers to add them for deletion and remove them from the list
+        Integer i = 0;
+        while(i < existingHandlers.size()) {
+            if (TDTM_DefaultConfig.deletedClasses.contains(existingHandlers[i].Class__c)) {
+                handlersToDelete.add(existingHandlers[i]);
+                existingHandlers.remove(i);
+            } else {
+                i++;
+            }
+        }
         
         //Insert those that are in the list of default handlers but aren't in the database
         for(Trigger_Handler__c defaultHandler : defaultHandlers) {
             Boolean alreadyExists = false;
-            Boolean needsUpdate = false;
             for(Trigger_Handler__c existingHandler : existingHandlers) {
                 if(defaultHandler.Class__c == existingHandler.Class__c && defaultHandler.Object__c == existingHandler.Object__c) {
                     alreadyExists = true;
@@ -180,13 +191,14 @@ global without sharing class STG_InstallScript implements InstallHandler {
                         handlersToUpdate.add(existingHandler);
                     }
                     break;
-                }
+                } 
             }
             if(!alreadyExists)
                 handlersToInsert.add(defaultHandler); 
         }    
         if(handlersToInsert.size() > 0) insert handlersToInsert;
         if(handlersToUpdate.size() > 0) update handlersToUpdate;
+        if(handlersToDelete.size() > 0) delete handlersToDelete;
     }
     
     private static void deactivateMatchingTdtm(Map<String, String> npspToCumulusMap, Map<String, Boolean> existingTriggerConfig) {
@@ -206,5 +218,31 @@ global without sharing class STG_InstallScript implements InstallHandler {
             handler.Active__c = false;
         }
         if(handlersToUpdate.size() > 0) update handlersToUpdate; 
+    }
+
+    /*******************************************************************************************************
+    * @description Sends an email to the user installing the package warning of package installation failure.
+    * @param e Exception thrown during the package installation process.
+    * @param context The installation context.
+    * @return void
+    */
+    public static void sendEmailOnInstallError(Exception e, InstallContext context) {
+        try {
+            String userEmail = [Select Id, Email from User where Id =:context.installerID()].Email;  
+            userEmail = UTIL_Namespace.sandboxEmailToRealEmail(userEmail);
+            Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+            mail.setUseSignature(false);
+            mail.setReplyTo('donotreply@salesforce.org');
+            mail.setSenderDisplayName('Nonprofit Success Pack');
+            mail.setSubject('NPSP Install Errors');
+            String bodyString = Label.stgInstallScriptError;
+            bodyString += '\n\n==========================. \n\n Error message: \n' + e.getMessage() + '\n\n'
+            + 'Error stack trace: \n' + e.getStackTraceString();
+            mail.setPlainTextBody(bodyString);      
+            mail.setToAddresses(new String[]{'errors@salesforce.org', userEmail});
+            Messaging.sendEmail(new Messaging.SingleEmailMessage[]{mail});
+        } catch(Exception e2) {
+            //Nothing to do here, as we don't want the install script to fail because emails could not be sent.
+        }
     }
 }

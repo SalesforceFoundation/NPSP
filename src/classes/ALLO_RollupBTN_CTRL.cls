@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,28 +28,29 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
 * @group Allocations
 * @group-content ../../ApexDocContent/Allocations.htm
 * @description Controller for button that recalculates Allocations rollups for a single General Accounting Unit.
 */
 public with sharing class ALLO_RollupBTN_CTRL {
+
+    private ApexPages.StandardController sc;
 	
     /** @description Empty constructor, does nothing.*/
-    public ALLO_RollupBTN_CTRL() {}
+    public ALLO_RollupBTN_CTRL(ApexPages.StandardController sc) {
+        this.sc = sc;
+    }
 
     /** @description Button click method runs allocation rollups for the current General Accounting Unit.*/
     public PageReference buttonClick() {
-		String parentId = ApexPages.currentPage().getParameters().get('id');
-        if (parentId != null && parentId != '') {
+        Id parentId = sc.getId();
+        if (parentId != null) {
         	//run rollups for this General Accouting Unit
 			ALLO_Rollup_SCHED rollup = new ALLO_Rollup_SCHED(parentId);
 			rollup.runRollups();
-
-	        PageReference pageRef = new PageReference('/' + parentId);
-	        pageRef.setRedirect(true);
-	        return pageRef;
-        } else return null;
-	}
+        }
+        return null;
+    }
 }

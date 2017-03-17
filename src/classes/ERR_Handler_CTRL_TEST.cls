@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
 
@@ -27,25 +27,17 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
-public with sharing class ERR_Handler_CTRL_TEST {
 
-    public pageReference withoutManualRollback() {     
-        
-        Contact contact1 = new Contact(FirstName = 'test', LastName = 'testerson1', Title = 'VP1');
-        insert contact1;
-        
-        //I think npe4__Contact__c is missing from the reciprocal relationship that gets automatically created.
-        npe4__Relationship__c[] relationships = new npe4__Relationship__c[]{
-            new npe4__Relationship__c(npe4__contact__c = contact1.id, npe4__Type__c='TestLookupType') };    
-        
-        insert relationships;
-        
-        //No try-catch necessary. The error is found in the processDML method of TDTM_TriggerHandler.
-        //The transaction is rolled back in that same method.
-        
-        return null;
-    }
-    
+/**
+* @author Salesforce.org
+* @date 2014
+* @description test class for error handler controller
+* @group ErrorHandling
+*/
+public with sharing class ERR_Handler_CTRL_TEST {
+    /*******************************************************************************************************
+    * @description test error handling with a save point
+    */
     public pageReference withManualRollback() {
         Savepoint sp = Database.setSavepoint();
         try {       

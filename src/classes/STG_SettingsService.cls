@@ -1,33 +1,34 @@
 /*
-Copyright (c) 2014 salesforce.com foundation, Inc.
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without modification, 
-are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice, 
-    this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright notice, 
-    this list of conditions and the following disclaimer in the documentation 
-    and/or other materials provided with the distribution.
-    * Neither the name of the salesforce.com foundation. nor the names of its contributors 
-    may be used to endorse or promote products derived from this software 
-    without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
-LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
-OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
-OF THE POSSIBILITY OF SUCH DAMAGE.
-
+    Copyright (c) 2015 Salesforce.org
+    All rights reserved.
+    
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+    
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Salesforce.org nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+ 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce Foundation
+* @author Salesforce.org
 * @date 01/13/2014
 * @group Settings
 * @description Settings Service class that holds all custom settings objects
@@ -154,7 +155,7 @@ public with sharing class STG_SettingsService {
     	get {
     		if (mapRDCustomField == null) {
 			    mapRDCustomField = new map<string, npe03__Custom_Field_Mapping__c>();
-			    mapRDCustomField = npe03__Custom_Field_Mapping__c.getAll();
+			    mapRDCustomField = UTIL_ListCustomSettingsFacade.getMapCustomFieldMappings();
     		} 
             return mapRDCustomField;    	   
     	}
@@ -168,7 +169,7 @@ public with sharing class STG_SettingsService {
         get {
             if (listRDCustomInstallment == null) {
                 listRDCustomInstallment = new list<npe03__Custom_Installment_Settings__c>();
-                listRDCustomInstallment = npe03__Custom_Installment_Settings__c.getAll().values();
+                listRDCustomInstallment = UTIL_ListCustomSettingsFacade.getMapCustomInstallmentSettings().values();
             } 
             return listRDCustomInstallment;           
         }
@@ -182,7 +183,7 @@ public with sharing class STG_SettingsService {
         get {
             if (listRDCustomFieldMapping == null) {
                 listRDCustomFieldMapping = new list<npe03__Custom_Field_Mapping__c>();
-                listRDCustomFieldMapping = npe03__Custom_Field_Mapping__c.getAll().values();
+                listRDCustomFieldMapping = UTIL_ListCustomSettingsFacade.getMapCustomFieldMappings().values();
             } 
             return listRDCustomFieldMapping;           
         }
@@ -196,7 +197,7 @@ public with sharing class STG_SettingsService {
         get {
             if (listPMTFieldMapping == null) {
                 listPMTFieldMapping = new list<npe01__Payment_Field_Mapping_Settings__c>();
-                listPMTFieldMapping = npe01__Payment_Field_Mapping_Settings__c.getAll().values();
+                listPMTFieldMapping = UTIL_ListCustomSettingsFacade.getMapPaymentFieldMappingSettings().values();
             } 
             return listPMTFieldMapping;           
         }

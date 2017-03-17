@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
 
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
 * @group Settings
 * @description Uninstall Script for the NPSP package. 
@@ -42,8 +42,9 @@ global class STG_UninstallScript implements UninstallHandler {
     */
     global void onUninstall(UninstallContext context) {
         
-        String[] schedulers = new String[] {'NPSP Global Scheduler', 'NPSP Scheduler1', 'NPSP Scheduler2', 'NPSP Scheduler3'};
-        schedulers.addAll(UTIL_MasterSchedulableHelper.scheduledJobs);
+        String[] schedulers = new String[] {'NPSP Global Scheduler', 'NPSP Scheduler1', 'NPSP Scheduler2', 'NPSP Scheduler3', 
+                                            'NPSP Scheduler 1', 'NPSP Scheduler 2', 'NPSP Scheduler 3'};
+        schedulers.addAll(UTIL_MasterSchedulableHelper.defaultScheduledJobs.keySet());
     	List<CronTrigger> scheduledJobs = [select Id, CronJobDetail.Id from CronTrigger 
     	   where CronJobDetail.Name IN :schedulers and CronJobDetail.JobType = '7'];
     	

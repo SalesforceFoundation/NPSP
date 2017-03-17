@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
 
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
 * @group Settings
 * @description Test Class for the Install Script for the NPSP package. 
@@ -60,6 +60,25 @@ public with sharing class STG_InstallScript_TEST {
         //Create some of the default settings
         createSomeDefaultSettings();
         
+        //Run the install script               
+        Test.testInstall(new STG_InstallScript(), null);
+        
+        //Verify all settings created
+        verifyAllSettingsCreated();
+    }
+
+    /** Tests that deleted class trigger handlers get deleted **/
+    public static testmethod void deletedHandlers() {
+        if (strTestOnly != '*' && strTestOnly != 'deletedHandlers') return;
+        
+        //Create some of the default settings
+        createSomeDefaultSettings();
+
+        // HH Object contact trigger support
+        insert new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'OPP_OpportunityNaming_TDTM', Load_Order__c = 0, Object__c = 'Opportunity', 
+              Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete');        
+
         //Run the install script               
         Test.testInstall(new STG_InstallScript(), null);
         
@@ -115,14 +134,19 @@ public with sharing class STG_InstallScript_TEST {
         afterScriptConfig.sort();
         defaultConfig.sort();
         
-        System.assertEquals(afterScriptConfig.size(), defaultConfig.size());
+        System.assertEquals(defaultConfig.size(), afterScriptConfig.size(), 'Number of created trigger handlers should match the number of handlers in TDTM_DefaultConfig.');
         for(Integer i = 0; i < defaultConfig.size(); i++) {
             System.assertEquals(afterScriptConfig[i].Class__c, defaultConfig[i].Class__c);
             System.assertEquals(afterScriptConfig[i].Load_Order__c, defaultConfig[i].Load_Order__c);
             System.assertEquals(afterScriptConfig[i].Object__c, defaultConfig[i].Object__c);
             System.assertEquals(afterScriptConfig[i].Active__c, defaultConfig[i].Active__c);
             System.assertEquals(afterScriptConfig[i].Asynchronous__c, defaultConfig[i].Asynchronous__c);
-            System.assertEquals(afterScriptConfig[i].Trigger_Action__c, defaultConfig[i].Trigger_Action__c);
+            //split and sort trigger actions so the test doesn't fail for different orders
+            List<String> afterTriggerAction = afterScriptConfig[i].Trigger_Action__c.split(';');
+            List<String> defaultTriggerAction = defaultConfig[i].Trigger_Action__c.split(';');
+            afterTriggerAction.sort();
+            defaultTriggerAction.sort();
+            System.assertEquals(afterTriggerAction, defaultTriggerAction);
         }
     }
     
@@ -252,7 +276,10 @@ public with sharing class STG_InstallScript_TEST {
         Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getOrgErrorSettings();
         Addr_Verification_Settings__c addrVerificationSetgs = UTIL_CustomSettingsFacade.getOrgAddressVerificationSettings();
         Batch_Data_Entry_Settings__c batchDataEntrySetgs = UTIL_CustomSettingsFacade.getOrgBDESettings();
-        
+        Household_Naming_Settings__c householdNamingSettings = UTIL_CustomSettingsFacade.getOrgHouseholdNamingSettings();
+        Allocations_Settings__c allocationsSettings = UTIL_CustomSettingsFacade.getOrgAllocationsSettings();
+        Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getOrgDataImportSettings();
+
         //If it's a new install we want to set the Household model by default
         System.assertEquals(CAO_Constants.HH_ACCOUNT_PROCESSOR, npe01Settings.npe01__Account_Processor__c);
         System.assertEquals(false, npe01Settings.npe01__Enable_Opportunity_Contact_Role_Trigger__c);
@@ -280,7 +307,7 @@ public with sharing class STG_InstallScript_TEST {
         System.assertEquals(null, npo02Settings.npo02__Household_Creation_Excluded_Recordtypes__c);
         System.assertEquals(HH_Households.NO_HOUSEHOLDS_PROCESSOR, npo02Settings.npo02__Household_Rules__c);
         System.assertEquals(true, npo02Settings.npo02__Enable_Soft_Credit_Rollups__c);
-        System.assertEquals('Soft Credit;Household Member', npo02Settings.npo02__Soft_Credit_Roles__c);
+        System.assertEquals('Matched Donor;Soft Credit;Household Member', npo02Settings.npo02__Soft_Credit_Roles__c);
         System.assertEquals(true, npo02Settings.npo02__Household_Contact_Roles_On__c);
         
         System.assertEquals(RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name(), npe03Settings.npe03__Open_Opportunity_Behavior__c);
@@ -291,7 +318,7 @@ public with sharing class STG_InstallScript_TEST {
         System.assertEquals(90, npe03Settings.npe03__Update_Check_Interval__c);
         System.assertEquals([select id from RecordType where sobjecttype = 'Opportunity' limit 1].id, npe03Settings.npe03__Record_Type__c);
         
-        System.assertEquals('List Settings', npe04Settings.npe4__Reciprocal_Method__c);
+        System.assertEquals('List Setting', npe04Settings.npe4__Reciprocal_Method__c);
         
         System.assertEquals(true, npe05Settings.npe5__Automatic_Affiliation_Creation_Turned_On__c);
         
@@ -304,9 +331,10 @@ public with sharing class STG_InstallScript_TEST {
         
         System.assertEquals(true, batchDataEntrySetgs.Allow_Blank_Opportunity_Names__c);
         System.assertEquals(true, batchDataEntrySetgs.Opportunity_Naming__c);
-        
-        List<Schedulable__c> scheduledJobs = [select Class_Name__c from Schedulable__c];
-        System.assertEquals(6, scheduledJobs.size());
+
+        System.assertEquals('HH_NameSpec',householdNamingSettings.Implementing_Class__c);
+        System.assertEquals(365,allocationsSettings.Rollup_N_Day_Value__c);
+        System.assertEquals(50,dataImportSettings.Batch_Size__c);
     }
 
     public static void deleteAllCustomSettings() {
@@ -325,7 +353,7 @@ public with sharing class STG_InstallScript_TEST {
     }
     
     public static void createSomeDefaultSettings() {
-    	List<Trigger_Handler__c> handlers = new List<Trigger_Handler__c>();
+        List<Trigger_Handler__c> handlers = new List<Trigger_Handler__c>();
         
         //Relationships on npe4__Relationship__c
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
@@ -356,7 +384,7 @@ public with sharing class STG_InstallScript_TEST {
     }
     
     public static void verifyAllSettingsCreated() {
-    	List<Trigger_Handler__c> afterScriptConfig = [select Active__c, Asynchronous__c, Class__c, Load_Order__c, 
+        List<Trigger_Handler__c> afterScriptConfig = [select Active__c, Asynchronous__c, Class__c, Load_Order__c, 
             Object__c, Trigger_Action__c from Trigger_Handler__c];
         
         List<Trigger_Handler__c> defaultConfig = TDTM_DefaultConfig.getDefaultRecords();

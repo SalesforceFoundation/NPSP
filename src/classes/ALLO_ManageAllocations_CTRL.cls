@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
 * @group Allocations
 * @group-content ../../ApexDocContent/Allocations.htm
@@ -37,7 +37,7 @@
 public with sharing class ALLO_ManageAllocations_CTRL {
 
     /** @description The current list of allocations we're managing, as displayed on the page.*/
-	public list<Allocation__c> listAllo {get;set;}
+    public list<Allocation__c> listAllo {get;set;}
     /** @description If defaults are enabled, the default allocation is here, and not in listAllo. */
     public Allocation__c defaultAllo {get;set;}
 
@@ -63,30 +63,73 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     /** @description The amount of the parent opportunity, if these are opportunity allocations.*/
     public decimal parentAmount {get;set;}
     /** @description The allocations settings object. */
-    public static Allocations_Settings__c settings {get;set;}
+    public Allocations_Settings__c settings {
+        get {
+            if (settings==null) {
+                settings = UTIL_CustomSettingsFacade.getAllocationsSettings();
+            }
+            return settings;
+        }
+        set;
+    }
+
+    /** @description The page title based on which type of allocation we're using. */
+    public string pageTitle {get;set;}
+    /** @description The name of the object we're adding allocations to. */
+    public string objectName {get;set;}
+    /** @description The key prefix for the object, for navigation. */
+    public string keyPrefix {get;set;}
+    /** @description The API name of the object. */
+    public string objectAPIName {get;set;}
+    /** @description The API name of the object. */
+    public string objectLabelPlural {get;set;}
 
     /** @description Row number sent back by page for add and delete row methods.*/
     public integer rowNumber {get;set;}
 
-    /** Constructor queries for the parent object and the allocations, and fills out attributes.*/
-    public ALLO_ManageAllocations_CTRL() {
+    /**
+     * @description The currency symbol or ISO code of the related record or
+     * org default
+     */
+    @TestVisible
+    private String currencySymbol;
 
-        settings = UTIL_CustomSettingsFacade.getAllocationsSettings();
+    /** @description Constructor queries for the parent object and the allocations, and fills out attributes.*/
+    public ALLO_ManageAllocations_CTRL(ApexPages.StandardSetController ssc) {
 
-        map<string,string> params = ApexPages.currentPage().getParameters();
-        parentAmount = 0;        
-        
-        if (params.containsKey('opp')) {
-            parentId = String.escapeSingleQuotes(params.get('opp'));
+        parentId = ApexPages.currentPage().getParameters().get('id');
+        parentAmount = 0;
+
+        if (parentId.getSObjectType() == Opportunity.sObjectType) {
             opp = [SELECT Id, Name, Amount FROM Opportunity WHERE Id = :parentId];
+
+            pageTitle = Label.alloManageOppAllocations;
+            objectName = opp.Name;
+
+            populateObjectParameters(Opportunity.sObjectType);
+
             //only Opportunities have parent amounts and enforce being below this amount
-            parentAmount = opp.Amount;
-        } else if (params.containsKey('cam')) {
-            parentId = String.escapeSingleQuotes(params.get('cam'));
+            if (opp.Amount!=null) {
+                parentAmount = opp.Amount;
+            }
+            if (parentAmount==0) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Warning, Label.alloCantAllocateNothing));
+            }
+        } else if (parentId.getSObjectType() == Campaign.sObjectType) {
             cam = [SELECT Id, Name FROM Campaign WHERE Id = :parentId];
-        } else if (params.containsKey('rd')) {
-            parentId = string.escapeSingleQuotes(params.get('rd'));
+
+            pageTitle = Label.alloManageCampaignAllocations;
+            objectName = cam.Name;
+
+            populateObjectParameters(Campaign.sObjectType);
+
+        } else if (parentId.getSObjectType() == npe03__Recurring_Donation__c.sObjectType) {
             rd = [SELECT Id, Name FROM npe03__Recurring_Donation__c WHERE Id = :parentId];
+
+            pageTitle = Label.alloManageRecurringDonationAllocations;
+            objectName = rd.Name;
+
+            populateObjectParameters(npe03__Recurring_Donation__c.sObjectType);
         }
 
         defaultAllo = new Allocation__c();
@@ -107,6 +150,36 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             addRow();
     }
 
+    /**
+     * @description Private default constructor
+     */
+    @TestVisible
+    private ALLO_ManageAllocations_CTRL() {}
+
+    /** @description Adds an empty row to the bottom of the list and refreshes the page.*/
+    private void populateObjectParameters(Schema.sObjectType st) {
+        DescribeSObjectResult describe = st.getDescribe();
+        keyPrefix = describe.getKeyPrefix();
+        objectAPIName = describe.getName();
+        objectLabelPlural = describe.getLabelPlural();
+    }
+
+    /**
+     * @description Return the currency symbol appropriate for the current
+     * user/org/record.  If the org is multi currency enabled, it will use the
+     * currency iso code from the related record.  If the org is not multi
+     * currency enabled, it will return the symbol for the currency of the org,
+     * or the currency iso code if no symbol is known.
+     *
+     * @return String A currency symbol or currency ISO code
+     */
+    public String getCurrencySymbol() {
+        if (currencySymbol == null) {
+            currencySymbol = UTIL_Currency.getInstance().getCurrencySymbol(parentId);
+        }
+        return currencySymbol;
+    }
+
     /** @description Adds an empty row to the bottom of the list and refreshes the page.*/
     public pageReference addRow() {
         Allocation__c allo = new Allocation__c();
@@ -123,6 +196,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             listAllo.add(allo);
         else
             listAllo.add(rowNumber+1, allo);
+
         return null;
     }
 
@@ -141,6 +215,8 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         list<Allocation__c> listAlloForInsert = new list<Allocation__c>();
         list<Allocation__c> listAlloForUpdate = new list<Allocation__c>();
         pageReference source = new pageReference('/'+parentId);
+        source.setRedirect(true);
+        source.getParameters().put('t',''+(System.currentTimeMillis()));
 
         //split into insert and update cases so we can reset recursion flags for each operation
         for (Allocation__c allo : listAllo) {

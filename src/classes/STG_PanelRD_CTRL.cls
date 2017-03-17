@@ -1,5 +1,5 @@
 /* 
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
 * @group Settings
 * @description The controller for the Recurring Donations panel 
@@ -44,16 +44,6 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
     * @description holds value to evaluate change in forecast months
     */
     private integer originalForecastMonths;
-
-    /*********************************************************************************************************
-    * @description The Schedulable object 
-    */
-    public Schedulable__c rdSched { public get; public set; }
-
-    /*********************************************************************************************************
-    * @description Whether the Recurring Donations Scheduled Job is disabled
-    */
-    public boolean isRDScheduleDisabled { get; set; }
     
     /*********************************************************************************************************
     * @description The panel's constructor
@@ -64,12 +54,7 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
     * @description Initiliazes the classes data 
     */
     public void init(){
-        originalForecastMonths = (integer)STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c;        
-        list<Schedulable__c> listSch = [select Id, Active__c from Schedulable__c where Class_Name__c = 'RD_RecurringDonations_SCHED' limit 1];
-        if (listSch.size() > 0) {
-            rdSched = listSch[0];
-            isRDScheduleDisabled = !rdSched.Active__c;
-        }
+        originalForecastMonths = (integer)STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c;
     }
     
     /*********************************************************************************************************
@@ -86,12 +71,7 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
         	if(STG_Panel.stgService.stgRD != null && !Test.isRunningTest()) {
         		toUpdate.add(STG_Panel.stgService.stgRD);
         	}
-        	
-        	if(rdSched != null) {
-                rdSched.Active__c = !isRDScheduleDisabled;
-                toUpdate.add(rdSched);
-        	}
-        	
+            
             update toUpdate;
             
             strRDOppRecordTypeLabel = null;
@@ -154,7 +134,7 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
     static public string strRDOppRecordTypeLabel {
         get {
             if (strRDOppRecordTypeLabel == null) {
-                strRDOppRecordTypeLabel = UTIL_RecordTypes.GetRecordTypeName('Opportunity', STG_Panel.stgService.stgRD.npe03__Record_Type__c);
+                strRDOppRecordTypeLabel = UTIL_RecordTypes.GetRecordTypeName(Opportunity.sObjectType, STG_Panel.stgService.stgRD.npe03__Record_Type__c);
             }
             return strRDOppRecordTypeLabel;
         }

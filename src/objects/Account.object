@@ -68,6 +68,16 @@
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
+            <field>Funding_Focus__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Grantmaker__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
             <field>npo02__HouseholdPhone__c</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
@@ -88,17 +98,62 @@
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
-            <field>Jigsaw</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>JigsawCompanyId</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
             <field>MasterRecordId</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Matching_Gift_Administrator_Name__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Matching_Gift_Amount_Max__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Matching_Gift_Amount_Min__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Matching_Gift_Annual_Employee_Max__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Matching_Gift_Comments__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Matching_Gift_Company__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Matching_Gift_Email__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Matching_Gift_Info_Updated__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Matching_Gift_Percent__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Matching_Gift_Phone__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Matching_Gift_Request_Deadline__c</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </availableFields>
@@ -204,11 +259,6 @@
         </availableFields>
         <availableFields>
             <field>npo02__SmallestAmount__c</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>SystemModstamp</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </availableFields>
@@ -353,11 +403,6 @@
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
-            <field>npe01__FirstDonationDate__c</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
             <field>npo02__Formal_Greeting__c</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
@@ -388,16 +433,6 @@
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
-            <field>Jigsaw</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>JigsawCompanyId</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
             <field>npo02__LargestAmount__c</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
@@ -409,11 +444,6 @@
         </availableFields>
         <availableFields>
             <field>npo02__LastCloseDate__c</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>npe01__LastDonationDate__c</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </availableFields>
@@ -459,16 +489,6 @@
         </availableFields>
         <availableFields>
             <field>LastViewedDate</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>npe01__LifetimeDonationHistory_Amount__c</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>npe01__LifetimeDonationHistory_Number__c</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </availableFields>
@@ -698,17 +718,12 @@
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
-            <field>Description</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
             <field>Fax</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
-            <field>npe01__One2OneContact__c</field>
+            <field>Name</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </availableFields>
@@ -724,6 +739,11 @@
         </availableFields>
         <availableFields>
             <field>Rating</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>RecordTypeId</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </availableFields>
@@ -744,7 +764,17 @@
         </availableFields>
         <description>HH_ManageHHAccount.page</description>
         <displayedFields>
+            <field>npe01__One2OneContact__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
             <field>npo02__HouseholdPhone__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>Description</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </displayedFields>
@@ -762,6 +792,182 @@
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
         <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Funding_Focus__c</fullName>
+        <description>The general program area(s) that this organization funds.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The general program area(s) that this organization funds.</inlineHelpText>
+        <label>Funding Focus</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Animal Welfare</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Arts and Culture</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Capacity Building</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Education</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Environmental</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Health Services</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Human Services</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>MultiselectPicklist</type>
+        <visibleLines>4</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Grantmaker__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Indicates that this organization is a grant making organization. Can apply to foundations, government agencies, corporations, etc.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Indicates that this organization is a grant making organization. Can apply to foundations, government agencies, corporations, etc.</inlineHelpText>
+        <label>Grantmaker</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Matching_Gift_Administrator_Name__c</fullName>
+        <description>The name of the company&apos;s matching gift administrator.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The name of the company&apos;s matching gift administrator.</inlineHelpText>
+        <label>Matching Gift Administrator Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Matching_Gift_Amount_Max__c</fullName>
+        <description>The maximum amount the company will match on any single gift.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The maximum amount the company will match on any single gift.</inlineHelpText>
+        <label>Matching Gift Amount Max</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Matching_Gift_Amount_Min__c</fullName>
+        <description>The smallest gift the company will match.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The smallest gift the company will match.</inlineHelpText>
+        <label>Matching Gift Amount Min</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Matching_Gift_Annual_Employee_Max__c</fullName>
+        <description>The maximum amount the company will match each year for an employee.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The maximum amount the company will match each year for an employee.</inlineHelpText>
+        <label>Matching Gift Annual Employee Max</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Matching_Gift_Comments__c</fullName>
+        <description>Additional notes about the company&apos;s matching gift program.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Additional notes about the company&apos;s matching gift program.</inlineHelpText>
+        <label>Matching Gift Comments</label>
+        <length>32768</length>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Matching_Gift_Company__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Is this a company that offers matching gifts?</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Is this a company that offers matching gifts?</inlineHelpText>
+        <label>Matching Gift Company</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Matching_Gift_Email__c</fullName>
+        <description>Email of the company&apos;s matching gift administrator.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Email of the company&apos;s matching gift administrator.</inlineHelpText>
+        <label>Matching Gift Email</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Email</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Matching_Gift_Info_Updated__c</fullName>
+        <description>The date when the matching gift information was last updated.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The date when the matching gift information was last updated.</inlineHelpText>
+        <label>Matching Gift Info Updated</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Matching_Gift_Percent__c</fullName>
+        <description>The portion of a gift the company will match.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The portion of a gift the company will match.</inlineHelpText>
+        <label>Matching Gift Percent</label>
+        <precision>5</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>Matching_Gift_Phone__c</fullName>
+        <description>Phone for the matching gift administration office.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Phone for the matching gift administration office.</inlineHelpText>
+        <label>Matching Gift Phone</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Phone</type>
+    </fields>
+    <fields>
+        <fullName>Matching_Gift_Request_Deadline__c</fullName>
+        <description>Any restrictions on how old gifts can be to be eligible for matching.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Any restrictions on how old gifts can be to be eligible for matching.</inlineHelpText>
+        <label>Matching Gift Request Deadline</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Membership_Span__c</fullName>
@@ -802,4 +1008,15 @@ IF(NOT(ISNULL($Setup.npo02__Households_Settings__c.npo02__Membership_Grace_Perio
         <type>Number</type>
         <unique>false</unique>
     </fields>
+    <webLinks>
+        <fullName>Manage_Household</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Manage Household</masterLabel>
+        <openType>noSidebar</openType>
+        <page>HH_ManageHHAccount</page>
+        <protected>false</protected>
+    </webLinks>
 </CustomObject>

@@ -44,6 +44,7 @@
         <actionName>View</actionName>
         <type>Default</type>
     </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
     <description>Stores which classes to run in response to DML performed on an object.</description>
@@ -52,6 +53,7 @@
     <enableFeeds>false</enableFeeds>
     <enableHistory>false</enableHistory>
     <enableReports>false</enableReports>
+    <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
     <fields>
@@ -67,10 +69,10 @@
     <fields>
         <fullName>Asynchronous__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>Indicates that this module should be run asynchronously in this transaction</description>
+        <description>Indicates that this module should be run asynchronously in this transaction, for any of its After events.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Indicates that this module should be run asynchronously in this transaction</inlineHelpText>
-        <label>Asynchronous</label>
+        <inlineHelpText>Indicates that this module should be run asynchronously in this transaction, for any of its After events.</inlineHelpText>
+        <label>Asynchronous After Events</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
@@ -148,6 +150,7 @@
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <required>false</required>
         <trackTrending>false</trackTrending>
         <type>MultiselectPicklist</type>
         <visibleLines>7</visibleLines>

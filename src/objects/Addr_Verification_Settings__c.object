@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <customSettingsType>Hierarchy</customSettingsType>
-    <customSettingsVisibility>Protected</customSettingsVisibility>
     <description>Settings for automatic address verification and normalization.</description>
     <enableFeeds>false</enableFeeds>
     <fields>
@@ -104,4 +103,5 @@
         <type>Url</type>
     </fields>
     <label>Address Verification Settings</label>
+    <visibility>Protected</visibility>
 </CustomObject>

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
 * @group Address Management
 * @description test class that provides address validation/normalization services
@@ -48,142 +48,242 @@ public with sharing class ADDR_Cicero_TEST {
     * @description a fake http response from Cicero for test code
     */
     private static string strResponseTest = 
-		'{'+
-		'"response" : {'+
-		'"messages" : [ ],'+
-		'"results" : {'+
-		'"candidates" : [ {'+
-		'"x" : -122.162791,'+
-		'"y" : 47.63411,'+
-		'"match_addr" : "2623 134th Ave NE, Bellevue, Washington, 98005",'+
-		'"locator_type" : "PointAddress",'+
-		'"score" : 100,'+
-		'"districts" : [ {'+
-		'"valid_to" : null,'+
-		'"last_update_date" : "2012-03-18 07:46:32",'+
-		'"district_type" : "NATIONAL_EXEC",'+
-		'"subtype" : "NATION",'+
-		'"id" : 19,'+
-		'"country" : "US",'+
-		'"city" : "",'+
-		'"label" : "United States",'+
-		'"district_id" : "UNITED STATES",'+
-		'"state" : "",'+
-		'"data" : { },'+
-		'"valid_from" : "0001-01-01 04:56:02",'+
-		'"sk" : 19'+
-		'}, {'+
-		'"valid_to" : null,'+
-		'"last_update_date" : "2012-03-18 07:46:32",'+
-		'"district_type" : "NATIONAL_UPPER",'+
-		'"subtype" : "UPPER",'+
-		'"id" : 74,'+
-		'"country" : "US",'+
-		'"city" : "",'+
-		'"label" : "Washington",'+
-		'"district_id" : "WA",'+
-		'"state" : "WA",'+
-		'"data" : { },'+
-		'"valid_from" : "1977-05-18 00:00:00",'+
-		'"sk" : 74'+
-		'}, {'+
-		'"valid_to" : null,'+
-		'"last_update_date" : "2012-03-18 07:46:32",'+
-		'"district_type" : "STATE_EXEC",'+
-		'"subtype" : "STATE",'+
-		'"id" : 1009,'+
-		'"country" : "US",'+
-		'"city" : "",'+
-		'"label" : "Washington",'+
-		'"district_id" : "WA",'+
-		'"state" : "WA",'+
-		'"data" : { },'+
-		'"valid_from" : "0001-01-01 04:56:02",'+
-		'"sk" : 1009'+
-		'}, {'+
-		'"valid_to" : null,'+
-		'"last_update_date" : "2012-03-18 07:46:31",'+
-		'"district_type" : "LOCAL",'+
-		'"subtype" : "COUNTY",'+
-		'"id" : 2908,'+
-		'"country" : "US",'+
-		'"city" : "King",'+
-		'"label" : "",'+
-		'"district_id" : "6",'+
-		'"state" : "WA",'+
-		'"data" : { },'+
-		'"valid_from" : "0001-01-01 04:56:02",'+
-		'"sk" : 2908'+
-		'}, {'+
-		'"valid_to" : null,'+
-		'"last_update_date" : "2012-03-18 07:46:31",'+
-		'"district_type" : "LOCAL",'+
-		'"subtype" : "COUNTY",'+
-		'"id" : 2916,'+
-		'"country" : "US",'+
-		'"city" : "King",'+
-		'"label" : "",'+
-		'"district_id" : "AT LARGE",'+
-		'"state" : "WA",'+
-		'"data" : { },'+
-		'"valid_from" : "0001-01-01 04:56:02",'+
-		'"sk" : 2916'+
-		'}, {'+
-		'"valid_to" : "2023-01-09 00:00:00",'+
-		'"last_update_date" : "2012-11-20 00:00:00",'+
-		'"district_type" : "STATE_UPPER",'+
-		'"subtype" : "UPPER",'+
-		'"id" : 756663,'+
-		'"country" : "US",'+
-		'"city" : "",'+
-		'"label" : "Washington State Senate district 48",'+
-		'"district_id" : "48",'+
-		'"state" : "WA",'+
-		'"data" : { },'+
-		'"valid_from" : "2013-01-14 00:00:00",'+
-		'"sk" : 756663'+
-		'}, {'+
-		'"valid_to" : "2023-01-09 00:00:00",'+
-		'"last_update_date" : "2012-11-20 00:00:00",'+
-		'"district_type" : "STATE_LOWER",'+
-		'"subtype" : "LOWER",'+
-		'"id" : 756712,'+
-		'"country" : "US",'+
-		'"city" : "",'+
-		'"label" : "Washington House of Representatives district 48",'+
-		'"district_id" : "48",'+
-		'"state" : "WA",'+
-		'"data" : { },'+
-		'"valid_from" : "2013-01-14 00:00:00",'+
-		'"sk" : 756712'+
-		'}, {'+
-		'"valid_to" : "2023-01-03 00:00:00",'+
-		'"last_update_date" : "2012-11-30 00:00:00",'+
-		'"district_type" : "NATIONAL_LOWER",'+
-		'"subtype" : "LOWER",'+
-		'"id" : 757403,'+
-		'"country" : "US",'+
-		'"city" : "",'+
-		'"label" : "Washington\'s 9th congressional district",'+
-		'"district_id" : "9",'+
-		'"state" : "WA",'+
-		'"data" : { },'+
-		'"valid_from" : "2013-01-03 00:00:00",'+
-		'"sk" : 757403'+
-		'} ],'+
-		'"geoservice" : "EsriWGS",'+
-		'"wkid" : 4326,'+
-		'"count" : {'+
-		'"from" : 0,'+
-		'"total" : 8,'+
-		'"to" : 7'+
-		'},'+
-		'"locator" : "rooftop"'+
-		'} ]'+
-		'},'+
-		'"errors" : [ ]'+
-		'}'+
-		'}';
+'{'+
+'  "response" : {'+
+'    "results" : {'+
+'      "candidates" : [ {'+
+'        "geoservice" : "Google",'+
+'        "match_subregion" : "San Francisco County",'+
+'        "x" : -122.3948366,'+
+'        "y" : 37.7938462,'+
+'        "match_addr" : "1 Market St #300, San Francisco, CA 94105, USA",'+
+'        "match_city" : "San Francisco",'+
+'        "match_region" : "CA",'+
+'        "score" : 0,'+
+'        "locator" : "rooftop",'+
+'        "districts" : [ {'+
+'          "ocd_id" : "ocd-division/country:us/state:ca",'+
+'          "data" : { },'+
+'          "id" : 5,'+
+'          "last_update_date" : "2012-03-18 07:46:32",'+
+'          "num_officials" : 2,'+
+'          "state" : "CA",'+
+'          "subtype" : "UPPER",'+
+'          "sk" : 5,'+
+'          "label" : "California",'+
+'          "valid_to" : null,'+
+'          "district_id" : "CA",'+
+'          "country" : "US",'+
+'          "valid_from" : "1977-05-18 00:00:00",'+
+'          "city" : "",'+
+'          "district_type" : "NATIONAL_UPPER"'+
+'        }, {'+
+'          "ocd_id" : "ocd-division/country:us",'+
+'          "data" : { },'+
+'          "id" : 19,'+
+'          "last_update_date" : "2012-03-18 07:46:32",'+
+'          "num_officials" : 2,'+
+'          "state" : "",'+
+'          "subtype" : "NATION",'+
+'          "sk" : 19,'+
+'          "label" : "United States",'+
+'          "valid_to" : null,'+
+'          "district_id" : "UNITED STATES",'+
+'          "country" : "US",'+
+'          "valid_from" : "0001-01-01 04:56:02",'+
+'          "city" : "",'+
+'          "district_type" : "NATIONAL_EXEC"'+
+'        }, {'+
+'          "ocd_id" : "ocd-division/country:us/state:ca",'+
+'          "data" : { },'+
+'          "id" : 87,'+
+'          "last_update_date" : "2012-03-18 07:46:32",'+
+'          "num_officials" : 2,'+
+'          "state" : "CA",'+
+'          "subtype" : "STATE",'+
+'          "sk" : 87,'+
+'          "label" : "California",'+
+'          "valid_to" : null,'+
+'          "district_id" : "CA",'+
+'          "country" : "US",'+
+'          "valid_from" : "0001-01-01 04:56:02",'+
+'          "city" : "",'+
+'          "district_type" : "STATE_EXEC"'+
+'        }, {'+
+'          "ocd_id" : "ocd-division/country:us/state:ca/place:san_francisco",'+
+'          "data" : { },'+
+'          "id" : 279,'+
+'          "last_update_date" : "2012-03-18 07:46:32",'+
+'          "num_officials" : 1,'+
+'          "state" : "CA",'+
+'          "subtype" : "CITY",'+
+'          "sk" : 279,'+
+'          "label" : "San Francisco city",'+
+'          "valid_to" : "9999-12-31 00:00:00",'+
+'          "district_id" : "SAN FRANCISCO",'+
+'          "country" : "US",'+
+'          "valid_from" : "0001-01-01 04:56:02",'+
+'          "city" : "San Francisco",'+
+'          "district_type" : "LOCAL_EXEC"'+
+'        }, {'+
+'          "ocd_id" : "ocd-division/country:us/state:ca/county:san_francisco/council_district:6",'+
+'          "data" : { },'+
+'          "id" : 1691,'+
+'          "last_update_date" : "2012-03-18 07:46:31",'+
+'          "num_officials" : 1,'+
+'          "state" : "CA",'+
+'          "subtype" : "COUNTY",'+
+'          "sk" : 1691,'+
+'          "label" : "San Francisco City Council district 6",'+
+'          "valid_to" : "9999-12-31 00:00:00",'+
+'          "district_id" : "6",'+
+'          "country" : "US",'+
+'          "valid_from" : "0001-01-01 04:56:02",'+
+'          "city" : "San Francisco",'+
+'          "district_type" : "LOCAL"'+
+'        }, {'+
+'          "ocd_id" : "ocd-division/country:us/state:ca/county:san francisco",'+
+'          "data" : { },'+
+'          "id" : 2253,'+
+'          "last_update_date" : "2012-03-18 07:46:31",'+
+'          "num_officials" : 0,'+
+'          "state" : "CA",'+
+'          "subtype" : "COUNTY",'+
+'          "sk" : 2253,'+
+'          "label" : "San Francisco city",'+
+'          "valid_to" : null,'+
+'          "district_id" : "AT LARGE",'+
+'          "country" : "US",'+
+'          "valid_from" : "0001-01-01 04:56:02",'+
+'          "city" : "San Francisco",'+
+'          "district_type" : "LOCAL"'+
+'        }, {'+
+'          "ocd_id" : "ocd-division/country:us/state:ca11",'+
+'          "data" : { },'+
+'          "id" : 383744,'+
+'          "last_update_date" : "2012-03-23 15:06:30",'+
+'          "num_officials" : 0,'+
+'          "state" : "CA",'+
+'          "subtype" : "UPPER",'+
+'          "sk" : 383744,'+
+'          "label" : "",'+
+'          "valid_to" : null,'+
+'          "district_id" : "11",'+
+'          "country" : "US",'+
+'          "valid_from" : "2012-03-26 21:14:08.201488",'+
+'          "city" : "",'+
+'          "district_type" : "STATE_UPPER_REDISTRICTED"'+
+'        }, {'+
+'          "ocd_id" : "ocd-division/country:us/state:ca17",'+
+'          "data" : { },'+
+'          "id" : 385724,'+
+'          "last_update_date" : "2012-03-22 15:22:42",'+
+'          "num_officials" : 0,'+
+'          "state" : "CA",'+
+'          "subtype" : "LOWER",'+
+'          "sk" : 385724,'+
+'          "label" : "",'+
+'          "valid_to" : null,'+
+'          "district_id" : "17",'+
+'          "country" : "US",'+
+'          "valid_from" : "2012-03-26 21:18:41.419987",'+
+'          "city" : "",'+
+'          "district_type" : "STATE_LOWER_REDISTRICTED"'+
+'        }, {'+
+'          "ocd_id" : "ocd-division/country:us/state:ca12",'+
+'          "data" : { },'+
+'          "id" : 388478,'+
+'          "last_update_date" : "2012-03-26 21:44:46",'+
+'          "num_officials" : 0,'+
+'          "state" : "CA",'+
+'          "subtype" : "LOWER",'+
+'          "sk" : 388478,'+
+'          "label" : "",'+
+'          "valid_to" : null,'+
+'          "district_id" : "12",'+
+'          "country" : "US",'+
+'          "valid_from" : "2012-03-26 21:56:48.256155",'+
+'          "city" : "",'+
+'          "district_type" : "NATIONAL_LOWER_REDISTRICTED"'+
+'        }, {'+
+'          "ocd_id" : "ocd-division/country:us/state:ca6",'+
+'          "data" : { },'+
+'          "id" : 393743,'+
+'          "last_update_date" : "2012-05-09 00:00:00",'+
+'          "num_officials" : 0,'+
+'          "state" : "CA",'+
+'          "subtype" : "CITY",'+
+'          "sk" : 393743,'+
+'          "label" : "",'+
+'          "valid_to" : null,'+
+'          "district_id" : "6",'+
+'          "country" : "US",'+
+'          "valid_from" : "2012-05-09 00:00:00",'+
+'          "city" : "SAN FRANCISCO",'+
+'          "district_type" : "LOCAL_REDISTRICTED"'+
+'        }, {'+
+'          "ocd_id" : "ocd-division/country:us/state:ca/sldl:17",'+
+'          "data" : { },'+
+'          "id" : 752693,'+
+'          "last_update_date" : "2012-11-12 00:00:00",'+
+'          "num_officials" : 1,'+
+'          "state" : "CA",'+
+'          "subtype" : "LOWER",'+
+'          "sk" : 752693,'+
+'          "label" : "California Assembly district 17",'+
+'          "valid_to" : "2022-12-05 00:00:00",'+
+'          "district_id" : "17",'+
+'          "country" : "US",'+
+'          "valid_from" : "2012-12-03 00:00:00",'+
+'          "city" : "",'+
+'          "district_type" : "STATE_LOWER"'+
+'        }, {'+
+'          "ocd_id" : "ocd-division/country:us/state:ca/sldu:11",'+
+'          "data" : { },'+
+'          "id" : 752749,'+
+'          "last_update_date" : "2012-11-12 00:00:00",'+
+'          "num_officials" : 1,'+
+'          "state" : "CA",'+
+'          "subtype" : "UPPER",'+
+'          "sk" : 752749,'+
+'          "label" : "California State Senate district 11",'+
+'          "valid_to" : "2022-12-05 00:00:00",'+
+'          "district_id" : "11",'+
+'          "country" : "US",'+
+'          "valid_from" : "2012-12-03 00:00:00",'+
+'          "city" : "",'+
+'          "district_type" : "STATE_UPPER"'+
+'        }, {'+
+'          "ocd_id" : "ocd-division/country:us/state:ca/cd:12",'+
+'          "data" : { },'+
+'          "id" : 757216,'+
+'          "last_update_date" : "2012-11-30 00:00:00",'+
+'          "num_officials" : 1,'+
+'          "state" : "CA",'+
+'          "subtype" : "LOWER",'+
+'          "sk" : 757216,'+
+'          "label" : "California\'s 12th congressional district",'+
+'          "valid_to" : "2023-01-03 00:00:00",'+
+'          "district_id" : "12",'+
+'          "country" : "US",'+
+'          "valid_from" : "2013-01-03 00:00:00",'+
+'          "city" : "",'+
+'          "district_type" : "NATIONAL_LOWER"'+
+'        } ],'+
+'        "match_country" : "US",'+
+'        "wkid" : 4326,'+
+'        "match_postal" : "94105",'+
+'        "count" : {'+
+'          "from" : 0,'+
+'          "total" : 13,'+
+'          "to" : 12'+
+'        }'+
+'      } ]'+
+'    },'+
+'    "messages" : [ ],'+
+'    "errors" : [ ]'+
+'  }'+
+'}';
     
     /*********************************************************************************************************
     * @description returns the HTTP Response from the HTTP Request for Cicero.
@@ -207,21 +307,27 @@ public with sharing class ADDR_Cicero_TEST {
 
         list<Address__c> listAddr = new list<Address__c>();
         Address__c addr = new Address__c();
-        addr.MailingStreet__c = '2623 134 ave ne';
-        addr.MailingCity__c = 'bellevue';
-        addr.MailingState__c = 'wa';
-        addr.MailingPostalCode__c = '98005';
+        addr.MailingStreet__c = '1 market st #300';
+        addr.MailingCity__c = 'san francisco';
+        addr.MailingState__c = 'ca';
+        addr.MailingPostalCode__c = '94105-1234';
         listAddr.add(addr);
         
         ADDR_Cicero_Validator cicero = new ADDR_Cicero_Validator();
         Addr_Verification_Settings__c settings = new Addr_Verification_Settings__c();
         settings.Auth_Token__c = 'foo';  // we need a fake token or we won't validate
+        settings.Address_Verification_Endpoint__c = 'bar';
         List<Address__c> listAddrVerified = cicero.verifyRecords(listAddr, settings);
         system.assertEquals(1, listAddrVerified.size());
+        //system.assertNotEquals(null, listAddrVerified[0].Pre_Verification_Address__c);
         system.assertEquals(true, listAddrVerified[0].Verified__c);
-        system.assertEquals('2623 134th Ave NE', listAddrVerified[0].MailingStreet__c);
-        system.assertEquals('Bellevue', listAddrVerified[0].MailingCity__c);
-        system.assertEquals('Washington', listAddrVerified[0].MailingState__c);
+        system.assertEquals('1 Market St #300', listAddrVerified[0].MailingStreet__c);
+        system.assertEquals('San Francisco', listAddrVerified[0].MailingCity__c);
+        system.assertEquals('CA', listAddrVerified[0].MailingState__c);
+        system.assertEquals('94105-1234', listAddrVerified[0].MailingPostalCode__c);
+        system.assertEquals('17', listAddrVerified[0].State_Lower_District__c);
+        system.assertEquals('11', listAddrVerified[0].State_Upper_District__c);
+
 	}
 
 }

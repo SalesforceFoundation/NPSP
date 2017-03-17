@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>継続支援</value>
+    </caseValues>
+    <nameFieldLabel>継続支援名</nameFieldLabel>
+    <quickActions>
+        <label>新規支援</label>
+        <name>New_Opportunity</name>
+    </quickActions>
+    <quickActions>
+        <label>クイック更新</label>
+        <name>Quick_Update</name>
+    </quickActions>
+</CustomObjectTranslation>

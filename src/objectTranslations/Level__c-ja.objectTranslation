@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Level --></value>
+    </caseValues>
+    <fields>
+        <help>このレベルが現在使用されているかどうか。</help>
+        <label>有効</label>
+        <name>Active__c</name>
+    </fields>
+    <fields>
+        <help>このレベルの目的、またはこのベルを達成することの意味を説明します。</help>
+        <label>説明</label>
+        <name>Description__c</name>
+    </fields>
+    <fields>
+        <help>このレベルを達成したときに対象オブジェクトに適用されるエンゲージメント計画テンプレート。</help>
+        <label>エンゲージメント計画テンプレート</label>
+        <name>Engagement_Plan_Template__c</name>
+        <relationshipLabel>レベル</relationshipLabel>
+    </fields>
+    <fields>
+        <help>現在のレベルへのルックアップを保存するターゲットオブジェクトの項目 (API 参照名)。この項目では、このレベルが含まれる「階層」が暗黙的に定義されます。</help>
+        <label>レベル項目</label>
+        <name>Level_Field__c</name>
+    </fields>
+    <fields>
+        <help>最大金額。このレベルに割り当てるには、この金額を下回っている必要があります。空にすると、このレベルの最小金額以上の金額がこのレベルに割り当てられます。</help>
+        <label>最大金額 (&lt;)</label>
+        <name>Maximum_Amount__c</name>
+    </fields>
+    <fields>
+        <help>このレベルに割り当てられる最小金額。空にすると、このレベルの最大金額未満の金額がこのレベルに割り当てられます。</help>
+        <label>最小金額 (&gt;=)</label>
+        <name>Minimum_Amount__c</name>
+    </fields>
+    <fields>
+        <help>オブジェクトの前のレベルへのルックアップを保存するターゲットオブジェクトの項目 (API 参照名)。省略可能。</help>
+        <label>前のレベル項目</label>
+        <name>Previous_Level_Field__c</name>
+    </fields>
+    <fields>
+        <help>このレベルの基準となる金額と期間を定義する対象オブジェクトの項目 (API 参照名)。</help>
+        <label>ソース項目</label>
+        <name>Source_Field__c</name>
+    </fields>
+    <fields>
+        <help>このレベルが適用されるオブジェクト。</help>
+        <label>対象</label>
+        <name>Target__c</name>
+        <picklistValues>
+            <masterLabel>Account</masterLabel>
+            <translation>団体</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Contact</masterLabel>
+            <translation>個人</translation>
+        </picklistValues>
+    </fields>
+    <layouts>
+        <layout>Level Layout</layout>
+        <sections>
+            <label>カスタムリンク</label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>ロングテキストセクション</label>
+            <section>long text section</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Level Name --></nameFieldLabel>
+    <validationRules>
+        <errorMessage>[対象] はレベルの必須項目です。このレベルの対象オブジェクトを指定してください。</errorMessage>
+        <name>Target_Required</name>
+    </validationRules>
+</CustomObjectTranslation>

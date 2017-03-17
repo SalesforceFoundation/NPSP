@@ -1,5 +1,5 @@
 /* 
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
 * @group Settings
 * @description The controller for the Reciprocal Relationships panel 
@@ -70,7 +70,7 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
         try {
             insert rlNew;
             isEditMode = false;
-            listRelLookup = null;
+            resetRelLookupSettings();
             rlNew = null;
         } catch(Exception e) {
             Database.rollback(sp);
@@ -88,6 +88,14 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
         isEditMode = false;
         rlNew = null;
         return null;
+    }
+
+    /*********************************************************************************************************
+    * @description Resets relationship lookup settings so that they are reloaded and the cached version isn't used.
+    */
+    public void resetRelLookupSettings() {
+        UTIL_ListCustomSettingsFacade.mapRelationshipLookupSettings = null;
+        listRelLookup = null;
     }
     
     /*********************************************************************************************************
@@ -107,7 +115,7 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
                 npe4__Relationship_Lookup__c rl = new npe4__Relationship_Lookup__c(Id = rlIdDelete);
                 delete rl;
                 // force reload.
-                listRelLookup = null;
+                resetRelLookupSettings();
             }
         } catch(Exception e) {
             Database.rollback(sp);
@@ -124,7 +132,7 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
         get {
             if (listRelLookup == null) {
                 
-                map<string, npe4__Relationship_Lookup__c> mapRL = npe4__Relationship_Lookup__c.getAll();
+                map<string, npe4__Relationship_Lookup__c> mapRL = UTIL_ListCustomSettingsFacade.getMapRelationshipLookupSettings();
                 
 	            // Sort them by name
 	            list<string> rlNames = new list<string>();
@@ -148,7 +156,7 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
     */
     public static void verifyRelLookups(STG_PanelHealthCheck_CTRL ctrl) {
         
-        map<string, npe4__Relationship_Lookup__c> mapRL = npe4__Relationship_Lookup__c.getAll();
+        map<string, npe4__Relationship_Lookup__c> mapRL = UTIL_ListCustomSettingsFacade.getMapRelationshipLookupSettings();
         //string strSetting = Schema.Sobjecttype.npe4__Relationship_Lookup__c.getLabel(); 
         boolean isValid = true;
         boolean isValidAll = true;
@@ -158,7 +166,7 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
             
             if (rl.npe4__Active__c && rl.npe4__Male__c == null && rl.npe4__Female__c == null && rl.npe4__Neutral__c == null) {
                 isValid = false;
-                ctrl.createDR(Label.stgNavRelReciprocal, 'Error', 
+                ctrl.createDR(Label.stgNavRelReciprocal, STG_PanelHealthCheck_CTRL.statusError, 
                     string.format(label.healthDetailsRelReciprocalInvalid, new string[]{rl.Name}), 
                     string.format(label.healthSolutionRelReciprocalInvalid, new string[]{label.stgNavConnections, Label.stgNavRelReciprocal}));    
             }               
@@ -168,7 +176,7 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
         }
 
         if (isValidAll) {
-            ctrl.createDR(Label.stgNavRelReciprocal, 'Success', null, label.healthLabelRelReciprocalValid);            
+            ctrl.createDR(Label.stgNavRelReciprocal, STG_PanelHealthCheck_CTRL.statusSuccess, null, label.healthLabelRelReciprocalValid);            
         }                           
     }           
     

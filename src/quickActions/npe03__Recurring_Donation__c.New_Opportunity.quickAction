@@ -2,6 +2,7 @@
 <QuickAction xmlns="http://soap.sforce.com/2006/04/metadata">
     <description>Creates a new Opportunity child record.</description>
     <label>New Opportunity</label>
+    <optionsCreateFeedItem>true</optionsCreateFeedItem>
     <quickActionLayout>
         <layoutSectionStyle>TwoColumnsLeftToRight</layoutSectionStyle>
         <quickActionLayoutColumns>

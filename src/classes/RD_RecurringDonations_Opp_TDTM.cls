@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2012,2013,2014 Salesforce.com Foundation
+    Copyright (c) 2012,2013,2014 Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,12 +28,12 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2013
 * @group Recurring Donations
 * @description Trigger Handler on Opportunity for managing Recurring Donations 
 */
-public with sharing class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
+public class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
     
     /*******************************************************************************************************
     * @description Trigger Handler for Recurring Donations called on an Opportunity trigger AfterUpdate.
@@ -63,12 +63,27 @@ public with sharing class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
                 }
                 i++;
             }                  
+        }
+
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
+            integer i = 0;
+            for (SObject sobj : newlist) {
+                Opportunity o = (Opportunity)sobj;
+                //does it have a recurring donation reference?
+                //is it in closed state?
+                if (o.npe03__Recurring_Donation__c != null && o.isClosed && o.Amount != null && o.Amount > 0){
+                    rdIds.add(o.npe03__Recurring_Donation__c);
+                }
+                i++;
+            }                  
         }           
         
         //Get the open label for opps
         string closedLabel = system.label.npe03.RecurringDonationClosedStatus;
         Integer rdcount = 0;
-        rdcount = [select count() from npe03__Recurring_Donation__c where npe03__Open_Ended_Status__c <> :closedLabel and id IN :RDids];
+        if (RDids.size() > 0) {
+            rdcount = [select count() from npe03__Recurring_Donation__c where npe03__Open_Ended_Status__c <> :closedLabel and id IN :RDids];
+        }
                                                                                           
         //recurring donations that need to be updated      
         if (rdcount > 0) {

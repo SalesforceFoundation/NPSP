@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>false</plural>
+        <value><!-- Engagement Plan Template --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>true</plural>
+        <value><!-- Engagement Plan Template --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>false</plural>
+        <value><!-- Engagement Plan Template --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>true</plural>
+        <value><!-- Engagement Plan Template --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>false</plural>
+        <value><!-- Engagement Plan Template --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>true</plural>
+        <value><!-- Engagement Plan Template --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>false</plural>
+        <value><!-- Engagement Plan Template --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>true</plural>
+        <value><!-- Engagement Plan Template --></value>
+    </caseValues>
+    <fields>
+        <help>Berechnet das Fälligkeitsdatum einer untergeordneten Aufgabe anhand des Zeitpunkts neu, an dem die übergeordnete Aufgabe tatsächlich abgeschlossen wurde.</help>
+        <label>Fälligk. d. unterg. Aufg. autom. aktual.</label>
+        <name>Automatically_Update_Child_Task_Due_Date__c</name>
+    </fields>
+    <fields>
+        <help>Person, der eine Aufgabe standardmäßig zugewiesen wird, wenn das Feld &quot;Zugewiesen zu&quot; einer Engagementplan-Aufgabe leer gelassen wird.</help>
+        <label>Standardzuweisung</label>
+        <name>Default_Assignee__c</name>
+        <picklistValues>
+            <masterLabel>Owner of Object for Engagement Plan</masterLabel>
+            <translation>Eigentümer des Objekts für den Engagementplan</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>User Creating Engagement Plan</masterLabel>
+            <translation>Benutzer, der den Engagementplan erstellt</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label>Beschreibung</label>
+        <name>Description__c</name>
+    </fields>
+    <fields>
+        <help>Gibt an, ob Aufgaben mit einem Fälligkeitsdatum am Wochenende für den Freitag vor dem Wochenende oder den Montag danach geplant werden sollen. Dies gilt nur, wenn &quot;Wochenenden überspringen&quot; ausgewählt ist.</help>
+        <label>Neu planen für</label>
+        <name>Reschedule_To__c</name>
+        <picklistValues>
+            <masterLabel>Friday</masterLabel>
+            <translation>Freitag</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Monday</masterLabel>
+            <translation>Montag</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Wenn diese Option ausgewählt ist, haben die in diesem Engagementplan erstellten Aufgaben keine Fälligkeitsdaten am Samstag oder Sonntag.</help>
+        <label>Wochenenden überspringen</label>
+        <name>Skip_Weekends__c</name>
+    </fields>
+    <fields>
+        <label>Engagementpläne insgesamt</label>
+        <name>Total_Engagement_Plans__c</name>
+    </fields>
+    <fields>
+        <label>Aufgaben insgesamt</label>
+        <name>Total_Tasks__c</name>
+    </fields>
+    <gender><!-- Neuter --></gender>
+    <layouts>
+        <layout>Engagement Plan Template Layout</layout>
+        <sections>
+            <label>Benutzerdefinierte Links</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Engagement Plan Template Name --></nameFieldLabel>
+    <webLinks>
+        <label>Vorlage verwalten</label>
+        <name>Manage_Template</name>
+    </webLinks>
+</CustomObjectTranslation>

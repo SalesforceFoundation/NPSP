@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009,2012, Salesforce.com Foundation
+    Copyright (c) 2009,2012, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,16 +28,17 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2011,2012
-* @description Enum for triggers and static utils for settings and collections
+* @group Relationships
+* @description Utility methods for Relationship management
 */
 public with sharing class REL_Utils {
 
     private static Map<String, npe4__Relationship_Auto_Create__c> AutoCreateMap;
     public static Map<String, npe4__Relationship_Auto_Create__c> getAutoCreateMap() {
         if(AutoCreateMap == null){
-            AutoCreateMap = npe4__Relationship_Auto_Create__c.getAll();
+            AutoCreateMap = UTIL_ListCustomSettingsFacade.getMapRelationshipAutoCreateSettings();
         }
         return AutoCreateMap;
     }
@@ -70,8 +71,10 @@ public with sharing class REL_Utils {
         return cmAutoCreate;
     }}
        
-    //modified csv parser to load initial static resource for recip settings
-    //http://wiki.developerforce.com/page/Code_Samples#Parse_a_CSV_with_APEX
+    /*******************************************************************************************************
+    * @description modified csv parser to load initial static resource for recip settings
+    * http://wiki.developerforce.com/page/Code_Samples#Parse_a_CSV_with_APEX
+    */ 
     public static List<List<String>> parseCSV(String contents,Boolean skipHeaders) {
         List<List<String>> allFields = new List<List<String>>();
     
@@ -85,11 +88,7 @@ public with sharing class REL_Utils {
         // we are not attempting to handle fields with a newline inside of them
         // so, split on newline to get the spreadsheet rows
         List<String> lines = new List<String>();
-        try {
-            lines = contents.split('\n');
-        } catch (System.ListException e) {
-            UTIL_Debug.debug('Limits exceeded?' + e.getMessage());
-        }
+        lines = contents.split('\n');
         Integer num = 0;
         for(String line : lines) {
             // check for blank CSV lines (only commas)

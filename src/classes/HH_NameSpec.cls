@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
 * @group Households
 * @description HH_NameSpec class that implements template based naming for Households.
@@ -133,18 +133,18 @@ public with sharing class HH_NameSpec implements HH_INaming {
         private integer cMaxUseOverrun { get; set; }
         private string strHNSField { get; set; }
         
-	    /*******************************************************************************************************
-	    * @description NameSpec Constructor
-	    * @param hns An instance of Household Naming Settings to use.
-	    * @param strField The namespec field in Settings to use.
-	    */
+        /*******************************************************************************************************
+        * @description NameSpec Constructor
+        * @param hns An instance of Household Naming Settings to use.
+        * @param strField The namespec field in Settings to use.
+        */
         private NameSpec(Household_Naming_Settings__c hns, string strField) {
-        	strHNSField = strField; 
-        	string strNameSpec = string.valueOf(hns.get(strField));
-        	strAnd = hns.Name_Connector__c;
-        	strOverrun = hns.Name_Overrun__c;
-        	cMaxUseOverrun = integer.valueOf(hns.Contact_Overrun_Count__c);
-        	parseNameSpec(strNameSpec);
+            strHNSField = strField; 
+            string strNameSpec = string.valueOf(hns.get(strField));
+            strAnd = (hns.Name_Connector__c == null ? ' ' : ' ' + hns.Name_Connector__c + ' ');
+            strOverrun = hns.Name_Overrun__c;
+            cMaxUseOverrun = integer.valueOf(hns.Contact_Overrun_Count__c);
+            parseNameSpec(strNameSpec);
         }
         
         /*******************************************************************************************************
@@ -178,13 +178,15 @@ public with sharing class HH_NameSpec implements HH_INaming {
                 strNameSpec = strNameSpec.left(ich+1);
             }
             
-            // look for the FirstNameSpec by removing any {LastName} field references
-            string str = strNameSpec.replace(chLToken + 'LastName' + chRToken, '');
+            // extract FirstNameSpec
+            string str = strFNameSpecFromStrNameSpec(strNameSpec);
+
+            // replace the firstnamespec with a token in our fullnamespec
             ich = str.indexOf(chLToken);
             integer ichR = str.lastIndexOf(chRToken);
             if (ich >= 0 && ichR > 0) {
+                strFullNameSpec = strNameSpec.replace(str, 'FirstNameSpec');
                 strFirstNameSpec = str.substring(ich + chLToken.length(), ichR);
-                strFullNameSpec = strNameSpec.replace(strFirstNameSpec, 'FirstNameSpec');
             } else {
                 strFullNameSpec = strNameSpec;
             }
@@ -198,6 +200,8 @@ public with sharing class HH_NameSpec implements HH_INaming {
             set<string> setStrField = new set<string>();
             if (strFirstNameSpec != null)
                 setStrField.addAll(setStrFieldFromStrFSpec(strFirstNameSpec));
+            if (strFullNameSpec != null)
+                setStrField.addAll(setStrFieldFromStrFSpec(strFullNameSpec));
             setStrField.add('LastName');    
             return setStrField;
         }
@@ -230,35 +234,52 @@ public with sharing class HH_NameSpec implements HH_INaming {
             string strLname = listCon[i].LastName;
             string strFname = strConFspec(listCon[i], ns.strFirstNameSpec);
             
-            // get the set of all fname's for this lname
+            // get the set of additional fname's for this lname
+            list<String> listFname = new list<String>();
             integer j = i + 1;
-            while (j < cCon && j < ns.cMaxUseOverrun && (isNoLastnames || listCon[j].LastName == strLname)) {
-                integer k = j + 1;
-                if (k == cCon || (!isNoLastnames && listCon[k].LastName != strLname)) {
-                    strFname += ' ' + ns.strAnd + ' ' + strConFspec(listCon[j], ns.strFirstNameSpec);
-                    j++;
+            while (j < cCon && (isNoLastnames || listCon[j].LastName == strLname)) {
+                String strF = strConFspec(listCon[j], ns.strFirstNameSpec);
+                if (strF != '') {
+                    listFName.add(strF);
+                }
+                j++;
+            }
+
+            // now put those additional fname's together
+            for (integer k = 0; k < listFName.size(); k++) {
+                // if we've hit the limit, then bail out
+                if (i+k+1 == ns.cMaxUseOverrun) {
+                    // we need j to hold maxOverrun
+                    j = ns.cMaxUseOverrun;
                     break;
+                }
+
+                // we want to use And if this is the last person in this lastname, or the last one we will include
+                if (k == listFName.size()-1 || (!isNoLastnames && (i+k+2) == ns.cMaxUseOverrun)) {
+                    strFname += ns.strAnd + listFName[k];
                 } else {
-                    strFName += ', ' + strConFspec(listCon[j], ns.strFirstNameSpec);
-                    j++;
+                    strFName += ', ' + listFname[k];
                 }
             }
-            
-            // now all contacts from lname should have their fname in strFname.
-            string strCon = ns.strFullNameSpec;
-            strCon = strCon.replace(chLToken + 'LastName' + chRToken, strLname);
-            strCon = strCon.replace(chLToken + 'FirstNameSpec' + chRToken, strFname);
+            // create lname part using first contact with that lastname
+            string strCon = strConFSpec(listCon[i], ns.strFullNameSpec);
+            strCon = strCon.replace('FirstNameSpec', strFname);
+            if (strFname == '')
+                strCon = strCon.trim();
             
             // add it to the whole name
-            if (i > 0 && j < cCon && j < ns.cMaxUseOverrun) {
+            boolean willAddOverrun = (j >= ns.cMaxUseOverrun && cCon > ns.cMaxUseOverrun && ns.strFirstNameSpec != '' && ns.strOverrun != null);
+             
+            // use and for last set as long as we won't be adding overrun too
+            if (i > 0 && j == cCon && !willAddOverrun) {
+                strName += ns.strAnd;                
+            } else if (i > 0) {
                 strName += ', ';
-            } else if (i > 0 && (j == cCon || j == ns.cMaxUseOverrun)) {
-                strName += ' ' + ns.strAnd + ' ';
             }
             strName += strCon;
 
-            if (j == ns.cMaxUseOverrun && cCon > ns.cMaxUseOverrun && ns.strFirstNameSpec != '') {
-                strName += ' ' + ns.strAnd + ' ' + ns.strOverrun;
+            if (willAddOverrun) {
+                strName += ns.strAnd + ns.strOverrun;
             }
 
             // continue with the next person we haven't included
@@ -285,8 +306,36 @@ public with sharing class HH_NameSpec implements HH_INaming {
         
         while (MyMatcher.find()) {
             // get the fieldname without the {}'s
-            string strField = strFspec.substring(MyMatcher.start() + chLToken.length(), MyMatcher.end()-1);
-            string val = string.valueOf(con.get(strField.trim()));
+            string strField = strFspec.substring(MyMatcher.start() + chLToken.length(), MyMatcher.end()-chRToken.length());
+            
+            //separate cross object references, i.e. account.name
+            list<string> splitField = (strField.split('\\.',0));
+            
+            //remove the field name itself to only include parent object references
+            string fieldName = splitField[splitField.size()-1].trim();
+            splitField.remove(splitField.size()-1);
+
+            //use the correct sObject
+            sObject thisObj;
+            if (!splitField.isEmpty()) {
+                thisObj = con.getsObject(splitField[0]);
+                splitField.remove(0);
+            } else {
+                thisObj = con;
+            }
+
+            //traverse parent relationships until the last one
+            for (string parentObj : splitField) {
+                if (thisObj != null) {
+                    thisObj = thisObj.getsObject(parentObj);
+                }
+            }
+
+            string val;
+            if (thisObj != null) {
+                val = string.valueOf(thisObj.get(fieldName));
+            }
+            
             // add back the {}'s for string substitution
             strField = chLToken + strField + chRToken;
             if (val == null) {   
@@ -297,6 +346,7 @@ public with sharing class HH_NameSpec implements HH_INaming {
             }
             str = str.replace(strField, val == null ? '' : val);
         }
+        //system.debug('**** strConFspec con: ' + con + ' strFspec: ' + strFspec + ' returns: ' + str);
         return str;     
     }
 
@@ -316,10 +366,29 @@ public with sharing class HH_NameSpec implements HH_INaming {
         
         while (MyMatcher.find()) {
             // get the fieldname without the {}'s
-            string strField = strFSpec.substring(MyMatcher.start() + chLToken.length(), MyMatcher.end()-1);
+            string strField = strFSpec.substring(MyMatcher.start() + chLToken.length(), MyMatcher.end()-chRToken.length());
             setStrField.add(strField.trim());
         }
         return setStrField;     
     }
 
+    /*******************************************************************************************************
+    * @description Given a namespec string, returns the firstnamespec which is demarcated by an outer {! }
+    * specified in that string.
+    * @param strNameSpec The namespec string, ie. {!lastname} {! {!firstname} foo {!bar}} Family
+    * return string The firstnamespec string, ie. {! {!firstname} foo {!bar}}
+    */
+    private static string strFNameSpecFromStrNameSpec(string strNameSpec) {
+
+        // First, instantiate a new Pattern object looking for {! {! xxxx } }
+        Pattern MyPattern = Pattern.compile('\\{![^\\}]*\\{!.*\\}[^\\{!]*\\}');       
+        // Then instantiate a new Matcher object 
+        Matcher MyMatcher = MyPattern.matcher(strNameSpec);
+        
+        if (MyMatcher.find()) {
+            return strNameSpec.substring(MyMatcher.start(), MyMatcher.end());
+        } else {
+            return '';
+        }     
+    }
 }

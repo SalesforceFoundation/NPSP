@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2012,2013,2014 Salesforce.com Foundation
+    Copyright (c) 2012,2013,2014 Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,13 +28,13 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2012 (2.0)
 * @group Recurring Donations
 * @description Trigger Handler on Recurring Donations 
 */
-public with sharing class RD_RecurringDonations_TDTM extends TDTM_Runnable {
-	
+public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
+    
     /*******************************************************************************************************
     * @description Trigger Handler on Recurring Donations.  Deals with creating/updating/deleting the opps
     * related to the Recurring Donations.
@@ -47,7 +47,6 @@ public with sharing class RD_RecurringDonations_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        list<npe03__Recurring_Donation__c> listRDDeletes = new list<npe03__Recurring_Donation__c>();
         map<id, npe03__Recurring_Donation__c> mapIdRDInserts = new map<id, npe03__Recurring_Donation__c>();
         list<npe03__Recurring_Donation__c> listRDUpdates = new list<npe03__Recurring_Donation__c>();
 
@@ -56,16 +55,16 @@ public with sharing class RD_RecurringDonations_TDTM extends TDTM_Runnable {
             return null;
             
         if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-        	set<Id> setRDId = new set<Id>();
-        	for (SObject s : newlist) 
-        	   setRDId.add(s.Id);
-        	newlist = RD_RecurringDonations.requeryListRD(setRDId);
-        	// since we recreate newlist, we can't assume it is same order as oldlist.
-        	// luckily we don't need oldlist for the AfterInsert scenario.
-        	oldlist = null; 
+            set<Id> setRDId = new set<Id>();
+            for (SObject s : newlist) 
+               setRDId.add(s.Id);
+            newlist = RD_RecurringDonations.requeryListRD(setRDId);
+            // since we recreate newlist, we can't assume it is same order as oldlist.
+            // luckily we don't need oldlist for the AfterInsert scenario.
+            oldlist = null; 
         } else if (triggerAction == TDTM_Runnable.Action.BeforeDelete) {
-        	// newlist will be null.  copy over oldlist, so we can use common loop below.
-        	newlist = oldlist;
+            // newlist will be null.  copy over oldlist, so we can use common loop below.
+            newlist = oldlist;
         }
 
         if (triggerAction != TDTM_Runnable.Action.BeforeInsert && triggerAction != TDTM_Runnable.Action.BeforeUpdate)
@@ -89,15 +88,9 @@ public with sharing class RD_RecurringDonations_TDTM extends TDTM_Runnable {
                 }            
             } else if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
                 mapIdRDInserts.put(r.id, r);
-            } else if (triggerAction == TDTM_Runnable.Action.BeforeDelete) {
-                listRDDeletes.add(r);
             } else if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                 listRDUpdates.add(r);
             }            
-        }
-        
-        if (listRDDeletes.size() > 0) {
-            RD_RecurringDonations.approveDeleteRecDonations(listRDDeletes);
         }
         
         if (listRDUpdates.size() > 0) {

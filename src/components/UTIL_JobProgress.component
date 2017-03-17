@@ -1,6 +1,6 @@
 <apex:component controller="UTIL_JobProgress_CTRL" selfClosing="true">
 <!-- 
-* Salesforce.com Foundation 2014
+* Salesforce.org 2014
 * Original work by Jason Venable, http://www.tehnrd.com - 2009
 * Component that displays progress for batch apex jobs 
 * Usage:

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2011, Salesforce.com Foundation
+    Copyright (c) 2011, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2011 (1.x)
 * @group Accounts
 * @description Tests for ACCT_IndividualAccounts_TDTM
@@ -53,12 +53,18 @@ private class ACCT_IndividualAccounts_TEST {
     /*********************************************************************************************************
     * @description Test Method for inserting a Contact that should get no account 
     */
-    private static testMethod void insertPrivate() {
-    	if (strTestOnly != '*' && strTestOnly != 'insertPrivate') return;
+    private static testMethod void insertPrivateOneToOne() {
+    	if (strTestOnly != '*' && strTestOnly != 'insertPrivateOneToOne') return;
         insertPrivateProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
-        insertPrivateProcessor(CAO_Constants.BUCKET_PROCESSOR);
-        insertPrivateProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }   
+    private static testMethod void insertPrivateBucket() {
+        if (strTestOnly != '*' && strTestOnly != 'insertPrivateBucket') return;
+        insertPrivateProcessor(CAO_Constants.BUCKET_PROCESSOR);
+    }
+    private static testMethod void insertPrivateHHAccount() {
+        if (strTestOnly != '*' && strTestOnly != 'insertPrivateHHAccount') return;
+        insertPrivateProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
     private static void insertPrivateProcessor(string strProcessor) {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
@@ -74,7 +80,9 @@ private class ACCT_IndividualAccounts_TEST {
             npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
             npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
+        Test.startTest();
         insert con;
+        Test.stopTest();
         
         Contact[] insertedContacts = [Select FirstName, LastName, AccountId  from Contact where id=:con.id];
         
@@ -113,25 +121,77 @@ private class ACCT_IndividualAccounts_TEST {
             
     	//Create a Contact
     	Contact contact2 = new Contact(FirstName = 'Test2', LastName = 'Testerson2');
+        Test.startTest();
         insert contact2;
+        Test.stopTest();
         
     	//Verify it's using Household Account - a new Account should have been created for it
     	Integer numOfAccs = [select count() from Account];
     	System.assertEquals(2, numOfAccs);
     }
     
+    private static testMethod void insertHHAccountContactTitleForRename() {
+        if (strTestOnly != '*' && strTestOnly != 'insertHHAccountContactTitleForRename') return;
+        insertContactTitleForRename(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }
+    private static void insertContactTitleForRename(string strProcessor) {
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+
+        Household_Naming_Settings__c hhNamingSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdNamingSettingsForTests(
+        	new Household_Naming_Settings__c(
+                Household_Name_Format__c = '{!LastName} Household',
+        		Formal_Greeting_Format__c = '{!{!Title} {!FirstName}} {!LastName}',
+                Informal_Greeting_Format__c = '{!{!FirstName}}',
+        		Name_Connector__c = label.npo02.HouseholdNameConnector,
+       			Name_Overrun__c = label.npo02.HouseholdNameOverrun,
+        		Contact_Overrun_Count__c = 9,
+        		Implementing_Class__c = 'HH_NameSpec'
+            )
+        );
+
+        CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+
+        Contact con = new Contact(
+            FirstName='Jack',
+            LastName='Ruby',
+            Title = 'Doctor',
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS,
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        Test.startTest();
+        insert con;
+        Test.stopTest();
+
+        Contact[] insertedContacts = [Select Account.npo02__Formal_Greeting__c, FirstName, LastName, AccountId  from Contact where id=:con.id];
+        system.assertEquals('Doctor Jack Ruby', insertedContacts[0].Account.npo02__Formal_Greeting__c);
+
+        con.Title = 'Hard Worker';
+        update con;
+
+        Contact[] updatedContacts = [Select Account.npo02__Formal_Greeting__c, FirstName, LastName, AccountId  from Contact where id=:con.id];
+        system.assertEquals('Hard Worker Jack Ruby', updatedContacts[0].Account.npo02__Formal_Greeting__c);
+    }
+
+    
     /*********************************************************************************************************
     * @description Create a contact, and change it to private, against all three account models.  
     */
     private static testMethod void insertOneToOneChangeToPrivate() {
     	if (strTestOnly != '*' && strTestOnly != 'insertOneToOneChangeToPrivate') return;
-    	
-        insertOneToOneChangeToPrivateProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);	
-        insertOneToOneChangeToPrivateProcessor(CAO_Constants.BUCKET_PROCESSOR); 
-        insertOneToOneChangeToPrivateProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR); 
+        insertChangeToPrivateProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);	
     }
-    
-    private static void insertOneToOneChangeToPrivateProcessor(string strProcessor) {
+    private static testMethod void insertBucketChangeToPrivate() {
+        if (strTestOnly != '*' && strTestOnly != 'insertBucketChangeToPrivate') return;        
+        insertChangeToPrivateProcessor(CAO_Constants.BUCKET_PROCESSOR); 
+    }
+    private static testMethod void insertHHAccountChangeToPrivate() {
+        if (strTestOnly != '*' && strTestOnly != 'insertHHAccountChangeToPrivate') return;
+        insertChangeToPrivateProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR); 
+    } 
+    private static void insertChangeToPrivateProcessor(string strProcessor) {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
@@ -145,7 +205,9 @@ private class ACCT_IndividualAccounts_TEST {
             npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
             npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
+        Test.startTest();
         insert con;
+        Test.stopTest();
         
         Contact[] insertedContacts = [Select FirstName, LastName, AccountId  from Contact where id=:con.id];
         ID accountId = insertedContacts[0].AccountId;
@@ -167,11 +229,13 @@ private class ACCT_IndividualAccounts_TEST {
     */
     private static testMethod void insertOneToOneTriggerOff() {
     	if (strTestOnly != '*' && strTestOnly != 'insertOneToOneTriggerOff') return;
-        insertOneToOneTriggerOffProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
-        insertOneToOneTriggerOffProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);    
+        insertTriggerOffProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
-    
-    private static void insertOneToOneTriggerOffProcessor(string strProcessor) {
+    private static testMethod void insertHHAccountTriggerOff() {
+        if (strTestOnly != '*' && strTestOnly != 'insertHHAccountTriggerOff') return;
+        insertTriggerOffProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);    
+    }    
+    private static void insertTriggerOffProcessor(string strProcessor) {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor,npe01__Disable_Account_Model_Trigger__c=true));
         
@@ -204,7 +268,9 @@ private class ACCT_IndividualAccounts_TEST {
             npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
             npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
+        Test.startTest();
         insert con;
+        Test.stopTest();
         
         Contact[] insertedContacts = [Select FirstName, LastName, AccountId  from Contact where id=:con.id];
 
@@ -274,8 +340,10 @@ private class ACCT_IndividualAccounts_TEST {
         con.LastName=updatedContactLastName;
         con.OtherCity = updatedOtherCity;
         con.AccountId = insertedContacts[0].AccountId;
+        Test.startTest();        
         update con;
-        
+        Test.stopTest();
+                
         Contact[] updatedContacts = [Select FirstName, LastName, AccountId, Account.Name,Account.npe01__One2OneContact__c,MailingStreet,OtherCity,Account.BillingStreet,Account.ShippingCity from Contact where id=:con.id];
         
         //the account should have been named correctly
@@ -315,11 +383,13 @@ private class ACCT_IndividualAccounts_TEST {
     */
     private static testMethod void detachOneToOne() {
     	if (strTestOnly != '*' && strTestOnly != 'detachOneToOne') return;
-        detachOneToOneProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
-        detachOneToOneProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+        detachProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
-    
-    private static void detachOneToOneProcessor(string strProcessor) {
+    private static testMethod void detachHHAccount() {
+        if (strTestOnly != '*' && strTestOnly != 'detachHHAccount') return;
+        detachProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+    private static void detachProcessor(string strProcessor) {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
@@ -341,7 +411,9 @@ private class ACCT_IndividualAccounts_TEST {
         
         con.AccountId = null;
         con.LastName = updatedContactLastName;
+        Test.startTest();
         update con;
+        Test.stopTest();
         
         Contact[] updatedContacts = [Select FirstName, LastName, AccountId,Account.Name,Account.npe01__One2OneContact__c from Contact where id=:con.id];
         
@@ -359,11 +431,13 @@ private class ACCT_IndividualAccounts_TEST {
     */
     private static testMethod void editContactDuringDetachOneToOne() {
     	if (strTestOnly != '*' && strTestOnly != 'editContactDuringDetachOneToOne') return;
-        editContactDuringDetachOneToOneProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
-        editContactDuringDetachOneToOneProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);	
+        editContactDuringDetachProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
-    
-    private static void editContactDuringDetachOneToOneProcessor(string strProcessor) {
+    private static testMethod void editContactDuringDetachHHAccount() {
+        if (strTestOnly != '*' && strTestOnly != 'editContactDuringDetachHHAccount') return;
+        editContactDuringDetachProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);   
+    }    
+    private static void editContactDuringDetachProcessor(string strProcessor) {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
                 
@@ -390,7 +464,9 @@ private class ACCT_IndividualAccounts_TEST {
         con.AccountId = null;
         con.LastName = updatedContactLastName;
         con.MailingStreet = updateContactMailingStreet;
+        Test.startTest();
         update con;
+        Test.stopTest();
         
         Contact[] updatedContacts = [Select FirstName, LastName, AccountId,Account.Name,Account.npe01__One2OneContact__c,MailingStreet,npe01__Organization_Type__c,Account.BillingStreet from Contact where id=:con.id];
         
@@ -421,11 +497,13 @@ private class ACCT_IndividualAccounts_TEST {
     */
     private static testMethod void attachToIndividualAccount() {
     	if (strTestOnly != '*' && strTestOnly != 'attachToIndividualAccount') return;
-        attachToIndividualAccountProcessor(CAO_Constants.BUCKET_PROCESSOR);
-        attachToIndividualAccountProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR); 
+        attachToProcessor(CAO_Constants.BUCKET_PROCESSOR);
     }
-    
-    private static void attachToIndividualAccountProcessor(string strProcessor) {
+    private static testMethod void attachToHHAccount() {
+        if (strTestOnly != '*' && strTestOnly != 'attachToHHAccount') return;
+        attachToProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR); 
+    }    
+    private static void attachToProcessor(string strProcessor) {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
                 
@@ -439,7 +517,9 @@ private class ACCT_IndividualAccounts_TEST {
             npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
             npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
+        Test.startTest();
         insert con;
+        Test.stopTest();
         
         Contact[] insertedContacts = [Select Account.Name,AccountId,npe01__Organization_Type__c from Contact where id=:con.id];
         //the contact should have the right type
@@ -459,11 +539,13 @@ private class ACCT_IndividualAccounts_TEST {
     */
     private static testMethod void detachIndividualAccount() {
     	if (strTestOnly != '*' && strTestOnly != 'detachIndividualAccount') return;
-    	detachIndividualAccountProcessor(CAO_Constants.BUCKET_PROCESSOR);
-        detachIndividualAccountProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    	detachAccountProcessor(CAO_Constants.BUCKET_PROCESSOR);
     }
-    
-    private static void detachIndividualAccountProcessor(string strProcessor) {
+    private static testMethod void detachHHAccount2() {
+        if (strTestOnly != '*' && strTestOnly != 'detachHHAccount2') return;
+        detachAccountProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+    private static void detachAccountProcessor(string strProcessor) {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
                
@@ -484,7 +566,9 @@ private class ACCT_IndividualAccounts_TEST {
         Id AccountId = insertedContacts[0].AccountId;
              
         con.AccountId = null;
+        Test.startTest();
         update con;
+        Test.stopTest();
         
         Contact[] updatedContacts = [Select Lastname,Account.Name,AccountId,npe01__Organization_Type__c from Contact where id=:con.id];
         
@@ -551,7 +635,9 @@ private class ACCT_IndividualAccounts_TEST {
         system.assert(!insertedContacts[0].Account.npe01__SystemIsIndividual__c);
              
         con.AccountId = null;
+        Test.startTest();
         update con;
+        Test.stopTest();
         
         Contact[] updatedContacts = [Select Account.Name,AccountId,Account.npe01__SystemIsIndividual__c,npe01__Organization_Type__c from Contact where id=:con.id];
         
@@ -566,11 +652,13 @@ private class ACCT_IndividualAccounts_TEST {
     */
     private static testMethod void contactAddedToExistingOneToOne() {
     	if (strTestOnly != '*' && strTestOnly != 'contactAddedToExistingOneToOne') return;
-        contactAddedToExistingOneToOneProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
-        contactAddedToExistingOneToOneProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);   
+        contactAddedToExistingProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
-    
-    private static void contactAddedToExistingOneToOneProcessor(string strProcessor) {
+    private static testMethod void contactAddedToExistingHHAccount() {
+        if (strTestOnly != '*' && strTestOnly != 'contactAddedToExistingHHAccount') return;
+        contactAddedToExistingProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);   
+    }    
+    private static void contactAddedToExistingProcessor(string strProcessor) {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
@@ -592,7 +680,9 @@ private class ACCT_IndividualAccounts_TEST {
         
         Contact con2 = new Contact(FirstName='John', LastName='Smith',AccountId=accountId);
         
+        Test.startTest();
         insert con2;
+        Test.stopTest();
         
         Contact[] insertedContact = [Select Account.Name,AccountId,Account.npe01__SystemIsIndividual__c,npe01__Organization_Type__c from Contact where id=:con2.id];
         
@@ -640,7 +730,9 @@ private class ACCT_IndividualAccounts_TEST {
         
         // now update the contact to the existing account from contact 1
         con2.AccountId = accountId;
+        Test.startTest();
         update con2;
+        Test.stopTest();
         
         Contact[] insertedContact = [Select Account.Name,AccountId,Account.npe01__SystemIsIndividual__c,npe01__Organization_Type__c from Contact where id=:con2.id];
         
@@ -653,12 +745,14 @@ private class ACCT_IndividualAccounts_TEST {
     /*********************************************************************************************************
     * @description Update a contact's Lastname in the 1:1 and Household Account models
     */
-    private static testMethod void contactInNormalOrgNameChange() {
-    	if (strTestOnly != '*' && strTestOnly != 'contactInNormalOrgNameChange') return;
+    private static testMethod void contactInNormalOrgNameChangeOneToOne() {
+    	if (strTestOnly != '*' && strTestOnly != 'contactInNormalOrgNameChangeOneToOne') return;
         contactInNormalOrgNameChangeProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
-        contactInNormalOrgNameChangeProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
-    
+    private static testMethod void contactInNormalOrgNameChangeHHAccount() {
+        if (strTestOnly != '*' && strTestOnly != 'contactInNormalOrgNameChangeHHAccount') return;
+        contactInNormalOrgNameChangeProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
     private static void contactInNormalOrgNameChangeProcessor(string strProcessor) {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
@@ -689,8 +783,9 @@ private class ACCT_IndividualAccounts_TEST {
         
         
         Contact con2 = new Contact(id=con.id, LastName='Smith');
-        
+        Test.startTest();        
         update con2;
+        Test.stopTest();
         
         Contact[] updatedContacts = [Select Account.Name,AccountId,Account.npe01__SystemIsIndividual__c,npe01__Organization_Type__c from Contact where id=:con.id];
         
@@ -746,7 +841,9 @@ private class ACCT_IndividualAccounts_TEST {
         system.assert(!insertedContacts[0].Account.npe01__SystemIsIndividual__c);
              
         con.AccountId = null;
+        Test.startTest();
         update con;
+        Test.stopTest();
         
         Contact[] updatedContacts = [Select Account.Name,AccountId,Account.npe01__SystemIsIndividual__c,npe01__Organization_Type__c from Contact where id=:con.id];
         
@@ -757,19 +854,20 @@ private class ACCT_IndividualAccounts_TEST {
     }
     
     /*********************************************************************************************************
-    * @description Delete a Contact and verify its One-to-One or Household Account is deleted.
+    * @description Delete a Contact and verify its One-to-One or Household Account is not deleted.
     */
-     public static testMethod void deleteContactNoOpp() {
-     	if (strTestOnly != '*' && strTestOnly != 'deleteContactNoOpp') return;
+     public static testMethod void deleteContactNoOppOneToOne() {
+     	if (strTestOnly != '*' && strTestOnly != 'deleteContactNoOppOneToOne') return;
         deleteContactNoOppProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
-        deleteContactNoOppProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
      }
-     
+     public static testMethod void deleteContactNoOppHHAccount() {
+        if (strTestOnly != '*' && strTestOnly != 'deleteContactNoOppHHAccount') return;
+        deleteContactNoOppProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+     }     
      public static void deleteContactNoOppProcessor(string strProcessor) {
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
-
         
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
@@ -790,25 +888,29 @@ private class ACCT_IndividualAccounts_TEST {
         
         Contact[] insertedContacts = [Select FirstName, LastName, AccountId  from Contact where id=:contactId];
         Id createdAccountId = insertedContacts[0].AccountId;
-        
+
+        Test.startTest();        
         delete con;
+        Test.stopTest();
         
         insertedContacts = [Select FirstName, LastName, AccountId  from Contact where id=:contactId];
         system.assertEquals(0,insertedContacts.size());
         
         Account[] missingAccount = [select id from Account where id=:createdAccountId];
-        system.assertEquals(0,missingAccount.size());
+        system.assertEquals(1,missingAccount.size());
     }
     
     /*********************************************************************************************************
     * @description Delete a Contact with Opps and verify its One-to-One or Household Account is not deleted.
     */
-    public static testMethod void deleteContactWithOpp() {
-    	if (strTestOnly != '*' && strTestOnly != 'deleteContactWithOpp') return;
+    public static testMethod void deleteContactWithOppOneToOne() {
+    	if (strTestOnly != '*' && strTestOnly != 'deleteContactWithOppOneToOne') return;
         deleteContactWithOppProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
-        deleteContactWithOppProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
-    
+    public static testMethod void deleteContactWithOppHHAccount() {
+        if (strTestOnly != '*' && strTestOnly != 'deleteContactWithOppHHAccount') return;
+        deleteContactWithOppProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }        
     public static void deleteContactWithOppProcessor(string strProcessor) {
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
@@ -843,8 +945,10 @@ private class ACCT_IndividualAccounts_TEST {
             CloseDate=System.today()
         );
         insert opp;
-        
+
+        Test.startTest();        
         delete con;
+        Test.stopTest();
         
         Account[] missingAccount = [select id from Account where id=:createdAccountId];
         system.assertEquals(1,missingAccount.size());
@@ -896,7 +1000,9 @@ private class ACCT_IndividualAccounts_TEST {
         
         Id createdAccountId = insertedContacts[0].AccountId;
             
+        Test.startTest();
         delete con;
+        Test.stopTest();
         
         Account[] missingAccount = [select id from Account where id=:createdAccountId];
         system.assertEquals(1,missingAccount.size());
@@ -904,8 +1010,8 @@ private class ACCT_IndividualAccounts_TEST {
     
 /* TESTING PHONE NUMBER WORKFLOW -------------------------------------------------------
  
-    /// <name> createContactWithPhoneNoPref </name>
-    /// <summary> Test Method for creating a contact with a phone number and no preferences set. </summary>
+    /*********************************************************************************************************
+    * @description Test Method for creating a contact with a phone number and no preferences set. </summary>
     private static testMethod void createContactWithPhoneNoPref()
     {
         //with no other prefs, phone should land in npe01__workphone__c and set npe01__PreferredPhone__c to 'work'.
@@ -923,8 +1029,8 @@ private class ACCT_IndividualAccounts_TEST {
         
     }
     
-    /// <name> createContactWithPhoneNoPrefAlsoHomePhone </name>
-    /// <summary> Test Method for creating a contact with a phone number and a home number. </summary>
+    /*********************************************************************************************************
+    * @description Test Method for creating a contact with a phone number and a home number.
     private static testMethod void createContactWithPhoneNoPrefAlsoHomePhone()
     {
         //with pref set to Home, HomePhone should land in Phone and set npe01__PreferredPhone__c to 'home'.
@@ -944,8 +1050,8 @@ private class ACCT_IndividualAccounts_TEST {
         
     }
     
-    /// <name> createContactWithPhonePrefSet </name>
-    /// <summary> Test Method for creating a contact with a phone number in Phone and the preferred phone set. </summary>
+    /*********************************************************************************************************
+    * @description Test Method for creating a contact with a phone number in Phone and the preferred phone set.
     private static testMethod void createContactWithPhonePrefSet()
     {
         //with pref set to Home, HomePhone should land in Phone and set npe01__PreferredPhone__c to 'home'.
@@ -999,9 +1105,8 @@ private class ACCT_IndividualAccounts_TEST {
         
     }
     
-    /// <name> createContactWithNumberAndPrefSet </name>
-    /// <summary> Test Method for creating a contact with a phone number in the correct field
-    /// and the preferred phone set. </summary>
+    /*********************************************************************************************************
+    * @description Test Method for creating a contact with a phone number in the correct field and the preferred phone set.
     private static testMethod void createContactWithNumberAndPrefSet()
     {
         //with pref set to Home, HomePhone should land in Phone and set npe01__PreferredPhone__c to 'home'.
@@ -1055,9 +1160,8 @@ private class ACCT_IndividualAccounts_TEST {
         
     }
     
-    /// <name> updateContactWithNumberAndPref </name>
-    /// <summary> Test Method for updating a contact with a phone number in the correct field
-    /// and the preferred phone set. </summary>
+    /*********************************************************************************************************
+    * @description Test Method for updating a contact with a phone number in the correct field and the preferred phone set. 
     private static testMethod void updateContactWithNumberAndPref()
     {
         //with pref set to Home, HomePhone should land in Phone and set npe01__PreferredPhone__c to 'home'.
@@ -1121,8 +1225,8 @@ private class ACCT_IndividualAccounts_TEST {
    */
 
 /* TESTING EMAIL WORKFLOW --------------------------------------------------------------
-    /// <name> createContactWithEmailNoPref </name>
-    /// <summary> Test Method for creating a contact with an email and no preferences set. </summary>
+    /*********************************************************************************************************
+    * @description Test Method for creating a contact with an email and no preferences set.
     private static testMethod void createContactWithEmailNoPref()
     {
         //with no other prefs, email should land in npe01__workemail__c and set npe01__Preferred_Email__c to 'work'.
@@ -1140,8 +1244,8 @@ private class ACCT_IndividualAccounts_TEST {
         
     }
     
-    /// <name> createContactWithEmailPersonalPrefAlsoPersonalEmail </name>
-    /// <summary> Test Method for creating a contact with a email and a personal email. </summary>
+    /*********************************************************************************************************
+    * @description Test Method for creating a contact with a email and a personal email. 
     private static testMethod void createContactWithEmailPersonalPrefAlsoPersonalEmail()
     {
         //with pref set to Personal, Personal email should land in email and set npe01__Preferred_Email__c to 'Personal'.
@@ -1160,8 +1264,8 @@ private class ACCT_IndividualAccounts_TEST {
         
     }
     
-    /// <name> createContactWithEmailPrefSet </name>
-    /// <summary> Test Method for creating a contact with an email in email and the preferred email set. </summary>
+    /*********************************************************************************************************
+    * @description Test Method for creating a contact with an email in email and the preferred email set. 
     private static testMethod void createContactWithEmailPrefSet()
     {
         //with pref set to Home, Personal Email should land in email and set npe01__Preferred_Email__c to 'Personal'.
@@ -1203,9 +1307,8 @@ private class ACCT_IndividualAccounts_TEST {
       
     }
     
-    /// <name> createContactWithEmailAndPrefSet </name>
-    /// <summary> Test Method for creating a contact with a email in the correct field
-    /// and the preferred email set. </summary>
+    /*********************************************************************************************************
+    * @description Test Method for creating a contact with a email in the correct field and the preferred email set. 
     private static testMethod void createContactWithEmailAndPrefSet()
     {
         //with pref set to Home, Personal Email should land in email and set npe01__Preferred_Email__c to 'Personal'.
@@ -1248,9 +1351,8 @@ private class ACCT_IndividualAccounts_TEST {
         
     }
     
-    /// <name> updateContactWithEmailAndPref </name>
-    /// <summary> Test Method for updating a contact with a email in the correct field
-    /// and the preferred email set. </summary>
+    /*********************************************************************************************************
+    * @description Test Method for updating a contact with a email in the correct field and the preferred email set. 
     private static testMethod void updateContactWithEmailAndPref()
     {
         //with pref set to Personal, Personal email should land in email and set npe01__Preferred_Email__c to 'Personal'.
@@ -1299,8 +1401,8 @@ private class ACCT_IndividualAccounts_TEST {
 /* TESTING DONATION HISTORY WEBSERVICES ------------------------------------------------*/
 /************************* DEPRECATE IN CUMULUS ***********************************    
 
-    /// <name> getContactDonationHistory </name>
-    /// <summary> Test Method for getContactDonationHistory</summary>
+    /*********************************************************************************************************
+    * @description Test Method for getContactDonationHistory
     private static testMethod void getContactDonationHistory()
     {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
@@ -1327,8 +1429,8 @@ private class ACCT_IndividualAccounts_TEST {
         Decimal sum = ACCT_IndividualAccounts.getContactDonationHistory(con.id);
     }
 
-    /// <name> getContactLastDonation </name>
-    /// <summary> Test Method for getContactLastDonation</summary>
+    /*********************************************************************************************************
+    * @description Test Method for getContactLastDonation
     private static testMethod void getContactLastDonation()
     {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
@@ -1359,9 +1461,8 @@ private class ACCT_IndividualAccounts_TEST {
         
     }
 
-
-/// <name> getContactDonationHistory </name>
-    /// <summary> Test Method for getContactDonationHistory</summary>
+    /*********************************************************************************************************
+    * @description Test Method for getContactDonationHistory
     private static testMethod void getContactDonationHistoryAmount()
     {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
@@ -1392,8 +1493,8 @@ private class ACCT_IndividualAccounts_TEST {
         system.assertEquals(system.label.npe01.DefaultContactTransactionCurrency + '500.00',ext.getContactDonationHistory());
     }
 
-    /// <name> getContactLastDonation </name>
-    /// <summary> Test Method for getContactLastDonation</summary>
+    /*********************************************************************************************************
+    * @description Test Method for getContactLastDonation
     private static testMethod void getContactLastDonationDate()
     {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
@@ -1485,5 +1586,200 @@ private class ACCT_IndividualAccounts_TEST {
             system.assertEquals(newAcc.Name, CAO_Constants.Contact_LASTNAME_FOR_TESTS);
         else if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR)            
             system.assertEquals(newAcc.Name, CAO_Constants.Contact_LASTNAME_FOR_TESTS + ' Household');
+    }
+
+    /*********************************************************************************************************
+    * @description Undelete a contact back to an existing Household Account
+    */
+    private static testMethod void undeleteContactToExistingHH() {
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+
+        Household_Naming_Settings__c hhNamingSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdNamingSettingsForTests(
+            new Household_Naming_Settings__c(
+                Household_Name_Format__c = '{!LastName} Household',
+                Formal_Greeting_Format__c = '{!{!Salutation} {!FirstName}} {!LastName}',
+                Informal_Greeting_Format__c = '{!{!FirstName}}',
+                Name_Connector__c = label.npo02.HouseholdNameConnector,
+                Name_Overrun__c = label.npo02.HouseholdNameOverrun,
+                Contact_Overrun_Count__c = 9,
+                Implementing_Class__c = 'HH_NameSpec'
+            )
+        );
+
+        Contact con = new Contact(
+            FirstName = 'Jane',
+            LastName = 'Smith',
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS,
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        insert con;
+
+        Contact insertedCon = [SELECT Account.Name, AccountId FROM Contact WHERE Id = :con.Id LIMIT 1];
+        Id acctId = insertedCon.AccountId;
+
+        Contact con2 = new Contact(FirstName = 'Johnny', LastName = 'Test', AccountId = null);
+        con2.AccountId = acctId;
+        insert con2;
+
+        Contact insertedCon2 = [SELECT Account.Name, AccountId FROM Contact WHERE Id = :con2.Id LIMIT 1];
+
+        System.assertNotEquals(null, acctId, 'The account should have been automatically created and assigned to the contact');
+        System.assertEquals(acctId, insertedCon2.AccountId, 'The second contact should be assigned to the same account as the first');
+        System.assert(insertedCon2.Account.Name.contains(con.LastName), 'The Account Name should contain the first contacts last name.');
+        System.assert(insertedCon2.Account.Name.contains(con2.LastName), 'The Account Name should contain the second contacts last name.');
+
+        delete insertedCon2;
+
+        List<Contact> insertedContacts = [SELECT Account.Name FROM Contact WHERE AccountId = :acctId];
+        System.assertEquals(1, insertedContacts.size(), 'The second contact should have been deleted, only one should remain.');
+        System.assert(insertedContacts[0].Account.Name.contains(con.LastName), 'The Account Name should still contain the first contacts last name.');
+        System.assert(!insertedContacts[0].Account.Name.contains(con2.LastName), 'The Account Name should no longer contain the first contacts last name after delete.');
+
+        Test.startTest();
+        undelete insertedCon2;
+        Test.stopTest();
+
+        insertedContacts = [SELECT Account.Name FROM Contact WHERE AccountId = :acctId];
+        System.assertEquals(2, insertedContacts.size(), 'The second contact should have been undeleted, both contacts should be there.');
+        System.assert(insertedContacts[0].Account.Name.contains(con.LastName), 'The Account Name should still contain the first contacts last name.');
+        System.assert(insertedContacts[0].Account.Name.contains(con2.LastName), 'The Account Name should contain the first contacts last name after undelete.');
+    }
+
+    /*********************************************************************************************************
+    * @description Delete a HH Contact without Opps and verify it can be undeleted.
+    */
+    public static testMethod void undeleteHHContactNoOpp() {
+
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+
+        Contact con = new Contact(
+            FirstName = 'Johnny',
+            LastName = 'Test',
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS,
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        insert con;
+
+        delete con;
+
+        Test.startTest();
+        try {
+            undelete con;
+        } catch (Exception e) {
+            System.assert(false, 'The contact is no longer in the recycle bin and cannot be undeleted.');
+        }
+        Test.stopTest();
+    }
+
+    /*********************************************************************************************************
+    * @description Delete a HH Contact with opps and verify account name is updated after undelete.
+    */
+    public static testMethod void undeleteHHContactWithOpp() {
+
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+
+        Household_Naming_Settings__c hhNamingSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdNamingSettingsForTests(
+            new Household_Naming_Settings__c(
+                Household_Name_Format__c = '{!LastName} Household',
+                Formal_Greeting_Format__c = '{!{!Salutation} {!FirstName}} {!LastName}',
+                Informal_Greeting_Format__c = '{!{!FirstName}}',
+                Name_Connector__c = label.npo02.HouseholdNameConnector,
+                Name_Overrun__c = label.npo02.HouseholdNameOverrun,
+                Contact_Overrun_Count__c = 9,
+                Implementing_Class__c = 'HH_NameSpec'
+            )
+        );
+
+        Contact con = new Contact(
+            FirstName = 'Johnny',
+            LastName = 'Test',
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS,
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        insert con;
+
+        Contact insertedCon = [SELECT AccountId, Account.Name FROM Contact WHERE Id = :con.Id LIMIT 1];
+        Id acctId = insertedCon.AccountId;
+        System.assert(insertedCon.Account.Name.contains(con.LastName), 'The Account Name should contain the contacts last name.');
+
+        //add other contact to household and associate opportunity with that contact to avoid cascade deletion of opportunity
+        Contact othercon = new Contact(accountId = acctId, LastName='other');
+        insert othercon;
+
+        Opportunity opp = new Opportunity(
+            Amount = 500,
+            AccountId = acctId,
+            Name = 'test',
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            CloseDate = System.today(),
+            Primary_Contact__c = othercon.id
+        );
+        insert opp;
+
+        delete con;
+
+        List<Error__c> errors = [SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c FROM Error__c];
+        System.assertEquals(0, errors.size(), errors);
+
+        Account anonymousAcct = [SELECT Id, Name, (SELECT Id FROM Contacts) FROM Account WHERE Id = :acctId LIMIT 1];
+        System.assert(!anonymousAcct.Name.contains(con.LastName), 'The Account Name should no longer contain the contacts last name.');
+
+        Test.startTest();
+        undelete con;
+        Test.stopTest();
+
+        Contact undeletedCon = [SELECT AccountId, Account.Name FROM Contact WHERE Id = :con.Id LIMIT 1];
+        System.assert(undeletedCon.Account.Name.contains(con.LastName), 'The Account Name should contain the contacts last name again.');
+        System.assertEquals(acctId, undeletedCon.AccountId, 'The contact should be returned to the same account.');
+    }
+
+    /*********************************************************************************************************
+    * @description Update a household account's record type, verify system fields are unset.
+    */
+    public static testMethod void updateHHAccountRecType() {
+
+        List<RecordType> rectypes = [SELECT Id FROM RecordType WHERE SobjectType = 'Account' AND IsActive = true];
+        if (rectypes.size() < 2) {
+            return;
+        }
+
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                npe01__HH_Account_RecordTypeID__c = rectypes[0].id
+            )
+        );
+
+        Contact con = new Contact(
+            LastName = 'Test'
+        );
+        insert con;
+
+        Contact queryCon = [SELECT AccountId FROM Contact WHERE Id = :con.id];
+
+        Account queryAccount = [SELECT Id, RecordTypeId, npe01__SYSTEMISINDIVIDUAL__c, npe01__SYSTEM_AccountType__c FROM Account WHERE Id = :queryCon.AccountId];
+
+        System.assertEquals(rectypes[0].id, queryAccount.RecordTypeId, 'RecType should be set to hh account rectype defined in settings.');
+        System.assertEquals(true, queryAccount.npe01__SYSTEMISINDIVIDUAL__c, 'IsIndividual system field should be set for household account.');
+        System.assertEquals(CAO_Constants.HH_ACCOUNT_TYPE, queryAccount.npe01__SYSTEM_AccountType__c, 'Account Type system field should be set for household account.');
+
+        Test.startTest();
+        queryAccount.RecordTypeId = rectypes[1].id;
+        update queryAccount;
+        Test.stopTest();
+
+        queryAccount = [SELECT Id, RecordTypeId, npe01__SYSTEMISINDIVIDUAL__c, npe01__SYSTEM_AccountType__c FROM Account WHERE Id = :queryCon.AccountId];
+
+        System.assertEquals(false, queryAccount.npe01__SYSTEMISINDIVIDUAL__c, 'Individual system field should not be set for household account.');
+        System.assertNotEquals(CAO_Constants.HH_ACCOUNT_TYPE, queryAccount.npe01__SYSTEM_AccountType__c, 'Account Type system field should not be set for household account.');
     }
 }

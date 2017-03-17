@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2013, Salesforce.com Foundation
+    Copyright (c) 2013, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
 
@@ -27,12 +27,22 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
+/**
+ * @author Salesforce.org
+ * @date 2014
+ * @group TDTM
+ * @group-content ../../ApexDocContent/TDTM.htm
+ * @description Test class for TDTM_Runnable
+ *
+***/
 @isTest
 public with sharing class TDTM_Runnable_TEST {
 
     private static string strTestOnly = '*';
     
-    /** This test verifies that the runFuture method of the TDTM_Runnable class works properly **/
+    /*************************************************************************** 
+    * @description This test verifies that the runFuture method of the TDTM_Runnable class works properly 
+    **/
     public static testmethod void testAsync() {
     	if (strTestOnly != '*' && strTestOnly != 'testAsync') return;
     	
@@ -56,9 +66,11 @@ public with sharing class TDTM_Runnable_TEST {
         System.assertEquals('New Acc Name', acc.Name);
     }
     
-    /** Test we do not get the "Cannot have more than 10 chunks in a single operation. Please rearrange the data to 
-    reduce chunking" error. 
-    If you comment out the first line in the method groupSObjects of TDTM_Runnable this test fails.**/
+    /*************************************************************************** 
+    * @description Test we do not get the "Cannot have more than 10 chunks in a single operation. Please rearrange the data to 
+    * reduce chunking" error. 
+    * If you comment out the first line in the method groupSObjects of TDTM_Runnable this test fails.
+    **/
     public static testmethod void nochunking() {
     	if (strTestOnly != '*' && strTestOnly != 'nochunking') return;
     	
@@ -81,6 +93,8 @@ public with sharing class TDTM_Runnable_TEST {
 		Test.stopTest();
 		
 		Integer errors = [select count() from Error__c];
+		list<Error__c> listErr = [select Full_Message__c, Object_Type__c, Record_URL__c from Error__c];
+		system.debug('**** listErr: ' + listErr);
 		System.assertEquals(0, errors);
     }
 }

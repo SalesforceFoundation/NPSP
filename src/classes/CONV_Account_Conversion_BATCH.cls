@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
 
@@ -28,12 +28,12 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
 * @group Account Model Converter
 * @description Account model conversion utility main class. This class holds all conversion logic
 */
-global with sharing class CONV_Account_Conversion_BATCH implements Database.Batchable<SObject>{
+global class CONV_Account_Conversion_BATCH implements Database.Batchable<SObject>{
 
     /*******************************************************************************************************
     * @description Query string set in the constructor
@@ -47,6 +47,10 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
     * @description Field used to store the old Household Id on the Account
     */
     public String HouseholdIdField {get;set;}
+    /*******************************************************************************************************
+    * @description Audit fields to write on created accounts if enabled by salesforce support
+    */
+    public set<string> auditFields = new set<string>{'CreatedById', 'CreatedDate', 'LastModifiedById', 'LastModifiedDate'};
 
     /*******************************************************************************************************
     * @description Constructs the class, sets the properties
@@ -66,15 +70,6 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
     * @return database.Querylocator
     */
     global database.Querylocator start(Database.BatchableContext bc) {
-
-        //turn off all existing TDTM-related trigger operations to avoid duplicative processing
-        List<Trigger_Handler__c> updateTriggerHandlers = new List<Trigger_Handler__c>();
-        for (Trigger_Handler__c t : [select Active__c from Trigger_Handler__c]){
-            t.Active__c = false;
-            updateTriggerHandlers.add(t);
-        }
-        update updateTriggerHandlers;
-
         return Database.getQueryLocator(query);
     }
 
@@ -84,6 +79,9 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
     * @param result Results to be processed from the query
     */
     global void execute(Database.BatchableContext bc, Sobject[] result) {
+    
+        //turn off all existing TDTM-related trigger operations to avoid duplicative processing
+        TDTM_TriggerHandler.disableTDTM = true;
 
         SavePoint sp = Database.setSavepoint();
 
@@ -101,7 +99,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
 
             consForUpdate = [select AccountId, Account.RecordTypeId, Account.Type, Account.npe01__SYSTEM_AccountType__c, Account.npe01__SYSTEMIsIndividual__c, Name, 
                             npo02__Household__c, npo02__TotalOppAmount__c, npe01__Primary_Address_Type__c, MailingStreet, MailingCity, MailingState, MailingCountry, 
-                            MailingPostalCode from Contact where npo02__Household__c IN :hhscope ORDER BY CreatedDate];
+                            MailingPostalCode, Primary_Affiliation__c from Contact where npo02__Household__c IN :hhscope ORDER BY CreatedDate];
 
             /********************************************************************/
             /** Generating a new Household Account for each Household in scope **/
@@ -153,6 +151,14 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                     addressedHouseholds.put(hh.Id, hh);
                 }
 
+                //if setting audit fields on insert has been enabled by salesforce support, copy over household audit fields to the account
+                Map<String, Schema.SObjectField> mapAudit = Schema.SObjectType.Account.fields.getMap();
+                for (string auditField : auditFields) {
+                    if (mapAudit.get(auditField).getDescribe().isCreateable()) {
+                        a.put(auditField, hh.get(auditField));
+                    }
+                }
+
                 hh2Account.put(hh.id, a);
             }
 
@@ -168,9 +174,16 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
             /***********************************************************************/
             /** Attaching current Household members to the new Household Account  **/
             /***********************************************************************/
-
+            
             Map<Id, npe5__Affiliation__c> conAffMap = new Map<Id, npe5__Affiliation__c>();
             Map<Id, Integer> hhMemberCount = new Map<Id, Integer>();
+            Map<string, npe5__Affiliation__c> mapKeyAff = new Map<string, npe5__Affiliation__c>();
+            
+            for (npe5__Affiliation__c aff : [select Id, npe5__Status__c, npe5__Primary__c, npe5__Organization__c, npe5__Contact__c
+                    from npe5__Affiliation__c where npe5__Contact__c in :consForUpdate]) {
+                string strKey = aff.npe5__Contact__c + ':' + aff.npe5__Organization__c;
+                mapKeyAff.put(strKey, aff);
+            }
 
             for (Contact c : consForUpdate){
                 Account a = hh2Account.get(c.npo02__Household__c);
@@ -185,9 +198,22 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                 }
 
                 //generate affiliations for any non 1x1/Individual accounts associated to this Contact
+                //or if an existing affiliation already exists, mark it primary.
+                //also set the contact's Primary Affiliation field.
                 if (!c.Account.npe01__SYSTEMIsIndividual__c){
-                    npe5__Affiliation__c aff = new npe5__Affiliation__c(npe5__Status__c = 'Current', npe5__Primary__c = true, npe5__Organization__c = c.AccountId, npe5__Contact__c = c.Id);
-                    conAffMap.put(c.Id, aff);
+                    string strKey = c.Id + ':' + c.AccountId;
+                    npe5__Affiliation__c aff = mapKeyAff.get(strKey);
+                    if (aff == null) {                    
+                        aff = new npe5__Affiliation__c(npe5__Status__c = 'Current', npe5__Primary__c = true, npe5__Organization__c = c.AccountId, npe5__Contact__c = c.Id);
+                        mapKeyAff.put(strKey, aff);
+                    }
+                    if (c.Primary_Affiliation__c == null) {
+                        c.Primary_Affiliation__c = c.AccountId;
+                        aff.npe5__Primary__c = true;
+                        aff.npe5__Status__c = 'Current';
+                    }
+                    if (conAffMap.get(c.Id) == null)
+                        conAffMap.put(c.Id, aff);
                 }
 
                 c.AccountId = a.Id;
@@ -208,12 +234,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
 
             //for any contacts that have an affiliation, update the primary affiliation for the contact
             if (!conAffMap.isEmpty()){
-                Database.insert(conAffMap.values(), true);
-                for (Contact c : consForUpdate){
-                    if (conAffMap.containsKey(c.Id)){
-                        c.Primary_Affiliation__c = conAffMap.get(c.Id).npe5__Organization__c;
-                    }
-                }
+                Database.upsert(conAffMap.values(), true);
             }
 
             for (Account a : hh2Account.values()){
@@ -242,7 +263,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
             /******************************************************************************/
 
             List<Task> tasksForUpdate = new List<Task>();
-            tasksForUpdate = [select WhatId from Task where WhatId IN :hhscope];
+            tasksForUpdate = database.query('select WhatId from Task where WhatId IN :hhscope');
 
             for (Task t : tasksForUpdate)
                 t.WhatId = hh2Account.get(t.WhatId).Id;
@@ -257,225 +278,228 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
             Map<Id, Address__c> addressesForInsert = new Map<Id, Address__c>();
             List<Account> hhAccountsForUpdate = new List<Account>();
 
-            //insert addresses for any household accounts that have one
-            for (Account a : hh2Account.values()){
+            npe01__Contacts_And_Orgs_Settings__c contactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
+            if (!contactsSettings.Household_Account_Addresses_Disabled__c) {
+                for (Id accountId : consWithNewHousehold.keySet()){
+                    List<Contact> conList = consWithNewHousehold.get(accountId);
 
-                if (a.BillingStreet != null || a.BillingState != null || a.BillingPostalCode != null || a.BillingCountry != null || a.BillingCity != null){
-                    Address__c ad = new Address__c(MailingStreet__c = a.BillingStreet,
-                        MailingState__c = a.BillingState,
-                        MailingPostalCode__c = a.BillingPostalCode,
-                        MailingCountry__c = a.BillingCountry,
-                        MailingCity__c = a.BillingCity,
-                        Default_Address__c = true,
-                        Address_Type__c = 'Home',
-                        Household_Account__c = a.Id);
-                    ADDR_Addresses_TDTM.handleMultilineStreet(ad);
+                    //if its the only Contact decide if we need to use the household account address or the contacts...
+                    if (conList != null && conList.size() == 1){
 
-                    addressesForInsert.put(a.Id, ad);
-                }
-            }
+                        ContactAddress cadd = new ContactAddress(conList[0]);
+                        Account myHHAccount = con2Account.get(conList[0].Id);
+                        
+                        //first, create an Address object if the original household had an address.
+                        if (addressedHouseholds.containsKey(conList[0].npo02__Household__c)) {
+                            Address__c a = new Address__c(
+                                MailingStreet__c = myHHAccount.BillingStreet,
+                                MailingCity__c = myHHAccount.BillingCity,
+                                MailingState__c = myHHAccount.BillingState,
+                                MailingPostalCode__c = myHHAccount.BillingPostalCode,
+                                MailingCountry__c = myHHAccount.BillingCountry,
+                                Default_Address__c = true,
+                                Address_Type__c = 'Home',
+                                Household_Account__c = myHHAccount.Id
+                                );
+                            ADDR_Addresses_TDTM.handleMultilineStreet(a);
+                            addressesForInsert.put(myHHAccount.Id, a);                                            
+                        }
 
-            for (Id accountId : consWithNewHousehold.keySet()){
-                List<Contact> conList = consWithNewHousehold.get(accountId);
+                        //we have a household address, but the contact does not have one assign the values to the contact
+                        //the address lookup will be populated later via the addressesForInsert based on the accountId
+                        if (addressedHouseholds.containsKey(conList[0].npo02__Household__c) && !cadd.hasAddress()){
+                            conList[0].MailingCity = myHHAccount.BillingCity;
+                            conList[0].MailingState = myHHAccount.BillingState;
+                            conList[0].MailingPostalCode = myHHAccount.BillingPostalCode;
+                            conList[0].MailingStreet = myHHAccount.BillingStreet;
+                            conList[0].MailingCountry = myHHAccount.BillingCountry;
+                            conList[0].npe01__Primary_Address_Type__c = 'Home';
+                            consForUpdate.add(conList[0]);
+                        }
 
-                //if its the only Contact decide if we need to use the household account address or the contacts...
-                if (conList != null && conList.size() == 1){
+                        //we have a household address and the contact has one
+                        else if (addressedHouseholds.containsKey(conList[0].npo02__Household__c) && cadd.hasAddress()){
+                            //if they're the same, do nothing, otherwise create a new contact address
+                            if (myHHAccount.BillingCity != cadd.MailingCity ||
+                                myHHAccount.BillingCountry != cadd.MailingCountry ||
+                                myHHAccount.BillingPostalCode != cadd.MailingZip ||
+                                myHHAccount.BillingState != cadd.MailingState ||
+                                myHHAccount.BillingStreet != cadd.MailingStreet){
 
-                    ContactAddress cadd = new ContactAddress(conList[0]);
-                    Account myHHAccount = con2Account.get(conList[0].Id);
+                                Address__c a = new Address__c(MailingStreet__c = cadd.MailingStreet,
+                                    MailingState__c = cadd.MailingState,
+                                    MailingPostalCode__c = cadd.MailingZip,
+                                    MailingCountry__c = cadd.MailingCountry,
+                                    MailingCity__c = cadd.MailingCity,
+                                    Default_Address__c = true,
+                                    Address_Type__c = cadd.AddressType,
+                                    Household_Account__c = accountId);
+                                ADDR_Addresses_TDTM.handleMultilineStreet(a);
+                                addressesForInsert.put(conList[0].Id, a);
+                            }
+                        }
 
-                    //we have a household address, but the contact does not have one assign the values to the contact
-                    //the address lookup will be populated later via the addressesForInsert based on the accountId
-                    if (addressedHouseholds.containsKey(conList[0].npo02__Household__c) && !cadd.hasAddress()){
-                        conList[0].MailingCity = myHHAccount.BillingCity;
-                        conList[0].MailingState = myHHAccount.BillingState;
-                        conList[0].MailingPostalCode = myHHAccount.BillingPostalCode;
-                        conList[0].MailingStreet = myHHAccount.BillingStreet;
-                        conList[0].MailingCountry = myHHAccount.BillingCountry;
-                        consForUpdate.add(conList[0]);
-                    }
-
-                    //we have a household address and the contact has one
-                    else if (addressedHouseholds.containsKey(conList[0].npo02__Household__c) && cadd.hasAddress()){
-                        //if they're the same, do nothing, otherwise create a new contact address
-                        if (myHHAccount.BillingCity != cadd.MailingCity ||
-                            myHHAccount.BillingCountry != cadd.MailingCountry ||
-                            myHHAccount.BillingPostalCode != cadd.MailingZip ||
-                            myHHAccount.BillingState != cadd.MailingState ||
-                            myHHAccount.BillingStreet != cadd.MailingStreet){
-
+                        //we do not have a household address, but the contact has one
+                        //use the contact's address as the default and do not set the override for the
+                        //contact
+                        else if (!addressedHouseholds.containsKey(conList[0].npo02__Household__c) && cadd.hasAddress()){
                             Address__c a = new Address__c(MailingStreet__c = cadd.MailingStreet,
                                 MailingState__c = cadd.MailingState,
                                 MailingPostalCode__c = cadd.MailingZip,
                                 MailingCountry__c = cadd.MailingCountry,
                                 MailingCity__c = cadd.MailingCity,
                                 Default_Address__c = true,
-                                Address_Type__c = conList[0].npe01__Primary_Address_Type__c,
+                                Address_Type__c = cadd.AddressType,
                                 Household_Account__c = accountId);
                             ADDR_Addresses_TDTM.handleMultilineStreet(a);
+                            addressesForInsert.put(AccountId, a);
 
-                            addressesForInsert.put(conList[0].Id, a);
+                            myHHAccount.BillingStreet = cadd.MailingStreet;
+                            myHHAccount.BillingState = cadd.MailingState;
+                            myHHAccount.BillingPostalCode = cadd.MailingZip;
+                            myHHAccount.BillingCountry = cadd.MailingCountry;
+                            myHHAccount.BillingCity = cadd.MailingCity;
+                            hhAccountsForUpdate.add(myHHAccount);
                         }
                     }
 
-                    //we do not have a household address, but the contact has one
-                    //use the contact's address as the default and do not set the override for the
-                    //contact
-                    else if (!addressedHouseholds.containsKey(conList[0].npo02__Household__c) && cadd.hasAddress()){
-                        Address__c a = new Address__c(MailingStreet__c = cadd.MailingStreet,
-                            MailingState__c = cadd.MailingState,
-                            MailingPostalCode__c = cadd.MailingZip,
-                            MailingCountry__c = cadd.MailingCountry,
-                            MailingCity__c = cadd.MailingCity,
-                            Default_Address__c = true,
-                            Address_Type__c = conList[0].npe01__Primary_Address_Type__c,
-                            Household_Account__c = accountId);
-                        ADDR_Addresses_TDTM.handleMultilineStreet(a);
-                        addressesForInsert.put(AccountId, a);
+                    //multiple contacts
+                    else if (conList != null && conList.size() > 1){
 
-                        myHHAccount.BillingStreet = cadd.MailingStreet;
-                        myHHAccount.BillingState = cadd.MailingState;
-                        myHHAccount.BillingPostalCode = cadd.MailingZip;
-                        myHHAccount.BillingCountry = cadd.MailingCountry;
-                        myHHAccount.BillingCity = cadd.MailingCity;
-                        hhAccountsForUpdate.add(myHHAccount);
-                    }
-                }
+                        Map<Contact, ContactAddress> HHaddresses = new Map<Contact, ContactAddress>();
+                        Map<String, Integer> addressFrequency = new Map<String, Integer>();
+                        Map<String, Double> addressHighestGiver = new Map<String, Double>();
+                        Map<String, ContactAddress> uniqueContactAddress = new Map<String, ContactAddress>();
 
-                //multiple contacts
-                else if (conList != null && conList.size() > 1){
+                        //build the list of new address__c objects that are present and grab some stats to
+                        //determine the default address.  First frequency, then total giving amount
+                        for (Contact c : conList){
+                            ContactAddress cadd = new ContactAddress(c);
 
-                    Map<Contact, ContactAddress> HHaddresses = new Map<Contact, ContactAddress>();
-                    Map<String, Integer> addressFrequency = new Map<String, Integer>();
-                    Map<String, Double> addressHighestGiver = new Map<String, Double>();
-                    Map<String, ContactAddress> uniqueContactAddress = new Map<String, ContactAddress>();
-
-                    //build the list of new address__c objects that are present and grab some stats to
-                    //determine the default address.  First frequency, then total giving amount
-                    for (Contact c : conList){
-                        ContactAddress cadd = new ContactAddress(c);
-
-                        //if this contact has an address and the new household does not yet...
-                        if (cadd.hasAddress() && !addressesForInsert.containsKey(c.AccountId)){
-                            HHaddresses.put(c, cadd);
-                            uniqueContactAddress.put(cadd.getMD5(), cadd);
-
-                            if (!addressFrequency.containsKey(cadd.getMD5()))
-                                addressFrequency.put(cadd.getMD5(),1);
-                            else{
-                                Integer addrCount = addressFrequency.get(cadd.getMd5());
-                                addrCount++;
-                                addressFrequency.put(cadd.getMD5(), addrCount);
-                            }
-
-                            if (!addressHighestGiver.containsKey(cadd.getMD5()))
-                                addressHighestGiver.put(cadd.getMD5(), c.npo02__TotalOppAmount__c);
-                            else{
-                                Double OppTotal = addressHighestGiver.get(cadd.getMD5());
-                                if (c.npo02__TotalOppAmount__c > OppTotal)
-                                    addressHighestGiver.put(cadd.getMD5(), c.npo02__TotalOppAmount__c);
-                           }
-                        }
-                        //if this contact has an address and the household does as well...
-                        else if (cadd.hasAddress() && addressesForInsert.containsKey(c.AccountId)){
-                            //if they're not the same address
-                            if (!cadd.isSameAddress(addressesForInsert.get(c.AccountId))){
+                            //if this contact has an address and the new household does not yet...
+                            if (cadd.hasAddress() && !addressesForInsert.containsKey(c.AccountId)){
                                 HHaddresses.put(c, cadd);
+                                uniqueContactAddress.put(cadd.getMD5(), cadd);
+
+                                if (!addressFrequency.containsKey(cadd.getMD5()))
+                                    addressFrequency.put(cadd.getMD5(),1);
+                                else{
+                                    Integer addrCount = addressFrequency.get(cadd.getMd5());
+                                    addrCount++;
+                                    addressFrequency.put(cadd.getMD5(), addrCount);
+                                }
+
+                                if (!addressHighestGiver.containsKey(cadd.getMD5()))
+                                    addressHighestGiver.put(cadd.getMD5(), c.npo02__TotalOppAmount__c);
+                                else{
+                                    Double OppTotal = addressHighestGiver.get(cadd.getMD5());
+                                    if (c.npo02__TotalOppAmount__c > OppTotal)
+                                        addressHighestGiver.put(cadd.getMD5(), c.npo02__TotalOppAmount__c);
+                               }
                             }
-                        }
-                        else
-                            HHaddresses.put(c, null);
-                    }//end conlist loop
-
-                    //loop through the unique addresses create address objects and determine the master address
-                    Boolean hasDefaultAddr = false;
-                    Integer addresscount = uniqueContactAddress.keySet().size();
-                    Integer counter = 0;
-                    String masteraddresshash = null;
-
-                    for (String MD5Hash : uniqueContactAddress.keySet()){
-                        ContactAddress cadd = uniqueContactAddress.get(MD5Hash);
-                        counter ++;
-
-                        //is this the top address in this household?
-                        if (!hasDefaultAddr){
-                            //first try address frequency
-                            Integer addCount = addressFrequency.get(MD5Hash);
-                            for (Integer i : addressFrequency.values()){
-                                if(addCount > i)
-                                    hasDefaultAddr = true;
-                                else
-                                    hasDefaultAddr = false;
+                            //if this contact has an address and the household does as well...
+                            else if (cadd.hasAddress() && addressesForInsert.containsKey(c.AccountId)){
+                                //if they're not the same address
+                                if (!cadd.isSameAddress(addressesForInsert.get(c.AccountId))){
+                                    HHaddresses.put(c, cadd);
+                                }
                             }
-                            //if we can't determine based on the frequency, try the largest giver
-                            if(!hasDefaultAddr){
-                                Double giverAmount = addressHighestGiver.get(MD5Hash);
-                                for (Double d : addressHighestGiver.values()){
-                                    if (giverAmount > d)
+                            else
+                                HHaddresses.put(c, null);
+                        }//end conlist loop
+
+                        //loop through the unique addresses create address objects and determine the master address
+                        Boolean hasDefaultAddr = false;
+                        Integer addresscount = uniqueContactAddress.keySet().size();
+                        Integer counter = 0;
+                        String masteraddresshash = null;
+
+                        for (String MD5Hash : uniqueContactAddress.keySet()){
+                            ContactAddress cadd = uniqueContactAddress.get(MD5Hash);
+                            counter ++;
+
+                            //is this the top address in this household?
+                            if (!hasDefaultAddr){
+                                //first try address frequency
+                                Integer addCount = addressFrequency.get(MD5Hash);
+                                for (Integer i : addressFrequency.values()){
+                                    if(addCount > i)
                                         hasDefaultAddr = true;
                                     else
                                         hasDefaultAddr = false;
                                 }
+                                //if we can't determine based on the frequency, try the largest giver
+                                if(!hasDefaultAddr){
+                                    Double giverAmount = addressHighestGiver.get(MD5Hash);
+                                    for (Double d : addressHighestGiver.values()){
+                                        if (giverAmount > d)
+                                            hasDefaultAddr = true;
+                                        else
+                                            hasDefaultAddr = false;
+                                    }
+                                }
+                            }
+
+                            //finally, if this is the last address adn we still don't have a default, use this one
+                            if(!hasDefaultAddr && counter == addresscount)
+                                hasDefaultAddr = true;
+
+                            // save our master address
+                            if (hasDefaultAddr && masteraddresshash == null)
+                                masteraddresshash = MD5Hash;
+
+                            Address__c a = new Address__c(
+                                                MailingStreet__c = cadd.MailingStreet,
+                                                MailingState__c = cadd.MailingState,
+                                                MailingPostalCode__c = cadd.MailingZip,
+                                                MailingCountry__c = cadd.MailingCountry,
+                                                MailingCity__c = cadd.MailingCity,
+                                                Default_Address__c = (masteraddresshash == MD5Hash ? true : false),
+                                                Address_Type__c = cadd.AddressType,
+                                                Household_Account__c = cadd.contact.AccountId
+                                                );
+                            ADDR_Addresses_TDTM.handleMultilineStreet(a);
+
+                            if (masteraddresshash == MD5Hash){
+                                addressesForInsert.put(cadd.AccountId, a);
+                                UTIL_Debug.debug('****DJH default address: ' + a);
+                            }
+                            else {
+                                addressesForInsert.put(cadd.ConId, a);
+                                UTIL_Debug.debug('****DJH not default address: ' + a);
                             }
                         }
 
-                        //finally, if this is the last address adn we still don't have a default, use this one
-                        if(!hasDefaultAddr && counter == addresscount)
-                            hasDefaultAddr = true;
+                        //set the household address fields to the default address values
+                        ContactAddress masteraddress = uniqueContactAddress.get(masteraddresshash);
 
-                        // save our master address
-                        if (hasDefaultAddr && masteraddresshash == null)
-                            masteraddresshash = MD5Hash;
-
-                        Address__c a = new Address__c(
-                                            MailingStreet__c = cadd.MailingStreet,
-                                            MailingState__c = cadd.MailingState,
-                                            MailingPostalCode__c = cadd.MailingZip,
-                                            MailingCountry__c = cadd.MailingCountry,
-                                            MailingCity__c = cadd.MailingCity,
-                                            Default_Address__c = (masteraddresshash == MD5Hash ? true : false),
-                                            Address_Type__c = cadd.contact.npe01__Primary_Address_Type__c,
-                                            Household_Account__c = cadd.contact.AccountId
-                                            );
-                        ADDR_Addresses_TDTM.handleMultilineStreet(a);
-
-                        if (masteraddresshash == MD5Hash){
-                            addressesForInsert.put(cadd.AccountId, a);
-                            UTIL_Debug.debug('****DJH default address: ' + a);
+                        if (masteraddress != null && masteraddress.hasAddress()){
+                            Account a = con2Account.get(masteraddress.ConId);
+                            a.BillingStreet = masteraddress.MailingStreet;
+                            a.BillingCity = masteraddress.MailingCity;
+                            a.BillingPostalCode = masteraddress.MailingZip;
+                            a.BillingCountry = masteraddress.MailingCountry;
+                            a.BillingState = masteraddress.MailingState;
+                            hhAccountsForUpdate.add(a);
                         }
-                        else {
-                            addressesForInsert.put(cadd.ConId, a);
-                            UTIL_Debug.debug('****DJH not default address: ' + a);
+
+                        //set any non-addressed contacts to the default address
+                        for (Contact c : HHaddresses.keySet()){
+                            ContactAddress ca = HHAddresses.get(c);
+                            if ((ca != null && !ca.hasAddress()) && (masteraddress != null && masteraddress.hasAddress())){
+                                c.MailingStreet = masteraddress.MailingStreet;
+                                c.MailingState = masteraddress.MailingState;
+                                c.MailingPostalCode = masteraddress.MailingZip;
+                                c.MailingCountry = masteraddress.MailingCountry;
+                                c.MailingCity = masteraddress.MailingCity;
+                                c.npe01__Primary_Address_Type__c = masteraddress.AddressType;
+                                consForUpdate.add(c);
+                            }
                         }
-                    }
-
-                    //set the household address fields to the default address values
-                    ContactAddress masteraddress = uniqueContactAddress.get(masteraddresshash);
-
-                    if (masteraddress != null && masteraddress.hasAddress()){
-                        Account a = con2Account.get(masteraddress.ConId);
-                        a.BillingStreet = masteraddress.MailingStreet;
-                        a.BillingCity = masteraddress.MailingCity;
-                        a.BillingPostalCode = masteraddress.MailingZip;
-                        a.BillingCountry = masteraddress.MailingCountry;
-                        a.BillingState = masteraddress.MailingState;
-                        hhAccountsForUpdate.add(a);
-                    }
-
-                    //set any non-addressed contacts to the default address
-                    for (Contact c : HHaddresses.keySet()){
-                        ContactAddress ca = HHAddresses.get(c);
-                        if ((ca != null && !ca.hasAddress()) && (masteraddress != null && masteraddress.hasAddress())){
-                            c.MailingStreet = masteraddress.MailingStreet;
-                            c.MailingState = masteraddress.MailingState;
-                            c.MailingPostalCode = masteraddress.MailingZip;
-                            c.MailingCountry = masteraddress.MailingCountry;
-                            c.MailingCity = masteraddress.MailingCity;
-                            consForUpdate.add(c);
-                        }
-                    }
-                }//close else
-            }//close for household
+                    }//close for multiple contacts
+                }//close for household
+            }//close for hh account addresses disabled
+            
 
             if (consForUpdate.size() > 0) Database.update(consForUpdate, true);
             if (addressesForInsert.values().size() > 0) Database.insert(addressesForInsert.values(), true);
@@ -510,17 +534,19 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                 }
 
                 //setting lookup address and overrides
-                for (Contact c : conList){
-                    //this contact address is not the master address, associate contact with other address and set override
-                    if (addressesForInsert.containsKey(c.Id)){
-                        c.Current_Address__c = addressesForInsert.get(c.Id).Id;
-                        c.is_Address_Override__c = true;
-                        consForUpdate.add(c);
-                    }
-                    //This Contact ID is not in the 'unique address' list, so set it to the hh address
-                    else if (addressesForInsert.containsKey(accountId)){
-                        c.Current_Address__c = addressesForInsert.get(accountId).Id;
-                        consForUpdate.add(c);
+                if (!contactsSettings.Household_Account_Addresses_Disabled__c) {
+                    for (Contact c : conList){
+                        //this contact address is not the master address, associate contact with other address and set override
+                        if (addressesForInsert.containsKey(c.Id)){
+                            c.Current_Address__c = addressesForInsert.get(c.Id).Id;
+                            c.is_Address_Override__c = true;
+                            consForUpdate.add(c);
+                        }
+                        //This Contact ID is not in the 'unique address' list, so set it to the hh address
+                        else if (addressesForInsert.containsKey(accountId)){
+                            c.Current_Address__c = addressesForInsert.get(accountId).Id;
+                            consForUpdate.add(c);
+                        }
                     }
                 }
             }
@@ -532,11 +558,17 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         //rollback the entire transaction on any failure, DML or otherwise
         }catch (Exception e){
             Database.rollback(sp);
+
+            //restore the trigger handlers
+            TDTM_TriggerHandler.disableTDTM = false;
+            
             ERR_Handler.processError(e, ERR_Handler_API.Context.CONV);
             //crash the transaction
             throw new AccountModelConversionException(e.getMessage());
         }
 
+        //restore the trigger handlers
+        TDTM_TriggerHandler.disableTDTM = false;
     }//close execute method
 
     /*******************************************************************************************************
@@ -544,13 +576,6 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
     * @param bc BatchableContext passed by the system call
     */
     global void finish(Database.BatchableContext bc) {
-        //restore the trigger handlers
-        List<Trigger_Handler__c> updateTriggerHandlers = new List<Trigger_Handler__c>();
-        for (Trigger_Handler__c t : [select Active__c from Trigger_Handler__c]){
-            t.Active__c = true;
-            updateTriggerHandlers.add(t);
-        }
-        update updateTriggerHandlers;
 
         //update the custom setting
         npe01__Contacts_and_Orgs_Settings__c ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
@@ -620,6 +645,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
             this.MailingState = c.MailingState;
             this.MailingZip = c.MailingPostalCode;
             this.MailingCountry = c.MailingCountry;
+            this.AddressType = c.npe01__Primary_Address_Type__c;
             this.AddressBlob = Blob.valueOf(c.MailingStreet + c.MailingCity + c.MailingState + c.MailingPostalCode + c.MailingCountry);
         }
 
@@ -631,6 +657,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         public String MailingState;
         public String MailingZip;
         public String MailingCountry;
+        public String AddressType;
         private Blob AddressBlob;
         private String MD5;
 

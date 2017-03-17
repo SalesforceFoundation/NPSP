@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,12 +28,13 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
 * @group Address Management
 * @description Trigger Handler on Account for Address management 
+* @async_support this trigger handler has been tested with async=true, and appears to not cause problems.
 */
-public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
+public class ADDR_Account_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
     * @description Trigger Handler on Account that handles Address management.
@@ -64,10 +65,11 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
             
             // AFTER INSERT
             if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-                // on insert, we only need to create addresses for Org accounts.
-                // Household accounts are handled during the after update, which will always occur
-                // as they are being hooked up with their primary contact. 
-                if (!acc.npe01__SYSTEMIsIndividual__c && UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c) {
+                // for new accounts that are using address management, create the address object.
+                if ((acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE && 
+                        !UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) ||
+                    (!acc.npe01__SYSTEMIsIndividual__c && 
+                        UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c)) {
                     if (isAccountAddressSpecified(acc))
                         listAccCreateAddr.add(acc);
                 }
@@ -78,8 +80,11 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
                 Account accOld = (Account)listOld[i];
                 // note that we detect whether the address change is coming from the address trigger,
                 // in which case we don't want to create a new address.
-                if (ADDR_Addresses_TDTM.hasRunAddrTrigger)
+                if (ADDR_Addresses_TDTM.hasRunAddrTrigger) {
+                    UTIL_Debug.debug('DJH**** stop Addr Trigger recursion in ADDR_Account_TDTM');
                     continue;
+                    
+                }
                 // we only support address management with HH Accounts and Organizational Accounts (if enabled)
                 if ((acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE && 
                 		!UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) ||
@@ -147,7 +152,6 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
 
     }
 
-    // 
     /*******************************************************************************************************
     * @description for each Account, create a new default address and add it to dmlWrapper
     * @param listAcc a list of Accounts
@@ -162,10 +166,11 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
             addr.Default_Address__c = true;
             addr.Latest_Start_Date__c = system.today();
             addr.Latest_End_Date__c = null;
-            ADDR_Addresses_TDTM.copyAddressStdSObjAddr(acc, 'Billing', addr);            
+            ADDR_Addresses_TDTM.copyAddressStdSObjAddr(acc, 'Billing', addr, null);
             listAddr.add(addr);         
         }
-        ADDR_Addresses_TDTM.createNonDuplicateAddresses(listAddr, dmlWrapper);
+        // since coming from an account address, there is no Address Type, so exclude it from the match testing.
+        ADDR_Addresses_TDTM.createNonDuplicateAddresses(listAddr, dmlWrapper, false);
     }
 
 }

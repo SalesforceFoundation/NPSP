@@ -1,5 +1,5 @@
 /* 
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
 * @group Settings
 * @description The controller for the Autocreate Relationships panel 
@@ -83,7 +83,7 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
         	acNew.Name = 'AutoCreateRel-' + system.now();
             insert acNew;
             isEditMode = false;
-            listRelAutoCreate = null;
+            resetRelAutoSettings();
             acNew = null;
         } catch(Exception e) {
             Database.rollback(sp);
@@ -109,6 +109,14 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
     public string acIdDelete { get; set; }
 
     /*********************************************************************************************************
+    * @description Resets relationship auto create settings so that they are reloaded and the cached version isn't used.
+    */
+    public void resetRelAutoSettings() {
+        UTIL_ListCustomSettingsFacade.mapRelationshipAutoCreateSettings = null;
+        listRelAutoCreate = null;
+    }
+
+    /*********************************************************************************************************
     * @description Action Method for deleting an existing ac. 
     * @return null
     */
@@ -120,7 +128,7 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
                 npe4__Relationship_Auto_Create__c ac = new npe4__Relationship_Auto_Create__c(Id = acIdDelete);
                 delete ac;
                 // force reload.
-                listRelAutoCreate = null;
+                resetRelAutoSettings();
             }
         } catch(Exception e) {
             Database.rollback(sp);
@@ -137,7 +145,7 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
         get {
             if (listRelAutoCreate == null) {
                 listRelAutoCreate = new list<npe4__Relationship_Auto_Create__c>();
-                listRelAutoCreate = npe4__Relationship_Auto_Create__c.getAll().values();
+                listRelAutoCreate = UTIL_ListCustomSettingsFacade.getMapRelationshipAutoCreateSettings().values();
             } 
             return listRelAutoCreate;           
         }
@@ -184,7 +192,7 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
     */
     public static void verifyAutoCreateRels(STG_PanelHealthCheck_CTRL ctrl) {
         
-        map<string, npe4__Relationship_Auto_Create__c> mapAC = npe4__Relationship_Auto_Create__c.getAll();
+        map<string, npe4__Relationship_Auto_Create__c> mapAC = UTIL_ListCustomSettingsFacade.getMapRelationshipAutoCreateSettings();
         string strSetting = Schema.Sobjecttype.npe4__Relationship_Auto_Create__c.getLabel(); 
         boolean isValid = true;
         boolean isValidAll = true;
@@ -196,7 +204,7 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
                         
             if (ac.npe4__Object__c == null || ac.npe4__Field__c == null || ac.npe4__Relationship_Type__c == null) {
                isValid = false;
-               ctrl.createDR(strSetting, 'Error', 
+               ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
                    string.format(label.healthDetailsAutoRelFieldsMissing, new string[]{strSetting}), 
                    string.format(label.healthSolutionAutoRelFieldsMissing, new string[]{label.stgNavConnections, label.stgNavRelAutoCreate}));
         	
@@ -206,7 +214,7 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
                 conField = Schema.sObjectType.Contact.fields.getMap().get(ac.npe4__Field__c); 
                 if (conField == null) { 
 	               isValid = false;
-	               ctrl.createDR(strSetting, 'Error', 
+	               ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
 	                   string.format(label.healthDetailsInvalidContactField, new string[]{ac.npe4__Field__c}), 
 	                   string.format(label.healthSolutionAutoRelInvalidContactField, new string[]{label.stgNavConnections, label.stgNavRelAutoCreate}));
                 }   
@@ -215,12 +223,12 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
                 conField = Schema.sObjectType.CampaignMember.fields.getMap().get(ac.npe4__Field__c); 
                 if (conField == null) { 
                     isValid = false;
-                    ctrl.createDR(strSetting, 'Error', 
+                    ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
                         string.format(label.healthDetailsInvalidCMField, new string[]{ac.npe4__Field__c}), 
                         string.format(label.healthSolutionAutoRelInvalidCMField, new string[]{label.stgNavConnections, label.stgNavRelAutoCreate}));
                 } else if (ac.npe4__Campaign_Types__c == null) { 
                     isValid = false;
-                    ctrl.createDR(strSetting, 'Error', 
+                    ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
                         label.healthDetailsAutoRelCampaignTypeMissing, 
                         string.format(label.healthSolutionAutoRelFieldsMissing, new string[]{label.stgNavConnections, label.stgNavRelAutoCreate}));
                 } 
@@ -233,7 +241,7 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
                 Schema.Displaytype dt = UTIL_Describe.getFieldDisplaytype(ac.npe4__Object__c, ac.npe4__Field__c);
                 if (dt != Schema.Displaytype.Reference) { 
                     isValid = false;
-                    ctrl.createDR(strSetting, 'Error', 
+                    ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
                         string.format(label.healthDetailsAutoRelInvalidLookupField, new string[]{ac.npe4__Field__c}), 
                         string.format(label.healthSolutionAutoRelInvalidLookupField, new string[]{label.stgNavConnections, label.stgNavRelAutoCreate}));
                 }               
@@ -244,7 +252,7 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
         }
 
         if (isValidAll) {
-            ctrl.createDR(strSetting, 'Success', null, label.healthLabelAutoRelValid);            
+            ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusSuccess, null, label.healthLabelAutoRelValid);            
         }                           
     }           
 }

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
 
@@ -28,14 +28,14 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
 * @group Utilities
 * @description Helper class that retrieves custom settings and sets defaults.
 * Needs to be "without sharing" so that the Install Script can run it.
 */
 public without sharing class UTIL_CustomSettingsFacade {
-
+    
     //storing user-level custom settings in-memory to avoid trying to isert/update them 
     //twice and thus trigger the "duplicate OwnerId" error
     static npe01__Contacts_And_Orgs_Settings__c contactsSettings;
@@ -62,7 +62,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     static Household_Naming_Settings__c orgHouseholdNamingSettings;
     static Allocations_Settings__c orgAllocationsSettings;
     static Data_Import_Settings__c orgDataImportSettings;
-    
+
     /*******************************************************************************************************
     * @description Returns the default Contacts and Orgs settings. 
     * @return npe01__Contacts_And_Orgs_Settings__c Custom settings record for Contacts and Orgs configuration. 
@@ -449,8 +449,9 @@ public without sharing class UTIL_CustomSettingsFacade {
             orgDataImportSettings = Data_Import_Settings__c.getOrgDefaults();
             if (orgDataImportSettings.Id == null) {
                 configDataImportSettings(orgDataImportSettings);
-                if(!Test.isRunningTest())
+                if(!Test.isRunningTest()) {
                     upsert orgDataImportSettings;
+                }
             }
         }
         return orgDataImportSettings;
@@ -465,6 +466,8 @@ public without sharing class UTIL_CustomSettingsFacade {
         cs.npe01__Payments_Enabled__c  = true;
         cs.npe01__Opportunity_Contact_Role_Default_role__c = 'Donor';
         cs.npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR;
+        cs.Opp_RecTypes_Excluded_for_Payments__c = null;
+        cs.Opp_Types_Excluded_for_Payments__c = null;
         Recordtypeinfo householdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get(CAO_Constants.HH_ACCOUNT_PROCESSOR);
         if(householdAccount != null)
             cs.npe01__HH_Account_RecordTypeID__c = householdAccount.getRecordTypeId();
@@ -516,7 +519,8 @@ public without sharing class UTIL_CustomSettingsFacade {
         hs.npo02__Household_OCR_Excluded_Recordtypes__c = null;
         hs.npo02__Household_Creation_Excluded_Recordtypes__c = null;
         hs.npo02__Enable_Soft_Credit_Rollups__c = true;
-        hs.npo02__Soft_Credit_Roles__c = 'Soft Credit;Household Member';
+        hs.npo02__Soft_Credit_Roles__c = 'Matched Donor;Soft Credit;Household Member';
+        hs.Matched_Donor_Role__c = 'Matched Donor';
         hs.npo02__Household_Contact_Roles_On__c = true;
                 
         // new HH Account model overrides having HH objects
@@ -542,7 +546,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
 
     private static void configRelationshipsSettings(npe4__Relationship_Settings__c rs) {
-        rs.npe4__Reciprocal_Method__c = 'List Settings';
+        rs.npe4__Reciprocal_Method__c = 'List Setting';
     }
     
     private static void configAffiliationsSettings(npe5__Affiliations_Settings__c afs) {
@@ -610,9 +614,17 @@ public without sharing class UTIL_CustomSettingsFacade {
         contactsSettings.npe01__Opportunity_Contact_Role_Default_role__c = mySettings.npe01__Opportunity_Contact_Role_Default_role__c;
         contactsSettings.npe01__Disable_Account_Model_Trigger__c = mySettings.npe01__Disable_Account_Model_Trigger__c;
         contactsSettings.npe01__Payments_Enabled__c = mySettings.npe01__Payments_Enabled__c;
+        contactsSettings.Opp_RecTypes_Excluded_for_Payments__c = mySettings.Opp_RecTypes_Excluded_for_Payments__c;
+        contactsSettings.Opp_Types_Excluded_for_Payments__c = mySettings.Opp_Types_Excluded_for_Payments__c;
+        contactsSettings.Automatic_Campaign_Member_Management__c = mySettings.Automatic_Campaign_Member_Management__c;
+        contactsSettings.Campaign_Member_Responded_Status__c = mySettings.Campaign_Member_Responded_Status__c;
+        contactsSettings.Campaign_Member_Non_Responded_Status__c = mySettings.Campaign_Member_Non_Responded_Status__c;
         contactsSettings.Organizational_Account_Addresses_Enabled__c = mySettings.Organizational_Account_Addresses_Enabled__c;
         contactsSettings.Simple_Address_Change_Treated_as_Update__c = mySettings.Simple_Address_Change_Treated_as_Update__c;
         contactsSettings.Household_Account_Addresses_Disabled__c = mySettings.Household_Account_Addresses_Disabled__c;
+        contactsSettings.Payments_Auto_Close_Stage_Name__c = mySettings.Payments_Auto_Close_Stage_Name__c;
+        contactsSettings.Honoree_Opportunity_Contact_Role__c = mySettings.Honoree_Opportunity_Contact_Role__c;
+        contactsSettings.Notification_Recipient_Opp_Contact_Role__c = mySettings.Notification_Recipient_Opp_Contact_Role__c;
         orgContactsSettings = contactsSettings;
         return contactsSettings;
     }
@@ -643,6 +655,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         householdsSettings.npo02__Advanced_Household_Naming__c = mySettings.npo02__Advanced_Household_Naming__c;
         householdsSettings.npo02__Enable_Soft_Credit_Rollups__c = mySettings.npo02__Enable_Soft_Credit_Rollups__c;
         householdsSettings.npo02__Soft_Credit_Roles__c = mySettings.npo02__Soft_Credit_Roles__c;
+        householdsSettings.Matched_Donor_Role__c = mySettings.Matched_Donor_Role__c;
         householdsSettings.npo02__Household_OCR_Excluded_Recordtypes__c = mySettings.npo02__Household_OCR_Excluded_Recordtypes__c; 
         householdsSettings.npo02__Household_Creation_Excluded_Recordtypes__c = mySettings.npo02__Household_Creation_Excluded_Recordtypes__c;
         householdsSettings.npo02__Household_Mailing_List_ID__c = mySettings.npo02__Household_Mailing_List_ID__c;
@@ -744,4 +757,27 @@ public without sharing class UTIL_CustomSettingsFacade {
         orgRecurringDonationsSettings = recurringDonationsSettings;
         return recurringDonationsSettings;
     }
+    
+    /*******************************************************************************************************
+    * @description Creates instance of settings to use in tests. It does not insert it, but all other methods will see these settings
+    * as the configured settings.
+    * @parameter mySettings Settings instance with the values to set.
+    * @return Household_Naming_Settings__c The configured settings.
+    **/
+    public static Household_Naming_Settings__c getHouseholdNamingSettingsForTests(Household_Naming_Settings__c mySettings) {
+      if(householdNamingSettings == null)
+        householdNamingSettings = new Household_Naming_Settings__c();
+
+      householdNamingSettings.Household_Name_Format__c = mySettings.Household_Name_Format__c;
+      householdNamingSettings.Formal_Greeting_Format__c = mySettings.Formal_Greeting_Format__c;
+      householdNamingSettings.Informal_Greeting_Format__c = mySettings.Informal_Greeting_Format__c;
+      householdNamingSettings.Name_Connector__c = mySettings.Name_Connector__c;
+      householdNamingSettings.Name_Overrun__c = mySettings.Name_Overrun__c;
+      householdNamingSettings.Contact_Overrun_Count__c = mySettings.Contact_Overrun_Count__c;
+      householdNamingSettings.Implementing_Class__c = mySettings.Implementing_Class__c;
+
+      orgHouseholdNamingSettings = householdNamingSettings;
+      return householdNamingSettings;
+    }
+
 }

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014 Salesforce.com Foundation
+    Copyright (c) 2014 Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,17 +28,18 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014 
-* @description Master Schedulable for the NPSP package. This should be the only
-* class that implements schedulable that exists in the package. UTIL_GlobalSchedulable
-* is deprecated and should not be used.
+* @description This class is deprecated. This class should be left in place
+* and not deleted, due to the fact that it could be scheduled in customer orgs
+* stuck on older versions, and deleting it could affect their ability to
+* upgrade without manually unscheduling it.
 * @group Utilities
 */
-public with sharing class UTIL_MasterSchedulable implements Schedulable {
-
+public class UTIL_MasterSchedulable implements Schedulable {
+    
     /*******************************************************************************************************
-    * @description Runs the class, as scheduled.
+    * @description This is deprecated and does nothing.
     * @param context The system context. Provided by the platform.
     * @return void
     */
@@ -50,5 +51,4 @@ public with sharing class UTIL_MasterSchedulable implements Schedulable {
     	//we wanted to avoid.
     	Object instance = classType.newInstance();
     }
-    
 }

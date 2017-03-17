@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
 
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2009
 * @group Affiliations
 * @group-content ../../ApexDocContent/Affiliations.htm
@@ -71,7 +71,7 @@ public class AFFL_Affiliations_TEST {
         insert acc2;
         
         Test.startTest();
-        AFFL_Affiliations_TDTM.hasRunForContacts = false;
+        AFFL_Affiliations_TDTM.doNotRunForContacts = false;
         contact.AccountId = acc2.id;
         update contact;
         Test.stopTest();
@@ -163,7 +163,7 @@ public class AFFL_Affiliations_TEST {
         
         con.AccountId = acc2.id;
         Test.startTest();      
-        AFFL_Affiliations_TDTM.hasRunForContacts = false;
+        AFFL_Affiliations_TDTM.doNotRunForContacts = false;
         update con;
         Test.stopTest();
           
@@ -197,6 +197,10 @@ public class AFFL_Affiliations_TEST {
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
     
+        // make sure household objects also created, since their trigger was interferring with the affilations trigger.
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR));
+
         list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(8);
         system.assertEquals(null, listCon[0].AccountId); 
         
@@ -323,7 +327,7 @@ public class AFFL_Affiliations_TEST {
         System.assertEquals(2, listAffl.size());
 
         Test.startTest();
-        AFFL_Affiliations_TDTM.hasRunForContacts = false;
+        AFFL_Affiliations_TDTM.doNotRunForContacts = false;
         // now update our contacts with a Primary Affiliation
         for (Contact con : listCon) 
             con.Primary_Affiliation__c = listAcc[4].Id; // Org1  
@@ -384,7 +388,7 @@ public class AFFL_Affiliations_TEST {
         System.assertEquals(2, listAffl.size());
 
         Test.startTest();
-        AFFL_Affiliations_TDTM.hasRunForContacts = false;
+        AFFL_Affiliations_TDTM.doNotRunForContacts = false;
         // now update our contacts with a Primary Affiliation and a different account
         for (Contact con : listCon) {
             con.AccountId = listAcc[4].Id; // Org1  
@@ -453,7 +457,7 @@ public class AFFL_Affiliations_TEST {
         System.assertEquals(9, listAffl.size());
 
         Test.startTest();
-        AFFL_Affiliations_TDTM.hasRunForContacts = false;
+        AFFL_Affiliations_TDTM.doNotRunForContacts = false;
         // now update our contacts to a different account
         for (Contact con : listCon) {
             con.AccountId = listAcc[5].Id; // Org2  
@@ -528,7 +532,7 @@ public class AFFL_Affiliations_TEST {
         System.assertEquals(9, listAffl.size());
 
         Test.startTest();
-        AFFL_Affiliations_TDTM.hasRunForContacts = false;
+        AFFL_Affiliations_TDTM.doNotRunForContacts = false;
         // now clear our primary affilation
         for (Contact con : listCon) {
             con.Primary_Affiliation__c = null; 
@@ -698,7 +702,7 @@ public class AFFL_Affiliations_TEST {
         }
         // must manually clear this, since our context is still active
         AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
-        AFFL_Affiliations_TDTM.hasRunForContacts = false;
+        AFFL_Affiliations_TDTM.doNotRunForContacts = false;
         insert listAffl;
                 
         // make sure primary affiliation set on Contacts
@@ -764,6 +768,119 @@ public class AFFL_Affiliations_TEST {
         system.assertEquals(system.label.npe5.DefaultCurrentStatus, queryAffl[1].npe5__Status__c, 'The new affiliation\'s status should be set to the default current status.');
         system.assertEquals(listcon[1].title, queryAffl[1].npe5__Role__c, 'The new affiliation\'s role should match the second contact\'s title.');
         system.assertEquals(System.Today(), queryAffl[0].npe5__StartDate__c, 'The affiliation\'s start date should be today.');
+
+    }
+
+    /*******************************************************************************************************
+    * @description Deletes a primary affiliation, verifies it's removed from the contact. Undeletes it,
+    * verifies it's added back to the contact.
+    */
+    static testMethod void deletePrimaryAffl() {
+        if (strTestOnly != '*' && strTestOnly != 'deletePrimaryAffl') return;
+
+        npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
+            new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true)
+        );
+
+        Account acc = new Account(Name='foo');
+        insert acc;
+        
+        Contact con = new Contact(
+            LastName='foo'
+        );
+        insert con;
+        
+        npe5__Affiliation__c affl = new npe5__Affiliation__c(
+            npe5__Contact__c = con.Id,
+            npe5__Organization__c = acc.Id,
+            npe5__StartDate__c = System.Today(),
+            npe5__Primary__c = true,
+            npe5__Status__c = system.label.npe5.DefaultCurrentStatus
+        );
+        Test.startTest();
+        insert affl;
+        Test.stopTest();
+
+        List<Error__c> errors = [SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c FROM Error__c];
+        System.assertEquals(0, errors.size(), errors);
+
+        Contact queryCon = [SELECT Id, Primary_Affiliation__c FROM Contact WHERE Id = :con.id];
+        system.assertEquals(acc.id, queryCon.Primary_Affiliation__c, 'Contact should have primary affiliation set.');
+
+        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
+        delete affl;
+        
+        errors = [SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c FROM Error__c];
+        System.assertEquals(0, errors.size(), errors);
+
+        queryCon = [SELECT Id, Primary_Affiliation__c FROM Contact WHERE Id = :con.id];
+        system.assertEquals(null, con.Primary_Affiliation__c, 'Contact primary affiliation should be blank.');
+
+        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
+        undelete affl;
+
+        queryCon = [SELECT Id, Primary_Affiliation__c FROM Contact WHERE Id = :con.id];
+        system.assertEquals(acc.id, queryCon.Primary_Affiliation__c, 'Contact should have primary affiliation set.');
+
+    }
+
+    /*******************************************************************************************************
+    * @description When undeleting a primary affiliation, if the contact has a new primary affiliation,
+    * the undeleted record should have primary unchecked, and the contact shouldn't be updated.
+    */
+    static testMethod void undeletePrimaryAfflNewAffl() {
+        if (strTestOnly != '*' && strTestOnly != 'undeletePrimaryAfflNewAffl') return;
+
+        npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
+            new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true)
+        );
+
+        Account acc = new Account(Name='foo');
+        insert acc;
+        
+        Contact con = new Contact(
+            LastName='foo',
+            Primary_Affiliation__c = acc.id
+        );
+        insert con;
+        
+        npe5__Affiliation__c queryAffl = [SELECT Id, npe5__Primary__c FROM npe5__Affiliation__c WHERE npe5__Contact__c = :con.id];
+        System.assert(queryAffl.npe5__Primary__c, 'Affiliation should be marked primary.');
+
+        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
+        delete queryAffl;
+
+        Contact queryCon = [SELECT Id, Primary_Affiliation__c FROM Contact WHERE Id = :con.id];
+        system.assertEquals(null, queryCon.Primary_Affiliation__c, 'Contact primary affiliation should be blank.');
+
+        Account newPrimary = new Account(Name='foo');
+        insert newPrimary;
+
+        npe5__Affiliation__c affl = new npe5__Affiliation__c(
+            npe5__Contact__c = con.Id,
+            npe5__Organization__c = newPrimary.Id,
+            npe5__StartDate__c = System.Today(),
+            npe5__Primary__c = true,
+            npe5__Status__c = system.label.npe5.DefaultCurrentStatus
+        );
+        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
+        
+        Test.startTest();
+        insert affl;
+        Test.stopTest();
+
+        queryCon = [SELECT Id, Primary_Affiliation__c FROM Contact WHERE Id = :con.id];
+        system.assertEquals(newPrimary.id, queryCon.Primary_Affiliation__c, 'Contact should have primary affiliation set.');
+
+        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
+
+        undelete queryAffl;
+
+        queryCon = [SELECT Id, Primary_Affiliation__c FROM Contact WHERE Id = :con.id];
+        system.assertEquals(newPrimary.id, queryCon.Primary_Affiliation__c, 'Contact primary affiliation should be unchanged.');
+
+        queryAffl = [SELECT Id, npe5__Primary__c FROM npe5__Affiliation__c WHERE npe5__Organization__c = :acc.id];
+        System.assert(!queryAffl.npe5__Primary__c, 'Undeleted Affiliation should NOT be marked primary.');
 
     }
 }

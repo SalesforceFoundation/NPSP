@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
 
@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
 * @group Account Model Converter
 * @group-content ../../ApexDocContent/Conv.htm
@@ -52,7 +52,7 @@ public with sharing class CONV_Account_Conversion_CTRL_TEST {
         system.assertEquals(1, [select count() from npo02__Household__c where Name = :HHName]);
 
         //add an oppty to the Contact as well
-        Opportunity o = new Opportunity(Name = 'Test Oppty', Amount = 1000, StageName = UTIL_UnitTestData_TEST.getClosedWonStage(), CloseDate = system.today(), npe01__Contact_Id_For_Role__c = c.Id);
+        Opportunity o = new Opportunity(Name = 'Test Oppty', Amount = 1000, StageName = UTIL_UnitTestData_TEST.getClosedWonStage(), CloseDate = system.today(), Primary_Contact__c = c.Id);
         insert o;
         system.assertEquals(1, [select count() from OpportunityContactRole where isPrimary = true and ContactId = :c.Id]);
 
@@ -114,7 +114,7 @@ public with sharing class CONV_Account_Conversion_CTRL_TEST {
         system.assertEquals(u.Id, [select OwnerId from Task where Id = :t.Id].OwnerId);
 
         //add an oppty to the Contact as well
-        Opportunity o = new Opportunity(OwnerId = u.Id, Name = 'Test Oppty', Amount = 1000, StageName = UTIL_UnitTestData_TEST.getClosedWonStage(), CloseDate = system.today(), npe01__Contact_Id_For_Role__c = c.Id);
+        Opportunity o = new Opportunity(OwnerId = u.Id, Name = 'Test Oppty', Amount = 1000, StageName = UTIL_UnitTestData_TEST.getClosedWonStage(), CloseDate = system.today(), Primary_Contact__c = c.Id);
         insert o;
         system.assertEquals(1, [select count() from OpportunityContactRole where isPrimary = true and ContactId = :c.Id]);
 
@@ -139,7 +139,7 @@ public with sharing class CONV_Account_Conversion_CTRL_TEST {
             Test.stopTest();
 
             //assert the warning exists
-            system.assertEquals(true, controller.runCheckErrorState);
+            system.assertEquals(true, controller.runCheckErrorState);        
         }
     }
 }

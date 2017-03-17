@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
 
@@ -29,7 +29,7 @@
 */
 
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
 * @group API
 * @group-content ../../ApexDocContent/API.htm
@@ -44,7 +44,7 @@ global with sharing class UTIL_RecordTypes_API {
     * @return Id The Id of the Record Type.
     */
     global static Id GetRecordTypeId(String objectName, String recordTypeName) {
-        return UTIL_RecordTypes.GetRecordTypeId(objectName, recordTypeName);
+        return UTIL_RecordTypes.GetRecordTypeId(getSObjectTypeForName(objectName), recordTypeName);
     }
     
     /*******************************************************************************************************
@@ -54,7 +54,7 @@ global with sharing class UTIL_RecordTypes_API {
     * @return String The name of the Record Type.
     */
     global static String GetRecordTypeName(String objectName, String recordTypeId) {
-        return UTIL_RecordTypes.GetRecordTypeName(objectName, recordTypeId);
+        return UTIL_RecordTypes.GetRecordTypeName(getSObjectTypeForName(objectName), recordTypeId);
     }
     
     /*******************************************************************************************************
@@ -64,6 +64,10 @@ global with sharing class UTIL_RecordTypes_API {
     * @return Set<Id> The Ids of the Record Types.
     */
 	global static Set<Id> GetRecordTypeIdSet(String objectName, Set<String> recordTypeNameSet) {
-        return UTIL_RecordTypes.GetRecordTypeIdSet(objectName, recordTypeNameSet);
+        return UTIL_RecordTypes.GetRecordTypeIdSet(getSObjectTypeForName(objectName), recordTypeNameSet);
+    }
+
+    private static sObjectType getSObjectTypeForName(String objectName) {
+        return Schema.describeSObjects(new List<String>{objectName}).get(0).getSObjectType();
     }
 }

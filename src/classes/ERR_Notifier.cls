@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
 
@@ -28,13 +28,13 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
 * @description Notifies specific users or groups by email or Chatter when error occur.
 * @group ErrorHandling
 * @group-content ../../ApexDocContent/ErrorHandling.htm
 */
-public with sharing class ERR_Notifier {
+public class ERR_Notifier {
 
     public static NotificationOptions notificationOptions = new NotificationOptions();
     
@@ -91,7 +91,7 @@ public with sharing class ERR_Notifier {
     * @return void
     */
     private static void sendEmailNotifications(String context, List<String> sendList) {
-        if (!system.isBatch() && !system.isFuture() && Limits.getFutureCalls() < Limits.getLimitFutureCalls()) {
+        if (!system.isBatch() && !system.isFuture() && Limits.getAsyncCalls() < Limits.getLimitAsyncCalls()) {
             //We cannot pass the context, because only primitive types can be passed to future methods.
             sendErrorQueueEmailNotificationFuture(sendList);
         } else if (system.isFuture()) {
@@ -143,10 +143,12 @@ public with sharing class ERR_Notifier {
     private static Messaging.SingleEmailMessage createEmailMessage(String context, List<Error__c> errorList, List<String> sendList) {
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
         mail.setUseSignature(false);
-        mail.setReplyTo('donotreply@salesforcefoundation.org');
-        mail.setSenderDisplayName('Nonprofit Starter Pack');
-        mail.setSubject('NPSP Error');
-        string bodyString = '';
+        mail.setReplyTo('donotreply@salesforce.org');
+        mail.setSenderDisplayName('Nonprofit Success Pack');
+        mail.setSubject('Salesforce Error');
+        string bodyString = 'Organization: ' + UserInfo.getOrganizationName() + '(' + UserInfo.getOrganizationId() + ')\n';
+        bodyString += 'User: ' + UserInfo.getUserName() + '(' + UserInfo.getUserId() + ')\n\n';
+        bodyString += Label.ErrorEmailMessage + '\n';
         if (context == ERR_Handler_API.Context.RD.name())
             bodyString += system.label.npe03.RecurringDonationErrorEmailBody;
         bodyString += '\n\nErrors:';
@@ -176,7 +178,7 @@ public with sharing class ERR_Notifier {
                 List<SObject> postsToInsert = new List<SObject>();
                 for(Error__c error : errors) {
                     SObject post = (SObject)System.Type.forName('FeedItem').newInstance();
-                    post.put('Title', 'NPSP Error');
+                    post.put('Title', 'Salesforce Error');
                     String body = getErrorMessageBody(error);
                     post.put('Body', body);
                     post.put('ParentId', collaborationGroup.Id);
@@ -221,7 +223,7 @@ public with sharing class ERR_Notifier {
         if (es.Error_Notifications_On__c && errorNotifRecipient != null) {
             if (errorNotifRecipient != NotificationOptions.sysAdmins) {
                 if (!(errorNotifRecipient instanceof id)) {
-                    ctrl.createDR(strSetting, 'Error', label.healthDetailsInvalidErrorRecipient, 
+                    ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, label.healthDetailsInvalidErrorRecipient, 
                         string.format(label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavSystem, Label.stgNavErrorNotify}));
                     return;
                 }
@@ -229,7 +231,7 @@ public with sharing class ERR_Notifier {
                     // verify chatter group exists
                     list<SObject> listCG = Database.query('select Id, Name from CollaborationGroup where id = :errorNotifRecipient');
                     if (listCG.size() == 0) {
-                        ctrl.createDR(strSetting, 'Error', 
+                        ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
                             string.format(label.healthDetailsInvalidErrorChatterGroup, new string[]{errorNotifRecipient}),
                             string.format(label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavSystem, Label.stgNavErrorNotify}));
                         return;
@@ -239,13 +241,13 @@ public with sharing class ERR_Notifier {
                         // verify user exists and is active
                         list<User> listUser = [select name, email, isActive from User where id = :errorNotifRecipient and isActive = true];
                         if (listUser.size() == 0) {
-                            ctrl.createDR(strSetting, 'Error', 
+                            ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
                                 string.format(label.healthDetailsInvalidErrorUser, new string[]{errorNotifRecipient}),
                                 string.format(label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavSystem, Label.stgNavErrorNotify}));
                             return;    
                         }
                         if (listUser[0].isActive == false) { 
-                            ctrl.createDR(strSetting, 'Error', 
+                            ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
                                 string.format(label.healthDetailsInvalidErrorUser, new string[]{listUser[0].name}),
                                 string.format(label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavSystem, Label.stgNavErrorNotify}));
                             return; 
@@ -254,33 +256,7 @@ public with sharing class ERR_Notifier {
                 }
             }
         // settings ok.
-        ctrl.createDR(strSetting, 'Success', null, label.healthLabelErrorRecipientValid);
-        }
-    }
-
-    /*******************************************************************************************************
-    * @description Sends an email to the user installing the package warning of package installation failure.
-    * @param e Exception thrown during the package installation process.
-    * @param context The installation context.
-    * @return void
-    */
-    public static void sendEmailOnInstallError(Exception e, InstallContext context) {
-        try {
-            String userEmail = [Select Id, Email from User where Id =:context.installerID()].Email;  
-            userEmail = UTIL_Namespace.sandboxEmailToRealEmail(userEmail);
-            Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-            mail.setUseSignature(false);
-            mail.setReplyTo('donotreply@salesforcefoundation.org');
-            mail.setSenderDisplayName('Nonprofit Starter Pack');
-            mail.setSubject('NPSP Install Errors');
-            String bodyString = Label.stgInstallScriptError;
-            bodyString += '\n\n==========================. \n\n Error message: \n' + e.getMessage() + '\n\n'
-            + 'Error stack trace: \n' + e.getStackTraceString();
-            mail.setPlainTextBody(bodyString);      
-            mail.setToAddresses(new String[]{'errors@salesforcefoundation.org', userEmail});
-            Messaging.sendEmail(new Messaging.SingleEmailMessage[]{mail});
-        } catch(Exception e2) {
-            //Nothing to do here, as we don't want the install script to fail because emails could not be sent.
+        ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusSuccess, null, label.healthLabelErrorRecipientValid);
         }
     }
 }

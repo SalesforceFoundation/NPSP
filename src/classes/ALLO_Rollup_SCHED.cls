@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
  
@@ -28,32 +28,24 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
 * @group Allocations
 * @group-content ../../ApexDocContent/Allocations.htm
 * @description Allocations Rollups to General Accounting Units
 */
-public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH implements UTIL_MasterSchedulableHelper.UTIL_IRecurring {
+public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH implements Schedulable {
 
     /*******************************************************************************************************
-    * @description Implementation of UTIL_MasterSchedulableHelper.UTIL_IRecurring, to allow nightly 
-    * scheduling. Attempts to start allocations rollup batch job.
-    * @return Boolean Whether the batch job started successfully. 
+    * @description Schedulable execute method executes this batch job.
     ********************************************************************************************************/
-    public Boolean executeReturnStatus() {
-        if(UTIL_JobScheduler.canRunBatch()) {
-        	Savepoint sp = Database.setSavepoint();
-        	try {
-	            ALLO_Rollup_SCHED rollup = new ALLO_Rollup_SCHED(200);
-	            rollup.runRollups();
-	            return true;
-        	} catch(Exception e) {
-        		Database.rollback(sp);
-        		ERR_Handler.processError(e, ERR_Handler_API.Context.ALLO);
-        	}
+    public void execute(SchedulableContext context) {
+        try {
+            ALLO_Rollup_SCHED rollup = new ALLO_Rollup_SCHED(RLLP_OppRollup_UTIL.BATCH_SIZE);
+            rollup.runRollups();
+        } catch(Exception e) {
+            ERR_Handler.processError(e, ERR_Handler_API.Context.ALLO);
         }
-        return false;
     }
 
     /*******************************************************************************************************
@@ -115,7 +107,7 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
 
         //build string of opp rec type names for query
         if (alloSettings.Excluded_Opp_RecTypes__c != null) {
-            strExcludeOppRecTypesQuery = 'AND Opportunity__r.RecordType.Name NOT IN ' + convertToQueryListFormat(alloSettings.Excluded_Opp_Rectypes__c);
+            strExcludeOppRecTypesQuery = 'AND Opportunity__r.RecordTypeId NOT IN ' + convertToQueryListFormat(alloSettings.Excluded_Opp_Rectypes__c);
         }
 
         //make  opp types
@@ -140,17 +132,19 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
             'MAX(Opportunity__r.CloseDate)' => UTIL_Namespace.StrTokenNSPrefix('Last_Allocation_Date__c')
         };
         
+        Integer currentYear = alloSettings.Use_Fiscal_Year_for_Rollups__c ? RLLP_OppRollup_UTIL.getCurrentFY() : System.today().year();
+
         rs.subgroupExpression = strFiscalOrCalendarYear+'(Opportunity__r.CloseDate)';
         rs.subgroupValueToParentFieldnameMap = new map<string, map<object, string>> {
             'SUM(Amount__c)' => new map<object, string> { 
-                System.Today().Year() => UTIL_Namespace.StrTokenNSPrefix('Total_Allocations_This_Year__c'), 
-                System.Today().AddYears(-1).Year() => UTIL_Namespace.StrTokenNSPrefix('Total_Allocations_Last_Year__c'),
-                System.Today().AddYears(-2).Year() => UTIL_Namespace.StrTokenNSPrefix('Total_Allocations_Two_Years_Ago__c')
+                currentYear => UTIL_Namespace.StrTokenNSPrefix('Total_Allocations_This_Year__c'), 
+                currentYear-1 => UTIL_Namespace.StrTokenNSPrefix('Total_Allocations_Last_Year__c'),
+                currentYear-2 => UTIL_Namespace.StrTokenNSPrefix('Total_Allocations_Two_Years_Ago__c')
             },
             'COUNT_DISTINCT(ID)' => new map<object, string> { 
-                System.Today().Year() => UTIL_Namespace.StrTokenNSPrefix('Number_of_Allocations_This_Year__c'), 
-                System.Today().AddYears(-1).Year() => UTIL_Namespace.StrTokenNSPrefix('Number_of_Allocations_Last_Year__c'),
-                System.Today().AddYears(-2).Year() => UTIL_Namespace.StrTokenNSPrefix('Number_of_Allocations_Two_Years_Ago__c')
+                currentYear => UTIL_Namespace.StrTokenNSPrefix('Number_of_Allocations_This_Year__c'), 
+                currentYear-1 => UTIL_Namespace.StrTokenNSPrefix('Number_of_Allocations_Last_Year__c'),
+                currentYear-2 => UTIL_Namespace.StrTokenNSPrefix('Number_of_Allocations_Two_Years_Ago__c')
             }
         };
 

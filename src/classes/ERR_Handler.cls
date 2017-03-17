@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
 
@@ -29,14 +29,14 @@
 */
 
 /**
-* @author Salesforce.com Foundation
+* @author Salesforce.org
 * @date 2014
 * @description Helps determine if errors occurred during the DML operations performed during the transaction, and with 
 * the necessary storing and notification of these errors.
 * @group ErrorHandling
 * @group-content ../../ApexDocContent/ErrorHandling.htm
 */
-public with sharing class ERR_Handler {
+public class ERR_Handler {
     
     /*******************************************************************************************************
     * @description Inner class that groups the result of processing the result of multiple DML operations performed
@@ -132,25 +132,13 @@ public with sharing class ERR_Handler {
 	                
 	                //Displaying an error message to the user
 	                if(ApexPages.currentPage() != null)
-	                   ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, err.Full_Message__c)); 
-	                
-	                //Bubbling the exception, if necessary.   
-                    if (TDTM_TriggerHandler.isPropogateErrorsFromTrigger) {
-                        UTIL_Debug.debug('**** isPropogateErrorsFromTrigger is true, so wanted to addError to: ' + sObjects[i]);
-                        throw new PropogateException(err.Full_Message__c);
-                    }
+	                   ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, err.Full_Message__c)); 	                
 	        	}
 	        }
     	}
     	return errors;
     }
-    
-    /*******************************************************************************************************
-    * @description Custom class that extends the Exception built-in class, and indicates that there is an unrecoverable
-    *              error that should be propagated all the way up the stack.
-    */
-    private class PropogateException extends Exception {}
-    
+        
     /*******************************************************************************************************
     * @description Creates an error record from an exception, stores it in the database (if enabled), and sends error
     *              notifications (if enabled).
@@ -273,6 +261,18 @@ public with sharing class ERR_Handler {
             recordURL = recordURL.replaceFirst('http:', 'https:');
             
         return recordURL;
+    }
+    
+    /*******************************************************************************************************
+    * @description Returns the ID of the object the error is about if available.
+    * @param error. The Error object.
+    * @return ID the object's Id if available, otherwise null.
+    */
+    public static ID getErrorObjectId(Error__c error) {
+        if (error.Record_URL__c != null) {
+            return error.Record_URL__c.substringAfterLast('/');
+        }
+        return null;
     }
     
     /*******************************************************************************************************

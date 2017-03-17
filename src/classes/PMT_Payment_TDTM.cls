@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2012, Salesforce.com Foundation
+    Copyright (c) 2012, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
 
@@ -28,12 +28,22 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation 
+* @author Salesforce.org 
 * @date 2014 
+* @group Payments
+* @group-content ../../ApexDocContent/Payments.htm
 * @description trigger handler on Opps for supporting Payments 
 */
-public with sharing class PMT_Payment_TDTM extends TDTM_Runnable {
+public class PMT_Payment_TDTM extends TDTM_Runnable {
 
+    /*******************************************************************************************************
+    * @description Trigger Handler on Opportunities for managing Payments
+    * @param newlist the list of Opps from trigger new. 
+    * @param oldlist the list of Opps from trigger old. 
+    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
+    * @param objResult the describe for Opportunity 
+    * @return dmlWrapper. 
+    ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
     TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
