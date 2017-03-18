@@ -4749,6 +4749,14 @@ This process may take some time, but you can close this page and the process wil
         <value>The NPSP de-duplicates Auto-Created Relationships automatically. Select this option if you want to disable automatic de-duplication, and allow multiple Relationships of the same Type to exist between two Contacts.</value>
     </labels>
     <labels>
+        <fullName>stgHelpRelFieldSyncToggle</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgHelpRelFieldSyncToggle</shortDescription>
+        <value>Select this option if you want to enable automatic synchronization of custom fields on the Relationship object across reciprocal pairs.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpRelGenderField</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -4795,6 +4803,14 @@ This process may take some time, but you can close this page and the process wil
         <protected>false</protected>
         <shortDescription>stgHelpRelReciprocalNeutral</shortDescription>
         <value>The value Salesforce uses if it cannot determine the Contact&apos;s gender based on Gender field value or Salutation.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRelSyncFields</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgHelpRelSyncFields</shortDescription>
+        <value>The Relationship fields you DO NOT want synchronized across a pair of reciprocal Relationships (when Custom Field Sync is enabled). Control or Command click to select more than one field.</value>
     </labels>
     <labels>
         <fullName>stgHelpReviewErrorLog</fullName>
@@ -5484,6 +5500,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgLabelRelSettings</shortDescription>
         <value>General Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelRelationshipSyncNoValidFields</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgLabelRelationshipSyncNoValidFields</shortDescription>
+        <value>No Valid Field Available</value>
     </labels>
     <labels>
         <fullName>stgLabelSelectChatterGroup</fullName>

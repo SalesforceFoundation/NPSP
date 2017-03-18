@@ -784,6 +784,7 @@
         <members>npe01__Contacts_And_Orgs_Settings__c.Simple_Address_Change_Treated_as_Update__c</members>
         <members>npe01__OppPayment__c.Payment_Acknowledged_Date__c</members>
         <members>npe01__OppPayment__c.Payment_Acknowledgment_Status__c</members>
+        <members>npe4__Relationship_Settings__c.Enable_Custom_Field_Sync__c</members>
         <members>npo02__Household__c.Number_of_Household_Members__c</members>
         <members>npo02__Households_Settings__c.Matched_Donor_Role__c</members>
         <name>CustomField</name>
@@ -1378,12 +1379,14 @@
         <members>stgHelpRDSuccesses</members>
         <members>stgHelpRecDon</members>
         <members>stgHelpRelAutoCreatedDup</members>
+        <members>stgHelpRelFieldSyncToggle</members>
         <members>stgHelpRelGenderField</members>
         <members>stgHelpRelReciprocalFemale</members>
         <members>stgHelpRelReciprocalMale</members>
         <members>stgHelpRelReciprocalMethod</members>
         <members>stgHelpRelReciprocalName</members>
         <members>stgHelpRelReciprocalNeutral</members>
+        <members>stgHelpRelSyncFields</members>
         <members>stgHelpReviewErrorLog</members>
         <members>stgHelpRollupBatchSize</members>
         <members>stgHelpRollupExcludeAccountOppRT</members>
@@ -1470,6 +1473,7 @@
         <members>stgLabelRDSettings</members>
         <members>stgLabelRDStatus</members>
         <members>stgLabelRelSettings</members>
+        <members>stgLabelRelationshipSyncNoValidFields</members>
         <members>stgLabelSelectChatterGroup</members>
         <members>stgLabelSoftCredit</members>
         <members>stgLabelTriggerHandlers</members>
@@ -1550,6 +1554,7 @@
         <members>Level__c</members>
         <members>Opportunity_Naming_Settings__c</members>
         <members>Partial_Soft_Credit__c</members>
+        <members>Relationship_Sync_Excluded_Fields__c</members>
         <members>Schedulable__c</members>
         <members>Trigger_Handler__c</members>
         <name>CustomObject</name>
