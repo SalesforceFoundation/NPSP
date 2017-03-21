@@ -4754,7 +4754,7 @@ This process may take some time, but you can close this page and the process wil
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgHelpRelFieldSyncToggle</shortDescription>
-        <value>Select this option if you want to enable automatic synchronization of custom fields on the Relationship object across reciprocal pairs.</value>
+        <value>Select this option to sync custom Relationships fields between the two contacts in a relationship pair.</value>
     </labels>
     <labels>
         <fullName>stgHelpRelGenderField</fullName>
@@ -4810,7 +4810,7 @@ This process may take some time, but you can close this page and the process wil
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgHelpRelSyncFields</shortDescription>
-        <value>The Relationship fields you DO NOT want synchronized across a pair of reciprocal Relationships (when Custom Field Sync is enabled). Control or Command click to select more than one field.</value>
+        <value>The custom Relationships fields you do not want synchronized between the two contacts in a relationship pair. Control or command click to select more than one field.</value>
     </labels>
     <labels>
         <fullName>stgHelpReviewErrorLog</fullName>
