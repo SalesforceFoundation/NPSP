@@ -42,28 +42,32 @@
                     </apex:outputPanel>
                 </div>
             </div>
-            <div class="slds-form-element">
-                <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Settings__c.Fields.Enable_Custom_Field_Sync__c.Label}" for="cbxCFS" styleClass="col-md-4 slds-form-element__label" />
-                <div class="slds-form-element__control">
-                    <apex:inputCheckbox value="{!stgService.stgRel.Enable_Custom_Field_Sync__c}" rendered="{!isEditMode}" id="cbxCFS" html-aria-describedby="{!$Component.cbxCFSHelp}" styleClass="slds-checkbox"/>
-                    <apex:inputCheckbox value="{!stgService.stgRel.Enable_Custom_Field_Sync__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxCFSO" html-aria-describedby="{!$Component.cbxCFSHelp}" styleClass="slds-checkbox"/>
-                    <apex:outputPanel id="cbxCFSHelp" layout="block">
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRelFieldSyncToggle}" />
-                    </apex:outputPanel>
+            <apex:outputPanel layout="block" id="excludedFields">
+                <div class="slds-form-element">
+                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Settings__c.Fields.Enable_Custom_Field_Sync__c.Label}" for="cbxCFS" styleClass="col-md-4 slds-form-element__label" />
+                    <div class="slds-form-element__control">
+                        <apex:inputCheckbox value="{!stgService.stgRel.Enable_Custom_Field_Sync__c}" rendered="{!isEditMode}" id="cbxCFS" html-aria-describedby="{!$Component.cbxCFSHelp}" styleClass="slds-checkbox">
+                            <apex:actionSupport event="onchange" reRender="excludedFields"  status="statusLoad"/>
+                        </apex:inputCheckbox>
+                        <apex:inputCheckbox value="{!stgService.stgRel.Enable_Custom_Field_Sync__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxCFSO" html-aria-describedby="{!$Component.cbxCFSHelp}" styleClass="slds-checkbox"/>
+                        <apex:outputPanel id="cbxCFSHelp" layout="block">
+                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRelFieldSyncToggle}" />
+                        </apex:outputPanel>
+                    </div>
                 </div>
-            </div>
-            <div class="slds-form-element">
-                <apex:outputLabel value="{!$ObjectType.Relationship_Sync_Excluded_Fields__c.Label}" for="slCFSF" styleClass="col-md-4 slds-form-element__label" />
-                <div class="slds-form-element__control">
-                    <apex:outputText value="{!IF(excludedLabels == '', $Label.stgLabelNone, excludedLabels)}" rendered="{!isReadOnlyMode}" id="slCFSFO" html-aria-describedby="{!$Component.slCFSHelp}" styleClass="slds-form-element__static"/>
-                    <apex:selectList value="{!listExcludedFields}" multiselect="true" size="5" rendered="{!isEditMode}" id="slCFSF" html-aria-describedby="{!$Component.slCFSFHelp}" styleClass="slds-select">
-                        <apex:selectOptions value="{!listSOSyncFieldOptions}"/>
-                    </apex:selectList>
-                    <apex:outputPanel id="slCFSFHelp" layout="block">
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRelSyncFields}" />
-                    </apex:outputPanel>
-                </div>
-            </div>            
+                <apex:outputPanel styleClass="slds-form-element" rendered="{!stgService.stgRel.Enable_Custom_Field_Sync__c}">
+                    <apex:outputLabel value="{!$ObjectType.Relationship_Sync_Excluded_Fields__c.Label}" for="slCFSF" styleClass="col-md-4 slds-form-element__label" />
+                    <div class="slds-form-element__control">
+                        <apex:outputText value="{!IF(excludedLabels == '', $Label.stgLabelNone, excludedLabels)}" rendered="{!isReadOnlyMode}" id="slCFSFO" html-aria-describedby="{!$Component.slCFSHelp}" styleClass="slds-form-element__static"/>
+                        <apex:selectList value="{!listExcludedFields}" multiselect="true" size="5" rendered="{!isEditMode}" id="slCFSF" html-aria-describedby="{!$Component.slCFSFHelp}" styleClass="slds-select">
+                            <apex:selectOptions value="{!listSOSyncFieldOptions}"/>
+                        </apex:selectList>
+                        <apex:outputPanel id="slCFSFHelp" layout="block">
+                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRelSyncFields}" />
+                        </apex:outputPanel>
+                    </div>
+                </apex:outputPanel>
+            </apex:outputPanel>
         </div>
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
             <apex:commandButton id="saveRel" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
