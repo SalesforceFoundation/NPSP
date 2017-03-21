@@ -147,3 +147,7 @@ flows:
             2:
                 task: test_data_1k
 
+orgs:
+    scratch:
+        beta_middlesuffix:
+            config_file: orgs/beta_middlesuffix.json
