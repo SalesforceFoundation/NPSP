@@ -8,6 +8,10 @@ Now that you're done [setting up GitHub](Github.html), each developer for NPSP n
 
 Be sure to write down your login and remember your password. 
 
+## Enable Translation Workbench
+
+You have to manually enable Translation Workbench in your DE org before deploying the NPSP code. In Setup, search for "Translation" and then click on "Translation Settings". Then click the "Enable" button to turn on Translation workbench. 
+
 # [Set up CumulusCI 2](http://cumulusci.readthedocs.io/en/latest/tutorial.html)
 
 CumulusCI is a command line tool belt and set of reusable Python classes useful in the development and release process of building a Salesforce Managed Package application. CumulusCI was originally built for the development and deployment of the NPSP, and is maintained by Salesforce.org. Among other things, CumulusCI makes the process of setting up a dev org for NPSP development *really* easy -- once you have CumulusCI itself set up. [Follow the tuturial](http://cumulusci.readthedocs.io/en/latest/tutorial.html) to do the following:
