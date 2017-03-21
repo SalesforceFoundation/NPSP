@@ -50,12 +50,23 @@ tasks:
         options:
             package_xml: lib/admin_profile.xml
 
-    run_browser_tests:
-        description: Runs the Ruby/Watir browser tests in the browsertests folder
+    run_browser_tests_firefox:
+        description: Runs the Ruby/Watir browser tests in the browsertests folder using Firefox
         class_path: cumulusci.tasks.command.SalesforceBrowserTest
         options:
-            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber -c features/'
+            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber -c features/ --tags ~@flaky --tags ~@chrome' 
             dir: '.'
+            env:
+                SELENIUM_BROWSER: firefox
+
+    run_browser_tests_chrome:
+        description: Runs the Ruby/Watir browser tests in the browsertests folder using Chrome
+        class_path: cumulusci.tasks.command.SalesforceBrowserTest
+        options:
+            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber -c features/ --tags ~@firefox --tags ~@flaky'
+            dir: '.'
+            env:
+                SELENIUM_BROWSER: chrome
 
     test_data_dev_org:
         description: 'Loads a test data set for most NPSP objects based on 100 Contacts that should fit into a scratch org or DE org'
@@ -99,11 +110,9 @@ flows:
             1:
                 task: download_browser_tests
             2:
-                task: run_browser_tests
+                task: run_browser_tests_firefox
                 options:
                     use_saucelabs: True
-                    env:
-                        SELENIUM_BROWSER: firefox
 
     ci_browsertests_chrome:
         description: Runs the browser tests via SauceLabs against Chrome
@@ -111,11 +120,9 @@ flows:
             1:
                 task: download_browser_tests
             2:
-                task: run_browser_tests
+                task: run_browser_tests_chrome
                 options:
                     use_saucelabs: True
-                    env:
-                        SELENIUM_BROWSER: chrome
 
     dev_org:
         tasks:
