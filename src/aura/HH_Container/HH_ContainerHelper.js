@@ -1,14 +1,5 @@
 ({
     /*******************************************************************************************************
-     * @description called at onInit to detect if Locker Service is enabled, warning if so.
-     */
-    warnOnLockerService: function(component) {
-        if (component.toString != null && component.toString().includes('SecureComponent')) {        
-            this.displayUIMessage(component, "LockerService, a new Salesforce security service, is activated and is preventing this page from working correctly. To get this page to work correctly, search for Critical Updates under Salesforce Setup, and then deactivate the Enable Lightning LockerService Security critical update.", "divUIMessageContainer");
-        }
-    },
-
-    /*******************************************************************************************************
      * @description This is a workaround due to a LockerService bug where any added properties
      * on an object don't get update the backing object.  The issue and workaround are in GUS issue W-3221032
      * https://gus.my.salesforce.com/apex/adm_bugdetail?id=a07B0000002FDKi&sfdc.override=1&srKp=a07&srPos=0

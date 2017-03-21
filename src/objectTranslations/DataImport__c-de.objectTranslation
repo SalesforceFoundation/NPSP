@@ -94,7 +94,7 @@
         <name>Account2ImportStatus__c</name>
     </fields>
     <fields>
-        <label><!-- Account2 Imported --></label>
+        <label>Account2 importiert</label>
         <name>Account2Imported__c</name>
         <relationshipLabel>NPSP-Datenimporte (Account2 importiert)</relationshipLabel>
     </fields>
