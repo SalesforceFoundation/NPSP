@@ -30,3 +30,8 @@
 .document body {
     background-color: white;
 }
+
+td,th {
+    padding-right: 10px;
+    padding-left: 10px;
+}

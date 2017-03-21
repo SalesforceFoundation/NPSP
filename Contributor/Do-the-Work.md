@@ -1,5 +1,5 @@
 ---
-title: NPSP Code Contributor's Guide: Do the Work
+title: NPSP Code Contributor's Guide&#58; Do the Work
 layout: default
 ---
 # [Home](http://developer.salesforcefoundation.org/Cumulus/Contributor/) > Do the Work!
@@ -10,7 +10,7 @@ Phew! You are now all set up to contribute code to NPSP. The first thing to do i
 
 If you’re not sure what you want to build but are looking for a way to contribute, it’s actually pretty easy to find something to work on.
 
-First, head back over to the [NPSP github issues](github.com/SalesforceFoundation/Cumulus/issues) and use the big ‘Labels’ tab at the top to select a set of labels to filter the issue list by. The 'community-ready' label is the ideal place to start - these are issues that have been reviewed by Salesforce.org engineers and flagged as good candidates for community contributions. You can also take a look at the ‘bug’, 'feature-request’ and ‘enhancement' labels.
+First, head back over to the [NPSP GitHub issues](github.com/SalesforceFoundation/Cumulus/issues) and use the big ‘Labels’ tab at the top to select a set of labels to filter the issue list by. The 'community-ready' label is the ideal place to start - these are issues that have been reviewed by Salesforce.org engineers and flagged as good candidates for community contributions. You can also take a look at the ‘bug’, 'feature-request’ and ‘enhancement' labels.
 
 We recommend always posting on the issue to see if it makes sense to pick it up, just in case somebody else is already working what you’ve selected! Also feel free to ask questions about the issue or discuss proposed solutions directly in the github issue.
 

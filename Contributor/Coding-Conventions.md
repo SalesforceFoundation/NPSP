@@ -1,5 +1,5 @@
 ---
-title: NPSP Coding Conventions
+title: NPSP Code Contributor's Guide&#58; NPSP Coding Conventions
 layout: default
 ---
 # [Home](http://developer.salesforcefoundation.org/Cumulus/Contributor/) > Coding Conventions 
@@ -16,7 +16,7 @@ layout: default
 	- _TDTM for classes that implement Table-Driven Trigger Management 
 	- _BATCH for classes implementing ```Database.Batchable```
 	- _SCHED for classes implementing ```System.Schedulable```
-	- _UTIL for classes of utility methods called by other classes (unless they are already using the UTIL_ prefix)
+	- \_UTIL for classes of utility methods called by other classes (unless they are already using the UTIL\_ prefix)
 	- _TEST for test classes
 4. Visualforce pages should have the same name as their controller or extension (except for the _CTRL suffix). Pages invoked by a custom button should end with "BTN", without a preceding underscore.
 5. Methods, properties and variables should have descriptive names using lowerCamelCase.
@@ -41,7 +41,8 @@ Classes' ApexDoc block is located in the lines above the class declaration.  The
 | @group-content | a relative path to a static html file that provides content about the group|
 | @description | one or more lines that provide an overview of the class|
 
-Example
+
+**Example:**
 ```
 /*******************************************************************************************************
 * @author Salesforce.com Foundation
@@ -65,8 +66,10 @@ In order for ApexDoc to identify class methods, the method line must contain an 
 | @description | one or more lines that provide an overview of the method|
 | @param *param name* | a description of what the parameter does|
 | @return | a description of the return value from the method|
-| @example | Example code usage. This will be wrapped in <code> tags to preserve whitespace|
-Example
+| @example | Example code usage. This will be wrapped in &lt;code&gt; tags to preserve whitespace|
+
+
+**Example:**
 ```
     /*******************************************************************************************************
     * @description Returns field describe data
@@ -86,7 +89,8 @@ Located in the lines above a property.  The special token is optional, but pleas
 |-------|-------------|
 | @description | one or more lines that describe the property|
 
-Example
+
+**Example:**
 ```
     /*******************************************************************************************************
     * @description specifies whether state and country picklists are enabled in this org.

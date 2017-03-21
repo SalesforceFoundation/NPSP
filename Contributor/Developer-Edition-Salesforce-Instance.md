@@ -1,12 +1,16 @@
 ---
-title: NPSP Code Contributor's Guide: Developer Edition Salesforce
+title: NPSP Code Contributor's Guide&#58; Developer Edition Salesforce
 layout: default
 ---
 # [Home](http://developer.salesforcefoundation.org/Cumulus/Contributor/) > Create a DE Org
 
-Now that you're done [setting up github](Github.html), each developer for NPSP needs their own development environment where all their coding takes place. Developer edition Salesforce instances (aka ‘DE orgs’) are free, you can [sign up for one here](https://developer.salesforce.com/en/signup). We strongly recommend starting with a new developer instance to avoid any potential conflicts.
+Now that you're done [setting up GitHub](Github.html), each developer for NPSP needs their own development environment where all their coding takes place. Developer edition Salesforce instances (aka ‘DE orgs’) are free, and you can [sign up for one here](https://developer.salesforce.com/en/signup). We strongly recommend starting with a new developer instance to avoid any potential conflicts.
 
 Be sure to write down your login and remember your password. 
+
+## Enable Translation Workbench
+
+You have to manually enable Translation Workbench in your DE org before deploying the NPSP code. In Setup, search for "Translation" and then click on "Translation Settings". Then click the "Enable" button to turn on Translation workbench. 
 
 # [Set up CumulusCI 2](http://cumulusci.readthedocs.io/en/latest/tutorial.html)
 
