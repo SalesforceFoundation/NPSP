@@ -128,6 +128,38 @@ tasks:
                 - Campaign
 
 flows:
+    browsertests_firefox:
+        description: Runs the browser tests locally against a managed package in Firefox
+        tasks:
+            1:
+                task: download_browser_tests
+            2:
+                task: browsertests_firefox
+
+    browsertests_chrome:
+        description: Runs the browser tests locally against a managed package in Chrome
+        tasks:
+            1:
+                task: download_browser_tests
+            2:
+                task: browsertests_chrome
+
+    browsertests_unmanaged_firefox:
+        description: Runs the browser tests via SauceLabs against the unmanaged metadata in Firefox
+        tasks:
+            1:
+                task: download_browser_tests
+            2:
+                task: browsertests_unmanaged_firefox
+
+    browsertests_unmanaged_chrome:
+        description: Runs the browser tests via SauceLabs against the unmanaged metadata in Chrome
+        tasks:
+            1:
+                task: download_browser_tests
+            2:
+                task: browsertests_unmanaged_chrome
+
     ci_browsertests_firefox:
         description: Runs the browser tests via SauceLabs against a managed package in Firefox
         tasks:
