@@ -953,6 +953,9 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         // we need the Contact CustomId key to always be checked second when matching
         string strUniqueId = '';
         if (isCustomIDInContactMatchRules && (strUniqueId = strNull(con.get(diSettings.Contact_Custom_Unique_ID__c))) != '') {
+            if (!isCustomIdInContactDatatypeString) {
+                strUniqueId = string.valueOf(double.valueOf(strUniqueId));
+            }
             listDiKey.add(strUniqueId);
         }
 
@@ -1071,6 +1074,9 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
 
         // we need the Contact CustomId key to always be checked second when matching
         if (isCustomIDInContactMatchRules && (strUniqueId = strNull(di.get(strDIContactCustomIDField(strCx)))) != '') {
+            if (!isCustomIdInContactDatatypeString) {
+                strUniqueId = string.valueOf(double.valueOf(strUniqueId));
+            }
             listDiKey.add(strUniqueId);
         }
                 
@@ -1354,6 +1360,9 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         // we need the Account CustomId key to always be checked second when matching
         string strUniqueId = ''; 
         if (isCustomIDInAccountMatchRules && (strUniqueId = strNull(acc.get(diSettings.Account_Custom_Unique_ID__c))) != '') {
+            if (!isCustomIdInAccountDatatypeString) {
+                strUniqueId = string.valueOf(double.valueOf(strUniqueId));
+            }
             listDiKey.add(strUniqueId);
         }
 
@@ -1381,6 +1390,9 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
 
         // we need the Account CustomId key to always be checked second when matching
         if (isCustomIDInAccountMatchRules && (strUniqueId = strNull(di.get(strDIAccountCustomIDField(strAx)))) != '') {
+            if (!isCustomIdInAccountDatatypeString) {
+                strUniqueId = string.valueOf(double.valueOf(strUniqueId));
+            }
             listDiKey.add(strUniqueId);
         }
 
