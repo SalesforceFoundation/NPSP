@@ -74,7 +74,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     public boolean isScheduleWizard{get; set;}    
 
     /*******************************************************************************************************
-    * @description is this opportunity in a closed/lost stage
+    * @description is this opportunity in a closed/lost stage`
     */ 
     public boolean isClosedLost{get; set;}
     
@@ -382,6 +382,20 @@ public with sharing class PMT_PaymentWizard_CTRL {
         options.add(new SelectOption('Month','Month'));
         options.add(new SelectOption('Year','Year'));
         return options;
+    }
+
+    /*******************************************************************************************************
+    * @description holds the list of FieldSetMembers from the appropriate field set.
+    * @return List<Schema.FieldSetMember>
+    */
+    public List<Schema.FieldSetMember> pmtFieldSet {
+        get {
+            if (pmtFieldSet == null) {
+                    pmtFieldSet = Schema.SObjectType.npe01__OppPayment__c.FieldSets.Payment_Wizard.getFields();
+            }
+            return pmtFieldSet;
+        }
+        private set;
     }
 
     /*******************************************************************************************************
