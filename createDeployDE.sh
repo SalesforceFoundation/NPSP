@@ -1,4 +1,6 @@
-source ~/cumulusci_venv/bin/activate
+export CUMULUSCI_KEY=Sayonara12345678
+virtualenv ~/cumulusci_venv
+. ~/cumulusci_venv/bin/activate
 cci org default dev
 cci org list
 cci flow run dev_org
