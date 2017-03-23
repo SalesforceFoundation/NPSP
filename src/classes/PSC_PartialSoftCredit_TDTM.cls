@@ -98,16 +98,50 @@ public class PSC_PartialSoftCredit_TDTM extends TDTM_Runnable {
 
         // create a map of all OCR's for the Opps in question
         // our map will use conId-oppId as its key
-        map<String, OpportunityContactRole> mapConIdOppIdToOCR = new map<String, OpportunityContactRole>();
+        map<String, list<OpportunityContactRole>> mapConIdOppIdToOCRs = new map<String, list<OpportunityContactRole>>();
         for (OpportunityContactRole ocr : [select Id, ContactId, OpportunityId, Role, IsPrimary from OpportunityContactRole 
                 where ContactId in :setConId and OpportunityId in :setOppId]) {
-            mapConIdOppIdToOCR.put(ocr.ContactId + '-' + ocr.OpportunityId, ocr);        
+            
+            list<OpportunityContactRole> listOCR = mapConIdOppIdToOCRs.get(ocr.ContactId + '-' + ocr.OpportunityId);
+            if (listOCR == null) {
+                listOCR = new list<OpportunityContactRole>();
+                mapConIdOppIdToOCRs.put(ocr.ContactId + '-' + ocr.OpportunityId, listOCR);
+            }
+            listOCR.add(ocr);
+        }
+        
+        // now remove any OCR's that are already matched to existing PSC's
+        for (Partial_Soft_Credit__c psc : [select Id, Contact__c, Opportunity__c, Contact_Role_ID__c 
+            from Partial_Soft_Credit__c
+            where Contact__c in :setConId and Opportunity__c in :setOppId]) {
+                
+            list<OpportunityContactRole> listOCR = mapConIdOppIdToOCRs.get(psc.Contact__c + '-' + psc.Opportunity__c);
+            if (listOCR != null) {
+                for (integer i = 0; i < listOCR.size(); i++) {
+                    if (listOCR[i].Id == psc.Contact_Role_ID__c) {
+                        listOCR.remove(i);
+                        break;
+                    }
+                }
+            }
         }
             
         // now go thru all our new PSC's, see if we find an existing OCR to use, otherwise create a new OCR
         list<OpportunityContactRole> listOCRNew = new list<OpportunityContactRole>();
+        set<ID> setIdOCRMatched = new set<ID>();
         for (Partial_Soft_Credit__c psc : listPSC) {
-            OpportunityContactRole ocr = mapConIdOppIdToOCR.get(psc.Contact__c + '-' + psc.Opportunity__c);
+            list<OpportunityContactRole> listOCR = mapConIdOppIdToOCRs.get(psc.Contact__c + '-' + psc.Opportunity__c);
+            OpportunityContactRole ocr;
+            
+            if (listOCR != null) {
+                // find an OCR we have not yet matched against
+                for (OpportunityContactRole ocrT : listOCR) {
+                    if (setIdOCRMatched.add(ocrT.Id)) {
+                        ocr = ocrT;
+                        break;
+                    }
+                }
+            }
             if (ocr == null) {
                 ocr = new OpportunityContactRole(OpportunityId=psc.Opportunity__c, ContactId=psc.Contact__c, Role=psc.Role_Name__c);
                 listOCRNew.add(ocr);
@@ -119,18 +153,28 @@ public class PSC_PartialSoftCredit_TDTM extends TDTM_Runnable {
         
         // add these new OCR's to our OCR map
         for (OpportunityContactRole ocr : listOCRNew) {
-            mapConIdOppIdToOCR.put(ocr.ContactId + '-' + ocr.OpportunityId, ocr);        
+            list<OpportunityContactRole> listOCR = mapConIdOppIdToOCRs.get(ocr.ContactId + '-' + ocr.OpportunityId);
+            if (listOCR == null) {
+                listOCR = new list<OpportunityContactRole>();
+                mapConIdOppIdToOCRs.put(ocr.ContactId + '-' + ocr.OpportunityId, listOCR);
+            }
+            listOCR.add(ocr);
         }
          
         // now set the matching OCR in each PSC
         for (Partial_Soft_Credit__c psc : listPSC) {
-            OpportunityContactRole ocr = mapConIdOppIdToOCR.get(psc.Contact__c + '-' + psc.Opportunity__c);
-            if (ocr != null) {
-                psc.Contact_Role_ID__c = ocr.Id;
+            list<OpportunityContactRole> listOCR = mapConIdOppIdToOCRs.get(psc.Contact__c + '-' + psc.Opportunity__c);
+            if (listOCR != null) { 
+                integer cOCR = listOCR.size();
+                if (cOCR > 0 && listOCR[cOCR-1] != null) {
+                    psc.Contact_Role_ID__c = listOCR[cOCR-1].Id;
+                    // remove the ocr from the list, so we don't reuse it.
+                    listOCR.remove(cOCR-1);
+                }
             }
         }
         
-        // we explicitly do not update the PSC's, since we know this is called from Before triggers!     
+        // we explicitly do not update the PSC's, since we know this is called from Before triggers! 
     }
 
     /*******************************************************************************************************
