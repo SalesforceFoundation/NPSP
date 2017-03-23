@@ -1,3 +1,4 @@
+export CUMULUSCI_KEY=Sayonara12345678
 export SFDX_ORG_CREATE_ARGS="-e prototype"
 
 cci org scratch dev scratch
