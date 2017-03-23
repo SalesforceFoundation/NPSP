@@ -1,3 +1,4 @@
+source ~/cumulusci_venv/bin/activate
 cci org default dev
 cci org list
 cci flow run dev_org
