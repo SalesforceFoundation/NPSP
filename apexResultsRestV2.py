@@ -14,7 +14,6 @@ It is designed to be used with SFDX and can use the Session ID that is returned 
 '''
 
 import pandas as pd
-import beatbox
 import time
 import sys, getopt
 import json
@@ -179,7 +178,22 @@ setCliParameters()
 # Authenticate using username or session ID
 if len(user)>0 and len(password)>0:
     # Authenticate user with username and password
-    query_result = queryWithUser(pod,client_id,client_secret,user,password,query)
+    print 'Using username and password to authenticate'
+    url = pod+'/services/oauth2/token'
+    print 'Url:',url
+    querystring = json.loads('{"grant_type":"password","client_id":"'+client_id+'","client_secret":"'+client_secret+'","username":"'+user+'","password":"'+password+'"}')
+    
+    headers = {'cache-control': "no-cache"}
+    response = requests.request("POST", url, headers=headers, params=querystring).json()
+    token = response['access_token']
+    instance_url = response['instance_url']
+    print 'Instance:',instance_url
+    print 'Access Token:',token
+    
+    endpoint = instance_url+serviceUrl+query
+    
+    headers = json.loads('{"Authorization": "Bearer '+token+'"}')
+    query_result = requests.get(endpoint,data=data,headers=headers).json()
 elif len(sessionfile)>0 or len(sessionId)>0:
     # Authenticate user with sessionid
     query_result = queryWithSession(sessionfile,sessionId)

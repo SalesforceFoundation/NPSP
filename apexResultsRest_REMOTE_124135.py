@@ -14,6 +14,7 @@ It is designed to be used with SFDX and can use the Session ID that is returned 
 '''
 
 import pandas as pd
+import beatbox
 import time
 import sys, getopt
 import json
@@ -45,20 +46,19 @@ app = 'generic'
 db = 'SDB'
 # Pod
 pod = "https://gs1.salesforce.com"
-instance_url = pod
 client_id = '3MVG9nwRZX60mjQra5yKwxXiTWGuvvMQuX5vqNtgXUQAl5lDXoyBBKU66oRTBZKeW.Exu5rRx8_nxdGbbODYh'
 client_secret = '4292478741080167126'
 
 # Get CLI arguments
 try:
     # Parse CLI arguments
-    opts, args = getopt.getopt(sys.argv[1:], 'hs:u:p:a:i:d:z:x:y:v', ['help','sessionfile','username','password','app','sessionid','database','pod','client_id','client_secret'])
+    opts, args = getopt.getopt(sys.argv[1:], 'hs:u:p:a:i:d:p:x:y:v', ['help','sessionfile','username','password','app','sessionid','database','pod','client_id','client_secret'])
 except getopt.GetoptError:
-    print 'apexResultsRest.py -s <sessionfile> -i <sessionid> -u <username> -p <password> -a <application> -d <database> -z <pod> -x <client_id> -y <client_secret> '
+    print 'apexResultsRest.py -s <sessionfile> -i <sessionid> -u <username> -p <password> -a <application> -d <database> -p <pod>'
     sys.exit(2)
 for opt, arg in opts:
     if opt == '-h':
-            print 'apexResultsRest.py -s <sessionfile> -i <sessionid> -u <username> -p <password> -a <application> -d <database>  -z <pod> -x <client_id> -y <client_secret> '
+            print 'apexResultsRest.py -s <sessionfile> -i <sessionid> -u <username> -p <password> -a <application> -d <database>'
             sys.exit()
     elif opt in ("-s", "--sessionfile"):
             sessionfile = arg
@@ -72,7 +72,7 @@ for opt, arg in opts:
             sessionId = arg
     elif opt in ("-d", "--database"):
             db = arg
-    elif opt in ("-z", "--pod"):
+    elif opt in ("-p", "--pod"):
             pod = arg
     elif opt in ("-x", "--client_id"):
             client_id = arg
@@ -83,27 +83,23 @@ query = "SELECT ApexClass.Name,ApexClassId,ApexLogId,AsyncApexJobId,Id,Message,M
 
 serviceUrl ='/services/data/v39.0/query/?q='
 
+endpoint = pod+serviceUrl+query
 data = {"ip":"1.1.2.3"}
 headers = ''
 query_results = ''
-endpoint = instance_url+serviceUrl+query
- 
+
 # Authenticate using username or session ID
 if len(user)>0 and len(password)>0:
     print 'Using username and password to authenticate'
-    url = pod+'/services/oauth2/token'
-    print 'Url:',url
+    url = pod+"/services/oauth2/token"
     querystring = json.loads('{"grant_type":"password","client_id":"'+client_id+'","client_secret":"'+client_secret+'","username":"'+user+'","password":"'+password+'"}')
-    
+    print 'QueryString:',querystring
     headers = {'cache-control': "no-cache"}
     response = requests.request("POST", url, headers=headers, params=querystring).json()
     token = response['access_token']
-    instance_url = response['instance_url']
-    print 'Instance:',instance_url
+
     print 'Access Token:',token
-    
-    endpoint = instance_url+serviceUrl+query
-    
+
     headers = json.loads('{"Authorization": "Bearer '+token+'"}')
     query_result = requests.get(endpoint,data=data,headers=headers).json()
     #service.login(user, password)  # login using your sf credentials
