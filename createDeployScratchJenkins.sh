@@ -8,6 +8,7 @@ cci org scratch dev scratch
 cci flow run dev_org --org scratch
 cci task run update_admin_profile --org scratch
 cci flow run test_data_dev_org --org scratch
+cci task run run_tests --org scratch
 
 echo "Get Org URL"
 sfdx force:org:open -r > scratch_session.txt 
