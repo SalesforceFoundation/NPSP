@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Household Naming Settings --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Household Naming Settings --></value>
+    </caseValues>
+    <fields>
+        <help>Specificeert het aantal contactpersonen die expliciet opgenomen worden in een naam. Na dat bedrag, de Naam Overrun wordt gebruikt.</help>
+        <label>Contactpersoon Overrun Count</label>
+        <name>Contact_Overrun_Count__c</name>
+    </fields>
+    <fields>
+        <help>Het formaat wat gebruikt wordt voor Formele Begroeting van het Huishouden</help>
+        <label>Formele Begroeting Formaat</label>
+        <name>Formal_Greeting_Format__c</name>
+    </fields>
+    <fields>
+        <help>Het formaat wat gebruikt wordt voor de naam van het Huishouden.</help>
+        <label>Naam Huishouden Formaat</label>
+        <name>Household_Name_Format__c</name>
+    </fields>
+    <fields>
+        <help>De naam van de klasse die HH_INaming interface implementeert voor het benoemen van Huishoudens.</help>
+        <label>Klasse implementeren</label>
+        <name>Implementing_Class__c</name>
+    </fields>
+    <fields>
+        <help>Het formaat wat gebruikt wordt voor Informele Begroeting van het Huishouden</help>
+        <label>Informele Begroeting Formaat</label>
+        <name>Informal_Greeting_Format__c</name>
+    </fields>
+    <fields>
+        <help>De string die paren verbindt in een naam. Bijvoorbeeld, John &amp; Jane, of John en Jane.</help>
+        <label>Naam connector</label>
+        <name>Name_Connector__c</name>
+    </fields>
+    <fields>
+        <help>De string die gebruikt wordt bij vervangen van lange lijsten met namen.</help>
+        <label>Naam Overrun</label>
+        <name>Name_Overrun__c</name>
+    </fields>
+    <gender><!-- Neuter --></gender>
+</CustomObjectTranslation>

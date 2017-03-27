@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <help>De batch waar deze lead vandaan komt.</help>
+        <label><!-- Batch --></label>
+        <name>Batch__c</name>
+        <relationshipLabel><!-- Leads --></relationshipLabel>
+    </fields>
+    <fields>
+        <label>Bedrijf Stad</label>
+        <name>CompanyCity__c</name>
+    </fields>
+    <fields>
+        <label>Bedrijf Land</label>
+        <name>CompanyCountry__c</name>
+    </fields>
+    <fields>
+        <label>Bedrijf Zip/Postcode</label>
+        <name>CompanyPostalCode__c</name>
+    </fields>
+    <fields>
+        <label>Bedrijf Staat/Provincie</label>
+        <name>CompanyState__c</name>
+    </fields>
+    <fields>
+        <label>Bedrijf Straat</label>
+        <name>CompanyStreet__c</name>
+    </fields>
+</CustomObjectTranslation>

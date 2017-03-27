@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Engagement Plan --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Engagement Plan --></value>
+    </caseValues>
+    <fields>
+        <label><!-- Account --></label>
+        <name>Account__c</name>
+        <relationshipLabel>Betrokkenheid Plannen</relationshipLabel>
+    </fields>
+    <fields>
+        <label>Campagne</label>
+        <name>Campaign__c</name>
+        <relationshipLabel>Betrokkenheid Plannen</relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Case --></label>
+        <name>Case__c</name>
+        <relationshipLabel>Betrokkenheid Plannen</relationshipLabel>
+    </fields>
+    <fields>
+        <label>Voltooide Taken</label>
+        <name>Completed_Tasks__c</name>
+    </fields>
+    <fields>
+        <label>Contactpersoon</label>
+        <name>Contact__c</name>
+        <relationshipLabel>Betrokkenheid Plannen</relationshipLabel>
+    </fields>
+    <fields>
+        <label>Betrokkenheids Plan Template</label>
+        <name>Engagement_Plan_Template__c</name>
+        <relationshipLabel>Betrokkenheid Plannen</relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Opportunity --></label>
+        <name>Opportunity__c</name>
+        <relationshipLabel>Betrokkenheid Plannen</relationshipLabel>
+    </fields>
+    <fields>
+        <label>Terugkerende Donatie</label>
+        <name>Recurring_Donation__c</name>
+        <relationshipLabel>Betrokkenheid Plannen</relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Status --></label>
+        <name>Status__c</name>
+    </fields>
+    <fields>
+        <label>Totale EP Taken</label>
+        <name>Total_EP_Tasks__c</name>
+    </fields>
+    <fields>
+        <label>Totale Taken</label>
+        <name>Total_Tasks__c</name>
+    </fields>
+    <gender><!-- Neuter --></gender>
+    <layouts>
+        <layout>Engagement Plan Layout</layout>
+        <sections>
+            <label>Aangepaste Koppelingen</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Engagement Plan Number --></nameFieldLabel>
+</CustomObjectTranslation>
