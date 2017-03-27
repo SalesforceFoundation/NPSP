@@ -2461,6 +2461,10 @@
         <name>stgHelpRelAutoCreatedDup</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgHelpRelFieldSyncToggle --></label>
+        <name>stgHelpRelFieldSyncToggle</name>
+    </customLabels>
+    <customLabels>
         <label>相互関係を判断するための個人の性別の定義に使用されるカスタム項目</label>
         <name>stgHelpRelGenderField</name>
     </customLabels>
@@ -2483,6 +2487,10 @@
     <customLabels>
         <label>個人の性別項目が男性または女性カスタム表示ラベルに一致しなかったときや、個人の敬称が性別を表していないときに使用される値。</label>
         <name>stgHelpRelReciprocalNeutral</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRelSyncFields --></label>
+        <name>stgHelpRelSyncFields</name>
     </customLabels>
     <customLabels>
         <label>&lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelErrorLog&apos;);return false;&quot;&gt;エラーログ&lt;/a&gt;で、問題があるかどうかを確認してください。</label>
@@ -2831,6 +2839,10 @@
         <name>stgLabelRelSettings</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgLabelRelationshipSyncNoValidFields --></label>
+        <name>stgLabelRelationshipSyncNoValidFields</name>
+    </customLabels>
+    <customLabels>
         <label>Chatter グループを選択</label>
         <name>stgLabelSelectChatterGroup</name>
     </customLabels>
@@ -3055,11 +3067,11 @@
         <name>NPSP_Settings</name>
     </customTabs>
     <quickActions>
-        <label><!-- Log a Call --></label>
+        <label><!-- LogACall --></label>
         <name>LogACall</name>
     </quickActions>
     <quickActions>
-        <label><!-- New Account --></label>
+        <label><!-- NewAccount --></label>
         <name>NewAccount</name>
     </quickActions>
     <quickActions>
@@ -3067,7 +3079,7 @@
         <name>NewContact</name>
     </quickActions>
     <quickActions>
-        <label><!-- New Note --></label>
+        <label><!-- NewNote --></label>
         <name>NewNote</name>
     </quickActions>
     <quickActions>
@@ -3075,7 +3087,7 @@
         <name>NewOpportunity</name>
     </quickActions>
     <quickActions>
-        <label><!-- New Task --></label>
+        <label><!-- NewTask --></label>
         <name>NewTask</name>
     </quickActions>
     <quickActions>
