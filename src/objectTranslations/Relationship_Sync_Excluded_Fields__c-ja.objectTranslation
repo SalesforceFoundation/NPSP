@@ -4,9 +4,4 @@
         <plural>false</plural>
         <value><!-- Fields to Exclude from Sync --></value>
     </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value><!-- Fields to Exclude from Sync --></value>
-    </caseValues>
-    <gender><!-- Feminine --></gender>
 </CustomObjectTranslation>
