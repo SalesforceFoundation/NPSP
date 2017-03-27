@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Allocations Settings --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Allocations Settings --></value>
+    </caseValues>
+    <fields>
+        <help>Inschakelen van Standaard Allocaties creëert een Allocatie object voor elke Opportunity. Hierdoor kunt u rapporten draaien op allocaties met een standaard Algemene Accounting Unit, maar gebruikt meer data-opslag.</help>
+        <label>Standaard Allocaties Ingeschakeld</label>
+        <name>Default_Allocations_Enabled__c</name>
+    </fields>
+    <fields>
+        <help>Houdt het ID voor de standaard Algemene Accounting Unit voor het creëren van standaard allocaties of voor de allocatie van niet-toegewezen hoeveelheden.</help>
+        <label>Standaard Algemene Accounting Unit</label>
+        <name>Default__c</name>
+    </fields>
+    <fields>
+        <help>Het uitsluiten van Opportunity Record Typen voor berekeningen van Allocatie rollups.</help>
+        <label>Uitgesloten Opp RecTypes</label>
+        <name>Excluded_Opp_RecTypes__c</name>
+    </fields>
+    <fields>
+        <help>Uitsluiten van Opportunity Typen van Allocaties rollups.</help>
+        <label>Uitgesloten Opp Typen</label>
+        <name>Excluded_Opp_Types__c</name>
+    </fields>
+    <fields>
+        <help>Deze waarde heeft invloed op het aantal dagen voor N Dagen Allocatie rollup velden.</help>
+        <label>Rollup N Dag Waarde</label>
+        <name>Rollup_N_Day_Value__c</name>
+    </fields>
+    <fields>
+        <help>Door dit te vakje te selecteren wordt het boekhoudjaar toegewezen in plaats van het kalander jaar. Om fiscale jaar in te stellen, ga naar setup &gt; bedrijfsprofiel &gt; fiscale jaar. OPMERKING: aangepast fiscale jaar instellingen worden niet ondersteund .</help>
+        <label>Gebruik Fiscaal Jaar voor Rollups</label>
+        <name>Use_Fiscal_Year_for_Rollups__c</name>
+    </fields>
+    <gender><!-- Neuter --></gender>
+</CustomObjectTranslation>

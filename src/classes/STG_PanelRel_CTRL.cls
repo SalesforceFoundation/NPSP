@@ -71,8 +71,142 @@ public with sharing class STG_PanelRel_CTRL extends STG_Panel {
     	get {
     		return getFieldLabel('Contact', STG_Panel.stgService.stgRel.npe4__Gender_Field__c);
     	}
-    }  
+    }
+
+    /*********************************************************************************************************
+    * @description The list of SelectOptions for Relationship fields to exclude from sync
+    */
+    public list<SelectOption> listSOSyncFieldOptions {
+        get {
+            if (listSOSyncFieldOptions == null) {
+                listSOSyncFieldOptions = new list<SelectOption>();
+                listSOSyncFieldOptions.add(new SelectOption('', Label.stgLabelNone));             
+                map<String, Schema.DescribeFieldResult> relFieldDescMap = UTIL_Describe.getAllFieldsDescribe('npe4__Relationship__c'); 
+               
+                //only present editable custom fields not from NPSP
+                for (string fieldName : relFieldDescMap.keyset()) {
+                    if (relFieldDescMap.get(fieldName).isCustom() && !fieldname.startsWith('npe4__')
+                        && !relFieldDescMap.get(fieldName).isCalculated() && !relFieldDescMap.get(fieldName).isAutoNumber()) {
+                        
+                        listSOSyncFieldOptions.add(new SelectOption(fieldName, relFieldDescMap.get(fieldName).getLabel())); 
+                    }               
+                }
+                
+                // insert disabled SelectOption if there are no valid fields    
+                if (listSOSyncFieldOptions.size() == 1){            
+                    listSOSyncFieldOptions.clear();
+                    listSOSyncFieldOptions.add(new SelectOption(strNoValidField, strNoValidField, true));
+                }
+            }               
+            return listSOSyncFieldOptions;
+        }
+        set;
+    }
+ 
+    /*********************************************************************************************************
+    * @description A localized string to use if there is no valid field
+    */
+    private static string strNoValidField = System.Label.stgLabelRelationshipSyncNoValidFields;
+
     
+    /*********************************************************************************************************
+    * @description A smeicolon-delimited list of field labels exclude from sync for display in read-only 
+    */
+    public String excludedLabels {
+        get {
+            if (excludedLabels == null) {
+                List<String> excludedLabelList = new List<String>();
+                for (string fieldName : new Set<String>(UTIL_ListCustomSettingsFacade.getMapRelationshipFieldSyncSettings().keyset())) {
+                    excludedLabelList.add(getFieldLabel('npe4__Relationship__c',fieldName));
+                }
+
+                excludedLabels = String.join(excludedLabelList,'; ');
+            }
+            return excludedLabels;
+        }
+        set;
+    }
+
+    /*********************************************************************************************************
+    * @description Set of strings used to hold previous value of listExcludedFields for comparison.
+    */
+    private Set<String> oldFields {
+        get {
+            if (oldFields == null) {
+                oldFields = new Set<String>(); 
+            }
+            return oldFields;
+        }
+        set;
+    }
+
+    /*********************************************************************************************************
+    * @description The list of string values databound to the multi-select-picklist. 
+    */
+    public list<string> listExcludedFields {
+        get {
+            if (listExcludedFields == null) {
+                listExcludedFields = new List<String>(UTIL_ListCustomSettingsFacade.getMapRelationshipFieldSyncSettings().keyset());
+            }
+            return listExcludedFields;
+        }
+        set {
+            oldFields = new Set<String>(listExcludedFields);
+            listExcludedFields = value;
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Override of virtual method from STG_Panel. Creates and/or  deletes Relationship_Sync_Excluded_Fields__c
+    * records as needed before saving other settings. 
+    * @return void
+    */ 
+    public override PageReference saveSettings() { 
+        STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
+        Savepoint sp = Database.setSavepoint();
+        List<Relationship_Sync_Excluded_Fields__c> newFieldRecs = new List<Relationship_Sync_Excluded_Fields__c>();
+        List<Relationship_Sync_Excluded_Fields__c> fieldRecsForDelete = new List<Relationship_Sync_Excluded_Fields__c>();        
+        
+        // if the values changed, then create any new list setting records  
+        if (!oldFields.equals(new Set<String>(listExcludedFields))) {
+            for (string str : listExcludedFields) {
+                if (!oldFields.contains(str) && String.isNotBlank(str)) {
+                    newFieldRecs.add(new Relationship_Sync_Excluded_Fields__c(Name = str));
+                }
+            }
+            // delete list settings for any records that had them before but are no longer selected
+            oldFields.removeAll(listExcludedFields);
+            if (oldFields.size() > 0) {
+                fieldRecsForDelete = [SELECT Id, Name FROM Relationship_Sync_Excluded_Fields__c WHERE NAME IN :oldFields];
+            } 
+        }
+
+        try {
+              
+            if (newFieldRecs.size() > 0 ) {
+                insert newFieldRecs;
+            }
+            
+            if (fieldRecsForDelete.size() > 0 ) {
+                delete fieldRecsForDelete;
+            }
+            
+            // null out static variables to force a re-read on next call
+            excludedLabels = null;
+            UTIL_ListCustomSettingsFacade.mapRelationshipFieldSyncSettings = null;
+
+            stgService.saveAll();
+            isEditMode = false;
+        } catch(Exception e) {
+            Database.rollback(sp);
+            ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+        }
+        return null;
+        
+    }
+
+
     /*********************************************************************************************************
     * @description Returns a field's label.  cover over describe call to handle fields that no longer exist.
     * @param strObj The object

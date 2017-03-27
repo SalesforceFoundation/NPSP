@@ -80,11 +80,20 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
             // for each of our Ladders
             for (String strLadder : mapLadderToLevels.keySet()) {
                 list<Level__c> listLvls = mapLadderToLevels.get(strLadder);
-                
+                Id lvlIdPrev;
+                // track whether or not a match was found
+                Boolean matchedLvl = false;
                 // note that we have try/catches around using the level fields, so we can provide useful errors if they are invalid
 
                 // go thru each list of Levels finding where this object fits
                 for (Level__c lvl : listLvls) {
+                    if (lvlIdPrev == null) {
+                        try {
+                            lvlIdPrev = (Id)sobj.get(strLadder);
+                        } catch (Exception ex) {
+                            throw new LevelException(String.format(Label.lvlErrorInvalidLookupField, new list<String>{strLadder, lvl.Name}));
+                        }
+                    }
                     Decimal amt;
                     try {
                         amt = (Decimal)sobj.get(lvl.Source_Field__c);
@@ -98,14 +107,7 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
                         (amt < lvl.Maximum_Amount__c || lvl.Maximum_Amount__c == null)) {
                         
                         // record the new level
-                        
-                        Id lvlIdPrev;
-                        try {
-                            lvlIdPrev = (Id)sobj.get(strLadder);
-                        } catch (Exception ex) {
-                            throw new LevelException(String.format(Label.lvlErrorInvalidLookupField, new list<String>{strLadder, lvl.Name}));
-                        }
-
+                        matchedLvl = true;
                         if (lvlIdPrev != lvl.Id) {
                             if (lvl.Previous_Level_Field__c != null) {
                                 try {
@@ -136,7 +138,12 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
                         break;
                     }
 
-                } // levels               
+                } // levels
+                // After looping through all levels in the current ladder if no match found but level set clear level
+                if (!matchedLvl && lvlIdPrev != null) {
+                    sobj.put(strLadder, null);
+                    mapSObjUpdate.put(sobj.Id, sobj);
+                }
             } // ladder            
         } // scope
                 

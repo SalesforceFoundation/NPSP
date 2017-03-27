@@ -1,0 +1,3008 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Translations xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customApplications>
+        <label><!-- Nonprofit Success Pack --></label>
+        <name>Nonprofit_CRM</name>
+    </customApplications>
+    <customLabels>
+        <label><!-- Addr Id Error --></label>
+        <name>Addr_Id_Error</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Batch Address Verification Not Supported --></label>
+        <name>Addr_No_Batch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Pending verification --></label>
+        <name>Addr_Pending_Verification</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- DEPRECATED - Addr Settings API Title --></label>
+        <name>Addr_Settings_API_Body</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Addr Settings API Title --></label>
+        <name>Addr_Settings_API_Title</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- DEPRECATED - Addr Settings Intro Body --></label>
+        <name>Addr_Settings_Intro_Body</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Addr Settings Intro Body --></label>
+        <name>Addr_Settings_Intro_Body1</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Addr Settings Intro Body --></label>
+        <name>Addr_Settings_Intro_Body2</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Addr Settings Intro Title --></label>
+        <name>Addr_Settings_Intro_Title</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Addr Settings Notice --></label>
+        <name>Addr_Settings_Notice</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Addr Settings Test Body --></label>
+        <name>Addr_Settings_Test_Body</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Addr Settings Test Response Title --></label>
+        <name>Addr_Settings_Test_Response_Title</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Addr Settings Test Title --></label>
+        <name>Addr_Settings_Test_Title</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Addr Skip Verified --></label>
+        <name>Addr_Skip_Verified</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Addr Token Error --></label>
+        <name>Addr_Token_Error</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Addr Unauthorized Endpoint --></label>
+        <name>Addr_Unauthorized_Endpoint</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Addr Valid Key Pair --></label>
+        <name>Addr_Valid_Key_Pair</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Addr Verification Batch Body --></label>
+        <name>Addr_Verification_Batch_Body</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- No Batch Support --></label>
+        <name>Addr_Verification_Batch_Not_Supported</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Batches of 100 --></label>
+        <name>Addr_Verification_Batch_SmartyStreets_Message</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Addr Verification Batch Status --></label>
+        <name>Addr_Verification_Batch_Status</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Addr Verification Batch Title --></label>
+        <name>Addr_Verification_Batch_Title</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Unable to load verification class when visiting settings page --></label>
+        <name>Addr_Verification_Cant_Load_Class</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Verification required --></label>
+        <name>Addr_Verification_Required</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- No address verification class defined --></label>
+        <name>Addr_Verification_Undefined_Class</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Wrong address verification class --></label>
+        <name>Addr_Verification_Wrong_Class</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Wrong address verification interface --></label>
+        <name>Addr_Verification_Wrong_Interface</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Address Successfully Verified --></label>
+        <name>Addr_Verified</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Addr Verify Endpoint --></label>
+        <name>Addr_Verify_Endpoint</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Google API Helpt Text --></label>
+        <name>Addr_Verify_Google_Help</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Addr Verify Settings --></label>
+        <name>Addr_Verify_Settings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Addr Verifying --></label>
+        <name>Addr_Verifying</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Address Not Found --></label>
+        <name>Address_Not_Found</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- {value} is not configured as a valid Country in your Organization. --></label>
+        <name>Address_StateCountry_Invalid_Error</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Address Verification Limit --></label>
+        <name>Address_Verification_Limit</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Risk Accepted --></label>
+        <name>CONV_Accept_Risk</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Account Field --></label>
+        <name>CONV_Account_Field</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Account Field For Old HH ID --></label>
+        <name>CONV_Account_Field_For_Old_HH_ID</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Activites Reparented --></label>
+        <name>CONV_Activities_Reparented</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Address Overrides --></label>
+        <name>CONV_Address_Overrides_Set</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Addresses Mapped --></label>
+        <name>CONV_Addresses_Mapped</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- All Data Backed Up --></label>
+        <name>CONV_All_Backed_Up</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- CONV_All_Dup_Rules_Disabled --></label>
+        <name>CONV_All_Dup_Rules_Disabled</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- All Households Selected --></label>
+        <name>CONV_All_Households_Selected</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- All Required Removed --></label>
+        <name>CONV_All_Required_Removed</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- All Triggers disabled --></label>
+        <name>CONV_All_Triggers_Disabled</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- All Users Logged Out --></label>
+        <name>CONV_All_Users_Logged_Out</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- All WFR and VR Disabled --></label>
+        <name>CONV_All_WFR_Disabled</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Batching Explanation --></label>
+        <name>CONV_Batching_Explanation</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Begin Conversion --></label>
+        <name>CONV_Begin</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Cancel --></label>
+        <name>CONV_Cancel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Configuration Options --></label>
+        <name>CONV_Configuration_Options</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Contacts Attached to Household --></label>
+        <name>CONV_Contacts_Attached</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Account Model Conversion Progress --></label>
+        <name>CONV_Conversion_Process</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Fundamental Changes --></label>
+        <name>CONV_Fundamental_Changes</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Important Information Header --></label>
+        <name>CONV_Important_Info_Header</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Local Expert --></label>
+        <name>CONV_Local_Expert</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Master Address Set --></label>
+        <name>CONV_Master_Address_Set</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- New Affiliations Created --></label>
+        <name>CONV_New_Affiliations</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- New Households Created --></label>
+        <name>CONV_New_Households_Created</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Non-NPSP Apps --></label>
+        <name>CONV_Non_NPSP_Apps</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Old Household Objects --></label>
+        <name>CONV_Old_Household_Objects</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Only Household Contacts --></label>
+        <name>CONV_Only_Household_Contacts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Opportunities Reparented --></label>
+        <name>CONV_Opportunities_Reparented</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Original HH Id --></label>
+        <name>CONV_Original_HH_Id</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Page Description --></label>
+        <name>CONV_Page_Description</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Page Title --></label>
+        <name>CONV_Page_Title</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Permanent Change Info --></label>
+        <name>CONV_Permanent_Change</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Primary Contacts Set --></label>
+        <name>CONV_Primary_Contacts_Set</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Proceed --></label>
+        <name>CONV_Proceed</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Record Ownership Transferred --></label>
+        <name>CONV_Record_Ownership_Transferred</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Reload --></label>
+        <name>CONV_Reload</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Selected Field Not Able to Hold ID --></label>
+        <name>CONV_Selected_Field_Bad</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Selected Field Not Verified for Id --></label>
+        <name>CONV_Selected_Field_Verification_Failure</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tested in Sandbox --></label>
+        <name>CONV_Tested_in_Sandbox</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Triggers ReEnabled --></label>
+        <name>CONV_Triggers_Reenabled</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Warning --></label>
+        <name>CONV_Warning</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- What This Tool Does --></label>
+        <name>CONV_What_This_Tool_Does</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- CampaignMemberStatusOmit --></label>
+        <name>CampaignMemberStatusOmit</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- CascadeDeletionError --></label>
+        <name>CascadeDeletionError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- ClosedWonOpportunities --></label>
+        <name>ClosedWonOpportunities</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- ConfirmDeleteAccount --></label>
+        <name>ConfirmDeleteAccount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- EPAddDependentTask --></label>
+        <name>EPAddDependentTask</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Engagement Plan&apos;s Add Task button label --></label>
+        <name>EPAddTask</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- EPDeleteTask --></label>
+        <name>EPDeleteTask</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- EPManageTasks --></label>
+        <name>EPManageTasks</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- EPManageTemplate --></label>
+        <name>EPManageTemplate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- EPTaskDependency --></label>
+        <name>EPTaskDependency</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- EPTaskTemplate --></label>
+        <name>EPTaskTemplate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- to, as in &quot;Add depend task to task 1&quot; --></label>
+        <name>EPTo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- ErrorEmailMessage --></label>
+        <name>ErrorEmailMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- HiddenForSecurity --></label>
+        <name>HiddenForSecurity</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- NameRequired --></label>
+        <name>NameRequired</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- OrganizationalOpportunities --></label>
+        <name>OrganizationalOpportunities</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Confirm --></label>
+        <name>PageMessagesConfirm</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error --></label>
+        <name>PageMessagesError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Fatal --></label>
+        <name>PageMessagesFatal</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Warning --></label>
+        <name>PageMessagesWarning</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Relationship Viewer - Create --></label>
+        <name>REL_Create_New_Relationship</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Relationship Viewer - Former --></label>
+        <name>REL_Former</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Relationship Viewer - No Relationship --></label>
+        <name>REL_No_Relationships</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Relationship Viewer - Re-center --></label>
+        <name>REL_RECenter</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Relationship Viewer - Return to Contact --></label>
+        <name>REL_Return_to_Contact</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Relationship Viewer - View Contact Record --></label>
+        <name>REL_View_Contact_Record</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RecurringDonationAccountAndContactError --></label>
+        <name>RecurringDonationAccountAndContactError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Saved --></label>
+        <name>Saved</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Settings not Saved --></label>
+        <name>Settings_not_Saved</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SmartyStreets Help Test --></label>
+        <name>SmartyStreets_Help_Text</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Zip Not Found --></label>
+        <name>Zip_Not_Found</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Zipcode Verification Limit --></label>
+        <name>Zipcode_Verification_Limit</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- addrCiceroMissingAPIKey --></label>
+        <name>addrCiceroMissingAPIKey</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- addrCopyConAddBtnHHObjOnly --></label>
+        <name>addrCopyConAddBtnHHObjOnly</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- addrGeneralSettings --></label>
+        <name>addrGeneralSettings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- addrHHAccountOnly --></label>
+        <name>addrHHAccountOnly</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- addrHHAddressAlwaysDefault --></label>
+        <name>addrHHAddressAlwaysDefault</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- addrSeasonalOverlap --></label>
+        <name>addrSeasonalOverlap</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- addrSeasonalPartial --></label>
+        <name>addrSeasonalPartial</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- alloAddRow --></label>
+        <name>alloAddRow</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- alloAddRowAtPosition --></label>
+        <name>alloAddRowAtPosition</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- alloAmountOrPercent --></label>
+        <name>alloAmountOrPercent</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- alloBatchCreateDefault --></label>
+        <name>alloBatchCreateDefault</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- alloBatchDefaultInfo --></label>
+        <name>alloBatchDefaultInfo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- alloBtnCancel --></label>
+        <name>alloBtnCancel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- alloBtnSaveAndClose --></label>
+        <name>alloBtnSaveAndClose</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- alloCampaignExceedsOppAmount --></label>
+        <name>alloCampaignExceedsOppAmount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- alloCantAllocateNothing --></label>
+        <name>alloCantAllocateNothing</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Default Allocations are enabled, but no default GAU is selected. --></label>
+        <name>alloDefaultGAUMissing</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- alloDefaultNotPercent --></label>
+        <name>alloDefaultNotPercent</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- alloDeleteRow --></label>
+        <name>alloDeleteRow</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- The allocations for this opportunity are greater than the amount of the opportun --></label>
+        <name>alloExceedsOppAmount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- alloManageCampaignAllocations --></label>
+        <name>alloManageCampaignAllocations</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- alloManageOppAllocations --></label>
+        <name>alloManageOppAllocations</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- alloManageRecurringDonationAllocations --></label>
+        <name>alloManageRecurringDonationAllocations</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- alloModifyCurrency --></label>
+        <name>alloModifyCurrency</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- alloNegativeAmount --></label>
+        <name>alloNegativeAmount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- alloNegativePercent --></label>
+        <name>alloNegativePercent</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Percent based Allocations cannot exceed 100%. --></label>
+        <name>alloPercentExceed100</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- alloRemainder --></label>
+        <name>alloRemainder</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Each Allocation must have a single parent object: Opportunity, Recurring Donatio --></label>
+        <name>alloSingleParent</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Opportunity Allocation totals must not exceed the amount of the Opportunity. --></label>
+        <name>alloTotalExceedsOppAmt</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- alloTotals --></label>
+        <name>alloTotals</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- alloUnallocated --></label>
+        <name>alloUnallocated</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiAccountCustomIdError --></label>
+        <name>bdiAccountCustomIdError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiBatchException --></label>
+        <name>bdiBatchException</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiBtnClose --></label>
+        <name>bdiBtnClose</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiComplete --></label>
+        <name>bdiComplete</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiCompleteWithErrors --></label>
+        <name>bdiCompleteWithErrors</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiContactCustomIdError --></label>
+        <name>bdiContactCustomIdError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiContactMatchEmail --></label>
+        <name>bdiContactMatchEmail</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiContactMatchFnameEmail --></label>
+        <name>bdiContactMatchFnameEmail</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiContactMatchFnameLname --></label>
+        <name>bdiContactMatchFnameLname</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiContactMatchFnameLnameEmail --></label>
+        <name>bdiContactMatchFnameLnameEmail</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Data Importer Contact matching option for Fname, Lname, Phone --></label>
+        <name>bdiContactMatchFnameLnamePhone</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiContactMatchLnameEmail --></label>
+        <name>bdiContactMatchLnameEmail</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiCreated --></label>
+        <name>bdiCreated</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiDataImporterConfigTitle --></label>
+        <name>bdiDataImporterConfigTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiDataImporterDescription --></label>
+        <name>bdiDataImporterDescription</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiDataImporterInfoLine1 --></label>
+        <name>bdiDataImporterInfoLine1</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiDataImporterInfoLine2 --></label>
+        <name>bdiDataImporterInfoLine2</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiDataImporterInfoLine2b --></label>
+        <name>bdiDataImporterInfoLine2b</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiDataImporterInfoLine3 --></label>
+        <name>bdiDataImporterInfoLine3</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiDataImporterInfoLine4 --></label>
+        <name>bdiDataImporterInfoLine4</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiDataImporterInfoTitle --></label>
+        <name>bdiDataImporterInfoTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiDataImporterNumToProcess --></label>
+        <name>bdiDataImporterNumToProcess</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiDataImporterTitle --></label>
+        <name>bdiDataImporterTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiDonation --></label>
+        <name>bdiDonation</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiErrorInvalidCampaignName --></label>
+        <name>bdiErrorInvalidCampaignName</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiErrorInvalidDonor --></label>
+        <name>bdiErrorInvalidDonor</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiErrorInvalidLastname --></label>
+        <name>bdiErrorInvalidLastname</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiErrorInvalidOppRTName --></label>
+        <name>bdiErrorInvalidOppRTName</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiErrorNonHHAccountContact --></label>
+        <name>bdiErrorNonHHAccountContact</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiFailed --></label>
+        <name>bdiFailed</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiHouseholdModelRequired --></label>
+        <name>bdiHouseholdModelRequired</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiIgnored --></label>
+        <name>bdiIgnored</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiImported --></label>
+        <name>bdiImported</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiMatched --></label>
+        <name>bdiMatched</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiRecordsFailed --></label>
+        <name>bdiRecordsFailed</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiRecordsImported --></label>
+        <name>bdiRecordsImported</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiRecordsProcessed --></label>
+        <name>bdiRecordsProcessed</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiRunBtn --></label>
+        <name>bdiRunBtn</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiStatus --></label>
+        <name>bdiStatus</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiStatusProcessed --></label>
+        <name>bdiStatusProcessed</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiStatusProcessing --></label>
+        <name>bdiStatusProcessing</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiTime --></label>
+        <name>bdiTime</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- button label on the Remove Contact popup --></label>
+        <name>btnRemove</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- campaignMemberStatusDefault --></label>
+        <name>campaignMemberStatusDefault</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- campaignMemberStatusNonResponded --></label>
+        <name>campaignMemberStatusNonResponded</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- campaignMemberStatusResponded --></label>
+        <name>campaignMemberStatusResponded</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Used when NPSP hits an error trying to create an account for a contact --></label>
+        <name>conFailedAccountCreate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeErrNoPersonAccounts --></label>
+        <name>conMergeErrNoPersonAccounts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- engagementPlanCantEdit --></label>
+        <name>engagementPlanCantEdit</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- engagementPlanNoLookups --></label>
+        <name>engagementPlanNoLookups</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- engagementPlanTwoLookups --></label>
+        <name>engagementPlanTwoLookups</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- exceptionRequiredField --></label>
+        <name>exceptionRequiredField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- exceptionValidationRule --></label>
+        <name>exceptionValidationRule</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- flsError --></label>
+        <name>flsError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthButtonRun --></label>
+        <name>healthButtonRun</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsAccOne2OneNoContacts --></label>
+        <name>healthDetailsAccOne2OneNoContacts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsAccountModel --></label>
+        <name>healthDetailsAccountModel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsAccountProcessor --></label>
+        <name>healthDetailsAccountProcessor</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsAccountRTIssue --></label>
+        <name>healthDetailsAccountRTIssue</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsAutoRelCampaignTypeMissing --></label>
+        <name>healthDetailsAutoRelCampaignTypeMissing</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsAutoRelFieldsMissing --></label>
+        <name>healthDetailsAutoRelFieldsMissing</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsAutoRelInvalidLookupField --></label>
+        <name>healthDetailsAutoRelInvalidLookupField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsBadRDField --></label>
+        <name>healthDetailsBadRDField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsBadReportId --></label>
+        <name>healthDetailsBadReportId</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsContactData --></label>
+        <name>healthDetailsContactData</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsDuplicateAcctRT --></label>
+        <name>healthDetailsDuplicateAcctRT</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- The details displayed when the duplicate contact roles health check fails --></label>
+        <name>healthDetailsDuplicateContactRoles</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsGenderField --></label>
+        <name>healthDetailsGenderField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsHHAccountModel --></label>
+        <name>healthDetailsHHAccountModel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsHHActNoContacts --></label>
+        <name>healthDetailsHHActNoContacts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsHHObNoContacts --></label>
+        <name>healthDetailsHHObNoContacts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsInvalidCMField --></label>
+        <name>healthDetailsInvalidCMField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsInvalidContactField --></label>
+        <name>healthDetailsInvalidContactField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsInvalidErrorChatterGroup --></label>
+        <name>healthDetailsInvalidErrorChatterGroup</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsInvalidErrorRecipient --></label>
+        <name>healthDetailsInvalidErrorRecipient</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsInvalidErrorUser --></label>
+        <name>healthDetailsInvalidErrorUser</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Health Check error if a Level refers to an invalid field --></label>
+        <name>healthDetailsInvalidFieldNumeric</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsInvalidFiscalYears --></label>
+        <name>healthDetailsInvalidFiscalYears</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Health Check error if a Level refers to an invalid field --></label>
+        <name>healthDetailsInvalidLevelField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Health Check error if a Level refers to an invalid field --></label>
+        <name>healthDetailsInvalidLevelFieldReference</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsInvalidObjectField --></label>
+        <name>healthDetailsInvalidObjectField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsInvalidOppField --></label>
+        <name>healthDetailsInvalidOppField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsInvalidOppStage --></label>
+        <name>healthDetailsInvalidOppStage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsInvalidPaymentField --></label>
+        <name>healthDetailsInvalidPaymentField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsInvalidRDCustomPeriod --></label>
+        <name>healthDetailsInvalidRDCustomPeriod</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsInvalidRDCustomPeriodPIcklist --></label>
+        <name>healthDetailsInvalidRDCustomPeriodPIcklist</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsInvalidRecordtypeId --></label>
+        <name>healthDetailsInvalidRecordtypeId</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsInvalidRecordtypeName --></label>
+        <name>healthDetailsInvalidRecordtypeName</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsInvalidScheduledJob --></label>
+        <name>healthDetailsInvalidScheduledJob</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsMailingListReportMissing --></label>
+        <name>healthDetailsMailingListReportMissing</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsMissingOppPayments --></label>
+        <name>healthDetailsMissingOppPayments</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsNothingScheduled --></label>
+        <name>healthDetailsNothingScheduled</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsOCR --></label>
+        <name>healthDetailsOCR</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsOCRDupPrimary --></label>
+        <name>healthDetailsOCRDupPrimary</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsOCRDupPrimaryValid --></label>
+        <name>healthDetailsOCRDupPrimaryValid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsOCRSettingsResolution --></label>
+        <name>healthDetailsOCRSettingsResolution</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsOCRSettingsValid --></label>
+        <name>healthDetailsOCRSettingsValid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsPaymentMappingBadDataTypes --></label>
+        <name>healthDetailsPaymentMappingBadDataTypes</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsRDFieldsBadDatatypes --></label>
+        <name>healthDetailsRDFieldsBadDatatypes</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsRelReciprocalInvalid --></label>
+        <name>healthDetailsRelReciprocalInvalid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsSaveAcctFailed --></label>
+        <name>healthDetailsSaveAcctFailed</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsSaveOppsFailed --></label>
+        <name>healthDetailsSaveOppsFailed</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsScheduleJobs --></label>
+        <name>healthDetailsScheduleJobs</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsTriggerHandlerDuplicate --></label>
+        <name>healthDetailsTriggerHandlerDuplicate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsTriggerHandlerMismatch --></label>
+        <name>healthDetailsTriggerHandlerMismatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsTriggerHandlerMissing --></label>
+        <name>healthDetailsTriggerHandlerMissing</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsUDFBadDatatypes --></label>
+        <name>healthDetailsUDFBadDatatypes</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsValidRDCustomPeriod --></label>
+        <name>healthDetailsValidRDCustomPeriod</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelAccountData --></label>
+        <name>healthLabelAccountData</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelAccountModelData --></label>
+        <name>healthLabelAccountModelData</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelAccountRTIssueValid --></label>
+        <name>healthLabelAccountRTIssueValid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelAllTestsPassed --></label>
+        <name>healthLabelAllTestsPassed</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelAutoRelValid --></label>
+        <name>healthLabelAutoRelValid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelContactData --></label>
+        <name>healthLabelContactData</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for Duplicate Contact Role health check --></label>
+        <name>healthLabelDuplicateContactRoles</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelErrorRecipientValid --></label>
+        <name>healthLabelErrorRecipientValid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelFailed --></label>
+        <name>healthLabelFailed</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelFiscalYearsValid --></label>
+        <name>healthLabelFiscalYearsValid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelHHAccData --></label>
+        <name>healthLabelHHAccData</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelHHData --></label>
+        <name>healthLabelHHData</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelHHObjData --></label>
+        <name>healthLabelHHObjData</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelIntro --></label>
+        <name>healthLabelIntro</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelLastRun --></label>
+        <name>healthLabelLastRun</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- The message displayed when the duplicate contact roles health check passes --></label>
+        <name>healthLabelNoDuplicateContactRoles</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelNoMissingOppPayments --></label>
+        <name>healthLabelNoMissingOppPayments</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelNone --></label>
+        <name>healthLabelNone</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelOCRCheck --></label>
+        <name>healthLabelOCRCheck</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelOCRSettings --></label>
+        <name>healthLabelOCRSettings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelOppPayments --></label>
+        <name>healthLabelOppPayments</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelPassed --></label>
+        <name>healthLabelPassed</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelPaymentMappingsValid --></label>
+        <name>healthLabelPaymentMappingsValid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelRDOppsValid --></label>
+        <name>healthLabelRDOppsValid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelRDValid --></label>
+        <name>healthLabelRDValid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelRelReciprocalValid --></label>
+        <name>healthLabelRelReciprocalValid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelScheduler --></label>
+        <name>healthLabelScheduler</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelSchedulerValid --></label>
+        <name>healthLabelSchedulerValid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelShowPassedTests --></label>
+        <name>healthLabelShowPassedTests</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelTime --></label>
+        <name>healthLabelTime</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelTriggerHandlerCheck --></label>
+        <name>healthLabelTriggerHandlerCheck</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelTriggerHandlersValid --></label>
+        <name>healthLabelTriggerHandlersValid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelUDFValid --></label>
+        <name>healthLabelUDFValid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Health Check title for Levels --></label>
+        <name>healthLabelVerifyLevels</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Health Check message when all Levels verify ok --></label>
+        <name>healthLabelVerifyLevelsSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthLabelWarning --></label>
+        <name>healthLabelWarning</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthPaymentAutoCloseStageInvalid --></label>
+        <name>healthPaymentAutoCloseStageInvalid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthPaymentAutoCloseStageMustBeActiveClosedWonOrBlank --></label>
+        <name>healthPaymentAutoCloseStageMustBeActiveClosedWonOrBlank</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthPaymentAutoCloseStageValid --></label>
+        <name>healthPaymentAutoCloseStageValid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionAccOne2OneNoContacts --></label>
+        <name>healthSolutionAccOne2OneNoContacts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionAccountModel --></label>
+        <name>healthSolutionAccountModel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionAccountRTIssue --></label>
+        <name>healthSolutionAccountRTIssue</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionAutoRelFieldsMissing --></label>
+        <name>healthSolutionAutoRelFieldsMissing</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionAutoRelInvalidCMField --></label>
+        <name>healthSolutionAutoRelInvalidCMField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionAutoRelInvalidContactField --></label>
+        <name>healthSolutionAutoRelInvalidContactField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionAutoRelInvalidLookupField --></label>
+        <name>healthSolutionAutoRelInvalidLookupField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionBadRDField --></label>
+        <name>healthSolutionBadRDField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionContactData --></label>
+        <name>healthSolutionContactData</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- The recommended solution for when the duplicate contact roles health check fails --></label>
+        <name>healthSolutionDuplicateContactRoles</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionEditSetting --></label>
+        <name>healthSolutionEditSetting</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionHHAccNoContacts --></label>
+        <name>healthSolutionHHAccNoContacts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionHHObjNoContacts --></label>
+        <name>healthSolutionHHObjNoContacts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionInvalidFiscalYears --></label>
+        <name>healthSolutionInvalidFiscalYears</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Health Check Solution for an invalid Level field --></label>
+        <name>healthSolutionInvalidLevelField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionInvalidOppField --></label>
+        <name>healthSolutionInvalidOppField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionInvalidOppStage --></label>
+        <name>healthSolutionInvalidOppStage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionInvalidPaymentField --></label>
+        <name>healthSolutionInvalidPaymentField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionInvalidRDCustomPeriod --></label>
+        <name>healthSolutionInvalidRDCustomPeriod</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionInvalidRDCustomPeriodPicklist --></label>
+        <name>healthSolutionInvalidRDCustomPeriodPicklist</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionInvalidScheduledJob --></label>
+        <name>healthSolutionInvalidScheduledJob</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionInvalidUDFObjectField --></label>
+        <name>healthSolutionInvalidUDFObjectField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionMailingListReportMissing --></label>
+        <name>healthSolutionMailingListReportMissing</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionMissingOppPayments --></label>
+        <name>healthSolutionMissingOppPayments</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionNothingScheduled --></label>
+        <name>healthSolutionNothingScheduled</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionOCRDupPrimary --></label>
+        <name>healthSolutionOCRDupPrimary</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionOCRException --></label>
+        <name>healthSolutionOCRException</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionPaymentMappingBadDataTypes --></label>
+        <name>healthSolutionPaymentMappingBadDataTypes</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionRDBadOppField --></label>
+        <name>healthSolutionRDBadOppField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionRDFieldsBadDatatypes --></label>
+        <name>healthSolutionRDFieldsBadDatatypes</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionRelReciprocalInvalid --></label>
+        <name>healthSolutionRelReciprocalInvalid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionSaveOppsFailed --></label>
+        <name>healthSolutionSaveOppsFailed</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionScheduleJobs --></label>
+        <name>healthSolutionScheduleJobs</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionTriggerHandlerMismatch --></label>
+        <name>healthSolutionTriggerHandlerMismatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionUDFBadDatatypes --></label>
+        <name>healthSolutionUDFBadDatatypes</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionUDFOppField --></label>
+        <name>healthSolutionUDFOppField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- hhCmpDedupLabelReturnToCmp --></label>
+        <name>hhCmpDedupLabelReturnToCmp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- hhCmpDedupeBatchMessage --></label>
+        <name>hhCmpDedupeBatchMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- hhCmpDedupeBatchProgressTitle --></label>
+        <name>hhCmpDedupeBatchProgressTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- hhCmpDedupeLabelOpenReport --></label>
+        <name>hhCmpDedupeLabelOpenReport</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- hhCmpDedupeNoReport --></label>
+        <name>hhCmpDedupeNoReport</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- hhCmpDedupeStatus --></label>
+        <name>hhCmpDedupeStatus</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- isARequiredField --></label>
+        <name>isARequiredField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- label for First link in list view --></label>
+        <name>labelListViewFirst</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- label for Last link in list view --></label>
+        <name>labelListViewLast</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- label for Next link in list view --></label>
+        <name>labelListViewNext</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- label for page info in list view --></label>
+        <name>labelListViewPageInfo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- label for Previous link in list view --></label>
+        <name>labelListViewPrevious</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- label for the loading... message used in some pages --></label>
+        <name>labelMessageLoading</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- label for Show More on list views --></label>
+        <name>labelShowMore</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblAddressOverride --></label>
+        <name>lblAddressOverride</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblBtnAddAllHHMembers --></label>
+        <name>lblBtnAddAllHHMembers</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblBtnAddContact --></label>
+        <name>lblBtnAddContact</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblCCardExcludeFrom --></label>
+        <name>lblCCardExcludeFrom</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblCity --></label>
+        <name>lblCity</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblCloned --></label>
+        <name>lblCloned</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblCountry --></label>
+        <name>lblCountry</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- caption of Remove Contact popup --></label>
+        <name>lblDeleteContact</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- prompt for the Remove Contact Popup --></label>
+        <name>lblDeleteContactPrompt</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- autocomplete&apos;s label for &quot;smith in Contacts&quot; --></label>
+        <name>lblFindInContacts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- string displayed in the autocomplete control when empty --></label>
+        <name>lblFindOrAddContact</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblFirstName --></label>
+        <name>lblFirstName</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblFormalGreeting --></label>
+        <name>lblFormalGreeting</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblHousehold --></label>
+        <name>lblHousehold</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblHouseholdName --></label>
+        <name>lblHouseholdName</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblInformalGreeting --></label>
+        <name>lblInformalGreeting</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblLastName --></label>
+        <name>lblLastName</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblMergeHHPrompt --></label>
+        <name>lblMergeHHPrompt</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblMergeHHTitle --></label>
+        <name>lblMergeHHTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblNPSPSettings --></label>
+        <name>lblNPSPSettings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error displayed when required perms missing to add a contact and its household --></label>
+        <name>lblNoHHMergePermissions</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblPostalCode --></label>
+        <name>lblPostalCode</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblRequired --></label>
+        <name>lblRequired</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblSalutation --></label>
+        <name>lblSalutation</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblState --></label>
+        <name>lblState</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblStreet --></label>
+        <name>lblStreet</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- leadConvertAccountName --></label>
+        <name>leadConvertAccountName</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- leadConvertAffilationName --></label>
+        <name>leadConvertAffilationName</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- leadConvertAffiliateExistingAccount --></label>
+        <name>leadConvertAffiliateExistingAccount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- leadConvertAffiliateNewAccount --></label>
+        <name>leadConvertAffiliateNewAccount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- leadConvertAffiliatedAccount --></label>
+        <name>leadConvertAffiliatedAccount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- leadConvertAttachBucketAccount --></label>
+        <name>leadConvertAttachBucketAccount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- leadConvertAttachExistingAccount --></label>
+        <name>leadConvertAttachExistingAccount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- leadConvertAutocreateHHAccount --></label>
+        <name>leadConvertAutocreateHHAccount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- leadConvertAutocreateOne2OneAccount --></label>
+        <name>leadConvertAutocreateOne2OneAccount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- leadConvertBtnCancel --></label>
+        <name>leadConvertBtnCancel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- leadConvertBtnConvert --></label>
+        <name>leadConvertBtnConvert</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- leadConvertContactAccount --></label>
+        <name>leadConvertContactAccount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- leadConvertContactSelection --></label>
+        <name>leadConvertContactSelection</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- leadConvertCreateAccount --></label>
+        <name>leadConvertCreateAccount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- leadConvertCreateNewContact --></label>
+        <name>leadConvertCreateNewContact</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- leadConvertMergeExistingContact --></label>
+        <name>leadConvertMergeExistingContact</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- leadConvertNewOpp --></label>
+        <name>leadConvertNewOpp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- leadConvertOwner --></label>
+        <name>leadConvertOwner</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- leadConvertPageTitle --></label>
+        <name>leadConvertPageTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- leadConvertRecordTypeWarning --></label>
+        <name>leadConvertRecordTypeWarning</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- leadConvertSectionTitle --></label>
+        <name>leadConvertSectionTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- leadConvertSendEmail --></label>
+        <name>leadConvertSendEmail</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- leadConvertStatus --></label>
+        <name>leadConvertStatus</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- leadConvertViewContactError --></label>
+        <name>leadConvertViewContactError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Save &amp; New button on the Level Edit page --></label>
+        <name>lvlBtnSaveAndNew</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error when the Level has the same lookup field  specified for level and previous --></label>
+        <name>lvlErrorDuplicateLookups</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error when a name of a level is duplicated --></label>
+        <name>lvlErrorDuplicateName</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error when Level Assignment fails to save its current or previous level --></label>
+        <name>lvlErrorInvalidLookupField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error if level&apos;s source field isn&apos;t valid --></label>
+        <name>lvlErrorInvalidSourceField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error if the Level Minimum is &gt; than Level Maximum --></label>
+        <name>lvlErrorMinGTMax</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error when we detect the minimum amount overlaps another level --></label>
+        <name>lvlErrorMinOverlap</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error if both min and max are empty on a level --></label>
+        <name>lvlErrorNoMinMax</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- mtchBtnSearch --></label>
+        <name>mtchBtnSearch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- mtchCloseDateEnd --></label>
+        <name>mtchCloseDateEnd</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- mtchCloseDateStart --></label>
+        <name>mtchCloseDateStart</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- mtchFindMatchedGiftsSectionHeader --></label>
+        <name>mtchFindMatchedGiftsSectionHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- mtchFindMoreGifts --></label>
+        <name>mtchFindMoreGifts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- mtchFindMoreGiftsInfo --></label>
+        <name>mtchFindMoreGiftsInfo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- mtchItems --></label>
+        <name>mtchItems</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- mtchSearchCriteriaEmpty --></label>
+        <name>mtchSearchCriteriaEmpty</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- mtchSelectCbxTitle --></label>
+        <name>mtchSelectCbxTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- mtchTotalMatchingGift --></label>
+        <name>mtchTotalMatchingGift</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- mtchTotalSelected --></label>
+        <name>mtchTotalSelected</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- mtchTotalUnaccounted --></label>
+        <name>mtchTotalUnaccounted</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- oppInstallmentsOf --></label>
+        <name>oppInstallmentsOf</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- oppNamingBoth --></label>
+        <name>oppNamingBoth</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- oppNamingIndividual --></label>
+        <name>oppNamingIndividual</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- oppNamingOrganizational --></label>
+        <name>oppNamingOrganizational</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardBtnCalcPayments --></label>
+        <name>pmtWizardBtnCalcPayments</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardBtnCreatePayments --></label>
+        <name>pmtWizardBtnCreatePayments</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardBtnRemovePaidPayments --></label>
+        <name>pmtWizardBtnRemovePaidPayments</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardClosedLost --></label>
+        <name>pmtWizardClosedLost</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardCreateSchedule --></label>
+        <name>pmtWizardCreateSchedule</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardFirstPaymentDate --></label>
+        <name>pmtWizardFirstPaymentDate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardInterval --></label>
+        <name>pmtWizardInterval</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardMsgNoOppFound --></label>
+        <name>pmtWizardMsgNoOppFound</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardNoUnpaidAmount --></label>
+        <name>pmtWizardNoUnpaidAmount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardNoWriteoffAmount --></label>
+        <name>pmtWizardNoWriteoffAmount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardNumberOfPayments --></label>
+        <name>pmtWizardNumberOfPayments</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardPaymentNumber --></label>
+        <name>pmtWizardPaymentNumber</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardPaymentsDisabled --></label>
+        <name>pmtWizardPaymentsDisabled</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardPaymentsDisabledTitle --></label>
+        <name>pmtWizardPaymentsDisabledTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardSectionTitle --></label>
+        <name>pmtWizardSectionTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardSectionWriteoff --></label>
+        <name>pmtWizardSectionWriteoff</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardSectionWriteoffPayments --></label>
+        <name>pmtWizardSectionWriteoffPayments</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardSubtitle --></label>
+        <name>pmtWizardSubtitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardToBeCreated --></label>
+        <name>pmtWizardToBeCreated</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardWarning --></label>
+        <name>pmtWizardWarning</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardWriteoffDate --></label>
+        <name>pmtWizardWriteoffDate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardWriteoffMessage --></label>
+        <name>pmtWizardWriteoffMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pscDeleteRow --></label>
+        <name>pscDeleteRow</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pscManageSoftCreditsAdd --></label>
+        <name>pscManageSoftCreditsAdd</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pscManageSoftCreditsAmount --></label>
+        <name>pscManageSoftCreditsAmount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pscManageSoftCreditsAmountMissing --></label>
+        <name>pscManageSoftCreditsAmountMissing</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pscManageSoftCreditsAmountOrPercent --></label>
+        <name>pscManageSoftCreditsAmountOrPercent</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pscManageSoftCreditsCantChangeCurrency --></label>
+        <name>pscManageSoftCreditsCantChangeCurrency</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pscManageSoftCreditsFull --></label>
+        <name>pscManageSoftCreditsFull</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pscManageSoftCreditsInvalidContact --></label>
+        <name>pscManageSoftCreditsInvalidContact</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pscManageSoftCreditsNoRoles --></label>
+        <name>pscManageSoftCreditsNoRoles</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pscManageSoftCreditsOppAmount --></label>
+        <name>pscManageSoftCreditsOppAmount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pscManageSoftCreditsPSCAmount --></label>
+        <name>pscManageSoftCreditsPSCAmount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pscManageSoftCreditsPartial --></label>
+        <name>pscManageSoftCreditsPartial</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pscManageSoftCreditsPercent --></label>
+        <name>pscManageSoftCreditsPercent</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pscManageSoftCreditsPrimaryDonor --></label>
+        <name>pscManageSoftCreditsPrimaryDonor</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pscManageSoftCreditsReconcileFail --></label>
+        <name>pscManageSoftCreditsReconcileFail</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pscManageSoftCreditsRestrictions --></label>
+        <name>pscManageSoftCreditsRestrictions</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pscManageSoftCreditsRoleMissing --></label>
+        <name>pscManageSoftCreditsRoleMissing</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pscManageSoftCreditsTitle --></label>
+        <name>pscManageSoftCreditsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pscManageSoftCreditsType --></label>
+        <name>pscManageSoftCreditsType</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pscManageSoftCreditsUnaccounted --></label>
+        <name>pscManageSoftCreditsUnaccounted</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pscManageSoftCreditsValidateTotals --></label>
+        <name>pscManageSoftCreditsValidateTotals</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- sendAcknowledgmentFailedStatus --></label>
+        <name>sendAcknowledgmentFailedStatus</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- sendAcknowledgmentFailureReasons --></label>
+        <name>sendAcknowledgmentFailureReasons</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- sendAcknowledgmentFireStatus --></label>
+        <name>sendAcknowledgmentFireStatus</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- sendAcknowledgmentNoneSelected --></label>
+        <name>sendAcknowledgmentNoneSelected</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- sendAcknowledgmentNumberNoEmail --></label>
+        <name>sendAcknowledgmentNumberNoEmail</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- sendAcknowledgmentNumberSent --></label>
+        <name>sendAcknowledgmentNumberSent</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- sendAcknowledgmentPageTitle --></label>
+        <name>sendAcknowledgmentPageTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- sendAcknowledgmentReturnLinkLabel --></label>
+        <name>sendAcknowledgmentReturnLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- sendAcknowledgmentSucceeded --></label>
+        <name>sendAcknowledgmentSucceeded</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- statusCompleted --></label>
+        <name>statusCompleted</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- statusInProgress --></label>
+        <name>statusInProgress</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- statusNotStarted --></label>
+        <name>statusNotStarted</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgAddrGeneralSettingsIntro --></label>
+        <name>stgAddrGeneralSettingsIntro</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgAddrMustChooseClass --></label>
+        <name>stgAddrMustChooseClass</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgBtnCancel --></label>
+        <name>stgBtnCancel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgBtnClearErrorLog --></label>
+        <name>stgBtnClearErrorLog</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgBtnCreateAutoRel --></label>
+        <name>stgBtnCreateAutoRel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgBtnCreateMapping --></label>
+        <name>stgBtnCreateMapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgBtnCreateRDPeriod --></label>
+        <name>stgBtnCreateRDPeriod</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgBtnCreateRelReciprocal --></label>
+        <name>stgBtnCreateRelReciprocal</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgBtnCreateTH --></label>
+        <name>stgBtnCreateTH</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgBtnCreateUDR --></label>
+        <name>stgBtnCreateUDR</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgBtnEdit --></label>
+        <name>stgBtnEdit</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgBtnHHAutoName --></label>
+        <name>stgBtnHHAutoName</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgBtnNewAutoRel --></label>
+        <name>stgBtnNewAutoRel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgBtnNewONS --></label>
+        <name>stgBtnNewONS</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgBtnNewPaymentMap --></label>
+        <name>stgBtnNewPaymentMap</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgBtnNewRDFieldMap --></label>
+        <name>stgBtnNewRDFieldMap</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgBtnNewRDPeriod --></label>
+        <name>stgBtnNewRDPeriod</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgBtnNewRelReciprocal --></label>
+        <name>stgBtnNewRelReciprocal</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgBtnNewTH --></label>
+        <name>stgBtnNewTH</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgBtnNewUDR --></label>
+        <name>stgBtnNewUDR</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgBtnRDCreateNewMap --></label>
+        <name>stgBtnRDCreateNewMap</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgBtnRefreshOpportunityNames --></label>
+        <name>stgBtnRefreshOpportunityNames</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgBtnRefreshPrimaryContacts --></label>
+        <name>stgBtnRefreshPrimaryContacts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgBtnRunBatch --></label>
+        <name>stgBtnRunBatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgBtnSave --></label>
+        <name>stgBtnSave</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgDocumentation --></label>
+        <name>stgDocumentation</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgDontAutoScheduleHelpText --></label>
+        <name>stgDontAutoScheduleHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgErrorINaming --></label>
+        <name>stgErrorINaming</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgErrorInvalidClass --></label>
+        <name>stgErrorInvalidClass</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgErrorInvalidNameFormat --></label>
+        <name>stgErrorInvalidNameFormat</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHHNameRefreshTitle --></label>
+        <name>stgHHNameRefreshTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpAccountModel --></label>
+        <name>stgHelpAccountModel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpAlloFiscalYearRollups --></label>
+        <name>stgHelpAlloFiscalYearRollups</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpAlloNDayValue --></label>
+        <name>stgHelpAlloNDayValue</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpAutoAffil --></label>
+        <name>stgHelpAutoAffil</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpAutoRelCampaignRT --></label>
+        <name>stgHelpAutoRelCampaignRT</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpAutoRelField --></label>
+        <name>stgHelpAutoRelField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpAutoRelObject --></label>
+        <name>stgHelpAutoRelObject</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpAutoRelType --></label>
+        <name>stgHelpAutoRelType</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpBDEAllowBlankOppNames --></label>
+        <name>stgHelpBDEAllowBlankOppNames</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpBDEOppNaming --></label>
+        <name>stgHelpBDEOppNaming</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpBatchAlloRollup --></label>
+        <name>stgHelpBatchAlloRollup</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpBatchCreateDefault --></label>
+        <name>stgHelpBatchCreateDefault</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpBatchOppRollup --></label>
+        <name>stgHelpBatchOppRollup</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpBtnHHNaming --></label>
+        <name>stgHelpBtnHHNaming</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpBtnOppNaming --></label>
+        <name>stgHelpBtnOppNaming</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpChatterGroup --></label>
+        <name>stgHelpChatterGroup</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpCiceroAddrVerification --></label>
+        <name>stgHelpCiceroAddrVerification</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpContactRTExcluded --></label>
+        <name>stgHelpContactRTExcluded</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpCreateMissingPayments --></label>
+        <name>stgHelpCreateMissingPayments</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpDefaultAllocationsEnabled --></label>
+        <name>stgHelpDefaultAllocationsEnabled</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpDefaultGAU --></label>
+        <name>stgHelpDefaultGAU</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpDisableHHAccountAddr --></label>
+        <name>stgHelpDisableHHAccountAddr</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpEnableSoftCreditRollups --></label>
+        <name>stgHelpEnableSoftCreditRollups</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpErrorLog --></label>
+        <name>stgHelpErrorLog</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpErrorNotifyOn --></label>
+        <name>stgHelpErrorNotifyOn</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpErrorNotifyTo --></label>
+        <name>stgHelpErrorNotifyTo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- displayed in the Example household names box --></label>
+        <name>stgHelpExampleHHNames</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpFGFormat --></label>
+        <name>stgHelpFGFormat</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpFiscalYearRollups --></label>
+        <name>stgHelpFiscalYearRollups</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpHHAccountRTID --></label>
+        <name>stgHelpHHAccountRTID</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpHHExcludedRT --></label>
+        <name>stgHelpHHExcludedRT</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpHHMailingListReport --></label>
+        <name>stgHelpHHMailingListReport</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpHHNameFormat --></label>
+        <name>stgHelpHHNameFormat</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpHHNaming --></label>
+        <name>stgHelpHHNaming</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpHHOCROn --></label>
+        <name>stgHelpHHOCROn</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpHHObjectOverview --></label>
+        <name>stgHelpHHObjectOverview</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpHHRules --></label>
+        <name>stgHelpHHRules</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpHealthCheck --></label>
+        <name>stgHelpHealthCheck</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpIGFormat --></label>
+        <name>stgHelpIGFormat</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpINamingClass --></label>
+        <name>stgHelpINamingClass</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpLeadConvert --></label>
+        <name>stgHelpLeadConvert</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- help text displayed on the Level Assignment Batch page --></label>
+        <name>stgHelpLvlAssignBatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpMatchedDonorRole --></label>
+        <name>stgHelpMatchedDonorRole</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpMaxPayments --></label>
+        <name>stgHelpMaxPayments</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpMembershipGracePeriod --></label>
+        <name>stgHelpMembershipGracePeriod</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpMembershipRT --></label>
+        <name>stgHelpMembershipRT</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpNPSPDoc --></label>
+        <name>stgHelpNPSPDoc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpNPSPSettings --></label>
+        <name>stgHelpNPSPSettings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpNameConnector --></label>
+        <name>stgHelpNameConnector</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpNameOverrun --></label>
+        <name>stgHelpNameOverrun</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpNewRDFieldMap --></label>
+        <name>stgHelpNewRDFieldMap</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpNewUDR --></label>
+        <name>stgHelpNewUDR</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpNoUDR --></label>
+        <name>stgHelpNoUDR</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpOCR --></label>
+        <name>stgHelpOCR</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpOCRDefaultRole --></label>
+        <name>stgHelpOCRDefaultRole</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpOCRRoleForHH --></label>
+        <name>stgHelpOCRRoleForHH</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpOneToOneRTID --></label>
+        <name>stgHelpOneToOneRTID</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpOppNamingAttribution --></label>
+        <name>stgHelpOppNamingAttribution</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpOppNamingDateFormat --></label>
+        <name>stgHelpOppNamingDateFormat</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpOppNamingFormat --></label>
+        <name>stgHelpOppNamingFormat</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpOppNamingRecTypes --></label>
+        <name>stgHelpOppNamingRecTypes</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpOppRecTypesNoPayments --></label>
+        <name>stgHelpOppRecTypesNoPayments</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpOppTypesNoPayments --></label>
+        <name>stgHelpOppTypesNoPayments</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpOrgAccountAddressMgmt --></label>
+        <name>stgHelpOrgAccountAddressMgmt</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpOverrunCount --></label>
+        <name>stgHelpOverrunCount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpPaymentMapOppField --></label>
+        <name>stgHelpPaymentMapOppField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpPaymentMapPaymentField --></label>
+        <name>stgHelpPaymentMapPaymentField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpPaymentMapping --></label>
+        <name>stgHelpPaymentMapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpPaymentMappings --></label>
+        <name>stgHelpPaymentMappings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpPaymentsEnabled --></label>
+        <name>stgHelpPaymentsEnabled</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpPowerOfUsHub --></label>
+        <name>stgHelpPowerOfUsHub</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpPrimaryContactBatch --></label>
+        <name>stgHelpPrimaryContactBatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRDAddCampaign --></label>
+        <name>stgHelpRDAddCampaign</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRDBatch --></label>
+        <name>stgHelpRDBatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRDDisableScheduling --></label>
+        <name>stgHelpRDDisableScheduling</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRDFailures --></label>
+        <name>stgHelpRDFailures</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRDFieldMap --></label>
+        <name>stgHelpRDFieldMap</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRDFieldMapOppField --></label>
+        <name>stgHelpRDFieldMapOppField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRDFieldMapRDField --></label>
+        <name>stgHelpRDFieldMapRDField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRDLastRun --></label>
+        <name>stgHelpRDLastRun</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRDMaxDonations --></label>
+        <name>stgHelpRDMaxDonations</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRDOpenOppBehavior --></label>
+        <name>stgHelpRDOpenOppBehavior</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRDOppForecastMonths --></label>
+        <name>stgHelpRDOppForecastMonths</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRDOppRT --></label>
+        <name>stgHelpRDOppRT</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRDPeriodFrequency --></label>
+        <name>stgHelpRDPeriodFrequency</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRDPeriodName --></label>
+        <name>stgHelpRDPeriodName</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRDPeriodType --></label>
+        <name>stgHelpRDPeriodType</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRDSuccesses --></label>
+        <name>stgHelpRDSuccesses</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRecDon --></label>
+        <name>stgHelpRecDon</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRelAutoCreatedDup --></label>
+        <name>stgHelpRelAutoCreatedDup</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRelFieldSyncToggle --></label>
+        <name>stgHelpRelFieldSyncToggle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRelGenderField --></label>
+        <name>stgHelpRelGenderField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRelReciprocalFemale --></label>
+        <name>stgHelpRelReciprocalFemale</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRelReciprocalMale --></label>
+        <name>stgHelpRelReciprocalMale</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRelReciprocalMethod --></label>
+        <name>stgHelpRelReciprocalMethod</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRelReciprocalName --></label>
+        <name>stgHelpRelReciprocalName</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRelReciprocalNeutral --></label>
+        <name>stgHelpRelReciprocalNeutral</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRelSyncFields --></label>
+        <name>stgHelpRelSyncFields</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpReviewErrorLog --></label>
+        <name>stgHelpReviewErrorLog</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRollupBatchSize --></label>
+        <name>stgHelpRollupBatchSize</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRollupExcludeAccountOppRT --></label>
+        <name>stgHelpRollupExcludeAccountOppRT</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRollupExcludeAccountOppType --></label>
+        <name>stgHelpRollupExcludeAccountOppType</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRollupExcludeAlloOppRecType --></label>
+        <name>stgHelpRollupExcludeAlloOppRecType</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRollupExcludeAlloOppType --></label>
+        <name>stgHelpRollupExcludeAlloOppType</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRollupExcludeContactOppRT --></label>
+        <name>stgHelpRollupExcludeContactOppRT</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRollupExcludeContactOppType --></label>
+        <name>stgHelpRollupExcludeContactOppType</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRollupNDayValue --></label>
+        <name>stgHelpRollupNDayValue</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRollupPrimaryContact --></label>
+        <name>stgHelpRollupPrimaryContact</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpSalesforceSetup --></label>
+        <name>stgHelpSalesforceSetup</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpSimpleAddrChangeIsUpdate --></label>
+        <name>stgHelpSimpleAddrChangeIsUpdate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpSoftCreditRoles --></label>
+        <name>stgHelpSoftCreditRoles</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpStoreErrorsOn --></label>
+        <name>stgHelpStoreErrorsOn</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpTDTM --></label>
+        <name>stgHelpTDTM</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpTHActive --></label>
+        <name>stgHelpTHActive</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpTHAsync --></label>
+        <name>stgHelpTHAsync</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpTHClass --></label>
+        <name>stgHelpTHClass</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpTHLoadOrder --></label>
+        <name>stgHelpTHLoadOrder</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpTHObject --></label>
+        <name>stgHelpTHObject</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpTHTriggerAction --></label>
+        <name>stgHelpTHTriggerAction</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpTriggerHandlers --></label>
+        <name>stgHelpTriggerHandlers</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpTriggerHandlersAsync --></label>
+        <name>stgHelpTriggerHandlersAsync</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpUDROperation --></label>
+        <name>stgHelpUDROperation</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpUDROppField --></label>
+        <name>stgHelpUDROppField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpUDRTargetObject --></label>
+        <name>stgHelpUDRTargetObject</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgInstallScriptError --></label>
+        <name>stgInstallScriptError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelActionColumn --></label>
+        <name>stgLabelActionColumn</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelAddressVerification --></label>
+        <name>stgLabelAddressVerification</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelAfflSettings --></label>
+        <name>stgLabelAfflSettings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelAllRecordTypes --></label>
+        <name>stgLabelAllRecordTypes</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelAlloBatchProgress --></label>
+        <name>stgLabelAlloBatchProgress</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelAllocationsRollupSettings --></label>
+        <name>stgLabelAllocationsRollupSettings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelAllocationsSettings --></label>
+        <name>stgLabelAllocationsSettings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelAreYouSure --></label>
+        <name>stgLabelAreYouSure</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelAutoContactRoles --></label>
+        <name>stgLabelAutoContactRoles</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelBDESettings --></label>
+        <name>stgLabelBDESettings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelBatchStatus --></label>
+        <name>stgLabelBatchStatus</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelCreateMissingPayments --></label>
+        <name>stgLabelCreateMissingPayments</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelCurrentUDR --></label>
+        <name>stgLabelCurrentUDR</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelDoNotRename --></label>
+        <name>stgLabelDoNotRename</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelErrorNotify --></label>
+        <name>stgLabelErrorNotify</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelExamplesFGFormat --></label>
+        <name>stgLabelExamplesFGFormat</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelExamplesHHNameFOrmat --></label>
+        <name>stgLabelExamplesHHNameFOrmat</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelExamplesIGFormat --></label>
+        <name>stgLabelExamplesIGFormat</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelHHGeneral --></label>
+        <name>stgLabelHHGeneral</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelHHNaming --></label>
+        <name>stgLabelHHNaming</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelHHNamingProgress --></label>
+        <name>stgLabelHHNamingProgress</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelHHOCR --></label>
+        <name>stgLabelHHOCR</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelHHObject --></label>
+        <name>stgLabelHHObject</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelHHSettings --></label>
+        <name>stgLabelHHSettings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelHonoreeNotificationHelpText --></label>
+        <name>stgLabelHonoreeNotificationHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelHonoreeNotificationOCR --></label>
+        <name>stgLabelHonoreeNotificationOCR</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelLeadSettings --></label>
+        <name>stgLabelLeadSettings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- menu title for the Level Assignment Batch in NPSP Settings --></label>
+        <name>stgLabelLvlAssignBatchTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelMembershipSettings --></label>
+        <name>stgLabelMembershipSettings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelNewAutoRel --></label>
+        <name>stgLabelNewAutoRel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelNewPaymentMapping --></label>
+        <name>stgLabelNewPaymentMapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelNewRDFieldMap --></label>
+        <name>stgLabelNewRDFieldMap</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelNewRelReciprocal --></label>
+        <name>stgLabelNewRelReciprocal</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelNewTH --></label>
+        <name>stgLabelNewTH</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelNewUDR --></label>
+        <name>stgLabelNewUDR</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelNone --></label>
+        <name>stgLabelNone</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelONS --></label>
+        <name>stgLabelONS</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelOppBatchProgress --></label>
+        <name>stgLabelOppBatchProgress</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelOppCampMembers --></label>
+        <name>stgLabelOppCampMembers</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelOppNamingRefreshTitle --></label>
+        <name>stgLabelOppNamingRefreshTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelOppNamingSettings --></label>
+        <name>stgLabelOppNamingSettings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelOppPrimaryContactTitle --></label>
+        <name>stgLabelOppPrimaryContactTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelOppRollupRT --></label>
+        <name>stgLabelOppRollupRT</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelOppRollups --></label>
+        <name>stgLabelOppRollups</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelOppUpdatePrimaryContact --></label>
+        <name>stgLabelOppUpdatePrimaryContact</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelOther --></label>
+        <name>stgLabelOther</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelOtherDateFormat --></label>
+        <name>stgLabelOtherDateFormat</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelOtherFormalGreetingFormat --></label>
+        <name>stgLabelOtherFormalGreetingFormat</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelOtherHHNameFormat --></label>
+        <name>stgLabelOtherHHNameFormat</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelOtherInformalGreetingFormat --></label>
+        <name>stgLabelOtherInformalGreetingFormat</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelOtherOpportunigyNamingFormat --></label>
+        <name>stgLabelOtherOpportunigyNamingFormat</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelPaymentMapNoValidFields --></label>
+        <name>stgLabelPaymentMapNoValidFields</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelPaymentSettings --></label>
+        <name>stgLabelPaymentSettings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelRDFieldMap --></label>
+        <name>stgLabelRDFieldMap</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelRDNewPeriod --></label>
+        <name>stgLabelRDNewPeriod</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelRDPeriod --></label>
+        <name>stgLabelRDPeriod</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelRDSettings --></label>
+        <name>stgLabelRDSettings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelRDStatus --></label>
+        <name>stgLabelRDStatus</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelRelSettings --></label>
+        <name>stgLabelRelSettings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelRelationshipSyncNoValidFields --></label>
+        <name>stgLabelRelationshipSyncNoValidFields</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelSelectChatterGroup --></label>
+        <name>stgLabelSelectChatterGroup</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelSoftCredit --></label>
+        <name>stgLabelSoftCredit</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelTriggerHandlers --></label>
+        <name>stgLabelTriggerHandlers</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelTypeAhead --></label>
+        <name>stgLabelTypeAhead</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelUDRNoOppFields --></label>
+        <name>stgLabelUDRNoOppFields</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelUDROp --></label>
+        <name>stgLabelUDROp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelUDROppField --></label>
+        <name>stgLabelUDROppField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelUDRTargetField --></label>
+        <name>stgLabelUDRTargetField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelUDRTargetFieldHelp --></label>
+        <name>stgLabelUDRTargetFieldHelp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelUDRTargetObject --></label>
+        <name>stgLabelUDRTargetObject</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLinkDelete --></label>
+        <name>stgLinkDelete</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNPSPGuideImportData --></label>
+        <name>stgNPSPGuideImportData</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNPSPSettings --></label>
+        <name>stgNPSPSettings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNPSPSettingsTitle --></label>
+        <name>stgNPSPSettingsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNPSPWorkbook --></label>
+        <name>stgNPSPWorkbook</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavAccountModel --></label>
+        <name>stgNavAccountModel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavAddressVerification --></label>
+        <name>stgNavAddressVerification</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavAffiliations --></label>
+        <name>stgNavAffiliations</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavAllocations --></label>
+        <name>stgNavAllocations</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavBDE --></label>
+        <name>stgNavBDE</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavBulkProcesses --></label>
+        <name>stgNavBulkProcesses</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavConnections --></label>
+        <name>stgNavConnections</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavContactRoles --></label>
+        <name>stgNavContactRoles</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavContacts --></label>
+        <name>stgNavContacts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavDonations --></label>
+        <name>stgNavDonations</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavDonorStatistics --></label>
+        <name>stgNavDonorStatistics</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavErrorLog --></label>
+        <name>stgNavErrorLog</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavErrorNotify --></label>
+        <name>stgNavErrorNotify</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavHealthCheck --></label>
+        <name>stgNavHealthCheck</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavHouseholds --></label>
+        <name>stgNavHouseholds</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavLeads --></label>
+        <name>stgNavLeads</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavMembership --></label>
+        <name>stgNavMembership</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavPaymentMappings --></label>
+        <name>stgNavPaymentMappings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavPayments --></label>
+        <name>stgNavPayments</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavPeople --></label>
+        <name>stgNavPeople</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavRDBatch --></label>
+        <name>stgNavRDBatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavRDFieldMap --></label>
+        <name>stgNavRDFieldMap</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavRDInstallmentPeriods --></label>
+        <name>stgNavRDInstallmentPeriods</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavRecurringDonations --></label>
+        <name>stgNavRecurringDonations</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavRelAutoCreate --></label>
+        <name>stgNavRelAutoCreate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavRelReciprocal --></label>
+        <name>stgNavRelReciprocal</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavRelationships --></label>
+        <name>stgNavRelationships</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavRollupAlloBatch --></label>
+        <name>stgNavRollupAlloBatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavRollupBatch --></label>
+        <name>stgNavRollupBatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavSchedule --></label>
+        <name>stgNavSchedule</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavSystem --></label>
+        <name>stgNavSystem</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavTriggerConfig --></label>
+        <name>stgNavTriggerConfig</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavUserDefinedRollups --></label>
+        <name>stgNavUserDefinedRollups</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgOppNamingDescription --></label>
+        <name>stgOppNamingDescription</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgPowerOfUsHub --></label>
+        <name>stgPowerOfUsHub</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgTools --></label>
+        <name>stgTools</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgValidationHHAccountHHRules --></label>
+        <name>stgValidationHHAccountHHRules</name>
+    </customLabels>
+    <customTabs>
+        <label>Batch Data Invoer</label>
+        <name>Batch_Data_Entry</name>
+    </customTabs>
+    <customTabs>
+        <label>Contactpersoon Samenvoegen</label>
+        <name>Contact_Merge</name>
+    </customTabs>
+    <customTabs>
+        <label>Ermee Beginnen</label>
+        <name>NPSP_Resources</name>
+    </customTabs>
+    <customTabs>
+        <label>NPSP Instellingen</label>
+        <name>NPSP_Settings</name>
+    </customTabs>
+    <quickActions>
+        <label><!-- LogACall --></label>
+        <name>LogACall</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- NewAccount --></label>
+        <name>NewAccount</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- New Contact --></label>
+        <name>NewContact</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- NewNote --></label>
+        <name>NewNote</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- New Opportunity --></label>
+        <name>NewOpportunity</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- NewTask --></label>
+        <name>NewTask</name>
+    </quickActions>
+    <quickActions>
+        <label>Nieuwe Campagne</label>
+        <name>New_Campaign</name>
+    </quickActions>
+    <quickActions>
+        <label>Nieuwe Terugkerende Donatie</label>
+        <name>New_Recurring_Donation</name>
+    </quickActions>
+    <reportTypes>
+        <description>Contactpersonen zonder connectie met een ander object</description>
+        <label>Alleen Contacten</label>
+        <name>Contacts_Only</name>
+        <sections>
+            <label>Contactpersonen</label>
+            <name>Contacts</name>
+        </sections>
+    </reportTypes>
+</Translations>

@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <help>De batch waar deze Account is gemaakt.</help>
+        <label><!-- Batch --></label>
+        <name>Batch__c</name>
+        <relationshipLabel><!-- Accounts --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>De standaard programma gebieden die deze organisatie financiert.</help>
+        <label>Financiering Focus</label>
+        <name>Funding_Focus__c</name>
+        <picklistValues>
+            <masterLabel>Animal Welfare</masterLabel>
+            <translation>Dierenwelzijn</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Arts and Culture</masterLabel>
+            <translation>Kunst en Cultuur</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Capacity Building</masterLabel>
+            <translation>Capaciteit Opbouwen</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Education</masterLabel>
+            <translation>Onderwijs</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Environmental</masterLabel>
+            <translation>Milieu</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Health Services</masterLabel>
+            <translation>Gezondheidszorg</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Human Services</masterLabel>
+            <translation>Menselijke Diensten</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Geeft aan dat deze organisatie een schenking donateur  is. Is toepasbaar op instellingen, overheidsinstanties, corporaties, etc.</help>
+        <label>Schenking donateur</label>
+        <name>Grantmaker__c</name>
+    </fields>
+    <fields>
+        <help>De naam van het bedrijf&apos;s matching gift adminstrator</help>
+        <label>Matching Gift Naam Administrator</label>
+        <name>Matching_Gift_Administrator_Name__c</name>
+    </fields>
+    <fields>
+        <help>Het maximum bedrag dat het bedrijf wil matchen voor een enkele gift.</help>
+        <label>Maximaal Matching Gift Bedrag</label>
+        <name>Matching_Gift_Amount_Max__c</name>
+    </fields>
+    <fields>
+        <help>De kleinste gift een bedrijf wil matchen.</help>
+        <label>Minimaal Matching Gift Bedrag</label>
+        <name>Matching_Gift_Amount_Min__c</name>
+    </fields>
+    <fields>
+        <help>Het maximum bedrag dat het bedrijf elk jaar voor een werknemer zal matchen.</help>
+        <label>Matching Gift Jaarlijks Medewerker Max</label>
+        <name>Matching_Gift_Annual_Employee_Max__c</name>
+    </fields>
+    <fields>
+        <help>Extra notities over het bedrijf zijn matching gift programma.</help>
+        <label>Matching Gift Opmerkingen</label>
+        <name>Matching_Gift_Comments__c</name>
+    </fields>
+    <fields>
+        <help>Is dit een bedrijf die matchende giften aanbiedt?</help>
+        <label>Matching Gift Bedrijf</label>
+        <name>Matching_Gift_Company__c</name>
+    </fields>
+    <fields>
+        <help>E-mail van de matching gift adminstrator van het bedrijf.</help>
+        <label><!-- Matching Gift Email --></label>
+        <name>Matching_Gift_Email__c</name>
+    </fields>
+    <fields>
+        <help>De datum wanneer de matching gift informatie voor het laatst is geüpdatet</help>
+        <label>Matching Gift Info Bijgewerkt</label>
+        <name>Matching_Gift_Info_Updated__c</name>
+    </fields>
+    <fields>
+        <help>Het deel van een gift die het bedrijf wil matchen.</help>
+        <label>Matching Gift Percentage</label>
+        <name>Matching_Gift_Percent__c</name>
+    </fields>
+    <fields>
+        <help>Telefoon voor matching gift administratie kantoor.</help>
+        <label>Matching Gift Telefoon</label>
+        <name>Matching_Gift_Phone__c</name>
+    </fields>
+    <fields>
+        <help>Restricties over hoe oud giften mogen zijn om in aanmerking te komen voor matching.</help>
+        <label>Bijbehorende Gift Deadline Aanvraag</label>
+        <name>Matching_Gift_Request_Deadline__c</name>
+    </fields>
+    <fields>
+        <help>Formule: Het aantal jaar hoe lang dit Huishouden al een Lid heeft.</help>
+        <label>Lidmaatschapsduur</label>
+        <name>Membership_Span__c</name>
+    </fields>
+    <fields>
+        <help>Formule: Huidig, verlopen, of bedenk periode. Standaard bedenk periode wordt ingesteld in Huishoud Instellingen.</help>
+        <label>Lidmaatschap Status</label>
+        <name>Membership_Status__c</name>
+    </fields>
+    <fields>
+        <help>Voor Huishoud Accounts, het aantal Contacten in het Huishouden</help>
+        <label>Aantal Leden van het Huishouden</label>
+        <name>Number_of_Household_Members__c</name>
+    </fields>
+    <layouts>
+        <layout>Household Layout</layout>
+        <sections>
+            <label><!-- Address --></label>
+            <section>Address</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Description --></label>
+            <section>Description</section>
+        </sections>
+        <sections>
+            <label><!-- Donation Information --></label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label><!-- Donation Totals --></label>
+            <section>Donation Totals</section>
+        </sections>
+        <sections>
+            <label>Velden</label>
+            <section>Fields</section>
+        </sections>
+        <sections>
+            <label><!-- Membership Information --></label>
+            <section>Membership Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Organization Layout</layout>
+        <sections>
+            <label>Adres</label>
+            <section>Address</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Description --></label>
+            <section>Description</section>
+        </sections>
+        <sections>
+            <label><!-- Donation Information --></label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label><!-- Donation Totals --></label>
+            <section>Donation Totals</section>
+        </sections>
+        <sections>
+            <label>Velden</label>
+            <section>Fields</section>
+        </sections>
+        <sections>
+            <label><!-- Grantmaking Information --></label>
+            <section>Grantmaking Information</section>
+        </sections>
+        <sections>
+            <label><!-- Matching Gift Comments --></label>
+            <section>Matching Gift Comments</section>
+        </sections>
+        <sections>
+            <label><!-- Matching Gift Information --></label>
+            <section>Matching Gift Information</section>
+        </sections>
+        <sections>
+            <label><!-- Membership Information --></label>
+            <section>Membership Information</section>
+        </sections>
+    </layouts>
+    <quickActions>
+        <label>Nieuw Adres</label>
+        <name>New_Address</name>
+    </quickActions>
+    <quickActions>
+        <label>Nieuwe Connectie</label>
+        <name>New_Affiliation</name>
+    </quickActions>
+    <quickActions>
+        <label>Snelle Update</label>
+        <name>Quick_Household_Update</name>
+    </quickActions>
+    <quickActions>
+        <label>Snelle Update</label>
+        <name>Quick_Organization_Update</name>
+    </quickActions>
+    <webLinks>
+        <label>Beheer Huishouden</label>
+        <name>Manage_Household</name>
+    </webLinks>
+</CustomObjectTranslation>
