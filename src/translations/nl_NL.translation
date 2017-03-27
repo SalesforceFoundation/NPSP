@@ -2361,6 +2361,10 @@
         <name>stgHelpRelAutoCreatedDup</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgHelpRelFieldSyncToggle --></label>
+        <name>stgHelpRelFieldSyncToggle</name>
+    </customLabels>
+    <customLabels>
         <label><!-- stgHelpRelGenderField --></label>
         <name>stgHelpRelGenderField</name>
     </customLabels>
@@ -2383,6 +2387,10 @@
     <customLabels>
         <label><!-- stgHelpRelReciprocalNeutral --></label>
         <name>stgHelpRelReciprocalNeutral</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRelSyncFields --></label>
+        <name>stgHelpRelSyncFields</name>
     </customLabels>
     <customLabels>
         <label><!-- stgHelpReviewErrorLog --></label>
@@ -2727,6 +2735,10 @@
     <customLabels>
         <label><!-- stgLabelRelSettings --></label>
         <name>stgLabelRelSettings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelRelationshipSyncNoValidFields --></label>
+        <name>stgLabelRelationshipSyncNoValidFields</name>
     </customLabels>
     <customLabels>
         <label><!-- stgLabelSelectChatterGroup --></label>
