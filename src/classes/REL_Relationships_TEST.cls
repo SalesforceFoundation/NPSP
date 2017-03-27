@@ -940,4 +940,28 @@ private class REL_Relationships_TEST {
             'Prey relationship should have been deleted because Predator side of relationship was deleted'
         );
     }
+
+   /*********************************************************************************************************
+    * @description Test method for verifying field sync exclusion.
+    */
+    static testMethod void testFieldSyncExclusion(){
+        if (strTestOnly != '*' && strTestOnly != 'testFieldSyncExclusion') return;
+        
+        setupRelationshipTestData(null);
+        Relationship_Sync_Excluded_Fields__c noDesc = new Relationship_Sync_Excluded_Fields__c(name = 'npe4__description__c');
+        insert noDesc;
+        
+        npe4__Relationship__c crel =  new npe4__Relationship__c(npe4__contact__c = c1.id, npe4__Relatedcontact__c = c2.id, 
+                                           npe4__Type__c='TestType', npe4__Description__c='Test Description');
+       
+        
+        Test.startTest();        
+        insert crel;
+        Test.stopTest();
+        
+        //assert Description is blank on reciprocal because it was excluded   
+        npe4__Relationship__c rel = [select id, npe4__Description__c from npe4__Relationship__c where npe4__ReciprocalRelationship__c = :crel.id];
+        system.assertEquals(null, rel.npe4__Description__c);
+    }
+
 }
