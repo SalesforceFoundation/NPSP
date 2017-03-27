@@ -542,7 +542,36 @@ public with sharing class STG_SettingsManager_TEST {
         STG_Panel.stgService.stgRel.npe4__Allow_AutoCreated_Duplicates__c = false;
         panel.saveSettings();
         system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgRelationshipSettings().npe4__Allow_AutoCreated_Duplicates__c);
-        system.assertNotEquals(null, panel.listSOGenderFieldOptions);
+        
+        STG_Panel.stgService.stgRel.Enable_Custom_Field_Sync__c = true;
+        panel.saveSettings();
+        system.assertEquals(true, UTIL_CustomSettingsFacade.getOrgRelationshipSettings().Enable_Custom_Field_Sync__c);
+        STG_Panel.stgService.stgRel.Enable_Custom_Field_Sync__c = false;
+        panel.saveSettings();
+        system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgRelationshipSettings().Enable_Custom_Field_Sync__c);
+
+        STG_Panel.stgService.stgRel.npe4__Gender_Field__c = 'description';
+        panel.saveSettings();
+        system.assertEquals(UTIL_Describe.getFieldLabel('Contact','description'),panel.strGenderFieldLabel,'Gender label doesn\'t match.');
+
+        // no settings to start
+        system.assertEquals(0,panel.listExcludedFields.size());
+        system.assertEquals('',panel.excludedLabels,'Excluded Labels is not blank.');
+        // add a value to listExcludedFields and confirm that correct setting was added
+        panel.listExcludedFields = new List<String>{'npe4__description__c'};
+        panel.saveSettings();
+        system.assertEquals(1,UTIL_ListCustomSettingsFacade.getMapRelationshipFieldSyncSettings().size());
+        system.assertEquals(UTIL_Describe.getFieldLabel('npe4__Relationship__c','npe4__description__c'),panel.excludedLabels.trim());
+
+        // cause deletion of that setting record by setting empty string, confirm results
+        panel.listExcludedFields = new List<String>();
+        panel.saveSettings();
+        system.assertEquals(0,UTIL_ListCustomSettingsFacade.getMapRelationshipFieldSyncSettings().size(),'Exclusion field map not empty.');
+
+        // these SelectOption lists will always have at least the ---None--- entry
+        system.assertNotEquals(null, panel.listSOGenderFieldOptions,'listSOGenderFieldOptions is not null.');
+        system.assertNotEquals(null,panel.listSOSyncFieldOptions,'listSOSyncFieldOptions is not null.');
+
     }
 
     /*********************************************************************************************************
