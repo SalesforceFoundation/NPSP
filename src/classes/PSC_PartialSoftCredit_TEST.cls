@@ -346,4 +346,67 @@ public with sharing class PSC_PartialSoftCredit_TEST {
         system.assert(cChanged > 0 && cChanged < listPSC.size());
     }      
 
+    /*******************************************************************************************************
+    * @description create multiple new duplicate Partial Soft Credits, and verify new OCRs are created for them.
+    */
+    static testmethod void createDupePSCsNewOCRs() {
+        
+        createTestData(cContactTest, cOppTest, amountTest, false);
+        
+        // make sure no OCR's exist
+        list<OpportunityContactRole> listOCR = [select Id, ContactId, OpportunityId, Role, IsPrimary from OpportunityContactRole];
+        system.assertEquals(0, listOCR.size());        
+        
+        // create our Partial Soft Credits
+        list<Partial_Soft_Credit__c> listPSC = new list<Partial_Soft_Credit__c>();
+        integer iOpp = 0;
+            
+        listPSC.add(new Partial_Soft_Credit__c(
+            Contact__c = listCon[0].Id,
+            Opportunity__c = listOpp[0].Id,
+            Role_Name__c = 'Soft Credit',
+            Amount__c = amountTest/2                
+            ));
+
+        listPSC.add(new Partial_Soft_Credit__c(
+            Contact__c = listCon[0].Id,
+            Opportunity__c = listOpp[0].Id,
+            Role_Name__c = 'Another Role',
+            Amount__c = amountTest/2                
+            ));
+
+        insert listPSC;
+        
+        // make sure new OCRs created
+        listOCR = [select Id, Role from OpportunityContactRole order by Id];
+        system.assertEquals(2, listOCR.size());
+        
+        // make sure OCR id's stored in PSCs
+        listPSC = [select Id, Contact_Role_ID__c from Partial_Soft_Credit__c order by Contact_Role_ID__c];
+        system.assertEquals(2, listPSC.size());
+        for (integer i = 0; i < 2; i++) {
+            system.assertEquals(listOCR[i].Id, listPSC[i].Contact_Role_ID__c);
+        }
+        
+        // now lets add one more PSC to the same contact & opp and make sure it creates another new OCR
+        Partial_Soft_Credit__c psc = new Partial_Soft_Credit__c(
+            Contact__c = listCon[0].Id,
+            Opportunity__c = listOpp[0].Id,
+            Role_Name__c = 'Yet Another Role',
+            Amount__c = amountTest/2                
+            );
+        insert psc;
+        
+        // make sure new OCRs created
+        listOCR = [select Id, Role from OpportunityContactRole order by Id];
+        system.assertEquals(3, listOCR.size());
+        
+        // make sure OCR id's stored in PSCs
+        listPSC = [select Id, Contact_Role_ID__c from Partial_Soft_Credit__c order by Contact_Role_ID__c];
+        system.assertEquals(3, listPSC.size());
+        for (integer i = 0; i < 3; i++) {
+            system.assertEquals(listOCR[i].Id, listPSC[i].Contact_Role_ID__c);
+        }
+                
+    }      
 }
