@@ -23,4 +23,4 @@ SCRATCHSESS=$(cat scratch_session.txt  | sed -n 1p | sed 's/.*sid=\(.*\)$/\1/')
 echo $SCRATCHSESS
 
 echo "Get Apex Test Results"
-python apexResultsRest.py -a Foundation -i $SCRATCHSESSCRATCHUSER=$(cat scratch_user.txt  | sed -n 1p | sed 's/\s*\(.*\)$/\1/')S
+python apexResultsRest.py -a Foundation -i $SCRATCHSESS
