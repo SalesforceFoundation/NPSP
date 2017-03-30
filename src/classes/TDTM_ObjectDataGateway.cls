@@ -47,8 +47,8 @@ public class TDTM_ObjectDataGateway implements TDTM_iTableDataGateway {
      */
     public Boolean isEmpty() {
         if(rowCount == null) {
-            List<AggregateResult> result = [select count(Id) rowCount from Trigger_Handler__c];
-            rowCount = (Integer)result[0].get('rowCount');
+            List<Trigger_Handler__c> result = [select Id from Trigger_Handler__c limit 1];
+            rowCount = result.size();
         }
         if(rowCount == 0)
             return true;    

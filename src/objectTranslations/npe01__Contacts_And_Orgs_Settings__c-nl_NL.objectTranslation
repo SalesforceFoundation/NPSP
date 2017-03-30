@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Contacts And Orgs Settings --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Contacts And Orgs Settings --></value>
+    </caseValues>
+    <fields>
+        <help>Maakt automatisch een Campagne Lid aan wanneer je een Opportunity maakt die een gerelateerde Primair Contact en Primaire Campagne bron hebben, of update die Opportunity met Gesloten/Gewonnen fase.</help>
+        <label>Automatisch Campagne Lid Management</label>
+        <name>Automatic_Campaign_Member_Management__c</name>
+    </fields>
+    <fields>
+        <help>De automatische status van een campagne lid van open of gesloten of verloren opportunity’s Die een primair contact en een primaire campagne bron aan geassocieerd zit. Als het veld wordt leeg gelaten, gebruikt Salesforce de eerste niet gereageerd status</help>
+        <label>Campagne Lid Niet Gereageerd Status</label>
+        <name>Campaign_Member_Non_Responded_Status__c</name>
+    </fields>
+    <fields>
+        <help>De automatische Status van een Campagne Lid van Open of Gesloten of verloren opportunity’s Die een Primair Contact en een Primaire Campagne Bron aan geassocieerd zit. Als het veld wordt leeg gelaten, gebruikt Salesforce de eerste beantwoorde status.</help>
+        <label>Campagne Lid Gereageerd Status</label>
+        <name>Campaign_Member_Responded_Status__c</name>
+    </fields>
+    <fields>
+        <help>Het vullen van deze instelling zorgt voor het automatisch aanmaken van een contactrol voor opportunity’s met een melding naar de honoree. Het leeglaten van dit veld schakelt de melding en het automatisch aanmaken van een contact role uit.</help>
+        <label>Gehonoreerde Opportunity Contact Rol</label>
+        <name>Honoree_Opportunity_Contact_Role__c</name>
+    </fields>
+    <fields>
+        <help>Schakelt Adresbeheer uit voor rekeningen van Huishoudens wanneer dit is geselecteerd.</help>
+        <label>Adres Huishoud Account uitgeschakeld</label>
+        <name>Household_Account_Addresses_Disabled__c</name>
+    </fields>
+    <fields>
+        <help>Bepaald het maximum aantal betalingen beschikbaar in de betalingscreatie wizard</help>
+        <label>Max Betalingen</label>
+        <name>Max_Payments__c</name>
+    </fields>
+    <fields>
+        <help>Het vullen van deze instelling zorgt voor het automatisch aanmaken van een contactrol voor opportunity’s met een melding naar het contact. Het leeglaten van dit veld schakelt de melding en het automatisch aanmaken van een contact role uit.</help>
+        <label>Notificatie Ontvanger Opp Contact Rol</label>
+        <name>Notification_Recipient_Opp_Contact_Role__c</name>
+    </fields>
+    <fields>
+        <help>Namen van Opportunity record types worden weggelaten als er een betaling wordt aangemaakt</help>
+        <label>Uitgesloten Opp Record Types</label>
+        <name>Opp_RecTypes_Excluded_for_Payments__c</name>
+    </fields>
+    <fields>
+        <help>Waardes voor het Opportynity type veld die uitgesloten moeten worden als er een betaling wordt aangemaakt</help>
+        <label>Uitgesloten Opp Types</label>
+        <name>Opp_Types_Excluded_for_Payments__c</name>
+    </fields>
+    <fields>
+        <help>Schakelt Adresbeheer in voor rekeningen van Huishoudens wanneer dit is geselecteerd.</help>
+        <label>Organisatie Acc Adressen Ingeschakeld</label>
+        <name>Organizational_Account_Addresses_Enabled__c</name>
+    </fields>
+    <fields>
+        <help>Kies de fase die een Opportunity moet worden wanneer het totale betalingsbedrag is gelijk aan het Opportunity bedrag. Als er geen fase is geselecteerd, dan zullen opportunities niet automatisch worden overgezet wanneer de betalingen compleet zijn.</help>
+        <label>Opp Fase voor Wanneer Volledig Betaald</label>
+        <name>Payments_Auto_Close_Stage_Name__c</name>
+    </fields>
+    <fields>
+        <help>Wanneer ingeschakeld, Veranderingen aan één contact of bedrijfs adres veld update het huidige adres, in plaats van een nieuwe adres aan te maken</help>
+        <label>Simpele Adres Wijzigingen = update</label>
+        <name>Simple_Address_Change_Treated_as_Update__c</name>
+    </fields>
+    <gender><!-- Neuter --></gender>
+</CustomObjectTranslation>

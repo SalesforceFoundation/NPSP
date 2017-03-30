@@ -163,6 +163,8 @@ private class LVL_LevelAssignBATCH_TEST {
         // create & insert contact
         listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(8);
         listCon[0].npo02__TotalOppAmount__c = null;
+        listCon[0].npo02__LastMembershipLevel__c = lvlTin.Id;
+
         listCon[1].npo02__TotalOppAmount__c = 10;
         listCon[2].npo02__TotalOppAmount__c = 100;
         
@@ -221,6 +223,32 @@ private class LVL_LevelAssignBATCH_TEST {
         Test.stopTest();
         
         verifyContactLevels();
+    }
+
+    /*********************************************************************************************************
+    * @description test our batch process for unassigning Levels on Contacts when Levels Change
+    * and they no longer meet the criteria
+    */
+    static testMethod void testContactLevelsChange() {
+        // create Levels
+        createTestLevels();
+
+        // create test Contacts
+        createTestContacts();
+
+        // modify lvl Tin
+        lvlTin.Minimum_Amount__c = 10; // Contact 0 will no longer meet this criteria
+        update lvlTin;
+
+        string strSoql = 'SELECT Id, Name, npo02__TotalOppAmount__c, npo02__LastMembershipLevel__c, npo02__LastMembershipOrigin__c, CreatedDate, LastModifiedDate FROM Contact';
+        LVL_LevelAssign_BATCH batch = new LVL_LevelAssign_BATCH(strSoql, 'Contact');
+
+        Test.startTest();
+        Database.executeBatch(batch);
+        Test.stopTest();
+
+        Contact conZero = [SELECT Id, npo02__LastMembershipLevel__c FROM Contact WHERE Id = :listCon[0].Id];
+        System.assertEquals(null, conZero.npo02__LastMembershipLevel__c);
     }
     
     /*********************************************************************************************************
