@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <help>Le lot dans lequel cette piste a été créée.</help>
+        <label>Lot</label>
+        <name>Batch__c</name>
+        <relationshipLabel>Pistes</relationshipLabel>
+    </fields>
+    <fields>
+        <label>Ville de la société</label>
+        <name>CompanyCity__c</name>
+    </fields>
+    <fields>
+        <label>Pays de la société</label>
+        <name>CompanyCountry__c</name>
+    </fields>
+    <fields>
+        <label>Code postal de l’entreprise</label>
+        <name>CompanyPostalCode__c</name>
+    </fields>
+    <fields>
+        <label>Région/Province de l’entreprise</label>
+        <name>CompanyState__c</name>
+    </fields>
+    <fields>
+        <label>Rue de la société</label>
+        <name>CompanyStreet__c</name>
+    </fields>
+</CustomObjectTranslation>

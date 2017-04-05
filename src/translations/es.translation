@@ -102,6 +102,10 @@
         <name>Addr_Verification_Batch_Title</name>
     </customLabels>
     <customLabels>
+        <label><!-- Unable to load verification class when visiting settings page --></label>
+        <name>Addr_Verification_Cant_Load_Class</name>
+    </customLabels>
+    <customLabels>
         <label>Verificación requerida</label>
         <name>Addr_Verification_Required</name>
     </customLabels>
@@ -176,6 +180,10 @@
     <customLabels>
         <label>Mi información fue respaldada yendo a Configuración, Gestión de Datos, Exportación de Datos.</label>
         <name>CONV_All_Backed_Up</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- CONV_All_Dup_Rules_Disabled --></label>
+        <name>CONV_All_Dup_Rules_Disabled</name>
     </customLabels>
     <customLabels>
         <label>Todas las Cuentas Familia existentes son seleccionadas junto con sus Contactos.</label>
@@ -322,8 +330,64 @@
         <name>CampaignMemberStatusOmit</name>
     </customLabels>
     <customLabels>
+        <label><!-- CascadeDeletionError --></label>
+        <name>CascadeDeletionError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- ClosedWonOpportunities --></label>
+        <name>ClosedWonOpportunities</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- ConfirmDeleteAccount --></label>
+        <name>ConfirmDeleteAccount</name>
+    </customLabels>
+    <customLabels>
+        <label>Agregar tarea dependiente</label>
+        <name>EPAddDependentTask</name>
+    </customLabels>
+    <customLabels>
+        <label>Agregar tarea</label>
+        <name>EPAddTask</name>
+    </customLabels>
+    <customLabels>
+        <label>Eliminar tarea</label>
+        <name>EPDeleteTask</name>
+    </customLabels>
+    <customLabels>
+        <label>Gestionar tareas del plan de acción.</label>
+        <name>EPManageTasks</name>
+    </customLabels>
+    <customLabels>
+        <label>Gestionar plantilla del plan de acción.</label>
+        <name>EPManageTemplate</name>
+    </customLabels>
+    <customLabels>
+        <label>Las dependencias de tareas en el plan de acción no pueden realizar bucles de dependencia recursivos.</label>
+        <name>EPTaskDependency</name>
+    </customLabels>
+    <customLabels>
+        <label>Las tareas del plan de acción sólo pueden depender de otras tareas que pertenezcan a la misma plantilla de plan de acción.</label>
+        <name>EPTaskTemplate</name>
+    </customLabels>
+    <customLabels>
+        <label>a</label>
+        <name>EPTo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- ErrorEmailMessage --></label>
+        <name>ErrorEmailMessage</name>
+    </customLabels>
+    <customLabels>
         <label>Oculto por seguridad</label>
         <name>HiddenForSecurity</name>
+    </customLabels>
+    <customLabels>
+        <label>El campo Asunto es requerido.</label>
+        <name>NameRequired</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- OrganizationalOpportunities --></label>
+        <name>OrganizationalOpportunities</name>
     </customLabels>
     <customLabels>
         <label>Exitoso</label>
@@ -446,6 +510,10 @@
         <name>alloBtnSaveAndClose</name>
     </customLabels>
     <customLabels>
+        <label><!-- alloCampaignExceedsOppAmount --></label>
+        <name>alloCampaignExceedsOppAmount</name>
+    </customLabels>
+    <customLabels>
         <label>Solo puede crear asignaciones para oportunidades con un monto positivo.</label>
         <name>alloCantAllocateNothing</name>
     </customLabels>
@@ -510,6 +578,10 @@
         <name>alloTotals</name>
     </customLabels>
     <customLabels>
+        <label><!-- alloUnallocated --></label>
+        <name>alloUnallocated</name>
+    </customLabels>
+    <customLabels>
         <label>El campo ID Único Customizado de la Cuenta {0} debe tener campos coincidentes en el NPSP Data Import object cuyos nombres de API son {1} y {2}.</label>
         <name>bdiAccountCustomIdError</name>
     </customLabels>
@@ -548,6 +620,10 @@
     <customLabels>
         <label>Nombre, Apellido y Correo Electrónico</label>
         <name>bdiContactMatchFnameLnameEmail</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Data Importer Contact matching option for Fname, Lname, Phone --></label>
+        <name>bdiContactMatchFnameLnamePhone</name>
     </customLabels>
     <customLabels>
         <label>Apellido y Correo Electrónico</label>
@@ -674,6 +750,10 @@
         <name>bdiTime</name>
     </customLabels>
     <customLabels>
+        <label><!-- button label on the Remove Contact popup --></label>
+        <name>btnRemove</name>
+    </customLabels>
+    <customLabels>
         <label>EstadoDelMiembroDeCampañaPredeterminado:</label>
         <name>campaignMemberStatusDefault</name>
     </customLabels>
@@ -686,8 +766,32 @@
         <name>campaignMemberStatusResponded</name>
     </customLabels>
     <customLabels>
+        <label><!-- Used when NPSP hits an error trying to create an account for a contact --></label>
+        <name>conFailedAccountCreate</name>
+    </customLabels>
+    <customLabels>
         <label>Las Cuentas Personales no son admitidas.</label>
         <name>conMergeErrNoPersonAccounts</name>
+    </customLabels>
+    <customLabels>
+        <label>No puede asignar este plan de acción a un nuevo objeto. Por favor, cree un nuevo plan de acción.</label>
+        <name>engagementPlanCantEdit</name>
+    </customLabels>
+    <customLabels>
+        <label>Se debe completar un campo de búsqueda a un objeto para cada plan de acción.</label>
+        <name>engagementPlanNoLookups</name>
+    </customLabels>
+    <customLabels>
+        <label>Solo un campo de búsqueda a un objeto puede completarse para cada plan de acción.</label>
+        <name>engagementPlanTwoLookups</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- exceptionRequiredField --></label>
+        <name>exceptionRequiredField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- exceptionValidationRule --></label>
+        <name>exceptionValidationRule</name>
     </customLabels>
     <customLabels>
         <label>Usted no tiene permisos para modificar {0}.</label>
@@ -782,8 +886,20 @@
         <name>healthDetailsInvalidErrorUser</name>
     </customLabels>
     <customLabels>
+        <label>El nivel {0} se refiere a un campo numérico no válido {1} en {2}.</label>
+        <name>healthDetailsInvalidFieldNumeric</name>
+    </customLabels>
+    <customLabels>
         <label>No se admiten Totales Año Fiscal cuando la organización esta utilizando Años fiscales personalizados.</label>
         <name>healthDetailsInvalidFiscalYears</name>
+    </customLabels>
+    <customLabels>
+        <label>El nivel {0} se refiere a un campo no válido {1} en {2}.</label>
+        <name>healthDetailsInvalidLevelField</name>
+    </customLabels>
+    <customLabels>
+        <label>El nivel {0} se refiere a un campo de búsqueda de nivel no válido {1} en {2}.</label>
+        <name>healthDetailsInvalidLevelFieldReference</name>
     </customLabels>
     <customLabels>
         <label>El campo {1} en {0} no existe.</label>
@@ -834,12 +950,24 @@
         <name>healthDetailsNothingScheduled</name>
     </customLabels>
     <customLabels>
+        <label><!-- healthDetailsOCR --></label>
+        <name>healthDetailsOCR</name>
+    </customLabels>
+    <customLabels>
         <label>Se encontraron {0} oportunidades que tienen más de una Función de contacto seleccionada como Principal.</label>
         <name>healthDetailsOCRDupPrimary</name>
     </customLabels>
     <customLabels>
         <label>No se encontraron oportunidades con múltiples Funciones de contacto seleccionadas como Principal.</label>
         <name>healthDetailsOCRDupPrimaryValid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsOCRSettingsResolution --></label>
+        <name>healthDetailsOCRSettingsResolution</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsOCRSettingsValid --></label>
+        <name>healthDetailsOCRSettingsValid</name>
     </customLabels>
     <customLabels>
         <label>El campo {0} en pagos y el campo {1} en oportunidades no son de tipos de datos compatibles.</label>
@@ -962,6 +1090,10 @@
         <name>healthLabelOCRCheck</name>
     </customLabels>
     <customLabels>
+        <label><!-- healthLabelOCRSettings --></label>
+        <name>healthLabelOCRSettings</name>
+    </customLabels>
+    <customLabels>
         <label>Pagos en Oportunidad</label>
         <name>healthLabelOppPayments</name>
     </customLabels>
@@ -1012,6 +1144,14 @@
     <customLabels>
         <label>Totales definidos por el usuario válidos.</label>
         <name>healthLabelUDFValid</name>
+    </customLabels>
+    <customLabels>
+        <label>Niveles</label>
+        <name>healthLabelVerifyLevels</name>
+    </customLabels>
+    <customLabels>
+        <label>Todas las referencias de campo en todos los niveles son válidas.</label>
+        <name>healthLabelVerifyLevelsSuccess</name>
     </customLabels>
     <customLabels>
         <label>Advertencia</label>
@@ -1084,6 +1224,10 @@
     <customLabels>
         <label>Como Salesforce no permite desactivar Años fiscales personalizados, los totales del NPSP utilizarán por defecto el año calendario.</label>
         <name>healthSolutionInvalidFiscalYears</name>
+    </customLabels>
+    <customLabels>
+        <label>Ir a la pestaña de Niveles, y actualizar la referencia de campo no válida en el Nivel {0}.</label>
+        <name>healthSolutionInvalidLevelField</name>
     </customLabels>
     <customLabels>
         <label>En la pestaña Configuración del NPSP, haga clic en {0} | {1}, y agregue el campo de oportunidad que falta, o elimine el registro de mapeo de pagos.</label>
@@ -1194,6 +1338,10 @@
         <name>hhCmpDedupeStatus</name>
     </customLabels>
     <customLabels>
+        <label><!-- isARequiredField --></label>
+        <name>isARequiredField</name>
+    </customLabels>
+    <customLabels>
         <label>Primero</label>
         <name>labelListViewFirst</name>
     </customLabels>
@@ -1222,8 +1370,108 @@
         <name>labelShowMore</name>
     </customLabels>
     <customLabels>
+        <label><!-- lblAddressOverride --></label>
+        <name>lblAddressOverride</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblBtnAddAllHHMembers --></label>
+        <name>lblBtnAddAllHHMembers</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblBtnAddContact --></label>
+        <name>lblBtnAddContact</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblCCardExcludeFrom --></label>
+        <name>lblCCardExcludeFrom</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblCity --></label>
+        <name>lblCity</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblCloned --></label>
+        <name>lblCloned</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblCountry --></label>
+        <name>lblCountry</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- caption of Remove Contact popup --></label>
+        <name>lblDeleteContact</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- prompt for the Remove Contact Popup --></label>
+        <name>lblDeleteContactPrompt</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- autocomplete&apos;s label for &quot;smith in Contacts&quot; --></label>
+        <name>lblFindInContacts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- string displayed in the autocomplete control when empty --></label>
+        <name>lblFindOrAddContact</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblFirstName --></label>
+        <name>lblFirstName</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblFormalGreeting --></label>
+        <name>lblFormalGreeting</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblHousehold --></label>
+        <name>lblHousehold</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblHouseholdName --></label>
+        <name>lblHouseholdName</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblInformalGreeting --></label>
+        <name>lblInformalGreeting</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblLastName --></label>
+        <name>lblLastName</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblMergeHHPrompt --></label>
+        <name>lblMergeHHPrompt</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblMergeHHTitle --></label>
+        <name>lblMergeHHTitle</name>
+    </customLabels>
+    <customLabels>
         <label>Configuración NPSP</label>
         <name>lblNPSPSettings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error displayed when required perms missing to add a contact and its household --></label>
+        <name>lblNoHHMergePermissions</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblPostalCode --></label>
+        <name>lblPostalCode</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblRequired --></label>
+        <name>lblRequired</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblSalutation --></label>
+        <name>lblSalutation</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblState --></label>
+        <name>lblState</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblStreet --></label>
+        <name>lblStreet</name>
     </customLabels>
     <customLabels>
         <label>Cuenta</label>
@@ -1274,6 +1522,10 @@
         <name>leadConvertContactAccount</name>
     </customLabels>
     <customLabels>
+        <label><!-- leadConvertContactSelection --></label>
+        <name>leadConvertContactSelection</name>
+    </customLabels>
+    <customLabels>
         <label>Crear nueva cuenta:</label>
         <name>leadConvertCreateAccount</name>
     </customLabels>
@@ -1298,6 +1550,10 @@
         <name>leadConvertPageTitle</name>
     </customLabels>
     <customLabels>
+        <label><!-- leadConvertRecordTypeWarning --></label>
+        <name>leadConvertRecordTypeWarning</name>
+    </customLabels>
+    <customLabels>
         <label>Convertir candidato</label>
         <name>leadConvertSectionTitle</name>
     </customLabels>
@@ -1312,6 +1568,38 @@
     <customLabels>
         <label>Usted solo puede ver contactos existentes.</label>
         <name>leadConvertViewContactError</name>
+    </customLabels>
+    <customLabels>
+        <label>Guardar y nuevo</label>
+        <name>lvlBtnSaveAndNew</name>
+    </customLabels>
+    <customLabels>
+        <label>Debe especificar campos de búsqueda diferentes en {0} para el campo de Nivel y de Nivel anterior.</label>
+        <name>lvlErrorDuplicateLookups</name>
+    </customLabels>
+    <customLabels>
+        <label>El nombre de nivel {0} ya existe. Nombres para el mismo destino y campo de nivel deben ser únicos.</label>
+        <name>lvlErrorDuplicateName</name>
+    </customLabels>
+    <customLabels>
+        <label>El campo {0} especificado en el nivel {1} no es un campo de búsqueda al objeto nivel válido.</label>
+        <name>lvlErrorInvalidLookupField</name>
+    </customLabels>
+    <customLabels>
+        <label>El campo {0} especificado en el nivel {1} no es un campo de número válido.</label>
+        <name>lvlErrorInvalidSourceField</name>
+    </customLabels>
+    <customLabels>
+        <label>La cantidad mínima debe ser menor que la cantidad máxima en el nivel {0}.</label>
+        <name>lvlErrorMinGTMax</name>
+    </customLabels>
+    <customLabels>
+        <label>El rango desde la cantidad mínima hasta la cantidad máxima en el nivel {0} se superpone con el rango entre la cantidad mínima y la cantidad máxima en el nivel {1}</label>
+        <name>lvlErrorMinOverlap</name>
+    </customLabels>
+    <customLabels>
+        <label>El nivel {0} debe tener la cantidad mínima o la cantidad máxima.</label>
+        <name>lvlErrorNoMinMax</name>
     </customLabels>
     <customLabels>
         <label>Buscar</label>
@@ -1466,6 +1754,10 @@
         <name>pmtWizardWriteoffMessage</name>
     </customLabels>
     <customLabels>
+        <label><!-- pscDeleteRow --></label>
+        <name>pscDeleteRow</name>
+    </customLabels>
+    <customLabels>
         <label>Añadir otra crédito blando</label>
         <name>pscManageSoftCreditsAdd</name>
     </customLabels>
@@ -1582,6 +1874,22 @@
         <name>sendAcknowledgmentSucceeded</name>
     </customLabels>
     <customLabels>
+        <label><!-- statusCompleted --></label>
+        <name>statusCompleted</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- statusInProgress --></label>
+        <name>statusInProgress</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- statusNotStarted --></label>
+        <name>statusNotStarted</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgAddrGeneralSettingsIntro --></label>
+        <name>stgAddrGeneralSettingsIntro</name>
+    </customLabels>
+    <customLabels>
         <label>Debe seleccionar un servicio de verificación para poder habilitar la verificación automática.</label>
         <name>stgAddrMustChooseClass</name>
     </customLabels>
@@ -1678,6 +1986,14 @@
         <name>stgBtnSave</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgDocumentation --></label>
+        <name>stgDocumentation</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgDontAutoScheduleHelpText --></label>
+        <name>stgDontAutoScheduleHelpText</name>
+    </customLabels>
+    <customLabels>
         <label>La implementación de la clase, no implementa la interfaz HH_INaming .</label>
         <name>stgErrorINaming</name>
     </customLabels>
@@ -1739,6 +2055,10 @@ NOTA : El paquete Non Profit Success Pack no es compatible con la configuración
         <label>Hacer clic en Correr lote para calcular los totales para todas las oportunidades cerradas con asignaciones relacionadas a ellas. El resultado se guardará en los registros Cuentas Contables General.
 Puede cerrar esta página en cualquier momento y el proceso seguirá corriendo.</label>
         <name>stgHelpBatchAlloRollup</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpBatchCreateDefault --></label>
+        <name>stgHelpBatchCreateDefault</name>
     </customLabels>
     <customLabels>
         <label>Use esta página para calcular los totales de todas las oportunidades cerradas, guardado el resultado en registros de Contactos, Familias y Cuentas. Este proceso puede llevar tiempo; puede cerrar esta página y el proceso seguirá corriendo.</label>
@@ -1830,12 +2150,20 @@ Una vez que el proceso se completó al 100%, puede abandonar o actualizar esta p
         <name>stgHelpEnableSoftCreditRollups</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgHelpErrorLog --></label>
+        <name>stgHelpErrorLog</name>
+    </customLabels>
+    <customLabels>
         <label>Seleccionar si se quiere que el sistema publique notificaciones de cierto tipo de errores.</label>
         <name>stgHelpErrorNotifyOn</name>
     </customLabels>
     <customLabels>
         <label>Seleccionar el tipo de usuario al que se le manda notificaciones.</label>
         <name>stgHelpErrorNotifyTo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- displayed in the Example household names box --></label>
+        <name>stgHelpExampleHHNames</name>
     </customLabels>
     <customLabels>
         <label>El formato que Salesforce utiliza para Saludos formal.</label>
@@ -1882,6 +2210,10 @@ Para aprender más sobre el modelo de Cuenta Familia recomendado, ver &lt;a href
         <name>stgHelpHHRules</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgHelpHealthCheck --></label>
+        <name>stgHelpHealthCheck</name>
+    </customLabels>
+    <customLabels>
         <label>El formato Salesforce usa para el Saludo informal</label>
         <name>stgHelpIGFormat</name>
     </customLabels>
@@ -1892,6 +2224,13 @@ Para aprender más sobre el modelo de Cuenta Familia recomendado, ver &lt;a href
     <customLabels>
         <label>Define si se crea una oportunidad al convertir un candidato.</label>
         <name>stgHelpLeadConvert</name>
+    </customLabels>
+    <customLabels>
+        <label>Esta funcionalidad calcula las asignaciones de nivel para todos los objetos de Salesforce (normalmente Cuentas y Contactos, pero también cualquier objeto personalizado) que tengan Niveles asignados a ellos. Este proceso puede tomar algún tiempo, pero puede cerrar esta página de forma segura y el proceso continuará en segundo plano.
+&lt;br/&gt; &lt;br/&gt;
+
+&lt;b&gt; IMPORTANTE: &lt;/b&gt; Puesto que Salesforce evalúa a menudo los niveles de los campos actualizados de otros procesos de datos masivos, es posible que desee ejecutar esos primero.</label>
+        <name>stgHelpLvlAssignBatch</name>
     </customLabels>
     <customLabels>
         <label>Seleccionar la Función de contacto para Donantes complementados.</label>
@@ -1908,6 +2247,14 @@ Para aprender más sobre el modelo de Cuenta Familia recomendado, ver &lt;a href
     <customLabels>
         <label>Nombre del tipo de registro de oportunidades, como Membresía, que se quiere que sumen a totales diferentes de otros tipos de registro de oportunidad.</label>
         <name>stgHelpMembershipRT</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpNPSPDoc --></label>
+        <name>stgHelpNPSPDoc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpNPSPSettings --></label>
+        <name>stgHelpNPSPSettings</name>
     </customLabels>
     <customLabels>
         <label>Especifica el nombre o caracteres (como &amp;) que Salesforce utiliza para conectar parejas en un nombre.</label>
@@ -1930,6 +2277,10 @@ IMPORTANTE: Ambos campos deben ser del mismo tipo de dato.</label>
     <customLabels>
         <label>No se definieron Totales definidos por el usuario</label>
         <name>stgHelpNoUDR</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpOCR --></label>
+        <name>stgHelpOCR</name>
     </customLabels>
     <customLabels>
         <label>La función por defecto para las funciones de contacto en oportunidades que se generan automáticamente.</label>
@@ -1996,6 +2347,10 @@ IMPORTANTE: Ambos campos deben ser del mismo tipo de dato.</label>
         <name>stgHelpPaymentsEnabled</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgHelpPowerOfUsHub --></label>
+        <name>stgHelpPowerOfUsHub</name>
+    </customLabels>
+    <customLabels>
         <label>&lt;b&gt;Advertencia:&lt;/b&gt; Hacer clic en este botón activará un lote de actualización de oportunidades para actualizar el campo Contacto principal. Salesforce actualizará los registros de oportunidad donde el campo Contacto principal no tenga el mismo valor que la Función de contacto marcada como principal. &lt;br/&gt;&lt;br/&gt;
 
 &lt;b&gt;Este proceso es irreversible.&lt;/b&gt;
@@ -2015,6 +2370,10 @@ Una vez que el procesos es 100% completo, usted puede abandonar est página o re
     <customLabels>
         <label>Si seleccionado, agrega la campaña especificada en donaciones recurrentes a todas las oportunidades relacionadas. Si no se selecciona, solo la primera oportunidad tendrá la campaña.</label>
         <name>stgHelpRDAddCampaign</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRDBatch --></label>
+        <name>stgHelpRDBatch</name>
     </customLabels>
     <customLabels>
         <label>Previene que la programación nocturna modifique las donaciones recurrentes. Deberá remover trabajos programados existentes en Configuración | Supervisar | Trabajos programados.</label>
@@ -2073,8 +2432,16 @@ Una vez que el procesos es 100% completo, usted puede abandonar est página o re
         <name>stgHelpRDSuccesses</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgHelpRecDon --></label>
+        <name>stgHelpRecDon</name>
+    </customLabels>
+    <customLabels>
         <label>Relaciones creadas autom. son automáticamente des duplicadas para prevenir relaciones duplicadas de ser creadas entre dos contactos. Seleccionar esta casilla deshabilita esto y permitir la creación de múltiples relaciones del mismo tipo entre contactos.</label>
         <name>stgHelpRelAutoCreatedDup</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRelFieldSyncToggle --></label>
+        <name>stgHelpRelFieldSyncToggle</name>
     </customLabels>
     <customLabels>
         <label>Campo personalizado usado para definir el género del contacto que se utiliza para determinar la relación reciproca.</label>
@@ -2099,6 +2466,14 @@ Una vez que el procesos es 100% completo, usted puede abandonar est página o re
     <customLabels>
         <label>El valor usado si el campo de genero del contacto no es igual al valor de la etiqueta personalizado de Masculino o Femenino, y el saludo del contacto no infiere el genero.</label>
         <name>stgHelpRelReciprocalNeutral</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRelSyncFields --></label>
+        <name>stgHelpRelSyncFields</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpReviewErrorLog --></label>
+        <name>stgHelpReviewErrorLog</name>
     </customLabels>
     <customLabels>
         <label>El número de registros que se procesa a la vez cuando se calculas las estadísticas del donante. Por defecto el tamaño es de 200. Reducir a un número menor si los Totales de oportunidades están fallando debido a limites en el sistema.</label>
@@ -2137,6 +2512,10 @@ Una vez que el procesos es 100% completo, usted puede abandonar est página o re
         <name>stgHelpRollupPrimaryContact</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgHelpSalesforceSetup --></label>
+        <name>stgHelpSalesforceSetup</name>
+    </customLabels>
+    <customLabels>
         <label>Trata cambios a en los campos de dirección en contacto o cuenta como actualizaciones de direcciones existentes (no se crea un registro en el objeto Direcciones). También causa que los espacios blandos y los cambios en caso sea tratados como actualizaciones.</label>
         <name>stgHelpSimpleAddrChangeIsUpdate</name>
     </customLabels>
@@ -2147,6 +2526,10 @@ Una vez que el procesos es 100% completo, usted puede abandonar est página o re
     <customLabels>
         <label>Seleccionar si se quiere que los errores se guarden en la base de datos.</label>
         <name>stgHelpStoreErrorsOn</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpTDTM --></label>
+        <name>stgHelpTDTM</name>
     </customLabels>
     <customLabels>
         <label>Indica que este módulo esta activo</label>
@@ -2307,6 +2690,10 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgLabelLeadSettings</name>
     </customLabels>
     <customLabels>
+        <label>Lote de niveles</label>
+        <name>stgLabelLvlAssignBatchTitle</name>
+    </customLabels>
+    <customLabels>
         <label>Configuración de Membresía</label>
         <name>stgLabelMembershipSettings</name>
     </customLabels>
@@ -2431,6 +2818,10 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgLabelRelSettings</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgLabelRelationshipSyncNoValidFields --></label>
+        <name>stgLabelRelationshipSyncNoValidFields</name>
+    </customLabels>
+    <customLabels>
         <label>Seleccionar un Grupo de Chatter</label>
         <name>stgLabelSelectChatterGroup</name>
     </customLabels>
@@ -2463,6 +2854,10 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgLabelUDRTargetField</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgLabelUDRTargetFieldHelp --></label>
+        <name>stgLabelUDRTargetFieldHelp</name>
+    </customLabels>
+    <customLabels>
         <label>Objeto objetivo</label>
         <name>stgLabelUDRTargetObject</name>
     </customLabels>
@@ -2471,8 +2866,20 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgLinkDelete</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgNPSPGuideImportData --></label>
+        <name>stgNPSPGuideImportData</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNPSPSettings --></label>
+        <name>stgNPSPSettings</name>
+    </customLabels>
+    <customLabels>
         <label>Configuración del Non Profit Success Pack</label>
         <name>stgNPSPSettingsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNPSPWorkbook --></label>
+        <name>stgNPSPWorkbook</name>
     </customLabels>
     <customLabels>
         <label>Modelo de Cuenta</label>
@@ -2591,6 +2998,10 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgNavRollupBatch</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgNavSchedule --></label>
+        <name>stgNavSchedule</name>
+    </customLabels>
+    <customLabels>
         <label>Herramientas del sistema</label>
         <name>stgNavSystem</name>
     </customLabels>
@@ -2601,6 +3012,18 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
     <customLabels>
         <label>Totales definidos por el usuario</label>
         <name>stgNavUserDefinedRollups</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgOppNamingDescription --></label>
+        <name>stgOppNamingDescription</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgPowerOfUsHub --></label>
+        <name>stgPowerOfUsHub</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgTools --></label>
+        <name>stgTools</name>
     </customLabels>
     <customLabels>
         <label>Al establecer el Modelo Cuenta en &apos; Cuenta Familiar &apos;, se requieren que la Regla de Familia se establezca en &apos;No Contactos&apos; . Al utilizar este modelo, no hay necesidad de tener un objeto adicional Familia.</label>

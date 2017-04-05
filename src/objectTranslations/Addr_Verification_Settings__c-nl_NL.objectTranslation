@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Address Verification Settings --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Address Verification Settings --></value>
+    </caseValues>
+    <fields>
+        <help>URL die wordt gebruikt voor adres verificatie</help>
+        <label>Adresverificatie URL</label>
+        <name>Address_Verification_Endpoint__c</name>
+    </fields>
+    <fields>
+        <help>Het verificatie ID van uw geheime sleutel</help>
+        <label>Verificatie ID</label>
+        <name>Auth_ID__c</name>
+    </fields>
+    <fields>
+        <help>Het verificatie Token van uw geheime sleutel</help>
+        <label>Verificatie Token</label>
+        <name>Auth_Token__c</name>
+    </fields>
+    <fields>
+        <help>De Salesforce class die verantwoordelijke is voor het koppelen met de SmartyStreets API en verifiëren van adressen</help>
+        <label>Verificatieservice</label>
+        <name>Class__c</name>
+    </fields>
+    <fields>
+        <help>Automatische adresverificatie voor nieuwe adressen inschakelen</help>
+        <label>Schakel Automatische Verificatie in</label>
+        <name>Enable_Automatic_Verification__c</name>
+    </fields>
+    <fields>
+        <help>Markeert dubbele adressen als ongeldig, als de API meer dan één adres terugkoppelt. Indien niet geselecteerd, zal Salesforce het eerste gesuggereerde adres als geldig zien.</help>
+        <label>Dubbele Adressen Weigeren</label>
+        <name>Reject_Ambiguous_Addresses__c</name>
+    </fields>
+    <fields>
+        <help>Melding timeout in seconden</help>
+        <label><!-- Timeout --></label>
+        <name>Timeout__c</name>
+    </fields>
+    <fields>
+        <help>Geeft aan of u gebruik maakt van de SmartyStreets adresverificatie service</help>
+        <label>AFGEKEURD - door gebruik SmartyStreets</label>
+        <name>Using_SmartyStreets__c</name>
+    </fields>
+    <fields>
+        <help>URL die wordt gebruikt voor postcode verificatie</help>
+        <label>Postcode Verificatie Eindpunt</label>
+        <name>Zipcode_Verification_Endpoint__c</name>
+    </fields>
+    <gender><!-- Neuter --></gender>
+</CustomObjectTranslation>

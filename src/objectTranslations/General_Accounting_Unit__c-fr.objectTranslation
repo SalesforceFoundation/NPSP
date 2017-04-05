@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- General Accounting Unit --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- General Accounting Unit --></value>
+    </caseValues>
+    <fields>
+        <help>Les unités comptables générales actives sont disponibles à la sélection pour les allocations. Les unités inactives ne peuvent pas recevoir de nouvelles allocations.</help>
+        <label>Actif</label>
+        <name>Active__c</name>
+    </fields>
+    <fields>
+        <help>La moyenne de toutes les allocations de cette unité comptable générale, présentes ou passées.</help>
+        <label>Allocation moyenne</label>
+        <name>Average_Allocation__c</name>
+    </fields>
+    <fields>
+        <help>Informations supplémentaires sur cette unité comptable générale.</help>
+        <label><!-- Description --></label>
+        <name>Description__c</name>
+    </fields>
+    <fields>
+        <help>La première date de fermeture de l’opportunité d’une allocation associée avec cette unité comptable générale.</help>
+        <label>Première date d’allocation</label>
+        <name>First_Allocation_Date__c</name>
+    </fields>
+    <fields>
+        <help>L’allocation la plus élevée de cette unité comptable générale, présente ou passée.</help>
+        <label>Allocation la plus élevée</label>
+        <name>Largest_Allocation__c</name>
+    </fields>
+    <fields>
+        <help>La dernière date de fermeture de l’opportunité d’une allocation associée avec cette unité comptable générale.</help>
+        <label>Date de la dernière allocation</label>
+        <name>Last_Allocation_Date__c</name>
+    </fields>
+    <fields>
+        <help>Nombre total d’allocations d’opportunités à une étape fermée et gagnée au cours des derniers N jours. La valeur de N peut être modifiée dans la configuration.</help>
+        <label>Nombre d’allocations N derniers jours</label>
+        <name>Number_of_Allocations_Last_N_Days__c</name>
+    </fields>
+    <fields>
+        <help>Nombre total d’allocations d’opportunités à une étape fermée et gagnée au cours de la dernière année.</help>
+        <label>Nombre d’allocations de l’année dernière</label>
+        <name>Number_of_Allocations_Last_Year__c</name>
+    </fields>
+    <fields>
+        <help>Nombre total d’allocations d’opportunités à une étape fermée et gagnée au cours de cette année.</help>
+        <label>Nombre d’allocations cette année</label>
+        <name>Number_of_Allocations_This_Year__c</name>
+    </fields>
+    <fields>
+        <help>Nombre total d’allocations d’opportunités à une étape fermée et gagnée deux ans auparavant.</help>
+        <label>Nombre d’allocations il y a deux ans</label>
+        <name>Number_of_Allocations_Two_Years_Ago__c</name>
+    </fields>
+    <fields>
+        <help>L’allocation la plus faible de cette unité comptable générale, présente ou passée.</help>
+        <label>Allocation la plus faible</label>
+        <name>Smallest_Allocation__c</name>
+    </fields>
+    <fields>
+        <help>Somme des allocations d’opportunités à une étape fermée et gagnée au cours des derniers N jours. La valeur de N peut être modifiée dans la configuration.</help>
+        <label>Allocations totales des N derniers jours</label>
+        <name>Total_Allocations_Last_N_Days__c</name>
+    </fields>
+    <fields>
+        <help>Somme des allocations d’opportunités à une étape fermée et gagnée au cours de l’année dernière.</help>
+        <label>Allocations totales de l’année dernière</label>
+        <name>Total_Allocations_Last_Year__c</name>
+    </fields>
+    <fields>
+        <help>Somme des allocations d’opportunités à une étape fermée et gagnée au cours de cette année.</help>
+        <label>Allocations totales de cette année</label>
+        <name>Total_Allocations_This_Year__c</name>
+    </fields>
+    <fields>
+        <help>Somme des allocations d’opportunités à une étape fermée et gagnée il y a deux ans.</help>
+        <label>Allocations totales il y a deux ans</label>
+        <name>Total_Allocations_Two_Years_Ago__c</name>
+    </fields>
+    <fields>
+        <help>Somme des allocations d’opportunités à une étape fermée et gagnée.</help>
+        <label>Total des allocations</label>
+        <name>Total_Allocations__c</name>
+    </fields>
+    <fields>
+        <help>Nombre total d’allocations d’opportunités à une étape fermée et gagnée.</help>
+        <label>Nombre total d’allocations</label>
+        <name>Total_Number_of_Allocations__c</name>
+    </fields>
+    <gender><!-- Masculine --></gender>
+    <layouts>
+        <layout>General Accounting Unit Layout</layout>
+        <sections>
+            <label>Informations d’allocation</label>
+            <section>Allocation Information</section>
+        </sections>
+        <sections>
+            <label>Totaux d’allocation</label>
+            <section>Allocation Totals</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- General Accounting Unit Name --></nameFieldLabel>
+    <startsWith><!-- Consonant --></startsWith>
+    <webLinks>
+        <label>Recalculer des cumuls</label>
+        <name>Recalculate_Rollups</name>
+    </webLinks>
+</CustomObjectTranslation>

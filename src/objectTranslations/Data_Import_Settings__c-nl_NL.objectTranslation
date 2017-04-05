@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Data Import Settings --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Data Import Settings --></value>
+    </caseValues>
+    <fields>
+        <help>Een optioneel Uniek Id veld dat wordt gebruikt voor Account matching</help>
+        <label>Account aangepast Uniek ID</label>
+        <name>Account_Custom_Unique_ID__c</name>
+    </fields>
+    <fields>
+        <help>Geeft aan welke regel gevolgd moet worden wanneer er geprobeerd wordt Accounts met een Data Import te matchen tegen bestaande Accounts.</help>
+        <label>Account Matching Regel</label>
+        <name>Account_Matching_Rule__c</name>
+    </fields>
+    <fields>
+        <help>Het aantal NPSP data records dat kan worden geïmporteerd in elke batch</help>
+        <label>Batchgrootte</label>
+        <name>Batch_Size__c</name>
+    </fields>
+    <fields>
+        <help>een optioneel Uniek Id veld dat wordt gebruikt voor Contactpersoon matching</help>
+        <label>Contact Aangepast uniek ID</label>
+        <name>Contact_Custom_Unique_ID__c</name>
+    </fields>
+    <fields>
+        <help>Geeft aan welke regel gevolgd moet worden wanneer er geprobeerd wordt Contactpersonen met een Data import te matchen tegen bestaande Contactpersonen.</help>
+        <label>Contact Matching Regel</label>
+        <name>Contact_Matching_Rule__c</name>
+    </fields>
+    <gender><!-- Neuter --></gender>
+</CustomObjectTranslation>
