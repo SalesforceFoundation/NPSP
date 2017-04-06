@@ -134,7 +134,7 @@ public class UTIL_UnitTestData_TEST {
         
         for (integer i=0;i<n;i++) {
             Contact newCon = New Contact (
-                FirstName= CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS + i + generateRandomString(2),
+                FirstName= CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS + i,
                 LastName= CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
                 npe01__Private__c=false,
                 npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
@@ -512,18 +512,6 @@ public class UTIL_UnitTestData_TEST {
 
         System.assertEquals(false, returnedUser.IsActive);
         System.assertEquals(false, queriedUser.IsActive);
-    }
-
-    private static String generateRandomString(Integer len) {
-        String chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz';
-        String[] result = new String[len];
-        Integer idx = 0;
-
-        while(idx < len) {
-            Integer chr = Math.mod(Math.abs(Crypto.getRandomInteger()), 62);
-            result[idx++] = chars.substring(chr, chr+1);
-        }
-        return String.join(result,'');
     }
 
 /*
