@@ -71,7 +71,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     // holds the list of DataImport records we are currently processing
     public list<DataImport__c> listDI;
     
-    private Data_Import_Settings__c diSettings {
+    public Data_Import_Settings__c diSettings {
         get {
             if (diSettings == null) {
                 diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();

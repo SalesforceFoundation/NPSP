@@ -42,7 +42,7 @@ public interface BDI_IMatching {
     * @param listDI The list of Data Import records with donations
     * @return map<Id, Opportunity> a map of Data Import record Id's to their appropriate Opportunity
     */ 
-    map<Id, Opportunity> matchDonations(list<DataImport__c> listDI);
+    map<Id, Opportunity> matchDonations(BDI_DataImport_BATCH bdi, list<DataImport__c> listDI);
 
     
 }
