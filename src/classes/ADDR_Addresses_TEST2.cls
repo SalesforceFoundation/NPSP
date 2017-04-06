@@ -971,7 +971,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         // insert new contacts to the HH without any addresses
         list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cHH);
         for (integer i = 0; i < cHH; i++) {
-            listCon[i].LastName = listCon[i].LastName + i; // adding counter to last name to prevent dupes
             listCon[i].AccountId = listAccT[i].Id;
         }
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
@@ -1056,7 +1055,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         // insert new contacts to the HH with the current default addresses
         list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cHH);
         for (integer i = 0; i < cHH; i++) {
-            listCon[i].LastName = listCon[i].LastName + i; // adding counter to last name to prevent dupes
             listCon[i].AccountId = listAccT[i].Id;
             listCon[i].MailingStreet = listAccT[i].BillingStreet;
             listCon[i].MailingCity = listAccT[i].BillingCity;
