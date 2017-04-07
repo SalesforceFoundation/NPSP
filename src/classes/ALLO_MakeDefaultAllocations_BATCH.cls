@@ -62,10 +62,12 @@ public class ALLO_MakeDefaultAllocations_BATCH implements Database.Batchable<sOb
     }
 
     private Boolean needsDefaultAllocation(Opportunity opp) {
-        if (!String.isBlank(alloSettings.Excluded_Opp_RecTypes__c) && alloSettings.Excluded_Opp_RecTypes__c.contains(opp.RecordTypeId)) {
-            return false;
+        if (!String.isBlank(alloSettings.Excluded_Opp_RecTypes__c) && !String.isBlank(opp.RecordTypeId)) {
+            if (alloSettings.Excluded_Opp_RecTypes__c.contains(opp.RecordTypeId)) {
+                return false;
+            }
         }
-        if (oppTypesToExclude.contains(opp.Type)) {
+        if (!String.isBlank(opp.Type) && oppTypesToExclude.contains(opp.Type)) {
             return false;
         }
         return true;
