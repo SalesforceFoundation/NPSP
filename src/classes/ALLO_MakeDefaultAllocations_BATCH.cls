@@ -39,41 +39,36 @@ public class ALLO_MakeDefaultAllocations_BATCH implements Database.Batchable<sOb
 
     /** @description Allocations settings object.*/
     private Allocations_Settings__c alloSettings = UTIL_CustomSettingsFacade.getAllocationsSettings();
+    
+    /** @description Which opportunity types to exclude. We need to split this into a set 
+    * to avoid a partial match, e.g. Donor could be matched to the string Matching Donor*/
+    private Set<String> oppTypesToExclude = String.isBlank(alloSettings.Excluded_Opp_Types__c) ? new Set<String>() : new Set<String>(alloSettings.Excluded_Opp_Types__c.split(';'));
+
     /** @description The query for the batch process to run on.*/
     private String query;
     
     /** @description The batch process constructor; creates the query based on type and record type exclusion settings.*/
     public ALLO_MakeDefaultAllocations_BATCH() {
-        
-        string strExcludeOppRecTypesQuery = '';
-        string strExcludeOppTypesQuery = '';
-
         if (ALLO_Multicurrency_TDTM.isMultiCurrency()) {
-            query = 'SELECT Id, Amount, CurrencyIsoCode FROM Opportunity';
+            query = 'SELECT Id, Amount, RecordTypeId, Type, CurrencyIsoCode FROM Opportunity';
         } else {
-            query = 'SELECT Id, Amount FROM Opportunity';
+            query = 'SELECT Id, Amount, RecordTypeId, Type FROM Opportunity';
         }
-
-        //build string of opp record type names for query
-        if (alloSettings.Excluded_Opp_RecTypes__c != null) {
-            strExcludeOppRecTypesQuery = ' WHERE RecordTypeId NOT IN ' + ALLO_Rollup_SCHED.convertToQueryListFormat(alloSettings.Excluded_Opp_Rectypes__c);
-        }
-
-        //build string of opp types for query
-        if (alloSettings.Excluded_Opp_Types__c != null) {
-            if (alloSettings.Excluded_Opp_RecTypes__c != null)
-                strExcludeOppTypesQuery = ' AND ';
-            else 
-                strExcludeOppTypesQuery = ' WHERE ';
-            strExcludeOppTypesQuery += ' Type NOT IN ' + ALLO_Rollup_SCHED.convertToQueryListFormat(alloSettings.Excluded_Opp_Types__c);
-        }
-
-        query += strExcludeOppRecTypesQuery + strExcludeOppTypesQuery;
     }
     
     /** @description Batch process start method.*/
     public Database.QueryLocator start(Database.BatchableContext BC) {
         return Database.getQueryLocator(query);
+    }
+
+    private Boolean needsDefaultAllocation(Opportunity opp) {
+        if (!String.isBlank(alloSettings.Excluded_Opp_RecTypes__c) && alloSettings.Excluded_Opp_RecTypes__c.contains(opp.RecordTypeId)) {
+            return false;
+        }
+        if (oppTypesToExclude.contains(opp.Type)) {
+            return false;
+        }
+        return true;
     }
 
     /*********************************************************************************************************
@@ -91,7 +86,10 @@ public class ALLO_MakeDefaultAllocations_BATCH implements Database.Batchable<sOb
         list<Allocation__c> listAlloForUpdate = new list<Allocation__c>();
 
         for (Opportunity opp : listOpps) {
-            mapIdOpp.put(opp.id, opp);
+            //only add opps not excluded in settings for processing
+            if (needsDefaultAllocation(opp)) {
+                mapIdOpp.put(opp.id, opp);
+            }
         }
 
         for (Allocation__c allo : [SELECT Id, General_Accounting_Unit__c, Opportunity__c, Amount__c FROM Allocation__c WHERE Opportunity__c IN :mapIdOpp.keySet()]) {
@@ -101,7 +99,7 @@ public class ALLO_MakeDefaultAllocations_BATCH implements Database.Batchable<sOb
             mapOppIdAllo.get(allo.Opportunity__c).add(allo);
         }
 
-        for (Opportunity opp : listOpps) {
+        for (Opportunity opp : mapIdOpp.values()) {
             //if we have allocations for this opp, create or update the default
             if (mapOppIdAllo.containsKey(opp.id)) {
                 decimal remainder = opp.Amount;
