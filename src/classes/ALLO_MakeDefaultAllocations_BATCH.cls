@@ -47,7 +47,8 @@ public class ALLO_MakeDefaultAllocations_BATCH implements Database.Batchable<sOb
     /** @description The query for the batch process to run on.*/
     private String query;
     
-    /** @description The batch process constructor; creates the query based on type and record type exclusion settings.*/
+    /** @description The batch process constructor; queries all opportunities, then excludes by recordtype/type in the execute method.
+    * This approach avoids query timeouts on large data volumes. */
     public ALLO_MakeDefaultAllocations_BATCH() {
         if (ALLO_Multicurrency_TDTM.isMultiCurrency()) {
             query = 'SELECT Id, Amount, RecordTypeId, Type, CurrencyIsoCode FROM Opportunity';
