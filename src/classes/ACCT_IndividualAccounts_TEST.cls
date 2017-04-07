@@ -1784,7 +1784,7 @@ private class ACCT_IndividualAccounts_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Update a household account's record type, verify system fields are unset.
+    * @description Update a 1-1 contact's first name and ownerid, verify no "duplicate id in list" exception.
     */
     public static testMethod void regressionDuplicateIdInList() {
 
