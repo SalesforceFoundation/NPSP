@@ -1803,15 +1803,15 @@ private class ACCT_IndividualAccounts_TEST {
         System.assertEquals(true, queryAccount.npe01__SYSTEMISINDIVIDUAL__c, 'IsIndividual system field should be set for household account.');
         System.assertEquals(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, queryAccount.npe01__SYSTEM_AccountType__c, 'Account Type system field should be set for household account.');
 
-        User secondUser = [SELECT Id FROM User WHERE Id != :queryCon.OwnerId AND IsActive = true AND UserType = 'Standard' LIMIT 1];
+        List<User> secondUser = [SELECT Id FROM User WHERE Id != :queryCon.OwnerId AND IsActive = true AND UserType = 'Standard' LIMIT 1];
         //regression only possible with a second active user, exit if we don't have one
-        if (secondUser == null) {
+        if (secondUser.isEmpty()) {
             return;
         }
 
         Test.startTest();
         con.FirstName = 'foo';
-        con.OwnerId = secondUser.id;
+        con.OwnerId = secondUser[0].id;
         try {
             update con;
         } catch (Exception ex) {
