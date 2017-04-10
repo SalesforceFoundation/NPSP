@@ -79,7 +79,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             return diSettings;
         }
         private set;
-    }    
+    }
 
     private boolean isFirstnameInContactMatchRules {
     	get {

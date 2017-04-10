@@ -120,16 +120,26 @@ public class BDI_Donations {
         // get the list of DI records that have donations to process
         list<DataImport__c> listDIDonations = validateDonationsToProcess();
         
+        // get our matching behavior to use
+        string matchBehavior = bdi.disettings.Donation_Matching_Behavior__c;
+
         // call the extension to match against existing donations
-        mapDIIdToOpp = iMatching.matchDonations(bdi, listDIDonations);
+        if (matchBehavior != BDI_DataImport_API.DoNotMatch) {
+            mapDIIdToOpp = iMatching.matchDonations(bdi, listDIDonations);
+        }
         
         // now go thru the new & existing donations and update them
         for (DataImport__c di : listDIDonations) {
             Opportunity opp = mapDIIdToOpp.get(di.Id);
             string strOppName;
             
+            // validate against our desired matching behavior
+            if (!isValidMatchBehavior(di, matchBehavior)) {
+                continue;
+            }
+            
             // if there is no opp matched, create one for it
-            boolean isNew = opp == null;
+            boolean isNew = (opp == null);
             if (isNew) {
                 opp = new Opportunity();
                 mapDIIdToOpp.put(di.Id, opp);
@@ -232,7 +242,7 @@ public class BDI_Donations {
     * @description validate bdi records for donations and return those to process
     * @return list<DataImport__c> The list of BDI records that have donations to process
     */ 
-    public list<DataImport__c> validateDonationsToProcess() {
+    private list<DataImport__c> validateDonationsToProcess() {
         list<DataImport__c> listDIDonations = new list<DataImport__c>();
         for (DataImport__c di : bdi.listDI) {
             // skip di's that already have an error
@@ -262,6 +272,43 @@ public class BDI_Donations {
             listDIDonations.add(di);
         }
         return listDIDonations;
+    }
+    
+    /*******************************************************************************************************
+    * @description validate whether the current donation record was appropriately matched to an exact,
+    * best, or new donation record given the matchingBehavior.  Invalid matches will be marked as an
+    * error in the DI record.
+    *
+    * @param di The DataImport record to validate
+    * @param matchBehavior The match behavior to validate against
+    * @return boolean True if valid, False if not
+    */ 
+    private boolean isValidMatchBehavior(DataImport__c di, string matchBehavior) {
+        string strError;
+        
+        if (matchBehavior == BDI_DataImport_API.RequireNoMatch && di.DonationImported__c != null) {
+            strError = label.bdiErrorDonationMultiMatch;
+        } 
+        else if (matchBehavior == BDI_DataImport_API.RequireExactMatch && 
+            (di.DonationImported__c == null || di.Donation_Possible_Matches__c != null)) {
+            strError = label.bdiErrorDonationMultiMatch;
+        } 
+        else if (matchBehavior == BDI_DataImport_API.ExactMatchOrCreate && di.Donation_Possible_Matches__c != null) {
+            strError = label.bdiErrorDonationMultiMatch;
+        }
+        else if (matchBehavior == BDI_DataImport_API.RequireBestMatch && di.DonationImported__c == null) {
+            strError = label.bdiErrorDonationMultiMatch;
+        }
+        else { 
+            return true;
+        }
+
+        bdi.LogBDIError(di, strError, 'DonationImportStatus__c');
+        
+        // clear the best match so it won't be used
+        di.DonationImported__c = null;
+        
+        return false;
     }
 
     /*******************************************************************************************************
@@ -443,21 +490,23 @@ public class BDI_Donations {
                     id = bdi.ContactFromDi(di, 1).Id;
                 }
                 list<Opportunity> listCAOpps = mapConAccIdToOpps.get(id);
-                Opportunity oppBest;
+                list<Integer> listIMatches = new list<Integer>();
+                
                 if (listCAOpps != null) {
                     for (integer i = 0; i < listCAOpps.size(); i++) {
                         Opportunity opp = listCAOpps[i];
                         // always match to an Opp we were given the Id to!
                         if (di.DonationImported__c == opp.Id) {
-                            oppBest = opp;
+                            listIMatches.clear();
+                            listIMatches.add(i);
                             break;
                         }
                         if (di.DonationImported__c == null) {
                             // try match against all specified fields
                             boolean isAllMatch = true;
                             for (String strDIField : listMatchFields) {
-                                //system.debug('****DJH strDIField: ' + strDIField + ' di: ' + di.get(strDIField) + ' map: ' + mapDIFieldToOppField.get(strDIField) + ' opp: ' + opp.get(mapDIFieldToOppField.get(strDIField)));
                                 Object val = di.get(strDIField);
+                                // handle mapping a specified record type name to the Id we must compare with
                                 if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c')) {
                                     val = UTIL_RecordTypes.getRecordTypeId(Opportunity.sObjectType, string.valueOf(val));
                                 }
@@ -467,23 +516,36 @@ public class BDI_Donations {
                                 }
                             }
                             if (isAllMatch) {
-                                oppBest = opp;
-                                // remove this opp from the list to avoid matching it again.
-                                listCAOpps.remove(i);
-                                break;
+                                listIMatches.add(i);
                             }
                         }
                     }
                 }
-                
-                // record what we found, either the matched opp or no match
-                if (oppBest != null) {
+                // see if we have only one exact match
+                if (listIMatches.size() == 1) {
+                    Integer iOpp = listIMatches[0];
+                    Opportunity opp = listCAOpps[iOpp];
                     di.DonationImportStatus__c = label.bdiMatched;
-                    di.DonationImported__c = oppBest.Id;
+                    di.DonationImported__c = opp.Id;
                     // put the existing opp in our map for caller's use
-                    mapDIIdToOpp.put(di.Id, oppBest);
+                    mapDIIdToOpp.put(di.Id, opp);
+                    // remove this opp from the list to avoid matching it again.
+                    listCAOpps.remove(iOpp);
+                } else if (listIMatches.size() > 1) {
+                    for (integer i = 0; i < listIMatches.size(); i++) {
+                        Opportunity opp = listCAOpps[listIMatches[i]];
+                        di.Donation_Possible_Matches__c += opp.Id + ',';
+                    }
+                    di.DonationImportStatus__c = label.bdiMatchedBest;
+                    // still provide a best match to caller
+                    Opportunity opp = listCAOpps[0];
+                    di.DonationImported__c = opp.Id;
+                    // put the existing opp in our map for caller's use
+                    mapDIIdToOpp.put(di.Id, opp);
+                    // remove this opp from the list to avoid matching it again.
+                    listCAOpps.remove(0);
                 } else {
-                    di.DonationImportStatus__c = label.bdiNoMatch;
+                    di.DonationImportStatus__c = label.bdiMatchedNone;
                 }
                 
             }
