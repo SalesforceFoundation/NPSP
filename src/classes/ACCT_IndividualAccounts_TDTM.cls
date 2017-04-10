@@ -782,12 +782,14 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             return true;
         if(conNew != null && conOld == null)
             return true;
-        if(conNew.FirstName == null) conNew.FirstName = '';
-        if(conNew.LastName == null) conNew.LastName = '';
+        String newFirst = conNew.FirstName == null ? '' : conNew.FirstName;
+        String oldFirst = conOld.FirstName == null ? '' : conOld.FirstName;
+        String newLast = conNew.LastName == null ? '' : conNew.LastName;
+        String oldLast = conOld.LastName == null ? '' : conOld.LastName;
         
         return (conNew.AccountId != conOld.AccountId ||
-                !conNew.FirstName.equals(conOld.FirstName) ||
-                !conNew.LastName.equals(conOld.LastName) ||
+                !newFirst.equals(oldFirst) ||
+                !newLast.equals(oldLast) ||
                 conNew.MailingStreet != conOld.MailingStreet ||
                 conNew.MailingCity != conOld.MailingCity ||
                 conNew.MailingState != conOld.MailingState ||
