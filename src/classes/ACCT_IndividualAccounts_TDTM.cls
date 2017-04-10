@@ -685,16 +685,20 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     */ 
     private void updateOwners(map<Id, Contact> mapContactIdContactOwnerChange, DmlWrapper dmlWrapper) {        
         if (mapContactIdContactOwnerChange.size() > 0) {
-            list<Account> listAccToUpdate = new list<Account>();
-            set<Id> setAccId = new set<Id>();
+            Map<Id, Account> allAccounts = new Map<Id, Account>();
+            Map<Id, Account> accountsToUpdate = new Map<Id, Account>();
+
             for (Contact con : mapContactIdContactOwnerChange.values()) {
-                setAccId.add(con.AccountId);
+                allAccounts.put(con.AccountId, null);
             }
                        
-            list<Account> listAcc = [Select Id, npe01__SYSTEM_AccountType__c, npe01__One2OneContact__c, OwnerId, (select Id from Contacts limit 2) from Account 
-                where Id IN :setAccId];
+            allAccounts = new Map<Id, Account>(
+                [SELECT Id, npe01__SYSTEM_AccountType__c, npe01__One2OneContact__c, OwnerId, 
+                    (SELECT Id FROM Contacts limit 2) 
+                 FROM Account WHERE Id IN :allAccounts.keySet()]
+            );
             
-            for (Account acc : listAcc) {
+            for (Account acc : allAccounts.values()) {
                 // only consider 1:1 and HH Accounts
                 if (acc.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE || acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {                    
                     // if there is only 1 contact associated with this account
@@ -703,13 +707,26 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                         Id ownerIdContact = (c != null ? c.OwnerId : null);
                         if (acc.OwnerId != ownerIdContact) {
                             acc.OwnerId = ownerIdContact;
-                            listAccToUpdate.add(acc);
+                            accountsToUpdate.put(acc.id, acc);
                         }
                     }
                 }   
             }
-            // add all accounts needing updating to our list
-            dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAccToUpdate);                        
+
+            //update existing dmlWrapper objects with accounts already in the list
+            //avoids "duplicate id in list" errors updating the same account twice
+            for (sObject dmlObj : dmlWrapper.objectsToUpdate) {
+                Id objId = (Id) dmlObj.get('id');
+                if (accountsToUpdate.containsKey(objId)) {
+                    dmlObj.put('OwnerId', accountsToUpdate.get(objId).OwnerId);
+                    accountsToUpdate.remove(objId);
+                }
+            }
+
+            // add the rest of the accounts that weren't already in the update list
+            if (!accountsToUpdate.isEmpty()) {
+                dmlWrapper.objectsToUpdate.addAll((List<SObject>)accountsToUpdate.values());
+            }
         }
     }
     
@@ -765,12 +782,14 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             return true;
         if(conNew != null && conOld == null)
             return true;
-        if(conNew.FirstName == null) conNew.FirstName = '';
-        if(conNew.LastName == null) conNew.LastName = '';
+        String newFirst = conNew.FirstName == null ? '' : conNew.FirstName;
+        String oldFirst = conOld.FirstName == null ? '' : conOld.FirstName;
+        String newLast = conNew.LastName == null ? '' : conNew.LastName;
+        String oldLast = conOld.LastName == null ? '' : conOld.LastName;
         
         return (conNew.AccountId != conOld.AccountId ||
-                !conNew.FirstName.equals(conOld.FirstName) ||
-                !conNew.LastName.equals(conOld.LastName) ||
+                !newFirst.equals(oldFirst) ||
+                !newLast.equals(oldLast) ||
                 conNew.MailingStreet != conOld.MailingStreet ||
                 conNew.MailingCity != conOld.MailingCity ||
                 conNew.MailingState != conOld.MailingState ||
