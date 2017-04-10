@@ -1782,4 +1782,41 @@ private class ACCT_IndividualAccounts_TEST {
         System.assertEquals(false, queryAccount.npe01__SYSTEMISINDIVIDUAL__c, 'Individual system field should not be set for household account.');
         System.assertNotEquals(CAO_Constants.HH_ACCOUNT_TYPE, queryAccount.npe01__SYSTEM_AccountType__c, 'Account Type system field should not be set for household account.');
     }
+
+    /*********************************************************************************************************
+    * @description Update a 1-1 contact's first name and ownerid, verify no "duplicate id in list" exception.
+    */
+    public static testMethod void regressionDuplicateIdInList() {
+
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR)
+        );
+
+        Contact con = new Contact(
+            LastName = 'Test'
+        );
+        insert con;
+
+        Contact queryCon = [SELECT Id, AccountId, OwnerId FROM Contact WHERE Id = :con.id];
+        Account queryAccount = [SELECT Id, RecordTypeId, npe01__SYSTEMISINDIVIDUAL__c, npe01__SYSTEM_AccountType__c FROM Account WHERE Id = :queryCon.AccountId];
+
+        System.assertEquals(true, queryAccount.npe01__SYSTEMISINDIVIDUAL__c, 'IsIndividual system field should be set for household account.');
+        System.assertEquals(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, queryAccount.npe01__SYSTEM_AccountType__c, 'Account Type system field should be set for household account.');
+
+        List<User> secondUser = [SELECT Id FROM User WHERE Id != :queryCon.OwnerId AND IsActive = true AND UserType = 'Standard' LIMIT 1];
+        //regression only possible with a second active user, exit if we don't have one
+        if (secondUser.isEmpty()) {
+            return;
+        }
+
+        Test.startTest();
+        con.FirstName = 'foo';
+        con.OwnerId = secondUser[0].id;
+        try {
+            update con;
+        } catch (Exception ex) {
+            System.assert(false, 'No exception should occur: ' + ex);
+        }
+        Test.stopTest();
+    }
 }

@@ -208,8 +208,8 @@ public class RD_RecurringDonations {
                     rd = updateMap.get(rdid);
                 }
                 
-                //if this is the summary row for this rd
-                if (isClosed == null && isWon == null) {
+                //if this is the summary row for this rd only update installments for open ended opportunities
+                if (isClosed == null && isWon == null && rd.npe03__open_ended_status__c == system.label.npe03.RecurringDonationOpenStatus) {
                     rd.npe03__Installments__c = (integer)obj.get('oppcount'); 
                     updateMap.put(rdid, rd);                                       
                 }
