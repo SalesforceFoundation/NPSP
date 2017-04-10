@@ -289,15 +289,17 @@ public class BDI_Donations {
         if (matchBehavior == BDI_DataImport_API.RequireNoMatch && di.DonationImported__c != null) {
             strError = label.bdiErrorDonationMultiMatch;
         } 
-        else if (matchBehavior == BDI_DataImport_API.RequireExactMatch && 
-            (di.DonationImported__c == null || di.Donation_Possible_Matches__c != null)) {
+        else if (matchBehavior == BDI_DataImport_API.RequireExactMatch && di.Donation_Possible_Matches__c != null) {
             strError = label.bdiErrorDonationMultiMatch;
+        } 
+        else if (matchBehavior == BDI_DataImport_API.RequireExactMatch && di.DonationImported__c == null) {
+            strError = label.bdiErrorDonationNoMatch;
         } 
         else if (matchBehavior == BDI_DataImport_API.ExactMatchOrCreate && di.Donation_Possible_Matches__c != null) {
             strError = label.bdiErrorDonationMultiMatch;
         }
         else if (matchBehavior == BDI_DataImport_API.RequireBestMatch && di.DonationImported__c == null) {
-            strError = label.bdiErrorDonationMultiMatch;
+            strError = label.bdiErrorDonationNoMatch;
         }
         else { 
             return true;
@@ -521,8 +523,10 @@ public class BDI_Donations {
                         }
                     }
                 }
-                // see if we have only one exact match
-                if (listIMatches.size() == 1) {
+                
+                
+                // if we have 1 or more matches, record the best one
+                if (listIMatches.size() > 0) {
                     Integer iOpp = listIMatches[0];
                     Opportunity opp = listCAOpps[iOpp];
                     di.DonationImportStatus__c = label.bdiMatched;
@@ -531,23 +535,18 @@ public class BDI_Donations {
                     mapDIIdToOpp.put(di.Id, opp);
                     // remove this opp from the list to avoid matching it again.
                     listCAOpps.remove(iOpp);
-                } else if (listIMatches.size() > 1) {
+                } else {
+                    di.DonationImportStatus__c = label.bdiMatchedNone;
+                }
+                
+                // if we have multiple matches, we want to record them all, and fixup our status
+                if (listIMatches.size() > 1) {
                     for (integer i = 0; i < listIMatches.size(); i++) {
                         Opportunity opp = listCAOpps[listIMatches[i]];
                         di.Donation_Possible_Matches__c += opp.Id + ',';
                     }
                     di.DonationImportStatus__c = label.bdiMatchedBest;
-                    // still provide a best match to caller
-                    Opportunity opp = listCAOpps[0];
-                    di.DonationImported__c = opp.Id;
-                    // put the existing opp in our map for caller's use
-                    mapDIIdToOpp.put(di.Id, opp);
-                    // remove this opp from the list to avoid matching it again.
-                    listCAOpps.remove(0);
-                } else {
-                    di.DonationImportStatus__c = label.bdiMatchedNone;
-                }
-                
+                } 
             }
             
             return mapDIIdToOpp;

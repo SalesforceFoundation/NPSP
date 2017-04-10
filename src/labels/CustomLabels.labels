@@ -1291,6 +1291,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Donation</value>
     </labels>
     <labels>
+        <fullName>bdiErrorDonationMultiMatch</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>error message if the donation matched multiple opps</shortDescription>
+        <value>The Donation information matched against multiple Opportunities, so it was not imported.  The Donation Possible Matches field contains the Salesforce Id&apos;s of the matched Opportunities.</value>
+    </labels>
+    <labels>
+        <fullName>bdiErrorDonationNoMatch</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>error when no matching donation found, and a match is required</shortDescription>
+        <value>No matching donation was found.</value>
+    </labels>
+    <labels>
         <fullName>bdiErrorInvalidCampaignName</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -1369,6 +1385,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>bdiMatched</shortDescription>
         <value>Matched</value>
+    </labels>
+    <labels>
+        <fullName>bdiMatchedBest</fullName>
+        <categories>Data Import</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>status on a bdi object to specify it was matched from an ambiguous set</shortDescription>
+        <value>Best Match Used</value>
+    </labels>
+    <labels>
+        <fullName>bdiMatchedNone</fullName>
+        <categories>Data Import</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>status on a bdi object when no matching record found</shortDescription>
+        <value>Matched None</value>
     </labels>
     <labels>
         <fullName>bdiRecordsFailed</fullName>

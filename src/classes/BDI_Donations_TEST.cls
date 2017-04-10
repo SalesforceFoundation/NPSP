@@ -358,7 +358,27 @@ public with sharing class BDI_Donations_TEST {
 
     /*********************************************************************************************************
     * @description operation: 
-    *    import donations using different matching rules: Amount, Date.  Ambiguous match detected.
+    *    import donations using different matching rules: Amount, Date.  ExactMatchOrCreate, no match found
+    * verify: 
+    *    no donations matched
+    *    new donation created
+    **********************************************************************************************************/            
+    static testMethod void donationMatchRules4b() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules4b') return;
+        insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
+            Donation_Amount__c=99,
+            Donation_Date__c=System.Today(),
+            Donation_Donor__c='contact1');
+            
+        donationMatchRules(
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ',' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
+            -1, BDI_DataImport_API.ExactMatchOrCreate, label.bdiCreated, false);
+    }
+
+    /*********************************************************************************************************
+    * @description operation: 
+    *    import donations using different matching rules: Amount, Date.  BestMatchOrCreate. matches exist
     * verify: 
     *    best donation matched
     **********************************************************************************************************/            
@@ -373,6 +393,184 @@ public with sharing class BDI_Donations_TEST {
             UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ',' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
             -2, BDI_DataImport_API.BestMatchOrCreate, label.bdiMatchedBest, true);
+    }
+
+    /*********************************************************************************************************
+    * @description operation: 
+    *    import donations using different matching rules: Amount, Date.  BestMatchOrCreate, no match
+    * verify: 
+    *    no donation matched
+    *    new donation created
+    **********************************************************************************************************/            
+    static testMethod void donationMatchRules5b() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules5b') return;
+        insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
+            Donation_Amount__c=99,
+            Donation_Date__c=System.Today(),
+            Donation_Donor__c='contact1');
+            
+        donationMatchRules(
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ',' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
+            -1, BDI_DataImport_API.BestMatchOrCreate, label.bdiCreated, false);
+    }
+
+    /*********************************************************************************************************
+    * @description operation: 
+    *    import donations using different matching rules: Amount, Date.  Specify No Match
+    * verify: 
+    *    new donation created (even though matches existing Opp)
+    **********************************************************************************************************/            
+    static testMethod void donationMatchRules6() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules6') return;
+        insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
+            Donation_Amount__c=100,
+            Donation_Date__c=System.Today(),
+            Donation_Donor__c='contact1');
+            
+        donationMatchRules(
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ',' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
+            -1, BDI_DataImport_API.DoNotMatch, label.bdiCreated, false);
+    }
+
+    /*********************************************************************************************************
+    * @description operation: 
+    *    import donations using different matching rules: Amount, Date.  Specify RequireNoMatch, but match exists
+    * verify: 
+    *    no donation created
+    *    error reported on bdi
+    **********************************************************************************************************/            
+    static testMethod void donationMatchRules7() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules7') return;
+        insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
+            Donation_Amount__c=200,
+            Donation_Date__c=System.Today(),
+            Donation_Donor__c='contact1');
+            
+        donationMatchRules(
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ',' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
+            -1, BDI_DataImport_API.RequireNoMatch, label.bdiErrorDonationMultiMatch, true);
+    }
+
+    /*********************************************************************************************************
+    * @description operation: 
+    *    import donations using different matching rules: Amount, Date.  Specify RequireNoMatch, no match exists
+    * verify: 
+    *    new donation created
+    **********************************************************************************************************/            
+    static testMethod void donationMatchRules7b() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules7b') return;
+        insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
+            Donation_Amount__c=99,
+            Donation_Date__c=System.Today(),
+            Donation_Donor__c='contact1');
+            
+        donationMatchRules(
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ',' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
+            -1, BDI_DataImport_API.RequireNoMatch, label.bdiCreated, false);
+    }
+
+    /*********************************************************************************************************
+    * @description operation: 
+    *    import donations using different matching rules: Amount, Date.  Specify RequireExactMatch, but none exists
+    * verify: 
+    *    no new donation created
+    *    error reported on bdi
+    **********************************************************************************************************/            
+    static testMethod void donationMatchRules8() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules8') return;
+        insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
+            Donation_Amount__c=99,
+            Donation_Date__c=System.Today(),
+            Donation_Donor__c='contact1');
+            
+        donationMatchRules(
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ',' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
+            -1, BDI_DataImport_API.RequireExactMatch, label.bdiErrorDonationNoMatch, false);
+    }
+
+    /*********************************************************************************************************
+    * @description operation: 
+    *    import donations using different matching rules: Amount, Date.  Specify RequireExactMatch, but multi exists
+    * verify: 
+    *    no new donation created
+    *    error reported on bdi
+    **********************************************************************************************************/            
+    static testMethod void donationMatchRules9() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules9') return;
+        insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
+            Donation_Amount__c=200,
+            Donation_Date__c=System.Today(),
+            Donation_Donor__c='contact1');
+            
+        donationMatchRules(
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ',' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
+            -1, BDI_DataImport_API.RequireExactMatch, label.bdiErrorDonationMultiMatch, true);
+    }
+
+    /*********************************************************************************************************
+    * @description operation: 
+    *    import donations using different matching rules: Amount, Date.  Specify RequireExactMatch, exact exists
+    * verify: 
+    *    no new donation created
+    *    record matched
+    **********************************************************************************************************/            
+    static testMethod void donationMatchRules9b() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules9b') return;
+        insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
+            Donation_Amount__c=100,
+            Donation_Date__c=System.Today(),
+            Donation_Donor__c='contact1');
+            
+        donationMatchRules(
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ',' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
+            -1, BDI_DataImport_API.RequireExactMatch, label.bdiMatched, false);
+    }
+
+    /*********************************************************************************************************
+    * @description operation: 
+    *    import donations using different matching rules: Amount, Date.  Specify RequireBestMatch, multi exists
+    * verify: 
+    *    no new donation created
+    *    best opp matched
+    **********************************************************************************************************/            
+    static testMethod void donationMatchRules10() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules10') return;
+        insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
+            Donation_Amount__c=200,
+            Donation_Date__c=System.Today(),
+            Donation_Donor__c='contact1');
+            
+        donationMatchRules(
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ',' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
+            2, BDI_DataImport_API.RequireBestMatch, label.bdiMatchedBest, true);
+    }
+
+    /*********************************************************************************************************
+    * @description operation: 
+    *    import donations using different matching rules: Amount, Date.  Specify RequireBestMatch, no match exists
+    * verify: 
+    *    no new donation created
+    *    error reported on bdi
+    **********************************************************************************************************/            
+    static testMethod void donationMatchRules10b() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules10b') return;
+        insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
+            Donation_Amount__c=99,
+            Donation_Date__c=System.Today(),
+            Donation_Donor__c='contact1');
+            
+        donationMatchRules(
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ',' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
+            -1, BDI_DataImport_API.RequireBestMatch, label.bdiErrorDonationNoMatch, false);
     }
 
     /*********************************************************************************************************
@@ -417,19 +615,17 @@ public with sharing class BDI_Donations_TEST {
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
     
-        // verify we matched an existing opp (no new opp created)
-        list<Opportunity> listOppX = [select Id, Name, Amount, Primary_Contact__c from Opportunity];
-        system.assertEquals(listOpp.size(), listOppX.size());
-        
         list<DataImport__c> listDI = [select Status__c, DonationImported__c, DonationImportStatus__c, 
             Donation_Possible_Matches__c from DataImport__c];        
         system.assertEquals(1, listDI.size());
-        system.assertEquals(expectedStatus, listDI[0].DonationImportStatus__c);                
-        system.assertEquals(imatch == -1 ? label.bdiFailed : label.bdiImported, listDI[0].Status__c);
+        system.assertEquals(expectedStatus, listDI[0].DonationImportStatus__c);
         system.assertEquals(hasMultiMatches, listDI[0].Donation_Possible_Matches__c != null);
-        if (imatch == -1)
-            system.assertEquals(null, listDI[0].DonationImported__c);
-        else if (imatch != -2)
+        if (imatch >= 0) {                
+            system.assertEquals(label.bdiImported, listDI[0].Status__c);
             system.assertEquals(listOpp[imatch].Id, listDI[0].DonationImported__c);
+	        // verify we matched an existing opp (no new opp created)
+	        list<Opportunity> listOppX = [select Id, Name, Amount, Primary_Contact__c from Opportunity];
+	        system.assertEquals(listOpp.size(), listOppX.size());
+        }
     }
 }

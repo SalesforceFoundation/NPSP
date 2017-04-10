@@ -960,6 +960,8 @@
         <members>bdiDataImporterNumToProcess</members>
         <members>bdiDataImporterTitle</members>
         <members>bdiDonation</members>
+        <members>bdiErrorDonationMultiMatch</members>
+        <members>bdiErrorDonationNoMatch</members>
         <members>bdiErrorInvalidCampaignName</members>
         <members>bdiErrorInvalidDonor</members>
         <members>bdiErrorInvalidLastname</members>
@@ -970,6 +972,8 @@
         <members>bdiIgnored</members>
         <members>bdiImported</members>
         <members>bdiMatched</members>
+        <members>bdiMatchedBest</members>
+        <members>bdiMatchedNone</members>
         <members>bdiRecordsFailed</members>
         <members>bdiRecordsImported</members>
         <members>bdiRecordsProcessed</members>
