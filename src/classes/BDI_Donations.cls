@@ -369,7 +369,7 @@ public class BDI_Donations {
     */ 
     public class BDIMatchingDonations implements BDI_IMatching {
         
-        private map<String, String> mapDIFieldToOppField = new map<String, String> {
+        private map<String, String> mapMatchDIFieldToOppField = new map<String, String> {
             UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') => 'Amount',
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c') => 'CloseDate',
             UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c') => 'RecordTypeId',
@@ -433,7 +433,7 @@ public class BDI_Donations {
             
             // add the match fields
             for (String strField : listMatchFields) {
-                String strOppField = mapDIFieldToOppField.get(strField);
+                String strOppField = mapMatchDIFieldToOppField.get(strField);
                 if (strOppField != null) {
                     setFields.add(strOppField);
                 }
@@ -510,7 +510,7 @@ public class BDI_Donations {
                                 if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c')) {
                                     val = UTIL_RecordTypes.getRecordTypeId(Opportunity.sObjectType, string.valueOf(val));
                                 }
-                                if (val != opp.get(mapDIFieldToOppField.get(strDIField))) {
+                                if (val != opp.get(mapMatchDIFieldToOppField.get(strDIField))) {
                                     isAllMatch = false;
                                     break;
                                 }
