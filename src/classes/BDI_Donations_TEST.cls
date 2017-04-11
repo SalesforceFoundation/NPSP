@@ -323,10 +323,17 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/            
     static testMethod void donationMatchRules3() {
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules3') return;
+        
+        string strRTName = UTIL_RecordTypes.getRecordTypeNameForMembershipTests(Opportunity.sObjectType);
+
+        // if membership is the default recordtype, we can't assume we'll match the intended opp, so we can't test.
+        if (UTIL_RecordTypes.isRecordTypeDefault(Opportunity.sObjectType, strRTName))
+            return;
+        
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=200,
             Donation_Date__c=System.Today(),
-            Donation_Record_Type_Name__c=UTIL_RecordTypes.getRecordTypeNameForMembershipTests(Opportunity.sObjectType),
+            Donation_Record_Type_Name__c=strRTName,
             Donation_Donor__c='contact1');
             
         donationMatchRules(
