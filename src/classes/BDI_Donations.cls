@@ -49,7 +49,7 @@ public class BDI_Donations {
     /*******************************************************************************************************
     * @description The Batch Data Import object the helper should use
     */ 
-    BDI_DataImport_BATCH bdi { get; set; }
+    private BDI_DataImport_BATCH bdi { get; set; }
     
     /*******************************************************************************************************
     * @description map to track the Opportunity created/matched for each DI record
@@ -82,10 +82,10 @@ public class BDI_Donations {
     /*******************************************************************************************************
     * @description the class object that supports the BDI_IMatching interface
     */
-    private static BDI_IMatching iMatching {
+    private BDI_IMatching iMatching {
         get {
             if (iMatching == null) {
-                string strClass = null; // UNDONE: setting or batch this is stored in? hns.Implementing_Class__c;
+                string strClass = bdi.diSettings.Donation_Matching_Implementing_Class__c;
                 if (strClass == null || strClass == '') {
                     strClass = 'BDI_Donations.BDIMatchingDonations';
                 }
@@ -101,6 +101,20 @@ public class BDI_Donations {
         }
         set;
     }
+    
+    /*******************************************************************************************************
+    * @description the map of DI Donation Fields to Opportunity Fields
+    */
+    private static map<String, String> mapDIFieldToOppField {
+        get {
+            if (mapDIFieldToOppField == null) {
+                mapDIFieldToOppField = BDI_DataImport_BATCH.mapFieldsForDIObject('Opportunity', 'Opportunity', 
+                    BDI_DataImport_BATCH.listStrDataImportFields);
+            }
+            return mapDIFieldToOppField;
+        }
+        set;
+    }
 
     /*******************************************************************************************************
     * @description Imports the appropriate Donations into NPSP, following matching rules and criteria
@@ -109,19 +123,11 @@ public class BDI_Donations {
     */ 
     public void importDonations() {
     
-        // get the fields we will auto-copy
-        map<string, string> mapDIFieldToOppField = 
-            BDI_DataImport_BATCH.mapFieldsForDIObject('Opportunity', 'Opportunity', BDI_DataImport_BATCH.listStrDataImportFields);
-        list<Opportunity> listOppInsert = new list<Opportunity>();
-        list<Opportunity> listOppUpdate = new list<Opportunity>();
-        list<DataImport__c> listDIInsert = new list<DataImport__c>();
-        list<DataImport__c> listDIUpdate = new list<DataImport__c>();
-        
         // get the list of DI records that have donations to process
         list<DataImport__c> listDIDonations = validateDonationsToProcess();
         
         // get our matching behavior to use
-        string matchBehavior = bdi.disettings.Donation_Matching_Behavior__c;
+        string matchBehavior = bdi.diSettings.Donation_Matching_Behavior__c;
 
         // call the extension to match against existing donations
         if (matchBehavior != BDI_DataImport_API.DoNotMatch) {
@@ -129,80 +135,27 @@ public class BDI_Donations {
         }
         
         // now go thru the new & existing donations and update them
+        list<Opportunity> listOppInsert = new list<Opportunity>();
+        list<Opportunity> listOppUpdate = new list<Opportunity>();
+        list<DataImport__c> listDIInsert = new list<DataImport__c>();
+        list<DataImport__c> listDIUpdate = new list<DataImport__c>();
+        
         for (DataImport__c di : listDIDonations) {
-            Opportunity opp = mapDIIdToOpp.get(di.Id);
-            string strOppName;
             
-            // validate against our desired matching behavior
+            // validate against our desired matching behavior (exact match, best match, new, etc.)
             if (!isValidMatchBehavior(di, matchBehavior)) {
                 continue;
             }
             
-            // if there is no opp matched, create one for it
-            boolean isNew = (opp == null);
-            if (isNew) {
-                opp = new Opportunity();
-                mapDIIdToOpp.put(di.Id, opp);
-                if (di.Donation_Donor__c == 'Account1') {
-                    Account acc = bdi.AccountFromDi(di, 1);
-                    opp.accountId = acc.Id;    
-                    strOppName = acc.Name;            
-                } else { // we can assume it's for Contact1
-                    Contact con = bdi.ContactFromDi(di, 1);
-                    opp.npe01__Contact_Id_for_Role__c = con.Id;
-                    opp.Primary_Contact__c = con.Id;
-                    opp.Primary_Contact_Campaign_Member_Status__c = di.Campaign_Member_Status__c;
-                    opp.AccountId = con.AccountId;
-                    strOppName = con.Firstname + ' ' + con.Lastname;
-                }
+            // update the new or existing Opp with the DI's field data
+            Opportunity opp = prepareOppForUpdateInsert(di);
+            
+            // handle any error from the prepare
+            if (opp == null) {
+                continue;
             }
             
-            if (di.Donation_Record_Type_Name__c != null) {
-                Id idRt = UTIL_RecordTypes.GetRecordTypeId(Opportunity.sObjectType, di.Donation_Record_Type_Name__c);
-                if (idRt == null) {
-                    bdi.LogBDIError(di, label.bdiErrorInvalidOppRTName, 'DonationImportStatus__c');
-                    continue;
-                }
-                opp.RecordTypeId = idRt;
-                strOppName += ' ' + di.Donation_Record_Type_Name__c;
-            } else {
-                strOppName += ' ' + label.bdiDonation;
-            }
-            
-            if (di.Donation_Campaign_Name__c != null) {
-                Id idCmp = bdi.mapStrNameToCampaignId.get(di.Donation_Campaign_Name__c);
-                if (idCmp == null) {
-                    bdi.LogBDIError(di, label.bdiErrorInvalidCampaignName, 'DonationImportStatus__c');
-                    continue;
-                }
-                opp.CampaignId = idCmp;
-            }
-            
-            if (di.Donation_Date__c == null) {
-                if (isNew) {
-                    di.Donation_Date__c = system.today();
-                } else {
-                    di.Donation_Date__c = opp.CloseDate;
-                }
-            }
-            
-            if (di.Donation_Name__c == null) {
-                if (isNew) {
-                    di.Donation_Name__c = strOppName + ' ' + di.Donation_Date__c.format();
-                } else {
-                    di.Donation_Name__c = opp.Name;
-                }
-            } 
-                
-            if (di.Donation_Stage__c == null && defaultClosedWonStage != '') {
-                di.Donation_Stage__c = defaultClosedWonStage;
-            }
-            // now copy over all the data to the Opp
-            for (string strDIField : mapDIFieldToOppField.keySet()) {
-                BDI_DataImport_BATCH.isCopiedDIField(di, strDIField, opp, mapDIFieldToOppField);
-            }
-
-            if (isNew) {
+            if (opp.Id == null) {
                 listOppInsert.add(opp);
                 listDIInsert.add(di);
             } else {
@@ -312,6 +265,89 @@ public class BDI_Donations {
         
         return false;
     }
+    
+    /*******************************************************************************************************
+    * @description for the provided DataImport record, create or update the appropriate Opp (in memory)
+    * with data from the DI record, and return it unsaved.
+    *
+    * @param di The DataImport record to prepare the Opportunity for
+    * @return Opportunity A new or existing Opportunity. Null if there was an error.
+    */ 
+    private Opportunity prepareOppForUpdateInsert(DataImport__c di) {        
+            Opportunity opp = mapDIIdToOpp.get(di.Id);
+            string strOppName;
+            
+            // if there is no opp matched, create one for it
+            boolean isNew = (opp == null);
+            if (isNew) {
+                opp = new Opportunity();
+                mapDIIdToOpp.put(di.Id, opp);
+                if (di.Donation_Donor__c == 'Account1') {
+                    Account acc = bdi.AccountFromDi(di, 1);
+                    opp.accountId = acc.Id;    
+                    strOppName = acc.Name;            
+                } else { // we can assume it's for Contact1
+                    Contact con = bdi.ContactFromDi(di, 1);
+                    opp.npe01__Contact_Id_for_Role__c = con.Id;
+                    opp.Primary_Contact__c = con.Id;
+                    opp.Primary_Contact_Campaign_Member_Status__c = di.Campaign_Member_Status__c;
+                    opp.AccountId = con.AccountId;
+                    strOppName = con.Firstname + ' ' + con.Lastname;
+                }
+            }
+            
+            if (di.Donation_Record_Type_Name__c != null) {
+                Id idRt = UTIL_RecordTypes.GetRecordTypeId(Opportunity.sObjectType, di.Donation_Record_Type_Name__c);
+                if (idRt == null) {
+                    bdi.LogBDIError(di, label.bdiErrorInvalidOppRTName, 'DonationImportStatus__c');
+                    return null;
+                }
+                opp.RecordTypeId = idRt;
+                strOppName += ' ' + di.Donation_Record_Type_Name__c;
+            } else {
+                strOppName += ' ' + label.bdiDonation;
+            }
+            
+            if (di.Donation_Campaign_Name__c != null) {
+                Id idCmp = bdi.mapStrNameToCampaignId.get(di.Donation_Campaign_Name__c);
+                if (idCmp == null) {
+                    bdi.LogBDIError(di, label.bdiErrorInvalidCampaignName, 'DonationImportStatus__c');
+                    return null;
+                }
+                opp.CampaignId = idCmp;
+            }
+            
+            if (di.Donation_Date__c == null) {
+                if (isNew) {
+                    di.Donation_Date__c = system.today();
+                } else {
+                    di.Donation_Date__c = opp.CloseDate;
+                }
+            }
+            
+            if (di.Donation_Name__c == null) {
+                if (isNew) {
+                    di.Donation_Name__c = strOppName + ' ' + di.Donation_Date__c.format();
+                } else {
+                    di.Donation_Name__c = opp.Name;
+                }
+            } 
+                
+            if (di.Donation_Stage__c == null && defaultClosedWonStage != '') {
+                di.Donation_Stage__c = defaultClosedWonStage;
+            }
+            // now copy over all the data to the Opp
+            for (string strDIField : mapDIFieldToOppField.keySet()) {
+                // skip recordtype which we special cased above
+                if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c').toLowercase()) {
+                    continue;
+                }
+                BDI_DataImport_BATCH.isCopiedDIField(di, strDIField, opp, mapDIFieldToOppField);
+            }
+            
+            // the Opp is ready!
+            return opp;
+    }
 
     /*******************************************************************************************************
     * @description Updates any fields on payment objects created for the Data Import opportunities.
@@ -371,14 +407,9 @@ public class BDI_Donations {
     */ 
     public class BDIMatchingDonations implements BDI_IMatching {
         
-        private map<String, String> mapMatchDIFieldToOppField = new map<String, String> {
-            UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') => 'Amount',
-            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c') => 'CloseDate',
-            UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c') => 'RecordTypeId',
-            UTIL_Namespace.StrTokenNSPrefix('Donation_Type__c') => 'Type',
-            UTIL_Namespace.StrTokenNSPrefix('Donation_Campaign_Name__c') => 'Campaign'
-        };
-        
+        /*******************************************************************************************************
+        * @description the bdi we are invoked from
+        */ 
         private BDI_DataImport_BATCH bdi { get; set; }
     
         /*******************************************************************************************************
@@ -431,11 +462,11 @@ public class BDI_Donations {
             string strRules = bdi.diSettings.Donation_Matching_Rule__c;
             list<String> listMatchFields;
             if (strRules != null) {
-                listMatchFields = strRules.split(',');
+                listMatchFields = strRules.toLowercase().split(',');
             } else {
                 listMatchFields = new list<String>{
-                    UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c'),
-                    UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c')
+                    UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c').toLowercase(),
+                    UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c').toLowercase()
                 };
             }
             
@@ -450,7 +481,7 @@ public class BDI_Donations {
             
             // add the match fields
             for (String strField : listMatchFields) {
-                String strOppField = mapMatchDIFieldToOppField.get(strField);
+                String strOppField = mapDIFieldToOppField.get(strField);
                 if (strOppField != null) {
                     setFields.add(strOppField);
                 }
@@ -563,10 +594,10 @@ public class BDI_Donations {
                             for (String strDIField : listMatchFields) {
                                 Object val = di.get(strDIField);
                                 // handle mapping a specified record type name to the Id we must compare with
-                                if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c')) {
+                                if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c').toLowercase()) {
                                     val = UTIL_RecordTypes.getRecordTypeId(Opportunity.sObjectType, string.valueOf(val));
                                 }
-                                if (val != opp.get(mapMatchDIFieldToOppField.get(strDIField))) {
+                                if (val != opp.get(mapDIFieldToOppField.get(strDIField))) {
                                     isAllMatch = false;
                                     break;
                                 }
