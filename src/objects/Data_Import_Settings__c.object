@@ -66,9 +66,9 @@
     </fields>
     <fields>
         <fullName>Donation_Matching_Behavior__c</fullName>
-        <description>Defines how the Data Importer should handle matching Donations.  Must be one of the following values: DoNotMatch, RequireExactMatch, ExactMatchOrCreate, RequireBestMatch, BestMatchOrCreate.</description>
+        <description>Defines how the Data Importer should handle matching Donations.  Must be one of the following values: DoNotMatch, RequireNoMatch, RequireExactMatch, ExactMatchOrCreate, RequireBestMatch, BestMatchOrCreate.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Defines how the Data Importer should handle matching Donations.  Must be one of the following values: DoNotMatch, RequireExactMatch, ExactMatchOrCreate, RequireBestMatch, BestMatchOrCreate.</inlineHelpText>
+        <inlineHelpText>Defines how the Data Importer should handle matching Donations.  Must be one of the following values: DoNotMatch, RequireNoMatch, RequireExactMatch, ExactMatchOrCreate, RequireBestMatch, BestMatchOrCreate.</inlineHelpText>
         <label>Donation Matching Behavior</label>
         <length>255</length>
         <required>false</required>
@@ -82,6 +82,18 @@
         <externalId>false</externalId>
         <inlineHelpText>Specifies which rule to follow when trying to match Donations in Data Import records against existing Opportunities and Payments.</inlineHelpText>
         <label>Donation Matching Rule</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Opportunity_Custom_Unique_ID__c</fullName>
+        <description>An optional Unique Id field to use for Contact matching</description>
+        <externalId>false</externalId>
+        <inlineHelpText>An optional Unique Id field to use for Contact matching</inlineHelpText>
+        <label>Opportunity Custom Unique ID</label>
         <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>

@@ -378,6 +378,8 @@ public class BDI_Donations {
             UTIL_Namespace.StrTokenNSPrefix('Donation_Type__c') => 'Type',
             UTIL_Namespace.StrTokenNSPrefix('Donation_Campaign_Name__c') => 'Campaign'
         };
+        
+        private BDI_DataImport_BATCH bdi { get; set; }
     
         /*******************************************************************************************************
         * @description For each of the provided Data Import records, look their existing Opportunity and Payment 
@@ -388,12 +390,16 @@ public class BDI_Donations {
         */ 
         public map<Id, Opportunity> matchDonations(BDI_DataImport_BATCH bdi, list<DataImport__c> listDI) {
 
+            this.bdi = bdi;
             map<Id, Opportunity> mapDIIdToOpp = new map<Id, Opportunity>();
             
             // collect all the contacts and accounts who have donations to import
             set<Id> setConId = new set<Id>();
             set<Id> setAccId = new set<Id>();
             set<Id> setOppId = new set<Id>();
+            set<string> setCustomIDString = new set<string>();
+            set<double> setCustomIDNumber = new set<double>();
+            
             for (DataImport__c di : listDI) {
                 // handle already been given the match!
                 if (di.DonationImported__c != null) {
@@ -405,6 +411,15 @@ public class BDI_Donations {
                     Account acc = bdi.AccountFromDi(di, 1);
                     setAccId.add(acc.Id);
                 }
+	            if (isCustomIDInOpportunityMatchRules) { 
+	                object val = di.get(strDIOpportunityCustomIDField());
+	                if (val != null) {
+	                    if (isCustomIdInOpportunityDatatypeString)
+	                        setCustomIDString.add(string.valueOf(val));
+	                    else
+	                        setCustomIDNumber.add(double.valueOf(val));
+	                }
+	            }
             }
             
             // if no donations to import, we can bail out
@@ -441,6 +456,11 @@ public class BDI_Donations {
                 }
             }
             
+            // add Custom field if needed
+            if (isCustomIDInOpportunityMatchRules) {
+                setFields.add(bdi.diSettings.Opportunity_Custom_Unique_ID__c);
+            } 
+            
             // now query for all Open Opportunities from these Contacts or Accounts
             integer cFilter = 0;
             string strSoql = 'select ' + string.join(new list<String>(setFields), ',');
@@ -462,6 +482,21 @@ public class BDI_Donations {
                     strSoql += ' or ';
                 }
                 strSoql += ' ' + UTIL_Namespace.StrTokenNSPrefix('Primary_Contact__c') + ' in :setConId ';
+                cFilter++;
+            }
+            if (setCustomIDString.size() > 0) {
+                if (cFilter > 0) {
+                    strSoql += ' or ';
+                }
+                strSoql += ' ' + bdi.diSettings.Opportunity_Custom_Unique_ID__c + ' in :setCustomIDString ';
+                cFilter++;
+            }
+            if (setCustomIDNumber.size() > 0) {
+                if (cFilter > 0) {
+                    strSoql += ' or ';
+                }
+                strSoql += ' ' + bdi.diSettings.Opportunity_Custom_Unique_ID__c + ' in :setCustomIDNumber ';
+                cFilter++;
             }
             strSoql += ') order by CloseDate ASC';
             list<Opportunity> listOpp = database.query(strSoql);
@@ -503,6 +538,25 @@ public class BDI_Donations {
                             listIMatches.add(i);
                             break;
                         }
+                        
+                        // always match to an Opp we were given the UniqueId to!
+                        string strUniqueId = ''; 
+                        if (isCustomIDInOpportunityMatchRules && 
+                            (strUniqueId = strNull(opp.get(bdi.diSettings.Opportunity_Custom_Unique_ID__c))) != '') {
+                            if (!isCustomIdInOpportunityDatatypeString) {
+                                strUniqueId = string.valueOf(double.valueOf(strUniqueId));
+                                // when using Amount in our test, we need to have two zeroes after the decimal point.
+                                if (Test.isRunningTest() && bdi.diSettings.Opportunity_Custom_Unique_ID__c == 'Amount') {
+                                    strUniqueId += '0';
+                                }
+                            }
+                            if (string.valueOf(di.get(strDIOpportunityCustomIDField())) == strUniqueId) {
+                                listIMatches.clear();
+                                listIMatches.add(i);
+                                break;
+                            }
+                        }
+
                         if (di.DonationImported__c == null) {
                             // try match against all specified fields
                             boolean isAllMatch = true;
@@ -551,6 +605,72 @@ public class BDI_Donations {
             
             return mapDIIdToOpp;
         }
+
+	    /*******************************************************************************************************
+	    * @description returns whether an Opportunity CustomID field is specified in settings
+	    */
+	    private boolean isCustomIdInOpportunityMatchRules {
+	        get {
+	            string str = bdi.diSettings.Opportunity_Custom_Unique_ID__c;
+	            if (str == null || str == '')
+	                return false;
+	            return true;
+	        }
+	    }
+	
+	    /*******************************************************************************************************
+	    * @description returns whether an Opportunity CustomID field is a string datatype
+	    */
+	    private boolean isCustomIdInOpportunityDatatypeString {
+	        get {
+	            if (isCustomIdInOpportunityDatatypeString == null) {
+	                isCustomIdInOpportunityDatatypeString = false;
+	                if (isCustomIdInOpportunityMatchRules) {
+	                    Schema.Displaytype dt = UTIL_Describe.getFieldDisplaytype('Opportunity', bdi.diSettings.Opportunity_Custom_Unique_ID__c);
+	                    if (dt == Schema.Displaytype.String || 
+	                        dt == Schema.Displaytype.TextArea || 
+	                        dt == Schema.Displaytype.Id ||
+	                        dt == Schema.Displaytype.URL ||
+	                        dt == Schema.Displaytype.Picklist ||
+	                        dt == Schema.Displaytype.Reference)
+	                        isCustomIdInOpportunityDatatypeString = true;
+	                }
+	            }
+	            return isCustomIdInOpportunityDatatypeString;
+	        }
+	        set;
+	    }
+	        
+	    /*******************************************************************************************************
+	    * @description returns the field name of the Opportunity CustomID field in the
+	    * Data Import object.  Note that if tests are running, it assumes the field is a standard field on 
+	    * Opportunity and thus has no trailing __c, but needs to have the __c for accessing in the Data Import object.
+	    * @return string
+	    */ 
+	    private string strDIOpportunityCustomIDField() {
+	        return 'Donation' + '_' + bdi.diSettings.Opportunity_Custom_Unique_ID__c + (test.isRunningTest() ? '__c' : '');
+	    }
+	    
+        /*******************************************************************************************************
+        * @description handles coercing an object to a string, and returning '' if it was null.
+        * @return string
+        */ 
+	    private string strNull(Object obj) {
+	        return strNull(string.valueOf(obj));
+	    }
+	
+        /*******************************************************************************************************
+        * @description handles null strings, returning '' if it was null.
+        * @return string
+        */ 
+	    private string strNull(string str) {
+	        if (str == null)
+	            return '';
+	        else
+	            return str;
+	    }
+
+        
     } // BDIMatchingDonations
     
 } // BDI_Donations

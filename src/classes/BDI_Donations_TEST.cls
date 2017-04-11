@@ -582,6 +582,56 @@ public with sharing class BDI_Donations_TEST {
 
     /*********************************************************************************************************
     * @description operation: 
+    *    import donations using different matching rules: Opportunity Unique Id (string), opp exists
+    * verify: 
+    *    no new donation created
+    *    existing opp matched
+    **********************************************************************************************************/            
+    static testMethod void donationMatchRules11() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules11') return;
+
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        // for testing, we need to use an existing Opportunity field that exists on both Opportunity and the DI.
+        diSettings.Opportunity_Custom_Unique_ID__c = 'Type';
+
+        insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
+            Donation_Amount__c=99,
+            Donation_Date__c=System.Today(),
+            Donation_Donor__c='contact1',
+            Donation_Type__c='MyUniqueID');
+            
+        donationMatchRules(
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ',' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
+            2, BDI_DataImport_API.RequireExactMatch, label.bdiMatched, false);
+    }
+
+    /*********************************************************************************************************
+    * @description operation: 
+    *    import donations using different matching rules: Opportunity Unique Id (number), opp exists
+    * verify: 
+    *    no new donation created
+    *    existing opp matched
+    **********************************************************************************************************/            
+    static testMethod void donationMatchRules11b() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules11b') return;
+
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        // for testing, we need to use an existing Opportunity field that exists on both Opportunity and the DI.
+        diSettings.Opportunity_Custom_Unique_ID__c = 'Amount';
+
+        insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
+            Donation_Amount__c=300,
+            Donation_Date__c=System.Today().addDays(-100),
+            Donation_Donor__c='contact1');
+            
+        donationMatchRules(
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
+            4, BDI_DataImport_API.RequireExactMatch, label.bdiMatched, false);
+    }
+
+    /*********************************************************************************************************
+    * @description operation: 
     *    the shared routine to actually test the different donations different matching rules. 
     * verify: 
     *    correct donations matched
@@ -603,7 +653,7 @@ public with sharing class BDI_Donations_TEST {
         listOpp.add(new Opportunity(name='Opp1', Primary_Contact__c=con.Id, Amount=100, CloseDate=System.Today().addDays(-1), 
             StageName=UTIL_unitTestData_TEST.getOpenStage()));
         listOpp.add(new Opportunity(name='Opp2', Primary_Contact__c=con.Id, Amount=200, CloseDate=System.Today(), 
-            StageName=UTIL_unitTestData_TEST.getOpenStage()));
+            StageName=UTIL_unitTestData_TEST.getOpenStage(), Type='MyUniqueID'));
         listOpp.add(new Opportunity(name='Opp3', Primary_Contact__c=con.Id, Amount=200, CloseDate=System.Today(), 
             StageName=UTIL_unitTestData_TEST.getOpenStage(), 
             RecordTypeId=UTIL_RecordTypes.getRecordTypeIdForMembershipTests(Opportunity.sObjectType)));
