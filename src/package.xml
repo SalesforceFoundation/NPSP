@@ -604,6 +604,7 @@
         <members>DataImport__c.Donation_Membership_Origin__c</members>
         <members>DataImport__c.Donation_Membership_Start_Date__c</members>
         <members>DataImport__c.Donation_Name__c</members>
+        <members>DataImport__c.Donation_Possible_Matches__c</members>
         <members>DataImport__c.Donation_Record_Type_Name__c</members>
         <members>DataImport__c.Donation_Stage__c</members>
         <members>DataImport__c.Donation_Type__c</members>
