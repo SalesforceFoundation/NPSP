@@ -803,6 +803,18 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Donation_Possible_Matches__c</fullName>
+        <description>A comma separated list of ID&apos;s to the first 10 possible Opportunity matches to a donation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>A comma separated list of ID&apos;s to the first 10 possible Opportunity matches to a donation.</inlineHelpText>
+        <label>Donation Possible Matches</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Donation_Record_Type_Name__c</fullName>
         <description>The Name of the Opportunity Record Type to use for the donation.  Uses default Record Type if left blank.</description>
         <externalId>false</externalId>
