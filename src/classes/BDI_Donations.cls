@@ -422,15 +422,18 @@ public class BDI_Donations {
         public map<Id, Opportunity> matchDonations(BDI_DataImport_BATCH bdi, list<DataImport__c> listDI) {
 
             this.bdi = bdi;
+            map<Id, Opportunity> mapDIIdToOpp = new map<Id, Opportunity>();
             
             // query for potential Opportunities based off our matching criteria
             list<Opportunity> listOpp = getPotentialDonationMatches(listDI);
+            if (listOpp == null) {
+                return mapDIIdToOpp;
+            }
             
             // put each contact's and account's opps in their own list
             map<Id, list<Opportunity>> mapConAccIdToOpps = createMapConAccIdToOpps(listOpp);
             
             // now look for the matching Opp for each donation
-            map<Id, Opportunity> mapDIIdToOpp = new map<Id, Opportunity>();
             for (DataImport__c di : listDI) {
                 ID id;
                 if (di.Donation_Donor__c == 'Account1') {
@@ -542,7 +545,7 @@ public class BDI_Donations {
         /*******************************************************************************************************
         * @description queries for all potential Donation Opportunities based off matching criteria
         * @param listDI The DataImport records we are trying to match
-        * @return list<Opportunity> The list of potential matching Opps
+        * @return list<Opportunity> The list of potential matching Opps.  null if none.
         */
         private list<Opportunity> getPotentialDonationMatches(list<DataImport__c> listDI) {
             
@@ -573,6 +576,11 @@ public class BDI_Donations {
                             setCustomIDNumber.add(double.valueOf(val));
                     }
                 }
+            }
+            
+            // bail out if no donations to import!
+            if (setOppId.size() == 0 && setAccId.size() == 0 && setConId.size() == 0) {
+                return null;
             }
             
             // the set of fields for our soql
