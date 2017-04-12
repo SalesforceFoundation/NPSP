@@ -255,14 +255,14 @@ public class BDI_Donations {
             strError = label.bdiErrorDonationNoMatch;
         }
         else { 
+            // valid behavior
             return true;
         }
 
-        bdi.LogBDIError(di, strError, 'DonationImportStatus__c');
-        
+        // invalid behavior
+        bdi.LogBDIError(di, strError, 'DonationImportStatus__c');        
         // clear the best match so it won't be used
         di.DonationImported__c = null;
-        
         return false;
     }
     
@@ -422,134 +422,15 @@ public class BDI_Donations {
         public map<Id, Opportunity> matchDonations(BDI_DataImport_BATCH bdi, list<DataImport__c> listDI) {
 
             this.bdi = bdi;
-            map<Id, Opportunity> mapDIIdToOpp = new map<Id, Opportunity>();
             
-            // collect all the contacts and accounts who have donations to import
-            set<Id> setConId = new set<Id>();
-            set<Id> setAccId = new set<Id>();
-            set<Id> setOppId = new set<Id>();
-            set<string> setCustomIDString = new set<string>();
-            set<double> setCustomIDNumber = new set<double>();
-            
-            for (DataImport__c di : listDI) {
-                // handle already been given the match!
-                if (di.DonationImported__c != null) {
-                    setOppId.add(di.DonationImported__c);
-                } else if (di.Donation_Donor__c == 'Contact1') {
-                    Contact con = bdi.ContactFromDi(di, 1);
-                    setConId.add(con.Id);                                
-                } else if (di.Donation_Donor__c == 'Account1') {
-                    Account acc = bdi.AccountFromDi(di, 1);
-                    setAccId.add(acc.Id);
-                }
-	            if (isCustomIDInOpportunityMatchRules) { 
-	                object val = di.get(strDIOpportunityCustomIDField());
-	                if (val != null) {
-	                    if (isCustomIdInOpportunityDatatypeString)
-	                        setCustomIDString.add(string.valueOf(val));
-	                    else
-	                        setCustomIDNumber.add(double.valueOf(val));
-	                }
-	            }
-            }
-            
-            // if no donations to import, we can bail out
-            if (setOppId.size() == 0 && setAccId.size() == 0 && setConId.size() == 0) {
-                return mapDIIdToOpp;
-            }
-            
-            // get our fields for the matching rule
-            string strRules = bdi.diSettings.Donation_Matching_Rule__c;
-            list<String> listMatchFields;
-            if (strRules != null) {
-                listMatchFields = strRules.toLowercase().split(',');
-            } else {
-                listMatchFields = new list<String>{
-                    UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c').toLowercase(),
-                    UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c').toLowercase()
-                };
-            }
-            
-            // the set of fields for our soql
-            set<String> setFields = new set<String>();
-            setFields.add('Id');
-            setFields.add('Name');
-            setFields.add('Amount');
-            setFields.add('AccountId');
-            setFields.add(UTIL_Namespace.StrTokenNSPrefix('Primary_Contact__c'));
-            setFields.add('CloseDate');
-            
-            // add the match fields
-            for (String strField : listMatchFields) {
-                String strOppField = mapDIFieldToOppField.get(strField);
-                if (strOppField != null) {
-                    setFields.add(strOppField);
-                }
-            }
-            
-            // add Custom field if needed
-            if (isCustomIDInOpportunityMatchRules) {
-                setFields.add(bdi.diSettings.Opportunity_Custom_Unique_ID__c);
-            } 
-            
-            // now query for all Open Opportunities from these Contacts or Accounts
-            integer cFilter = 0;
-            string strSoql = 'select ' + string.join(new list<String>(setFields), ',');
-            strSoql += ' from Opportunity';
-            strSoql += ' where IsClosed = false and (';
-            if (setOppId.size() > 0) {
-                strSoql += ' Id in :setOppId ';
-                cFilter++;
-            }
-            if (setAccId.size() > 0) {
-                if (cFilter > 0) {
-                    strSoql += ' or ';
-                }
-                strSoql += ' AccountId in :setAccId ';
-                cFilter++;
-            }
-            if (setConId.size() > 0) {
-                if (cFilter > 0) {
-                    strSoql += ' or ';
-                }
-                strSoql += ' ' + UTIL_Namespace.StrTokenNSPrefix('Primary_Contact__c') + ' in :setConId ';
-                cFilter++;
-            }
-            if (setCustomIDString.size() > 0) {
-                if (cFilter > 0) {
-                    strSoql += ' or ';
-                }
-                strSoql += ' ' + bdi.diSettings.Opportunity_Custom_Unique_ID__c + ' in :setCustomIDString ';
-                cFilter++;
-            }
-            if (setCustomIDNumber.size() > 0) {
-                if (cFilter > 0) {
-                    strSoql += ' or ';
-                }
-                strSoql += ' ' + bdi.diSettings.Opportunity_Custom_Unique_ID__c + ' in :setCustomIDNumber ';
-                cFilter++;
-            }
-            strSoql += ') order by CloseDate ASC';
-            list<Opportunity> listOpp = database.query(strSoql);
+            // query for potential Opportunities based off our matching criteria
+            list<Opportunity> listOpp = getPotentialDonationMatches(listDI);
             
             // put each contact's and account's opps in their own list
-            map<Id, list<Opportunity>> mapConAccIdToOpps = new map<Id, list<Opportunity>>();
-            for (Opportunity opp : listOpp) {
-                ID id;
-                if (opp.Primary_Contact__c != null) {
-                    id = opp.Primary_Contact__c;
-                } else {
-                    id = opp.AccountId;
-                }
-                list<Opportunity> listCAOpps = mapConAccIdToOpps.get(id);
-                if (listCAOpps == null) {
-                    listCAOpps = new list<Opportunity>();
-                    mapConAccIdToOpps.put(id, listCAOpps);
-                }
-                listCAOpps.add(opp);
-            }
+            map<Id, list<Opportunity>> mapConAccIdToOpps = createMapConAccIdToOpps(listOpp);
             
             // now look for the matching Opp for each donation
+            map<Id, Opportunity> mapDIIdToOpp = new map<Id, Opportunity>();
             for (DataImport__c di : listDI) {
                 ID id;
                 if (di.Donation_Donor__c == 'Account1') {
@@ -635,6 +516,152 @@ public class BDI_Donations {
             }
             
             return mapDIIdToOpp;
+        }
+
+        /*******************************************************************************************************
+        * @description the list of BDI Donation fields to use in donation matching
+        */
+        private list<String> listMatchFields {
+            get {
+                if (listMatchFields == null) {
+                    string strRules = bdi.diSettings.Donation_Matching_Rule__c;
+                    if (strRules != null) {
+                        listMatchFields = strRules.toLowercase().split(',');
+                    } else {
+                        listMatchFields = new list<String> {
+                            UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c').toLowercase(),
+                            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c').toLowercase()
+                        };
+                    }
+                }
+                return listMatchFields;
+            }
+            set;
+        }
+
+        /*******************************************************************************************************
+        * @description queries for all potential Donation Opportunities based off matching criteria
+        * @param listDI The DataImport records we are trying to match
+        * @return list<Opportunity> The list of potential matching Opps
+        */
+        private list<Opportunity> getPotentialDonationMatches(list<DataImport__c> listDI) {
+            
+            // collect all the contacts and accounts who have donations to import
+            set<Id> setConId = new set<Id>();
+            set<Id> setAccId = new set<Id>();
+            set<Id> setOppId = new set<Id>();
+            set<string> setCustomIDString = new set<string>();
+            set<double> setCustomIDNumber = new set<double>();
+            
+            for (DataImport__c di : listDI) {
+                // handle already been given the match!
+                if (di.DonationImported__c != null) {
+                    setOppId.add(di.DonationImported__c);
+                } else if (di.Donation_Donor__c == 'Contact1') {
+                    Contact con = bdi.ContactFromDi(di, 1);
+                    setConId.add(con.Id);                                
+                } else if (di.Donation_Donor__c == 'Account1') {
+                    Account acc = bdi.AccountFromDi(di, 1);
+                    setAccId.add(acc.Id);
+                }
+                if (isCustomIDInOpportunityMatchRules) { 
+                    object val = di.get(strDIOpportunityCustomIDField());
+                    if (val != null) {
+                        if (isCustomIdInOpportunityDatatypeString)
+                            setCustomIDString.add(string.valueOf(val));
+                        else
+                            setCustomIDNumber.add(double.valueOf(val));
+                    }
+                }
+            }
+            
+            // the set of fields for our soql
+            set<String> setFields = new set<String>();
+            setFields.add('Id');
+            setFields.add('Name');
+            setFields.add('Amount');
+            setFields.add('AccountId');
+            setFields.add(UTIL_Namespace.StrTokenNSPrefix('Primary_Contact__c'));
+            setFields.add('CloseDate');
+            
+            // add the match fields
+            for (String strField : listMatchFields) {
+                String strOppField = mapDIFieldToOppField.get(strField);
+                if (strOppField != null) {
+                    setFields.add(strOppField);
+                }
+            }
+            
+            // add Custom field if needed
+            if (isCustomIDInOpportunityMatchRules) {
+                setFields.add(bdi.diSettings.Opportunity_Custom_Unique_ID__c);
+            } 
+            
+            // now query for all Open Opportunities from these Contacts or Accounts
+            integer cFilter = 0;
+            string strSoql = 'select ' + string.join(new list<String>(setFields), ',');
+            strSoql += ' from Opportunity';
+            strSoql += ' where IsClosed = false and (';
+            if (setOppId.size() > 0) {
+                strSoql += ' Id in :setOppId ';
+                cFilter++;
+            }
+            if (setAccId.size() > 0) {
+                if (cFilter > 0) {
+                    strSoql += ' or ';
+                }
+                strSoql += ' AccountId in :setAccId ';
+                cFilter++;
+            }
+            if (setConId.size() > 0) {
+                if (cFilter > 0) {
+                    strSoql += ' or ';
+                }
+                strSoql += ' ' + UTIL_Namespace.StrTokenNSPrefix('Primary_Contact__c') + ' in :setConId ';
+                cFilter++;
+            }
+            if (setCustomIDString.size() > 0) {
+                if (cFilter > 0) {
+                    strSoql += ' or ';
+                }
+                strSoql += ' ' + bdi.diSettings.Opportunity_Custom_Unique_ID__c + ' in :setCustomIDString ';
+                cFilter++;
+            }
+            if (setCustomIDNumber.size() > 0) {
+                if (cFilter > 0) {
+                    strSoql += ' or ';
+                }
+                strSoql += ' ' + bdi.diSettings.Opportunity_Custom_Unique_ID__c + ' in :setCustomIDNumber ';
+                cFilter++;
+            }
+            strSoql += ') order by CloseDate ASC';
+
+            list<Opportunity> listOpp = database.query(strSoql); 
+            return listOpp;           
+        }
+        
+        /*******************************************************************************************************
+        * @description creates a map from a Contact Id or Account Id, to a list of Opportunities
+        * @param listOpp The opps to put on the map
+        * @return map<Id, list<Opportunity>> The returned map
+        */
+        private map<Id, list<Opportunity>> createMapConAccIdToOpps(list<Opportunity> listOpp) {
+            map<Id, list<Opportunity>> mapConAccIdToOpps = new map<Id, list<Opportunity>>();
+            for (Opportunity opp : listOpp) {
+                ID id;
+                if (opp.Primary_Contact__c != null) {
+                    id = opp.Primary_Contact__c;
+                } else {
+                    id = opp.AccountId;
+                }
+                list<Opportunity> listCAOpps = mapConAccIdToOpps.get(id);
+                if (listCAOpps == null) {
+                    listCAOpps = new list<Opportunity>();
+                    mapConAccIdToOpps.put(id, listCAOpps);
+                }
+                listCAOpps.add(opp);
+            }
+            return mapConAccIdToOpps;
         }
 
 	    /*******************************************************************************************************
