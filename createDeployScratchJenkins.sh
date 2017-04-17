@@ -24,3 +24,5 @@ echo $SCRATCHSESS
 
 echo "Get Apex Test Results"
 python apexResultsRest.py -a Foundation -i $SCRATCHSESS
+
+cci org scratch_delete scratch
