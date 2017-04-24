@@ -3,42 +3,42 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Level --></value>
+        <value>Ebene</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Level --></value>
+        <value>Ebenen</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Level --></value>
+        <value>Ebene</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Level --></value>
+        <value>Ebenen</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Level --></value>
+        <value>Ebene</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Level --></value>
+        <value>Ebenen</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Level --></value>
+        <value>Ebene</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Level --></value>
+        <value>Ebenen</value>
     </caseValues>
     <fields>
         <help>Gibt an, ob diese Ebene aktuell verwendet wird.</help>
@@ -94,7 +94,7 @@
             <translation>Kontakt</translation>
         </picklistValues>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
     <layouts>
         <layout>Level Layout</layout>
         <sections>
@@ -106,7 +106,7 @@
             <section>long text section</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Level Name --></nameFieldLabel>
+    <nameFieldLabel>Ebene</nameFieldLabel>
     <validationRules>
         <errorMessage>Ziel ist ein erforderliches Feld auf der Ebene.  Geben Sie das Zielobjekt für diese Ebene an.</errorMessage>
         <name>Target_Required</name>
