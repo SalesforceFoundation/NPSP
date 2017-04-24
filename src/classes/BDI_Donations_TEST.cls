@@ -325,6 +325,7 @@ public with sharing class BDI_Donations_TEST {
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules3') return;
         
         string strRTName = UTIL_RecordTypes.getRecordTypeNameForMembershipTests(Opportunity.sObjectType);
+        system.debug('****DJH: testing match with recordtype: ' + strRTName);
 
         // if membership is the default recordtype, we can't assume we'll match the intended opp, so we can't test.
         if (UTIL_RecordTypes.isRecordTypeDefault(Opportunity.sObjectType, strRTName))
@@ -337,9 +338,9 @@ public with sharing class BDI_Donations_TEST {
             Donation_Donor__c='contact1');
             
         donationMatchRules(
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c') + ',' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ',' +
-            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c') + ',' +
-            UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c'),
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
             3, BDI_DataImport_API.ExactMatchOrCreate, label.bdiMatched, false);
     }
 
@@ -592,7 +593,7 @@ public with sharing class BDI_Donations_TEST {
 
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         // for testing, we need to use an existing Opportunity field that exists on both Opportunity and the DI.
-        diSettings.Opportunity_Custom_Unique_ID__c = 'Type';
+        //diSettings.Opportunity_Custom_Unique_ID__c = 'Type';
 
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=99,
@@ -601,8 +602,7 @@ public with sharing class BDI_Donations_TEST {
             Donation_Type__c='MyUniqueID');
             
         donationMatchRules(
-            UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ',' +
-            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Type__c'),
             2, BDI_DataImport_API.RequireExactMatch, label.bdiMatched, false);
     }
 
@@ -618,7 +618,7 @@ public with sharing class BDI_Donations_TEST {
 
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         // for testing, we need to use an existing Opportunity field that exists on both Opportunity and the DI.
-        diSettings.Opportunity_Custom_Unique_ID__c = 'Amount';
+        //diSettings.Opportunity_Custom_Unique_ID__c = 'Amount';
 
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=300,
@@ -626,7 +626,7 @@ public with sharing class BDI_Donations_TEST {
             Donation_Donor__c='contact1');
             
         donationMatchRules(
-            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c'),
             4, BDI_DataImport_API.RequireExactMatch, label.bdiMatched, false);
     }
 
