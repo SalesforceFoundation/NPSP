@@ -22,7 +22,7 @@ project:
             - namespace: npe01
               version: 3.6
         - namespace: npe03
-          version: 3.7
+          version: 3.9
         - namespace: npe4
           version: 3.5
         - namespace: npe5
