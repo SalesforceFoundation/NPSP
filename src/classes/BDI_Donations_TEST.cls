@@ -632,6 +632,95 @@ public with sharing class BDI_Donations_TEST {
 
     /*********************************************************************************************************
     * @description operation: 
+    *    import donations using different matching rules: Amount, Date, where Opp has NO Payments.
+    * verify: 
+    *    no new donation created
+    *    existing opp matched
+    **********************************************************************************************************/            
+    static testMethod void donationMatchRules12() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules12') return;
+
+        insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
+            Donation_Amount__c=700,
+            Donation_Date__c=System.Today(),
+            Donation_Donor__c='contact1');
+            
+        donationMatchRules(
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ',' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
+            7, BDI_DataImport_API.RequireExactMatch, label.bdiMatched, false);
+    }
+
+    /*********************************************************************************************************
+    * @description operation: 
+    *    import donations using different matching rules: Amount, Date, where Opp has Multiple Payments.
+    * verify: 
+    *    no new donation created
+    *    existing opp matched
+    **********************************************************************************************************/            
+    static testMethod void donationMatchRules13() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules13') return;
+
+        insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
+            Donation_Amount__c=550,
+            Donation_Date__c=System.Today(),
+            Donation_Donor__c='contact1');
+            
+        donationMatchRules(
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ',' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
+            9, BDI_DataImport_API.RequireExactMatch, label.bdiMatched, false);
+    }
+
+    /*********************************************************************************************************
+    * @description operation: 
+    *    import donations using different matching rules: check#, where Opp has Multiple Payments.
+    * verify: 
+    *    no new donation created
+    *    existing opp matched
+    **********************************************************************************************************/            
+    static testMethod void donationMatchRules14() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules14') return;
+
+        insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
+            Donation_Amount__c=25,
+            Donation_Date__c=System.Today(),
+            Donation_Donor__c='contact1',
+            Payment_Check_Reference_Number__c='pick me'
+            );
+            
+        donationMatchRules(
+            UTIL_Namespace.StrTokenNSPrefix('Payment_Check_Reference_Number__c') + ',' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
+            9, BDI_DataImport_API.RequireExactMatch, label.bdiMatched, false);
+    }
+
+    /*********************************************************************************************************
+    * @description operation: 
+    *    import donations using different matching rules: check#, where Opp has Multiple Payments, 
+    *    multi opps match, RequireExactMatch
+    * verify: 
+    *    no new donation created
+    *    error reported on bdi
+    **********************************************************************************************************/            
+    static testMethod void donationMatchRules15() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules15') return;
+
+        insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
+            Donation_Amount__c=25,
+            Donation_Date__c=System.Today(),
+            Donation_Donor__c='contact1',
+            Payment_Check_Reference_Number__c='dupe'
+            );
+            
+        donationMatchRules(
+            UTIL_Namespace.StrTokenNSPrefix('Payment_Check_Reference_Number__c') + ',' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
+            -1, BDI_DataImport_API.RequireExactMatch, label.bdiErrorDonationMultiMatch, true);
+    }
+
+    /*********************************************************************************************************
+    * @description operation: 
     *    the shared routine to actually test the different donations different matching rules. 
     * verify: 
     *    correct donations matched
@@ -648,6 +737,8 @@ public with sharing class BDI_Donations_TEST {
         Contact con = new Contact(firstname='c0', lastname='c0', email='c0@c0.com');
         insert con;
         list<Opportunity> listOpp = new list<Opportunity>();
+        
+        // Opps 0-5 will get their default single Payment record
         listOpp.add(new Opportunity(name='Opp0', Primary_Contact__c=con.Id, Amount=100, CloseDate=System.Today(), 
             StageName=UTIL_unitTestData_TEST.getOpenStage()));
         listOpp.add(new Opportunity(name='Opp1', Primary_Contact__c=con.Id, Amount=100, CloseDate=System.Today().addDays(-1), 
@@ -659,8 +750,35 @@ public with sharing class BDI_Donations_TEST {
             RecordTypeId=UTIL_RecordTypes.getRecordTypeIdForMembershipTests(Opportunity.sObjectType)));
         listOpp.add(new Opportunity(name='Opp4', Primary_Contact__c=con.Id, Amount=300, CloseDate=System.Today(), 
             StageName=UTIL_unitTestData_TEST.getOpenStage()));
-        insert listOpp;
+        listOpp.add(new Opportunity(name='Opp5', Primary_Contact__c=con.Id, Amount=500, CloseDate=System.Today(), 
+            StageName=UTIL_unitTestData_TEST.getOpenStage(), npe01__Do_Not_Automatically_Create_Payment__c=true));
+        
+        // Opps 6-7 will have no Payment records
+        listOpp.add(new Opportunity(name='Opp6', Primary_Contact__c=con.Id, Amount=600, CloseDate=System.Today(), 
+            StageName=UTIL_unitTestData_TEST.getOpenStage(), npe01__Do_Not_Automatically_Create_Payment__c=true));
+        listOpp.add(new Opportunity(name='Opp7', Primary_Contact__c=con.Id, Amount=700, CloseDate=System.Today(), 
+            StageName=UTIL_unitTestData_TEST.getOpenStage(), npe01__Do_Not_Automatically_Create_Payment__c=true));
 
+        // Opps 8-9 will have multiple Payment records
+        listOpp.add(new Opportunity(name='Opp8', Primary_Contact__c=con.Id, Amount=600, CloseDate=System.Today(), 
+            StageName=UTIL_unitTestData_TEST.getOpenStage(), npe01__Do_Not_Automatically_Create_Payment__c=true));
+        listOpp.add(new Opportunity(name='Opp9', Primary_Contact__c=con.Id, Amount=700, CloseDate=System.Today(), 
+            StageName=UTIL_unitTestData_TEST.getOpenStage(), npe01__Do_Not_Automatically_Create_Payment__c=true));
+
+        insert listOpp;
+        
+        // create Opps 8-9's Payment records
+        list<npe01__OppPayment__c> listPmt = new list<npe01__OppPayment__c>();
+        listPmt.add(new npe01__OppPayment__c(npe01__Opportunity__c=listOpp[8].Id, npe01__Payment_Amount__c=350, 
+            npe01__Scheduled_Date__c=System.Today(), npe01__Check_Reference_Number__c='dupe'));
+        listPmt.add(new npe01__OppPayment__c(npe01__Opportunity__c=listOpp[8].Id, npe01__Payment_Amount__c=250, 
+            npe01__Scheduled_Date__c=System.Today()));
+        listPmt.add(new npe01__OppPayment__c(npe01__Opportunity__c=listOpp[9].Id, npe01__Payment_Amount__c=550, 
+            npe01__Scheduled_Date__c=System.Today(), npe01__Check_Reference_Number__c='dupe'));
+        listPmt.add(new npe01__OppPayment__c(npe01__Opportunity__c=listOpp[9].Id, npe01__Payment_Amount__c=150, 
+            npe01__Scheduled_Date__c=System.Today(), npe01__Check_Reference_Number__c='pick me'));
+        insert listPmt;
+        
         // set the specified settings
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         diSettings.Donation_Matching_Rule__c = strRule;

@@ -115,6 +115,23 @@ public class BDI_Donations {
         }
         set;
     }
+    
+    /*******************************************************************************************************
+    * @description the map of DI Donation Fields to Payment Fields
+    */
+    private static map<string, string> mapDIFieldToPmtField { 
+        get {
+            if (mapDIFieldToPmtField == null) {
+                mapDIFieldToPmtField = BDI_DataImport_BATCH.mapFieldsForDIObject('Payment', 'npe01__OppPayment__c', 
+                    BDI_DataImport_BATCH.listStrDataImportFields);
+                // special case Donation fields we defaultly map to Opp fields, but we will use with Payments too!
+                mapDIFieldToPmtField.put(UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c').toLowercase(), 'npe01__Payment_Amount__c');
+                mapDIFieldToPmtField.put(UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c').toLowercase(), 'npe01__Scheduled_Date__c');
+            }
+            return mapDIFieldToPmtField;
+        }
+        set;
+    }
 
     /*******************************************************************************************************
     * @description Imports the appropriate Donations into NPSP, following matching rules and criteria
@@ -357,15 +374,14 @@ public class BDI_Donations {
 
         // need to find payment records, to add any additional info.
         map<Id, npe01__OppPayment__c> mapOppIdToPayment = new map<Id, npe01__OppPayment__c>();
+        map<Id, npe01__OppPayment__c> mapPmtIdToPayment = new map<Id, npe01__OppPayment__c>();
         for (npe01__OppPayment__c pmt : [select Id, npe01__Opportunity__c from npe01__OppPayment__c where npe01__Opportunity__c in :mapDIIdToOpp.values()]) {
             mapOppIdToPayment.put(pmt.npe01__Opportunity__c, pmt);
+            mapPmtIdToPayment.put(pmt.Id, pmt);
         }
 
-        // get the payment fields we will auto-copy
-        map<string, string> mapDIFieldToPmtField = 
-            BDI_DataImport_BATCH.mapFieldsForDIObject('Payment', 'npe01__OppPayment__c', BDI_DataImport_BATCH.listStrDataImportFields);
-        list<npe01__OppPayment__c> listPmtUpsert = new list<npe01__OppPayment__c>();
-        list<DataImport__c> listDIUpsert = new list<DataImport__c>();
+        list<npe01__OppPayment__c> listPmtUpdate = new list<npe01__OppPayment__c>();
+        list<DataImport__c> listDIUpdate = new list<DataImport__c>();
 
         // update payments
         for (DataImport__c di: bdi.listDI) {
@@ -373,7 +389,19 @@ public class BDI_Donations {
             if (di.Status__c == label.bdiFailed)
                continue;            
             if (di.DonationImported__c != null) {
-                npe01__OppPayment__c pmt = mapOppIdToPayment.get(di.DonationImported__c);
+                npe01__OppPayment__c pmt;
+                ID pmtId = di.PaymentImported__c;
+                // use the pmt we matched
+                if (pmtId != null) {
+                    pmt = mapPmtIdToPayment.get(pmtId);
+                } else {
+                    // otherwise the single payment created for the opp
+                    pmt = mapOppIdToPayment.get(di.DonationImported__c);
+                    if (pmt != null) {
+                        di.PaymentImported__c = pmt.Id;
+                        di.PaymentImportStatus__c = label.bdiCreated;
+                    }
+                }
                 if (pmt != null) {
                     integer cPropSet = 0;
                     for (string strDIField : mapDIFieldToPmtField.keySet()) {
@@ -383,19 +411,18 @@ public class BDI_Donations {
                     }                    
                     if (cPropSet > 0) {
                         mapDIIdPmt.put(di.Id, pmt);
-                        listPmtUpsert.add(pmt);
-                        listDIUpsert.add(di);
+                        listPmtUpdate.add(pmt);
+                        listDIUpdate.add(di);
                     }
                 }
             }
         }
         
-        //upsert mapDIIdPmt.values();
-        list<Database.UpsertResult> listUR = database.upsert(listPmtUpsert, false);
+        list<Database.SaveResult> listUR = database.update(listPmtUpdate, false);
         for (integer i = 0; i < listUR.size(); i++) {
-            Database.UpsertResult ur = listUR[i];
+            Database.SaveResult ur = listUR[i];
             if (!ur.isSuccess()) {
-                bdi.LogBDIError(listDIUpsert[i], ur.getErrors()[0].getMessage(), null);
+                bdi.LogBDIError(listDIUpdate[i], ur.getErrors()[0].getMessage(), null);
             }
         }
         
@@ -424,7 +451,7 @@ public class BDI_Donations {
             this.bdi = bdi;
             map<Id, Opportunity> mapDIIdToOpp = new map<Id, Opportunity>();
             
-            // query for potential Opportunities based off our matching criteria
+            // query for potential Opportunities & Payments based off our matching criteria
             list<Opportunity> listOpp = getPotentialDonationMatches(listDI);
             if (listOpp == null) {
                 return mapDIIdToOpp;
@@ -443,58 +470,42 @@ public class BDI_Donations {
                 }
                 list<Opportunity> listCAOpps = mapConAccIdToOpps.get(id);
                 list<Integer> listIMatches = new list<Integer>();
+                map<ID, npe01__OppPayment__c> mapOppIdToPmt = new map<ID, npe01__OppPayment__c>();
                 
                 if (listCAOpps != null) {
                     for (integer i = 0; i < listCAOpps.size(); i++) {
                         Opportunity opp = listCAOpps[i];
-                        // always match to an Opp we were given the Id to!
-                        if (di.DonationImported__c == opp.Id) {
+                        String matchType;
+                        
+                        // use Opp only matching rules if no payments or just a single payment
+                        if (opp.npe01__Number_of_Payments__c <= 1) {
+                            matchType = getMatchTypeByOppRules(di, opp);
+                        } else {
+                            // use Payment matching rules
+                            for (npe01__OppPayment__c pmt : opp.npe01__OppPayment__r) {
+                                matchType = getMatchTypeByPmtRules(di, pmt);
+             system.debug('****DJH: matchType: ' + matchType);
+                                if (matchType != 'noMatch') {
+                                    mapOppIdToPmt.put(opp.Id, pmt);
+                                    //if (matchType == 'IdMatch') 
+                                        break;
+                                }
+                            }
+                            
+                        }
+              system.debug('****DJH: matchType: ' + matchType);
+                        if (matchType == 'IdMatch') {
                             listIMatches.clear();
                             listIMatches.add(i);
                             break;
-                        }
-                        
-                        // always match to an Opp we were given the UniqueId to!
-                        string strUniqueId = ''; 
-                        if (isCustomIDInOpportunityMatchRules && 
-                            (strUniqueId = strNull(opp.get(bdi.diSettings.Opportunity_Custom_Unique_ID__c))) != '') {
-                            if (!isCustomIdInOpportunityDatatypeString) {
-                                strUniqueId = string.valueOf(double.valueOf(strUniqueId));
-                                // when using Amount in our test, we need to have two zeroes after the decimal point.
-                                if (Test.isRunningTest() && bdi.diSettings.Opportunity_Custom_Unique_ID__c == 'Amount') {
-                                    strUniqueId += '0';
-                                }
-                            }
-                            if (string.valueOf(di.get(strDIOpportunityCustomIDField())) == strUniqueId) {
-                                listIMatches.clear();
-                                listIMatches.add(i);
-                                break;
-                            }
-                        }
-
-                        if (di.DonationImported__c == null) {
-                            // try match against all specified fields
-                            boolean isAllMatch = true;
-                            for (String strDIField : listMatchFields) {
-                                Object val = di.get(strDIField);
-                                // handle mapping a specified record type name to the Id we must compare with
-                                if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c').toLowercase()) {
-                                    val = UTIL_RecordTypes.getRecordTypeId(Opportunity.sObjectType, string.valueOf(val));
-                                }
-                                if (val != opp.get(mapDIFieldToOppField.get(strDIField))) {
-                                    isAllMatch = false;
-                                    break;
-                                }
-                            }
-                            if (isAllMatch) {
-                                listIMatches.add(i);
-                            }
+                        } else if (matchType == 'fieldMatch') {
+                            listIMatches.add(i);
                         }
                     }
                 }
                 
-                
                 // if we have 1 or more matches, record the best one
+system.debug('****DJH: listIMatches: ' + listIMatches);
                 if (listIMatches.size() > 0) {
                     Integer iOpp = listIMatches[0];
                     Opportunity opp = listCAOpps[iOpp];
@@ -502,8 +513,18 @@ public class BDI_Donations {
                     di.DonationImported__c = opp.Id;
                     // put the existing opp in our map for caller's use
                     mapDIIdToOpp.put(di.Id, opp);
-                    // remove this opp from the list to avoid matching it again.
-                    listCAOpps.remove(iOpp);
+                    
+                    // if unique, remove this opp from the list to avoid matching it again.
+                    if (listIMatches.size() == 1) {
+                        listCAOpps.remove(iOpp);
+                    }
+                    
+                    // also record the payment
+                    npe01__OppPayment__c pmt = mapOppIdToPmt.get(opp.Id);
+                    if (pmt != null) {
+                        di.PaymentImported__c = pmt.Id;
+                        di.PaymentImportStatus__c = label.bdiMatched;
+                    }
                 } else {
                     di.DonationImportStatus__c = label.bdiMatchedNone;
                 }
@@ -519,6 +540,90 @@ public class BDI_Donations {
             }
             
             return mapDIIdToOpp;
+        }
+
+        /*******************************************************************************************************
+        * @description checks whether the specified opp is a match for this DI record
+        * @param di The data import record we are trying to find an opp for
+        * @param opp The opp to evaluate
+        * @return String 'IdMatch' if an Id match, 'fieldMatch' if matches by other fields, otherwise 'noMatch'
+        */
+        private string getMatchTypeByOppRules(DataImport__c di, Opportunity opp) {
+            // always match to an Opp we were given the Id to!
+            if (di.DonationImported__c == opp.Id) {
+                return 'IdMatch';
+            }
+                        
+            // always match to an Opp we were given the UniqueId to!
+            string strUniqueId = ''; 
+            if (isCustomIDInOpportunityMatchRules && 
+                (strUniqueId = strNull(opp.get(bdi.diSettings.Opportunity_Custom_Unique_ID__c))) != '') {
+                if (!isCustomIdInOpportunityDatatypeString) {
+                    strUniqueId = string.valueOf(double.valueOf(strUniqueId));
+                    // when using Amount in our test, we need to have two zeroes after the decimal point.
+                    if (Test.isRunningTest() && bdi.diSettings.Opportunity_Custom_Unique_ID__c == 'Amount') {
+                        strUniqueId += '0';
+                    }
+                }
+                if (string.valueOf(di.get(strDIOpportunityCustomIDField())) == strUniqueId) {
+                    return 'IdMatch';
+                }
+            }
+
+            if (di.DonationImported__c == null) {
+                // try match against all specified fields
+                boolean isAllMatch = true;
+                for (String strDIField : listMatchFields) {
+                    Object val = di.get(strDIField);
+                    // handle mapping a specified record type name to the Id we must compare with
+                    if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c').toLowercase()) {
+                        val = UTIL_RecordTypes.getRecordTypeId(Opportunity.sObjectType, string.valueOf(val));
+                    }
+                    // only test opp fields (failing match if payment fields specified)
+                    string strOppField = mapDIFieldToOppField.get(strDIField);
+                    if (strOppField == null || val != opp.get(strOppField)) {
+                        isAllMatch = false;
+                        break;
+                    }
+                }
+                if (isAllMatch) {
+                    return 'fieldMatch';
+                }
+            }
+            
+            return 'noMatch';
+        }
+        
+        /*******************************************************************************************************
+        * @description checks whether the specified opp has a Payment match for this DI record
+        * @param di The data import record we are trying to find an Opp & Payment for
+        * @param pmt The payment to evaluate
+        * @return String 'IdMatch' if an Id match, 'fieldMatch' if matches by other fields, otherwise 'noMatch'
+        */
+        private string getMatchTypeByPmtRules(DataImport__c di, npe01__OppPayment__c pmt) {
+
+            // always match to an Payment we were given the Id to!
+            if (di.PaymentImported__c == pmt.Id) {
+                return 'IdMatch';
+            }
+
+            // try match against all specified fields
+            boolean isAllMatch = true;
+            for (String strDIField : listMatchFields) {
+                Object val = di.get(strDIField);
+
+                // only test opp fields (failing match if payment fields specified)
+                string strPmtField = mapDIFieldToPmtField.get(strDIField);
+                system.debug('****DJH: val: ' + val + ' strDIField: ' + strDIField + ' strPmtField: ' + strPmtField + ' pmt: ' + pmt.get(strPmtField));
+                if (strPmtField == null || val != pmt.get(strPmtField)) {
+                    isAllMatch = false;
+                    break;
+                }
+            }
+            if (isAllMatch) {
+                return 'fieldMatch';
+            }
+            return 'noMatch';
         }
 
         /*******************************************************************************************************
@@ -543,7 +648,7 @@ public class BDI_Donations {
         }
 
         /*******************************************************************************************************
-        * @description queries for all potential Donation Opportunities based off matching criteria
+        * @description queries for all potential Donation Opportunities & Payments based off matching criteria
         * @param listDI The DataImport records we are trying to match
         * @return list<Opportunity> The list of potential matching Opps.  null if none.
         */
@@ -583,31 +688,53 @@ public class BDI_Donations {
                 return null;
             }
             
-            // the set of fields for our soql
-            set<String> setFields = new set<String>();
-            setFields.add('Id');
-            setFields.add('Name');
-            setFields.add('Amount');
-            setFields.add('AccountId');
-            setFields.add(UTIL_Namespace.StrTokenNSPrefix('Primary_Contact__c'));
-            setFields.add('CloseDate');
+            // the set of Opportunity fields for our soql
+            set<String> setOppFields = new set<String>();
+            setOppFields.add('Id');
+            setOppFields.add('Name');
+            setOppFields.add('Amount');
+            setOppFields.add('AccountId');
+            setOppFields.add(UTIL_Namespace.StrTokenNSPrefix('Primary_Contact__c'));
+            setOppFields.add('CloseDate');
+            setOppFields.add('npe01__Number_of_Payments__c');
+            
+            // the set of Payment fields for our soql
+            set<String> setPmtFields = new set<String>();
+            setPmtFields.add('Id');
+            setPmtFields.add('Name');
+            setPmtFields.add('npe01__Paid__c');
+            setPmtFields.add('npe01__Opportunity__c');
+            setPmtFields.add('npe01__Payment_Amount__c');
+            setPmtFields.add('npe01__Payment_Date__c');
+            setPmtFields.add('npe01__Scheduled_Date__c');
+            setPmtFields.add('npe01__Written_Off__c');
             
             // add the match fields
             for (String strField : listMatchFields) {
                 String strOppField = mapDIFieldToOppField.get(strField);
                 if (strOppField != null) {
-                    setFields.add(strOppField);
+                    setOppFields.add(strOppField);
+                } else {
+	                String strPmtField = mapDIFieldToPmtField.get(strField);
+	                if (strPmtField != null) {
+	                    setPmtFields.add(strPmtField);
+	                }
                 }
             }
             
             // add Custom field if needed
             if (isCustomIDInOpportunityMatchRules) {
-                setFields.add(bdi.diSettings.Opportunity_Custom_Unique_ID__c);
+                setOppFields.add(bdi.diSettings.Opportunity_Custom_Unique_ID__c);
             } 
             
             // now query for all Open Opportunities from these Contacts or Accounts
             integer cFilter = 0;
-            string strSoql = 'select ' + string.join(new list<String>(setFields), ',');
+            string strSoql = 'select ' + string.join(new list<String>(setOppFields), ',');
+            
+            // add Payment subquery
+            strSoql += ', (select ' + string.join(new list<String>(setPmtFields), ',');
+            strSoql += ' from npe01__OppPayment__r where npe01__Paid__c = false order by npe01__Scheduled_Date__c ASC)'; 
+            
             strSoql += ' from Opportunity';
             strSoql += ' where IsClosed = false and (';
             if (setOppId.size() > 0) {
@@ -643,7 +770,6 @@ public class BDI_Donations {
                 cFilter++;
             }
             strSoql += ') order by CloseDate ASC';
-
             list<Opportunity> listOpp = database.query(strSoql); 
             return listOpp;           
         }
