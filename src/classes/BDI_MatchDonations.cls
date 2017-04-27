@@ -32,8 +32,7 @@
                 mapDIFieldToPmtField = BDI_DataImport_BATCH.mapFieldsForDIObject('Payment', 'npe01__OppPayment__c', 
                     BDI_DataImport_BATCH.listStrDataImportFields);
                 // special case Donation fields we defaultly map to Opp fields, but we will use with Payments too!
-                // note that these two work for matching rules.  later, on updating a payment, we manually
-                // substitute npe01__Payment_Date__c for npe01__Schedule_Date__c, since that is the field to write to.
+                // note that these two work for matching rules.  
                 mapDIFieldToPmtField.put(UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c').toLowercase(), 'npe01__Payment_Amount__c');
                 mapDIFieldToPmtField.put(UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c').toLowercase(), 'npe01__Scheduled_Date__c');
             }
@@ -82,14 +81,12 @@
                     // go thru each opp for this contact or account
                     for (integer i = 0; i < listCAOpps.size(); i++) {
                         Opportunity opp = listCAOpps[i];
-system.debug('****DJH: testing Opp: ' + opp);                        
                         matchType mType = matchType.noMatch;
 
                         // if 1 or more payments, use Payment matching rules
                         if (opp.npe01__Number_of_Payments__c >= 1) {
                             for (npe01__OppPayment__c pmt : opp.npe01__OppPayment__r) {
                                 mType = getMatchTypeByPmtRules(di, pmt);
-system.debug('****DJH: mTypePmT: ' + mType);                                
                                 if (mType != matchType.noMatch) {
                                     // we take the first matching payment found
                                     mapOppIdToPmt.put(opp.Id, pmt);
@@ -101,7 +98,6 @@ system.debug('****DJH: mTypePmT: ' + mType);
                         // if no payments, or we failed to match with a single payment, use Opp matching rules
                         if (opp.npe01__Number_of_Payments__c <= 1 && mType == matchType.noMatch) {
                             mType = getMatchTypeByOppRules(di, opp);
-system.debug('****DJH: mTypeOpp: ' + mType);                                
                         }
 
                         if (mType == matchType.IdMatch) {
@@ -147,7 +143,6 @@ system.debug('****DJH: mTypeOpp: ' + mType);
                 } else {
                     di.DonationImportStatus__c = label.bdiMatchedNone;
                 }
-system.debug('****DJH: di.DonationImportStatus__c ' + di.DonationImportStatus__c + ' listIMatches: ' + listIMatches);                
             }
         }
 

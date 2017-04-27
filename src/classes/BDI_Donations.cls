@@ -125,10 +125,8 @@ public class BDI_Donations {
                 mapDIFieldToPmtField = BDI_DataImport_BATCH.mapFieldsForDIObject('Payment', 'npe01__OppPayment__c', 
                     BDI_DataImport_BATCH.listStrDataImportFields);
                 // special case Donation fields we defaultly map to Opp fields, but we will use with Payments too!
-                // note that these two work for matching rules.  later, on updating a payment, we manually
-                // substitute npe01__Payment_Date__c for npe01__Schedule_Date__c, since that is the field to write to.
                 mapDIFieldToPmtField.put(UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c').toLowercase(), 'npe01__Payment_Amount__c');
-                mapDIFieldToPmtField.put(UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c').toLowercase(), 'npe01__Scheduled_Date__c');
+                mapDIFieldToPmtField.put(UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c').toLowercase(), 'npe01__Payment_Date__c');
             }
             return mapDIFieldToPmtField;
         }
@@ -419,10 +417,6 @@ public class BDI_Donations {
         list<npe01__OppPayment__c> listPmtUpdate = new list<npe01__OppPayment__c>();
         list<DataImport__c> listDIUpdate = new list<DataImport__c>();
         
-        // we need to clone our field mapping, so we can tweak Donation_Amount__c => Schedule_Date__c to Payment_Date__c
-        map<String, String> mapDIFieldToPmtFieldClone = mapDIFieldToPmtField.clone();
-        mapDIFieldToPmtFieldClone.put(UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c').toLowercase(), 'npe01__Payment_Date__c');
-
         // update payments
         for (DataImport__c di : listDIDonations) {
             // skip di's that already have an error
@@ -432,8 +426,8 @@ public class BDI_Donations {
                 npe01__OppPayment__c pmt = mapDIIdToPmt.get(di.Id);
                 if (pmt != null) {
                     integer cPropSet = 0;
-                    for (string strDIField : mapDIFieldToPmtFieldClone.keySet()) {
-                        if (BDI_DataImport_BATCH.isCopiedDIField(di, strDIField, pmt, mapDIFieldToPmtFieldClone)) {
+                    for (string strDIField : mapDIFieldToPmtField.keySet()) {
+                        if (BDI_DataImport_BATCH.isCopiedDIField(di, strDIField, pmt, mapDIFieldToPmtField)) {
                             cPropSet++;
                         }
                     }                    
