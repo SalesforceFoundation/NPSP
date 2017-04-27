@@ -128,7 +128,11 @@
                         di.DonationImportStatus__c = label.bdiMatchedBest;
                         for (integer i = 0; i < listIMatches.size(); i++) {
                             Opportunity oppT = listCAOpps[listIMatches[i]];
-                            di.Donation_Possible_Matches__c += oppT.Id + ',';
+                            if (di.Donation_Possible_Matches__c == null) {
+                                di.Donation_Possible_Matches__c = oppT.Id;
+                            } else {
+                                di.Donation_Possible_Matches__c += ',' + oppT.Id;
+                            }
                         }
                     } 
                     
