@@ -68,7 +68,7 @@ public with sharing class BDI_Donations_TEST {
 
     /*********************************************************************************************************
     * @description operation
-    *        import existing contacts with existiong open Opportunities  
+    *        import existing contacts with existing open Opportunities  
     * verify: 
     *       opportunity objects matched & closed
     *       payment objects updated
@@ -92,6 +92,12 @@ public with sharing class BDI_Donations_TEST {
         listDI[0].Payment_Method__c = 'Check';
         listDI[1].Payment_Method__c = 'Visa';       
         insert listDI;
+
+        // set the specified settings
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ',' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+        diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
           
         //run batch data import
         Test.StartTest();
@@ -160,6 +166,12 @@ public with sharing class BDI_Donations_TEST {
         listDI[1].Payment_Check_Reference_Number__c = '1234';
         listDI[1].Payment_Method__c = 'Visa';       
         insert listDI;
+          
+        // set the specified settings
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ',' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+        diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
           
         //run batch data import
         Test.StartTest();
@@ -235,6 +247,12 @@ public with sharing class BDI_Donations_TEST {
         listDI[2].Payment_Method__c = 'Mastercard';       
         insert listDI;
           
+        // set the specified settings
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ',' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+        diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
+          
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
@@ -288,6 +306,7 @@ public with sharing class BDI_Donations_TEST {
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=100,
             Donation_Date__c=System.Today(),
+            Payment_Method__c = 'Check',
             Donation_Donor__c='contact1');
             
         donationMatchRules(
@@ -307,6 +326,7 @@ public with sharing class BDI_Donations_TEST {
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=300,
             Donation_Date__c=System.Today(),
+            Payment_Method__c = 'Check',
             Donation_Donor__c='contact1');
             
         donationMatchRules(
@@ -335,6 +355,7 @@ public with sharing class BDI_Donations_TEST {
             Donation_Amount__c=200,
             Donation_Date__c=System.Today(),
             Donation_Record_Type_Name__c=strRTName,
+            Payment_Method__c = 'Check',
             Donation_Donor__c='contact1');
             
         donationMatchRules(
@@ -356,6 +377,7 @@ public with sharing class BDI_Donations_TEST {
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=200,
             Donation_Date__c=System.Today(),
+            Payment_Method__c = 'Check',
             Donation_Donor__c='contact1');
             
         donationMatchRules(
@@ -376,6 +398,7 @@ public with sharing class BDI_Donations_TEST {
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=99,
             Donation_Date__c=System.Today(),
+            Payment_Method__c = 'Check',
             Donation_Donor__c='contact1');
             
         donationMatchRules(
@@ -395,6 +418,7 @@ public with sharing class BDI_Donations_TEST {
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=200,
             Donation_Date__c=System.Today(),
+            Payment_Method__c = 'Check',
             Donation_Donor__c='contact1');
             
         donationMatchRules(
@@ -415,6 +439,7 @@ public with sharing class BDI_Donations_TEST {
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=99,
             Donation_Date__c=System.Today(),
+            Payment_Method__c = 'Check',
             Donation_Donor__c='contact1');
             
         donationMatchRules(
@@ -434,6 +459,7 @@ public with sharing class BDI_Donations_TEST {
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=100,
             Donation_Date__c=System.Today(),
+            Payment_Method__c = 'Check',
             Donation_Donor__c='contact1');
             
         donationMatchRules(
@@ -454,6 +480,7 @@ public with sharing class BDI_Donations_TEST {
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=200,
             Donation_Date__c=System.Today(),
+            Payment_Method__c = 'Check',
             Donation_Donor__c='contact1');
             
         donationMatchRules(
@@ -473,6 +500,7 @@ public with sharing class BDI_Donations_TEST {
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=99,
             Donation_Date__c=System.Today(),
+            Payment_Method__c = 'Check',
             Donation_Donor__c='contact1');
             
         donationMatchRules(
@@ -493,6 +521,7 @@ public with sharing class BDI_Donations_TEST {
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=99,
             Donation_Date__c=System.Today(),
+            Payment_Method__c = 'Check',
             Donation_Donor__c='contact1');
             
         donationMatchRules(
@@ -513,6 +542,7 @@ public with sharing class BDI_Donations_TEST {
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=200,
             Donation_Date__c=System.Today(),
+            Payment_Method__c = 'Check',
             Donation_Donor__c='contact1');
             
         donationMatchRules(
@@ -533,6 +563,7 @@ public with sharing class BDI_Donations_TEST {
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=100,
             Donation_Date__c=System.Today(),
+            Payment_Method__c = 'Check',
             Donation_Donor__c='contact1');
             
         donationMatchRules(
@@ -553,6 +584,7 @@ public with sharing class BDI_Donations_TEST {
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=200,
             Donation_Date__c=System.Today(),
+            Payment_Method__c = 'Check',
             Donation_Donor__c='contact1');
             
         donationMatchRules(
@@ -573,6 +605,7 @@ public with sharing class BDI_Donations_TEST {
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=99,
             Donation_Date__c=System.Today(),
+            Payment_Method__c = 'Check',
             Donation_Donor__c='contact1');
             
         donationMatchRules(
@@ -590,15 +623,11 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/            
     static testMethod void donationMatchRules11() {
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules11') return;
-
-        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-        // for testing, we need to use an existing Opportunity field that exists on both Opportunity and the DI.
-        //diSettings.Opportunity_Custom_Unique_ID__c = 'Type';
-
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=99,
             Donation_Date__c=System.Today(),
             Donation_Donor__c='contact1',
+            Payment_Method__c = 'Check',
             Donation_Type__c='MyUniqueID');
             
         donationMatchRules(
@@ -615,14 +644,10 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/            
     static testMethod void donationMatchRules11b() {
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules11b') return;
-
-        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-        // for testing, we need to use an existing Opportunity field that exists on both Opportunity and the DI.
-        //diSettings.Opportunity_Custom_Unique_ID__c = 'Amount';
-
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=300,
             Donation_Date__c=System.Today().addDays(-100),
+            Payment_Method__c = 'Check',
             Donation_Donor__c='contact1');
             
         donationMatchRules(
@@ -643,6 +668,7 @@ public with sharing class BDI_Donations_TEST {
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=700,
             Donation_Date__c=System.Today(),
+            Payment_Method__c = 'Check',
             Donation_Donor__c='contact1');
             
         donationMatchRules(
@@ -664,6 +690,7 @@ public with sharing class BDI_Donations_TEST {
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=550,
             Donation_Date__c=System.Today(),
+            Payment_Method__c = 'Check',
             Donation_Donor__c='contact1');
             
         donationMatchRules(
@@ -686,6 +713,7 @@ public with sharing class BDI_Donations_TEST {
             Donation_Amount__c=25,
             Donation_Date__c=System.Today(),
             Donation_Donor__c='contact1',
+            Payment_Method__c = 'Check',
             Payment_Check_Reference_Number__c='pick me'
             );
             
@@ -710,6 +738,7 @@ public with sharing class BDI_Donations_TEST {
             Donation_Amount__c=25,
             Donation_Date__c=System.Today(),
             Donation_Donor__c='contact1',
+            Payment_Method__c = 'Check',
             Payment_Check_Reference_Number__c='dupe'
             );
             
@@ -791,13 +820,20 @@ public with sharing class BDI_Donations_TEST {
         Test.stopTest();
     
         list<DataImport__c> listDI = [select Status__c, DonationImported__c, DonationImportStatus__c, 
-            Donation_Possible_Matches__c from DataImport__c];        
+            Donation_Possible_Matches__c, PaymentImported__c, PaymentImportStatus__c from DataImport__c];        
         system.assertEquals(1, listDI.size());
         system.assertEquals(expectedStatus, listDI[0].DonationImportStatus__c);
         system.assertEquals(hasMultiMatches, listDI[0].Donation_Possible_Matches__c != null);
         if (imatch >= 0) {                
             system.assertEquals(label.bdiImported, listDI[0].Status__c);
             system.assertEquals(listOpp[imatch].Id, listDI[0].DonationImported__c);
+            if (imatch != 6 && imatch != 7) {
+                system.assertNotEquals(null, listDI[0].PaymentImported__c);
+                system.assertEquals(label.bdiMatched, listDI[0].PaymentImportStatus__c);
+                npe01__OppPayment__c pmt = [select Id, npe01__Payment_Method__c from npe01__OppPayment__c 
+                    where Id = :listDI[0].PaymentImported__c];
+                system.assertEquals('Check', pmt.npe01__Payment_Method__c);
+            }
 	        // verify we matched an existing opp (no new opp created)
 	        list<Opportunity> listOppX = [select Id, Name, Amount, Primary_Contact__c from Opportunity];
 	        system.assertEquals(listOpp.size(), listOppX.size());

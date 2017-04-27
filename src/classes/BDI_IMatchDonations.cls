@@ -31,18 +31,22 @@
 * @author Salesforce.org
 * @date 2017
 * @group Batch Data Import
-* @description Interface for classes that will provide Matching of existing objects for BDI
+* @description Interface for classes that will provide Matching of Donations 
+* (Opportunities and Payments) for BDI
 *
 */
-public interface BDI_IMatching {
+public interface BDI_IMatchDonations {
     
     /*******************************************************************************************************
     * @description For each of the provided Data Import records, find their existing Opportunity and Payment to
-    * update, or create a new Opportunity, storing the lookup and status back in the BDI record.
+    * update, storing the lookup and status back in the BDI record.
+    *
+    * @param bdi The BDI instance currently running
     * @param listDI The list of Data Import records with donations
-    * @return map<Id, Opportunity> a map of Data Import record Id's to their appropriate Opportunity
+    * @param mapDIIdToOpp Map to fill in of DI Id's to matched Opportunities
+    * @param mapDIIdToPmt Map to fill in of DI Id's to matched Payments
+    * @return void
     */ 
-    map<Id, Opportunity> matchDonations(BDI_DataImport_BATCH bdi, list<DataImport__c> listDI);
-
-    
+    void match(BDI_DataImport_BATCH bdi, list<DataImport__c> listDI, 
+        map<Id, Opportunity> mapDIIdToOpp, map<Id, npe01__OppPayment__c> mapDIIdToPmt);
 }

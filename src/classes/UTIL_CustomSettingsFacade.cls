@@ -594,7 +594,8 @@ public without sharing class UTIL_CustomSettingsFacade {
     private static void configDataImportSettings(Data_Import_Settings__c dis) {
         dis.Batch_Size__c = 50;
         dis.Contact_Matching_Rule__c = 'Firstname,Lastname,Email';
-        dis.Donation_Matching_Implementing_Class__c = 'BDI_Donations.BDIMatchingDonations';
+        dis.Donation_Matching_Implementing_Class__c = 'BDI_MatchDonations';
+        dis.Donation_Matching_Behavior__c = BDI_DataImport_API.DoNotMatch;
     }
 
     /*******************************************************************************************************
