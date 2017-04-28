@@ -725,7 +725,8 @@ public with sharing class BDI_Donations_TEST {
 
     /*********************************************************************************************************
     * @description operation: 
-    *    import donations using different matching rules: check#, where no payment match found, but opp found.
+    *    import donations using different matching rules: check#, amount, date, 
+    *    where no payment match found, but opp found.
     * verify: 
     *    no new donation created
     *    no opp matched
@@ -750,7 +751,49 @@ public with sharing class BDI_Donations_TEST {
 
     /*********************************************************************************************************
     * @description operation: 
-    *    import donations using different matching rules: check#, where Opp has Multiple Payments, 
+    *    import donations using different matching rules: Amount, Date, where Opp has Multiple Payments,
+    *    and matches one of the payments under the opp
+    * verify: 
+    *    no new donation created
+    *    existing opp matched, but left open
+    *    payment matched
+    *    opp remaining balance updated
+    **********************************************************************************************************/            
+    static testMethod void donationMatchRules14c() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules14c') return;
+
+        insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
+            Donation_Amount__c=350,
+            Donation_Date__c=System.Today(),
+            Payment_Method__c = 'Check',
+            Donation_Donor__c='contact1');
+            
+        donationMatchRules(
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ',' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
+            8, BDI_DataImport_API.RequireExactMatch, label.bdiMatched, false);
+            
+        DataImport__c di = [select Status__c, DonationImported__c, DonationImportStatus__c, 
+            Donation_Possible_Matches__c, PaymentImported__c, PaymentImportStatus__c from DataImport__c];
+        system.assertEquals(label.bdiMatched, di.DonationImportStatus__c);       
+        system.assertEquals(label.bdiMatched, di.PaymentImportStatus__c);
+        
+        Opportunity opp = [select Id, IsWon, IsClosed, Amount, npe01__Amount_Outstanding__c from Opportunity where id = :di.DonationImported__c];
+        npe01__OppPayment__c pmt = [select Id, npe01__Payment_Amount__c, npe01__Paid__c from npe01__OppPayment__c where id = :di.PaymentImported__c];
+        system.debug('****DJH: opp: ' + opp);
+        system.debug('****DJH: pmt: ' + pmt);
+        
+        system.assertEquals(false, opp.IsWon);
+        system.assertEquals(false, opp.IsClosed);
+        system.assertEquals(600, opp.Amount);
+        system.assertEquals(250, opp.npe01__Amount_Outstanding__c);
+        system.assertEquals(350, pmt.npe01__Payment_Amount__c);
+        system.assertEquals(true, pmt.npe01__Paid__c);
+    }
+
+    /*********************************************************************************************************
+    * @description operation: 
+    *    import donations using different matching rules: check#, donation date, where Opp has Multiple Payments, 
     *    multi opps match, RequireExactMatch
     * verify: 
     *    no new donation created

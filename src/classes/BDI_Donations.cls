@@ -208,6 +208,12 @@ public class BDI_Donations {
         // add any payments to our map
         trackPayments(listDIDonations);
         
+        // when we mark Payments paid, ensure they will close our Opp.
+        npe01__Contacts_And_Orgs_Settings__c cs = UTIL_CustomSettingsFacade.getContactsSettings();
+        if (cs.Payments_Auto_Close_Stage_Name__c == null) {
+            cs.Payments_Auto_Close_Stage_Name__c = defaultClosedWonStage;
+        }
+        
         // update payments with any data from the DI record
         updatePayments(listDIDonations);      
     }
@@ -354,14 +360,23 @@ public class BDI_Donations {
                     di.Donation_Name__c = opp.Name;
                 }
             } 
-                
+            
             if (di.Donation_Stage__c == null && defaultClosedWonStage != '') {
                 di.Donation_Stage__c = defaultClosedWonStage;
             }
+            
             // now copy over all the data to the Opp
             for (string strDIField : mapDIFieldToOppField.keySet()) {
                 // skip recordtype which we special cased above
                 if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c').toLowercase()) {
+                    continue;
+                }
+                // only honor Stage if we aren't updating its payment
+                if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Stage__c').toLowercase() && di.PaymentImported__c != null) {
+                    continue;
+                }
+                // only honor Amount if we aren't updating its payment
+                if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c').toLowercase() && di.PaymentImported__c != null) {
                     continue;
                 }
                 BDI_DataImport_BATCH.isCopiedDIField(di, strDIField, opp, mapDIFieldToOppField);
@@ -373,17 +388,21 @@ public class BDI_Donations {
 
     /*******************************************************************************************************
     * @description Updates our map of DI records to Payments to include the Payments just auto-created
-    * when we created new Opps, or pmt's for matched Opps that we haven't yet tracked.
+    * when we created new Opps, or pmt's for matched Opps that we haven't yet tracked.  Also marks
+    * Payments that we matched as Paid.
     * @param listDIDonations The DI Records that have donations to import
     * @return void
     */ 
     public void trackPayments(list<DataImport__c> listDIDonations) {
         
-        // find the Opps for our missing payments
+        // find the Opps for our missing payments and mark existing Payments paid.
         list<ID> listOppId = new list<ID>();        
         for (DataImport__c di : listDIDonations) {
             if (di.DonationImported__c != null && di.PaymentImported__c == null) {
                 listOppId.add(di.DonationImported__c);
+            } else if (di.PaymentImported__c != null) {
+                npe01__OppPayment__c pmt = mapDIIdToPmt.get(di.Id);
+                pmt.npe01__Paid__c = true;
             }
         }
 
@@ -438,7 +457,6 @@ public class BDI_Donations {
                 }
             }
         }
-        
         list<Database.SaveResult> listSR = database.update(listPmtUpdate, false);
         for (integer i = 0; i < listSR.size(); i++) {
             Database.SaveResult sr = listSR[i];
@@ -447,8 +465,5 @@ public class BDI_Donations {
             }
         }
     }
-    
-    
-    
     
 } // BDI_Donations
