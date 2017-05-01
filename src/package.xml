@@ -979,6 +979,7 @@
         <members>bdiImported</members>
         <members>bdiMatched</members>
         <members>bdiMatchedBest</members>
+        <members>bdiMatchedId</members>
         <members>bdiMatchedNone</members>
         <members>bdiRecordsFailed</members>
         <members>bdiRecordsImported</members>

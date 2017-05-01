@@ -171,7 +171,8 @@ public with sharing class BDI_Donations_TEST {
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         diSettings.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ',' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
-        diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
+        // make sure we support matching by Id even when no match specified.
+        diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.RequireNoMatch;
           
         //run batch data import
         Test.StartTest();
@@ -206,8 +207,8 @@ public with sharing class BDI_Donations_TEST {
         system.assertEquals(2, listDI.size());
         system.assertEquals(listDI[0].DonationImported__c, listOpp[0].Id); 
         system.assertEquals(listDI[1].DonationImported__c, listOpp[1].Id);
-        system.assertEquals(label.bdiMatched, listDI[0].DonationImportStatus__c);
-        system.assertEquals(label.bdiMatched, listDI[1].DonationImportStatus__c);        
+        system.assertEquals(label.bdiMatchedId, listDI[0].DonationImportStatus__c);
+        system.assertEquals(label.bdiMatchedId, listDI[1].DonationImportStatus__c);        
     }
     
     /*********************************************************************************************************

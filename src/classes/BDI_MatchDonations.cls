@@ -110,6 +110,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
             list<Integer> listIMatches = new list<Integer>();
             map<ID, npe01__OppPayment__c> mapOppIdToPmt = new map<ID, npe01__OppPayment__c>();
             
+            boolean isMatchedById = false;
             if (listCAOpps != null) {
                 // go thru each opp for this contact or account
                 for (integer i = 0; i < listCAOpps.size(); i++) {
@@ -123,6 +124,11 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                             if (mType != matchType.noMatch) {
                                 // we take the first matching payment found
                                 mapOppIdToPmt.put(opp.Id, pmt);
+                                
+                                // flag it as Id match if the Opp was specified
+                                if (opp.Id == di.DonationImported__c) {
+                                    mType = matchType.IdMatch;
+                                }
                                 break;
                             }
                         }
@@ -137,6 +143,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                         // if we matched by Id, then we don't even care about other matches by field.
                         listIMatches.clear();
                         listIMatches.add(i);
+                        isMatchedById = true;
                         break;
                     } else if (mType == matchType.fieldMatch) {
                         listIMatches.add(i);
@@ -154,7 +161,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                 
                 // if unique, remove this opp from the list to avoid matching it again.
                 if (listIMatches.size() == 1) {
-                    di.DonationImportStatus__c = label.bdiMatched;
+                    di.DonationImportStatus__c = (isMatchedById ? label.bdiMatchedId : label.bdiMatched);
                     listCAOpps.remove(iOpp);
                 } else {
                     // we have multiple matches, we want to record them all, and fixup our status

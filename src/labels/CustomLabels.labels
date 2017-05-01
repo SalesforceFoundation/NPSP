@@ -1388,11 +1388,19 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>bdiMatchedBest</fullName>
-        <categories>Data Import</categories>
+        <categories>Data Importer</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>status on a bdi object to specify it was matched from an ambiguous set</shortDescription>
         <value>Best Match Used</value>
+    </labels>
+    <labels>
+        <fullName>bdiMatchedId</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>BDI status when matching an object by its Salesforce ID</shortDescription>
+        <value>Matched by Id</value>
     </labels>
     <labels>
         <fullName>bdiMatchedNone</fullName>
