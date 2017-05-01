@@ -271,7 +271,7 @@ public class BDI_Donations {
             return true;
         }
         if (matchBehavior == BDI_DataImport_API.RequireNoMatch && di.DonationImported__c != null) {
-            strError = label.bdiErrorDonationMultiMatch;
+            strError = label.bdiErrorDonationRequireNoMatch;
         } 
         else if (matchBehavior == BDI_DataImport_API.RequireExactMatch && di.Donation_Possible_Matches__c != null) {
             strError = label.bdiErrorDonationMultiMatch;
@@ -292,9 +292,13 @@ public class BDI_Donations {
 
         // invalid behavior
         bdi.LogBDIError(di, strError, 'DonationImportStatus__c');        
+        if (di.Donation_Possible_Matches__c == null) {
+            di.Donation_Possible_Matches__c = di.DonationImported__c;
+        }
         // clear the best match so it won't be used
         di.DonationImported__c = null;
         di.PaymentImported__c = null;
+        di.PaymentImportStatus__c = null;
         return false;
     }
     

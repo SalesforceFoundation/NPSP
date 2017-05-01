@@ -487,7 +487,7 @@ public with sharing class BDI_Donations_TEST {
         donationMatchRules(
             UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ',' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
-            -1, BDI_DataImport_API.RequireNoMatch, label.bdiErrorDonationMultiMatch, true);
+            -1, BDI_DataImport_API.RequireNoMatch, label.bdiErrorDonationRequireNoMatch, true);
     }
 
     /*********************************************************************************************************

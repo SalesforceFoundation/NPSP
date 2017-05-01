@@ -968,6 +968,7 @@
         <members>bdiDonation</members>
         <members>bdiErrorDonationMultiMatch</members>
         <members>bdiErrorDonationNoMatch</members>
+        <members>bdiErrorDonationRequireNoMatch</members>
         <members>bdiErrorInvalidCampaignName</members>
         <members>bdiErrorInvalidDonor</members>
         <members>bdiErrorInvalidLastname</members>

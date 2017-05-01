@@ -1307,6 +1307,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>No matching donation was found.</value>
     </labels>
     <labels>
+        <fullName>bdiErrorDonationRequireNoMatch</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>error message if the donation matched opp(s), but behavior required no match</shortDescription>
+        <value>The Donation information matched against 1 or more Opportunities, but the setting required no matches, so it was not imported. The Donation Possible Matches field contains the Salesforce Id&apos;s of the matched Opportunities.</value>
+    </labels>
+    <labels>
         <fullName>bdiErrorInvalidCampaignName</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
