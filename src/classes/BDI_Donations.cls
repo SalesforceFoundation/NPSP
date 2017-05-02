@@ -148,12 +148,12 @@ public class BDI_Donations {
     */ 
     public void importDonations() {
     
-        // get the list of DI records that have donations to process
-        list<DataImport__c> listDIDonations = validateDonationsToProcess();
-        
         // get our matching behavior to use
         string matchBehavior = bdi.diSettings.Donation_Matching_Behavior__c;
 
+        // get the list of DI records that have donations to process
+        list<DataImport__c> listDIDonations = validateDonationsToProcess(matchBehavior);
+        
         // call the extension to match against existing donations
         if (matchBehavior != BDI_DataImport_API.DoNotMatch) {
             iMatchDonations.match(bdi, listDIDonations, mapDIIdToOpp, mapDIIdToPmt);
@@ -228,14 +228,24 @@ public class BDI_Donations {
 
     /*******************************************************************************************************
     * @description validate bdi records for donations and return those to process
+    * @param matchBehavior The match behavior to validate against
     * @return list<DataImport__c> The list of BDI records that have donations to process
     */ 
-    private list<DataImport__c> validateDonationsToProcess() {
+    private list<DataImport__c> validateDonationsToProcess(string matchBehavior) {
         list<DataImport__c> listDIDonations = new list<DataImport__c>();
         for (DataImport__c di : bdi.listDI) {
+            
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == label.bdiFailed) {
                continue;
+            }
+            
+            // skip di's that have an OppId or PaymentId, but we were told to do no matching.  in this case
+            // they must have already been created for this di on a previous run, and we don't want to create another.
+            if ((di.DonationImported__c != null || di.PaymentImported__c != null) && matchBehavior == BDI_DataImport_API.DoNotMatch) {
+                continue;
+            }
+                
             if (di.Donation_Donor__c == 'Contact1' || (di.Donation_Donor__c == null && di.Donation_Amount__c != null)) {
                 di.Donation_Donor__c = 'Contact1';
                 Contact con = bdi.ContactFromDi(di, 1);
@@ -278,7 +288,15 @@ public class BDI_Donations {
         if (di.DonationImportStatus__c == label.bdiMatchedId) {
             return true;
         }
-        if (matchBehavior == BDI_DataImport_API.RequireNoMatch && di.DonationImported__c != null) {
+        // always error if they provided Donation or Payment ID, but it wasn't valid
+        if ((di.DonationImported__c != null || di.PaymentImported__c != null) && di.DonationImportStatus__c == label.bdiMatchedNone) {
+            strError = label.bdiErrorDonationLookupMatch;
+            // usually we clear the payment status, but if it's Id might have been at fault, let's put the message there too!
+            if (di.PaymentImported__c != null) {
+                di.PaymentImportStatus__c = label.bdiErrorDonationLookupMatch;
+            }
+        }
+        else if (matchBehavior == BDI_DataImport_API.RequireNoMatch && di.DonationImported__c != null) {
             strError = label.bdiErrorDonationRequireNoMatch;
         } 
         else if (matchBehavior == BDI_DataImport_API.RequireExactMatch && di.Donation_Possible_Matches__c != null) {
@@ -298,15 +316,20 @@ public class BDI_Donations {
             return true;
         }
 
-        // invalid behavior
-        bdi.LogBDIError(di, strError, 'DonationImportStatus__c');        
+        // move any match that we reject to possible matches
         if (di.Donation_Possible_Matches__c == null) {
             di.Donation_Possible_Matches__c = di.DonationImported__c;
         }
-        // clear the best match so it won't be used
-        di.DonationImported__c = null;
-        di.PaymentImported__c = null;
-        di.PaymentImportStatus__c = null;
+
+        // clear the match so it won't be used (but only if we think the user didn't put it in themselves!)
+        if (strError != label.bdiErrorDonationLookupMatch) {
+            di.DonationImported__c = null;
+            di.PaymentImported__c = null;
+            di.PaymentImportStatus__c = null;
+        }
+
+        // invalid behavior
+        bdi.LogBDIError(di, strError, 'DonationImportStatus__c');        
         return false;
     }
     
@@ -414,6 +437,9 @@ public class BDI_Donations {
         // find the Opps for our missing payments and mark existing Payments paid.
         list<ID> listOppId = new list<ID>();        
         for (DataImport__c di : listDIDonations) {
+            // skip di's that already have an error
+            if (di.Status__c == label.bdiFailed)
+               continue;
             if (di.DonationImported__c != null && di.PaymentImported__c == null) {
                 listOppId.add(di.DonationImported__c);
             } else if (di.PaymentImported__c != null) {
@@ -431,6 +457,9 @@ public class BDI_Donations {
         
         // store the Payments into our shared map and update their DI record
         for (DataImport__c di : listDIDonations) {
+            // skip di's that already have an error
+            if (di.Status__c == label.bdiFailed)
+               continue;
             if (di.DonationImported__c != null && di.PaymentImported__c == null) {
                 npe01__OppPayment__c pmt = mapOppIdToPayment.get(di.DonationImported__c);
                 if (pmt != null) {

@@ -394,6 +394,136 @@ public with sharing class BDI_Donations_TEST {
 
     /*********************************************************************************************************
     * @description operation: 
+    *    import donations using different matching rules: Date, Amount, PaymentId to paid Pmt, Opp Closed
+    *    requireExactMatch
+    * verify: 
+    *    no new donation created
+    *    error reported on bdi
+    **********************************************************************************************************/            
+    static testMethod void donationMatchPaymentIdToPaidClosedOppRequireExactMatch() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchPaymentIdToPaidClosedOppRequireExactMatch') return;
+        donationMatchPaymentIdToPaidClosedOppWithBehavior(BDI_DataImport_API.RequireExactMatch, label.bdiErrorDonationLookupMatch);
+    }
+    
+    /*********************************************************************************************************
+    * @description operation: 
+    *    import donations using different matching rules: Date, Amount, PaymentId to paid Pmt, Opp Closed
+    *    requireNoMatch
+    * verify: 
+    *    no new donation created
+    *    error reported on bdi
+    **********************************************************************************************************/            
+    static testMethod void donationMatchPaymentIdToPaidClosedOppRequireNoMatch() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchPaymentIdToPaidClosedOppRequireNoMatch') return;
+        donationMatchPaymentIdToPaidClosedOppWithBehavior(BDI_DataImport_API.RequireNoMatch, label.bdiErrorDonationLookupMatch);
+    }
+
+    /*********************************************************************************************************
+    * @description operation: 
+    *    import donations using different matching rules: Date, Amount, PaymentId to paid Pmt, Opp Closed
+    *    DoNotMatch
+    * verify: 
+    *    no new donation created
+    *    error reported on bdi
+    **********************************************************************************************************/            
+    static testMethod void donationMatchPaymentIdToPaidClosedOppDoNotMatch() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchPaymentIdToPaidClosedOppDoNotMatch') return;
+        donationMatchPaymentIdToPaidClosedOppWithBehavior(BDI_DataImport_API.DoNotMatch, null);
+    }
+
+    /*********************************************************************************************************
+    * @description operation: 
+    *    import donations using different matching rules: Date, Amount, PaymentId to paid Pmt, Opp Closed
+    *    BestMatchOrCreate
+    * verify: 
+    *    no new donation created
+    *    error reported on bdi
+    **********************************************************************************************************/            
+    static testMethod void donationMatchPaymentIdToPaidClosedOppBestMatchOrCreate() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchPaymentIdToPaidClosedOppBestMatchOrCreate') return;
+        donationMatchPaymentIdToPaidClosedOppWithBehavior(BDI_DataImport_API.BestMatchOrCreate, label.bdiErrorDonationLookupMatch);
+    }
+
+    /*********************************************************************************************************
+    * @description operation: 
+    *    import donations using different matching rules: Date, Amount, PaymentId to paid Pmt, Opp Closed
+    *    ExactMatchOrCreate
+    * verify: 
+    *    no new donation created
+    *    error reported on bdi
+    **********************************************************************************************************/            
+    static testMethod void donationMatchPaymentIdToPaidClosedOppExactMatchOrCreate() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchPaymentIdToPaidClosedOppExactMatchOrCreate') return;
+        donationMatchPaymentIdToPaidClosedOppWithBehavior(BDI_DataImport_API.ExactMatchOrCreate, label.bdiErrorDonationLookupMatch);
+    }
+
+    /*********************************************************************************************************
+    * @description operation: 
+    *    import donations using different matching rules: Date, Amount, PaymentId to paid Pmt, Opp Closed
+    *    RequireBestMatch
+    * verify: 
+    *    no new donation created
+    *    error reported on bdi
+    **********************************************************************************************************/            
+    static testMethod void donationMatchPaymentIdToPaidClosedOppRequireBestMatch() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchPaymentIdToPaidClosedOppRequireBestMatch') return;
+        donationMatchPaymentIdToPaidClosedOppWithBehavior(BDI_DataImport_API.RequireBestMatch, label.bdiErrorDonationLookupMatch);
+    }
+
+    /*********************************************************************************************************
+    * @description operation: 
+    *    import donations using different matching rules: Date, Amount, PaymentId to paid Pmt, Opp Closed
+    * @param behavior The mathcing behavior
+    * verify: 
+    *    no new donation created
+    *    error reported on bdi
+    **********************************************************************************************************/            
+    static void donationMatchPaymentIdToPaidClosedOppWithBehavior(String matchBehavior, string expectedStatus) {    
+
+        createTestData();
+
+        // Opp will have one Payment records, but it will be paid, opp will be closed
+        Opportunity opp = new Opportunity(name='MyClosedOpp', Primary_Contact__c=listConT[0].Id, Amount=100, CloseDate=System.Today(), 
+            StageName=UTIL_unitTestData_TEST.getClosedWonStage(), npe01__Do_Not_Automatically_Create_Payment__c=false);
+        insert opp;
+        npe01__OppPayment__c pmt = [select Id, npe01__Opportunity__c, npe01__Paid__c from npe01__OppPayment__c 
+            where npe01__Opportunity__c = :opp.Id];
+        system.assertEquals(true, pmt.npe01__Paid__c);
+
+        insert new DataImport__c(Contact1_Firstname__c=listConT[0].Firstname, Contact1_Lastname__c=listConT[0].Lastname, 
+            Contact1_Personal_Email__c=listConT[0].Email,
+            Donation_Amount__c=100,
+            Donation_Date__c=System.Today(),
+            Donation_Donor__c='contact1',
+            PaymentImported__c= pmt.Id,
+            Payment_Method__c = 'Check'
+            );
+            
+        // set the specified settings
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ',' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+        diSettings.Donation_Matching_Behavior__c = matchBehavior;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+
+        // verify results
+        list<DataImport__c> listDI = [select Status__c, DonationImported__c, DonationImportStatus__c, 
+            Donation_Possible_Matches__c, PaymentImported__c, PaymentImportStatus__c from DataImport__c];        
+        system.assertEquals(1, listDI.size());
+        system.assertEquals(expectedStatus, listDI[0].DonationImportStatus__c);
+        system.assertEquals(expectedStatus, listDI[0].PaymentImportStatus__c);
+        system.assertEquals(null, listDI[0].Donation_Possible_Matches__c);
+        system.assertNotEquals(null, listDI[0].PaymentImported__c);
+        system.assertEquals(null, listDI[0].DonationImported__c);        
+    }
+
+    /*********************************************************************************************************
+    * @description operation: 
     *    import donations using different matching rules: Amount, Date.  avoid same amount, different day.
     * verify: 
     *    correct donations matched

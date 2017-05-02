@@ -966,6 +966,7 @@
         <members>bdiDataImporterNumToProcess</members>
         <members>bdiDataImporterTitle</members>
         <members>bdiDonation</members>
+        <members>bdiErrorDonationLookupMatch</members>
         <members>bdiErrorDonationMultiMatch</members>
         <members>bdiErrorDonationNoMatch</members>
         <members>bdiErrorDonationRequireNoMatch</members>
