@@ -110,46 +110,64 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
             list<Integer> listIMatches = new list<Integer>();
             map<ID, npe01__OppPayment__c> mapOppIdToPmt = new map<ID, npe01__OppPayment__c>();
             
-            boolean isMatchedById = false;
+            boolean isMatchedByOppId = false;
+            boolean isMatchedByPmtId = false;
+
             if (listCAOpps != null) {
                 // go thru each opp for this contact or account
                 for (integer i = 0; i < listCAOpps.size(); i++) {
                     Opportunity opp = listCAOpps[i];
-                    matchType mType = matchType.noMatch;
+                    matchType mType = MATCHTYPE.NO_MATCH;
 
                     // if 1 or more payments, use Payment matching rules
                     if (opp.npe01__Number_of_Payments__c >= 1) {
+                        npe01__OppPayment__c pmtBest = null;
                         for (npe01__OppPayment__c pmt : opp.npe01__OppPayment__r) {
                             mType = getMatchTypeByPmtRules(di, pmt);
-                            if (mType != matchType.noMatch) {
-                                // we take the first matching payment found
-                                mapOppIdToPmt.put(opp.Id, pmt);
-                                
-                                // flag it as Id match if the Opp was specified
-                                if (opp.Id == di.DonationImported__c) {
-                                    mType = matchType.IdMatch;
-                                }
+                            
+                            if (mType == MATCHTYPE.ID_MATCH) {
+                                pmtBest = pmt;
+                                isMatchedByPmtId = true;
                                 break;
+                            } else if (mType == MATCHTYPE.FIELD_MATCH) {
+                                // we take the first field match as possible best
+                                if (pmtBest == null) {
+                                    pmtBest = pmt;
+                                }
+                            }
+                        } // end looping thru payments
+                        
+                        // save our best match
+                        if (pmtBest != null) {
+                            mapOppIdToPmt.put(opp.Id, pmtBest);
+
+                            // treat a field match as Id match if the Opp was specified
+                            if (opp.Id == di.DonationImported__c) {
+                                mType = MATCHTYPE.ID_MATCH;
+                            }
+                            
+                            if (mType != MATCHTYPE.ID_MATCH) {
+                                mType = MATCHTYPE.FIELD_MATCH;
                             }
                         }
-                    }
+                    } // end matching an opp with >= 1 payment
 
                     // if no payments, or we failed to match with a single payment, use Opp matching rules
-                    if (opp.npe01__Number_of_Payments__c <= 1 && mType == matchType.noMatch) {
+                    if (opp.npe01__Number_of_Payments__c <= 1 && mType == MATCHTYPE.NO_MATCH) {
                         mType = getMatchTypeByOppRules(di, opp);
                     }
 
-                    if (mType == matchType.IdMatch) {
+                    if (mType == MATCHTYPE.ID_MATCH) {
                         // if we matched by Id, then we don't even care about other matches by field.
                         listIMatches.clear();
                         listIMatches.add(i);
-                        isMatchedById = true;
+                        isMatchedByOppId = true;
                         break;
-                    } else if (mType == matchType.fieldMatch) {
+                    } else if (mType == MATCHTYPE.FIELD_MATCH) {
                         listIMatches.add(i);
                     }
-                }
-            }
+                } // end looping thru opps
+            } 
             
             // if we have 1 or more matches, record the best one
             if (listIMatches.size() > 0) {
@@ -161,7 +179,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                 
                 // if unique, remove this opp from the list to avoid matching it again.
                 if (listIMatches.size() == 1) {
-                    di.DonationImportStatus__c = (isMatchedById ? label.bdiMatchedId : label.bdiMatched);
+                    di.DonationImportStatus__c = (isMatchedByOppId ? label.bdiMatchedId : label.bdiMatched);
                     listCAOpps.remove(iOpp);
                 } else {
                     // we have multiple matches, we want to record them all, and fixup our status
@@ -180,7 +198,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                 npe01__OppPayment__c pmt = mapOppIdToPmt.get(opp.Id);
                 if (pmt != null) {
                     di.PaymentImported__c = pmt.Id;
-                    di.PaymentImportStatus__c = label.bdiMatched;
+                    di.PaymentImportStatus__c = (isMatchedByPmtId ? label.bdiMatchedId : label.bdiMatched);
                     // put the existing pmt in our map for caller's use
                     mapDIIdToPmt.put(di.Id, pmt);
                 }
@@ -194,7 +212,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
     * @description describes the type of match returned from our matching routines.  we couldn't use declare
     * an enum within an inner class, so we went with strings.
     */
-    private enum matchType {IdMatch, fieldMatch, noMatch}
+    private enum MATCHTYPE {ID_MATCH, FIELD_MATCH, NO_MATCH}
 
     /*******************************************************************************************************
     * @description checks whether the specified opp is a match for this DI record
@@ -205,7 +223,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
     private matchType getMatchTypeByOppRules(DataImport__c di, Opportunity opp) {
         // always match to an Opp we were given the Id to!
         if (di.DonationImported__c == opp.Id) {
-            return matchType.IdMatch;
+            return MATCHTYPE.ID_MATCH;
         }
 
         if (di.DonationImported__c == null) {
@@ -225,11 +243,11 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                 }
             }
             if (isAllMatch) {
-                return matchType.fieldMatch;
+                return MATCHTYPE.FIELD_MATCH;
             }
         }
         
-        return matchType.noMatch;
+        return MATCHTYPE.NO_MATCH;
     }
     
     /*******************************************************************************************************
@@ -242,7 +260,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
 
         // always match to an Payment we were given the Id to!
         if (di.PaymentImported__c == pmt.Id) {
-            return matchType.IdMatch;
+            return MATCHTYPE.ID_MATCH;
         }
 
         // try match against all specified fields
@@ -258,9 +276,9 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
             }
         }
         if (isAllMatch) {
-            return matchType.fieldMatch;
+            return MATCHTYPE.FIELD_MATCH;
         }
-        return matchType.noMatch;
+        return MATCHTYPE.NO_MATCH;
     }
 
     /*******************************************************************************************************
@@ -323,6 +341,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
         setOppFields.add(UTIL_Namespace.StrTokenNSPrefix('Primary_Contact__c'));
         setOppFields.add('CloseDate');
         setOppFields.add('npe01__Number_of_Payments__c');
+        setOppFields.add('Account.npe01__SYSTEMIsIndividual__c');
         
         // the set of Payment fields for our soql
         set<String> setPmtFields = new set<String>();
@@ -390,7 +409,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
         map<Id, list<Opportunity>> mapConAccIdToOpps = new map<Id, list<Opportunity>>();
         for (Opportunity opp : listOpp) {
             ID id;
-            if (opp.Primary_Contact__c != null) {
+            if (opp.Account.npe01__SYSTEMIsIndividual__c && opp.Primary_Contact__c != null) {
                 id = opp.Primary_Contact__c;
             } else {
                 id = opp.AccountId;

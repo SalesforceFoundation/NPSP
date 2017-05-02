@@ -80,6 +80,11 @@ public class BDI_Donations {
     }
 
     /*******************************************************************************************************
+    * @description our exception class
+    */
+    private class BDIException extends Exception {}
+
+    /*******************************************************************************************************
     * @description the class object that supports the BDI_IMatchDonations interface
     */
     private BDI_IMatchDonations iMatchDonations {
@@ -95,6 +100,9 @@ public class BDI_Donations {
                     if (classInstance instanceof BDI_IMatchDonations) {
                         iMatchDonations = (BDI_IMatchDonations)classInstance;
                     }
+                }
+                if (iMatchDonations == null) {
+                    throw new BDIException(String.format(Label.bdiErrorInvalidIMatchDonations, new list<String>{strClass}));                    
                 }
             }
             return iMatchDonations;
