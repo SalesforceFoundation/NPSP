@@ -2528,7 +2528,7 @@ If you want to know which Opportunities would have previously included this doub
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionMissingOppPayments</shortDescription>
-        <value>View these Opportunities by running the &lt;b&gt;Opportunities without Payments&lt;/b&gt; report in the NPSP Health Check reports folder.  Note that you should add filter criteria on the report for any Opportunity Types and Opportunity RecTypes you&apos;ve excluded in NPSP Payments Settings. You can create them using the Create Missing Payments button on NPSP Settings &gt; Donations &gt; Payments.</value>
+        <value>View these Opportunities by running the &lt;b&gt;Opportunities without Payments&lt;/b&gt; report in the NPSP Health Check reports folder.  Note that you should add filter criteria on the report for any Opportunity Types and Opportunity RecTypes you&apos;ve excluded in NPSP Payments Settings. You can create them using the Create Missing Payments button on NPSP Settings &gt; Bulk Data Processes &gt; Create Missing Payments.</value>
     </labels>
     <labels>
         <fullName>healthSolutionNothingScheduled</fullName>
