@@ -316,13 +316,14 @@ public class BDI_Donations {
             return true;
         }
 
-        // move any match that we reject to possible matches
-        if (di.Donation_Possible_Matches__c == null) {
-            di.Donation_Possible_Matches__c = di.DonationImported__c;
-        }
-
         // clear the match so it won't be used (but only if we think the user didn't put it in themselves!)
         if (strError != label.bdiErrorDonationLookupMatch) {
+    
+            // move any match that we reject to possible matches
+            if (di.Donation_Possible_Matches__c == null) {
+                di.Donation_Possible_Matches__c = di.DonationImported__c;
+            }
+
             di.DonationImported__c = null;
             di.PaymentImported__c = null;
             di.PaymentImportStatus__c = null;

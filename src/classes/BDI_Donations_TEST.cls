@@ -400,9 +400,10 @@ public with sharing class BDI_Donations_TEST {
     *    no new donation created
     *    error reported on bdi
     **********************************************************************************************************/            
-    static testMethod void donationMatchPaymentIdToPaidClosedOppRequireExactMatch() {
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchPaymentIdToPaidClosedOppRequireExactMatch') return;
-        donationMatchPaymentIdToPaidClosedOppWithBehavior(BDI_DataImport_API.RequireExactMatch, label.bdiErrorDonationLookupMatch);
+    static testMethod void matchPaymentIdToPaidClosedOppRequireExactMatch() {
+        if (strTestOnly != '*' && strTestOnly != 'matchPaymentIdToPaidClosedOppRequireExactMatch') return;
+        matchDonationIdToPaidClosedOppWithBehavior(BDI_DataImport_API.RequireExactMatch, 
+            label.bdiErrorDonationLookupMatch, true);
     }
     
     /*********************************************************************************************************
@@ -413,9 +414,10 @@ public with sharing class BDI_Donations_TEST {
     *    no new donation created
     *    error reported on bdi
     **********************************************************************************************************/            
-    static testMethod void donationMatchPaymentIdToPaidClosedOppRequireNoMatch() {
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchPaymentIdToPaidClosedOppRequireNoMatch') return;
-        donationMatchPaymentIdToPaidClosedOppWithBehavior(BDI_DataImport_API.RequireNoMatch, label.bdiErrorDonationLookupMatch);
+    static testMethod void matchPaymentIdToPaidClosedOppRequireNoMatch() {
+        if (strTestOnly != '*' && strTestOnly != 'matchPaymentIdToPaidClosedOppRequireNoMatch') return;
+        matchDonationIdToPaidClosedOppWithBehavior(BDI_DataImport_API.RequireNoMatch, 
+            label.bdiErrorDonationLookupMatch, true);
     }
 
     /*********************************************************************************************************
@@ -426,9 +428,9 @@ public with sharing class BDI_Donations_TEST {
     *    no new donation created
     *    error reported on bdi
     **********************************************************************************************************/            
-    static testMethod void donationMatchPaymentIdToPaidClosedOppDoNotMatch() {
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchPaymentIdToPaidClosedOppDoNotMatch') return;
-        donationMatchPaymentIdToPaidClosedOppWithBehavior(BDI_DataImport_API.DoNotMatch, null);
+    static testMethod void matchPaymentIdToPaidClosedOppDoNotMatch() {
+        if (strTestOnly != '*' && strTestOnly != 'matchPaymentIdToPaidClosedOppDoNotMatch') return;
+        matchDonationIdToPaidClosedOppWithBehavior(BDI_DataImport_API.DoNotMatch, null, true);
     }
 
     /*********************************************************************************************************
@@ -439,9 +441,10 @@ public with sharing class BDI_Donations_TEST {
     *    no new donation created
     *    error reported on bdi
     **********************************************************************************************************/            
-    static testMethod void donationMatchPaymentIdToPaidClosedOppBestMatchOrCreate() {
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchPaymentIdToPaidClosedOppBestMatchOrCreate') return;
-        donationMatchPaymentIdToPaidClosedOppWithBehavior(BDI_DataImport_API.BestMatchOrCreate, label.bdiErrorDonationLookupMatch);
+    static testMethod void matchPaymentIdToPaidClosedOppBestMatchOrCreate() {
+        if (strTestOnly != '*' && strTestOnly != 'matchPaymentIdToPaidClosedOppBestMatchOrCreate') return;
+        matchDonationIdToPaidClosedOppWithBehavior(BDI_DataImport_API.BestMatchOrCreate, 
+            label.bdiErrorDonationLookupMatch, true);
     }
 
     /*********************************************************************************************************
@@ -452,9 +455,10 @@ public with sharing class BDI_Donations_TEST {
     *    no new donation created
     *    error reported on bdi
     **********************************************************************************************************/            
-    static testMethod void donationMatchPaymentIdToPaidClosedOppExactMatchOrCreate() {
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchPaymentIdToPaidClosedOppExactMatchOrCreate') return;
-        donationMatchPaymentIdToPaidClosedOppWithBehavior(BDI_DataImport_API.ExactMatchOrCreate, label.bdiErrorDonationLookupMatch);
+    static testMethod void matchPaymentIdToPaidClosedOppExactMatchOrCreate() {
+        if (strTestOnly != '*' && strTestOnly != 'matchPaymentIdToPaidClosedOppExactMatchOrCreate') return;
+        matchDonationIdToPaidClosedOppWithBehavior(BDI_DataImport_API.ExactMatchOrCreate, 
+            label.bdiErrorDonationLookupMatch, true);
     }
 
     /*********************************************************************************************************
@@ -465,20 +469,107 @@ public with sharing class BDI_Donations_TEST {
     *    no new donation created
     *    error reported on bdi
     **********************************************************************************************************/            
-    static testMethod void donationMatchPaymentIdToPaidClosedOppRequireBestMatch() {
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchPaymentIdToPaidClosedOppRequireBestMatch') return;
-        donationMatchPaymentIdToPaidClosedOppWithBehavior(BDI_DataImport_API.RequireBestMatch, label.bdiErrorDonationLookupMatch);
+    static testMethod void matchPaymentIdToPaidClosedOppRequireBestMatch() {
+        if (strTestOnly != '*' && strTestOnly != 'matchPaymentIdToPaidClosedOppRequireBestMatch') return;
+        matchDonationIdToPaidClosedOppWithBehavior(BDI_DataImport_API.RequireBestMatch, 
+            label.bdiErrorDonationLookupMatch, true);
     }
 
     /*********************************************************************************************************
     * @description operation: 
-    *    import donations using different matching rules: Date, Amount, PaymentId to paid Pmt, Opp Closed
-    * @param behavior The mathcing behavior
+    *    import donations using different matching rules: Date, Amount, Id to paid donation, Opp Closed
+    *    requireExactMatch
     * verify: 
     *    no new donation created
     *    error reported on bdi
     **********************************************************************************************************/            
-    static void donationMatchPaymentIdToPaidClosedOppWithBehavior(String matchBehavior, string expectedStatus) {    
+    static testMethod void matchDonationIdToPaidClosedOppRequireExactMatch() {
+        if (strTestOnly != '*' && strTestOnly != 'matchDonationIdToPaidClosedOppRequireExactMatch') return;
+        matchDonationIdToPaidClosedOppWithBehavior(BDI_DataImport_API.RequireExactMatch, 
+            label.bdiErrorDonationLookupMatch, false);
+    }
+    
+    /*********************************************************************************************************
+    * @description operation: 
+    *    import donations using different matching rules: Date, Amount, Id to paid donation, Opp Closed
+    *    requireNoMatch
+    * verify: 
+    *    no new donation created
+    *    error reported on bdi
+    **********************************************************************************************************/            
+    static testMethod void matchDonationIdToPaidClosedOppRequireNoMatch() {
+        if (strTestOnly != '*' && strTestOnly != 'matchDonationIdToPaidClosedOppRequireNoMatch') return;
+        matchDonationIdToPaidClosedOppWithBehavior(BDI_DataImport_API.RequireNoMatch, 
+            label.bdiErrorDonationLookupMatch, false);
+    }
+
+    /*********************************************************************************************************
+    * @description operation: 
+    *    import donations using different matching rules: Date, Amount, Id to paid donation, Opp Closed
+    *    DoNotMatch
+    * verify: 
+    *    no new donation created
+    *    error reported on bdi
+    **********************************************************************************************************/            
+    static testMethod void matchDonationIdToPaidClosedOppDoNotMatch() {
+        if (strTestOnly != '*' && strTestOnly != 'matchDonationIdToPaidClosedOppDoNotMatch') return;
+        matchDonationIdToPaidClosedOppWithBehavior(BDI_DataImport_API.DoNotMatch, null, false);
+    }
+
+    /*********************************************************************************************************
+    * @description operation: 
+    *    import donations using different matching rules: Date, Amount, Id to paid donation, Opp Closed
+    *    BestMatchOrCreate
+    * verify: 
+    *    no new donation created
+    *    error reported on bdi
+    **********************************************************************************************************/            
+    static testMethod void matchDonationIdToPaidClosedOppBestMatchOrCreate() {
+        if (strTestOnly != '*' && strTestOnly != 'matchDonationIdToPaidClosedOppBestMatchOrCreate') return;
+        matchDonationIdToPaidClosedOppWithBehavior(BDI_DataImport_API.BestMatchOrCreate, 
+            label.bdiErrorDonationLookupMatch, false);
+    }
+
+    /*********************************************************************************************************
+    * @description operation: 
+    *    import donations using different matching rules: Date, Amount, Id to paid donation, Opp Closed
+    *    ExactMatchOrCreate
+    * verify: 
+    *    no new donation created
+    *    error reported on bdi
+    **********************************************************************************************************/            
+    static testMethod void matchDonationIdToPaidClosedOppExactMatchOrCreate() {
+        if (strTestOnly != '*' && strTestOnly != 'matchDonationIdToPaidClosedOppExactMatchOrCreate') return;
+        matchDonationIdToPaidClosedOppWithBehavior(BDI_DataImport_API.ExactMatchOrCreate, 
+            label.bdiErrorDonationLookupMatch, false);
+    }
+
+    /*********************************************************************************************************
+    * @description operation: 
+    *    import donations using different matching rules: Date, Amount, Id to paid donation, Opp Closed
+    *    RequireBestMatch
+    * verify: 
+    *    no new donation created
+    *    error reported on bdi
+    **********************************************************************************************************/            
+    static testMethod void matchDonationIdToPaidClosedOppRequireBestMatch() {
+        if (strTestOnly != '*' && strTestOnly != 'matchDonationIdToPaidClosedOppRequireBestMatch') return;
+        matchDonationIdToPaidClosedOppWithBehavior(BDI_DataImport_API.RequireBestMatch, 
+            label.bdiErrorDonationLookupMatch, false);
+    }
+
+    /*********************************************************************************************************
+    * @description operation: 
+    *    import donations using different matching rules: Date, Amount, Id to paid donation, Opp Closed
+    * @param behavior The matching behavior to use
+    * @param expectedStatus the status value expected on PaymentImportStatus and DonationImportStatus
+    * @param fillPaymentId whether to specify the OppId or PaymentId on the DI record
+    * verify: 
+    *    no new donation created
+    *    error reported on bdi
+    **********************************************************************************************************/            
+    static void matchDonationIdToPaidClosedOppWithBehavior(String matchBehavior, 
+        string expectedStatus, boolean fillPaymentId) {    
 
         createTestData();
 
@@ -490,14 +581,19 @@ public with sharing class BDI_Donations_TEST {
             where npe01__Opportunity__c = :opp.Id];
         system.assertEquals(true, pmt.npe01__Paid__c);
 
-        insert new DataImport__c(Contact1_Firstname__c=listConT[0].Firstname, Contact1_Lastname__c=listConT[0].Lastname, 
+        DataImport__c di = new DataImport__c(Contact1_Firstname__c=listConT[0].Firstname, Contact1_Lastname__c=listConT[0].Lastname, 
             Contact1_Personal_Email__c=listConT[0].Email,
             Donation_Amount__c=100,
             Donation_Date__c=System.Today(),
             Donation_Donor__c='contact1',
-            PaymentImported__c= pmt.Id,
             Payment_Method__c = 'Check'
             );
+        if (fillPaymentId) {
+            di.PaymentImported__c = pmt.Id;
+        } else {
+            di.DonationImported__c = opp.Id;
+        }
+        insert di;
             
         // set the specified settings
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
@@ -516,10 +612,17 @@ public with sharing class BDI_Donations_TEST {
             Donation_Possible_Matches__c, PaymentImported__c, PaymentImportStatus__c from DataImport__c];        
         system.assertEquals(1, listDI.size());
         system.assertEquals(expectedStatus, listDI[0].DonationImportStatus__c);
-        system.assertEquals(expectedStatus, listDI[0].PaymentImportStatus__c);
-        system.assertEquals(null, listDI[0].Donation_Possible_Matches__c);
-        system.assertNotEquals(null, listDI[0].PaymentImported__c);
-        system.assertEquals(null, listDI[0].DonationImported__c);        
+        if (fillPaymentId) {
+            system.assertEquals(expectedStatus, listDI[0].PaymentImportStatus__c);
+            system.assertEquals(null, listDI[0].Donation_Possible_Matches__c);
+            system.assertNotEquals(null, listDI[0].PaymentImported__c);
+            system.assertEquals(null, listDI[0].DonationImported__c);        
+        } else {
+            system.assertEquals(null, listDI[0].PaymentImportStatus__c);
+            system.assertEquals(null, listDI[0].Donation_Possible_Matches__c);
+            system.assertEquals(null, listDI[0].PaymentImported__c);
+            system.assertNotEquals(null, listDI[0].DonationImported__c);        
+        }
     }
 
     /*********************************************************************************************************
