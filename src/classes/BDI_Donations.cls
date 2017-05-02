@@ -401,7 +401,7 @@ public class BDI_Donations {
                 }
             } 
             
-            if (di.Donation_Stage__c == null && defaultClosedWonStage != '') {
+            if (di.Donation_Stage__c == null && defaultClosedWonStage != '' && di.PaymentImported__c == null) {
                 di.Donation_Stage__c = defaultClosedWonStage;
             }
             
