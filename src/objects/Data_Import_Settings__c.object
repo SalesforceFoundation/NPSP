@@ -64,6 +64,42 @@
         <type>Text</type>
         <unique>false</unique>
     </fields>
+    <fields>
+        <fullName>Donation_Matching_Behavior__c</fullName>
+        <description>Defines how the Data Importer should handle matching Donations.  Must be one of the following values: DoNotMatch, RequireNoMatch, RequireExactMatch, ExactMatchOrCreate, RequireBestMatch, BestMatchOrCreate.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Defines how the Data Importer should handle matching Donations.  Must be one of the following values: DoNotMatch, RequireNoMatch, RequireExactMatch, ExactMatchOrCreate, RequireBestMatch, BestMatchOrCreate.</inlineHelpText>
+        <label>Donation Matching Behavior</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Donation_Matching_Implementing_Class__c</fullName>
+        <description>The full developer name of an Apex class that implements the BDI_IMatching interface for Donations.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The full developer name of an Apex class that implements the BDI_IMatching interface for Donations.</inlineHelpText>
+        <label>Donation Matching Implementing Class</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Donation_Matching_Rule__c</fullName>
+        <description>Specifies which rule to follow when trying to match Donations in Data Import records against existing Opportunities and Payments.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Specifies which rule to follow when trying to match Donations in Data Import records against existing Opportunities and Payments.</inlineHelpText>
+        <label>Donation Matching Rule</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
     <label>Data Import Settings</label>
     <visibility>Public</visibility>
 </CustomObject>
