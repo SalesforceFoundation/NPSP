@@ -8,6 +8,6 @@
   "OrgPreferences" : {
     "ChatterEnabled" : true,
     "DisableParallelApexTesting" : true,
-    "S1DesktopEnabled" : true,
+    "S1DesktopEnabled" : true
   }
 }
