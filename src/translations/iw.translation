@@ -2456,6 +2456,10 @@
         <name>stgHelpRelAutoCreatedDup</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgHelpRelFieldSyncToggle --></label>
+        <name>stgHelpRelFieldSyncToggle</name>
+    </customLabels>
+    <customLabels>
         <label>שדה ברירת מחדל המציין את המגדר של איש הקשר. Salesforce עושה שימוש בערך המופיע בשדה זה כדי לקבוע קשרים הדדיים.</label>
         <name>stgHelpRelGenderField</name>
     </customLabels>
@@ -2478,6 +2482,10 @@
     <customLabels>
         <label>הערך המשמש את מערכת Salesforce אם אין לה אפשרות לקבוע את מגדר המשתמש לפי הערך בשדה המגדר או הברכה.</label>
         <name>stgHelpRelReciprocalNeutral</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRelSyncFields --></label>
+        <name>stgHelpRelSyncFields</name>
     </customLabels>
     <customLabels>
         <label>עיין &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelErrorLog&apos;);return false;&quot;&gt;ביומני השגיאות&lt;/a&gt; כדי לבדוק אם קיימות בעיות.</label>
@@ -2824,6 +2832,10 @@
     <customLabels>
         <label>הגדרות כלליות</label>
         <name>stgLabelRelSettings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelRelationshipSyncNoValidFields --></label>
+        <name>stgLabelRelationshipSyncNoValidFields</name>
     </customLabels>
     <customLabels>
         <label>בחר קבוצת Chatter</label>
