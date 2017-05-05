@@ -8,21 +8,25 @@ project:
         install_class: STG_InstallScript
         uninstall_class: STG_UninstallScript
     git:
+        repo_url: https://github.com/SalesforceFoundation/Cumulus
         default_branch: dev
         prefix_beta: uat/
         prefix_release: rel/
+    apexdoc:
+        homepage: ApexDocContent/homepage.htm
+        banner: ApexDocContent/projectheader.htm
     dependencies:
         - namespace: npo02
-          version: 3.6
+          version: 3.8
           dependencies:
             - namespace: npe01
-              version: 3.4
+              version: 3.6
         - namespace: npe03
-          version: 3.5
+          version: 3.9
         - namespace: npe4
-          version: 3.3
+          version: 3.5
         - namespace: npe5
-          version: 3.3
+          version: 3.5
 
 tasks:
     download_browser_tests:
@@ -50,12 +54,43 @@ tasks:
         options:
             package_xml: lib/admin_profile.xml
 
-    run_browser_tests:
-        description: Runs the Ruby/Watir browser tests in the browsertests folder
+    browsertests_firefox:
+        description: Runs the Ruby/Watir browser tests in the browsertests folder using Firefox
         class_path: cumulusci.tasks.command.SalesforceBrowserTest
         options:
-            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber -c features/'
+            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber -c features/ --tags ~@flaky --tags ~@chrome' 
             dir: '.'
+            env:
+                SELENIUM_BROWSER: firefox
+
+    browsertests_chrome:
+        description: Runs the Ruby/Watir browser tests in the browsertests folder using Chrome
+        class_path: cumulusci.tasks.command.SalesforceBrowserTest
+        options:
+            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber -c features/ --tags ~@firefox --tags ~@flaky'
+            dir: '.'
+            env:
+                SELENIUM_BROWSER: chrome
+
+    browsertests_unmanaged_firefox:
+        description: Runs the Ruby/Watir browser tests in the browsertests folder against unmanaged metadata in Firefox
+        class_path: cumulusci.tasks.command.SalesforceBrowserTest
+        options:
+            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber -c features/ --tags ~@flaky --tags ~@chrome' 
+            dir: '.'
+            env:
+                SELENIUM_BROWSER: firefox
+                TARGET_ORG: unmanaged
+
+    rowsertests_unmanaged_chrome:
+        description: Runs the Ruby/Watir browser tests in the browsertests folder against unmanaged metadata in Chrome
+        class_path: cumulusci.tasks.command.SalesforceBrowserTest
+        options:
+            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber -c features/ --tags ~@firefox --tags ~@flaky'
+            dir: '.'
+            env:
+                SELENIUM_BROWSER: chrome
+                TARGET_ORG: unmanaged
 
     test_data_dev_org:
         description: 'Loads a test data set for most NPSP objects based on 100 Contacts that should fit into a scratch org or DE org'
@@ -93,29 +128,77 @@ tasks:
                 - Campaign
 
 flows:
-    ci_browsertests_firefox:
-        description: Runs the browser tests via SauceLabs against Firefox
+    browsertests_firefox:
+        description: Runs the browser tests locally against a managed package in Firefox
         tasks:
             1:
                 task: download_browser_tests
             2:
-                task: run_browser_tests
+                task: browsertests_firefox
+
+    browsertests_chrome:
+        description: Runs the browser tests locally against a managed package in Chrome
+        tasks:
+            1:
+                task: download_browser_tests
+            2:
+                task: browsertests_chrome
+
+    browsertests_unmanaged_firefox:
+        description: Runs the browser tests via SauceLabs against the unmanaged metadata in Firefox
+        tasks:
+            1:
+                task: download_browser_tests
+            2:
+                task: browsertests_unmanaged_firefox
+
+    browsertests_unmanaged_chrome:
+        description: Runs the browser tests via SauceLabs against the unmanaged metadata in Chrome
+        tasks:
+            1:
+                task: download_browser_tests
+            2:
+                task: browsertests_unmanaged_chrome
+
+    ci_browsertests_firefox:
+        description: Runs the browser tests via SauceLabs against a managed package in Firefox
+        tasks:
+            1:
+                task: download_browser_tests
+            2:
+                task: browsertests_firefox
                 options:
                     use_saucelabs: True
-                    env:
-                        SELENIUM_BROWSER: firefox
 
     ci_browsertests_chrome:
-        description: Runs the browser tests via SauceLabs against Chrome
+        description: Runs the browser tests via SauceLabs against a managed package in Chrome
         tasks:
             1:
                 task: download_browser_tests
             2:
-                task: run_browser_tests
+                task: browsertests_chrome
                 options:
                     use_saucelabs: True
-                    env:
-                        SELENIUM_BROWSER: chrome
+
+    ci_browsertests_unmanaged_firefox:
+        description: Runs the browser tests via SauceLabs against the unmanaged metadata in Firefox
+        tasks:
+            1:
+                task: download_browser_tests
+            2:
+                task: browsertests_unmanaged_firefox
+                options:
+                    use_saucelabs: True
+
+    ci_browsertests_unmanaged_chrome:
+        description: Runs the browser tests via SauceLabs against the unmanaged metadata in Chrome
+        tasks:
+            1:
+                task: download_browser_tests
+            2:
+                task: browsertests_unmanaged_chrome
+                options:
+                    use_saucelabs: True
 
     dev_org:
         tasks:
@@ -147,3 +230,11 @@ flows:
             2:
                 task: test_data_1k
 
+orgs:
+    scratch:
+        beta_middlesuffix:
+            config_file: orgs/beta_middlesuffix.json
+        beta_multicurrency:
+            config_file: orgs/beta_multicurrency.json
+        browsertest_classic:
+            config_file: orgs/browsertest_classic.json

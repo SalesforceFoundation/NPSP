@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Engagement Plan Template --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Engagement Plan Template --></value>
+    </caseValues>
+    <fields>
+        <help>Recalcule la date d’échéance d’une tâche enfant en fonction de la date à laquelle la tâche parente a été terminée effectivement.</help>
+        <label>M à j auto date d’échéance tâche fille</label>
+        <name>Automatically_Update_Child_Task_Due_Date__c</name>
+    </fields>
+    <fields>
+        <help>Lorsque le champ « Attribué à » d’une tâche de plan d’engagement est laissé vide, à qui la tâche doit-elle être attribuée ?</help>
+        <label>Bénéficiaire par défaut</label>
+        <name>Default_Assignee__c</name>
+        <picklistValues>
+            <masterLabel>Owner of Object for Engagement Plan</masterLabel>
+            <translation>Détenteur de l’objet pour le plan d’engagement</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>User Creating Engagement Plan</masterLabel>
+            <translation>Utilisateur créant le plan d’engagement</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Description --></label>
+        <name>Description__c</name>
+    </fields>
+    <fields>
+        <help>Les tâches ayant une date d’échéance pendant un week-end doivent-elles être replanifiées pour le vendredi précédent ou le lundi suivant ? Ceci ne s’applique que si « Éviter les week-ends » est sélectionné.</help>
+        <label>Replanifier pour</label>
+        <name>Reschedule_To__c</name>
+        <picklistValues>
+            <masterLabel>Friday</masterLabel>
+            <translation>Vendredi</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Monday</masterLabel>
+            <translation>Lundi</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Si sélectionné, les tâches créées dans ce plan d’engagement n’auront pas leur date d’échéance un samedi ni un dimanche.</help>
+        <label>Éviter les week-ends</label>
+        <name>Skip_Weekends__c</name>
+    </fields>
+    <fields>
+        <label>Total des plans d’engagement</label>
+        <name>Total_Engagement_Plans__c</name>
+    </fields>
+    <fields>
+        <label>Tâches totales</label>
+        <name>Total_Tasks__c</name>
+    </fields>
+    <gender><!-- Masculine --></gender>
+    <layouts>
+        <layout>Engagement Plan Template Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Engagement Plan Template Name --></nameFieldLabel>
+    <startsWith><!-- Consonant --></startsWith>
+    <webLinks>
+        <label>Gérer un modèle</label>
+        <name>Manage_Template</name>
+    </webLinks>
+</CustomObjectTranslation>

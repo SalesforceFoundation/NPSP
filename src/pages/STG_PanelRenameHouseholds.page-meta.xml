@@ -6,27 +6,27 @@
     <label>STG_PanelRenameHouseholds</label>
     <packageVersions>
         <majorNumber>3</majorNumber>
-        <minorNumber>4</minorNumber>
+        <minorNumber>6</minorNumber>
         <namespace>npe01</namespace>
     </packageVersions>
     <packageVersions>
         <majorNumber>3</majorNumber>
-        <minorNumber>5</minorNumber>
+        <minorNumber>9</minorNumber>
         <namespace>npe03</namespace>
     </packageVersions>
     <packageVersions>
         <majorNumber>3</majorNumber>
-        <minorNumber>3</minorNumber>
+        <minorNumber>5</minorNumber>
         <namespace>npe4</namespace>
     </packageVersions>
     <packageVersions>
         <majorNumber>3</majorNumber>
-        <minorNumber>3</minorNumber>
+        <minorNumber>5</minorNumber>
         <namespace>npe5</namespace>
     </packageVersions>
     <packageVersions>
         <majorNumber>3</majorNumber>
-        <minorNumber>6</minorNumber>
+        <minorNumber>8</minorNumber>
         <namespace>npo02</namespace>
     </packageVersions>
 </ApexPage>

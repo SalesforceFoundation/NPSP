@@ -151,15 +151,15 @@
         <name>Matching_Gift_Status__c</name>
         <picklistValues>
             <masterLabel>Potential</masterLabel>
-            <translation><!-- Potential --></translation>
+            <translation>Potencial</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Received</masterLabel>
-            <translation><!-- Received --></translation>
+            <translation>Recibido</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Submitted</masterLabel>
-            <translation><!-- Submitted --></translation>
+            <translation>Presentada</translation>
         </picklistValues>
     </fields>
     <fields>
@@ -325,8 +325,16 @@
             <section>Major Gift Information</section>
         </sections>
         <sections>
+            <label><!-- Matching Gift Information --></label>
+            <section>Matching Gift Information</section>
+        </sections>
+        <sections>
             <label><!-- Payment Information --></label>
             <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label><!-- Tribute Information --></label>
+            <section>Tribute Information</section>
         </sections>
     </layouts>
     <layouts>

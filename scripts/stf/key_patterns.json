@@ -54,5 +54,9 @@
     "^WebTab\\.[^.]+$": {
         "primary_index": 1,
         "secondary_indices": null
+    },
+    "^WorkflowTask\\.[^.]+\\.[^.]+\\.[^\\t]+$": {
+        "primary_index": 2,
+        "secondary_indices": [1]
     }
 }

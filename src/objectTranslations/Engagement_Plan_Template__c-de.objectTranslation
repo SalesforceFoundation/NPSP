@@ -41,64 +41,64 @@
         <value><!-- Engagement Plan Template --></value>
     </caseValues>
     <fields>
-        <help><!-- Recalculates a child Task&apos;s due date based on when the parent Task was actually completed. --></help>
-        <label><!-- Automatically Update Child Task Due Date --></label>
+        <help>Berechnet das Fälligkeitsdatum einer untergeordneten Aufgabe anhand des Zeitpunkts neu, an dem die übergeordnete Aufgabe tatsächlich abgeschlossen wurde.</help>
+        <label>Fälligk. d. unterg. Aufg. autom. aktual.</label>
         <name>Automatically_Update_Child_Task_Due_Date__c</name>
     </fields>
     <fields>
-        <help><!-- When an Engagement Plan Task&apos;s Assigned To field is left blank, who should the Task be assigned to? --></help>
-        <label><!-- Default Assignee --></label>
+        <help>Person, der eine Aufgabe standardmäßig zugewiesen wird, wenn das Feld &quot;Zugewiesen zu&quot; einer Engagementplan-Aufgabe leer gelassen wird.</help>
+        <label>Standardzuweisung</label>
         <name>Default_Assignee__c</name>
         <picklistValues>
             <masterLabel>Owner of Object for Engagement Plan</masterLabel>
-            <translation><!-- Owner of Object for Engagement Plan --></translation>
+            <translation>Eigentümer des Objekts für den Engagementplan</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>User Creating Engagement Plan</masterLabel>
-            <translation><!-- User Creating Engagement Plan --></translation>
+            <translation>Benutzer, der den Engagementplan erstellt</translation>
         </picklistValues>
     </fields>
     <fields>
-        <label><!-- Description --></label>
+        <label>Beschreibung</label>
         <name>Description__c</name>
     </fields>
     <fields>
-        <help><!-- Should Tasks with Due Dates on a weekend day be scheduled for the Friday before the weekend or the Monday after? This applies only if Skip Weekend is selected. --></help>
-        <label><!-- Reschedule To --></label>
+        <help>Gibt an, ob Aufgaben mit einem Fälligkeitsdatum am Wochenende für den Freitag vor dem Wochenende oder den Montag danach geplant werden sollen. Dies gilt nur, wenn &quot;Wochenenden überspringen&quot; ausgewählt ist.</help>
+        <label>Neu planen für</label>
         <name>Reschedule_To__c</name>
         <picklistValues>
             <masterLabel>Friday</masterLabel>
-            <translation><!-- Friday --></translation>
+            <translation>Freitag</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Monday</masterLabel>
-            <translation><!-- Monday --></translation>
+            <translation>Montag</translation>
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- If selected, Tasks created in this Engagement Plan will not have Due Dates that fall on Saturday or Sunday. --></help>
-        <label><!-- Skip Weekends --></label>
+        <help>Wenn diese Option ausgewählt ist, haben die in diesem Engagementplan erstellten Aufgaben keine Fälligkeitsdaten am Samstag oder Sonntag.</help>
+        <label>Wochenenden überspringen</label>
         <name>Skip_Weekends__c</name>
     </fields>
     <fields>
-        <label><!-- Total Engagement Plans --></label>
+        <label>Engagementpläne insgesamt</label>
         <name>Total_Engagement_Plans__c</name>
     </fields>
     <fields>
-        <label><!-- Total Tasks --></label>
+        <label>Aufgaben insgesamt</label>
         <name>Total_Tasks__c</name>
     </fields>
     <gender><!-- Neuter --></gender>
     <layouts>
         <layout>Engagement Plan Template Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Benutzerdefinierte Links</label>
             <section>Custom Links</section>
         </sections>
     </layouts>
     <nameFieldLabel><!-- Engagement Plan Template Name --></nameFieldLabel>
     <webLinks>
-        <label><!-- Manage_Template --></label>
+        <label>Vorlage verwalten</label>
         <name>Manage_Template</name>
     </webLinks>
 </CustomObjectTranslation>

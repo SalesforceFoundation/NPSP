@@ -25,19 +25,19 @@
         <relationshipLabel>助成金期限</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Type --></label>
+        <label>種別</label>
         <name>Type__c</name>
         <picklistValues>
             <masterLabel>Application</masterLabel>
-            <translation><!-- Application --></translation>
+            <translation>アプリケーション</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Final Report</masterLabel>
-            <translation><!-- Final Report --></translation>
+            <translation>最終レポート</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Interim Report</masterLabel>
-            <translation><!-- Interim Report --></translation>
+            <translation>中間レポート</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>LOI</masterLabel>

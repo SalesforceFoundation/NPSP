@@ -2464,7 +2464,7 @@ If you want to know which Opportunities would have previously included this doub
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionMissingOppPayments</shortDescription>
-        <value>View these Opportunities by running the &lt;b&gt;Opportunities without Payments&lt;/b&gt; report in the NPSP Health Check reports folder.  Note that you should add filter criteria on the report for any Opportunity Types and Opportunity RecTypes you&apos;ve excluded in NPSP Payments Settings. You can create them using the Create Missing Payments button on NPSP Settings &gt; Donations &gt; Payments.</value>
+        <value>View these Opportunities by running the &lt;b&gt;Opportunities without Payments&lt;/b&gt; report in the NPSP Health Check reports folder.  Note that you should add filter criteria on the report for any Opportunity Types and Opportunity RecTypes you&apos;ve excluded in NPSP Payments Settings. You can create them using the Create Missing Payments button on NPSP Settings &gt; Bulk Data Processes &gt; Create Missing Payments.</value>
     </labels>
     <labels>
         <fullName>healthSolutionNothingScheduled</fullName>
@@ -4172,7 +4172,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpDefaultGAU</shortDescription>
-        <value>When Default Allocations is enabled, Salesforce creates a GAU Allocation for all new Opportunities and assigns them to this General Accounting Unit. NOTE: This doesn&apos;t include existing unallocated Opportunities. You can allocate them to the default General Accounting Unit in NPSP Settings under Bulk Data Processes | Batch Create Default Allocations.</value>
+        <value>When Default Allocations is enabled, Salesforce creates a GAU Allocation for all new Opportunities not excluded in GAU Allocations Rollup Settings, and assigns them to this General Accounting Unit. NOTE: This doesn&apos;t include existing unallocated Opportunities. You can allocate them to the default General Accounting Unit in NPSP Settings under Bulk Data Processes | Batch Create Default Allocations.</value>
     </labels>
     <labels>
         <fullName>stgHelpDisableHHAccountAddr</fullName>
@@ -4749,6 +4749,14 @@ This process may take some time, but you can close this page and the process wil
         <value>The NPSP de-duplicates Auto-Created Relationships automatically. Select this option if you want to disable automatic de-duplication, and allow multiple Relationships of the same Type to exist between two Contacts.</value>
     </labels>
     <labels>
+        <fullName>stgHelpRelFieldSyncToggle</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgHelpRelFieldSyncToggle</shortDescription>
+        <value>Select this option to sync custom Relationships fields between the two contacts in a relationship pair.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpRelGenderField</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -4795,6 +4803,14 @@ This process may take some time, but you can close this page and the process wil
         <protected>false</protected>
         <shortDescription>stgHelpRelReciprocalNeutral</shortDescription>
         <value>The value Salesforce uses if it cannot determine the Contact&apos;s gender based on Gender field value or Salutation.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRelSyncFields</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgHelpRelSyncFields</shortDescription>
+        <value>The custom Relationships fields you do not want synchronized between the two contacts in a relationship pair. Control or command click to select more than one field.</value>
     </labels>
     <labels>
         <fullName>stgHelpReviewErrorLog</fullName>
@@ -5484,6 +5500,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgLabelRelSettings</shortDescription>
         <value>General Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelRelationshipSyncNoValidFields</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgLabelRelationshipSyncNoValidFields</shortDescription>
+        <value>No Valid Field Available</value>
     </labels>
     <labels>
         <fullName>stgLabelSelectChatterGroup</fullName>

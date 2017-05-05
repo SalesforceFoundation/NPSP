@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Batch --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Batch --></value>
+    </caseValues>
+    <fields>
+        <label><!-- Batch Status --></label>
+        <name>Batch_Status__c</name>
+        <picklistValues>
+            <masterLabel>Complete</masterLabel>
+            <translation>Voltooid</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>In Progress</masterLabel>
+            <translation>In Behandeling</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label>Beschrijving</label>
+        <name>Description__c</name>
+    </fields>
+    <fields>
+        <label>Aantal Stuks</label>
+        <name>Number_of_Items__c</name>
+    </fields>
+    <fields>
+        <help>API Naam van het object waarvan het een batch is.</help>
+        <label>Object Naam</label>
+        <name>Object_Name__c</name>
+    </fields>
+    <gender><!-- Neuter --></gender>
+    <layouts>
+        <layout>Batch Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Batch Name --></nameFieldLabel>
+</CustomObjectTranslation>

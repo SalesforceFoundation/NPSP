@@ -1,4 +1,4 @@
-<apex:page showHeader="true" sidebar="false" controller="STG_SettingsManager_CTRL" action="{!setTriggerSchedConfig}" docType="html-5.0" standardStylesheets="false">
+<apex:page showHeader="true" sidebar="false" title="{!$Label.stgNPSPSettingsTitle}" controller="STG_SettingsManager_CTRL" action="{!setTriggerSchedConfig}" docType="html-5.0" standardStylesheets="false">
 
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-migrate-1.2.1.min.js')}"/>

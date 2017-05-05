@@ -66,12 +66,10 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     private map<string, Contact> mapDIKeyToContact = new map<string, Contact>();
     private map<string, Account> mapDIKeyToAccount = new map<string, Account>();
     private map<Id, Address__c> mapDIIdToAddr = new map<Id, Address__c>();
-    private map<Id, Opportunity> mapDIIdToOpp = new map<Id, Opportunity>();
-    private map<Id, npe01__OppPayment__c> mapDIIdPmt = new map<Id, npe01__OppPayment__c>();
-    private map<string, Id> mapStrNameToCampaignId = new map<string, Id>();
+    public map<string, Id> mapStrNameToCampaignId = new map<string, Id>();
 
     // holds the list of DataImport records we are currently processing
-    private list<DataImport__c> listDI;
+    public list<DataImport__c> listDI;
     
     private Data_Import_Settings__c diSettings {
         get {
@@ -213,7 +211,8 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             
             importCampaigns();
 
-            importOpportunities();
+            BDI_Donations bdiDonations = new BDI_Donations(this);
+            bdiDonations.importDonations();
 
             importCampaignMembers();
 
@@ -286,7 +285,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     }
 
     // utility to copy the specific error into the provide di.
-    private void LogBDIError(DataImport__c di, string strError, string strStatusField) {
+    public void LogBDIError(DataImport__c di, string strError, string strStatusField) {
     	//system.debug('****DJH: LogBDIError di: ' + di + ' strError: ' + strError + ' field: ' + strStatusField);
     	di.Status__c = label.bdiFailed;
         di.FailureInformation__c = strError;
@@ -298,7 +297,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     public void finish(Database.BatchableContext bc) {}
 
     // utility to return all fields from the Data Import object
-    private static list<string> listStrDataImportFields { 
+    public static list<string> listStrDataImportFields { 
         get {
             if (listStrDataImportFields == null) {
                 Map<String, Schema.SObjectField> mapS = Schema.SObjectType.DataImport__c.fields.getMap();
@@ -318,7 +317,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     
     // utility to return a map of fields from the DataImport to fields for the given 'object',
     // from the list of DataImport Fields, which have the form DIObject.developerfieldname in the field's help text property. 
-    private static map<string, string> mapFieldsForDIObject(string strObj, string strBaseObj, list<string> listStrDIFields) {
+    public static map<string, string> mapFieldsForDIObject(string strObj, string strBaseObj, list<string> listStrDIFields) {
         map<string, string> mapDIFieldToObjField = new map<string, string>();
         for (string strF : listStrDIFields) {
             DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), strF);
@@ -371,7 +370,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     * @param mapDIFieldToDstField The field map from a DI field to the destination field
     * @return boolean True if copied, False is not copied.
     */
-    private static boolean isCopiedDIField(DataImport__c di, String strDIField, SObject objDst, map<string, string> mapDIFieldToDstField) {
+    public static boolean isCopiedDIField(DataImport__c di, String strDIField, SObject objDst, map<string, string> mapDIFieldToDstField) {
         
         Object val = di.get(strDIField);
 
@@ -953,6 +952,9 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         // we need the Contact CustomId key to always be checked second when matching
         string strUniqueId = '';
         if (isCustomIDInContactMatchRules && (strUniqueId = strNull(con.get(diSettings.Contact_Custom_Unique_ID__c))) != '') {
+            if (!isCustomIdInContactDatatypeString) {
+                strUniqueId = string.valueOf(double.valueOf(strUniqueId));
+            }
             listDiKey.add(strUniqueId);
         }
 
@@ -1071,6 +1073,9 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
 
         // we need the Contact CustomId key to always be checked second when matching
         if (isCustomIDInContactMatchRules && (strUniqueId = strNull(di.get(strDIContactCustomIDField(strCx)))) != '') {
+            if (!isCustomIdInContactDatatypeString) {
+                strUniqueId = string.valueOf(double.valueOf(strUniqueId));
+            }
             listDiKey.add(strUniqueId);
         }
                 
@@ -1174,7 +1179,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     }
     
     // utility that finds a contact in our map, by matching against all the contact dikeys
-    private Contact ContactFromDi(DataImport__c di, integer iCon) {
+    public Contact ContactFromDi(DataImport__c di, integer iCon) {
         for (string diKey : listDiKeyCx(di, iCon == 1 ? 'Contact1' : 'Contact2')) {
             Contact con = mapDIKeyToContact.get(diKey);
             if (con != null)
@@ -1354,6 +1359,9 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         // we need the Account CustomId key to always be checked second when matching
         string strUniqueId = ''; 
         if (isCustomIDInAccountMatchRules && (strUniqueId = strNull(acc.get(diSettings.Account_Custom_Unique_ID__c))) != '') {
+            if (!isCustomIdInAccountDatatypeString) {
+                strUniqueId = string.valueOf(double.valueOf(strUniqueId));
+            }
             listDiKey.add(strUniqueId);
         }
 
@@ -1381,6 +1389,9 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
 
         // we need the Account CustomId key to always be checked second when matching
         if (isCustomIDInAccountMatchRules && (strUniqueId = strNull(di.get(strDIAccountCustomIDField(strAx)))) != '') {
+            if (!isCustomIdInAccountDatatypeString) {
+                strUniqueId = string.valueOf(double.valueOf(strUniqueId));
+            }
             listDiKey.add(strUniqueId);
         }
 
@@ -1392,7 +1403,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     }
     
     // utility that finds an account in our map, by matching against all the account dikeys
-    private Account AccountFromDi(DataImport__c di, integer iAcc) {
+    public Account AccountFromDi(DataImport__c di, integer iAcc) {
         for (string diKey : listDiKeyAx(di, iAcc == 1 ? 'Account1' : 'Account2')) {
             Account acc = mapDIKeyToAccount.get(diKey);
             if (acc != null)
@@ -1721,194 +1732,6 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         
     }
 
-    //********************************************* OPPORTUNITIES ************************************************
-    // method to create an new Opportunity for the specified Contact or Account
-    private void importOpportunities() {
-    
-        // get the fields we will auto-copy
-        map<string, string> mapDIFieldToOppField = mapFieldsForDIObject('Opportunity', 'Opportunity', listStrDataImportFields);
-        list<Opportunity> listOppInsert = new list<Opportunity>();
-        list<DataImport__c> listDIInsert = new list<DataImport__c>();
-        
-        for (DataImport__c di : listDI) {
-            // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
-               continue;
-            integer cPropSet = 0;
-            Opportunity opp = new Opportunity();
-            string strOppName;
-            
-            // ignore this row if we've already imported an opp 
-            if (di.DonationImported__c != null)
-                continue;
-
-            if (di.Donation_Donor__c == 'Contact1' || (di.Donation_Donor__c == null && di.Donation_Amount__c != null)) {
-                Contact con = ContactFromDi(di, 1);
-                if (con == null) {
-                    LogBDIError(di, label.bdiErrorInvalidDonor, 'DonationImportStatus__c');
-                    continue;
-                }                
-                opp.npe01__Contact_Id_for_Role__c = con.Id;
-                opp.Primary_Contact__c = con.Id;
-                opp.Primary_Contact_Campaign_Member_Status__c = di.Campaign_Member_Status__c;
-                opp.AccountId = con.AccountId;
-                strOppName = con.Firstname + ' ' + con.Lastname;
-            } else if (di.Donation_Donor__c == 'Account1') {
-                Account acc = AccountFromDi(di, 1);
-                if (acc == null) {
-                    LogBDIError(di, label.bdiErrorInvalidDonor, 'DonationImportStatus__c');
-                    continue;
-                }
-                opp.accountId = acc.Id;    
-                strOppName = acc.Name;            
-            } else if (di.Donation_Donor__c != null) {
-                LogBDIError(di, label.bdiErrorInvalidDonor, 'DonationImportStatus__c');
-                continue;
-            }
-                
-            if (di.Donation_Record_Type_Name__c != null) {
-                Id idRt = UTIL_RecordTypes.GetRecordTypeId(Opportunity.sObjectType, di.Donation_Record_Type_Name__c);
-                if (idRt == null) {
-                    LogBDIError(di, label.bdiErrorInvalidOppRTName, 'DonationImportStatus__c');
-                    continue;
-                }
-                opp.RecordTypeId = idRt;
-                strOppName += ' ' + di.Donation_Record_Type_Name__c;
-            } else {
-                strOppName += ' ' + label.bdiDonation;
-            }
-            
-            if (di.Donation_Campaign_Name__c != null) {
-                Id idCmp = mapStrNameToCampaignId.get(di.Donation_Campaign_Name__c);
-                if (idCmp == null) {
-                    LogBDIError(di, label.bdiErrorInvalidCampaignName, 'DonationImportStatus__c');
-                    continue;
-                }
-                opp.CampaignId = idCmp;
-            }
-            
-            if (di.Donation_Date__c == null) {
-                di.Donation_Date__c = system.today();
-                cPropSet--;
-            }
-            
-            if (di.Donation_Name__c == null) {
-                di.Donation_Name__c = strOppName + ' ' + di.Donation_Date__c.format();
-                cPropSet--;
-            } 
-                
-            if (di.Donation_Stage__c == null && defaultClosedWonStage != '') {
-                di.Donation_Stage__c = defaultClosedWonStage;
-                cPropSet--;
-            }
-
-            for (string strDIField : mapDIFieldToOppField.keySet()) {
-                if (isCopiedDIField(di, strDIField, opp, mapDIFieldToOppField)) {
-                    cPropSet++;
-                }
-            }
-            // unfortunately, if there are checkbox fields that we copied, we can't tell the difference
-            // between null or false, so looking at cPropSet isn't good enough!  let's also look for an account specified.
-            if (cPropSet > 0 && opp.AccountId != null) {
-                mapDIIdToOpp.put(di.Id, opp);
-                listOppInsert.add(opp);
-                listDIInsert.add(di);  
-            } else {
-            	// clear out fields we autoset since we didn't actually create an opp.
-            	di.Donation_Date__c = null;
-            	di.Donation_Name__c = null;
-            	di.Donation_Stage__c = null;
-            }
-            if (Test.isRunningTest() && opp.Name != null && opp.Name.startsWith('FailTest'))
-                opp.Name = null;
-        }
-        //insert mapDIIdToOpp.values();
-        list<Database.SaveResult> listSR = database.insert(listOppInsert, false);
-        for (integer i = 0; i < listSR.size(); i++) {
-            Database.SaveResult sr = listSR[i];
-            if (!sr.isSuccess()) {
-                LogBDIError(listDIInsert[i], sr.getErrors()[0].getMessage(), 'DonationImportStatus__c');
-            }
-        }
-        
-        // update each DI with its new opp
-        for (DataImport__c di: listDI) {
-            if (di.DonationImported__c == null) {
-                Opportunity opp = mapDIIdToOpp.get(di.Id);
-                if (opp != null && opp.Id != null) {
-                    di.DonationImported__c = opp.Id;
-                    di.DonationImportStatus__c = label.bdiCreated;
-                }
-            }
-        }  
-        
-        // now deal with any payment child records
-        updatePayments();      
-    }
-    
-    // finds a valid Close Won Opportunity Stage
-    private static string defaultClosedWonStage {
-        get {	
-            if (defaultClosedWonStage == null){
-                List<OpportunityStage> listStg = [select masterlabel from opportunitystage where isActive = true and iswon = true];
-                if (listStg.size() > 0) {
-                    defaultClosedWonStage = listStg[0].masterlabel;
-                } else {
-                    defaultClosedWonStage = '';
-                }
-            }
-            return defaultClosedWonStage;
-        }
-        set;
-    }
-    
-    // method to update any fields on payment objects created for the Data Import opportunities.
-    private void updatePayments() {
-
-        // need to find payment records, to add any additional info.
-        map<Id, npe01__OppPayment__c> mapOppIdToPayment = new map<Id, npe01__OppPayment__c>();
-        for (npe01__OppPayment__c pmt : [select Id, npe01__Opportunity__c from npe01__OppPayment__c where npe01__Opportunity__c in :mapDIIdToOpp.values()]) {
-            mapOppIdToPayment.put(pmt.npe01__Opportunity__c, pmt);
-        }
-
-        // get the payment fields we will auto-copy
-        map<string, string> mapDIFieldToPmtField = mapFieldsForDIObject('Payment', 'npe01__OppPayment__c', listStrDataImportFields);
-        list<npe01__OppPayment__c> listPmtUpsert = new list<npe01__OppPayment__c>();
-        list<DataImport__c> listDIUpsert = new list<DataImport__c>();
-
-        // update payments
-        for (DataImport__c di: listDI) {
-            // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
-               continue;        	
-            if (di.DonationImported__c != null) {
-                npe01__OppPayment__c pmt = mapOppIdToPayment.get(di.DonationImported__c);
-                if (pmt != null) {
-                    integer cPropSet = 0;
-                    for (string strDIField : mapDIFieldToPmtField.keySet()) {
-                        if (isCopiedDIField(di, strDIField, pmt, mapDIFieldToPmtField)) {
-                            cPropSet++;
-                        }
-                    }                    
-                    if (cPropSet > 0) {
-                        mapDIIdPmt.put(di.Id, pmt);
-                        listPmtUpsert.add(pmt);
-                        listDIUpsert.add(di);
-                    }
-	            }
-	        }
-        }
-        
-        //upsert mapDIIdPmt.values();
-        list<Database.UpsertResult> listUR = database.upsert(listPmtUpsert, false);
-        for (integer i = 0; i < listUR.size(); i++) {
-            Database.UpsertResult ur = listUR[i];
-            if (!ur.isSuccess()) {
-                LogBDIError(listDIUpsert[i], ur.getErrors()[0].getMessage(), null);
-            }
-        }
-        
-    }    
 
     //********************************************* CAMPAIGNS ************************************************
     // utility to match to existing campaigns, and create new campaigns, as needed.

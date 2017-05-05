@@ -183,7 +183,6 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         verifyOppContactRolesSettings();
         verifyTriggerHandlers();
         verifyNoMissingOppPayments();
-        verifyNoDuplicateContactRoles();
         verifyLevels();
         
         DateTime dtEnd = system.now();
@@ -666,7 +665,11 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
      * @description Detect if any opportunities exists where the same contact
      * is associated with that opportunity multiple times through multiple
      * opportunity contact role records.
-     */
+     
+     As of 3/2017, we have removed this Health Check, since it is slightly misleading,
+     doesn't support LDV orgs, and would be costly to redesign.  full details in AA item
+     W-017715: https://foundation--agf.na6.visual.force.com/0D58000003Irbf0
+     
      public void verifyNoDuplicateContactRoles() {
         try {
             Set<String> softCreditRoles = RLLP_OppRollup_UTIL.softCreditRoles;
@@ -719,6 +722,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
             );
         }
      }
+     */
 
     /*********************************************************************************************************
     * @description Verifies that all Level records refer to existing fields of the correct type

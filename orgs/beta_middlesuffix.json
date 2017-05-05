@@ -1,0 +1,15 @@
+{
+  "Company": "NPSP - Beta Org - MiddleSuffix",
+  "Country": "US",
+  "LastName": "Belvedere",
+  "Email": "mrbelvedere@salesforce.org",
+  "Edition": "Developer",
+  "OrgPreferences" : {
+    "ChatterEnabled" : true,
+    "DisableParallelApexTesting" : true,
+    "IsMiddleNameEnabled": true,
+    "IsNameSuffixEnabled": true,
+    "S1DesktopEnabled" : true,
+    "Translation" : true
+  }
+}

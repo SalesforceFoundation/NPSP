@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Engagement Plan --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Engagement Plan --></value>
+    </caseValues>
+    <fields>
+        <label>Compte</label>
+        <name>Account__c</name>
+        <relationshipLabel>Plans d’engagement</relationshipLabel>
+    </fields>
+    <fields>
+        <label>Campagne</label>
+        <name>Campaign__c</name>
+        <relationshipLabel>Plans d’engagement</relationshipLabel>
+    </fields>
+    <fields>
+        <label>Requête</label>
+        <name>Case__c</name>
+        <relationshipLabel>Plans d’engagement</relationshipLabel>
+    </fields>
+    <fields>
+        <label>Tâches terminées</label>
+        <name>Completed_Tasks__c</name>
+    </fields>
+    <fields>
+        <label><!-- Contact --></label>
+        <name>Contact__c</name>
+        <relationshipLabel>Plans d’engagement</relationshipLabel>
+    </fields>
+    <fields>
+        <label>Modèle de plan d’engagement</label>
+        <name>Engagement_Plan_Template__c</name>
+        <relationshipLabel>Plans d’engagement</relationshipLabel>
+    </fields>
+    <fields>
+        <label>Opportunité</label>
+        <name>Opportunity__c</name>
+        <relationshipLabel>Plans d’engagement</relationshipLabel>
+    </fields>
+    <fields>
+        <label>Don régulier</label>
+        <name>Recurring_Donation__c</name>
+        <relationshipLabel>Plans d’engagement</relationshipLabel>
+    </fields>
+    <fields>
+        <label>Statut</label>
+        <name>Status__c</name>
+    </fields>
+    <fields>
+        <label>Tâches PE totales</label>
+        <name>Total_EP_Tasks__c</name>
+    </fields>
+    <fields>
+        <label>Tâches totales</label>
+        <name>Total_Tasks__c</name>
+    </fields>
+    <gender><!-- Masculine --></gender>
+    <layouts>
+        <layout>Engagement Plan Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Engagement Plan Number --></nameFieldLabel>
+    <startsWith><!-- Consonant --></startsWith>
+</CustomObjectTranslation>

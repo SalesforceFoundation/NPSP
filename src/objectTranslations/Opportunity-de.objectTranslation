@@ -31,8 +31,8 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The date when the donor was specifically asked for the donation, as opposed to the Opportunity Close Date that the organization may set to either when the Opportunity was first created, or when the Opportunity was won. --></help>
-        <label><!-- Ask Date --></label>
+        <help>Das Datum, an dem der Spender ausdrücklich um die Spende gebeten wurde, im Gegensatz zum Opportunity-Schlusstermin, den die Organisation auf das Erstellungsdatum der Opportunity oder den Termin festlegt, an dem die Opportunity gewonnen wurde.</help>
+        <label>Spendenaufruf-Datum</label>
         <name>Ask_Date__c</name>
     </fields>
     <fields>
@@ -41,8 +41,8 @@
         <relationshipLabel><!-- Opportunities --></relationshipLabel>
     </fields>
     <fields>
-        <help><!-- Notes on why the donation ask was not successful. --></help>
-        <label><!-- Closed Lost Reason --></label>
+        <help>Gibt an, warum der Spendenaufruf nicht erfolgreich war.</help>
+        <label>Grund für Geschlossen und verloren</label>
         <name>Closed_Lost_Reason__c</name>
     </fields>
     <fields>
@@ -51,20 +51,20 @@
         <name>Fair_Market_Value__c</name>
     </fields>
     <fields>
-        <help><!-- Categorizes the type of ask for this opportunity. --></help>
-        <label><!-- Gift Strategy --></label>
+        <help>Kategorisiert den Typ des Aufrufs für diese Opportunity.</help>
+        <label>Geschenkstrategie</label>
         <name>Gift_Strategy__c</name>
         <picklistValues>
             <masterLabel>New Donor</masterLabel>
-            <translation><!-- New Donor --></translation>
+            <translation>Neuer Spender</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Renewal</masterLabel>
-            <translation><!-- Renewal --></translation>
+            <translation>Erneuerung</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Upgrade</masterLabel>
-            <translation><!-- Upgrade --></translation>
+            <translation>Hochstufung</translation>
         </picklistValues>
     </fields>
     <fields>
@@ -135,18 +135,18 @@
         <name>Is_Grant_Renewal__c</name>
     </fields>
     <fields>
-        <help><!-- The account of the company who will match this gift. --></help>
+        <help>Der Account des Unternehmens für dieses ergänzende Geschenk</help>
         <label>Zugewiesener Spendenaccount</label>
         <name>Matching_Gift_Account__c</name>
         <relationshipLabel>Zugewiesene Geschenke</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- The name of the company who will match this gift. --></help>
+        <help>Der Name des Unternehmens für dieses ergänzende Geschenk</help>
         <label>Zugewiesenes Spende Arbeitgeber</label>
         <name>Matching_Gift_Employer__c</name>
     </fields>
     <fields>
-        <help><!-- The status of this gift being matched. --></help>
+        <help>Status des ergänzenden Geschenks.</help>
         <label>Zugewiesener Spendenstatus</label>
         <name>Matching_Gift_Status__c</name>
         <picklistValues>
@@ -163,7 +163,7 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The employer&apos;s matching gift for this employee&apos;s gift. --></help>
+        <help>Geschenk des Arbeitgebers, das das Geschenk dieses Mitarbeiters ergänzt.</help>
         <label>Zugewiesenes Spende</label>
         <name>Matching_Gift__c</name>
         <relationshipLabel>Zugewiesene Geschenke</relationshipLabel>
@@ -233,8 +233,8 @@
         <relationshipLabel><!-- Opportunities --></relationshipLabel>
     </fields>
     <fields>
-        <help><!-- The date this donor was identified as qualifying for this donation. --></help>
-        <label><!-- Qualified Date --></label>
+        <help>Das Datum, an dem dieser Spender als qualifizierter Spender dieser Spende identifiziert wurde.</help>
+        <label>Qualifizierungsdatum</label>
         <name>Qualified_Date__c</name>
     </fields>
     <fields>
@@ -302,31 +302,39 @@
     <layouts>
         <layout>In-Kind Gift Layout</layout>
         <sections>
-            <label><!-- Donation Information --></label>
+            <label>Spendeninformationen</label>
             <section>Donation Information</section>
         </sections>
         <sections>
-            <label><!-- In-Kind Information --></label>
+            <label>Sachgeschenkinformationen</label>
             <section>In-Kind Information</section>
         </sections>
         <sections>
-            <label><!-- Tribute Information --></label>
+            <label>Informationen zur Anerkennung</label>
             <section>Tribute Information</section>
         </sections>
     </layouts>
     <layouts>
         <layout>Major Gift Layout</layout>
         <sections>
-            <label><!-- Donation Information --></label>
+            <label>Spendeninformationen</label>
             <section>Donation Information</section>
         </sections>
         <sections>
-            <label><!-- Major Gift Information --></label>
+            <label>Informationen zum Hauptgeschenk</label>
             <section>Major Gift Information</section>
         </sections>
         <sections>
-            <label><!-- Payment Information --></label>
+            <label><!-- Matching Gift Information --></label>
+            <section>Matching Gift Information</section>
+        </sections>
+        <sections>
+            <label>Zahlungsinformationen</label>
             <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label><!-- Tribute Information --></label>
+            <section>Tribute Information</section>
         </sections>
     </layouts>
     <layouts>
