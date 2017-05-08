@@ -113,7 +113,7 @@ public class BDI_Donations {
     /*******************************************************************************************************
     * @description the map of DI Donation Fields to Opportunity Fields
     */
-    private static map<String, String> mapDIFieldToOppField {
+    public static map<String, String> mapDIFieldToOppField {
         get {
             if (mapDIFieldToOppField == null) {
                 mapDIFieldToOppField = BDI_DataImport_BATCH.mapFieldsForDIObject('Opportunity', 'Opportunity', 
@@ -127,7 +127,7 @@ public class BDI_Donations {
     /*******************************************************************************************************
     * @description the map of DI Donation Fields to Payment Fields
     */
-    private static map<string, string> mapDIFieldToPmtField { 
+    public static map<string, string> mapDIFieldToPmtField { 
         get {
             if (mapDIFieldToPmtField == null) {
                 mapDIFieldToPmtField = BDI_DataImport_BATCH.mapFieldsForDIObject('Payment', 'npe01__OppPayment__c', 
