@@ -167,11 +167,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
         } catch (Exception ex) {
             // Since none of the records were sent, update the listOppNotSent collection
             // to contain a list of all the records that would have been processed.
-            listOppNotSent = [select Id, Name from Opportunity where 
-                id in :listOpp];
-            for (Opportunity opp : listOppNotSent) {
-                opp.Acknowledgment_Status__c = label.sendAcknowledgmentFireStatus;
-            }
+            listOppNotSent = [select Id, Name from Opportunity where id in :listOpp];
 
             // Make the error look more readable on the page
             ERR_ExceptionHandler.beautifyExceptionMessage(ex);
