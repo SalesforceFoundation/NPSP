@@ -131,7 +131,6 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
         for (Opportunity opp : listOpp) {
             opp.Acknowledgment_Status__c = label.sendAcknowledgmentFireStatus;
         }
-        cNotSent = listOpp.size();
 
         try {
             update listOpp;
@@ -168,6 +167,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
             // Since none of the records were sent, update the listOppNotSent collection
             // to contain a list of all the records that would have been processed.
             listOppNotSent = [select Id, Name from Opportunity where id in :listOpp];
+            cNotSent = listOppNotSent.size();
 
             // Make the error look more readable on the page
             ERR_ExceptionHandler.beautifyExceptionMessage(ex);
