@@ -289,7 +289,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
             if (listMatchFields == null) {
                 string strRules = bdi.diSettings.Donation_Matching_Rule__c;
                 if (strRules != null) {
-                    listMatchFields = strRules.toLowercase().split(',');
+                    listMatchFields = strRules.toLowercase().replace(' ', '').split(';');
                 } else {
                     listMatchFields = new list<String> {
                         UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c').toLowercase(),

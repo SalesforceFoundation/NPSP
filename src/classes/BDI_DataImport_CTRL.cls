@@ -86,6 +86,8 @@ public with sharing class BDI_DataImport_CTRL {
         get {
             if (diSettings == null) {
                 diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+                // our picklist options hold lowercase DIfields
+                diSettings.Donation_Matching_Rule__c = diSettings.Donation_Matching_Rule__c.toLowercase();
             }
             return diSettings;
         }
