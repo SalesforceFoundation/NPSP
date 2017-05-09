@@ -215,18 +215,17 @@ public class UTIL_RecordTypes {
     /**
      * @description Return a list of SelectOptions where the label is the
      * record type name and the value is the record type id of a record type
-     * that belongs to the given object type.  The 'master' record type is
-     * omitted from this list of options.
+     * that belongs to the given object type.  The 'master' record type and
+     * all in-active record types are omitted from this list of options.
      *
      * @param objectType The type of the object
      * @return List<SelectOption>
      */
     public static List<SelectOption> getRecordTypesForSelectList(sObjectType objectType) {
-        Map<String, Schema.RecordTypeInfo> recordTypeInfos = objectType.getDescribe().getRecordTypeInfosByName();
+        String objectName = objectType.getDescribe().getName();
         List<SelectOption> options = new List<SelectOption>();
-        for (String recordTypeName : recordTypeInfos.keySet()) {
-            Schema.RecordTypeInfo rti = recordTypeInfos.get(recordTypeName);
-            options.add(new SelectOption(rti.getRecordTypeId(), recordTypeName));
+        for (RecordType rt : [SELECT Id, Name FROM RecordType WHERE IsActive = True AND SObjectType = :objectName ORDER BY Name]) {
+            options.add(new SelectOption(rt.Id, rt.Name));
         }
         return options;
     }
@@ -234,18 +233,17 @@ public class UTIL_RecordTypes {
     /**
      * @description Return a list of SelectOptions where both the value and the
      * label are the record type name of a record type that belongs to the
-     * given object type.  The 'master' record type is omitted from this list
-     * of options.
+     * given object type.  The 'master' record type and all in-active record types
+     * are omitted from this list of options.
      *
      * @param objectType The type of the object
      * @return List<SelectOption>
      */
     public static List<SelectOption> getStringRecordTypesForSelectList(sObjectType objectType) {
-        Map<String, Schema.RecordTypeInfo> recordTypeInfos = objectType.getDescribe().getRecordTypeInfosByName();
+        String objectName = objectType.getDescribe().getName();
         List<SelectOption> options = new List<SelectOption>();
-        for (String recordTypeName : recordTypeInfos.keySet()) {
-            Schema.RecordTypeInfo rti = recordTypeInfos.get(recordTypeName);
-            options.add(new SelectOption(recordTypeName, recordTypeName));
+        for (RecordType rt : [SELECT Id, Name FROM RecordType WHERE IsActive = True AND SObjectType = :objectName ORDER BY Name]) {
+            options.add(new SelectOption(rt.Name, rt.Name));
         }
         return options;
     }
