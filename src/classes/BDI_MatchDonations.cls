@@ -191,6 +191,9 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                         } else {
                             di.Donation_Possible_Matches__c += ',' + oppT.Id;
                         }
+                        // only take the first 10 matches to not blow our 255 char limit.
+                        if (i == 9)
+                            break;
                     }
                 } 
                 
