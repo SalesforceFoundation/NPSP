@@ -21,39 +21,43 @@ app_visibility_template = """
 """
 
 class UpdateAdminProfile(BaseUpdateAdminProfile):
-        
+
     def _process_metadata(self):
         super(UpdateAdminProfile, self)._process_metadata()
-        
+
+        # ignore existing app and RT profile settings
         self._strip_access('recordTypeVisibilities')
         self._strip_access('applicationVisibilities')
-        
+
         # Set record type visibilities
         self._set_record_type('Account.HH_Account', 'false')
         self._set_record_type('Account.Organization', 'true')
         self._set_record_type('Opportunity.NPSP_Default', 'true')
-        self._set_app('Nonprofit_CRM','true')
+
+        # set app visibility
+        self._set_app('Nonprofit_CRM', 'true')
 
     def _set_visibility(self, visibility_template, name, default):
-        rt = visibility_template.format(default, name)
+        perm_element = visibility_template.format(default, name)
         findReplace(
             '<tabVisibilities>',
-            '{}<tabVisibilities>'.format(rt),
+            '{}<tabVisibilities>'.format(perm_element),
             os.path.join(self.tempdir, 'profiles'),
             'Admin.profile',
             max=1,
         )
 
-    def _strip_access(self,name):
+    def _strip_access(self, name):
         findReplaceRegex(
-            '<{0}>([^\$]+)</{0}>'.format(name),
+            r'<{0}>([^\$]+)</{0}>'.format(name),
             '',
             os.path.join(self.tempdir, 'profiles'),
             'Admin.profile'
         )
 
-    def _set_record_type(self,name,default):
-        self._set_visibility(rt_visibility_template,name,default)
+    def _set_record_type(self, name, default):
+        self._set_visibility(rt_visibility_template, name, default)
 
-    def _set_app(self,name,default):
-        self._set_visibility(app_visibility_template,name,default)
+
+    def _set_app(self, name, default):
+        self._set_visibility(app_visibility_template, name, default)
