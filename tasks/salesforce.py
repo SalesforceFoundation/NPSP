@@ -46,7 +46,7 @@ class UpdateAdminProfile(BaseUpdateAdminProfile):
 
     def _strip_access(self,name):
         findReplaceRegex(
-            '<{}>([^\$]+)</{}>'.format(name,name),
+            '<{0}>([^\$]+)</{0}>'.format(name),
             '',
             os.path.join(self.tempdir, 'profiles'),
             'Admin.profile'
