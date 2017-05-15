@@ -132,7 +132,8 @@ public with sharing class BDI_DataImport_CTRL {
         // validation
         if (diSettings.Donation_Matching_Behavior__c != null && 
             diSettings.Donation_Matching_Behavior__c != BDI_DataImport_API.DoNotMatch && 
-                (diSettings.Donation_Matching_Rule__c == null || diSettings.Donation_Matching_Rule__c == '')) {
+            String.isBlank(diSettings.Donation_Matching_Rule__c)) {
+            
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Warning, Label.bdiDonationMatchingRuleEmpty));
             return null;
         }
