@@ -45,9 +45,12 @@
                         thisRowPercent.prop('disabled', true);
                     }
                 }
-                if (!isNaN($(o).val()))
-                    sumAmount += Math.round($(o).val()*100);
-               
+                var amt=$(o).val();
+                // due to how chrome handle's the global replace, have to
+                // first remove the currency symbols first and then strip out all commas.
+                if (!isNaN(amt.replace(/[\$£€]/g, '').replace(/,/g, '')))
+                    sumAmount += Math.round(amt.replace(/[\$£€]/g, '').replace(/,/g, '')*100);
+
             });
 
             //write total amount. if we have a parent amount, include the unallocated remainder. 
