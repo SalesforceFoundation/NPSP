@@ -86,8 +86,35 @@ public with sharing class BDI_DataImport_CTRL {
         get {
             if (diSettings == null) {
                 diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+                // our picklist options hold lowercase DIfields
+                diSettings.Donation_Matching_Rule__c = diSettings.Donation_Matching_Rule__c.toLowercase();
             }
             return diSettings;
+        }
+        private set;
+    }
+    
+    /*********************************************************************************************************
+    * @description The list of SelectOptions of Donation fields from the BDI object 
+    */
+    public list<SelectOption> listSODonationFields {
+        get {
+        
+            if (listSODonationFields == null) {
+                listSODonationFields = new list<SelectOption>();
+                
+                set<String> setFields = new set<String>();
+                setFields.addAll(BDI_Donations.mapDIFieldToOppField.keySet());
+                setFields.addAll(BDI_Donations.mapDIFieldToPmtField.keySet());
+                
+                for (String diField : setFields) {
+                    String strLabel = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), diField); 
+                    listSODonationFields.add(new SelectOption(diField, strLabel));
+                }
+
+                listSODonationFields.sort();
+            }         
+            return listSODonationFields;
         }
         private set;
     }
@@ -102,6 +129,15 @@ public with sharing class BDI_DataImport_CTRL {
     }
     
     public PageReference importData() {
+        // validation
+        if (diSettings.Donation_Matching_Behavior__c != null && 
+            diSettings.Donation_Matching_Behavior__c != BDI_DataImport_API.DoNotMatch && 
+            String.isBlank(diSettings.Donation_Matching_Rule__c)) {
+            
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Warning, Label.bdiDonationMatchingRuleEmpty));
+            return null;
+        }
+
         if (!Test.isRunningTest() && this.userCanEditSettings){
             upsert diSettings;
         }

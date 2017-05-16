@@ -191,6 +191,9 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                         } else {
                             di.Donation_Possible_Matches__c += ',' + oppT.Id;
                         }
+                        // only take the first 10 matches to not blow our 255 char limit.
+                        if (i == 9)
+                            break;
                     }
                 } 
                 
@@ -289,7 +292,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
             if (listMatchFields == null) {
                 string strRules = bdi.diSettings.Donation_Matching_Rule__c;
                 if (strRules != null) {
-                    listMatchFields = strRules.toLowercase().split(',');
+                    listMatchFields = strRules.toLowercase().replace(' ', '').split(';');
                 } else {
                     listMatchFields = new list<String> {
                         UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c').toLowercase(),

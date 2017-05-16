@@ -944,6 +944,12 @@
         <members>alloUnallocated</members>
         <members>bdiAccountCustomIdError</members>
         <members>bdiBatchException</members>
+        <members>bdiBehaviorBestMatchOrCreate</members>
+        <members>bdiBehaviorDoNotMatch</members>
+        <members>bdiBehaviorExactMatchOrCreate</members>
+        <members>bdiBehaviorRequireBestMatch</members>
+        <members>bdiBehaviorRequireExactMatch</members>
+        <members>bdiBehaviorRequireNoMatch</members>
         <members>bdiBtnClose</members>
         <members>bdiComplete</members>
         <members>bdiCompleteWithErrors</members>
@@ -966,6 +972,7 @@
         <members>bdiDataImporterNumToProcess</members>
         <members>bdiDataImporterTitle</members>
         <members>bdiDonation</members>
+        <members>bdiDonationMatchingRuleEmpty</members>
         <members>bdiErrorDonationLookupMatch</members>
         <members>bdiErrorDonationMultiMatch</members>
         <members>bdiErrorDonationNoMatch</members>
