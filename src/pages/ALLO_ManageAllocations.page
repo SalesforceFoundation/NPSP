@@ -45,12 +45,16 @@
                         thisRowPercent.prop('disabled', true);
                     }
                 }
-                var amt=$(o).val();
-                // due to how chrome handle's the global replace, have to
-                // first remove the currency symbols first and then strip out all commas.
-                if (!isNaN(amt.replace(/[\$£€]/g, '').replace(/,/g, '')))
-                    sumAmount += Math.round(amt.replace(/[\$£€]/g, '').replace(/,/g, '')*100);
-
+                // determine the User's current thousands separator to strip out of the string
+                var thousandsSeparator = whatSeparator();
+                // create a regex expression to remove the thousands separator from the string
+                var re = new RegExp("\\"+thousandsSeparator,"g");
+                // remove all currency symbols, whitespace characters and thousands separators from the string
+                // before attempting to convert it to a numeric value
+                var cleanedAmt = amt=$(o).val().replace(/[\$£€]/g, '').replace(/\s/g,'').replace(re,'');
+                if (!isNaN(cleanedAmt)) {
+                    sumAmount += Math.round(cleanedAmt*100);
+                }
             });
 
             //write total amount. if we have a parent amount, include the unallocated remainder. 
@@ -109,7 +113,14 @@
             calcPercent();
             calcAmount();
         }
-        
+
+        //determine the thousands separator by using the machine/browswer current locale setting        
+        var whatSeparator = function() {
+            var n = 1000.1;
+            n = n.toLocaleString().substring(1, 2);
+            return n;
+        }
+
         //bind functions to window that are needed in the page
         window.initOrReload = initOrReload;
         window.changePercent = changePercent;
