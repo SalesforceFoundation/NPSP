@@ -114,11 +114,16 @@
             calcAmount();
         }
 
-        //determine the thousands separator by using the machine/browswer current locale setting        
+        // determine the thousands separator by using Salesforce's currency locale settings format an 
+        // sobject field into a hidden div and then retrieve and parse that string out here.
         var whatSeparator = function() {
-            var n = 1000.1;
-            n = n.toLocaleString().substring(1, 2);
-            return n;
+            var formattedNumber = $("#dummyFormattedCurrency").text().trim().replace(/\s/g,'');
+            if (formattedNumber) {
+                var oneIsAt = formattedNumber.indexOf("1");
+                return formattedNumber.substring(oneIsAt+1, oneIsAt+2);
+            } else {
+                return ","; // default value
+            }
         }
 
         //bind functions to window that are needed in the page
@@ -246,4 +251,7 @@
             </div>
         </div>
     </apex:form>
+    <div style="display:none" id="dummyFormattedCurrency">
+        <apex:outputField value="{!dummyAllocForFormatting.Amount__c}" />
+    </div>
 </apex:page>

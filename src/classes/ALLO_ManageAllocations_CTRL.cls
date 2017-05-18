@@ -254,4 +254,13 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         pageReference source = new pageReference('/'+parentId);
         return source;
     }
+
+    /** @description Returns a dummy Allocation__c record with the amount field set to 1000 to use a way of
+      * retrieving a formatted currency value with the users current locale setting. This is needed to 
+      * determine the thousands separator in the page javascript 
+      * @return SObject with the Amount__c field set to 1000.
+     */
+    public Allocation__c getDummyAllocForFormatting() {
+        return new Allocation__c(Amount__c = 1000); 
+    }
 }
