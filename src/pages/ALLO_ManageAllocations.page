@@ -26,7 +26,8 @@
 
         //adds all amount fields together
         var calcAmount = function() {
-            sumAmount = 0;
+            var amts = [];
+            var pcts = [];
             $('.alloAmount').each(function(i,o){
                 var thisRowAmount = $('.amount'+i);
                 var thisRowPercent = $('.percent'+i);
@@ -44,33 +45,39 @@
                     if (isBlankOrEmpty(thisRowPercent)) {
                         thisRowPercent.prop('disabled', true);
                     }
-                }
-                // determine the User's current thousands separator to strip out of the string
-                var thousandsSeparator = whatSeparator();
-                // create a regex expression to remove the thousands separator from the string
-                var re = new RegExp("\\"+thousandsSeparator,"g");
-                // remove all currency symbols, whitespace characters and thousands separators from the string
-                // before attempting to convert it to a numeric value
-                var cleanedAmt = amt=$(o).val().replace(/[\$£€]/g, '').replace(/\s/g,'').replace(re,'');
-                if (!isNaN(cleanedAmt)) {
-                    sumAmount += Math.round(cleanedAmt*100);
+                    amts.push(thisRowAmount.val());
+                    pcts.push(thisRowPercent.val());
                 }
             });
 
-            //write total amount. if we have a parent amount, include the unallocated remainder. 
-            //if we're over the parent amount, make it red.
-            if (parentAmount > 0) {
-                var unallocated = (Math.round((parentAmount*100) - sumAmount)/100).toFixed(2);
-                $('#totalAmount').text(unallocated);
-                if (unallocated < 0) {
-                    $('#totalAmount').css({ "color": "red", "font-weight": "bold" });
-                    $('[id$="saveCloseBTN"]').attr('disabled','disabled');
-                } else {
-                    $('#totalAmount').css({ "color": "black", "font-weight": "normal" });
-                    $('[id$="saveCloseBTN"]').removeAttr('disabled');
-                }
+            // Use VF remoting to handle summing the amount field values to ensure that the amount
+            // input string values are properly converted to a number using the current user's
+            // locale setting in Salesforce.
+            if (amts.length > 0) {
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.ALLO_ManageAllocations_CTRL.sumAmountFields}', amts, pcts, parentAmount,
+                    function (result, event) {
+                        sumAmount = result;
+                        //write total amount. if we have a parent amount, include the unallocated remainder. 
+                        //if we're over the parent amount, make it red.
+                        if (parentAmount > 0) {
+                            var unallocated = (Math.round((parentAmount*100) - sumAmount)/100).toFixed(2);
+                            $('#totalAmount').text(unallocated);
+                            if (unallocated < 0) {
+                                $('#totalAmount').css({ "color": "red", "font-weight": "bold" });
+                                $('[id$="saveCloseBTN"]').attr('disabled','disabled');
+                            } else {
+                                $('#totalAmount').css({ "color": "black", "font-weight": "normal" });
+                                $('[id$="saveCloseBTN"]').removeAttr('disabled');
+                            }
+                        } else {
+                            $('#totalAmount').text((Math.round(sumAmount)/100).toFixed(2));
+                        }
+                    }
+                );
             } else {
-                $('#totalAmount').text((Math.round(sumAmount)/100).toFixed(2));
+                $('#totalAmount').text(Math.round((parentAmount*100)/100).toFixed(2));
+                $('[id$="saveCloseBTN"]').attr('disabled','disabled');
             }
             
         }
@@ -89,8 +96,12 @@
                 } else {
                     thisRowAmount.prop('disabled', true);
                     //if we have a parent amount, set the calculated amount based on the percent
-                    if (parentAmount > 0)
-                        thisRowAmount.val((Math.round(thisRowPercent.val() * parentAmount)/100).toFixed(2));
+                    if (parentAmount > 0) {
+                        var amt = (Math.round(thisRowPercent.val() * parentAmount)/100).toFixed(2);
+                        if (amt !== 'NaN') {
+                            thisRowAmount.val(amt);
+                        }
+                    }
                 }
             });
             
@@ -112,18 +123,6 @@
         var initOrReload = function() {
             calcPercent();
             calcAmount();
-        }
-
-        // determine the thousands separator by using Salesforce's currency locale settings format an 
-        // sobject field into a hidden div and then retrieve and parse that string out here.
-        var whatSeparator = function() {
-            var formattedNumber = $("#dummyFormattedCurrency").text().trim().replace(/\s/g,'');
-            if (formattedNumber) {
-                var oneIsAt = formattedNumber.indexOf("1");
-                return formattedNumber.substring(oneIsAt+1, oneIsAt+2);
-            } else {
-                return ","; // default value
-            }
         }
 
         //bind functions to window that are needed in the page
@@ -251,7 +250,4 @@
             </div>
         </div>
     </apex:form>
-    <div style="display:none" id="dummyFormattedCurrency">
-        <apex:outputField value="{!dummyAllocForFormatting.Amount__c}" />
-    </div>
 </apex:page>
