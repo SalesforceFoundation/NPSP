@@ -46,5 +46,16 @@ global class TDTM_Config_API {
     */
     global static List<Trigger_Handler__c> getDefaultRecords() {
         return TDTM_DefaultConfig.getDefaultRecords(); 
-    }    
+    }
+
+    /*******************************************************************************************************
+    * @description Returns the list of current cached trigger handler records
+    * @return List<Trigger_Handler__c> a list of cached trigger handler records with current values.  SI's
+    *         may modify this list in the current execution context to temporarily change the functionality of
+    *         tdtm triggers - disable triggers, enable triggers, or even add a new row to the collection
+    *         that is not committed to the database.
+    */
+    global static List<Trigger_Handler__c> getCachedRecords() {
+        return TDTM_ObjectDataGateway.listTH; 
+    }
 }
