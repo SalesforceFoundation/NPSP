@@ -269,7 +269,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     public static Double sumAmountFields(List<String> amts, List<String> pcts, Decimal parentAmount) {
         Double rtnValue = 0;
         if (amts != null) {
-            Boolean commaSeparator = (1.5).format().contains(',');
+            Boolean commaSeparator = (1.5).format().contains(','); // is this a comma separator for the decimal point?
             for (Integer i=0; i<amts.size(); i++) {
                 String a = amts[i];
                 if (commaSeparator) {
@@ -280,7 +280,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
                         // it out.
                         if (a.right(3).startsWith('.')) {
                             // If there is a decimal point in the 3rd position from the
-                            // right, then let's assume this is in US format.
+                            // right, then let's assume this is in US format (many other countries use this too)
                             // In that case, change the period to a comma so that
                             // it can be converted to a number below.
                             a = a.replaceAll('.',',');

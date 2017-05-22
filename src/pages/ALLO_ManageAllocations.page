@@ -97,7 +97,11 @@
                     thisRowAmount.prop('disabled', true);
                     //if we have a parent amount, set the calculated amount based on the percent
                     if (parentAmount > 0) {
-                        var amt = (Math.round(thisRowPercent.val() * parentAmount)/100).toFixed(2);
+                        // if the users locale uses commas as the decimal separator, replace
+                        // those with a period so it works with js. don't have to worry about
+                        // the thousands separator for percentages.
+                        var pct = thisRowPercent.val().replace(/\s/g,'').replace(/,/g,'.');
+                        var amt = (Math.round(pct * parentAmount)/100).toFixed(2);
                         if (amt !== 'NaN') {
                             thisRowAmount.val(amt);
                         }
