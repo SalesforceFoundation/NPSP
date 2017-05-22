@@ -246,6 +246,7 @@
         <members>STG_UninstallScript</members>
         <members>STG_UninstallScript_TEST</members>
         <members>TDTM_Config_API</members>
+        <members>TDTM_Config_API_Test</members>
         <members>TDTM_DefaultConfig</members>
         <members>TDTM_ObjectDataGateway</members>
         <members>TDTM_Runnable</members>
