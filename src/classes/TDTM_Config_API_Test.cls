@@ -79,12 +79,12 @@ private class TDTM_Config_API_Test {
                 th.Exclude_For_These_Usernames__c = UserInfo.getUserName();
             }
         }
-        database.insert(handlers);
+        insert handlers;
 
-        Contact con1 = new Contact(LastName='foo');
-        insert con1;
-        con1 = [SELECT AccountId FROM Contact WHERE Id = :con1.Id LIMIT 1];
-        system.assertEquals(null, con1.AccountId, 'there should not be an account id associated with this new contact');
+        Contact con = new Contact(LastName='foo');
+        insert con;
+        con = [SELECT AccountId FROM Contact WHERE Id = :con.Id LIMIT 1];
+        system.assertEquals(null, con.AccountId, 'there should not be an account id associated with this new contact');
     }
     
 }
