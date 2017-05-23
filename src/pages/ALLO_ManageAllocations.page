@@ -10,6 +10,8 @@
         var sumAmount;
         
         var parentAmount = {!parentAmount};
+        var decimalSeparator = "{!decimalSeparator}";
+        var thousandsSeparator = "{!thousandsSeparator}";
         var defaultEnabled = {!Settings.Default_Allocations_Enabled__c};
 
         function isLightningExperienceOrSalesforce1() {
@@ -45,16 +47,28 @@
                         thisRowPercent.prop('disabled', true);
                     }
                 }
-                if (!isNaN($(o).val()))
-                    sumAmount += Math.round($(o).val()*100);
-               
+
+                // create a regex expression to remove the thousands separator from the string
+                var re = new RegExp("\\"+thousandsSeparator,"g");
+                // remove all currency symbols, whitespace characters and thousands separators from the string
+                // before attempting to convert it to a numeric value
+                var cleanedAmt = amt=thisRowAmount.val().replace(/[\$£€]/g, '').replace(/\s/g,'').replace(re,'');
+                if (decimalSeparator !== ".") {
+                    // JS does not recognize decimal separators other than a period
+                    re = new RegExp("\\"+decimalSeparator,"g");
+                    cleanedAmt = cleanedAmt.replace(re,'.');
+                }
+                if (!isNaN(cleanedAmt)) {
+                    sumAmount += Math.round(cleanedAmt*100);
+                }
+
             });
 
             //write total amount. if we have a parent amount, include the unallocated remainder. 
             //if we're over the parent amount, make it red.
             if (parentAmount > 0) {
                 var unallocated = (Math.round((parentAmount*100) - sumAmount)/100).toFixed(2);
-                $('#totalAmount').text(unallocated);
+                $('#totalAmount').text(reformatCurrency(unallocated));
                 if (unallocated < 0) {
                     $('#totalAmount').css({ "color": "red", "font-weight": "bold" });
                     $('[id$="saveCloseBTN"]').attr('disabled','disabled');
@@ -63,7 +77,7 @@
                     $('[id$="saveCloseBTN"]').removeAttr('disabled');
                 }
             } else {
-                $('#totalAmount').text((Math.round(sumAmount)/100).toFixed(2));
+                $('#totalAmount').text(reformatCurrency((Math.round(sumAmount)/100).toFixed(2)));
             }
             
         }
@@ -82,8 +96,20 @@
                 } else {
                     thisRowAmount.prop('disabled', true);
                     //if we have a parent amount, set the calculated amount based on the percent
-                    if (parentAmount > 0)
-                        thisRowAmount.val((Math.round(thisRowPercent.val() * parentAmount)/100).toFixed(2));
+                    if (parentAmount > 0) {
+                        var pct = thisRowPercent.val();
+                        // if the users locale uses commas as the decimal separator, replace
+                        // those with a period so it works with js. don't have to worry about
+                        // the thousands separator for percentages.
+                        if (decimalSeparator !== ".") {
+                            var re = new RegExp("\\"+decimalSeparator,"g");
+                            pct = pct.replace(/\s/g,'').replace(re,'.');
+                        }
+                        var amt = (Math.round(pct * parentAmount)/100).toFixed(2);
+                        if (amt !== 'NaN') {
+                            thisRowAmount.val(reformatCurrency(amt));
+                        }
+                    }
                 }
             });
             
@@ -98,6 +124,13 @@
             initOrReload();
         }
 
+        var reformatCurrency = function(amt) {
+            if (decimalSeparator !== ".") {
+                amt = amt.replace(".",decimalSeparator);
+            }
+            return amt;
+        }
+
         var isBlankOrEmpty = function (selector){
             return (selector.val() == '' || !selector.val());
         }
@@ -106,7 +139,7 @@
             calcPercent();
             calcAmount();
         }
-        
+
         //bind functions to window that are needed in the page
         window.initOrReload = initOrReload;
         window.changePercent = changePercent;
