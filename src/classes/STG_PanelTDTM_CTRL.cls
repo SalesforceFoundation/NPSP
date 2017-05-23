@@ -70,7 +70,8 @@ public with sharing class STG_PanelTDTM_CTRL extends STG_Panel {
             if (listTH == null) {
                 listTH = new list<Trigger_Handler__c>();
                 listTH = [select Id, Active__c, Asynchronous__c, Class__c, Load_Order__c, Object__c, Trigger_Action__c, 
-                            User_Managed__c from Trigger_Handler__c order by Object__c, Load_Order__c];
+                            User_Managed__c, Exclude_For_These_Usernames__c
+                            from Trigger_Handler__c order by Object__c, Load_Order__c];
             }
             for (Trigger_Handler__c th : listTH) {
                 th.Trigger_Action__c = th.Trigger_Action__c.replaceAll('[;]','; ');
