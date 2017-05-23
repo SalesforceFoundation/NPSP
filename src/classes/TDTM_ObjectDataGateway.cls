@@ -71,7 +71,7 @@ public without sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGa
             Set<String> excludedUserNames = (th.Exclude_For_These_Usernames__c != null ? 
                     new Set<String>(th.Exclude_For_These_Usernames__c.split(';')) : new Set<String>());
             if (th.Object__c == objectName && th.Trigger_Action__c.contains(strAction) && th.Active__c == true
-                    && (th.Exclude_For_These_Usernames__c == null || !excludedUserNames.contains(currUserName))) {
+                    && !excludedUserNames.contains(currUserName)) {
                 listClasses.add(th);
             }
         }
@@ -92,7 +92,7 @@ public without sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGa
         get {
             if (listTH == null) {
                 listTH =  [select Asynchronous__c, Class__c, Load_Order__c, Object__c, Active__c, Exclude_For_These_Usernames__c,
-                    Trigger_Action__c from Trigger_Handler__c where Active__c = true order by Load_Order__c];
+                    Trigger_Action__c from Trigger_Handler__c order by Load_Order__c];
             }
             return listTH;
         }
