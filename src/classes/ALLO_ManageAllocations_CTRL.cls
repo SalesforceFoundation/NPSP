@@ -254,4 +254,15 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         pageReference source = new pageReference('/'+parentId);
         return source;
     }
+
+    /** @description Returns the decimal separator character in use for the Users current Locale setting */
+    public String getDecimalSeparator() {
+        return (1.5).format().subString(1,2);
+    }
+
+    /** @description Returns the thousands separator character in use for the Users current Locale setting */
+    public String getThousandsSeparator() {
+        return (1000).format().subString(1,2);
+    }
+
 }
