@@ -250,4 +250,12 @@ private class ALLO_ManageAllocations_TEST {
             controller.getCurrencySymbol()
         );
     }
+
+    /** @description test the methods to retreive the currency separator characters */
+    @isTest
+    private static void testGetSeparators() {
+        ALLO_ManageAllocations_CTRL controller = new ALLO_ManageAllocations_CTRL();
+        system.AssertNotEquals(null, controller.getDecimalSeparator());
+        system.AssertNotEquals(null, controller.getThousandsSeparator());
+    }
 }
