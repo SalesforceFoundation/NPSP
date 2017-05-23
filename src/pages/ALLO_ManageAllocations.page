@@ -68,7 +68,7 @@
             //if we're over the parent amount, make it red.
             if (parentAmount > 0) {
                 var unallocated = (Math.round((parentAmount*100) - sumAmount)/100).toFixed(2);
-                $('#totalAmount').text(unallocated);
+                $('#totalAmount').text(reformatCurrency(unallocated));
                 if (unallocated < 0) {
                     $('#totalAmount').css({ "color": "red", "font-weight": "bold" });
                     $('[id$="saveCloseBTN"]').attr('disabled','disabled');
@@ -77,7 +77,7 @@
                     $('[id$="saveCloseBTN"]').removeAttr('disabled');
                 }
             } else {
-                $('#totalAmount').text((Math.round(sumAmount)/100).toFixed(2));
+                $('#totalAmount').text(reformatCurrency((Math.round(sumAmount)/100).toFixed(2)));
             }
             
         }
@@ -107,7 +107,7 @@
                         }
                         var amt = (Math.round(pct * parentAmount)/100).toFixed(2);
                         if (amt !== 'NaN') {
-                            thisRowAmount.val(amt);
+                            thisRowAmount.val(reformatCurrency(amt));
                         }
                     }
                 }
@@ -122,6 +122,13 @@
                 thisRowAmount.val('');
             }
             initOrReload();
+        }
+
+        var reformatCurrency = function(amt) {
+            if (decimalSeparator !== ".") {
+                amt = amt.replace(".",decimalSeparator);
+            }
+            return amt;
         }
 
         var isBlankOrEmpty = function (selector){
