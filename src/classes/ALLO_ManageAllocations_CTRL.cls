@@ -255,56 +255,14 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         return source;
     }
 
-    /** @description Used to handle properly converting and summing the amount fields on the page 
-      * taking into account the users current locale setting. Found that this could not be done
-      * reliably in JS, thus the need to handle via VF Remoting. Passing in the array of percents
-      * and the parent amount as well to handle the scenario where a) the user types in a percent
-      * on the screen and the amount is formatted using JS, but not in a way that exactly matches
-      * the locale Salesforce in Salesforce. In that case, have to reformat the % value to
-      * something that matches the current local; b) the amount value is "NaN" and has to be
-      * recalculated using the passed % value.
-      * @return Double value sum of the entere values (multiplied by 100)
-     */
-    @remoteAction
-    public static Double sumAmountFields(List<String> amts, List<String> pcts, Decimal parentAmount) {
-        Double rtnValue = 0;
-        if (amts != null) {
-            Boolean commaSeparator = (1.5).format().contains(','); // is this a comma separator for the decimal point?
-            for (Integer i=0; i<amts.size(); i++) {
-                String a = amts[i];
-                if (commaSeparator) {
-                    if (!String.IsEmpty(pcts[i])) {
-                        // If there is a percentage on this line, then it's likely that
-                        // the amount field is formatted in standard US format (####.##).
-                        // This isn't always the case though, so have to try to figure 
-                        // it out.
-                        if (a.right(3).startsWith('.')) {
-                            // If there is a decimal point in the 3rd position from the
-                            // right, then let's assume this is in US format (many other countries use this too)
-                            // In that case, change the period to a comma so that
-                            // it can be converted to a number below.
-                            a = a.replaceAll('.',',');
-                        } else if (a == 'NaN') {
-                            // if the string is "NaN" (not-a-number in JS) then recalcuate
-                            // the percentage here
-                            a = (Math.round( Integer.valueOf(pcts[i].replaceAll(',','.')) * (parentAmount*100)) / 100).format();
-                        }
-                    }
-                    a = a.replaceAll('[^,\\d]','').replaceAll(',','.'); // remove any non-numeric characters and convert the comma to a period
-                } else {
-                    a = a.replaceAll(',',''); // remove any commas
-                }
-                try {
-                    rtnValue += Double.valueOf(a)*100;
-                } catch (Exception ex) {
-                    // if this fails, then the string can't be converted to a number
-                    // in the new format. In that case, it's likely that the string
-                    // is formatted differently than the users locale. So
-                    // give it one more try without stripping out any characters
-                    rtnValue += Double.valueOf(amts[i])*100;
-                }
-            }
-        }
-        return rtnValue;
+    /** @description Returns the decimal separator character in use for the Users current Locale setting */
+    public String getDecimalSeparator() {
+        return (1.5).format().subString(1,2);
     }
+
+    /** @description Returns the thousands separator character in use for the Users current Locale setting */
+    public String getThousandsSeparator() {
+        return (1000).format().subString(1,2);
+    }
+
 }

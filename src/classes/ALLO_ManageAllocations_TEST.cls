@@ -251,11 +251,11 @@ private class ALLO_ManageAllocations_TEST {
         );
     }
 
-    /** @description test the VF remoting method */
+    /** @description test the methods to retreive the currency separator characters */
     @isTest
-    private static void testRemoteAction() {
-        Double amt = 1000.23;
-        Double rtn = ALLO_ManageAllocations_CTRL.sumAmountFields(new List<String>{ '1,000.23' }, new List<String>{ '' }, amt);
-        System.AssertEquals(amt, rtn/100, 'The sum of the amount should return ' + (amt*100).format() + ' not ' + rtn.format());
+    private static void testGetSeparators() {
+        ALLO_ManageAllocations_CTRL controller = new ALLO_ManageAllocations_CTRL();
+        system.AssertNotEquals(null, controller.getDecimalSeparator());
+        system.AssertNotEquals(null, controller.getThousandsSeparator());
     }
 }
