@@ -72,9 +72,9 @@
                     <div class="slds-form-element">
                         <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Exclude_For_These_Usernames__c.Label}" for="tbxExc" styleClass="slds-form-element__label" />
                         <div class="slds-form-element__control">
-                            <apex:inputField value="{!thNew.Exclude_For_These_Usernames__c}" required="false" id="tbxExc" html-aria-describedby="{!$Component.tbxExcHelp}" styleClass="slds-checkbox" />
+                            <apex:inputField value="{!thNew.Exclude_For_These_Usernames__c}" required="false" id="tbxExc" html-aria-describedby="{!$Component.tbxExcHelp}" styleClass="slds-input" />
                             <apex:outputPanel id="tbxExcHelp" layout="block">
-                                <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpTHAsync}" />
+                                <apex:outputText styleClass="slds-form-element__help" value="{!$ObjectType.Trigger_Handler__c.Fields.Exclude_For_These_Usernames__c.InlineHelpText}" />
                             </apex:outputPanel>
                         </div>
                     </div>
