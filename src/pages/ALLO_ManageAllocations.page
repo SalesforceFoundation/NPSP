@@ -56,7 +56,7 @@
                 if (decimalSeparator !== ".") {
                     // JS does not recognize decimal separators other than a period
                     re = new RegExp("\\"+decimalSeparator,"g");
-                    cleanedAmt = cleanedAmt.replace(re,'');
+                    cleanedAmt = cleanedAmt.replace(re,'.');
                 }
                 if (!isNaN(cleanedAmt)) {
                     sumAmount += Math.round(cleanedAmt*100);
