@@ -56,7 +56,7 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Exclude_For_These_Usernames__c</field>
+                <field>Usernames_to_Exclude__c</field>
             </layoutItems>
         </layoutColumns>
         <style>OneColumn</style>
