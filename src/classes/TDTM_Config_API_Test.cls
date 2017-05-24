@@ -76,7 +76,7 @@ private class TDTM_Config_API_Test {
         List<Trigger_Handler__c> handlers = TDTM_Config_API.getDefaultRecords();
         for (Trigger_Handler__c th : handlers) {
             if (th.Object__c == 'Contact' && th.Class__c == 'ACCT_IndividualAccounts_TDTM') {
-                th.Exclude_For_These_Usernames__c = UserInfo.getUserName();
+                th.Usernames_to_Exclude__c = UserInfo.getUserName();
             }
         }
         insert handlers;

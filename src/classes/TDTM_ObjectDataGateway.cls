@@ -68,8 +68,8 @@ public without sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGa
         string currUserName = UserInfo.getUserName();
         List<SObject> listClasses = new list<Sobject>();
         for (Trigger_Handler__c th : listTH) {
-            Set<String> excludedUserNames = (th.Exclude_For_These_Usernames__c != null ? 
-                    new Set<String>(th.Exclude_For_These_Usernames__c.split(';')) : new Set<String>());
+            Set<String> excludedUserNames = (th.Usernames_to_Exclude__c != null ?
+                    new Set<String>(th.Usernames_to_Exclude__c.split(';')) : new Set<String>());
             if (th.Object__c == objectName && th.Trigger_Action__c.contains(strAction) && th.Active__c == true
                     && !excludedUserNames.contains(currUserName)) {
                 listClasses.add(th);
@@ -91,7 +91,7 @@ public without sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGa
     public static list<Trigger_Handler__c> listTH {
         get {
             if (listTH == null) {
-                listTH =  [select Asynchronous__c, Class__c, Load_Order__c, Object__c, Active__c, Exclude_For_These_Usernames__c,
+                listTH =  [select Asynchronous__c, Class__c, Load_Order__c, Object__c, Active__c, Usernames_to_Exclude__c
                     Trigger_Action__c from Trigger_Handler__c order by Load_Order__c];
             }
             return listTH;
