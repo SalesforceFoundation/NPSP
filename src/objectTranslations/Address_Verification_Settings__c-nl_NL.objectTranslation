@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Address Verification Settings-DEPRECATED --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Address Verification Settings-DEPRECATED --></value>
+    </caseValues>
+    <fields>
+        <help>URL die wordt gebruikt voor adres verificatie</help>
+        <label>Adres Verificatie Eindpunt -AFGEKEURD</label>
+        <name>Address_Verification_Endpoint__c</name>
+    </fields>
+    <fields>
+        <help>Het verificatie ID van uw geheime sleutel</help>
+        <label>Verificatie ID-AFGEKEURD</label>
+        <name>Auth_ID__c</name>
+    </fields>
+    <fields>
+        <help>Het verificatie Token van uw geheime sleutel</help>
+        <label>Verificatie Token-AFGEKEURD</label>
+        <name>Auth_Token__c</name>
+    </fields>
+    <fields>
+        <help>Indien aangevinkt, aangepaste adressen worden automatisch geupdate door de reactie van de service (als er één geverifieerd resultaat is)</help>
+        <label>Automatisch Adressen Updaten-AFGEKEURD</label>
+        <name>Auto_Update_Addresses__c</name>
+    </fields>
+    <fields>
+        <help>De Salesforce class die verantwoordelijk is voor het koppelen met de SmartyStreets API en verifiëren van adressen</help>
+        <label>Class-AFGEKEURD</label>
+        <name>Class__c</name>
+    </fields>
+    <fields>
+        <help>Indien aangevinkt, elk US Adres dat de service markeert als onbestelbaar wordt automatisch geleegd. (U kunt de ongeldige vermelding in het Adress Record inzien.)</help>
+        <label>Verwijder Ongeldige Adressen-AFGEKEURD</label>
+        <name>Clear_Invalid_Addresses__c</name>
+    </fields>
+    <fields>
+        <help>Automatisch adresverificatie voor nieuwe adressen inschakelen</help>
+        <label>Inschakelen Automatische Verificatie AFG</label>
+        <name>Enable_Automatic_Verification__c</name>
+    </fields>
+    <fields>
+        <help>Markeert dubbele adressen als ongeldig, als de API meer dan één adres terugkoppelt. Indien niet geselecteerd, zal salesforce het eerste suggereerde adres als geldig adres te accepteren</help>
+        <label>Dubbele Adressen Weigeren-AFGEKEURD</label>
+        <name>Reject_Ambiguous_Addresses__c</name>
+    </fields>
+    <fields>
+        <help>Melding timeout in seconden</help>
+        <label>Timeout-AFGEKEURD</label>
+        <name>Timeout__c</name>
+    </fields>
+    <fields>
+        <help>Geeft aan of u gebruik maakt van de SmartyStreets adresverificatie service</help>
+        <label>SmartyStreets Gebruiken-AFGEKEURD</label>
+        <name>Using_SmartyStreets__c</name>
+    </fields>
+    <fields>
+        <help>URL die wordt gebruikt voor postcode verificatie</help>
+        <label>Postcode Verificatie Eindpunt -AFGEKEURD</label>
+        <name>Zipcode_Verification_Endpoint__c</name>
+    </fields>
+    <gender><!-- Neuter --></gender>
+</CustomObjectTranslation>

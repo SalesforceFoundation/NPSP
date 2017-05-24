@@ -2461,6 +2461,10 @@ Dieser Vorgang kann etwas Zeit in Anspruch nehmen, Sie können die Seite jedoch 
         <name>stgHelpRelAutoCreatedDup</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgHelpRelFieldSyncToggle --></label>
+        <name>stgHelpRelFieldSyncToggle</name>
+    </customLabels>
+    <customLabels>
         <label>Das benutzerdefinierte Feld, das zur Definition des Geschlechts eines Kontakts verwendet wird, um wechselseitige Beziehungen festzulegen</label>
         <name>stgHelpRelGenderField</name>
     </customLabels>
@@ -2483,6 +2487,10 @@ Dieser Vorgang kann etwas Zeit in Anspruch nehmen, Sie können die Seite jedoch 
     <customLabels>
         <label>Der verwendete Wert, wenn das Feld mit Angabe des Geschlecht nicht mit den Werten in der benutzerdefinierten weiblichen oder männlichen Bezeichnung übereinstimmt und in der Anrede des Kontakts kein Geschlecht angegeben ist</label>
         <name>stgHelpRelReciprocalNeutral</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRelSyncFields --></label>
+        <name>stgHelpRelSyncFields</name>
     </customLabels>
     <customLabels>
         <label>Lesen Sie &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelErrorLog&apos;);return false;&quot;&gt;Fehlerprotokolle&lt;/a&gt;, um zu sehen, ob Probleme vorhanden sind.</label>
@@ -2831,6 +2839,10 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <name>stgLabelRelSettings</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgLabelRelationshipSyncNoValidFields --></label>
+        <name>stgLabelRelationshipSyncNoValidFields</name>
+    </customLabels>
+    <customLabels>
         <label>Chattergruppen auswählen</label>
         <name>stgLabelSelectChatterGroup</name>
     </customLabels>
@@ -3055,11 +3067,11 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <name>NPSP_Settings</name>
     </customTabs>
     <quickActions>
-        <label><!-- Log a Call --></label>
+        <label><!-- LogACall --></label>
         <name>LogACall</name>
     </quickActions>
     <quickActions>
-        <label><!-- New Account --></label>
+        <label><!-- NewAccount --></label>
         <name>NewAccount</name>
     </quickActions>
     <quickActions>
@@ -3067,7 +3079,7 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <name>NewContact</name>
     </quickActions>
     <quickActions>
-        <label><!-- New Note --></label>
+        <label><!-- NewNote --></label>
         <name>NewNote</name>
     </quickActions>
     <quickActions>
@@ -3075,7 +3087,7 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <name>NewOpportunity</name>
     </quickActions>
     <quickActions>
-        <label><!-- New Task --></label>
+        <label><!-- NewTask --></label>
         <name>NewTask</name>
     </quickActions>
     <quickActions>

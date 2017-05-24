@@ -3,42 +3,42 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Engagement Plan --></value>
+        <value>Engagementplan</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Engagement Plan --></value>
+        <value>Engagementpläne</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Engagement Plan --></value>
+        <value>Engagementplan</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Engagement Plan --></value>
+        <value>Engagementpläne</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Engagement Plan --></value>
+        <value>Engagementplans</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Engagement Plan --></value>
+        <value>Engagementpläne</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Engagement Plan --></value>
+        <value>Engagementplan</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Engagement Plan --></value>
+        <value>Engagementplänen</value>
     </caseValues>
     <fields>
         <label><!-- Account --></label>
@@ -91,7 +91,7 @@
         <label>Aufgaben insgesamt</label>
         <name>Total_Tasks__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Masculine</gender>
     <layouts>
         <layout>Engagement Plan Layout</layout>
         <sections>
@@ -99,5 +99,5 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Engagement Plan Number --></nameFieldLabel>
+    <nameFieldLabel>Engagementplan</nameFieldLabel>
 </CustomObjectTranslation>

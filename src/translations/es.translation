@@ -2440,6 +2440,10 @@ Una vez que el procesos es 100% completo, usted puede abandonar est página o re
         <name>stgHelpRelAutoCreatedDup</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgHelpRelFieldSyncToggle --></label>
+        <name>stgHelpRelFieldSyncToggle</name>
+    </customLabels>
+    <customLabels>
         <label>Campo personalizado usado para definir el género del contacto que se utiliza para determinar la relación reciproca.</label>
         <name>stgHelpRelGenderField</name>
     </customLabels>
@@ -2462,6 +2466,10 @@ Una vez que el procesos es 100% completo, usted puede abandonar est página o re
     <customLabels>
         <label>El valor usado si el campo de genero del contacto no es igual al valor de la etiqueta personalizado de Masculino o Femenino, y el saludo del contacto no infiere el genero.</label>
         <name>stgHelpRelReciprocalNeutral</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRelSyncFields --></label>
+        <name>stgHelpRelSyncFields</name>
     </customLabels>
     <customLabels>
         <label><!-- stgHelpReviewErrorLog --></label>
@@ -2810,6 +2818,10 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgLabelRelSettings</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgLabelRelationshipSyncNoValidFields --></label>
+        <name>stgLabelRelationshipSyncNoValidFields</name>
+    </customLabels>
+    <customLabels>
         <label>Seleccionar un Grupo de Chatter</label>
         <name>stgLabelSelectChatterGroup</name>
     </customLabels>
@@ -3034,11 +3046,11 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>NPSP_Settings</name>
     </customTabs>
     <quickActions>
-        <label><!-- Log a Call --></label>
+        <label><!-- LogACall --></label>
         <name>LogACall</name>
     </quickActions>
     <quickActions>
-        <label><!-- New Account --></label>
+        <label><!-- NewAccount --></label>
         <name>NewAccount</name>
     </quickActions>
     <quickActions>
@@ -3046,7 +3058,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>NewContact</name>
     </quickActions>
     <quickActions>
-        <label><!-- New Note --></label>
+        <label><!-- NewNote --></label>
         <name>NewNote</name>
     </quickActions>
     <quickActions>
@@ -3054,7 +3066,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>NewOpportunity</name>
     </quickActions>
     <quickActions>
-        <label><!-- New Task --></label>
+        <label><!-- NewTask --></label>
         <name>NewTask</name>
     </quickActions>
     <quickActions>

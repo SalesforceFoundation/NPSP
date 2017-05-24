@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <help>Datum van erkenning</help>
+        <label>Erkenning Datum</label>
+        <name>Acknowledgment_Date__c</name>
+    </fields>
+    <fields>
+        <help>Status van Erkenning van deze gift.</help>
+        <label>Erkenning Status</label>
+        <name>Acknowledgment_Status__c</name>
+        <picklistValues>
+            <masterLabel>Acknowledged</masterLabel>
+            <translation>Erkend</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Do Not Acknowledge</masterLabel>
+            <translation>Niet Erkend</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Email Acknowledgment Not Sent</masterLabel>
+            <translation>E-mail Erkenning Niet Verzonden</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Email Acknowledgment Now</masterLabel>
+            <translation>E-mail Erkenning Nu</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>To Be Acknowledged</masterLabel>
+            <translation>Te Worden Erkend</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>De datum waarop de donateur specifiek is gevraagd naar de donatie, in tegenstelling tot de Opportunity sluitingsdatum die de organisatie instelt wanneer de Opportunity voor het eerst gemaakt is, of wanneer de Opportunity is gewonnen.</help>
+        <label>Vraag Datum</label>
+        <name>Ask_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Batch --></label>
+        <name>Batch__c</name>
+        <relationshipLabel>Opportunties</relationshipLabel>
+    </fields>
+    <fields>
+        <help>Notities over waarom de donatie vraag niet succesvol was.</help>
+        <label>Reden Gesloten Verloren</label>
+        <name>Closed_Lost_Reason__c</name>
+    </fields>
+    <fields>
+        <help>De Eerlijke Markt Waarde van een in natura gift.</help>
+        <label>Eerlijke Markt Waarde</label>
+        <name>Fair_Market_Value__c</name>
+    </fields>
+    <fields>
+        <help>Categoriseert het type vragen voor deze opportunity.</help>
+        <label>Gift Strategie</label>
+        <name>Gift_Strategy__c</name>
+        <picklistValues>
+            <masterLabel>New Donor</masterLabel>
+            <translation>Nieuwe Donateur</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Renewal</masterLabel>
+            <translation>Vernieuwing</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Upgrade</masterLabel>
+            <translation><!-- Upgrade --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>De datum van de schenking&apos;s ontstaan, volgens het doucment of contract verzonden door de organisatie die de schenking geeft.</help>
+        <label>Schenking Contract Datum</label>
+        <name>Grant_Contract_Date__c</name>
+    </fields>
+    <fields>
+        <help>Volgt unieke nummers die soms toegewezen zijn door organisaties die schenkingen geven.</help>
+        <label>Schenking Contract Nummer</label>
+        <name>Grant_Contract_Number__c</name>
+    </fields>
+    <fields>
+        <label>Schenking Periode Eind Datum</label>
+        <name>Grant_Period_End_Date__c</name>
+    </fields>
+    <fields>
+        <label>Schenking Periode Start  Datum</label>
+        <name>Grant_Period_Start_Date__c</name>
+    </fields>
+    <fields>
+        <help>Beschrijf de financiering gebieden voor de schenking. Je kan alles invullen wat je wilt. Bijvoorbeeld, je kunt de naam van het programma waar de schenking bij hoort invullen.</help>
+        <label>Programma Gebieden</label>
+        <name>Grant_Program_Area_s__c</name>
+    </fields>
+    <fields>
+        <help>Een URL die wijst naar de vereisten op een schenking-maker zijn website.</help>
+        <label>Schenking Vereisten Website</label>
+        <name>Grant_Requirements_Website__c</name>
+    </fields>
+    <fields>
+        <help>Het bestaande contact record van de geëerde persoon voor deze donatie.</help>
+        <label>Geëerd Contactpersoon</label>
+        <name>Honoree_Contact__c</name>
+        <relationshipLabel>Opportunties (Geëerde Contactpersoon)</relationshipLabel>
+    </fields>
+    <fields>
+        <help>De geëerde persoon zijn naam verschaft door de donateur. Indien dit veld leeg is, en de Eerbetoon contact veld bevat een waarde, zal Salesforce automatisch deze waarde invullen.</help>
+        <label>Geëerd Naam</label>
+        <name>Honoree_Name__c</name>
+    </fields>
+    <fields>
+        <help>Houdt elk rijke tekst beschrijving van een in natura gift, inclusief afbeeldingen.</help>
+        <label>In Natura Beschrijving</label>
+        <name>In_Kind_Description__c</name>
+    </fields>
+    <fields>
+        <help>Aangevinkt als de donateur de Eerlijke Markt Waarde verschaft heeft voor deze in natura gift.</help>
+        <label>In Natura Donateur Verklaarde Waarde</label>
+        <name>In_Kind_Donor_Declared_Value__c</name>
+    </fields>
+    <fields>
+        <help>Het type in natura gift</help>
+        <label>In Natura Type</label>
+        <name>In_Kind_Type__c</name>
+        <picklistValues>
+            <masterLabel>Goods</masterLabel>
+            <translation>Goederen</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Services</masterLabel>
+            <translation><!-- Services --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Indien geselecteerd, impliceert dat de schenking een vernieuwing is van een vorige schenking.</help>
+        <label>Is Nieuwe Schenking</label>
+        <name>Is_Grant_Renewal__c</name>
+    </fields>
+    <fields>
+        <help><!-- The account of the company who will match this gift. --></help>
+        <label>Matching Gift Bedrag</label>
+        <name>Matching_Gift_Account__c</name>
+        <relationshipLabel>Gematchte Giften</relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The name of the company who will match this gift. --></help>
+        <label>Matching Gift Werkgever</label>
+        <name>Matching_Gift_Employer__c</name>
+    </fields>
+    <fields>
+        <help><!-- The status of this gift being matched. --></help>
+        <label><!-- Matching Gift Status --></label>
+        <name>Matching_Gift_Status__c</name>
+        <picklistValues>
+            <masterLabel>Potential</masterLabel>
+            <translation>Potentieel</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Received</masterLabel>
+            <translation>Ontvangen</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Submitted</masterLabel>
+            <translation>Ingediend</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- The employer&apos;s matching gift for this employee&apos;s gift. --></help>
+        <label><!-- Matching Gift --></label>
+        <name>Matching_Gift__c</name>
+        <relationshipLabel>Gematchte Giften</relationshipLabel>
+    </fields>
+    <fields>
+        <help>De NPSP werkt dit veld automatisch bij op basis van de volgende Grote Deadline record.</help>
+        <label>Volgende Leverdatum</label>
+        <name>Next_Grant_Deadline_Due_Date__c</name>
+    </fields>
+    <fields>
+        <help>Een persoonlijk bericht voor de notificatie ontvanger.</help>
+        <label>Notificatie Bericht</label>
+        <name>Notification_Message__c</name>
+    </fields>
+    <fields>
+        <help>Hoe de notificatie ontvanger zou moeten worden genotificeerd.</help>
+        <label>Notificatie Voorkeur</label>
+        <name>Notification_Preference__c</name>
+        <picklistValues>
+            <masterLabel>Do Not Notify</masterLabel>
+            <translation>Houdt niet op de hoogte</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Email</masterLabel>
+            <translation>E-mail</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Phone</masterLabel>
+            <translation>Telefoon</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Postal Mail</masterLabel>
+            <translation>Post</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Het bestaande contact record van de persoon die gewaarschuwd moet worden voor deze donatie.</help>
+        <label>Notificatie Ontvanger Contactpersoon</label>
+        <name>Notification_Recipient_Contact__c</name>
+        <relationshipLabel>Opportunties (Notificatie Ontvanger)</relationshipLabel>
+    </fields>
+    <fields>
+        <help>De contact informatie (verschaft door de donateur) voor de notificatie ontvanger.</help>
+        <label>Notificatie Ontvanger Informatie</label>
+        <name>Notification_Recipient_Information__c</name>
+    </fields>
+    <fields>
+        <help>De naam (verschaft door de donateur) van de persoon die moet gewaarschuwd worden voor deze gift. Als dit veld leeg is, en de Notificatie Ontvanger Contact veld bevat een waarde, zal Salesforce dit veld automatisch vullen met deze waarde.</help>
+        <label>Notificatie Ontvanger Naam</label>
+        <name>Notification_Recipient_Name__c</name>
+    </fields>
+    <fields>
+        <help>Als deze schenking een vernieuwing is van een vorige schenking, gebruik dit veld om dit record te relateren aan het vorige record.</help>
+        <label>Vorige Schenking/Gift Opportunity</label>
+        <name>Previous_Grant_Opportunity__c</name>
+        <relationshipLabel>Gerelateerde Schenkingen/Giften</relationshipLabel>
+    </fields>
+    <fields>
+        <help>De status die gebruikt moet worden bij het maken van een campagnelid voor deze opportunity&apos;s primaire contact en primaire campagne bron. Laat standaard leeg met een reactiestatus voor gesloten/gewonnen opp, en een non-responded status voor andere opp.</help>
+        <label>Primair Contact Campagnelid Status</label>
+        <name>Primary_Contact_Campaign_Member_Status__c</name>
+    </fields>
+    <fields>
+        <help>De primaire contactpersoon voor deze opportunity. De primaire contactpersoon rol wordt gesynchroniseerd met dit veld. Voor individuele donaties, dit geeft attributie voor deze opportunity.</help>
+        <label>Primair Contactpersoon</label>
+        <name>Primary_Contact__c</name>
+        <relationshipLabel>Opportunties</relationshipLabel>
+    </fields>
+    <fields>
+        <help>De datum waarop de donateur is gekwalificeerd voor deze donatie.</help>
+        <label>Gekwalificeerde Datum</label>
+        <name>Qualified_Date__c</name>
+    </fields>
+    <fields>
+        <help>Termijn naam voor inclusie in Opportunity Naamgeving. Laat de betalingstermijn nummer tussen haakjes voor openstaande terugkerende donaties.</help>
+        <label>Terugkerende Donatie Termijn Naam</label>
+        <name>Recurring_Donation_Installment_Name__c</name>
+    </fields>
+    <fields>
+        <help>De betalingstermijn nummer van deze opportunity&apos;s terugkerende donatie schema.</help>
+        <label>Terugkerende Donatie Termijn Nummer</label>
+        <name>Recurring_Donation_Installment_Number__c</name>
+    </fields>
+    <fields>
+        <help>Het bedrag dat je verzoekt. Dit nummer kan anders zijn dan het uiteindelijke prijs bedrag.</help>
+        <label>Aangevraagd Bedrag</label>
+        <name>Requested_Amount__c</name>
+    </fields>
+    <fields>
+        <help>Geeft aan of de gift een eerbetoon is aan een individu.</help>
+        <label>Eerbetoon Type</label>
+        <name>Tribute_Type__c</name>
+        <picklistValues>
+            <masterLabel>Honor</masterLabel>
+            <translation>Eerbetoon</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Memorial</masterLabel>
+            <translation>Gedachtenis</translation>
+        </picklistValues>
+    </fields>
+    <layouts>
+        <layout>Donation Layout</layout>
+        <sections>
+            <label>Donatie Informatie</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Gematchte Gift Informatie</label>
+            <section>Matching Gift Information</section>
+        </sections>
+        <sections>
+            <label>Betalingsinformatie</label>
+            <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label>Eerbetoon Informatie</label>
+            <section>Tribute Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Grant Layout</layout>
+        <sections>
+            <label>Donatie Informatie</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Schenking Informatie</label>
+            <section>Grant Information</section>
+        </sections>
+        <sections>
+            <label>Betalingsinformatie</label>
+            <section>Payment Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>In-Kind Gift Layout</layout>
+        <sections>
+            <label>Donatie Informatie</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>In Natura Informatie</label>
+            <section>In-Kind Information</section>
+        </sections>
+        <sections>
+            <label>Eerbetoon Informatie</label>
+            <section>Tribute Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Major Gift Layout</layout>
+        <sections>
+            <label>Donatie Informatie</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Grote Gift Informatie</label>
+            <section>Major Gift Information</section>
+        </sections>
+        <sections>
+            <label><!-- Matching Gift Information --></label>
+            <section>Matching Gift Information</section>
+        </sections>
+        <sections>
+            <label>Betalingsinformatie</label>
+            <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label><!-- Tribute Information --></label>
+            <section>Tribute Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Matching Gift Layout</layout>
+        <sections>
+            <label>Donatie Informatie</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Betalingsinformatie</label>
+            <section>Payment Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Membership Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>Velden</label>
+            <section>Fields</section>
+        </sections>
+        <sections>
+            <label>Lid Informatie</label>
+            <section>Member Information</section>
+        </sections>
+        <sections>
+            <label>Betalingsinformatie</label>
+            <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label><!-- System Information --></label>
+            <section>System Information</section>
+        </sections>
+    </layouts>
+    <quickActions>
+        <label>Nieuwe Betaling</label>
+        <name>New_Payment</name>
+    </quickActions>
+    <quickActions>
+        <label>Snelle Update</label>
+        <name>Quick_Update</name>
+    </quickActions>
+    <webLinks>
+        <label>Email Bevestiging</label>
+        <name>Email_Acknowledgment</name>
+    </webLinks>
+    <webLinks>
+        <label>Email Bevestigingen</label>
+        <name>Email_Acknowledgments</name>
+    </webLinks>
+    <webLinks>
+        <label>Vind Gematchte Giften</label>
+        <name>Find_Matched_Gifts</name>
+    </webLinks>
+    <webLinks>
+        <label>Soft Credits Beheren</label>
+        <name>Manage_Soft_Credits</name>
+    </webLinks>
+    <webLinks>
+        <label>Ververs Naam</label>
+        <name>Refresh_Name</name>
+    </webLinks>
+</CustomObjectTranslation>
