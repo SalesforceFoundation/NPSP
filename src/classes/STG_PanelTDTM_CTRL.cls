@@ -50,8 +50,9 @@ public with sharing class STG_PanelTDTM_CTRL extends STG_Panel {
     */
     public Trigger_Handler__c thNew {
         get {
-            if (thNew == null)
-              thNew = new Trigger_Handler__c();
+            if (thNew == null) {
+                thNew = new Trigger_Handler__c();
+            }
             return thNew;
         }
         private set;

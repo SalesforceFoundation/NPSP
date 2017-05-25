@@ -50,8 +50,9 @@ public without sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGa
             List<Trigger_Handler__c> result = [select Id from Trigger_Handler__c limit 1];
             rowCount = result.size();
         }
-        if(rowCount == 0)
-            return true;    
+        if(rowCount == 0) {
+            return true;
+        }
         return false;
     }
 
