@@ -167,9 +167,9 @@
     </fields>
     <fields>
         <fullName>Usernames_to_Exclude__c</fullName>
-        <description>Semicolon separated list of Salesforce Usernames that this trigger will NOT run for</description>
+        <description>Semicolon separated list of Salesforce usernames that this trigger will NOT run for</description>
         <externalId>false</externalId>
-        <inlineHelpText>Semicolon separated list of Salesforce Usernames that this trigger will NOT run for. Leave blank to run for all users.</inlineHelpText>
+        <inlineHelpText>Semicolon separated list of Salesforce usernames that this trigger will NOT run for. Leave blank to run for all users.</inlineHelpText>
         <label>Usernames to Exclude</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
