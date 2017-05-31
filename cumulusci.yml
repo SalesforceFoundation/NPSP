@@ -58,7 +58,7 @@ tasks:
         description: Runs the Ruby/Watir browser tests in the browsertests folder using Firefox
         class_path: cumulusci.tasks.command.SalesforceBrowserTest
         options:
-            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber -c features/ --tags ~@flaky --tags ~@chrome' 
+            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber --format pretty --format junit --out ../junit -c features/ --tags ~@flaky --tags ~@chrome' 
             dir: '.'
             env:
                 SELENIUM_BROWSER: firefox
@@ -67,7 +67,7 @@ tasks:
         description: Runs the Ruby/Watir browser tests in the browsertests folder using Chrome
         class_path: cumulusci.tasks.command.SalesforceBrowserTest
         options:
-            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber -c features/ --tags ~@firefox --tags ~@flaky'
+            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber --format pretty --format junit --out ../junit -c features/ --tags ~@firefox --tags ~@flaky'
             dir: '.'
             env:
                 SELENIUM_BROWSER: chrome
@@ -76,17 +76,17 @@ tasks:
         description: Runs the Ruby/Watir browser tests in the browsertests folder against unmanaged metadata in Firefox
         class_path: cumulusci.tasks.command.SalesforceBrowserTest
         options:
-            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber -c features/ --tags ~@flaky --tags ~@chrome' 
+            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber --format pretty --format junit --out ../junit -c features/ --tags ~@flaky --tags ~@chrome' 
             dir: '.'
             env:
                 SELENIUM_BROWSER: firefox
                 TARGET_ORG: unmanaged
 
-    rowsertests_unmanaged_chrome:
+    browsertests_unmanaged_chrome:
         description: Runs the Ruby/Watir browser tests in the browsertests folder against unmanaged metadata in Chrome
         class_path: cumulusci.tasks.command.SalesforceBrowserTest
         options:
-            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber -c features/ --tags ~@firefox --tags ~@flaky'
+            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber --format pretty --format junit --out ../junit -c features/ --tags ~@firefox --tags ~@flaky'
             dir: '.'
             env:
                 SELENIUM_BROWSER: chrome
