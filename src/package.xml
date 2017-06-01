@@ -186,7 +186,15 @@
         <members>REL_Relationships_TDTM</members>
         <members>REL_Relationships_TEST</members>
         <members>REL_Utils</members>
+        <members>RLLP_Definition</members>
+        <members>RLLP_Engine</members>
+        <members>RLLP_Exclusion</members>
+        <members>RLLP_FiscalYears</members>
+        <members>RLLP_Operation</members>
         <members>RLLP_OppAccRollup_BATCH</members>
+        <members>RLLP_OppAccount</members>
+        <members>RLLP_OppAccount_BATCH</members>
+        <members>RLLP_OppAccount_TEST</members>
         <members>RLLP_OppContactRollup_BATCH</members>
         <members>RLLP_OppHouseholdRollup_BATCH</members>
         <members>RLLP_OppPartialSoftCreditRollup</members>
@@ -771,8 +779,8 @@
         <members>Trigger_Handler__c.Load_Order__c</members>
         <members>Trigger_Handler__c.Object__c</members>
         <members>Trigger_Handler__c.Trigger_Action__c</members>
-        <members>Trigger_Handler__c.Usernames_to_Exclude__c</members>
         <members>Trigger_Handler__c.User_Managed__c</members>
+        <members>Trigger_Handler__c.Usernames_to_Exclude__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Automatic_Campaign_Member_Management__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Non_Responded_Status__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Responded_Status__c</members>
