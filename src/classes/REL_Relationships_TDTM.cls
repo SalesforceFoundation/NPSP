@@ -450,6 +450,9 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
                     return true;
                 }
             }
+            if (newRel.npe4__Type__c != oldRel.npe4__Type__c) {
+                return true;
+            }
         } 
         return false;
     }
