@@ -964,4 +964,55 @@ private class REL_Relationships_TEST {
         system.assertEquals(null, rel.npe4__Description__c);
     }
 
+    /*********************************************************************************************************
+    * @description Test method for change to Type field only.
+    */
+    static testMethod void testTypeChangeOnly(){
+        if (strTestOnly != '*' && strTestOnly != 'testFieldSyncExclusion') return;
+        
+        setupRelationshipTestData(null);
+        Relationship_Sync_Excluded_Fields__c noDesc = new Relationship_Sync_Excluded_Fields__c(name = 'npe4__description__c');
+        insert noDesc;
+        
+        npe4__Relationship__c crel =  new npe4__Relationship__c(npe4__contact__c = c1.id, npe4__Relatedcontact__c = c2.id, 
+                                           npe4__Type__c='Friend', npe4__Status__c = 'Active', npe4__Description__c='Test Description');
+       
+        
+        insert crel;
+        
+        // check that rel gets created
+        List<npe4__Relationship__c> relList = [select id,npe4__contact__c,npe4__Relatedcontact__c,npe4__Status__c,
+                                          npe4__Type__c, npe4__ReciprocalRelationship__c
+                                          from npe4__Relationship__c where Id= :crel.Id limit 1];
+        // check for mirror rel
+        List<npe4__Relationship__c> mirrorList = [select id,npe4__contact__c,npe4__Relatedcontact__c,npe4__Status__c,
+                                              npe4__Type__c,npe4__ReciprocalRelationship__c  
+                                              from npe4__Relationship__c where npe4__ReciprocalRelationship__c=:relList[0].Id limit 1];
+            
+        //same types
+        System.assertEquals(mirrorList[0].npe4__Type__c, 'Friend');
+        System.assertEquals(relList[0].npe4__Type__c, 'Friend');  
+        
+        // test changing the relationship
+        relList[0].npe4__Type__c = 'Colleague';
+        
+        Test.startTest();
+        update relList[0];
+        Test.stopTest();        
+        
+        // test change to the rel
+        npe4__Relationship__c updated_original = [select id, npe4__Description__c, npe4__Type__c,npe4__ReciprocalRelationship__c 
+                                              from npe4__Relationship__c where id = :relList[0].Id limit 1];
+                                              
+        //original should have updated relationship
+        System.assertEquals('Colleague', updated_original.npe4__Type__c);
+
+        
+        npe4__Relationship__c updated_mirror = [select id, npe4__Type__c, npe4__Description__c, npe4__ReciprocalRelationship__c
+                                              from npe4__Relationship__c where npe4__ReciprocalRelationship__c = :relList[0].Id limit 1];
+        //mirror should have relationship set right
+        System.assertEquals('Colleague', updated_mirror.npe4__Type__c);   
+
+    }
+
 }
