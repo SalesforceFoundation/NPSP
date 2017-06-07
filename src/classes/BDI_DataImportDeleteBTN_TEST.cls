@@ -280,9 +280,7 @@ class BDI_DataImportDeleteBTN_TEST {
      * @return PageReference
      */
     static PageReference clickButton(String actionType) {
-        if (String.isNotBlank(actionType)) {
-            ApexPages.currentPage().getParameters().put('action', actionType);
-        }
+        ApexPages.currentPage().getParameters().put('action', actionType);
 
         BDI_DataImportDeleteBTN_CTRL ctrl = new BDI_DataImportDeleteBTN_CTRL();
 
