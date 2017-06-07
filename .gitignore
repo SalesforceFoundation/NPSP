@@ -25,4 +25,5 @@ Referenced Packages
 .*.swp
 *.pyc
 *.sublime-project
+*.csv
 /config/

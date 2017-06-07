@@ -1,0 +1,1 @@
+sfdx force:auth:jwt:grant -i 3MVG9nwRZX60mjQra5yKwxXiTWGuvvMQuX5vqNtgXUQAl5lDXoyBBKU66oRTBZKeW.Exu5rRx8_nxdGbbODYh  -f /Users/rfrankus/.ssh/server.key --setdefaultusername  -u rfrankus@sfdx-salesforce.org

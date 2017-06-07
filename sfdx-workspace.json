@@ -6,6 +6,6 @@
     }
   ],
   "Namespace": "",
-  "SfdcLoginUrl": "https://gs0.salesforce.com",
+  "SfdcLoginUrl": "https://gs1.salesforce.com",
   "SourceApiVersion": "37.0"
 }

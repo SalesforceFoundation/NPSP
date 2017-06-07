@@ -1,0 +1,1105 @@
+<testsuite tests="834">
+  <testcase classname="ACCT_AccountMerge_TEST" name="testMergeThreeHHAccountsManyAddr" time="2.035" />
+  <testcase classname="ACCT_AccountMerge_TEST" name="testMergeThreeOrgAccountsManyAddr" time="1.016" />
+  <testcase classname="ACCT_AccountMerge_TEST" name="testMergeTwoHHAccounts" time="2.051">
+    <failure type="Class.ACCT_AccountMerge_TEST.testMergeTwoHHAccounts: line 129, column 1">System.AssertException: Assertion Failed: Expected: 4, Actual: 6</failure>
+  </testcase>
+  <testcase classname="ACCT_AccountMerge_TEST" name="testMergeTwoOne2OneAccounts" time="1.002">
+    <failure type="Class.ACCT_AccountMerge_TEST.testMergeTwoOne2OneAccounts: line 276, column 1">System.AssertException: Assertion Failed: Expected: 4, Actual: 6</failure>
+  </testcase>
+  <testcase classname="ACCT_AccountMerge_TEST" name="testNamesAndOppsMergeHHToHH" time="3.026">
+    <failure type="Class.ACCT_AccountMerge_TEST.testNamesAndOppsMerge: line 469, column 1
+Class.ACCT_AccountMerge_TEST.testNamesAndOppsMergeHHToHH: line 357, column 1">System.AssertException: Assertion Failed: Expected: 4, Actual: 6</failure>
+  </testcase>
+  <testcase classname="ACCT_AccountMerge_TEST" name="testNamesAndOppsMergeHHToOrg" time="2.13">
+    <failure type="Class.ACCT_AccountMerge_TEST.testNamesAndOppsMerge: line 493, column 1
+Class.ACCT_AccountMerge_TEST.testNamesAndOppsMergeHHToOrg: line 384, column 1">System.AssertException: Assertion Failed: Expected: 4, Actual: 6</failure>
+  </testcase>
+  <testcase classname="ACCT_AccountMerge_TEST" name="testNamesAndOppsMergeOne2OneToOne2One" time="1.001">
+    <failure type="Class.ACCT_AccountMerge_TEST.testNamesAndOppsMerge: line 477, column 1
+Class.ACCT_AccountMerge_TEST.testNamesAndOppsMergeOne2OneToOne2One: line 366, column 1">System.AssertException: Assertion Failed: Expected: 4, Actual: 6</failure>
+  </testcase>
+  <testcase classname="ACCT_AccountMerge_TEST" name="testNamesAndOppsMergeOne2OneToOrg" time="1.02">
+    <failure type="Class.ACCT_AccountMerge_TEST.testNamesAndOppsMerge: line 509, column 1
+Class.ACCT_AccountMerge_TEST.testNamesAndOppsMergeOne2OneToOrg: line 402, column 1">System.AssertException: Assertion Failed: Expected: 4, Actual: 6</failure>
+  </testcase>
+  <testcase classname="ACCT_AccountMerge_TEST" name="testNamesAndOppsMergeOrgToHH" time="2.004">
+    <failure type="Class.ACCT_AccountMerge_TEST.testNamesAndOppsMerge: line 485, column 1
+Class.ACCT_AccountMerge_TEST.testNamesAndOppsMergeOrgToHH: line 375, column 1">System.AssertException: Assertion Failed: Expected: 4, Actual: 6</failure>
+  </testcase>
+  <testcase classname="ACCT_AccountMerge_TEST" name="testNamesAndOppsMergeOrgToOne2One" time="1.009">
+    <failure type="Class.ACCT_AccountMerge_TEST.testNamesAndOppsMerge: line 501, column 1
+Class.ACCT_AccountMerge_TEST.testNamesAndOppsMergeOrgToOne2One: line 393, column 1">System.AssertException: Assertion Failed: Expected: 4, Actual: 6</failure>
+  </testcase>
+  <testcase classname="ACCT_CascadeDeleteLookups_TEST" name="testAccountCascadeGrandchild" time="1.033" />
+  <testcase classname="ACCT_CascadeDeleteLookups_TEST" name="testAccountCascadeRelationship" time="1.002" />
+  <testcase classname="ACCT_CascadeDeleteLookups_TEST" name="testAccountMergeNoCascade" time="0.0" />
+  <testcase classname="ACCT_HHAccounts_TEST" name="DeleteContactsFromHHAccounts" />
+  <testcase classname="ACCT_HHAccounts_TEST" name="NewContactsEmptyHHAccounts" />
+  <testcase classname="ACCT_HHAccounts_TEST" name="NewContactsNoAccounts" />
+  <testcase classname="ACCT_HHAccounts_TEST" name="NewContactsNoAccountsWithHHObj" />
+  <testcase classname="ACCT_HHAccounts_TEST" name="NewContactsNonEmptyHHAccounts" />
+  <testcase classname="ACCT_HHAccounts_TEST" name="UndeleteContactsFromHHAccounts" />
+  <testcase classname="ACCT_HHAccounts_TEST" name="UpdateContactsMergeHHAccounts" />
+  <testcase classname="ACCT_HHAccounts_TEST" name="UpdateContactsSplitHHAccounts" />
+  <testcase classname="ACCT_HHAccounts_TEST" name="UpdateOneToOneAndBucketContactsToHHAccounts" />
+  <testcase classname="ACCT_HHAccounts_TEST" name="addContactCheckAccountPrimaryContact" />
+  <testcase classname="ACCT_HHAccounts_TEST" name="addContactCheckNumberHHMembers" />
+  <testcase classname="ACCT_HHAccounts_TEST" name="changeContactOwners" />
+  <testcase classname="ACCT_HHAccounts_TEST" name="changeContactsCheckOpps">
+    <failure type="Class.ACCT_HHAccounts_TEST.changeContactsCheckOpps: line 875, column 1">System.AssertException: Assertion Failed: Expected: 5, Actual: 10</failure>
+  </testcase>
+  <testcase classname="ACCT_HHAccounts_TEST" name="newHHAccountWithRecordTypeOnly" />
+  <testcase classname="ACCT_HHAccounts_TEST" name="updateAccountToHHRecordType" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="ACCT_IndividualAccounts_TEST" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="attachToHHAccount" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="attachToIndividualAccount" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="changeFromOneToOneToHouseholdAccount" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="contactAddedToExistingHHAccount" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="contactAddedToExistingOneToOne" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="contactInNormalOrgNameChangeHHAccount" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="contactInNormalOrgNameChangeOneToOne" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="contactUpdatedToExistingOneToOne" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="contactUpdatedToExistingOneToOneHH" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="deleteContactNoOppHHAccount" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="deleteContactNoOppOneToOne" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="deleteContactNormalAccountHouseholdAcc" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="deleteContactNormalAccountOneToOne" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="deleteContactWithOppHHAccount" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="deleteContactWithOppOneToOne" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="detachFromNormalAccountToBucket" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="detachFromNormalAccountToBucketAccountProcessor" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="detachFromNormalAccountToOneToOne" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="detachFromNormalAccountToOneToOneHousehold" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="detachHHAccount" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="detachHHAccount2" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="detachIndividualAccount" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="detachOneToOne" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="editContactDuringDetachHHAccount" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="editContactDuringDetachOneToOne" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="ghIssue16a" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="ghIssue16b" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="insertBucketChangeToPrivate" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="insertHHAccountChangeToPrivate" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="insertHHAccountContactTitleForRename" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="insertHHAccountTriggerOff" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="insertOneToOneChangeToPrivate" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="insertOneToOneTriggerOff" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="insertPrivateBucket" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="insertPrivateHHAccount" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="insertPrivateOneToOne" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="insertUpdateOneToOne" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="insertUpdateOneToOneHouseholds" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="undeleteContactToExistingHH" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="undeleteHHContactNoOpp" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="undeleteHHContactWithOpp" />
+  <testcase classname="ACCT_IndividualAccounts_TEST" name="updateHHAccountRecType" />
+  <testcase classname="ACCT_ViewOverride_TEST" name="accountViewOverride" time="0.0" />
+  <testcase classname="ACCT_ViewOverride_TEST" name="noAccount" time="0.0" />
+  <testcase classname="ADDR_Addresses_TEST" name="clearAddrOverride" time="1.003" />
+  <testcase classname="ADDR_Addresses_TEST" name="clearAddrOverrideNewAddr" time="1.007" />
+  <testcase classname="ADDR_Addresses_TEST" name="deleteDefaultAddr" time="1.0" />
+  <testcase classname="ADDR_Addresses_TEST" name="deleteNonDefaultOverrideAddr" time="1.003" />
+  <testcase classname="ADDR_Addresses_TEST" name="insertContactWithAddress" time="0.0" />
+  <testcase classname="ADDR_Addresses_TEST" name="insertContactWithAddressOverride" time="0.0" />
+  <testcase classname="ADDR_Addresses_TEST" name="insertContactWithAddressRecreateAccount" time="1.008" />
+  <testcase classname="ADDR_Addresses_TEST" name="insertNewDefaultAddr" time="1.003" />
+  <testcase classname="ADDR_Addresses_TEST" name="insertNewDefaultAddrAndReset" time="1.0" />
+  <testcase classname="ADDR_Addresses_TEST" name="insertNewSeasonalAddr" time="1.017" />
+  <testcase classname="ADDR_Addresses_TEST" name="insertNewSeasonalAddrNotCurrent" time="1.002" />
+  <testcase classname="ADDR_Addresses_TEST" name="newAddrNoAccount" time="0.0" />
+  <testcase classname="ADDR_Addresses_TEST" name="newAddrNotHHAccount" time="0.0" />
+  <testcase classname="ADDR_Addresses_TEST" name="newDefaultAddr" time="0.0" />
+  <testcase classname="ADDR_Addresses_TEST" name="setConAddrNoOverride" time="0.0" />
+  <testcase classname="ADDR_Addresses_TEST" name="setConAddrOverride" time="1.003" />
+  <testcase classname="ADDR_Addresses_TEST" name="updateAccAddrExisting" time="1.007" />
+  <testcase classname="ADDR_Addresses_TEST" name="updateAccAddrNew" time="2.003" />
+  <testcase classname="ADDR_Addresses_TEST" name="updateAddrOverride" />
+  <testcase classname="ADDR_Addresses_TEST" name="updateConAddrExisting" />
+  <testcase classname="ADDR_Addresses_TEST" name="updateConAddrExistingAddrType" />
+  <testcase classname="ADDR_Addresses_TEST" name="updateConAddrExistingCaseOnly" />
+  <testcase classname="ADDR_Addresses_TEST" name="updateConAddrMarkOverride" />
+  <testcase classname="ADDR_Addresses_TEST" name="updateConAddrNew" />
+  <testcase classname="ADDR_Addresses_TEST" name="updateDefaultAddr" />
+  <testcase classname="ADDR_Addresses_TEST" name="updateNonDefaultAddr" />
+  <testcase classname="ADDR_Addresses_TEST2" name="clearConAddrExisting" time="1.0" />
+  <testcase classname="ADDR_Addresses_TEST2" name="deleteSeasonalAddr" time="1.0" />
+  <testcase classname="ADDR_Addresses_TEST2" name="insertConWithAddrToExistingHH" time="1.015" />
+  <testcase classname="ADDR_Addresses_TEST2" name="insertConWithDefaultAddrToExistingHH" time="1.003" />
+  <testcase classname="ADDR_Addresses_TEST2" name="insertConWithNoAddrToExistingHH" time="1.009" />
+  <testcase classname="ADDR_Addresses_TEST2" name="insertContactWithMultilineStreetAddress" time="0.0" />
+  <testcase classname="ADDR_Addresses_TEST2" name="insertNewDefaultMultilineStreetAddr" time="1.0" />
+  <testcase classname="ADDR_Addresses_TEST2" name="insertPartialSeasonalAddr" time="0.0" />
+  <testcase classname="ADDR_Addresses_TEST2" name="insertSeasonalAddrOverlapExisting" time="1.0" />
+  <testcase classname="ADDR_Addresses_TEST2" name="insertSeasonalAddrWithOverlap" time="1.003" />
+  <testcase classname="ADDR_Addresses_TEST2" name="newAddrForOrgAccounts" time="0.0" />
+  <testcase classname="ADDR_Addresses_TEST2" name="newDupeAccountAddr" time="0.0" />
+  <testcase classname="ADDR_Addresses_TEST2" name="newDupeAccountAddrNonDefault" time="1.002" />
+  <testcase classname="ADDR_Addresses_TEST2" name="newDupeContactAddr" time="1.003" />
+  <testcase classname="ADDR_Addresses_TEST2" name="newDupeContactAddrNonDefault" time="1.003" />
+  <testcase classname="ADDR_Addresses_TEST2" name="newOrgAccounts" time="0.0" />
+  <testcase classname="ADDR_Addresses_TEST2" name="scheduleSeasonalAddrReset" time="1.007" />
+  <testcase classname="ADDR_Addresses_TEST2" name="scheduleSeasonalAddrUpdate" time="1.0" />
+  <testcase classname="ADDR_Addresses_TEST2" name="setConAddrOverrideAndLookupOnNewContact" />
+  <testcase classname="ADDR_Addresses_TEST2" name="testDisabledHHAccountAddr" />
+  <testcase classname="ADDR_Addresses_TEST2" name="testSeasonalAddrOverlapLogic" />
+  <testcase classname="ADDR_Addresses_TEST2" name="updateAccMultilineStreetAddr" />
+  <testcase classname="ADDR_Addresses_TEST2" name="updateAccMultilineStreetAddrNL" />
+  <testcase classname="ADDR_Addresses_TEST2" name="updateConAddrWithExternalOverride" />
+  <testcase classname="ADDR_Addresses_TEST2" name="updateConAddrWithOverride" />
+  <testcase classname="ADDR_Addresses_TEST2" name="updateHHContactToNewHH" />
+  <testcase classname="ADDR_Addresses_TEST2" name="updateOrgAccounts" />
+  <testcase classname="ADDR_Addresses_TEST2" name="updateOrgContactToHH" />
+  <testcase classname="ADDR_Addresses_TEST2" name="updateSeasonalAddr" />
+  <testcase classname="ADDR_Cicero_TEST" name="singleValidAddr" time="0.0" />
+  <testcase classname="ADDR_CopyAddrHHObjBTN_TEST" name="TEST_AddressUtility" time="1.02" />
+  <testcase classname="ADDR_GoogleGeoAPI_Validator_TEST" name="testAmbiguousAddress" time="0.0" />
+  <testcase classname="ADDR_GoogleGeoAPI_Validator_TEST" name="testBadResponse" time="0.0" />
+  <testcase classname="ADDR_GoogleGeoAPI_Validator_TEST" name="testInterfaceStrings" time="0.0" />
+  <testcase classname="ADDR_GoogleGeoAPI_Validator_TEST" name="testInvalidRequestAddress" time="0.0" />
+  <testcase classname="ADDR_GoogleGeoAPI_Validator_TEST" name="testNullAuthToken" time="0.0" />
+  <testcase classname="ADDR_GoogleGeoAPI_Validator_TEST" name="testOverQueryLimitAddress" time="0.0" />
+  <testcase classname="ADDR_GoogleGeoAPI_Validator_TEST" name="testRequestDeniedAddress" time="0.0" />
+  <testcase classname="ADDR_GoogleGeoAPI_Validator_TEST" name="testSingleAddress" time="0.0" />
+  <testcase classname="ADDR_GoogleGeoAPI_Validator_TEST" name="testSingleAddressLongZipcode" time="0.0" />
+  <testcase classname="ADDR_GoogleGeoAPI_Validator_TEST" name="testSingleAddressSubPremise" time="0.0" />
+  <testcase classname="ADDR_GoogleGeoAPI_Validator_TEST" name="testUnknownErrorAddress" time="0.0" />
+  <testcase classname="ADDR_GoogleGeoAPI_Validator_TEST" name="testZeroResultsAddress" time="0.0" />
+  <testcase classname="ADDR_Validation_Gateway_TEST" name="testBadAuth" time="0.0" />
+  <testcase classname="ADDR_Validation_Gateway_TEST" name="testBadInput" time="0.0" />
+  <testcase classname="ADDR_Validation_Gateway_TEST" name="testMultiAddress" time="0.0" />
+  <testcase classname="ADDR_Validation_Gateway_TEST" name="testNoSubscription" time="0.0" />
+  <testcase classname="ADDR_Validation_Gateway_TEST" name="testOneAddress" time="0.0" />
+  <testcase classname="ADDR_Validation_Gateway_TEST" name="testServerError" time="0.0" />
+  <testcase classname="ADDR_Validation_Gateway_TEST" name="testZip" time="0.0" />
+  <testcase classname="ADDR_Validator_Batch_TEST" name="multipleValidAddresses" time="28.23" />
+  <testcase classname="ADDR_Validator_Batch_TEST" name="multipleValidAddressessZipcodes" time="1.0" />
+  <testcase classname="ADDR_Validator_Batch_TEST" name="multipleValidZipcodes" time="0.0" />
+  <testcase classname="ADDR_Validator_Batch_TEST" name="oneValidAddress" time="1.0" />
+  <testcase classname="ADDR_Validator_Batch_TEST" name="oneValidZipcode" time="1.0" />
+  <testcase classname="ADDR_Validator_Batch_TEST" name="validAddressInvalidZipcode" time="0.0" />
+  <testcase classname="ADDR_Validator_TEST" name="test400" time="1.036" />
+  <testcase classname="ADDR_Validator_TEST" name="test401" time="0.0" />
+  <testcase classname="ADDR_Validator_TEST" name="test402" time="0.0" />
+  <testcase classname="ADDR_Validator_TEST" name="test500" time="0.0" />
+  <testcase classname="ADDR_Validator_TEST" name="testBlankService" time="0.0" />
+  <testcase classname="ADDR_Validator_TEST" name="testContactAddress" time="1.006" />
+  <testcase classname="ADDR_Validator_TEST" name="testContactAmbiguousAddress" time="1.001" />
+  <testcase classname="ADDR_Validator_TEST" name="testContactCityAndStateOnly" time="1.005" />
+  <testcase classname="ADDR_Validator_TEST" name="testContactInvalidAddress" time="0.0" />
+  <testcase classname="ADDR_Validator_TEST" name="testContactZipOnly" time="0.0" />
+  <testcase classname="ADDR_Validator_TEST" name="testController" time="0.0" />
+  <testcase classname="ADDR_Validator_TEST" name="testControllerMissingSetting" time="0.0" />
+  <testcase classname="AFFL_Affiliations_TEST" name="contactWithMultipleAffiliations_v2" time="0.0" />
+  <testcase classname="AFFL_Affiliations_TEST" name="deletePrimaryAffl" time="1.025" />
+  <testcase classname="AFFL_Affiliations_TEST" name="newAccountNewAffl" time="0.0" />
+  <testcase classname="AFFL_Affiliations_TEST" name="newContactOnIndividualAccount" time="0.0" />
+  <testcase classname="AFFL_Affiliations_TEST" name="newContactOnOrgAccount" time="0.0" />
+  <testcase classname="AFFL_Affiliations_TEST" name="newContactOnOrgAccountAutoOff" time="0.0" />
+  <testcase classname="AFFL_Affiliations_TEST" name="newContactsWithPrimaryAffiliation" time="1.0" />
+  <testcase classname="AFFL_Affiliations_TEST" name="newContactsWithPrimaryAffiliationOnetoOne" time="0.0" />
+  <testcase classname="AFFL_Affiliations_TEST" name="newPrimaryAffiliations" time="1.013" />
+  <testcase classname="AFFL_Affiliations_TEST" name="newPrimaryAffiliationsFromAffl" time="1.001" />
+  <testcase classname="AFFL_Affiliations_TEST" name="undeletePrimaryAfflNewAffl" time="1.001" />
+  <testcase classname="AFFL_Affiliations_TEST" name="updateContactsWithPrimaryAffiliation" time="1.003" />
+  <testcase classname="AFFL_Affiliations_TEST" name="updateContactsWithPrimaryAffiliationAndAccount" time="1.001" />
+  <testcase classname="AFFL_Affiliations_TEST" name="updateContactsWithPrimaryAffiliationClearPrimary" time="1.009" />
+  <testcase classname="AFFL_Affiliations_TEST" name="updateContactsWithPrimaryAffiliationToDiffAccount" time="1.008" />
+  <testcase classname="ALLO_Allocations_TEST" name="bulkOppInsert" time="3.597" />
+  <testcase classname="ALLO_Allocations_TEST" name="campaignAllocations" time="1.001" />
+  <testcase classname="ALLO_Allocations_TEST" name="defaultAllocations" time="0.0">
+    <failure type="Class.ALLO_Allocations_TEST.defaultAllocations: line 155, column 1">System.AssertException: Assertion Failed: An allocation to the default General Accounting Unit should be created.: Expected: 1, Actual: 0</failure>
+  </testcase>
+  <testcase classname="ALLO_Allocations_TEST" name="oppAmountChange" time="1.039" />
+  <testcase classname="ALLO_Allocations_TEST" name="recurringDonationsValidation" time="0.0">
+    <failure type="Class.ALLO_Allocations_TEST.recurringDonationsValidation: line 276, column 1">System.AssertException: Assertion Failed: A single opportunity should be created.: Expected: 1, Actual: 0</failure>
+  </testcase>
+  <testcase classname="ALLO_Allocations_TEST" name="testExcludedOpps" time="0.0" />
+  <testcase classname="ALLO_Allocations_TEST" name="testInactiveGAU" time="0.0" />
+  <testcase classname="ALLO_Allocations_TEST" name="testMakeDefaultAllocations" time="1.0" />
+  <testcase classname="ALLO_Allocations_TEST" name="testOppNullAmount" time="0.0" />
+  <testcase classname="ALLO_ManageAllocations_TEST" name="testCam" time="0.0" />
+  <testcase classname="ALLO_ManageAllocations_TEST" name="testGetCurrencySymbolCallsUtilCurrency" time="0.0" />
+  <testcase classname="ALLO_ManageAllocations_TEST" name="testGetCurrencySymbolReturnsCachedSymbol" time="0.0" />
+  <testcase classname="ALLO_ManageAllocations_TEST" name="testOpp" time="0.0" />
+  <testcase classname="ALLO_ManageAllocations_TEST" name="testRD" time="0.0" />
+  <testcase classname="ALLO_Multicurrency_TEST" name="alloMultiCurrency" time="0.0" />
+  <testcase classname="ALLO_Multicurrency_TEST" name="rollupMultiCurrency" time="0.0" />
+  <testcase classname="ALLO_Multicurrency_TEST" name="testMakeDefaultAllocations" time="0.0" />
+  <testcase classname="ALLO_Rollup_TEST" name="rollupBTN" time="0.0" />
+  <testcase classname="ALLO_Rollup_TEST" name="rollupFiscalYear" time="0.0" />
+  <testcase classname="AccountProcessorTest" name="TestAccountProcessorTest" time="0.0" />
+  <testcase classname="AnimalLocatorTest" name="testGetCallout" />
+  <testcase classname="AnimalsCalloutsTest" name="testGetCallout" />
+  <testcase classname="BDE_BatchDataEntry_TEST" name="testBatchDataEntry" time="0.0" />
+  <testcase classname="BDE_BatchEntry_TEST" name="testBatchDataEntryController" time="0.0" />
+  <testcase classname="BDE_BatchEntry_TEST" name="testBatchWithSave" time="0.0" />
+  <testcase classname="BDE_BatchEntry_TEST" name="testExistingBatchObjects" time="0.0" />
+  <testcase classname="BDE_BatchEntry_TEST" name="testNewObjectLoad" time="0.0" />
+  <testcase classname="BDE_BatchEntry_TEST" name="testOtherConfig" time="0.0" />
+  <testcase classname="BDI_DataImport_TEST" name="ManyDISameHomeAddresses" time="1.001" />
+  <testcase classname="BDI_DataImport_TEST" name="OneDIDuplicateNewContacts" time="0.0" />
+  <testcase classname="BDI_DataImport_TEST" name="OneDIExistingContacts1x1" time="0.0" />
+  <testcase classname="BDI_DataImport_TEST" name="OneDITwoExistingContacts" time="1.013" />
+  <testcase classname="BDI_DataImport_TEST" name="OneDITwoNewAccounts" time="0.0" />
+  <testcase classname="BDI_DataImport_TEST" name="OneDITwoNewContacts" time="1.008" />
+  <testcase classname="BDI_DataImport_TEST" name="OneDITwoSameAccounts" time="0.0" />
+  <testcase classname="BDI_DataImport_TEST" name="TwoDIAffiliations" time="1.063" />
+  <testcase classname="BDI_DataImport_TEST" name="TwoDIDuplicateNewContacts" time="0.0" />
+  <testcase classname="BDI_DataImport_TEST" name="TwoDIDuplicateNewContactsDifferentOrder" time="1.0" />
+  <testcase classname="BDI_DataImport_TEST" name="TwoDIExistingAccounts" time="0.0" />
+  <testcase classname="BDI_DataImport_TEST" name="TwoDIExistingAccountsSalesforceId" time="1.0" />
+  <testcase classname="BDI_DataImport_TEST" name="TwoDIHomeAddresses" time="1.015" />
+  <testcase classname="BDI_DataImport_TEST" name="TwoDIHomeAddressesAddrMgmtOff" time="1.001" />
+  <testcase classname="BDI_DataImport_TEST" name="TwoDIMixedAddresses" time="1.123" />
+  <testcase classname="BDI_DataImport_TEST" name="TwoDIMixedAddressesAddrMgmtOff" time="1.007" />
+  <testcase classname="BDI_DataImport_TEST" name="TwoDINewContactsExistingsHousehold" time="1.001" />
+  <testcase classname="BDI_DataImport_TEST" name="TwoDISameAccounts" time="0.0" />
+  <testcase classname="BDI_DataImport_TEST" name="TwoDITwoNewContacts" time="0.0" />
+  <testcase classname="BDI_DataImport_TEST" name="TwoDITwoNewContactsHouseholdFields" time="0.0" />
+  <testcase classname="BDI_DataImport_TEST" name="TwoDIWithAccountDonations" time="0.0">
+    <failure type="Class.BDI_DataImport_TEST.TwoDIWithAccountDonations: line 1026, column 1">System.AssertException: Assertion Failed: Expected: 2, Actual: 4</failure>
+  </testcase>
+  <testcase classname="BDI_DataImport_TEST" name="TwoDIWithCampaignMembers" time="1.013" />
+  <testcase classname="BDI_DataImport_TEST" name="TwoDIWithDonationErrors" time="0.0">
+    <failure type="Class.BDI_DataImport_TEST.TwoDIWithDonationErrors: line 1188, column 1">System.AssertException: Assertion Failed: Expected: 1, Actual: 3</failure>
+  </testcase>
+  <testcase classname="BDI_DataImport_TEST" name="TwoDIWithDonations" time="1.008">
+    <failure type="Class.BDI_DataImport_TEST.TwoDIWithDonations: line 958, column 1">System.AssertException: Assertion Failed: Expected: 2, Actual: 4</failure>
+  </testcase>
+  <testcase classname="BDI_DataImport_TEST" name="TwoDIWithDonationsAndCampaigns">
+    <failure type="Class.BDI_DataImport_TEST.TwoDIWithDonationsAndCampaigns: line 1091, column 1">System.AssertException: Assertion Failed: Expected: 2, Actual: 4</failure>
+  </testcase>
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDIDuplicateEmailExistingContacts" time="1.042" />
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDIDuplicateEmailNewContacts" time="0.0" />
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDIDuplicateNewContactManyFields" time="0.0" />
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDIDuplicatePhoneNewContacts" time="0.0" />
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDIMultiContactMatchRules1" time="1.0" />
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDIMultiContactMatchRules2" time="1.0" />
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDIMultiContactMatchRules3" time="1.001" />
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDIMultiContactMatchRules4" time="1.003" />
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDIMultiContactMatchRules5" time="1.002" />
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDIMultiContactMatchRules6" time="1.002" />
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDIMultiContactMatchRules7" time="1.001" />
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDIMultiContactMatchRules8" time="1.013" />
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDIMultiContactMatchRules9" time="1.002" />
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDIOverlappingEmailExistingContacts" time="0.0" />
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDIOverlappingPhoneExistingContacts" time="0.0" />
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDISalesforceIdMatchingExistingAndNewContacts" time="1.0" />
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDISalesforceIdMatchingExistingContacts" time="0.0" />
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDISomeInvalidContactData" time="1.005" />
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDITestAccountDataErrorHandling" time="1.055" />
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDITestAddressDataErrorHandling" time="1.001" />
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDITestCampaignDataErrorHandling" time="1.019">
+    <failure type="Class.BDI_DataImport_TEST2.ManyDITestCampaignDataErrorHandling: line 1430, column 1">System.AssertException: Assertion Failed: Expected: 3, Actual: 6</failure>
+  </testcase>
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDITestContactDataErrorHandling" />
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDITestDonationDataErrorHandling">
+    <failure type="Class.BDI_DataImport_TEST2.ManyDITestDonationDataErrorHandling: line 1387, column 1">System.AssertException: Assertion Failed: Expected: 2, Actual: 3</failure>
+  </testcase>
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDIUniqueIdMatchingExistingAccounts" />
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDIUniqueIdMatchingExistingContacts" />
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDIUniqueIdMatchingNewAndExistingAccounts" />
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDIUniqueIdMatchingNewAndExistingContacts" />
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDIUniqueIdNewAccounts" />
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDIUniqueIdNewContacts" />
+  <testcase classname="BDI_DataImport_TEST2" name="ManyDIUniqueIdNotMatchingExistingContacts" />
+  <testcase classname="BDI_DataImport_TEST2" name="OneDISalesforceIdMatchingExistingAndNewContact" />
+  <testcase classname="BDI_DataImport_TEST2" name="SingleDISalesforceIdMatchingExistingHousehold" />
+  <testcase classname="BDI_DataImport_TEST2" name="TestBDIVisualforcePage">
+    <failure type="Class.BDI_DataImport_TEST2.TestBDIVisualforcePage: line 100, column 1">System.AssertException: Assertion Failed: Expected: 2, Actual: 5</failure>
+  </testcase>
+  <testcase classname="BDI_DataImport_TEST2" name="TestBDIVisualforcePageValidation" />
+  <testcase classname="BDI_DataImport_TEST2" name="TestDeleteAllDIRecordsBtn" />
+  <testcase classname="BDI_DataImport_TEST2" name="TestDeleteImportedDIRecordsBtn" />
+  <testcase classname="BDI_DataImport_TEST2" name="TwoDIExistingC2PartialMatch" />
+  <testcase classname="BDI_DataImport_TEST2" name="TwoDINewC2PartialMatch" />
+  <testcase classname="BDI_DataImport_TEST2" name="testFieldLevelSecurity" />
+  <testcase classname="BDI_DataImport_TEST2" name="testInvalidAccountModel" />
+  <testcase classname="BDI_DataImport_TEST2" name="testInvalidAddressHandling" />
+  <testcase classname="BDI_DataImport_TEST2" name="testPreferredEmailAutoSetting" />
+  <testcase classname="BDI_DataImport_TEST2" name="testPreferredPhoneAutoSetting" />
+  <testcase classname="CAM_CascadeDeleteLookups_TEST" name="testOppCascade" time="0.0" />
+  <testcase classname="CONV_Account_Conversion_BATCH_TEST" name="test2ContactAddresses" />
+  <testcase classname="CONV_Account_Conversion_BATCH_TEST" name="testAccountConversion1to1">
+    <failure type="Class.CONV_Account_Conversion_BATCH_TEST.testAccountConversion1to1: line 99, column 1">System.AssertException: Assertion Failed: Expected: 150, Actual: 300</failure>
+  </testcase>
+  <testcase classname="CONV_Account_Conversion_BATCH_TEST" name="testAccountConversionBucket">
+    <failure type="Class.CONV_Account_Conversion_BATCH_TEST.testAccountConversionBucket: line 155, column 1">System.AssertException: Assertion Failed: Expected: 1, Actual: 2</failure>
+  </testcase>
+  <testcase classname="CONV_Account_Conversion_BATCH_TEST" name="testContactDisableAddresses" />
+  <testcase classname="CONV_Account_Conversion_BATCH_TEST" name="testSettingPrimaryAffiliation" />
+  <testcase classname="CONV_Account_Conversion_BATCH_TEST" name="testSingleContactAddress" />
+  <testcase classname="CONV_Account_Conversion_CTRL_TEST" name="testConversionCTRLErrorState" time="1.005" />
+  <testcase classname="CONV_Account_Conversion_CTRL_TEST" name="testConversionCtrl" time="1.002" />
+  <testcase classname="CON_CascadeDeleteLookups_TEST" name="testContactCascadeRelationshipWithoutOverride" time="1.006" />
+  <testcase classname="CON_CascadeDeleteLookups_TEST" name="testContactCascadeWithoutOverride" time="0.0" />
+  <testcase classname="CON_CascadeDeleteLookups_TEST" name="testContactDeleteExceptionWithOverride" time="1.0" />
+  <testcase classname="CON_CascadeDeleteLookups_TEST" name="testContactMergeNoCascade" time="1.083" />
+  <testcase classname="CON_ChangeAccount_TEST" name="testAddressOverride" time="1.001" />
+  <testcase classname="CON_ChangeAccount_TEST" name="testGetsDefaultAddressHHToHH" time="2.008" />
+  <testcase classname="CON_ChangeAccount_TEST" name="testGetsDefaultAddressHHToOrg" time="1.0" />
+  <testcase classname="CON_ChangeAccount_TEST" name="testGetsDefaultAddressOne2OneToOne2One" time="0.0" />
+  <testcase classname="CON_ChangeAccount_TEST" name="testGetsDefaultAddressOne2OneToOrg" time="0.0" />
+  <testcase classname="CON_ChangeAccount_TEST" name="testGetsDefaultAddressOrgToHH" time="1.007" />
+  <testcase classname="CON_ChangeAccount_TEST" name="testGetsDefaultAddressOrgToOne2One" time="0.0" />
+  <testcase classname="CON_ChangeAccount_TEST" name="testNamesAndOppsUpdatedHHToHH" time="3.083">
+    <failure type="Class.CON_ChangeAccount_TEST.testNamesAndOppsUpdated: line 167, column 1
+Class.CON_ChangeAccount_TEST.testNamesAndOppsUpdatedHHToHH: line 52, column 1">System.AssertException: Assertion Failed: Expected: 1, Actual: 2</failure>
+  </testcase>
+  <testcase classname="CON_ChangeAccount_TEST" name="testNamesAndOppsUpdatedHHToOrg" time="1.035">
+    <failure type="Class.CON_ChangeAccount_TEST.testNamesAndOppsUpdated: line 194, column 1
+Class.CON_ChangeAccount_TEST.testNamesAndOppsUpdatedHHToOrg: line 79, column 1">System.AssertException: Assertion Failed: Expected: 2, Actual: 3</failure>
+  </testcase>
+  <testcase classname="CON_ChangeAccount_TEST" name="testNamesAndOppsUpdatedOne2OneToOne2One" time="1.007">
+    <failure type="Class.CON_ChangeAccount_TEST.testNamesAndOppsUpdated: line 176, column 1
+Class.CON_ChangeAccount_TEST.testNamesAndOppsUpdatedOne2OneToOne2One: line 61, column 1">System.AssertException: Assertion Failed: Expected: 2, Actual: 3</failure>
+  </testcase>
+  <testcase classname="CON_ChangeAccount_TEST" name="testNamesAndOppsUpdatedOne2OneToOrg" time="1.0">
+    <failure type="Class.CON_ChangeAccount_TEST.testNamesAndOppsUpdated: line 212, column 1
+Class.CON_ChangeAccount_TEST.testNamesAndOppsUpdatedOne2OneToOrg: line 97, column 1">System.AssertException: Assertion Failed: Expected: 2, Actual: 3</failure>
+  </testcase>
+  <testcase classname="CON_ChangeAccount_TEST" name="testNamesAndOppsUpdatedOrgToHH">
+    <failure type="Class.CON_ChangeAccount_TEST.testNamesAndOppsUpdated: line 185, column 1
+Class.CON_ChangeAccount_TEST.testNamesAndOppsUpdatedOrgToHH: line 70, column 1">System.AssertException: Assertion Failed: Expected: 0, Actual: 1</failure>
+  </testcase>
+  <testcase classname="CON_ChangeAccount_TEST" name="testNamesAndOppsUpdatedOrgToOne2One">
+    <failure type="Class.CON_ChangeAccount_TEST.testNamesAndOppsUpdated: line 203, column 1
+Class.CON_ChangeAccount_TEST.testNamesAndOppsUpdatedOrgToOne2One: line 88, column 1">System.AssertException: Assertion Failed: Expected: 0, Actual: 1</failure>
+  </testcase>
+  <testcase classname="CON_ContactMergeTDTM_TEST" name="mergeContactsDifferentHHAccount" time="3.047">
+    <failure type="Class.CON_ContactMergeTDTM_TEST.mergeContactsDifferentHHAccount: line 204, column 1">System.AssertException: Assertion Failed: Expected: 3, Actual: 4</failure>
+  </testcase>
+  <testcase classname="CON_ContactMergeTDTM_TEST" name="mergeContactsDifferentHHAccountAddressOverride" time="2.0" />
+  <testcase classname="CON_ContactMergeTDTM_TEST" name="mergeContactsDifferentHHAccountManyAffl" time="2.002" />
+  <testcase classname="CON_ContactMergeTDTM_TEST" name="mergeContactsSameHHAccount" time="2.018">
+    <failure type="Class.CON_ContactMergeTDTM_TEST.mergeContactsSameHHAccount: line 109, column 1">System.AssertException: Assertion Failed: Expected: 2, Actual: 3</failure>
+  </testcase>
+  <testcase classname="CON_ContactMergeTDTM_TEST2" name="mergeContactsDifferentHHAccountManyRel" time="2.014" />
+  <testcase classname="CON_ContactMergeTDTM_TEST2" name="testNamesAndOppsMergeHHToHH" time="3.025">
+    <failure type="Class.CON_ContactMergeTDTM_TEST2.testNamesAndOppsMerge: line 245, column 1
+Class.CON_ContactMergeTDTM_TEST2.testNamesAndOppsMergeHHToHH: line 117, column 1">System.AssertException: Assertion Failed: Expected: 1, Actual: 2</failure>
+  </testcase>
+  <testcase classname="CON_ContactMergeTDTM_TEST2" name="testNamesAndOppsMergeHHToOrg" time="2.013">
+    <failure type="Class.CON_ContactMergeTDTM_TEST2.testNamesAndOppsMerge: line 272, column 1
+Class.CON_ContactMergeTDTM_TEST2.testNamesAndOppsMergeHHToOrg: line 144, column 1">System.AssertException: Assertion Failed: Expected: 2, Actual: 3</failure>
+  </testcase>
+  <testcase classname="CON_ContactMergeTDTM_TEST2" name="testNamesAndOppsMergeOne2OneToOne2One" time="1.04">
+    <failure type="Class.CON_ContactMergeTDTM_TEST2.testNamesAndOppsMerge: line 254, column 1
+Class.CON_ContactMergeTDTM_TEST2.testNamesAndOppsMergeOne2OneToOne2One: line 126, column 1">System.AssertException: Assertion Failed: Expected: 1, Actual: 2</failure>
+  </testcase>
+  <testcase classname="CON_ContactMergeTDTM_TEST2" name="testNamesAndOppsMergeOne2OneToOrg" time="1.002">
+    <failure type="Class.CON_ContactMergeTDTM_TEST2.testNamesAndOppsMerge: line 290, column 1
+Class.CON_ContactMergeTDTM_TEST2.testNamesAndOppsMergeOne2OneToOrg: line 162, column 1">System.AssertException: Assertion Failed: Expected: 2, Actual: 3</failure>
+  </testcase>
+  <testcase classname="CON_ContactMergeTDTM_TEST2" name="testNamesAndOppsMergeOrgToHH" time="2.013">
+    <failure type="Class.CON_ContactMergeTDTM_TEST2.testNamesAndOppsMerge: line 263, column 1
+Class.CON_ContactMergeTDTM_TEST2.testNamesAndOppsMergeOrgToHH: line 135, column 1">System.AssertException: Assertion Failed: Expected: 2, Actual: 3</failure>
+  </testcase>
+  <testcase classname="CON_ContactMergeTDTM_TEST2" name="testNamesAndOppsMergeOrgToOne2One" time="1.075">
+    <failure type="Class.CON_ContactMergeTDTM_TEST2.testNamesAndOppsMerge: line 281, column 1
+Class.CON_ContactMergeTDTM_TEST2.testNamesAndOppsMergeOrgToOne2One: line 153, column 1">System.AssertException: Assertion Failed: Expected: 2, Actual: 3</failure>
+  </testcase>
+  <testcase classname="CON_ContactMergeTDTM_TEST2" name="testNamesAndOppsMergeOrgToOrg" time="1.048">
+    <failure type="Class.CON_ContactMergeTDTM_TEST2.testNamesAndOppsMerge: line 299, column 1
+Class.CON_ContactMergeTDTM_TEST2.testNamesAndOppsMergeOrgToOrg: line 171, column 1">System.AssertException: Assertion Failed: Expected: 2, Actual: 3</failure>
+  </testcase>
+  <testcase classname="CON_ContactMerge_TEST" name="exerciseUIHHAccount" time="0.0" />
+  <testcase classname="CON_ContactMerge_TEST" name="exerciseUIOne2One" time="0.0" />
+  <testcase classname="CON_ContactMerge_TEST" name="failMergeWithDeletedRecordSelectedHHAccount" time="1.009" />
+  <testcase classname="CON_ContactMerge_TEST" name="failMergeWithDeletedRecordSelectedOne2One" time="0.0" />
+  <testcase classname="CON_ContactMerge_TEST" name="failNextStepWithDeletedRecordSelectedHHAccount" time="0.0" />
+  <testcase classname="CON_ContactMerge_TEST" name="failNextStepWithDeletedRecordSelectedOne2One" time="0.0" />
+  <testcase classname="CON_ContactMerge_TEST" name="merge1Org1OneToOneHHAccount" time="1.0" />
+  <testcase classname="CON_ContactMerge_TEST" name="merge1Org1OneToOneOne2One" time="1.025" />
+  <testcase classname="CON_ContactMerge_TEST" name="merge2IndividualsHHAccount" time="0.0" />
+  <testcase classname="CON_ContactMerge_TEST" name="merge2IndividualsOne2One" time="0.0" />
+  <testcase classname="CON_ContactMerge_TEST" name="merge2OneToOneHHAccount" time="1.037" />
+  <testcase classname="CON_ContactMerge_TEST" name="merge2OneToOneOne2One" time="1.001" />
+  <testcase classname="CON_ContactMerge_TEST" name="merge2OneToOneOppsHHAccount" time="2.058">
+    <failure type="Class.CON_ContactMerge_TEST.merge2OneToOneOpps: line 488, column 1
+Class.CON_ContactMerge_TEST.merge2OneToOneOppsHHAccount: line 426, column 1">System.AssertException: Assertion Failed: Expected: 1, Actual: 3</failure>
+  </testcase>
+  <testcase classname="CON_ContactMerge_TEST" name="merge2OneToOneOppsOne2One" time="2.0">
+    <failure type="Class.CON_ContactMerge_TEST.merge2OneToOneOpps: line 485, column 1
+Class.CON_ContactMerge_TEST.merge2OneToOneOppsOne2One: line 422, column 1">System.AssertException: Assertion Failed: Expected: 1, Actual: 3</failure>
+  </testcase>
+  <testcase classname="CON_ContactMerge_TEST" name="merge2OrganizationsHHAccount" time="0.0" />
+  <testcase classname="CON_ContactMerge_TEST" name="merge2OrganizationsOne2One" time="0.0" />
+  <testcase classname="CON_ContactMerge_TEST" name="merge2PrivateContactsHHAccount" time="0.0" />
+  <testcase classname="CON_ContactMerge_TEST" name="merge2PrivateContactsOne2One" time="0.0" />
+  <testcase classname="CON_ContactMerge_TEST" name="tooFewContactsSelectedHHAccount" time="0.0" />
+  <testcase classname="CON_ContactMerge_TEST" name="tooFewContactsSelectedOne2One" time="0.0" />
+  <testcase classname="CON_ContactMerge_TEST" name="tooManyContactsSelectedHHAccount" time="0.0" />
+  <testcase classname="CON_ContactMerge_TEST" name="tooManyContactsSelectedOne2One" />
+  <testcase classname="CON_ContactMerge_TEST2" name="ghIssue6HHAccount" time="2.02" />
+  <testcase classname="CON_ContactMerge_TEST2" name="ghIssue6One2One" time="1.0" />
+  <testcase classname="CON_ContactMerge_TEST2" name="householdDifferentFromMaster" time="2.027" />
+  <testcase classname="CON_ContactMerge_TEST2" name="merge2OneToOneInSameAccountHHAccount" time="1.003" />
+  <testcase classname="CON_ContactMerge_TEST2" name="merge2OneToOneInSameAccountOne2One" time="2.013" />
+  <testcase classname="CON_ContactMerge_TEST2" name="merge3OneToOneHHAccount" time="1.094">
+    <failure type="Class.HH_HouseholdNaming.UpdateNames: line 82, column 1
+Class.HH_HouseholdNaming.handleHHNameUpdates: line 373, column 1
+Class.ACCT_Accounts_TDTM.run: line 101, column 1
+Class.TDTM_TriggerHandler.runClass: line 173, column 1
+Class.TDTM_TriggerHandler.run: line 98, column 1
+Trigger.TDTM_Account: line 34, column 1">System.LimitException: Too many SOQL queries: 101</failure>
+  </testcase>
+  <testcase classname="CON_ContactMerge_TEST2" name="merge3OneToOneOne2One" time="2.001" />
+  <testcase classname="CON_ContactMerge_TEST2" name="personAccountErrorDetection" time="0.0" />
+  <testcase classname="CON_ContactMerge_TEST2" name="testBadIdsPassed" time="0.0" />
+  <testcase classname="CON_ContactMerge_TEST2" name="testGoodIdsPassed" time="0.0" />
+  <testcase classname="CON_ContactMerge_TEST2" name="testNamesAndOppsMergeBucketToHH" time="2.032">
+    <failure type="Class.CON_ContactMerge_TEST2.testNamesAndOppsMerge: line 849, column 1
+Class.CON_ContactMerge_TEST2.testNamesAndOppsMergeBucketToHH: line 607, column 1">System.AssertException: Assertion Failed: Expected: 1, Actual: 2</failure>
+  </testcase>
+  <testcase classname="CON_ContactMerge_TEST2" name="testNamesAndOppsMergeBucketToOne2One" time="2.021">
+    <failure type="Class.CON_ContactMerge_TEST2.testNamesAndOppsMerge: line 867, column 1
+Class.CON_ContactMerge_TEST2.testNamesAndOppsMergeBucketToOne2One: line 625, column 1">System.AssertException: Assertion Failed: Expected: 1, Actual: 2</failure>
+  </testcase>
+  <testcase classname="CON_ContactMerge_TEST2" name="testNamesAndOppsMergeHHToBucket">
+    <failure type="Class.CON_ContactMerge_TEST2.testNamesAndOppsMerge: line 858, column 1
+Class.CON_ContactMerge_TEST2.testNamesAndOppsMergeHHToBucket: line 616, column 1">System.AssertException: Assertion Failed: Expected: 1, Actual: 2</failure>
+  </testcase>
+  <testcase classname="CON_ContactMerge_TEST2" name="testNamesAndOppsMergeHHToHH">
+    <failure type="Class.CON_ContactMerge_TEST2.testNamesAndOppsMerge: line 768, column 1
+Class.CON_ContactMerge_TEST2.testNamesAndOppsMergeHHToHH: line 526, column 1">System.AssertException: Assertion Failed: Expected: 1, Actual: 2</failure>
+  </testcase>
+  <testcase classname="CON_ContactMerge_TEST2" name="testNamesAndOppsMergeHHToOne2One">
+    <failure type="Class.CON_ContactMerge_TEST2.testNamesAndOppsMerge: line 840, column 1
+Class.CON_ContactMerge_TEST2.testNamesAndOppsMergeHHToOne2One: line 598, column 1">System.AssertException: Assertion Failed: Expected: 1, Actual: 2</failure>
+  </testcase>
+  <testcase classname="CON_ContactMerge_TEST2" name="testNamesAndOppsMergeHHToOrg">
+    <failure type="Class.CON_ContactMerge_TEST2.testNamesAndOppsMerge: line 795, column 1
+Class.CON_ContactMerge_TEST2.testNamesAndOppsMergeHHToOrg: line 553, column 1">System.AssertException: Assertion Failed: Expected: 2, Actual: 3</failure>
+  </testcase>
+  <testcase classname="CON_ContactMerge_TEST2" name="testNamesAndOppsMergeOne2OneToBucket">
+    <failure type="Class.CON_ContactMerge_TEST2.testNamesAndOppsMerge: line 877, column 1
+Class.CON_ContactMerge_TEST2.testNamesAndOppsMergeOne2OneToBucket: line 634, column 1">System.AssertException: Assertion Failed: Expected: 3, Actual: 5</failure>
+  </testcase>
+  <testcase classname="CON_ContactMerge_TEST2" name="testNamesAndOppsMergeOne2OneToHH">
+    <failure type="Class.CON_ContactMerge_TEST2.testNamesAndOppsMerge: line 832, column 1
+Class.CON_ContactMerge_TEST2.testNamesAndOppsMergeOne2OneToHH: line 589, column 1">System.AssertException: Assertion Failed: Expected: 3, Actual: 5</failure>
+  </testcase>
+  <testcase classname="CON_ContactMerge_TEST2" name="testNamesAndOppsMergeOne2OneToOne2One">
+    <failure type="Class.CON_ContactMerge_TEST2.testNamesAndOppsMerge: line 778, column 1
+Class.CON_ContactMerge_TEST2.testNamesAndOppsMergeOne2OneToOne2One: line 535, column 1">System.AssertException: Assertion Failed: Expected: 3, Actual: 5</failure>
+  </testcase>
+  <testcase classname="CON_ContactMerge_TEST2" name="testNamesAndOppsMergeOne2OneToOrg">
+    <failure type="Class.CON_ContactMerge_TEST2.testNamesAndOppsMerge: line 814, column 1
+Class.CON_ContactMerge_TEST2.testNamesAndOppsMergeOne2OneToOrg: line 571, column 1">System.AssertException: Assertion Failed: Expected: 3, Actual: 5</failure>
+  </testcase>
+  <testcase classname="CON_ContactMerge_TEST2" name="testNamesAndOppsMergeOrgToHH">
+    <failure type="Class.CON_ContactMerge_TEST2.testNamesAndOppsMerge: line 786, column 1
+Class.CON_ContactMerge_TEST2.testNamesAndOppsMergeOrgToHH: line 544, column 1">System.AssertException: Assertion Failed: Expected: 2, Actual: 3</failure>
+  </testcase>
+  <testcase classname="CON_ContactMerge_TEST2" name="testNamesAndOppsMergeOrgToOne2One">
+    <failure type="Class.CON_ContactMerge_TEST2.testNamesAndOppsMerge: line 804, column 1
+Class.CON_ContactMerge_TEST2.testNamesAndOppsMergeOrgToOne2One: line 562, column 1">System.AssertException: Assertion Failed: Expected: 2, Actual: 3</failure>
+  </testcase>
+  <testcase classname="CON_ContactMerge_TEST2" name="testNamesAndOppsMergeOrgToOrg">
+    <failure type="Class.CON_ContactMerge_TEST2.testNamesAndOppsMerge: line 822, column 1
+Class.CON_ContactMerge_TEST2.testNamesAndOppsMergeOrgToOrg: line 580, column 1">System.AssertException: Assertion Failed: Expected: 2, Actual: 3</failure>
+  </testcase>
+  <testcase classname="CON_ContactMerge_TEST2" name="testSearchSpecPassed" />
+  <testcase classname="CON_ContactMerge_TEST2" name="testStandardSetSelected" />
+  <testcase classname="CON_DeleteContactOverride_TEST" name="deleteAloneInHousehold" time="1.0" />
+  <testcase classname="CON_DeleteContactOverride_TEST" name="deleteOneToOne" time="0.0" />
+  <testcase classname="CON_DeleteContactOverride_TEST" name="deleteWithOtherMembers" time="1.006" />
+  <testcase classname="CON_DoNotContact_TEST" name="testDeceasedAlone" time="0.0" />
+  <testcase classname="CON_DoNotContact_TEST" name="testDeceasedInHousehold" time="1.003" />
+  <testcase classname="CON_DoNotContact_TEST" name="testDoNotContact" time="0.0" />
+  <testcase classname="EP_EngagementPlanTaskValidation_TEST" name="testCrossTemplateEPDependentTask" time="0.0" />
+  <testcase classname="EP_EngagementPlanTaskValidation_TEST" name="testMultipleEPDependentTask" time="0.0" />
+  <testcase classname="EP_EngagementPlanTaskValidation_TEST" name="testRedundantEPDependentTask" time="0.0" />
+  <testcase classname="EP_EngagementPlanTaskValidation_TEST" name="testSingleEPDependentTask" time="0.0" />
+  <testcase classname="EP_EngagementPlanTaskValidation_TEST" name="testUpdateCrossTemplateEPDependentTask" time="0.0" />
+  <testcase classname="EP_EngagementPlanTaskValidation_TEST" name="testUpdateTemplateWithEPDependentTask" time="0.0" />
+  <testcase classname="EP_EngagementPlans_TEST" name="testDependentPlan" time="1.0" />
+  <testcase classname="EP_EngagementPlans_TEST" name="testPlanUpdate" time="0.0" />
+  <testcase classname="EP_EngagementPlans_TEST" name="testPlanWithTwoLookups" time="0.0" />
+  <testcase classname="EP_EngagementPlans_TEST" name="testPlanWithoutLookup" time="0.0" />
+  <testcase classname="EP_EngagementPlans_TEST" name="testSkipWeekendsFriday" time="0.0" />
+  <testcase classname="EP_EngagementPlans_TEST" name="testSkipWeekendsMonday" time="0.0" />
+  <testcase classname="EP_EngagementPlans_TEST" name="testTaskAssignment" time="0.0" />
+  <testcase classname="EP_EngagementPlans_TEST" name="test_getsobjectparentpath" time="0.0" />
+  <testcase classname="EP_ManageEPTemplate_CTRL_TEST" name="testClone" time="1.016" />
+  <testcase classname="EP_ManageEPTemplate_CTRL_TEST" name="testDependentPlan" time="1.0" />
+  <testcase classname="EP_TaskDependency_TEST" name="testDelayType" time="1.018" />
+  <testcase classname="EP_TaskDependency_TEST" name="testDeleteDependentTask" time="1.001" />
+  <testcase classname="EP_TaskDependency_TEST" name="testDeletedPlan" time="0.0" />
+  <testcase classname="EP_TaskDependency_TEST" name="testDependentPlan" time="1.002" />
+  <testcase classname="EP_TaskRollup_TEST" name="testDeleteCompletedEPTask" time="1.047" />
+  <testcase classname="EP_TaskRollup_TEST" name="testMultipleEPTasks" time="0.0" />
+  <testcase classname="EP_TaskRollup_TEST" name="testMultipleEPTasksAndPlans" time="1.001" />
+  <testcase classname="EP_TaskRollup_TEST" name="testMultipleTasks" time="0.0" />
+  <testcase classname="EP_TaskRollup_TEST" name="testSingleEPTask" time="0.0" />
+  <testcase classname="EP_TaskRollup_TEST" name="testSingleTask" time="0.0" />
+  <testcase classname="EP_TaskRollup_TEST" name="testUnrelateEPTask" time="1.0" />
+  <testcase classname="EP_TaskRollup_TEST" name="testUpdateMultipleEPTask" time="1.003" />
+  <testcase classname="ERR_AddError_TEST" name="databaseDml" time="0.0" />
+  <testcase classname="ERR_AsyncErrors_TEST" name="testInsertsErrors" time="0.0" />
+  <testcase classname="ERR_AsyncErrors_TEST" name="testQueriesForErrorsInCurrentNamespace" time="0.0" />
+  <testcase classname="ERR_AsyncErrors_TEST" name="testQueryForErrorsInLastDayIfNotPreviouslyRun" time="0.0" />
+  <testcase classname="ERR_AsyncErrors_TEST" name="testQueryForErrorsSinceLastRun" time="0.0" />
+  <testcase classname="ERR_AsyncErrors_TEST" name="testSendsNotifications" time="0.0" />
+  <testcase classname="ERR_AsyncErrors_TEST" name="testUpdatesLastRunSetting" time="0.0" />
+  <testcase classname="ERR_ExceptionHandler_TEST" name="testHandleException" time="0.0" />
+  <testcase classname="ERR_ExceptionHandler_TEST" name="testUnhandledExceptionIsUnmodified" time="0.0" />
+  <testcase classname="ERR_Handler_TEST" name="controllerWithManualRollback" time="1.028" />
+  <testcase classname="ERR_Handler_TEST" name="errorStoredInDatabaseFromInsert" time="0.0" />
+  <testcase classname="ERR_Handler_TEST" name="errorsStoredInDbTdtmCustomConfigEmailErrors" time="0.0" />
+  <testcase classname="ERR_Handler_TEST" name="errorsStoredInDbTdtmCustomConfigPostToChatter" time="0.0" />
+  <testcase classname="ERR_Handler_TEST" name="testInactiveUserEmailBehavior" time="0.0" />
+  <testcase classname="HH_CampaignDedupeBTN_TEST" name="testCampaignHHReport" time="1.002" />
+  <testcase classname="HH_Container_TEST" name="testAddContactAddresses" time="1.012" />
+  <testcase classname="HH_Container_TEST" name="testAutoCompleteDataProvider" time="1.01" />
+  <testcase classname="HH_Container_TEST" name="testGetAddresses" time="1.005" />
+  <testcase classname="HH_Container_TEST" name="testGetHHGetContacts" time="0.0" />
+  <testcase classname="HH_Container_TEST" name="testGetHHNamesGreetings" time="0.0" />
+  <testcase classname="HH_Container_TEST" name="testGetSalutations" time="0.0" />
+  <testcase classname="HH_Container_TEST" name="testMergeHouseholds" time="2.003" />
+  <testcase classname="HH_Container_TEST" name="testPackageLabels" time="0.0" />
+  <testcase classname="HH_Container_TEST" name="testUpdateHousehold" time="1.004" />
+  <testcase classname="HH_Container_TEST" name="testUpsertContacts" time="1.009" />
+  <testcase classname="HH_HouseholdNaming_TEST" name="HouseholdNamingTest" time="2.031" />
+  <testcase classname="HH_HouseholdNaming_TEST" name="HouseholdNamingUpdateTest" time="2.025" />
+  <testcase classname="HH_HouseholdNaming_TEST" name="testBatch" time="0.0" />
+  <testcase classname="HH_HouseholdNaming_TEST" name="testCaseChanges" time="0.0" />
+  <testcase classname="HH_HouseholdNaming_TEST" name="testNamingOrder" time="2.014" />
+  <testcase classname="HH_HouseholdNaming_TEST" name="testNamingOrder2" time="0.0" />
+  <testcase classname="HH_Households_TEST" name="Households_Test" time="0.0" />
+  <testcase classname="HH_Households_TEST" name="contactDeleteWithOwnHousehold" time="1.0" />
+  <testcase classname="HH_Households_TEST" name="contactDeleteWithSharedHousehold" time="1.0" />
+  <testcase classname="HH_Households_TEST" name="deleteEmptyHouseholds_test" time="0.0" />
+  <testcase classname="HH_Households_TEST" name="newIndContactAllContactsProcessor" time="0.0" />
+  <testcase classname="HH_Households_TEST" name="newIndContactIndividualsProcessor" time="0.0" />
+  <testcase classname="HH_Households_TEST" name="newNoHouseholdProcessor" time="0.0" />
+  <testcase classname="HH_Households_TEST" name="newOrgContactAllContactsProcessor" time="1.08" />
+  <testcase classname="HH_Households_TEST" name="newOrgContactIndividualsProcessor" time="0.0" />
+  <testcase classname="HH_Households_TEST" name="newPrivateContactAllContactsProcessor" time="0.0" />
+  <testcase classname="HH_Households_TEST" name="testBulk" />
+  <testcase classname="HH_Households_TEST" name="testCaseChanges" />
+  <testcase classname="HH_Households_TEST" name="testHouseholdExclusion" />
+  <testcase classname="HH_Households_TEST" name="testMergeRollupSupport" />
+  <testcase classname="HH_Households_TEST" name="testNewAndUpdateContactWithHHNaming" />
+  <testcase classname="HH_ManageHH_TEST" name="testExistingHHAccount" time="0.0" />
+  <testcase classname="HH_ManageHH_TEST" name="testExistingHHObject" time="0.0" />
+  <testcase classname="HH_ManageHH_TEST" name="testNewHHObject" time="0.0" />
+  <testcase classname="HH_NameSpec_TEST" name="OneAnonymousContact" />
+  <testcase classname="HH_NameSpec_TEST" name="OneContact" />
+  <testcase classname="HH_NameSpec_TEST" name="OneContactXReferences" />
+  <testcase classname="HH_NameSpec_TEST" name="SixContactsOneLastnamesContactOverrun" />
+  <testcase classname="HH_NameSpec_TEST" name="SixContactsTwoLastnamesContactOverrun" />
+  <testcase classname="HH_NameSpec_TEST" name="ThreeContactsTwoLastnames" />
+  <testcase classname="HH_NameSpec_TEST" name="ThreeContactsTwoLastnamesCustomFields" />
+  <testcase classname="HH_NameSpec_TEST" name="TwoContactDifferentLastname" />
+  <testcase classname="HH_NameSpec_TEST" name="TwoContactSameLastname" />
+  <testcase classname="HH_NameSpec_TEST" name="TwoContactSameLastnameAccountReference" />
+  <testcase classname="HH_NameSpec_TEST" name="testRefreshAllHHNaming" />
+  <testcase classname="HH_NameSpec_TEST" name="testRefreshAllHHNamingManyHH" />
+  <testcase classname="HH_NameSpec_TEST" name="testRefreshAllHHNamingWithCustom" />
+  <testcase classname="HH_OppContactRoles_TEST" name="ghIssue25" time="1.004">
+    <failure type="Class.HH_OppContactRoles_TEST.ghIssue25: line 371, column 1">System.AssertException: Assertion Failed: Expected: 2, Actual: 4</failure>
+  </testcase>
+  <testcase classname="HH_OppContactRoles_TEST" name="opportunityDeceasedPrimaryAccount" time="1.0" />
+  <testcase classname="HH_OppContactRoles_TEST" name="opportunityRegularAccountHHAccount" time="0.0" />
+  <testcase classname="HH_OppContactRoles_TEST" name="opportunityRegularAccountOne2One" time="0.0" />
+  <testcase classname="HH_OppContactRoles_TEST" name="opportunityWithHouseholdBucket" time="0.0" />
+  <testcase classname="HH_OppContactRoles_TEST" name="opportunityWithHouseholdHHAccount" time="1.0" />
+  <testcase classname="HH_OppContactRoles_TEST" name="opportunityWithHouseholdNoRolesBucket" time="0.0" />
+  <testcase classname="HH_OppContactRoles_TEST" name="opportunityWithHouseholdNoRolesHHAccount" time="1.004" />
+  <testcase classname="HH_OppContactRoles_TEST" name="opportunityWithHouseholdNoRolesOne2One" time="1.008" />
+  <testcase classname="HH_OppContactRoles_TEST" name="opportunityWithHouseholdOne2One" time="1.0" />
+  <testcase classname="HH_OppContactRoles_TEST" name="opportunityWithNoHouseholdHHAccount" time="1.0" />
+  <testcase classname="HH_OppContactRoles_TEST" name="opportunityWithNoHouseholdOne2One" time="1.004" />
+  <testcase classname="HH_OppContactRoles_TEST" name="testOppsAcctChangeHHToHH" time="2.018" />
+  <testcase classname="HH_OppContactRoles_TEST" name="testOppsAcctChangeHHToOrg" time="1.004" />
+  <testcase classname="HH_OppContactRoles_TEST" name="testOppsAcctChangeOne2OneToOne2One" time="1.003" />
+  <testcase classname="HH_OppContactRoles_TEST" name="testOppsAcctChangeOne2OneToOrg" />
+  <testcase classname="HH_OppContactRoles_TEST" name="testOppsAcctChangeOrgToHH" />
+  <testcase classname="HH_OppContactRoles_TEST" name="testOppsAcctChangeOrgToOne2One" />
+  <testcase classname="HH_OppContactRoles_TEST" name="updateOppHHAccountRefreshNone" />
+  <testcase classname="HH_OppContactRoles_TEST" name="updateOppHHAccountRefreshOpen" />
+  <testcase classname="HH_OppContactRoles_TEST" name="updateOppHHAccountRefreshOpenAndClosed" />
+  <testcase classname="LD_LeadConvertOverride_TEST" name="convertCompanyLead_Test" time="0.0" />
+  <testcase classname="LD_LeadConvertOverride_TEST" name="mergeLeadConversion_TestBucketAccountOppOCR" time="0.0">
+    <failure type="Class.LD_LeadConvertOverride_TEST.mergeLeadConversion_TestOppOCR: line 887, column 1
+Class.LD_LeadConvertOverride_TEST.mergeLeadConversion_TestBucketAccountOppOCR: line 810, column 1">System.AssertException: Assertion Failed: Expected: 1, Actual: 2</failure>
+  </testcase>
+  <testcase classname="LD_LeadConvertOverride_TEST" name="mergeLeadConversion_TestHHAccountOppOCR" time="1.081">
+    <failure type="Class.LD_LeadConvertOverride_TEST.mergeLeadConversion_TestOppOCR: line 887, column 1
+Class.LD_LeadConvertOverride_TEST.mergeLeadConversion_TestHHAccountOppOCR: line 804, column 1">System.AssertException: Assertion Failed: Expected: 1, Actual: 3</failure>
+  </testcase>
+  <testcase classname="LD_LeadConvertOverride_TEST" name="mergeLeadConversion_TestOne2OneOppOCR" time="1.008">
+    <failure type="Class.LD_LeadConvertOverride_TEST.mergeLeadConversion_TestOppOCR: line 887, column 1
+Class.LD_LeadConvertOverride_TEST.mergeLeadConversion_TestOne2OneOppOCR: line 798, column 1">System.AssertException: Assertion Failed: Expected: 1, Actual: 3</failure>
+  </testcase>
+  <testcase classname="LD_LeadConvertOverride_TEST" name="newLeadConversionExistingNamedCompanyAffl_TestBucketAccount" time="0.0" />
+  <testcase classname="LD_LeadConvertOverride_TEST" name="newLeadConversionExistingNamedCompanyAffl_TestHHAccount" time="1.001" />
+  <testcase classname="LD_LeadConvertOverride_TEST" name="newLeadConversionExistingNamedCompanyAffl_TestOne2One" time="0.0" />
+  <testcase classname="LD_LeadConvertOverride_TEST" name="newLeadConversionExistingNamedCompany_TestBucketAccount" time="0.0" />
+  <testcase classname="LD_LeadConvertOverride_TEST" name="newLeadConversionExistingNamedCompany_TestHHAccount" time="0.0" />
+  <testcase classname="LD_LeadConvertOverride_TEST" name="newLeadConversionExistingNamedCompany_TestOne2One" time="0.0" />
+  <testcase classname="LD_LeadConvertOverride_TEST" name="newLeadConversionHHObjBucket" time="0.0" />
+  <testcase classname="LD_LeadConvertOverride_TEST" name="newLeadConversionHHObjOne2One" time="1.0" />
+  <testcase classname="LD_LeadConvertOverride_TEST" name="newLeadConversionMerge_TestBucketAccount" time="0.0" />
+  <testcase classname="LD_LeadConvertOverride_TEST" name="newLeadConversionMerge_TestHHAccount" time="0.0" />
+  <testcase classname="LD_LeadConvertOverride_TEST" name="newLeadConversionMerge_TestOne2One" time="0.0" />
+  <testcase classname="LD_LeadConvertOverride_TEST" name="newLeadConversionNewNamedCompany_TestBucketAccount" time="0.0" />
+  <testcase classname="LD_LeadConvertOverride_TEST" name="newLeadConversionNewNamedCompany_TestHHAccount" time="0.0" />
+  <testcase classname="LD_LeadConvertOverride_TEST" name="newLeadConversionNewNamedCompany_TestOne2One" time="0.0" />
+  <testcase classname="LD_LeadConvertOverride_TEST" name="newLeadConversion_TestBucketAccount" time="0.0" />
+  <testcase classname="LD_LeadConvertOverride_TEST" name="newLeadConversion_TestBucketAccountOppAFF" time="1.004">
+    <failure type="Class.LD_LeadConvertOverride_TEST.newLeadConversion_TestOppAFF: line 992, column 1
+Class.LD_LeadConvertOverride_TEST.newLeadConversion_TestBucketAccountOppAFF: line 916, column 1">System.AssertException: Assertion Failed: Expected: 1, Actual: 3</failure>
+  </testcase>
+  <testcase classname="LD_LeadConvertOverride_TEST" name="newLeadConversion_TestBucketAccountOppOCR" time="0.0">
+    <failure type="Class.LD_LeadConvertOverride_TEST.newLeadConversion_TestOppOCR: line 782, column 1
+Class.LD_LeadConvertOverride_TEST.newLeadConversion_TestBucketAccountOppOCR: line 714, column 1">System.AssertException: Assertion Failed: Expected: 1, Actual: 2</failure>
+  </testcase>
+  <testcase classname="LD_LeadConvertOverride_TEST" name="newLeadConversion_TestHHAccount" time="1.001" />
+  <testcase classname="LD_LeadConvertOverride_TEST" name="newLeadConversion_TestHHAccountOppAFF">
+    <failure type="Class.LD_LeadConvertOverride_TEST.newLeadConversion_TestOppAFF: line 992, column 1
+Class.LD_LeadConvertOverride_TEST.newLeadConversion_TestHHAccountOppAFF: line 910, column 1">System.AssertException: Assertion Failed: Expected: 1, Actual: 4</failure>
+  </testcase>
+  <testcase classname="LD_LeadConvertOverride_TEST" name="newLeadConversion_TestHHAccountOppOCR">
+    <failure type="Class.LD_LeadConvertOverride_TEST.newLeadConversion_TestOppOCR: line 782, column 1
+Class.LD_LeadConvertOverride_TEST.newLeadConversion_TestHHAccountOppOCR: line 708, column 1">System.AssertException: Assertion Failed: Expected: 1, Actual: 3</failure>
+  </testcase>
+  <testcase classname="LD_LeadConvertOverride_TEST" name="newLeadConversion_TestOne2One" />
+  <testcase classname="LD_LeadConvertOverride_TEST" name="newLeadConversion_TestOne2OneOppAFF">
+    <failure type="Class.LD_LeadConvertOverride_TEST.newLeadConversion_TestOppAFF: line 992, column 1
+Class.LD_LeadConvertOverride_TEST.newLeadConversion_TestOne2OneOppAFF: line 904, column 1">System.AssertException: Assertion Failed: Expected: 1, Actual: 4</failure>
+  </testcase>
+  <testcase classname="LD_LeadConvertOverride_TEST" name="newLeadConversion_TestOne2OneOppOCR">
+    <failure type="Class.LD_LeadConvertOverride_TEST.newLeadConversion_TestOppOCR: line 782, column 1
+Class.LD_LeadConvertOverride_TEST.newLeadConversion_TestOne2OneOppOCR: line 702, column 1">System.AssertException: Assertion Failed: Expected: 1, Actual: 3</failure>
+  </testcase>
+  <testcase classname="LD_LeadConvertOverride_TEST" name="newNativeLeadConversion_TestBucketAccount" />
+  <testcase classname="LD_LeadConvertOverride_TEST" name="newNativeLeadConversion_TestHHAccount" />
+  <testcase classname="LD_LeadConvertOverride_TEST" name="newNativeLeadConversion_TestOne2One" />
+  <testcase classname="LVL_LevelAssignBATCH_TEST" name="testAccountLevels" time="1.017" />
+  <testcase classname="LVL_LevelAssignBATCH_TEST" name="testContactLevels" time="1.0" />
+  <testcase classname="LVL_LevelAssignBATCH_TEST" name="testLevelAssignScheduling" time="1.006" />
+  <testcase classname="LVL_LevelAssignBATCH_TEST" name="testLevelValidationExistingMax" time="0.0" />
+  <testcase classname="LVL_LevelAssignBATCH_TEST" name="testLevelValidationExistingMin" time="0.0" />
+  <testcase classname="LVL_LevelAssignBATCH_TEST" name="testLevelValidationExistingNames" time="0.0" />
+  <testcase classname="LVL_LevelAssignBATCH_TEST" name="testLevelValidationMinMaxMustExist" time="0.0" />
+  <testcase classname="LVL_LevelAssignBATCH_TEST" name="testLevelValidationMinMaxOverlap" time="0.0" />
+  <testcase classname="LVL_LevelAssignBATCH_TEST" name="testLevelValidationNewMax" time="0.0" />
+  <testcase classname="LVL_LevelAssignBATCH_TEST" name="testLevelValidationNewMin" time="0.0" />
+  <testcase classname="LVL_LevelAssignBATCH_TEST" name="testLevelValidationNewNames" time="0.0" />
+  <testcase classname="LVL_LevelEdit_TEST" name="testCloneLevel" time="0.0" />
+  <testcase classname="LVL_LevelEdit_TEST" name="testNewLevel" time="0.0" />
+  <testcase classname="LVL_LevelEdit_TEST" name="testSaveAndNewLevel" time="0.0" />
+  <testcase classname="LVL_LevelEdit_TEST" name="testTargetFieldChange" time="0.0" />
+  <testcase classname="LeadProcessorTest" name="testMethod1" time="2.482" />
+  <testcase classname="MTCH_FindGifts_TEST" name="testCreateMatches" time="3.012" />
+  <testcase classname="MTCH_FindGifts_TEST" name="testCreateMatchesPercent" time="2.049" />
+  <testcase classname="MTCH_FindGifts_TEST" name="testCreateSearchedMatches" time="2.052" />
+  <testcase classname="MTCH_FindGifts_TEST" name="testUnmatchMatches" time="2.037" />
+  <testcase classname="MTCH_Opportunity_TEST" name="testCreateMatches" time="3.09">
+    <failure type="Class.MTCH_Opportunity_TEST.testCreateMatches: line 54, column 1">System.AssertException: Assertion Failed: Expected: 10, Actual: 21</failure>
+  </testcase>
+  <testcase classname="MyHelloWorldTest" name="test_addHelloWorld" time="0.0" />
+  <testcase classname="MyHelloWorldTest" name="test_helloWorldAccountTrigger" time="0.0" />
+  <testcase classname="OPP_CampaignMember_TEST" name="batchCreateMixedMembers" time="6.985">
+    <failure type="Class.OPP_CampaignMember_TEST.batchCreateMixedMembers: line 456, column 1">System.AssertException: Assertion Failed: 200 campaign members should be created.: Expected: 200, Actual: 0</failure>
+  </testcase>
+  <testcase classname="OPP_CampaignMember_TEST" name="createMemberNonResponded" time="0.0">
+    <failure type="Class.OPP_CampaignMember_TEST.createMemberNonResponded: line 273, column 1">System.AssertException: Assertion Failed: A campaign member should be created.: Expected: 1, Actual: 0</failure>
+  </testcase>
+  <testcase classname="OPP_CampaignMember_TEST" name="createMemberResponded" time="1.01">
+    <failure type="Class.OPP_CampaignMember_TEST.createMemberResponded: line 317, column 1">System.AssertException: Assertion Failed: A campaign member should be created.: Expected: 1, Actual: 0</failure>
+  </testcase>
+  <testcase classname="OPP_CampaignMember_TEST" name="featureOff" time="1.002" />
+  <testcase classname="OPP_CampaignMember_TEST" name="newMemberCreateStatus" time="0.0">
+    <failure type="Class.OPP_CampaignMember_TEST.newMemberCreateStatus: line 80, column 1">System.AssertException: Assertion Failed: A campaign member should be created.: Expected: 1, Actual: 0</failure>
+  </testcase>
+  <testcase classname="OPP_CampaignMember_TEST" name="omitCampaignMember" time="1.042" />
+  <testcase classname="OPP_CampaignMember_TEST" name="settingUsesExistingStatus" time="1.001">
+    <failure type="Class.OPP_CampaignMember_TEST.settingUsesExistingStatus: line 228, column 1">System.AssertException: Assertion Failed: A campaign member should still exist.: Expected: 1, Actual: 0</failure>
+  </testcase>
+  <testcase classname="OPP_CampaignMember_TEST" name="updateMemberCreateStatus" time="1.013">
+    <failure type="Class.OPP_CampaignMember_TEST.updateMemberCreateStatus: line 128, column 1">System.AssertException: Assertion Failed: Campaign member be updated to our status.: Expected: foo, Actual: Sent</failure>
+  </testcase>
+  <testcase classname="OPP_CampaignMember_TEST" name="updateStatus" time="1.0">
+    <failure type="Class.OPP_CampaignMember_TEST.updateStatus: line 179, column 1">System.AssertException: Assertion Failed: Status should be created per the npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Responded_Status__c setting.: Expected: NewTestStatus, Actual: Sent</failure>
+  </testcase>
+  <testcase classname="OPP_CascadeDeleteLookups_TEST" name="testOppCascade" time="1.117" />
+  <testcase classname="OPP_MatchingDonationsBTN_TEST" name="TestMatchingDonationPage" time="0.0" />
+  <testcase classname="OPP_OpportunityContactRoles_TEST" name="avoidDuplicateCRs" time="0.0" />
+  <testcase classname="OPP_OpportunityContactRoles_TEST" name="createOrUpdateCR" time="0.0" />
+  <testcase classname="OPP_OpportunityContactRoles_TEST" name="honoreeNotificationBlankSettings" time="0.0" />
+  <testcase classname="OPP_OpportunityContactRoles_TEST" name="honoreeNotificationInsert" time="0.0" />
+  <testcase classname="OPP_OpportunityContactRoles_TEST" name="honoreeNotificationUpdate" time="0.0" />
+  <testcase classname="OPP_OpportunityContactRoles_TEST" name="oppCRTriggerTurnedOff" time="0.0" />
+  <testcase classname="OPP_OpportunityContactRoles_TEST" name="oppRolesForBadId" time="0.0" />
+  <testcase classname="OPP_OpportunityContactRoles_TEST" name="oppRolesForIndividualAccount" time="0.0" />
+  <testcase classname="OPP_OpportunityContactRoles_TEST" name="oppRolesForIndividualContact" time="0.0" />
+  <testcase classname="OPP_OpportunityContactRoles_TEST" name="oppRolesForOneToOneAccount" time="0.0" />
+  <testcase classname="OPP_OpportunityContactRoles_TEST" name="oppRolesForOneToOneContact" time="0.0" />
+  <testcase classname="OPP_OpportunityNaming_TEST" name="testBulk" time="2.031">
+    <failure type="Class.OPP_OpportunityNaming_TEST.testBulk: line 236, column 1">System.AssertException: Assertion Failed: The name should be calculated based on the individual attributed setting.: Expected: conname true Donation, Actual: Donation</failure>
+  </testcase>
+  <testcase classname="OPP_OpportunityNaming_TEST" name="testButton" time="1.002" />
+  <testcase classname="OPP_OpportunityNaming_TEST" name="testException" time="1.0">
+    <failure type="Class.OPP_OpportunityNaming_TEST.testException: line 290, column 1">System.AssertException: Assertion Failed: An error record should be created.: Expected: 1, Actual: 3</failure>
+  </testcase>
+  <testcase classname="OPP_OpportunityNaming_TEST" name="testMissingData" time="1.012" />
+  <testcase classname="OPP_PrimaryContact_TEST" name="testBatch" time="1.012" />
+  <testcase classname="OPP_PrimaryContact_TEST" name="testBulkInsert" time="5.297" />
+  <testcase classname="OPP_PrimaryContact_TEST" name="testCreateUpdateOCR" time="1.004" />
+  <testcase classname="OPP_PrimaryContact_TEST" name="testExistingConRoles" time="1.006" />
+  <testcase classname="OPP_SendAcknowledgmentBTN_TEST" name="testBtnCTRL" time="1.012">
+    <failure type="Class.OPP_SendAcknowledgmentBTN_TEST.testBtnCTRL: line 67, column 1">System.AssertException: Assertion Failed: Expected: 1, Actual: 2</failure>
+  </testcase>
+  <testcase classname="PMT_PaymentCreator_TEST" name="CloseLostOppWithMixOfPayments" time="1.003" />
+  <testcase classname="PMT_PaymentCreator_TEST" name="createOppWithRecordTypeExcluded" time="0.0" />
+  <testcase classname="PMT_PaymentCreator_TEST" name="createOppWithTypeExcluded" time="0.0" />
+  <testcase classname="PMT_PaymentCreator_TEST" name="createOppWithTypeNotExcluded" time="0.0" />
+  <testcase classname="PMT_PaymentCreator_TEST" name="nullAmount" time="0.0" />
+  <testcase classname="PMT_PaymentCreator_TEST" name="testBatchPaymentCreation" time="0.0" />
+  <testcase classname="PMT_PaymentCreator_TEST" name="testOpportunityWillAutoCloseIfAmountUpdatedToMatchPayments" time="0.0" />
+  <testcase classname="PMT_PaymentCreator_TEST" name="testOpportunityWillAutoClosefterAllPaymentsReceived" time="0.0" />
+  <testcase classname="PMT_PaymentCreator_TEST" name="testOpportunityWillNotAutoCloseClosesIfAmountSetToZero" time="0.0" />
+  <testcase classname="PMT_PaymentCreator_TEST" name="testOpportunityWillNotAutoCloseIfAllPaymentsWrittenOff" time="0.0" />
+  <testcase classname="PMT_PaymentCreator_TEST" name="testOpportunityWillNotAutoCloseIfAlreadyClosed" time="0.0" />
+  <testcase classname="PMT_PaymentCreator_TEST" name="testOpportunityWillNotAutoCloseIfNoStageNameSet" time="0.0" />
+  <testcase classname="PMT_PaymentCreator_TEST" name="testOpportunityWillNotAutoCloseIfNotAllPaymentsReceived" time="0.0" />
+  <testcase classname="PMT_PaymentWizard_TEST" name="closedWonStage" time="0.0" />
+  <testcase classname="PMT_PaymentWizard_TEST" name="test_PageElementsMonthly" time="0.0" />
+  <testcase classname="PMT_PaymentWizard_TEST" name="test_PageElementsWeekly" time="0.0" />
+  <testcase classname="PMT_PaymentWizard_TEST" name="test_PageElementsYearly" time="0.0" />
+  <testcase classname="PMT_PaymentWizard_TEST" name="test_PaymentMappingsApplied" time="0.0" />
+  <testcase classname="PMT_PaymentWizard_TEST" name="test_RemovePaidPayments" time="0.0" />
+  <testcase classname="PMT_PaymentWizard_TEST" name="test_nullOpps" time="0.0" />
+  <testcase classname="PMT_PaymentWizard_TEST" name="test_paymentsEnabled_WriteOff" time="0.0" />
+  <testcase classname="PMT_PaymentWizard_TEST" name="test_publicGetters" time="0.0" />
+  <testcase classname="PSC_ManageSoftCredits_TEST" name="createNewPSCs" time="1.005" />
+  <testcase classname="PSC_ManageSoftCredits_TEST" name="createNewPSCsByPercent" time="1.001" />
+  <testcase classname="PSC_ManageSoftCredits_TEST" name="createNewPSCsToExistingPSCs" time="1.005" />
+  <testcase classname="PSC_ManageSoftCredits_TEST" name="deleteExistingPSCs" time="1.022" />
+  <testcase classname="PSC_ManageSoftCredits_TEST" name="deleteExistingPSCsByClearContactId" time="1.003" />
+  <testcase classname="PSC_ManageSoftCredits_TEST" name="loadInvalidPSCs" time="1.0" />
+  <testcase classname="PSC_ManageSoftCredits_TEST" name="loadSoftCreditOCRs" time="1.016" />
+  <testcase classname="PSC_ManageSoftCredits_TEST" name="makeExistingPSCsFullCredits" time="1.0" />
+  <testcase classname="PSC_ManageSoftCredits_TEST" name="makeNewPSCsFullCredits" time="1.001" />
+  <testcase classname="PSC_ManageSoftCredits_TEST" name="testErrors" time="1.001" />
+  <testcase classname="PSC_ManageSoftCredits_TEST" name="testNoSoftCreditRoles" time="1.001" />
+  <testcase classname="PSC_ManageSoftCredits_TEST" name="updateExistingPSCs" time="1.001" />
+  <testcase classname="PSC_PartialSoftCredit_TEST" name="createPSCsExistingOCRs" time="1.033" />
+  <testcase classname="PSC_PartialSoftCredit_TEST" name="createPSCsNewOCRs" time="1.027" />
+  <testcase classname="PSC_PartialSoftCredit_TEST" name="createPSCsSomeExistingOCRs" time="1.008" />
+  <testcase classname="PSC_PartialSoftCredit_TEST" name="updatePSCsInvalidFields" time="1.0" />
+  <testcase classname="PSC_PartialSoftCredit_TEST" name="updatePSCsRoleName" time="1.0" />
+  <testcase classname="RD_BulkTests_TEST" name="bulkInsertOpportunities" time="0.0">
+    <failure type="Class.RD_BulkTests_TEST.bulkInsertOpportunities: line 80, column 1">System.AssertException: Assertion Failed: Expected: 400, Actual: 1</failure>
+  </testcase>
+  <testcase classname="RD_CascadeDeleteLookups_TEST" name="testRDCascade" time="0.0">
+    <failure type="Class.RD_CascadeDeleteLookups_TEST.testRDCascade: line 59, column 1">System.AssertException: Assertion Failed: Two opps should be auto created by recurring donation.: Expected: 2, Actual: 0</failure>
+  </testcase>
+  <testcase classname="RD_CascadeDeleteLookups_TEST" name="testRDDeleteException" time="0.0">
+    <failure type="Class.RD_CascadeDeleteLookups_TEST.testRDDeleteException: line 110, column 1">System.AssertException: Assertion Failed: Two opps should be auto created by recurring donation.: Expected: 2, Actual: 0</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST" name="closeOppForOpenEndedRecurringDonationCustomDays" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST.closeOppForOpenEndedRecurringDonationCustomDays: line 892, column 1">System.AssertException: Assertion Failed</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST" name="closeOppForOpenEndedRecurringDonationCustomMonths" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST.closeOppForOpenEndedRecurringDonationCustomMonths: line 954, column 1">System.AssertException: Assertion Failed: Expected: 6, Actual: 0</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST" name="closeOppForOpenEndedRecurringDonationCustomWeeks" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST.closeOppForOpenEndedRecurringDonationCustomWeeks: line 830, column 1">System.AssertException: Assertion Failed</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST" name="closeOppForOpenEndedRecurringDonationCustomYears" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST.closeOppForOpenEndedRecurringDonationCustomYears: line 1017, column 1">System.AssertException: Assertion Failed: Expected: 1, Actual: 0</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST" name="closeOppForOpenEndedRecurringDonationMonthly" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST.closeOppForOpenEndedRecurringDonationMonthly: line 711, column 1">System.AssertException: Assertion Failed: Expected: 1, Actual: 0</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST" name="closeOppForOpenEndedRecurringDonationQuarterly" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST.closeOppForOpenEndedRecurringDonationQuarterly: line 766, column 1">System.AssertException: Assertion Failed: Expected: 4, Actual: 0</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST" name="closeOppForOpenEndedRecurringDonationWeekly" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST.closeOppForOpenEndedRecurringDonationWeekly: line 654, column 1">System.AssertException: Assertion Failed</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST" name="contactRolesOnOppsBucket" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST.contactRolesOnOppsProcessor: line 308, column 1
+Class.RD_RecurringDonations_TEST.contactRolesOnOppsBucket: line 273, column 1">System.AssertException: Assertion Failed: Expected: 2, Actual: 0</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST" name="contactRolesOnOppsHHAccount" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST.contactRolesOnOppsProcessor: line 308, column 1
+Class.RD_RecurringDonations_TEST.contactRolesOnOppsHHAccount: line 279, column 1">System.AssertException: Assertion Failed: Expected: 2, Actual: 0</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST" name="contactRolesOnOppsOne2One" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST.contactRolesOnOppsProcessor: line 308, column 1
+Class.RD_RecurringDonations_TEST.contactRolesOnOppsOne2One: line 276, column 1">System.AssertException: Assertion Failed: Expected: 2, Actual: 0</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST" name="deleteRecurringDonation" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST.deleteRecurringDonation: line 246, column 1">System.AssertException: Assertion Failed: Expected: 3, Actual: 0</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST" name="insertCampaignOpportunities" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST.insertCampaignOpportunities: line 215, column 1">System.AssertException: Assertion Failed: Expected: 2, Actual: 0</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST" name="insertOpenEndedRecurringDonations" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST.insertOpenEndedRecurringDonations: line 388, column 1">System.AssertException: Assertion Failed: Expected: 12, Actual: 0</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST" name="insertOpportunities" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST.insertOpportunities: line 85, column 1">System.AssertException: Assertion Failed: Expected: null, Actual: a1f0P000008WGgoQAG</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST" name="insertQuarterlyOpportunities" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST.insertQuarterlyOpportunities: line 173, column 1">System.AssertException: Assertion Failed: Expected: 2, Actual: 0</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST" name="insertWeeklyOpportunities" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST.insertWeeklyOpportunities: line 138, column 1">System.AssertException: Assertion Failed: Expected: 2, Actual: 0</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST" name="testSettingsCreation" time="0.0" />
+  <testcase classname="RD_RecurringDonations_TEST" name="updateOpenEndedRecurringDonation1an15" time="1.001" />
+  <testcase classname="RD_RecurringDonations_TEST" name="updateOpenEndedRecurringDonationMonthly" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST.updateOpenEndedRecurringDonationMonthly: line 430, column 1">System.AssertException: Assertion Failed</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST" name="updateOpenEndedRecurringDonationQuarterly" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST.updateOpenEndedRecurringDonationQuarterly: line 607, column 1">System.AssertException: Assertion Failed</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST" name="updateOpenEndedRecurringDonationWeekly" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST.updateOpenEndedRecurringDonationWeekly: line 561, column 1">System.AssertException: Assertion Failed: Expected: 12, Actual: 0</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST" name="updateOpenEndedRecurringDonationYearly" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST.updateOpenEndedRecurringDonationYearly: line 517, column 1">System.AssertException: Assertion Failed</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST2" name="batchStatusBarTest" time="0.0" />
+  <testcase classname="RD_RecurringDonations_TEST2" name="closeOpenEndedRecurringDonationMarkOppsClosedLost" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST2.closeOpenEndedRecurringDonationMarkOppsClosedLost: line 135, column 1">System.AssertException: Assertion Failed</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST2" name="closeOppForOpenEndedRecurringDonationBadRecurrance" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST2.closeOppForOpenEndedRecurringDonationBadRecurrance: line 289, column 1">System.ListException: List index out of bounds: 0</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST2" name="closeOppForOpenEndedRecurringDonationYearly" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST2.closeOppForOpenEndedRecurringDonationYearly: line 80, column 1">System.AssertException: Assertion Failed: Expected: 1, Actual: 0</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST2" name="closeRecurringDonationDeleteOpps" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST2.closeRecurringDonationDeleteOpps: line 338, column 1">System.AssertException: Assertion Failed: Same value: 0</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST2" name="insertClosedOppForOpenEndedRecurringDonation" time="0.0" />
+  <testcase classname="RD_RecurringDonations_TEST2" name="multipleRDInsert" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST2.multipleRDInsert: line 413, column 1">System.AssertException: Assertion Failed: Expected: 7, Actual: 0</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST2" name="testBTN" time="0.0" />
+  <testcase classname="RD_RecurringDonations_TEST2" name="testBatch" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST2.testBatch: line 700, column 1">System.ListException: List index out of bounds: 0</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST2" name="testErrorHandlingAllSysAdmins" time="1.001" />
+  <testcase classname="RD_RecurringDonations_TEST2" name="testErrorHandlingPublicGroup" time="1.0" />
+  <testcase classname="RD_RecurringDonations_TEST2" name="testErrorHandlingUser" time="1.004" />
+  <testcase classname="RD_RecurringDonations_TEST2" name="testInstallmentNumbers" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST2.testInstallmentNumbers: line 1011, column 1">System.AssertException: Assertion Failed: Recurring Donation opportunities should have the correct installment number.: Expected: 1, Actual: null</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST2" name="testOpenEndedMonthlyEndDates" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST2.testOpenEndedMonthlyEndDates: line 1089, column 1">System.AssertException: Assertion Failed: Expected: 12, Actual: 0</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST2" name="testOrphanedRd" time="1.004" />
+  <testcase classname="RD_RecurringDonations_TEST2" name="testRDCustomFieldMappingFixedRD" time="0.0" />
+  <testcase classname="RD_RecurringDonations_TEST2" name="testRDCustomFieldMappingOpenRD" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST2.testRDCustomFieldMappingOpenRD: line 950, column 1">System.AssertException: Assertion Failed: Same value: 0</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST2" name="tooManyInstallments" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST2.tooManyInstallments: line 454, column 1">System.AssertException: Assertion Failed: Expected: null, Actual: a1f0P000008WGhgQAG</failure>
+  </testcase>
+  <testcase classname="RD_RecurringDonations_TEST2" name="updateOppsFromMultipleRDs" time="1.019" />
+  <testcase classname="RD_RecurringDonations_TEST2" name="updateRecurringDonationWithClosedOpp" time="0.0">
+    <failure type="Class.RD_RecurringDonations_TEST2.updateRecurringDonationWithClosedOpp: line 180, column 1">System.ListException: List index out of bounds: 0</failure>
+  </testcase>
+  <testcase classname="REL_Relationships_TEST" name="RelationshipsViewer_TEST" time="2.013" />
+  <testcase classname="REL_Relationships_TEST" name="test2Rels1Transaction_v2" time="1.0" />
+  <testcase classname="REL_Relationships_TEST" name="testAutoCreateCampaignMemberInsert" time="1.005" />
+  <testcase classname="REL_Relationships_TEST" name="testAutoCreateCampaignMemberUpdate" time="1.0" />
+  <testcase classname="REL_Relationships_TEST" name="testAutoCreateContactInsert" time="2.001" />
+  <testcase classname="REL_Relationships_TEST" name="testAutoCreateContactUpdate" time="2.004" />
+  <testcase classname="REL_Relationships_TEST" name="testAutoCreateDupePrevention" time="1.004" />
+  <testcase classname="REL_Relationships_TEST" name="testContactRel" time="1.007" />
+  <testcase classname="REL_Relationships_TEST" name="testDeletingMutuallyReferentialRelationshipsDoesNotPreventDeleteOfReciprocals" time="1.007" />
+  <testcase classname="REL_Relationships_TEST" name="testErrorRecordCreation" time="1.007" />
+  <testcase classname="REL_Relationships_TEST" name="testExceptionRecordCreation" time="1.017" />
+  <testcase classname="REL_Relationships_TEST" name="testFemaleGenderFieldReciprocal" time="1.001" />
+  <testcase classname="REL_Relationships_TEST" name="testFemaleSalutationReciprocal" time="1.006" />
+  <testcase classname="REL_Relationships_TEST" name="testGenderChange" time="2.001" />
+  <testcase classname="REL_Relationships_TEST" name="testInversionSettingsHaveType" time="1.011" />
+  <testcase classname="REL_Relationships_TEST" name="testInversionSettingsNoType" time="1.005" />
+  <testcase classname="REL_Relationships_TEST" name="testMaleGenderFieldReciprocal" time="1.008" />
+  <testcase classname="REL_Relationships_TEST" name="testMaleSalutationReciprocal" time="1.01" />
+  <testcase classname="REL_Relationships_TEST" name="testNeutralGenderFieldReciprocal" time="1.001" />
+  <testcase classname="REL_Relationships_TEST" name="testNeutralSalutationReciprocal" time="1.0" />
+  <testcase classname="REL_Relationships_TEST" name="testNoGenderManualRel" time="2.006" />
+  <testcase classname="REL_Relationships_TEST" name="testNoGenderManualRelStatusChange" />
+  <testcase classname="REL_Relationships_TEST" name="testNoValidSettingsConfig" />
+  <testcase classname="REL_Relationships_TEST" name="testOrphanedRelDelete" />
+  <testcase classname="REL_Relationships_TEST" name="testRelationshipDelete" />
+  <testcase classname="REL_Relationships_TEST" name="testRelationshipUTILS" />
+  <testcase classname="RLLP_OppPartialSoftCreditRollup_TEST" name="testDuplicateOCRSoftCredits" time="1.002" />
+  <testcase classname="RLLP_OppPartialSoftCreditRollup_TEST" name="testMulticurrencyPartialSoftCreditRollups" time="0.0" />
+  <testcase classname="RLLP_OppPartialSoftCreditRollup_TEST" name="testPartialSoftCreditRollups" time="4.609" />
+  <testcase classname="RLLP_OppPartialSoftCreditRollup_TEST" name="testPartialSoftCreditRollupsAllStats" time="1.004" />
+  <testcase classname="RLLP_OppRollupBATCH_TEST" name="testOppAcctRollupBatch" time="1.003" />
+  <testcase classname="RLLP_OppRollupBATCH_TEST" name="testOppContactRollupBatch" time="1.0" />
+  <testcase classname="RLLP_OppRollupBATCH_TEST" name="testOppPartialSoftCreditRollupBatch" time="1.0" />
+  <testcase classname="RLLP_OppRollupBATCH_TEST" name="testOppSoftCreditRollupBatch" time="1.001" />
+  <testcase classname="RLLP_OppRollup_TEST" name="OneContactMultipleOppsHHAccount_1" time="1.0" />
+  <testcase classname="RLLP_OppRollup_TEST" name="OneContactMultipleOppsHHAccount_2" time="1.007" />
+  <testcase classname="RLLP_OppRollup_TEST" name="OneContactMultipleOppsHHAccount_3" time="1.001" />
+  <testcase classname="RLLP_OppRollup_TEST" name="OneContactMultipleOppsHHAccount_4" time="1.011" />
+  <testcase classname="RLLP_OppRollup_TEST" name="OneContactMultipleOppsHHAccount_5" time="1.001" />
+  <testcase classname="RLLP_OppRollup_TEST" name="OneContactMultipleOppsHHAccount_6" time="1.079" />
+  <testcase classname="RLLP_OppRollup_TEST" name="OneContactMultipleOppsOne2One_1" time="1.004" />
+  <testcase classname="RLLP_OppRollup_TEST" name="OneContactMultipleOppsOne2One_2" time="1.003" />
+  <testcase classname="RLLP_OppRollup_TEST" name="OneContactMultipleOppsOne2One_3" time="1.001" />
+  <testcase classname="RLLP_OppRollup_TEST" name="OneContactMultipleOppsOne2One_4" time="1.0" />
+  <testcase classname="RLLP_OppRollup_TEST" name="OneContactMultipleOppsOne2One_5" time="1.001" />
+  <testcase classname="RLLP_OppRollup_TEST" name="OneContactMultipleOppsOne2One_6" time="1.0" />
+  <testcase classname="RLLP_OppRollup_TEST" name="OneContactOneInkindHHAccount" />
+  <testcase classname="RLLP_OppRollup_TEST" name="OneContactOneInkindOne2One" />
+  <testcase classname="RLLP_OppRollup_TEST" name="testGivingRollupAcctHHAccount" />
+  <testcase classname="RLLP_OppRollup_TEST" name="testGivingRollupAcctMembershipHHAccount" />
+  <testcase classname="RLLP_OppRollup_TEST" name="testGivingRollupAcctMembershipOne2One" />
+  <testcase classname="RLLP_OppRollup_TEST" name="testGivingRollupAcctOne2One" />
+  <testcase classname="RLLP_OppRollup_TEST" name="testGivingRollupAlwaysPrimaryHHAccount" />
+  <testcase classname="RLLP_OppRollup_TEST" name="testGivingRollupAlwaysPrimaryOne2One" />
+  <testcase classname="RLLP_OppRollup_TEST" name="testGivingRollupBatchHHAccount" />
+  <testcase classname="RLLP_OppRollup_TEST" name="testGivingRollupBatchOne2One" />
+  <testcase classname="RLLP_OppRollup_TEST" name="testGivingRollupBulkHHAccount" />
+  <testcase classname="RLLP_OppRollup_TEST" name="testGivingRollupBulkOne2One" />
+  <testcase classname="RLLP_OppRollup_TEST" name="testGivingRollupExcludedRTHHAccount" />
+  <testcase classname="RLLP_OppRollup_TEST" name="testGivingRollupExcludedRTOne2One" />
+  <testcase classname="RLLP_OppRollup_TEST" name="testGivingRollupHHAccount" />
+  <testcase classname="RLLP_OppRollup_TEST" name="testGivingRollupIndividualBucket" />
+  <testcase classname="RLLP_OppRollup_TEST" name="testGivingRollupIndividualHHAccount" />
+  <testcase classname="RLLP_OppRollup_TEST" name="testGivingRollupOne2One" />
+  <testcase classname="RLLP_OppRollup_TEST" name="testMemberRollupHHAccount" />
+  <testcase classname="RLLP_OppRollup_TEST" name="testMemberRollupOne2One" />
+  <testcase classname="RLLP_OppRollup_TEST2" name="testFYUtility" time="0.0" />
+  <testcase classname="RLLP_OppRollup_TEST2" name="testFiscalYearandCustomNDayHHAccount" time="1.006" />
+  <testcase classname="RLLP_OppRollup_TEST2" name="testFiscalYearandCustomNDayOne2One" time="1.007" />
+  <testcase classname="RLLP_OppRollup_TEST2" name="testFutureMethodsHHAccount" time="2.027" />
+  <testcase classname="RLLP_OppRollup_TEST2" name="testFutureMethodsOne2One" time="1.0" />
+  <testcase classname="RLLP_OppRollup_TEST2" name="testGetFiscalYearForDate" time="0.0" />
+  <testcase classname="RLLP_OppRollup_TEST2" name="testGivingRollupTooManyOppsHHAccount" time="7.913" />
+  <testcase classname="RLLP_OppRollup_TEST2" name="testGivingRollupTooManyOppsOne2One" time="7.914" />
+  <testcase classname="RLLP_OppRollup_TEST2" name="testHouseholdStatsHHAccount" time="1.011" />
+  <testcase classname="RLLP_OppRollup_TEST2" name="testHouseholdStatsOne2One" time="1.008" />
+  <testcase classname="RLLP_OppRollup_TEST2" name="testMultiCurrencyMethodsHHAccount" time="0.0" />
+  <testcase classname="RLLP_OppRollup_TEST2" name="testMultiCurrencyMethodsOne2One" time="0.0" />
+  <testcase classname="RLLP_OppRollup_TEST2" name="testOpportunityUtilityErrorHandlingHHAccount" time="1.036">
+    <failure type="Class.RLLP_OppRollup_TEST2.testOpportunityUtilityErrorHandling: line 110, column 1
+Class.RLLP_OppRollup_TEST2.testOpportunityUtilityErrorHandlingHHAccount: line 59, column 1">System.AssertException: Assertion Failed: Expected: 0, Actual: 10</failure>
+  </testcase>
+  <testcase classname="RLLP_OppRollup_TEST2" name="testOpportunityUtilityErrorHandlingOne2One" time="1.027">
+    <failure type="Class.RLLP_OppRollup_TEST2.testOpportunityUtilityErrorHandling: line 110, column 1
+Class.RLLP_OppRollup_TEST2.testOpportunityUtilityErrorHandlingOne2One: line 52, column 1">System.AssertException: Assertion Failed: Expected: 0, Actual: 10</failure>
+  </testcase>
+  <testcase classname="RLLP_OppRollup_TEST2" name="testOrgSoftCreditsHHAccount" time="1.006" />
+  <testcase classname="RLLP_OppRollup_TEST2" name="testOrgSoftCreditsOne2One" time="1.003" />
+  <testcase classname="RLLP_OppRollup_TEST2" name="testRollupAllsHHAccount" time="0.0" />
+  <testcase classname="RLLP_OppRollup_TEST2" name="testRollupAllsOne2One" time="0.0" />
+  <testcase classname="RLLP_OppRollup_TEST2" name="testSoftCreditsHHAccount" />
+  <testcase classname="RLLP_OppRollup_TEST2" name="testSoftCreditsOne2One" />
+  <testcase classname="RLLP_OppRollup_TEST2" name="testUDRChangeBehaviorHHAccount" />
+  <testcase classname="RLLP_OppRollup_TEST2" name="testUDRChangeBehaviorOne2One" />
+  <testcase classname="RLLP_OppRollup_TEST2" name="testUserDefinedRollupHHAccount" />
+  <testcase classname="RLLP_OppRollup_TEST2" name="testUserDefinedRollupOne2One" />
+  <testcase classname="STG_InstallScript_TEST" name="defaultSettingsCreated" time="0.0" />
+  <testcase classname="STG_InstallScript_TEST" name="deletedHandlers" time="0.0" />
+  <testcase classname="STG_InstallScript_TEST" name="mappingsTest_runScriptCustomConfigOnInstallAllFlags" time="0.0" />
+  <testcase classname="STG_InstallScript_TEST" name="mappingsTest_runScriptCustomConfigOnInstallSomeFlags" time="0.0" />
+  <testcase classname="STG_InstallScript_TEST" name="mappingsTest_runScriptNoCustomConfigOnInstall" time="0.0" />
+  <testcase classname="STG_InstallScript_TEST" name="mappingsTest_runScriptNoCustomSettings" time="0.0" />
+  <testcase classname="STG_InstallScript_TEST" name="missingSettingsCreated" time="0.0" />
+  <testcase classname="STG_InstallScript_TEST" name="push" time="0.0" />
+  <testcase classname="STG_InstallScript_TEST" name="upgrade" time="0.0" />
+  <testcase classname="STG_InstallScript_TEST2" name="handlersChanged" time="0.0" />
+  <testcase classname="STG_InstallScript_TEST2" name="handlersChanged_UserManaged" time="0.0" />
+  <testcase classname="STG_InstallScript_TEST2" name="schedulersChanged" time="0.0" />
+  <testcase classname="STG_PanelHealthCheck_TEST" name="verifyLevelFieldsExist" time="0.0" />
+  <testcase classname="STG_PanelHealthCheck_TEST" name="verifyLevelSourceFieldNumeric" time="0.0" />
+  <testcase classname="STG_PanelHealthCheck_TEST" name="verifyNoMissingOppPaymentsFail" time="0.0" />
+  <testcase classname="STG_PanelHealthCheck_TEST" name="verifyNoMissingOppPaymentsSuccess" time="0.0" />
+  <testcase classname="STG_PanelHealthCheck_TEST" name="verifyOCRSettingsCheck" time="0.0" />
+  <testcase classname="STG_PanelOpps_TEST" name="testGetOpportunityStageSelectOptionsContainsAtLeastEmptySelection" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="TEST_userRollupSettings" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testDataBoundMultiSelect" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testNameSpecs" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testPanel" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testPanelAffl" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testPanelAllo" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testPanelBDE" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testPanelContactRoles" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testPanelContacts" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testPanelErrorLog" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testPanelHealthCheck" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testPanelHouseholds" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testPanelLeads" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testPanelLvlAssignBatch" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testPanelMembership" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testPanelOppBatch" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testPanelOppNaming" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testPanelOppRollups" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testPanelOpps" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testPanelPaymentMapping" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testPanelRD" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testPanelRDBatch" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testPanelRDCustomFieldMapping" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testPanelRDCustomInstallment" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testPanelRel" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testPanelRelAuto" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testPanelRelReciprocal" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testPanelSchedule" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testPanelTDTM" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testPanelUserRollup" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testSetTriggerSchedConfig" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testSettingsManager" time="0.0" />
+  <testcase classname="STG_SettingsManager_TEST" name="testSettingsService" time="0.0" />
+  <testcase classname="STG_UninstallScript_TEST" name="rununinstall" time="0.0" />
+  <testcase classname="TDTM_Runnable_TEST" name="nochunking" time="24.447" />
+  <testcase classname="TDTM_Runnable_TEST" name="testAsync" time="0.0" />
+  <testcase classname="TDTM_TriggerScaffolds_TEST" name="tdtmCampaign" time="0.0" />
+  <testcase classname="TDTM_TriggerScaffolds_TEST" name="tdtmLead" time="0.0" />
+  <testcase classname="TVRemoteControlTest" name="testGetMenuOptions" time="0.0" />
+  <testcase classname="TVRemoteControlTest" name="testVolumeDecrease" time="0.0" />
+  <testcase classname="TVRemoteControlTest" name="testVolumeDecreaseUnderMin" time="0.0" />
+  <testcase classname="TVRemoteControlTest" name="testVolumeIncrease" time="0.0" />
+  <testcase classname="TVRemoteControlTest" name="testVolumeIncreaseOverMax" time="0.0" />
+  <testcase classname="UTIL_Currency_TEST" name="testGetCurrencyIsoCodeQueryBuildsCorrectQuery" time="0.0" />
+  <testcase classname="UTIL_Currency_TEST" name="testGetCurrencySymbolQueriesForCodeIfMultiCurrency" time="0.0" />
+  <testcase classname="UTIL_Currency_TEST" name="testGetCurrencySymbolReturnsDefaultCurrencySymbolIfSingleCurrency" time="0.0" />
+  <testcase classname="UTIL_Currency_TEST" name="testGetDefaultCurrencySymbolReturnsIsoCodeIfUnknownSymbol" time="0.0" />
+  <testcase classname="UTIL_Currency_TEST" name="testGetDefaultCurrencySymbolReturnsKnownSymbol" time="0.0" />
+  <testcase classname="UTIL_Currency_TEST" name="testGetDefaultCurrencyWrapsUserInfoMethod" time="0.0" />
+  <testcase classname="UTIL_Currency_TEST" name="testIsMultiCurrencyOrganizationWrapsUserInfoMethod" time="0.0" />
+  <testcase classname="UTIL_Currency_TEST" name="testSingletonReturnsExistingInstance" time="0.0" />
+  <testcase classname="UTIL_Currency_TEST" name="testSingletonReturnsNewInstanceIfNoExisting" time="0.0" />
+  <testcase classname="UTIL_Describe_TEST" name="testDescribe" />
+  <testcase classname="UTIL_JobProgress_CTRL_TEST" name="checkNullBatchJobProgressBehavior" />
+  <testcase classname="UTIL_JobProgress_CTRL_TEST" name="jobProgressController" />
+  <testcase classname="UTIL_Namespace_TEST" name="TestNamespacePrefixFixups" />
+  <testcase classname="UTIL_Namespace_TEST" name="keepUnusedPackagedLabelsInPackage" />
+  <testcase classname="UTIL_Namespace_TEST" name="testSandboxEmailToRealEmail" />
+  <testcase classname="UTIL_RecordTypeSettingsUpdate_TEST" name="testBlankSettingsRemainBlank" time="0.0" />
+  <testcase classname="UTIL_RecordTypeSettingsUpdate_TEST" name="testEmptyValuesAreDiscarded" time="0.0" />
+  <testcase classname="UTIL_RecordTypeSettingsUpdate_TEST" name="testIdsRemainIds" time="0.0" />
+  <testcase classname="UTIL_RecordTypeSettingsUpdate_TEST" name="testKitchenSink" time="0.0" />
+  <testcase classname="UTIL_RecordTypeSettingsUpdate_TEST" name="testKnownRecordTypeNamesAreConverted" time="0.0" />
+  <testcase classname="UTIL_RecordTypeSettingsUpdate_TEST" name="testNullSettingsRemainNull" time="0.0" />
+  <testcase classname="UTIL_RecordTypeSettingsUpdate_TEST" name="testUnknownRecordTypeNamesAreDiscarded" time="0.0" />
+  <testcase classname="UTIL_RecordTypeSettingsUpdate_TEST" name="testUpdateDoesNotRunOnUpgradeFrom379" time="0.0" />
+  <testcase classname="UTIL_RecordTypeSettingsUpdate_TEST" name="testUpdateDoesNotRunOnUpgradeFrom399" time="0.0" />
+  <testcase classname="UTIL_RecordTypeSettingsUpdate_TEST" name="testUpdateRunsOnNewInstall" time="0.0" />
+  <testcase classname="UTIL_RecordTypeSettingsUpdate_TEST" name="testUpdateRunsOnUpgradeFrom354" time="0.0" />
+  <testcase classname="UTIL_RecordTypeSettingsUpdate_TEST" name="testUpdateRunsOnUpgradeFrom377" time="0.0" />
+  <testcase classname="UTIL_RecordTypeSettingsUpdate_TEST" name="testUpdateSettings" time="0.0" />
+  <testcase classname="UTIL_RecordTypes_TEST" name="TestRecordTypes" />
+  <testcase classname="UTIL_RecordTypes_TEST" name="testRecTypes" />
+  <testcase classname="UTIL_Typeahead_TEST" name="testQuery" />
+  <testcase classname="UTIL_UnitTestData_TEST" name="testCreateNewInactiveUserForTests" />
+  <testcase classname="UTIL_UnitTestData_TEST" name="testCreateNewUserWithDefaultRole" />
+  <testcase classname="UTIL_UnitTestData_TEST" name="testCreateNewUserWithRandomRole" />
+  <testcase classname="UpdateContactAddressTest" name="test" time="0.0" />
+</testsuite>
