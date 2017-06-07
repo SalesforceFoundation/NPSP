@@ -1,0 +1,30 @@
+<apex:page controller="BDI_DataImportDeleteBTN_CTRL"
+    title="NPSP Data Import Delete"
+    tabStyle="DataImport__c"
+    showHeader="true"
+    sidebar="false"
+    action="{!buttonClick}"
+    docType="html-5.0"
+    standardStylesheets="false">
+
+    <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.SLDS, '/0_12_2/assets/styles/salesforce-lightning-design-system-vf.min.css')}"/>
+
+    <div class="slds slds-p-bottom--x-large">
+        <apex:form id="idForm" styleClass="slds-p-bottom--x-large">
+    
+        <c:UTIL_PageMessages />
+
+        <div class="slds-card__header slds-grid">
+            <div class="slds-no-flex">
+                <apex:commandButton value="{!$Label.bdiBtnClose}" 
+                    action="{!close}" 
+                    immediate="true" 
+                    styleClass="slds-button slds-button--neutral" />
+            </div>
+        </div>
+
+        </apex:form>
+    </div>
+                                    
+</apex:page>
