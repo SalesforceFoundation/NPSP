@@ -94,11 +94,6 @@ Insert Recurring Donations:
         npe03__Open_Ended_status__c: True
         npe03__Schedule_Type__c: Monthly
     lookups:
-        #npe03__Account__c: 
-        #    key_field: household_id
-        #    table: households
-        #    join_field: household_id
-        #    value_field: sf_id
         npe03__Contact__c:
             key_field: contact_id
             table: contacts

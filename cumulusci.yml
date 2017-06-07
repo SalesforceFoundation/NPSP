@@ -124,6 +124,20 @@ tasks:
                 - General_Accounting_Unit__c
                 - Campaign
 
+    test_data_delete_managed:
+        description: 'WARNING: Deletes all data in the objects specified in the objects option.'
+        class_path: cumulusci.tasks.bulkdata.DeleteData
+        options:
+            objects:
+                - Opportunity
+                - npe03__Recurring_Donation__c
+                - Case
+                - Contact
+                - Account
+                - npsp__Allocation__c
+                - npsp__General_Accounting_Unit__c
+                - Campaign
+
 flows:
     browsertests_firefox:
         description: Runs the browser tests locally against a managed package in Firefox
@@ -219,6 +233,16 @@ flows:
             2:
                 task: test_data_dev_org
 
+    test_data_dev_org_managed:
+        description: 'WARNING: This flow deletes all data first, then loads the complete test data set based on 100 Contacts into the target org.'
+        tasks:
+            1:
+                task: test_data_delete_managed
+            2:
+                task: test_data_dev_org
+                options:
+                    mapping: testdata/mapping_managed.yml
+
     test_data_1k:
         description: 'WARNING: This flow deletes all data first, then loads the complete test data set based on 1,024 Contacts into the target org.'
         tasks:
@@ -226,6 +250,7 @@ flows:
                 task: test_data_delete
             2:
                 task: test_data_1k
+
 
 orgs:
     scratch:
