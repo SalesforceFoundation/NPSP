@@ -62,6 +62,7 @@
         <members>BDI_IMatchDonations</members>
         <members>BDI_MatchDonations</members>
         <members>BDI_SettingsUI_CTRL</members>
+        <members>BDI_SettingsUI_TEST</members>
         <members>CAM_CascadeDeleteLookups_TDTM</members>
         <members>CAM_CascadeDeleteLookups_TEST</members>
         <members>CAO_Constants</members>
