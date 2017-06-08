@@ -58,11 +58,14 @@ public class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
                 //does it have a recurring donation reference?
                 //has it changed closed state, amount, or recurring donation changed?
                 Opportunity oppOld = (Opportunity)oldlist[i];
-                
-                if (o.npe03__Recurring_Donation__c != null 
-                    && (o.isClosed != oppOld.isClosed 
-                        || o.Amount != oppOld.Amount
-                        || o.npe03__Recurring_Donation__c != oppOld.npe03__Recurring_Donation__c)){
+                if (o.isClosed != oppOld.isClosed 
+                    || o.Amount != oppOld.Amount
+                    || o.npe03__Recurring_Donation__c != oppOld.npe03__Recurring_Donation__c){
+                    // If the Recurring Donation has changed, also update the Recurring Donation 
+                    // associated with the old (previous) version of the Opportunity
+                    if(o.npe03__Recurring_Donation__c != oppOld.npe03__Recurring_Donation__c) {
+                        rdIds.add(oppOld.npe03__Recurring_Donation__c);
+                    }
                     rdIds.add(o.npe03__Recurring_Donation__c);
                 }
                 i++;
