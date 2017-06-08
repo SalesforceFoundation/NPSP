@@ -1523,6 +1523,30 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Begin Data Import Process</value>
     </labels>
     <labels>
+        <fullName>bdiSettingsSectionContactMatching</fullName>
+        <categories>Batch Data Import</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>section label for contact matching rules in bDI</shortDescription>
+        <value>Contact &amp; Account Matching</value>
+    </labels>
+    <labels>
+        <fullName>bdiSettingsSectionDonationMatching</fullName>
+        <categories>Batch Data Import</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>section label for Donation Matching in BDI Settings</shortDescription>
+        <value>Donation Matching</value>
+    </labels>
+    <labels>
+        <fullName>bdiSettingsSectionExtensibility</fullName>
+        <categories>Batch Data Import</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>section label for Extensibility in BDI Settings</shortDescription>
+        <value>Extensibility</value>
+    </labels>
+    <labels>
         <fullName>bdiStatus</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
