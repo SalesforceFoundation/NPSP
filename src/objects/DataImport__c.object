@@ -1139,7 +1139,7 @@
         <openType>sidebar</openType>
         <protected>false</protected>
         <requireRowSelection>false</requireRowSelection>
-        <url>/apex/npsp__BDI_DataImport?action=deleteAll&amp;retURL={!URLFOR($Action.DataImport__c.Tab, $ObjectType.DataImport__c)}</url>
+        <url>/apex/npsp__BDI_DataImportDeleteBTN?action=deleteAll&amp;retURL={!URLFOR($Action.DataImport__c.Tab, $ObjectType.DataImport__c)}</url>
     </webLinks>
     <webLinks>
         <fullName>Delete_Imported_Data_Import_Records</fullName>
@@ -1152,7 +1152,7 @@
         <openType>sidebar</openType>
         <protected>false</protected>
         <requireRowSelection>false</requireRowSelection>
-        <url>/apex/npsp__BDI_DataImport?action=deleteImported&amp;retURL={!URLFOR($Action.DataImport__c.Tab, $ObjectType.DataImport__c)}</url>
+        <url>/apex/npsp__BDI_DataImportDeleteBTN?action=deleteImported&amp;retURL={!URLFOR($Action.DataImport__c.Tab, $ObjectType.DataImport__c)}</url>
     </webLinks>
     <webLinks>
         <fullName>Process_Data_Import</fullName>

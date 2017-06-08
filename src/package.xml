@@ -57,6 +57,8 @@
         <members>BDI_DataImport_CTRL</members>
         <members>BDI_DataImport_TEST</members>
         <members>BDI_DataImport_TEST2</members>
+        <members>BDI_DataImportDeleteBTN_CTRL</members>
+        <members>BDI_DataImportDeleteBTN_TEST</members>
         <members>BDI_Donations</members>
         <members>BDI_Donations_TEST</members>
         <members>BDI_IMatchDonations</members>
@@ -313,6 +315,7 @@
         <members>ALLO_RollupBTN</members>
         <members>BDE_BatchEntry</members>
         <members>BDI_DataImport</members>
+        <members>BDI_DataImportDeleteBTN</members>
         <members>CONV_Account_Conversion</members>
         <members>CON_ContactMerge</members>
         <members>CON_DeleteContactOverride</members>
