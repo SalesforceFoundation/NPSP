@@ -74,6 +74,7 @@ private with sharing class BDI_DataImport_TEST2 {
         system.assertEquals(null, ctrl.crecProcessed);
         system.assertEquals(null, ctrl.crecImported);
         system.assertEquals(null, ctrl.crecFailed);
+        system.assertNotEquals(null, ctrl.listSODonationFields);
         
         ctrl.importData();
         Test.stopTest();
