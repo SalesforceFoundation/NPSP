@@ -15,7 +15,7 @@
         if (redirect) {
             if ((typeof sforce != 'undefined') && sforce && (!!sforce.one)) {
                 // Manage navigation in Lightning Experience & Salesforce1
-                    sforce.one.back(true);
+                sforce.one.back(true);
             }
             else {
                 var recordId = '{!recordId}';
