@@ -306,6 +306,12 @@ public with sharing class MTCH_FindGifts_CTRL {
                             'AND Id != \'' + opp.Id + '\' ' +
                             'ORDER BY Name';
         list<Opportunity> potentialGifts2 = Database.query(query);
+
+        if (potentialGifts2.isEmpty()) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, Label.mtchSearchCriteriaEmpty));
+            return null;
+        }
+        
         for (Opportunity o : potentialGifts2){
             if (o.Matching_Gift__c == opp.Id){
                 selection.put(o.Id, true);
