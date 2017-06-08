@@ -36,6 +36,7 @@
 
 @isTest
 public class UTIL_UnitTestData_TEST { 
+    static final String PROFILE_STANDARD_USER = 'Standard User';
 
 // create data for use in unit tests
 // should not be referenced by production code
@@ -157,32 +158,6 @@ public class UTIL_UnitTestData_TEST {
         
         return ContactsToAdd;
     }
-    /*
-    public static List<Contact> CreateMultipleTestContactsInHouseholds (List<Contact> firstContactList) {
-        
-        List<contact> ContactsToAdd = New List<contact> ();
-        
-        for (integer i=0;i<firstContactList.size();i++) {
-            Contact newCon = New Contact (
-                FirstName= CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS + i,
-                LastName= CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-                npe01__Private__c=false,
-                npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-                npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-                npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-                npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
-                OtherCity = 'Seattle',
-                Household__c = firstContactList[i].Household__c
-            );
-            ContactsToAdd.add (newCon);
-        }
-        
-        // testing doing the insert in the calling code - will maybe reinstate this
-        //insert ContactsToAdd;
-        
-        return ContactsToAdd;
-    }
-    */
 
     public static List<Opportunity> OppsForContactList (List<Contact> Cons, id CampId, string Stage, date Close, double Amt, string rectype, string oppType) {
         id rtid = UTIL_RecordTypes.GetRecordTypeId (Opportunity.sObjectType,rectype);
@@ -355,7 +330,7 @@ public class UTIL_UnitTestData_TEST {
         Profile p = [
             SELECT Id
             FROM Profile
-            WHERE Name='Standard User'
+            WHERE Name = :PROFILE_STANDARD_USER
         ];
 
         UserRole r;
@@ -395,6 +370,7 @@ public class UTIL_UnitTestData_TEST {
                 UserRoleId = r.Id,
                 Username = strUsername
             );
+
             insert u;
         }
         return u;
@@ -423,6 +399,89 @@ public class UTIL_UnitTestData_TEST {
         }
 
         return u;
+    }
+
+    /**
+     * @description Create a User having Standard User profile assigned
+     * @return User
+     */
+    public static User createStandardProfileUser() {
+        return createUser(PROFILE_STANDARD_USER);
+    }
+
+    /**
+     * @description Create a User having specified profile assigned
+     * @param profileName Profile Name
+     * @return User
+     */
+    public static User createUser(String profileName) {
+        User u = buildUser(buildUniqueLastName(), profileName);
+
+        //create the user
+        System.runAs(u) {}
+
+        return u;      
+    } 
+
+    /**
+     * @description Construct a unique last name to be assigned to a User
+     * @return String
+     */
+    static String buildUniqueLastName() {
+        return UserInfo.getOrganizationId() +
+            String.valueof(Datetime.now()).replace(' ','').replace(':','').replace('-','') +
+            Integer.valueOf(math.rint(math.random()*2000000));
+    }
+
+    /**
+     * @description Set new User fields
+     * @param lastName Last Name
+     * @param profileName Profile Name
+     * @return User
+     */
+    static User buildUser(String lastName, String profileName) {
+        Profile p = [SELECT Id FROM Profile WHERE name = :profileName];
+        String alias = lastName.replaceAll(' ', '').leftPad(8, '0').right(8);
+        String email = lastName.left(70) + '@email.com';
+
+        return new User(
+            LastName = lastName, 
+            Email = email, 
+            ProfileId = p.id,
+            UserName = email,
+            Alias = alias, 
+            TimeZoneSidKey = 'America/Los_Angeles',
+            LocaleSidKey = 'en_US', 
+            LanguageLocaleKey = 'en_US',
+            EmailEncodingKey = 'ISO-8859-1'
+        );
+    }
+
+    /**
+     * @description Assert a Visualforce page has an error message displayed
+     * @param expectedMsg Expected error message
+     * @return void
+     */
+    public static void assertPageHasError(String expectedMsg) {
+        ApexPages.Message[] msgs = ApexPages.getMessages();
+
+        System.assert(
+            ApexPages.hasMessages(ApexPages.Severity.ERROR), 
+            'Expected page to contain at least one error message. Messages: ' + msgs
+        );
+ 
+        for (ApexPages.Message msg : msgs) {
+            if (msg.getSummary().contains(expectedMsg) && msg.getSeverity() == ApexPages.Severity.ERROR) {
+                return;       
+            }
+        }
+
+        System.assert(false, 
+            String.format(
+                'Cannot find "{0}" in the page messages: ' + msgs,
+                new String[] { expectedMsg }
+            )
+        );
     }
 
     public static list<Account> listAccT;
@@ -514,47 +573,4 @@ public class UTIL_UnitTestData_TEST {
         System.assertEquals(false, queriedUser.IsActive);
     }
 
-/*
-        public static List<Opportunity> OppsForAccountList (List<Account> Accts, id CampId, string Stage, date Close, double Amt, string rectype) {
-    
-        // given a List of accounts,
-        // add one Opp per acct w/ the specified data
-    
-        List<Opportunity> OppsToAdd = new List<Opportunity> ();
-        
-        // look up the id for the specified rectype
-        id rtid = UTIL_RecordTypes.GetRecordTypeId ('Opportunity',rectype);
-        
-        for ( Account thisAcct : Accts) {
-            Opportunity newOpp = New Opportunity (
-                AccountId = thisAcct.id,
-                Name = 'Test Opp ' + thisAcct.Name,
-                Amount = Amt,
-                CloseDate = Close,
-                StageName = Stage,
-                CampaignId = CampId,
-                RecordTypeId = rtid
-            );  
-            OppsToAdd.add (newOpp);
-        }
-        
-        return OppsToAdd;
-        
-    }
-    */
-    
-    
-  /*  
-    public Static CampaignMember CreateCampaignMember (id CampId, id ConId, string CMStatus) {
-    
-        CampaignMember newCM = new CampaignMember (
-            CampaignId = CampId,
-            ContactId = ConId,
-            Status = CMStatus
-        );
-        
-        insert newCM;
-        return newCm;           
-    }
-*/
 }
