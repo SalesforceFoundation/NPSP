@@ -1330,7 +1330,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         System.assertEquals(null, rd2.npe03__Paid_Amount__c);
         
         //--------------------------------
-        // Update the Second Opportunity's Recurring Donation field
+        // Update the Opportunity's Recurring Donation field
         o.npe03__Recurring_Donation__c = r2.Id;
         update o;
         Test.stopTest();
@@ -1343,5 +1343,85 @@ private with sharing class RD_RecurringDonations_TEST2 {
         rd2 = [select npe03__Paid_Amount__c from npe03__Recurring_Donation__c where id = :r2.id];    
         System.assertEquals(50, rd2.npe03__Paid_Amount__c);
     }
+
+
+    //========================================================================
+    // Test that removing a ClosedWon Opportunity from one Recurring Donation
+    // updates the npe03__Paid_Amount__c value 
+    //========================================================================
+    static testMethod void updateOpenEndedRecurringDonationsPaidAmountByRemovingAClosedWonOpp(){
+        if (strTestOnly != '*' && strTestOnly != 'closeOppForOpenEndedRecurringDonationQuarterly') return;
+
+        //--------------------------------
+        // Retrieve the Recurring Donation's Settings
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+            new npe03__Recurring_Donations_Settings__c(
+                npe03__Opportunity_Forecast_Months__c = 12,
+                npe03__Maximum_Donations__c = 50,
+                npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name())
+        );           
+        
+        //--------------------------------
+        // Setup the Account
+        Account a = new Account();
+        a.Name = 'test Individual';
+        insert a;
+        
+        //--------------------------------
+        // Setup the Contact
+        Contact c = new Contact();
+        c.FirstName = 'test';
+        c.LastName = 'contact';
+        c.AccountId = a.Id;
+        insert c;       
+
+        //--------------------------------
+        // Setup the First Recurring Donation
+        npe03__Recurring_Donation__c r1 = new npe03__Recurring_Donation__c();
+        r1.Name = 'TestRD1';
+        r1.npe03__Installments__c = 0;
+        r1.npe03__Contact__c = c.Id;
+        r1.npe03__Amount__c = 100;
+        r1.npe03__Date_Established__c = Date.newInstance(1970,6,12);
+        r1.npe03__Open_Ended_Status__c = System.label.npe03.RecurringDonationOpenStatus;
+        r1.npe03__Next_Payment_Date__c = System.today().toStartOfMonth();
+        r1.OwnerId = System.Userinfo.getUserId();
+        insert r1;        
+        
+        //--------------------------------
+        // Setup the Opportunity
+        String closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
+        
+        Opportunity o = new Opportunity();
+        o.StageName = closedstage;
+        o.CloseDate = system.today();
+        o.Amount = 50;
+        o.AccountId = a.Id;
+        o.Name = 'test';
+        o.npe03__Recurring_Donation__c = r1.Id;
+        RD_ProcessControl.hasRun = false;
+        
+        //--------------------------------
+        // Insert the Opportunity
+        Test.startTest();        
+        insert o;
+        
+        //--------------------------------
+        // Confirm the Opportunity has updated the Recurring Donation's (r1) npe03__Paid_Amount__c
+        npe03__Recurring_Donation__c rd1 = [select npe03__Paid_Amount__c from npe03__Recurring_Donation__c where id = :r1.id];    
+        System.assertEquals(50, rd1.npe03__Paid_Amount__c);
+        
+        //--------------------------------
+        // Remove the Opportunity's Recurring Donation value by setting the field to null
+        o.npe03__Recurring_Donation__c = null;
+        update o;
+        Test.stopTest();
+
+        //--------------------------------
+        // Confirm the Opportunity has updated the npe03__Paid_Amount__c for both Recurring Donation (r1) 
+        rd1 = [select npe03__Paid_Amount__c from npe03__Recurring_Donation__c where id = :r1.id];    
+        System.assertEquals(null, rd1.npe03__Paid_Amount__c);
+    }
     
+
 }
