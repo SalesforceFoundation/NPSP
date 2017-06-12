@@ -32,7 +32,7 @@
         <description>The number of NPSP Data Import records to process in each batch.</description>
         <externalId>false</externalId>
         <inlineHelpText>The number of NPSP Data Import records to process in each batch.</inlineHelpText>
-        <label>Batch Size</label>
+        <label>Batch Process Size</label>
         <precision>3</precision>
         <required>false</required>
         <scale>0</scale>
