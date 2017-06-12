@@ -278,6 +278,10 @@ public without sharing class RLLP_OppRollup {
                 
                 //calculate best gift year
                 decimal yrAmt = (decimal)r.get('TotalOppAmount');
+                // Handle currency conversion for the Account in a MultiCurrency org
+                if(RLLP_OppRollup_UTIL.isMultiCurrency()){
+                    yrAmt = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)accountsToUpdate.get(aid).get('CurrencyIsoCode'), yrAmt);
+                }
                 integer yr = (integer)r.get('CalendarYr');
                 Account a = accountsToUpdate.get(aid);
                 if ((yrAmt > a.npo02__Best_Gift_Year_Total__c || a.npo02__Best_Gift_Year_Total__c==null ) && yr !=null){
@@ -437,8 +441,10 @@ public without sharing class RLLP_OppRollup {
                 
                 Contact c = contactsToUpdate.get(cid);
 
-                if(RLLP_OppRollup_UTIL.isMultiCurrency())
+                // Handle currency conversion for the Contact in a MultiCurrency org
+                if(RLLP_OppRollup_UTIL.isMultiCurrency()) {
                     yrAmt = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)c.get('CurrencyIsoCode'),yrAmt);
+                }
 
                 if ((yrAmt > c.npo02__Best_Gift_Year_Total__c || c.npo02__Best_Gift_Year_Total__c==null ) && yr !=null){
                     c.npo02__Best_Gift_Year_Total__c = yrAmt;
@@ -593,6 +599,10 @@ public without sharing class RLLP_OppRollup {
             
                 //calculate best gift year
                 decimal yrAmt = (decimal)r.get('TotalOppAmount');
+                // Handle currency conversion for the Household in a MultiCurrency org
+                if(RLLP_OppRollup_UTIL.isMultiCurrency()){
+                    yrAmt = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)householdsToUpdate.get(hhid).get('CurrencyIsoCode'), yrAmt);
+                }
                 integer yr = (integer)r.get('CalendarYr');
                 npo02__Household__c hh = householdsToUpdate.get(hhid);
                 if ((yrAmt > hh.npo02__Best_Gift_Year_Total__c || hh.npo02__Best_Gift_Year_Total__c==null ) && yr !=null){
