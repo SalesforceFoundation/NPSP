@@ -143,4 +143,18 @@
         </div>
 
     </apex:outputPanel>
+
+    <script type="text/javascript">
+        // hate doing stuff like this, but could not get the focus going to the first control (batch)
+        // even trying html-tabIndex and tabindexhint.  focus kept ending up on the last control instead!
+        window.addEventListener('load', function() {
+            if ({!isEditMode}) {
+                var fld = document.getElementById('{!$Component.fldBatch}');
+                if (fld !== null) {
+                    fld.focus();
+                }
+            }
+        }, false);
+    </script>
+
 </apex:component>
