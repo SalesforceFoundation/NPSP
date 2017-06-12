@@ -68,15 +68,12 @@ public with sharing class BDI_DataImport_CTRL {
         get {
             if (diSettings == null) {
                 diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-                // our picklist options hold lowercase DIfields
-                diSettings.Donation_Matching_Rule__c = diSettings.Donation_Matching_Rule__c.toLowercase();
             }
             return diSettings;
         }
         private set;
     }
     
-    // action method that user wants to close this page
     public PageReference close() {
         String retUrl = ApexPages.currentPage().getParameters().get('retURL');
         if (String.isBlank(retUrl)) retUrl = '/home/home.jsp';
@@ -87,15 +84,6 @@ public with sharing class BDI_DataImport_CTRL {
     }
     
     public PageReference importData() {
-        // validation
-        if (diSettings.Donation_Matching_Behavior__c != null && 
-            diSettings.Donation_Matching_Behavior__c != BDI_DataImport_API.DoNotMatch && 
-            String.isBlank(diSettings.Donation_Matching_Rule__c)) {
-            
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Warning, Label.bdiDonationMatchingRuleEmpty));
-            return null;
-        }
-
         if (!Test.isRunningTest() && this.userCanEditSettings){
             upsert diSettings;
         }

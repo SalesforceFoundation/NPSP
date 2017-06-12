@@ -74,7 +74,6 @@ private with sharing class BDI_DataImport_TEST2 {
         system.assertEquals(null, ctrl.crecProcessed);
         system.assertEquals(null, ctrl.crecImported);
         system.assertEquals(null, ctrl.crecFailed);
-        system.assertNotEquals(null, ctrl.listSODonationFields);
         
         ctrl.importData();
         Test.stopTest();
@@ -143,11 +142,6 @@ private with sharing class BDI_DataImport_TEST2 {
         
         ctrl.diSettings.Account_Custom_Unique_ID__c = null;
         ctrl.diSettings.Account_Custom_Unique_ID__c = 'Lastname';        
-        ctrl.importData();
-        system.assertEquals(false, ctrl.batchRunning);
-        
-        ctrl.diSettings.Donation_Matching_Rule__c = BDI_DataImport_API.RequireExactMatch;
-        ctrl.diSettings.Donation_Matching_Behavior__c = null;
         ctrl.importData();
         system.assertEquals(false, ctrl.batchRunning);
         
