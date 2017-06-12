@@ -3,7 +3,7 @@
     tabStyle="DataImport__c"
     showHeader="true"
     sidebar="false"
-    action="{!actionImportOrDelete}"
+    action="{!preload}"
     docType="html-5.0"
     standardStylesheets="false">
 
