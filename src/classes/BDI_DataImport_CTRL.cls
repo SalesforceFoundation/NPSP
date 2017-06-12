@@ -96,19 +96,10 @@ public with sharing class BDI_DataImport_CTRL {
     * @return null
     */
     public PageReference saveBDISettings() {
-        // validation
-        if (diSettings.Donation_Matching_Behavior__c != null && 
-            diSettings.Donation_Matching_Behavior__c != BDI_DataImport_API.DoNotMatch && 
-            String.isBlank(diSettings.Donation_Matching_Rule__c)) {
-            
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Warning, Label.bdiDonationMatchingRuleEmpty));
-            return null;
-        }
 
-        if (!Test.isRunningTest() && this.userCanEditSettings){
-            upsert diSettings;
+        if (BDI_SettingsUI_CTRL.saveBDISettings(diSettings)) {
+            isEditMode = false;
         }
-        isEditMode = false;
         return null;
     }        
     
@@ -139,6 +130,10 @@ public with sharing class BDI_DataImport_CTRL {
     * @return null
     */
     public PageReference importData() {
+        if (userCanEditSettings && !BDI_SettingsUI_CTRL.saveBDISettings(diSettings)) {
+            return null;
+        }
+
         dtStart = system.now();
         apexJobId = BDI_DataImport_API.importData();
         if(apexJobId != null)

@@ -146,4 +146,44 @@ public with sharing class BDI_SettingsUI_CTRL {
         }
         private set;
     }
+
+    /*********************************************************************************************************
+    * @description saves the provided Settings.  since we want this operation controlled by the containing
+    * page, it is static to be callable by the controlling page.  it must pass the settings instance however.
+    * @param diSettings The BDI settings to save
+    * @return True if success, False if error.
+    */
+    public static boolean saveBDISettings(Data_Import_Settings__c diSettings) {
+
+        // validate matching rules
+        if (diSettings.Donation_Matching_Behavior__c != null &&
+            diSettings.Donation_Matching_Behavior__c != BDI_DataImport_API.DoNotMatch &&
+            String.isBlank(diSettings.Donation_Matching_Rule__c)) {
+
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Warning, Label.bdiDonationMatchingRuleEmpty));
+            return false;
+        }
+
+        // validate donation implementing class
+        string strClass = diSettings.Donation_Matching_Implementing_Class__c;
+        if (String.isNotBlank(strClass)) {
+            BDI_IMatchDonations iMatchDonations = null;
+            Type classType = Type.forName(strClass);
+            if (classType != null) {
+                Object classInstance = classType.newInstance();
+                if (classInstance instanceof BDI_IMatchDonations) {
+                    iMatchDonations = (BDI_IMatchDonations) classInstance;
+                }
+            }
+            if (iMatchDonations == null) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Warning,
+                    String.format(Label.bdiErrorInvalidIMatchDonations, new list<String>{strClass})));
+                return false;
+            }
+        }
+
+        upsert diSettings;
+        return true;
+    }
+
 }
