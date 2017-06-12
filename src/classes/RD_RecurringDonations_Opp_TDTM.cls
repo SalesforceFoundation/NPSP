@@ -60,7 +60,7 @@ public class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
                 Opportunity oppOld = (Opportunity)oldlist[i];
                 if (o.isClosed != oppOld.isClosed 
                     || o.Amount != oppOld.Amount
-                    || o.npe03__Recurring_Donation__c != oppOld.npe03__Recurring_Donation__c){
+                    || o.npe03__Recurring_Donation__c != oppOld.npe03__Recurring_Donation__c) {
                     
                     // If the Recurring Donation has changed, also update the Recurring Donation 
                     // associated with the old (previous) version of the Opportunity
