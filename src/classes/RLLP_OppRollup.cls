@@ -271,22 +271,26 @@ public without sharing class RLLP_OppRollup {
         // invokes code to get the currency of npo02__CombinedRollupFieldset__c oppty
         opptyCurrencies = (RLLP_OppRollup_UTIL.isMultiCurrency() ? RLLP_OppRollup_UTIL.rcfFindCurrency(objectList) : null);
         
-        for (sobject r : objectList){            
-            id aid = (id)(r.get('AccountId'));
-            if (aid != null){
-                updateRollupFromResult((sobject)(accountsToUpdate.get(aid)), r, opptyCurrencies);
-                
-                //calculate best gift year
-                decimal yrAmt = (decimal)r.get('TotalOppAmount');
+        for (sObject r : objectList) {
+            Id accountId = (Id)(r.get('AccountId'));
+            if (null != accountId) {
+                Account currentAccount = accountsToUpdate.get(accountId);
+
+                updateRollupFromResult((sObject)currentAccount, r, opptyCurrencies);
+
+                // Calculate Best Gift Year
+                Decimal yrAmt = (Decimal)r.get('TotalOppAmount');
                 // Handle currency conversion for the Account in a MultiCurrency org
-                if(RLLP_OppRollup_UTIL.isMultiCurrency()){
-                    yrAmt = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)accountsToUpdate.get(aid).get('CurrencyIsoCode'), yrAmt);
+                if (RLLP_OppRollup_UTIL.isMultiCurrency()) {
+                    yrAmt = RLLP_OppRollup_UTIL.ConvertFromCorporate(currentAccount.CurrencyIsoCode, yrAmt);
                 }
-                integer yr = (integer)r.get('CalendarYr');
-                Account a = accountsToUpdate.get(aid);
-                if ((yrAmt > a.npo02__Best_Gift_Year_Total__c || a.npo02__Best_Gift_Year_Total__c==null ) && yr !=null){
-                    a.npo02__Best_Gift_Year_Total__c = yrAmt;
-                    a.npo02__Best_Gift_Year__c = string.valueOf(yr);
+                Integer yr = (Integer)r.get('CalendarYr');
+
+                // Update the Best Gift Year Total and Best Gift Year values
+                if ((yrAmt > currentAccount.npo02__Best_Gift_Year_Total__c || null == currentAccount.npo02__Best_Gift_Year_Total__c) 
+                    && (null != yr)) {
+                    currentAccount.npo02__Best_Gift_Year_Total__c = yrAmt;
+                    currentAccount.npo02__Best_Gift_Year__c = String.valueOf(yr);
                 }          
             }   
         }       
@@ -430,25 +434,26 @@ public without sharing class RLLP_OppRollup {
         // invokes code to get the currency of npo02__CombinedRollupFieldset__c oppty
         opptyCurrencies = (RLLP_OppRollup_UTIL.isMultiCurrency() ? RLLP_OppRollup_UTIL.rcfFindCurrency(objectList) : null);
             
-        for (sobject r : objectList) {
-            id cid = (id)(r.get('ContactId'));
-            if (cid != null){
-                updateRollupFromResult((sobject)(contactsToUpdate.get(cid)), r, opptyCurrencies);
-                
-                //calculate best gift year
-                decimal yrAmt = (decimal)r.get('TotalOppAmount');
-                integer yr = (integer)r.get('CalendarYr');
-                
-                Contact c = contactsToUpdate.get(cid);
+        for (sObject r : objectList) {
+            Id contactId = (Id)(r.get('ContactId'));
+            if (null != contactId) {
+                Contact currentContact = contactsToUpdate.get(contactId);
 
+                updateRollupFromResult((sObject)currentContact, r, opptyCurrencies);
+
+                // Calculate Best Gift Year
+                Decimal yrAmt = (Decimal)r.get('TotalOppAmount');
                 // Handle currency conversion for the Contact in a MultiCurrency org
-                if(RLLP_OppRollup_UTIL.isMultiCurrency()) {
-                    yrAmt = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)c.get('CurrencyIsoCode'),yrAmt);
+                if (RLLP_OppRollup_UTIL.isMultiCurrency()) {
+                    yrAmt = RLLP_OppRollup_UTIL.ConvertFromCorporate(currentContact.CurrencyIsoCode, yrAmt);
                 }
+                Integer yr = (Integer)r.get('CalendarYr');
 
-                if ((yrAmt > c.npo02__Best_Gift_Year_Total__c || c.npo02__Best_Gift_Year_Total__c==null ) && yr !=null){
-                    c.npo02__Best_Gift_Year_Total__c = yrAmt;
-                    c.npo02__Best_Gift_Year__c = string.valueOf(yr);
+                // Update the Best Gift Year Total and Best Gift Year values
+                if ((yrAmt > currentContact.npo02__Best_Gift_Year_Total__c || null == currentContact.npo02__Best_Gift_Year_Total__c) 
+                    && (null != yr) ) {
+                    currentContact.npo02__Best_Gift_Year_Total__c = yrAmt;
+                    currentContact.npo02__Best_Gift_Year__c = String.valueOf(yr);
                 }
             }
         }
@@ -592,22 +597,25 @@ public without sharing class RLLP_OppRollup {
         // invokes code to get the currency of npo02__CombinedRollupFieldset__c oppty
         opptyCurrencies = (RLLP_OppRollup_UTIL.isMultiCurrency() ? RLLP_OppRollup_UTIL.rcfFindCurrency(objectList) : null);
             
-        for (sobject r : objectList) {
-            id hhid = (id)(r.get('hhid'));
-            if (hhid != null){
-                updateRollupFromResult((sobject)(householdsToUpdate.get(hhid)), r, opptyCurrencies);
-            
-                //calculate best gift year
-                decimal yrAmt = (decimal)r.get('TotalOppAmount');
+        for (sObject r : objectList) {
+            Id householdId = (Id)(r.get('hhid'));
+            if (null != householdId) {
+                npo02__Household__c currentHousehold = householdsToUpdate.get(householdId);
+
+                updateRollupFromResult((sobject)currentHousehold, r, opptyCurrencies);
+
+                // Calculate best gift year
+                Decimal yrAmt = (Decimal)r.get('TotalOppAmount');
                 // Handle currency conversion for the Household in a MultiCurrency org
-                if(RLLP_OppRollup_UTIL.isMultiCurrency()){
-                    yrAmt = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)householdsToUpdate.get(hhid).get('CurrencyIsoCode'), yrAmt);
+                if (RLLP_OppRollup_UTIL.isMultiCurrency()) {
+                    yrAmt = RLLP_OppRollup_UTIL.ConvertFromCorporate(currentHousehold.CurrencyIsoCode, yrAmt);
                 }
-                integer yr = (integer)r.get('CalendarYr');
-                npo02__Household__c hh = householdsToUpdate.get(hhid);
-                if ((yrAmt > hh.npo02__Best_Gift_Year_Total__c || hh.npo02__Best_Gift_Year_Total__c==null ) && yr !=null){
-                    hh.npo02__Best_Gift_Year_Total__c = yrAmt;
-                    hh.npo02__Best_Gift_Year__c = string.valueOf(yr);
+                Integer yr = (Integer)r.get('CalendarYr');
+
+                if ((yrAmt > currentHousehold.npo02__Best_Gift_Year_Total__c || null == currentHousehold.npo02__Best_Gift_Year_Total__c) 
+                    && (null != yr)) {
+                    currentHousehold.npo02__Best_Gift_Year_Total__c = yrAmt;
+                    currentHousehold.npo02__Best_Gift_Year__c = String.valueOf(yr);
                 }                
             }                
         }        
