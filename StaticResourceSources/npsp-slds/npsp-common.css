@@ -69,3 +69,8 @@ input.lookupInput203 {
 .datePicker {
    z-index: 10000;
 }
+
+/* the following are for our UTIL_Tooltip visualforce component to use */
+.slds-scope .slds-form-element__icon .util-tooltip { display: none; }
+.slds-button:hover + .util-tooltip { display:inline-block; position:absolute; width: 20em; top: 3em; left:-1em; }
+.slds-button:focus + .util-tooltip { display:inline-block; position:absolute; width: 20em; top: 3em; left:-1em; }

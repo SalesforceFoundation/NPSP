@@ -63,6 +63,8 @@
         <members>BDI_Donations_TEST</members>
         <members>BDI_IMatchDonations</members>
         <members>BDI_MatchDonations</members>
+        <members>BDI_SettingsUI_CTRL</members>
+        <members>BDI_SettingsUI_TEST</members>
         <members>CAM_CascadeDeleteLookups_TDTM</members>
         <members>CAM_CascadeDeleteLookups_TEST</members>
         <members>CAO_Constants</members>
@@ -292,6 +294,7 @@
         <name>ApexClass</name>
     </types>
     <types>
+        <members>BDI_SettingsUI</members>
         <members>STG_DataBoundMultiSelect</members>
         <members>STG_PageHeader</members>
         <members>UTIL_FormField</members>
@@ -300,6 +303,7 @@
         <members>UTIL_NavigateBack</members>
         <members>UTIL_PageMessages</members>
         <members>UTIL_SoqlListView</members>
+        <members>UTIL_Tooltip</members>
         <members>UTIL_Typeahead</members>
         <name>ApexComponent</name>
     </types>
@@ -1000,6 +1004,9 @@
         <members>bdiRecordsImported</members>
         <members>bdiRecordsProcessed</members>
         <members>bdiRunBtn</members>
+        <members>bdiSettingsSectionContactMatching</members>
+        <members>bdiSettingsSectionDonationMatching</members>
+        <members>bdiSettingsSectionExtensibility</members>
         <members>bdiStatus</members>
         <members>bdiStatusProcessed</members>
         <members>bdiStatusProcessing</members>

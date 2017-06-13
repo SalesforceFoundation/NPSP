@@ -50,6 +50,7 @@ public with sharing class BDI_DataImport_CTRL {
         batchRunning = false;
         apexJobId = null;
         dtStart = null;
+        isEditMode = false;
     }
 
     public PageReference preload() { 
@@ -76,32 +77,45 @@ public with sharing class BDI_DataImport_CTRL {
         private set;
     }
     
+    /*******************************************************************************************************
+    * @description is the panel in Edit Mode
+    */ 
+    public boolean isEditMode { get; set; }
+    
     /*********************************************************************************************************
-    * @description The list of SelectOptions of Donation fields from the BDI object 
+    * @description puts the Settings panel into Edit mode.
+    * @return null
     */
-    public list<SelectOption> listSODonationFields {
-        get {
-        
-            if (listSODonationFields == null) {
-                listSODonationFields = new list<SelectOption>();
-                
-                set<String> setFields = new set<String>();
-                setFields.addAll(BDI_Donations.mapDIFieldToOppField.keySet());
-                setFields.addAll(BDI_Donations.mapDIFieldToPmtField.keySet());
-                
-                for (String diField : setFields) {
-                    String strLabel = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), diField); 
-                    listSODonationFields.add(new SelectOption(diField, strLabel));
-                }
+    public PageReference editBDISettings() {
+        isEditMode = true;
+        return null;
+    }        
 
-                listSODonationFields.sort();
-            }         
-            return listSODonationFields;
+    /*********************************************************************************************************
+    * @description saves the Settings, and puts panel into readonly mode.
+    * @return null
+    */
+    public PageReference saveBDISettings() {
+
+        if (BDI_SettingsUI_CTRL.saveBDISettings(diSettings)) {
+            isEditMode = false;
         }
-        private set;
-    }
+        return null;
+    }        
+    
+    /*********************************************************************************************************
+    * @description puts the Settings panel into readonly mode.
+    * @return null
+    */
+    public PageReference cancelBDISettings() {
+        isEditMode = false;
+        return null;
+    }        
 
-    // action method that user wants to close this page
+    /*********************************************************************************************************
+    * @description closes the page and returns to the original calling page
+    * @return PageReference
+    */
     public PageReference close() {
         String retUrl = ApexPages.currentPage().getParameters().get('retURL');
         if (String.isBlank(retUrl)) retUrl = '/home/home.jsp';
@@ -111,19 +125,15 @@ public with sharing class BDI_DataImport_CTRL {
         return p;
     }
     
+    /*********************************************************************************************************
+    * @description starts the batch job to import data
+    * @return null
+    */
     public PageReference importData() {
-        // validation
-        if (diSettings.Donation_Matching_Behavior__c != null && 
-            diSettings.Donation_Matching_Behavior__c != BDI_DataImport_API.DoNotMatch && 
-            String.isBlank(diSettings.Donation_Matching_Rule__c)) {
-            
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Warning, Label.bdiDonationMatchingRuleEmpty));
+        if (userCanEditSettings && !BDI_SettingsUI_CTRL.saveBDISettings(diSettings)) {
             return null;
         }
 
-        if (!Test.isRunningTest() && this.userCanEditSettings){
-            upsert diSettings;
-        }
         dtStart = system.now();
         apexJobId = BDI_DataImport_API.importData();
         if(apexJobId != null)
@@ -237,58 +247,6 @@ public with sharing class BDI_DataImport_CTRL {
             } else {
                 return null;
             }
-        }
-        private set;
-    }
-
-    public list<SelectOption> listSOContactUniqueID {
-        get {
-            if (listSOContactUniqueID == null) {
-                listSOContactUniqueID = new list<SelectOption>();
-                //add a default option
-                listSOContactUniqueID.add(new SelectOption('', Label.stgLabelNone));
-                            
-                Map<String, Schema.DescribeFieldResult> mapNameToDfr = UTIL_Describe.getAllFieldsDescribe('Contact');               
-                for (Schema.DescribeFieldResult dfr : mapNameToDfr.values()) {
-                    //only allow custom fields that have no namespace
-                    if (dfr.isCustom() && dfr.getName().countMatches('__') == 1) {
-                        Schema.Displaytype dt = dfr.getType();
-                        // only strings and numbers
-                        if (dt == Schema.DisplayType.String ||
-                           dt == Schema.DisplayType.Integer ||
-                           dt == Schema.DisplayType.Double) {
-                           listSOContactUniqueID.add(new SelectOption(dfr.getName(), dfr.getLabel()));
-                        } 
-                    }               
-                }
-            }               
-            return listSOContactUniqueID;
-        }
-        private set;
-    }
-
-    public list<SelectOption> listSOAccountUniqueID {
-        get {
-            if (listSOAccountUniqueID == null) {
-                listSOAccountUniqueID = new list<SelectOption>();
-                //add a default option
-                listSOAccountUniqueID.add(new SelectOption('', Label.stgLabelNone));
-                                           
-                Map<String, Schema.DescribeFieldResult> mapNameToDfr = UTIL_Describe.getAllFieldsDescribe('Account');               
-                for (Schema.DescribeFieldResult dfr : mapNameToDfr.values()) {
-                    //only allow custom fields that have no namespace
-                    if (dfr.isCustom() && dfr.getName().countMatches('__') == 1) {
-                        Schema.Displaytype dt = dfr.getType();
-                        // only strings and numbers
-                        if (dt == Schema.DisplayType.String ||
-                           dt == Schema.DisplayType.Integer ||
-                           dt == Schema.DisplayType.Double) {
-                           listSOAccountUniqueID.add(new SelectOption(dfr.getName(), dfr.getLabel()));
-                        } 
-                    }               
-                }
-            }               
-            return listSOAccountUniqueID;
         }
         private set;
     }
