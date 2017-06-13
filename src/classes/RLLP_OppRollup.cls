@@ -282,7 +282,7 @@ public without sharing class RLLP_OppRollup {
                 Decimal yrAmt = (Decimal)r.get('TotalOppAmount');
                 // Handle currency conversion for the Account in a MultiCurrency org
                 if (RLLP_OppRollup_UTIL.isMultiCurrency()) {
-                    yrAmt = RLLP_OppRollup_UTIL.ConvertFromCorporate(currentAccount.CurrencyIsoCode, yrAmt);
+                    yrAmt = RLLP_OppRollup_UTIL.ConvertFromCorporate((String)currentAccount.get('CurrencyIsoCode'), yrAmt);
                 }
                 Integer yr = (Integer)r.get('CalendarYr');
 
@@ -445,7 +445,7 @@ public without sharing class RLLP_OppRollup {
                 Decimal yrAmt = (Decimal)r.get('TotalOppAmount');
                 // Handle currency conversion for the Contact in a MultiCurrency org
                 if (RLLP_OppRollup_UTIL.isMultiCurrency()) {
-                    yrAmt = RLLP_OppRollup_UTIL.ConvertFromCorporate(currentContact.CurrencyIsoCode, yrAmt);
+                    yrAmt = RLLP_OppRollup_UTIL.ConvertFromCorporate((String)currentContact.get('CurrencyIsoCode'), yrAmt);
                 }
                 Integer yr = (Integer)r.get('CalendarYr');
 
@@ -608,7 +608,7 @@ public without sharing class RLLP_OppRollup {
                 Decimal yrAmt = (Decimal)r.get('TotalOppAmount');
                 // Handle currency conversion for the Household in a MultiCurrency org
                 if (RLLP_OppRollup_UTIL.isMultiCurrency()) {
-                    yrAmt = RLLP_OppRollup_UTIL.ConvertFromCorporate(currentHousehold.CurrencyIsoCode, yrAmt);
+                    yrAmt = RLLP_OppRollup_UTIL.ConvertFromCorporate((String)currentHousehold.get('CurrencyIsoCode'), yrAmt);
                 }
                 Integer yr = (Integer)r.get('CalendarYr');
 
