@@ -1120,7 +1120,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>settings label for BestMatchOrCreate behavior</shortDescription>
-        <value>First Match or Create - Import a record if it matches an existing record; create a new record if no match found.</value>
+        <value>Best Match or Create - Import a record if it matches an existing record; create a new record if no match found.</value>
     </labels>
     <labels>
         <fullName>bdiBehaviorDoNotMatch</fullName>
@@ -1144,7 +1144,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>settings label for RequireBestMatch behavior</shortDescription>
-        <value>First Match - Only import a record when it matches at least 1 existing record, and update the first matched record.</value>
+        <value>Best Match - Only import a record when it matches at least 1 existing record, and update the best matched record.</value>
     </labels>
     <labels>
         <fullName>bdiBehaviorRequireExactMatch</fullName>
@@ -1489,6 +1489,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>status on a bdi object when no matching record found</shortDescription>
         <value>Matched None</value>
+    </labels>
+    <labels>
+        <fullName>bdiPositiveNumber</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error when numeric settings set to negative number</shortDescription>
+        <value>Number must be positive.</value>
     </labels>
     <labels>
         <fullName>bdiRecordsFailed</fullName>

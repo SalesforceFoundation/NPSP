@@ -638,6 +638,7 @@
         <members>Data_Import_Settings__c.Batch_Size__c</members>
         <members>Data_Import_Settings__c.Contact_Custom_Unique_ID__c</members>
         <members>Data_Import_Settings__c.Contact_Matching_Rule__c</members>
+        <members>Data_Import_Settings__c.Donation_Date_Range__c</members>
         <members>Data_Import_Settings__c.Donation_Matching_Behavior__c</members>
         <members>Data_Import_Settings__c.Donation_Matching_Implementing_Class__c</members>
         <members>Data_Import_Settings__c.Donation_Matching_Rule__c</members>
@@ -1000,6 +1001,7 @@
         <members>bdiMatchedBest</members>
         <members>bdiMatchedId</members>
         <members>bdiMatchedNone</members>
+        <members>bdiPositiveNumber</members>
         <members>bdiRecordsFailed</members>
         <members>bdiRecordsImported</members>
         <members>bdiRecordsProcessed</members>

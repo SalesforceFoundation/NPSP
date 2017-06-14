@@ -121,8 +121,21 @@
                     </apex:outputPanel>
                 </div>
             </div>
-        </div>                    
-        
+        </div>
+
+        <div class="slds-form slds-form_stacked slds-m-left--large">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label">
+                    <apex:outputLabel for="fldDonationDateRange" value="{!$ObjectType.Data_Import_Settings__c.Fields.Donation_Date_Range__c.Label}"/>
+                </label>
+                <c:UTIL_Tooltip tooltip="{!$ObjectType.Data_Import_Settings__c.Fields.Donation_Date_Range__c.InlineHelpText}" />
+                <div class="slds-form-element__control">
+                    <apex:inputField id="fldDonationDateRange" value="{!diSettings.Donation_Date_Range__c}" type="number" styleClass="slds-input" rendered="{!isEditMode}" />
+                    <apex:outputField id="fldDonationDateRangeRO" value="{!diSettings.Donation_Date_Range__c}" styleClass="slds-input" rendered="{!isReadOnlyMode}"/>
+                </div>
+            </div>
+        </div>
+
         <div class="slds-section slds-is-open slds-p-around--xx-small slds-theme--shade">
             <h4 class="slds-section__title slds-m-left--small ">
                 <span class="slds-truncate slds-p-horizontal_small" title="Section Title">{!$Label.bdiSettingsSectionExtensibility}</span>
