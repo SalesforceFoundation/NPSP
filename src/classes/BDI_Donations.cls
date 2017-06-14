@@ -283,7 +283,7 @@ public class BDI_Donations {
     */ 
     private boolean isValidMatchBehavior(DataImport__c di, string matchBehavior) {
         string strError;
-        
+
         // always allow matching by Id, regardless of specified behavior
         if (di.DonationImportStatus__c == label.bdiMatchedId) {
             return true;

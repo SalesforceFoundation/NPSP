@@ -129,7 +129,6 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
 
                         for (npe01__OppPayment__c pmt : opp.npe01__OppPayment__r) {
                             matchInfo = getMatchInfoByPmtRules(di, pmt);
-                            system.debug('****DJH: pmt: ' + pmt + ' matchInfo: ' + matchInfo);
 
                             if (matchInfo.matchType == MATCHTYPE.ID_MATCH) {
                                 pmtBest = pmt;
