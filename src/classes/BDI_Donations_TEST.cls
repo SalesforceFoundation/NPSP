@@ -642,7 +642,70 @@ public with sharing class BDI_Donations_TEST {
         donationMatchRules(
             UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
-            0, BDI_DataImport_API.ExactMatchOrCreate, label.bdiMatched, false);
+            0, BDI_DataImport_API.ExactMatchOrCreate, label.bdiMatched, false, 0);
+    }
+
+    /*********************************************************************************************************
+    * @description operation:
+    *    import donations using different matching rules: Amount, Date.  avoid same amount, different day.
+    *    use date range for the match.
+    * verify:
+    *    correct donations matched
+    **********************************************************************************************************/
+    static testMethod void donationMatchRules1b() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules1b') return;
+        insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
+            Donation_Amount__c=100,
+            Donation_Date__c=System.Today()+1,
+            Payment_Method__c = 'Check',
+            Donation_Donor__c='contact1');
+
+        donationMatchRules(
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
+                UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
+            0, BDI_DataImport_API.ExactMatchOrCreate, label.bdiMatched, false, 1);
+    }
+
+    /*********************************************************************************************************
+    * @description operation:
+    *    import donations using different matching rules: Amount, Date.  avoid same amount, different day.
+    *    use date range for the match.
+    * verify:
+    *    error, due to multiple matches
+    **********************************************************************************************************/
+    static testMethod void donationMatchRules1c() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules1c') return;
+        insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
+            Donation_Amount__c=100,
+            Donation_Date__c=System.Today(),
+            Payment_Method__c = 'Check',
+            Donation_Donor__c='contact1');
+
+        donationMatchRules(
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
+                UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
+            -1, BDI_DataImport_API.RequireExactMatch, label.bdiErrorDonationMultiMatch, true, 1);
+    }
+
+    /*********************************************************************************************************
+    * @description operation:
+    *    import donations using different matching rules: Amount, Date.  avoid same amount, different day.
+    *    use date range for the match.
+    * verify:
+    *    correct donations matched
+    **********************************************************************************************************/
+    static testMethod void donationMatchRules1d() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules1d') return;
+        insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
+            Donation_Amount__c=100,
+            Donation_Date__c=System.Today(),
+            Payment_Method__c = 'Check',
+            Donation_Donor__c='contact1');
+
+        donationMatchRules(
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
+                UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
+            0, BDI_DataImport_API.RequireBestMatch, label.bdiMatchedBest, true, 1);
     }
 
     /*********************************************************************************************************
@@ -662,7 +725,7 @@ public with sharing class BDI_Donations_TEST {
         donationMatchRules(
             UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
-            4, BDI_DataImport_API.ExactMatchOrCreate, label.bdiMatched, false);
+            4, BDI_DataImport_API.ExactMatchOrCreate, label.bdiMatched, false, 0);
     }
 
     /*********************************************************************************************************
@@ -691,7 +754,7 @@ public with sharing class BDI_Donations_TEST {
             UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c') + ';' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
-            3, BDI_DataImport_API.ExactMatchOrCreate, label.bdiMatched, false);
+            3, BDI_DataImport_API.ExactMatchOrCreate, label.bdiMatched, false, 0);
     }
 
     /*********************************************************************************************************
@@ -712,7 +775,7 @@ public with sharing class BDI_Donations_TEST {
         donationMatchRules(
             UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
-            -1, BDI_DataImport_API.ExactMatchOrCreate, label.bdiErrorDonationMultiMatch, true);
+            -1, BDI_DataImport_API.ExactMatchOrCreate, label.bdiErrorDonationMultiMatch, true, 0);
     }
 
     /*********************************************************************************************************
@@ -733,7 +796,7 @@ public with sharing class BDI_Donations_TEST {
         donationMatchRules(
             UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
-            -1, BDI_DataImport_API.ExactMatchOrCreate, label.bdiCreated, false);
+            -1, BDI_DataImport_API.ExactMatchOrCreate, label.bdiCreated, false, 0);
     }
 
     /*********************************************************************************************************
@@ -753,7 +816,7 @@ public with sharing class BDI_Donations_TEST {
         donationMatchRules(
             UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
-            -2, BDI_DataImport_API.BestMatchOrCreate, label.bdiMatchedBest, true);
+            -2, BDI_DataImport_API.BestMatchOrCreate, label.bdiMatchedBest, true, 0);
     }
 
     /*********************************************************************************************************
@@ -774,7 +837,7 @@ public with sharing class BDI_Donations_TEST {
         donationMatchRules(
             UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
-            -1, BDI_DataImport_API.BestMatchOrCreate, label.bdiCreated, false);
+            -1, BDI_DataImport_API.BestMatchOrCreate, label.bdiCreated, false, 0);
     }
 
     /*********************************************************************************************************
@@ -794,7 +857,7 @@ public with sharing class BDI_Donations_TEST {
         donationMatchRules(
             UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
-            -1, BDI_DataImport_API.DoNotMatch, label.bdiCreated, false);
+            -1, BDI_DataImport_API.DoNotMatch, label.bdiCreated, false, 0);
     }
 
     /*********************************************************************************************************
@@ -815,7 +878,7 @@ public with sharing class BDI_Donations_TEST {
         donationMatchRules(
             UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
-            -1, BDI_DataImport_API.RequireNoMatch, label.bdiErrorDonationRequireNoMatch, true);
+            -1, BDI_DataImport_API.RequireNoMatch, label.bdiErrorDonationRequireNoMatch, true, 0);
     }
 
     /*********************************************************************************************************
@@ -835,7 +898,7 @@ public with sharing class BDI_Donations_TEST {
         donationMatchRules(
             UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
-            -1, BDI_DataImport_API.RequireNoMatch, label.bdiCreated, false);
+            -1, BDI_DataImport_API.RequireNoMatch, label.bdiCreated, false, 0);
     }
 
     /*********************************************************************************************************
@@ -856,7 +919,7 @@ public with sharing class BDI_Donations_TEST {
         donationMatchRules(
             UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
-            -1, BDI_DataImport_API.RequireExactMatch, label.bdiErrorDonationNoMatch, false);
+            -1, BDI_DataImport_API.RequireExactMatch, label.bdiErrorDonationNoMatch, false, 0);
     }
 
     /*********************************************************************************************************
@@ -877,7 +940,7 @@ public with sharing class BDI_Donations_TEST {
         donationMatchRules(
             UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
-            -1, BDI_DataImport_API.RequireExactMatch, label.bdiErrorDonationMultiMatch, true);
+            -1, BDI_DataImport_API.RequireExactMatch, label.bdiErrorDonationMultiMatch, true, 0);
     }
 
     /*********************************************************************************************************
@@ -898,7 +961,7 @@ public with sharing class BDI_Donations_TEST {
         donationMatchRules(
             UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
-            -1, BDI_DataImport_API.RequireExactMatch, label.bdiMatched, false);
+            -1, BDI_DataImport_API.RequireExactMatch, label.bdiMatched, false, 0);
     }
 
     /*********************************************************************************************************
@@ -919,7 +982,7 @@ public with sharing class BDI_Donations_TEST {
         donationMatchRules(
             UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
-            2, BDI_DataImport_API.RequireBestMatch, label.bdiMatchedBest, true);
+            2, BDI_DataImport_API.RequireBestMatch, label.bdiMatchedBest, true, 0);
     }
 
     /*********************************************************************************************************
@@ -940,7 +1003,7 @@ public with sharing class BDI_Donations_TEST {
         donationMatchRules(
             UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
-            -1, BDI_DataImport_API.RequireBestMatch, label.bdiErrorDonationNoMatch, false);
+            -1, BDI_DataImport_API.RequireBestMatch, label.bdiErrorDonationNoMatch, false, 0);
     }
 
     /*********************************************************************************************************
@@ -961,7 +1024,7 @@ public with sharing class BDI_Donations_TEST {
             
         donationMatchRules(
             UTIL_Namespace.StrTokenNSPrefix('Donation_Type__c'),
-            2, BDI_DataImport_API.RequireExactMatch, label.bdiMatched, false);
+            2, BDI_DataImport_API.RequireExactMatch, label.bdiMatched, false, 0);
     }
 
     /*********************************************************************************************************
@@ -981,7 +1044,7 @@ public with sharing class BDI_Donations_TEST {
             
         donationMatchRules(
             UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c'),
-            4, BDI_DataImport_API.RequireExactMatch, label.bdiMatched, false);
+            4, BDI_DataImport_API.RequireExactMatch, label.bdiMatched, false, 0);
     }
 
     /*********************************************************************************************************
@@ -1003,7 +1066,7 @@ public with sharing class BDI_Donations_TEST {
         donationMatchRules(
             UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
-            7, BDI_DataImport_API.RequireExactMatch, label.bdiMatched, false);
+            7, BDI_DataImport_API.RequireExactMatch, label.bdiMatched, false, 0);
     }
 
     /*********************************************************************************************************
@@ -1025,7 +1088,7 @@ public with sharing class BDI_Donations_TEST {
         donationMatchRules(
             UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
-            9, BDI_DataImport_API.RequireExactMatch, label.bdiMatched, false);
+            9, BDI_DataImport_API.RequireExactMatch, label.bdiMatched, false, 0);
     }
 
     /*********************************************************************************************************
@@ -1049,7 +1112,7 @@ public with sharing class BDI_Donations_TEST {
         donationMatchRules(
             UTIL_Namespace.StrTokenNSPrefix('Payment_Check_Reference_Number__c') + ';' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
-            9, BDI_DataImport_API.RequireExactMatch, label.bdiMatched, false);
+            9, BDI_DataImport_API.RequireExactMatch, label.bdiMatched, false, 0);
     }
 
     /*********************************************************************************************************
@@ -1075,7 +1138,7 @@ public with sharing class BDI_Donations_TEST {
             UTIL_Namespace.StrTokenNSPrefix('Payment_Check_Reference_Number__c') + ';' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' + 
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
-            -1, BDI_DataImport_API.RequireExactMatch, label.bdiErrorDonationNoMatch, false);
+            -1, BDI_DataImport_API.RequireExactMatch, label.bdiErrorDonationNoMatch, false, 0);
     }
 
     /*********************************************************************************************************
@@ -1100,7 +1163,7 @@ public with sharing class BDI_Donations_TEST {
         donationMatchRules(
             UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
-            8, BDI_DataImport_API.RequireExactMatch, label.bdiMatched, false);
+            8, BDI_DataImport_API.RequireExactMatch, label.bdiMatched, false, 0);
             
         DataImport__c di = [select Status__c, DonationImported__c, DonationImportStatus__c, 
             Donation_Possible_Matches__c, PaymentImported__c, PaymentImportStatus__c from DataImport__c];
@@ -1140,7 +1203,7 @@ public with sharing class BDI_Donations_TEST {
         donationMatchRules(
             UTIL_Namespace.StrTokenNSPrefix('Payment_Check_Reference_Number__c') + ';' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
-            -1, BDI_DataImport_API.RequireExactMatch, label.bdiErrorDonationMultiMatch, true);
+            -1, BDI_DataImport_API.RequireExactMatch, label.bdiErrorDonationMultiMatch, true, 0);
     }
 
     /*********************************************************************************************************
@@ -1163,7 +1226,7 @@ public with sharing class BDI_Donations_TEST {
         donationMatchRules(
             UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
-            10, BDI_DataImport_API.RequireExactMatch, label.bdiMatched, false);
+            10, BDI_DataImport_API.RequireExactMatch, label.bdiMatched, false, 0);
     }
 
     /*********************************************************************************************************
@@ -1187,7 +1250,129 @@ public with sharing class BDI_Donations_TEST {
         donationMatchRules(
             UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
-            11, BDI_DataImport_API.RequireExactMatch, label.bdiMatched, false);
+            11, BDI_DataImport_API.RequireExactMatch, label.bdiMatched, false, 0);
+    }
+
+    /*********************************************************************************************************
+    * @description operation:
+    *    import donations using different matching rules: Amount, Date, where Opp has Multiple Payments,
+    *    and matches one of the payments under the opp
+    * verify:
+    *    no new donation created
+    *    existing opp matched, but left open
+    *    payment matched
+    *    opp remaining balance updated
+    **********************************************************************************************************/
+    static testMethod void donationMatchRules18a() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules18a') return;
+
+        insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
+            Donation_Amount__c=12,
+            Donation_Date__c=System.Today(),
+            Payment_Method__c = 'Check',
+            Donation_Donor__c='contact1');
+
+        donationMatchRules(
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
+                UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
+            12, BDI_DataImport_API.RequireExactMatch, label.bdiMatched, false, 0);
+
+        DataImport__c di = [select Status__c, DonationImported__c, DonationImportStatus__c,
+            Donation_Possible_Matches__c, PaymentImported__c, PaymentImportStatus__c from DataImport__c];
+        system.assertEquals(label.bdiMatched, di.DonationImportStatus__c);
+        system.assertEquals(label.bdiMatched, di.PaymentImportStatus__c);
+
+        Opportunity opp = [select Id, IsWon, IsClosed, Amount, npe01__Amount_Outstanding__c from Opportunity where id = :di.DonationImported__c];
+        npe01__OppPayment__c pmt = [select Id, npe01__Payment_Amount__c, npe01__Paid__c from npe01__OppPayment__c where id = :di.PaymentImported__c];
+
+        system.assertEquals(false, opp.IsWon);
+        system.assertEquals(false, opp.IsClosed);
+        system.assertEquals(48, opp.Amount);
+        system.assertEquals(36, opp.npe01__Amount_Outstanding__c);
+        system.assertEquals(12, pmt.npe01__Payment_Amount__c);
+        system.assertEquals(true, pmt.npe01__Paid__c);
+    }
+
+    /*********************************************************************************************************
+    * @description operation:
+    *    import donations using different matching rules: Amount, Date, where Opp has Multiple Payments,
+    *    and matches multiple of the payments under the opp, using a date range
+    * verify:
+    *    no new donation created
+    *    existing opp matched, but left open
+    *    payment matched
+    *    opp remaining balance updated
+    **********************************************************************************************************/
+    static testMethod void donationMatchRules18b() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules18a') return;
+
+        insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
+            Donation_Amount__c=12,
+            Donation_Date__c=System.Today(),
+            Payment_Method__c = 'Check',
+            Donation_Donor__c='contact1');
+
+        donationMatchRules(
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
+                UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
+            12, BDI_DataImport_API.RequireBestMatch, label.bdiMatched, false, 1);
+
+        DataImport__c di = [select Status__c, DonationImported__c, DonationImportStatus__c,
+            Donation_Possible_Matches__c, PaymentImported__c, PaymentImportStatus__c from DataImport__c];
+        system.assertEquals(label.bdiMatched, di.DonationImportStatus__c);
+        system.assertEquals(label.bdiMatched, di.PaymentImportStatus__c);
+
+        Opportunity opp = [select Id, IsWon, IsClosed, Amount, npe01__Amount_Outstanding__c from Opportunity where id = :di.DonationImported__c];
+        npe01__OppPayment__c pmt = [select Id, npe01__Payment_Amount__c, npe01__Paid__c, npe01__Scheduled_Date__c from npe01__OppPayment__c where id = :di.PaymentImported__c];
+
+        system.assertEquals(false, opp.IsWon);
+        system.assertEquals(false, opp.IsClosed);
+        system.assertEquals(48, opp.Amount);
+        system.assertEquals(36, opp.npe01__Amount_Outstanding__c);
+        system.assertEquals(12, pmt.npe01__Payment_Amount__c);
+        system.assertEquals(true, pmt.npe01__Paid__c);
+        system.assertEquals(system.Today(), pmt.npe01__Scheduled_Date__c);
+    }
+
+    /*********************************************************************************************************
+    * @description operation:
+    *    import donations using different matching rules: Amount, Date, where Opp has Multiple Payments,
+    *    and matches multiple of the payments under the opp, using a date range
+    * verify:
+    *    no new donation created
+    *    existing opp matched, but left open
+    *    payment matched
+    *    opp remaining balance updated
+    **********************************************************************************************************/
+    static testMethod void donationMatchRules18c() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules18c') return;
+
+        insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
+            Donation_Amount__c=12,
+            Donation_Date__c=System.Today()+1,
+            Payment_Method__c = 'Check',
+            Donation_Donor__c='contact1');
+
+        donationMatchRules(
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
+                UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
+            12, BDI_DataImport_API.RequireBestMatch, label.bdiMatched, false, 2);
+
+        DataImport__c di = [select Status__c, DonationImported__c, DonationImportStatus__c,
+            Donation_Possible_Matches__c, PaymentImported__c, PaymentImportStatus__c from DataImport__c];
+        system.assertEquals(label.bdiMatched, di.DonationImportStatus__c);
+        system.assertEquals(label.bdiMatched, di.PaymentImportStatus__c);
+
+        Opportunity opp = [select Id, IsWon, IsClosed, Amount, npe01__Amount_Outstanding__c from Opportunity where id = :di.DonationImported__c];
+        npe01__OppPayment__c pmt = [select Id, npe01__Payment_Amount__c, npe01__Paid__c, npe01__Scheduled_Date__c from npe01__OppPayment__c where id = :di.PaymentImported__c];
+
+        system.assertEquals(false, opp.IsWon);
+        system.assertEquals(false, opp.IsClosed);
+        system.assertEquals(48, opp.Amount);
+        system.assertEquals(36, opp.npe01__Amount_Outstanding__c);
+        system.assertEquals(12, pmt.npe01__Payment_Amount__c);
+        system.assertEquals(true, pmt.npe01__Paid__c);
+        system.assertEquals(system.Today()+1, pmt.npe01__Scheduled_Date__c);
     }
 
     /*********************************************************************************************************
@@ -1202,7 +1387,7 @@ public with sharing class BDI_Donations_TEST {
     * @param hasMultiMatches Whether we expect anything in Donation_Possible_Matches__c
     **********************************************************************************************************/            
     static void donationMatchRules(string strRule, integer imatch, string matchBehavior, 
-        string expectedStatus, boolean hasMultiMatches) { 
+        string expectedStatus, boolean hasMultiMatches, integer dateRange) {
         
         // create opps to match against
         Contact con = new Contact(firstname='c0', lastname='c0', email='c0@c0.com');
@@ -1244,9 +1429,13 @@ public with sharing class BDI_Donations_TEST {
         listOpp.add(new Opportunity(name='Opp11', Primary_Contact__c=con.Id, Amount=1100, CloseDate=System.Today(), 
             StageName=UTIL_unitTestData_TEST.getOpenStage(), npe01__Do_Not_Automatically_Create_Payment__c=true));
 
+        // Opp 12 will have multiple Payment records, different days, same amounts.
+        listOpp.add(new Opportunity(name='Opp11', Primary_Contact__c=con.Id, Amount=48, CloseDate=System.Today(),
+            StageName=UTIL_unitTestData_TEST.getOpenStage(), npe01__Do_Not_Automatically_Create_Payment__c=true));
+
         insert listOpp;
         
-        // create Opps 8-10's Payment records
+        // create Opps 8-11's Payment records
         list<npe01__OppPayment__c> listPmt = new list<npe01__OppPayment__c>();
         listPmt.add(new npe01__OppPayment__c(npe01__Opportunity__c=listOpp[8].Id, npe01__Payment_Amount__c=350, 
             npe01__Scheduled_Date__c=System.Today(), npe01__Check_Reference_Number__c='dupe'));
@@ -1266,12 +1455,21 @@ public with sharing class BDI_Donations_TEST {
         listPmt.add(new npe01__OppPayment__c(npe01__Opportunity__c=listOpp[11].Id, npe01__Payment_Amount__c=1100, 
             npe01__Scheduled_Date__c=System.Today(), npe01__Written_Off__c=true));
 
+        listPmt.add(new npe01__OppPayment__c(npe01__Opportunity__c=listOpp[12].Id, npe01__Payment_Amount__c=12,
+            npe01__Scheduled_Date__c=System.Today()));
+        listPmt.add(new npe01__OppPayment__c(npe01__Opportunity__c=listOpp[12].Id, npe01__Payment_Amount__c=12,
+            npe01__Scheduled_Date__c=System.Today()+1));
+        listPmt.add(new npe01__OppPayment__c(npe01__Opportunity__c=listOpp[12].Id, npe01__Payment_Amount__c=12,
+            npe01__Scheduled_Date__c=System.Today()+2));
+        listPmt.add(new npe01__OppPayment__c(npe01__Opportunity__c=listOpp[12].Id, npe01__Payment_Amount__c=12,
+            npe01__Scheduled_Date__c=System.Today()+3));
         insert listPmt;
         
         // set the specified settings
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         diSettings.Donation_Matching_Rule__c = strRule;
         diSettings.Donation_Matching_Behavior__c = matchBehavior;
+        diSettings.Donation_Date_Range__c = dateRange;
  
         //run batch data import
         Test.StartTest();

@@ -427,7 +427,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
         
         // add Payment subquery
         strSoql += ', (select ' + string.join(new list<String>(setPmtFields), ',');
-        strSoql += ' from npe01__OppPayment__r where npe01__Paid__c = false order by npe01__Scheduled_Date__c ASC)'; 
+        strSoql += ' from npe01__OppPayment__r where npe01__Paid__c = false order by npe01__Scheduled_Date__c ASC, CreatedDate ASC)';
         
         strSoql += ' from Opportunity';
         strSoql += ' where IsClosed = false and (';
@@ -449,7 +449,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
             strSoql += ' ' + UTIL_Namespace.StrTokenNSPrefix('Primary_Contact__c') + ' in :setConId ';
             cFilter++;
         }
-        strSoql += ') order by CloseDate ASC';
+        strSoql += ') order by CloseDate ASC, CreatedDate ASC';
         list<Opportunity> listOpp = database.query(strSoql); 
         return listOpp;           
     }
