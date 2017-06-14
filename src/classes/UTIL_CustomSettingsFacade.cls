@@ -594,15 +594,22 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     private static void configDataImportSettings(Data_Import_Settings__c dis) {
-        if (dis.Batch_Size__c == null)
+        if (dis.Batch_Size__c == null) {
             dis.Batch_Size__c = 50;
-        if (dis.Contact_Matching_Rule__c == null)
+        }
+        if (dis.Contact_Matching_Rule__c == null) {
             dis.Contact_Matching_Rule__c = 'Firstname,Lastname,Email';
-        if (dis.Donation_Matching_Behavior__c == null)
+        }
+        if (dis.Donation_Matching_Behavior__c == null) {
             dis.Donation_Matching_Behavior__c = BDI_DataImport_API.DoNotMatch;
-        if (dis.Donation_Matching_Rule__c == null)
+        }
+        if (dis.Donation_Matching_Rule__c == null) {
             dis.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
                 UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+        }
+        if (dis.Donation_Date_Range__c == null) {
+            dis.Donation_Date_Range__c = 0;
+        }
     }
 
     /*******************************************************************************************************

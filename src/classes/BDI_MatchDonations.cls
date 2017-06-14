@@ -112,67 +112,79 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
             
             boolean isMatchedByOppId = false;
             boolean isMatchedByPmtId = false;
+            integer ioppBest = null;
 
             if (listCAOpps != null) {
+                integer dtVarianceOpp = null;
+
                 // go thru each opp for this contact or account
                 for (integer i = 0; i < listCAOpps.size(); i++) {
                     Opportunity opp = listCAOpps[i];
-                    matchType mType = MATCHTYPE.NO_MATCH;
+                    MatchInfo matchInfo = new MatchInfo(MATCHTYPE.NO_MATCH, 0);
 
                     // if 1 or more payments, use Payment matching rules
                     if (opp.npe01__Number_of_Payments__c >= 1) {
                         npe01__OppPayment__c pmtBest = null;
+                        integer dtVariancePmt = null;
+
                         for (npe01__OppPayment__c pmt : opp.npe01__OppPayment__r) {
-                            mType = getMatchTypeByPmtRules(di, pmt);
-                            
-                            if (mType == MATCHTYPE.ID_MATCH) {
+                            matchInfo = getMatchInfoByPmtRules(di, pmt);
+                            system.debug('****DJH: pmt: ' + pmt + ' matchInfo: ' + matchInfo);
+
+                            if (matchInfo.matchType == MATCHTYPE.ID_MATCH) {
                                 pmtBest = pmt;
                                 isMatchedByPmtId = true;
                                 break;
-                            } else if (mType == MATCHTYPE.FIELD_MATCH) {
-                                // we take the first field match as possible best
-                                if (pmtBest == null) {
+                            } else if (matchInfo.matchType == MATCHTYPE.FIELD_MATCH) {
+                                // we start with the first field match as possible best, and then look for closer matches
+                                if (pmtBest == null || matchInfo.dateVariance < dtVariancePmt) {
                                     pmtBest = pmt;
+                                    dtVariancePmt = matchInfo.dateVariance;
                                 }
                             }
                         } // end looping thru payments
-                        
+
                         // save our best match
                         if (pmtBest != null) {
                             mapOppIdToPmt.put(opp.Id, pmtBest);
 
                             // treat a field match as Id match if the Opp was specified
                             if (opp.Id == di.DonationImported__c) {
-                                mType = MATCHTYPE.ID_MATCH;
+                                matchInfo.matchType = MATCHTYPE.ID_MATCH;
                             }
                             
-                            if (mType != MATCHTYPE.ID_MATCH) {
-                                mType = MATCHTYPE.FIELD_MATCH;
+                            if (matchInfo.matchType != MATCHTYPE.ID_MATCH) {
+                                matchInfo.matchType = MATCHTYPE.FIELD_MATCH;
                             }
                         }
                     } // end matching an opp with >= 1 payment
 
                     // if no payments, or we failed to match with a single payment, use Opp matching rules
-                    if (opp.npe01__Number_of_Payments__c <= 1 && mType == MATCHTYPE.NO_MATCH) {
-                        mType = getMatchTypeByOppRules(di, opp);
+                    if (opp.npe01__Number_of_Payments__c <= 1 && matchInfo.matchType == MATCHTYPE.NO_MATCH) {
+                        matchInfo = getMatchInfoByOppRules(di, opp);
                     }
 
-                    if (mType == MATCHTYPE.ID_MATCH) {
+                    if (matchInfo.matchType == MATCHTYPE.ID_MATCH) {
                         // if we matched by Id, then we don't even care about other matches by field.
                         listIMatches.clear();
                         listIMatches.add(i);
+                        ioppBest = i;
                         isMatchedByOppId = true;
                         break;
-                    } else if (mType == MATCHTYPE.FIELD_MATCH) {
+                    } else if (matchInfo.matchType == MATCHTYPE.FIELD_MATCH) {
                         listIMatches.add(i);
+                        // we start with the first field match as possible best, and then look for closer matches
+                        if (ioppBest == null || matchInfo.dateVariance < dtVarianceOpp) {
+                            ioppBest = i;
+                            dtVarianceOpp = matchInfo.dateVariance;
+                        }
                     }
                 } // end looping thru opps
             } 
             
             // if we have 1 or more matches, record the best one
             if (listIMatches.size() > 0) {
-                Integer iOpp = listIMatches[0];
-                Opportunity opp = listCAOpps[iOpp];
+                Opportunity opp = listCAOpps[ioppBest];
                 di.DonationImported__c = opp.Id;
                 // put the existing opp in our map for caller's use
                 mapDIIdToOpp.put(di.Id, opp);
@@ -180,7 +192,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                 // if unique, remove this opp from the list to avoid matching it again.
                 if (listIMatches.size() == 1) {
                     di.DonationImportStatus__c = (isMatchedByOppId ? label.bdiMatchedId : label.bdiMatched);
-                    listCAOpps.remove(iOpp);
+                    listCAOpps.remove(ioppBest);
                 } else {
                     // we have multiple matches, we want to record them all, and fixup our status
                     di.DonationImportStatus__c = label.bdiMatchedBest;
@@ -212,76 +224,115 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
     }
 
     /*******************************************************************************************************
-    * @description describes the type of match returned from our matching routines.  we couldn't use declare
-    * an enum within an inner class, so we went with strings.
+    * @description describes the type of match returned from our matching routines.
     */
     private enum MATCHTYPE {ID_MATCH, FIELD_MATCH, NO_MATCH}
+
+    /*******************************************************************************************************
+    * @description describes the type of match returned from our matching routines
+    */
+    private class MatchInfo {
+        MATCHTYPE matchtype;
+        integer dateVariance;
+
+        MatchInfo(MATCHTYPE matchtype, integer dateVariance) {
+            this.matchtype = matchtype;
+            this.dateVariance = dateVariance;
+        }
+    }
 
     /*******************************************************************************************************
     * @description checks whether the specified opp is a match for this DI record
     * @param di The data import record we are trying to find an opp for
     * @param opp The opp to evaluate
-    * @return matchType
+    * @return MatchInfo
     */
-    private matchType getMatchTypeByOppRules(DataImport__c di, Opportunity opp) {
+    private MatchInfo getMatchInfoByOppRules(DataImport__c di, Opportunity opp) {
         // always match to an Opp we were given the Id to!
         if (di.DonationImported__c == opp.Id) {
-            return MATCHTYPE.ID_MATCH;
+            return new MatchInfo(MATCHTYPE.ID_MATCH, 0);
         }
 
         if (di.DonationImported__c == null) {
             // try match against all specified fields
             boolean isAllMatch = true;
+            integer dtVariance = 0;
+
             for (String strDIField : listMatchFields) {
                 Object val = di.get(strDIField);
+                string strOppField = mapDIFieldToOppField.get(strDIField);
+
+                // special case date matching
+                if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c').toLowercase() && strOppField != null) {
+                    integer dtVarianceT = math.abs(date.valueOf(val).daysBetween(date.valueOf(opp.get(strOppField))));
+                    if (dtVarianceT <= integer.valueOf(bdi.diSettings.Donation_Date_Range__c)) {
+                        dtVariance = dtVarianceT;
+                        continue;
+                    }
+                }
+
                 // handle mapping a specified record type name to the Id we must compare with
                 if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c').toLowercase()) {
                     val = UTIL_RecordTypes.getRecordTypeId(Opportunity.sObjectType, string.valueOf(val));
                 }
+
                 // only test opp fields (failing match if payment fields specified)
-                string strOppField = mapDIFieldToOppField.get(strDIField);
                 if (strOppField == null || val != opp.get(strOppField)) {
                     isAllMatch = false;
                     break;
                 }
             }
             if (isAllMatch) {
-                return MATCHTYPE.FIELD_MATCH;
+                return new MatchInfo(MATCHTYPE.FIELD_MATCH, dtVariance);
             }
         }
         
-        return MATCHTYPE.NO_MATCH;
+        return new MatchInfo(MATCHTYPE.NO_MATCH, 0);
     }
     
     /*******************************************************************************************************
     * @description checks whether the specified opp has a Payment match for this DI record
     * @param di The data import record we are trying to find an Opp & Payment for
     * @param pmt The payment to evaluate
-    * @return matchType
+    * @return MatchInfo
     */
-    private matchType getMatchTypeByPmtRules(DataImport__c di, npe01__OppPayment__c pmt) {
+    private MatchInfo getMatchInfoByPmtRules(DataImport__c di, npe01__OppPayment__c pmt) {
 
         // always match to an Payment we were given the Id to!
         if (di.PaymentImported__c == pmt.Id) {
-            return MATCHTYPE.ID_MATCH;
+            return new MatchInfo(MATCHTYPE.ID_MATCH, 0);
         }
 
-        // try match against all specified fields
-        boolean isAllMatch = true;
-        for (String strDIField : listMatchFields) {
-            Object val = di.get(strDIField);
+        if (di.PaymentImported__c == null) {
+            // try match against all specified fields
+            boolean isAllMatch = true;
+            integer dtVariance = 0;
 
-            // only test pmt fields (failing match if Opp fields specified)
-            string strPmtField = mapDIFieldToPmtField.get(strDIField);
-            if (strPmtField == null || val != pmt.get(strPmtField)) {
-                isAllMatch = false;
-                break;
+            for (String strDIField : listMatchFields) {
+                Object val = di.get(strDIField);
+                string strPmtField = mapDIFieldToPmtField.get(strDIField);
+
+                // special case date matching
+                if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c').toLowercase() && strPmtField != null) {
+                    integer dtVarianceT = math.abs(date.valueOf(val).daysBetween(date.valueOf(pmt.get(strPmtField))));
+                    if (dtVarianceT <= integer.valueOf(bdi.diSettings.Donation_Date_Range__c)) {
+                        dtVariance = dtVarianceT;
+                        continue;
+                    }
+                }
+
+                // only test pmt fields (failing match if Opp fields specified)
+                if (strPmtField == null || val != pmt.get(strPmtField)) {
+                    isAllMatch = false;
+                    break;
+                }
+            }
+            if (isAllMatch) {
+                return new MatchInfo(MATCHTYPE.FIELD_MATCH, dtVariance);
             }
         }
-        if (isAllMatch) {
-            return MATCHTYPE.FIELD_MATCH;
-        }
-        return MATCHTYPE.NO_MATCH;
+
+        return new MatchInfo(MATCHTYPE.NO_MATCH, 0);
     }
 
     /*******************************************************************************************************
