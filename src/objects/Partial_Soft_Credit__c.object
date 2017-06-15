@@ -160,6 +160,6 @@
         <openType>sidebar</openType>
         <protected>false</protected>
         <requireRowSelection>false</requireRowSelection>
-        <url>/apex/npsp__PSC_ManageSoftCredits?id={!Opportunity.Id}</url>
+        <url>/apex/%%%NAMESPACE%%%PSC_ManageSoftCredits?id={!Opportunity.Id}</url>
     </webLinks>
 </CustomObject>
