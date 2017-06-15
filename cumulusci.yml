@@ -34,6 +34,11 @@ tasks:
             dir: browser_tests
             subfolder: NPSP-Browser-Tests-master
 
+    deploy:
+        options:
+            namespace_inject: npsp
+            unmanaged: True
+
     deploy_dev_config:
         description: Deploys the post install configuration for an unmanaged DE org
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -216,7 +221,7 @@ flows:
             6:
                 task: deploy
                 options:
-                    namespace_inject: npsp
+                    unmanaged: False
 
     dev_org:
         tasks:
