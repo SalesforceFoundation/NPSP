@@ -109,6 +109,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
             list<Opportunity> listCAOpps = mapConAccIdToOpps.get(id);
             list<Integer> listIMatches = new list<Integer>();
             map<ID, npe01__OppPayment__c> mapOppIdToPmt = new map<ID, npe01__OppPayment__c>();
+            list<ID> listPmtIdMatches = new list<ID>();
             
             boolean isMatchedByOppId = false;
             boolean isMatchedByPmtId = false;
@@ -133,8 +134,11 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                             if (matchInfo.matchType == MATCHTYPE.ID_MATCH) {
                                 pmtBest = pmt;
                                 isMatchedByPmtId = true;
+                                // clear possible other matches
+                                listPmtIdMatches.clear();
                                 break;
                             } else if (matchInfo.matchType == MATCHTYPE.FIELD_MATCH) {
+                                listPmtIdMatches.add(pmt.Id);
                                 // we start with the first field match as possible best, and then look for closer matches
                                 if (pmtBest == null || matchInfo.dateVariance < dtVariancePmt) {
                                     pmtBest = pmt;
@@ -169,6 +173,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                         listIMatches.add(i);
                         ioppBest = i;
                         isMatchedByOppId = true;
+                        listPmtIdMatches.clear();
                         break;
                     } else if (matchInfo.matchType == MATCHTYPE.FIELD_MATCH) {
                         listIMatches.add(i);
@@ -206,15 +211,31 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                         if (i == 9)
                             break;
                     }
-                } 
+                }
                 
                 // also record the payment
                 npe01__OppPayment__c pmt = mapOppIdToPmt.get(opp.Id);
                 if (pmt != null) {
                     di.PaymentImported__c = pmt.Id;
-                    di.PaymentImportStatus__c = (isMatchedByPmtId ? label.bdiMatchedId : label.bdiMatched);
+                    di.PaymentImportStatus__c = (isMatchedByPmtId ? label.bdiMatchedId :
+                        (listPmtIdMatches.size() > 1 ? label.bdiMatchedBest : label.bdiMatched));
                     // put the existing pmt in our map for caller's use
                     mapDIIdToPmt.put(di.Id, pmt);
+
+                    // also record payment matches if any
+                    if (listPmtIdMatches.size() > 1) {
+                        for (integer i = 0; i < listPmtIdMatches.size(); i++) {
+                            ID idPmt = listPmtIdMatches[i];
+                            if (di.Payment_Possible_Matches__c == null) {
+                                di.Payment_Possible_Matches__c = idPmt;
+                            } else {
+                                di.Payment_Possible_Matches__c += ',' + idPmt;
+                            }
+                            // only take the first 10 matches to not blow our 255 char limit.
+                            if (i == 9)
+                                break;
+                        }
+                    }
                 }
             } else {
                 di.DonationImportStatus__c = label.bdiMatchedNone;
