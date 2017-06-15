@@ -233,6 +233,9 @@ public with sharing class HH_Container_LCTRL {
                 'MailingLongitude', 
                 'CreatedDate'
             };
+            if (UTIL_Describe.isMiddleNameEnabled()) {
+                setContactFields.add('Middlename');
+            }
 
                 /*** until we support these, we don't want them to interfere with what the user specifies.
                 if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled)
@@ -267,7 +270,10 @@ public with sharing class HH_Container_LCTRL {
             'MailingPostalCode', 
             'MailingCountry', 
             'MailingLatitude', 
-            'MailingLongitude'};        
+            'MailingLongitude'};
+        if (UTIL_Describe.isMiddleNameEnabled()) {
+            setContactFields.add('Middlename');
+        }
         return setContactFields;
     }
 

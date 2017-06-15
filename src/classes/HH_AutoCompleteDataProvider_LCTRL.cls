@@ -54,9 +54,33 @@ public with sharing class HH_AutoCompleteDataProvider_LCTRL {
             
             // use helper to get all contact fields to support custom household naming and greetings.
             // note that our helper does FLS, so we don't have to do it here.
-            String strSoql = HH_Container_LCTRL.getContactSelectQueryWithFls();
-            strSoql += ' WHERE Name LIKE :preparedQueryValue AND Id not in :listCon LIMIT 100';
-    
+            String strSoql = HH_Container_LCTRL.getContactSelectQueryWithFls() + ' WHERE ';
+
+            if (UTIL_Describe.isMiddleNameEnabled()) {
+                // When the Middlename field is enabled, there is a known issue (as of 6/15/2017) that
+                // prevents a query on the Name field from working properly if the record has a
+                // middlename or suffix value. To work-around this, we'll parse the queryValue into
+                // individual "words" and build a more generic query to find the records.
+                // Technically this will result in a larger result set than we really want
+                // however the only other solution would be to assume that three values will
+                // always match to first/middle/last. If the user enters two values, it could assume
+                // that matches to first + middle OR last. That gets more complicated and doesn't take
+                // into account compound firstnames such as "Anne Marie".
+                // This should be considered a temporary work-around until such time as Salesforce
+                // fixes the known issue:
+                // https://success.salesforce.com/issues_view?id=a1p30000000eQRxAAM
+                strSoql += '(';
+                for (String p : preparedQueryValue.remove('%').split(' ')) {
+                    strSoql += ' FirstName LIKE \'%' + String.escapeSingleQuotes(p) + '%\' OR ' +
+                            ' MiddleName LIKE \'%' + String.escapeSingleQuotes(p) + '%\' OR ' +
+                            ' LastName LIKE \'%' + String.escapeSingleQuotes(p) + '%\' OR ';
+                }
+                strSoql = strSoql.removeEnd(' OR ') + ') ';
+            } else {
+                strSoql += ' Name LIKE :preparedQueryValue';
+            }
+            strSoql += ' AND Id not in :listCon LIMIT 100';
+
             List<SObject> results = Database.query(strSoql);
     
             List<ProviderResult> providerResults = new List<ProviderResult>();

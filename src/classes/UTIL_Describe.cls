@@ -452,6 +452,15 @@ public class UTIL_Describe {
         }
     }
 
+    /** @description returns true if the MiddleName field is enabled in this org */
+    public static Boolean isMiddleNameEnabled() {
+        if (!fieldTokens.containsKey('Contact')) {
+            fieldTokens.put('Contact', Contact.sObjectType.getDescribe().fields.getMap());
+            fieldDescribes.put('Contact', new Map<String, Schema.DescribeFieldResult>());
+        }
+        return fieldTokens.get('Contact').containsKey('middlename');
+    }
+
     /** @description our exception object for Field Level & Object Security errors. */
     private class permsException extends Exception {}
     
