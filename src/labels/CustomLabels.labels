@@ -1427,6 +1427,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Matched an existing contact from a non-Household Account, which is not supported.</value>
     </labels>
     <labels>
+        <fullName>bdiErrorPaymentMultiMatch</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error message if the donation matched multiple pmts</shortDescription>
+        <value>The Donation information matched against multiple Payments, so it was not imported. The Payment Possible Matches field contains the Salesforce Id&apos;s of the matched Payments.</value>
+    </labels>
+    <labels>
         <fullName>bdiFailed</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>

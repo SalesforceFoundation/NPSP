@@ -994,6 +994,7 @@
         <members>bdiErrorInvalidLastname</members>
         <members>bdiErrorInvalidOppRTName</members>
         <members>bdiErrorNonHHAccountContact</members>
+        <members>bdiErrorPaymentMultiMatch</members>
         <members>bdiFailed</members>
         <members>bdiHouseholdModelRequired</members>
         <members>bdiIgnored</members>
