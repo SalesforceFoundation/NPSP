@@ -1351,7 +1351,7 @@ ISBLANK(npe03__Recurring_Donation__c),
         <masterLabel>Email Acknowledgment</masterLabel>
         <openType>sidebar</openType>
         <protected>false</protected>
-        <url>/apex/NPSP__OPP_SendAcknowledgmentBTN?OppId={!Opportunity.Id}</url>
+        <url>/apex/%%%NAMESPACE%%%OPP_SendAcknowledgmentBTN?OppId={!Opportunity.Id}</url>
     </webLinks>
     <webLinks>
         <fullName>Email_Acknowledgments</fullName>

@@ -211,6 +211,13 @@ flows:
                 options:
                     use_saucelabs: True
 
+    ci_master:
+        tasks:
+            6:
+                task: deploy
+                options:
+                    namespace_inject: npsp
+
     dev_org:
         tasks:
             8:
