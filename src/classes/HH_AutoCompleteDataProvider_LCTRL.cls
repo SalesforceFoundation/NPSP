@@ -57,28 +57,22 @@ public with sharing class HH_AutoCompleteDataProvider_LCTRL {
             // note that our helper does FLS, so we don't have to do it here.
             String strSoql = HH_Container_LCTRL.getContactSelectQueryWithFls() + ' WHERE ';
 
+            Set<Id> contactIds = new Set<Id>();
             if (UTIL_Describe.isMiddleNameEnabled()) {
                 // When the Middlename field is enabled, there is a known issue (as of 6/15/2017) that
                 // prevents a query on the Name field from working properly if the record has a
-                // middlename or suffix value. To work-around this, we'll parse the queryValue into
-                // individual "words" and build a more generic query to find the records.
-                // Technically this will result in a larger result set than we really want
-                // however the only other solution would be to assume that three values will
-                // always match to first/middle/last. If the user enters two values, it could assume
-                // that matches to first + middle OR last. That gets more complicated and doesn't take
-                // into account compound firstnames such as "Anne Marie".
+                // middlename or suffix value. To work around this, use SOSL to search by name
+                // and then run a second query for the returned set of contacts.
                 // This should be considered a temporary work-around until such time as Salesforce
                 // fixes the known issue:
                 // https://success.salesforce.com/issues_view?id=a1p30000000eQRxAAM
-                strSoql += '(';
-                for (String p : preparedQueryValue.remove('%').split(' ')) {
-                    strSoql += ' FirstName LIKE \'%' + String.escapeSingleQuotes(p) + '%\' OR ' +
-                            ' MiddleName LIKE \'%' + String.escapeSingleQuotes(p) + '%\' OR ' +
-                            ' LastName LIKE \'%' + String.escapeSingleQuotes(p) + '%\' OR ';
+                List<List<SObject>> searchResults = [FIND :queryValue IN NAME FIELDS RETURNING Contact(Id, Name) LIMIT 100];
+                for (SObject s : searchResults[0]) {
+                    contactIds.add((Id)s.get('Id'));
                 }
-                strSoql = strSoql.removeEnd(' OR ') + ') ';
+                strSoql += ' Id in :contactIds ';
             } else {
-                strSoql += ' Name LIKE :preparedQueryValue';
+                strSoql += ' Name LIKE :preparedQueryValue ';
             }
             strSoql += ' AND Id not in :listCon LIMIT 100';
 
