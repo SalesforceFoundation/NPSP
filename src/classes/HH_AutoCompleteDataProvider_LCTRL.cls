@@ -45,8 +45,9 @@ public with sharing class HH_AutoCompleteDataProvider_LCTRL {
     @AuraEnabled
     public static List<ProviderResult> queryObjects(String queryValue, list<Contact> listCon) {
         try {
-            if (listCon == null)
+            if (listCon == null) {
                 listCon = new list<Contact>();
+            }
             
             // '%', '_', and '\' all are special characters in LIKE syntax.
             // We escape them here by prepending those characters with a backslash
