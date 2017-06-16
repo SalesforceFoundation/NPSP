@@ -160,7 +160,13 @@ public with sharing class BDI_SettingsUI_CTRL {
             diSettings.Donation_Matching_Behavior__c != BDI_DataImport_API.DoNotMatch &&
             String.isBlank(diSettings.Donation_Matching_Rule__c)) {
 
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Warning, Label.bdiDonationMatchingRuleEmpty));
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, Label.bdiDonationMatchingRuleEmpty));
+            return false;
+        }
+
+        // validate Donation Date Range
+        if (diSettings.Donation_Date_Range__c < 0) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, Label.bdiPositiveNumber));
             return false;
         }
 
@@ -176,7 +182,7 @@ public with sharing class BDI_SettingsUI_CTRL {
                 }
             }
             if (iMatchDonations == null) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Warning,
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error,
                     String.format(Label.bdiErrorInvalidIMatchDonations, new list<String>{strClass})));
                 return false;
             }
