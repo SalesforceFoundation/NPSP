@@ -5,7 +5,6 @@
       "Default": true
     }
   ],
-  "Namespace": "",
-  "SfdcLoginUrl": "https://gs0.salesforce.com",
+  "Namespace": "npsp",
   "SourceApiVersion": "37.0"
 }
