@@ -1453,9 +1453,17 @@ public with sharing class BDI_Donations_TEST {
             StageName=UTIL_unitTestData_TEST.getOpenStage(), npe01__Do_Not_Automatically_Create_Payment__c=true));
 
         // Opp 12 will have multiple Payment records, different days, same amounts.
-        listOpp.add(new Opportunity(name='Opp11', Primary_Contact__c=con.Id, Amount=48, CloseDate=System.Today(),
+        listOpp.add(new Opportunity(name='Opp12', Primary_Contact__c=con.Id, Amount=48, CloseDate=System.Today(),
             StageName=UTIL_unitTestData_TEST.getOpenStage(), npe01__Do_Not_Automatically_Create_Payment__c=true));
 
+        // Opp 13 will have a payment with no scheduled date!
+        listOpp.add(new Opportunity(name='Opp13', Primary_Contact__c=con.Id, Amount=1330, CloseDate=System.Today(),
+            StageName=UTIL_unitTestData_TEST.getOpenStage(), npe01__Do_Not_Automatically_Create_Payment__c=true));
+
+        // Opp 14 will have no Amount, nor payment!
+        listOpp.add(new Opportunity(name='Opp14', Primary_Contact__c=con.Id, Amount=null, CloseDate=System.Today(),
+            StageName=UTIL_unitTestData_TEST.getOpenStage(), npe01__Do_Not_Automatically_Create_Payment__c=true));
+        
         insert listOpp;
         
         // create Opps 8-11's Payment records
@@ -1486,6 +1494,9 @@ public with sharing class BDI_Donations_TEST {
             npe01__Scheduled_Date__c=System.Today()+2));
         listPmt.add(new npe01__OppPayment__c(npe01__Opportunity__c=listOpp[12].Id, npe01__Payment_Amount__c=12,
             npe01__Scheduled_Date__c=System.Today()+3));
+
+        listPmt.add(new npe01__OppPayment__c(npe01__Opportunity__c=listOpp[12].Id, npe01__Payment_Amount__c=12));
+
         insert listPmt;
         
         // set the specified settings
