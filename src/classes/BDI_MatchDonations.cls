@@ -215,6 +215,12 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                 
                 // also record the payment
                 npe01__OppPayment__c pmt = mapOppIdToPmt.get(opp.Id);
+
+                // if we didn't match a payment for the Opp, but it has only one payment, let's use it!
+                if (pmt == null && opp.npe01__Number_of_Payments__c == 1) {
+                    pmt = opp.npe01__OppPayment__r[0];
+                }
+
                 if (pmt != null) {
                     di.PaymentImported__c = pmt.Id;
                     di.PaymentImportStatus__c = (isMatchedByPmtId ? label.bdiMatchedId :

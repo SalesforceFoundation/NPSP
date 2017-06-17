@@ -1398,6 +1398,46 @@ public with sharing class BDI_Donations_TEST {
     }
 
     /*********************************************************************************************************
+    * @description operation:
+    *    import donations using different matching rules: Amount, Date, where Opp has a payment that has
+    *    a different date and amount
+    * verify:
+    *    no new donation created
+    *    existing opp matched, and closed
+    *    payment matched and marked paid and updated to match opp
+    **********************************************************************************************************/
+    static testMethod void donationMatchRules19() {
+        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules19') return;
+
+        insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
+            Donation_Amount__c=15,
+            Donation_Date__c=System.Today(),
+            Payment_Method__c = 'Check',
+            Donation_Donor__c='contact1');
+
+        donationMatchRules(
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
+                UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
+            15, BDI_DataImport_API.RequireBestMatch, label.bdiMatched, label.bdiMatched, false, 0);
+
+        DataImport__c di = [select Status__c, DonationImported__c, DonationImportStatus__c,
+            Donation_Possible_Matches__c, PaymentImported__c, PaymentImportStatus__c from DataImport__c];
+        system.assertEquals(label.bdiMatched, di.DonationImportStatus__c);
+        system.assertEquals(label.bdiMatched, di.PaymentImportStatus__c);
+
+        Opportunity opp = [select Id, IsWon, IsClosed, Amount, npe01__Amount_Outstanding__c from Opportunity where id = :di.DonationImported__c];
+        npe01__OppPayment__c pmt = [select Id, npe01__Payment_Amount__c, npe01__Paid__c, npe01__Scheduled_Date__c, npe01__Payment_Date__c from npe01__OppPayment__c where id = :di.PaymentImported__c];
+
+        system.assertEquals(true, opp.IsWon);
+        system.assertEquals(true, opp.IsClosed);
+        system.assertEquals(15, opp.Amount);
+        system.assertEquals(0, opp.npe01__Amount_Outstanding__c);
+        system.assertEquals(15, pmt.npe01__Payment_Amount__c);
+        system.assertEquals(true, pmt.npe01__Paid__c);
+        system.assertEquals(system.Today(), pmt.npe01__Payment_Date__c);
+    }
+
+    /*********************************************************************************************************
     * @description operation: 
     *    the shared routine to actually test the different donations different matching rules. 
     * verify: 
@@ -1463,7 +1503,11 @@ public with sharing class BDI_Donations_TEST {
         // Opp 14 will have no Amount, nor payment!
         listOpp.add(new Opportunity(name='Opp14', Primary_Contact__c=con.Id, Amount=null, CloseDate=System.Today(),
             StageName=UTIL_unitTestData_TEST.getOpenStage(), npe01__Do_Not_Automatically_Create_Payment__c=true));
-        
+
+        // Opp 15 will have a payment that doesn't agree on date
+        listOpp.add(new Opportunity(name='Opp15', Primary_Contact__c=con.Id, Amount=15, CloseDate=System.Today(),
+            StageName=UTIL_unitTestData_TEST.getOpenStage(), npe01__Do_Not_Automatically_Create_Payment__c=true));
+
         insert listOpp;
         
         // create Opps 8-11's Payment records
@@ -1495,7 +1539,10 @@ public with sharing class BDI_Donations_TEST {
         listPmt.add(new npe01__OppPayment__c(npe01__Opportunity__c=listOpp[12].Id, npe01__Payment_Amount__c=12,
             npe01__Scheduled_Date__c=System.Today()+3));
 
-        listPmt.add(new npe01__OppPayment__c(npe01__Opportunity__c=listOpp[12].Id, npe01__Payment_Amount__c=12));
+        listPmt.add(new npe01__OppPayment__c(npe01__Opportunity__c=listOpp[13].Id, npe01__Payment_Amount__c=12));
+
+        listPmt.add(new npe01__OppPayment__c(npe01__Opportunity__c=listOpp[15].Id, npe01__Payment_Amount__c=55,
+            npe01__Scheduled_Date__c=System.Today()+15));
 
         insert listPmt;
         
