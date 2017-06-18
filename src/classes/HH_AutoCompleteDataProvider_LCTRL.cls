@@ -48,7 +48,7 @@ public with sharing class HH_AutoCompleteDataProvider_LCTRL {
             if (listCon == null) {
                 listCon = new list<Contact>();
             }
-            
+
             // '%', '_', and '\' all are special characters in LIKE syntax.
             // We escape them here by prepending those characters with a backslash
             String preparedQueryValue = '%' + queryValue.replaceAll('([%_\\\\])', '\\\\$0') + '%';
@@ -58,7 +58,7 @@ public with sharing class HH_AutoCompleteDataProvider_LCTRL {
             String strSoql = HH_Container_LCTRL.getContactSelectQueryWithFls() + ' WHERE ';
 
             Set<Id> contactIds = new Set<Id>();
-            if (UTIL_Describe.isMiddleNameEnabled()) {
+            if (UTIL_Describe.isMiddleNameEnabled() && queryValue.length() > 1) {
                 // When the Middlename field is enabled, there is a known issue (as of 6/15/2017) that
                 // prevents a query on the Name field from working properly if the record has a
                 // middlename or suffix value. To work around this, use SOSL to search by name
@@ -68,7 +68,7 @@ public with sharing class HH_AutoCompleteDataProvider_LCTRL {
                 // https://success.salesforce.com/issues_view?id=a1p30000000eQRxAAM
                 List<List<SObject>> searchResults = [FIND :queryValue IN NAME FIELDS RETURNING Contact(Id, Name) LIMIT 100];
                 for (SObject s : searchResults[0]) {
-                    contactIds.add((Id)s.get('Id'));
+                    contactIds.add((Id) s.get('Id'));
                 }
                 strSoql += ' Id in :contactIds ';
             } else {
@@ -77,16 +77,16 @@ public with sharing class HH_AutoCompleteDataProvider_LCTRL {
             strSoql += ' AND Id not in :listCon LIMIT 100';
 
             List<SObject> results = Database.query(strSoql);
-    
+
             List<ProviderResult> providerResults = new List<ProviderResult>();
-    
+
             for (SObject so : results) {
                 ProviderResult result = new ProviderResult();
                 result.value = so;
                 result.displayValue = (String) so.get('Name');
                 providerResults.add(result);
             }
-    
+
             return providerResults;
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
