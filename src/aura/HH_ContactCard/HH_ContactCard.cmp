@@ -17,7 +17,7 @@
                             <lightning:icon iconName="standard:contact" class="slds-icon--small" size="small"/>
                         </div>
                         <div class="slds-media__body">
-                            <a href="{! '/' + v.contact.Id}" target="_blank">{!v.contact.FirstName}&nbsp;{!v.contact.LastName}</a>
+                            <a href="{! '/' + v.contact.Id}" target="_blank">{!v.contact.Name}</a>
                         </div>
                         <div class="slds-media__figure slds-m-right--none">
                             <lightning:buttonIcon iconName="utility:close" class="removeBtn" variant="bare"
