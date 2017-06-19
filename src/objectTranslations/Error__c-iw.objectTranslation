@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <article>None</article>
+        <plural>false</plural>
+        <value><!-- Error --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>false</plural>
+        <value><!-- הError --></value>
+    </caseValues>
+    <caseValues>
+        <article>None</article>
+        <plural>true</plural>
+        <value><!-- Error --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>true</plural>
+        <value><!-- הError --></value>
+    </caseValues>
+    <fields>
+        <help>ההקשר שיצר את השגיאה, אם ידוע.</help>
+        <label>סוג הקשר</label>
+        <name>Context_Type__c</name>
+    </fields>
+    <fields>
+        <help>התאריך והשעה בהם התרחשה השגיאה</help>
+        <label><!-- Datetime --></label>
+        <name>Datetime__c</name>
+    </fields>
+    <fields>
+        <help>מציין אם נשלחה הודעת דואר אלקטרוני בנוגע לשגיאה.</help>
+        <label>דואר אלקטרוני נשלח</label>
+        <name>Email_Sent__c</name>
+    </fields>
+    <fields>
+        <help>סוג השגיאה שהתרחשה</help>
+        <label>סוג שגיאה</label>
+        <name>Error_Type__c</name>
+    </fields>
+    <fields>
+        <help>הטקסט המלא של הודעת השגיאה</help>
+        <label>הודעה מלאה</label>
+        <name>Full_Message__c</name>
+    </fields>
+    <fields>
+        <help>סוג האובייקט שבו התרחשה השגיאה, אם ידוע.</help>
+        <label>סוג אובייקט</label>
+        <name>Object_Type__c</name>
+    </fields>
+    <fields>
+        <help>מציין אם השגיאה פורסמה ב-Chatter.</help>
+        <label>פורסם ב-Chatter</label>
+        <name>Posted_in_Chatter__c</name>
+    </fields>
+    <fields>
+        <help>קישור אל הרשומה שבה התרחשה השגיאה, אם זמינה.</help>
+        <label>כתובת URL של רשומה</label>
+        <name>Record_URL__c</name>
+    </fields>
+    <fields>
+        <help>מעקב המחסנית של השגיאה שהתרחשה, אם זמין בזמן הריצה.</help>
+        <label>מעקב מחסנית</label>
+        <name>Stack_Trace__c</name>
+    </fields>
+    <gender><!-- Masculine --></gender>
+    <layouts>
+        <layout>Error Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Error Number --></nameFieldLabel>
+</CustomObjectTranslation>

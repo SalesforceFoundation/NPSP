@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <article>None</article>
+        <plural>false</plural>
+        <value><!-- Data Import Settings --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>false</plural>
+        <value><!-- הData Import Settings --></value>
+    </caseValues>
+    <caseValues>
+        <article>None</article>
+        <plural>true</plural>
+        <value><!-- Data Import Settings --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>true</plural>
+        <value><!-- הData Import Settings --></value>
+    </caseValues>
+    <fields>
+        <help>שדה אופציונלי של מזהה ייחודי, המשמש התאמת חשבונות</help>
+        <label>מזהה חשבון ייחודי ומותאם אישית</label>
+        <name>Account_Custom_Unique_ID__c</name>
+    </fields>
+    <fields>
+        <help>מציין איזה כלל יש ליישם בעת ניסיון להתאים חשבונות ברשומות יבוא נתונים, לחשבונות קיימים.</help>
+        <label>כלל התאמת חשבונות</label>
+        <name>Account_Matching_Rule__c</name>
+    </fields>
+    <fields>
+        <help>מספר הרשומות של יבוא נתוני NPSP שיש לעבד בכל אצווה.</help>
+        <label>גודל אצווה</label>
+        <name>Batch_Size__c</name>
+    </fields>
+    <fields>
+        <help>שדה אופציונלי של מזהה ייחודי, המשמש להתאמת אנשי קשר</help>
+        <label>מזהה איש קשר ייחודי ומותאם אישית</label>
+        <name>Contact_Custom_Unique_ID__c</name>
+    </fields>
+    <fields>
+        <help>מציין איזה כלל יש ליישם בעת ניסיון להתאים אנשי קשר ברשומות יבוא נתונים, לאנשי קשר קיימים.</help>
+        <label>כלל התאמת אנשי קשר</label>
+        <name>Contact_Matching_Rule__c</name>
+    </fields>
+    <gender><!-- Masculine --></gender>
+</CustomObjectTranslation>
