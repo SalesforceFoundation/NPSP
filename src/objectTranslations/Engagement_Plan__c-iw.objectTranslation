@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <article>None</article>
+        <plural>false</plural>
+        <value><!-- Engagement Plan --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>false</plural>
+        <value><!-- הEngagement Plan --></value>
+    </caseValues>
+    <caseValues>
+        <article>None</article>
+        <plural>true</plural>
+        <value><!-- Engagement Plan --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>true</plural>
+        <value><!-- הEngagement Plan --></value>
+    </caseValues>
+    <fields>
+        <label>חשבון</label>
+        <name>Account__c</name>
+        <relationshipLabel>תוכניות מעורבות</relationshipLabel>
+    </fields>
+    <fields>
+        <label>מבצע</label>
+        <name>Campaign__c</name>
+        <relationshipLabel>תוכניות מעורבות</relationshipLabel>
+    </fields>
+    <fields>
+        <label>מקרה</label>
+        <name>Case__c</name>
+        <relationshipLabel>תוכניות מעורבות</relationshipLabel>
+    </fields>
+    <fields>
+        <label>משימות שהושלמו</label>
+        <name>Completed_Tasks__c</name>
+    </fields>
+    <fields>
+        <label>איש קשר</label>
+        <name>Contact__c</name>
+        <relationshipLabel>תוכניות מעורבות</relationshipLabel>
+    </fields>
+    <fields>
+        <label>תבנית תוכנית מעורבות</label>
+        <name>Engagement_Plan_Template__c</name>
+        <relationshipLabel>תוכניות מעורבות</relationshipLabel>
+    </fields>
+    <fields>
+        <label>תרומה</label>
+        <name>Opportunity__c</name>
+        <relationshipLabel>תוכניות מעורבות</relationshipLabel>
+    </fields>
+    <fields>
+        <label>תרומה חוזרת</label>
+        <name>Recurring_Donation__c</name>
+        <relationshipLabel>תוכניות מעורבות</relationshipLabel>
+    </fields>
+    <fields>
+        <label>מצב</label>
+        <name>Status__c</name>
+    </fields>
+    <fields>
+        <label>סה&quot;כ משימות ת&quot;מ</label>
+        <name>Total_EP_Tasks__c</name>
+    </fields>
+    <fields>
+        <label>סה&quot;כ משימות</label>
+        <name>Total_Tasks__c</name>
+    </fields>
+    <gender><!-- Masculine --></gender>
+    <layouts>
+        <layout>Engagement Plan Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Engagement Plan Number --></nameFieldLabel>
+</CustomObjectTranslation>
