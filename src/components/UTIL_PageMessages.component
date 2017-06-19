@@ -15,7 +15,7 @@
         </style>
     </apex:outputText>
 
-    <div class="slds" id="page_messages">
+    <div class="sfdo203 slds" id="page_messages">
         <div class="{!IF(useToast, 'slds-notify-container', '')}">
             <apex:repeat value="{!pageMessages}" var="m">
                 <div role="alert" class="slds-notify slds-notify--toast slds-theme--{!m.severityTheme}">
