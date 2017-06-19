@@ -215,6 +215,12 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                 
                 // also record the payment
                 npe01__OppPayment__c pmt = mapOppIdToPmt.get(opp.Id);
+
+                // if we didn't match a payment for the Opp, but it has only one payment, let's use it!
+                if (pmt == null && opp.npe01__Number_of_Payments__c == 1) {
+                    pmt = opp.npe01__OppPayment__r[0];
+                }
+
                 if (pmt != null) {
                     di.PaymentImported__c = pmt.Id;
                     di.PaymentImportStatus__c = (isMatchedByPmtId ? label.bdiMatchedId :
@@ -284,10 +290,13 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
 
                 // special case date matching
                 if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c').toLowercase() && strOppField != null) {
-                    integer dtVarianceT = math.abs(date.valueOf(val).daysBetween(date.valueOf(opp.get(strOppField))));
-                    if (dtVarianceT <= integer.valueOf(bdi.diSettings.Donation_Date_Range__c)) {
-                        dtVariance = dtVarianceT;
-                        continue;
+                    Date dtOpp = date.valueOf(opp.get(strOppField));
+                    if (dtOpp != null) {
+                        integer dtVarianceT = math.abs(date.valueOf(val).daysBetween(dtOpp));
+                        if (dtVarianceT <= integer.valueOf(bdi.diSettings.Donation_Date_Range__c)) {
+                            dtVariance = dtVarianceT;
+                            continue;
+                        }
                     }
                 }
 
@@ -334,10 +343,13 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
 
                 // special case date matching
                 if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c').toLowercase() && strPmtField != null) {
-                    integer dtVarianceT = math.abs(date.valueOf(val).daysBetween(date.valueOf(pmt.get(strPmtField))));
-                    if (dtVarianceT <= integer.valueOf(bdi.diSettings.Donation_Date_Range__c)) {
-                        dtVariance = dtVarianceT;
-                        continue;
+                    Date dtPmt = date.valueOf(pmt.get(strPmtField));
+                    if (dtPmt != null) {
+                        integer dtVarianceT = math.abs(date.valueOf(val).daysBetween(dtPmt));
+                        if (dtVarianceT <= integer.valueOf(bdi.diSettings.Donation_Date_Range__c)) {
+                            dtVariance = dtVarianceT;
+                            continue;
+                        }
                     }
                 }
 
