@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <article>None</article>
+        <plural>false</plural>
+        <value><!-- Household --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>false</plural>
+        <value><!-- הHousehold --></value>
+    </caseValues>
+    <caseValues>
+        <article>None</article>
+        <plural>true</plural>
+        <value><!-- Household --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>true</plural>
+        <value><!-- הHousehold --></value>
+    </caseValues>
+    <fields>
+        <help>מספר אנשי הקשר במשק הבית.</help>
+        <label>מספר חברים במשק בית</label>
+        <name>Number_of_Household_Members__c</name>
+    </fields>
+    <gender><!-- Masculine --></gender>
+    <nameFieldLabel><!-- Household Name --></nameFieldLabel>
+    <quickActions>
+        <label>עדכן משק בית</label>
+        <name>Update_Household</name>
+    </quickActions>
+</CustomObjectTranslation>

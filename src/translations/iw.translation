@@ -1,0 +1,3105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Translations xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customApplications>
+        <label><!-- Nonprofit Success Pack --></label>
+        <name>Nonprofit_CRM</name>
+    </customApplications>
+    <customLabels>
+        <label>מזהה האימות לא יכול להיות ריק.</label>
+        <name>Addr_Id_Error</name>
+    </customLabels>
+    <customLabels>
+        <label>השירות שצוין אינו תומך באימות כתובות באצווה.</label>
+        <name>Addr_No_Batch</name>
+    </customLabels>
+    <customLabels>
+        <label>בהמתנה לאימות</label>
+        <name>Addr_Pending_Verification</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- DEPRECATED - Addr Settings API Title --></label>
+        <name>Addr_Settings_API_Body</name>
+    </customLabels>
+    <customLabels>
+        <label>הגדרות חשבון API לאימות</label>
+        <name>Addr_Settings_API_Title</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- DEPRECATED - Addr Settings Intro Body --></label>
+        <name>Addr_Settings_Intro_Body</name>
+    </customLabels>
+    <customLabels>
+        <label>ה-API של אימות הכתובות מאפשר לך לאמת כתובות בזמן שאתה מוסיף אותן ל-Salesforce. בנוסף, ה-API מאפשר לך ליצור מבנה אחיד של כתובות כאשר תשמור אותן (לדוגמה, הוא ממיר כל מופע של Street ל-St ברשומה הנשמרת).</label>
+        <name>Addr_Settings_Intro_Body1</name>
+    </customLabels>
+    <customLabels>
+        <label>&lt;br/&gt;כדי להתחיל:&lt;br/&gt;&lt;br/&gt;
+1. פתח חשבון בשירות חיצוני לאימות כתובות. (חלקם ניתנים בחינם למלכ&quot;רים.)&lt;br/&gt;
+2. בשירות אימות הכתובות, צור את מזהה ו/או אסימון האימות הנדרש.&lt;br/&gt;
+3. חזור לדף זה, לחץ על לחצן העריכה לעיל והדבק את המזהה ו/או האסימון בשדות המתאימים.&lt;br/&gt;
+4. מלא את יתר השדות ולחץ על &apos;שמור&apos;. טקסט העזרה של כל שדה מספק מידע נוסף. לקבלת עזרה נוספת, עיין &lt;a href=&quot;https://powerofus.force.com/NPSP_Address_Verification&quot;&gt;במסמכי התיעוד של NPSP‏&lt;/a&gt;.</label>
+        <name>Addr_Settings_Intro_Body2</name>
+    </customLabels>
+    <customLabels>
+        <label>מבוא</label>
+        <name>Addr_Settings_Intro_Title</name>
+    </customLabels>
+    <customLabels>
+        <label>אימות הכתובות יפעל רק עבור רשומות שתיצור מעתה ואילך. האימות אינו תקף לגבי פרטי התקשרות שכבר הזנת ב-Salesforce.</label>
+        <name>Addr_Settings_Notice</name>
+    </customLabels>
+    <customLabels>
+        <label>כדי לבדוק את זוג המפתחות הסודיים שלך, הזן מיקוד בארה&quot;ב:</label>
+        <name>Addr_Settings_Test_Body</name>
+    </customLabels>
+    <customLabels>
+        <label>תגובת API</label>
+        <name>Addr_Settings_Test_Response_Title</name>
+    </customLabels>
+    <customLabels>
+        <label>בדוק את ההגדרות שלי</label>
+        <name>Addr_Settings_Test_Title</name>
+    </customLabels>
+    <customLabels>
+        <label>דלג על רשומות שלא אומתו בעבר</label>
+        <name>Addr_Skip_Verified</name>
+    </customLabels>
+    <customLabels>
+        <label>אסימון האימות לא יכול להיות ריק.</label>
+        <name>Addr_Token_Error</name>
+    </customLabels>
+    <customLabels>
+        <label>נקודת קצה לא מאושרת. הזן כתובת URL של נקודת קצה לרשימת האתרים המרוחקים המאושרים שלך, תחת &apos;הגדרה &gt; אבטחה &gt; אתר מרוחק&apos;.</label>
+        <name>Addr_Unauthorized_Endpoint</name>
+    </customLabels>
+    <customLabels>
+        <label>זוג המפתחות הסודיים שלך חוקי.</label>
+        <name>Addr_Valid_Key_Pair</name>
+    </customLabels>
+    <customLabels>
+        <label>&lt;p&gt;לחץ על &apos;אימות כל הכתובות&apos; כדי לאמת ולהאחיד את כל הכתובות בארגון שלך.
+        התהליך של אימות הפריטים המרובים משתמש בהגדרות מהסעיפים לעיל.&lt;/p&gt;
+ &lt;br/&gt;</label>
+        <name>Addr_Verification_Batch_Body</name>
+    </customLabels>
+    <customLabels>
+        <label>השירות שנבחר אינו תומך באימות כתובות באצווה.</label>
+        <name>Addr_Verification_Batch_Not_Supported</name>
+    </customLabels>
+    <customLabels>
+        <label>SmartyStreets יאמת כתובות באצוות של 100.</label>
+        <name>Addr_Verification_Batch_SmartyStreets_Message</name>
+    </customLabels>
+    <customLabels>
+        <label>מצב אימות פריטים מרובים</label>
+        <name>Addr_Verification_Batch_Status</name>
+    </customLabels>
+    <customLabels>
+        <label>אימות כתובות קיימות מרובות</label>
+        <name>Addr_Verification_Batch_Title</name>
+    </customLabels>
+    <customLabels>
+        <label>אירעה שגיאה בעת טעינת מחלקת המאמת {0}</label>
+        <name>Addr_Verification_Cant_Load_Class</name>
+    </customLabels>
+    <customLabels>
+        <label>נדרש אימות</label>
+        <name>Addr_Verification_Required</name>
+    </customLabels>
+    <customLabels>
+        <label>מחלקת אימות הכתובות לא צוינה בהגדרות. לא ניתן לבצע אימות כתובות.</label>
+        <name>Addr_Verification_Undefined_Class</name>
+    </customLabels>
+    <customLabels>
+        <label>לא קיימת מחלקה עם השם שצוין. לא ניתן לבצע אימות כתובות.</label>
+        <name>Addr_Verification_Wrong_Class</name>
+    </customLabels>
+    <customLabels>
+        <label>מחלקת אימות הכתובות אינה מיישמת את הממשק הדרוש. לא ניתן לבצע אימות כתובות.</label>
+        <name>Addr_Verification_Wrong_Interface</name>
+    </customLabels>
+    <customLabels>
+        <label>מאומת</label>
+        <name>Addr_Verified</name>
+    </customLabels>
+    <customLabels>
+        <label>הזן כתובת URL של נקודת הקצה.</label>
+        <name>Addr_Verify_Endpoint</name>
+    </customLabels>
+    <customLabels>
+        <label>Google Geocoding API זקוק לערך עבור אסימון האימות בלבד.  לקבלת ערך זה, בקר במסוף ה-API בכתובת https://code.google.com/apis/console והיכנס עם חשבון Google שלך. לחץ על הקישור Services בתפריט השמאלי במסוף ה-API ולאחר מכן הפעל את שירות Geocoding API. לאחר הפעלת השירות, מפתח ה-API שלך יהיה זמין בדף API Access, במקטע Simple API Access. לקבלת מידע נוסף על השירות ואפשרויות שיעמיד לרשותך, בקר בכתובת https://developers.google.com/maps/documentation/geocoding/.</label>
+        <name>Addr_Verify_Google_Help</name>
+    </customLabels>
+    <customLabels>
+        <label>ודא שהזנת את פרטי הכניסה.</label>
+        <name>Addr_Verify_Settings</name>
+    </customLabels>
+    <customLabels>
+        <label>מאמת כתובות.</label>
+        <name>Addr_Verifying</name>
+    </customLabels>
+    <customLabels>
+        <label>הכתובת לא נמצאה.</label>
+        <name>Address_Not_Found</name>
+    </customLabels>
+    <customLabels>
+        <label>&apos;{0}&apos; אינה מוגדרת כארץ חוקית בארגון שלך.</label>
+        <name>Address_StateCountry_Invalid_Error</name>
+    </customLabels>
+    <customLabels>
+        <label>לא ניתן לאמת יותר מ-100 כתובות בו זמנית.</label>
+        <name>Address_Verification_Limit</name>
+    </customLabels>
+    <customLabels>
+        <label>אני מקבל את הסיכון הכרוך בשימוש בכלי זה, כולל אובדן נתונים ונתונים לא עקביים.</label>
+        <name>CONV_Accept_Risk</name>
+    </customLabels>
+    <customLabels>
+        <label>שדה חשבון</label>
+        <name>CONV_Account_Field</name>
+    </customLabels>
+    <customLabels>
+        <label>שדה חשבון עבור מזהה משק בית ישן</label>
+        <name>CONV_Account_Field_For_Old_HH_ID</name>
+    </customLabels>
+    <customLabels>
+        <label>פעילויות ומשימות המשויכות לחשבונות 1x1 אישיים מועברות לחשבון משק הבית החדש</label>
+        <name>CONV_Activities_Reparented</name>
+    </customLabels>
+    <customLabels>
+        <label>עקיפת כתובת מוגדרת עבור כל איש קשר שכתובתו שונה מהכתובת של משק הבית</label>
+        <name>CONV_Address_Overrides_Set</name>
+    </customLabels>
+    <customLabels>
+        <label>הכתובות ממופות ממשק בית או אנשי קשר קיימים אל אובייקטי כתובת חדשים, ולאחר מכן מצורפות לאיש הקשר וחשבון משק הבית</label>
+        <name>CONV_Addresses_Mapped</name>
+    </customLabels>
+    <customLabels>
+        <label>הנתונים שלי גובו על-ידי מעבר אל &apos;הגדרה | ניהול נתונים | יצוא נתונים&apos;</label>
+        <name>CONV_All_Backed_Up</name>
+    </customLabels>
+    <customLabels>
+        <label>כל כללי ניהול השכפול של Data.com הושבתו.</label>
+        <name>CONV_All_Dup_Rules_Disabled</name>
+    </customLabels>
+    <customLabels>
+        <label>כל משקי הבית הקיימים נבחרו, ביחד עם אנשי הקשר שלהם</label>
+        <name>CONV_All_Households_Selected</name>
+    </customLabels>
+    <customLabels>
+        <label>כל הגבלות השדה הנדרשות עבור שדות מותאמים אישית הוסרו.</label>
+        <name>CONV_All_Required_Removed</name>
+    </customLabels>
+    <customLabels>
+        <label>כל הגורמים המפעילים של NPSP מושבתים (כלי השירות אינו משבית את הגורמים המפעילים המותאמים אישית שלך. ליתר ביטחון, עליך להשבית גם אותם)</label>
+        <name>CONV_All_Triggers_Disabled</name>
+    </customLabels>
+    <customLabels>
+        <label>כל המשתמשים התנתקו ממופע Salesforce שלי.</label>
+        <name>CONV_All_Users_Logged_Out</name>
+    </customLabels>
+    <customLabels>
+        <label>כל זרימות העבודה וכל כללי האימות המותאמים אישית הושבתו.</label>
+        <name>CONV_All_WFR_Disabled</name>
+    </customLabels>
+    <customLabels>
+        <label>כלי זה יעבד את אנשי הקשר הקיימים שלך, שמשויכים למשקי בית, באצוות של 200 משקי בית בכל פעם וינסה להמיר אותם לחשבונות משק בית. כל שגיאה שתתרחש במהלך ההמרה תגרום לכשל של אצוות אנשי קשר אחת או יותר, בעוד שעיבוד יתר האצוות עשוי להתבצע בהצלחה.  כתוצאה מכך עלול להיווצר חוסר עקביות בנתונים שלך.  במקרה כזה, תצטרך לפתור את הבעיה באופן מיידי ולהפעיל מחדש את כלי ההמרות. משימת האצווה המשויכת לכלי זה מבצעת את הפעולות הבאות:</label>
+        <name>CONV_Batching_Explanation</name>
+    </customLabels>
+    <customLabels>
+        <label>התחל תהליך המרה</label>
+        <name>CONV_Begin</name>
+    </customLabels>
+    <customLabels>
+        <label>ביטול</label>
+        <name>CONV_Cancel</name>
+    </customLabels>
+    <customLabels>
+        <label>אפשרויות תצורה</label>
+        <name>CONV_Configuration_Options</name>
+    </customLabels>
+    <customLabels>
+        <label>אנשי הקשר מתנתקים מחשבון 1x1 או החשבון האישי שלהם, ומתחברים לחשבון משק הבית שנוצר זה עתה</label>
+        <name>CONV_Contacts_Attached</name>
+    </customLabels>
+    <customLabels>
+        <label>התקדמות המרת מודל חשבון</label>
+        <name>CONV_Conversion_Process</name>
+    </customLabels>
+    <customLabels>
+        <label>אתה עומד לבצע שינויים מהותיים בנתוני Salesforce ובמודל הנתונים שלך. לשם כך, ייתכן שיהיה צורך לערוך שינויים בדוחות, לוחות מחוונים ופריטים נוספים. Salesforce.com ו-Salesforce.org אינם אחראים לאובדן של נתונים או שלמות נתונים.  האם להמשיך בכל זאת?</label>
+        <name>CONV_Fundamental_Changes</name>
+    </customLabels>
+    <customLabels>
+        <label>מידע חשוב</label>
+        <name>CONV_Important_Info_Header</name>
+    </customLabels>
+    <customLabels>
+        <label>התייעצתי במומחה Salesforce באזור שלי.</label>
+        <name>CONV_Local_Expert</name>
+    </customLabels>
+    <customLabels>
+        <label>אם לא קיימת כתובת, הכתובת הראשית של משק הבית נקבעת או מוגדרת לפי תדירות השימוש בכתובות והנתינה של איש הקשר</label>
+        <name>CONV_Master_Address_Set</name>
+    </customLabels>
+    <customLabels>
+        <label>התהליך מסיר כל שיוך של חשבון שאינו 1x1 לאנשי קשר, יוצר השתייכויות חדשות ומגדיר את שדה ההשתייכות הראשית של איש הקשר</label>
+        <name>CONV_New_Affiliations</name>
+    </customLabels>
+    <customLabels>
+        <label>חשבונות משק בית חדשים נוצרים עבור כל משק בית קיים</label>
+        <name>CONV_New_Households_Created</name>
+    </customLabels>
+    <customLabels>
+        <label>כל היישומים שאינם של NPSP הוסרו או הושבתו באופן זמני.</label>
+        <name>CONV_Non_NPSP_Apps</name>
+    </customLabels>
+    <customLabels>
+        <label>אובייקטים קודמים של משקי בית נשארו במקומם, ויש למחוק אותם באופן ידני לאחר בדיקת התוצאות של תהליך ההמרה.</label>
+        <name>CONV_Old_Household_Objects</name>
+    </customLabels>
+    <customLabels>
+        <label>אני מודע לכך שהכלי יפעל רק עבור אנשי קשר שמשק בית משויך אליהם כעת.</label>
+        <name>CONV_Only_Household_Contacts</name>
+    </customLabels>
+    <customLabels>
+        <label>התהליך מסיר הזדמנויות מחשבון 1x1 או החשבון האישי, ומצורף לחשבונות משק הבית ולאנשי הקשר החדשים</label>
+        <name>CONV_Opportunities_Reparented</name>
+    </customLabels>
+    <customLabels>
+        <label>באופן אופציונלי, ניתן לבחור שדה מותאם אישית בחשבון משק הבית החדש כדי לאחסן בו את מזהה אובייקט משק הבית המקורי.  זו אפשרות שימושית כדי להגדיר בשלב מאוחר יותר הורה עבור כל חיפוש או אובייקט צאצא שנמצא קודם לכן במשק הבית, אל חשבון משק הבית החדש.  ניתן לבחור רק בשדות מותאמים אישית שאינם בשימוש ושמכילים טקסט.</label>
+        <name>CONV_Original_HH_Id</name>
+    </customLabels>
+    <customLabels>
+        <label>דף זה מיועד לסייע לך להמיר את הארגון שלך ממודל קיים של חשבון 1x1 או חשבון אישי, למודל החדש של חשבון משק בית.</label>
+        <name>CONV_Page_Description</name>
+    </customLabels>
+    <customLabels>
+        <label>כלי שירות להמרת מודל חשבון</label>
+        <name>CONV_Page_Title</name>
+    </customLabels>
+    <customLabels>
+        <label>זהו שינוי לצמיתות.  הקפד להתייעץ עם מומחה באזורך לפני שתמשיך.  במהלך ההמרה, מסד הנתונים שלך יושבת באופן זמני כדי למנוע שינויים לא מכוונים בנתונים הקיימים.  Salesforce.com ו-Salesforce.org אינם אחראים לאובדן, שינויים או נזק לנתונים, שעלולים להיגרם כתוצאה מפעולה זו. אם תמשיך, אתה נושא באחריות בלעדית. לפני שתתחיל בתהליך זה, עליך לוודא שהפעולות הבאות בוצעו:</label>
+        <name>CONV_Permanent_Change</name>
+    </customLabels>
+    <customLabels>
+        <label>עבור כל משקי הבית הוגדרו ערכי איש קשר ראשי</label>
+        <name>CONV_Primary_Contacts_Set</name>
+    </customLabels>
+    <customLabels>
+        <label>המשך בהמרה</label>
+        <name>CONV_Proceed</name>
+    </customLabels>
+    <customLabels>
+        <label>כל הבעלויות על רשומות הועברו ממשתמשים לא פעילים.</label>
+        <name>CONV_Record_Ownership_Transferred</name>
+    </customLabels>
+    <customLabels>
+        <label>טען מחדש את כלי ההמרות</label>
+        <name>CONV_Reload</name>
+    </customLabels>
+    <customLabels>
+        <label>לשדה שנבחר אין אפשרות להכיל את פרטי מזהה משק הבית באופן הנדרש.  בחר שדה חשבון אחר.</label>
+        <name>CONV_Selected_Field_Bad</name>
+    </customLabels>
+    <customLabels>
+        <label>אירעה שגיאה בעת ניסיון לאמת את החוקיות של שדה החשבון שנבחר.  לא ניתן לאמת את השדה שנבחר בצורה מדויקת.  ללא אימות זה, לא ניתן לקבוע אם ניתן לבצע בהצלחה את מיפוי השדה, ולכן גם את ההמרה שלך.  תוכל להמשיך על אחריותך, או לבחור שדה אחר לאחסון מזהה משק הבית.</label>
+        <name>CONV_Selected_Field_Verification_Failure</name>
+    </customLabels>
+    <customLabels>
+        <label>תהליך ההמרה נבדק בסביבת Sandbox.</label>
+        <name>CONV_Tested_in_Sandbox</name>
+    </customLabels>
+    <customLabels>
+        <label>כל הגורמים המפעילים של NPSP מופעלים מחדש (תצטרך להפעיל מחדש באופן ידני כל גורם מפעיל מותאם אישית שהשבתת לצורך ההמרה. בנוסף, כלי השירות מפעיל מחדש את &lt;b&gt;כל&lt;/b&gt; הגורמים המפעילים של NPSP, כך שאם השבתת חלק מהם באופן סלקטיבי לפני כן, תצטרך גם להשבית אותם באופן ידני שוב)</label>
+        <name>CONV_Triggers_Reenabled</name>
+    </customLabels>
+    <customLabels>
+        <label>אזהרה!</label>
+        <name>CONV_Warning</name>
+    </customLabels>
+    <customLabels>
+        <label>מה כלי זה עושה</label>
+        <name>CONV_What_This_Tool_Does</name>
+    </customLabels>
+    <customLabels>
+        <label>השמט</label>
+        <name>CampaignMemberStatusOmit</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- CascadeDeletionError --></label>
+        <name>CascadeDeletionError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- ClosedWonOpportunities --></label>
+        <name>ClosedWonOpportunities</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- ConfirmDeleteAccount --></label>
+        <name>ConfirmDeleteAccount</name>
+    </customLabels>
+    <customLabels>
+        <label>הוסף משימה תלויה</label>
+        <name>EPAddDependentTask</name>
+    </customLabels>
+    <customLabels>
+        <label>הוסף משימה</label>
+        <name>EPAddTask</name>
+    </customLabels>
+    <customLabels>
+        <label>מחק משימה</label>
+        <name>EPDeleteTask</name>
+    </customLabels>
+    <customLabels>
+        <label>נהל משימות תוכנית מעורבות</label>
+        <name>EPManageTasks</name>
+    </customLabels>
+    <customLabels>
+        <label>נהל תבנית תוכנית מעורבות</label>
+        <name>EPManageTemplate</name>
+    </customLabels>
+    <customLabels>
+        <label>יחסי תלות של משימת תוכנית מעורבות לא יכולים ליצור לולאות תלות רקורסיביות.</label>
+        <name>EPTaskDependency</name>
+    </customLabels>
+    <customLabels>
+        <label>משימות תוכנית מעורבות יכולות להיות תלויות במשימות תוכנית מעורבות אחרות השייכות לאותה תבנית של תוכנית מעורבות.</label>
+        <name>EPTaskTemplate</name>
+    </customLabels>
+    <customLabels>
+        <label>אל</label>
+        <name>EPTo</name>
+    </customLabels>
+    <customLabels>
+        <label>מערכת Salesforce דיווחה על השגיאות הבאות בזמן ש-NPSP ניסתה לבצע את משימות האצווה שלה, או כאשר לא הייתה לה אפשרות להציג הודעות שגיאה למשתמש באופן ישיר. סביר להניח ש-NPSP ניסתה לעדכן שדות סיכום בחשבונות ואנשי קשר, אך לא הייתה לה אפשרות לשמור רשומות מסוימות. כשל זה עשוי להיגרם עקב גורמים שונים שאינם קשורים ל-NPSP, כגון קוד או כללי התאמה מותאמים אישית.
+
+קרא מאמר זה ב-Power of Us Hub כדי ללמוד כיצד פועלות משימות מתוזמנות אלה: https://powerofus.force.com/NPSP_Scheduled_Jobs
+
+אם אינך בטוח כיצד לפתור שגיאות אלה, פרסם הודעה בקבוצה של &apos;ערכת ההצלחה למלכ&quot;רים&apos; (NPSP) ב-Power of Us Hub‏: https://powerofus.force.com/HUB_NPSP_Group</label>
+        <name>ErrorEmailMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>מוסתר משיקולי אבטחה</label>
+        <name>HiddenForSecurity</name>
+    </customLabels>
+    <customLabels>
+        <label>הנושא הוא שדה חובה.</label>
+        <name>NameRequired</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- OrganizationalOpportunities --></label>
+        <name>OrganizationalOpportunities</name>
+    </customLabels>
+    <customLabels>
+        <label>הצלחה</label>
+        <name>PageMessagesConfirm</name>
+    </customLabels>
+    <customLabels>
+        <label>שגיאה</label>
+        <name>PageMessagesError</name>
+    </customLabels>
+    <customLabels>
+        <label>שגיאה</label>
+        <name>PageMessagesFatal</name>
+    </customLabels>
+    <customLabels>
+        <label>אזהרה</label>
+        <name>PageMessagesWarning</name>
+    </customLabels>
+    <customLabels>
+        <label>צור קשר חדש</label>
+        <name>REL_Create_New_Relationship</name>
+    </customLabels>
+    <customLabels>
+        <label>קודם</label>
+        <name>REL_Former</name>
+    </customLabels>
+    <customLabels>
+        <label>אין קשרים עבור איש קשר זה.</label>
+        <name>REL_No_Relationships</name>
+    </customLabels>
+    <customLabels>
+        <label>התמקד מחדש באיש קשר זה</label>
+        <name>REL_RECenter</name>
+    </customLabels>
+    <customLabels>
+        <label>חזור אל איש הקשר</label>
+        <name>REL_Return_to_Contact</name>
+    </customLabels>
+    <customLabels>
+        <label>הצג רשומת איש קשר</label>
+        <name>REL_View_Contact_Record</name>
+    </customLabels>
+    <customLabels>
+        <label>עבור תרומות חוזרות, ניתן לציין רק ארגון או איש קשר, לא שניהם.</label>
+        <name>RecurringDonationAccountAndContactError</name>
+    </customLabels>
+    <customLabels>
+        <label>נשמר.</label>
+        <name>Saved</name>
+    </customLabels>
+    <customLabels>
+        <label>ההגדרות לא נשמרו</label>
+        <name>Settings_not_Saved</name>
+    </customLabels>
+    <customLabels>
+        <label>הקפד להזין את מזהה האימות ואסימון האימות שסיפקת ל-SmartyStreets. תמצא אותם בדף המפתחות של SmartyStreets API.</label>
+        <name>SmartyStreets_Help_Text</name>
+    </customLabels>
+    <customLabels>
+        <label>המיקוד לא נמצא.</label>
+        <name>Zip_Not_Found</name>
+    </customLabels>
+    <customLabels>
+        <label>לא ניתן לאמת יותר מ-100 מיקודים בו זמנית.</label>
+        <name>Zipcode_Verification_Limit</name>
+    </customLabels>
+    <customLabels>
+        <label>יש לציין את המפתח של Cicero API בהגדרה של אסימון האימות בהגדרות אימות הכתובת.</label>
+        <name>addrCiceroMissingAPIKey</name>
+    </customLabels>
+    <customLabels>
+        <label>לחצן זה תומך באנשי קשר עם אובייקטי משק בית בלבד, לא בחשבונות משק בית.</label>
+        <name>addrCopyConAddBtnHHObjOnly</name>
+    </customLabels>
+    <customLabels>
+        <label>הגדרות כתובת כלליות</label>
+        <name>addrGeneralSettings</name>
+    </customLabels>
+    <customLabels>
+        <label>אובייקטים של כתובת נתמכים רק בחשבונות משק בית ובחשבונות ארגוניים (אם הופעלו).</label>
+        <name>addrHHAccountOnly</name>
+    </customLabels>
+    <customLabels>
+        <label>כתובת משק הבית תועתק לכל אנשי הקשר שלא הוגדרה עבורם עקיפת כתובת.</label>
+        <name>addrHHAddressAlwaysDefault</name>
+    </customLabels>
+    <customLabels>
+        <label>כתובות עונתיות לא יכולות לחפוף לכל כתובת עונתית אחרת במשק הבית.</label>
+        <name>addrSeasonalOverlap</name>
+    </customLabels>
+    <customLabels>
+        <label>בכתובת יש להגדיר את כל השדות העונתיים, או אף אחד מהם.</label>
+        <name>addrSeasonalPartial</name>
+    </customLabels>
+    <customLabels>
+        <label>הוסף שורה</label>
+        <name>alloAddRow</name>
+    </customLabels>
+    <customLabels>
+        <label>הוסף שורה במיקום</label>
+        <name>alloAddRowAtPosition</name>
+    </customLabels>
+    <customLabels>
+        <label>לכל הקצאה יש להקצות סכום או אחוז.</label>
+        <name>alloAmountOrPercent</name>
+    </customLabels>
+    <customLabels>
+        <label>צור הקצאות ברירת מחדל באצווה</label>
+        <name>alloBatchCreateDefault</name>
+    </customLabels>
+    <customLabels>
+        <label>כלי שירות זה מפעיל תהליך אצווה היוצר הקצאות ברירת מחדל עבור כל ההזדמנויות הקיימות, מלבד הזדמנויות שאינן נכללות בהגדרות הסיכום של הקצאות GAU.‏
+&lt;br/&gt;
+&lt;br/&gt;
+כדי להפעיל כלי זה, יש לאפשר הקצאות ברירת מחדל ולבחור יחידה חשבונאית כללית המהווה ברירת מחדל. לאחר שתאפשר הקצאות ברירת המחדל לזמינות, תצטרך להפעיל כלי זה פעם אחת בלבד, משום שכל ההזדמנויות החדשות יקבלו הקצאת ברירת מחדל לאחר אפשור ההקצאות.
+&lt;br/&gt;
+&lt;br/&gt;
+לבדיקת הגדרות ההקצאה של GAU, עבור אל &apos;תרומות | הקצאות GAU&apos;.</label>
+        <name>alloBatchDefaultInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>ביטול</label>
+        <name>alloBtnCancel</name>
+    </customLabels>
+    <customLabels>
+        <label>שמור</label>
+        <name>alloBtnSaveAndClose</name>
+    </customLabels>
+    <customLabels>
+        <label>הקצאות המבצע שלך לא נוצרו. הקצאות המבצע עבור ההזדמנות חרגו ממספר ההזדמנויות.</label>
+        <name>alloCampaignExceedsOppAmount</name>
+    </customLabels>
+    <customLabels>
+        <label>ניתן ליצור הקצאות עבור הזדמנויות עם סכום חיובי בלבד.</label>
+        <name>alloCantAllocateNothing</name>
+    </customLabels>
+    <customLabels>
+        <label>אפשרת הקצאות ברירת מחדל. עליך גם לבחור יחידה חשבונאית כללית.</label>
+        <name>alloDefaultGAUMissing</name>
+    </customLabels>
+    <customLabels>
+        <label>הקצאת ברירת המחדל לא יכולה להתבסס על אחוזים.</label>
+        <name>alloDefaultNotPercent</name>
+    </customLabels>
+    <customLabels>
+        <label>מחיקה</label>
+        <name>alloDeleteRow</name>
+    </customLabels>
+    <customLabels>
+        <label>עליך לעדכן את ההקצאות שלך לפני שתוכל להקטין את הסכום של הזדמנות. ההקצאות עבור הזדמנות זו גדולות כעת מסכום ההזדמנות.</label>
+        <name>alloExceedsOppAmount</name>
+    </customLabels>
+    <customLabels>
+        <label>נהל הקצאות מבצע</label>
+        <name>alloManageCampaignAllocations</name>
+    </customLabels>
+    <customLabels>
+        <label>נהל הקצאות הזדמנות</label>
+        <name>alloManageOppAllocations</name>
+    </customLabels>
+    <customLabels>
+        <label>נהל הקצאות תרומה חוזרת</label>
+        <name>alloManageRecurringDonationAllocations</name>
+    </customLabels>
+    <customLabels>
+        <label>לא ניתן לשנות מטבעות הקצאה באופן ישיר. מטבע של הקצאה מעודכן כאשר מתבצע שינוי במטבע של ההזדמנות, המבצע או התרומה החוזרת המהווה הורה.</label>
+        <name>alloModifyCurrency</name>
+    </customLabels>
+    <customLabels>
+        <label>הסכום של הקצאה לא יכול להיות שלילי.</label>
+        <name>alloNegativeAmount</name>
+    </customLabels>
+    <customLabels>
+        <label>האחוז של הקצאה לא יכול להיות שלילי.</label>
+        <name>alloNegativePercent</name>
+    </customLabels>
+    <customLabels>
+        <label>הקצאות המבוססות על אחוזים לא יכולות לחרוג מ-100%.</label>
+        <name>alloPercentExceed100</name>
+    </customLabels>
+    <customLabels>
+        <label>תזכורת:</label>
+        <name>alloRemainder</name>
+    </customLabels>
+    <customLabels>
+        <label>לכל הקצאה חייב להיות אובייקט הורה אחד: הזדמנות, תרומה חוזרת או מבצע.</label>
+        <name>alloSingleParent</name>
+    </customLabels>
+    <customLabels>
+        <label>סכומים כוללים של הקצאות הזדמנות לא יכולים לחרוג מסכום ההזדמנות.</label>
+        <name>alloTotalExceedsOppAmt</name>
+    </customLabels>
+    <customLabels>
+        <label>סך הכול:</label>
+        <name>alloTotals</name>
+    </customLabels>
+    <customLabels>
+        <label>לא הוקצה</label>
+        <name>alloUnallocated</name>
+    </customLabels>
+    <customLabels>
+        <label>לשדה ההגדרה {0} של המזהה הייחודי והמותאם אישית של החשבון חייבים להיות שדות תואמים באובייקט של ייבוא נתוני NPSP ששמות ה-API שלו הם {1} ו-{2}.</label>
+        <name>bdiAccountCustomIdError</name>
+    </customLabels>
+    <customLabels>
+        <label>אירעה שגיאה במהלך ביצוע התהליך.  המצב הבא היה השגיאה הראשונה שדווחה:</label>
+        <name>bdiBatchException</name>
+    </customLabels>
+    <customLabels>
+        <label>סגור</label>
+        <name>bdiBtnClose</name>
+    </customLabels>
+    <customLabels>
+        <label>הושלם</label>
+        <name>bdiComplete</name>
+    </customLabels>
+    <customLabels>
+        <label>שגיאות</label>
+        <name>bdiCompleteWithErrors</name>
+    </customLabels>
+    <customLabels>
+        <label>לשדה ההגדרה {0} של המזהה הייחודי והמותאם אישית של איש הקשר חייבים להיות שדות תואמים באובייקט של ייבוא נתוני NPSP ששמות ה-API שלו הם {1} ו-{2}.</label>
+        <name>bdiContactCustomIdError</name>
+    </customLabels>
+    <customLabels>
+        <label>דואר אלקטרוני בלבד</label>
+        <name>bdiContactMatchEmail</name>
+    </customLabels>
+    <customLabels>
+        <label>שם פרטי ודואר אלקטרוני</label>
+        <name>bdiContactMatchFnameEmail</name>
+    </customLabels>
+    <customLabels>
+        <label>שם פרטי ושם משפחה</label>
+        <name>bdiContactMatchFnameLname</name>
+    </customLabels>
+    <customLabels>
+        <label>שם פרטי,שם משפחה ודואר אלקטרוני</label>
+        <name>bdiContactMatchFnameLnameEmail</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Data Importer Contact matching option for Fname, Lname, Phone --></label>
+        <name>bdiContactMatchFnameLnamePhone</name>
+    </customLabels>
+    <customLabels>
+        <label>שם משפחה ודואר אלקטרוני</label>
+        <name>bdiContactMatchLnameEmail</name>
+    </customLabels>
+    <customLabels>
+        <label>נוצר</label>
+        <name>bdiCreated</name>
+    </customLabels>
+    <customLabels>
+        <label>אפשרויות תצורה</label>
+        <name>bdiDataImporterConfigTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>כלי יבוא הנתונים של &apos;ערכת ההצלחה למלכ&quot;רים&apos; (NPSP) מסייע לך לייבא את נתוניך בקלות אל NPSP</label>
+        <name>bdiDataImporterDescription</name>
+    </customLabels>
+    <customLabels>
+        <label>כל רשומת ייבוא יכולה להכיל עד שני אנשי קשר, שני ארגונים, כתובת אופציונלית בבית ותרומה אופציונלית.</label>
+        <name>bdiDataImporterInfoLine1</name>
+    </customLabels>
+    <customLabels>
+        <label>מערכת Salesforce תנסה להתאים אנשי קשר וארגונים קיימים ולעדכן את המידע שלהם, במקום ליצור רשומות כפולות.</label>
+        <name>bdiDataImporterInfoLine2</name>
+    </customLabels>
+    <customLabels>
+        <label>כדי להימנע מחריגה ממגבלות השירות, כלי יבוא הנתונים של NPSP אינו מאמת כתובות באמצעות שירות האימות שייתכן שציינת בהגדרות NPSP.</label>
+        <name>bdiDataImporterInfoLine2b</name>
+    </customLabels>
+    <customLabels>
+        <label>Salesforce תעקוב אחר כל בעיה בייבוא הנתונים שתתרחש ברשומות יבוא נפרדות. לאחר פתרון הבעיות, תוכל לייבא שוב את הרשומות שנכשלו, מבלי לחשוש שתיצור רשומות כפולות.</label>
+        <name>bdiDataImporterInfoLine3</name>
+    </customLabels>
+    <customLabels>
+        <label>ייתכן שייבוא הנתונים לא יתחיל באופן מיידי. העיבוד תלוי בפעילות הנוכחית של Salesforce.</label>
+        <name>bdiDataImporterInfoLine4</name>
+    </customLabels>
+    <customLabels>
+        <label>מידע חשוב</label>
+        <name>bdiDataImporterInfoTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>מספר רשומות יבוא נתונים לעיבוד:</label>
+        <name>bdiDataImporterNumToProcess</name>
+    </customLabels>
+    <customLabels>
+        <label>יבוא נתוני NPSP</label>
+        <name>bdiDataImporterTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>תרומה</label>
+        <name>bdiDonation</name>
+    </customLabels>
+    <customLabels>
+        <label>שם לא חוקי של מבצע לגיוס תרומות</label>
+        <name>bdiErrorInvalidCampaignName</name>
+    </customLabels>
+    <customLabels>
+        <label>שם לא חוקי של תורם תרומה</label>
+        <name>bdiErrorInvalidDonor</name>
+    </customLabels>
+    <customLabels>
+        <label>יש לציין שם משפחה.</label>
+        <name>bdiErrorInvalidLastname</name>
+    </customLabels>
+    <customLabels>
+        <label>שם לא חוקי של סוג רשומת תרומה</label>
+        <name>bdiErrorInvalidOppRTName</name>
+    </customLabels>
+    <customLabels>
+        <label>בוצעה התאמה של איש קשר קיים מחשבון שאינו של משק בית, אשר אינו נתמך.</label>
+        <name>bdiErrorNonHHAccountContact</name>
+    </customLabels>
+    <customLabels>
+        <label>נכשל</label>
+        <name>bdiFailed</name>
+    </customLabels>
+    <customLabels>
+        <label>כלי יבוא נתוני NPSP פועל רק עם מודל חשבון משק הבית.</label>
+        <name>bdiHouseholdModelRequired</name>
+    </customLabels>
+    <customLabels>
+        <label>התעלמות</label>
+        <name>bdiIgnored</name>
+    </customLabels>
+    <customLabels>
+        <label>מיובא</label>
+        <name>bdiImported</name>
+    </customLabels>
+    <customLabels>
+        <label>הותאמו</label>
+        <name>bdiMatched</name>
+    </customLabels>
+    <customLabels>
+        <label>רשומות שנכשלו:</label>
+        <name>bdiRecordsFailed</name>
+    </customLabels>
+    <customLabels>
+        <label>רשומות שיובאו:</label>
+        <name>bdiRecordsImported</name>
+    </customLabels>
+    <customLabels>
+        <label>רשומות שעובדו:</label>
+        <name>bdiRecordsProcessed</name>
+    </customLabels>
+    <customLabels>
+        <label>הפעל תהליך יבוא נתונים</label>
+        <name>bdiRunBtn</name>
+    </customLabels>
+    <customLabels>
+        <label>מצב נוכחי:</label>
+        <name>bdiStatus</name>
+    </customLabels>
+    <customLabels>
+        <label>עובדו {0} אצוות מתוך {1}.</label>
+        <name>bdiStatusProcessed</name>
+    </customLabels>
+    <customLabels>
+        <label>מעבד כרגע את אצווה {0} מתוך {1}.</label>
+        <name>bdiStatusProcessing</name>
+    </customLabels>
+    <customLabels>
+        <label>זמן:</label>
+        <name>bdiTime</name>
+    </customLabels>
+    <customLabels>
+        <label>הסר</label>
+        <name>btnRemove</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- campaignMemberStatusDefault --></label>
+        <name>campaignMemberStatusDefault</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- campaignMemberStatusNonResponded --></label>
+        <name>campaignMemberStatusNonResponded</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- campaignMemberStatusResponded --></label>
+        <name>campaignMemberStatusResponded</name>
+    </customLabels>
+    <customLabels>
+        <label>נכשלה יצירת חשבון עבור איש הקשר {0} {1}. {2}</label>
+        <name>conFailedAccountCreate</name>
+    </customLabels>
+    <customLabels>
+        <label>חשבונות אישיים אינם נתמכים.</label>
+        <name>conMergeErrNoPersonAccounts</name>
+    </customLabels>
+    <customLabels>
+        <label>לא ניתן להקצות תוכנית מעורבות זו לאובייקט חדש. צור תוכנית מעורבות חדשה.</label>
+        <name>engagementPlanCantEdit</name>
+    </customLabels>
+    <customLabels>
+        <label>יש למלא חיפוש אובייקט אחד עבור כל תוכנית מעורבות.</label>
+        <name>engagementPlanNoLookups</name>
+    </customLabels>
+    <customLabels>
+        <label>ניתן למלא חיפוש אובייקט אחד בלבד לכל תוכנית מעורבות.</label>
+        <name>engagementPlanTwoLookups</name>
+    </customLabels>
+    <customLabels>
+        <label>חסרים שדות נדרשים:</label>
+        <name>exceptionRequiredField</name>
+    </customLabels>
+    <customLabels>
+        <label>כלל אימות מונע את שמירת הרשומה:</label>
+        <name>exceptionValidationRule</name>
+    </customLabels>
+    <customLabels>
+        <label>אין לך הרשאות לשנות את {0}.</label>
+        <name>flsError</name>
+    </customLabels>
+    <customLabels>
+        <label>הפעל בדיקת תקינות</label>
+        <name>healthButtonRun</name>
+    </customLabels>
+    <customLabels>
+        <label>קיימים {0} חשבונות &apos;אחד לאחד&apos; ללא אנשי קשר.</label>
+        <name>healthDetailsAccOne2OneNoContacts</name>
+    </customLabels>
+    <customLabels>
+        <label>לא צוין מודל חשבון חוקי.</label>
+        <name>healthDetailsAccountModel</name>
+    </customLabels>
+    <customLabels>
+        <label>מודל החשבון מוגדר כ&apos;{0}&apos;, אך בדיקת התקינות העלתה שאתה משתמש בשילוב של חשבונות מסוגים שונים.</label>
+        <name>healthDetailsAccountProcessor</name>
+    </customLabels>
+    <customLabels>
+        <label>שדות המערכת הוגדרו באופן שגוי ב-{0} רשומות חשבון העושות שימוש בסוג הרשומה {1}.</label>
+        <name>healthDetailsAccountRTIssue</name>
+    </customLabels>
+    <customLabels>
+        <label>יש לציין סוג מבצע עבור יצירה אוטומטית של קשר מ-CampaignMembers.</label>
+        <name>healthDetailsAutoRelCampaignTypeMissing</name>
+    </customLabels>
+    <customLabels>
+        <label>ליצירה אוטומטית של קשר, יש לציין אובייקט, שדה וסוג קשר חוקיים.</label>
+        <name>healthDetailsAutoRelFieldsMissing</name>
+    </customLabels>
+    <customLabels>
+        <label>השדה {0} אינו שדה חיפוש.</label>
+        <name>healthDetailsAutoRelInvalidLookupField</name>
+    </customLabels>
+    <customLabels>
+        <label>שדה התרומה החוזרת {0} לא קיים.</label>
+        <name>healthDetailsBadRDField</name>
+    </customLabels>
+    <customLabels>
+        <label>צוין {0} דוח לא חוקי.</label>
+        <name>healthDetailsBadReportId</name>
+    </customLabels>
+    <customLabels>
+        <label>קיימים {0} אנשי קשר ללא חשבון.  אנשי קשר אלה יהיו פרטיים למשתמש שיצר אותם.</label>
+        <name>healthDetailsContactData</name>
+    </customLabels>
+    <customLabels>
+        <label>לא ניתן לציין אותו סוג רשומת חשבון עבור סוג רשומת חשבון משק הבית וסוג הרשומה &apos;אחד לאחד&apos;.</label>
+        <name>healthDetailsDuplicateAcctRT</name>
+    </customLabels>
+    <customLabels>
+        <label>בדיקת התקינות העלתה הזדמנויות עם אנשי קשר וערכי סיכום כפולים.</label>
+        <name>healthDetailsDuplicateContactRoles</name>
+    </customLabels>
+    <customLabels>
+        <label>שדה המגדר {0} לא קיים באיש הקשר.</label>
+        <name>healthDetailsGenderField</name>
+    </customLabels>
+    <customLabels>
+        <label>בעת שימוש במודל חשבון משק הבית, יש להגדיר את כללי משק הבית כ&apos;ללא אנשי קשר&apos;.</label>
+        <name>healthDetailsHHAccountModel</name>
+    </customLabels>
+    <customLabels>
+        <label>קיימים {0} חשבונות משק בית ללא אנשי קשר.</label>
+        <name>healthDetailsHHActNoContacts</name>
+    </customLabels>
+    <customLabels>
+        <label>קיימים {0} אובייקטים של משק בית ללא אנשי קשר.</label>
+        <name>healthDetailsHHObNoContacts</name>
+    </customLabels>
+    <customLabels>
+        <label>שדה ה-CampaignMember {0} לא קיים.</label>
+        <name>healthDetailsInvalidCMField</name>
+    </customLabels>
+    <customLabels>
+        <label>שדה איש הקשר {0} לא קיים.</label>
+        <name>healthDetailsInvalidContactField</name>
+    </customLabels>
+    <customLabels>
+        <label>קבוצת Chatter לא חוקית {0}.</label>
+        <name>healthDetailsInvalidErrorChatterGroup</name>
+    </customLabels>
+    <customLabels>
+        <label>נמען לא חוקי של הודעות שגיאה.</label>
+        <name>healthDetailsInvalidErrorRecipient</name>
+    </customLabels>
+    <customLabels>
+        <label>משתמש לא חוקי {0}.</label>
+        <name>healthDetailsInvalidErrorUser</name>
+    </customLabels>
+    <customLabels>
+        <label>רמה {0} מפנה אל שדה מספרי לא חוקי {1} ב-{2}.</label>
+        <name>healthDetailsInvalidFieldNumeric</name>
+    </customLabels>
+    <customLabels>
+        <label>סיכומי שנת כספים אינם נתמכים כאשר הארגון משתמש בשנות כספים מותאמות אישית.</label>
+        <name>healthDetailsInvalidFiscalYears</name>
+    </customLabels>
+    <customLabels>
+        <label>רמה {0} מפנה אל שדה לא חוקי {1} ב-{2}.</label>
+        <name>healthDetailsInvalidLevelField</name>
+    </customLabels>
+    <customLabels>
+        <label>רמה {0} מפנה אל שדה חיפוש רמה לא חוקי {1} ב-{2}.</label>
+        <name>healthDetailsInvalidLevelFieldReference</name>
+    </customLabels>
+    <customLabels>
+        <label>שדה {1} של {0} לא קיים.</label>
+        <name>healthDetailsInvalidObjectField</name>
+    </customLabels>
+    <customLabels>
+        <label>שדה ההזדמנות {0} לא קיים.</label>
+        <name>healthDetailsInvalidOppField</name>
+    </customLabels>
+    <customLabels>
+        <label>שלב ההזדמנות {0} לא קיים או אינו פעיל.</label>
+        <name>healthDetailsInvalidOppStage</name>
+    </customLabels>
+    <customLabels>
+        <label>שדה התשלום {0} לא קיים.</label>
+        <name>healthDetailsInvalidPaymentField</name>
+    </customLabels>
+    <customLabels>
+        <label>תקופת התשלומים המותאמת אישית {0} אינה נכללת בערכי רשימת הבחירה עבור שדה תקופת התשלומים של התרומה החוזרת.</label>
+        <name>healthDetailsInvalidRDCustomPeriod</name>
+    </customLabels>
+    <customLabels>
+        <label>הערך {0} ברשימת הבחירה של תקופת התשלומים של התרומה החוזרת אינו ערך חוקי של תקופת תשלומים מותאמת אישית.</label>
+        <name>healthDetailsInvalidRDCustomPeriodPIcklist</name>
+    </customLabels>
+    <customLabels>
+        <label>מזהה Recordtype {0} לא חוקי.</label>
+        <name>healthDetailsInvalidRecordtypeId</name>
+    </customLabels>
+    <customLabels>
+        <label>שם Recordtype {0} לא חוקי.</label>
+        <name>healthDetailsInvalidRecordtypeName</name>
+    </customLabels>
+    <customLabels>
+        <label>הרשומה {0} באובייקט Schedulable__c לא חוקית.</label>
+        <name>healthDetailsInvalidScheduledJob</name>
+    </customLabels>
+    <customLabels>
+        <label>בדוח NPSP_Campaign_Household_Mailing_List חסר הפריט המשמש עבור לחצן רשימת הדיוור של משק הבית.</label>
+        <name>healthDetailsMailingListReportMissing</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} הזדמנויות שצריכות להשתייך לתשלומים חסרות בתשלומים אלה.</label>
+        <name>healthDetailsMissingOppPayments</name>
+    </customLabels>
+    <customLabels>
+        <label>מחלקות ברירת המחדל המתוזמנות של NPSP אינן מתוזמנות.</label>
+        <name>healthDetailsNothingScheduled</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} ו-{1} לא יכולים להשתמש באותו ערך תפקיד.</label>
+        <name>healthDetailsOCR</name>
+    </customLabels>
+    <customLabels>
+        <label>נמצאו {0} הזדמנויות שבהן יותר מתפקיד אחד של איש הקשר בהזדמנות מסומן כראשי.</label>
+        <name>healthDetailsOCRDupPrimary</name>
+    </customLabels>
+    <customLabels>
+        <label>לא נמצאו הזדמנויות עם מספר תפקידי איש קשר ראשי בהזדמנות.</label>
+        <name>healthDetailsOCRDupPrimaryValid</name>
+    </customLabels>
+    <customLabels>
+        <label>בכרטיסיית ההגדרות של NPSP, לחץ על &apos;תרומות | תפקידי איש קשר&apos; וערוך את ערכי ההגדרות לעיל.</label>
+        <name>healthDetailsOCRSettingsResolution</name>
+    </customLabels>
+    <customLabels>
+        <label>ההגדרות של תפקידי איש הקשר בהזדמנות ב-NPSP הנן חוקיות.</label>
+        <name>healthDetailsOCRSettingsValid</name>
+    </customLabels>
+    <customLabels>
+        <label>סוגי הנתונים של שדה התשלום {0} ושדה ההזדמנות {1} אינם תואמים.</label>
+        <name>healthDetailsPaymentMappingBadDataTypes</name>
+    </customLabels>
+    <customLabels>
+        <label>סוגי הנתונים של שדה התרומה החוזרת {0} ושדה ההזדמנות {1} אינם תואמים.</label>
+        <name>healthDetailsRDFieldsBadDatatypes</name>
+    </customLabels>
+    <customLabels>
+        <label>הקשר ההדדי {0} צריך להכיל ערך בשדה אחד לפחות עבור &apos;זכר&apos;, &apos;נקבה&apos; או &apos;ניטרלי&apos;.</label>
+        <name>healthDetailsRelReciprocalInvalid</name>
+    </customLabels>
+    <customLabels>
+        <label>לא ניתן ליצור חשבון חדש.</label>
+        <name>healthDetailsSaveAcctFailed</name>
+    </customLabels>
+    <customLabels>
+        <label>לא ניתן ליצור הזדמנויות חדשות.</label>
+        <name>healthDetailsSaveOppsFailed</name>
+    </customLabels>
+    <customLabels>
+        <label>באובייקט Schedulable__c object חסרים אחד או יותר מהפריטים הבאים: סיכום הזדמנות, תרומה ומשימות כתובת עונתית.</label>
+        <name>healthDetailsScheduleJobs</name>
+    </customLabels>
+    <customLabels>
+        <label>המטפל במפעיל {0} באובייקט {1} עם אותם שדות מטפל חוזר מספר פעמים וישפיע על התנהגות NPSP.</label>
+        <name>healthDetailsTriggerHandlerDuplicate</name>
+    </customLabels>
+    <customLabels>
+        <label>המטפל במפעיל {0} באובייקט {1} אינו תואם לתצורת ברירת המחדל של NPSP.</label>
+        <name>healthDetailsTriggerHandlerMismatch</name>
+    </customLabels>
+    <customLabels>
+        <label>המטפל במפעיל {0} באובייקט {1} חסר והדבר ישפיע על התנהגות NPSP.</label>
+        <name>healthDetailsTriggerHandlerMissing</name>
+    </customLabels>
+    <customLabels>
+        <label>סוגי הנתונים של שדה ההזדמנות {0} ושדה {2} של {1} אינם תואמים.</label>
+        <name>healthDetailsUDFBadDatatypes</name>
+    </customLabels>
+    <customLabels>
+        <label>תקופות התשלומים המותאמות אישית של התרומה החוזרת הנן חוקיות.</label>
+        <name>healthDetailsValidRDCustomPeriod</name>
+    </customLabels>
+    <customLabels>
+        <label>נתוני חשבון</label>
+        <name>healthLabelAccountData</name>
+    </customLabels>
+    <customLabels>
+        <label>נתוני מודל חשבון</label>
+        <name>healthLabelAccountModelData</name>
+    </customLabels>
+    <customLabels>
+        <label>שדות מערכת החשבונות עבור כל חשבונות משק הבית וחשבונות &apos;אחד לאחד&apos; מוגדרים בצורה נכונה.</label>
+        <name>healthLabelAccountRTIssueValid</name>
+    </customLabels>
+    <customLabels>
+        <label>כל בדיקות התקינות הסתיימו בהצלחה.</label>
+        <name>healthLabelAllTestsPassed</name>
+    </customLabels>
+    <customLabels>
+        <label>הקשרים האוטומטיים חוקיים.</label>
+        <name>healthLabelAutoRelValid</name>
+    </customLabels>
+    <customLabels>
+        <label>נתוני איש קשר</label>
+        <name>healthLabelContactData</name>
+    </customLabels>
+    <customLabels>
+        <label>אנשי קשר וערכי סיכום כפולים</label>
+        <name>healthLabelDuplicateContactRoles</name>
+    </customLabels>
+    <customLabels>
+        <label>נמען הודעות השגיאה חוקי.</label>
+        <name>healthLabelErrorRecipientValid</name>
+    </customLabels>
+    <customLabels>
+        <label>נכשל</label>
+        <name>healthLabelFailed</name>
+    </customLabels>
+    <customLabels>
+        <label>שנות כספים מותאמות אישית לא בשימוש.</label>
+        <name>healthLabelFiscalYearsValid</name>
+    </customLabels>
+    <customLabels>
+        <label>נתוני חשבון משק בית</label>
+        <name>healthLabelHHAccData</name>
+    </customLabels>
+    <customLabels>
+        <label>נתוני משק בית</label>
+        <name>healthLabelHHData</name>
+    </customLabels>
+    <customLabels>
+        <label>נתוני אובייקט משק בית</label>
+        <name>healthLabelHHObjData</name>
+    </customLabels>
+    <customLabels>
+        <label>בדיקת התקינות מאמתת כי כל הגדרות NPSP שלך תקינות ובודקת אם קיימות בעיות בנתוני החשבונות שלך. בסיום הבדיקה, תוכל לעיין בתוצאות, כולל מידע מפורט על כל כשל שהתגלה.</label>
+        <name>healthLabelIntro</name>
+    </customLabels>
+    <customLabels>
+        <label>הפעלה אחרונה: {0}</label>
+        <name>healthLabelLastRun</name>
+    </customLabels>
+    <customLabels>
+        <label>בדיקת התקינות לא גילתה הזדמנויות עם אנשי קשר וערכי סיכום כפולים.</label>
+        <name>healthLabelNoDuplicateContactRoles</name>
+    </customLabels>
+    <customLabels>
+        <label>כל ההזדמנויות עם תשלומים מכילות את התשלומים הצפויים.</label>
+        <name>healthLabelNoMissingOppPayments</name>
+    </customLabels>
+    <customLabels>
+        <label>(ללא)</label>
+        <name>healthLabelNone</name>
+    </customLabels>
+    <customLabels>
+        <label>תפקידי איש קשר בהזדמנות</label>
+        <name>healthLabelOCRCheck</name>
+    </customLabels>
+    <customLabels>
+        <label>הגדרות תפקיד איש קשר בהזדמנות</label>
+        <name>healthLabelOCRSettings</name>
+    </customLabels>
+    <customLabels>
+        <label>תשלומי הזדמנות</label>
+        <name>healthLabelOppPayments</name>
+    </customLabels>
+    <customLabels>
+        <label>עבר</label>
+        <name>healthLabelPassed</name>
+    </customLabels>
+    <customLabels>
+        <label>מיפוי התשלומים חוקי.</label>
+        <name>healthLabelPaymentMappingsValid</name>
+    </customLabels>
+    <customLabels>
+        <label>ניתן לשמור הזדמנויות חדשות.</label>
+        <name>healthLabelRDOppsValid</name>
+    </customLabels>
+    <customLabels>
+        <label>מיפוי שדות התרומה החוזרת הנו חוקי.</label>
+        <name>healthLabelRDValid</name>
+    </customLabels>
+    <customLabels>
+        <label>הקשרים ההדדיים חוקיים.</label>
+        <name>healthLabelRelReciprocalValid</name>
+    </customLabels>
+    <customLabels>
+        <label>מתזמן ברירת מחדל של NPSP</label>
+        <name>healthLabelScheduler</name>
+    </customLabels>
+    <customLabels>
+        <label>המשימות החוזרות של NPSP מתוזמנות.</label>
+        <name>healthLabelSchedulerValid</name>
+    </customLabels>
+    <customLabels>
+        <label>הצג בדיקות שהסתיימו בהצלחה</label>
+        <name>healthLabelShowPassedTests</name>
+    </customLabels>
+    <customLabels>
+        <label>זמן זיהוי בשניות: {0}</label>
+        <name>healthLabelTime</name>
+    </customLabels>
+    <customLabels>
+        <label>תצורת גורם מפעיל</label>
+        <name>healthLabelTriggerHandlerCheck</name>
+    </customLabels>
+    <customLabels>
+        <label>הגורמים המפעילים מוגדרים עבור גורמים מפעילים המהווים ברירת מחדל של NPSP.</label>
+        <name>healthLabelTriggerHandlersValid</name>
+    </customLabels>
+    <customLabels>
+        <label>הסיכומים בהגדרת משתמש חוקיים.</label>
+        <name>healthLabelUDFValid</name>
+    </customLabels>
+    <customLabels>
+        <label>רמות</label>
+        <name>healthLabelVerifyLevels</name>
+    </customLabels>
+    <customLabels>
+        <label>כל ההפניות לשדות בכל הרמות הנן חוקיות.</label>
+        <name>healthLabelVerifyLevelsSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label>אזהרה</label>
+        <name>healthLabelWarning</name>
+    </customLabels>
+    <customLabels>
+        <label>השלב שנבחר כיעד שאליו יש להעביר את ההזדמנות לאחר שכל התשלומים יושלמו חייב להיות שלב סגירה/זכייה חוקי.</label>
+        <name>healthPaymentAutoCloseStageInvalid</name>
+    </customLabels>
+    <customLabels>
+        <label>אל תבחר שלב הזדמנות (בכך תשבית את התכונה) או עדכן את ההגדרה לשימוש בשלב סגירה/זכייה של הזדמנות.</label>
+        <name>healthPaymentAutoCloseStageMustBeActiveClosedWonOrBlank</name>
+    </customLabels>
+    <customLabels>
+        <label>לא נבחר שלב שאליו יש להעביר את ההזדמנות לאחר שכל התשלומים יתקבלו, או שהשלב שנבחר הוא שלב סגירה/זכייה פעיל.</label>
+        <name>healthPaymentAutoCloseStageValid</name>
+    </customLabels>
+    <customLabels>
+        <label>שקול למחוק חשבונות &apos;אחד לאחד&apos; אלה שאינם בשימוש כדי לחסוך מקום.</label>
+        <name>healthSolutionAccOne2OneNoContacts</name>
+    </customLabels>
+    <customLabels>
+        <label>כל החשבונות שלך צריכים להשתמש באותו מודל חשבון. כדי להציג את כל החשבונות שלך וסוגיהם, הפעל את הדוח &lt;b&gt;חשבונות אישיים לפי סוג חשבון&lt;/b&gt; בתיקיית דוחות בדיקת התקינות של NPSP.</label>
+        <name>healthSolutionAccountModel</name>
+    </customLabels>
+    <customLabels>
+        <label>עבור חשבונות משק בית, ודא שהערך של npe01__SYSTEM_AccountType__c הוא &apos;חשבון משק בית&apos;. עבור חשבונות &apos;אחד לאחד&apos;, ודא שהערך של npe01__SYSTEM_AccountType__c הוא &apos;אחד לאחד אישי&apos;. עבור שני הסוגים, ודא כי npe01__SYSTEMISINDIVIDUAL__c מוגדר כ-true.</label>
+        <name>healthSolutionAccountRTIssue</name>
+    </customLabels>
+    <customLabels>
+        <label>בכרטיסיית ההגדרות של NPSP, לחץ על &apos;{0} | {1}&apos; ומחק את הרשומה הבלתי חוקית של יצירת קשרים אוטומטית.</label>
+        <name>healthSolutionAutoRelFieldsMissing</name>
+    </customLabels>
+    <customLabels>
+        <label>בכרטיסיית ההגדרות של NPSP, לחץ על &apos;{0} | {1}&apos; והוסף את שדה CampaignMember החסר, או מחק את הרשומה הבלתי חוקית של יצירת קשרים אוטומטית.</label>
+        <name>healthSolutionAutoRelInvalidCMField</name>
+    </customLabels>
+    <customLabels>
+        <label>בכרטיסיית ההגדרות של NPSP, לחץ על &apos;{0} | {1}&apos; והוסף את שדה איש הקשר החסר, או מחק את הרשומה הבלתי חוקית של יצירת קשרים אוטומטית.</label>
+        <name>healthSolutionAutoRelInvalidContactField</name>
+    </customLabels>
+    <customLabels>
+        <label>בכרטיסיית ההגדרות של NPSP, לחץ על &apos;{0} | {1}&apos; ומחק את הרשומה הבלתי חוקית של יצירת קשר אוטומטית.</label>
+        <name>healthSolutionAutoRelInvalidLookupField</name>
+    </customLabels>
+    <customLabels>
+        <label>בכרטיסיית ההגדרות של NPSP, לחץ על &apos;{0} | {1}&apos; והוסף את שדה התרומה החוזרת החסר, או מחק את רשומת המיפוי של שדות תרומה חוזרת.</label>
+        <name>healthSolutionBadRDField</name>
+    </customLabels>
+    <customLabels>
+        <label>כדי להציג אנשי קשר אלה, הפעל את הדוח &lt;b&gt;אנשי קשר ללא חשבונות&lt;/b&gt; בתיקיית דוחות בדיקת התקינות של NPSP.</label>
+        <name>healthSolutionContactData</name>
+    </customLabels>
+    <customLabels>
+        <label>בעבר, NPSP ספרה פעמיים ערכי סיכום של קרדיט עבור אנשי קשר ששויכו פעמיים להזדמנות דרך שני תפקידי איש קשר בהזדמנות. כיום NPSP סופרת ערכי סיכום אלה פעם אחת בלבד, ללא תלות במספר השיוכים של איש קשר להזדמנות.&lt;br/&gt;
+&lt;br/&gt;
+אם ברצונך לדעת אילו הזדמנויות היו כוללות בעבר את הספירה הכפולה של ערך סיכום זה, הפעל את שאילתת ה-SOQL הבאה במסוף למפתחים: &apos;&apos;SELECT Count(Id), OpportunityId, Opportunity.Name OpportunityName, ContactId, Contact.Name ContactName FROM OpportunityContactRole WHERE Opportunity.IsWon = true AND Role IN ({0}) GROUP BY OpportunityId, Opportunity.Name, ContactId, Contact.Name HAVING Count(Id) &gt; 1&apos;&apos;</label>
+        <name>healthSolutionDuplicateContactRoles</name>
+    </customLabels>
+    <customLabels>
+        <label>בכרטיסיית ההגדרות של NPSP, לחץ על &apos;{1} | {2}&apos; וערוך את ההגדרה של {0}.</label>
+        <name>healthSolutionEditSetting</name>
+    </customLabels>
+    <customLabels>
+        <label>שקול למחוק חשבונות משק בית אלה שאינם בשימוש כדי לחסוך מקום. כדי להציג חשבונות משק בית אלה, הפעל את הדוח &lt;b&gt;חשבונות משק בית ריקים&lt;/b&gt; בתיקיית דוחות בדיקת התקינות של NPSP</label>
+        <name>healthSolutionHHAccNoContacts</name>
+    </customLabels>
+    <customLabels>
+        <label>שקול למחוק אובייקטי משק בית אלה שאינם בשימוש כדי לחסוך מקום. אם השלמת המרה למודל חשבון משק הבית ואינך זקוק עוד לנתונים של רשומות אובייקט משק הבית, ניתן למחוק אותם.  כדי להציג אובייקטי משק בית אלה, הפעל את הדוח &lt;b&gt;אובייקטי משק בית ריקים&lt;/b&gt; בתיקיית דוחות בדיקת התקינות של NPSP.</label>
+        <name>healthSolutionHHObjNoContacts</name>
+    </customLabels>
+    <customLabels>
+        <label>משום ש-Salesforce אינה תומכת בכיבוי של שנות כספים מותאמות אישית, סיכומי NPSP יעברו כברירת מחדל לשנה קלנדרית.</label>
+        <name>healthSolutionInvalidFiscalYears</name>
+    </customLabels>
+    <customLabels>
+        <label>עבור לכרטיסייה &apos;רמות&apos; ועדכן את ההפניה אל השדה הלא חוקי ברמה {0}.</label>
+        <name>healthSolutionInvalidLevelField</name>
+    </customLabels>
+    <customLabels>
+        <label>בכרטיסיית ההגדרות של NPSP, לחץ על &apos;{0} | {1}&apos; והוסף את שדה ההזדמנות החסר, או מחק את רשומת מיפוי התשלום.</label>
+        <name>healthSolutionInvalidOppField</name>
+    </customLabels>
+    <customLabels>
+        <label>הוסף את הערך של שלב הזדמנות זה בהגדרות של Salesforce.</label>
+        <name>healthSolutionInvalidOppStage</name>
+    </customLabels>
+    <customLabels>
+        <label>בכרטיסיית ההגדרות של NPSP, לחץ על &apos;{0} | {1}&apos; והוסף את שדה התשלום החסר, או מחק את רשומת מיפוי התשלום.</label>
+        <name>healthSolutionInvalidPaymentField</name>
+    </customLabels>
+    <customLabels>
+        <label>הוסף את ערך רשימת הבחירה של תקופת התשלומים של תרומה חוזרת זו בהגדרות של Salesforce.</label>
+        <name>healthSolutionInvalidRDCustomPeriod</name>
+    </customLabels>
+    <customLabels>
+        <label>בכרטיסיית ההגדרות של NPSP, לחץ על &apos;{0} | {1}&apos; והוסף את הערך החסר של תקופת התשלומים המותאמת אישית של התרומה החוזרת, או מחק את ערך רשימת הבחירה משדה תקופת התשלומים.</label>
+        <name>healthSolutionInvalidRDCustomPeriodPicklist</name>
+    </customLabels>
+    <customLabels>
+        <label>עליך לעדכן את הרשומה כך שתכיל מחלקה חוקית המיישמת את ממשק UTIL_MasterSchedulableHelper.UTIL_IRecurring.</label>
+        <name>healthSolutionInvalidScheduledJob</name>
+    </customLabels>
+    <customLabels>
+        <label>בכרטיסיית ההגדרות של NPSP, לחץ על &apos;{0} | {1}&apos; והוסף את השדה החסר, או מחק את רשומת סיכום המשתמשים.</label>
+        <name>healthSolutionInvalidUDFObjectField</name>
+    </customLabels>
+    <customLabels>
+        <label>צור דוח המבוסס על מבצעים עם אנשי קשר, שבהם מצב החבר אינו מכיל את הערך &apos;כפול&apos;.  לאחר מכן, ציין דוח זה בכרטיסייה &apos;{0} &gt; {1}&apos; בהגדרות של NPSP.</label>
+        <name>healthSolutionMailingListReportMissing</name>
+    </customLabels>
+    <customLabels>
+        <label>כדי להציג הזדמנויות אלה, הפעל את הדוח &lt;b&gt;הזדמנויות ללא חשבונות&lt;/b&gt; בתיקיית דוחות בדיקת התקינות של NPSP.  שים לב שעליך להוסיף לדוח קריטריוני סינון עבור כל הסוגים ו-RecTypes של הזדמנויות שמנעת את הכללתם בהגדרות התשלומים ב-NPSP. תוכל ליצור אותם באמצעות הלחצן &apos;צור תשלומים חסרים&apos; ב&apos;הגדרות NPSP &gt; תרומות &gt; תשלומים&apos;.</label>
+        <name>healthSolutionMissingOppPayments</name>
+    </customLabels>
+    <customLabels>
+        <label>עליך לתזמן את ההפעלה של מחלקות ברירת המחדל המתוזמנות של NPSP.</label>
+        <name>healthSolutionNothingScheduled</name>
+    </customLabels>
+    <customLabels>
+        <label>סימון שדות OpportunityContactRoles מרובים כ&apos;ראשי&apos; עלול לגרום לסיכומי הזדמנות, כגון &apos;סה&quot;כ תרומות&apos;, להחזיר תוצאות חישוב שגויות.  כדי להציג הזדמנויות אלה, הפעל את הדוח &lt;b&gt;הזדמנויות עם תפקידי איש קשר ראשי&lt;/b&gt; בתיקיית דוחות בדיקת התקינות של NPSP, ועיין ברשומות עם שניים או יותר תפקידי איש קשר ראשי.</label>
+        <name>healthSolutionOCRDupPrimary</name>
+    </customLabels>
+    <customLabels>
+        <label>אם יש לך כמות גדולה של הזדמנויות ותפקידי איש קשר בהזדמנות, מעל 50,000, תוכל להתעלם בבטחה מכל שגיאה הנוגעת למגבלות SOQL.</label>
+        <name>healthSolutionOCRException</name>
+    </customLabels>
+    <customLabels>
+        <label>בכרטיסיית ההגדרות של NPSP, לחץ על &apos;{0} | {1}&apos; ומחק את רשומת מיפוי התשלום.</label>
+        <name>healthSolutionPaymentMappingBadDataTypes</name>
+    </customLabels>
+    <customLabels>
+        <label>בכרטיסיית ההגדרות של NPSP, לחץ על &apos;{0} | {1}&apos; והוסף את שדה ההזדמנות החסר, או מחק את רשומת המיפוי של שדות תרומה חוזרת.</label>
+        <name>healthSolutionRDBadOppField</name>
+    </customLabels>
+    <customLabels>
+        <label>בכרטיסיית ההגדרות של NPSP, לחץ על &apos;{0} | {1}&apos; ומחק את רשומת המיפוי של שדות תרומה חוזרת.</label>
+        <name>healthSolutionRDFieldsBadDatatypes</name>
+    </customLabels>
+    <customLabels>
+        <label>בכרטיסיית ההגדרות של NPSP, לחץ על &apos;{0} | {1}&apos;, מחק את רשומת הקשר ההדדי וצור רשומה חדשה עם המידע הנדרש.</label>
+        <name>healthSolutionRelReciprocalInvalid</name>
+    </customLabels>
+    <customLabels>
+        <label>ודא שאין לך כללי אימות, שדות נדרשים או כללי זרימת עבודה שימנעו שמירה של הזדמנות או חשבון.</label>
+        <name>healthSolutionSaveOppsFailed</name>
+    </customLabels>
+    <customLabels>
+        <label>כדי שתכונות אלה יפעלו כראוי, לכל מחלקות ברירת המחדל המתוזמנות של NPSP צריכות להיות רשומות ב-Schedulable__c.</label>
+        <name>healthSolutionScheduleJobs</name>
+    </customLabels>
+    <customLabels>
+        <label>אם המטפלים במפעילים אינם תואמים לתצורת ברירת המחדל של NPSP, ייתכן שהתפקוד של NPSP יהיה מוגבל או ישתנה.  את השינויים צריך לבצע אדם המתמצא בתחום של מטפלים במפעילים ב-NPSP, היודע כיצד השינויים שלהם ישפיעו על התנהגות המערכת.</label>
+        <name>healthSolutionTriggerHandlerMismatch</name>
+    </customLabels>
+    <customLabels>
+        <label>בכרטיסיית ההגדרות של NPSP, לחץ על &apos;{0} | {1}&apos; ומחק את רשומת סיכום המשתמשים.</label>
+        <name>healthSolutionUDFBadDatatypes</name>
+    </customLabels>
+    <customLabels>
+        <label>בכרטיסיית ההגדרות של NPSP, לחץ על &apos;{0} | {1}&apos; והוסף את שדה ההזדמנות החסר, או מחק את רשומת סיכום המשתמשים.</label>
+        <name>healthSolutionUDFOppField</name>
+    </customLabels>
+    <customLabels>
+        <label>חזור למבצע</label>
+        <name>hhCmpDedupLabelReturnToCmp</name>
+    </customLabels>
+    <customLabels>
+        <label>בשל גודל המבצע, התהליך של זיהוי החברים במשק הבית מתבצע באצווה ועשוי להימשך מספר דקות.  בסיום, לחץ על הקישור כדי לפתוח את הדוח.</label>
+        <name>hhCmpDedupeBatchMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>הסרת פריטי משק בית כפולים</label>
+        <name>hhCmpDedupeBatchProgressTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>פתח דוח</label>
+        <name>hhCmpDedupeLabelOpenReport</name>
+    </customLabels>
+    <customLabels>
+        <label>לא ניתן למצוא את הדוח. צור דוח עם השם הייחודי &apos;NPSP_Campaign_Household_Mailing_List&apos;. הערה: סוג הרשומה צריך להיות &apos;מבצעים עם אנשי קשר&apos;. המסנן של מצב החבר אינו מכיל את הערך &apos;כפול&apos;.</label>
+        <name>hhCmpDedupeNoReport</name>
+    </customLabels>
+    <customLabels>
+        <label>משק בית כפול</label>
+        <name>hhCmpDedupeStatus</name>
+    </customLabels>
+    <customLabels>
+        <label>הוא שדה נדרש.</label>
+        <name>isARequiredField</name>
+    </customLabels>
+    <customLabels>
+        <label>ראשון</label>
+        <name>labelListViewFirst</name>
+    </customLabels>
+    <customLabels>
+        <label>אחרון</label>
+        <name>labelListViewLast</name>
+    </customLabels>
+    <customLabels>
+        <label>הבא</label>
+        <name>labelListViewNext</name>
+    </customLabels>
+    <customLabels>
+        <label>&amp;nbsp;&amp;nbsp;&amp;nbsp;דף {0} מתוך {1} &amp;nbsp;&amp;nbsp;({2} רשומות)</label>
+        <name>labelListViewPageInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>הקודם</label>
+        <name>labelListViewPrevious</name>
+    </customLabels>
+    <customLabels>
+        <label>טוען...</label>
+        <name>labelMessageLoading</name>
+    </customLabels>
+    <customLabels>
+        <label>הצג עוד</label>
+        <name>labelShowMore</name>
+    </customLabels>
+    <customLabels>
+        <label>(עקיפת כתובת)</label>
+        <name>lblAddressOverride</name>
+    </customLabels>
+    <customLabels>
+        <label>הוסף את כל החברים</label>
+        <name>lblBtnAddAllHHMembers</name>
+    </customLabels>
+    <customLabels>
+        <label>הוסף את {0}</label>
+        <name>lblBtnAddContact</name>
+    </customLabels>
+    <customLabels>
+        <label>מנע הכללה ב:</label>
+        <name>lblCCardExcludeFrom</name>
+    </customLabels>
+    <customLabels>
+        <label>עיר</label>
+        <name>lblCity</name>
+    </customLabels>
+    <customLabels>
+        <label>שוכפל</label>
+        <name>lblCloned</name>
+    </customLabels>
+    <customLabels>
+        <label>ארץ</label>
+        <name>lblCountry</name>
+    </customLabels>
+    <customLabels>
+        <label>הסר איש קשר</label>
+        <name>lblDeleteContact</name>
+    </customLabels>
+    <customLabels>
+        <label>האם ברצונך להסיר איש קשר זה ממשק בית זה בשמירה?</label>
+        <name>lblDeleteContactPrompt</name>
+    </customLabels>
+    <customLabels>
+        <label>באנשי קשר</label>
+        <name>lblFindInContacts</name>
+    </customLabels>
+    <customLabels>
+        <label>מצא איש קשר או הוסף איש קשר חדש למשק הבית</label>
+        <name>lblFindOrAddContact</name>
+    </customLabels>
+    <customLabels>
+        <label>שם פרטי</label>
+        <name>lblFirstName</name>
+    </customLabels>
+    <customLabels>
+        <label>ברכה רשמית</label>
+        <name>lblFormalGreeting</name>
+    </customLabels>
+    <customLabels>
+        <label>משק בית</label>
+        <name>lblHousehold</name>
+    </customLabels>
+    <customLabels>
+        <label>שם משק בית</label>
+        <name>lblHouseholdName</name>
+    </customLabels>
+    <customLabels>
+        <label>ברכה לא רשמית</label>
+        <name>lblInformalGreeting</name>
+    </customLabels>
+    <customLabels>
+        <label>שם משפחה</label>
+        <name>lblLastName</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} נמצא במשק בית עם חברים נוספים.  האם ברצונך להוסיף את {0} בלבד או להוסיף את כל החברים במשק הבית?</label>
+        <name>lblMergeHHPrompt</name>
+    </customLabels>
+    <customLabels>
+        <label>מיזוג משקי בית</label>
+        <name>lblMergeHHTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>הגדרות NPSP</label>
+        <name>lblNPSPSettings</name>
+    </customLabels>
+    <customLabels>
+        <label>דרושות הרשאות עדכון מחיקה במשקי בית (חשבונות) כדי להוסיף איש קשר קיים למשק הבית.</label>
+        <name>lblNoHHMergePermissions</name>
+    </customLabels>
+    <customLabels>
+        <label>מיקוד</label>
+        <name>lblPostalCode</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblRequired --></label>
+        <name>lblRequired</name>
+    </customLabels>
+    <customLabels>
+        <label>ברכה</label>
+        <name>lblSalutation</name>
+    </customLabels>
+    <customLabels>
+        <label>מדינה</label>
+        <name>lblState</name>
+    </customLabels>
+    <customLabels>
+        <label>רחוב</label>
+        <name>lblStreet</name>
+    </customLabels>
+    <customLabels>
+        <label>חשבון</label>
+        <name>leadConvertAccountName</name>
+    </customLabels>
+    <customLabels>
+        <label>חשבון משויך</label>
+        <name>leadConvertAffilationName</name>
+    </customLabels>
+    <customLabels>
+        <label>שייך לקיים:</label>
+        <name>leadConvertAffiliateExistingAccount</name>
+    </customLabels>
+    <customLabels>
+        <label>שייך לחשבון חדש:</label>
+        <name>leadConvertAffiliateNewAccount</name>
+    </customLabels>
+    <customLabels>
+        <label>חשבון משויך</label>
+        <name>leadConvertAffiliatedAccount</name>
+    </customLabels>
+    <customLabels>
+        <label>צרף לחשבון Bucket אישי</label>
+        <name>leadConvertAttachBucketAccount</name>
+    </customLabels>
+    <customLabels>
+        <label>צרף לקיים:</label>
+        <name>leadConvertAttachExistingAccount</name>
+    </customLabels>
+    <customLabels>
+        <label>צור חשבון משק בית</label>
+        <name>leadConvertAutocreateHHAccount</name>
+    </customLabels>
+    <customLabels>
+        <label>צור חשבון &apos;אחד לאחד&apos;</label>
+        <name>leadConvertAutocreateOne2OneAccount</name>
+    </customLabels>
+    <customLabels>
+        <label>ביטול</label>
+        <name>leadConvertBtnCancel</name>
+    </customLabels>
+    <customLabels>
+        <label>המרה</label>
+        <name>leadConvertBtnConvert</name>
+    </customLabels>
+    <customLabels>
+        <label>חשבון איש קשר</label>
+        <name>leadConvertContactAccount</name>
+    </customLabels>
+    <customLabels>
+        <label>עליך לבחור אפשרות בתיבת איש הקשר.</label>
+        <name>leadConvertContactSelection</name>
+    </customLabels>
+    <customLabels>
+        <label>צור חשבון חדש:</label>
+        <name>leadConvertCreateAccount</name>
+    </customLabels>
+    <customLabels>
+        <label>צור חדש:</label>
+        <name>leadConvertCreateNewContact</name>
+    </customLabels>
+    <customLabels>
+        <label>מיזוג עם קיים:</label>
+        <name>leadConvertMergeExistingContact</name>
+    </customLabels>
+    <customLabels>
+        <label>אל תיצור {0} בעת ההמרה.</label>
+        <name>leadConvertNewOpp</name>
+    </customLabels>
+    <customLabels>
+        <label>בעל רשומה</label>
+        <name>leadConvertOwner</name>
+    </customLabels>
+    <customLabels>
+        <label>המר הפניה:</label>
+        <name>leadConvertPageTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>סוג ברירת המחדל של רשומת החשבון עבור הפרופיל שלך זהה לסוג הרשומה שהוגדר כמודל החשבון בהגדרות NSPS, והדבר עלול לגרום לבעיות. מומלץ לשנות את סוג ברירת המחדל של רשומת החשבון לערך אחר עבור כל הפרופילים.</label>
+        <name>leadConvertRecordTypeWarning</name>
+    </customLabels>
+    <customLabels>
+        <label>המר הפניה</label>
+        <name>leadConvertSectionTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>שלח הודעת דואר אלקטרוני לבעלים</label>
+        <name>leadConvertSendEmail</name>
+    </customLabels>
+    <customLabels>
+        <label>מצב ההמרה</label>
+        <name>leadConvertStatus</name>
+    </customLabels>
+    <customLabels>
+        <label>תוכל להציג אנשי קשר קיימים בלבד.</label>
+        <name>leadConvertViewContactError</name>
+    </customLabels>
+    <customLabels>
+        <label>שמור וחדש</label>
+        <name>lvlBtnSaveAndNew</name>
+    </customLabels>
+    <customLabels>
+        <label>עליך לציין שדות חיפוש שונים ב-{0} עבור שדה הרמה ושדה הרמה הקודמת.</label>
+        <name>lvlErrorDuplicateLookups</name>
+    </customLabels>
+    <customLabels>
+        <label>רמה בשם {0} כבר קיימת.  השמות של אותו שדה יעד ורמה צריכים להיות ייחודיים.</label>
+        <name>lvlErrorDuplicateName</name>
+    </customLabels>
+    <customLabels>
+        <label>השדה {0} שצוין ברמה {1} אינו שדה חיפוש חוקי אל אובייקט רמה.</label>
+        <name>lvlErrorInvalidLookupField</name>
+    </customLabels>
+    <customLabels>
+        <label>השדה {0} שצוין ברמה {1} אינו שדה מספר חוקי.</label>
+        <name>lvlErrorInvalidSourceField</name>
+    </customLabels>
+    <customLabels>
+        <label>הסכום המינימלי חייב להיות קטן מהסכום המרבי ברמה {0}.</label>
+        <name>lvlErrorMinGTMax</name>
+    </customLabels>
+    <customLabels>
+        <label>הטווח בין הסכום המינימלי והסכום המרבי ברמה {0} חופף לטווח בין הסכום המינימלי והסכום המרבי ברמה {1}</label>
+        <name>lvlErrorMinOverlap</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error if both min and max are empty on a level --></label>
+        <name>lvlErrorNoMinMax</name>
+    </customLabels>
+    <customLabels>
+        <label>חיפוש</label>
+        <name>mtchBtnSearch</name>
+    </customLabels>
+    <customLabels>
+        <label>סיום תאריך סגירה</label>
+        <name>mtchCloseDateEnd</name>
+    </customLabels>
+    <customLabels>
+        <label>התחלת תאריך סגירה</label>
+        <name>mtchCloseDateStart</name>
+    </customLabels>
+    <customLabels>
+        <label>חיפוש תרומות שוות</label>
+        <name>mtchFindMatchedGiftsSectionHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>חיפוש תרומות נוספות</label>
+        <name>mtchFindMoreGifts</name>
+    </customLabels>
+    <customLabels>
+        <label>מלא מסנן אחד או יותר ולאחר מכן לחץ על &apos;חיפוש&apos;.</label>
+        <name>mtchFindMoreGiftsInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} פריטים</label>
+        <name>mtchItems</name>
+    </customLabels>
+    <customLabels>
+        <label>ציין מסנן אחד או יותר כדי לחפש.</label>
+        <name>mtchSearchCriteriaEmpty</name>
+    </customLabels>
+    <customLabels>
+        <label>בחר</label>
+        <name>mtchSelectCbxTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>סה&quot;כ תרומה שווה</label>
+        <name>mtchTotalMatchingGift</name>
+    </customLabels>
+    <customLabels>
+        <label>סה&quot;כ שנבחרו</label>
+        <name>mtchTotalSelected</name>
+    </customLabels>
+    <customLabels>
+        <label>סה&quot;כ ללא הסבר</label>
+        <name>mtchTotalUnaccounted</name>
+    </customLabels>
+    <customLabels>
+        <label>מתוך</label>
+        <name>oppInstallmentsOf</name>
+    </customLabels>
+    <customLabels>
+        <label>גם וגם</label>
+        <name>oppNamingBoth</name>
+    </customLabels>
+    <customLabels>
+        <label>תרומות איש קשר</label>
+        <name>oppNamingIndividual</name>
+    </customLabels>
+    <customLabels>
+        <label>תרומות ארגון</label>
+        <name>oppNamingOrganizational</name>
+    </customLabels>
+    <customLabels>
+        <label>חשב תשלומים</label>
+        <name>pmtWizardBtnCalcPayments</name>
+    </customLabels>
+    <customLabels>
+        <label>צור תשלומים</label>
+        <name>pmtWizardBtnCreatePayments</name>
+    </customLabels>
+    <customLabels>
+        <label>הסר תשלומים ששולמו</label>
+        <name>pmtWizardBtnRemovePaidPayments</name>
+    </customLabels>
+    <customLabels>
+        <label>הערה: הזדמנות זו מסומנת כסגורה ללא זכייה. כדי ליצור תשלומים, ערוך תחילה את רשומת ההזדמנות ושנה את השלב לסגירה או פתיחה עם זכייה.</label>
+        <name>pmtWizardClosedLost</name>
+    </customLabels>
+    <customLabels>
+        <label>צור לוח זמנים לתשלום</label>
+        <name>pmtWizardCreateSchedule</name>
+    </customLabels>
+    <customLabels>
+        <label>תאריך התשלום הראשון</label>
+        <name>pmtWizardFirstPaymentDate</name>
+    </customLabels>
+    <customLabels>
+        <label>מרווח זמן</label>
+        <name>pmtWizardInterval</name>
+    </customLabels>
+    <customLabels>
+        <label>לא נמצאו הזדמנויות.</label>
+        <name>pmtWizardMsgNoOppFound</name>
+    </customLabels>
+    <customLabels>
+        <label>הערה: הזדמנות זו לא מכילה סכום שלא שולם. כדי ליצור תשלומים, ערוך תחילה את רשומת ההזדמנות והזן סכום או לחץ על הלחצן כדי למחוק תשלומים קיימים. אם ההזדמנות נסגרה, ייתכן שתצטרך לפתוח אותה מחדש.</label>
+        <name>pmtWizardNoUnpaidAmount</name>
+    </customLabels>
+    <customLabels>
+        <label>הערה: הזדמנות זו לא מכילה סכום שלא שולם. כדי למחוק תשלומים, ערוך תחילה את רשומת ההזדמנות והזן סכום או לחץ על הלחצן כדי למחוק את תשלומים קיימים.</label>
+        <name>pmtWizardNoWriteoffAmount</name>
+    </customLabels>
+    <customLabels>
+        <label>מס&apos; תשלומים</label>
+        <name>pmtWizardNumberOfPayments</name>
+    </customLabels>
+    <customLabels>
+        <label>מספר תשלום</label>
+        <name>pmtWizardPaymentNumber</name>
+    </customLabels>
+    <customLabels>
+        <label>לא הפעלת תשלומים ב-NPSP. כדי להשתמש באשף תזמון התשלומים, הפעל תשלומים בדף ההגדרות של NPSP.</label>
+        <name>pmtWizardPaymentsDisabled</name>
+    </customLabels>
+    <customLabels>
+        <label>תשלומי NPSP לא מופעלים</label>
+        <name>pmtWizardPaymentsDisabledTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>פרטי הזדמנות נוכחית</label>
+        <name>pmtWizardSectionTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>מחק יתרה שנותרה</label>
+        <name>pmtWizardSectionWriteoff</name>
+    </customLabels>
+    <customLabels>
+        <label>מחק תשלומים</label>
+        <name>pmtWizardSectionWriteoffPayments</name>
+    </customLabels>
+    <customLabels>
+        <label>צור תשלום אחד או יותר עבור הזדמנות זו</label>
+        <name>pmtWizardSubtitle</name>
+    </customLabels>
+    <customLabels>
+        <label>יצירת תשלומים</label>
+        <name>pmtWizardToBeCreated</name>
+    </customLabels>
+    <customLabels>
+        <label>אזהרה</label>
+        <name>pmtWizardWarning</name>
+    </customLabels>
+    <customLabels>
+        <label>באיזה תאריך ברצונך להשתמש?</label>
+        <name>pmtWizardWriteoffDate</name>
+    </customLabels>
+    <customLabels>
+        <label>אתה מתכונן למחוק {0} תשלומים בסכום כולל של {1}.</label>
+        <name>pmtWizardWriteoffMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>מחק שורה</label>
+        <name>pscDeleteRow</name>
+    </customLabels>
+    <customLabels>
+        <label>הוסף קרדיט נוסף</label>
+        <name>pscManageSoftCreditsAdd</name>
+    </customLabels>
+    <customLabels>
+        <label>כמות</label>
+        <name>pscManageSoftCreditsAmount</name>
+    </customLabels>
+    <customLabels>
+        <label>הזן סכום קרדיט עבור כל הערכים.</label>
+        <name>pscManageSoftCreditsAmountMissing</name>
+    </customLabels>
+    <customLabels>
+        <label>סכום או אחוז</label>
+        <name>pscManageSoftCreditsAmountOrPercent</name>
+    </customLabels>
+    <customLabels>
+        <label>לא ניתן לשנות מטבעות של קרדיט חלקי באופן ישיר. מטבע של קרדיט חלקי מתעדכן כאשר מתבצע שינוי במטבע של הזדמנות האב.</label>
+        <name>pscManageSoftCreditsCantChangeCurrency</name>
+    </customLabels>
+    <customLabels>
+        <label>מלא</label>
+        <name>pscManageSoftCreditsFull</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} הוא איש הקשר הראשי עבור הזדמנות זו. לא ניתן להוסיף קרדיט לאיש קשר זה.</label>
+        <name>pscManageSoftCreditsInvalidContact</name>
+    </customLabels>
+    <customLabels>
+        <label>לא ציינת תפקידים בתור תפקידי קרדיט.   ב&apos;הגדרות NPSP&apos;, &apos;תרומות&apos;, תפקידי איש קשר&apos;, עליך להוסיף את התפקידים המתאימים להגדרה &apos;תפקידי קרדיט&apos;.</label>
+        <name>pscManageSoftCreditsNoRoles</name>
+    </customLabels>
+    <customLabels>
+        <label>סיכום כללי</label>
+        <name>pscManageSoftCreditsOppAmount</name>
+    </customLabels>
+    <customLabels>
+        <label>סכום קרדיט</label>
+        <name>pscManageSoftCreditsPSCAmount</name>
+    </customLabels>
+    <customLabels>
+        <label>חלקי</label>
+        <name>pscManageSoftCreditsPartial</name>
+    </customLabels>
+    <customLabels>
+        <label>אחוז</label>
+        <name>pscManageSoftCreditsPercent</name>
+    </customLabels>
+    <customLabels>
+        <label>תורם ראשי</label>
+        <name>pscManageSoftCreditsPrimaryDonor</name>
+    </customLabels>
+    <customLabels>
+        <label>סכום הקרדיט הכולל צריך להיות קטן או שווה לסכום ההזדמנות.  כדי לעקוף מגבלה זו, סמן את האפשרות &apos;אפשר סכום קרדיט גדול מהסכום הכולל&apos;.</label>
+        <name>pscManageSoftCreditsReconcileFail</name>
+    </customLabels>
+    <customLabels>
+        <label>הגבלות קרדיט</label>
+        <name>pscManageSoftCreditsRestrictions</name>
+    </customLabels>
+    <customLabels>
+        <label>עליך לציין שם תפקיד עבור כל הקרדיט.</label>
+        <name>pscManageSoftCreditsRoleMissing</name>
+    </customLabels>
+    <customLabels>
+        <label>נהל קרדיט</label>
+        <name>pscManageSoftCreditsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>סוג</label>
+        <name>pscManageSoftCreditsType</name>
+    </customLabels>
+    <customLabels>
+        <label>סה&quot;כ ללא הסבר</label>
+        <name>pscManageSoftCreditsUnaccounted</name>
+    </customLabels>
+    <customLabels>
+        <label>אפשר סכום קרדיט גדול מהסכום הכולל</label>
+        <name>pscManageSoftCreditsValidateTotals</name>
+    </customLabels>
+    <customLabels>
+        <label>אישור בדואר אלקטרוני לא נשלח</label>
+        <name>sendAcknowledgmentFailedStatus</name>
+    </customLabels>
+    <customLabels>
+        <label>הרשומות הבאות לא אושרו. אישורים יכולים להיכשל כאשר אין כלל זרימת עבודה (מצב האישור הוא &apos;שלח אישור&apos;) שהופעל לשליחת האישור, או אם הרשומה לא עמדה בקריטריונים נוספים להפעלת כלל זרימת העבודה. לדוגמה, אם לא הוגדר איש קשר ראשי, או אם שדה הדואר האלקטרוני של איש הקשר הראשי ריק או אינו חוקי.</label>
+        <name>sendAcknowledgmentFailureReasons</name>
+    </customLabels>
+    <customLabels>
+        <label>שלח אישור בדואר אלקטרוני כעת</label>
+        <name>sendAcknowledgmentFireStatus</name>
+    </customLabels>
+    <customLabels>
+        <label>עליך לבחור הזדמנות אחת או יותר לפני שתלחץ על &apos;שלח אישורים בדואר אלקטרוני&apos;.</label>
+        <name>sendAcknowledgmentNoneSelected</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} אישורים לא נשלחו.</label>
+        <name>sendAcknowledgmentNumberNoEmail</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} אישורים נשלחו.</label>
+        <name>sendAcknowledgmentNumberSent</name>
+    </customLabels>
+    <customLabels>
+        <label>שלח אישורים בדואר אלקטרוני</label>
+        <name>sendAcknowledgmentPageTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>חזור למדיניות</label>
+        <name>sendAcknowledgmentReturnLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>אושר</label>
+        <name>sendAcknowledgmentSucceeded</name>
+    </customLabels>
+    <customLabels>
+        <label>הושלם</label>
+        <name>statusCompleted</name>
+    </customLabels>
+    <customLabels>
+        <label>בביצוע</label>
+        <name>statusInProgress</name>
+    </customLabels>
+    <customLabels>
+        <label>לא הופעל</label>
+        <name>statusNotStarted</name>
+    </customLabels>
+    <customLabels>
+        <label>ניהול חשבונות משק בית וארגון מאפשר לך להוסיף כתובות מרובות לחשבון, לציין כתובות ברירת מחדל ולציין כתובות עונתיות. ניהול הכתובות זמין ב-NPSP3 ואילך עם מודל חשבון משק הבית.</label>
+        <name>stgAddrGeneralSettingsIntro</name>
+    </customLabels>
+    <customLabels>
+        <label>עליך לבחור שירות אימות כדי להפעיל אימות אוטומטי.</label>
+        <name>stgAddrMustChooseClass</name>
+    </customLabels>
+    <customLabels>
+        <label>ביטול</label>
+        <name>stgBtnCancel</name>
+    </customLabels>
+    <customLabels>
+        <label>נקה יומן שגיאות</label>
+        <name>stgBtnClearErrorLog</name>
+    </customLabels>
+    <customLabels>
+        <label>צור קשר אוטומטי</label>
+        <name>stgBtnCreateAutoRel</name>
+    </customLabels>
+    <customLabels>
+        <label>צור מיפוי מותאם אישית</label>
+        <name>stgBtnCreateMapping</name>
+    </customLabels>
+    <customLabels>
+        <label>צור תקופת תשלומים מותאמת אישית</label>
+        <name>stgBtnCreateRDPeriod</name>
+    </customLabels>
+    <customLabels>
+        <label>צור קשר הדדי</label>
+        <name>stgBtnCreateRelReciprocal</name>
+    </customLabels>
+    <customLabels>
+        <label>צור מטפל במפעיל</label>
+        <name>stgBtnCreateTH</name>
+    </customLabels>
+    <customLabels>
+        <label>צור סיכום</label>
+        <name>stgBtnCreateUDR</name>
+    </customLabels>
+    <customLabels>
+        <label>עריכה</label>
+        <name>stgBtnEdit</name>
+    </customLabels>
+    <customLabels>
+        <label>רענן את כל שמות משק הבית</label>
+        <name>stgBtnHHAutoName</name>
+    </customLabels>
+    <customLabels>
+        <label>קשר אוטומטי חדש</label>
+        <name>stgBtnNewAutoRel</name>
+    </customLabels>
+    <customLabels>
+        <label>שם הזדמנות חדשה</label>
+        <name>stgBtnNewONS</name>
+    </customLabels>
+    <customLabels>
+        <label>מיפוי שדות תשלום חדשים</label>
+        <name>stgBtnNewPaymentMap</name>
+    </customLabels>
+    <customLabels>
+        <label>מיפוי שדות מותאמים אישית חדשים</label>
+        <name>stgBtnNewRDFieldMap</name>
+    </customLabels>
+    <customLabels>
+        <label>תקופת תשלומים מותאמת אישית חדשה</label>
+        <name>stgBtnNewRDPeriod</name>
+    </customLabels>
+    <customLabels>
+        <label>קשר הדדי חדש</label>
+        <name>stgBtnNewRelReciprocal</name>
+    </customLabels>
+    <customLabels>
+        <label>מטפל במפעיל חדש</label>
+        <name>stgBtnNewTH</name>
+    </customLabels>
+    <customLabels>
+        <label>סיכום חדש בהגדרת משתמש</label>
+        <name>stgBtnNewUDR</name>
+    </customLabels>
+    <customLabels>
+        <label>צור מיפוי שדות מותאמים אישית</label>
+        <name>stgBtnRDCreateNewMap</name>
+    </customLabels>
+    <customLabels>
+        <label>רענן את כל שמות ההזדמנות</label>
+        <name>stgBtnRefreshOpportunityNames</name>
+    </customLabels>
+    <customLabels>
+        <label>רענן את כל אנשי הקשר הראשיים בהזדמנות</label>
+        <name>stgBtnRefreshPrimaryContacts</name>
+    </customLabels>
+    <customLabels>
+        <label>הפעל אצווה</label>
+        <name>stgBtnRunBatch</name>
+    </customLabels>
+    <customLabels>
+        <label>שמור</label>
+        <name>stgBtnSave</name>
+    </customLabels>
+    <customLabels>
+        <label>תיעוד</label>
+        <name>stgDocumentation</name>
+    </customLabels>
+    <customLabels>
+        <label>כאשר אפשרות זו מסומנת, NPSP לא תתזמן משימות ברירת מחדל חוזרות באופן אוטומטי. 
+&lt;br/&gt; 
+&lt;br/&gt; 
+משימות חוזרות אלה מחשבות סיכומים, מעדכנות תרומות חוזרות וכתובות עונתיות, ומטפלות בשגיאות. 
+&lt;br/&gt; 
+&lt;br/&gt; 
+כשאפשרות זו לא מסומנת, בכל פעם שתבקר בדף ההגדרות של NPSP, מערכת NPSP תוודא שמשימות ברירת המחדל החוזרות מתוזמנות. התזמון מחדש תקף רק לגבי משימות חסרות, לא משימות שעודכנו. 
+&lt;br/&gt; 
+&lt;br/&gt; 
+כדי להציג משימות אלה, חפש את  המשימות המתוזמנות בהגדרות של Salesforce.</label>
+        <name>stgDontAutoScheduleHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label>מחלקת היישום אינה מיישמת את הממשק HH_INaming.</label>
+        <name>stgErrorINaming</name>
+    </customLabels>
+    <customLabels>
+        <label>מחלקת יישום לא חוקית.</label>
+        <name>stgErrorInvalidClass</name>
+    </customLabels>
+    <customLabels>
+        <label>שגיאה ב-{0}: {1}</label>
+        <name>stgErrorInvalidNameFormat</name>
+    </customLabels>
+    <customLabels>
+        <label>רענן את שמות משק הבית</label>
+        <name>stgHHNameRefreshTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>מודל החשבון המשמש את &apos;ערכת ההצלחה למלכ&quot;רים&apos;. אפשרות זו קובעת מה יקרה כשתיצור איש קשר עם שדה חשבון ריק. אזהרה: סוג הרשומה שנבחר עבור מודל החשבון לא צריך לשמש כסוג ברירת המחדל של רשומת חשבון עבור פרופילים בארגון שלך. שימוש באותו סוג רשומה יכול ליצור בעיות שונות בנתונים.</label>
+        <name>stgHelpAccountModel</name>
+    </customLabels>
+    <customLabels>
+        <label>כשאפשרות זו מסומנת, היא מפעילה את ההגדרות של שנת הכספים, במקום הגדרות השנה הקלנדרית, עבור סיכומים כוללים של הקצאות. כדי להגדיר פרטי שנת כספים, עבור אל &apos;הגדרה | פרופיל חברה | שנת כספים&apos;. הערה: &apos;ערכת ההצלחה למלכ&quot;רים&apos; אינה תומכת בהגדרות מותאמות אישית של שנת כספים.</label>
+        <name>stgHelpAlloFiscalYearRollups</name>
+    </customLabels>
+    <customLabels>
+        <label>הגדרת הערך עבור סיכומי &apos;N יום&apos;, כאשר N הוא מספר הימים שלפני היום הנוכחי. ערך ברירת המחדל הוא סיכום של 365 הימים האחרונים.</label>
+        <name>stgHelpAlloNDayValue</name>
+    </customLabels>
+    <customLabels>
+        <label>כאשר אפשרות זו מסומנת, היא מנחה את Salesforce ליצור או לעדכן השתייכויות עבור אנשי קשר הקשורים לחשבונות ארגוניים (סוג רשומת חשבון = &apos;ארגון&apos;) בכל פעם שחל שינוי בשדה החשבון או ההשתייכות הראשית של איש הקשר.</label>
+        <name>stgHelpAutoAffil</name>
+    </customLabels>
+    <customLabels>
+        <label>רשימה של סוגי המבצע החוקיים עבור חבר מבצע זה. (ריק עבור אנשי קשר.)</label>
+        <name>stgHelpAutoRelCampaignRT</name>
+    </customLabels>
+    <customLabels>
+        <label>השדה שמפעיל את היצירה האוטומטית.</label>
+        <name>stgHelpAutoRelField</name>
+    </customLabels>
+    <customLabels>
+        <label>אובייקט Salesforce המשויך לקשר הנוצר באופן אוטומטי.</label>
+        <name>stgHelpAutoRelObject</name>
+    </customLabels>
+    <customLabels>
+        <label>סוג הקשר שברצונך ליצור בין החבר במבצע או איש הקשר הבסיסי, לבין החבר במבצע או איש הקשר המתאים. החבר במבצע או איש הקשר המתאים יקבל ערך של קשר הדדי, אם ערך כזה זמין.</label>
+        <name>stgHelpAutoRelType</name>
+    </customLabels>
+    <customLabels>
+        <label>אם אפשרות זו מוגדרת, הזנת ערכים באצווה לעולם לא תעניק שמות להזדמנויות, גם אם הם ריקים (לא נכלל בדף BDE).</label>
+        <name>stgHelpBDEAllowBlankOppNames</name>
+    </customLabels>
+    <customLabels>
+        <label>הגדרה זו יוצרת באופן אוטומטי את שם הרשומה עבור רשומות הזדמנות שהוזנו באצווה, על בסיס ערך השדות שהוזנו.</label>
+        <name>stgHelpBDEOppNaming</name>
+    </customLabels>
+    <customLabels>
+        <label>כלי שירות זה מחשב סיכומים כוללים עבור כל ההזדמנויות הסגורות עם הקצאות, ומעדכן את הרשומות של היחידה החשבונאית הכללית (GAU) הרלוונטית.
+תהליך זה עשוי לארוך זמן מה, אך ניתן לסגור דף זה ללא חשש והתהליך ימשיך לפעול ברקע.</label>
+        <name>stgHelpBatchAlloRollup</name>
+    </customLabels>
+    <customLabels>
+        <label>לחיצה על לחצן זה מפעילה תהליך אצווה היוצר הקצאות ברירת מחדל עבור כל ההזדמנויות הקיימות, מלבד הזדמנויות שלא נכללו בהגדרות סיכום ההקצאות. כדי להפעיל כלי זה, יש להפעיל הקצאות ברירת מחדל ולבחור יחידה חשבונאית כללית.</label>
+        <name>stgHelpBatchCreateDefault</name>
+    </customLabels>
+    <customLabels>
+        <label>כלי שירות זה מחשב סיכומים כוללים עבור כל ההזדמנויות הסגורות עם הקצאות, ומעדכן את אנשי הקשר, משקי הבית והחשבונות הרלוונטיים.
+תהליך זה עשוי לארוך זמן מה, אך ניתן לסגור דף זה ללא חשש והתהליך ימשיך לפעול ברקע.</label>
+        <name>stgHelpBatchOppRollup</name>
+    </customLabels>
+    <customLabels>
+        <label>&lt;b&gt;אזהרה:&lt;/b&gt; לחיצה על לחצן זה תפעיל מתן שמות אוטומטי למשק בית ותחליף את שמות משק הבית, הברכות הרשמיות והברכות הלא רשמיות הקיימים שלך בשמות חדשים, בהתאם לתבניות שבחרת. כל חשבון משק בית (או אובייקט משק בית) בארגון Salesforce שלך יקבל שם חדש (מלבד משקי הבית שעבורם מתן השמות האוטומטי אינו מופעל).&lt;br/&gt;&lt;br/&gt;
+
+&lt;b&gt;זהו תהליך בלתי הפיך.&lt;/b&gt; ניתן לכבות את מתן השמות האוטומטי למשק בית בכל עת, אך השמות החדשים יישארו בתוקף. &lt;br/&gt;&lt;br/&gt;
+
+לפני הפעלת התהליך, מומלץ להשבית את הפריטים הבאים כאשר הם משפיעים על משקי בית:
+&lt;br/&gt;
+&lt;br/&gt;
+● כללי אימות מותאמים אישית&lt;br/&gt;
+● כללי זרימת עבודה&lt;br/&gt;
+● בונה התהליכים&lt;br/&gt;
+● זרימות עבודה חזותיות&lt;br/&gt;
+● גורמים מפעילים מותאמים אישית&lt;br/&gt;
+
+&lt;br/&gt;
+לאחר שהתהליך יושלם במלואו, תוכל לצאת מדף זה או לרענן אותו ללא חשש.</label>
+        <name>stgHelpBtnHHNaming</name>
+    </customLabels>
+    <customLabels>
+        <label>&lt;b&gt;אזהרה:&lt;/b&gt; לחיצה על לחצן זה תפעיל מתן שמות להזדמנויות באצווה ותרענן את כל שמות ההזדמנויות בהתאם לתבנית שבחרת. Salesforce תשנה את השם של כל הזדמנות בארגון שלך, מלבד אלה שציינת את הערך &apos;אל תשנה את השם&apos; בתבנית שם ההזדמנות שלהן. &lt;br/&gt;&lt;br/&gt;
+
+&lt;b&gt;זהו תהליך בלתי הפיך.&lt;/b&gt;
+לפני הפעלת התהליך, אנו ממליצים שתגבה את הנתונים שלך. בנוסף, אנו ממליצים להשבית את הפריטים הבאים כאשר הם משפיעים על הזדמנויות: 
+&lt;br/&gt;
+&lt;br/&gt;
+● כללי אימות מותאמים אישית&lt;br/&gt;
+● כללי זרימת עבודה&lt;br/&gt;
+● בונה התהליכים&lt;br/&gt;
+● זרימות עבודה חזותיות&lt;br/&gt;
+● גורמים מפעילים מותאמים אישית&lt;br/&gt;&lt;br/&gt;
+לאחר שהתהליך יושלם במלואו, תוכל לצאת מדף זה או לרענן אותו ללא חשש.</label>
+        <name>stgHelpBtnOppNaming</name>
+    </customLabels>
+    <customLabels>
+        <label>קבוצת Chatter שבה יתפרסמו הודעות השגיאה.</label>
+        <name>stgHelpChatterGroup</name>
+    </customLabels>
+    <customLabels>
+        <label>הקפד להזין את מפתח ה-API של Cicero בשדה ההגדרות של אסימון האימות. תוכל למצוא את מפתח ה-API בדף הפרופיל שלך ב-Cicero, באתר cicero.azavea.com</label>
+        <name>stgHelpCiceroAddrVerification</name>
+    </customLabels>
+    <customLabels>
+        <label>סוגי רשומות איש הקשר שאינך רוצה לכלול ביצירה אוטומטית של תפקידי איש קשר של חבר במשק בית. לדוגמה, ייתכן שתרצה ליצור רשומה מסוג &apos;ילד&apos; עבור ילדים שהנם אנשי קשר במשק הבית ולהזין אותו כאן. לאחר מכן, Salesforce תמנע הכללה של אנשי קשר אלה בקבלה של תפקיד איש קשר במשק הבית כאשר ההזדמנות תיווצר.</label>
+        <name>stgHelpContactRTExcluded</name>
+    </customLabels>
+    <customLabels>
+        <label>&lt;b&gt;אזהרה:&lt;/b&gt; לחיצה על לחצן זה תפעיל יצירת תשלומים באצווה. Salesforce תיצור תשלום עבור כל הזדמנות שאינה מכילה תשלומים אשר: 
+&lt;br/&gt;
+&lt;br/&gt; 
+● הסכום שלהם גדול מאפס&lt;br/&gt; 
+● אינם מסומנים בערך &apos;אל תיצור תשלום באופן אוטומטי&apos;&lt;br/&gt; 
+● לא נמנעה הכללה שלהם בהגדרות &apos;תרומות | תשלומים&apos;&lt;br/&gt; 
+&lt;br/&gt; 
+
+&lt;b&gt;זהו תהליך בלתי הפיך.&lt;/b&gt; 
+לפני הפעלת התהליך, מומלץ להשבית את הפריטים הבאים כאשר הם משפיעים על תשלומים: 
+&lt;br/&gt;
+&lt;br/&gt;
+● כללי אימות מותאמים אישית&lt;br/&gt;
+● כללי זרימת עבודה&lt;br/&gt;
+● בונה התהליכים&lt;br/&gt;
+● זרימות עבודה חזותיות&lt;br/&gt;
+● גורמים מפעילים מותאמים אישית&lt;br/&gt; 
+
+&lt;br/&gt; 
+לאחר שהתהליך יושלם במלואו, תוכל לצאת מדף זה או לרענן אותו ללא חשש.</label>
+        <name>stgHelpCreateMissingPayments</name>
+    </customLabels>
+    <customLabels>
+        <label>מאפשר את היצירה האוטומטית והניהול של רשומות הקצאת GAU אל היחידה החשבונאית הכללית המהווה ברירת מחדל. תכונה זו מאפשרת דיווח משופר על הקצאות ליחידה חשבונאית כללית המהווה ברירת מחדל, אך עושה שימוש בשטח רב יותר לאחסון נתונים.</label>
+        <name>stgHelpDefaultAllocationsEnabled</name>
+    </customLabels>
+    <customLabels>
+        <label>כאשר הקצאות ברירת מחדל מופעלות, Salesforce יוצרת הקצאת GAU עבור כל ההזדמנויות ומקצה אותן ליחידה חשבונאית כללית זו. הערה: לא כולל הזדמנויות קיימות שלא הוקצו. תוכל להקצות אותן ליחידה החשבונאית הכללית המהווה ברירת מחדל בהגדרות NPSP תחת &apos;תהליכי אצוות נתונים | צור הקצאות ברירת מחדל באצווה&apos;.</label>
+        <name>stgHelpDefaultGAU</name>
+    </customLabels>
+    <customLabels>
+        <label>סמן אפשרות זו כדי להשבית ניהול כתובות עבור חשבונות משק בית.</label>
+        <name>stgHelpDisableHHAccountAddr</name>
+    </customLabels>
+    <customLabels>
+        <label>סיכום הסכומים הכוללים של הזדמנויות סגורות/זכייה לרשומות איש קשר על סמך תפקידי איש קשר בהזדמנות שהוקצו. סיכומי קרדיט מתרחשים רק באצוות ליליות, אך ניתן להפעיל אותם באופן ידני מההגדרות של אצוות סיכום התרומות.</label>
+        <name>stgHelpEnableSoftCreditRollups</name>
+    </customLabels>
+    <customLabels>
+        <label>יומן השגיאות מציג רשימה מפורטת של שגיאות לצורך תיקון באגים. השגיאות נרשמות ביומן רק אם האפשרויות &apos;טיפול בשגיאות&apos; ו&apos;שמור שגיאות&apos; מופעלות ב&apos;כלי מערכת | הודעות שגיאה&apos;.</label>
+        <name>stgHelpErrorLog</name>
+    </customLabels>
+    <customLabels>
+        <label>סמן אפשרות זו אם תרצה שהמערכת תפרסם הודעות עבור סוגי שגיאות מסוימים.</label>
+        <name>stgHelpErrorNotifyOn</name>
+    </customLabels>
+    <customLabels>
+        <label>בחר את סוג המשתמש שאליו יישלחו הודעות.</label>
+        <name>stgHelpErrorNotifyTo</name>
+    </customLabels>
+    <customLabels>
+        <label>&lt;b&gt;הערה:&lt;/b&gt; בדוגמאות לתצוגה מקדימה שלעיל לא ניתן להציג מידע על שדות שאינם &apos;שם פרטי&apos;, &apos;שם משפחה&apos; או &apos;תואר&apos;. (לדוגמה, אם יצרת שדה מותאם אישית עבור כינוי שבו תרצה להשתמש בברכה לא רשמית, שדה זה לא יופיע כאן.) שדות שאינם &apos;שם פרטי&apos;, &apos;שם משפחה&apos; או &apos;תואר&apos; אינם מופיעים גם בשדות הברכה של דף ניהול משק הבית, אך כאשר תשמור את פרטי אנשי הקשר בדף זה, מוסכמות מתן השמות שלך למשקי בית יוצגו בצורה נכונה.</label>
+        <name>stgHelpExampleHHNames</name>
+    </customLabels>
+    <customLabels>
+        <label>התבנית שמשמשת את Salesforce עבור הברכה הרשמית.</label>
+        <name>stgHelpFGFormat</name>
+    </customLabels>
+    <customLabels>
+        <label>כשאפשרות זו מסומנת, היא מפעילה את ההגדרות של שנת הכספים, במקום הגדרות השנה הקלנדרית, עבור סיכומים כוללים של הזדמנויות. כדי להגדיר פרטי שנת כספים, עבור אל &apos;הגדרה | פרופיל חברה | שנת כספים&apos;. הערה: &apos;ערכת ההצלחה למלכ&quot;רים&apos; אינה תומכת בהגדרות מותאמות אישית של שנת כספים.</label>
+        <name>stgHelpFiscalYearRollups</name>
+    </customLabels>
+    <customLabels>
+        <label>סוג רשומת החשבון שבו תרצה להשתמש עבור חשבונות חדשים, אם בחרת את מודל חשבון משק הבית לעיל. תוכל לבחור את סוג ברירת המחדל של רשומת חשבון משק הבית, או סוג רשומה משלך. אם תבחר באפשרות --ללא--, מערכת Salesforce תשתמש בסוג ברירת המחדל של רשומת החשבון עבור המשתמש שיוצר את איש הקשר החדש (ואת החשבון המשויך).</label>
+        <name>stgHelpHHAccountRTID</name>
+    </customLabels>
+    <customLabels>
+        <label>מציין אילו סוגים של רשומות איש קשר Salesforce לא תכלול ביצירת אובייקטים של משק בית. (תקף לגבי מודל החשבון &apos;אחד לאחד&apos; או &apos;אישי&apos; בלבד.)</label>
+        <name>stgHelpHHExcludedRT</name>
+    </customLabels>
+    <customLabels>
+        <label>כדי למנוע שליחת פריטי דואר כפולים לאותה כתובת, דוח רשימת הדיוור של משק הבית מסיר פריטים כפולים במבצע המכיל אנשי קשר מרובים מאותו משק בית. NPSP כוללת דוח הניתן לבחירה בשם &apos;רשימת דיוור של משק בית למבצע ב-NPSP&apos; אם השם של דוח זה השתנה או שהוא נמחק, בחר דוח מסוג &apos;מבצעים עם אנשי קשר&apos;, עם מסנן עבור: מצב החבר אינו מכיל את הערך &apos;כפול&apos;.</label>
+        <name>stgHelpHHMailingListReport</name>
+    </customLabels>
+    <customLabels>
+        <label>התבנית שמשמשת את Salesforce עבור השם של משק הבית.</label>
+        <name>stgHelpHHNameFormat</name>
+    </customLabels>
+    <customLabels>
+        <label>אם אפשרות זו מסומנת, מערכת Salesforce יוצרת באופן אוטומטי שם עבור חשבון משק הבית (או אובייקט משק הבית), על סמך השמות של אנשי הקשר במשק הבית. Salesforce גם יוצרת באופן אוטומטי את הברכות הרשמיות והלא רשמיות.</label>
+        <name>stgHelpHHNaming</name>
+    </customLabels>
+    <customLabels>
+        <label>יוצרת באופן אוטומטי תפקידי איש קשר עבור חברים במשק הבית של איש הקשר הראשי בהזדמנות.</label>
+        <name>stgHelpHHOCROn</name>
+    </customLabels>
+    <customLabels>
+        <label>למידע נוסף על הדגם המומלץ של חשבון משק בית, עיין &lt;a href=&quot;https://powerofus.force.com/NPSP_Account_Model&quot; target=&quot;_blank&quot;&gt;במסמכי התיעוד של NPSP‏&lt;/a&gt;.</label>
+        <name>stgHelpHHObjectOverview</name>
+    </customLabels>
+    <customLabels>
+        <label>מציין עבור אילו אנשי קשר Salesforce תיצור באופן אוטומטי אובייקטים נפרדים של משק בית. (תקף לגבי מודל החשבון &apos;אחד לאחד&apos; או &apos;אישי&apos; בלבד.)</label>
+        <name>stgHelpHHRules</name>
+    </customLabels>
+    <customLabels>
+        <label>השתמש &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelHealthCheck&apos;);return false;&quot;&gt;בבדיקת התקינות&lt;/a&gt; כדי לאמת את תצורת NPSP שלך!</label>
+        <name>stgHelpHealthCheck</name>
+    </customLabels>
+    <customLabels>
+        <label>התבנית שמשמשת את Salesforce עבור הברכה הלא רשמית.</label>
+        <name>stgHelpIGFormat</name>
+    </customLabels>
+    <customLabels>
+        <label>השם של מחלקת Apex שמיישמת את ממשק HH_INaming לצורך מתן שמות למשקי בית.</label>
+        <name>stgHelpINamingClass</name>
+    </customLabels>
+    <customLabels>
+        <label>מציין את ההתנהגות הכללית עבור יצירת הזדמנויות כאשר אתה ממיר הפניה לאיש קשר. אם אפשרות זו אינה מסומנת, Salesforce לא תיצור באופן אוטומטי הזדמנות כאשר תמיר הפניות לאנשי קשר. למידע נוסף, עיין &lt;a href=&quot;https://powerofus.force.com/NPSP_Leads&quot; target=&quot;_blank&quot;&gt;במסמכי התיעוד של NPSP‏&lt;/a&gt;.</label>
+        <name>stgHelpLeadConvert</name>
+    </customLabels>
+    <customLabels>
+        <label>כלי שירות זה מחשב את הקצאות הרמות עבור כל האובייקטים של Salesforce (ברוב המקרים חשבונות ואנשי קשר, אך גם כל אובייקט מותאם אישית) שהוקצו להם רמות. תהליך זה עשוי לארוך זמן מה, אך ניתן לסגור דף זה ללא חשש והתהליך ימשיך לפעול ברקע.
+&lt;br/&gt;&lt;br/&gt;
+
+&lt;b&gt;חשוב:&lt;/b&gt; משום שמערכת Salesforce מבצעת לעתים קרובות הערכה של רמות ביחס לשדות מעודכנים מתהליכי אצוות נתונים אחרים, ייתכן שתרצה להפעיל תהליכים אלה תחילה.</label>
+        <name>stgHelpLvlAssignBatch</name>
+    </customLabels>
+    <customLabels>
+        <label>תפקיד איש הקשר שבו תרצה להשתמש עבור תורמים תואמים. אנו ממליצים להשתמש ב&apos;תורם מותאם&apos;.</label>
+        <name>stgHelpMatchedDonorRole</name>
+    </customLabels>
+    <customLabels>
+        <label>מגדיר את המספר המרבי של תשלומים המותר בתזמון של תשלומים עבור הזדמנות. אם לא הוזן ערך, ברירת המחדל היא 12.</label>
+        <name>stgHelpMaxPayments</name>
+    </customLabels>
+    <customLabels>
+        <label>לאחר שחברות מסתיימת, משך תקופת החסד (בימים) לפני שמצב החברות בחשבון ישתנה מ&apos;תקופת חסד&apos; ל&apos;הסתיים&apos;. ערך ברירת המחדל הוא 30 יום.</label>
+        <name>stgHelpMembershipGracePeriod</name>
+    </customLabels>
+    <customLabels>
+        <label>סוג הרשומה המשמש לחישוב הזדמנויות העוקבות אחר תרומות במסגרת חברות. מומלץ להשתמש בחברות. הזדמנויות עם סוג רשומה זה מסוכמות בנפרד מסוגי רשומות הזדמנות אחרים.</label>
+        <name>stgHelpMembershipRT</name>
+    </customLabels>
+    <customLabels>
+        <label>מסמכי התיעוד של NPSP</label>
+        <name>stgHelpNPSPDoc</name>
+    </customLabels>
+    <customLabels>
+        <label>מגדירים את &apos;ערכת ההצלחה למלכ&quot;רים&apos; לעמידה בצורכי הארגון שלך. תוכל גם לנטר את התקינות של ארגון Salesforce שלך, או להפעיל תהליכי אצווה לעדכון נתונים.</label>
+        <name>stgHelpNPSPSettings</name>
+    </customLabels>
+    <customLabels>
+        <label>מציין את השם או התו (כגון &amp;) המשמש את Salesforce לחיבור זוגות בשם.</label>
+        <name>stgHelpNameConnector</name>
+    </customLabels>
+    <customLabels>
+        <label>מציין את הטקסט המשמש את Salesforce להחלפת רשימות ארוכות של שמות.</label>
+        <name>stgHelpNameOverrun</name>
+    </customLabels>
+    <customLabels>
+        <label>תחילה, בחר את שדה התרומה החוזרת שברצונך למפות. לאחר מכן, בחר את שדה ההזדמנות שאליו ברצונך למפות. שדה התרומה החוזרת שתבחר יופיע בכל הזדמנויות הצאצא עבור התרומה החוזרת.
+
+חשוב: יש להגדיר סוג נתונים זהה עבור שני שדות אלה.</label>
+        <name>stgHelpNewRDFieldMap</name>
+    </customLabels>
+    <customLabels>
+        <label>בחר את שדה ההזדמנות ופעולת הסיכום המתאימה, ולאחר מכן בחר את האובייקט והשדה שאליהם תרצה לבצע סיכום.</label>
+        <name>stgHelpNewUDR</name>
+    </customLabels>
+    <customLabels>
+        <label>לא הוגדרו סיכומים בהגדרת משתמש</label>
+        <name>stgHelpNoUDR</name>
+    </customLabels>
+    <customLabels>
+        <label>קרדיטים, תפקידי איש קשר ותרומות שוות קשורים אלה לאלה בדרכים חשובות. אם אינך מכיר את המושגים הללו ואת האופן שבו הם משפיעים זה על זה, עיין &lt;a href=&quot;https://powerofus.force.com/NPSP_SCMG&quot; target=&quot;_blank&quot;&gt;במסמכי התיעוד של NPSP‏&lt;/a&gt; לפני שתבצע שינויים בהגדרות אלה.</label>
+        <name>stgHelpOCR</name>
+    </customLabels>
+    <customLabels>
+        <label>תפקיד איש הקשר המהווה ברירת מחדל, המוקצה אוטומטית לאיש הקשר הראשי עבור ההזדמנות.</label>
+        <name>stgHelpOCRDefaultRole</name>
+    </customLabels>
+    <customLabels>
+        <label>תפקיד איש הקשר שבו תרצה להשתמש עבור חברי משק בית.</label>
+        <name>stgHelpOCRRoleForHH</name>
+    </customLabels>
+    <customLabels>
+        <label>סוג רשומת החשבון שבו תרצה להשתמש עבור חשבונות חדשים, אם בחרת את מודל חשבון &apos;אחד לאחד&apos; לעיל. NPSP אינה מגיעה עם סוג ברירת מחדל של רשומה עבור חשבונות &apos;אחד לאחד&apos;, לכן עליך ליצור סוג רשומה (כגון &apos;אישי&apos;) לפני שתבחר במודל זה. אם תבחר באפשרות --ללא--, מערכת Salesforce תשתמש בסוג ברירת המחדל של רשומת החשבון עבור המשתמש שיוצר את איש הקשר החדש (ואת חשבון &apos;אחד לאחד&apos; המשויך).</label>
+        <name>stgHelpOneToOneRTID</name>
+    </customLabels>
+    <customLabels>
+        <label>מציין אם ברצונך להחיל הגדרות אלה על תרומות איש קשר (כלומר, הזדמנויות המשויכות לחשבונות משק בית, &apos;אחד לאחד&apos; או Bucket אישיים), תרומות ארגוניות או תרומות של איש קשר ושל ארגון.</label>
+        <name>stgHelpOppNamingAttribution</name>
+    </customLabels>
+    <customLabels>
+        <label>תבנית התאריך המשמשת עבור כל שדה תאריך או DateTime שתבנית שם ההזדמנות מפנה אליו. בחר תבנית, או בחר &apos;אחר&apos; כדי ליצור תבנית מותאמת אישית משלך עבור המפרט SimpleDateFormat של Java.</label>
+        <name>stgHelpOppNamingDateFormat</name>
+    </customLabels>
+    <customLabels>
+        <label>התבנית של שם ההזדמנות. בחר &apos;אחר&apos; כדי ליצור תבנית משלך. לפרטים, עיין &lt;a href=&quot;https://powerofus.force.com/NPSP_Opp_Names&quot; target=&quot;_blank&quot;&gt;במסמכי התיעוד של NPSP‏&lt;/a&gt;.</label>
+        <name>stgHelpOppNamingFormat</name>
+    </customLabels>
+    <customLabels>
+        <label>סוגי רשומות ההזדמנות שעליהם ברצונך להחיל שם הזדמנות זה. כדי לבחור יותר מסוג רשומה אחד, לחץ על לחצן העכבר ועל מקש Control או Command. האפשרות &apos;--ללא--&apos; מחילה את השמות החדשים על כל סוגי הרשומות.</label>
+        <name>stgHelpOppNamingRecTypes</name>
+    </customLabels>
+    <customLabels>
+        <label>Salesforce לא תיצור באופן אוטומטי תשלומים עבור סוגי רשומות ההזדמנות שנבחרו. כדי לבחור יותר מסוג רשומה אחד, לחץ על לחצן העכבר ועל מקש Control או Command.</label>
+        <name>stgHelpOppRecTypesNoPayments</name>
+    </customLabels>
+    <customLabels>
+        <label>Salesforce לא תיצור באופן אוטומטי תשלומים עבור הזדמנויות שמכילות ערך זה ברשימת הבחירה של הסוג.</label>
+        <name>stgHelpOppTypesNoPayments</name>
+    </customLabels>
+    <customLabels>
+        <label>סמן אפשרות זו כדי לאפשר ניהול כתובות עבור חשבונות ארגוניים.</label>
+        <name>stgHelpOrgAccountAddressMgmt</name>
+    </customLabels>
+    <customLabels>
+        <label>מספר אנשי הקשר ש-Salesforce תעניק להם שם באופן מפורש בשמות וברכות של משק בית. לאחר מספר זה, Salesforce תשתמש בערך של גלישת השמות לצורת מתן שמות.</label>
+        <name>stgHelpOverrunCount</name>
+    </customLabels>
+    <customLabels>
+        <label>שדה ההזדמנות שממנו תתבצע העתקה.</label>
+        <name>stgHelpPaymentMapOppField</name>
+    </customLabels>
+    <customLabels>
+        <label>שדה התשלום שאליו תתבצע העתקה.</label>
+        <name>stgHelpPaymentMapPaymentField</name>
+    </customLabels>
+    <customLabels>
+        <label>כדי להגדיר מיפוי, בחר שדה הזדמנות ולאחר מכן בחר את שדה התשלום שאליו הוא ממפה. הערה: מיפוי תשלומים מחייב שיהיו לך שני שדות (אחד בהזדמנות, אחד בתשלום) בעלי סוג נתונים תואם.</label>
+        <name>stgHelpPaymentMapping</name>
+    </customLabels>
+    <customLabels>
+        <label>מפה את השדות כך שהערכים מההזדמנות יועתקו אוטומטית אל התשלום. המיפוי תקף לגבי תשלומים שנוצרו אוטומטית או תשלומים שנוצרו באמצעות מתזמן התשלומים.</label>
+        <name>stgHelpPaymentMappings</name>
+    </customLabels>
+    <customLabels>
+        <label>אם אפשרות זו מופעלת, Salesforce יוצרת באופן אוטומטי תשלומים עבור הזדמנויות חדשות (תרומות).</label>
+        <name>stgHelpPaymentsEnabled</name>
+    </customLabels>
+    <customLabels>
+        <label>שאלות? ל-HUb יש תשובות! נסה את הקבוצה של &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;ערכת ההצלחה למלכ&quot;רים&lt;/a&gt; לתשובות בנושא NPSP ואת קבוצת &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;מנהלי המערכת&lt;/a&gt; לתשובות בנושא ניהול והגדרת התצורה של Salesforce‏.&lt;br/&gt;&lt;br/&gt;הישאר מעודכן בהערות המוצר החדשות ביותר של NPSP בקבוצת &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;הודעות המוצר של NPSP‏&lt;/a&gt;.</label>
+        <name>stgHelpPowerOfUsHub</name>
+    </customLabels>
+    <customLabels>
+        <label>&lt;b&gt;אזהרה:&lt;/b&gt; לחיצה על לחצן זה תפעיל עדכון הזדמנויות באצווה לרענון שדה איש הקשר הראשי. מערכת Salesforce תעדכן רשומות הזדמנות שבהן הערך של שדה איש הקשר הראשי אינו זהה לערך של רשומת איש הקשר הראשי בהזדמנות, המסומן כראשי.&lt;br/&gt;&lt;br/&gt;
+
+&lt;b&gt;זהו תהליך בלתי הפיך.&lt;/b&gt;
+שינוי זה מעדכן את רשומות ההזדמנות. לפני שתפעיל תהליך זה, מומלץ לגבות את הנתונים שלך. בנוסף, אנו ממליצים להשבית את הפריטים הבאים כאשר הם משפיעים על הזדמנויות: 
+&lt;br/&gt;
+&lt;br/&gt;
+● כללי אימות מותאמים אישית&lt;br/&gt;
+● כללי זרימת עבודה&lt;br/&gt;
+● בונה התהליכים&lt;br/&gt;
+● זרימות עבודה חזותיות&lt;br/&gt;
+● גורמים מפעילים מותאמים אישית&lt;br/&gt;&lt;br/&gt;
+לאחר שהתהליך יושלם במלואו, תוכל לצאת מדף זה או לרענן אותו ללא חשש.</label>
+        <name>stgHelpPrimaryContactBatch</name>
+    </customLabels>
+    <customLabels>
+        <label>אם אפשרות זו מסומנת, היא מוסיפה את המבצע שציינת עבור התרומה החוזרת לכל ההזדמנויות הקשורות (כלומר, &apos;צאצאים&apos;). אם אפשרות זו אינה מסומנת, המבצע מופיע רק בהזדמנות הראשונה של התרומה החוזרת.</label>
+        <name>stgHelpRDAddCampaign</name>
+    </customLabels>
+    <customLabels>
+        <label>כלי שירות זה מפעיל תהליך אצווה עבור כל התרומות החוזרות עם סיום פתוח, על סמך מספר החודשים של תחזית ההזדמנויות:
+&lt;br/&gt;
+&lt;br/&gt; 
+● יוצר הזדמנויות חדשות&lt;br/&gt;
+● מעדכן את מספר התשלומים והסכום ששולם&lt;br/&gt;
+&lt;br/&gt;
+תהליך זה עשוי לארוך זמן מה, אך ניתן לסגור דף זה ללא חשש והתהליך ימשיך לפעול ברקע.</label>
+        <name>stgHelpRDBatch</name>
+    </customLabels>
+    <customLabels>
+        <label>מניעת התזמון של העדכון הלילי של תרומות חוזרות.</label>
+        <name>stgHelpRDDisableScheduling</name>
+    </customLabels>
+    <customLabels>
+        <label>מספר התרומות החוזרות שהעדכון שלהן נכשל בפעולת האצווה האחרונה.</label>
+        <name>stgHelpRDFailures</name>
+    </customLabels>
+    <customLabels>
+        <label>הגדרה זו מאפשרת לך למפות שדות מרשומת התרומה החוזרת אל הזדמנויות הצאצא של התרומה החוזרת.</label>
+        <name>stgHelpRDFieldMap</name>
+    </customLabels>
+    <customLabels>
+        <label>הוצא משימוש.</label>
+        <name>stgHelpRDFieldMapOppField</name>
+    </customLabels>
+    <customLabels>
+        <label>הוצא משימוש.</label>
+        <name>stgHelpRDFieldMapRDField</name>
+    </customLabels>
+    <customLabels>
+        <label>התאריך והשעה של עדכון האצווה האחרון של תרומות חוזרות.</label>
+        <name>stgHelpRDLastRun</name>
+    </customLabels>
+    <customLabels>
+        <label>הגבלת המספר הכולל של תרומות (תשלומים) שניתן ליצור עבור תרומות חוזרות באורך קבוע. ערך ברירת המחדל הוא 50.</label>
+        <name>stgHelpRDMaxDonations</name>
+    </customLabels>
+    <customLabels>
+        <label>אומר למערכת Salesforce מה לעשות עם כל הזדמנות שנותרה פתוחה כאשר אתה מסמן את המצב של תרומה חוזרת עם סיום פתוח כ&apos;סגור&apos;.</label>
+        <name>stgHelpRDOpenOppBehavior</name>
+    </customLabels>
+    <customLabels>
+        <label>מספר החודשים ליצירת הזדמנויות פתוחות עבור תרומות חוזרות עם סיום פתוח. ערך ברירת המחדל הוא 12, לכן אחרי כל חודש, Salesforce יוצרת הזדמנויות פתוחות למשך חודש (כלומר, מספר החודשים הכולל ליצירת הזדמנויות פתוחות הוא תמיד 12).</label>
+        <name>stgHelpRDOppForecastMonths</name>
+    </customLabels>
+    <customLabels>
+        <label>סוג רשומת ההזדמנות המוקצה להזדמנויות הצאצא של התרומה החוזרת.</label>
+        <name>stgHelpRDOppRT</name>
+    </customLabels>
+    <customLabels>
+        <label>משך הזמן שתקופת התשלומים המותאמת אישית מכסה.</label>
+        <name>stgHelpRDPeriodFrequency</name>
+    </customLabels>
+    <customLabels>
+        <label>השם של תקופת התשלומים המותאמת אישית החדשה</label>
+        <name>stgHelpRDPeriodName</name>
+    </customLabels>
+    <customLabels>
+        <label>סוג פרק הזמן שתקופת התשלומים המותאמת אישית מכסה.</label>
+        <name>stgHelpRDPeriodType</name>
+    </customLabels>
+    <customLabels>
+        <label>מספר התרומות החוזרות שהעדכון שלהן בוצע בהצלחה בהפעלת האצווה האחרונה.</label>
+        <name>stgHelpRDSuccesses</name>
+    </customLabels>
+    <customLabels>
+        <label>הגדרה זו מאפשרת לך ליצור תקופות תשלומים מותאמות אישית עבור תרומות חוזרות, השונות מתקופות התשלומים המהוות ברירת מחדל (חודשית, רבעונית, שנתית וכן הלאה) הנכללות ב-NPSP.</label>
+        <name>stgHelpRecDon</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP מסירה אוטומטית פריטים כפולים בקשרים הנוצרים באופן אוטומטי. בחר אפשרות זו אם ברצונך להשבית הסרה אוטומטית של פריטים כפולים, ולאפשר לקשרים מרובים מאותו סוג להתקיים בין שני אנשי קשר.</label>
+        <name>stgHelpRelAutoCreatedDup</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRelFieldSyncToggle --></label>
+        <name>stgHelpRelFieldSyncToggle</name>
+    </customLabels>
+    <customLabels>
+        <label>שדה ברירת מחדל המציין את המגדר של איש הקשר. Salesforce עושה שימוש בערך המופיע בשדה זה כדי לקבוע קשרים הדדיים.</label>
+        <name>stgHelpRelGenderField</name>
+    </customLabels>
+    <customLabels>
+        <label>הערך המשמש את Salesforce אם הערך בשדה המגדר של איש הקשר הוא &apos;נקבה&apos;, או אם שדה התואר של איש הקשר מציין מגדר.</label>
+        <name>stgHelpRelReciprocalFemale</name>
+    </customLabels>
+    <customLabels>
+        <label>הערך המשמש את Salesforce אם הערך בשדה המגדר של איש הקשר הוא &apos;זכר&apos;, או אם שדה התואר של איש הקשר מציין מגדר.</label>
+        <name>stgHelpRelReciprocalMale</name>
+    </customLabels>
+    <customLabels>
+        <label>מציין את השיטה המשמשת ליצירת קשרים הדדיים. למידע נוסף, עיין &lt;a href=&quot;https://powerofus.force.com/NPSP_Relationships_Settings&quot; target=&quot;_blank&quot;&gt;במסמכי התיעוד של NPSP‏&lt;/a&gt;.</label>
+        <name>stgHelpRelReciprocalMethod</name>
+    </customLabels>
+    <customLabels>
+        <label>שם הקשר. זהו ערך הסוג שהמשתמש בוחר בעת יצירה של קשר בין אנשי קשר.</label>
+        <name>stgHelpRelReciprocalName</name>
+    </customLabels>
+    <customLabels>
+        <label>הערך המשמש את מערכת Salesforce אם אין לה אפשרות לקבוע את מגדר המשתמש לפי הערך בשדה המגדר או הברכה.</label>
+        <name>stgHelpRelReciprocalNeutral</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRelSyncFields --></label>
+        <name>stgHelpRelSyncFields</name>
+    </customLabels>
+    <customLabels>
+        <label>עיין &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelErrorLog&apos;);return false;&quot;&gt;ביומני השגיאות&lt;/a&gt; כדי לבדוק אם קיימות בעיות.</label>
+        <name>stgHelpReviewErrorLog</name>
+    </customLabels>
+    <customLabels>
+        <label>מספר הרשומות שיעובדו בבת-אחת בעת חישוב נתונים סטטיסטיים של תורם. גודל ברירת המחדל הוא 200. אם סיכומי ההזדמנויות נכשלים כתוצאה ממגבלות המערכת, בחר מספר קטן יותר.</label>
+        <name>stgHelpRollupBatchSize</name>
+    </customLabels>
+    <customLabels>
+        <label>הזדמנויות עם סוגי הרשומות שנבחרו לא ייכללו בסיכומים אל החשבון. כדי לבחור יותר מסוג רשומה אחד, לחץ על לחצן העכבר ועל מקש Control או Command.</label>
+        <name>stgHelpRollupExcludeAccountOppRT</name>
+    </customLabels>
+    <customLabels>
+        <label>הזדמנויות המכילות ערך זה ברשימת הבחירה של הסוג לא ייכללו בסיכומים אל החשבון.</label>
+        <name>stgHelpRollupExcludeAccountOppType</name>
+    </customLabels>
+    <customLabels>
+        <label>הקצאות GAU מהזדמנויות עם סוגי הרשומות שנבחרו לא ייכללו במהלך הסיכום אל רשומת היחידה החשבונאית הכללית.</label>
+        <name>stgHelpRollupExcludeAlloOppRecType</name>
+    </customLabels>
+    <customLabels>
+        <label>הקצאות GAU מהזדמנויות המכילות ערך זה ברשימת הבחירה של הסוג לא ייכללו במהלך הסיכום אל רשומת היחידה החשבונאית הכללית.</label>
+        <name>stgHelpRollupExcludeAlloOppType</name>
+    </customLabels>
+    <customLabels>
+        <label>הזדמנויות עם סוגי הרשומות שנבחרו לא ייכללו בסיכומים אל איש הקשר. כדי לבחור יותר מסוג רשומה אחד, לחץ על לחצן העכבר ועל מקש Control או Command.</label>
+        <name>stgHelpRollupExcludeContactOppRT</name>
+    </customLabels>
+    <customLabels>
+        <label>הזדמנויות המכילות ערך זה ברשימת הבחירה של הסוג לא ייכללו בסיכומים אל איש הקשר.</label>
+        <name>stgHelpRollupExcludeContactOppType</name>
+    </customLabels>
+    <customLabels>
+        <label>הגדרת הערך עבור סיכומי &apos;N יום&apos;, כאשר N הוא מספר הימים שלפני היום הנוכחי. ערך ברירת המחדל הוא סיכום של 365 הימים האחרונים.</label>
+        <name>stgHelpRollupNDayValue</name>
+    </customLabels>
+    <customLabels>
+        <label>כאשר אפשרות זו מסומנת, מערכת Salesforce תמיד תסכם את נתוני התורמים אל איש הקשר הראשי של ההזדמנות, וחשבון או רשומת משק הבית המתאימים, גם אם ההזדמנות אינה מאדם פרטי (כלומר מחברה, מוסד וכן הלאה). אם אפשרות זו אינה מסומנת, והחשבון של ההזדמנות הוא ארגון, רק הארגון יקבל קרדיט עבור ההזדמנות.</label>
+        <name>stgHelpRollupPrimaryContact</name>
+    </customLabels>
+    <customLabels>
+        <label>רוצה לבצע התאמה אישית של פריסות דפים, או להוסיף משתמשים?  נסה את דפי &lt;a href=&quot;/setup/forcecomHomepage.apexp?setupid=ForceCom&quot; target=&quot;_blank&quot;&gt;ההגדרות של Salesforce‏&lt;/a&gt;.</label>
+        <name>stgHelpSalesforceSetup</name>
+    </customLabels>
+    <customLabels>
+        <label>שינוי כתובת פשוט הוא שינוי (כגון תיקון שגיאת הקלדה או מחיקת רווח מיותר) בשדה אחד של איש קשר או כתובת בחשבון. כאשר אפשרות זו מסומנת, מערכת Salesforce מתייחסת לשינויים אלה כעדכונים של הכתובת הקיימת (כלומר, לא נוצר אובייקט כתובת חדש).</label>
+        <name>stgHelpSimpleAddrChangeIsUpdate</name>
+    </customLabels>
+    <customLabels>
+        <label>תפקידי איש קשר בהזדמנות שברצונך לכלול בסיכומי קרדיט. לבחירת תפקידים מרובים, לחץ על לחצן העכבר ועל מקש Control או Command.</label>
+        <name>stgHelpSoftCreditRoles</name>
+    </customLabels>
+    <customLabels>
+        <label>סמן אפשרות זו אם ברצונך לשמור שגיאות במסד הנתונים.</label>
+        <name>stgHelpStoreErrorsOn</name>
+    </customLabels>
+    <customLabels>
+        <label>מטפלים במפעילים מכילים את הלוגיקה העסקית שיש להפעיל עבור אירוע מסוים של גורם מפעיל.</label>
+        <name>stgHelpTDTM</name>
+    </customLabels>
+    <customLabels>
+        <label>מציין שהמטפל במפעיל זה נמצא במצב פעיל והוא יופעל כאשר הקריטריונים של פעולת הגורם המפעיל יתמלאו.</label>
+        <name>stgHelpTHActive</name>
+    </customLabels>
+    <customLabels>
+        <label>מציין שהאירועים המאוחרים של המטפל במפעיל זה צריכים לפעול באופן אסינכרוני. אזהרה: אם מחלקת Apex שצוינה אינה תומכת בעיבוד אסינכרוני ותסמן תיבה זו, ייתכן שהמחלקה לא תפעל כראוי.</label>
+        <name>stgHelpTHAsync</name>
+    </customLabels>
+    <customLabels>
+        <label>מחלקת Apex שתופעל.</label>
+        <name>stgHelpTHClass</name>
+    </customLabels>
+    <customLabels>
+        <label>הסדר שבו הגורם המפעיל צריך לפעול. אם לרשומה שהמטפל במפעיל זה מעבד יש רשומות קשורות, סדר הטעינה מבטיח שהן ייווצרו או יעודכנו בסדר הנכון.</label>
+        <name>stgHelpTHLoadOrder</name>
+    </customLabels>
+    <customLabels>
+        <label>האובייקט הקשור למטפל במפעיל זה.</label>
+        <name>stgHelpTHObject</name>
+    </customLabels>
+    <customLabels>
+        <label>הפעולות שמפעילות את הגורם המפעיל. כדי לבחור יותר מפעולה אחת, לחץ על לחצן העכבר ועל מקש Ctrl או Command.</label>
+        <name>stgHelpTHTriggerAction</name>
+    </customLabels>
+    <customLabels>
+        <label>גורמים מפעילים אלה שולטים בפונקציות ליבה ב&apos;ערכת ההצלחה למלכ&quot;רים&apos;, לכן נקוט משנה זהירות במהלך היצירה או השינוי שלהם.</label>
+        <name>stgHelpTriggerHandlers</name>
+    </customLabels>
+    <customLabels>
+        <label>הגדרה של מטפל במפעיל לפעולה באופן אסינכרוני יכולה להוביל להשלכות לא מכוונות ויש לבדוק אותה באופן מלא לפני הפריסה.</label>
+        <name>stgHelpTriggerHandlersAsync</name>
+    </customLabels>
+    <customLabels>
+        <label>קובע כיצד יש לסכם את השדה. הרשימה כוללת רק את הפעולות החוקיות עבור ההזדמנות שנבחרה.</label>
+        <name>stgHelpUDROperation</name>
+    </customLabels>
+    <customLabels>
+        <label>שדה ההזדמנות שיש לסכם.</label>
+        <name>stgHelpUDROppField</name>
+    </customLabels>
+    <customLabels>
+        <label>האובייקט שבו פרטי הסיכום יופיעו.</label>
+        <name>stgHelpUDRTargetObject</name>
+    </customLabels>
+    <customLabels>
+        <label>ההתקנה שלך בוצעה בהצלחה, אך זיהינו בעיה קלה. כדי לתקן את הבעיה,, טען את דף ההגדרות של NPSP ב-Salesforce‏.
+
+הערה: כרטיסיית ההגדרות של NPSP גלויה ביישום &apos;ערכת ההצלחה למלכ&quot;רים&apos;. אם אינך רואה את הכרטיסייה, בחר את &apos;ערכת ההצלחה למלכ&quot;רים&apos; מתפריט היישומים בפינה הימנית העליונה.</label>
+        <name>stgInstallScriptError</name>
+    </customLabels>
+    <customLabels>
+        <label>פעולה</label>
+        <name>stgLabelActionColumn</name>
+    </customLabels>
+    <customLabels>
+        <label>הגדרות כתובת</label>
+        <name>stgLabelAddressVerification</name>
+    </customLabels>
+    <customLabels>
+        <label>הגדרות השתייכות</label>
+        <name>stgLabelAfflSettings</name>
+    </customLabels>
+    <customLabels>
+        <label>כל סוגי הרשומות -</label>
+        <name>stgLabelAllRecordTypes</name>
+    </customLabels>
+    <customLabels>
+        <label>התקדמות אצוות סיכום הקצאות</label>
+        <name>stgLabelAlloBatchProgress</name>
+    </customLabels>
+    <customLabels>
+        <label>הגדרות סיכום הקצאות GAU</label>
+        <name>stgLabelAllocationsRollupSettings</name>
+    </customLabels>
+    <customLabels>
+        <label>הגדרות ברירת מחדל להקצאות</label>
+        <name>stgLabelAllocationsSettings</name>
+    </customLabels>
+    <customLabels>
+        <label>האם אתה בטוח?</label>
+        <name>stgLabelAreYouSure</name>
+    </customLabels>
+    <customLabels>
+        <label>תפקידי איש קשר אוטומטיים</label>
+        <name>stgLabelAutoContactRoles</name>
+    </customLabels>
+    <customLabels>
+        <label>הגדרות הזנת נתונים באצווה</label>
+        <name>stgLabelBDESettings</name>
+    </customLabels>
+    <customLabels>
+        <label>מצב אצווה</label>
+        <name>stgLabelBatchStatus</name>
+    </customLabels>
+    <customLabels>
+        <label>צור תשלומים חסרים</label>
+        <name>stgLabelCreateMissingPayments</name>
+    </customLabels>
+    <customLabels>
+        <label>סיכומים נוכחיים בהגדרת משתמש</label>
+        <name>stgLabelCurrentUDR</name>
+    </customLabels>
+    <customLabels>
+        <label>אל תשנה שם -</label>
+        <name>stgLabelDoNotRename</name>
+    </customLabels>
+    <customLabels>
+        <label>הגדרות הודעת שגיאה</label>
+        <name>stgLabelErrorNotify</name>
+    </customLabels>
+    <customLabels>
+        <label>דוגמאות לתבנית ברכה רשמית</label>
+        <name>stgLabelExamplesFGFormat</name>
+    </customLabels>
+    <customLabels>
+        <label>דוגמאות לתבנית שם משק בית</label>
+        <name>stgLabelExamplesHHNameFOrmat</name>
+    </customLabels>
+    <customLabels>
+        <label>דוגמאות לתבנית ברכה לא רשמית</label>
+        <name>stgLabelExamplesIGFormat</name>
+    </customLabels>
+    <customLabels>
+        <label>הגדרות כלליות</label>
+        <name>stgLabelHHGeneral</name>
+    </customLabels>
+    <customLabels>
+        <label>הגדרות שם משק בית</label>
+        <name>stgLabelHHNaming</name>
+    </customLabels>
+    <customLabels>
+        <label>התקדמות הפעלת מתן שמות</label>
+        <name>stgLabelHHNamingProgress</name>
+    </customLabels>
+    <customLabels>
+        <label>תפקידי איש קשר בהזדמנות של במשק בית</label>
+        <name>stgLabelHHOCR</name>
+    </customLabels>
+    <customLabels>
+        <label>אובייקט משק בית</label>
+        <name>stgLabelHHObject</name>
+    </customLabels>
+    <customLabels>
+        <label>הגדרות משק בית</label>
+        <name>stgLabelHHSettings</name>
+    </customLabels>
+    <customLabels>
+        <label>צור אוטומטית תפקידי איש קשר בהזדמנות עבור אנשי קשר של מקבל הוקרה ונמען הודעות</label>
+        <name>stgLabelHonoreeNotificationHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label>תפקידי איש קשר בהזדמנות של מקבל הוקרה ונמען הודעות</label>
+        <name>stgLabelHonoreeNotificationOCR</name>
+    </customLabels>
+    <customLabels>
+        <label>הגדרות הפניה</label>
+        <name>stgLabelLeadSettings</name>
+    </customLabels>
+    <customLabels>
+        <label>אצוות הקצאת רמות</label>
+        <name>stgLabelLvlAssignBatchTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>הגדרות חברות</label>
+        <name>stgLabelMembershipSettings</name>
+    </customLabels>
+    <customLabels>
+        <label>קשר אוטומטי חדש</label>
+        <name>stgLabelNewAutoRel</name>
+    </customLabels>
+    <customLabels>
+        <label>מיפוי שדות תשלום חדשים</label>
+        <name>stgLabelNewPaymentMapping</name>
+    </customLabels>
+    <customLabels>
+        <label>מיפוי שדות מותאמים אישית חדשים</label>
+        <name>stgLabelNewRDFieldMap</name>
+    </customLabels>
+    <customLabels>
+        <label>קשר הדדי חדש</label>
+        <name>stgLabelNewRelReciprocal</name>
+    </customLabels>
+    <customLabels>
+        <label>מטפל במפעיל חדש</label>
+        <name>stgLabelNewTH</name>
+    </customLabels>
+    <customLabels>
+        <label>סיכום חדש בהגדרת משתמש</label>
+        <name>stgLabelNewUDR</name>
+    </customLabels>
+    <customLabels>
+        <label>--ללא--</label>
+        <name>stgLabelNone</name>
+    </customLabels>
+    <customLabels>
+        <label>הגדרות שם הזדמנות</label>
+        <name>stgLabelONS</name>
+    </customLabels>
+    <customLabels>
+        <label>התקדמות אצוות סיכום תרומות</label>
+        <name>stgLabelOppBatchProgress</name>
+    </customLabels>
+    <customLabels>
+        <label>חברי מבצע</label>
+        <name>stgLabelOppCampMembers</name>
+    </customLabels>
+    <customLabels>
+        <label>רענן שמות הזדמנות</label>
+        <name>stgLabelOppNamingRefreshTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>שמות הזדמנות</label>
+        <name>stgLabelOppNamingSettings</name>
+    </customLabels>
+    <customLabels>
+        <label>רענן את איש הקשר הראשי בהזדמנות</label>
+        <name>stgLabelOppPrimaryContactTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>סוגי רשומות סיכום הזדמנויות</label>
+        <name>stgLabelOppRollupRT</name>
+    </customLabels>
+    <customLabels>
+        <label>סיכומי הזדמנויות</label>
+        <name>stgLabelOppRollups</name>
+    </customLabels>
+    <customLabels>
+        <label>עדכון אנשי קשר ראשיים באצווה</label>
+        <name>stgLabelOppUpdatePrimaryContact</name>
+    </customLabels>
+    <customLabels>
+        <label>אחר</label>
+        <name>stgLabelOther</name>
+    </customLabels>
+    <customLabels>
+        <label>תבנית תאריך אחרת</label>
+        <name>stgLabelOtherDateFormat</name>
+    </customLabels>
+    <customLabels>
+        <label>תבנית ברכה רשמית אחרת</label>
+        <name>stgLabelOtherFormalGreetingFormat</name>
+    </customLabels>
+    <customLabels>
+        <label>תבנית שם משק בית אחרת</label>
+        <name>stgLabelOtherHHNameFormat</name>
+    </customLabels>
+    <customLabels>
+        <label>תבנית ברכה לא רשמית אחרת</label>
+        <name>stgLabelOtherInformalGreetingFormat</name>
+    </customLabels>
+    <customLabels>
+        <label>תבנית אחרת למתן שם למשק בית</label>
+        <name>stgLabelOtherOpportunigyNamingFormat</name>
+    </customLabels>
+    <customLabels>
+        <label>אין שדה חוקי זמין</label>
+        <name>stgLabelPaymentMapNoValidFields</name>
+    </customLabels>
+    <customLabels>
+        <label>הגדרות תשלום</label>
+        <name>stgLabelPaymentSettings</name>
+    </customLabels>
+    <customLabels>
+        <label>מיפויי שדות מותאמים אישית</label>
+        <name>stgLabelRDFieldMap</name>
+    </customLabels>
+    <customLabels>
+        <label>תקופת תשלומים חדשה</label>
+        <name>stgLabelRDNewPeriod</name>
+    </customLabels>
+    <customLabels>
+        <label>תקופות תשלומים מותאמות אישית</label>
+        <name>stgLabelRDPeriod</name>
+    </customLabels>
+    <customLabels>
+        <label>הגדרות תרומה חוזרת</label>
+        <name>stgLabelRDSettings</name>
+    </customLabels>
+    <customLabels>
+        <label>עדכון הזדמנויות תרומה חוזרת</label>
+        <name>stgLabelRDStatus</name>
+    </customLabels>
+    <customLabels>
+        <label>הגדרות כלליות</label>
+        <name>stgLabelRelSettings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelRelationshipSyncNoValidFields --></label>
+        <name>stgLabelRelationshipSyncNoValidFields</name>
+    </customLabels>
+    <customLabels>
+        <label>בחר קבוצת Chatter</label>
+        <name>stgLabelSelectChatterGroup</name>
+    </customLabels>
+    <customLabels>
+        <label>הגדרות קרדיט</label>
+        <name>stgLabelSoftCredit</name>
+    </customLabels>
+    <customLabels>
+        <label>מטפלים במפעילים</label>
+        <name>stgLabelTriggerHandlers</name>
+    </customLabels>
+    <customLabels>
+        <label>התחל להקליד...</label>
+        <name>stgLabelTypeAhead</name>
+    </customLabels>
+    <customLabels>
+        <label>לא נמצאו שדות הזדמנות חוקיים.</label>
+        <name>stgLabelUDRNoOppFields</name>
+    </customLabels>
+    <customLabels>
+        <label>פעולת סיכום</label>
+        <name>stgLabelUDROp</name>
+    </customLabels>
+    <customLabels>
+        <label>שדה הזדמנות</label>
+        <name>stgLabelUDROppField</name>
+    </customLabels>
+    <customLabels>
+        <label>שדה יעד</label>
+        <name>stgLabelUDRTargetField</name>
+    </customLabels>
+    <customLabels>
+        <label>השדה המותאם אישית באובייקט היעד שיציג את הסיכום המותאם אישית שלך. שדה זה חייב להיות מאותו סוג כמו שדה ההזדמנות שאתה מסכם.</label>
+        <name>stgLabelUDRTargetFieldHelp</name>
+    </customLabels>
+    <customLabels>
+        <label>אובייקט יעד</label>
+        <name>stgLabelUDRTargetObject</name>
+    </customLabels>
+    <customLabels>
+        <label>מחק</label>
+        <name>stgLinkDelete</name>
+    </customLabels>
+    <customLabels>
+        <label>מדריך NPSP לייבוא נתונים</label>
+        <name>stgNPSPGuideImportData</name>
+    </customLabels>
+    <customLabels>
+        <label>הגדרות יישום &apos;ערכת ההצלחה למלכ&quot;רים&apos;</label>
+        <name>stgNPSPSettings</name>
+    </customLabels>
+    <customLabels>
+        <label>הגדרות &apos;ערכת ההצלחה למלכ&quot;רים&apos;</label>
+        <name>stgNPSPSettingsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>מסלול גיוס התרומות של NPSP</label>
+        <name>stgNPSPWorkbook</name>
+    </customLabels>
+    <customLabels>
+        <label>מודל חשבון</label>
+        <name>stgNavAccountModel</name>
+    </customLabels>
+    <customLabels>
+        <label>כתובות</label>
+        <name>stgNavAddressVerification</name>
+    </customLabels>
+    <customLabels>
+        <label>השתייכויות</label>
+        <name>stgNavAffiliations</name>
+    </customLabels>
+    <customLabels>
+        <label>הקצאות GAU</label>
+        <name>stgNavAllocations</name>
+    </customLabels>
+    <customLabels>
+        <label>הזנת נתונים באצווה</label>
+        <name>stgNavBDE</name>
+    </customLabels>
+    <customLabels>
+        <label>תהליכי נתונים בצובר</label>
+        <name>stgNavBulkProcesses</name>
+    </customLabels>
+    <customLabels>
+        <label>קשרים</label>
+        <name>stgNavConnections</name>
+    </customLabels>
+    <customLabels>
+        <label>תפקידי איש קשר</label>
+        <name>stgNavContactRoles</name>
+    </customLabels>
+    <customLabels>
+        <label>אנשי קשר</label>
+        <name>stgNavContacts</name>
+    </customLabels>
+    <customLabels>
+        <label>תרומות</label>
+        <name>stgNavDonations</name>
+    </customLabels>
+    <customLabels>
+        <label>נתונים סטטיסטיים של תורם</label>
+        <name>stgNavDonorStatistics</name>
+    </customLabels>
+    <customLabels>
+        <label>יומן שגיאות</label>
+        <name>stgNavErrorLog</name>
+    </customLabels>
+    <customLabels>
+        <label>הודעות שגיאה</label>
+        <name>stgNavErrorNotify</name>
+    </customLabels>
+    <customLabels>
+        <label>בדיקת תקינות</label>
+        <name>stgNavHealthCheck</name>
+    </customLabels>
+    <customLabels>
+        <label>משקי בית</label>
+        <name>stgNavHouseholds</name>
+    </customLabels>
+    <customLabels>
+        <label>הפניות</label>
+        <name>stgNavLeads</name>
+    </customLabels>
+    <customLabels>
+        <label>חברות</label>
+        <name>stgNavMembership</name>
+    </customLabels>
+    <customLabels>
+        <label>מיפויי תשלומים</label>
+        <name>stgNavPaymentMappings</name>
+    </customLabels>
+    <customLabels>
+        <label>תשלומים</label>
+        <name>stgNavPayments</name>
+    </customLabels>
+    <customLabels>
+        <label>אנשים</label>
+        <name>stgNavPeople</name>
+    </customLabels>
+    <customLabels>
+        <label>אצוות תרומות חוזרות</label>
+        <name>stgNavRDBatch</name>
+    </customLabels>
+    <customLabels>
+        <label>מיפויי שדות מותאמים אישית של תרומה חוזרת</label>
+        <name>stgNavRDFieldMap</name>
+    </customLabels>
+    <customLabels>
+        <label>תקופות תשלומים מותאמות אישית של תרומה חוזרת</label>
+        <name>stgNavRDInstallmentPeriods</name>
+    </customLabels>
+    <customLabels>
+        <label>תרומות חוזרות</label>
+        <name>stgNavRecurringDonations</name>
+    </customLabels>
+    <customLabels>
+        <label>יצירה קשרים אוטומטית</label>
+        <name>stgNavRelAutoCreate</name>
+    </customLabels>
+    <customLabels>
+        <label>הגדרות הדדיות של קשרים</label>
+        <name>stgNavRelReciprocal</name>
+    </customLabels>
+    <customLabels>
+        <label>קשרים</label>
+        <name>stgNavRelationships</name>
+    </customLabels>
+    <customLabels>
+        <label>אצוות סיכום הקצאות</label>
+        <name>stgNavRollupAlloBatch</name>
+    </customLabels>
+    <customLabels>
+        <label>אצוות סיכום תרומות</label>
+        <name>stgNavRollupBatch</name>
+    </customLabels>
+    <customLabels>
+        <label>מתזמן התהליכים</label>
+        <name>stgNavSchedule</name>
+    </customLabels>
+    <customLabels>
+        <label>כלי מערכת</label>
+        <name>stgNavSystem</name>
+    </customLabels>
+    <customLabels>
+        <label>תצורת גורם מפעיל</label>
+        <name>stgNavTriggerConfig</name>
+    </customLabels>
+    <customLabels>
+        <label>סיכומים בהגדרת משתמש</label>
+        <name>stgNavUserDefinedRollups</name>
+    </customLabels>
+    <customLabels>
+        <label>כשתיצור הזדמנות, השם יתמלא באופן אוטומטי באמצעות מוסכמת מתן שמות המהווה ברירת מחדל. תוכל להתאים אישית את מוסכמת מתן השמות על-ידי יצירה של שמות הזדמנות מותאמים אישית.</label>
+        <name>stgOppNamingDescription</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgPowerOfUsHub --></label>
+        <name>stgPowerOfUsHub</name>
+    </customLabels>
+    <customLabels>
+        <label>כלים</label>
+        <name>stgTools</name>
+    </customLabels>
+    <customLabels>
+        <label>מודל החשבון מוגדר כ&apos;חשבון משק בית&apos;, המחייב להגדיר את כללי משק הבית כ&apos;ללא אנשי קשר&apos;.   בעת שימוש בחשבונות משק בית, אין צורך באובייקט משק בית נוסף.</label>
+        <name>stgValidationHHAccountHHRules</name>
+    </customLabels>
+    <customTabs>
+        <label>הזנת נתונים באצווה</label>
+        <name>Batch_Data_Entry</name>
+    </customTabs>
+    <customTabs>
+        <label>מיזוג אנשי קשר</label>
+        <name>Contact_Merge</name>
+    </customTabs>
+    <customTabs>
+        <label>תחילת העבודה</label>
+        <name>NPSP_Resources</name>
+    </customTabs>
+    <customTabs>
+        <label>הגדרות NPSP</label>
+        <name>NPSP_Settings</name>
+    </customTabs>
+    <quickActions>
+        <label><!-- Log a Call --></label>
+        <name>LogACall</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- New Account --></label>
+        <name>NewAccount</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- New Contact --></label>
+        <name>NewContact</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- New Note --></label>
+        <name>NewNote</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- New Opportunity --></label>
+        <name>NewOpportunity</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- New Task --></label>
+        <name>NewTask</name>
+    </quickActions>
+    <quickActions>
+        <label>מבצע חדש</label>
+        <name>New_Campaign</name>
+    </quickActions>
+    <quickActions>
+        <label>תרומה חוזרת חדשה</label>
+        <name>New_Recurring_Donation</name>
+    </quickActions>
+    <reportTypes>
+        <description>אנשי קשר מבלי לקשר כל אובייקט אחר</description>
+        <label>אנשי קשר בלבד</label>
+        <name>Contacts_Only</name>
+        <sections>
+            <label>אנשי קשר</label>
+            <name>Contacts</name>
+        </sections>
+    </reportTypes>
+</Translations>

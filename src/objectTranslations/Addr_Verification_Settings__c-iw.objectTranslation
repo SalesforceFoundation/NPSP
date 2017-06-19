@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <article>None</article>
+        <plural>false</plural>
+        <value><!-- Address Verification Settings --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>false</plural>
+        <value><!-- הAddress Verification Settings --></value>
+    </caseValues>
+    <caseValues>
+        <article>None</article>
+        <plural>true</plural>
+        <value><!-- Address Verification Settings --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>true</plural>
+        <value><!-- הAddress Verification Settings --></value>
+    </caseValues>
+    <fields>
+        <help>כתובת URL המשמשת לאימות כתובת.</help>
+        <label>כתובת URL לאימות כתובת</label>
+        <name>Address_Verification_Endpoint__c</name>
+    </fields>
+    <fields>
+        <help>מזהה האימות מתוך מפתח הזוג הסודי שלך.</help>
+        <label>מזהה אימות</label>
+        <name>Auth_ID__c</name>
+    </fields>
+    <fields>
+        <help>אסימון האימות מתוך מפתח הזוג הסודי שלך.</help>
+        <label>אסימון אימות</label>
+        <name>Auth_Token__c</name>
+    </fields>
+    <fields>
+        <help>מחלקת Salesforce האחראית ליצירת קשר עם SmartyStreets API ולאימות כתובות.</help>
+        <label>שירות אימות</label>
+        <name>Class__c</name>
+    </fields>
+    <fields>
+        <help>מאפשר אימות אוטומטי של כתובות חדשות.</help>
+        <label>הפעל אימות אוטומטי</label>
+        <name>Enable_Automatic_Verification__c</name>
+    </fields>
+    <fields>
+        <help>מסמן כתובות רב-משמעיות כבלתי חוקיות, כאשר ה-API מחזיר יותר מכתובת אחת. אם אפשרות זו אינה מסומנת, Salesforce תקבל את הכתובת הראשונה שהוצעה בתור הכתובת החוקית.</help>
+        <label>דחה כתובות רב-משמעיות</label>
+        <name>Reject_Ambiguous_Addresses__c</name>
+    </fields>
+    <fields>
+        <help>זמן קצוב בשניות להסבר.</help>
+        <label>זמן קצוב</label>
+        <name>Timeout__c</name>
+    </fields>
+    <fields>
+        <help>מציין אם אתה משתמש בשירות SmartyStreets לאימות כתובות.</help>
+        <label><!-- DEPRECATED - Using SmartyStreets --></label>
+        <name>Using_SmartyStreets__c</name>
+    </fields>
+    <fields>
+        <help>כתובת URL המשמשת לאימות מיקוד.</help>
+        <label>נקודת קצה לאימות מיקוד</label>
+        <name>Zipcode_Verification_Endpoint__c</name>
+    </fields>
+    <gender><!-- Masculine --></gender>
+</CustomObjectTranslation>

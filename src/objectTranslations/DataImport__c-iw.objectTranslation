@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <article>None</article>
+        <plural>false</plural>
+        <value><!-- NPSP Data Import --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>false</plural>
+        <value><!-- הNPSP Data Import --></value>
+    </caseValues>
+    <caseValues>
+        <article>None</article>
+        <plural>true</plural>
+        <value><!-- NPSP Data Import --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>true</plural>
+        <value><!-- הNPSP Data Import --></value>
+    </caseValues>
+    <fields>
+        <label>מצב יבוא Account1</label>
+        <name>Account1ImportStatus__c</name>
+    </fields>
+    <fields>
+        <label>Account1 יובא</label>
+        <name>Account1Imported__c</name>
+        <relationshipLabel>יבוא נתוני NPSP (Account1 יובא)</relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Account1.BillingCity --></help>
+        <label>Account1 - עיר</label>
+        <name>Account1_City__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account1.BillingCountry --></help>
+        <label>Account1 - ארץ</label>
+        <name>Account1_Country__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account1.Name --></help>
+        <label>Account1 - שם</label>
+        <name>Account1_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account1.Phone --></help>
+        <label>Account1 - טלפון</label>
+        <name>Account1_Phone__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account1.BillingState --></help>
+        <label>Account1 - מדינה/מחוז</label>
+        <name>Account1_State_Province__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account1.BillingStreet --></help>
+        <label>Account1 - רחוב</label>
+        <name>Account1_Street__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account1.Website --></help>
+        <label>Account1 - אתר אינטרנט</label>
+        <name>Account1_Website__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account1.BillingPostalCode --></help>
+        <label>Account1 - מיקוד</label>
+        <name>Account1_Zip_Postal_Code__c</name>
+    </fields>
+    <fields>
+        <label>מצב יבוא Account2</label>
+        <name>Account2ImportStatus__c</name>
+    </fields>
+    <fields>
+        <label>Account2 יובא</label>
+        <name>Account2Imported__c</name>
+        <relationshipLabel>יבוא נתוני NPSP (Account2 יובא)</relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Account2.BillingCity --></help>
+        <label>Account2 - עיר</label>
+        <name>Account2_City__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account2.BillingCountry --></help>
+        <label>Account2 - ארץ</label>
+        <name>Account2_Country__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account2.Name --></help>
+        <label>Account2 - שם</label>
+        <name>Account2_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account2.Phone --></help>
+        <label>Account2 - טלפון</label>
+        <name>Account2_Phone__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account2.BillingState --></help>
+        <label>Account2 - מדינה/מחוז</label>
+        <name>Account2_State_Province__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account2.BillingStreet --></help>
+        <label>Account2 - רחוב</label>
+        <name>Account2_Street__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account2.Website --></help>
+        <label>Account2 - אתר אינטרנט</label>
+        <name>Account2_Website__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account2.BillingPostalCode --></help>
+        <label>Account2 - מיקוד</label>
+        <name>Account2_Zip_Postal_Code__c</name>
+    </fields>
+    <fields>
+        <help>ApexJobID של משימת האצווה שעיבדה את הרשומה.</help>
+        <label><!-- ApexJobId --></label>
+        <name>ApexJobId__c</name>
+    </fields>
+    <fields>
+        <label>מצב חבר במבצע</label>
+        <name>Campaign_Member_Status__c</name>
+    </fields>
+    <fields>
+        <label>מצב יבוא Contact1</label>
+        <name>Contact1ImportStatus__c</name>
+    </fields>
+    <fields>
+        <label>Contact1 יובא</label>
+        <name>Contact1Imported__c</name>
+        <relationshipLabel>יבוא נתוני NPSP (Contact1 יובא)</relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Contact1.npe01__AlternateEmail__c --></help>
+        <label>Contact1 - דואר אלקטרוני חלופי</label>
+        <name>Contact1_Alternate_Email__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.Birthdate --></help>
+        <label>Contact1 - תאריך לידה</label>
+        <name>Contact1_Birthdate__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.Firstname --></help>
+        <label>Contact1 - שם פרטי</label>
+        <name>Contact1_Firstname__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.HomePhone --></help>
+        <label>Contact1 - טלפון בבית</label>
+        <name>Contact1_Home_Phone__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.Lastname --></help>
+        <label>Contact1 - שם משפחה</label>
+        <name>Contact1_Lastname__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.MobilePhone --></help>
+        <label>Contact1 - טלפון נייד</label>
+        <name>Contact1_Mobile_Phone__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.OtherPhone --></help>
+        <label>Contact1 - טלפון אחר</label>
+        <name>Contact1_Other_Phone__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.npe01__HomeEmail__c --></help>
+        <label>Contact1 - דואר אלקטרוני אישי</label>
+        <name>Contact1_Personal_Email__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.npe01__Preferred_Email__c --></help>
+        <label>Contact1 - דואר אלקטרוני מועדף</label>
+        <name>Contact1_Preferred_Email__c</name>
+        <picklistValues>
+            <masterLabel>Alternate</masterLabel>
+            <translation>חלופי</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Personal</masterLabel>
+            <translation>אישי</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>עבודה</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Contact1.npe01__PreferredPhone__c --></help>
+        <label>Contact1 - טלפון מועדף</label>
+        <name>Contact1_Preferred_Phone__c</name>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation>בית</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mobile</masterLabel>
+            <translation>נייד</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation>אחר</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>עבודה</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Contact1.Salutation --></help>
+        <label>Contact1 - תואר</label>
+        <name>Contact1_Salutation__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.Title --></help>
+        <label>Contact1 - תפקיד</label>
+        <name>Contact1_Title__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.npe01__WorkEmail__c --></help>
+        <label>Contact1 - דואר אלקטרוני בעבודה</label>
+        <name>Contact1_Work_Email__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.npe01__WorkPhone__c --></help>
+        <label>Contact1 - טלפון בעבודה</label>
+        <name>Contact1_Work_Phone__c</name>
+    </fields>
+    <fields>
+        <label>מצב יבוא Contact2</label>
+        <name>Contact2ImportStatus__c</name>
+    </fields>
+    <fields>
+        <label>Contact2 יובא</label>
+        <name>Contact2Imported__c</name>
+        <relationshipLabel>יבוא נתוני NPSP (Contact2 יובא)</relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Contact2.npe01__AlternateEmail__c --></help>
+        <label>Contact2 - דואר אלקטרוני חלופי</label>
+        <name>Contact2_Alternate_Email__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.Birthdate --></help>
+        <label>Contact2 - תאריך לידה</label>
+        <name>Contact2_Birthdate__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.Firstname --></help>
+        <label>Contact2 - שם פרטי</label>
+        <name>Contact2_Firstname__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.HomePhone --></help>
+        <label>Contact2 - טלפון בבית</label>
+        <name>Contact2_Home_Phone__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.Lastname --></help>
+        <label>Contact2 - שם משפחה</label>
+        <name>Contact2_Lastname__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.MobilePhone --></help>
+        <label>Contact2 - טלפון נייד</label>
+        <name>Contact2_Mobile_Phone__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.OtherPhone --></help>
+        <label>Contact2 - טלפון אחר</label>
+        <name>Contact2_Other_Phone__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.npe01__HomeEmail__c --></help>
+        <label>Contact2 - דואר אלקטרוני אישי</label>
+        <name>Contact2_Personal_Email__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.npe01__Preferred_Email__c --></help>
+        <label>Contact2 - דואר אלקטרוני מועדף</label>
+        <name>Contact2_Preferred_Email__c</name>
+        <picklistValues>
+            <masterLabel>Alternate</masterLabel>
+            <translation>חלופה</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Personal</masterLabel>
+            <translation>אישי</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>עבודה</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Contact2.npe01__PreferredPhone__c --></help>
+        <label>Contact2 - טלפון מועדף</label>
+        <name>Contact2_Preferred_Phone__c</name>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation>בית</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mobile</masterLabel>
+            <translation>נייד</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation>אחר</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>עבודה</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Contact2.Salutation --></help>
+        <label>Contact2 - צורת פנייה</label>
+        <name>Contact2_Salutation__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.Title --></help>
+        <label>Contact2 - תפקיד</label>
+        <name>Contact2_Title__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.npe01__WorkEmail__c --></help>
+        <label>Contact2 - דואר אלקטרוני בעבודה</label>
+        <name>Contact2_Work_Email__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.npe01__WorkPhone__c --></help>
+        <label>Contact2 - טלפון בעבודה</label>
+        <name>Contact2_Work_Phone__c</name>
+    </fields>
+    <fields>
+        <label>מצב יבוא תרומה</label>
+        <name>DonationImportStatus__c</name>
+    </fields>
+    <fields>
+        <label>התרומה יובאה</label>
+        <name>DonationImported__c</name>
+        <relationshipLabel>יבוא נתוני NPSP</relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.Amount --></help>
+        <label>סכום תרומה</label>
+        <name>Donation_Amount__c</name>
+    </fields>
+    <fields>
+        <label>שם מסע קידום</label>
+        <name>Donation_Campaign_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.CloseDate --></help>
+        <label>תאריך תרומה</label>
+        <name>Donation_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.Description --></help>
+        <label>תיאור תרומה</label>
+        <name>Donation_Description__c</name>
+    </fields>
+    <fields>
+        <help>מציין אם התרומה היא תרומה אישית מ-Contact1 או תרומה ארגונית מ-Account1.</help>
+        <label>תורם תרומה</label>
+        <name>Donation_Donor__c</name>
+        <picklistValues>
+            <masterLabel>Account1</masterLabel>
+            <translation><!-- Account1 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Contact1</masterLabel>
+            <translation><!-- Contact1 --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.npe01__Member_Level__c --></help>
+        <label>רמת חבר בתרומה</label>
+        <name>Donation_Member_Level__c</name>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.npe01__Membership_End_Date__c --></help>
+        <label>תאריך סיום חברות בתרומה</label>
+        <name>Donation_Membership_End_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.npe01__Membership_Origin__c --></help>
+        <label>מקור חברות בתרומה</label>
+        <name>Donation_Membership_Origin__c</name>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.npe01__Membership_Start_Date__c --></help>
+        <label>תאריך התחלת חברות בתרומה</label>
+        <name>Donation_Membership_Start_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.Name --></help>
+        <label>שם תרומה</label>
+        <name>Donation_Name__c</name>
+    </fields>
+    <fields>
+        <help>השם של סוג רשומת ההזדמנות שישמש עבור התרומה. אם ריק, המערכת תשתמש בסוג הרשומה המהווה ברירת מחדל.</help>
+        <label>שם סוג רשומת תרומה</label>
+        <name>Donation_Record_Type_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.StageName --></help>
+        <label>שלב תרומה</label>
+        <name>Donation_Stage__c</name>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.Type --></help>
+        <label>סוג תרומה</label>
+        <name>Donation_Type__c</name>
+    </fields>
+    <fields>
+        <help>תיאור הגורמים לכישלון הייבוא של רשומת יבוא הנתונים.</help>
+        <label>פרטי כישלון</label>
+        <name>FailureInformation__c</name>
+    </fields>
+    <fields>
+        <label>מצב יבוא כתובת הבית</label>
+        <name>HomeAddressImportStatus__c</name>
+    </fields>
+    <fields>
+        <label>כתובת הבית יובאה</label>
+        <name>HomeAddressImported__c</name>
+        <relationshipLabel>יבוא נתוני NPSP</relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Address.npsp__MailingCity__c --></help>
+        <label>עיר הבית</label>
+        <name>Home_City__c</name>
+    </fields>
+    <fields>
+        <help><!-- Address.npsp__MailingCountry__c --></help>
+        <label>ארץ הבית</label>
+        <name>Home_Country__c</name>
+    </fields>
+    <fields>
+        <help><!-- Address.npsp__MailingState__c --></help>
+        <label>מדינה/מחוז הבית</label>
+        <name>Home_State_Province__c</name>
+    </fields>
+    <fields>
+        <help><!-- Address.npsp__MailingStreet__c --></help>
+        <label>רחוב הבית</label>
+        <name>Home_Street__c</name>
+    </fields>
+    <fields>
+        <help><!-- Address.npsp__MailingPostalCode__c --></help>
+        <label>מיקוד הבית</label>
+        <name>Home_Zip_Postal_Code__c</name>
+    </fields>
+    <fields>
+        <label>חשבון משק הבית יובא</label>
+        <name>HouseholdAccountImported__c</name>
+        <relationshipLabel>יבוא נתוני NPSP (חשבון משק הבית יובא)</relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Household.Phone --></help>
+        <label>טלפון של משק הבית</label>
+        <name>Household_Phone__c</name>
+    </fields>
+    <fields>
+        <help>המועד שבו רשומת יבוא הנתונים יובאה בהצלחה.</help>
+        <label>תאריך יבוא</label>
+        <name>ImportedDate__c</name>
+    </fields>
+    <fields>
+        <help><!-- Payment.npe01__Check_Reference_Number__c --></help>
+        <label>המחאה/מספר סימוכין של התשלום</label>
+        <name>Payment_Check_Reference_Number__c</name>
+    </fields>
+    <fields>
+        <help><!-- Payment.npe01__Payment_Method__c --></help>
+        <label>שיטת תשלום</label>
+        <name>Payment_Method__c</name>
+    </fields>
+    <fields>
+        <help>המצב של יבוא רשומת יבוא הנתונים.</help>
+        <label>מצב</label>
+        <name>Status__c</name>
+        <picklistValues>
+            <masterLabel>Failed</masterLabel>
+            <translation>נכשל</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Imported</masterLabel>
+            <translation>מיובא</translation>
+        </picklistValues>
+    </fields>
+    <gender><!-- Masculine --></gender>
+    <layouts>
+        <layout>Data Import Layout</layout>
+        <sections>
+            <label>פרטי Account1</label>
+            <section>Account1 Organization Information</section>
+        </sections>
+        <sections>
+            <label>פרטי Account2</label>
+            <section>Account2 Organization Information</section>
+        </sections>
+        <sections>
+            <label><!-- Campaign Information --></label>
+            <section>Campaign Information</section>
+        </sections>
+        <sections>
+            <label>פרטי Contact1</label>
+            <section>Contact1 Information</section>
+        </sections>
+        <sections>
+            <label>פרטי Contact2</label>
+            <section>Contact2 Information</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>פרטי תרומה</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>כתובת בבית</label>
+            <section>Home Address</section>
+        </sections>
+        <sections>
+            <label><!-- Household Account Information --></label>
+            <section>Household Account Information</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Data Import ID --></nameFieldLabel>
+    <webLinks>
+        <label>מחק את כל רשומות יבוא הנתונים</label>
+        <name>Delete_All_Data_Import_Records</name>
+    </webLinks>
+    <webLinks>
+        <label>מחק את כל רשומות יבוא הנתונים שיובאו</label>
+        <name>Delete_Imported_Data_Import_Records</name>
+    </webLinks>
+    <webLinks>
+        <label>התחל יבוא נתונים</label>
+        <name>Process_Data_Import</name>
+    </webLinks>
+</CustomObjectTranslation>
