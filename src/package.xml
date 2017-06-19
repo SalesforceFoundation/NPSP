@@ -1569,200 +1569,235 @@
         <members>Account-de</members>
         <members>Account-es</members>
         <members>Account-fr</members>
+        <members>Account-iw</members>
         <members>Account-ja</members>
         <members>Account-nl_NL</members>
         <members>Activity-de</members>
         <members>Activity-es</members>
         <members>Activity-fr</members>
+        <members>Activity-iw</members>
         <members>Activity-ja</members>
         <members>Activity-nl_NL</members>
         <members>Addr_Verification_Settings__c-de</members>
         <members>Addr_Verification_Settings__c-en_US</members>
         <members>Addr_Verification_Settings__c-es</members>
         <members>Addr_Verification_Settings__c-fr</members>
+        <members>Addr_Verification_Settings__c-iw</members>
         <members>Addr_Verification_Settings__c-ja</members>
         <members>Addr_Verification_Settings__c-nl_NL</members>
         <members>Address_Verification_Settings__c-de</members>
         <members>Address_Verification_Settings__c-en_US</members>
         <members>Address_Verification_Settings__c-es</members>
         <members>Address_Verification_Settings__c-fr</members>
+        <members>Address_Verification_Settings__c-iw</members>
         <members>Address_Verification_Settings__c-ja</members>
         <members>Address_Verification_Settings__c-nl_NL</members>
         <members>Address__c-de</members>
         <members>Address__c-en_US</members>
         <members>Address__c-es</members>
         <members>Address__c-fr</members>
+        <members>Address__c-iw</members>
         <members>Address__c-ja</members>
         <members>Address__c-nl_NL</members>
         <members>Allocation__c-de</members>
         <members>Allocation__c-en_US</members>
         <members>Allocation__c-es</members>
         <members>Allocation__c-fr</members>
+        <members>Allocation__c-iw</members>
         <members>Allocation__c-ja</members>
         <members>Allocation__c-nl_NL</members>
         <members>Allocations_Settings__c-de</members>
         <members>Allocations_Settings__c-en_US</members>
         <members>Allocations_Settings__c-es</members>
         <members>Allocations_Settings__c-fr</members>
+        <members>Allocations_Settings__c-iw</members>
         <members>Allocations_Settings__c-ja</members>
         <members>Allocations_Settings__c-nl_NL</members>
         <members>Batch_Data_Entry_Settings__c-de</members>
         <members>Batch_Data_Entry_Settings__c-en_US</members>
         <members>Batch_Data_Entry_Settings__c-es</members>
         <members>Batch_Data_Entry_Settings__c-fr</members>
+        <members>Batch_Data_Entry_Settings__c-iw</members>
         <members>Batch_Data_Entry_Settings__c-ja</members>
         <members>Batch_Data_Entry_Settings__c-nl_NL</members>
         <members>Batch__c-de</members>
         <members>Batch__c-en_US</members>
         <members>Batch__c-es</members>
         <members>Batch__c-fr</members>
+        <members>Batch__c-iw</members>
         <members>Batch__c-ja</members>
         <members>Batch__c-nl_NL</members>
         <members>Contact-de</members>
         <members>Contact-es</members>
         <members>Contact-fr</members>
+        <members>Contact-iw</members>
         <members>Contact-ja</members>
         <members>Contact-nl_NL</members>
         <members>DataImport__c-de</members>
         <members>DataImport__c-en_US</members>
         <members>DataImport__c-es</members>
         <members>DataImport__c-fr</members>
+        <members>DataImport__c-iw</members>
         <members>DataImport__c-ja</members>
         <members>DataImport__c-nl_NL</members>
         <members>Data_Import_Settings__c-de</members>
         <members>Data_Import_Settings__c-en_US</members>
         <members>Data_Import_Settings__c-es</members>
         <members>Data_Import_Settings__c-fr</members>
+        <members>Data_Import_Settings__c-iw</members>
         <members>Data_Import_Settings__c-ja</members>
         <members>Data_Import_Settings__c-nl_NL</members>
         <members>Engagement_Plan_Task__c-de</members>
         <members>Engagement_Plan_Task__c-en_US</members>
         <members>Engagement_Plan_Task__c-es</members>
         <members>Engagement_Plan_Task__c-fr</members>
+        <members>Engagement_Plan_Task__c-iw</members>
         <members>Engagement_Plan_Task__c-ja</members>
         <members>Engagement_Plan_Task__c-nl_NL</members>
         <members>Engagement_Plan_Template__c-de</members>
         <members>Engagement_Plan_Template__c-en_US</members>
         <members>Engagement_Plan_Template__c-es</members>
         <members>Engagement_Plan_Template__c-fr</members>
+        <members>Engagement_Plan_Template__c-iw</members>
         <members>Engagement_Plan_Template__c-ja</members>
         <members>Engagement_Plan_Template__c-nl_NL</members>
         <members>Engagement_Plan__c-de</members>
         <members>Engagement_Plan__c-en_US</members>
         <members>Engagement_Plan__c-es</members>
         <members>Engagement_Plan__c-fr</members>
+        <members>Engagement_Plan__c-iw</members>
         <members>Engagement_Plan__c-ja</members>
         <members>Engagement_Plan__c-nl_NL</members>
         <members>Error_Settings__c-de</members>
         <members>Error_Settings__c-en_US</members>
         <members>Error_Settings__c-es</members>
         <members>Error_Settings__c-fr</members>
+        <members>Error_Settings__c-iw</members>
         <members>Error_Settings__c-ja</members>
         <members>Error_Settings__c-nl_NL</members>
         <members>Error__c-de</members>
         <members>Error__c-en_US</members>
         <members>Error__c-es</members>
         <members>Error__c-fr</members>
+        <members>Error__c-iw</members>
         <members>Error__c-ja</members>
         <members>Error__c-nl_NL</members>
         <members>Fund__c-de</members>
         <members>Fund__c-en_US</members>
         <members>Fund__c-es</members>
         <members>Fund__c-fr</members>
+        <members>Fund__c-iw</members>
         <members>Fund__c-ja</members>
         <members>Fund__c-nl_NL</members>
         <members>General_Accounting_Unit__c-de</members>
         <members>General_Accounting_Unit__c-en_US</members>
         <members>General_Accounting_Unit__c-es</members>
         <members>General_Accounting_Unit__c-fr</members>
+        <members>General_Accounting_Unit__c-iw</members>
         <members>General_Accounting_Unit__c-ja</members>
         <members>General_Accounting_Unit__c-nl_NL</members>
         <members>Grant_Deadline__c-de</members>
         <members>Grant_Deadline__c-en_US</members>
         <members>Grant_Deadline__c-es</members>
         <members>Grant_Deadline__c-fr</members>
+        <members>Grant_Deadline__c-iw</members>
         <members>Grant_Deadline__c-ja</members>
         <members>Grant_Deadline__c-nl_NL</members>
         <members>Household_Naming_Settings__c-de</members>
         <members>Household_Naming_Settings__c-en_US</members>
         <members>Household_Naming_Settings__c-es</members>
         <members>Household_Naming_Settings__c-fr</members>
+        <members>Household_Naming_Settings__c-iw</members>
         <members>Household_Naming_Settings__c-ja</members>
         <members>Household_Naming_Settings__c-nl_NL</members>
         <members>Lead-de</members>
         <members>Lead-es</members>
         <members>Lead-fr</members>
+        <members>Lead-iw</members>
         <members>Lead-ja</members>
         <members>Lead-nl_NL</members>
         <members>Level__c-de</members>
         <members>Level__c-en_US</members>
         <members>Level__c-es</members>
         <members>Level__c-fr</members>
+        <members>Level__c-iw</members>
         <members>Level__c-ja</members>
         <members>Level__c-nl_NL</members>
         <members>Opportunity-de</members>
         <members>Opportunity-es</members>
         <members>Opportunity-fr</members>
+        <members>Opportunity-iw</members>
         <members>Opportunity-ja</members>
         <members>Opportunity-nl_NL</members>
         <members>Opportunity_Naming_Settings__c-de</members>
         <members>Opportunity_Naming_Settings__c-en_US</members>
         <members>Opportunity_Naming_Settings__c-es</members>
         <members>Opportunity_Naming_Settings__c-fr</members>
+        <members>Opportunity_Naming_Settings__c-iw</members>
         <members>Opportunity_Naming_Settings__c-ja</members>
         <members>Opportunity_Naming_Settings__c-nl_NL</members>
         <members>Partial_Soft_Credit__c-de</members>
         <members>Partial_Soft_Credit__c-en_US</members>
         <members>Partial_Soft_Credit__c-es</members>
         <members>Partial_Soft_Credit__c-fr</members>
+        <members>Partial_Soft_Credit__c-iw</members>
         <members>Partial_Soft_Credit__c-ja</members>
         <members>Partial_Soft_Credit__c-nl_NL</members>
         <members>Relationship_Sync_Excluded_Fields__c-de</members>
         <members>Relationship_Sync_Excluded_Fields__c-en_US</members>
         <members>Relationship_Sync_Excluded_Fields__c-es</members>
         <members>Relationship_Sync_Excluded_Fields__c-fr</members>
+        <members>Relationship_Sync_Excluded_Fields__c-iw</members>
         <members>Relationship_Sync_Excluded_Fields__c-ja</members>
         <members>Relationship_Sync_Excluded_Fields__c-nl_NL</members>
         <members>Schedulable__c-de</members>
         <members>Schedulable__c-en_US</members>
         <members>Schedulable__c-es</members>
         <members>Schedulable__c-fr</members>
+        <members>Schedulable__c-iw</members>
         <members>Schedulable__c-ja</members>
         <members>Schedulable__c-nl_NL</members>
         <members>Trigger_Handler__c-de</members>
         <members>Trigger_Handler__c-en_US</members>
         <members>Trigger_Handler__c-es</members>
         <members>Trigger_Handler__c-fr</members>
+        <members>Trigger_Handler__c-iw</members>
         <members>Trigger_Handler__c-ja</members>
         <members>Trigger_Handler__c-nl_NL</members>
         <members>npe01__Contacts_And_Orgs_Settings__c-de</members>
         <members>npe01__Contacts_And_Orgs_Settings__c-es</members>
         <members>npe01__Contacts_And_Orgs_Settings__c-fr</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c-iw</members>
         <members>npe01__Contacts_And_Orgs_Settings__c-ja</members>
         <members>npe01__Contacts_And_Orgs_Settings__c-nl_NL</members>
         <members>npe01__OppPayment__c-de</members>
         <members>npe01__OppPayment__c-es</members>
         <members>npe01__OppPayment__c-fr</members>
+        <members>npe01__OppPayment__c-iw</members>
         <members>npe01__OppPayment__c-ja</members>
         <members>npe01__OppPayment__c-nl_NL</members>
         <members>npe03__Recurring_Donation__c-de</members>
         <members>npe03__Recurring_Donation__c-es</members>
         <members>npe03__Recurring_Donation__c-fr</members>
+        <members>npe03__Recurring_Donation__c-iw</members>
         <members>npe03__Recurring_Donation__c-ja</members>
         <members>npe03__Recurring_Donation__c-nl_NL</members>
         <members>npe4__Relationship_Settings__c-de</members>
         <members>npe4__Relationship_Settings__c-es</members>
         <members>npe4__Relationship_Settings__c-fr</members>
+        <members>npe4__Relationship_Settings__c-iw</members>
         <members>npe4__Relationship_Settings__c-ja</members>
         <members>npe4__Relationship_Settings__c-nl_NL</members>
         <members>npo02__Household__c-de</members>
         <members>npo02__Household__c-es</members>
         <members>npo02__Household__c-fr</members>
+        <members>npo02__Household__c-iw</members>
         <members>npo02__Household__c-ja</members>
         <members>npo02__Household__c-nl_NL</members>
         <members>npo02__Households_Settings__c-de</members>
         <members>npo02__Households_Settings__c-es</members>
         <members>npo02__Households_Settings__c-fr</members>
+        <members>npo02__Households_Settings__c-iw</members>
         <members>npo02__Households_Settings__c-ja</members>
         <members>npo02__Households_Settings__c-nl_NL</members>
         <name>CustomObjectTranslation</name>
@@ -1918,6 +1953,7 @@
         <members>de</members>
         <members>es</members>
         <members>fr</members>
+        <members>iw</members>
         <members>ja</members>
         <members>nl_NL</members>
         <name>Translations</name>

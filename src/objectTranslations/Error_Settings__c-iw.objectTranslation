@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <article>None</article>
+        <plural>false</plural>
+        <value><!-- Error Settings --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>false</plural>
+        <value><!-- הError Settings --></value>
+    </caseValues>
+    <caseValues>
+        <article>None</article>
+        <plural>true</plural>
+        <value><!-- Error Settings --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>true</plural>
+        <value><!-- הError Settings --></value>
+    </caseValues>
+    <fields>
+        <help>משמש למעקב אחר הביצוע האחרון של יומן השגיאות של משימות Async</help>
+        <label>שגיאת Async בדוק הפעלה אחרונה</label>
+        <name>Async_Error_Check_Last_Run__c</name>
+    </fields>
+    <fields>
+        <help>אם אפשרות זו מסומנת, מסגרת הטיפול בשגיאות של NPSP מושבתת.</help>
+        <label>השבת טיפול בשגיאות</label>
+        <name>Disable_Error_Handling__c</name>
+    </fields>
+    <fields>
+        <help>כאשר אפשרות זו מסומנת, NPSP לא תתזמן משימות ברירת מחדל חוזרות באופן אוטומטי. משימות חוזרות אלה מחשבות סיכומים, מעדכנות תרומות חוזרות וכתובות עונתיות, ומטפלות בשגיאות.</help>
+        <label>אל תתזמן משימות ב. מחדל של NPSP אוטומטית</label>
+        <name>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
+    </fields>
+    <fields>
+        <help>הפעל אפשרות זו כדי לאפשר משפטי תיקון באגים בקוד החבילה המנוהלת.</help>
+        <label>הפעל תיקון באגים</label>
+        <name>Enable_Debug__c</name>
+    </fields>
+    <fields>
+        <help>סמן אפשרות זו אם תרצה שהמערכת תפרסם הודעות עבור סוגי שגיאות מסוימים.</help>
+        <label>הודעות שגיאה</label>
+        <name>Error_Notifications_On__c</name>
+    </fields>
+    <fields>
+        <help>בחר את סוג המשתמש שאליו יישלחו הודעות.</help>
+        <label>נמעני הודעות שגיאה</label>
+        <name>Error_Notifications_To__c</name>
+    </fields>
+    <fields>
+        <help>סמן אפשרות זו אם ברצונך לשמור שגיאות במסד הנתונים.</help>
+        <label>שמור שגיאות</label>
+        <name>Store_Errors_On__c</name>
+    </fields>
+    <gender><!-- Masculine --></gender>
+</CustomObjectTranslation>
