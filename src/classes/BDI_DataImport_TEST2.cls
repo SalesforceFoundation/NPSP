@@ -145,6 +145,11 @@ private with sharing class BDI_DataImport_TEST2 {
         ctrl.importData();
         system.assertEquals(false, ctrl.batchRunning);
         
+        ctrl.diSettings.Donation_Matching_Rule__c = BDI_DataImport_API.RequireExactMatch;
+        ctrl.diSettings.Donation_Matching_Behavior__c = null;
+        ctrl.importData();
+        system.assertEquals(false, ctrl.batchRunning);
+        
         Test.stopTest();
     }
     
