@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <help>אם כתובת זו מחייבת אימות, לחץ על &apos;אמת כתובת&apos; בראש דף הכתובת. עיין במסמכי העזרה ב-Power of Us Hub לקבלת מידע נוסף.</help>
+        <label>מצב אימות כתובת</label>
+        <name>Address_Verification_Status__c</name>
+    </fields>
+    <fields>
+        <help>חיפוש באצווה שבה איש קשר זה נוצר.</help>
+        <label>אצווה</label>
+        <name>Batch__c</name>
+        <relationshipLabel>אנשי קשר</relationshipLabel>
+    </fields>
+    <fields>
+        <help>הכתובת הנוכחית שרשומה בשדות הכתובת למשלוח דואר של איש הקשר.</help>
+        <label>כתובת נוכחית</label>
+        <lookupFilter>
+            <informationalMessage>כדי לראות את כל הכתובות עבור משק הבית של איש הקשר, הזן A-*‎ בחלון החיפוש</informationalMessage>
+        </lookupFilter>
+        <name>Current_Address__c</name>
+        <relationshipLabel>אנשי קשר (כתובת נוכחית)</relationshipLabel>
+    </fields>
+    <fields>
+        <help>כשהיא נבחרת, אפשרות זו מסמנת את איש הקשר כנפטר ומונעת את הכללתו בשמות, הודעות דואר אלקטרוני ושיחות טלפון של משק הבית.</help>
+        <label>נפטר</label>
+        <name>Deceased__c</name>
+    </fields>
+    <fields>
+        <help>כשהיא נבחרת, אפשרות זו מונעת הכללה של איש הקשר בהודעות דואר אלקטרוני ושיחות טלפון.</help>
+        <label>לא ליצור קשר</label>
+        <name>Do_Not_Contact__c</name>
+    </fields>
+    <fields>
+        <help>סימון תיבה זו ימנע הכללה של איש קשר זה בברכה הרשמית של משק הבית.</help>
+        <label>אל תכלול בברכה רשמית של משק בית</label>
+        <name>Exclude_from_Household_Formal_Greeting__c</name>
+    </fields>
+    <fields>
+        <help>סימון תיבה זו ימנע הכללה של איש קשר זה בברכה הלא רשמית של משק הבית.</help>
+        <label>אל תכלול בברכה לא רשמית של משק בית</label>
+        <name>Exclude_from_Household_Informal_Greeting__c</name>
+    </fields>
+    <fields>
+        <help>סימון תיבה זו ימנע הכללה של איש קשר זה בשם משק הבית.</help>
+        <label>אל תכלול בשם משק בית</label>
+        <name>Exclude_from_Household_Name__c</name>
+    </fields>
+    <fields>
+        <help>סכום הקרדיט המוקדם ביותר.</help>
+        <label>סכום קרדיט ראשון</label>
+        <name>First_Soft_Credit_Amount__c</name>
+    </fields>
+    <fields>
+        <help>תאריך הקרדיט המוקדם ביותר.</help>
+        <label>תאריך קרדיט ראשון</label>
+        <name>First_Soft_Credit_Date__c</name>
+    </fields>
+    <fields>
+        <help>מכיל את המזהה של משק הבית הנוכחי, בין אם זהו חשבון משק בית או אובייקט משק בית.</help>
+        <label><!-- HHId --></label>
+        <name>HHId__c</name>
+    </fields>
+    <fields>
+        <help>סכום הקרדיט הגדול ביותר.</help>
+        <label>סכום תרומה מערכתית גדולה ביותר</label>
+        <name>Largest_Soft_Credit_Amount__c</name>
+    </fields>
+    <fields>
+        <help>תאריך הקרדיט הגדול ביותר.</help>
+        <label>תאריך תרומה מערכתית גדולה ביותר</label>
+        <name>Largest_Soft_Credit_Date__c</name>
+    </fields>
+    <fields>
+        <help>סכום הקרדיט האחרון שהוענק.</help>
+        <label>סכום תרומה מערכתית אחרונה</label>
+        <name>Last_Soft_Credit_Amount__c</name>
+    </fields>
+    <fields>
+        <help>תאריך הקרדיט האחרון שהוענק.</help>
+        <label>תאריך תרומה מערכתית אחרונה</label>
+        <name>Last_Soft_Credit_Date__c</name>
+    </fields>
+    <fields>
+        <help>מספר הקרדיטים, שנסגרו במספר הימים האחרונים שנקבע בהגדרות NPSP.</help>
+        <label>מספר תרומות מערכתיות ב-N הימים האחרונים</label>
+        <name>Number_of_Soft_Credits_Last_N_Days__c</name>
+    </fields>
+    <fields>
+        <help>מספר הקרדיטים בשנה שעברה.</help>
+        <label>מספר תרומות מערכתיות בשנה שעברה</label>
+        <name>Number_of_Soft_Credits_Last_Year__c</name>
+    </fields>
+    <fields>
+        <help>מספר הקרדיטים בשנה הנוכחית.</help>
+        <label>מספר תרומות מערכתיות בשנה הנוכחית</label>
+        <name>Number_of_Soft_Credits_This_Year__c</name>
+    </fields>
+    <fields>
+        <help>מספר הקרדיטים לפני שנתיים.</help>
+        <label>מספר תרומות מערכתיות לפני שנתיים</label>
+        <name>Number_of_Soft_Credits_Two_Years_Ago__c</name>
+    </fields>
+    <fields>
+        <help>מספר הקרדיטים.</help>
+        <label>מספר תרומות מערכתיות</label>
+        <name>Number_of_Soft_Credits__c</name>
+    </fields>
+    <fields>
+        <help>משמשת למעקב אחר החשבון של רשומת ההשתייכות לארגונים של איש הקשר, המסומנת כראשית.</help>
+        <label>השתייכות ראשית</label>
+        <name>Primary_Affiliation__c</name>
+        <relationshipLabel>לא לשימוש.  השתמש בהשתייכות לארגונים.</relationshipLabel>
+    </fields>
+    <fields>
+        <help>אפשרות זו מסומנת אם המשתמש הוא איש הקשר הראשי בחשבון שלו.  ניתן לערוך בחשבון את איש הקשר הראשי.</help>
+        <label>איש קשר ראשי</label>
+        <name>Primary_Contact__c</name>
+    </fields>
+    <fields>
+        <help>סכום הקרדיט הכולל, שנסגר במספר הימים האחרונים שנקבע בהגדרות משק הבית.</help>
+        <label>תרומות מערכתיות ב-N הימים האחרונים</label>
+        <name>Soft_Credit_Last_N_Days__c</name>
+    </fields>
+    <fields>
+        <help>אם אפשרות זו מסומנת, חיפוש הכתובת הנוכחית של איש הקשר עוקף את כתובת ברירת המחדל של משק הבית או הכתובת העונתית.</help>
+        <label>עקיפת כתובת</label>
+        <name>is_Address_Override__c</name>
+    </fields>
+    <layouts>
+        <layout>Contact Layout</layout>
+        <sections>
+            <label>פרטי איש קשר</label>
+            <section>Contact Details</section>
+        </sections>
+        <sections>
+            <label>פרטי תרומה</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>סכומי תרומה כוללים</label>
+            <section>Donation Totals</section>
+        </sections>
+        <sections>
+            <label>כתובת משק הבית</label>
+            <section>Household Address</section>
+        </sections>
+        <sections>
+            <label>פרטי תרומת משק הבית</label>
+            <section>Household Donation Info</section>
+        </sections>
+        <sections>
+            <label>פרטי חברות</label>
+            <section>Membership Information</section>
+        </sections>
+        <sections>
+            <label>שונות</label>
+            <section>Misc</section>
+        </sections>
+        <sections>
+            <label>סה״כ זכות מערכתית</label>
+            <section>Soft Credit Totals</section>
+        </sections>
+    </layouts>
+    <quickActions>
+        <label>השתייכות חדשה</label>
+        <name>New_Affiliation</name>
+    </quickActions>
+    <quickActions>
+        <label>תרומה חוזרת חדשה</label>
+        <name>New_Recurring_Donation</name>
+    </quickActions>
+    <quickActions>
+        <label>קשר חדש</label>
+        <name>New_Relationship</name>
+    </quickActions>
+    <quickActions>
+        <label>עדכון מהיר</label>
+        <name>Quick_Update</name>
+    </quickActions>
+    <webLinks>
+        <label>מזג אנשי קשר</label>
+        <name>Merge_Contacts</name>
+    </webLinks>
+</CustomObjectTranslation>

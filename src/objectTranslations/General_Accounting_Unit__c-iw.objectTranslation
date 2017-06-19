@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <article>None</article>
+        <plural>false</plural>
+        <value><!-- General Accounting Unit --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>false</plural>
+        <value><!-- הGeneral Accounting Unit --></value>
+    </caseValues>
+    <caseValues>
+        <article>None</article>
+        <plural>true</plural>
+        <value><!-- General Accounting Unit --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>true</plural>
+        <value><!-- הGeneral Accounting Unit --></value>
+    </caseValues>
+    <fields>
+        <help>יחידות חשבונאיות כלליות זמינות לבחירה בהקצאות. לא ניתן לשייך הקצאות חדשות ליחידות חשבונאיות לא פעילות.</help>
+        <label>פעיל</label>
+        <name>Active__c</name>
+    </fields>
+    <fields>
+        <help>ממוצע כל ההקצאות בכל הזמנים ליחידה חשבונאית כללית זו.</help>
+        <label>הקצאה ממוצעת</label>
+        <name>Average_Allocation__c</name>
+    </fields>
+    <fields>
+        <help>מידע נוסף על יחידה חשבונאית כללית זו.</help>
+        <label>תיאור</label>
+        <name>Description__c</name>
+    </fields>
+    <fields>
+        <help>תאריך סגירת ההזדמנות הראשון של הקצאה המשויכת ליחידה חשבונאית כללית זו.</help>
+        <label>תאריך הקצאה ראשונה</label>
+        <name>First_Allocation_Date__c</name>
+    </fields>
+    <fields>
+        <help>ההקצאה הגדולה ביותר בכל הזמנים ליחידה חשבונאית כללית זו.</help>
+        <label>ההקצאה הגדולה ביותר</label>
+        <name>Largest_Allocation__c</name>
+    </fields>
+    <fields>
+        <help>תאריך סגירת ההזדמנות האחרון של הקצאה המשויכת ליחידה חשבונאית כללית זו.</help>
+        <label>תאריך הקצאה אחרונה</label>
+        <name>Last_Allocation_Date__c</name>
+    </fields>
+    <fields>
+        <help>המספר הכולל של הקצאות של הזדמנויות בשלב סגירה וזכייה ב-N הימים האחרונים. ניתן לשנות את הערך של N בהגדרות.</help>
+        <label>מספר הקצאות ב-N הימים האחרונים</label>
+        <name>Number_of_Allocations_Last_N_Days__c</name>
+    </fields>
+    <fields>
+        <help>המספר הכולל של הקצאות של הזדמנויות בשלב סגירה וזכייה בשנה שעברה.</help>
+        <label>מספר הקצאות בשנה שעברה</label>
+        <name>Number_of_Allocations_Last_Year__c</name>
+    </fields>
+    <fields>
+        <help>המספר הכולל של הקצאות של הזדמנויות בשלב סגירה וזכייה בשנה הנוכחית.</help>
+        <label>מספר הקצאות בשנה הנוכחית</label>
+        <name>Number_of_Allocations_This_Year__c</name>
+    </fields>
+    <fields>
+        <help>המספר הכולל של הקצאות של הזדמנויות בשלב סגירה וזכייה לפני שנתיים.</help>
+        <label>מספר הקצאות לפני שנתיים</label>
+        <name>Number_of_Allocations_Two_Years_Ago__c</name>
+    </fields>
+    <fields>
+        <help>ההקצאה הקטנה ביותר בכל הזמנים ליחידה חשבונאית כללית זו.</help>
+        <label>ההקצאה הקטנה ביותר</label>
+        <name>Smallest_Allocation__c</name>
+    </fields>
+    <fields>
+        <help>סך כל ההקצאות של הזדמנויות בשלב סגירה וזכייה ב-N הימים האחרונים. ניתן לשנות את הערך של N בהגדרות.</help>
+        <label>סה&quot;כ הקצאות ב-N הימים האחרונים</label>
+        <name>Total_Allocations_Last_N_Days__c</name>
+    </fields>
+    <fields>
+        <help>סך כל ההקצאות של הזדמנויות בשלב של סגירה וזכייה בשנה שעברה.</help>
+        <label>סה&quot;כ הקצאות בשנה שעברה</label>
+        <name>Total_Allocations_Last_Year__c</name>
+    </fields>
+    <fields>
+        <help>סך כל ההקצאות של הזדמנויות בשלב של סגירה וזכייה בשנה הנוכחית.</help>
+        <label>סה&quot;כ הקצאות בשנה הנוכחית</label>
+        <name>Total_Allocations_This_Year__c</name>
+    </fields>
+    <fields>
+        <help>סך כל ההקצאות של הזדמנויות בשלב של סגירה וזכייה לפני שנתיים.</help>
+        <label>סה&quot;כ הקצאות לפני שנתיים</label>
+        <name>Total_Allocations_Two_Years_Ago__c</name>
+    </fields>
+    <fields>
+        <help>סך כל ההקצאות של הזדמנויות בשלב של סגירה וזכייה.</help>
+        <label>סה&quot;כ הקצאות</label>
+        <name>Total_Allocations__c</name>
+    </fields>
+    <fields>
+        <help>המספר הכולל של הקצאות של הזדמנויות בשלב סגירה וזכייה.</help>
+        <label>מספר הקצאות כולל</label>
+        <name>Total_Number_of_Allocations__c</name>
+    </fields>
+    <gender><!-- Masculine --></gender>
+    <layouts>
+        <layout>General Accounting Unit Layout</layout>
+        <sections>
+            <label>פרטי הקצאה</label>
+            <section>Allocation Information</section>
+        </sections>
+        <sections>
+            <label>סכומי הקצאה כוללים</label>
+            <section>Allocation Totals</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- General Accounting Unit Name --></nameFieldLabel>
+    <webLinks>
+        <label>חשב מחדש סיכומים</label>
+        <name>Recalculate_Rollups</name>
+    </webLinks>
+</CustomObjectTranslation>

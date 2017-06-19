@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <article>None</article>
+        <plural>false</plural>
+        <value><!-- Household Naming Settings --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>false</plural>
+        <value><!-- הHousehold Naming Settings --></value>
+    </caseValues>
+    <caseValues>
+        <article>None</article>
+        <plural>true</plural>
+        <value><!-- Household Naming Settings --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>true</plural>
+        <value><!-- הHousehold Naming Settings --></value>
+    </caseValues>
+    <fields>
+        <help>מציין את מספר אנשי הקשר שניתן להוסיף לשם באופן מפורש.  לאחר מספר זה, יתבצע שימוש בגלישת השמות.</help>
+        <label>ספירה לגלישת אנשי קשר</label>
+        <name>Contact_Overrun_Count__c</name>
+    </fields>
+    <fields>
+        <help>התבנית שתשמש עבור הברכה הרשמית של משק הבית.</help>
+        <label>תבנית ברכה רשמית</label>
+        <name>Formal_Greeting_Format__c</name>
+    </fields>
+    <fields>
+        <help>התבנית שתשמש עבור השם של משק הבית.</help>
+        <label>תבנית שם משק בית</label>
+        <name>Household_Name_Format__c</name>
+    </fields>
+    <fields>
+        <help>שם המחלקה שמיישמת את ממשק HH_INaming לצורך מתן שמות למשקי בית.</help>
+        <label>מחלקת יישום</label>
+        <name>Implementing_Class__c</name>
+    </fields>
+    <fields>
+        <help>התבנית שתשמש עבור הברכה הלא רשמית של משק הבית.</help>
+        <label>תבנית ברכה לא רשמית</label>
+        <name>Informal_Greeting_Format__c</name>
+    </fields>
+    <fields>
+        <help>המחרוזת שתשמש לקישור זוגות בשם.  לדוגמה, אלון + אלה, או אלון ואלה.</help>
+        <label>מחבר שם</label>
+        <name>Name_Connector__c</name>
+    </fields>
+    <fields>
+        <help>המחרוזת שתשמש להחלפת רשימות ארוכות של שמות.</help>
+        <label>גלישת שמות</label>
+        <name>Name_Overrun__c</name>
+    </fields>
+    <gender><!-- Masculine --></gender>
+</CustomObjectTranslation>
