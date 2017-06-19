@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <help>האצווה שממנה הפניה זו נוצרה.</help>
+        <label>אצווה</label>
+        <name>Batch__c</name>
+        <relationshipLabel>הפניות</relationshipLabel>
+    </fields>
+    <fields>
+        <label>עיר החברה</label>
+        <name>CompanyCity__c</name>
+    </fields>
+    <fields>
+        <label>ארץ החברה</label>
+        <name>CompanyCountry__c</name>
+    </fields>
+    <fields>
+        <label>מיקוד החברה</label>
+        <name>CompanyPostalCode__c</name>
+    </fields>
+    <fields>
+        <label>מדינה/מחוז החברה</label>
+        <name>CompanyState__c</name>
+    </fields>
+    <fields>
+        <label>רחוב החברה</label>
+        <name>CompanyStreet__c</name>
+    </fields>
+</CustomObjectTranslation>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <article>None</article>
+        <plural>false</plural>
+        <value><!-- GAU Allocation --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>false</plural>
+        <value><!-- הGAU Allocation --></value>
+    </caseValues>
+    <caseValues>
+        <article>None</article>
+        <plural>true</plural>
+        <value><!-- GAU Allocation --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>true</plural>
+        <value><!-- הGAU Allocation --></value>
+    </caseValues>
+    <fields>
+        <help>סכום ההזדמנות שיש להקצות ליחידת חשבונאות כללית זו. השאר ריק עבור הקצאות המבוססות על אחוזים.</help>
+        <label>סכום</label>
+        <name>Amount__c</name>
+    </fields>
+    <fields>
+        <help>שיוך אופציונלי של הקצאות למבצע. כל ההזדמנויות החדשות שנוצרו עם מבצע זה כמקור המבצע הראשי יוקצו אוטומטית באותו אופן.</help>
+        <label>מבצע</label>
+        <name>Campaign__c</name>
+        <relationshipLabel>הקצאות GAU</relationshipLabel>
+    </fields>
+    <fields>
+        <help>היחידה החשבונאית הכללית לשיוך הקצאה זו. רק יחידות חשבונאיות כלליות המסומנות כפעילות זמינות לצורך הקצאות חדשות.</help>
+        <label>יחידה חשבונאית כללית</label>
+        <lookupFilter>
+            <errorMessage>ניתן לשייך הקצאות רק ליחידות חשבונאיות כלליות במצב פעיל. לא ניתן לבצע שינויים בהקצאות המשויכות ליחידות חשבונאיות כלליות שאינן פעילות.</errorMessage>
+            <informationalMessage>ניתן לבחור רק יחידות חשבונאיות כלליות במצב פעיל.</informationalMessage>
+        </lookupFilter>
+        <name>General_Accounting_Unit__c</name>
+        <relationshipLabel>הקצאות GAU</relationshipLabel>
+    </fields>
+    <fields>
+        <help>שיוך של הקצאות להזדמנות. כל ההזדמנויות בשלב של סגירה וזכייה יסוכמו ליחידה החשבונאית הכללית של הקצאה זו.</help>
+        <label>תרומה</label>
+        <name>Opportunity__c</name>
+        <relationshipLabel>הקצאות GAU</relationshipLabel>
+    </fields>
+    <fields>
+        <help>אחוז ההזדמנות שיש להקצות ליחידה חשבונאית כללית זו. שינוי סכום ההזדמנות של הקצאה המבוססת על אחוזים יביא לשינוי סכום ההקצאה.</help>
+        <label>אחוז</label>
+        <name>Percent__c</name>
+    </fields>
+    <fields>
+        <help>שיוך אופציונלי של הקצאות לתרומה חוזרת. כל ההזדמנויות החדשות שנוצרו עם לוח זמנים זה של תרומה חוזרת יוקצו אוטומטית באותו אופן.</help>
+        <label>תרומה חוזרת</label>
+        <name>Recurring_Donation__c</name>
+        <relationshipLabel>הקצאות GAU</relationshipLabel>
+    </fields>
+    <gender><!-- Masculine --></gender>
+    <layouts>
+        <layout>Allocation Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- GAU Allocation Name --></nameFieldLabel>
+    <webLinks>
+        <label>נהל הקצאות</label>
+        <name>Manage_Allocations</name>
+    </webLinks>
+</CustomObjectTranslation>
