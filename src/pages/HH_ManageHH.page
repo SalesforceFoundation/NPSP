@@ -11,6 +11,9 @@
                 color: red;
                 font-weight: 700;
             }
+            #contentWrapper .bPageFooter.noTableFooter {
+                display: none;
+            }
         </style>
                 
         <!-- start with a spinner here until lightning loads -->
