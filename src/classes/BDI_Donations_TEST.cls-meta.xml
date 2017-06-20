@@ -6,5 +6,10 @@
         <minorNumber>6</minorNumber>
         <namespace>npe01</namespace>
     </packageVersions>
+    <packageVersions>
+        <majorNumber>3</majorNumber>
+        <minorNumber>8</minorNumber>
+        <namespace>npo02</namespace>
+    </packageVersions>
     <status>Active</status>
 </ApexClass>

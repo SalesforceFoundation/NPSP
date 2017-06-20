@@ -258,12 +258,14 @@ public without sharing class UTIL_CustomSettingsFacade {
     public static Data_Import_Settings__c getDataImportSettings() {        
         if(Test.isRunningTest() && dataImportSettings == null) {
             dataImportSettings = new Data_Import_Settings__c();
-            configDataImportSettings(dataImportSettings);
         } else if (dataImportSettings == null) {
             dataImportSettings = Data_Import_Settings__c.getInstance();
             if (dataImportSettings.Id == null) 
                 dataImportSettings = getOrgDataImportSettings();
         }
+        // always call config, to deal with new settings we've added
+        // we'll only config those setting that are null
+        configDataImportSettings(dataImportSettings);
         return dataImportSettings;
     }
 
@@ -592,8 +594,22 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     private static void configDataImportSettings(Data_Import_Settings__c dis) {
-        dis.Batch_Size__c = 50;
-        dis.Contact_Matching_Rule__c = 'Firstname,Lastname,Email';
+        if (dis.Batch_Size__c == null) {
+            dis.Batch_Size__c = 50;
+        }
+        if (dis.Contact_Matching_Rule__c == null) {
+            dis.Contact_Matching_Rule__c = 'Firstname,Lastname,Email';
+        }
+        if (dis.Donation_Matching_Behavior__c == null) {
+            dis.Donation_Matching_Behavior__c = BDI_DataImport_API.DoNotMatch;
+        }
+        if (dis.Donation_Matching_Rule__c == null) {
+            dis.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
+                UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+        }
+        if (dis.Donation_Date_Range__c == null) {
+            dis.Donation_Date_Range__c = 0;
+        }
     }
 
     /*******************************************************************************************************
