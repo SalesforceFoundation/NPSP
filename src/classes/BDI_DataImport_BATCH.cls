@@ -63,15 +63,15 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     
     // maps to keep track of the objects we will create.
     // all are indexed by the object's matching key or the di.Id
-    private map<string, Contact> mapDIKeyToContact = new map<string, Contact>();
-    private map<string, Account> mapDIKeyToAccount = new map<string, Account>();
+    public map<string, Contact> mapDIKeyToContact = new map<string, Contact>();
+    public map<string, Account> mapDIKeyToAccount = new map<string, Account>();
     private map<Id, Address__c> mapDIIdToAddr = new map<Id, Address__c>();
     public map<string, Id> mapStrNameToCampaignId = new map<string, Id>();
 
     // holds the list of DataImport records we are currently processing
     public list<DataImport__c> listDI;
     
-    private Data_Import_Settings__c diSettings {
+    public Data_Import_Settings__c diSettings {
         get {
             if (diSettings == null) {
                 diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
@@ -79,7 +79,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             return diSettings;
         }
         private set;
-    }    
+    }
 
     private boolean isFirstnameInContactMatchRules {
     	get {

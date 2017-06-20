@@ -803,10 +803,22 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Donation_Possible_Matches__c</fullName>
+        <description>A comma separated list of ID&apos;s to the first 10 possible Opportunity matches to a donation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>A comma separated list of ID&apos;s to the first 10 possible Opportunity matches to a donation.</inlineHelpText>
+        <label>Donation Possible Matches</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Donation_Record_Type_Name__c</fullName>
         <description>The Name of the Opportunity Record Type to use for the donation.  Uses default Record Type if left blank.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The Name of the Opportunity Record Type to use for the donation. Uses default Record Type if left blank.</inlineHelpText>
+        <inlineHelpText>Opportunity.RecordTypeId</inlineHelpText>
         <label>Donation Record Type Name</label>
         <length>255</length>
         <required>false</required>
@@ -954,6 +966,28 @@
         <type>DateTime</type>
     </fields>
     <fields>
+        <fullName>PaymentImportStatus__c</fullName>
+        <externalId>false</externalId>
+        <label>Payment Import Status</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>PaymentImported__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Payment Imported</label>
+        <referenceTo>npe01__OppPayment__c</referenceTo>
+        <relationshipLabel>NPSP Data Imports</relationshipLabel>
+        <relationshipName>NPSP_Data_Imports</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
         <fullName>Payment_Check_Reference_Number__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Payment.npe01__Check_Reference_Number__c</inlineHelpText>
@@ -969,6 +1003,18 @@
         <externalId>false</externalId>
         <inlineHelpText>Payment.npe01__Payment_Method__c</inlineHelpText>
         <label>Payment Method</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Payment_Possible_Matches__c</fullName>
+        <description>A comma separated list of ID&apos;s to the first 10 possible Payment matches to a donation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>A comma separated list of ID&apos;s to the first 10 possible Payment matches to a donation.</inlineHelpText>
+        <label>Payment Possible Matches</label>
         <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>

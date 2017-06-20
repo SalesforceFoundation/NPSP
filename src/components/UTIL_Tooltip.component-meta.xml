@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ApexPage xmlns="http://soap.sforce.com/2006/04/metadata">
-    <apiVersion>39.0</apiVersion>
-    <availableInTouch>false</availableInTouch>
-    <confirmationTokenRequired>false</confirmationTokenRequired>
-    <label>BDI_DataImport</label>
+<ApexComponent xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>37.0</apiVersion>
+    <description>This is a generic template for Visualforce Component.  With this template, you may adjust the default elements and values and add new elements and values.</description>
+    <label>UTIL_Tooltip</label>
     <packageVersions>
         <majorNumber>3</majorNumber>
         <minorNumber>6</minorNumber>
@@ -29,4 +28,4 @@
         <minorNumber>8</minorNumber>
         <namespace>npo02</namespace>
     </packageVersions>
-</ApexPage>
+</ApexComponent>
