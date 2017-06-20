@@ -8,8 +8,9 @@
     standardStylesheets="false">
 
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
-    <apex:stylesheet value="{!URLFOR($Resource.SLDS, '/0_12_2/assets/styles/salesforce-lightning-design-system-vf.min.css')}"/>
 
+    <apex:slds />
+    
     <style type="text/css">
         svg {
             width: 100%;
@@ -53,124 +54,61 @@
                     </div>
                 </div>
             </div>
+            
+            <c:UTIL_PageMessages />
 
-            <apex:outputText rendered="{!NOT(batchRunning)}">
-                <div class="slds-container--large slds-container--center">
-                    <c:UTIL_PageMessages />
+            <div class="slds-grid">
+                <div class="slds-size--1-of-2 slds-m-horizontal--large">
+                    <apex:outputText rendered="{!NOT(batchRunning)}">
+                        <div class="slds-container--large slds-container--center">
+        
+                            <div  class="slds-m-bottom--large">
+                                <div class="slds-text-heading--small slds-m-bottom--medium">
+                                    {!$Label.bdiDataImporterInfoTitle}
+                                </div>
+        
+                                <div class="slds-text-longform">
+                                    <ul>
+                                        <li>{!$Label.bdiDataImporterInfoLine1}</li>
+                                        <li>{!$Label.bdiDataImporterInfoLine2}</li>
+                                        <li>{!$Label.bdiDataImporterInfoLine2b}</li>
+                                        <li>{!$Label.bdiDataImporterInfoLine3}</li>
+                                        <li>{!$Label.bdiDataImporterInfoLine4}</li>
+                                        <li style="list-style-type: none;" class="slds-m-top--medium">
+                                            <b>{!$Label.bdiDataImporterNumToProcess}&nbsp;{!crecToProcess}</b>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </apex:outputText>
+                
+                    <apex:outputText rendered="{!NOT(batchRunning) && NOT(isEditMode)}">
+                        <div class="slds-container--large">
+                            <div class="slds-grid slds-grid--align-center">
+                                <div class="slds-form-element">
+                                    <div class="slds-form-element__control">
+                                        <apex:commandButton value="{!$Label.bdiRunBtn}" action="{!importData}" immediate="false" styleClass="slds-button slds-button--brand" rerender="idForm"/>
+                                        <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!close}" immediate="true" styleClass="slds-button slds-button--neutral" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </apex:outputText>
+                </div>
 
-                    <div  class="slds-m-bottom--large">
+                <div class="slds-size--1-of-2 slds-m-horizontal--large">        
+                    <apex:outputText rendered="{!AND(NOT(batchRunning), userCanEditSettings)}">
                         <div class="slds-text-heading--small slds-m-bottom--medium">
-                            {!$Label.bdiDataImporterInfoTitle}
+                            {!$Label.bdiDataImporterConfigTitle}&nbsp;&nbsp;&nbsp;&nbsp;
+                            <apex:commandButton value="{!$Label.stgBtnEdit}" action="{!editBDISettings}" immediate="true" styleClass="slds-button slds-button--neutral" rendered="{!NOT(isEditMode)}"/>
+                            <apex:commandButton value="{!$Label.stgBtnSave}" action="{!saveBDISettings}" immediate="false" styleClass="slds-button slds-button--brand" rendered="{!isEditMode}"/>
+                            <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelBDISettings}" immediate="true" styleClass="slds-button slds-button--neutral" rendered="{!isEditMode}"/>
                         </div>
-
-                        <div class="slds-text-longform">
-                            <ul>
-                                <li>{!$Label.bdiDataImporterInfoLine1}</li>
-                                <li>{!$Label.bdiDataImporterInfoLine2}</li>
-                                <li>{!$Label.bdiDataImporterInfoLine2b}</li>
-                                <li>{!$Label.bdiDataImporterInfoLine3}</li>
-                                <li>{!$Label.bdiDataImporterInfoLine4}</li>
-                                <li style="list-style-type: none;" class="slds-m-top--medium">
-                                    <b>{!$Label.bdiDataImporterNumToProcess}&nbsp;{!crecToProcess}</b>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                        <c:BDI_SettingsUI bdiSettings="{!diSettings}" editMode="{!isEditMode}" />
+                   </apex:outputText>
                 </div>
-            </apex:outputText>
-
-            <apex:outputText rendered="{!AND(NOT(batchRunning), userCanEditSettings)}">
-                <div class="slds-container--large slds-container--center slds-m-top--large slds-p-top--large slds-col-rule--top">
-                    <div class="slds-m-bottom--large">
-                        <div class="slds-text-heading--small slds-m-bottom--medium">
-                            {!$Label.bdiDataImporterConfigTitle}
-                        </div>
-
-                        <div class="slds-form--horizontal">
-
-                            <div class="slds-form-element">
-                                <label class="slds-form-element__label">
-                                    <apex:outputText value="{!$ObjectType.Data_Import_Settings__c.Fields.Batch_Size__c.Label}"/>
-                                </label>
-                                <div class="slds-form-element__control">
-                                    <apex:inputField value="{!diSettings.Batch_Size__c}" type="number" styleClass="slds-input"/>
-                                    <span class="slds-form-element__help">
-                                        <apex:outputText value="{!$ObjectType.Data_Import_Settings__c.Fields.Batch_Size__c.InlineHelpText}" />
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="slds-form-element">
-                                <label class="slds-form-element__label">
-                                    <apex:outputText value="{!$ObjectType.Data_Import_Settings__c.Fields.Contact_Matching_Rule__c.Label}"/>
-                                </label>
-                                <div class="slds-form-element__control">
-                                    <div class="slds-select_container">
-                                        <apex:selectList value="{!diSettings.Contact_Matching_Rule__c}" size="1" multiselect="false" styleClass="slds-select">
-                                            <apex:selectOption itemLabel="{!$Label.bdiContactMatchFnameLnameEmail}" itemValue="Firstname,Lastname,Email" />
-                                            <apex:selectOption itemLabel="{!$Label.bdiContactMatchLnameEmail}" itemValue="Lastname,Email" />
-                                            <apex:selectOption itemLabel="{!$Label.bdiContactMatchFnameEmail}" itemValue="Firstname,Email" />
-                                            <apex:selectOption itemLabel="{!$Label.bdiContactMatchFnameLname}" itemValue="Firstname,Lastname" />
-                                            <apex:selectOption itemLabel="{!$Label.bdiContactMatchEmail}" itemValue="Email" />
-                                            <apex:selectOption itemLabel="{!$Label.bdiContactMatchFnameLnamePhone}" itemValue="Firstname,Lastname,Phone" />
-                                        </apex:selectList>
-                                    </div>
-                                    <span class="slds-form-element__help">
-                                        <apex:outputText value="{!$ObjectType.Data_Import_Settings__c.Fields.Contact_Matching_Rule__c.InlineHelpText}" />
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="slds-form-element">
-                                <label class="slds-form-element__label">
-                                    <apex:outputText value="{!$ObjectType.Data_Import_Settings__c.Fields.Contact_Custom_Unique_ID__c.Label}"/>
-                                </label>
-                                <div class="slds-form-element__control">
-                                    <div class="slds-select_container">
-                                        <apex:selectList value="{!diSettings.Contact_Custom_Unique_ID__c}" size="1" multiselect="false" styleClass="slds-select">
-                                            <apex:selectOptions value="{!listSOContactUniqueID}"/>
-                                        </apex:selectList>
-                                    </div>
-                                    <span class="slds-form-element__help">
-                                        <apex:outputText value="{!$ObjectType.Data_Import_Settings__c.Fields.Contact_Custom_Unique_ID__c.InlineHelpText}" />
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="slds-form-element">
-                                <label class="slds-form-element__label">
-                                    <apex:outputText value="{!$ObjectType.Data_Import_Settings__c.Fields.Account_Custom_Unique_ID__c.Label}"/>
-                                </label>
-                                <div class="slds-form-element__control">
-                                    <div class="slds-select_container">
-                                        <apex:selectList value="{!diSettings.Account_Custom_Unique_ID__c}" size="1" multiselect="false" styleClass="slds-select">
-                                            <apex:selectOptions value="{!listSOAccountUniqueID}"/>
-                                        </apex:selectList>
-                                    </div>
-                                    <span class="slds-form-element__help">
-                                        <apex:outputText value="{!$ObjectType.Data_Import_Settings__c.Fields.Account_Custom_Unique_ID__c.InlineHelpText}" />
-                                    </span>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </apex:outputText>
-
-            <apex:outputText rendered="{!NOT(batchRunning)}">
-                <div class="slds-container--large slds-container--center">
-                    <div class="slds-form--horizontal">
-                        <div class="slds-form-element">
-                            <div class="slds-form-element__control">
-                                <apex:commandButton value="{!$Label.bdiRunBtn}" action="{!importData}" immediate="false" styleClass="slds-button slds-button--brand" rerender="idForm"/>
-                                <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!close}" immediate="true" styleClass="slds-button slds-button--neutral" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </apex:outputText>
-
+            </div>
 
             <apex:outputText rendered="{!batchRunning}" >
                 <div class="slds-container--large slds-container--center">
@@ -262,4 +200,5 @@
             </apex:outputText>
         </apex:form>
     </div>
+
 </apex:page>
