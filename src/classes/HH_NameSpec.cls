@@ -207,7 +207,6 @@ public with sharing class HH_NameSpec implements HH_INaming {
         }
     }
     
-    
     /*******************************************************************************************************
     * @description Given a namespec and a list of Contacts (assumed from a single household),
     * return the formated string for that household.  
@@ -217,76 +216,102 @@ public with sharing class HH_NameSpec implements HH_INaming {
     * return string
     */
     private static string strNameFromNameSpec(NameSpec ns, list<Contact> listCon) {
-        string strName = '';
-        integer cCon = listCon.size();          
-        integer i = 0;
-        boolean isNoLastnames = (ns.strFullNameSpec.indexOf(chLToken + 'LastName' + chRToken) == -1);
+        Integer size = listCon.size();    
+        Boolean hasNoLastNameFormat = ns.strFullNameSpec.indexOf(chLToken + 'LastName' + chRToken) == -1;
+        Boolean hasLastNameOnlyFormat = !hasNoLastNameFormat && ns.setStrFieldsInNameSpec().size() == 1;
+        Set<String> processedLastNames = new Set<String>();
+        String[] names = new String[0];
         
-        if (cCon == 0) {
-        	if (ns.strHNSField == 'Household_Name_Format__c')
-        	   strName = label.npo02.HouseholdAnonymousName;
-            else 
-        	   strName = label.npo02.HouseholdAnonymousGreeting;
+        if (size == 0) {
+        	names.add(
+                ns.strHNSField == 'Household_Name_Format__c'
+                    ? label.npo02.HouseholdAnonymousName
+                    : label.npo02.HouseholdAnonymousGreeting
+            );
         }
         
-        while (i < cCon && i < ns.cMaxUseOverrun) {
-            
-            string strLname = listCon[i].LastName;
+        for (Integer i = 0, next = 0; i < size && i < ns.cMaxUseOverrun; i = next) {
+            String strLname = listCon[i].LastName;
+            next = i + 1;
+
+            if (hasLastNameOnlyFormat && processedLastNames.contains(strLname)) {
+                continue;
+            }
+            processedLastNames.add(strLname);
+
             string strFname = strConFspec(listCon[i], ns.strFirstNameSpec);
             
             // get the set of additional fname's for this lname
             list<String> listFname = new list<String>();
-            integer j = i + 1;
-            while (j < cCon && (isNoLastnames || listCon[j].LastName == strLname)) {
-                String strF = strConFspec(listCon[j], ns.strFirstNameSpec);
-                if (strF != '') {
-                    listFName.add(strF);
+            for (; next < size && (hasNoLastNameFormat || listCon[next].LastName == strLname); next++) {
+                String nextFname = strConFspec(listCon[next], ns.strFirstNameSpec);
+
+                if (nextFname != '') {
+                    listFName.add(nextFname);
                 }
-                j++;
             }
 
             // now put those additional fname's together
-            for (integer k = 0; k < listFName.size(); k++) {
+            for (Integer k = 0; k < listFName.size(); k++) {
                 // if we've hit the limit, then bail out
                 if (i+k+1 == ns.cMaxUseOverrun) {
-                    // we need j to hold maxOverrun
-                    j = ns.cMaxUseOverrun;
+                    // reached max contact count limit
+                    next = ns.cMaxUseOverrun;
                     break;
                 }
 
                 // we want to use And if this is the last person in this lastname, or the last one we will include
-                if (k == listFName.size()-1 || (!isNoLastnames && (i+k+2) == ns.cMaxUseOverrun)) {
+                if (k == listFName.size()-1 || (!hasNoLastNameFormat && (i+k+2) == ns.cMaxUseOverrun)) {
                     strFname += ns.strAnd + listFName[k];
                 } else {
                     strFName += ', ' + listFname[k];
                 }
             }
+
             // create lname part using first contact with that lastname
-            string strCon = strConFSpec(listCon[i], ns.strFullNameSpec);
-            strCon = strCon.replace('FirstNameSpec', strFname);
-            if (strFname == '')
-                strCon = strCon.trim();
-            
-            // add it to the whole name
-            boolean willAddOverrun = (j >= ns.cMaxUseOverrun && cCon > ns.cMaxUseOverrun && ns.strFirstNameSpec != '' && ns.strOverrun != null);
+            String name = strConFSpec(listCon[i], ns.strFullNameSpec);
+            name = name.replace('FirstNameSpec', strFname);
+            if (strFname == '') {
+                name = name.trim();
+            }
              
-            // use and for last set as long as we won't be adding overrun too
-            if (i > 0 && j == cCon && !willAddOverrun) {
-                strName += ns.strAnd;                
-            } else if (i > 0) {
-                strName += ', ';
-            }
-            strName += strCon;
+            names.add(name);
+   
+            Boolean isOverrun = next >= ns.cMaxUseOverrun && 
+                size > ns.cMaxUseOverrun && 
+                ns.strFirstNameSpec != '' && 
+                ns.strOverrun != null;
 
-            if (willAddOverrun) {
-                strName += ns.strAnd + ns.strOverrun;
-            }
-
-            // continue with the next person we haven't included
-            i = j;
+            if (isOverrun) {
+                names.add(ns.strOverrun);
+            }            
         }
-        
-        return ns.strPrefix + strName + ns.strSuffix;
+
+        return ns.strPrefix + buildName(ns, names) + ns.strSuffix;
+    }
+    
+    /*******************************************************************************************************
+    * @description Concatenate string out of individual formatted names.
+    * @param ns The namespec class
+    * @param names List of strings to concatenate
+    * return string Concatenated string where names are separated by comma except 
+    * the last string is linked with the namespec's AND delimiter 
+    */
+    private static String buildName(NameSpec ns, String[] names) {
+        String name = '';
+        String delimiter = '';
+        Integer size = names.size();
+
+        for (Integer i = 0; i < size; i++) {
+            if (i > 0 && i == size - 1) {
+                delimiter = ns.strAnd;
+            } else if (i > 0) {
+                delimiter = ', ';
+            }
+            name += delimiter + names[i];
+        }
+
+        return name;
     }
     
     /*******************************************************************************************************
