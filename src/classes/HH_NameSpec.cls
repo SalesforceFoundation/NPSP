@@ -223,7 +223,7 @@ public with sharing class HH_NameSpec implements HH_INaming {
         String[] names = new String[0];
         
         if (size == 0) {
-        	names.add(
+            names.add(
                 ns.strHNSField == 'Household_Name_Format__c'
                     ? label.npo02.HouseholdAnonymousName
                     : label.npo02.HouseholdAnonymousGreeting
