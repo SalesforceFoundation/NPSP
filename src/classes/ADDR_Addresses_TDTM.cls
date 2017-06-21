@@ -41,6 +41,8 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * @description static flag to prevent recursive call 
     */
     public static boolean hasRunAddrTrigger = false;
+    public static boolean hasRunAddrTriggerREAL = false;
+    public static integer cHasRunAddrTrigger = 0;
 
     /*******************************************************************************************************
     * @description map from Country name (UPPER CASE) to Country Code
@@ -79,10 +81,11 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         // will require visiting all the HH Accounts, and deciding whether we are propagating the change
         // to all related objects, or just to Contacts who are using the Address as their override.
         //
-        	
+        UTIL_Debug.debug('DJH**** ADDR_Addresses_TDTM ' + triggerAction + ' hasRun: ' + cHasRunAddrTrigger);
+
         // prevent recursion
-        if (hasRunAddrTrigger) {
-        	//UTIL_Debug.debug('DJH**** stop Addr Trigger recursion');
+        if (cHasRunAddrTrigger > 0) {
+        	UTIL_Debug.debug('DJH**** stop Addr Trigger recursion in ADDR_Addresses_TDTM');
             return null;
         }
 
@@ -166,7 +169,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         
         // AFTER INSERT & AFTER UPDATE & AFTER DELETE
         // now we have which HH Accounts to consider, and which to only use for Address Override updates.
-        hasRunAddrTrigger = true;
+        cHasRunAddrTrigger++;
         
         DmlWrapper dmlWrapper = new DmlWrapper();        
         
@@ -195,7 +198,8 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                     UTIL_Debug.debug(LoggingLevel.WARN, '**** Address: ' + addr + ' message: ' + error.Full_Message__c);
                 }
             }
-        return null;
+            cHasRunAddrTrigger--;
+            return null;
         }
 
         // hack to detect empty addresses and delete them after we've propagated the change to all contacts and account
@@ -209,6 +213,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             if (listAddr.size() > 0)
                 delete listAddr;             
         }
+        cHasRunAddrTrigger--;
         return null;
     }    
     
@@ -351,15 +356,15 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }  
                     
         if (listAccUpdate.size() > 0) {
-            //UTIL_Debug.debug('DJH**** listAccUpdate: ' + listAccUpdate);
+            UTIL_Debug.debug('DJH**** listAccUpdate: ' + listAccUpdate);
             dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAccUpdate);
         }
         if (listAddrUpdate.size() > 0) {
-            //UTIL_Debug.debug('DJH**** listAddrUpdate: ' + listAddrUpdate);
+            UTIL_Debug.debug('DJH**** listAddrUpdate: ' + listAddrUpdate);
             dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAddrUpdate);
         }
         if (listConUpdate.size() > 0) {
-            //UTIL_Debug.debug('DJH**** listConUpdate: ' + listConUpdate);
+            UTIL_Debug.debug('DJH**** listConUpdate: ' + listConUpdate);
             dmlWrapper.objectsToUpdate.addAll((List<SObject>)listConUpdate);
         }
         
@@ -756,11 +761,12 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         // we'll go thru refreshCurrentHHAddress() again, this time allowing it to do the updates    
         
         // must manually set our semaphore, so when we update contacts and households, they don't try to create additional addresses
-        hasRunAddrTrigger = true;       
+        cHasRunAddrTrigger++;
 
         Dmlwrapper dmlWrapper = new Dmlwrapper();
         refreshCurrentHHAddress(mapAccIdAddr, dmlWrapper, false);
         TDTM_TriggerHandler.processDML(dmlWrapper);
+        cHasRunAddrTrigger--;
     }
     
     /*******************************************************************************************************

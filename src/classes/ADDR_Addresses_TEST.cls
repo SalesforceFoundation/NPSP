@@ -577,7 +577,7 @@ public with sharing class ADDR_Addresses_TEST {
             Account acc = mapAccIdAcc.get(con.AccountId);
             if (con.MailingStreet.contains('not override') == true) {
                 cNotOverride++;
-                system.assertEquals(false, isMatchAddressAccCon(acc, con));
+                system.assertEquals(true, isMatchAddressAccCon(acc, con));
                 system.assert(con.MailingStreet.contains('not override'));
                 system.assert(con.MailingCity.contains('not override'));
                 system.assertEquals(false, con.is_Address_Override__c);
@@ -591,7 +591,7 @@ public with sharing class ADDR_Addresses_TEST {
                 system.assertNotEquals(null, con.Current_Address__c);
             }
         }
-        system.assertEquals(cHH, cNotOverride);
+        system.assertEquals(cHH * cCon, cNotOverride);
     }
 
     /*********************************************************************************************************
