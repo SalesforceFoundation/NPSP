@@ -72,14 +72,8 @@ public with sharing class CON_ContactMergeTDTM_TEST {
         insert accOrg;
         conWinner.Primary_Affiliation__c = accOrg.Id;
         conLoser.Primary_Affiliation__c = accOrg.Id;
-        AFFL_Affiliations_TDTM.doNotRunForContacts = false;
-        AFFL_Affiliations_TDTM.hasRunForAccounts = false;
-        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
-        update new list<Contact> {conWinner, conLoser};        
-        AFFL_Affiliations_TDTM.doNotRunForContacts = false;
-        AFFL_Affiliations_TDTM.hasRunForAccounts = false;
-        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
-        system.assertEquals(2, [select count() from npe5__Affiliation__c]);              
+        update new list<Contact> {conWinner, conLoser};
+        system.assertEquals(2, [select count() from npe5__Affiliation__c]);
         
         Test.startTest();
         merge conWinner conLoser;
@@ -155,14 +149,8 @@ public with sharing class CON_ContactMergeTDTM_TEST {
         insert accOrg;
         conWinner.Primary_Affiliation__c = accOrg.Id;
         conLoser.Primary_Affiliation__c = accOrg.Id;
-        AFFL_Affiliations_TDTM.doNotRunForContacts = false;
-        AFFL_Affiliations_TDTM.hasRunForAccounts = false;
-        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
-        update new list<Contact> {conWinner, conLoser};        
-        AFFL_Affiliations_TDTM.doNotRunForContacts = false;
-        AFFL_Affiliations_TDTM.hasRunForAccounts = false;
-        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
-        system.assertEquals(2, [select count() from npe5__Affiliation__c]);              
+        update new list<Contact> {conWinner, conLoser};
+        system.assertEquals(2, [select count() from npe5__Affiliation__c]);
 
         Test.startTest();
         merge conWinner conLoser;
@@ -249,13 +237,7 @@ public with sharing class CON_ContactMergeTDTM_TEST {
         conWinner.Primary_Affiliation__c = accOrg.Id;
         conLoser1.Primary_Affiliation__c = accOrg.Id;
         conLoser2.Primary_Affiliation__c = accOrg.Id;
-        AFFL_Affiliations_TDTM.doNotRunForContacts = false;
-        AFFL_Affiliations_TDTM.hasRunForAccounts = false;
-        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
-        update new list<Contact> {conWinner, conLoser1, conLoser2};        
-        AFFL_Affiliations_TDTM.doNotRunForContacts = false;
-        AFFL_Affiliations_TDTM.hasRunForAccounts = false;
-        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
+        update new list<Contact> {conWinner, conLoser1, conLoser2};
         system.assertEquals(3, [select count() from npe5__Affiliation__c]);
         
         // create additional affiliations
@@ -265,9 +247,6 @@ public with sharing class CON_ContactMergeTDTM_TEST {
         listAffl.add(new npe5__Affiliation__c(npe5__Contact__c=conLoser2.Id, npe5__Organization__c=accOrg.Id, npe5__Status__c='inactive'));             
         listAffl.add(new npe5__Affiliation__c(npe5__Contact__c=conLoser2.Id, npe5__Organization__c=accOrg.Id, npe5__Status__c='random'));             
         insert listAffl;
-        AFFL_Affiliations_TDTM.doNotRunForContacts = false;
-        AFFL_Affiliations_TDTM.hasRunForAccounts = false;
-        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
         system.assertEquals(7, [select count() from npe5__Affiliation__c]);
 
         // now let's do the merge!
