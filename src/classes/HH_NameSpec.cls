@@ -216,13 +216,13 @@ public with sharing class HH_NameSpec implements HH_INaming {
     * return string
     */
     private static string strNameFromNameSpec(NameSpec ns, list<Contact> listCon) {
-        Integer size = listCon.size();    
-        Boolean hasNoLastNameFormat = ns.strFullNameSpec.indexOf(chLToken + 'LastName' + chRToken) == -1;
-        Boolean hasLastNameOnlyFormat = !hasNoLastNameFormat && ns.setStrFieldsInNameSpec().size() == 1;
+        Integer cCon = listCon.size();    
+        Boolean isNoLastnames = ns.strFullNameSpec.indexOf(chLToken + 'LastName' + chRToken) == -1;
+        Boolean isLastNameOnlyFormat = !isNoLastnames && ns.setStrFieldsInNameSpec().size() == 1;
         Set<String> processedLastNames = new Set<String>();
         String[] names = new String[0];
         
-        if (size == 0) {
+        if (cCon == 0) {
             names.add(
                 ns.strHNSField == 'Household_Name_Format__c'
                     ? label.npo02.HouseholdAnonymousName
@@ -230,20 +230,20 @@ public with sharing class HH_NameSpec implements HH_INaming {
             );
         }
         
-        for (Integer i = 0, next = 0; i < size && i < ns.cMaxUseOverrun; i = next) {
+        for (Integer i = 0, next = 0; i < cCon && i < ns.cMaxUseOverrun; i = next) {
             String strLname = listCon[i].LastName;
             next = i + 1;
 
-            if (hasLastNameOnlyFormat && processedLastNames.contains(strLname)) {
+            if (isLastNameOnlyFormat && processedLastNames.contains(strLname)) {
                 continue;
             }
             processedLastNames.add(strLname);
 
-            string strFname = strConFspec(listCon[i], ns.strFirstNameSpec);
+            String strFname = strConFspec(listCon[i], ns.strFirstNameSpec);
             
             // get the set of additional fname's for this lname
             list<String> listFname = new list<String>();
-            for (; next < size && (hasNoLastNameFormat || listCon[next].LastName == strLname); next++) {
+            for (; next < cCon && (isNoLastnames || listCon[next].LastName == strLname); next++) {
                 String nextFname = strConFspec(listCon[next], ns.strFirstNameSpec);
 
                 if (nextFname != '') {
@@ -261,7 +261,7 @@ public with sharing class HH_NameSpec implements HH_INaming {
                 }
 
                 // we want to use And if this is the last person in this lastname, or the last one we will include
-                if (k == listFName.size()-1 || (!hasNoLastNameFormat && (i+k+2) == ns.cMaxUseOverrun)) {
+                if (k == listFName.size()-1 || (!isNoLastnames && (i+k+2) == ns.cMaxUseOverrun)) {
                     strFname += ns.strAnd + listFName[k];
                 } else {
                     strFName += ', ' + listFname[k];
@@ -274,15 +274,15 @@ public with sharing class HH_NameSpec implements HH_INaming {
             if (strFname == '') {
                 name = name.trim();
             }
-             
+
             names.add(name);
    
-            Boolean isOverrun = next >= ns.cMaxUseOverrun && 
-                size > ns.cMaxUseOverrun && 
+            Boolean willAddOverrun = next >= ns.cMaxUseOverrun && 
+                cCon > ns.cMaxUseOverrun && 
                 ns.strFirstNameSpec != '' && 
                 ns.strOverrun != null;
 
-            if (isOverrun) {
+            if (willAddOverrun) {
                 names.add(ns.strOverrun);
             }            
         }

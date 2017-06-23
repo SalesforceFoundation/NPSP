@@ -235,7 +235,7 @@ private with sharing class HH_NameSpec_TEST {
         HH Name, Formal Greeting, and Informal Greeting are correct
     **********************************************************************************************************/            
     static testMethod void ThreeContactsTwoLastNamesNotInSequenceWhenTheNameFormatHasLastName() {
-        if (strTestOnly != '*' && strTestOnly != 'ThreeContactsTwoLastNamesNotInSequence') return;
+        if (strTestOnly != '*' && strTestOnly != 'ThreeContactsTwoLastNamesNotInSequenceWhenTheNameFormatHasLastName') return;
                 
         Contact[] listCon = new Contact[] {
             new Contact (
@@ -292,7 +292,7 @@ private with sharing class HH_NameSpec_TEST {
         HH Name, Formal Greeting, and Informal Greeting are correct
     **********************************************************************************************************/            
     static testMethod void ThreeContactsTwoLastNamesNotInSequenceWhenTheNameFormatHasNoLastName() {
-        if (strTestOnly != '*' && strTestOnly != 'ThreeContactsTwoLastNamesNotInSequence') return;
+        if (strTestOnly != '*' && strTestOnly != 'ThreeContactsTwoLastNamesNotInSequenceWhenTheNameFormatHasNoLastName') return;
                 
         Contact[] listCon = new Contact[] {
             new Contact (
