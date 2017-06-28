@@ -1,13 +1,12 @@
 {
-  "Company": "NPSP - Beta Org - Multicurrency",
-  "Country": "US",
-  "LastName": "Belvedere",
-  "Email": "mrbelvedere@salesforce.org",
-  "Edition": "Developer",
-  "Features": "MultiCurrency",
-  "OrgPreferences" : {
-    "ChatterEnabled" : true,
-    "DisableParallelApexTesting" : true,
-    "S1DesktopEnabled" : true
+  "orgName": "NPSP - Beta Org - Multicurrency",
+  "edition": "Developer",
+  "features": "MultiCurrency",
+  "orgPreferences" : {
+    "enabled": [
+      "ChatterEnabled",
+      "DisableParallelApexTesting",
+      "S1DesktopEnabled"
+    ]
   }
 }
