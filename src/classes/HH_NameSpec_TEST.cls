@@ -54,13 +54,13 @@ private with sharing class HH_NameSpec_TEST {
     static testMethod void OneContact() {
         if (strTestOnly != '*' && strTestOnly != 'OneContact') return;
         
-        list<Contact> listCon = new list<Contact>();
-        Contact c1 = new Contact (
-            Salutation = 'Skipper',
-            FirstName = 'John',
-            LastName = 'Doe'
-        );
-        listCon.add(c1);
+        Contact[] listCon = new Contact[] {
+            new Contact (
+                Salutation = 'Skipper',
+                FirstName = 'John',
+                LastName = 'Doe'
+            )
+        };
                
         HH_NameSpec ns = new HH_NameSpec();
         //Using the API class just to give it test coverage.
@@ -95,18 +95,17 @@ private with sharing class HH_NameSpec_TEST {
     static testMethod void TwoContactSameLastname() {
         if (strTestOnly != '*' && strTestOnly != 'TwoContactSameLastname') return;
                 
-        list<Contact> listCon = new list<Contact>();
-        Contact c1 = new Contact (
-            Salutation = 'Skipper',
-            FirstName = 'John',
-            LastName = 'Doe'
-        );
-        listCon.add(c1);
-        Contact c2 = new Contact (
-            FirstName = 'Jane',
-            LastName = 'Doe'
-        );
-        listCon.add(c2);
+        Contact[] listCon = new Contact[] {
+            new Contact (
+                Salutation = 'Skipper',
+                FirstName = 'John',
+                LastName = 'Doe'
+            ),
+            new Contact (
+                FirstName = 'Jane',
+                LastName = 'Doe'
+            )
+        };
                
         HH_NameSpec ns = new HH_NameSpec();
         Household_Naming_Settings__c hns = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
@@ -144,18 +143,17 @@ private with sharing class HH_NameSpec_TEST {
     static testMethod void TwoContactDifferentLastname() {
         if (strTestOnly != '*' && strTestOnly != 'TwoContactDifferentLastname') return;
                 
-        list<Contact> listCon = new list<Contact>();
-        Contact c1 = new Contact (
-            Salutation = 'Skipper',
-            FirstName = 'John',
-            LastName = 'Doe'
-        );
-        listCon.add(c1);
-        Contact c2 = new Contact (
-            FirstName = 'Jane',
-            LastName = 'Smith'
-        );
-        listCon.add(c2);
+        Contact[] listCon = new Contact[] {
+            new Contact (
+                Salutation = 'Skipper',
+                FirstName = 'John',
+                LastName = 'Doe'
+            ),
+            new Contact (
+                FirstName = 'Jane',
+                LastName = 'Smith'
+            )
+        };
                
         HH_NameSpec ns = new HH_NameSpec();
         Household_Naming_Settings__c hns = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
@@ -187,23 +185,21 @@ private with sharing class HH_NameSpec_TEST {
     static testMethod void ThreeContactsTwoLastnames() {
         if (strTestOnly != '*' && strTestOnly != 'ThreeContactsTwoLastnames') return;
                 
-        list<Contact> listCon = new list<Contact>();
-        Contact c1 = new Contact (
-            Salutation = 'Skipper',
-            FirstName = 'John',
-            LastName = 'Doe'
-        );
-        listCon.add(c1);
-        Contact c2 = new Contact (
-            FirstName = 'Jane',
-            LastName = 'Doe'
-        );
-        listCon.add(c2);
-        Contact c3 = new Contact (
-            FirstName = 'Sally',
-            LastName = 'Smith'
-        );
-        listCon.add(c3);
+        Contact[] listCon = new Contact[] {
+            new Contact (
+                Salutation = 'Skipper',
+                FirstName = 'John',
+                LastName = 'Doe'
+            ),
+            new Contact (
+                FirstName = 'Jane',
+                LastName = 'Doe'
+            ),
+            new Contact (
+                FirstName = 'Sally',
+                LastName = 'Smith'
+            )
+        };
                
         HH_NameSpec ns = new HH_NameSpec();
         Household_Naming_Settings__c hns = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
@@ -230,7 +226,118 @@ private with sharing class HH_NameSpec_TEST {
         hns.Informal_Greeting_Format__c = 'The {!{!FirstName} {!LastName}} {!FirstName} {!LastName} Family';
         system.assertEquals('The John Doe & Jane Doe John Doe & Sally Smith Sally Smith Family', ns.getExampleName(hns, 'Informal_Greeting_Format__c', listCon));
     }
+
+    /*********************************************************************************************************
+    @description
+    operation:
+        3 contacts, 2 different lastnames in household, contacts' last name is not in the sequence 
+    verify:
+        HH Name, Formal Greeting, and Informal Greeting are correct
+    **********************************************************************************************************/            
+    static testMethod void ThreeContactsTwoLastNamesNotInSequenceWhenTheNameFormatHasLastName() {
+        if (strTestOnly != '*' && strTestOnly != 'ThreeContactsTwoLastNamesNotInSequenceWhenTheNameFormatHasLastName') return;
+                
+        Contact[] listCon = new Contact[] {
+            new Contact (
+                Salutation = 'Mr',
+                FirstName = 'John',
+                LastName = 'Doe',
+                npe01__WorkEmail__c = 'john@doe.com'
+            ),
+            new Contact (
+                Salutation = 'Mrs',
+                FirstName = 'Sally',
+                LastName = 'Smith',
+                npe01__WorkEmail__c = 'sally@smith.com'
+            ),
+            new Contact (
+                Salutation = 'Ms',
+                FirstName = 'Jane',
+                LastName = 'Doe',
+                npe01__WorkEmail__c = 'jane@doe.com'
+            )
+        };
+             
+        HH_NameSpec ns = new HH_NameSpec();
+        Household_Naming_Settings__c hns = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
+        hns.Name_Connector__c = '&';
+        
+        hns.Household_Name_Format__c = 'The {!LastName} Family';
+        system.assertEquals('The Doe & Smith Family', ns.getExampleName(hns, 'Household_Name_Format__c', listCon));
+
+        hns.Household_Name_Format__c = 'The {!LastName}: {!{!npe01__WorkEmail__c}} Family';
+        system.assertEquals('The Doe: john@doe.com, Smith: sally@smith.com & Doe: jane@doe.com Family', ns.getExampleName(hns, 'Household_Name_Format__c', listCon));
+
+        hns.Household_Name_Format__c = 'The {!LastName}, {!{!FirstName} {!npe01__WorkEmail__c}} Family';
+        system.assertEquals('The Doe, John john@doe.com, Smith, Sally sally@smith.com & Doe, Jane jane@doe.com Family', ns.getExampleName(hns, 'Household_Name_Format__c', listCon));
     
+        hns.Household_Name_Format__c = 'The {!LastName} ({!{!FirstName}}) Family';
+        system.assertEquals('The Doe (John), Smith (Sally) & Doe (Jane) Family', ns.getExampleName(hns, 'Household_Name_Format__c', listCon));
+
+        hns.Formal_Greeting_Format__c = '{!{!Salutation} {!FirstName}} {!LastName}';
+        system.assertEquals('Mr John Doe, Mrs Sally Smith & Ms Jane Doe', ns.getExampleName(hns, 'Formal_Greeting_Format__c', listCon));
+
+        hns.Informal_Greeting_Format__c = 'The {!{!Salutation}} {!FirstName} {!LastName} Family';
+        system.assertEquals('The Mr John Doe, Mrs Sally Smith & Ms Jane Doe Family', ns.getExampleName(hns, 'Informal_Greeting_Format__c', listCon));
+
+        hns.Informal_Greeting_Format__c = 'The {!{!FirstName} {!LastName}} {!FirstName} {!LastName} Family';
+        system.assertEquals('The John Doe John Doe, Sally Smith Sally Smith & Jane Doe Jane Doe Family', ns.getExampleName(hns, 'Informal_Greeting_Format__c', listCon));
+    }
+
+    /*********************************************************************************************************
+    @description
+    operation:
+        3 contacts, 2 different lastnames in household, the contacts' last name is not in the sequence 
+    verify:
+        HH Name, Formal Greeting, and Informal Greeting are correct
+    **********************************************************************************************************/            
+    static testMethod void ThreeContactsTwoLastNamesNotInSequenceWhenTheNameFormatHasNoLastName() {
+        if (strTestOnly != '*' && strTestOnly != 'ThreeContactsTwoLastNamesNotInSequenceWhenTheNameFormatHasNoLastName') return;
+                
+        Contact[] listCon = new Contact[] {
+            new Contact (
+                Salutation = 'Mr',
+                FirstName = 'John',
+                LastName = 'Doe',
+                npe01__WorkEmail__c = 'john@doe.com'
+            ),
+            new Contact (
+                Salutation = 'Mrs',
+                FirstName = 'Sally',
+                LastName = 'Smith',
+                npe01__WorkEmail__c = 'sally@smith.com'
+            ),
+            new Contact (
+                Salutation = 'Ms',
+                FirstName = 'Jane',
+                LastName = 'Doe',
+                npe01__WorkEmail__c = 'jane@doe.com'
+            )
+        };
+             
+        HH_NameSpec ns = new HH_NameSpec();
+        Household_Naming_Settings__c hns = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
+        hns.Name_Connector__c = '&';
+        
+        hns.Household_Name_Format__c = 'The Family';
+        system.assertEquals('The Family', ns.getExampleName(hns, 'Household_Name_Format__c', listCon));
+
+        hns.Household_Name_Format__c = 'The {!npe01__WorkEmail__c} Family';
+        system.assertEquals('The john@doe.com Family', ns.getExampleName(hns, 'Household_Name_Format__c', listCon));
+
+        hns.Household_Name_Format__c = 'The {!*{!npe01__WorkEmail__c}*} Family';
+        system.assertEquals('The *john@doe.com*, *sally@smith.com* & *jane@doe.com* Family', ns.getExampleName(hns, 'Household_Name_Format__c', listCon));
+
+        hns.Household_Name_Format__c = 'The {!{!FirstName} {!npe01__WorkEmail__c}} Family';
+        system.assertEquals('The John john@doe.com, Sally sally@smith.com & Jane jane@doe.com Family', ns.getExampleName(hns, 'Household_Name_Format__c', listCon));
+    
+        hns.Formal_Greeting_Format__c = 'The {!*{!Salutation} {!FirstName}*} Family';
+        system.assertEquals('The *Mr John*, *Mrs Sally* & *Ms Jane* Family', ns.getExampleName(hns, 'Formal_Greeting_Format__c', listCon));
+
+        hns.Informal_Greeting_Format__c = '{!{!FirstName} Dude}';
+        system.assertEquals('John Dude, Sally Dude & Jane Dude', ns.getExampleName(hns, 'Informal_Greeting_Format__c', listCon));   
+    }
+     
     /*********************************************************************************************************
     @description
     operation:
@@ -239,29 +346,26 @@ private with sharing class HH_NameSpec_TEST {
         HH Name, Formal Greeting, and Informal Greeting are correct
     **********************************************************************************************************/            
     static testMethod void ThreeContactsTwoLastnamesCustomFields() {
-        if (strTestOnly != '*' && strTestOnly != 'ThreeContactsTwoLastnamesCustomFields') return;
-                
-        list<Contact> listCon = new list<Contact>();
-        Contact c1 = new Contact (
-            Salutation = 'Skipper',
-            FirstName = 'John',
-            LastName = 'Doe',
-            npe01__WorkEmail__c = 'john@doe.com'
-            
-        );
-        listCon.add(c1);
-        Contact c2 = new Contact (
-            Salutation = 'Mrs.',
-            FirstName = 'Jane',
-            LastName = 'Doe',
-            npe01__WorkEmail__c = 'jane@doe.com'
-        );
-        listCon.add(c2);
-        Contact c3 = new Contact (
-            FirstName = 'Sally',
-            LastName = 'Smith'
-        );
-        listCon.add(c3);
+        if (strTestOnly != '*' && strTestOnly != 'ThreeContactsTwoLastnamesCustomFields') return;                
+        
+        Contact[] listCon = new Contact[] {
+            new Contact (
+                Salutation = 'Skipper',
+                FirstName = 'John',
+                LastName = 'Doe',
+                npe01__WorkEmail__c = 'john@doe.com'            
+            ),
+            new Contact (
+                Salutation = 'Mrs.',
+                FirstName = 'Jane',
+                LastName = 'Doe',
+                npe01__WorkEmail__c = 'jane@doe.com'
+            ),
+            new Contact (
+                FirstName = 'Sally',
+                LastName = 'Smith'
+            )
+        };
                
         HH_NameSpec ns = new HH_NameSpec();
         Household_Naming_Settings__c hns = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
@@ -723,15 +827,6 @@ private with sharing class HH_NameSpec_TEST {
         if (strTestOnly != '*' && strTestOnly != 'OneContact') return;
         
         list<Contact> listCon = new list<Contact>();
-        Contact c1 = new Contact (
-            Salutation = 'Skipper',
-            FirstName = 'John',
-            LastName = 'Doe',
-            npo02__Naming_Exclusions__c = 'Name;Formal_Greeting__c;Informal_Greeting__c'
-        );
-        // don't add the contact to the list we pass in, since the INaming interface assumes
-        // appropriate contacts are already filtered out by Household Naming code.
-        //listCon.add(c1);
                
         HH_NameSpec ns = new HH_NameSpec();
         Household_Naming_Settings__c hns = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
@@ -822,14 +917,14 @@ private with sharing class HH_NameSpec_TEST {
         Account acc = new Account(Name='MyEmployer');
         insert acc;
 
-        list<Contact> listCon = new list<Contact>();
-        Contact c1 = new Contact (
-            Salutation = 'Skipper',
-            FirstName = 'John',
-            LastName = 'Doe',
-            Primary_Affiliation__c = acc.Id
-        );
-        listCon.add(c1);
+        Contact[] listCon = new Contact[] {
+            new Contact (
+                Salutation = 'Skipper',
+                FirstName = 'John',
+                LastName = 'Doe',
+                Primary_Affiliation__c = acc.Id
+            )
+        };
         insert listCon;
         
         listCon = [select Id, Firstname, Lastname, Account.npe01__One2OneContact__r.Primary_Affiliation__r.Name from Contact];

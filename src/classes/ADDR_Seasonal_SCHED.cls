@@ -48,23 +48,15 @@ public class ADDR_Seasonal_SCHED implements Database.Batchable<SObject>, Schedul
     * @param bc the BatchableContext
     * @return database.Querylocator  
     ********************************************************************************************************/
-    public database.Querylocator start(Database.BatchableContext bc) {       
-            
-        // find all seasonal addresses, so we can see which accounts might need updating
-        list<Address__c> listAddr = [select Id, Household_Account__c from Address__c where Seasonal_Start_Month__c != null];
-        list<ID> listAccId = new list<ID>();
-        for (Address__c addr : listAddr) {
-            listAccId.add(addr.Household_Account__c);
-        }
-            
-        // find all Accounts who have any Seasonal Address, since it may need to now
-        // become current or inactive, and we don't want to assume the last time this ran.
-        // make sure to include all Billing Address fields, that we will need to look at
-        string strSoql = 'select Id, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLongitude, BillingLatitude';
+    public database.Querylocator start(Database.BatchableContext bc) {
+        // Find all Accounts who have any Seasonal Address that might need updating,
+        // since it may need to now become current or inactive, and we don't want to assume the last time this ran.
+        // Make sure to include all Billing Address fields, that we will need to look at
+        string strSoql = 'SELECT Id, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLongitude, BillingLatitude';
         if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
             strSoql += ', BillingStateCode, BillingCountryCode';
         }
-        strSoql += ' from Account where Id in :listAccId';
+        strSoql += ' FROM Account WHERE Id IN (SELECT Household_Account__c FROM Address__c where Seasonal_Start_Month__c != null)';
         return Database.getQueryLocator(strSoql);      
     }
     
