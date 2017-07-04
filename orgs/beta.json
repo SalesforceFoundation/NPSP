@@ -1,12 +1,11 @@
 {
-  "Company": "NPSP - Beta Test Org",
-  "Country": "US",
-  "LastName": "Belvedere",
-  "Email": "mrbelvedere@salesforce.org",
-  "Edition": "Developer",
-  "OrgPreferences" : {
-    "DisableParallelApexTesting" : true,
-    "S1DesktopEnabled" : true,
-    "ChatterEnabled" : true
+  "orgName": "NPSP - Beta Test Org",
+  "edition": "Developer",
+  "orgPreferences" : {
+    "enabled": [
+      "ChatterEnabled",
+      "DisableParallelApexTesting",
+      "S1DesktopEnabled"
+    ]
   }
 }
