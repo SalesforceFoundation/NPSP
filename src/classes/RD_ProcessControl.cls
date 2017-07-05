@@ -38,11 +38,28 @@ public with sharing class RD_ProcessControl {
     /*******************************************************************************************************
     * @description flag to prevent recursion into the RD trigger handler/logic
     */ 
-    public static boolean hasRun = false;
+    private static Integer recursionFlag = 0;
 
     /*******************************************************************************************************
     * @description flag to specify when running the Refresh Opportunities button on a RD.
     */ 
     public static boolean batchButton = false;
 
+    /*******************************************************************************************************
+    * @description Increment/Decrement the static flag counter that tracks whether this trigger has been
+    *   called alread
+    * @param b A boolean where true increments the counter and false decrements it.
+    * @return void This method modifies class variables and doesn't return anything.
+    ********************************************************************************************************/
+    public static void setRecursionFlag(boolean b) {
+        recursionFlag += (b ? 1 : -1);
+        if (recursionFlag < 0) {
+            recursionFlag = 0;
+        }
+    }
+
+    /* @description Returns true if the recursionFlag value is greater than 1 */
+    public static Boolean checkRecursionState() {
+        return (recursionFlag > 0);
+    }
 }

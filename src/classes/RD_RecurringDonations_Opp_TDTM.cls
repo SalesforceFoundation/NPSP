@@ -47,7 +47,7 @@ public class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
             
-        RD_ProcessControl.hasRun = true;
+        RD_ProcessControl.setRecursionFlag(true);
         DmlWrapper dmlWrapper = new DmlWrapper();
         
         set<id> rdIDs = new set<id>();        
@@ -106,7 +106,11 @@ public class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
                 RD_RecurringDonations.updateRecurringDonationOnOppChangeFuture(rdIds);                                        
             }
         }
-        
-        return dmlWrapper;
+
+        TDTM_TriggerHandler.processDML(dmlWrapper);
+        dmlWrapper = null;
+        RD_ProcessControl.setRecursionFlag(false);
+
+        return null;
     }
 }

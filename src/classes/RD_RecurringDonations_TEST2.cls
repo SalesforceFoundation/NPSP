@@ -83,7 +83,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         string closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
         o.StageName = closedstage;
         o.CloseDate = system.today();
-        RD_ProcessControl.hasRun = false;
+        RD_ProcessControl.setRecursionFlag(false);
         Test.startTest();        
         //update opp
         update o;
@@ -133,7 +133,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         list<Opportunity> originalOpps = new list<Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);
         integer cOpp =  originalOpps.size();
         system.assert(cOpp == 52 || cOpp == 53);        
-        RD_ProcessControl.hasRun = false;
+        RD_ProcessControl.setRecursionFlag(false);
         Test.startTest();
         r1.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationClosedStatus;
         update r1;
@@ -186,7 +186,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         //fake the last payment date close operation
         r1.npe03__Last_Payment_Date__c = system.today();
         update r1;
-        RD_ProcessControl.hasRun = false;                
+        RD_ProcessControl.setRecursionFlag(false);                
         Test.startTest();        
         r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodYearly;
         update r1;
@@ -238,7 +238,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         o.AccountId = a.Id;
         o.Name = 'test';
         o.npe03__Recurring_Donation__c = r1.Id;
-        RD_ProcessControl.hasRun = false;
+        RD_ProcessControl.setRecursionFlag(false);
         Test.startTest();        
         insert o;
         Test.stopTest();
@@ -284,18 +284,20 @@ private with sharing class RD_RecurringDonations_TEST2 {
         r1.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
         r1.npe03__Next_Payment_Date__c = system.today();
         insert r1;
-        
+
         list<Opportunity> originalOpps = new list<Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);
         Opportunity o = originalOpps[0];
         string closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
         o.StageName = closedstage;
         o.CloseDate = system.today();
         r1.npe03__Installment_Period__c = 'GarbageDate';
+        RD_ProcessControl.setRecursionFlag(true); // need to simulate that this previous run to prevent the Opp from being deleted.
         update r1;
-        RD_ProcessControl.hasRun = false;
-        Test.startTest();        
+        RD_ProcessControl.setRecursionFlag(false);
+        Test.startTest();
         update o;
         Test.stopTest();
+        // TODO -- Why is there no System.Assert() here to validate result?
     }
     
        //test closing an opportunity for an open recurring donation
@@ -337,7 +339,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         
         system.assertNotEquals(0, [select count() from Opportunity where npe03__Recurring_Donation__c = :r1.id and isClosed = false]);
         //reset the semaphore
-        RD_ProcessControl.hasRun = false;
+        RD_ProcessControl.setRecursionFlag(false);
         Test.startTest();        
         r1.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationClosedStatus;
         update r1;
@@ -405,7 +407,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         rdlist[0].npe03__Amount__c = 50;
         rdlist[1].npe03__Amount__c = 50;
         rdlist[1].npe03__Next_Payment_Date__c = system.today().toStartOfMonth().addDays(5);
-        RD_ProcessControl.hasRun = false;
+        RD_ProcessControl.setRecursionFlag(false);
         update rdlist;        
         Test.stopTest();
         
@@ -494,7 +496,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         r1.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
         r1.npe03__Next_Payment_Date__c = system.today();
         insert r1;
-        RD_ProcessControl.hasRun = false;
+        RD_ProcessControl.setRecursionFlag(false);
                 
         npe03__Recurring_Donation__c r2 = new npe03__Recurring_Donation__c();
         r2.Name = 'test';
@@ -507,7 +509,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         r2.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
         r2.npe03__Next_Payment_Date__c = system.today();
         insert r2;
-        RD_ProcessControl.hasRun = false;
+        RD_ProcessControl.setRecursionFlag(false);
         list<Opportunity> originalOpps = new list<Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__r.id = :r1.id or npe03__Recurring_Donation__c = :r2.id]);                                
         string closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
         system.assert(originalOpps.size() > 1);
@@ -891,7 +893,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         }
 
         Test.startTest();
-            RD_ProcessControl.hasRun=false;
+            RD_ProcessControl.setRecursionFlag(false);
             r1.name='TestRD CFM Update';
             update r1;
         Test.stopTest();
@@ -953,7 +955,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         }
 
         Test.startTest();
-            RD_ProcessControl.hasRun=false;
+            RD_ProcessControl.setRecursionFlag(false);
             r1.name='TestRD CFM Update';
             update r1;
         Test.stopTest();
@@ -1220,7 +1222,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         oppty2.AccountId = a.Id;
         oppty2.Name = 'test2';
         oppty2.npe03__Recurring_Donation__c = null;
-        RD_ProcessControl.hasRun = false;
+        RD_ProcessControl.setRecursionFlag(false);
 
         //--------------------------------
         // Insert the two Opportunities
@@ -1314,7 +1316,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         o.AccountId = a.Id;
         o.Name = 'test';
         o.npe03__Recurring_Donation__c = r1.Id;
-        RD_ProcessControl.hasRun = false;
+        RD_ProcessControl.setRecursionFlag(false);
         
         //--------------------------------
         // Insert the Opportunity
@@ -1399,7 +1401,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         o.AccountId = a.Id;
         o.Name = 'test';
         o.npe03__Recurring_Donation__c = r1.Id;
-        RD_ProcessControl.hasRun = false;
+        RD_ProcessControl.setRecursionFlag(false);
         
         //--------------------------------
         // Insert the Opportunity

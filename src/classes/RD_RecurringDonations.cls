@@ -816,10 +816,10 @@ public class RD_RecurringDonations {
             boolean cfmFieldChanged=false;
             for (string s : customFieldMappingSettings.keySet()){
                 npe03__Custom_Field_Mapping__c cfm = customFieldMappingSettings.get(s);
-               if(oldRD.get(cfm.npe03__Recurring_Donation_Field__c)!=r.get(cfm.npe03__Recurring_Donation_Field__c)){
+                if(oldRD.get(cfm.npe03__Recurring_Donation_Field__c)!=r.get(cfm.npe03__Recurring_Donation_Field__c)){
                     cfmFieldChanged=true;
-               }
-            }  
+                }
+            }
             //if we're closing an open ended donation, modify the existing opps as required by the custom setting
             if (r.npe03__Open_Ended_Status__c == closedlabel && oldRD.npe03__Open_Ended_Status__c != r.npe03__Open_Ended_Status__c){
                 newlycloseddonations.add(r);        

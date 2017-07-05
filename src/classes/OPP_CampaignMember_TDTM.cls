@@ -42,7 +42,7 @@ public class OPP_CampaignMember_TDTM extends TDTM_Runnable {
     private List<String> listMemberStatus = new List<String>();
 
     /** @description Static flag to prevent recursion */
-    private static integer recursionFlag = 0;
+    private static Integer recursionFlag = 0;
 
     /*******************************************************************************************************
     * @description Creates and updates campaign members based on opportunity primary contact, primary 
