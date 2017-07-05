@@ -10,6 +10,7 @@ public with sharing abstract class RLLP_Definition {
     public interface IExclusion {
         Boolean isExcluded(SObject detail);
     }
+
     public class OperationWrapper {
         public IExclusion exclusion;
         public List<RLLP_Operation> operations = new List<RLLP_Operation>();
@@ -20,6 +21,61 @@ public with sharing abstract class RLLP_Definition {
         }
     }
     public List<OperationWrapper> wrappers = new List<OperationWrapper>();
+
+    public Set<String> summaryFields;
+    public Set<String> detailFields;
+
+    //parses wrappers to get sets of fields
+    public void populateFields() {
+        summaryFields = new Set<String>();
+        detailFields = new Set<String>();
+
+        detailFields.add(amountField.getDescribe().getName());
+        detailFields.add(closeDateField.getDescribe().getName());
+
+        //no attribution object means that the lookup to the summary field is on the attribution object
+        if (attributionObject == null) {
+            detailFields.add(attributionId.getDescribe().getName());
+        }
+        //TODO: get detail fields from exclusions, the next line is a hack
+        detailFields.add('Type');
+        detailFields.add('RecordTypeId');
+
+        for (OperationWrapper wrapper : wrappers) {
+            for (RLLP_Operation operation : wrapper.operations) {
+                summaryFields.add(operation.destinationField.getDescribe().getName());
+                
+                if (operation.resultField != null) {
+                    detailFields.add(operation.resultField.getDescribe().getName());
+                }
+            }
+        }
+    }
+
+    //get detail query, e.g. opps or payments
+    public String getDetailQuery() {
+        if (detailFields == null) {
+            populateFields();
+        }
+        String query = 'SELECT ';
+        query += (String)String.join(new List<String>(detailFields), ', ');
+        if (attributionObject != null) {
+            query += ', (SELECT ' + attributionId + ' FROM ' + attributionRelationshipName + ')';
+        }
+        query += ' FROM ' + detailObject.getDescribe().getName();
+        return query;
+    }
+
+    //get summary object query, e.g. contacts and accounts
+    public String getSummaryQuery() {
+        if (summaryFields == null) {
+            populateFields();
+        }
+        String query = 'SELECT ';
+        query += String.join(new List<String>(summaryFields), ', ');
+        query += ' FROM ' + summaryObject.getDescribe().getName();
+        return query;
+    }
 
     public void processDetails(List<SObject> details) {
         for (SObject detail : details) {
