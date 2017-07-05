@@ -8,6 +8,7 @@ salesforce.schema
 Referenced Packages
 /destructiveChanges.xml
 /admin_profile
+/browser_tests
 /uninstall
 /uninstallsrc
 /installdeploy
@@ -20,6 +21,7 @@ Referenced Packages
 /unpackaged_stage
 /packaged
 /test_results.json
+/test_results.xml
 /test_results_junit.xml
 /venv
 .*.swp

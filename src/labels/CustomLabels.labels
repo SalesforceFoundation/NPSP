@@ -1115,6 +1115,54 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>An error occurred during the process.  The following status was the first reported error:</value>
     </labels>
     <labels>
+        <fullName>bdiBehaviorBestMatchOrCreate</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>settings label for BestMatchOrCreate behavior</shortDescription>
+        <value>Best Match or Create - Import a record if it matches an existing record; create a new record if no match found.</value>
+    </labels>
+    <labels>
+        <fullName>bdiBehaviorDoNotMatch</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>settings label for DoNotMatch behavior</shortDescription>
+        <value>Do Not Match - No matching is attempted; new records are created.</value>
+    </labels>
+    <labels>
+        <fullName>bdiBehaviorExactMatchOrCreate</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>settings label for ExactMatchOrCreate behavior</shortDescription>
+        <value>Single Match or Create - Import a record if it matches a single existing record; create a new record if no single match found.</value>
+    </labels>
+    <labels>
+        <fullName>bdiBehaviorRequireBestMatch</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>settings label for RequireBestMatch behavior</shortDescription>
+        <value>Best Match - Only import a record when it matches at least 1 existing record, and update the best matched record.</value>
+    </labels>
+    <labels>
+        <fullName>bdiBehaviorRequireExactMatch</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>settings label for RequireExactMatch behavior</shortDescription>
+        <value>Single Match - Only import a record if it matches a single existing record.</value>
+    </labels>
+    <labels>
+        <fullName>bdiBehaviorRequireNoMatch</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>settings label for RequireNoMatch behavior</shortDescription>
+        <value>No Match - Only import a record if it doesn&apos;t match an existing record.</value>
+    </labels>
+    <labels>
         <fullName>bdiBtnClose</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -1291,6 +1339,46 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Donation</value>
     </labels>
     <labels>
+        <fullName>bdiDonationMatchingRuleEmpty</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error displayed in Data Importer if no donation matching rules set</shortDescription>
+        <value>When Donation matching is enabled, you must select one or more fields in Donation Matching Rule.</value>
+    </labels>
+    <labels>
+        <fullName>bdiErrorDonationLookupMatch</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error on BDI record if DonationImported or PaymentImported lookups are invalid</shortDescription>
+        <value>The lookup value provided in Donation Imported, or Payment Imported, is not valid.</value>
+    </labels>
+    <labels>
+        <fullName>bdiErrorDonationMultiMatch</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>error message if the donation matched multiple opps</shortDescription>
+        <value>The Donation information matched against multiple Opportunities, so it was not imported.  The Donation Possible Matches field contains the Salesforce Id&apos;s of the matched Opportunities.</value>
+    </labels>
+    <labels>
+        <fullName>bdiErrorDonationNoMatch</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>error when no matching donation found, and a match is required</shortDescription>
+        <value>No matching donation was found.</value>
+    </labels>
+    <labels>
+        <fullName>bdiErrorDonationRequireNoMatch</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>error message if the donation matched opp(s), but behavior required no match</shortDescription>
+        <value>The Donation information matched against 1 or more Opportunities, but the setting required no matches, so it was not imported. The Donation Possible Matches field contains the Salesforce Id&apos;s of the matched Opportunities.</value>
+    </labels>
+    <labels>
         <fullName>bdiErrorInvalidCampaignName</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -1305,6 +1393,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>bdiErrorInvalidDonor</shortDescription>
         <value>Invalid Donation Donor</value>
+    </labels>
+    <labels>
+        <fullName>bdiErrorInvalidIMatchDonations</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error thrown if specified class doesn&apos;t support BDI_IMatchDonations</shortDescription>
+        <value>The Apex class {0} was not found or does not support the BDI_IMatchDonations interface.</value>
     </labels>
     <labels>
         <fullName>bdiErrorInvalidLastname</fullName>
@@ -1329,6 +1425,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>bdiErrorNonHHAccountContact</shortDescription>
         <value>Matched an existing contact from a non-Household Account, which is not supported.</value>
+    </labels>
+    <labels>
+        <fullName>bdiErrorPaymentMultiMatch</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error message if the donation matched multiple pmts</shortDescription>
+        <value>The Donation information matched against multiple Payments, so it was not imported. The Payment Possible Matches field contains the Salesforce Id&apos;s of the matched Payments.</value>
     </labels>
     <labels>
         <fullName>bdiFailed</fullName>
@@ -1371,6 +1475,38 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Matched</value>
     </labels>
     <labels>
+        <fullName>bdiMatchedBest</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>status on a bdi object to specify it was matched from an ambiguous set</shortDescription>
+        <value>Best Match Used</value>
+    </labels>
+    <labels>
+        <fullName>bdiMatchedId</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>BDI status when matching an object by its Salesforce ID</shortDescription>
+        <value>Matched by Id</value>
+    </labels>
+    <labels>
+        <fullName>bdiMatchedNone</fullName>
+        <categories>Data Import</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>status on a bdi object when no matching record found</shortDescription>
+        <value>Matched None</value>
+    </labels>
+    <labels>
+        <fullName>bdiPositiveNumber</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error when numeric settings set to negative number</shortDescription>
+        <value>Number must be positive.</value>
+    </labels>
+    <labels>
         <fullName>bdiRecordsFailed</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -1401,6 +1537,30 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>bdiRunBtn</shortDescription>
         <value>Begin Data Import Process</value>
+    </labels>
+    <labels>
+        <fullName>bdiSettingsSectionContactMatching</fullName>
+        <categories>Batch Data Import</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>section label for contact matching rules in bDI</shortDescription>
+        <value>Contact &amp; Account Matching</value>
+    </labels>
+    <labels>
+        <fullName>bdiSettingsSectionDonationMatching</fullName>
+        <categories>Batch Data Import</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>section label for Donation Matching in BDI Settings</shortDescription>
+        <value>Donation Matching</value>
+    </labels>
+    <labels>
+        <fullName>bdiSettingsSectionExtensibility</fullName>
+        <categories>Batch Data Import</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>section label for Extensibility in BDI Settings</shortDescription>
+        <value>Extensibility</value>
     </labels>
     <labels>
         <fullName>bdiStatus</fullName>

@@ -50,6 +50,7 @@ public with sharing class BDI_DataImport_CTRL {
         batchRunning = false;
         apexJobId = null;
         dtStart = null;
+        isEditMode = false;
     }
 
     public PageReference preload() { 
@@ -68,12 +69,53 @@ public with sharing class BDI_DataImport_CTRL {
         get {
             if (diSettings == null) {
                 diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+                // our picklist options hold lowercase DIfields
+                diSettings.Donation_Matching_Rule__c = diSettings.Donation_Matching_Rule__c.toLowercase();
             }
             return diSettings;
         }
         private set;
     }
     
+    /*******************************************************************************************************
+    * @description is the panel in Edit Mode
+    */ 
+    public boolean isEditMode { get; set; }
+    
+    /*********************************************************************************************************
+    * @description puts the Settings panel into Edit mode.
+    * @return null
+    */
+    public PageReference editBDISettings() {
+        isEditMode = true;
+        return null;
+    }        
+
+    /*********************************************************************************************************
+    * @description saves the Settings, and puts panel into readonly mode.
+    * @return null
+    */
+    public PageReference saveBDISettings() {
+
+        if (BDI_SettingsUI_CTRL.saveBDISettings(diSettings)) {
+            isEditMode = false;
+        }
+        return null;
+    }        
+    
+    /*********************************************************************************************************
+    * @description puts the Settings panel into readonly mode.
+    * @return null
+    */
+    public PageReference cancelBDISettings() {
+        isEditMode = false;
+        return null;
+    }        
+
+    /*********************************************************************************************************
+    * @description closes the page and returns to the original calling page
+    * @return PageReference
+    */
     public PageReference close() {
         String retUrl = ApexPages.currentPage().getParameters().get('retURL');
         if (String.isBlank(retUrl)) retUrl = '/home/home.jsp';
@@ -83,10 +125,15 @@ public with sharing class BDI_DataImport_CTRL {
         return p;
     }
     
+    /*********************************************************************************************************
+    * @description starts the batch job to import data
+    * @return null
+    */
     public PageReference importData() {
-        if (!Test.isRunningTest() && this.userCanEditSettings){
-            upsert diSettings;
+        if (userCanEditSettings && !BDI_SettingsUI_CTRL.saveBDISettings(diSettings)) {
+            return null;
         }
+
         dtStart = system.now();
         apexJobId = BDI_DataImport_API.importData();
         if(apexJobId != null)
@@ -200,58 +247,6 @@ public with sharing class BDI_DataImport_CTRL {
             } else {
                 return null;
             }
-        }
-        private set;
-    }
-
-    public list<SelectOption> listSOContactUniqueID {
-        get {
-            if (listSOContactUniqueID == null) {
-                listSOContactUniqueID = new list<SelectOption>();
-                //add a default option
-                listSOContactUniqueID.add(new SelectOption('', Label.stgLabelNone));
-                            
-                Map<String, Schema.DescribeFieldResult> mapNameToDfr = UTIL_Describe.getAllFieldsDescribe('Contact');               
-                for (Schema.DescribeFieldResult dfr : mapNameToDfr.values()) {
-                    //only allow custom fields that have no namespace
-                    if (dfr.isCustom() && dfr.getName().countMatches('__') == 1) {
-                        Schema.Displaytype dt = dfr.getType();
-                        // only strings and numbers
-                        if (dt == Schema.DisplayType.String ||
-                           dt == Schema.DisplayType.Integer ||
-                           dt == Schema.DisplayType.Double) {
-                           listSOContactUniqueID.add(new SelectOption(dfr.getName(), dfr.getLabel()));
-                        } 
-                    }               
-                }
-            }               
-            return listSOContactUniqueID;
-        }
-        private set;
-    }
-
-    public list<SelectOption> listSOAccountUniqueID {
-        get {
-            if (listSOAccountUniqueID == null) {
-                listSOAccountUniqueID = new list<SelectOption>();
-                //add a default option
-                listSOAccountUniqueID.add(new SelectOption('', Label.stgLabelNone));
-                                           
-                Map<String, Schema.DescribeFieldResult> mapNameToDfr = UTIL_Describe.getAllFieldsDescribe('Account');               
-                for (Schema.DescribeFieldResult dfr : mapNameToDfr.values()) {
-                    //only allow custom fields that have no namespace
-                    if (dfr.isCustom() && dfr.getName().countMatches('__') == 1) {
-                        Schema.Displaytype dt = dfr.getType();
-                        // only strings and numbers
-                        if (dt == Schema.DisplayType.String ||
-                           dt == Schema.DisplayType.Integer ||
-                           dt == Schema.DisplayType.Double) {
-                           listSOAccountUniqueID.add(new SelectOption(dfr.getName(), dfr.getLabel()));
-                        } 
-                    }               
-                }
-            }               
-            return listSOAccountUniqueID;
         }
         private set;
     }

@@ -16,17 +16,14 @@ project:
         homepage: ApexDocContent/homepage.htm
         banner: ApexDocContent/projectheader.htm
     dependencies:
-        - namespace: npo02
-          version: 3.8
-          dependencies:
-            - namespace: npe01
-              version: 3.6
-        - namespace: npe03
-          version: 3.9
-        - namespace: npe4
-          version: 3.5
-        - namespace: npe5
-          version: 3.5
+        # npo02 (includes npe01)
+        - github: https://github.com/SalesforceFoundation/Households
+        # npe03
+        - github: https://github.com/SalesforceFoundation/Recurring_Donations
+        # npe4
+        - github: https://github.com/SalesforceFoundation/Relationships
+        # npe5
+        - github: https://github.com/SalesforceFoundation/Affiliations
 
 tasks:
     download_browser_tests:
@@ -213,7 +210,13 @@ flows:
                 task: browsertests_unmanaged_chrome
                 options:
                     use_saucelabs: True
-
+    ci_feature:
+        tasks:
+            # Set run_tests_debug to query for test classes with the namespace
+            8:
+                options:
+                    managed: True
+            
     dev_org:
         tasks:
             8:

@@ -246,6 +246,7 @@ private class HH_Container_TEST {
         initTestData();
 
         Test.startTest();
+        Test.setFixedSearchResults(new List<Id>{ conA.Id, conO.Id });
         
         list<HH_AutoCompleteDataProvider_LCTRL.ProviderResult> listPR = HH_AutoCompleteDataProvider_LCTRL.queryObjects('con', null);
         system.assertEquals(2, listPR.size());

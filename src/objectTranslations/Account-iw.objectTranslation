@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <help>האצווה שבה חשבון זה נוצר.</help>
+        <label>אצווה</label>
+        <name>Batch__c</name>
+        <relationshipLabel>חשבונות</relationshipLabel>
+    </fields>
+    <fields>
+        <help>התחומים הכלליים שארגון זה מממן.</help>
+        <label>מיקוד המימון</label>
+        <name>Funding_Focus__c</name>
+        <picklistValues>
+            <masterLabel>Animal Welfare</masterLabel>
+            <translation>רווחת בעלי חיים</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Arts and Culture</masterLabel>
+            <translation>אמנות ותרבות</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Capacity Building</masterLabel>
+            <translation>בניית יכולת</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Education</masterLabel>
+            <translation>חינוך</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Environmental</masterLabel>
+            <translation>סביבתי</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Health Services</masterLabel>
+            <translation>שירותי בריאות</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Human Services</masterLabel>
+            <translation>שירותי אנוש</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>מציין שארגון זה הוא ארגון פילנתרופי. יכול לחול על מוסדות, סוכנויות ממשלתיות, תאגידים וכו&apos;</help>
+        <label>פילנתרופי</label>
+        <name>Grantmaker__c</name>
+    </fields>
+    <fields>
+        <help>השם של מנהל תוכנית השוואת התרומות של החברה.</help>
+        <label>שם מנהל השוואת תרומות</label>
+        <name>Matching_Gift_Administrator_Name__c</name>
+    </fields>
+    <fields>
+        <help>הסכום המרבי שהחברה תשווה בכל תרומה יחידה.</help>
+        <label>סכום מרבי להשוואת תרומה</label>
+        <name>Matching_Gift_Amount_Max__c</name>
+    </fields>
+    <fields>
+        <help>התרומה הקטנה ביותר שהחברה תשווה.</help>
+        <label>סכום מינימלי להשוואת תרומה</label>
+        <name>Matching_Gift_Amount_Min__c</name>
+    </fields>
+    <fields>
+        <help>הסכום המרבי שהחברה תשווה עבור עובד בשנה.</help>
+        <label>סכום מרבי להשוואת תרומות של עובד בשנה</label>
+        <name>Matching_Gift_Annual_Employee_Max__c</name>
+    </fields>
+    <fields>
+        <help>הערות נוספות בנושא תוכנית השוואת התרומות של החברה.</help>
+        <label>הערות בנושא השוואת תרומות</label>
+        <name>Matching_Gift_Comments__c</name>
+    </fields>
+    <fields>
+        <help>האם זו חברה המציעה השוואת תרומות?</help>
+        <label>חברה המבצעת השוואת תרומות</label>
+        <name>Matching_Gift_Company__c</name>
+    </fields>
+    <fields>
+        <help>כתובת הדואר האלקטרוני של מנהל תכנית השוואת התרומות של החברה.</help>
+        <label>דואר אלקטרוני של השוואת תרומות</label>
+        <name>Matching_Gift_Email__c</name>
+    </fields>
+    <fields>
+        <help>תאריך העדכון האחרון של פרטי השוואת התרומות.</help>
+        <label>עדכון פרטי השוואת תרומות</label>
+        <name>Matching_Gift_Info_Updated__c</name>
+    </fields>
+    <fields>
+        <help>החלק של תרומה שהחברה תשווה.</help>
+        <label>אחוז השוואת תרומות</label>
+        <name>Matching_Gift_Percent__c</name>
+    </fields>
+    <fields>
+        <help>מספר הטלפון של משרד תוכנית השוואת התרומות.</help>
+        <label>טלפון של השוואת תרומות</label>
+        <name>Matching_Gift_Phone__c</name>
+    </fields>
+    <fields>
+        <help>כל הגבלה על השוואה של תרומות שהוענקו בעבר.</help>
+        <label>תאריך יעד לבקשת השוואת תרומות</label>
+        <name>Matching_Gift_Request_Deadline__c</name>
+    </fields>
+    <fields>
+        <help>נוסחה: מספר השנים שבהן משק בית זה כלל חבר.</help>
+        <label>היקף חברות</label>
+        <name>Membership_Span__c</name>
+    </fields>
+    <fields>
+        <help>נוסחה: עדכני, הסתיים או תקופת חסד.  ברירת המחדל לתקופת חסד שנקבעה בהגדרות משק הבית.</help>
+        <label>מצב חברות</label>
+        <name>Membership_Status__c</name>
+    </fields>
+    <fields>
+        <help>עבור חשבונות משק בית, מספר אנשי הקשר במשק הבית.</help>
+        <label>מספר חברים במשק בית</label>
+        <name>Number_of_Household_Members__c</name>
+    </fields>
+    <layouts>
+        <layout>Household Layout</layout>
+        <sections>
+            <label>כתובת</label>
+            <section>Address</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Description --></label>
+            <section>Description</section>
+        </sections>
+        <sections>
+            <label>פרטי תרומה</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>סכומי תרומה כוללים</label>
+            <section>Donation Totals</section>
+        </sections>
+        <sections>
+            <label>שדות</label>
+            <section>Fields</section>
+        </sections>
+        <sections>
+            <label>פרטי חברות</label>
+            <section>Membership Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Organization Layout</layout>
+        <sections>
+            <label>כתובת</label>
+            <section>Address</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Description --></label>
+            <section>Description</section>
+        </sections>
+        <sections>
+            <label>פרטי תרומה</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>סכומי תרומה כוללים</label>
+            <section>Donation Totals</section>
+        </sections>
+        <sections>
+            <label>שדות</label>
+            <section>Fields</section>
+        </sections>
+        <sections>
+            <label>פרטי יצירת מענק</label>
+            <section>Grantmaking Information</section>
+        </sections>
+        <sections>
+            <label><!-- Matching Gift Comments --></label>
+            <section>Matching Gift Comments</section>
+        </sections>
+        <sections>
+            <label>פרטי תרומה משווה</label>
+            <section>Matching Gift Information</section>
+        </sections>
+        <sections>
+            <label>פרטי חברות</label>
+            <section>Membership Information</section>
+        </sections>
+    </layouts>
+    <quickActions>
+        <label>כתובת חדשה</label>
+        <name>New_Address</name>
+    </quickActions>
+    <quickActions>
+        <label>השתייכות חדשה</label>
+        <name>New_Affiliation</name>
+    </quickActions>
+    <quickActions>
+        <label>עדכון מהיר</label>
+        <name>Quick_Household_Update</name>
+    </quickActions>
+    <quickActions>
+        <label>עדכון מהיר</label>
+        <name>Quick_Organization_Update</name>
+    </quickActions>
+    <webLinks>
+        <label>נהל משק בית</label>
+        <name>Manage_Household</name>
+    </webLinks>
+</CustomObjectTranslation>

@@ -6,27 +6,27 @@
     <label>STG_PanelCreatePayments</label>
     <packageVersions>
         <majorNumber>3</majorNumber>
-        <minorNumber>6</minorNumber>
+        <minorNumber>7</minorNumber>
         <namespace>npe01</namespace>
     </packageVersions>
     <packageVersions>
         <majorNumber>3</majorNumber>
-        <minorNumber>9</minorNumber>
+        <minorNumber>10</minorNumber>
         <namespace>npe03</namespace>
     </packageVersions>
     <packageVersions>
         <majorNumber>3</majorNumber>
-        <minorNumber>5</minorNumber>
+        <minorNumber>6</minorNumber>
         <namespace>npe4</namespace>
     </packageVersions>
     <packageVersions>
         <majorNumber>3</majorNumber>
-        <minorNumber>5</minorNumber>
+        <minorNumber>6</minorNumber>
         <namespace>npe5</namespace>
     </packageVersions>
     <packageVersions>
         <majorNumber>3</majorNumber>
-        <minorNumber>8</minorNumber>
+        <minorNumber>9</minorNumber>
         <namespace>npo02</namespace>
     </packageVersions>
 </ApexPage>

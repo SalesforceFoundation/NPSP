@@ -8,7 +8,7 @@
                 </div>
                 <div class="slds-media__body">
                     <div class="slds-grid slds-grid--align-spread slds-has-flexi-truncate">
-                        <p class="slds-tile__title slds-truncate">{!v.value.FirstName}&nbsp;{!v.value.LastName}</p>
+                        <p class="slds-tile__title slds-truncate">{!v.value.Name}</p>
                         <lightning:buttonIcon iconName="utility:new" variant="bare" onclick="{!c.handleClick}"
                             class="slds-shrink-none" size="large" alternativeText="{!$Label.npo02.Add}" />
                     </div>

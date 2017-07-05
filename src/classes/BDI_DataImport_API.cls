@@ -37,10 +37,21 @@
 global with sharing class BDI_DataImport_API {
 
      private class BDIException extends Exception {}
-     
+
+    /*******************************************************************************************************
+    * @description string values for different matching behaviors BDI can support.  couldn't use an enum
+    * since we need to store it in a custom settings text field.
+    */
+    global static final string DoNotMatch = 'DoNotMatch'; // Don't Match. Always create new Opportunities.
+    global static final string RequireNoMatch = 'RequireNoMatch'; // Always create.  Show error if any match.
+    global static final string RequireExactMatch = 'RequireExactMatch'; // Use exact match. Show error if there isn't an exact match or there are no matches.
+    global static final string ExactMatchOrCreate = 'ExactMatchOrCreate'; // Use exact match. Show error if there isn't an exact match. Create opportunity if there are no matches.
+    global static final string RequireBestMatch = 'RequireBestMatch'; // Use the best match. Show error if no match.
+    global static final string BestMatchOrCreate = 'BestMatchOrCreate'; // Use the best match. Create opportunity if no match.
+
     /*******************************************************************************************************
     * @description Imports all DataImport records that have not been previously imported. Their status is changed
-                    to imported, once the process fishishes.
+    * to imported, once the process fishishes.
     * @return ID The ID of the batch job that performs the data import.
     */
     global static ID importData() {
