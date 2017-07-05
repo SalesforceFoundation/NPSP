@@ -291,7 +291,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         o.StageName = closedstage;
         o.CloseDate = system.today();
         r1.npe03__Installment_Period__c = 'GarbageDate';
-        RD_ProcessControl.setRecursionFlag(true); // need to simulate that this previous run to prevent the Opp from being deleted.
+        RD_ProcessControl.setRecursionFlag(true); // need to simulate that this previously ran to prevent the Opp from being deleted.
         update r1;
         RD_ProcessControl.setRecursionFlag(false);
         Test.startTest();
