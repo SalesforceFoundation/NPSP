@@ -100,13 +100,13 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             runOpportunityTriggerHandler(newlist, oldlist, triggerAction, objResult);
         }
 
-        // Set required flags, process the DML, and then clear the flags
+        // Increment the recursion flag, process the DML, and then decrement the recursion flag
         resetFlags(true);
         TDTM_TriggerHandler.processDML(dmlWrapper);
         dmlWrapper = null;
         resetFlags(false);
 
-        return null; // dmlWrapper;
+        return null;
     }
 
     /*******************************************************************************************************
@@ -722,8 +722,9 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description Resets flags that prevent recursion to a specified state.
-    * @param b A boolean of which state the flags should be set to.
+    * @description Increment/Decrement the static flag counter that tracks whether this trigger has been
+    *   called alread
+    * @param b A boolean where true increments the counter and false decrements it.
     * @return void This method modifies class variables and doesn't return anything.
     ********************************************************************************************************/
     public static void resetFlags(boolean b) {
