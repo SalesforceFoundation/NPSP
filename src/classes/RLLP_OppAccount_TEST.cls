@@ -1,6 +1,8 @@
 @isTest
 private class RLLP_OppAccount_TEST {
 
+    public static final String accountLimit = '200';
+
     @isTest(SeeAllData=true)
     static void PerformanceNEW() {
         TDTM_TriggerHandler.disableTDTM = true;
@@ -11,7 +13,7 @@ private class RLLP_OppAccount_TEST {
         String summaryQuery = rollup.getSummaryQuery();
         //System.debug('njjc detail query: ' + detailQuery);
         //System.debug('njjc summary query: ' + summaryQuery);
-        List<Account> accounts = Database.query(summaryQuery + ' ORDER BY npo02__TotalOppAmount__c DESC NULLS LAST LIMIT 1');
+        List<Account> accounts = Database.query(summaryQuery + ' ORDER BY npo02__TotalOppAmount__c DESC NULLS LAST LIMIT ' + accountLimit);
         List<Opportunity> opps = Database.query(detailQuery + ' WHERE AccountId IN :accounts');
         rollup.processDetails(opps);
         List<Account> results = rollup.getResults();
@@ -26,7 +28,7 @@ private class RLLP_OppAccount_TEST {
         TDTM_TriggerHandler.disableTDTM = true;
         Long startTime = System.currentTimeMillis();
         RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
-        Map<Id, Account> accs = new Map<Id, Account>((List<Account>)Database.query(oppRollupUtil.buildAccountQuery() + ' ORDER BY npo02__Best_Gift_Year_Total__c DESC  NULLS LAST LIMIT 1'));
+        Map<Id, Account> accs = new Map<Id, Account>((List<Account>)Database.query(oppRollupUtil.buildAccountQuery() + ' ORDER BY npo02__TotalOppAmount__c DESC NULLS LAST LIMIT ' + accountLimit));
         RLLP_OppRollup oppRoller = new RLLP_OppRollup();
         oppRoller.RollupAccounts(accs);
         Long executionTime = System.currentTimeMillis() - startTime;
