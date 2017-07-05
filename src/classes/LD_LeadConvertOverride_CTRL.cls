@@ -376,12 +376,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 	        }
 
 	        // avoid auto-affiliation creation by disabling the Affiliations Trigger for Contacts
-            List<Trigger_Handler__c> triggerHandlers = TDTM_Config_API.getCachedRecords();
-            for (Trigger_Handler__c th : triggerHandlers) {
-                if (th.Object__c == 'Contact' && th.Class__c == 'AFFL_Affiliations_TDTM') {
-                    th.Active__c = false;
-                }
-            }
+            TDTM_TriggerHandler.toggleTriggerState('Contact', 'AFFL_Affiliations_TDTM', false);
 
             // temporarily disable address management
             boolean hhAcctAddrDisabled = UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c;
@@ -521,8 +516,8 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             	afflAccId = strAfflAccountId;
             }
             if (afflAccId != null) {
-                // Setting this to null will force listTh to requery the full list of trigger handlers
-                triggerHandlers = null;
+                // Re-Enable the Affilations Trigger for the Contact
+                TDTM_TriggerHandler.toggleTriggerState('Contact', 'AFFL_Affiliations_TDTM', true);
                 AFFL_Affiliations_TDTM.createNonDupeAffiliation(l, lcr.getContactId(), afflAccId, true);
             }
             

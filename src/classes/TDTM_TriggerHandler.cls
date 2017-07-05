@@ -242,4 +242,20 @@ public class TDTM_TriggerHandler {
                     
         return errors;
     }
+
+    /*******************************************************************************************************
+    * @description Modifies the global static collection of Trigger_Handler records to disable or enable
+    * a specific TriggerHander by SObjectName and ApexClass name.
+    * @param objName SObject Name
+    * @param className Apex Class Name
+    * @param state True (enable) | False (disable)
+    */
+    public static void toggleTriggerState(String objName, String className, Boolean state) {
+        List<Trigger_Handler__c> triggerHandlers = TDTM_Config_API.getCachedRecords();
+        for (Trigger_Handler__c th : triggerHandlers) {
+            if (th.Object__c == objName && th.Class__c == className) {
+                th.Active__c = state;
+            }
+        }
+    }
 }
