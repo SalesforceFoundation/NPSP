@@ -80,8 +80,6 @@ private with sharing class ALLO_Allocations_TEST {
         insert gau;
 
         //resetting these manually as a test is considered a single context for static variables
-        ALLO_Allocations_TDTM.resetFlags(false);
-        
         list<Allocation__c> alloForInsert = new list<Allocation__c>();
 
         Allocation__c percentAllo = new Allocation__c(Opportunity__c=opp.id, Percent__c = 50, General_Accounting_Unit__c = gau.id);
@@ -95,7 +93,6 @@ private with sharing class ALLO_Allocations_TEST {
         system.assertEquals(4, queryAllo[1].Amount__c, 'The amount of the percentage allocation should be calculated based on the Opportunity amount.');
         system.assertEquals(4, queryAllo[0].Amount__c, 'The amount of the standard number allocation should be 4.');
         
-        ALLO_Allocations_TDTM.resetFlags(false);
         opp.Amount = 10;
         Test.startTest();
         update opp;
@@ -105,7 +102,6 @@ private with sharing class ALLO_Allocations_TEST {
         system.assertEquals(5, queryAllo[1].Amount__c, 'The amount of the percentage allocation should increase proportionately with the Opportunity amount.');
         system.assertEquals(4, queryAllo[0].Amount__c, 'The amount of the standard number allocation should be unchanged at 4.');
         
-        ALLO_Allocations_TDTM.resetFlags(false);
         opp.Amount = 8;
         update opp;
 
@@ -113,7 +109,6 @@ private with sharing class ALLO_Allocations_TEST {
         system.assertEquals(4, queryAllo[1].Amount__c, 'The amount of the percentage allocation should decrease proportionately with the Opportunity amount.');
         system.assertEquals(4, queryAllo[0].Amount__c, 'The amount of the standard number allocation should be unchanged at 4.');
 
-        ALLO_Allocations_TDTM.resetFlags(false);
         opp.Amount = 1;
         
         Exception ex = null;
@@ -156,7 +151,6 @@ private with sharing class ALLO_Allocations_TEST {
         system.assertEquals(8,queryAllo[0].Amount__c, 'The default allocation should be for the total amount of the Opportunity.');
 
         //resetting these manually as a test is considered a single context for static variables
-        ALLO_Allocations_TDTM.resetFlags(false);
         Allocation__c amountAllo = new Allocation__c(Opportunity__c=opp.id, Amount__c = 6, General_Accounting_Unit__c = gau.id);
         Test.startTest();
         insert amountAllo;
@@ -166,7 +160,6 @@ private with sharing class ALLO_Allocations_TEST {
         system.debug('LOOK queryAllo' + queryAllo);
         system.assertEquals(2,queryAllo[0].Amount__c, 'The default allocation should be equal to the remainder of the total Opp amount after removing the new Allocation amount.');
 
-        ALLO_Allocations_TDTM.resetFlags(false);
         amountAllo.Amount__c = 8;
         update amountAllo;
 
@@ -203,7 +196,6 @@ private with sharing class ALLO_Allocations_TEST {
         alloForInsert.add(amountAllo);
         insert alloForInsert;
 
-        ALLO_Allocations_TDTM.resetFlags(false);
         Opportunity opp = new Opportunity(Name='success', Amount = 10, AccountID=acc.id, CampaignId=cam.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
         Test.startTest();
         insert opp;
@@ -219,7 +211,6 @@ private with sharing class ALLO_Allocations_TEST {
         system.assertEquals(campaigngau.id, queryAllo[2].General_Accounting_Unit__c, 'An allocation mirroring the Campaign Allocation should be created.');
         system.assertEquals(5, queryAllo[2].Amount__c, 'The allocation amount should mirror the Campaign allocation.');
 
-        ALLO_Allocations_TDTM.resetFlags(false);
         Opportunity opp2 = new Opportunity(Name='error', Amount = 6, AccountID=acc.id, CampaignId=cam.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
         insert opp2;
 
@@ -280,8 +271,6 @@ private with sharing class ALLO_Allocations_TEST {
         system.assertEquals(defaultgau.id,queryAllo[0].General_Accounting_Unit__c,'The allocation should be assigned to the default General Accounting Unit.');
         system.assertEquals(20,queryAllo[0].Amount__c,'The default allocation should be for the total amount of the Opportunity.');
         
-        ALLO_Allocations_TDTM.resetFlags(false);
-
         list<Allocation__c> alloForInsert = new list<Allocation__c>();
         Allocation__c percentAllo = new Allocation__c(Recurring_Donation__c = rd.id, Percent__c = 50, General_Accounting_Unit__c = gau.id);
         alloForInsert.add(percentAllo);
@@ -298,22 +287,18 @@ private with sharing class ALLO_Allocations_TEST {
         queryOpp[0].StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
         update queryOpp[0];
 
-        ALLO_Allocations_TDTM.resetFlags(false);
-
         percentAllo.Percent__c = 20;
         update percentAllo;
         queryAllo = [SELECT Id, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :queryOpp[0].id ORDER BY Percent__c];
         system.assertEquals(2,queryAllo.size(), 'Allocations for the closed/won opportunity should be unchanged.');
         system.assertEquals(50,queryAllo[1].Percent__c, 'The percentage based allocation should be unchanged.');
 
-        ALLO_Allocations_TDTM.resetFlags(false);
         Opportunity opp = new Opportunity(Name='foo', npe03__Recurring_Donation__c = rd.id, Amount = 20, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getOpenStage());
         insert opp;
 
         queryAllo = [SELECT Id, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :opp.id ORDER BY Amount__c];
         system.assertEquals(3,queryAllo.size(), 'Allocations for the open Recurring Donation Opportunity should be created automatically when the opportunity is created.');
 
-        ALLO_Allocations_TDTM.resetFlags(false);
         Allocation__c exceedAllo = new Allocation__c(Recurring_Donation__c = rd.id, Amount__c = 10, General_Accounting_Unit__c = gau.id);
         insert exceedAllo;
         
@@ -322,13 +307,11 @@ private with sharing class ALLO_Allocations_TEST {
         system.assertEquals(2,queryAllo.size(), 'Only percent based Opportunity Allocation should exist.');
         system.assertEquals(16,queryAllo[0].Amount__c, 'The percentage based allocation amount should be set based on the opportunity amount.');
 
-        ALLO_Allocations_TDTM.resetFlags(false);
         delete exceedAllo;
 
         queryAllo = [SELECT Id, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :opp.id ORDER BY Amount__c];
         system.assertEquals(3,queryAllo.size(), 'Allocations for the open Recurring Donation Opportunity should be created automatically when the opportunity is created.');
 
-        ALLO_Allocations_TDTM.resetFlags(false);
         delete amountAllo;
 
         queryAllo = [SELECT Id, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :opp.id ORDER BY Percent__c];
@@ -363,7 +346,6 @@ private with sharing class ALLO_Allocations_TEST {
         alloForInsert.add(percentAllo);
         insert alloForInsert;
 
-        ALLO_Allocations_TDTM.resetFlags(false);
         list<Opportunity> oppList = new list<Opportunity>();
         for (integer i=0;i<100;i++)
             oppList.add(new Opportunity(Name='opp'+i, Amount = 8, AccountID=acc.id, CampaignId=math.mod(i,2)==0?cam.id:null, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage()));
@@ -378,7 +360,6 @@ private with sharing class ALLO_Allocations_TEST {
         for (Opportunity opp : oppList)
             opp.Amount = 4;
 
-        ALLO_Allocations_TDTM.resetFlags(false);
         update oppList;
 
         queryAggResult = [SELECT count_distinct(Id), General_Accounting_Unit__r.Name FROM Allocation__c WHERE Opportunity__r.Name LIKE 'opp%' GROUP BY General_Accounting_Unit__r.Name ORDER BY count_distinct(Id)];
@@ -441,14 +422,12 @@ private with sharing class ALLO_Allocations_TEST {
         list<Allocation__c> queryAllo = [SELECT Id, Amount__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :opp.id];
         system.assertEquals(0,queryAllo.size(),'No default allocation should be created for an opporunity with a null amount.');
 
-        ALLO_Allocations_TDTM.resetFlags(false);
         opp.Amount = 8;
         update opp;
 
         queryAllo = [SELECT Id, Amount__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :opp.id];
         system.assertEquals(1,queryAllo.size(),'A default allocation should be created for the opporunity that now has an amount.');
 
-        ALLO_Allocations_TDTM.resetFlags(false);
         opp.Amount = null;
         update opp;
 
@@ -486,7 +465,6 @@ private with sharing class ALLO_Allocations_TEST {
         listGau[0].Active__c = false;
         update listGau[0];
 
-        ALLO_Allocations_TDTM.resetFlags(false);
         Opportunity opp = new Opportunity(Name='foo', CampaignId=cam.id, Amount = 8, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
         Test.startTest();
         insert opp;
@@ -500,7 +478,6 @@ private with sharing class ALLO_Allocations_TEST {
         listGau[1].Active__c = false;
         update listGau[1];
 
-        ALLO_Allocations_TDTM.resetFlags(false);
         opp.Amount = 80;
 
         try {
@@ -531,7 +508,7 @@ private with sharing class ALLO_Allocations_TEST {
         setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
 
         //setting flags to not create default allocations for the new opportunities
-        ALLO_Allocations_TDTM.resetFlags(true);
+        TDTM_TriggerHandler.toggleTriggerState('Opportunity', 'ALLO_Allocations_TDTM', false);
 
         Account acc = new Account(Name='foo');
         insert acc;

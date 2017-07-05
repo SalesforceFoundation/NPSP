@@ -37,12 +37,8 @@
 */
 public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
-    /** @description Static flag to prevent recursion for allocations before triggers. */
-    public static boolean hasRunForAllocationsBefore = false;
-    /** @description Static flag to prevent recursion for allocations after triggers. */
-    public static boolean hasRunForAllocationsAfter = false;
-    /** @description Static flag to prevent recursion for opportunity triggers. */
-    public static boolean hasRunForOpportunities = false;
+    /** @description Static flag to prevent recursion */
+    private static integer recursionFlag = 0;
 
     /** @description A map of allocation parent id to alloWrapper class; holds all relevant allocations data for this transaction. */
     public map<id,alloWrapper> mapWrapper = new map<id,alloWrapper>();
@@ -90,26 +86,27 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         }
 
         // dispatch to the correct handler
-        if (objResult.getsObjectType() == Allocation__c.sObjectType && !hasRunForAllocationsBefore && 
+        if (objResult.getsObjectType() == Allocation__c.sObjectType && recursionFlag == 0 &&
             (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate)) {
 
             runAllocationBeforeTriggerHandler(newlist, oldlist, triggerAction, objResult);
-            hasRunForAllocationsBefore = true;
-        } else if (objResult.getsObjectType() == Allocation__c.sObjectType && !hasRunForAllocationsAfter && 
+        } else if (objResult.getsObjectType() == Allocation__c.sObjectType && recursionFlag == 0 &&
             (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate || triggerAction == TDTM_Runnable.Action.AfterDelete)) {
 
             runAllocationAfterTriggerHandler(newlist, oldlist, triggerAction, objResult);
             //setting before to true for afterDelete case, to avoid running triggers on DML wrapper objects
-            hasRunForAllocationsBefore = true;
-            hasRunForAllocationsAfter = true;
-        } else if (objResult.getsObjectType() == Opportunity.sObjectType && !hasRunForOpportunities) {
+        } else if (objResult.getsObjectType() == Opportunity.sObjectType && recursionFlag == 0) {
 
             runOpportunityTriggerHandler(newlist, oldlist, triggerAction, objResult);
-            hasRunForOpportunities = true;
-            hasRunForAllocationsBefore = true;
-            hasRunForAllocationsAfter = true;
         }
-        return dmlWrapper;
+
+        // Set required flags, process the DML, and then clear the flags
+        resetFlags(true);
+        TDTM_TriggerHandler.processDML(dmlWrapper);
+        dmlWrapper = null;
+        resetFlags(false);
+
+        return null; // dmlWrapper;
     }
 
     /*******************************************************************************************************
@@ -730,8 +727,9 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     * @return void This method modifies class variables and doesn't return anything.
     ********************************************************************************************************/
     public static void resetFlags(boolean b) {
-        hasRunForOpportunities = b;
-        hasRunForAllocationsAfter = b;
-        hasRunForAllocationsBefore = b;
+        recursionFlag += (b ? 1 : -1);
+        if (recursionFlag < 0) {
+            recursionFlag = 0;
+        }
     }
 }
