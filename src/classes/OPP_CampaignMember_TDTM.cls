@@ -41,8 +41,8 @@ public class OPP_CampaignMember_TDTM extends TDTM_Runnable {
     private List<Id> listCampaignId = new List<Id>();
     private List<String> listMemberStatus = new List<String>();
 
-    /**@description Static flag to prevent recursion. */
-    public static Boolean hasRun = false;
+    /** @description Static flag to prevent recursion */
+    private static integer recursionFlag = 0;
 
     /*******************************************************************************************************
     * @description Creates and updates campaign members based on opportunity primary contact, primary 
@@ -58,7 +58,7 @@ public class OPP_CampaignMember_TDTM extends TDTM_Runnable {
         
         dmlWrapper dmlWrapper = new DmlWrapper();
 
-        if (hasRun) {
+        if (recursionFlag > 0) {
             return dmlWrapper;
         }
 
@@ -110,8 +110,13 @@ public class OPP_CampaignMember_TDTM extends TDTM_Runnable {
             dmlWrapper = CON_AddToCampaign.CreateCampaignMembers(listContactId, listCampaignId, listMemberStatus);
         }
 
-        hasRun = true;
-        return dmlWrapper;
+        // Increment the recursion flag, process the DML, and then decrement the recursion flag
+        setRecursionFlag(true);
+        TDTM_TriggerHandler.processDML(dmlWrapper);
+        dmlWrapper = null;
+        setRecursionFlag(false);
+
+        return null;
     }
 
     /*******************************************************************************************************
@@ -169,5 +174,18 @@ public class OPP_CampaignMember_TDTM extends TDTM_Runnable {
 
         listCampaignId.add(opp.CampaignId);
         listContactId.add(opp.Primary_Contact__c);
+    }
+
+    /*******************************************************************************************************
+    * @description Increment/Decrement the static flag counter that tracks whether this trigger has been
+    *   called alread
+    * @param b A boolean where true increments the counter and false decrements it.
+    * @return void This method modifies class variables and doesn't return anything.
+    ********************************************************************************************************/
+    public static void setRecursionFlag(boolean b) {
+        recursionFlag += (b ? 1 : -1);
+        if (recursionFlag < 0) {
+            recursionFlag = 0;
+        }
     }
 }
