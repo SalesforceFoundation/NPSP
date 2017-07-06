@@ -32,7 +32,7 @@
  * @date 2017
  * @group TDTM
  * @group-content ../../ApexDocContent/TDTM.htm
- * @description Test class for TDTM_Config_API Class and enabling TDTM control for SI's
+ * @description Test class to validate behavior changes related to TDTM Static Flag handling
  *
 ***/
 @isTest
