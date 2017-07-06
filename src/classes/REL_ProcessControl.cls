@@ -34,5 +34,26 @@
 * @description Provides process control to prevent relationship creation recursion in triggers 
 */
 public with sharing class REL_ProcessControl {
-    public static boolean hasRun = false;
+    /*******************************************************************************************************
+    * @description flag to prevent recursion into the RD trigger handler/logic
+    */
+    private static Integer recursionFlag = 0;
+
+    /*******************************************************************************************************
+    * @description Increment/Decrement the static flag counter that tracks whether this trigger has been
+    *   called alread
+    * @param b A boolean where true increments the counter and false decrements it.
+    * @return void This method modifies class variables and doesn't return anything.
+    ********************************************************************************************************/
+    public static void setRecursionFlag(boolean b) {
+        recursionFlag += (b ? 1 : -1);
+        if (recursionFlag < 0) {
+            recursionFlag = 0;
+        }
+    }
+
+    /* @description Returns true if the recursionFlag value is greater than 1 */
+    public static Boolean checkRecursionState() {
+        return (recursionFlag > 0);
+    }
 }

@@ -107,9 +107,10 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
         List<npe4__Relationship__c> relationshipsToUpdate = new List<npe4__Relationship__c>();
         List<npe4__Relationship__c> relationshipsToDelete = new List<npe4__Relationship__c>();
         List<npe4__Relationship__c> reciprocalsToUpdate = new List<npe4__Relationship__c>();
-        
+
+        // Set the recursion flag up front because there could be DML operations before the main method ends.
         if (triggerAction == TDTM_Runnable.Action.afterUpdate) {
-            REL_ProcessControl.hasRun = true;
+            REL_ProcessControl.setRecursionFlag(true);
         }
         
         Integer i = 0;          // processing counter            
@@ -169,10 +170,11 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
             mainWrapper.objectsToDelete.addAll((List<SObject>)relationshipsToDelete);
         }
 
+        TDTM_TriggerHandler.processDML(mainWrapper);
         if (triggerAction == TDTM_Runnable.Action.afterUpdate) {
-            REL_ProcessControl.hasRun = false;
+            REL_ProcessControl.setRecursionFlag(false);
         }
-        return mainWrapper;
+        return null;
     }
 
     /*******************************************************************************************************
