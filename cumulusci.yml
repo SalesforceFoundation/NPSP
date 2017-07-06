@@ -210,13 +210,7 @@ flows:
                 task: browsertests_unmanaged_chrome
                 options:
                     use_saucelabs: True
-    ci_feature:
-        tasks:
-            # Set run_tests_debug to query for test classes with the namespace
-            8:
-                options:
-                    managed: True
-            
+     
     dev_org:
         tasks:
             8:
