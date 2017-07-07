@@ -354,15 +354,15 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }  
                     
         if (listAccUpdate.size() > 0) {
-            UTIL_Debug.debug('DJH**** listAccUpdate: ' + listAccUpdate);
+            //UTIL_Debug.debug('DJH**** listAccUpdate: ' + listAccUpdate);
             dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAccUpdate);
         }
         if (listAddrUpdate.size() > 0) {
-            UTIL_Debug.debug('DJH**** listAddrUpdate: ' + listAddrUpdate);
+            //UTIL_Debug.debug('DJH**** listAddrUpdate: ' + listAddrUpdate);
             dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAddrUpdate);
         }
         if (listConUpdate.size() > 0) {
-            UTIL_Debug.debug('DJH**** listConUpdate: ' + listConUpdate);
+            //UTIL_Debug.debug('DJH**** listConUpdate: ' + listConUpdate);
             dmlWrapper.objectsToUpdate.addAll((List<SObject>)listConUpdate);
         }
         

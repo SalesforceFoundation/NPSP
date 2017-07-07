@@ -1589,22 +1589,13 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
                 addr.Household_Account__c = di.Id;  // a bogus id for this field
             }            
         }
-        // because we have inserted contacts and accounts in the same context,
-        // the address trigger flag will have been set to true.  we need to
-        // reset it back to false, or else the newly inserted addresses won't
-        // propogate to the hh account and contacts.
-        //ADDR_Addresses_TDTM.hasRunAddrTriggerREAL = false;
 
-        // two prong strategy! if any address object fails to save, and we allow
-        // salesforce to do the retry with the other records (ie, calling insert with AllOrNothing=false),
-        // our hasRunAddrTrigger won't get cleared for the retries, and address propagation will not occur.
-        // solution: first try to save all with AllOrNothing=true.  Then if we hit any failures, do one 
-        // address record at a time, so we can reset hasRunAddTrigger before each insert.
+        // two prong strategy! if any address object fails to save, do one
+        // address record at a time, so we can log the failing address with the correct bdi record.
         try  {
-            insert listAddrInsert;        
+            insert listAddrInsert;
         } catch (exception ex) {
             for (integer i = 0; i < listAddrInsert.size(); i++) {
-                //ADDR_Addresses_TDTM.hasRunAddrTriggerREAL = false;
                 Database.SaveResult sr = database.insert(listAddrInsert[i], false);
                 if (!sr.isSuccess()) {
                     LogBDIError(listDIInsert[i], sr.getErrors()[0].getMessage(), 'HomeAddressImportStatus__c');
