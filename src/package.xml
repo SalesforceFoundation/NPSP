@@ -291,6 +291,7 @@
         <members>UTIL_UnitTestData_TEST</members>
         <members>UTIL_Version_API</members>
         <members>UTIL_iSoqlListViewConsumer</members>
+        <members>TDTM_DMLgt200_TEST</members>
         <name>ApexClass</name>
     </types>
     <types>
