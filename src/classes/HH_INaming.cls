@@ -33,7 +33,7 @@
 * @group Households
 * @description Interface for classes that will provide Household Naming functionality.
 */
-public Interface HH_INaming {
+global Interface HH_INaming {
     
     /*******************************************************************************************************
     * @description Get the Household name for the list of Contacts from a single Household.
