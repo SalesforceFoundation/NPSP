@@ -61,10 +61,12 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         boolean acctHasAddress = false;
         boolean acctChanged = false;
 
+        //UTIL_Debug.debug('DJH**** ADDR_Contact_TDTM ' + triggerAction + ' hasRun: ' + ADDR_Addresses_TDTM.cHasRunAddrTrigger);
+
 		// bail out if address mgmt turned off.
         if (UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c)
         	return dmlWrapper;
-                
+
         // Rules:
         // inserting new contact - make their address a new default address, unless they say it is an override
         // updating an existing contact - make their address a new default address, unless they say it is an override
@@ -195,7 +197,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                ) {
                 // note that we detect whether the address change is coming from the address trigger,
                 // in which case we don't want to create a new address.
-                if (ADDR_Addresses_TDTM.hasRunAddrTrigger) {
+                if (ADDR_Addresses_TDTM.cHasRunAddrTrigger > 0) {
                 	//UTIL_Debug.debug('DJH**** stop Addr Trigger recursion in ADDR_Contact_TDTM');
                     continue;
                 }
@@ -205,19 +207,20 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                     setConCreateAddr.add(con);
             }             
         }
-        
-        // set the mailing address for contacts who specify an address lookup or override
-        if (listConAddrSet.size() > 0) {
+
+        if (listConAddrSet.size() > 0 || listConAddrReset.size() > 0) {
             // to avoid pushing these address changes to the HH.
-            ADDR_Addresses_TDTM.hasRunAddrTrigger = true;
+            ADDR_Addresses_TDTM.cHasRunAddrTrigger++;
+        }
+
+            // set the mailing address for contacts who specify an address lookup or override
+        if (listConAddrSet.size() > 0) {
             setConAddrFromLookup(listConAddrSet, dmlWrapper, triggerAction);
         }
         
         // reset the mailing address for contacts who no longer have an address override
         if (listConAddrReset.size() > 0) {
         	resetConAddr(listConAddrReset);
-            // to avoid pushing these address changes to the HH.
-            ADDR_Addresses_TDTM.hasRunAddrTrigger = true;
         }
         
         // update the Latest date fields on any address overrides
@@ -227,8 +230,12 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         // create any new Default Address objects
         if (setConCreateAddr.size() > 0)
             createAddrFromCon(new List<Contact>(setConCreateAddr), dmlWrapper, triggerAction);
-            
-        return dmlWrapper;    
+
+        TDTM_TriggerHandler.processDML(dmlWrapper);
+        if (listConAddrSet.size() > 0 || listConAddrReset.size() > 0) {
+            ADDR_Addresses_TDTM.cHasRunAddrTrigger--;
+        }
+        return null;
     }
 
     /*******************************************************************************************************

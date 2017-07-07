@@ -572,7 +572,6 @@ private class LD_LeadConvertOverride_TEST {
 		List<LeadStatus> convertStatus = [SELECT Id, MasterLabel FROM LeadStatus WHERE IsConverted=true];
 		
 		Test.startTest();
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         system.debug('****ACTION: calling convertLead!');
         Database.LeadConvertResult lcr;
         Boolean brkLoop;
