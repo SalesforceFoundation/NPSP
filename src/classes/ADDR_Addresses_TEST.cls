@@ -94,19 +94,14 @@ public with sharing class ADDR_Addresses_TEST {
         		listConT[ (i * cConT) + j].AccountId = listAccT[i].Id;
         	}
         }        
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        insert listConT;    	
+        insert listConT;
 
         initTestAddr(cHHT);
         for (integer i = 0; i < cHHT; i++) {
             listAddrT[i].Household_Account__c = listAccT[i].Id;
             listAddrT[i].Default_Address__c = true;
         }
-        // clear our triggers recursion prevention since we starting a new test
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         insert listAddrT;
-        // clear our triggers recursion prevention since we are starting a new test
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         // restore async behavior as appropriate
         TDTM_DefaultConfig.stopTestDataInit();
     }
@@ -245,8 +240,7 @@ public with sharing class ADDR_Addresses_TEST {
         Test.startTest();
         for (Contact con : listConT) 
             con.AccountId = null;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        update listConT; 
+        update listConT;
         Test.stopTest();       
 
         // verify that the HH and Contacts share the same address
@@ -318,7 +312,7 @@ public with sharing class ADDR_Addresses_TEST {
         	addr.MailingStreet__c = 'New Street' + i;
         	addr.MailingCity__c = 'New City' + i;
         }
-        system.assertEquals(false, ADDR_Addresses_TDTM.hasRunAddrTrigger);
+        system.assertEquals(0, ADDR_Addresses_TDTM.cHasRunAddrTrigger);
         Test.startTest();
         update listAddrT;
         Test.stopTest();
@@ -352,7 +346,7 @@ public with sharing class ADDR_Addresses_TEST {
         createHHTestData(cHH, cCon);
         
         // now let's delete the Addresses
-        system.assertEquals(false, ADDR_Addresses_TDTM.hasRunAddrTrigger);
+        system.assertEquals(0, ADDR_Addresses_TDTM.cHasRunAddrTrigger);
         Test.startTest();
         delete listAddrT;
         Test.stopTest();
@@ -395,7 +389,6 @@ public with sharing class ADDR_Addresses_TEST {
             listAddrT[i].MailingStreet__c = 'override' + i;
             listAddrT[i].MailingCity__c = 'override' + i;
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         insert listAddrT;
         
         // set the contacts' address overrides
@@ -406,11 +399,9 @@ public with sharing class ADDR_Addresses_TEST {
             con.is_Address_Override__c = true;
             listCon.add(con);
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        update listCon;        
+        update listCon;
         
         // now let's delete the override Addresses
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.startTest();
         delete listAddrT;
         Test.stopTest();
@@ -449,7 +440,7 @@ public with sharing class ADDR_Addresses_TEST {
             addr.MailingStreet__c = 'New Street' + i;
             addr.MailingCity__c = 'New City' + i;
         }
-        system.assertEquals(false, ADDR_Addresses_TDTM.hasRunAddrTrigger);
+        system.assertEquals(0, ADDR_Addresses_TDTM.cHasRunAddrTrigger);
         Test.startTest();
         update listAddrT;
         Test.stopTest();
@@ -487,23 +478,19 @@ public with sharing class ADDR_Addresses_TEST {
         addrNew.MailingCity__c = 'city override';
         addrNew.Default_Address__c = false;
         addrNew.Household_Account__c = listAccT[0].Id;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         insert addrNew;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        
+
         // set a contact's address override
         listConT[0].Current_Address__c = addrNew.Id;
         listConT[0].is_Address_Override__c = true;
         update listConT[0];
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-    
+
         // now let's update the default Addresses
         for (integer i = 0; i < cHH; i++) {
             Address__c addr = listAddrT[i];
             addr.MailingStreet__c = 'New Street' + i;
             addr.MailingCity__c = 'New City' + i;
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.startTest();
         update listAddrT;
         Test.stopTest();
@@ -550,10 +537,8 @@ public with sharing class ADDR_Addresses_TEST {
             listAddrT[i].MailingStreet__c = 'not override' + i;
             listAddrT[i].MailingCity__c = 'not override' + i;
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         insert listAddrT;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        
+
         // set the contacts' address overrides
         list<Contact> listCon = new list<Contact>();
         for (integer i = 0; i < cHH; i++) {
@@ -562,10 +547,8 @@ public with sharing class ADDR_Addresses_TEST {
             con.is_Address_Override__c = false;
             listCon.add(con);
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.startTest();
         update listCon;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.stopTest();
         
         // verify that the HH and Contacts share the same address, except for the contacts we modified
@@ -615,10 +598,8 @@ public with sharing class ADDR_Addresses_TEST {
             listAddrT[i].MailingStreet__c = 'New Default Street' + i;
             listAddrT[i].MailingCity__c = 'New Default City' + i;
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.startTest();
         insert listAddrT;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;        
         Test.stopTest();
 
         // verify that the HH and Contacts share the same address and it's new!
@@ -673,10 +654,8 @@ public with sharing class ADDR_Addresses_TEST {
             listAddrT[i].MailingStreet__c = 'New Default Street' + i;
             listAddrT[i].MailingCity__c = 'New Default City' + i;
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         insert listAddrT;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        
+
         // go back to original default addresses
         // added this extra set to test fix where we didn't use the correct default
         for (integer i = 0; i < cHH; i++) {
@@ -684,10 +663,8 @@ public with sharing class ADDR_Addresses_TEST {
             listAddrOriginal[i].MailingStreet__c = 'Original Default Street' + i;
             listAddrOriginal[i].MailingCity__c = 'Original Default City' + i;
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.startTest();
         update listAddrOriginal;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.stopTest();
 
         // verify that the HH and Contacts share the same address and it's new!
@@ -740,10 +717,8 @@ public with sharing class ADDR_Addresses_TEST {
             listAddrT[i].MailingStreet__c = 'override' + i;
             listAddrT[i].MailingCity__c = 'override' + i;
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         insert listAddrT;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        
+
         // set the contacts' address overrides
         list<Contact> listCon = new list<Contact>();
         for (integer i = 0; i < cHH; i++) {
@@ -752,10 +727,8 @@ public with sharing class ADDR_Addresses_TEST {
             con.is_Address_Override__c = true;
             listCon.add(con);
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.startTest();
         update listCon;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.stopTest();
         
         // verify that the HH and Contacts share the same address
@@ -807,10 +780,8 @@ public with sharing class ADDR_Addresses_TEST {
             listAddrT[i].MailingStreet__c = 'override' + i;
             listAddrT[i].MailingCity__c = 'override' + i;
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         insert listAddrT;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        
+
         // set the contacts' address overrides
         list<Contact> listCon = new list<Contact>();
         for (integer i = 0; i < cHH; i++) {
@@ -819,18 +790,14 @@ public with sharing class ADDR_Addresses_TEST {
             con.is_Address_Override__c = true;
             listCon.add(con);
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         update listCon;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
 
         // now clear out the contacts' address overrides
         for (Contact con : listCon) {
             con.is_Address_Override__c = false;
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.startTest();
         update listCon;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.stopTest();
         
         // verify that the HH and Contacts share the same address
@@ -875,10 +842,8 @@ public with sharing class ADDR_Addresses_TEST {
             listAddrT[i].MailingStreet__c = 'override' + i;
             listAddrT[i].MailingCity__c = 'override' + i;
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         insert listAddrT;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        
+
         // set the contacts' address overrides
         list<Contact> listCon = new list<Contact>();
         for (integer i = 0; i < cHH; i++) {
@@ -887,9 +852,7 @@ public with sharing class ADDR_Addresses_TEST {
             con.is_Address_Override__c = true;
             listCon.add(con);
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         update listCon;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
 
         // now clear out the contacts' address overrides,
         // but modify the address also!
@@ -898,10 +861,8 @@ public with sharing class ADDR_Addresses_TEST {
             con.MailingStreet = 'New Street';
             con.MailingCity = 'New City';
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.startTest();
         update listCon;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.stopTest();
         
         // verify that the HH and Contacts share the same address
@@ -940,7 +901,6 @@ public with sharing class ADDR_Addresses_TEST {
             con.MailingCity = 'Direct City Edit';
             listCon.add(con);
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         update listCon;
 
         for (integer i = 0; i < cHH; i++) {
@@ -948,7 +908,6 @@ public with sharing class ADDR_Addresses_TEST {
             con.MailingStreet = 'another Street Edit';
             con.MailingCity = 'another City Edit';
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         update listCon;
 
         for (integer i = 0; i < cHH; i++) {
@@ -956,7 +915,6 @@ public with sharing class ADDR_Addresses_TEST {
             con.MailingStreet = 'final Street Edit';
             con.MailingCity = 'final City Edit';
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.startTest();
         update listCon;
         Test.stopTest();
@@ -1007,7 +965,6 @@ public with sharing class ADDR_Addresses_TEST {
             con.is_Address_Override__c = true;
             listCon.add(con);
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.startTest();
         update listCon;
         Test.stopTest();
@@ -1063,14 +1020,12 @@ public with sharing class ADDR_Addresses_TEST {
             con.MailingStreet = 'Direct Street Edit';
             listCon.add(con);
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         update listCon;
 
         for (integer i = 0; i < cHH; i++) {
             Contact con = listConT[i*cHH + i];
             con.MailingState = 'Washington';
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         update listCon;
 
         for (integer i = 0; i < cHH; i++) {
@@ -1078,7 +1033,6 @@ public with sharing class ADDR_Addresses_TEST {
             con.MailingStreet = ' direct street  edit ';  // whitespace and casing should not count as a real edit.
             con.MailingState = 'Oregon';
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.startTest();
         update listCon;
 
@@ -1131,21 +1085,18 @@ public with sharing class ADDR_Addresses_TEST {
             con.npe01__Primary_Address_Type__c = 'Other';
             listCon.add(con);
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         update listCon;
 
         for (integer i = 0; i < cHH; i++) {
             Contact con = listConT[i*cHH + i];
             con.MailingStreet = ' direct street edit ';
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         update listCon;
 
         for (integer i = 0; i < cHH; i++) {
             Contact con = listConT[i*cHH + i];
             con.MailingState = 'Washington';
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         update listCon;
 
         for (integer i = 0; i < cHH; i++) {
@@ -1153,7 +1104,6 @@ public with sharing class ADDR_Addresses_TEST {
             con.MailingStreet = ' direct street  edit ';  // whitespace and casing should not count as a real edit.
             con.MailingState = 'Oregon';
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.startTest();
         update listCon;
 
@@ -1208,14 +1158,12 @@ public with sharing class ADDR_Addresses_TEST {
             con.MailingStreet = 'Direct Street Edit';
             listCon.add(con);
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         update listCon;
 
         for (integer i = 0; i < cHH; i++) {
             Contact con = listConT[i*cHH + i];
             con.MailingState = 'Washington';
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         update listCon;
 
         for (integer i = 0; i < cHH; i++) {
@@ -1223,14 +1171,12 @@ public with sharing class ADDR_Addresses_TEST {
             con.MailingStreet = ' direct street  edit ';  // whitespace and casing should not count as a real edit.
             con.MailingState = 'Oregon';
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         update listCon;
 
         for (integer i = 0; i < cHH; i++) {
             Contact con = listConT[i*cHH + i];
             con.MailingStreet = ' DIRECT STREET  EDIT ';  // only change casing.
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         update listCon;
         
         // verify that the HH and Contacts share the same address
@@ -1257,7 +1203,6 @@ public with sharing class ADDR_Addresses_TEST {
         	Account acc = listAccT[i];
         	acc.BillingStreet = 'direct street  edit';
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.startTest();
         update listAccT;
         Test.stopTest();
@@ -1303,7 +1248,6 @@ public with sharing class ADDR_Addresses_TEST {
             acc.BillingStreet = 'Direct Street Edit';
             acc.BillingCity = 'Direct City Edit';
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         update listAccT;
 
         for (integer i = 0; i < cHH; i++) {
@@ -1311,7 +1255,6 @@ public with sharing class ADDR_Addresses_TEST {
             acc.BillingStreet = 'another Street Edit';
             acc.BillingCity = 'another City Edit';
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         update listAccT;
 
         for (integer i = 0; i < cHH; i++) {
@@ -1319,7 +1262,6 @@ public with sharing class ADDR_Addresses_TEST {
             acc.BillingStreet = 'final Street Edit';
             acc.BillingCity = 'final City Edit';
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.startTest();
         update listAccT;
         Test.stopTest();
@@ -1372,14 +1314,12 @@ public with sharing class ADDR_Addresses_TEST {
             Account acc = listAccT[i];
             acc.BillingStreet = 'Direct Street Edit';
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         update listAccT;
 
         for (integer i = 0; i < cHH; i++) {
             Account acc = listAccT[i];
             acc.BillingState = 'Washington';
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         update listAccT;
 
         for (integer i = 0; i < cHH; i++) {
@@ -1387,7 +1327,6 @@ public with sharing class ADDR_Addresses_TEST {
             acc.BillingStreet = ' direct street  edit ';    // whitespace and casing should not count as real edit.
             acc.BillingState = 'Oregon';
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.startTest();
         update listAccT;
         Test.stopTest();
@@ -1497,10 +1436,8 @@ public with sharing class ADDR_Addresses_TEST {
             listAddrT[i].MailingStreet__c = 'New Seasonal Street' + i;
             listAddrT[i].MailingCity__c = 'New Seasonal City' + i;
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.startTest();
         insert listAddrT;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.stopTest();
         
         // verify that the HH and Contacts share the same address and it's new!
@@ -1551,10 +1488,8 @@ public with sharing class ADDR_Addresses_TEST {
             listAddrT[i].MailingStreet__c = 'New Seasonal Street' + i;
             listAddrT[i].MailingCity__c = 'New Seasonal City' + i;
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.startTest();
         insert listAddrT;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.stopTest();
         
         // verify that the HH and Contacts share the same address and it's new!

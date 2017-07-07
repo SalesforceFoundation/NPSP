@@ -79,7 +79,6 @@ public with sharing class ADDR_Validator_TEST {
         
         Test.StartTest();
         insert contact;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.StopTest();
         
         //check household got created for contact
@@ -125,7 +124,6 @@ public with sharing class ADDR_Validator_TEST {
         
         Test.StartTest();
         insert contact;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.StopTest();
         
         //check household got created for contact
@@ -157,7 +155,6 @@ public with sharing class ADDR_Validator_TEST {
         
         Test.StartTest();
         insert contact;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.StopTest();
         
         //check household got created for contact
@@ -189,7 +186,6 @@ public with sharing class ADDR_Validator_TEST {
         
         Test.StartTest();
         insert contact;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.StopTest();
         
         //check household got created for contact
@@ -221,7 +217,6 @@ public with sharing class ADDR_Validator_TEST {
         
         Test.StartTest();
         insert contact;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.StopTest();
         
         //check household got created for contact
@@ -253,7 +248,6 @@ public with sharing class ADDR_Validator_TEST {
         
         Test.StartTest();
         insert contact;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.StopTest();
         
         //check household got created for contact
@@ -285,7 +279,6 @@ public with sharing class ADDR_Validator_TEST {
         
         Test.StartTest();
         insert contact;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.StopTest();
         
         //check household got created for contact
@@ -317,7 +310,6 @@ public with sharing class ADDR_Validator_TEST {
         
         Test.StartTest();
         insert contact;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.StopTest();
         
         //check household got created for contact
@@ -354,7 +346,6 @@ public with sharing class ADDR_Validator_TEST {
         
         Test.startTest();
         insert contact;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.StopTest();
         
         //check household got created for contact

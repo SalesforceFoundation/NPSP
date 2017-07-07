@@ -40,8 +40,6 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
     /*******************************************************************************************************
     * @description static flag to prevent recursive call 
     */
-    public static boolean hasRunAddrTrigger = false;
-    public static boolean hasRunAddrTriggerREAL = false;
     public static integer cHasRunAddrTrigger = 0;
 
     /*******************************************************************************************************
@@ -81,11 +79,11 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         // will require visiting all the HH Accounts, and deciding whether we are propagating the change
         // to all related objects, or just to Contacts who are using the Address as their override.
         //
-        UTIL_Debug.debug('DJH**** ADDR_Addresses_TDTM ' + triggerAction + ' hasRun: ' + cHasRunAddrTrigger);
+        //UTIL_Debug.debug('DJH**** ADDR_Addresses_TDTM ' + triggerAction + ' hasRun: ' + cHasRunAddrTrigger);
 
         // prevent recursion
         if (cHasRunAddrTrigger > 0) {
-        	UTIL_Debug.debug('DJH**** stop Addr Trigger recursion in ADDR_Addresses_TDTM');
+        	//UTIL_Debug.debug('DJH**** stop Addr Trigger recursion in ADDR_Addresses_TDTM');
             return null;
         }
 

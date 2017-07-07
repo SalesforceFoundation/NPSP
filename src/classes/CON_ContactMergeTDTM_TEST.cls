@@ -315,10 +315,7 @@ public with sharing class CON_ContactMergeTDTM_TEST {
         conWinner.MailingStreet = 'street override';
         conWinner.MailingCity = 'city override';
         conWinner.is_Address_Override__c = true;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         update conWinner;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        
         // here we go!
         Test.startTest();
         merge conWinner conLoser;

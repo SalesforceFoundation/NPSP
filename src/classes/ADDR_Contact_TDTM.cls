@@ -61,7 +61,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         boolean acctHasAddress = false;
         boolean acctChanged = false;
 
-        UTIL_Debug.debug('DJH**** ADDR_Contact_TDTM ' + triggerAction + ' hasRun: ' + ADDR_Addresses_TDTM.cHasRunAddrTrigger);
+        //UTIL_Debug.debug('DJH**** ADDR_Contact_TDTM ' + triggerAction + ' hasRun: ' + ADDR_Addresses_TDTM.cHasRunAddrTrigger);
 
 		// bail out if address mgmt turned off.
         if (UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c)
@@ -198,7 +198,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 // note that we detect whether the address change is coming from the address trigger,
                 // in which case we don't want to create a new address.
                 if (ADDR_Addresses_TDTM.cHasRunAddrTrigger > 0) {
-                	UTIL_Debug.debug('DJH**** stop Addr Trigger recursion in ADDR_Contact_TDTM');
+                	//UTIL_Debug.debug('DJH**** stop Addr Trigger recursion in ADDR_Contact_TDTM');
                     continue;
                 }
 
@@ -215,16 +215,12 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
 
             // set the mailing address for contacts who specify an address lookup or override
         if (listConAddrSet.size() > 0) {
-            // to avoid pushing these address changes to the HH.
-            //ADDR_Addresses_TDTM.hasRunAddrTriggerREAL = true;
             setConAddrFromLookup(listConAddrSet, dmlWrapper, triggerAction);
         }
         
         // reset the mailing address for contacts who no longer have an address override
         if (listConAddrReset.size() > 0) {
         	resetConAddr(listConAddrReset);
-            // to avoid pushing these address changes to the HH.
-            //ADDR_Addresses_TDTM.hasRunAddrTriggerREAL = true;
         }
         
         // update the Latest date fields on any address overrides
@@ -235,12 +231,8 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         if (setConCreateAddr.size() > 0)
             createAddrFromCon(new List<Contact>(setConCreateAddr), dmlWrapper, triggerAction);
 
-        UTIL_Debug.debug('DJH**** processDML about to be called in ADDR_Contact_TDTM');
         TDTM_TriggerHandler.processDML(dmlWrapper);
-        UTIL_Debug.debug('DJH**** processDML finished in ADDR_Contact_TDTM');
-        //ADDR_Addresses_TDTM.hasRunAddrTriggerREAL = false;
         if (listConAddrSet.size() > 0 || listConAddrReset.size() > 0) {
-            // to avoid pushing these address changes to the HH.
             ADDR_Addresses_TDTM.cHasRunAddrTrigger--;
         }
         return null;
