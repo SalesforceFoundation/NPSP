@@ -274,6 +274,39 @@ private class TDTM_DMLgt200_TEST {
                 WHERE npe03__Recurring_Donation__c IN :rds],
                 'There should be exactly ' + (insertCnt*2).format() + ' Installment Opps');
     }
+
+    /*********************************************************************************************************
+    * @description Test creating 200+ new Contacts with a full address
+    *   NOTE: THIS WILL FAIL IN AN ORG WITHOUT THE STATIC FLAG CHANGES
+    */
+    @isTest
+    static void test_addresses() {
+        if (strTestOnly != '*' && strTestOnly != 'test_addresses') return;
+        Test.startTest();
+
+        // Create more than 200 Contact records and then validate that all of the Household Accounts were created
+        List<Contact> contacts = new List<Contact>();
+        for (Integer n=0; n<insertCnt; n++) {
+            contacts.add(new Contact(
+                    FirstName = 'TEST' + n,
+                    LastName = 'TestContact# ' + n,
+                    MailingStreet = '1313 Mockingbird Lane',
+                    MailingCity = 'Munsterville',
+                    MailingState = 'Illinois',
+                    MailingPostalCode = '06123',
+                    MailingCountry = 'United States'
+            ));
+        }
+        database.insert(contacts);
+        Test.stopTest();
+
+        system.AssertEquals(insertCnt, [SELECT Count() FROM Account WHERE RecordType.DeveloperName = 'HH_Account'],
+                'There should be exactly ' + insertCnt.format() + ' Household Account records');
+        system.AssertEquals(insertCnt, [SELECT Count() FROM Address__c WHERE MailingPostalCode__c = '06123'],
+                'There should be exactly ' + insertCnt.format() + ' Address Records');
+
+    }
+
     /*********************************************************************************************************
     * @description Test creating 200+ new Contacts and validate that all 200+ have their account named properly
     */

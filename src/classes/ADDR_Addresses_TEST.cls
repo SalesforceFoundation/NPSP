@@ -315,7 +315,7 @@ public with sharing class ADDR_Addresses_TEST {
             addr.MailingStreet__c = 'New Street' + i;
             addr.MailingCity__c = 'New City' + i;
         }
-        system.assertEquals(0, ADDR_Addresses_TDTM.cHasRunAddrTrigger);
+//        system.assertEquals(0, ADDR_Addresses_TDTM.cHasRunAddrTrigger);
         Test.startTest();
         update listAddrT;
         Test.stopTest();
@@ -349,7 +349,7 @@ public with sharing class ADDR_Addresses_TEST {
         createHHTestData(cHH, cCon);
 
         // now let's delete the Addresses
-        system.assertEquals(0, ADDR_Addresses_TDTM.cHasRunAddrTrigger);
+//        system.assertEquals(0, ADDR_Addresses_TDTM.cHasRunAddrTrigger);
         Test.startTest();
         delete listAddrT;
         Test.stopTest();
@@ -443,7 +443,7 @@ public with sharing class ADDR_Addresses_TEST {
             addr.MailingStreet__c = 'New Street' + i;
             addr.MailingCity__c = 'New City' + i;
         }
-        system.assertEquals(0, ADDR_Addresses_TDTM.cHasRunAddrTrigger);
+//        system.assertEquals(0, ADDR_Addresses_TDTM.cHasRunAddrTrigger);
         Test.startTest();
         update listAddrT;
         Test.stopTest();

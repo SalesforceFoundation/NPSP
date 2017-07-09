@@ -38,11 +38,6 @@
 public class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
-    * @description static flag to prevent recursive call 
-    */
-    public static integer cHasRunAddrTrigger = 0;
-
-    /*******************************************************************************************************
     * @description map from Country name (UPPER CASE) to Country Code
     */
     private static Map<String, String> validCountriesByLabel = new Map<String, String>();
@@ -82,7 +77,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         //UTIL_Debug.debug('DJH**** ADDR_Addresses_TDTM ' + triggerAction + ' hasRun: ' + cHasRunAddrTrigger);
 
         // prevent recursion
-        if (cHasRunAddrTrigger > 0) {
+        if (ADDR_ProcessControl.checkRecursionState()) {
         	//UTIL_Debug.debug('DJH**** stop Addr Trigger recursion in ADDR_Addresses_TDTM');
             return null;
         }
@@ -94,8 +89,9 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
             for (SObject so : listOld) {
                 ID accId = ((Address__c)so).Household_Account__c;
-                if (accId != null)
+                if (accId != null) {
                     mapAccIdAddr.put(accId, null);
+                }
             }
         } else {  
 
@@ -167,15 +163,17 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         
         // AFTER INSERT & AFTER UPDATE & AFTER DELETE
         // now we have which HH Accounts to consider, and which to only use for Address Override updates.
-        cHasRunAddrTrigger++;
+        ADDR_ProcessControl.setRecursionFlag(true);
         
         DmlWrapper dmlWrapper = new DmlWrapper();        
         
-        if (mapAccIdAddr.size() > 0)        
+        if (mapAccIdAddr.size() > 0) {
             refreshCurrentHHAddress(mapAccIdAddr, dmlWrapper, false);
+        }
        
-        if (mapAddrIdAddr.size() > 0) 
-            updateAddrOverrides(mapAddrIdAddr, dmlWrapper);        
+        if (mapAddrIdAddr.size() > 0) {
+            updateAddrOverrides(mapAddrIdAddr, dmlWrapper);
+        }
 
         // we must process dmlWrapper ourselves, so we can extract out the appropriate errors
         // that might occur updating contacts and accounts, and associating those errors with 
@@ -196,7 +194,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                     UTIL_Debug.debug(LoggingLevel.WARN, '**** Address: ' + addr + ' message: ' + error.Full_Message__c);
                 }
             }
-            cHasRunAddrTrigger--;
+            ADDR_ProcessControl.setRecursionFlag(false);
             return null;
         }
 
@@ -211,7 +209,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             if (listAddr.size() > 0)
                 delete listAddr;             
         }
-        cHasRunAddrTrigger--;
+        ADDR_ProcessControl.setRecursionFlag(false);
         return null;
     }    
     
@@ -759,12 +757,12 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         // we'll go thru refreshCurrentHHAddress() again, this time allowing it to do the updates    
         
         // must manually set our semaphore, so when we update contacts and households, they don't try to create additional addresses
-        cHasRunAddrTrigger++;
+        ADDR_ProcessControl.setRecursionFlag(true);
 
         Dmlwrapper dmlWrapper = new Dmlwrapper();
         refreshCurrentHHAddress(mapAccIdAddr, dmlWrapper, false);
         TDTM_TriggerHandler.processDML(dmlWrapper);
-        cHasRunAddrTrigger--;
+        ADDR_ProcessControl.setRecursionFlag(false);
     }
     
     /*******************************************************************************************************

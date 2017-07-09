@@ -197,7 +197,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                ) {
                 // note that we detect whether the address change is coming from the address trigger,
                 // in which case we don't want to create a new address.
-                if (ADDR_Addresses_TDTM.cHasRunAddrTrigger > 0) {
+                if (ADDR_ProcessControl.checkRecursionState()) {
                 	//UTIL_Debug.debug('DJH**** stop Addr Trigger recursion in ADDR_Contact_TDTM');
                     continue;
                 }
@@ -210,7 +210,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
 
         if (listConAddrSet.size() > 0 || listConAddrReset.size() > 0) {
             // to avoid pushing these address changes to the HH.
-            ADDR_Addresses_TDTM.cHasRunAddrTrigger++;
+            ADDR_ProcessControl.setRecursionFlag(true);
         }
 
             // set the mailing address for contacts who specify an address lookup or override
@@ -233,7 +233,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
 
         TDTM_TriggerHandler.processDML(dmlWrapper);
         if (listConAddrSet.size() > 0 || listConAddrReset.size() > 0) {
-            ADDR_Addresses_TDTM.cHasRunAddrTrigger--;
+            ADDR_ProcessControl.setRecursionFlag(false);
         }
         return null;
     }
