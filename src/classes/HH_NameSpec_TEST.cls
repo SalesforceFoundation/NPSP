@@ -740,7 +740,7 @@ private with sharing class HH_NameSpec_TEST {
 
         // refresh all names
         Test.startTest();
-        HH_ProcessControl.inFutureContext = false;             
+//        HH_ProcessControl.inFutureContext = false;
         HH_HouseholdNaming.refreshAllHouseholdNaming(true);
         Test.stopTest();
         
@@ -802,7 +802,7 @@ private with sharing class HH_NameSpec_TEST {
 
         // refresh all names
         Test.startTest();
-        HH_ProcessControl.inFutureContext = false;             
+//        HH_ProcessControl.inFutureContext = false;
         HH_HouseholdNaming.refreshAllHouseholdNaming(true);
         Test.stopTest();
         

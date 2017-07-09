@@ -38,6 +38,15 @@
 @isTest
 private class TDTM_DMLgt200_TEST {
 
+    /*********************************************************************************************************
+    * @description if you only want to run one test in this class, fill in its name here.
+    * if you want to run all tests, then use '*'
+    */
+    private static string strTestOnly = '*';
+
+    /* @description The number of records to insert for these tests. Inserting more than 200 records at once
+    * will cause triggers to be called twice - once for the first group of 200 and then again for the remainder.
+    */
     private static Integer insertCnt = 210;
 
     /*********************************************************************************************************
@@ -46,6 +55,7 @@ private class TDTM_DMLgt200_TEST {
     */
     @isTest
     static void test_contacts_with_affiliations() {
+        if (strTestOnly != '*' && strTestOnly != 'test_contacts_with_affiliations') return;
 
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
                 new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
@@ -61,7 +71,7 @@ private class TDTM_DMLgt200_TEST {
         for (Integer n=0; n<insertCnt; n++) {
             contacts.add(new Contact(
                     FirstName = 'TEST' + n,
-                    LastName = 'Test1000X-' + n,
+                    LastName = 'TestContact# ' + n,
                     Title = 'TestTitle'
             ));
         }
@@ -95,6 +105,7 @@ private class TDTM_DMLgt200_TEST {
     */
     @isTest
     static void test_contacts_with_primary_affiliations() {
+        if (strTestOnly != '*' && strTestOnly != 'test_contacts_with_primary_affiliations') return;
 
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
                 new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
@@ -111,7 +122,7 @@ private class TDTM_DMLgt200_TEST {
         for (Integer n=0; n<insertCnt; n++) {
             contacts.add(new Contact(
                     FirstName = 'TEST' + n,
-                    LastName = 'Test1000X-' + n,
+                    LastName = 'TestContact# ' + n,
                     Title = 'TestTitle',
                     Primary_Affiliation__c = orgAcct.Id
             ));
@@ -131,6 +142,7 @@ private class TDTM_DMLgt200_TEST {
     */
     @isTest
     static void test_contacts_with_relationships() {
+        if (strTestOnly != '*' && strTestOnly != 'test_contacts_with_relationships') return;
 
         Test.startTest();
 
@@ -139,7 +151,7 @@ private class TDTM_DMLgt200_TEST {
         for (Integer n=0; n<insertCnt; n++) {
             contacts.add(new Contact(
                     FirstName = 'TEST' + n,
-                    LastName = 'Test1000X-' + n,
+                    LastName = 'TestContact# ' + n,
                     Title = 'TestTitle'
             ));
         }
@@ -173,6 +185,7 @@ private class TDTM_DMLgt200_TEST {
     */
     @isTest
     static void test_opportunities_with_default_alloc() {
+        if (strTestOnly != '*' && strTestOnly != 'test_opportunities_with_default_alloc') return;
 
         Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
@@ -226,6 +239,8 @@ private class TDTM_DMLgt200_TEST {
     */
     @isTest
     static void test_recurring_donations() {
+        if (strTestOnly != '*' && strTestOnly != 'test_recurring_donations') return;
+
         Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
 
@@ -259,4 +274,55 @@ private class TDTM_DMLgt200_TEST {
                 WHERE npe03__Recurring_Donation__c IN :rds],
                 'There should be exactly ' + (insertCnt*2).format() + ' Installment Opps');
     }
+    /*********************************************************************************************************
+    * @description Test creating 200+ new Contacts and validate that all 200+ have their account named properly
+    */
+    @isTest
+    static void test_household_naming() {
+        if (strTestOnly != '*' && strTestOnly != 'test_household_naming') return;
+
+        //settings
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+                new npo02__Households_Settings__c (
+                        npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                        npo02__Advanced_Household_Naming__c = true,
+                        npo02__Always_Rollup_to_Primary_Contact__c = false,
+                        npo02__Enable_Opp_Rollup_Triggers__c = true,
+                        npo02__Excluded_Account_Opp_Rectypes__c = null,
+                        npo02__Excluded_Account_Opp_Types__c = null,
+                        npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                        npo02__Excluded_Contact_Opp_Types__c = null
+                ));
+
+        Test.startTest();
+
+        // Create more than 200 Contact records and then validate that all of the Household Accounts were created
+        List<Contact> contacts = new List<Contact>();
+        for (Integer n=0; n<insertCnt; n++) {
+            contacts.add(new Contact(
+                    FirstName = 'TEST' + n,
+                    LastName = 'TestContact# ' + n,
+                    MailingStreet = '1313 Mockingbird Lane',
+                    MailingCity = 'Munsterville',
+                    MailingState = 'Illinois',
+                    MailingPostalCode = '06123',
+                    MailingCountry = 'United States'
+            ));
+        }
+        database.insert(contacts);
+
+        // rename all the Contacts
+        Integer n = 0;
+        for (Contact c : contacts) {
+            c.LastName = 'ChangedLastName#' + (n++);
+        }
+        database.update(contacts);
+
+        Test.stopTest();
+
+        for (Contact c : [SELECT Id, FirstName, LastName, Account.Name FROM Contact WHERE Id IN :contacts ORDER BY LastName]) {
+            System.assert(c.Account.Name.contains(c.LastName), 'The Account Name should contain the Contacts last name');
+        }
+    }
+
 }

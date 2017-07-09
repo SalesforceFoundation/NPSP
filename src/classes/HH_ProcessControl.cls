@@ -34,6 +34,27 @@
 * @description Process control class to prevent trigger recursion in async process for household naming 
 */
 public without sharing class HH_ProcessControl {
-	/** @description flag used to prevent recursive renaming of household names. */
-    public static boolean inFutureContext = false;
+
+    /*******************************************************************************************************
+    * @description flag to prevent recursion into the household naming handler/logic
+    */
+    private static Integer recursionFlag = 0;
+
+    /*******************************************************************************************************
+    * @description Increment/Decrement the static flag counter that tracks whether this trigger has been
+    *   called alread
+    * @param b A boolean where true increments the counter and false decrements it.
+    * @return void This method modifies class variables and doesn't return anything.
+    ********************************************************************************************************/
+    public static void setRecursionFlag(boolean b) {
+        recursionFlag += (b ? 1 : -1);
+        if (recursionFlag < 0) {
+            recursionFlag = 0;
+        }
+    }
+
+    /* @description Returns true if the recursionFlag value is greater than 1 */
+    public static Boolean checkRecursionState() {
+        return (recursionFlag > 0);
+    }
 }

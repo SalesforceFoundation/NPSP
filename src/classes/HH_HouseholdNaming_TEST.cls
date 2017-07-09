@@ -190,7 +190,7 @@ public class HH_HouseholdNaming_TEST {
         }  
         
         //turn off the before trigger via our processor:
-        HH_ProcessControl.inFutureContext = true;        
+        HH_ProcessControl.setRecursionFlag(true);
         insert insertlist;
         list<id> householdids = new list<id>();
         

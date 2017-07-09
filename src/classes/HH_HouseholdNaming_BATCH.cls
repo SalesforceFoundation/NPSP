@@ -85,7 +85,7 @@ public class HH_HouseholdNaming_BATCH implements Database.Batchable<SObject> {
     * @return void  
     ********************************************************************************************************/
     public void execute(Database.BatchableContext bc, Sobject[] result) {
-        HH_ProcessControl.inFutureContext = true;     
+        HH_ProcessControl.setRecursionFlag(true);
         
         //first, if this is coming from the VF settings interface, and the user just enabled
         //automatic household naming for the first time, we need to markup
