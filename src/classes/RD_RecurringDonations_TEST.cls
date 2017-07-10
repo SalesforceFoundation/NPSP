@@ -252,8 +252,7 @@ public class RD_RecurringDonations_TEST {
         system.assertEquals(date.newinstance(1970,8,12),installments2[2].CloseDate);
         system.assertEquals(a.id,installments2[0].AccountId);
         UTIL_Debug.debug('**** '+installments2);
-        RD_ProcessControl.setRecursionFlag(false);
-        
+
         delete r2;
         
         //delete should cascade related opps that aren't closed/won
@@ -429,7 +428,6 @@ public class RD_RecurringDonations_TEST {
         integer cOpp =  originalOpps.size();
         system.assert(cOpp == 52 || cOpp == 53);        
         system.assertEquals(100, originalOpps[0].Amount);
-        RD_ProcessControl.setRecursionFlag(false);
         Test.startTest();
         r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodMonthly;
         update r1;
@@ -469,7 +467,6 @@ public class RD_RecurringDonations_TEST {
         r1.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
         r1.npe03__Next_Payment_Date__c = system.today();
        
-        RD_ProcessControl.setRecursionFlag(false);
         Test.startTest();
         insert r1;
         Test.stopTest();
@@ -516,7 +513,6 @@ public class RD_RecurringDonations_TEST {
         integer cOpp =  originalOpps.size();
         system.assert(cOpp == 52 || cOpp == 53);        
         system.assertEquals(100, originalOpps[0].Amount);
-        RD_ProcessControl.setRecursionFlag(false);
         Test.startTest();
         r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodYearly;
         update r1;
@@ -560,7 +556,6 @@ public class RD_RecurringDonations_TEST {
         
         system.assertEquals(12, originalOpps.size());
         system.assertEquals(100, originalOpps[0].Amount);
-        RD_ProcessControl.setRecursionFlag(false);
         Test.startTest();
         r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodWeekly;
         update r1;
@@ -606,7 +601,6 @@ public class RD_RecurringDonations_TEST {
         integer cOpp =  originalOpps.size();
         system.assert(cOpp == 52 || cOpp == 53);        
         system.assertEquals(100, originalOpps[0].Amount);
-        RD_ProcessControl.setRecursionFlag(false);
         Test.startTest();
         r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodQuarterly;
         update r1;
@@ -657,8 +651,7 @@ public class RD_RecurringDonations_TEST {
         string closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
         o.StageName = closedstage;
         o.CloseDate = system.today();
-        RD_ProcessControl.setRecursionFlag(false);
-        Test.startTest();        
+        Test.startTest();
         //update opp
         update o;
         //call the update method
@@ -715,8 +708,7 @@ public class RD_RecurringDonations_TEST {
         o1.StageName = closedstage;
         o1.CloseDate = system.today();
         list<Opportunity> oppList = new list<Opportunity>{o1};
-        RD_ProcessControl.setRecursionFlag(false);
-        Test.startTest();        
+        Test.startTest();
         //update opp
         update oppList;
         //call the update method
@@ -771,8 +763,7 @@ public class RD_RecurringDonations_TEST {
         string closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
         o.StageName = closedstage;
         o.CloseDate = system.today();
-        RD_ProcessControl.setRecursionFlag(false);
-        Test.startTest();        
+        Test.startTest();
         //update opp
         update o;
         //call the update method
@@ -833,8 +824,7 @@ public class RD_RecurringDonations_TEST {
         string closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
         o.StageName = closedstage;
         o.CloseDate = system.today();
-        RD_ProcessControl.setRecursionFlag(false);
-        Test.startTest();        
+        Test.startTest();
         //update opp
         update o;
         //call the update method
@@ -895,8 +885,7 @@ public class RD_RecurringDonations_TEST {
         string closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
         o.StageName = closedstage;
         o.CloseDate = system.today();
-        RD_ProcessControl.setRecursionFlag(false);
-        Test.startTest();        
+        Test.startTest();
         //update opp
         update o;
         //call the update method        
@@ -957,8 +946,7 @@ public class RD_RecurringDonations_TEST {
         string closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
         o.StageName = closedstage;
         o.CloseDate = system.today();
-        RD_ProcessControl.setRecursionFlag(false);
-        Test.startTest();        
+        Test.startTest();
         //update opp
         update o;
         //call the update method
@@ -1020,8 +1008,7 @@ public class RD_RecurringDonations_TEST {
         string closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
         o.StageName = closedstage;
         o.CloseDate = system.today();
-        RD_ProcessControl.setRecursionFlag(false);
-        Test.startTest();        
+        Test.startTest();
         //update opp
         update o;
         //call the update method
