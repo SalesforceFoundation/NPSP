@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Cumulus</fullName>
     <types>
@@ -26,6 +26,7 @@
         <members>ADDR_IValidator</members>
         <members>ADDR_MockGoogleGeoAPIResponse_TEST</members>
         <members>ADDR_MockHttpRespGenerator_TEST</members>
+        <members>ADDR_ProcessControl</members>
         <members>ADDR_Seasonal_SCHED</members>
         <members>ADDR_SmartyStreets_Gateway</members>
         <members>ADDR_SmartyStreets_Validator</members>
@@ -176,6 +177,7 @@
         <members>PSC_PartialSoftCredit_TEST</members>
         <members>RD_AddDonationsBTN_CTRL</members>
         <members>RD_BulkTests_TEST</members>
+        <members>MSMITH_TestGAUTrigger</members>
         <members>RD_CascadeDeleteLookups_TDTM</members>
         <members>RD_CascadeDeleteLookups_TEST</members>
         <members>RD_InstallScript_BATCH</members>
@@ -255,6 +257,7 @@
         <members>TDTM_Config_API</members>
         <members>TDTM_Config_API_Test</members>
         <members>TDTM_DefaultConfig</members>
+        <members>TDTM_DMLgt200_TEST</members>
         <members>TDTM_ObjectDataGateway</members>
         <members>TDTM_Runnable</members>
         <members>TDTM_Runnable_TEST</members>
@@ -291,8 +294,6 @@
         <members>UTIL_UnitTestData_TEST</members>
         <members>UTIL_Version_API</members>
         <members>UTIL_iSoqlListViewConsumer</members>
-        <members>TDTM_DMLgt200_TEST</members>
-        <members>ADDR_ProcessControl</members>
         <name>ApexClass</name>
     </types>
     <types>

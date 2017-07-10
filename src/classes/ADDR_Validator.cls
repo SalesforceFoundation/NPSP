@@ -101,7 +101,7 @@ public with sharing class ADDR_Validator {
 	                        //setting the flag to avoid running ADDR_Validator_TDTM again after the verification
                             ADDR_ProcessControl.setValidationRecursionFlag(true);
 	                        //updating the addresses with the verified version
-	                        update validator.verifyRecords(avList, settings);
+                            update validator.verifyRecords(avList, settings);
                             ADDR_ProcessControl.setValidationRecursionFlag(false);
 	                    } else {
 	                        ERR_Handler.processError(new ValidationException(Label.Addr_Verification_Wrong_Interface), ERR_Handler_API.Context.ADDR);
