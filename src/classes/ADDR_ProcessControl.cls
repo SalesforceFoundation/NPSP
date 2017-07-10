@@ -42,8 +42,8 @@ public class ADDR_ProcessControl {
     private static Integer recursionFlag = 0;
 
     /*******************************************************************************************************
-    * @description Increment/Decrement the static flag counter that tracks whether this trigger has been
-    *   called alread
+    * @description Increment/Decrement the static flag counter that tracks whether the Address processing
+    *    trigger has been called already
     * @param b A boolean where true increments the counter and false decrements it.
     * @return void This method modifies class variables and doesn't return anything.
     ********************************************************************************************************/
@@ -58,4 +58,36 @@ public class ADDR_ProcessControl {
     public static Boolean checkRecursionState() {
         return (recursionFlag > 0);
     }
+
+	/*******************************************************************************************************
+    * @description Simple static flag to prevent execution of the address validation triggers
+    */
+    private static Integer validationRecursionFlag = 0;
+    public static Boolean doNotExecuteValidationTrigger;
+
+    /* @description Returns true if the validationRecursionFlag value is greater than 1 */
+    public static Boolean checkValidationRecursionState() {
+        return (validationRecursionFlag > 0);
+    }
+
+    /*******************************************************************************************************
+    * @description Increment/Decrement the static flag counter used to prevent Address Validation recursion
+    * @param b A boolean where true increments the counter and false decrements it.
+    * @return void This method modifies class variables and doesn't return anything.
+    ********************************************************************************************************/
+    public static void setValidationRecursionFlag(boolean b) {
+        validationRecursionFlag += (b ? 1 : -1);
+        if (validationRecursionFlag < 0) {
+            validationRecursionFlag = 0;
+        }
+    }
+
+	/*******************************************************************************************************
+    * @description To support DML operations with more than 200 records, use a static Set of Id's that
+    * have been passed to the verifyAddressRecords() method. This allows for a recursion check that goes
+    * by the Id's of the records as opposed to a simple boolean.
+    */
+    public static Set<Id> processedIdsForValidation = new Set<Id>();
+
+
 }

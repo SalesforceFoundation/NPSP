@@ -47,7 +47,7 @@ private class TDTM_DMLgt200_TEST {
     /* @description The number of records to insert for these tests. Inserting more than 200 records at once
     * will cause triggers to be called twice - once for the first group of 200 and then again for the remainder.
     */
-    private static Integer insertCnt = 210;
+    private static Integer insertCnt = 210  ;
 
     /*********************************************************************************************************
     * @description Test creating 200+ Contacts with Affiliations
@@ -356,6 +356,46 @@ private class TDTM_DMLgt200_TEST {
         for (Contact c : [SELECT Id, FirstName, LastName, Account.Name FROM Contact WHERE Id IN :contacts ORDER BY LastName]) {
             System.assert(c.Account.Name.contains(c.LastName), 'The Account Name should contain the Contacts last name');
         }
+    }
+
+    /*********************************************************************************************************
+    * @description Create more than 200 Contact records and then validate that all of the Addresses were verified
+    *   NOTE: THIS WILL FAIL IN AN ORG WITHOUT THE STATIC FLAG CHANGES
+    */
+    static testMethod void test_address_validation() {
+        if (strTestOnly != '*' && strTestOnly != 'test_address_validation') return;
+
+        ADDR_Validator_TEST.createDefaultSettings();
+        Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
+
+        // Create more than 200 Contact records and then validate that all of the Addresses were verified
+        List<Contact> contacts = new List<Contact>();
+        for (Integer n=0; n<insertCnt; n++) {
+            contacts.add(new Contact(
+                    FirstName = 'TEST' + n,
+                    LastName = 'TestContact# ' + n,
+                    MailingStreet = 'multiple-address',
+                    MailingCity = 'Cupertino',
+                    MailingState = 'California',
+                    MailingPostalCode = '95014',
+                    MailingCountry = 'United States'
+            ));
+        }
+        Test.StartTest();
+        database.insert(contacts);
+        Test.StopTest();
+
+        //check household got created for contacts
+        system.AssertEquals(insertCnt, [SELECT Count() FROM Account WHERE RecordType.DeveloperName = 'HH_Account'],
+                'There should be exactly ' + insertCnt.format() + ' Household Account records');
+
+        // validate that there all address records were validated
+        system.AssertEquals(insertCnt, [SELECT Count() FROM Address__c WHERE Verification_Status__c = :Label.Addr_Verified],
+                'There should be exactly ' + insertCnt.format() + ' Validated Address records');
+
+        // validate that there all contact addresses were fixed
+        system.AssertEquals(insertCnt, [SELECT Count() FROM Contact WHERE MailingPostalCode = '95014-2083'],
+                'There should be exactly ' + insertCnt.format() + ' Updated Contact Addresses');
     }
 
 }
