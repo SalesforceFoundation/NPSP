@@ -385,17 +385,75 @@ private class TDTM_DMLgt200_TEST {
         database.insert(contacts);
         Test.StopTest();
 
-        //check household got created for contacts
+        // check household created for contacts
         system.AssertEquals(insertCnt, [SELECT Count() FROM Account WHERE RecordType.DeveloperName = 'HH_Account'],
                 'There should be exactly ' + insertCnt.format() + ' Household Account records');
 
-        // validate that there all address records were validated
+        // validate that all address records were validated
         system.AssertEquals(insertCnt, [SELECT Count() FROM Address__c WHERE Verification_Status__c = :Label.Addr_Verified],
                 'There should be exactly ' + insertCnt.format() + ' Validated Address records');
 
-        // validate that there all contact addresses were fixed
+        // validate that all contact addresses were fixed
         system.AssertEquals(insertCnt, [SELECT Count() FROM Contact WHERE MailingPostalCode = '95014-2083'],
                 'There should be exactly ' + insertCnt.format() + ' Updated Contact Addresses');
     }
 
+    /**
+     * @description Tests issue #1960 where changing the number of OpportunityForecastMonths and then executing the
+     * RD batch job does not properly create all of the necessary default allocations records.
+     *   NOTE: THIS WILL FAIL IN AN ORG WITHOUT THE STATIC FLAG CHANGES
+     */
+    @isTest
+    private static void testAllocationsCreatedForManyOpenEndedRecurringDonations() {
+        if (strTestOnly != '*' && strTestOnly != 'testAllocationsCreatedForManyOpenEndedRecurringDonations') return;
+
+        Contact c = UTIL_UnitTestData_TEST.getContact();
+        insert c;
+
+        npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+                new npe03__Recurring_Donations_Settings__c(
+                        npe03__Opportunity_Forecast_Months__c = 1,
+                        npe03__Maximum_Donations__c = 12,
+                        npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()
+                ));
+
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(
+                Name = 'Test GAU'
+        );
+        insert defaultGau;
+
+        UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(new Allocations_Settings__c(
+                Default_Allocations_Enabled__c = true, Default__c = defaultGau.Id));
+
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
+        for (Integer i = 0; i < 20; i++) {
+            rds.add(new npe03__Recurring_Donation__c(
+                    npe03__Contact__c = c.Id,
+                    npe03__Amount__c = 100.0,
+                    npe03__Installment_Period__c = 'Monthly',
+                    npe03__Open_Ended_Status__c = 'Open'
+            ));
+        }
+
+        insert rds;
+
+        Test.startTest();
+
+        rdSettings.npe03__Opportunity_Forecast_Months__c = 12;
+        STG_PanelRDBatch_CTRL rdBatch = new STG_PanelRDBatch_CTRL();
+        rdBatch.runBatch();
+
+        Test.stopTest();
+
+        List<Opportunity> createdOpportunities = [SELECT Id FROM Opportunity WHERE npe03__Recurring_Donation__c IN :rds];
+
+        // Validate that there are 240 (12*20) Opps, Payments and Allocations created by the batch job.
+        System.assertEquals(240, createdOpportunities.size(), 'There should be 240 generated Installment Opportunities created');
+
+        System.assertEquals(240, [SELECT Count() FROM npe01__OppPayment__c WHERE npe01__Opportunity__c IN :createdOpportunities],
+            'There should be 240 generated payment records');
+
+        System.assertEquals(240, [SELECT Count() FROM Allocation__c WHERE Opportunity__c IN :createdOpportunities],
+                'There should be 240 generated default allocations records');
+    }
 }
