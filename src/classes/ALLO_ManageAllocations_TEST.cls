@@ -90,8 +90,6 @@ private class ALLO_ManageAllocations_TEST {
         ctrl.addRow();
         system.assertEquals(2,ctrl.listAllo.size(),'Adding a row increases the size of the allocation list.');
 
-        ALLO_Allocations_TDTM.resetFlags(false);
-
         ctrl.listAllo[0].Percent__c = 50;
         ctrl.listAllo[0].General_Accounting_Unit__c = gau.id;
         ctrl.rowNumber = 1;
@@ -142,8 +140,6 @@ private class ALLO_ManageAllocations_TEST {
         //delete the first allocation on the list
         ctrl.rowNumber = 0;
         ctrl.delRow();
-
-        ALLO_Allocations_TDTM.resetFlags(false);
 
         ctrl.listAllo[1].Amount__c = 5;
         ctrl.listAllo[1].General_Accounting_Unit__c = campaigngau.id;
@@ -199,8 +195,6 @@ private class ALLO_ManageAllocations_TEST {
         //delete the first allocation on the list
         ctrl.rowNumber = 0;
         ctrl.delRow();
-
-        ALLO_Allocations_TDTM.resetFlags(false);
 
         ctrl.listAllo[1].Amount__c = 5;
         ctrl.listAllo[1].General_Accounting_Unit__c = gau.id;
