@@ -36,11 +36,6 @@
 */
 public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
 
-    // static flags to prevent some recursive calls 
-    private static boolean doNotRunForContacts = false;
-    private static boolean hasRunForAffiliations = false;
-    private static boolean hasRunForAccounts = false;
-
     /*******************************************************************************************************
     * @description Trigger Handler on Contact, Account, or Affiliation, dispatches to the correct method
     * based on object type.
@@ -53,32 +48,40 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
     ********************************************************************************************************/    
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
-            
+
+        DmlWrapper wrapper;
+
         // dispatch to the correct handler
-        if (objResult.getsObjectType() == Contact.sObjectType && !doNotRunForContacts) {
-            DmlWrapper wrapper = runContactTriggerHandler(newlist, oldlist, triggerAction, objResult);
-            
-            // we used to prevent any further recursive call with contacts and affiliations,
-            // but it turns out in some scenarios, before the AfterInsert of a contact calls us,
-            // another trigger handler may update the contact, causing the AfterUpdate to come thru.
-            // if we set the flag to stop recursion, then we won't process the AfterInsert, where
-            // we create the initial affiliation. thus we no longer set a recursion prevention flag,
-            // and we only use doNotRunForContacts where we actually have a use case to prevent recursion.
-            // as for the Affiliations and Account recursion flags, we have no current known issues with
-            // their recursion prevention, so we left that as is.
-            //
-            // hasRunForContacts = true;
-            
-            return wrapper;
-        } else if (objResult.getsObjectType() == npe5__Affiliation__c.sObjectType && !hasRunForAffiliations) {
-            DmlWrapper wrapper = runAfflTriggerHandler(newlist, oldlist, triggerAction, objResult);
-            return wrapper;
-        } else if (objResult.getsObjectType() == Account.sObjectType && !hasRunForAccounts) {
-            DmlWrapper wrapper = runAccountTriggerHandler(newlist, oldlist, triggerAction, objResult);
-            return wrapper;
+        if (objResult.getsObjectType() == Contact.sObjectType && AFFL_ProcessControl.doNotRunForContacts == 0) {
+            wrapper = runContactTriggerHandler(newlist, oldlist, triggerAction, objResult);
+
+        } else if (objResult.getsObjectType() == npe5__Affiliation__c.sObjectType && AFFL_ProcessControl.hasRunForAffiliations == 0) {
+            AFFL_ProcessControl.hasRunForAffiliations++;
+            wrapper = runAfflTriggerHandler(newlist, oldlist, triggerAction, objResult);
+
+        } else if (objResult.getsObjectType() == Account.sObjectType && AFFL_ProcessControl.hasRunForAccounts == 0) {
+            AFFL_ProcessControl.hasRunForAccounts++;
+            wrapper = runAccountTriggerHandler(newlist, oldlist, triggerAction, objResult);
+
         } else {
             return null;
         }
+
+        // Process the DML
+        TDTM_TriggerHandler.processDML(wrapper);
+
+        // Decrement the recursion counters based on related processing logic
+        if (objResult.getsObjectType() == npe5__Affiliation__c.sObjectType) {
+            AFFL_ProcessControl.hasRunForAffiliations--;
+            if (AFFL_ProcessControl.doNotRunForContacts > 0) {
+                AFFL_ProcessControl.doNotRunForContacts--;
+            }
+
+        } else if (objResult.getsObjectType() == Account.sObjectType) {
+            AFFL_ProcessControl.hasRunForAccounts--;
+        }
+
+        return null;
     }
                 
     /*******************************************************************************************************
@@ -275,12 +278,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
             }
 
         }
-
-        // perform all dml before exiting this handler method, being sure to set and clear flags before/after
-        hasRunForAccounts = true;
-        TDTM_TriggerHandler.processDml(dmlWrapper);
-        hasRunForAccounts = false;
-        return null;
+        return dmlWrapper;
     }
 
 
@@ -546,7 +544,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
             }
 
             if (!conForUpdate.isEmpty()) {
-                doNotRunForContacts = true;
+                AFFL_ProcessControl.doNotRunForContacts++;
                 dmlWrapper.objectsToUpdate.addAll((List<SObject>)conForUpdate);
             }
         }
@@ -571,13 +569,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
             dmlWrapper.objectsToUpdate.addAll((List<SObject>)afflForUpdate);
         }
 
-        // perform all dml before exiting this handler method, being sure to set and clear flags before/after
-        hasRunForAffiliations = true;
-        TDTM_TriggerHandler.processDml(dmlWrapper);
-        hasRunForAffiliations = false;
-        doNotRunForContacts = false;
-
-        return null;
+        return dmlWrapper;
     }
     
     /*******************************************************************************************************

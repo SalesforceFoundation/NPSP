@@ -172,7 +172,11 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             
             if (triggerAction == TDTM_Runnable.Action.AfterInsert)
                 copyRecurringDonationCampaignAllocations(listOppsForProcessing);
-            
+
+            // TO-DO: If a null Opp.Amount field is populated on an Update AND the Opportunity has an attached
+            // campaign that has Allocations on it, the action below will NOT set the default allocations on the
+            // Opportunity using the allocation records from the Campaign. It will use the global default Allocation
+            // in the NPSP Settings if there is one though.
             else if (triggerAction == TDTM_Runnable.Action.AfterUpdate)
                 opportunityAmountCurrencyChange(listOppsForProcessing);
         }

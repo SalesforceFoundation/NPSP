@@ -191,26 +191,28 @@ private class TDTM_DMLgt200_TEST {
         insert c;
         c = [SELECT Id, AccountId FROM Contact WHERE Id = :c.Id LIMIT 1];
 
-        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(
+        General_Accounting_Unit__c gau1 = new General_Accounting_Unit__c(
                 Name = 'TestGAU',
                 Active__c = True
         );
-        insert gau;
+        General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(
+                Name = 'DefaultForCampaign',
+                Active__c = True
+        );
+        insert new List<General_Accounting_Unit__c>{gau1, gau2};
+
+        UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(new Allocations_Settings__c(
+                Default_Allocations_Enabled__c = true, Default__c = gau1.Id));
 
         Campaign camp = new Campaign(Name = 'UNITTEST', IsActive = True);
         insert camp;
 
         Allocation__c campAlloc = new Allocation__c(
                 Campaign__c = camp.Id,
-                General_Accounting_Unit__c = gau.Id,
+                General_Accounting_Unit__c = gau2.Id,
                 Percent__c = 100
         );
         insert campAlloc;
-
-        UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(new Allocations_Settings__c(
-                Default_Allocations_Enabled__c = true, Default__c = gau.Id));
-
-        ALLO_Allocations_TDTM.resetFlags(false);
 
         Test.startTest();
 
@@ -220,16 +222,28 @@ private class TDTM_DMLgt200_TEST {
             opps.add(new Opportunity(
                     Name = 'MASS INSERT TEST ' + n,
                     Primary_Contact__c = c.Id,
-                    CloseDate = Date.Today().addMonths(1),
-                    Amount = 100,
                     CampaignId = camp.Id,
+                    CloseDate = Date.Today().addMonths(1),
                     StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
             ));
         }
         database.insert(opps);
+
+        system.AssertEquals(0, [SELECT Count() FROM Allocation__c
+                                        WHERE Opportunity__c IN :opps],
+                'There should be exactly zero default Allocations');
+
+        // Populate the Amount field on the Opportunity to allow the allocations to be applied
+        for (Opportunity o : opps) {
+            o.Amount = 100;
+        }
+        database.update(opps);
+
         Test.stopTest();
+        // NOTE: For now, validating that it's applying the Settings Default GAU as opposed to the
+        // the GAU that is attached to the Campaign.
         system.AssertEquals(insertCnt, [SELECT Count() FROM Allocation__c
-        WHERE Opportunity__c IN :opps],
+                                        WHERE Opportunity__c IN :opps AND General_Accounting_Unit__c = :gau1.Id],
                 'There should be exactly ' + insertCnt.format() + ' default Allocations');
     }
 
