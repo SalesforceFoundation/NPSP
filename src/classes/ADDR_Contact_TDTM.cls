@@ -116,7 +116,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 } else if (isContactAddressEmpty(con) && acctHasAddress) {
                 	// if the contact has no address specified and the household has a default address, pick up the hh default.
                     listConAddrReset.add(con);                	
-                }
+                } 
             }
             
             // BEFORE UPDATE
@@ -391,6 +391,12 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             	// record the match in the contact
             	if (isBefore) {
                     con.Current_Address__c = addrDup.Id;
+                    
+                    //reset the Primary Address Type only; resetting other fields on Contact will create a new Address
+                    con.npe01__Primary_Address_Type__c = con.npe01__Primary_Address_Type__c == null
+                        ? addrDup.Address_Type__c
+                        : con.npe01__Primary_Address_Type__c;
+                       
             	} else { 	                
 	                // if it is a fuzzy match, not exact, then we want to update the existing address.
 	                if (ADDR_Addresses_TDTM.isAddressChanged(addrNew, addrDup, true)) {
@@ -489,42 +495,4 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         	}
         }         
     }
-
-    /*******************************************************************************************************
-    * @description For these merge winner Contacts, update their address if using default, or if using
-    * an override, copy the override to the household (avoiding dupes);
-    * @param listCon list of Contacts 
-    * @return void  
-    public static void handleContactMergeAddresses(list<Contact> listCon) {
-        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
-        list<Contact> listConAddrReset = new list<Contact>();
-        list<Contact> listConCreateAddr = new list<Contact>();
- 
-        for (Contact con : listCon) {
-	         // if no override, refill from the Default Address
-	        if (!con.is_Address_Override__c) {
-	            listConAddrReset.add(con);
-	        } else { // create a new address on the account
-	            listConCreateAddr.add(con);                    
-	        }
-        }                
-    
-         // reset the mailing address for contacts who no longer have an address override
-        if (listConAddrReset.size() > 0) {
-            resetConAddr(listConAddrReset);
-            // to avoid pushing these address changes to the HH.
-            ADDR_Addresses_TDTM.hasRunAddrTrigger = true;
-            // update them
-            dmlWrapper.objectsToUpdate.addAll((list<SObject>)listConAddrReset);
-        }
- 
-         // create new Address override objects
-        if (listConCreateAddr.size() > 0) {
-            createAddrFromCon(listConCreateAddr, dmlWrapper, TDTM_Runnable.Action.BeforeUpdate);
-        }
-        
-        TDTM_TriggerHandler.ProcessDml(dmlWrapper);
-    }
-    ********************************************************************************************************/
-
 }
