@@ -308,24 +308,12 @@ private class TDTM_DMLgt200_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Test creating 200+ new Contacts and validate that all 200+ have their account named properly
+    * @description Test creating 200+ new Contacts and validate that all 200+ have their account named properly.
+    * Not testing Household object with this logic.
     */
     @isTest
-    static void test_household_naming() {
-        if (strTestOnly != '*' && strTestOnly != 'test_household_naming') return;
-
-        //settings
-        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
-                new npo02__Households_Settings__c (
-                        npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
-                        npo02__Advanced_Household_Naming__c = true,
-                        npo02__Always_Rollup_to_Primary_Contact__c = false,
-                        npo02__Enable_Opp_Rollup_Triggers__c = true,
-                        npo02__Excluded_Account_Opp_Rectypes__c = null,
-                        npo02__Excluded_Account_Opp_Types__c = null,
-                        npo02__Excluded_Contact_Opp_Rectypes__c = null,
-                        npo02__Excluded_Contact_Opp_Types__c = null
-                ));
+    static void test_household_account_naming() {
+        if (strTestOnly != '*' && strTestOnly != 'test_household_account_naming') return;
 
         Test.startTest();
 
@@ -333,16 +321,19 @@ private class TDTM_DMLgt200_TEST {
         List<Contact> contacts = new List<Contact>();
         for (Integer n=0; n<insertCnt; n++) {
             contacts.add(new Contact(
-                    FirstName = 'TEST' + n,
-                    LastName = 'TestContact# ' + n,
-                    MailingStreet = '1313 Mockingbird Lane',
-                    MailingCity = 'Munsterville',
-                    MailingState = 'Illinois',
-                    MailingPostalCode = '06123',
-                    MailingCountry = 'United States'
+                FirstName = 'TEST' + n,
+                LastName = 'TestContact# ' + n ,
+                MailingStreet = '1313 Mockingbird Lane',
+                MailingCity = 'Munsterville',
+                MailingState = 'Illinois',
+                MailingPostalCode = '06123',
+                MailingCountry = 'United States'
             ));
         }
         database.insert(contacts);
+
+        system.AssertEquals(insertCnt, [SELECT Count() FROM Account WHERE RecordType.DeveloperName = 'HH_Account'],
+                'There should be exactly ' + insertCnt.format() + ' Accounts');
 
         // rename all the Contacts
         Integer n = 0;
@@ -362,7 +353,8 @@ private class TDTM_DMLgt200_TEST {
     * @description Create more than 200 Contact records and then validate that all of the Addresses were verified
     *   NOTE: THIS WILL FAIL IN AN ORG WITHOUT THE STATIC FLAG CHANGES
     */
-    static testMethod void test_address_validation() {
+    @isTest
+    static void test_address_validation() {
         if (strTestOnly != '*' && strTestOnly != 'test_address_validation') return;
 
         ADDR_Validator_TEST.createDefaultSettings();

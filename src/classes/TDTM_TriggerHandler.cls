@@ -93,6 +93,9 @@ public class TDTM_TriggerHandler {
             //Run the relevant classes
             for (SObject classToCall : classesToCall) {
                 TDTM_Runnable.DmlWrapper dmlWrapperLocal = new TDTM_Runnable.DmlWrapper();
+
+                //UTIL_Debug.debug(LoggingLevel.WARN, '****Calling TDTM Handler - ' + (String)classToCall.get('Class__c') + ' for ' +
+                //        describeObj.getLocalName() + ': ' + thisAction + ' with ' + (newList != null ? newList : oldList).size() + ' records');
                 
                 try {
                     dmlWrapperLocal = runClass(classToCall, newList, OldList, thisAction, describeObj);
