@@ -47,6 +47,7 @@
         <members>ALLO_ManageAllocations_TEST</members>
         <members>ALLO_Multicurrency_TDTM</members>
         <members>ALLO_Multicurrency_TEST</members>
+        <members>ALLO_ProcessControl</members>
         <members>ALLO_RollupBTN_CTRL</members>
         <members>ALLO_Rollup_SCHED</members>
         <members>ALLO_Rollup_TEST</members>

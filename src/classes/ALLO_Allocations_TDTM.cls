@@ -37,9 +37,6 @@
 */
 public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
-    /** @description Static flag to prevent recursion */
-    private static integer recursionFlag = 0;
-
     /** @description A map of allocation parent id to alloWrapper class; holds all relevant allocations data for this transaction. */
     public map<id,alloWrapper> mapWrapper = new map<id,alloWrapper>();
     /** @description Allocations settings. */
@@ -86,25 +83,25 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         }
 
         // dispatch to the correct handler
-        if (objResult.getsObjectType() == Allocation__c.sObjectType && recursionFlag == 0 &&
+        if (objResult.getsObjectType() == Allocation__c.sObjectType && !ALLO_ProcessControl.checkRecursionState() &&
             (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate)) {
 
             runAllocationBeforeTriggerHandler(newlist, oldlist, triggerAction, objResult);
-        } else if (objResult.getsObjectType() == Allocation__c.sObjectType && recursionFlag == 0 &&
+        } else if (objResult.getsObjectType() == Allocation__c.sObjectType && !ALLO_ProcessControl.checkRecursionState() &&
             (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate || triggerAction == TDTM_Runnable.Action.AfterDelete)) {
 
             runAllocationAfterTriggerHandler(newlist, oldlist, triggerAction, objResult);
             //setting before to true for afterDelete case, to avoid running triggers on DML wrapper objects
-        } else if (objResult.getsObjectType() == Opportunity.sObjectType && recursionFlag == 0) {
+        } else if (objResult.getsObjectType() == Opportunity.sObjectType && !ALLO_ProcessControl.checkRecursionState()) {
 
             runOpportunityTriggerHandler(newlist, oldlist, triggerAction, objResult);
         }
 
         // Increment the recursion flag, process the DML, and then decrement the recursion flag
-        resetFlags(true);
+        ALLO_ProcessControl.setRecursionFlag(true);
         TDTM_TriggerHandler.processDML(dmlWrapper);
         dmlWrapper = null;
-        resetFlags(false);
+        ALLO_ProcessControl.setRecursionFlag(false);
 
         return null;
     }
@@ -723,18 +720,5 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         if (ALLO_Multicurrency_TDTM.isMultiCurrency())
             defaultAllo.put('CurrencyIsoCode',opp.get('CurrencyIsoCode'));
         return defaultAllo;
-    }
-
-    /*******************************************************************************************************
-    * @description Increment/Decrement the static flag counter that tracks whether this trigger has been
-    *   called alread
-    * @param b A boolean where true increments the counter and false decrements it.
-    * @return void This method modifies class variables and doesn't return anything.
-    ********************************************************************************************************/
-    public static void resetFlags(boolean b) {
-        recursionFlag += (b ? 1 : -1);
-        if (recursionFlag < 0) {
-            recursionFlag = 0;
-        }
     }
 }
