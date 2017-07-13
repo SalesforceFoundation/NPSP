@@ -629,6 +629,7 @@
         <members>DataImport__c.HouseholdAccountImported__c</members>
         <members>DataImport__c.Household_Phone__c</members>
         <members>DataImport__c.ImportedDate__c</members>
+        <members>DataImport__c.NPSP_Data_Import_Batch__c</members>
         <members>DataImport__c.PaymentImportStatus__c</members>
         <members>DataImport__c.PaymentImported__c</members>
         <members>DataImport__c.Payment_Check_Reference_Number__c</members>
@@ -1000,6 +1001,7 @@
         <members>bdiHouseholdModelRequired</members>
         <members>bdiIgnored</members>
         <members>bdiImported</members>
+        <members>bdiInvalidBatchId</members>
         <members>bdiMatched</members>
         <members>bdiMatchedBest</members>
         <members>bdiMatchedId</members>

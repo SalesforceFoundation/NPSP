@@ -966,6 +966,19 @@
         <type>DateTime</type>
     </fields>
     <fields>
+        <fullName>NPSP_Data_Import_Batch__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <inlineHelpText>an optional NPSP Data Import Batch this record belongs to</inlineHelpText>
+        <label>NPSP Data Import Batch</label>
+        <referenceTo>DataImportBatch__c</referenceTo>
+        <relationshipLabel>NPSP Data Imports</relationshipLabel>
+        <relationshipName>NPSP_Data_Imports</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
         <fullName>PaymentImportStatus__c</fullName>
         <externalId>false</externalId>
         <label>Payment Import Status</label>
