@@ -136,12 +136,11 @@ private with sharing class BDI_DataImport_TEST2 {
         // instantiate the controller
         BDI_DataImport_CTRL ctrl = new BDI_DataImport_CTRL();
         
-        ctrl.diSettings.Account_Custom_Unique_ID__c = 'Name';
+        ctrl.diSettings.Contact_Custom_Unique_ID__c = 'bad field';
         ctrl.importData();
         system.assertEquals(false, ctrl.batchRunning);
         
-        ctrl.diSettings.Account_Custom_Unique_ID__c = null;
-        ctrl.diSettings.Account_Custom_Unique_ID__c = 'Lastname';        
+        ctrl.diSettings.Account_Custom_Unique_ID__c = 'another bad field';
         ctrl.importData();
         system.assertEquals(false, ctrl.batchRunning);
         

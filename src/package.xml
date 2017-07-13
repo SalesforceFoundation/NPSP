@@ -291,6 +291,7 @@
         <members>UTIL_UnitTestData_TEST</members>
         <members>UTIL_Version_API</members>
         <members>UTIL_iSoqlListViewConsumer</members>
+        <members>BDI_DataImportBatch_SEL</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -1582,6 +1583,7 @@
         <members>Batch_Data_Entry_Settings__c</members>
         <members>Batch__c</members>
         <members>DataImport__c</members>
+        <members>DataImportBatch__c</members>
         <members>Data_Import_Settings__c</members>
         <members>Engagement_Plan_Task__c</members>
         <members>Engagement_Plan_Template__c</members>
