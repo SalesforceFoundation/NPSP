@@ -21,6 +21,10 @@
         <type>Default</type>
     </actionOverrides>
     <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
         <actionName>List</actionName>
         <type>Default</type>
     </actionOverrides>
@@ -129,45 +133,37 @@
         <externalId>false</externalId>
         <inlineHelpText>Defines how the Data Importer should handle matching Donations. You must choose a value.</inlineHelpText>
         <label>Donation Matching Behavior</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Do Not Match</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>No Match</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Single Match</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Single Match or Create</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Best Match</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Best Match or Create</fullName>
+                <default>false</default>
+            </picklistValues>
+            <restrictedPicklist>true</restrictedPicklist>
+            <sorted>false</sorted>
+        </picklist>
         <required>true</required>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
-        <valueSet>
-            <restricted>true</restricted>
-            <valueSetDefinition>
-                <sorted>false</sorted>
-                <value>
-                    <fullName>Do Not Match</fullName>
-                    <default>false</default>
-                    <label>Do Not Match</label>
-                </value>
-                <value>
-                    <fullName>No Match</fullName>
-                    <default>false</default>
-                    <label>No Match</label>
-                </value>
-                <value>
-                    <fullName>Single Match</fullName>
-                    <default>false</default>
-                    <label>Single Match</label>
-                </value>
-                <value>
-                    <fullName>Single Match or Create</fullName>
-                    <default>false</default>
-                    <label>Single Match or Create</label>
-                </value>
-                <value>
-                    <fullName>Best Match</fullName>
-                    <default>false</default>
-                    <label>Best Match</label>
-                </value>
-                <value>
-                    <fullName>Best Match or Create</fullName>
-                    <default>false</default>
-                    <label>Best Match or Create</label>
-                </value>
-            </valueSetDefinition>
-        </valueSet>
     </fields>
     <fields>
         <fullName>Donation_Matching_Implementing_Class__c</fullName>
@@ -201,5 +197,4 @@
     <pluralLabel>NPSP Data Import Batches</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
-    <visibility>Public</visibility>
 </CustomObject>

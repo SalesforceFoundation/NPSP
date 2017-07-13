@@ -1681,6 +1681,12 @@
         <members>Contact-iw</members>
         <members>Contact-ja</members>
         <members>Contact-nl_NL</members>
+        <members>DataImportBatch__c-de</members>
+        <members>DataImportBatch__c-en_US</members>
+        <members>DataImportBatch__c-es</members>
+        <members>DataImportBatch__c-fr</members>
+        <members>DataImportBatch__c-ja</members>
+        <members>DataImportBatch__c-nl_NL</members>
         <members>DataImport__c-de</members>
         <members>DataImport__c-en_US</members>
         <members>DataImport__c-es</members>
@@ -1900,6 +1906,7 @@
         <members>Batch__c-Batch Layout</members>
         <members>Campaign-NPSP Campaign Layout</members>
         <members>Contact-Contact Layout</members>
+        <members>DataImportBatch__c-NPSP Data Import Batch Layout</members>
         <members>DataImport__c-Data Import Layout</members>
         <members>Engagement_Plan_Task__c-Engagement Plan Task Layout</members>
         <members>Engagement_Plan_Template__c-Engagement Plan Template Layout</members>
