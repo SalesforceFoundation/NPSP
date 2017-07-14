@@ -1214,7 +1214,8 @@ public with sharing class ADDR_Addresses_TEST {
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
 
         contact.accountId = listAccT[0].Id;
-        update contact = populateContactAddress(contact, listAddrT[0]);
+        populateContactAddress(contact, listAddrT[0]);
+        update contact;
 
         Test.stopTest();
 
@@ -1270,7 +1271,8 @@ public with sharing class ADDR_Addresses_TEST {
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
 
         Contact contact = new Contact(LastName = 'TestPrimaryAddressTypeNewContact', AccountId = listAccT[0].Id);
-        insert contact = populateContactAddress(contact, listAddrT[0]);
+        populateContactAddress(contact, listAddrT[0]);
+        insert contact;
 
         Test.stopTest();
 
@@ -1704,14 +1706,12 @@ public with sharing class ADDR_Addresses_TEST {
     * @param sourceAddress Address
     * @return Contact
     **********************************************************************************************************/
-    static Contact populateContactAddress(Contact c, Address__c sourceAddress) {
+    static void populateContactAddress(Contact c, Address__c sourceAddress) {
         c.MailingStreet = sourceAddress.MailingStreet__c;
         c.MailingCity = sourceAddress.MailingCity__c;
         c.MailingState = sourceAddress.MailingState__c;
         c.MailingPostalCode = sourceAddress.MailingPostalCode__c;
         c.MailingCountry = sourceAddress.MailingCountry__c;
-
-        return c;
     }
 
     /*********************************************************************************************************
