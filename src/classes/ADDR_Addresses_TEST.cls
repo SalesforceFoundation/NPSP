@@ -1704,7 +1704,6 @@ public with sharing class ADDR_Addresses_TEST {
     * @description Populates Contact's Mailing Address from the Address
     * @param c Contact
     * @param sourceAddress Address
-    * @return Contact
     **********************************************************************************************************/
     static void populateContactAddress(Contact c, Address__c sourceAddress) {
         c.MailingStreet = sourceAddress.MailingStreet__c;
