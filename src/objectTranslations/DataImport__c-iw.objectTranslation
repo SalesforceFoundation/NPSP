@@ -408,6 +408,11 @@
         <name>Donation_Name__c</name>
     </fields>
     <fields>
+        <help><!-- A comma separated list of ID&apos;s to the first 10 possible Opportunity matches to a donation. --></help>
+        <label><!-- Donation Possible Matches --></label>
+        <name>Donation_Possible_Matches__c</name>
+    </fields>
+    <fields>
         <help>השם של סוג רשומת ההזדמנות שישמש עבור התרומה. אם ריק, המערכת תשתמש בסוג הרשומה המהווה ברירת מחדל.</help>
         <label>שם סוג רשומת תרומה</label>
         <name>Donation_Record_Type_Name__c</name>
@@ -477,6 +482,15 @@
         <name>ImportedDate__c</name>
     </fields>
     <fields>
+        <label><!-- Payment Import Status --></label>
+        <name>PaymentImportStatus__c</name>
+    </fields>
+    <fields>
+        <label><!-- Payment Imported --></label>
+        <name>PaymentImported__c</name>
+        <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
+    </fields>
+    <fields>
         <help><!-- Payment.npe01__Check_Reference_Number__c --></help>
         <label>המחאה/מספר סימוכין של התשלום</label>
         <name>Payment_Check_Reference_Number__c</name>
@@ -485,6 +499,11 @@
         <help><!-- Payment.npe01__Payment_Method__c --></help>
         <label>שיטת תשלום</label>
         <name>Payment_Method__c</name>
+    </fields>
+    <fields>
+        <help><!-- A comma separated list of ID&apos;s to the first 10 possible Payment matches to a donation. --></help>
+        <label><!-- Payment Possible Matches --></label>
+        <name>Payment_Possible_Matches__c</name>
     </fields>
     <fields>
         <help>המצב של יבוא רשומת יבוא הנתונים.</help>
