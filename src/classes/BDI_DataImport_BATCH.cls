@@ -63,7 +63,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         strSoql += ' WHERE Status__c <> \'' + label.bdiImported + '\' ';
 
         if (batchId != null) {
-            strSoql += ' AND NPSP_Data_Import_Batch__c = ' + batchId;
+            strSoql += ' AND NPSP_Data_Import_Batch__c = \'' + batchId + '\'';
         } else {
             strSoql += ' AND NPSP_Data_Import_Batch__c = NULL';
         }

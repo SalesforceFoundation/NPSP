@@ -52,13 +52,14 @@
         <members>BDE_BatchDataEntry_TEST</members>
         <members>BDE_BatchEntry_CTRL</members>
         <members>BDE_BatchEntry_TEST</members>
+        <members>BDI_DataImportBatch_SEL</members>
+        <members>BDI_DataImportDeleteBTN_CTRL</members>
+        <members>BDI_DataImportDeleteBTN_TEST</members>
         <members>BDI_DataImport_API</members>
         <members>BDI_DataImport_BATCH</members>
         <members>BDI_DataImport_CTRL</members>
         <members>BDI_DataImport_TEST</members>
         <members>BDI_DataImport_TEST2</members>
-        <members>BDI_DataImportDeleteBTN_CTRL</members>
-        <members>BDI_DataImportDeleteBTN_TEST</members>
         <members>BDI_Donations</members>
         <members>BDI_Donations_TEST</members>
         <members>BDI_IMatchDonations</members>
@@ -291,7 +292,7 @@
         <members>UTIL_UnitTestData_TEST</members>
         <members>UTIL_Version_API</members>
         <members>UTIL_iSoqlListViewConsumer</members>
-        <members>BDI_DataImportBatch_SEL</members>
+        <members>BDI_DataImportAPI_TEST</members>
         <name>ApexClass</name>
     </types>
     <types>

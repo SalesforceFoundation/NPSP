@@ -36,6 +36,11 @@
 */
 public with sharing class BDI_DataImportBatch_SEL {
 
+    /*******************************************************************************************************
+    * @description queries the database for all Data Import Batch records with the specified Id's
+    * @param setBatchId The batches to query for.
+    * @return list<DataImportBatch__c>
+    */
     public static list<DataImportBatch__c> selectByIds(Set<Id> setBatchId) {
         return [SELECT Id,
                     Account_Custom_Unique_ID__c,
@@ -49,7 +54,5 @@ public with sharing class BDI_DataImportBatch_SEL {
                     Donation_Date_Range__c
             FROM DataImportBatch__c
             WHERE Id in :setBatchId];
-
     }
-
 }

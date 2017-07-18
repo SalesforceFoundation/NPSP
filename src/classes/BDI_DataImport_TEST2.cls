@@ -1639,7 +1639,12 @@ private with sharing class BDI_DataImport_TEST2 {
           
         //run batch data import
         Test.StartTest();
-        system.assertEquals(null, BDI_DataImport_API.importData());
+        try {
+            BDI_DataImport_API.importData();
+            system.assert(false, 'importData should have thrown exception');
+        } catch (exception ex) {
+            system.assert(ex.getMessage().contains('Household Account model'));
+        }
         Test.stopTest();
     }
     

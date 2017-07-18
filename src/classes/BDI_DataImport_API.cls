@@ -55,7 +55,12 @@ global with sharing class BDI_DataImport_API {
     * @return ID The ID of the batch job that performs the data import.
     */
     global static ID importData() {
-        return importData(null);
+        list<ProcessDataImportBatchesResult> listResult = processDataImportBatches(new list<ID>{null});
+        if (listResult != null) {
+            return listResult[0].apexJobId;
+        } else {
+            return null;
+        }
     }
 
     /*******************************************************************************************************
@@ -64,25 +69,34 @@ global with sharing class BDI_DataImport_API {
     * @param batchId optional batch to scope processing to.
     * @return ID The ID of the batch job that performs the data import.
     */
-    global static ID importData(ID batchId) {
-        Id apexJobId;
+    @InvocableMethod(label='processDataImportBatches' description='starts the batch processing of a list of DataImport batches')
+    global static list<ProcessDataImportBatchesResult> processDataImportBatches(list<ID> listBatchId) {
 
-        try {
+        list<ProcessDataImportBatchesResult> listResult = new list<ProcessDataImportBatchesResult>();
+        for (ID batchId : listBatchId) {
             BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(batchId);
-            apexJobId = Database.executeBatch(bdi, integer.valueOf(bdi.diSettings.Batch_Size__c));
-            return apexJobId;
-        } catch (Exception ex) {
-            if (ApexPages.currentPage() != null) {
-                ApexPages.addMessage(new ApexPages.Message(
-                    ApexPages.Severity.ERROR,
-                    ex.getMessage()
-                ));
-            } else {
-                // if we are not in a context where we can notify the user of
-                // this exception, rethrow it
-                throw ex;
-            }
-            return null;
+            listResult.add(new ProcessDataImportBatchesResult(Database.executeBatch(bdi, integer.valueOf(bdi.diSettings.Batch_Size__c))));
+        }
+        return listResult;
+    }
+
+    /*******************************************************************************************************
+    * @description The return result object for each batch that is provided to processDataImportBatches()
+    */
+    global class ProcessDataImportBatchesResult {
+
+        /*******************************************************************************************************
+        * @description The return result object for each batch that is provided to processDataImportBatches()
+        */
+        @InvocableVariable
+        global ID apexJobId;
+
+        /*******************************************************************************************************
+        * @description constructor
+        */
+        ProcessDataImportBatchesResult(ID apexJobId) {
+            this.apexJobId = apexJobId;
         }
     }
+
 }
