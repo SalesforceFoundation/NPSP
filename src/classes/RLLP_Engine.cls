@@ -2,7 +2,7 @@ public class RLLP_Engine {
     
     public RLLP_Engine(List<RLLP_Operation> operations) {
         for (RLLP_Operation operation : operations) {
-            if (!hasYearly && operation.year != null) {
+            if (!hasYearly && isYearlyOperation(operation)) {
                 hasYearly = true;
             }
             if (!hasSmallest && operation.type == RLLP_Operation.RollupType.SMALLEST) {
@@ -20,6 +20,12 @@ public class RLLP_Engine {
         }
     }
 
+    private Boolean isYearlyOperation(RLLP_Operation operation) {
+        return (operation.year != null || 
+                operation.Type == RLLP_Operation.RollupType.YEARS_DONATED || 
+                operation.Type == RLLP_Operation.RollupType.CURRENT_STREAK);
+    }
+
     public class Sum {
         Integer count = 0;
         Double total = 0;
@@ -35,9 +41,9 @@ public class RLLP_Engine {
         }
     }
 
-    Sum total = new Sum();
+    @testVisible Sum total = new Sum();
     
-    Map<Integer, Sum> yearly = new Map<Integer, Sum>();
+    @testVisible Map<String, Sum> yearly = new Map<String, Sum>();
     
     SObject smallest;
     Double smallestAmount;
@@ -61,7 +67,7 @@ public class RLLP_Engine {
         total.add(amount);
 
         if (this.hasYearly) {
-            Integer year = RLLP_FiscalYears.getYear(closeDate);
+            String year = String.valueOf(RLLP_FiscalYears.getYear(closeDate));
             if (!yearly.containsKey(year)) {
                 Sum s = new Sum();
                 yearly.put(year, s);
@@ -97,17 +103,22 @@ public class RLLP_Engine {
     }
 
     public Object getResult(RLLP_Operation operation) {
-        system.debug('njjc: ' + operation + ': ' + this);
+//        system.debug('njjc: ' + operation + ': ' + this);
         if (operation.year!=null) {
-            if (!yearly.containsKey(operation.year)) {
+            String year = String.valueOf(operation.year);
+            if (!yearly.containsKey(year)) {
                 return 0;
             }
             if (operation.type == RLLP_Operation.RollupType.COUNT) {
-                return yearly.get(operation.year).count;
+                return yearly.get(year).count;
             }
             if (operation.type == RLLP_Operation.RollupType.SUM) {
-                return yearly.get(operation.year).total;
+                return yearly.get(year).total;
             }
+        }
+
+        if (operation.type == RLLP_Operation.RollupType.YEARS_DONATED) {
+            return getYearsDonated();
         }
 
         if (operation.type == RLLP_Operation.RollupType.COUNT) {
@@ -133,6 +144,46 @@ public class RLLP_Engine {
             return last.get(operation.resultField);
         }
         return null;
+    }
+
+    private List<String> getSortedYears() {
+        if (yearly.isEmpty()) {
+            return null;
+        }
+        List<String> yearsDonated = new List<String>(yearly.keySet());
+        yearsDonated.sort();
+        return yearsDonated;
+    }
+
+    @TestVisible private String getYearsDonated() {
+        if (yearly.isEmpty()) {
+            return null;
+        }
+        return String.join(getSortedYears(),';');
+    }
+
+    @TestVisible private Integer getDonorStreak() {
+        if (yearly.isEmpty()) {
+            return null;
+        }
+        List<String> yearlySorted = getSortedYears();
+        Integer currentYear = RLLP_FiscalYears.getYear(System.today());
+        Integer streakLength = 0;
+
+        //if they haven't donated this year, start counting last year
+        if (currentYear != Integer.valueOf(yearlySorted[yearlySorted.size()-1])) {
+            currentYear--;
+        }
+
+        for (Integer i = yearlySorted.size()-1; i>=0; i--) {
+            if (currentYear == Integer.valueOf(yearlySorted[i])) {
+                streakLength += 1;
+                currentYear --;
+            } else {
+                break;
+            }
+        }
+        return streakLength;
     }
 
 /*
