@@ -348,27 +348,6 @@ public with sharing class HH_Container_LCTRL {
     }
 
     /*******************************************************************************************************
-    * @description deletes the Contacts in the database
-    * @param listCon The list of Contacts to delete
-    * @return void
-    @AuraEnabled
-    public static void deleteContacts(list<Contact> listCon) {
-        try {
-            if (listCon.size() == 0)
-                return;
-            
-            // Check object permissions
-            if (!Contact.sObjectType.getDescribe().isDeletable()) {
-                throw new System.NoAccessException();    
-            }
-            delete listCon;
-        } catch (Exception ex) {
-            throw new AuraHandledException(ex.getMessage());
-        }
-    }
-    */
-
-    /*******************************************************************************************************
     * @description saves any changes to the Household in the database
     * @param hh The Household
     * @return void
@@ -446,23 +425,46 @@ public with sharing class HH_Container_LCTRL {
     */
     @AuraEnabled
     public static void saveHouseholdPage(SObject hh, list<Contact> listCon, list<Contact> listConRemove, list<Account>listHHMerge) {
-
-        // save the Household
         updateHousehold(hh);
         
         // need to merge any households (Accounts only) before we save contacts
         // so we avoid deleting a household if that contact was the last one in the hh.
-        if (listHHMerge != null && listHHMerge.size() > 0) {
+        if (isNotEmpty(listHHMerge)) {
             mergeHouseholds((Account)hh, listHHMerge);
         }
+
+        List<Contact> contacts = new List<Contact>(listCon);
+        contacts.addAll(listConRemove);        
+        upsertContacts(contacts);  
         
-        // save the contacts
-        upsertContacts(listCon);
-        
-        // remove any contacts
-        upsertContacts(listConRemove);                
+        if (isNotEmpty(listHHMerge)) {
+            cleanupAddresses(new List<Id>{ (Id) hh.get('Id') });
+        }          
+    }
+    
+    static Boolean isNotEmpty(List<Account> accounts) {
+        return accounts != null && !accounts.isEmpty();
     }
 
+    static void cleanupAddresses(List<Id> accountIds) {
+        Id[] cleanupAccountIds = new Id[0];       
+        
+        for (Account acc : [SELECT npe01__SYSTEM_AccountType__c FROM Account WHERE Id IN :accountIds]) {
+            if (isHouseholdOrOrganization(acc)) {
+                cleanupAccountIds.add(acc.Id);
+            }           
+        }
+
+        ADDR_Addresses_TDTM.cleanupAccountAddresses(cleanupAccountIds);
+    }
+
+    static Boolean isHouseholdOrOrganization(Account acc) {
+        return acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE ||
+            (
+                acc.npe01__SYSTEM_AccountType__c != CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE &&
+                acc.npe01__SYSTEM_AccountType__c != CAO_Constants.BUCKET_ORGANIZATION_TYPE
+            );
+    } 
 
     /*******************************************************************************************************
     * @description sets the Household Name and Greetings on the Household object, given the list of Contacts
