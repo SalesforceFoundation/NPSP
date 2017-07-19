@@ -170,7 +170,16 @@ private class HH_Container_TEST {
         Test.stopTest();        
     }
 
-    static testMethod void saveHouseholdMergeShouldResultInOneDefaultAddress() {
+    /*********************************************************************************************************
+    @description
+        Add new Contacts into the Household where:
+            - The only Contact from another Household has the same Address
+            - The only Contact from another Household has different Address
+    verify:
+        Only one default Address exists for the Household.
+        Other Households are merged with the Household.
+    **********************************************************************************************************/ 
+    static testMethod void saveShouldResultInOneDefaultAddressWhenContactsAreAddedToTheHousehold() {
         Integer accountSize = 3;
         Account[] accounts = buildAccounts(accountSize);
         insert accounts;
@@ -182,6 +191,9 @@ private class HH_Container_TEST {
 
         Integer contactsPerAccount = 1;
         insert buildContacts(accounts, contactsPerAccount);
+
+        //Refresh the Household data from database
+        accounts[0] = (Account) HH_Container_LCTRL.getHH(accounts[0].Id);
 
         Map<Id, Contact[]> contactsByHh = getContactsByHousehold();
         System.assertEquals(accountSize, contactsByHh.size());
@@ -203,8 +215,13 @@ private class HH_Container_TEST {
         Account[] accountsToMerge = new Account[] { accounts[1], accounts[2] };
 
         Test.startTest();
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         HH_Container_LCTRL.saveHouseholdPage(accounts[0], hhContacts, hhContactsToRemove, accountsToMerge);
         Test.stopTest();
+
+        Account[] actualAccounts = getAccounts();
+        System.assertEquals(1, actualAccounts.size(), actualAccounts);
+        System.assertEquals(accounts[0].Id, actualAccounts[0].Id);
 
         Address__c[] actualAddresses = getAddresses();
         System.assertEquals(2, actualAddresses.size(), actualAddresses);
@@ -231,95 +248,87 @@ private class HH_Container_TEST {
         }     
     }
 
-    static Account[] buildAccounts(Integer size) {
-        Account[] accounts = new Account[0];
+    /*********************************************************************************************************
+    @description
+        Add a new Contact into the Household and remove a Contact from the Household.
+    verify:
+        The new Contact is added to the Household.
+        A new Household and an Address are created for the Removed Contact.
+        No Household is merged.
+    **********************************************************************************************************/ 
+    static testMethod void saveShouldAddRemovedContactToNewHousehold() {
+        Integer accountSize = 2;
+        Account[] accounts = buildAccounts(accountSize);
+        insert accounts;
 
-        for (Integer i = 0; i < size; i++) {
-            accounts.add(new Account(
-                Name = 'TestManageHousehold' + i,
-                npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE
-            ));
-        }
+        Address__c[] addresses = buildAddresses(accounts);
+        insert addresses;
 
-        return accounts;
-    }
+        Integer contactsPerAccount = 2;
+        insert buildContacts(accounts, contactsPerAccount);
 
-    static Address__c[] buildSameStreetAddresses(Account[] accounts) {
-        return buildAddresses(accounts, true);
-    }
+        //Refresh the Household data from database
+        accounts[0] = (Account) HH_Container_LCTRL.getHH(accounts[0].Id);
 
-    static Address__c[] buildAddresses(Account[] accounts) {
-        return buildAddresses(accounts, false);
-    }
+        Map<Id, Contact[]> contactsByHh = getContactsByHousehold();
+        System.assertEquals(accountSize, contactsByHh.size());
 
-    static Address__c[] buildAddresses(Account[] accounts, Boolean isSameStreetAddress) {
-        Address__c[] addresses = new Address__c[0];
+        Contact[] hhContacts = new Contact[] { contactsByHh.get(accounts[0].Id)[0] };
 
-        for (Integer i = 0, size = accounts.size(); i < size; i++) {
-            String streetPrefix = isSameStreetAddress ? '' : String.valueOf(i);
+        Contact newContact = contactsByHh.get(accounts[1].Id)[0];
+        newContact.AccountId = accounts[0].Id;
+        copyAddressToContact(addresses[0], newContact);        
+        hhContacts.add(newContact);
 
-            addresses.add(new Address__c(
-                Household_Account__c = accounts[i].Id,
-                Default_Address__c = true,
-                MailingStreet__c = streetPrefix + ' Main St',
-                MailingCity__c = 'New York',
-                MailingCountry__c = 'United States'
-            ));
-        }
+        Contact removedContact = contactsByHh.get(accounts[0].Id)[1];
+        removedContact.AccountId = null;
 
-        return addresses;
-    }
+        Contact[] hhContactsToRemove = new Contact[] { removedContact };
+        Account[] accountsToMerge = new Account[0];
 
-    static Contact[] buildContacts(Account[] accounts, Integer sizePerAccount) {
-        Contact[] contacts = new Contact[0];
+        Test.startTest();
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        HH_Container_LCTRL.saveHouseholdPage(accounts[0], hhContacts, hhContactsToRemove, accountsToMerge);
+        Test.stopTest();
 
-        for (Account acc : accounts) {
-            for (Integer i = 0; i < sizePerAccount; i++) {
-                contacts.add(new Contact(
-                    LastName = acc.Name + i, 
-                    AccountId = acc.Id
-                ));
-            }
-        }
+        //Verify a new Account and an Address have been created for the removed Contact
+        Integer actualAccountSize = accountSize + 1;
+        Account[] actualAccounts = getAccounts();
+        System.assertEquals(actualAccountSize, actualAccounts.size(), actualAccounts);
 
-        return contacts;
-    }
+        Address__c[] actualAddresses = getAddresses();
+        System.assertEquals(actualAccountSize, actualAddresses.size(), actualAddresses);
+        
+        contactsByHh = getContactsByHousehold();
+        System.assertEquals(actualAccountSize, contactsByHh.size(), contactsByHh); 
 
-    static void copyAddressToContact(Address__c addr, Contact c) {
-        c.MailingStreet = addr.MailingStreet__c;
-        c.MailingCity = addr.MailingCity__c;
-        c.MailingState = addr.MailingState__c;
-        c.MailingPostalCode = addr.MailingPostalCode__c;
-        c.MailingCountry = addr.MailingCountry__c;
-    }
-
-    static Map<Id, Contact[]> getContactsByHousehold() {
-        Map<Id, Contact[]> contactsByHh = new Map<Id, Contact[]>();
-
-        for (Contact c : getContacts()) {
-            if (!contactsByHh.containsKey(c.AccountId)) {
-                contactsByHh.put(c.AccountId, new Contact[0]);
+        for (Account acc : actualAccounts) {
+            Address__c[] accountAddresses = new Address__c[0];
+            for (Address__c addr : actualAddresses) {
+                if (addr.Household_Account__c == acc.Id) {
+                    accountAddresses.add(addr);
+                }
             }
 
-            contactsByHh.get(c.AccountId).add(c);
-        }
+            System.assertEquals(1, accountAddresses.size(), accountAddresses);
 
-        return contactsByHh;
-    }
+            Contact[] contacts = contactsByHh.get(acc.Id);
+            Integer expectedContactSize = acc.Id == accounts[0].Id ? 2 : 1;
 
-    static Contact[] getContacts() {
-        return Database.query(HH_Container_LCTRL.getContactSelectQueryWithFls());     
-    }
+            System.assertNotEquals(null, contacts);
+            System.assertEquals(expectedContactSize, contacts.size());
 
-    static Address__c[] getAddresses() {
-        return [
-            SELECT Default_Address__c, Household_Account__c, Address_Type__c,
-                MailingStreet__c, MailingCity__c, MailingState__c,
-                MailingPostalCode__c, MailingCountry__c
-            FROM Address__c
-        ];
-    }
-    
+            for (Contact c : contacts) {
+                if (acc.Id == accounts[0].Id) {
+                    System.assert(c.Id == hhContacts[0].Id || c.Id == hhContacts[1].Id);
+                } else if (acc.Id != accounts[1].Id) {
+                    System.assertEquals(removedContact.Id, c.Id);
+                }
+                
+                System.assertEquals(accountAddresses[0].Id, c.Current_Address__c);
+            }     
+        } 
+    }    
     
     /*********************************************************************************************************
     * @description Tests getHHNamesGreetings()
@@ -393,5 +402,133 @@ private class HH_Container_TEST {
         system.assertEquals(0, listPR.size());
         
         Test.stopTest();
+    }
+
+    // Helpers
+    ////////////
+
+    /*********************************************************************************************************
+    * @description Builds Accounts with Household Account Type
+    * @param size Number of Accounts to build
+    * @return Account[] List of Accounts
+    **********************************************************************************************************/
+    static Account[] buildAccounts(Integer size) {
+        Account[] accounts = new Account[0];
+
+        for (Integer i = 0; i < size; i++) {
+            accounts.add(new Account(
+                Name = 'TestManageHousehold' + i,
+                npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE
+            ));
+        }
+
+        return accounts;
+    }
+
+    /*********************************************************************************************************
+    * @description Builds a default Address for each Account
+    * @param accounts List of Accounts to associate Addresses with
+    * @return Address__c[] List of Addresses
+    **********************************************************************************************************/
+    static Address__c[] buildAddresses(Account[] accounts) {
+        Address__c[] addresses = new Address__c[0];
+
+        for (Integer i = 0, size = accounts.size(); i < size; i++) {
+            addresses.add(new Address__c(
+                Household_Account__c = accounts[i].Id,
+                Default_Address__c = true,
+                MailingStreet__c = i + ' Main St',
+                MailingCity__c = 'New York',
+                MailingCountry__c = 'United States'
+            ));
+        }
+
+        return addresses;
+    }
+
+    /*********************************************************************************************************
+    * @description Builds specified number of Contacts for Accounts
+    * @param accounts List of Accounts to build Contacts for
+    * @param sizePerAccount Number of Contacts per Account
+    * @return Contact[] List of Contacts
+    **********************************************************************************************************/
+    static Contact[] buildContacts(Account[] accounts, Integer sizePerAccount) {
+        Contact[] contacts = new Contact[0];
+
+        for (Account acc : accounts) {
+            for (Integer i = 0; i < sizePerAccount; i++) {
+                contacts.add(new Contact(
+                    LastName = acc.Name + i, 
+                    AccountId = acc.Id
+                ));
+            }
+        }
+
+        return contacts;
+    }
+
+    /*********************************************************************************************************
+    * @description Populates Contact's Mailing Address from the source Address
+    * @param addr Address
+    * @param c Contact
+    * @return void
+    **********************************************************************************************************/
+    static void copyAddressToContact(Address__c addr, Contact c) {
+        c.MailingStreet = addr.MailingStreet__c;
+        c.MailingCity = addr.MailingCity__c;
+        c.MailingState = addr.MailingState__c;
+        c.MailingPostalCode = addr.MailingPostalCode__c;
+        c.MailingCountry = addr.MailingCountry__c;
+    }
+
+    /*********************************************************************************************************
+    * @description Retrieved Contacts and maps Contacts to a Household
+    * @return Map<Id, Contact[]> Map of Contacts by a Household
+    **********************************************************************************************************/
+    static Map<Id, Contact[]> getContactsByHousehold() {
+        Map<Id, Contact[]> contactsByHh = new Map<Id, Contact[]>();
+
+        for (Contact c : getContacts()) {
+            if (!contactsByHh.containsKey(c.AccountId)) {
+                contactsByHh.put(c.AccountId, new Contact[0]);
+            }
+
+            contactsByHh.get(c.AccountId).add(c);
+        }
+
+        return contactsByHh;
+    }
+
+    /*********************************************************************************************************
+    * @description Retrieves all Contacts with fields relevant for the Manage Household page
+    * @return Contact[] List of all Contacts
+    **********************************************************************************************************/
+    static Contact[] getContacts() {
+        return Database.query(HH_Container_LCTRL.getContactSelectQueryWithFls());     
+    }
+
+    /*********************************************************************************************************
+    * @description Retrieves all Addresses from database
+    * @return Address__c[] List of all Addresses
+    **********************************************************************************************************/
+    static Address__c[] getAddresses() {
+        return [
+            SELECT Default_Address__c, Household_Account__c, Address_Type__c,
+                MailingStreet__c, MailingCity__c, MailingState__c,
+                MailingPostalCode__c, MailingCountry__c
+            FROM Address__c
+        ];
+    }
+
+    /*********************************************************************************************************
+    * @description Retrieves all Account from database
+    * @return Account[] List of all Accounts
+    **********************************************************************************************************/
+    static Account[] getAccounts() {
+        return [
+            SELECT Name, BillingStreet, BillingCity, 
+                BillingState, BillingPostalCode, BillingCountry
+            FROM Account
+        ];
     }
 }

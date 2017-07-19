@@ -319,15 +319,15 @@ public with sharing class HH_Container_LCTRL {
                 UTIL_Describe.copyObjectFLS('Contact', con, con2, listStrFld);
                 // Due to the complexity of working in both the Household and Account Household models,
                 // we need to skip the security check on the Household field.
-                    con2.npo02__Household__c = con.npo02__Household__c;
+                con2.npo02__Household__c = con.npo02__Household__c;
                 if (con.Id != null) {
                     listUpdate.add(con2);
                 } else {
                     listInsert.add(con2);
                 }
             }
-            
 
+            
             // avoid saving of contacts from updating household names
             // to avoid record lock errors.  let the household be responsible
             // for updating its name.
@@ -440,12 +440,22 @@ public with sharing class HH_Container_LCTRL {
         if (isNotEmpty(listHHMerge)) {
             cleanupAddresses(new List<Id>{ (Id) hh.get('Id') });
         }          
-    }
-    
+    }    
+
+    /*******************************************************************************************************
+    * @description Checks if the Account list is not empty
+    * @param accounts The list of Accounts
+    * @return Boolean True is the list is not empty, false if the list is null or empty
+    */
     static Boolean isNotEmpty(List<Account> accounts) {
         return accounts != null && !accounts.isEmpty();
     }
 
+    /*******************************************************************************************************
+    * @description Cleans up/refreshes the Addresses for specified Account Ids
+    * @param accountIds List of Account Ids
+    * @return void
+    */
     static void cleanupAddresses(List<Id> accountIds) {
         Id[] cleanupAccountIds = new Id[0];       
         
@@ -458,6 +468,12 @@ public with sharing class HH_Container_LCTRL {
         ADDR_Addresses_TDTM.cleanupAccountAddresses(cleanupAccountIds);
     }
 
+    /*******************************************************************************************************
+    * @description Verifies the Account Type
+    * @param acc An Account
+    * @return Boolean True if the Account Type is Household Account or another type 
+    * except One-to-One Individual and Bucket Individual Account types
+    */
     static Boolean isHouseholdOrOrganization(Account acc) {
         return acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE ||
             (
