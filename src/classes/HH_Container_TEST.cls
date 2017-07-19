@@ -482,7 +482,7 @@ private class HH_Container_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Retrieved Contacts and maps Contacts to a Household
+    * @description Retrieves Contacts and maps Contacts to a Household
     * @return Map<Id, Contact[]> Map of Contacts by a Household
     **********************************************************************************************************/
     static Map<Id, Contact[]> getContactsByHousehold() {
