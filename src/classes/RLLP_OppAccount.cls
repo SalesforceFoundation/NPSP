@@ -34,12 +34,12 @@ public with sharing class RLLP_OppAccount extends RLLP_Definition {
         standardRollup.operations.add(new RLLP_Operation(Account.npo02__AverageAmount__c, RLLP_Operation.RollupType.AVERAGE));
         standardRollup.operations.add(new RLLP_Operation(Account.npo02__TotalOppAmount__c, RLLP_Operation.RollupType.SUM));
         standardRollup.operations.add(new RLLP_Operation(Account.npo02__NumberOfClosedOpps__c, RLLP_Operation.RollupType.COUNT));
-        standardRollup.operations.add(new RLLP_Operation(Account.npo02__OppAmount2YearsAgo__c, RLLP_Operation.RollupType.SUM, thisYear-2));
-        standardRollup.operations.add(new RLLP_Operation(Account.npo02__OppAmountLastYear__c, RLLP_Operation.RollupType.SUM, thisYear-1));
-        standardRollup.operations.add(new RLLP_Operation(Account.npo02__OppAmountThisYear__c, RLLP_Operation.RollupType.SUM, thisYear));
-        standardRollup.operations.add(new RLLP_Operation(Account.npo02__OppsClosed2YearsAgo__c, RLLP_Operation.RollupType.COUNT, thisYear-2));
-        standardRollup.operations.add(new RLLP_Operation(Account.npo02__OppsClosedLastYear__c, RLLP_Operation.RollupType.COUNT, thisYear-1));
-        standardRollup.operations.add(new RLLP_Operation(Account.npo02__OppsClosedThisYear__c, RLLP_Operation.RollupType.COUNT, thisYear));
+        standardRollup.operations.add(new RLLP_Operation(Account.npo02__OppAmount2YearsAgo__c, RLLP_Operation.RollupType.SUM, String.valueOf(thisYear-2)));
+        standardRollup.operations.add(new RLLP_Operation(Account.npo02__OppAmountLastYear__c, RLLP_Operation.RollupType.SUM, String.valueOf(thisYear-1)));
+        standardRollup.operations.add(new RLLP_Operation(Account.npo02__OppAmountThisYear__c, RLLP_Operation.RollupType.SUM, String.valueOf(thisYear)));
+        standardRollup.operations.add(new RLLP_Operation(Account.npo02__OppsClosed2YearsAgo__c, RLLP_Operation.RollupType.COUNT, String.valueOf(thisYear-2)));
+        standardRollup.operations.add(new RLLP_Operation(Account.npo02__OppsClosedLastYear__c, RLLP_Operation.RollupType.COUNT, String.valueOf(thisYear-1)));
+        standardRollup.operations.add(new RLLP_Operation(Account.npo02__OppsClosedThisYear__c, RLLP_Operation.RollupType.COUNT, String.valueOf(thisYear)));
         wrappers.add(standardRollup);
 
         RLLP_Definition.OperationWrapper membershipRollup = new RLLP_Definition.OperationWrapper(new MembershipOpportunityExclusion());
@@ -97,12 +97,3 @@ public with sharing class RLLP_OppAccount extends RLLP_Definition {
         }
     }
 }
-
-/*RLLP_Definition OppContactRollups = new RLLP_Definition(
-    Contact.SObjectType, 
-    Opportunity.SObjectType,
-    OpportunityContactRole.SObjectType,
-    OpportunityContactRole.ContactId, 
-    Opportunity.CloseDate,
-    Opportunity.Amount
-);*/

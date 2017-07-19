@@ -14,10 +14,21 @@ public with sharing abstract class RLLP_Definition {
     public class OperationWrapper {
         public IExclusion exclusion;
         public List<RLLP_Operation> operations = new List<RLLP_Operation>();
+        public List<RLLP_Exclusion> exclusions = new List<RLLP_Exclusion>();
+
         public Map<Id, RLLP_Engine> summaries = new Map<Id, RLLP_Engine>();
         
         public OperationWrapper(IExclusion exclusion) {
             this.exclusion = exclusion;
+        }
+
+        public Boolean isExcluded(SObject detail) {
+            for (RLLP_Exclusion exclusion : this.exclusions) {
+                if (exclusion.isExcluded(detail)) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
     public List<OperationWrapper> wrappers = new List<OperationWrapper>();
@@ -81,14 +92,15 @@ public with sharing abstract class RLLP_Definition {
         for (SObject detail : details) {
             Date closeDate = getCloseDate(detail);
             Double amount = getAmount(detail);
+            List<Id> attributionIds = getAttribution(detail);
 
             for (OperationWrapper wrapper : wrappers) {
                 //skip if excluded
-                if (wrapper.exclusion.isExcluded(detail)) {
+                if (wrapper.isExcluded(detail)) {
                     continue;
                 } else {
                     //for each attribution, instantiate summary and add record to summary
-                    for (Id attributionId : getAttribution(detail)) {
+                    for (Id attributionId : attributionIds) {
                         //instantiate summary
                         if (!wrapper.summaries.containsKey(attributionId)) {
                             wrapper.summaries.put(attributionId, new RLLP_Engine(wrapper.operations));
@@ -100,6 +112,10 @@ public with sharing abstract class RLLP_Definition {
         }
     }
 
+    //returns all the results from the summary objects
+    //TODO: implement a comparison with existing rollup numbers to only update when needed; 
+    //remember all to set all 0s if the record doesn't exist in the results, as only summary records exist if there are details for that record
+    //TODO: ensure that update logic allows partial success
     public List<SObject> getResults() {
         Map<Id, SObject> results = new Map<Id, SObject>();
         for (OperationWrapper wrapper : wrappers) {
@@ -141,7 +157,7 @@ public with sharing abstract class RLLP_Definition {
         List<Id> results = new List<Id>();
         if (attributionObject!=null) {
             for (SObject attributionRecords : detail.getSObjects(attributionRelationshipName)) {
-                results.add((Id)attributionRecords.get(attributionId));
+                results.add((Id)attributionRecords.get(attributionId)); //TODO: check any user defined filters on the attribution object
             }
         } else {
             results.add((Id)detail.get(attributionId));
