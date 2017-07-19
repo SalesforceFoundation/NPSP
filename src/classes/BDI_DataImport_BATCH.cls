@@ -75,7 +75,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         loadSettings(batchId);
 
         // and make sure settings are valid
-        validateSettings();
+        validateSettings(diSettings);
     }
 
     /*******************************************************************************************************
@@ -110,10 +110,40 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     }
 
     /*******************************************************************************************************
-    * @description validates the data import settings to use for this batch.
+    * @description validates the data import settings.  Used by UI as well as at runtime by the batch.
+    * throws an exception if there are any invalid settings.
     * @return void
     */
-    private void validateSettings() {
+    public static void validateSettings(Data_Import_Settings__c diSettings) {
+
+        // validate matching rules
+        if (diSettings.Donation_Matching_Behavior__c != null &&
+            diSettings.Donation_Matching_Behavior__c != BDI_DataImport_API.DoNotMatch &&
+            String.isBlank(diSettings.Donation_Matching_Rule__c)) {
+
+            throw(new BDIException(Label.bdiDonationMatchingRuleEmpty));
+        }
+
+        // validate Donation Date Range
+        if (diSettings.Donation_Date_Range__c < 0) {
+            throw(new BDIException(Label.bdiPositiveNumber));
+        }
+
+        // validate donation implementing class
+        string strClass = diSettings.Donation_Matching_Implementing_Class__c;
+        if (String.isNotBlank(strClass)) {
+            BDI_IMatchDonations iMatchDonations = null;
+            Type classType = Type.forName(strClass);
+            if (classType != null) {
+                Object classInstance = classType.newInstance();
+                if (classInstance instanceof BDI_IMatchDonations) {
+                    iMatchDonations = (BDI_IMatchDonations) classInstance;
+                }
+            }
+            if (iMatchDonations == null) {
+                throw(new BDIException(String.format(Label.bdiErrorInvalidIMatchDonations, new list<String>{strClass})));
+            }
+        }
 
         // ensure we are in the household account model!
         if (!CAO_Constants.isHHAccountModel())
@@ -144,6 +174,19 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
                         'Account1_' + strFieldname,
                         'Account2_' + strFieldname})));
             }
+        }
+
+        // make sure they have specified a valid Donation Matching Behavior
+        set<String> setDMBehavior = new set<String> {
+            BDI_DataImport_API.DoNotMatch,
+            BDI_DataImport_API.RequireNoMatch,
+            BDI_DataImport_API.RequireExactMatch,
+            BDI_DataImport_API.ExactMatchOrCreate,
+            BDI_DataImport_API.RequireBestMatch,
+            BDI_DataImport_API.BestMatchOrCreate
+        };
+        if (!setDMBehavior.contains(diSettings.Donation_Matching_Behavior__c)) {
+            throw(new BDIException(String.format(Label.bdiInvalidDonationMatchingBehavior, new String[]{diSettings.Donation_Matching_Behavior__c})));
         }
     }
     
