@@ -361,22 +361,6 @@ private class ACCT_IndividualAccounts_TEST {
 	        system.assertEquals(updatedContacts[0].OtherCity,updatedContacts[0].Account.ShippingCity);
         }        
     }
-    /*
-    private static testMethod void testDefault()
-    {
-       
-        boolean aDefaultIsSelected = false;
-        Schema.DescribeFieldResult F = Schema.sObjectType.Contact.fields.Salutation;
-            List<Schema.PicklistEntry> P = F.getPicklistValues();
-            for(Schema.PicklistEntry pe : P){
-                UTIL_Debug.debug('****' +pe.getValue() + ' : ' + pe.isDefaultValue());
-                if (pe.isDefaultValue()){
-                        aDefaultIsSelected = true;
-                }
-            }
-         system.assert(aDefaultIsSelected); 
-    }
-    */
     
     /*********************************************************************************************************
     * @description Test Method for separating a Contact from it's One-to-One account, in 1:1 and Household Account models.
@@ -1006,534 +990,7 @@ private class ACCT_IndividualAccounts_TEST {
         
         Account[] missingAccount = [select id from Account where id=:createdAccountId];
         system.assertEquals(1,missingAccount.size());
-    }
-    
-/* TESTING PHONE NUMBER WORKFLOW -------------------------------------------------------
- 
-    /*********************************************************************************************************
-    * @description Test Method for creating a contact with a phone number and no preferences set. </summary>
-    private static testMethod void createContactWithPhoneNoPref()
-    {
-        //with no other prefs, phone should land in npe01__workphone__c and set npe01__PreferredPhone__c to 'work'.
-        String newPhone = '206-777-7777';
-        String preferredPhone = null;
-        String workPhoneString = 'Work';
-        Contact con = new Contact(FirstName='test', LastName='contact678',phone=newPhone,npe01__PreferredPhone__c=preferredPhone);
-        insert con;
-        
-        Contact[] insertedContacts = [Select phone,npe01__workPhone__c,npe01__PreferredPhone__c from Contact where id=:con.id];
-        
-        system.assertEquals(newPhone,insertedContacts[0].Phone);
-        system.assertEquals(newPhone,insertedContacts[0].npe01__WorkPhone__c);
-        system.assertEquals(workPhoneString,insertedContacts[0].npe01__PreferredPhone__c);
-        
-    }
-    
-    /*********************************************************************************************************
-    * @description Test Method for creating a contact with a phone number and a home number.
-    private static testMethod void createContactWithPhoneNoPrefAlsoHomePhone()
-    {
-        //with pref set to Home, HomePhone should land in Phone and set npe01__PreferredPhone__c to 'home'.
-        //currently HomePhone data is lost.
-        String newPhone = '206-777-7777';
-        String newHomePhone = '888-898-9999';
-        String preferredPhone = 'Home';
-        Contact con = new Contact(FirstName='test', LastName='contact678',phone=newPhone,HomePhone=newHomePhone,npe01__PreferredPhone__c=preferredPhone);
-        insert con;
-        
-        Contact[] insertedContacts = [Select phone,npe01__workPhone__c,HomePhone,npe01__PreferredPhone__c from Contact where id=:con.id];
-        
-        system.assertEquals(newPhone,insertedContacts[0].Phone);
-        system.assertEquals(newPhone,insertedContacts[0].HomePhone);
-        system.assertEquals(null,insertedContacts[0].npe01__WorkPhone__c);
-        system.assertEquals(preferredPhone,insertedContacts[0].npe01__PreferredPhone__c);
-        
-    }
-    
-    /*********************************************************************************************************
-    * @description Test Method for creating a contact with a phone number in Phone and the preferred phone set.
-    private static testMethod void createContactWithPhonePrefSet()
-    {
-        //with pref set to Home, HomePhone should land in Phone and set npe01__PreferredPhone__c to 'home'.
-        //these are currently commented out because it's not supported. See #47.
-        String newPhone = '206-777-7777';
-        String preferredPhone = 'Home';
-        Contact con = new Contact(FirstName='test', LastName='contact678',phone=newPhone,npe01__PreferredPhone__c=preferredPhone);
-        insert con;
-        
-        Contact[] insertedContacts = [Select phone,HomePhone,npe01__PreferredPhone__c from Contact where id=:con.id];
-        
-        system.assertEquals(newPhone,insertedContacts[0].Phone);
-        system.assertEquals(newPhone,insertedContacts[0].HomePhone);
-        system.assertEquals(preferredPhone,insertedContacts[0].npe01__PreferredPhone__c);
-        
-        //test work phone
-        preferredPhone = 'Work';
-        
-        Contact con1 = new Contact(FirstName='test', LastName='contact678',phone=newPhone,npe01__PreferredPhone__c=preferredPhone);
-        insert con1;
-        
-        Contact[] insertedContacts1 = [Select phone,npe01__WorkPhone__c,npe01__PreferredPhone__c from Contact where id=:con1.id];
-        
-        system.assertEquals(newPhone,insertedContacts1[0].Phone);
-        system.assertEquals(newPhone,insertedContacts1[0].npe01__WorkPhone__c);
-        system.assertEquals(preferredPhone,insertedContacts1[0].npe01__PreferredPhone__c);
-        
-        //test mobile phone
-        preferredPhone = 'Mobile';
-        
-        Contact con2 = new Contact(FirstName='test', LastName='contact678',phone=newPhone,npe01__PreferredPhone__c=preferredPhone);
-        insert con2;
-        
-        Contact[] insertedContacts2 = [Select phone,MobilePhone,npe01__PreferredPhone__c from Contact where id=:con2.id];
-        
-        system.assertEquals(newPhone,insertedContacts2[0].Phone);
-        system.assertEquals(newPhone,insertedContacts2[0].MobilePhone);
-        system.assertEquals(preferredPhone,insertedContacts2[0].npe01__PreferredPhone__c);
-        
-        //test other phone
-        preferredPhone = 'Other';
-        
-        Contact con3 = new Contact(FirstName='test', LastName='contact678',phone=newPhone,npe01__PreferredPhone__c=preferredPhone);
-        insert con3;
-        
-        Contact[] insertedContacts3 = [Select phone,OtherPhone,npe01__PreferredPhone__c from Contact where id=:con3.id];
-        
-        system.assertEquals(newPhone,insertedContacts3[0].Phone);
-        system.assertEquals(newPhone,insertedContacts3[0].OtherPhone);
-        system.assertEquals(preferredPhone,insertedContacts3[0].npe01__PreferredPhone__c);
-        
-    }
-    
-    /*********************************************************************************************************
-    * @description Test Method for creating a contact with a phone number in the correct field and the preferred phone set.
-    private static testMethod void createContactWithNumberAndPrefSet()
-    {
-        //with pref set to Home, HomePhone should land in Phone and set npe01__PreferredPhone__c to 'home'.
-        //these are currently commented out because it's not supported. See #47.
-        String newPhone = '206-777-7777';
-        String preferredPhone = 'Home';
-        Contact con = new Contact(FirstName='test', LastName='contact678',HomePhone=newPhone,npe01__PreferredPhone__c=preferredPhone);
-        insert con;
-        
-        Contact[] insertedContacts = [Select phone,HomePhone,npe01__PreferredPhone__c from Contact where id=:con.id];
-        
-        system.assertEquals(newPhone,insertedContacts[0].Phone);
-        system.assertEquals(newPhone,insertedContacts[0].HomePhone);
-        system.assertEquals(preferredPhone,insertedContacts[0].npe01__PreferredPhone__c);
-        
-        //test work phone
-        preferredPhone = 'Work';
-        
-        Contact con1 = new Contact(FirstName='test', LastName='contact678',npe01__WorkPhone__c=newPhone,npe01__PreferredPhone__c=preferredPhone);
-        insert con1;
-        
-        Contact[] insertedContacts1 = [Select phone,npe01__WorkPhone__c,npe01__PreferredPhone__c from Contact where id=:con1.id];
-        
-        system.assertEquals(newPhone,insertedContacts1[0].Phone);
-        system.assertEquals(newPhone,insertedContacts1[0].npe01__WorkPhone__c);
-        system.assertEquals(preferredPhone,insertedContacts1[0].npe01__PreferredPhone__c);
-        
-        //test mobile phone
-        preferredPhone = 'Mobile';
-        
-        Contact con2 = new Contact(FirstName='test', LastName='contact678',MobilePhone=newPhone,npe01__PreferredPhone__c=preferredPhone);
-        insert con2;
-        
-        Contact[] insertedContacts2 = [Select phone,MobilePhone,npe01__PreferredPhone__c from Contact where id=:con2.id];
-        
-        system.assertEquals(newPhone,insertedContacts2[0].Phone);
-        system.assertEquals(newPhone,insertedContacts2[0].MobilePhone);
-        system.assertEquals(preferredPhone,insertedContacts2[0].npe01__PreferredPhone__c);
-        
-        //test other phone
-        preferredPhone = 'Other';
-        
-        Contact con3 = new Contact(FirstName='test', LastName='contact678',OtherPhone=newPhone,npe01__PreferredPhone__c=preferredPhone);
-        insert con3;
-        
-        Contact[] insertedContacts3 = [Select phone,OtherPhone,npe01__PreferredPhone__c from Contact where id=:con3.id];
-        
-        system.assertEquals(newPhone,insertedContacts3[0].Phone);
-        system.assertEquals(newPhone,insertedContacts3[0].OtherPhone);
-        system.assertEquals(preferredPhone,insertedContacts3[0].npe01__PreferredPhone__c);
-        
-    }
-    
-    /*********************************************************************************************************
-    * @description Test Method for updating a contact with a phone number in the correct field and the preferred phone set. 
-    private static testMethod void updateContactWithNumberAndPref()
-    {
-        //with pref set to Home, HomePhone should land in Phone and set npe01__PreferredPhone__c to 'home'.
-        
-        String newPhone = '206-777-7777';
-        String preferredPhone = 'Home';
-        Contact con = new Contact(FirstName='test', LastName='contact678',HomePhone=newPhone,npe01__PreferredPhone__c=preferredPhone);
-        insert con;
-        
-        Contact[] insertedContacts = [Select phone,HomePhone,npe01__PreferredPhone__c from Contact where id=:con.id];
-        
-        //test work phone
-        preferredPhone = 'Work';
-        String workPhone = '206-888-8888';
-        
-        con.npe01__WorkPhone__c = workPhone;
-        con.npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS;
-        update con;
-        
-        Contact[] insertedContacts1 = [Select phone,HomePhone,npe01__WorkPhone__c,npe01__PreferredPhone__c from Contact where id=:con.id];
-        
-        system.assertEquals(workPhone,insertedContacts1[0].Phone);
-        system.assertEquals(workPhone,insertedContacts1[0].npe01__WorkPhone__c);
-        system.assertEquals(newPhone,insertedContacts1[0].HomePhone);
-        system.assertEquals(preferredPhone,insertedContacts1[0].npe01__PreferredPhone__c);
-        
-        //test mobile phone
-        preferredPhone = 'Mobile';
-        String mobilePhone = '206-999-9999';
-        
-        con.MobilePhone = mobilePhone;
-        con.npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS;
-        update con;
-        
-        Contact[] insertedContacts2 = [Select phone,HomePhone,npe01__WorkPhone__c,MobilePhone,npe01__PreferredPhone__c from Contact where id=:con.id];
-        
-        system.assertEquals(mobilePhone,insertedContacts2[0].Phone);
-        system.assertEquals(mobilePhone,insertedContacts2[0].MobilePhone);
-        system.assertEquals(workPhone,insertedContacts2[0].npe01__WorkPhone__c);
-        system.assertEquals(newPhone,insertedContacts2[0].HomePhone);
-        system.assertEquals(preferredPhone,insertedContacts2[0].npe01__PreferredPhone__c);
-        
-        //test other phone
-        preferredPhone = 'Other';
-        String otherPhone = '206-666-6666';
-        
-        con.OtherPhone = otherPhone;
-        con.npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS;
-        update con;
-        
-        Contact[] insertedContacts3 = [Select phone,HomePhone,npe01__WorkPhone__c,MobilePhone,OtherPhone,npe01__PreferredPhone__c from Contact where id=:con.id];
-        
-        system.assertEquals(otherPhone,insertedContacts3[0].Phone);
-        system.assertEquals(otherPhone,insertedContacts3[0].OtherPhone);
-        system.assertEquals(mobilePhone,insertedContacts3[0].MobilePhone);
-        system.assertEquals(workPhone,insertedContacts3[0].npe01__WorkPhone__c);
-        system.assertEquals(newPhone,insertedContacts3[0].HomePhone);
-        system.assertEquals(preferredPhone,insertedContacts3[0].npe01__PreferredPhone__c);
-        
-    }
-   */
-
-/* TESTING EMAIL WORKFLOW --------------------------------------------------------------
-    /*********************************************************************************************************
-    * @description Test Method for creating a contact with an email and no preferences set.
-    private static testMethod void createContactWithEmailNoPref()
-    {
-        //with no other prefs, email should land in npe01__workemail__c and set npe01__Preferred_Email__c to 'work'.
-        String newEmail = 'joe@testforemail.com';
-        String preferredEmail = null;
-        String workEmailString = 'Work';
-        Contact con = new Contact(FirstName='test', LastName='contact678',email=newEmail,npe01__Preferred_Email__c=preferredEmail);
-        insert con;
-        
-        Contact[] insertedContacts = [Select email,npe01__workEmail__c,npe01__Preferred_Email__c from Contact where id=:con.id];
-        
-        system.assertEquals(newEmail,insertedContacts[0].email);
-        system.assertEquals(newEmail,insertedContacts[0].npe01__workEmail__c);
-        system.assertEquals(workEmailString,insertedContacts[0].npe01__Preferred_Email__c);
-        
-    }
-    
-    /*********************************************************************************************************
-    * @description Test Method for creating a contact with a email and a personal email. 
-    private static testMethod void createContactWithEmailPersonalPrefAlsoPersonalEmail()
-    {
-        //with pref set to Personal, Personal email should land in email and set npe01__Preferred_Email__c to 'Personal'.
-        String newEmail = 'joe@testforemail.com';
-        String newPersonalEmail = 'j@testemail.net';
-        String preferredEmail = 'Personal';
-        Contact con = new Contact(FirstName='test', LastName='contact678',email=newEmail,npe01__HomeEmail__c=newPersonalEmail,npe01__Preferred_Email__c=preferredEmail);
-        insert con;
-        
-        Contact[] insertedContacts = [Select email,npe01__workEmail__c,npe01__HomeEmail__c,npe01__Preferred_Email__c from Contact where id=:con.id];
-        
-        system.assertEquals(newEmail,insertedContacts[0].email);
-        system.assertEquals(newEmail,insertedContacts[0].npe01__HomeEmail__c);
-        system.assertEquals(null,insertedContacts[0].npe01__workEmail__c);
-        system.assertEquals(preferredEmail,insertedContacts[0].npe01__Preferred_Email__c);
-        
-    }
-    
-    /*********************************************************************************************************
-    * @description Test Method for creating a contact with an email in email and the preferred email set. 
-    private static testMethod void createContactWithEmailPrefSet()
-    {
-        //with pref set to Home, Personal Email should land in email and set npe01__Preferred_Email__c to 'Personal'.
-        //commented out until #49 is fixed
-        String newEmail = 'joe@testforemail.com';
-        String preferredEmail = 'Personal';
-        Contact con = new Contact(FirstName='test', LastName='contact678',email=newEmail,npe01__Preferred_Email__c=preferredEmail);
-        insert con;
-        
-        Contact[] insertedContacts = [Select email,npe01__HomeEmail__c,npe01__Preferred_Email__c from Contact where id=:con.id];
-        
-        system.assertEquals(newEmail,insertedContacts[0].email);
-       //   system.assertEquals(newEmail,insertedContacts[0].npe01__HomeEmail__c);
-        system.assertEquals(preferredEmail,insertedContacts[0].npe01__Preferred_Email__c);
-        
-        //test work email
-        preferredEmail = 'Work';
-        
-        Contact con1 = new Contact(FirstName='test', LastName='contact678',email=newEmail,npe01__Preferred_Email__c=preferredEmail);
-        insert con1;
-        
-        Contact[] insertedContacts1 = [Select email,npe01__workEmail__c,npe01__Preferred_Email__c from Contact where id=:con1.id];
-        
-        system.assertEquals(newEmail,insertedContacts1[0].email);
-        system.assertEquals(newEmail,insertedContacts1[0].npe01__workEmail__c);
-        system.assertEquals(preferredEmail,insertedContacts1[0].npe01__Preferred_Email__c);
-        
-        //test alternate email
-        preferredEmail = 'Alternate';
-        
-        Contact con2 = new Contact(FirstName='test', LastName='contact678',email=newEmail,npe01__Preferred_Email__c=preferredEmail);
-        insert con2;
-        
-        Contact[] insertedContacts2 = [Select email,npe01__AlternateEmail__c,npe01__Preferred_Email__c from Contact where id=:con2.id];
-        
-        system.assertEquals(newEmail,insertedContacts2[0].email);
-        system.assertEquals(newEmail,insertedContacts2[0].npe01__AlternateEmail__c);
-        system.assertEquals(preferredEmail,insertedContacts2[0].npe01__Preferred_Email__c);
-      
-    }
-    
-    /*********************************************************************************************************
-    * @description Test Method for creating a contact with a email in the correct field and the preferred email set. 
-    private static testMethod void createContactWithEmailAndPrefSet()
-    {
-        //with pref set to Home, Personal Email should land in email and set npe01__Preferred_Email__c to 'Personal'.
-        
-        String newEmail = 'joe@testforemail.com';
-        String preferredEmail = 'Personal';
-        Contact con = new Contact(FirstName='test', LastName='contact678',npe01__HomeEmail__c=newEmail,npe01__Preferred_Email__c=preferredEmail);
-        insert con;
-        
-        Contact[] insertedContacts = [Select email,npe01__HomeEmail__c,npe01__Preferred_Email__c from Contact where id=:con.id];
-        
-        system.assertEquals(newEmail,insertedContacts[0].email);
-        system.assertEquals(newEmail,insertedContacts[0].npe01__HomeEmail__c);
-        system.assertEquals(preferredEmail,insertedContacts[0].npe01__Preferred_Email__c);
-        
-        //test work email
-        preferredEmail = 'Work';
-        
-        Contact con1 = new Contact(FirstName='test', LastName='contact678',npe01__workEmail__c=newEmail,npe01__Preferred_Email__c=preferredEmail);
-        insert con1;
-        
-        Contact[] insertedContacts1 = [Select email,npe01__workEmail__c,npe01__Preferred_Email__c from Contact where id=:con1.id];
-        
-        system.assertEquals(newEmail,insertedContacts1[0].email);
-        system.assertEquals(newEmail,insertedContacts1[0].npe01__workEmail__c);
-        system.assertEquals(preferredEmail,insertedContacts1[0].npe01__Preferred_Email__c);
-        
-        //test mobile email
-        preferredEmail = 'Alternate';
-        
-        Contact con2 = new Contact(FirstName='test', LastName='contact678',npe01__AlternateEmail__c=newEmail,npe01__Preferred_Email__c=preferredEmail);
-        insert con2;
-        
-        Contact[] insertedContacts2 = [Select email,npe01__AlternateEmail__c,npe01__Preferred_Email__c from Contact where id=:con2.id];
-        
-        system.assertEquals(newEmail,insertedContacts2[0].email);
-        system.assertEquals(newEmail,insertedContacts2[0].npe01__AlternateEmail__c);
-        system.assertEquals(preferredEmail,insertedContacts2[0].npe01__Preferred_Email__c);
-       
-        
-    }
-    
-    /*********************************************************************************************************
-    * @description Test Method for updating a contact with a email in the correct field and the preferred email set. 
-    private static testMethod void updateContactWithEmailAndPref()
-    {
-        //with pref set to Personal, Personal email should land in email and set npe01__Preferred_Email__c to 'Personal'.
-        
-        String newEmail = 'joe@testforemail.com';
-        String preferredEmail = 'Personal';
-        Contact con = new Contact(FirstName='test', LastName='contact678',npe01__HomeEmail__c=newEmail,npe01__Preferred_Email__c=preferredEmail);
-        insert con;
-        
-        Contact[] insertedContacts = [Select email,npe01__HomeEmail__c,npe01__Preferred_Email__c from Contact where id=:con.id];
-        
-        //test work email
-        preferredEmail = 'Work';
-        String workEmail = 'jd@email.net';
-        
-        con.npe01__workEmail__c = workEmail;
-        con.npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS;
-        update con;
-        
-        Contact[] insertedContacts1 = [Select email,npe01__HomeEmail__c,npe01__workEmail__c,npe01__Preferred_Email__c from Contact where id=:con.id];
-        
-        system.assertEquals(workEmail,insertedContacts1[0].email);
-        system.assertEquals(workEmail,insertedContacts1[0].npe01__workEmail__c);
-        system.assertEquals(newEmail,insertedContacts1[0].npe01__HomeEmail__c);
-        system.assertEquals(preferredEmail,insertedContacts1[0].npe01__Preferred_Email__c);
-        
-        //test mobile email
-        preferredEmail = 'Alternate';
-        String alternateEmail = 'jdc@testemail.net';
-        
-        con.npe01__alternateEmail__c = alternateEmail;
-        con.npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS;
-        update con;
-        
-        Contact[] insertedContacts2 = [Select email,npe01__HomeEmail__c,npe01__workEmail__c,npe01__alternateEmail__c,npe01__Preferred_Email__c from Contact where id=:con.id];
-        
-        system.assertEquals(alternateEmail,insertedContacts2[0].email);
-        system.assertEquals(alternateEmail,insertedContacts2[0].npe01__alternateEmail__c);
-        system.assertEquals(workEmail,insertedContacts2[0].npe01__workEmail__c);
-        system.assertEquals(newEmail,insertedContacts2[0].npe01__HomeEmail__c);
-        system.assertEquals(preferredEmail,insertedContacts2[0].npe01__Preferred_Email__c);
-      
-        
-    }
-*/
-/* TESTING DONATION HISTORY WEBSERVICES ------------------------------------------------*/
-/************************* DEPRECATE IN CUMULUS ***********************************    
-
-    /*********************************************************************************************************
-    * @description Test Method for getContactDonationHistory
-    private static testMethod void getContactDonationHistory()
-    {
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
-        
-        
-        CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
-
-        Contact con = new Contact(
-            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS,
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
-        insert con;
-
-        Opportunity o = new Opportunity(Amount=500,Name='test',StageName='Closed Won',CloseDate=System.today());
-        insert o;
-        
-        OpportunityContactRole ocr = new OpportunityContactRole(OpportunityId=o.Id,ContactId=con.Id,isPrimary=true,role='Donor');
-        insert ocr;
-
-        Decimal sum = ACCT_IndividualAccounts.getContactDonationHistory(con.id);
-    }
-
-    /*********************************************************************************************************
-    * @description Test Method for getContactLastDonation
-    private static testMethod void getContactLastDonation()
-    {
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
-        
-        CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
-
-        Contact con = new Contact(
-            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS,
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
-        insert con;
-        
-        String sum = ACCT_IndividualAccounts.getContactLastDonation(con.id);
-        
-        system.assertEquals('',sum);
-
-        Opportunity o = new Opportunity(Amount=500,Name='test',StageName='Closed Won',CloseDate=System.today());
-        insert o;
-        
-        OpportunityContactRole ocr = new OpportunityContactRole(OpportunityId=o.Id,ContactId=con.Id,isPrimary=true,role='Donor');
-        insert ocr;
-
-        sum = ACCT_IndividualAccounts.getContactLastDonation(con.id);
-        
-    }
-
-    /*********************************************************************************************************
-    * @description Test Method for getContactDonationHistory
-    private static testMethod void getContactDonationHistoryAmount()
-    {
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
-        
-        CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
-
-        Contact con = new Contact(
-            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS,
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
-        insert con;
-
-        Opportunity o = new Opportunity(Amount=500,Name='test',StageName='Closed Won',CloseDate=System.today());
-        insert o;
-        
-        OpportunityContactRole ocr = new OpportunityContactRole(OpportunityId=o.Id,ContactId=con.Id,isPrimary=true,role='Donor');
-        insert ocr;
-        
-        //pass contact into the controller
-        ApexPages.StandardController sc = new ApexPages.standardController(con);
-        //pass the controller into the extension
-        ContactDonationCredit_EXT ext = new ContactDonationCredit_EXT(sc);
-        
-        system.assertEquals(system.label.npe01.DefaultContactTransactionCurrency + '500.00',ext.getContactDonationHistory());
-    }
-
-    /*********************************************************************************************************
-    * @description Test Method for getContactLastDonation
-    private static testMethod void getContactLastDonationDate()
-    {
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
-        
-        Integer year = 2005;
-        Integer month = 10;
-        Integer day = 10;
-        
-        
-        CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
-
-        Contact con = new Contact(
-            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS,
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
-        insert con;
-        
-        String sum = ACCT_IndividualAccounts.getContactLastDonation(con.id);
-        
-        system.assertEquals('',sum);
-
-        Opportunity o = new Opportunity(Amount=500,Name='test',StageName='Closed Won',CloseDate=date.newInstance(year,month,day));
-        insert o;
-        
-        OpportunityContactRole ocr = new OpportunityContactRole(OpportunityId=o.Id,ContactId=con.Id,isPrimary=true,role='Donor');
-        insert ocr;
-        
-        //pass contact into the controller
-        ApexPages.StandardController sc = new ApexPages.standardController(con);
-        //pass the controller into the extension
-        ContactDonationCredit_EXT ext = new ContactDonationCredit_EXT(sc);
-
-        system.assertEquals(String.valueOf(day) + '/' + String.valueOf(month) + '/' + String.valueOf(year),ext.getContactLastDonation());        
-    }   
-************************* DEPRECATE IN CUMULUS ***********************************/    
+    } 
      
     /*********************************************************************************************************
     * @description Rename a Contact's firstname to null and make sure the 1:1 Account's name gets updated
@@ -1743,44 +1200,59 @@ private class ACCT_IndividualAccounts_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Update a household account's record type, verify system fields are unset.
-    */
+    @description 
+        Update a Household Account's Record Type to another Record Type 
+    verify:
+        The specific system fields should not be set.
+    **********************************************************************************************************/ 
     public static testMethod void updateHHAccountRecType() {
+        Boolean isPersonAccountEnabled = UTIL_Describe.isValidField('Account', 'isPersonAccount');
 
-        List<RecordType> rectypes = [SELECT Id FROM RecordType WHERE SobjectType = 'Account' AND IsActive = true];
-        if (rectypes.size() < 2) {
+        String soql = String.format(
+            'SELECT Id{0} FROM RecordType WHERE SobjectType = \'\'Account\'\' AND IsActive = true',
+            new String[] { isPersonAccountEnabled ? ', IsPersonType' : '' }
+        );       
+        List<RecordType> rectypes = database.query(soql);
+        
+        if (rectypes == null || rectypes.size() < 2) {
             return;
         }
 
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
                 npe01__HH_Account_RecordTypeID__c = rectypes[0].id
             )
         );
 
-        Contact con = new Contact(
-            LastName = 'Test'
-        );
+        Contact con = new Contact(LastName = 'Test');
         insert con;
+        con = [SELECT AccountId FROM Contact WHERE Id = :con.id];
+        
+        Account queryAccount = [SELECT Id, RecordTypeId, npe01__SYSTEMISINDIVIDUAL__c, npe01__SYSTEM_AccountType__c FROM Account WHERE Id = :con.AccountId];
 
-        Contact queryCon = [SELECT AccountId FROM Contact WHERE Id = :con.id];
-
-        Account queryAccount = [SELECT Id, RecordTypeId, npe01__SYSTEMISINDIVIDUAL__c, npe01__SYSTEM_AccountType__c FROM Account WHERE Id = :queryCon.AccountId];
-
-        System.assertEquals(rectypes[0].id, queryAccount.RecordTypeId, 'RecType should be set to hh account rectype defined in settings.');
+        System.assertEquals(rectypes[0].id, queryAccount.RecordTypeId, 'Record Type should be set to hh account rectype defined in settings.');
         System.assertEquals(true, queryAccount.npe01__SYSTEMISINDIVIDUAL__c, 'IsIndividual system field should be set for household account.');
         System.assertEquals(CAO_Constants.HH_ACCOUNT_TYPE, queryAccount.npe01__SYSTEM_AccountType__c, 'Account Type system field should be set for household account.');
 
+        Id newRecordTypeId = findAnotherRecordTypeId(rectypes[0].id, rectypes, isPersonAccountEnabled);
+        if (newRecordTypeId == null) {
+            //Cannot verify the rest of the test since 
+            //a Record Type of the same isPersonType (where applicable) does not exist
+            return;
+        }
+        
+        System.assertNotEquals(rectypes[0].id, newRecordTypeId);
+        
         Test.startTest();
-        queryAccount.RecordTypeId = rectypes[1].id;
-        update queryAccount;
+        //If the Account is a Person Account, no other field can be updated when changing the Record Type
+        update new Account(Id = queryAccount.Id, RecordTypeId = newRecordTypeId);
         Test.stopTest();
 
-        queryAccount = [SELECT Id, RecordTypeId, npe01__SYSTEMISINDIVIDUAL__c, npe01__SYSTEM_AccountType__c FROM Account WHERE Id = :queryCon.AccountId];
+        queryAccount = [SELECT Id, RecordTypeId, npe01__SYSTEMISINDIVIDUAL__c, npe01__SYSTEM_AccountType__c FROM Account WHERE Id = :con.AccountId];
 
-        System.assertEquals(false, queryAccount.npe01__SYSTEMISINDIVIDUAL__c, 'Individual system field should not be set for household account.');
-        System.assertNotEquals(CAO_Constants.HH_ACCOUNT_TYPE, queryAccount.npe01__SYSTEM_AccountType__c, 'Account Type system field should not be set for household account.');
+        System.assertEquals(false, queryAccount.npe01__SYSTEMISINDIVIDUAL__c, 'Individual system field should not be set after the Record Type change.');
+        System.assertNotEquals(CAO_Constants.HH_ACCOUNT_TYPE, queryAccount.npe01__SYSTEM_AccountType__c, 'Account Type system field should not be set after the Record Type change.');
     }
 
     /*********************************************************************************************************
@@ -1818,5 +1290,44 @@ private class ACCT_IndividualAccounts_TEST {
             System.assert(false, 'No exception should occur: ' + ex);
         }
         Test.stopTest();
+    }
+
+    // Helpers
+    ////////////
+
+    /*********************************************************************************************************
+    * @description Find another Record Type Id that is not recTypeId. If the org has Person Accounts enabled, 
+    * then other Record Type must be of the same isPersonType as the input recTypeId.
+    * @param recTypeId A Record Type Id 
+    * @param recTypes List of all Record Types for the Account SObjectType
+    * @param isPersonAccountEnabled Flag to indicate if the org has Person Accounts enabled
+    * @return Id An Id of another Record Type
+    **********************************************************************************************************/
+    static Id findAnotherRecordTypeId(Id recTypeId, List<RecordType> recTypes, Boolean isPersonAccountEnabled) {
+        Id newRecTypeId = null;
+        
+        Map<Id, RecordType> recTypesById = new Map<Id, RecordType>(recTypes);
+        RecordType recType = recTypesById.remove(recTypeId);
+        
+        if (recTypesById.isEmpty() || recType == null) {
+            return newRecTypeId;
+        }
+        
+        if (isPersonAccountEnabled) {
+            //Choose a Record Type that has the same IsPersonType value
+            Boolean isPersonType = (Boolean) recType.get('IsPersonType');
+            
+            for (RecordType rt : recTypesById.values()) {
+                if ((Boolean) rt.get('IsPersonType') == isPersonType) {
+                    newRecTypeId = rt.Id;
+                    break;
+                }
+            }            
+        } else {
+            //Choose any Record Type that is not input recTypeId
+            newRecTypeId = recTypesById.values()[0].Id;
+        }
+        
+        return newRecTypeId;
     }
 }
