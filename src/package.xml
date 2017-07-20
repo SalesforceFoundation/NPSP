@@ -801,8 +801,8 @@
         <members>Trigger_Handler__c.Load_Order__c</members>
         <members>Trigger_Handler__c.Object__c</members>
         <members>Trigger_Handler__c.Trigger_Action__c</members>
-        <members>Trigger_Handler__c.Usernames_to_Exclude__c</members>
         <members>Trigger_Handler__c.User_Managed__c</members>
+        <members>Trigger_Handler__c.Usernames_to_Exclude__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Automatic_Campaign_Member_Management__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Non_Responded_Status__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Responded_Status__c</members>
@@ -1053,7 +1053,6 @@
         <members>healthDetailsBadReportId</members>
         <members>healthDetailsContactData</members>
         <members>healthDetailsDuplicateAcctRT</members>
-        <members>healthDetailsDuplicateContactRoles</members>
         <members>healthDetailsGenderField</members>
         <members>healthDetailsHHAccountModel</members>
         <members>healthDetailsHHActNoContacts</members>
@@ -1101,7 +1100,6 @@
         <members>healthLabelAllTestsPassed</members>
         <members>healthLabelAutoRelValid</members>
         <members>healthLabelContactData</members>
-        <members>healthLabelDuplicateContactRoles</members>
         <members>healthLabelErrorRecipientValid</members>
         <members>healthLabelFailed</members>
         <members>healthLabelFiscalYearsValid</members>
@@ -1110,7 +1108,6 @@
         <members>healthLabelHHObjData</members>
         <members>healthLabelIntro</members>
         <members>healthLabelLastRun</members>
-        <members>healthLabelNoDuplicateContactRoles</members>
         <members>healthLabelNoMissingOppPayments</members>
         <members>healthLabelNone</members>
         <members>healthLabelOCRCheck</members>
@@ -1143,7 +1140,6 @@
         <members>healthSolutionAutoRelInvalidLookupField</members>
         <members>healthSolutionBadRDField</members>
         <members>healthSolutionContactData</members>
-        <members>healthSolutionDuplicateContactRoles</members>
         <members>healthSolutionEditSetting</members>
         <members>healthSolutionHHAccNoContacts</members>
         <members>healthSolutionHHObjNoContacts</members>
