@@ -287,16 +287,16 @@ public class TDTM_TriggerHandler {
 
                 // update oldList with the correct cached state of the objects
                 oldList = listSObj;
-                UTIL_Debug.debug(LoggingLevel.WARN, '****DJH fixup oldList to : ' + oldList);
+                //UTIL_Debug.debug(LoggingLevel.WARN, '**** fixup oldList to : ' + oldList);
             } else {
-                UTIL_Debug.debug(LoggingLevel.WARN, '****DJH fixup not done since mapIdToSobj was null. mapDescObjToMapOldForUpdates:  ' + mapDescObjToMapOldForUpdates);
+                //UTIL_Debug.debug(LoggingLevel.WARN, '**** fixup not done since mapIdToSobj was null. mapDescObjToMapOldForUpdates:  ' + mapDescObjToMapOldForUpdates);
             }
         }
 
         // now cache objects for future Update calls
         if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
             mapDescObjToMapOldForUpdates.put(describeObj, new Map<Id, SObject>(newList));
-            UTIL_Debug.debug(LoggingLevel.WARN, '****DJH cached newList: ' + newList);
+            //UTIL_Debug.debug(LoggingLevel.WARN, '**** cached newList: ' + newList);
         }
 
         return oldList;
