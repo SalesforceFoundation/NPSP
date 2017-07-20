@@ -71,12 +71,21 @@
         <label>Gebruiker Beheren</label>
         <name>User_Managed__c</name>
     </fields>
+    <fields>
+        <help><!-- Semicolon separated list of Salesforce usernames that this trigger will NOT run for. Leave blank to run for all users. --></help>
+        <label><!-- Usernames to Exclude --></label>
+        <name>Usernames_to_Exclude__c</name>
+    </fields>
     <gender><!-- Neuter --></gender>
     <layouts>
         <layout>Trigger Handler Layout</layout>
         <sections>
             <label><!-- Custom Links --></label>
             <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- New Section --></label>
+            <section>New Section</section>
         </sections>
     </layouts>
     <nameFieldLabel><!-- Trigger Handler Name --></nameFieldLabel>
