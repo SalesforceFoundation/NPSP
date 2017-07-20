@@ -597,6 +597,30 @@
         <name>bdiBatchException</name>
     </customLabels>
     <customLabels>
+        <label><!-- settings label for BestMatchOrCreate behavior --></label>
+        <name>bdiBehaviorBestMatchOrCreate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for DoNotMatch behavior --></label>
+        <name>bdiBehaviorDoNotMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for ExactMatchOrCreate behavior --></label>
+        <name>bdiBehaviorExactMatchOrCreate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for RequireBestMatch behavior --></label>
+        <name>bdiBehaviorRequireBestMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for RequireExactMatch behavior --></label>
+        <name>bdiBehaviorRequireExactMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for RequireNoMatch behavior --></label>
+        <name>bdiBehaviorRequireNoMatch</name>
+    </customLabels>
+    <customLabels>
         <label>סגור</label>
         <name>bdiBtnClose</name>
     </customLabels>
@@ -685,12 +709,36 @@
         <name>bdiDonation</name>
     </customLabels>
     <customLabels>
+        <label><!-- error displayed in Data Importer if no donation matching rules set --></label>
+        <name>bdiDonationMatchingRuleEmpty</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error on BDI record if DonationImported or PaymentImported lookups are invalid --></label>
+        <name>bdiErrorDonationLookupMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error message if the donation matched multiple opps --></label>
+        <name>bdiErrorDonationMultiMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error when no matching donation found, and a match is required --></label>
+        <name>bdiErrorDonationNoMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error message if the donation matched opp(s), but behavior required no match --></label>
+        <name>bdiErrorDonationRequireNoMatch</name>
+    </customLabels>
+    <customLabels>
         <label>שם לא חוקי של מבצע לגיוס תרומות</label>
         <name>bdiErrorInvalidCampaignName</name>
     </customLabels>
     <customLabels>
         <label>שם לא חוקי של תורם תרומה</label>
         <name>bdiErrorInvalidDonor</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error thrown if specified class doesn&apos;t support BDI_IMatchDonations --></label>
+        <name>bdiErrorInvalidIMatchDonations</name>
     </customLabels>
     <customLabels>
         <label>יש לציין שם משפחה.</label>
@@ -703,6 +751,10 @@
     <customLabels>
         <label>בוצעה התאמה של איש קשר קיים מחשבון שאינו של משק בית, אשר אינו נתמך.</label>
         <name>bdiErrorNonHHAccountContact</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error message if the donation matched multiple pmts --></label>
+        <name>bdiErrorPaymentMultiMatch</name>
     </customLabels>
     <customLabels>
         <label>נכשל</label>
@@ -725,6 +777,22 @@
         <name>bdiMatched</name>
     </customLabels>
     <customLabels>
+        <label><!-- status on a bdi object to specify it was matched from an ambiguous set --></label>
+        <name>bdiMatchedBest</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- BDI status when matching an object by its Salesforce ID --></label>
+        <name>bdiMatchedId</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- status on a bdi object when no matching record found --></label>
+        <name>bdiMatchedNone</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error when numeric settings set to negative number --></label>
+        <name>bdiPositiveNumber</name>
+    </customLabels>
+    <customLabels>
         <label>רשומות שנכשלו:</label>
         <name>bdiRecordsFailed</name>
     </customLabels>
@@ -739,6 +807,18 @@
     <customLabels>
         <label>הפעל תהליך יבוא נתונים</label>
         <name>bdiRunBtn</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- section label for contact matching rules in bDI --></label>
+        <name>bdiSettingsSectionContactMatching</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- section label for Donation Matching in BDI Settings --></label>
+        <name>bdiSettingsSectionDonationMatching</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- section label for Extensibility in BDI Settings --></label>
+        <name>bdiSettingsSectionExtensibility</name>
     </customLabels>
     <customLabels>
         <label>מצב נוכחי:</label>
@@ -851,10 +931,6 @@
     <customLabels>
         <label>לא ניתן לציין אותו סוג רשומת חשבון עבור סוג רשומת חשבון משק הבית וסוג הרשומה &apos;אחד לאחד&apos;.</label>
         <name>healthDetailsDuplicateAcctRT</name>
-    </customLabels>
-    <customLabels>
-        <label>בדיקת התקינות העלתה הזדמנויות עם אנשי קשר וערכי סיכום כפולים.</label>
-        <name>healthDetailsDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
         <label>שדה המגדר {0} לא קיים באיש הקשר.</label>
@@ -1045,10 +1121,6 @@
         <name>healthLabelContactData</name>
     </customLabels>
     <customLabels>
-        <label>אנשי קשר וערכי סיכום כפולים</label>
-        <name>healthLabelDuplicateContactRoles</name>
-    </customLabels>
-    <customLabels>
         <label>נמען הודעות השגיאה חוקי.</label>
         <name>healthLabelErrorRecipientValid</name>
     </customLabels>
@@ -1079,10 +1151,6 @@
     <customLabels>
         <label>הפעלה אחרונה: {0}</label>
         <name>healthLabelLastRun</name>
-    </customLabels>
-    <customLabels>
-        <label>בדיקת התקינות לא גילתה הזדמנויות עם אנשי קשר וערכי סיכום כפולים.</label>
-        <name>healthLabelNoDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
         <label>כל ההזדמנויות עם תשלומים מכילות את התשלומים הצפויים.</label>
@@ -1211,12 +1279,6 @@
     <customLabels>
         <label>כדי להציג אנשי קשר אלה, הפעל את הדוח &lt;b&gt;אנשי קשר ללא חשבונות&lt;/b&gt; בתיקיית דוחות בדיקת התקינות של NPSP.</label>
         <name>healthSolutionContactData</name>
-    </customLabels>
-    <customLabels>
-        <label>בעבר, NPSP ספרה פעמיים ערכי סיכום של קרדיט עבור אנשי קשר ששויכו פעמיים להזדמנות דרך שני תפקידי איש קשר בהזדמנות. כיום NPSP סופרת ערכי סיכום אלה פעם אחת בלבד, ללא תלות במספר השיוכים של איש קשר להזדמנות.&lt;br/&gt;
-&lt;br/&gt;
-אם ברצונך לדעת אילו הזדמנויות היו כוללות בעבר את הספירה הכפולה של ערך סיכום זה, הפעל את שאילתת ה-SOQL הבאה במסוף למפתחים: &apos;&apos;SELECT Count(Id), OpportunityId, Opportunity.Name OpportunityName, ContactId, Contact.Name ContactName FROM OpportunityContactRole WHERE Opportunity.IsWon = true AND Role IN ({0}) GROUP BY OpportunityId, Opportunity.Name, ContactId, Contact.Name HAVING Count(Id) &gt; 1&apos;&apos;</label>
-        <name>healthSolutionDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
         <label>בכרטיסיית ההגדרות של NPSP, לחץ על &apos;{1} | {2}&apos; וערוך את ההגדרה של {0}.</label>
@@ -3062,11 +3124,11 @@
         <name>NPSP_Settings</name>
     </customTabs>
     <quickActions>
-        <label><!-- Log a Call --></label>
+        <label><!-- LogACall --></label>
         <name>LogACall</name>
     </quickActions>
     <quickActions>
-        <label><!-- New Account --></label>
+        <label><!-- NewAccount --></label>
         <name>NewAccount</name>
     </quickActions>
     <quickActions>
@@ -3074,7 +3136,7 @@
         <name>NewContact</name>
     </quickActions>
     <quickActions>
-        <label><!-- New Note --></label>
+        <label><!-- NewNote --></label>
         <name>NewNote</name>
     </quickActions>
     <quickActions>
@@ -3082,7 +3144,7 @@
         <name>NewOpportunity</name>
     </quickActions>
     <quickActions>
-        <label><!-- New Task --></label>
+        <label><!-- NewTask --></label>
         <name>NewTask</name>
     </quickActions>
     <quickActions>
