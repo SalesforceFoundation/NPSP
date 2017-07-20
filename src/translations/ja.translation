@@ -596,6 +596,30 @@
         <name>bdiBatchException</name>
     </customLabels>
     <customLabels>
+        <label><!-- settings label for BestMatchOrCreate behavior --></label>
+        <name>bdiBehaviorBestMatchOrCreate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for DoNotMatch behavior --></label>
+        <name>bdiBehaviorDoNotMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for ExactMatchOrCreate behavior --></label>
+        <name>bdiBehaviorExactMatchOrCreate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for RequireBestMatch behavior --></label>
+        <name>bdiBehaviorRequireBestMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for RequireExactMatch behavior --></label>
+        <name>bdiBehaviorRequireExactMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for RequireNoMatch behavior --></label>
+        <name>bdiBehaviorRequireNoMatch</name>
+    </customLabels>
+    <customLabels>
         <label>完了</label>
         <name>bdiBtnClose</name>
     </customLabels>
@@ -684,12 +708,36 @@
         <name>bdiDonation</name>
     </customLabels>
     <customLabels>
+        <label><!-- error displayed in Data Importer if no donation matching rules set --></label>
+        <name>bdiDonationMatchingRuleEmpty</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error on BDI record if DonationImported or PaymentImported lookups are invalid --></label>
+        <name>bdiErrorDonationLookupMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error message if the donation matched multiple opps --></label>
+        <name>bdiErrorDonationMultiMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error when no matching donation found, and a match is required --></label>
+        <name>bdiErrorDonationNoMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error message if the donation matched opp(s), but behavior required no match --></label>
+        <name>bdiErrorDonationRequireNoMatch</name>
+    </customLabels>
+    <customLabels>
         <label>無効な支援キャンペーン名</label>
         <name>bdiErrorInvalidCampaignName</name>
     </customLabels>
     <customLabels>
         <label>無効な支援者</label>
         <name>bdiErrorInvalidDonor</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error thrown if specified class doesn&apos;t support BDI_IMatchDonations --></label>
+        <name>bdiErrorInvalidIMatchDonations</name>
     </customLabels>
     <customLabels>
         <label>姓を指定する必要があります。</label>
@@ -702,6 +750,10 @@
     <customLabels>
         <label>サポートされていない、世帯団体以外の既存の個人に一致しました。</label>
         <name>bdiErrorNonHHAccountContact</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error message if the donation matched multiple pmts --></label>
+        <name>bdiErrorPaymentMultiMatch</name>
     </customLabels>
     <customLabels>
         <label>失敗</label>
@@ -724,6 +776,22 @@
         <name>bdiMatched</name>
     </customLabels>
     <customLabels>
+        <label><!-- status on a bdi object to specify it was matched from an ambiguous set --></label>
+        <name>bdiMatchedBest</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- BDI status when matching an object by its Salesforce ID --></label>
+        <name>bdiMatchedId</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- status on a bdi object when no matching record found --></label>
+        <name>bdiMatchedNone</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error when numeric settings set to negative number --></label>
+        <name>bdiPositiveNumber</name>
+    </customLabels>
+    <customLabels>
         <label>レコードが失敗しました:</label>
         <name>bdiRecordsFailed</name>
     </customLabels>
@@ -738,6 +806,18 @@
     <customLabels>
         <label>データインポート処理を開始</label>
         <name>bdiRunBtn</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- section label for contact matching rules in bDI --></label>
+        <name>bdiSettingsSectionContactMatching</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- section label for Donation Matching in BDI Settings --></label>
+        <name>bdiSettingsSectionDonationMatching</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- section label for Extensibility in BDI Settings --></label>
+        <name>bdiSettingsSectionExtensibility</name>
     </customLabels>
     <customLabels>
         <label>現在の状況:</label>
@@ -850,10 +930,6 @@
     <customLabels>
         <label>世帯団体レコードタイプと 1 対 1 のレコードタイプに同じ団体レコードタイプを指定することはできません。</label>
         <name>healthDetailsDuplicateAcctRT</name>
-    </customLabels>
-    <customLabels>
-        <label>個人および積み上げ集計の値が重複している支援が状態チェックで見つかりました。</label>
-        <name>healthDetailsDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
         <label>性別項目 {0} が個人に存在しません。</label>
@@ -1044,10 +1120,6 @@
         <name>healthLabelContactData</name>
     </customLabels>
     <customLabels>
-        <label>個人および積み上げ集計の値が重複しています</label>
-        <name>healthLabelDuplicateContactRoles</name>
-    </customLabels>
-    <customLabels>
         <label>エラー通知受信者は有効です。</label>
         <name>healthLabelErrorRecipientValid</name>
     </customLabels>
@@ -1078,10 +1150,6 @@
     <customLabels>
         <label>最終実行日: {0}</label>
         <name>healthLabelLastRun</name>
-    </customLabels>
-    <customLabels>
-        <label>個人または積み上げ集計の値が重複している支援が状態チェックで見つかりませんでした。</label>
-        <name>healthLabelNoDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
         <label>支払が設定されているすべての支援に支払が必要です。</label>
@@ -1210,12 +1278,6 @@
     <customLabels>
         <label>これらの個人を表示するには、NPSP 状態チェックレポートフォルダで&lt;b&gt;団体が関連しない個人&lt;/b&gt;レポートを実行します。</label>
         <name>healthSolutionContactData</name>
-    </customLabels>
-    <customLabels>
-        <label>これまでは、2 つの異なる支援個人の役割で支援に 2 回関連付けられた個人のソフトクレジットの積み上げ集計値が NPSP で二重にカウントされていました。支援の個人の関連付けの数に関係なく、このような積み上げ集計値が NPSP で 1 回のみカウントされるようになりました。&lt;br/&gt;
-&lt;br/&gt;
-以前にこのように積み上げ集計値が二重にカウントされていた支援を確認するには、開発者コンソールで「SELECT Count(Id), OpportunityId, Opportunity.Name OpportunityName, ContactId, Contact.Name ContactName FROM OpportunityContactRole WHERE Opportunity.IsWon = true AND Role IN ({0}) GROUP BY OpportunityId, Opportunity.Name, ContactId, Contact.Name HAVING Count(Id) &gt; 1」という SOQL クエリを実行します</label>
-        <name>healthSolutionDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
         <label>[NPSP 設定] タブで、{1} | {2} をクリックし、{0} 設定を編集します。</label>
