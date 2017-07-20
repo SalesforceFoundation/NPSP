@@ -124,6 +124,10 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
             doStash(oldlist);
             addDeletionErrors();
             processDeletionErrors(objResult.getSObjectType().getDescribe().getName());
+            
+            for (Cascade cc : getCascades()) {
+                cc.parents.clear();
+            }
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
@@ -138,13 +142,14 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
 
             disableCascade = true;
             doDelete();
+            disableCascade = false;
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterUndelete) {
             disableCascade = true;
             doUndelete(newlist);
+            disableCascade = false;
         }
-
 
         return null;
     }
@@ -265,6 +270,7 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
                 forDelete.addAll(cc.children.values());
             }
             cc.children.clear();
+            cc.childToParent.clear();
         }
         if (!forDelete.isEmpty()) {
             List<Database.DeleteResult> delResults = Database.delete(forDelete, false);
