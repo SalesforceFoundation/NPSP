@@ -581,6 +581,30 @@
         <name>bdiBatchException</name>
     </customLabels>
     <customLabels>
+        <label><!-- settings label for BestMatchOrCreate behavior --></label>
+        <name>bdiBehaviorBestMatchOrCreate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for DoNotMatch behavior --></label>
+        <name>bdiBehaviorDoNotMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for ExactMatchOrCreate behavior --></label>
+        <name>bdiBehaviorExactMatchOrCreate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for RequireBestMatch behavior --></label>
+        <name>bdiBehaviorRequireBestMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for RequireExactMatch behavior --></label>
+        <name>bdiBehaviorRequireExactMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for RequireNoMatch behavior --></label>
+        <name>bdiBehaviorRequireNoMatch</name>
+    </customLabels>
+    <customLabels>
         <label><!-- bdiBtnClose --></label>
         <name>bdiBtnClose</name>
     </customLabels>
@@ -669,12 +693,36 @@
         <name>bdiDonation</name>
     </customLabels>
     <customLabels>
+        <label><!-- error displayed in Data Importer if no donation matching rules set --></label>
+        <name>bdiDonationMatchingRuleEmpty</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error on BDI record if DonationImported or PaymentImported lookups are invalid --></label>
+        <name>bdiErrorDonationLookupMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error message if the donation matched multiple opps --></label>
+        <name>bdiErrorDonationMultiMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error when no matching donation found, and a match is required --></label>
+        <name>bdiErrorDonationNoMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error message if the donation matched opp(s), but behavior required no match --></label>
+        <name>bdiErrorDonationRequireNoMatch</name>
+    </customLabels>
+    <customLabels>
         <label><!-- bdiErrorInvalidCampaignName --></label>
         <name>bdiErrorInvalidCampaignName</name>
     </customLabels>
     <customLabels>
         <label><!-- bdiErrorInvalidDonor --></label>
         <name>bdiErrorInvalidDonor</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error thrown if specified class doesn&apos;t support BDI_IMatchDonations --></label>
+        <name>bdiErrorInvalidIMatchDonations</name>
     </customLabels>
     <customLabels>
         <label><!-- bdiErrorInvalidLastname --></label>
@@ -687,6 +735,10 @@
     <customLabels>
         <label><!-- bdiErrorNonHHAccountContact --></label>
         <name>bdiErrorNonHHAccountContact</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error message if the donation matched multiple pmts --></label>
+        <name>bdiErrorPaymentMultiMatch</name>
     </customLabels>
     <customLabels>
         <label><!-- bdiFailed --></label>
@@ -709,6 +761,22 @@
         <name>bdiMatched</name>
     </customLabels>
     <customLabels>
+        <label><!-- status on a bdi object to specify it was matched from an ambiguous set --></label>
+        <name>bdiMatchedBest</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- BDI status when matching an object by its Salesforce ID --></label>
+        <name>bdiMatchedId</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- status on a bdi object when no matching record found --></label>
+        <name>bdiMatchedNone</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error when numeric settings set to negative number --></label>
+        <name>bdiPositiveNumber</name>
+    </customLabels>
+    <customLabels>
         <label><!-- bdiRecordsFailed --></label>
         <name>bdiRecordsFailed</name>
     </customLabels>
@@ -723,6 +791,18 @@
     <customLabels>
         <label><!-- bdiRunBtn --></label>
         <name>bdiRunBtn</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- section label for contact matching rules in bDI --></label>
+        <name>bdiSettingsSectionContactMatching</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- section label for Donation Matching in BDI Settings --></label>
+        <name>bdiSettingsSectionDonationMatching</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- section label for Extensibility in BDI Settings --></label>
+        <name>bdiSettingsSectionExtensibility</name>
     </customLabels>
     <customLabels>
         <label><!-- bdiStatus --></label>
@@ -835,10 +915,6 @@
     <customLabels>
         <label><!-- healthDetailsDuplicateAcctRT --></label>
         <name>healthDetailsDuplicateAcctRT</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- The details displayed when the duplicate contact roles health check fails --></label>
-        <name>healthDetailsDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
         <label><!-- healthDetailsGenderField --></label>
@@ -1029,10 +1105,6 @@
         <name>healthLabelContactData</name>
     </customLabels>
     <customLabels>
-        <label><!-- Label for Duplicate Contact Role health check --></label>
-        <name>healthLabelDuplicateContactRoles</name>
-    </customLabels>
-    <customLabels>
         <label><!-- healthLabelErrorRecipientValid --></label>
         <name>healthLabelErrorRecipientValid</name>
     </customLabels>
@@ -1063,10 +1135,6 @@
     <customLabels>
         <label><!-- healthLabelLastRun --></label>
         <name>healthLabelLastRun</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- The message displayed when the duplicate contact roles health check passes --></label>
-        <name>healthLabelNoDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
         <label><!-- healthLabelNoMissingOppPayments --></label>
@@ -1195,10 +1263,6 @@
     <customLabels>
         <label><!-- healthSolutionContactData --></label>
         <name>healthSolutionContactData</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- The recommended solution for when the duplicate contact roles health check fails --></label>
-        <name>healthSolutionDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
         <label><!-- healthSolutionEditSetting --></label>
