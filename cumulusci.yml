@@ -34,6 +34,20 @@ tasks:
             dir: browser_tests
             subfolder: NPSP-Browser-Tests-master
 
+    download_ldv_tests:
+        description: Downloads the NPSP-LDV-Tests repository
+        class_path: cumulusci.tasks.util.DownloadZip
+        options:
+            dir: ldv_tests
+            subfolder: Cumulus-LDV-Tests-master
+            url: 'https://github.com/SalesforceFoundation/Cumulus-LDV-Tests/archive/master.zip'
+
+    deploy_ldv_tests:
+        description: Deploy the LDV-Tests repo to your org.
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: ldv_tests/src
+        
     deploy_dev_config:
         description: Deploys the post install configuration for an unmanaged DE org
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -251,6 +265,17 @@ flows:
             2:
                 task: test_data_1k
 
+    ldv_tests:
+        description: 'Deploys and runs LDV tests'
+        tasks:
+            1:
+                task: download_ldv_tests
+            2:
+                task: deploy_ldv_tests
+            3:
+                task: run_tests
+                options:
+                    test_name_match: LDV_%
 
 orgs:
     scratch:
