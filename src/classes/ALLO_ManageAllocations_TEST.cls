@@ -180,6 +180,11 @@ private class ALLO_ManageAllocations_TEST {
         alloForInsert.add(amountAllo);
         insert alloForInsert;
 
+        Integer oppCnt = [SELECT Count() FROM Opportunity WHERE npe03__Recurring_Donation__c = :rd.Id];
+        system.assertNotEquals(0, oppCnt, 'There should be at least one installment Opportunity');
+        system.assertEquals(oppCnt * 2, [SELECT Count() FROM Allocation__c WHERE Opportunity__r.npe03__Recurring_Donation__c = :rd.Id],
+            'There should be two Allocations per Installment Opportunity');
+
         PageReference pageRef = Page.ALLO_ManageAllocations;
         Test.setCurrentPage(pageRef);
         ApexPages.currentPage().getParameters().put('id', rd.id);
@@ -203,7 +208,10 @@ private class ALLO_ManageAllocations_TEST {
         Test.stopTest();
 
         list<Allocation__c> queryAllo = [SELECT Id, Percent__c, Amount__c FROM Allocation__c WHERE Recurring_Donation__c=:rd.id];
-        system.assertEquals(2,queryAllo.size(),'2 allocations should be saved, one original allocation should be deleted.');
+        system.assertEquals(2,queryAllo.size(),'2 allocations should be saved on the recurring donation; one original allocation should be deleted.');
+
+        system.assertEquals(oppCnt * 2, [SELECT Count() FROM Allocation__c WHERE Opportunity__r.npe03__Recurring_Donation__c = :rd.Id],
+                'There should still be two Allocations per Installment Opportunity');
     }
 
     /**
