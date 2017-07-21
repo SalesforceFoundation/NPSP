@@ -87,16 +87,13 @@ public class TDTM_TriggerHandler {
         // Get the classes to run. Note that we are using the local object name, so it works for objects
         // from Cumulus both in the package and unmanaged dev orgs.
         List<SObject> classesToCall = dao.getclassesToCallForObject(describeObj.getLocalName(), thisAction);
-        UTIL_Debug.debug(LoggingLevel.WARN, '****Classes To Call for ' + describeObj.getLocalName() + ': ' + JSON.serializePretty(classesToCall));
+//        UTIL_Debug.debug(LoggingLevel.WARN, '****Classes To Call for ' + describeObj.getLocalName() + ': ' + JSON.serializePretty(classesToCall));
 
         if(classesToCall != null && classesToCall.size() > 0) {
             //Run the relevant classes
             for (SObject classToCall : classesToCall) {
                 TDTM_Runnable.DmlWrapper dmlWrapperLocal = new TDTM_Runnable.DmlWrapper();
 
-                //UTIL_Debug.debug(LoggingLevel.WARN, '****Calling TDTM Handler - ' + (String)classToCall.get('Class__c') + ' for ' +
-                //        describeObj.getLocalName() + ': ' + thisAction + ' with ' + (newList != null ? newList : oldList).size() + ' records');
-                
                 try {
                     dmlWrapperLocal = runClass(classToCall, newList, OldList, thisAction, describeObj);
                 } catch (Exception ex) {
@@ -123,7 +120,8 @@ public class TDTM_TriggerHandler {
                     if(dmlWrapperLocal.objectsToUndelete != null && !dmlWrapperLocal.objectsToUndelete.isEmpty())
                         dmlWrapper.objectsToUndelete.addAll(dmlWrapperLocal.objectsToUndelete);
                 }
-                UTIL_Debug.debugWithInfo('****Finished executing: ' + classToCall.get('Class__c'));
+                UTIL_Debug.debugWithInfo('****Finished executing: ' + classToCall.get('Class__c') + ' for ' +
+                        describeObj.getName() + ': ' + thisAction);
             }
 
             
@@ -168,13 +166,15 @@ public class TDTM_TriggerHandler {
 			        //A class can only run asynchronously (calling a future) if we have the ids of the
                     //records we want to affect. This means we can only run it for after in insert. 
                     //Also,a future cannot be called from a future or batch method.
-			        if(async && !isBefore && !System.isFuture() && !System.isBatch()) {
-			        	UTIL_Debug.debug(LoggingLevel.WARN, '****Calling asynchronously: ' + classToRunName);
-			        	runAsync(classToRun, classToRunName, newList, oldList, thisAction, describeObj);
-			        } else {
-			        	UTIL_Debug.debugWithInfo('****Calling synchronously: ' + classToRunName);
+                    if(async && !isBefore && !System.isFuture() && !System.isBatch()) {
+                        UTIL_Debug.debug(LoggingLevel.WARN, '****Calling asynchronously: ' + classToRunName + ' for ' +
+                                describeObj.getName() + ': ' + thisAction + ' with ' + (newList != null ? newList : oldList).size() + ' records');
+                        runAsync(classToRun, classToRunName, newList, oldList, thisAction, describeObj);
+                    } else {
+                        UTIL_Debug.debugWithInfo('****Calling synchronously: ' + classToRunName + ' for ' +
+                                describeObj.getName() + ': ' + thisAction + ' with ' + (newList != null ? newList : oldList).size() + ' records');
                         return classToRun.run(newlist, oldlist, thisAction, describeObj);
-			        }
+                    }
 	        	} else {
 	        		UTIL_Debug.debug(LoggingLevel.WARN, '****The class does not implement the required interface.');
 	        	}

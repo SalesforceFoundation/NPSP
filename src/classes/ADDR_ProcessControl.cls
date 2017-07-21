@@ -37,7 +37,13 @@
 public class ADDR_ProcessControl {
 
     /*******************************************************************************************************
-    * @description flag to prevent recursion into the RD trigger handler/logic
+    * @description Flag to true to prevent the AfterUpdate trigger on the Contact from processing changes
+    * to the Contact's address that are being made by this BeforeUpdate trigger. Only used by ADDR_Contact_TDTM.
+    */
+    public static Boolean hasAlreadyRunBeforeOnContact = false;
+
+    /*******************************************************************************************************
+    * @description Flag to prevent recursion into the Address trigger handler/logic
     */
     private static Integer recursionFlag = 0;
 
@@ -52,10 +58,12 @@ public class ADDR_ProcessControl {
         if (recursionFlag < 0) {
             recursionFlag = 0;
         }
+        UTIL_Debug.debug('>>>>>> setRecursionFlag(' + b + ') ==> ' + recursionFlag);
     }
 
     /* @description Returns true if the recursionFlag value is greater than 1 */
     public static Boolean checkRecursionState() {
+        UTIL_Debug.debug('>>>>>> checkRecursionState() ==> ' + recursionFlag);
         return (recursionFlag > 0);
     }
 

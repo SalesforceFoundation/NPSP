@@ -504,11 +504,11 @@ public with sharing class ADDR_Addresses_TEST {
             Account acc = mapAccIdAcc.get(con.AccountId);
             if (con.is_Address_Override__c) {
                 system.assertEquals(con.Current_Address__c, addrNew.Id);
-                system.assertEquals(false, isMatchAddressAccCon(acc, con));
+                system.assertEquals(false, isMatchAddressAccCon(acc, con), 'The Household address should not have been updated from the Contact');
                 system.assert(!con.MailingStreet.contains('New Street'));
                 system.assert(!con.MailingCity.contains('New City'));
             } else {
-                system.assertEquals(true, isMatchAddressAccCon(acc, con));
+                system.assertEquals(true, isMatchAddressAccCon(acc, con), 'The Household address should have been updated from the Contact');
                 system.assert(con.MailingStreet.contains('New Street'));
                 system.assert(con.MailingCity.contains('New City'));
                 system.assertEquals(false, con.is_Address_Override__c);
@@ -521,7 +521,7 @@ public with sharing class ADDR_Addresses_TEST {
     @description
         set contact current address, but not override  
     verify:
-        contact's address updated, but not override
+        contact's address updated, but not overriden; the household accounts address remains unchanged
     **********************************************************************************************************/
     static testMethod void setConAddrNoOverride() {
         if (strTestOnly != '*' && strTestOnly != 'setConAddrNoOverride') return;
@@ -539,7 +539,7 @@ public with sharing class ADDR_Addresses_TEST {
         }
         insert listAddrT;
 
-        // set the contacts' address overrides
+        // set the contacts' "Current Address" to the new 'not override' address, but don't check "Is Address Override"
         list<Contact> listCon = new list<Contact>();
         for (integer i = 0; i < cHH; i++) {
             Contact con = listConT[i * cHH + i];
@@ -551,30 +551,33 @@ public with sharing class ADDR_Addresses_TEST {
         update listCon;
         Test.stopTest();
 
-        // verify that the HH and Contacts share the same address, except for the contacts we modified
         map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude from Account]);
         listCon = [select Id, Name, AccountId, is_Address_Override__c, Current_Address__c, Current_Address__r.Default_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, MailingLatitude, MailingLongitude from Contact];
+
+        system.assertEquals(cHH, [SELECT Count() FROM Address__c WHERE MailingCity__c LIKE 'not%' AND Default_Address__c = False],
+                'There should be one "not override" address per Household not set as default address');
 
         integer cNotOverride = 0;
         for (Contact con : listCon) {
             Account acc = mapAccIdAcc.get(con.AccountId);
             if (con.MailingStreet.contains('not override') == true) {
                 cNotOverride++;
-                system.assertEquals(true, isMatchAddressAccCon(acc, con));
+                system.assertEquals(false, con.Current_Address__r.Default_Address__c);
+                system.assertEquals(false, isMatchAddressAccCon(acc, con), 'The Household address should not have been updated from the Contact');
                 system.assert(con.MailingStreet.contains('not override'));
                 system.assert(con.MailingCity.contains('not override'));
                 system.assertEquals(false, con.is_Address_Override__c);
                 system.assertNotEquals(null, con.Current_Address__c);
             } else {
                 system.assertEquals(true, con.Current_Address__r.Default_Address__c);
-                system.assertEquals(true, isMatchAddressAccCon(acc, con));
+                system.assertEquals(true, isMatchAddressAccCon(acc, con), 'The Household address should remain unchanged from before and match the Contact that was not updated');
                 system.assert(con.MailingStreet.contains('Street'));
                 system.assert(con.MailingCity.contains('City'));
                 system.assertEquals(false, con.is_Address_Override__c);
                 system.assertNotEquals(null, con.Current_Address__c);
             }
         }
-        system.assertEquals(cHH * cCon, cNotOverride);
+        system.assertEquals(cHH, cNotOverride, 'There should be one Contact per Household with the "not override" address');
     }
 
     /*********************************************************************************************************
