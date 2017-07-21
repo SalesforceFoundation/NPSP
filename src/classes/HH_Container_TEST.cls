@@ -179,7 +179,7 @@ private class HH_Container_TEST {
         Only one default Address exists for the Household.
         Other Households are merged with the Household.
     **********************************************************************************************************/ 
-    static testMethod void saveShouldResultInOneDefaultAddressWhenContactsAreAddedToTheHousehold() {
+    private static testMethod void saveShouldResultInOneDefaultAddressWhenContactsAreAddedToTheHousehold() {
         Integer accountSize = 3;
         Account[] accounts = buildAccounts(accountSize);
         insert accounts;
@@ -256,7 +256,7 @@ private class HH_Container_TEST {
         A new Household and an Address are created for the Removed Contact.
         No Household is merged.
     **********************************************************************************************************/ 
-    static testMethod void saveShouldAddRemovedContactToNewHousehold() {
+    private static testMethod void saveShouldAddRemovedContactToNewHousehold() {
         Integer accountSize = 2;
         Account[] accounts = buildAccounts(accountSize);
         insert accounts;
@@ -412,7 +412,7 @@ private class HH_Container_TEST {
     * @param size Number of Accounts to build
     * @return Account[] List of Accounts
     **********************************************************************************************************/
-    static Account[] buildAccounts(Integer size) {
+    private static Account[] buildAccounts(Integer size) {
         Account[] accounts = new Account[0];
 
         for (Integer i = 0; i < size; i++) {
@@ -430,7 +430,7 @@ private class HH_Container_TEST {
     * @param accounts List of Accounts to associate Addresses with
     * @return Address__c[] List of Addresses
     **********************************************************************************************************/
-    static Address__c[] buildAddresses(Account[] accounts) {
+    private static Address__c[] buildAddresses(Account[] accounts) {
         Address__c[] addresses = new Address__c[0];
 
         for (Integer i = 0, size = accounts.size(); i < size; i++) {
@@ -452,7 +452,7 @@ private class HH_Container_TEST {
     * @param sizePerAccount Number of Contacts per Account
     * @return Contact[] List of Contacts
     **********************************************************************************************************/
-    static Contact[] buildContacts(Account[] accounts, Integer sizePerAccount) {
+    private static Contact[] buildContacts(Account[] accounts, Integer sizePerAccount) {
         Contact[] contacts = new Contact[0];
 
         for (Account acc : accounts) {
@@ -473,7 +473,7 @@ private class HH_Container_TEST {
     * @param c Contact
     * @return void
     **********************************************************************************************************/
-    static void copyAddressToContact(Address__c addr, Contact c) {
+    private static void copyAddressToContact(Address__c addr, Contact c) {
         c.MailingStreet = addr.MailingStreet__c;
         c.MailingCity = addr.MailingCity__c;
         c.MailingState = addr.MailingState__c;
@@ -485,7 +485,7 @@ private class HH_Container_TEST {
     * @description Retrieves Contacts and maps Contacts to a Household
     * @return Map<Id, Contact[]> Map of Contacts by a Household
     **********************************************************************************************************/
-    static Map<Id, Contact[]> getContactsByHousehold() {
+    private static Map<Id, Contact[]> getContactsByHousehold() {
         Map<Id, Contact[]> contactsByHh = new Map<Id, Contact[]>();
 
         for (Contact c : getContacts()) {
@@ -503,7 +503,7 @@ private class HH_Container_TEST {
     * @description Retrieves all Contacts with fields relevant for the Manage Household page
     * @return Contact[] List of all Contacts
     **********************************************************************************************************/
-    static Contact[] getContacts() {
+    private static Contact[] getContacts() {
         return Database.query(HH_Container_LCTRL.getContactSelectQueryWithFls());     
     }
 
@@ -511,7 +511,7 @@ private class HH_Container_TEST {
     * @description Retrieves all Addresses from database
     * @return Address__c[] List of all Addresses
     **********************************************************************************************************/
-    static Address__c[] getAddresses() {
+    private static Address__c[] getAddresses() {
         return [
             SELECT Default_Address__c, Household_Account__c, Address_Type__c,
                 MailingStreet__c, MailingCity__c, MailingState__c,
@@ -524,7 +524,7 @@ private class HH_Container_TEST {
     * @description Retrieves all Account from database
     * @return Account[] List of all Accounts
     **********************************************************************************************************/
-    static Account[] getAccounts() {
+    private static Account[] getAccounts() {
         return [
             SELECT Name, BillingStreet, BillingCity, 
                 BillingState, BillingPostalCode, BillingCountry

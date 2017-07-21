@@ -447,7 +447,7 @@ public with sharing class HH_Container_LCTRL {
     * @param accounts The list of Accounts
     * @return Boolean True is the list is not empty, false if the list is null or empty
     */
-    static Boolean isNotEmpty(List<Account> accounts) {
+    private static Boolean isNotEmpty(List<Account> accounts) {
         return accounts != null && !accounts.isEmpty();
     }
 
@@ -456,7 +456,7 @@ public with sharing class HH_Container_LCTRL {
     * @param accountIds List of Account Ids
     * @return void
     */
-    static void cleanupAddresses(List<Id> accountIds) {
+    private static void cleanupAddresses(List<Id> accountIds) {
         Id[] cleanupAccountIds = new Id[0];       
         
         for (Account acc : [SELECT npe01__SYSTEM_AccountType__c FROM Account WHERE Id IN :accountIds]) {
@@ -474,7 +474,7 @@ public with sharing class HH_Container_LCTRL {
     * @return Boolean True if the Account Type is Household Account or another type 
     * except One-to-One Individual and Bucket Individual Account types
     */
-    static Boolean isHouseholdOrOrganization(Account acc) {
+    private static Boolean isHouseholdOrOrganization(Account acc) {
         return acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE ||
             (
                 acc.npe01__SYSTEM_AccountType__c != CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE &&
