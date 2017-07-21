@@ -661,69 +661,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         
     }
 
-    /**
-     * @description Detect if any opportunities exists where the same contact
-     * is associated with that opportunity multiple times through multiple
-     * opportunity contact role records.
-     
-     As of 3/2017, we have removed this Health Check, since it is slightly misleading,
-     doesn't support LDV orgs, and would be costly to redesign.  full details in AA item
-     W-017715: https://foundation--agf.na6.visual.force.com/0D58000003Irbf0
-     
-     public void verifyNoDuplicateContactRoles() {
-        try {
-            Set<String> softCreditRoles = RLLP_OppRollup_UTIL.softCreditRoles;
-
-            List<AggregateResult> results = [
-                SELECT
-                    COUNT(Id),
-                    OpportunityId,
-                    ContactId
-                FROM OpportunityContactRole
-                WHERE Opportunity.IsWon = true
-                AND Role IN :softCreditRoles
-                GROUP BY OpportunityId, ContactId
-                HAVING Count(Id) > 1
-                LIMIT 1
-            ];
-
-            List<String> quotedSoftCreditRoles = new List<String>();
-
-            for (String role : softCreditRoles) {
-                quotedSoftCreditRoles.add('\'' + String.escapeSingleQuotes(role) + '\'');
-            }
-
-            if (results.size() > 0) {
-                createDR(
-                    Label.healthLabelDuplicateContactRoles,
-                    statusWarning,
-                    Label.healthDetailsDuplicateContactRoles,
-                    String.format(
-                        Label.healthSolutionDuplicateContactRoles,
-                        new List<String>{
-                            String.join(quotedSoftCreditRoles, ', ')
-                        }
-                    )
-                );
-            } else {
-                createDR(
-                    Label.healthLabelDuplicateContactRoles,
-                    statusSuccess,
-                    null,
-                    label.healthLabelNoDuplicateContactRoles
-                );
-            }
-        } catch (Exception e) {
-            createDR(
-                Label.healthLabelDuplicateContactRoles,
-                statusError,
-                e.getMessage(),
-                null
-            );
-        }
-     }
-     */
-
+   
     /*********************************************************************************************************
     * @description Verifies that all Level records refer to existing fields of the correct type
     */
