@@ -274,7 +274,7 @@ flows:
                 task: deploy_ldv_tests
             3:
                 task: run_tests
-                task_options:
+                options:
                     test_name_match: LDV_%
 
 orgs:
