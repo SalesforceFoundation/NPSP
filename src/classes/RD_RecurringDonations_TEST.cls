@@ -261,8 +261,6 @@ public class RD_RecurringDonations_TEST {
         system.assertEquals(3,installments3.size());
         system.assertEquals(33.33,installments3[0].Amount);
 
-        //flag needs to be reset as the delete and undelete are in the same context for tests.
-        UTIL_CascadeDeleteLookups_TDTM.disableCascade = false;
         undelete r2;
 
         installments3 = [select Amount, IsDeleted from Opportunity where npe03__Recurring_Donation__c = :r2.id];
