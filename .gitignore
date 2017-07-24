@@ -27,4 +27,5 @@ Referenced Packages
 .*.swp
 *.pyc
 *.sublime-project
+*.sublime-workspace
 /config/
