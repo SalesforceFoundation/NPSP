@@ -263,8 +263,10 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
                 dupeMembers.add(new CampaignMember(Id = m.Id, Status = newStatus)); 
                 
                 if (StatusLabels.size() > 0 && !StatusLabels.containsKey(newStatus)) {
-                    newStatuses.add(new CampaignMemberStatus(label=newStatus, campaignid=campaignId, hasResponded=StatusLabels.get(m.Status), sortorder=nextSortOrder));
-                    StatusLabels.put(newStatus, StatusLabels.get(m.Status));
+                    Boolean hasResponded = StatusLabels.get(m.Status) == true;
+                    
+                    newStatuses.add(new CampaignMemberStatus(label=newStatus, campaignid=campaignId, hasResponded=hasResponded, sortorder=nextSortOrder));
+                    StatusLabels.put(newStatus, hasResponded);
                     nextSortOrder++;
                 }
             }

@@ -596,6 +596,30 @@ Wenn Sie nicht wissen, wie diese Fehler behoben werden, senden Sie eine Nachrich
         <name>bdiBatchException</name>
     </customLabels>
     <customLabels>
+        <label><!-- settings label for BestMatchOrCreate behavior --></label>
+        <name>bdiBehaviorBestMatchOrCreate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for DoNotMatch behavior --></label>
+        <name>bdiBehaviorDoNotMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for ExactMatchOrCreate behavior --></label>
+        <name>bdiBehaviorExactMatchOrCreate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for RequireBestMatch behavior --></label>
+        <name>bdiBehaviorRequireBestMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for RequireExactMatch behavior --></label>
+        <name>bdiBehaviorRequireExactMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for RequireNoMatch behavior --></label>
+        <name>bdiBehaviorRequireNoMatch</name>
+    </customLabels>
+    <customLabels>
         <label>Schließen</label>
         <name>bdiBtnClose</name>
     </customLabels>
@@ -684,12 +708,36 @@ Wenn Sie nicht wissen, wie diese Fehler behoben werden, senden Sie eine Nachrich
         <name>bdiDonation</name>
     </customLabels>
     <customLabels>
+        <label><!-- error displayed in Data Importer if no donation matching rules set --></label>
+        <name>bdiDonationMatchingRuleEmpty</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error on BDI record if DonationImported or PaymentImported lookups are invalid --></label>
+        <name>bdiErrorDonationLookupMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error message if the donation matched multiple opps --></label>
+        <name>bdiErrorDonationMultiMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error when no matching donation found, and a match is required --></label>
+        <name>bdiErrorDonationNoMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error message if the donation matched opp(s), but behavior required no match --></label>
+        <name>bdiErrorDonationRequireNoMatch</name>
+    </customLabels>
+    <customLabels>
         <label>Ungültiger Spendenkampagnenname</label>
         <name>bdiErrorInvalidCampaignName</name>
     </customLabels>
     <customLabels>
         <label>Ungültiger Spender</label>
         <name>bdiErrorInvalidDonor</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error thrown if specified class doesn&apos;t support BDI_IMatchDonations --></label>
+        <name>bdiErrorInvalidIMatchDonations</name>
     </customLabels>
     <customLabels>
         <label>Der Nachname muss angegeben werden.</label>
@@ -702,6 +750,10 @@ Wenn Sie nicht wissen, wie diese Fehler behoben werden, senden Sie eine Nachrich
     <customLabels>
         <label>Ein vorhandener Kontakt aus einem Nicht-Haushalt-Account wurde abgeglichen, was nicht unterstützt wird.</label>
         <name>bdiErrorNonHHAccountContact</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error message if the donation matched multiple pmts --></label>
+        <name>bdiErrorPaymentMultiMatch</name>
     </customLabels>
     <customLabels>
         <label>Fehlgeschlagen</label>
@@ -724,6 +776,22 @@ Wenn Sie nicht wissen, wie diese Fehler behoben werden, senden Sie eine Nachrich
         <name>bdiMatched</name>
     </customLabels>
     <customLabels>
+        <label><!-- status on a bdi object to specify it was matched from an ambiguous set --></label>
+        <name>bdiMatchedBest</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- BDI status when matching an object by its Salesforce ID --></label>
+        <name>bdiMatchedId</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- status on a bdi object when no matching record found --></label>
+        <name>bdiMatchedNone</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error when numeric settings set to negative number --></label>
+        <name>bdiPositiveNumber</name>
+    </customLabels>
+    <customLabels>
         <label>Fehlerhafte Datensätze:</label>
         <name>bdiRecordsFailed</name>
     </customLabels>
@@ -738,6 +806,18 @@ Wenn Sie nicht wissen, wie diese Fehler behoben werden, senden Sie eine Nachrich
     <customLabels>
         <label>Datenimportvorgang beginnen</label>
         <name>bdiRunBtn</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- section label for contact matching rules in bDI --></label>
+        <name>bdiSettingsSectionContactMatching</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- section label for Donation Matching in BDI Settings --></label>
+        <name>bdiSettingsSectionDonationMatching</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- section label for Extensibility in BDI Settings --></label>
+        <name>bdiSettingsSectionExtensibility</name>
     </customLabels>
     <customLabels>
         <label>Aktueller Status:</label>
@@ -850,10 +930,6 @@ Wenn Sie nicht wissen, wie diese Fehler behoben werden, senden Sie eine Nachrich
     <customLabels>
         <label>Sie können für den Haushalt-Account-Datensatztyp und den Eins-zu-Eins-Datensatztyp nicht denselben Account-Datensatztyp angeben.</label>
         <name>healthDetailsDuplicateAcctRT</name>
-    </customLabels>
-    <customLabels>
-        <label>Die Statusprüfung hat Opportunities mit doppelten Kontakten und Rollup-Werten gefunden.</label>
-        <name>healthDetailsDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
         <label>Im Kontakt ist Feld {0} für das Geschlecht nicht vorhanden.</label>
@@ -1044,10 +1120,6 @@ Wenn Sie nicht wissen, wie diese Fehler behoben werden, senden Sie eine Nachrich
         <name>healthLabelContactData</name>
     </customLabels>
     <customLabels>
-        <label>Doppelte Kontakte und Rollup-Werte</label>
-        <name>healthLabelDuplicateContactRoles</name>
-    </customLabels>
-    <customLabels>
         <label>Empfänger von Fehlerbenachrichtigungen gültig</label>
         <name>healthLabelErrorRecipientValid</name>
     </customLabels>
@@ -1078,10 +1150,6 @@ Wenn Sie nicht wissen, wie diese Fehler behoben werden, senden Sie eine Nachrich
     <customLabels>
         <label>Letzte Ausführung: {0}</label>
         <name>healthLabelLastRun</name>
-    </customLabels>
-    <customLabels>
-        <label>Die Statusprüfung hat keine Opportunities mit doppelten Kontakten und Rollup-Werten gefunden.</label>
-        <name>healthLabelNoDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
         <label>Für alle Opportunities mit Zahlungen werden Zahlungen erwartet.</label>
@@ -1210,12 +1278,6 @@ Wenn Sie nicht wissen, wie diese Fehler behoben werden, senden Sie eine Nachrich
     <customLabels>
         <label>Führen Sie zu deren Anzeige den Bericht &lt;b&gt;Kontakte ohne Account&lt;/b&gt; im Ordner &quot;Berichte zu NPSP-Statusprüfungen&quot; aus.</label>
         <name>healthSolutionContactData</name>
-    </customLabels>
-    <customLabels>
-        <label>In der Vergangenheit hat NPSP Rollup-Werte von indirekten Gutschriften für Kontakte doppelt gezählt, die einer Opportunity durch zwei unterschiedliche Opportunity-Kontaktrollen zweimal zugewiesen waren. NPSP zählt diese Rollup-Werte nun nur noch einmal, unabhängig von der Anzahl der Zuweisungen des Kontakts zu einer Opportunity.&lt;br/&gt;
-&lt;br/&gt;
-Wenn Sie wissen möchten, für welche Opportunities Rollup-Werte zuvor doppelt gezählt wurden, führen Sie diese SOQL-Abfrage in der Entwicklerkonsole aus: &apos;&apos;SELECT Count(Id), OpportunityId, Opportunity.Name OpportunityName, ContactId, Contact.Name ContactName FROM OpportunityContactRole WHERE Opportunity.IsWon = true AND Role IN ({0}) GROUP BY OpportunityId, Opportunity.Name, ContactId, Contact.Name HAVING Count(Id) &gt; 1&apos;&apos;</label>
-        <name>healthSolutionDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
         <label>Klicken Sie auf der Registerkarte &quot;NPSP-Einstellungen&quot; auf {1} | {2} und bearbeiten Sie die {0}-Einstellung.</label>
