@@ -73,9 +73,17 @@ global with sharing class BDI_DataImport_API {
     global static list<ProcessDataImportBatchesResult> processDataImportBatches(list<ID> listBatchId) {
 
         list<ProcessDataImportBatchesResult> listResult = new list<ProcessDataImportBatchesResult>();
+
+        Savepoint sp = Database.setSavepoint();
         for (ID batchId : listBatchId) {
-            BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(batchId);
-            listResult.add(new ProcessDataImportBatchesResult(Database.executeBatch(bdi, integer.valueOf(bdi.diSettings.Batch_Size__c))));
+            try {
+                BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(batchId);
+                listResult.add(new ProcessDataImportBatchesResult(Database.executeBatch(bdi, integer.valueOf(bdi.diSettings.Batch_Size__c))));
+            } catch (exception ex) {
+                Database.rollback(sp);
+                ex.setMessage('Error encountered in batch: ' + batchId + '. ' + ex.getMessage());
+                throw ex;
+            }
         }
         return listResult;
     }
