@@ -1073,8 +1073,14 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }
         
         // if specified, also include Address Type
-        if (strAddrType != null) 
+        if (strAddrType != null) {
             addr.Address_Type__c = strAddrType;
+        } else {
+            // A null value will force a newly created Address record to use its defined default value for
+            // the picklist, which if not reflected here could cause isAddressChanged() to return true
+            // in cases when it should not.
+            addr.Address_Type__c = defaultAddressType;
+        }
             
         //UTIL_Debug.debug('****DJH: copyAddressStdSobjAddr: ' + sobjSrc + ' ' + addr);
     }
@@ -1178,5 +1184,24 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }
         return isCodesEnabled;
     }
-    
+
+    /********************************************************************************************************
+    * @description Retreive the defined default address type picklist value to use when creating a new
+    * Address record.
+    */
+    public static String defaultAddressType {
+        get {
+            if (defaultAddressType == null) {
+                for (Schema.PicklistEntry pv: Address__c.Address_Type__c.getDescribe().getPicklistValues()) {
+                    if (pv.isDefaultValue()) {
+                        defaultAddressType = pv.getValue();
+                        break;
+                    }
+                }
+            }
+            return defaultAddressType;
+        }
+    }
+
+
 }

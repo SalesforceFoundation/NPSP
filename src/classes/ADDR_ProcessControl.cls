@@ -67,7 +67,7 @@ public class ADDR_ProcessControl {
         return (recursionFlag > 0);
     }
 
-	/*******************************************************************************************************
+    /*******************************************************************************************************
     * @description Simple static flag to prevent execution of the address validation triggers
     */
     private static Integer validationRecursionFlag = 0;
@@ -90,12 +90,11 @@ public class ADDR_ProcessControl {
         }
     }
 
-	/*******************************************************************************************************
+    /*******************************************************************************************************
     * @description To support DML operations with more than 200 records, use a static Set of Id's that
     * have been passed to the verifyAddressRecords() method. This allows for a recursion check that goes
     * by the Id's of the records as opposed to a simple boolean.
     */
     public static Set<Id> processedIdsForValidation = new Set<Id>();
-
 
 }

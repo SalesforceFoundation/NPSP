@@ -118,7 +118,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 } else if (isContactAddressEmpty(con) && acctHasAddress) {
                 	// if the contact has no address specified and the household has a default address, pick up the hh default.
                     listConAddrReset.add(con);
-                } 
+                }
             }
             
             // BEFORE UPDATE
@@ -157,8 +157,8 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                             listConAddrReset.add(con);
                         }
             	    } else { // create a new address on the account
-                        setConCreateAddr.add(con);                    
-            	    }                
+                        setConCreateAddr.add(con);
+            	    }
             	} else {
             	
 	                // highest priority. if they are changing to a new Current Address, refill from it.
@@ -417,27 +417,30 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             
             // if found a match
             if (addrDup != null) {
-            	// record the match in the contact
-            	if (isBefore) {
+                // record the match in the contact
+                if (isBefore) {
                     con.Current_Address__c = addrDup.Id;
                     
                     //reset the Primary Address Type only; resetting other fields on Contact will create a new Address
                     con.npe01__Primary_Address_Type__c = con.npe01__Primary_Address_Type__c == null
                         ? addrDup.Address_Type__c
                         : con.npe01__Primary_Address_Type__c;
-                       
-            	} else { 	                
+
+                // Prevent an address that was just inserted by the BeforeInsert trigger from being udpated
+                // a second time by the AfterInsert trigger.
+                } else {
 	                // if it is a fuzzy match, not exact, then we want to update the existing address.
 	                if (ADDR_Addresses_TDTM.isAddressChanged(addrNew, addrDup, true)) {
 	                    ADDR_Addresses_TDTM.copyAddressObj(addrNew, addrDup);
-	                    if (!con.is_Address_Override__c && !addrDup.Default_Address__c)
-	                        addrDup.Default_Address__c = true;
+	                    if (!con.is_Address_Override__c && !addrDup.Default_Address__c) {
+                            addrDup.Default_Address__c = true;
+                        }
 	                    listAddrUpdateDefault.add(addrDup);
 	                }                  
 	                // exact match. we aren't specifying override, so the address should become the new hh default address
 	                else if (!con.is_Address_Override__c && !addrDup.Default_Address__c) {
-	                	addrDup.Default_Address__c = true;
-	                	listAddrUpdateDefault.add(addrDup);
+                        addrDup.Default_Address__c = true;
+                        listAddrUpdateDefault.add(addrDup);
 	                }
                 }
             }
@@ -456,11 +459,11 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         }
         
         if (mapConAddrInsertNow.size() > 0 && isBefore) {
-	        insert mapConAddrInsertNow.values();
+            insert mapConAddrInsertNow.values();
 	        for (Contact con : mapConAddrInsertNow.keySet()) {
 	            Address__c addr = mapConAddrInsertNow.get(con);
 	            con.Current_Address__c = addr.Id;
-	        }        
+	        }
         }    
         
         if (listAddrUpdateDefault.size() > 0 && !isBefore) {
