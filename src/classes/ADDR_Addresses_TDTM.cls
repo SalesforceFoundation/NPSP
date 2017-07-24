@@ -865,43 +865,44 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         ContactRepository contactRepo = new ContactRepository(mapAccIdListAddrHH.keySet());          
         
         for (ID accId : mapAccIdListAddrHH.keySet()) {
-            if (mapAccIdListAddrHH.get(accId) == null) {
-                continue;
-            }
-               
-            map<string, list<Address__c>> mapAddrKeyToAddresses = new map<string, list<Address__c>>(); 
-            Address__c addrDefault;
-            
-            for (Address__c addr : mapAccIdListAddrHH.get(accId)) {
-                
-                // remember the oldest modified Default address
-                // this is the one from the winning account, since the losing account addresses get updated.
-                if (addr.Default_Address__c && addrDefault == null) {
-                    addrDefault = addr;
-                    mapAccIdAddr.put(accId, addrDefault);
-                }
+            if (mapAccIdListAddrHH.get(accId) != null) {         
+	            map<string, list<Address__c>> mapAddrKeyToAddresses = new map<string, list<Address__c>>(); 
+	            Address__c addrDefault;
+	            
+                for (Address__c addr : mapAccIdListAddrHH.get(accId)) {
+                    
+                    // remember the oldest modified Default address
+                    // this is the one from the winning account, since the losing account addresses get updated.
+                    if (addr.Default_Address__c && addrDefault == null) {
+                        addrDefault = addr;
+                        mapAccIdAddr.put(accId, addrDefault);
+                    }
 
-                // create our map of Address Keys to a list of one or more Addresses
-                string addrKey = getAddrKey(addr);
-                list<Address__c> listAddr = mapAddrKeyToAddresses.get(addrKey);
-                if (listAddr == null) {
-                    listAddr = new list<Address__c>();
-                    mapAddrKeyToAddresses.put(addrKey, listAddr);
+                    // create our map of Address Keys to a list of one or more Addresses
+                    string addrKey = getAddrKey(addr);
+                    list<Address__c> listAddr = mapAddrKeyToAddresses.get(addrKey);
+                    if (listAddr == null) {
+                        listAddr = new list<Address__c>();
+                        mapAddrKeyToAddresses.put(addrKey, listAddr);
+                    }
+                    listAddr.add(addr);
                 }
-                listAddr.add(addr);
-            }
-            
-            // now we have the Default Address to use and lists of potential duplicate addresses
-            // remove the duplicates, updating any contacts that are using the duplicates
-            // we delay getting the contacts until we know we have a duplicate.
-            for (string addrKey : mapAddrKeyToAddresses.keySet()) {
-                list<Address__c> listAddr = mapAddrKeyToAddresses.get(addrKey);
-                for (integer i = 1; i < listAddr.size(); i++) {
-                    Address__c addrDupe = listAddr[i];
-                    replaceAddress(addrDupe, listAddr[0], contactRepo.getContacts(accId), dmlWrapper);
-                    dmlWrapper.objectsToDelete.add(addrDupe);
+                
+                // now we have the Default Address to use and lists of potential duplicate addresses
+                // remove the duplicates, updating any contacts that are using the duplicates
+                // we delay getting the contacts until we know we have a duplicate.
+                for (string addrKey : mapAddrKeyToAddresses.keySet()) {
+                    list<Address__c> listAddr = mapAddrKeyToAddresses.get(addrKey);
+
+                    for (integer i = 1, size = listAddr.size(); i < size; i++) {
+                        Address__c addrDupe = listAddr[i];
+                        
+                        replaceAddress(addrDupe, listAddr[0], contactRepo.getContacts(accId), dmlWrapper);
+                        dmlWrapper.objectsToDelete.add(addrDupe);
+                    }
                 }
-            }
+                
+            } 
         }
         
         // perform our updates & deletes for dealing with the duplicate addresses
