@@ -860,48 +860,50 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
         // for each Account, get its list of Addresses in oldest to newest order (of LastModifiedDate)
         map<Id, list<Address__c>> mapAccIdListAddrHH = getMapAccIdListAddrHH(listAccId);
+
+        // Construct Contact repository for Accounts having Addresses
+        ContactRepository contactRepo = new ContactRepository(mapAccIdListAddrHH.keySet());          
         
         for (ID accId : mapAccIdListAddrHH.keySet()) {
-            if (mapAccIdListAddrHH.get(accId) != null) {         
-	            map<string, list<Address__c>> mapAddrKeyToAddresses = new map<string, list<Address__c>>(); 
-	            Address__c addrDefault;
-	            
-                for (Address__c addr : mapAccIdListAddrHH.get(accId)) {
-                    
-                    // remember the oldest modified Default address
-                    // this is the one from the winning account, since the losing account addresses get updated.
-                    if (addr.Default_Address__c && addrDefault == null) {
-                        addrDefault = addr;
-                        mapAccIdAddr.put(accId, addrDefault);
-                    }
+            if (mapAccIdListAddrHH.get(accId) == null) {
+                continue;
+            }
+               
+            map<string, list<Address__c>> mapAddrKeyToAddresses = new map<string, list<Address__c>>(); 
+            Address__c addrDefault;
+            
+            for (Address__c addr : mapAccIdListAddrHH.get(accId)) {
+                
+                // remember the oldest modified Default address
+                // this is the one from the winning account, since the losing account addresses get updated.
+                if (addr.Default_Address__c && addrDefault == null) {
+                    addrDefault = addr;
+                    mapAccIdAddr.put(accId, addrDefault);
+                }
 
-                    // create our map of Address Keys to a list of one or more Addresses
-                    string addrKey = getAddrKey(addr);
-                    list<Address__c> listAddr = mapAddrKeyToAddresses.get(addrKey);
-                    if (listAddr == null) {
-                        listAddr = new list<Address__c>();
-                        mapAddrKeyToAddresses.put(addrKey, listAddr);
-                    }
-                    listAddr.add(addr);
+                // create our map of Address Keys to a list of one or more Addresses
+                string addrKey = getAddrKey(addr);
+                list<Address__c> listAddr = mapAddrKeyToAddresses.get(addrKey);
+                if (listAddr == null) {
+                    listAddr = new list<Address__c>();
+                    mapAddrKeyToAddresses.put(addrKey, listAddr);
                 }
-                
-                // now we have the Default Address to use and lists of potential duplicate addresses
-                // remove the duplicates, updating any contacts that are using the duplicates
-                // we delay getting the contacts until we know we have a duplicate.
-                list<Contact> listCon = null;
-                for (string addrKey : mapAddrKeyToAddresses.keySet()) {
-                    list<Address__c> listAddr = mapAddrKeyToAddresses.get(addrKey);
-                    for (integer i = 1; i < listAddr.size(); i++) {
-                        Address__c addrDupe = listAddr[i];
-                        if (listCon == null)
-                            listCon = [select Id, Current_Address__c from Contact where AccountId =: accId];
-                        replaceAddress(addrDupe, listAddr[0], listCon, dmlWrapper);
-                        dmlWrapper.objectsToDelete.add(addrDupe);
-                    }
+                listAddr.add(addr);
+            }
+            
+            // now we have the Default Address to use and lists of potential duplicate addresses
+            // remove the duplicates, updating any contacts that are using the duplicates
+            // we delay getting the contacts until we know we have a duplicate.
+            for (string addrKey : mapAddrKeyToAddresses.keySet()) {
+                list<Address__c> listAddr = mapAddrKeyToAddresses.get(addrKey);
+                for (integer i = 1; i < listAddr.size(); i++) {
+                    Address__c addrDupe = listAddr[i];
+                    replaceAddress(addrDupe, listAddr[0], contactRepo.getContacts(accId), dmlWrapper);
+                    dmlWrapper.objectsToDelete.add(addrDupe);
                 }
-                
-            } 
+            }
         }
+        
         // perform our updates & deletes for dealing with the duplicate addresses
         TDTM_TriggerHandler.processDml(dmlWrapper);
 
@@ -909,7 +911,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
 	    dmlWrapper = new TDTM_Runnable.DmlWrapper();
 	    refreshCurrentHHAddress(mapAccIdAddr, dmlWrapper, false);
         TDTM_TriggerHandler.processDml(dmlWrapper);
-    }
+    }    
     
     /*******************************************************************************************************
     * @description replaces the losing address with the winning address in any contacts referring to the 
@@ -1175,6 +1177,76 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             }
         }
         return isCodesEnabled;
+    }
+
+    /*******************************************************************************************************
+    * @description Contact repository responsible for retrieval and storing of Contacts for specified Accounts
+    */
+    public class ContactRepository {
+        /*******************************************************************************************************
+        * @description Account filter when querying Contacts
+        */
+        private Set<Id> queryAccountIds;
+
+        /*******************************************************************************************************
+        * @description Contains list of retrieved Contacts by an Account Id
+        */
+        private Map<Id, Contact[]> contactsByAccountId {
+            get {
+                return contactsByAccountId = contactsByAccountId == null
+                    ? findContactsByAccount()
+                    : contactsByAccountId;
+            }
+            set;
+        }
+
+        /*******************************************************************************************************
+        * @description Constructor 
+        * @param accountIds Account Ids to initialize the Contact Repository with
+        */
+        public ContactRepository(Set<Id> accountIds) {
+            queryAccountIds = accountIds == null 
+                ? new Set<Id>()
+                : accountIds;
+        }        
+
+        /*******************************************************************************************************
+        * @description Returns Contacts for the specified Account 
+        * @param accountId The Id of an Account to retrieve Contacts for
+        * @return Contact[] List of Contacts for the specified Account. Empty list if the Account has no Contacts.
+        */
+        public Contact[] getContacts(Id accountId) {
+            if (!queryAccountIds.contains(accountId)) {
+                queryAccountIds.add(accountId);
+
+                //reset Contacts repo so the next reference to the variable retrieves data from DB
+                contactsByAccountId = null;
+            }
+
+            Contact[] contacts = contactsByAccountId.get(accountId);
+            return contacts == null ? new Contact[0] : contacts;
+        }
+
+        /*******************************************************************************************************
+        * @description Queries DB for specified ContactRepository Account Ids
+        * @return Map<Id, Contact[]> Map of Contacts by an Account Id
+        */
+        private Map<Id, Contact[]> findContactsByAccount() {
+            Map<Id, Contact[]> contactsByAccountId = new Map<Id, Contact[]>();
+
+            if (queryAccountIds.isEmpty()) {
+                return contactsByAccountId;
+            }
+
+            for (Contact c : [SELECT Id, AccountId, Current_Address__c FROM Contact WHERE AccountId IN :queryAccountIds]) {
+                if (!contactsByAccountId.containsKey(c.AccountId)) {
+                    contactsByAccountId.put(c.AccountId, new Contact[0]);
+                }
+                contactsByAccountId.get(c.AccountId).add(c);
+            }
+
+            return contactsByAccountId;
+        }
     }
     
 }

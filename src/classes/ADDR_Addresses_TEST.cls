@@ -1695,7 +1695,87 @@ public with sharing class ADDR_Addresses_TEST {
             boolean fSeasonal = (addr.MailingStreet__c.contains('New Seasonal Street'));
             system.assertEquals(!fSeasonal, addr.Default_Address__c);
         }        
-    }   
+    } 
+         
+    /*********************************************************************************************************
+    @description
+        Execute ContactRepository.getContacts() for an Account not having any Contact 
+    verify:
+        Method returns empty Contact list
+    **********************************************************************************************************/       
+    static testMethod void ContactRepository_getContactsShouldReturnEmptyListWhenAccountHasNoContacts() {
+        if (strTestOnly != '*' && strTestOnly != 'ContactRepository_getContactsShouldReturnEmptyListWhenAccountHasNoContacts') return;
+
+        Account account = new Account(Name = 'AccountWithoutContacts');
+        insert account;
+
+        ADDR_Addresses_TDTM.ContactRepository contactRepo = new ADDR_Addresses_TDTM.ContactRepository(new Set<Id>{ account.Id });   
+
+        Contact[] contacts = contactRepo.getContacts(account.Id);
+        System.assertEquals(0, contacts.size());
+    }  
+
+    /*********************************************************************************************************
+    @description
+        Execute ContactRepository.getContacts() for Acconts having Contacts 
+    verify:
+        Method returns expected Contact list for each Account
+    **********************************************************************************************************/  
+    static testMethod void ContactRepository_getContactsShouldReturnContactsWhenAccountHasContacts() {
+        if (strTestOnly != '*' && strTestOnly != 'ContactRepository_getContactsShouldReturnContactsWhenAccountHasContacts') return;        
+        
+        Integer hhSize = 2;
+        Integer contactSize = 2; 
+        createHHTestData(hhSize, contactSize);
+
+        ADDR_Addresses_TDTM.ContactRepository contactRepo = new ADDR_Addresses_TDTM.ContactRepository(extractIds(listAccT)); 
+       
+        testAndAssertContactRepositoryGetContacts(contactRepo, listAccT, listConT);      
+    }
+
+    /*********************************************************************************************************
+    @description
+        Execute ContactRepository.getContacts() for an Account not passed to the ContactRepository constructor 
+    verify:
+        Method returns expected Contact list for each Account
+    **********************************************************************************************************/  
+    static testMethod void ContactRepository_getContactsShouldReturnContactsWhenAccountHasNotBeenPassedToConstructor() {
+        if (strTestOnly != '*' && strTestOnly != 'ContactRepository_getContactsShouldReturnContactsWhenAccountHasNotBeenPassedToConstructor') return;        
+        
+        Integer hhSize = 2;
+        Integer contactSize = 2; 
+        createHHTestData(hhSize, contactSize);
+
+        ADDR_Addresses_TDTM.ContactRepository contactRepo = new ADDR_Addresses_TDTM.ContactRepository(new Set<Id>()); 
+        testAndAssertContactRepositoryGetContacts(contactRepo, listAccT, listConT);   
+
+        contactRepo = new ADDR_Addresses_TDTM.ContactRepository(new Set<Id>{ listAccT[0].Id }); 
+        testAndAssertContactRepositoryGetContacts(contactRepo, listAccT, listConT);    
+    }
+
+    /*********************************************************************************************************
+    @description
+        Execute ContactRepository.getContacts() for each Account in the input argument Account list 
+    verify:
+        Method returns expected Contact list for each Account
+    **********************************************************************************************************/  
+    static void testAndAssertContactRepositoryGetContacts(ADDR_Addresses_TDTM.ContactRepository contactRepo, List<Account> accounts, List<Contact> contacts) { 
+        Map<Id, Contact[]> contactsByAccountId = new Map<Id, Contact[]>();
+        for (Contact c : contacts) {
+            if (!contactsByAccountId.containsKey(c.AccountId)) {
+                contactsByAccountId.put(c.AccountId, new Contact[0]);
+            }
+            contactsByAccountId.get(c.AccountId).add(c);
+        }
+
+        for (Account account : accounts) {
+            Contact[] expectedContacts = contactsByAccountId.get(account.Id);
+            Contact[] actualContacts = contactRepo.getContacts(account.Id);
+
+            System.assertEquals(expectedContacts.size(), actualContacts.size());
+            System.assert(extractIds(expectedContacts).containsAll(extractIds(actualContacts)));
+        }    
+    }
 
     // Helpers
     ////////////
@@ -1756,6 +1836,15 @@ public with sharing class ADDR_Addresses_TEST {
                 MailingCountry, MailingLatitude, MailingLongitude 
             FROM Contact
         ];        
+    }
+
+    /*********************************************************************************************************
+    * @description Extracts Ids of Sobjects
+    * @param sobjects List of Sobjects
+    * @return Set<Id> Set of Sobjects' Ids
+    **********************************************************************************************************/
+    static Set<Id> extractIds(List<Sobject> sobjects) {
+        return (new Map<Id, Sobject>(sobjects)).keySet();
     }
 
     /*********************************************************************************************************
