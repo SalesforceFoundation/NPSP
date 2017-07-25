@@ -1,0 +1,82 @@
+<apex:component controller="RP_GettingStartedController">
+
+    <div class="slds-m-around_x-small">
+
+        <h1 class="slds-text-heading_large slds-p-around_medium">{!$Label.RP_GettingStarted}</h1>
+
+    </div>
+
+    <div class="slds-m-vertical_medium slds-media slds-media_responsive">
+
+        <div class="slds-p-horizontal_xx-large slds-size--1-of-1 slds-large-size--1-of-3">
+
+            <img class="slds-p-vertical_medium slds-align_absolute-center" id="trailheadImage" src="{!URLFOR($Resource.RP_Resources, 'Resources/images/Image_Trailhead.png' )}" width="150" height="60"/>
+
+            <h2 class="slds-text-heading_medium slds-align_absolute-center">{!$Label.RP_TrailheadSubtitle}</h2>
+            <p class="slds-m-vertical_large">{!$Label.RP_TrailheadParagraph}</p>
+
+            <apex:outputLink target="_blank" styleClass="slds-align_absolute-center links" rendered="{!NOT(ISNULL(linksData.trailheadLink))}" value="{!linksData.trailheadLink}"> {!$Label.RP_TrailheadLinkLabel} </apex:outputLink>
+
+        </div>
+
+        <div id="bordersDiv" class="slds-p-horizontal_xx-large slds-border_right slds-border_left slds-size--1-of-1 slds-large-size--1-of-3">
+
+            <img class="slds-col slds-p-vertical_medium slds-align_absolute-center" id="usImage" src="{!URLFOR($Resource.RP_Resources, 'Resources/images/Image_US.png' )}" width="175" height="60"/>
+
+            <h2 class="slds-col slds-text-heading_medium slds-align_absolute-center">{!$Label.RP_USSubtitle}</h2>
+            <p class="slds-m-vertical_large">{!$Label.RP_USParagraph}</p>
+
+            <apex:outputLink target="_blank" styleClass="slds-align_absolute-center links" rendered="{!NOT(ISNULL(linksData.usLink))}" value="{!linksData.usLink}"> {!$Label.RP_UsHubLinkLabel} </apex:outputLink>
+
+            <apex:outputLink target="_blank" styleClass="slds-align_absolute-center links" rendered="{!NOT(ISNULL(linksData.salesforceOrgLink))}" value="{!linksData.salesforceOrgLink}"> {!$Label.RP_SalesforceOrgLinkLabel} </apex:outputLink>
+
+        </div>
+
+        <div class="slds-p-horizontal_xx-large slds-size--1-of-1 slds-large-size--1-of-3">
+
+            <img class="slds-p-vertical_medium slds-align_absolute-center" id="diveDeeperImage" src="{!URLFOR($Resource.RP_Resources, 'Resources/images/Image_DiveDeeper.png' )}" width="130" height="60"/>
+
+            <h2 class="slds-text-heading_medium slds-align_absolute-center">{!$Label.RP_DeeperSubtitle}</h2>
+            <p class="slds-m-vertical_large">{!$Label.RP_DeeperParagraph}</p>
+
+            <apex:outputLink target="_blank" styleClass="slds-align_absolute-center links" rendered="{!NOT(ISNULL(linksData.nspsLink))}" value="{!linksData.nspsLink}"> {!$Label.RP_NpspLinkLabel} </apex:outputLink>
+
+            <apex:outputLink target="_blank" styleClass="slds-align_absolute-center links" rendered="{!NOT(ISNULL(linksData.webinarLink))}" value="{!linksData.webinarLink}"> {!$Label.RP_WebinarLinkLabel} </apex:outputLink>
+
+            <apex:outputLink target="_blank" styleClass="slds-align_absolute-center links" rendered="{!NOT(ISNULL(linksData.customerJourneyLink))}" value="{!linksData.customerJourneyLink}"> {!$Label.RP_CustomerJourneyLinkLabel} </apex:outputLink>
+
+
+        </div>
+
+    </div>
+
+    <img id="mountainsImage" src="{!URLFOR($Resource.RP_Resources, 'Resources/images/Image_Mountains.png' )}" width="2000" height="80" />
+
+    <script src="{!URLFOR($Resource.RP_Resources, 'Resources/js/jquery-3.2.1.min.js' )}" />
+
+    <script type="text/javascript">
+
+        //Function included to remove borders of getting started section, when the display change to mobile size
+
+        $(document).ready(function() {
+
+            function checkWidth() {
+
+                if ($(window).width() < 769) {
+
+                    $('[id$=bordersDiv]').removeClass("slds-border_left slds-border_right");
+                }
+                else {
+
+                    $('[id$=bordersDiv]').addClass("slds-border_left slds-border_right");
+                }
+            }
+            // Execute on load
+            checkWidth();
+            // Bind event listener
+            $(window).resize(checkWidth);
+        });
+
+    </script>
+
+</apex:component>
