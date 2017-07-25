@@ -801,7 +801,7 @@
         <members>RP_GitHub__mdt.RP_GitHub_Salesforce_Org_Endpoint__c</members>
         <members>RP_Youtube__mdt.RP_Youtube_API_Endpoint__c</members>
         <members>RP_Youtube__mdt.RP_Youtube_Channel_Name__c</members>
-        <members>RP_Youtube__mdt.RP_Youtube_Playlist_Id__c</members>        
+        <members>RP_Youtube__mdt.RP_Youtube_Playlist_Id__c</members>
         <members>Schedulable__c.Active__c</members>
         <members>Schedulable__c.Class_Name__c</members>
         <members>Schedulable__c.Frequency__c</members>
@@ -1949,6 +1949,9 @@
         <members>Opportunity-Matching Gift Layout</members>
         <members>Opportunity-Membership Layout</members>
         <members>Partial_Soft_Credit__c-Partial Soft Credit Layout</members>
+        <members>RP_Getting_Started_Links__mdt-RP Getting Started Links Layout</members>
+        <members>RP_Youtube__mdt-RP Youtube Metadata Layout</members>
+        <members>RP_GitHub__mdt-RP GitHub Layout</members>
         <members>Schedulable__c-Schedulable Layout</members>
         <members>Trigger_Handler__c-Trigger Handler Layout</members>
         <name>Layout</name>
