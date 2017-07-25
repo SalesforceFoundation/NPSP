@@ -2026,5 +2026,50 @@
         <members>Opportunity.Opportunity Email Acknowledgment</members>
         <name>WorkflowRule</name>
     </types>
+    <types>
+        <members>RP_GettingStartedController</members>
+        <members>RP_GitHubController</members>
+        <members>RP_GitHubLatestReleaseClient</members>
+        <members>RP_GitHubTest</members>
+        <members>RP_GitHubTestMock</members>
+        <members>RP_YoutubeClient</members>
+        <members>RP_YoutubeController</members>
+        <members>RP_YoutubeTest</members>
+        <members>RP_YoutubeTestMock</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>RP_GettingStarted</members>
+        <members>RP_GitHub</members>
+        <members>RP_Youtube</members>
+        <name>ApexComponent</name>
+    </types>
+    <types>
+        <members>RP_Resources</members>
+        <name>ApexPage</name>
+    </types>
+    <types>
+        <members>CustomLabels</members>
+        <name>CustomLabels</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>CustomMetadata</name>
+    </types>
+    <types>
+        <members>RP_Getting_Started_Links__mdt</members>
+        <members>RP_GitHub__mdt</members>
+        <members>RP_Youtube__mdt</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>SalesforceOrgRepository</members>
+        <name>RemoteSiteSetting</name>
+    </types>
+    <types>
+        <members>RP_Resources</members>
+        <members>SLDS</members>
+        <name>StaticResource</name>
+    </types>
     <version>37.0</version>
 </Package>
