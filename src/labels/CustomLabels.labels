@@ -1,6 +1,174 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
     <labels>
+        <fullName>RP_ChangesGitHub</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RP_ChangesGitHub</shortDescription>
+        <value>Changes:</value>
+    </labels>
+    <labels>
+        <fullName>RP_CustomerJourneyLinkLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RP_CustomerJourneyLinkLabel</shortDescription>
+        <value>Customer Journey</value>
+    </labels>
+    <labels>
+        <fullName>RP_DeeperParagraph</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RP_DeeperParagraph</shortDescription>
+        <value>Dive deeper into Salesforce and learn everything you need to be successful.</value>
+    </labels>
+    <labels>
+        <fullName>RP_DeeperSubtitle</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RP_DeeperSubtitle</shortDescription>
+        <value>3. Dive Deeper</value>
+    </labels>
+    <labels>
+        <fullName>RP_GettingStarted</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RP_GettingStarted</shortDescription>
+        <value>Getting Started</value>
+    </labels>
+    <labels>
+        <fullName>RP_GitHubSubtitle</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RP_GitHubSubtitle</shortDescription>
+        <value>updates are pushed automatically; no installation needed!</value>
+    </labels>
+    <labels>
+        <fullName>RP_GitHubTitle</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RP_GitHubTitle</shortDescription>
+        <value>Latest Release Notes</value>
+    </labels>
+    <labels>
+        <fullName>RP_NpspLinkLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RP_NpspLinkLabel</shortDescription>
+        <value>NSPS Product Documentation</value>
+    </labels>
+    <labels>
+        <fullName>RP_ProductNameLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RP_ProductNameLabel</shortDescription>
+        <value>Nonprofit Success Pack</value>
+    </labels>
+    <labels>
+        <fullName>RP_ReleaseGitHub</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RP_ReleaseGitHub</shortDescription>
+        <value>Released:</value>
+    </labels>
+    <labels>
+        <fullName>RP_ReleaseNotesLink</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RP_ReleaseNotesLink</shortDescription>
+        <value>Read full release notes &gt;</value>
+    </labels>
+    <labels>
+        <fullName>RP_SalesforceOrgLinkLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RP_SalesforceOrgLinkLabel</shortDescription>
+        <value>Salesforce.org Office Hours</value>
+    </labels>
+    <labels>
+        <fullName>RP_StableRelease</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RP_StableRelease</shortDescription>
+        <value>(Stable)</value>
+    </labels>
+    <labels>
+        <fullName>RP_SubTitle</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RP_SubTitle</shortDescription>
+        <value>You now have access to ALL the powerful features of Salesforce Enterprise Edition PLUS the ability to better manage donors with the Nonprofit Success Pack application. Now let&apos;s get started.</value>
+    </labels>
+    <labels>
+        <fullName>RP_Title</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RP_Title</shortDescription>
+        <value>Welcome to Salesforce and the</value>
+    </labels>
+    <labels>
+        <fullName>RP_TrailheadLinkLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RP_TrailheadLinkLabel</shortDescription>
+        <value>Visit Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>RP_TrailheadParagraph</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RP_TrailheadParagraph</shortDescription>
+        <value>Get started with the Nonprofit Success Pack by learning the basics of fundraising and donation managment.</value>
+    </labels>
+    <labels>
+        <fullName>RP_TrailheadSubtitle</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RP_TrailheadSubtitle</shortDescription>
+        <value>1. Learn with Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>RP_USParagraph</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RP_USParagraph</shortDescription>
+        <value>Get help from our active community of fellow NPSP users, or reach out to Salesforce.org.</value>
+    </labels>
+    <labels>
+        <fullName>RP_UsHubLinkLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RP_UsHubLinkLabel</shortDescription>
+        <value>Power of Us HUB</value>
+    </labels>
+    <labels>
+        <fullName>RP_UsSubtitle</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RP_UsSubtitle</shortDescription>
+        <value>2. Join the Community</value>
+    </labels>
+    <labels>
+        <fullName>RP_Videos</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RP_Videos</shortDescription>
+        <value>How-To videos</value>
+    </labels>
+    <labels>
+        <fullName>RP_WebinarLinkLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RP_WebinarLinkLabel</shortDescription>
+        <value>Webinar Schedule</value>
+    </labels>
+    <labels>
+        <fullName>RP_YoutubeChannel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RP_YoutubeChannel</shortDescription>
+        <value>View more on our youtube channel &gt;</value>
+    </labels>
+    <labels>
         <fullName>Addr_Id_Error</fullName>
         <language>en_US</language>
         <protected>true</protected>
