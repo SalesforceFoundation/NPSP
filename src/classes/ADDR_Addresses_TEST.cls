@@ -133,18 +133,18 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     public static boolean isMatchAddressAccCon(Account acc, Contact con) {
         return (acc.BillingStreet == con.MailingStreet &&
-            acc.BillingCity == con.MailingCity &&
-            acc.BillingState == con.MailingState &&
-            acc.BillingPostalCode == con.MailingPostalCode &&
-            acc.BillingCountry == con.MailingCountry &&
-            acc.BillingLatitude == con.MailingLatitude &&
-            acc.BillingLongitude == con.MailingLongitude
+                acc.BillingCity == con.MailingCity &&
+                acc.BillingState == con.MailingState &&
+                acc.BillingPostalCode == con.MailingPostalCode &&
+                acc.BillingCountry == con.MailingCountry &&
+                acc.BillingLatitude == con.MailingLatitude &&
+                acc.BillingLongitude == con.MailingLongitude
         );
     }
-        
+
     /*********************************************************************************************************
     @description
-        create N new default Addresses for N Households (with M Contacts)  
+        create N new default Addresses for N Households (with M Contacts)
     verify:
         N addresses created
         N household billing address fields updated
@@ -206,16 +206,16 @@ public with sharing class ADDR_Addresses_TEST {
         }
 
         list<Address__c> listAddr = [
-            select Id, Default_Address__c, MailingStreet__c, Household_Account__c, Address_Type__c
-            from Address__c
-            where Default_Address__c = true
+                select Id, Default_Address__c, MailingStreet__c, Household_Account__c, Address_Type__c
+                from Address__c
+                where Default_Address__c = true
         ];
         system.assertEquals(cCon, listAddr.size());
         for (Address__c addr : listAddr) {
             system.assertEquals('Other', addr.Address_Type__c);
         }
     }
-        
+
     /*********************************************************************************************************
     @description
         insert contact w/ address, and force recreate of hh account
@@ -295,10 +295,10 @@ public with sharing class ADDR_Addresses_TEST {
             system.assertNotEquals(null, con.Current_Address__c);
         }
     }
-        
+
     /*********************************************************************************************************
     @description
-        update existing default Addresses  
+        update existing default Addresses
     verify:
         household billing address fields updated
         contact Mailing address fields updated
@@ -336,7 +336,7 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
-        delete existing default Addresses  
+        delete existing default Addresses
     verify:
         household billing address fields cleared
         contact Mailing address fields cleared
@@ -371,7 +371,7 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
-        delete existing non-default override Addresses  
+        delete existing non-default override Addresses
     verify:
         household billing address fields not changed
         contact Mailing address fields reset to default
@@ -424,7 +424,7 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
-        update existing non-default Addresses  
+        update existing non-default Addresses
     verify:
         no change to HH and contact addresses
     **********************************************************************************************************/
@@ -462,7 +462,7 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
-        set contact address override  
+        set contact address override
     verify:
         contact's address matches override
     **********************************************************************************************************/
@@ -519,7 +519,7 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
-        set contact current address, but not override  
+        set contact current address, but not override
     verify:
         contact's address updated, but not overriden; the household accounts address remains unchanged
     **********************************************************************************************************/
@@ -582,7 +582,7 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
-        insert new default addresses to HH w/ existing default addresses  
+        insert new default addresses to HH w/ existing default addresses
     verify:
         contact's && hh address matches new default
         old default addresses no longer marked default
@@ -634,10 +634,10 @@ public with sharing class ADDR_Addresses_TEST {
             }
         }
     }
-    
+
     /*********************************************************************************************************
     @description
-        insert new default addresses to HH w/ existing default addresses, and then go back  
+        insert new default addresses to HH w/ existing default addresses, and then go back
     verify:
         contact's && hh address matches original default
         new default addresses no longer marked default
@@ -702,7 +702,7 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
-        update contacts' Address Override  
+        update contacts' Address Override
     verify:
         contacts' Mailing address fields updated to the Address Override's fields.
     **********************************************************************************************************/
@@ -762,10 +762,10 @@ public with sharing class ADDR_Addresses_TEST {
             system.assertEquals(null, addr.Latest_End_Date__c);
         }
     }
-        
+
     /*********************************************************************************************************
     @description
-        clear contacts' Address Override  
+        clear contacts' Address Override
     verify:
         contacts' Mailing address fields updated to the HH default address
     **********************************************************************************************************/
@@ -827,7 +827,7 @@ public with sharing class ADDR_Addresses_TEST {
 
    /*********************************************************************************************************
     @description
-        clear contacts' Address Override and modify a new address 
+        clear contacts' Address Override and modify a new address
     verify:
         new default address created
     **********************************************************************************************************/
@@ -885,7 +885,7 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
-        update contacts' mailing address to cause creation of new default Address object  
+        update contacts' mailing address to cause creation of new default Address object
     verify:
         new Default Address created
         HH and Contacts get new Address
@@ -937,7 +937,7 @@ public with sharing class ADDR_Addresses_TEST {
 
         // verify the previous addresses got Default cleared.
         list<Address__c> listAddr = [select Id, Default_Address__c, MailingStreet__c, Household_Account__c from Address__c];
-        // each set of edits created a new address object 
+        // each set of edits created a new address object
         system.assertEquals(cHH * 4, listAddr.size());
         for (Address__c addr : listAddr) {
             boolean fNewDefault = (addr.MailingStreet__c.contains('final Street Edit'));
@@ -947,7 +947,7 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
-        update contacts' mailing address and mark it as override, to cause creation of new non-default Address object  
+        update contacts' mailing address and mark it as override, to cause creation of new non-default Address object
     verify:
         new Address created
         HH sticks with default Address
@@ -998,7 +998,7 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
-        update contacts' mailing address to cause an update to default Address object  
+        update contacts' mailing address to cause an update to default Address object
     verify:
         existing Default Address updated
         HH and Contacts get updated Address
@@ -1007,10 +1007,10 @@ public with sharing class ADDR_Addresses_TEST {
         if (strTestOnly != '*' && strTestOnly != 'updateConAddrExisting') return;
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-            new npe01__Contacts_and_Orgs_Settings__c(
-                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
-                Simple_Address_Change_Treated_as_Update__c = true
-            ));
+                new npe01__Contacts_and_Orgs_Settings__c(
+                        npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                        Simple_Address_Change_Treated_as_Update__c = true
+                ));
 
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
@@ -1063,7 +1063,7 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
-        update contacts' address type to cause an update to default Address object  
+        update contacts' address type to cause an update to default Address object
     verify:
         existing Default Address updated
         HH and Contacts get updated Address
@@ -1072,10 +1072,10 @@ public with sharing class ADDR_Addresses_TEST {
         if (strTestOnly != '*' && strTestOnly != 'updateConAddrExistingAddrType') return;
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-            new npe01__Contacts_and_Orgs_Settings__c(
-                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
-                Simple_Address_Change_Treated_as_Update__c = true
-            ));
+                new npe01__Contacts_and_Orgs_Settings__c(
+                        npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                        Simple_Address_Change_Treated_as_Update__c = true
+                ));
 
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
@@ -1136,25 +1136,25 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
-        Add an existing Contact to a Household. 
+        Add an existing Contact to a Household.
         Pre-populate the Contact's address with the Household Address
-        in the same way Manage Household pre-populates Contact's Mailing Address with Account's Billing Address.  
+        in the same way Manage Household pre-populates Contact's Mailing Address with Account's Billing Address.
     verify:
         The Contact's current Address is equal to the new Household Address.
         Contact's "Primary Address Type" is the same as the Address' "Address Type".
-    **********************************************************************************************************/        
+    **********************************************************************************************************/
     static testMethod void addExistingContactToNewHouseholdShouldSyncPrimaryAddressTypeWithAddressType() {
         if (strTestOnly != '*' && strTestOnly != 'addExistingContactToNewHouseholdShouldSyncPrimaryAddressTypeWithAddressType') return;
-        
+
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-            new npe01__Contacts_and_Orgs_Settings__c (
-                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
-                Simple_Address_Change_Treated_as_Update__c = true
-            )
+                new npe01__Contacts_and_Orgs_Settings__c (
+                        npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                        Simple_Address_Change_Treated_as_Update__c = true
+                )
         );
 
         Integer hhSize = 1;
-        Integer contactSize = 1; 
+        Integer contactSize = 1;
         createHHTestData(hhSize, contactSize);
 
         Account account = new Account(Name = 'AccountWithoutAddress');
@@ -1188,7 +1188,7 @@ public with sharing class ADDR_Addresses_TEST {
 
             Address__c[] addresses = addressesByHh.get(c.AccountId);
             System.assert(addresses != null && addresses.size() == 1, addresses);
-            
+
             System.assertNotEquals(null, c.npe01__Primary_Address_Type__c);
             assertEqualAddresses(addresses[0], c);
         }
@@ -1196,25 +1196,25 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
-        Add a new Contact to a Household. 
+        Add a new Contact to a Household.
         Pre-populate the Contact's address with the Household Address
-        in the same way standard Salesforce pre-populates Contact's Mailing Address with Account's Billing Address.  
+        in the same way standard Salesforce pre-populates Contact's Mailing Address with Account's Billing Address.
     verify:
         The Contact's current Address is equal to the new Household Address.
         Contact's "Primary Address Type" is the same as the Address' "Address Type".
     **********************************************************************************************************/
     static testMethod void addNewContactToHouseholdShouldSyncPrimaryAddressTypeWithAddressType() {
         if (strTestOnly != '*' && strTestOnly != 'addNewContactToHouseholdShouldSyncPrimaryAddressTypeWithAddressType') return;
-        
+
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-            new npe01__Contacts_and_Orgs_Settings__c (
-                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
-                Simple_Address_Change_Treated_as_Update__c = true
-            )
+                new npe01__Contacts_and_Orgs_Settings__c (
+                        npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                        Simple_Address_Change_Treated_as_Update__c = true
+                )
         );
 
         Integer hhSize = 1;
-        Integer contactSize = 1; 
+        Integer contactSize = 1;
         createHHTestData(hhSize, contactSize);
 
         Test.startTest();
@@ -1241,7 +1241,7 @@ public with sharing class ADDR_Addresses_TEST {
         for (Contact c : contacts) {
             Address__c[] addresses = addressesByHh.get(c.AccountId);
             System.assert(addresses != null && addresses.size() == 1, addresses);
-            
+
             System.assertNotEquals(null, c.npe01__Primary_Address_Type__c);
             assertEqualAddresses(addresses[0], c);
         }
@@ -1249,7 +1249,7 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
-        update contacts' mailing address with just a case change, to cause an update to default Address object  
+        update contacts' mailing address with just a case change, to cause an update to default Address object
     verify:
         existing Default Address updated
         HH and Contacts get updated Address
@@ -1258,10 +1258,10 @@ public with sharing class ADDR_Addresses_TEST {
         if (strTestOnly != '*' && strTestOnly != 'updateConAddrExistingCaseOnly') return;
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-            new npe01__Contacts_and_Orgs_Settings__c(
-                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
-                Simple_Address_Change_Treated_as_Update__c = true
-            ));
+                new npe01__Contacts_and_Orgs_Settings__c(
+                        npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                        Simple_Address_Change_Treated_as_Update__c = true
+                ));
 
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
@@ -1347,7 +1347,7 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
-        update accounts' billing address to cause creation of new default Address object  
+        update accounts' billing address to cause creation of new default Address object
     verify:
         new Default Address created
         HH and Contacts get new Address
@@ -1397,7 +1397,7 @@ public with sharing class ADDR_Addresses_TEST {
 
         // verify the previous addresses got Default cleared.
         list<Address__c> listAddr = [select Id, Default_Address__c, MailingStreet__c, Household_Account__c from Address__c];
-        // each set of edits created a new address object 
+        // each set of edits created a new address object
         system.assertEquals(cHH * 4, listAddr.size());
         for (Address__c addr : listAddr) {
             boolean fNewDefault = (addr.MailingStreet__c.contains('final Street Edit'));
@@ -1407,7 +1407,7 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
-        update accounts' billing address to cause an update of the default Address object  
+        update accounts' billing address to cause an update of the default Address object
     verify:
         existing Default Address updated
         HH and Contacts get updated Address
@@ -1416,10 +1416,10 @@ public with sharing class ADDR_Addresses_TEST {
         if (strTestOnly != '*' && strTestOnly != 'updateAccAddrExisting') return;
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-            new npe01__Contacts_and_Orgs_Settings__c(
-                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
-                Simple_Address_Change_Treated_as_Update__c = true
-            ));
+                new npe01__Contacts_and_Orgs_Settings__c(
+                        npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                        Simple_Address_Change_Treated_as_Update__c = true
+                ));
 
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
@@ -1470,7 +1470,7 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
-        create an Address with no Account 
+        create an Address with no Account
     verify:
         runtime error
     **********************************************************************************************************/
@@ -1494,7 +1494,7 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
-        create an Address with a NON-Household Account 
+        create an Address with a NON-Household Account
     verify:
         runtime error
     **********************************************************************************************************/
@@ -1519,9 +1519,9 @@ public with sharing class ADDR_Addresses_TEST {
         }
         Integer insertedAddrCount = [select count() from Address__c];
         System.assertEquals(0, insertedAddrCount);
-        
+
         /* We cannot verify error record was created because the usage of addError causes the whole transaction
-        to be rolled back. 
+        to be rolled back.
         List<Error__c> errors = [select Id, Full_Message__c, Stack_Trace__c, Email_Sent__c from Error__c];
         UTIL_Debug.debug('****Errors: ' + JSON.serializePretty(errors));
         System.assertEquals(1, errors.size());*/
@@ -1529,7 +1529,7 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
-        insert new seasonal addresses to HH w/ existing default addresses  
+        insert new seasonal addresses to HH w/ existing default addresses
     verify:
         contact's && hh address matches new seasonal
         old default addresses still marked default
@@ -1581,7 +1581,7 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
-        insert new seasonal addresses, not current, to HH w/ existing default addresses  
+        insert new seasonal addresses, not current, to HH w/ existing default addresses
     verify:
         contact's && hh address stay with default
         old default addresses still marked default
@@ -1629,7 +1629,87 @@ public with sharing class ADDR_Addresses_TEST {
             boolean fSeasonal = (addr.MailingStreet__c.contains('New Seasonal Street'));
             system.assertEquals(!fSeasonal, addr.Default_Address__c);
         }
-    }   
+    }
+
+    /*********************************************************************************************************
+    @description
+        Execute ContactRepository.getContacts() for an Account not having any Contact
+    verify:
+        Method returns empty Contact list
+    **********************************************************************************************************/
+    static testMethod void ContactRepository_getContactsShouldReturnEmptyListWhenAccountHasNoContacts() {
+        if (strTestOnly != '*' && strTestOnly != 'ContactRepository_getContactsShouldReturnEmptyListWhenAccountHasNoContacts') return;
+
+        Account account = new Account(Name = 'AccountWithoutContacts');
+        insert account;
+
+        ADDR_Addresses_TDTM.ContactRepository contactRepo = new ADDR_Addresses_TDTM.ContactRepository(new Set<Id>{ account.Id });
+
+        Contact[] contacts = contactRepo.getContacts(account.Id);
+        System.assertEquals(0, contacts.size());
+    }
+
+    /*********************************************************************************************************
+    @description
+        Execute ContactRepository.getContacts() for Acconts having Contacts
+    verify:
+        Method returns expected Contact list for each Account
+    **********************************************************************************************************/
+    static testMethod void ContactRepository_getContactsShouldReturnContactsWhenAccountHasContacts() {
+        if (strTestOnly != '*' && strTestOnly != 'ContactRepository_getContactsShouldReturnContactsWhenAccountHasContacts') return;
+
+        Integer hhSize = 2;
+        Integer contactSize = 2;
+        createHHTestData(hhSize, contactSize);
+
+        ADDR_Addresses_TDTM.ContactRepository contactRepo = new ADDR_Addresses_TDTM.ContactRepository(extractIds(listAccT));
+
+        testAndAssertContactRepositoryGetContacts(contactRepo, listAccT, listConT);
+    }
+
+    /*********************************************************************************************************
+    @description
+        Execute ContactRepository.getContacts() for an Account not passed to the ContactRepository constructor
+    verify:
+        Method returns expected Contact list for each Account
+    **********************************************************************************************************/
+    static testMethod void ContactRepository_getContactsShouldReturnContactsWhenAccountHasNotBeenPassedToConstructor() {
+        if (strTestOnly != '*' && strTestOnly != 'ContactRepository_getContactsShouldReturnContactsWhenAccountHasNotBeenPassedToConstructor') return;
+
+        Integer hhSize = 2;
+        Integer contactSize = 2;
+        createHHTestData(hhSize, contactSize);
+
+        ADDR_Addresses_TDTM.ContactRepository contactRepo = new ADDR_Addresses_TDTM.ContactRepository(new Set<Id>());
+        testAndAssertContactRepositoryGetContacts(contactRepo, listAccT, listConT);
+
+        contactRepo = new ADDR_Addresses_TDTM.ContactRepository(new Set<Id>{ listAccT[0].Id });
+        testAndAssertContactRepositoryGetContacts(contactRepo, listAccT, listConT);
+    }
+
+    /*********************************************************************************************************
+    @description
+        Execute ContactRepository.getContacts() for each Account in the input argument Account list
+    verify:
+        Method returns expected Contact list for each Account
+    **********************************************************************************************************/
+    static void testAndAssertContactRepositoryGetContacts(ADDR_Addresses_TDTM.ContactRepository contactRepo, List<Account> accounts, List<Contact> contacts) {
+        Map<Id, Contact[]> contactsByAccountId = new Map<Id, Contact[]>();
+        for (Contact c : contacts) {
+            if (!contactsByAccountId.containsKey(c.AccountId)) {
+                contactsByAccountId.put(c.AccountId, new Contact[0]);
+            }
+            contactsByAccountId.get(c.AccountId).add(c);
+        }
+
+        for (Account account : accounts) {
+            Contact[] expectedContacts = contactsByAccountId.get(account.Id);
+            Contact[] actualContacts = contactRepo.getContacts(account.Id);
+
+            System.assertEquals(expectedContacts.size(), actualContacts.size());
+            System.assert(extractIds(expectedContacts).containsAll(extractIds(actualContacts)));
+        }
+    }
 
     /*********************************************************************************************************
     @description
@@ -1697,10 +1777,10 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     static Address__c[] getAddresses() {
         return [
-            SELECT Id, Default_Address__c, Household_Account__c, Address_Type__c,
-                MailingStreet__c, MailingCity__c, MailingState__c,
-                MailingPostalCode__c, MailingCountry__c
-            FROM Address__c
+                SELECT Id, Default_Address__c, Household_Account__c, Address_Type__c,
+                        MailingStreet__c, MailingCity__c, MailingState__c,
+                        MailingPostalCode__c, MailingCountry__c
+                FROM Address__c
         ];
     }
 
@@ -1710,12 +1790,21 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     static Contact[] getContacts() {
         return [
-            SELECT Id, Name, AccountId, is_Address_Override__c, 
-                Current_Address__c, npe01__Primary_Address_Type__c,
-                MailingStreet, MailingCity, MailingState, MailingPostalCode, 
-                MailingCountry, MailingLatitude, MailingLongitude 
-            FROM Contact
-        ];        
+                SELECT Id, Name, AccountId, is_Address_Override__c,
+                        Current_Address__c, npe01__Primary_Address_Type__c,
+                        MailingStreet, MailingCity, MailingState, MailingPostalCode,
+                        MailingCountry, MailingLatitude, MailingLongitude
+                FROM Contact
+        ];
+    }
+
+    /*********************************************************************************************************
+    * @description Extracts Ids of Sobjects
+    * @param sobjects List of Sobjects
+    * @return Set<Id> Set of Sobjects' Ids
+    **********************************************************************************************************/
+    static Set<Id> extractIds(List<Sobject> sobjects) {
+        return (new Map<Id, Sobject>(sobjects)).keySet();
     }
 
     /*********************************************************************************************************
