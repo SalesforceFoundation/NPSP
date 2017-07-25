@@ -349,17 +349,13 @@ public with sharing class PSC_PartialSoftCredit_TEST {
     /*******************************************************************************************************
     * @description create multiple new duplicate Partial Soft Credits, and verify new OCRs are created for them.
     */
-    static testmethod void createDupePSCsNewOCRs() {
-        
+    static testmethod void createDupePSCsNewOCRs() {        
         createTestData(cContactTest, cOppTest, amountTest, false);
         
-        // make sure no OCR's exist
-        list<OpportunityContactRole> listOCR = [select Id, ContactId, OpportunityId, Role, IsPrimary from OpportunityContactRole];
+        list<OpportunityContactRole> listOCR = getOpportunityContactRoles();
         system.assertEquals(0, listOCR.size());        
         
-        // create our Partial Soft Credits
         list<Partial_Soft_Credit__c> listPSC = new list<Partial_Soft_Credit__c>();
-        integer iOpp = 0;
             
         listPSC.add(new Partial_Soft_Credit__c(
             Contact__c = listCon[0].Id,
@@ -376,17 +372,11 @@ public with sharing class PSC_PartialSoftCredit_TEST {
             ));
 
         insert listPSC;
-        
-        // make sure new OCRs created
-        listOCR = [select Id, Role from OpportunityContactRole order by Id];
+
+        listOCR = getOpportunityContactRoles();
         system.assertEquals(2, listOCR.size());
-        
-        // make sure OCR id's stored in PSCs
-        listPSC = [select Id, Contact_Role_ID__c from Partial_Soft_Credit__c order by Contact_Role_ID__c];
-        system.assertEquals(2, listPSC.size());
-        for (integer i = 0; i < 2; i++) {
-            system.assertEquals(listOCR[i].Id, listPSC[i].Contact_Role_ID__c, 'OCR ' + listOCR + ' PSC ' + listPSC);
-        }
+
+        assertOpportunityContactRolesAreStoredInPartialSoftCredits(listOCR);
         
         // now lets add one more PSC to the same contact & opp and make sure it creates another new OCR
         Partial_Soft_Credit__c psc = new Partial_Soft_Credit__c(
@@ -397,16 +387,51 @@ public with sharing class PSC_PartialSoftCredit_TEST {
             );
         insert psc;
         
-        // make sure new OCRs created
-        listOCR = [select Id, Role from OpportunityContactRole order by Id];
+        listOCR = getOpportunityContactRoles();
         system.assertEquals(3, listOCR.size());
-        
-        // make sure OCR id's stored in PSCs
-        listPSC = [select Id, Contact_Role_ID__c from Partial_Soft_Credit__c order by Contact_Role_ID__c];
-        system.assertEquals(3, listPSC.size());
-        for (integer i = 0; i < 3; i++) {
-            system.assertEquals(listOCR[i].Id, listPSC[i].Contact_Role_ID__c);
+
+        assertOpportunityContactRolesAreStoredInPartialSoftCredits(listOCR);
+    } 
+
+    // Helpers
+    ////////////  
+
+    /*********************************************************************************************************
+    * @description Assert Opportunity Contact Role Ids are stored in Partial Soft Credits
+    * @param oppContactRoles List of Opportunity Contact Roles
+    * @return void
+    **********************************************************************************************************/
+    static void assertOpportunityContactRolesAreStoredInPartialSoftCredits(OpportunityContactRole[] oppContactRoles) {
+        Set<Id> contactRoleIds = new Set<Id>();
+
+        for (Partial_Soft_Credit__c credit : getPartialSoftCredits()) {
+            System.assertNotEquals(null, credit.Contact_Role_ID__c);
+            contactRoleIds.add(credit.Contact_Role_ID__c);
         }
-                
-    }      
+
+        Set<Id> expectedContactRoleIds = (new Map<Id, OpportunityContactRole>(oppContactRoles)).keySet();
+
+        System.assertEquals(expectedContactRoleIds.size(), contactRoleIds.size());
+        System.assert(expectedContactRoleIds.containsAll(contactRoleIds));
+    }
+
+    /*********************************************************************************************************
+    * @description Retrieve all Opportunity Contact Roles
+    * @return OpportunityContactRole[] List of all Opportunity Contact Roles
+    **********************************************************************************************************/
+    static OpportunityContactRole[] getOpportunityContactRoles() {
+        return [
+            SELECT Id, Role FROM OpportunityContactRole
+        ];
+    }   
+
+    /*********************************************************************************************************
+    * @description Retrieve all Partial Soft Credits
+    * @return Partial_Soft_Credit__c[] List of all Partial Soft Credits
+    **********************************************************************************************************/    
+    static Partial_Soft_Credit__c[] getPartialSoftCredits() {
+        return [
+            SELECT Id, Contact_Role_ID__c FROM Partial_Soft_Credit__c
+        ];
+    }
 }
