@@ -1978,6 +1978,7 @@
         <members>CumulusStaticResources</members>
         <members>SLDS</members>
         <members>sfdo203</members>
+        <members>RP_Resources</members>
         <name>StaticResource</name>
     </types>
     <types>
@@ -2049,10 +2050,6 @@
         <name>ApexPage</name>
     </types>
     <types>
-        <members>CustomLabels</members>
-        <name>CustomLabels</name>
-    </types>
-    <types>
         <members>*</members>
         <name>CustomMetadata</name>
     </types>
@@ -2065,11 +2062,6 @@
     <types>
         <members>SalesforceOrgRepository</members>
         <name>RemoteSiteSetting</name>
-    </types>
-    <types>
-        <members>RP_Resources</members>
-        <members>SLDS</members>
-        <name>StaticResource</name>
     </types>
     <version>37.0</version>
 </Package>
