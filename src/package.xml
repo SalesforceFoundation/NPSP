@@ -792,6 +792,16 @@
         <members>Partial_Soft_Credit__c.Contact__c</members>
         <members>Partial_Soft_Credit__c.Opportunity__c</members>
         <members>Partial_Soft_Credit__c.Role_Name__c</members>
+        <members>RP_Getting_Started_Links__mdt.RP_Customer_Journey_Link__c</members>
+        <members>RP_Getting_Started_Links__mdt.RP_Salesforce_Org_Link__c</members>
+        <members>RP_Getting_Started_Links__mdt.RP_Trailhead_Link__c</members>
+        <members>RP_Getting_Started_Links__mdt.RP_Us_Link__c</members>
+        <members>RP_Getting_Started_Links__mdt.RP_Webinar_Link__c</members>
+        <members>RP_Getting_Started_Links__mdt.RP_Npsp_Link__c</members>
+        <members>RP_GitHub__mdt.RP_GitHub_Salesforce_Org_Endpoint__c</members>
+        <members>RP_Youtube__mdt.RP_Youtube_API_Endpoint__c</members>
+        <members>RP_Youtube__mdt.RP_Youtube_Channel_Name__c</members>
+        <members>RP_Youtube__mdt.RP_Youtube_Playlist_Id__c</members>        
         <members>Schedulable__c.Active__c</members>
         <members>Schedulable__c.Class_Name__c</members>
         <members>Schedulable__c.Frequency__c</members>
