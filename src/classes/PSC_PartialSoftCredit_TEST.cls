@@ -385,7 +385,7 @@ public with sharing class PSC_PartialSoftCredit_TEST {
         listPSC = [select Id, Contact_Role_ID__c from Partial_Soft_Credit__c order by Contact_Role_ID__c];
         system.assertEquals(2, listPSC.size());
         for (integer i = 0; i < 2; i++) {
-            system.assertEquals(listOCR[i].Id, listPSC[i].Contact_Role_ID__c);
+            system.assertEquals(listOCR[i].Id, listPSC[i].Contact_Role_ID__c, 'OCR ' + listOCR + ' PSC ' + listPSC);
         }
         
         // now lets add one more PSC to the same contact & opp and make sure it creates another new OCR
