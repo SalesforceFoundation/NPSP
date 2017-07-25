@@ -205,6 +205,15 @@
         <members>RLLP_OppRollup_TEST2</members>
         <members>RLLP_OppRollup_UTIL</members>
         <members>RLLP_OppSoftCreditRollup_BATCH</members>
+        <members>RP_GettingStartedController</members>
+        <members>RP_GitHubController</members>
+        <members>RP_GitHubLatestReleaseClient</members>
+        <members>RP_GitHubTest</members>
+        <members>RP_GitHubTestMock</members>
+        <members>RP_YoutubeClient</members>
+        <members>RP_YoutubeController</members>
+        <members>RP_YoutubeTest</members>
+        <members>RP_YoutubeTestMock</members>
         <members>STG_DataBoundMultiSelect_CTRL</members>
         <members>STG_InstallScript</members>
         <members>STG_InstallScript_TEST</members>
@@ -295,6 +304,9 @@
     </types>
     <types>
         <members>BDI_SettingsUI</members>
+        <members>RP_GettingStarted</members>
+        <members>RP_GitHub</members>
+        <members>RP_Youtube</members>
         <members>STG_DataBoundMultiSelect</members>
         <members>STG_PageHeader</members>
         <members>UTIL_FormField</members>
@@ -335,6 +347,7 @@
         <members>PSC_ManageSoftCredits</members>
         <members>RD_AddDonationsBTN</members>
         <members>REL_RelationshipsViewer</members>
+        <members>RP_Resources</members>
         <members>STG_PanelAddrVerification</members>
         <members>STG_PanelAffiliations</members>
         <members>STG_PanelAlloBatch</members>
@@ -1283,6 +1296,30 @@
         <members>pscManageSoftCreditsType</members>
         <members>pscManageSoftCreditsUnaccounted</members>
         <members>pscManageSoftCreditsValidateTotals</members>
+        <members>RP_ChangesGitHub</members>
+        <members>RP_CustomerJourneyLinkLabel</members>
+        <members>RP_DeeperParagraph</members>
+        <members>RP_DeeperSubtitle</members>
+        <members>RP_GettingStarted</members>
+        <members>RP_GitHubSubtitle</members>
+        <members>RP_GitHubTitle</members>
+        <members>RP_NpspLinkLabel</members>
+        <members>RP_ProductNameLabel</members>
+        <members>RP_ReleaseGitHub</members>
+        <members>RP_ReleaseNotesLink</members>
+        <members>RP_SalesforceOrgLinkLabel</members>
+        <members>RP_StableRelease</members>
+        <members>RP_SubTitle</members>
+        <members>RP_Title</members>
+        <members>RP_TrailheadLinkLabel</members>
+        <members>RP_TrailheadParagraph</members>
+        <members>RP_TrailheadSubtitle</members>
+        <members>RP_UsHubLinkLabel</members>
+        <members>RP_USParagraph</members>
+        <members>RP_UsSubtitle</members>
+        <members>RP_Videos</members>
+        <members>RP_WebinarLinkLabel</members>
+        <members>RP_YoutubeChannel</members>
         <members>sendAcknowledgmentFailedStatus</members>
         <members>sendAcknowledgmentFailureReasons</members>
         <members>sendAcknowledgmentFireStatus</members>
@@ -1592,6 +1629,9 @@
         <members>Opportunity_Naming_Settings__c</members>
         <members>Partial_Soft_Credit__c</members>
         <members>Relationship_Sync_Excluded_Fields__c</members>
+        <members>RP_Getting_Started_Links__mdt</members>
+        <members>RP_GitHub__mdt</members>
+        <members>RP_Youtube__mdt</members>
         <members>Schedulable__c</members>
         <members>Trigger_Handler__c</members>
         <name>CustomObject</name>
@@ -1955,6 +1995,7 @@
     <types>
         <members>Cicero</members>
         <members>GoogleAPI</members>
+        <members>SalesforceOrgRepository</members>
         <members>SmartyStreets</members>
         <members>SmartyStreetsZip</members>
         <name>RemoteSiteSetting</name>
@@ -1976,9 +2017,9 @@
     </types>
     <types>
         <members>CumulusStaticResources</members>
+        <members>RP_Resources</members>
         <members>SLDS</members>
         <members>sfdo203</members>
-        <members>RP_Resources</members>
         <name>StaticResource</name>
     </types>
     <types>
@@ -2028,40 +2069,8 @@
         <name>WorkflowRule</name>
     </types>
     <types>
-        <members>RP_GettingStartedController</members>
-        <members>RP_GitHubController</members>
-        <members>RP_GitHubLatestReleaseClient</members>
-        <members>RP_GitHubTest</members>
-        <members>RP_GitHubTestMock</members>
-        <members>RP_YoutubeClient</members>
-        <members>RP_YoutubeController</members>
-        <members>RP_YoutubeTest</members>
-        <members>RP_YoutubeTestMock</members>
-        <name>ApexClass</name>
-    </types>
-    <types>
-        <members>RP_GettingStarted</members>
-        <members>RP_GitHub</members>
-        <members>RP_Youtube</members>
-        <name>ApexComponent</name>
-    </types>
-    <types>
-        <members>RP_Resources</members>
-        <name>ApexPage</name>
-    </types>
-    <types>
         <members>*</members>
         <name>CustomMetadata</name>
-    </types>
-    <types>
-        <members>RP_Getting_Started_Links__mdt</members>
-        <members>RP_GitHub__mdt</members>
-        <members>RP_Youtube__mdt</members>
-        <name>CustomObject</name>
-    </types>
-    <types>
-        <members>SalesforceOrgRepository</members>
-        <name>RemoteSiteSetting</name>
     </types>
     <version>37.0</version>
 </Package>
