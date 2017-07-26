@@ -30,19 +30,18 @@
 /**
  * @author Salesforce.org
  * @date 2017
- * @group Affiliations
- * @description Process control class to prevent trigger recursion process for Opportunity handling
+ * @group TDTM
+ * @group-content ../../ApexDocContent/TDTM.htm
+ * @description Base class for process control logic
  *
 ***/
-public class OPP_ProcessControl {
+public class TDTM_AbstractProcessControl {
 
     /*******************************************************************************************************
-    * @description Enum to define the recursion prevention types used by OPP TDTM triggers
-    * - campaignMember: Prevent recursion specifically for the OPP_CampaignMember_TDTM class
+    * @description Map to track the specific recursion type status
     */
-    public enum flagType {
-        campaignMember
-    }
+    private static Map<String, Integer> recursionMap = new Map<String, Integer>();
+
 
     /*******************************************************************************************************
     * @description Increment/Decrement the static flag counter that tracks whether the processing
@@ -50,14 +49,19 @@ public class OPP_ProcessControl {
     * @param b A boolean where true increments the counter and false decrements it.
     * @return void This method modifies class variables and doesn't return anything.
     ********************************************************************************************************/
-    public static void setRecursionFlag(flagType flag, boolean b) {
-        TDTM_AbstractProcessControl.setRecursionFlag(flag.name(), b);
+    public static void setRecursionFlag(String flag, boolean b) {
+        Integer recursionFlag = (recursionMap.containsKey(flag) ? recursionMap.get(flag) : 0);
+        recursionFlag += (b ? 1 : -1);
+        if (recursionFlag < 0) {
+            recursionFlag = 0;
+        }
+        recursionMap.put(flag, recursionFlag);
     }
 
     /********************************************************************************************************
     * @description Returns true if the recursionFlag value is greater than 1
     */
-    public static Boolean checkRecursionState(flagType flag) {
-        return TDTM_AbstractProcessControl.checkRecursionState(flag.name());
+    public static Boolean checkRecursionState(String flag) {
+        return (recursionMap.containsKey(flag) ? recursionMap.get(flag) : 0) > 0;
     }
 }

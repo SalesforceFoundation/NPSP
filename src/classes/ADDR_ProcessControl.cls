@@ -50,30 +50,20 @@ public class ADDR_ProcessControl {
     }
 
     /*******************************************************************************************************
-    * @description Map to track the specific recursion type status
-    */
-    private static Map<flagType, Integer> recursionMap = new Map<flagType, Integer>();
-
-    /*******************************************************************************************************
     * @description Increment/Decrement the static flag counter that tracks whether the processing
     *    trigger has been called already
     * @param b A boolean where true increments the counter and false decrements it.
     * @return void This method modifies class variables and doesn't return anything.
     ********************************************************************************************************/
     public static void setRecursionFlag(flagType flag, boolean b) {
-        Integer recursionFlag = (recursionMap.containsKey(flag) ? recursionMap.get(flag) : 0);
-        recursionFlag += (b ? 1 : -1);
-        if (recursionFlag < 0) {
-            recursionFlag = 0;
-        }
-        recursionMap.put(flag, recursionFlag);
+        TDTM_AbstractProcessControl.setRecursionFlag(flag.name(), b);
     }
 
     /********************************************************************************************************
     * @description Returns true if the recursionFlag value is greater than 1
     */
     public static Boolean checkRecursionState(flagType flag) {
-        return (recursionMap.containsKey(flag) ? recursionMap.get(flag) : 0) > 0;
+        return TDTM_AbstractProcessControl.checkRecursionState(flag.name());
     }
 
     /*******************************************************************************************************

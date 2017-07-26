@@ -34,26 +34,21 @@
 * @description Provides process control for Allocation related triggers
 */
 public class ALLO_ProcessControl {
-    /*******************************************************************************************************
-    * @description flag to prevent recursion into the RD trigger handler/logic
-    */
-    private static Integer recursionFlag = 0;
 
     /*******************************************************************************************************
-    * @description Increment/Decrement the static flag counter that tracks whether this trigger has been
-    *   called alread
+    * @description Increment/Decrement the static flag counter that tracks whether the processing
+    *    trigger has been called already
     * @param b A boolean where true increments the counter and false decrements it.
     * @return void This method modifies class variables and doesn't return anything.
     ********************************************************************************************************/
-    public static void setRecursionFlag(boolean b) {
-        recursionFlag += (b ? 1 : -1);
-        if (recursionFlag < 0) {
-            recursionFlag = 0;
-        }
+    public static void setRecursionFlag(Boolean b) {
+        TDTM_AbstractProcessControl.setRecursionFlag('ALLO_ProcessControl', b);
     }
 
-    /* @description Returns true if the recursionFlag value is greater than 1 */
+    /********************************************************************************************************
+    * @description Returns true if the recursionFlag value is greater than 1
+    */
     public static Boolean checkRecursionState() {
-        return (recursionFlag > 0);
+        return TDTM_AbstractProcessControl.checkRecursionState('ALLO_ProcessControl');
     }
 }
