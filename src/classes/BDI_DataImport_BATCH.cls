@@ -104,7 +104,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
                     Donation_Date_Range__c = diBatch.Donation_Date_Range__c
                 );
             } else {
-                throw(new BDIException(string.format(Label.bdiContactCustomIdError, new string[]{batchId})));
+                throw(new BDIException(string.format(Label.bdiInvalidBatchId, new string[]{batchId})));
             }
         }
     }
