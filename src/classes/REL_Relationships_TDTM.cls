@@ -98,9 +98,13 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
     */
     private DmlWrapper runForRelationships(List<npe4__Relationship__c> newlist, List<npe4__Relationship__c> oldlist, 
     TDTM_Runnable.Action triggerAction) {
-    	    
-    	DmlWrapper mainWrapper = new DmlWrapper();
-    	
+
+        if (TDTM_ProcessControl.checkRecursionState(TDTM_ProcessControl.flag.REL)) {
+            return null;
+        }
+
+        DmlWrapper mainWrapper = new DmlWrapper();
+
         // Relationship list for termination updates
         List<npe4__Relationship__c> origrelationships = new List<npe4__Relationship__c>();
         List<npe4__Relationship__c> relationshipsToCreate = new List<npe4__Relationship__c>();
@@ -110,9 +114,9 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
 
         // Set the recursion flag up front because there could be DML operations before the main method ends.
         if (triggerAction == TDTM_Runnable.Action.afterUpdate) {
-            REL_ProcessControl.setRecursionFlag(true);
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.REL, true);
         }
-        
+
         Integer i = 0;          // processing counter            
         for(npe4__Relationship__c r : newlist) {
             // AFTER INSERT
@@ -172,7 +176,7 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
 
         TDTM_TriggerHandler.processDML(mainWrapper);
         if (triggerAction == TDTM_Runnable.Action.afterUpdate) {
-            REL_ProcessControl.setRecursionFlag(false);
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.REL, false);
         }
         return null;
     }

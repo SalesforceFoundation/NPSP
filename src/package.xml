@@ -26,7 +26,6 @@
         <members>ADDR_IValidator</members>
         <members>ADDR_MockGoogleGeoAPIResponse_TEST</members>
         <members>ADDR_MockHttpRespGenerator_TEST</members>
-        <members>ADDR_ProcessControl</members>
         <members>ADDR_Seasonal_SCHED</members>
         <members>ADDR_SmartyStreets_Gateway</members>
         <members>ADDR_SmartyStreets_Validator</members>
@@ -39,7 +38,6 @@
         <members>ADDR_Validator_TEST</members>
         <members>AFFL_Affiliations_TDTM</members>
         <members>AFFL_Affiliations_TEST</members>
-        <members>AFFL_ProcessControl</members>
         <members>ALLO_Allocations_TDTM</members>
         <members>ALLO_Allocations_TEST</members>
         <members>ALLO_MakeDefaultAllocations_BATCH</members>
@@ -47,7 +45,6 @@
         <members>ALLO_ManageAllocations_TEST</members>
         <members>ALLO_Multicurrency_TDTM</members>
         <members>ALLO_Multicurrency_TEST</members>
-        <members>ALLO_ProcessControl</members>
         <members>ALLO_RollupBTN_CTRL</members>
         <members>ALLO_Rollup_SCHED</members>
         <members>ALLO_Rollup_TEST</members>
@@ -136,7 +133,6 @@
         <members>HH_NameSpec_TEST</members>
         <members>HH_OppContactRoles_TDTM</members>
         <members>HH_OppContactRoles_TEST</members>
-        <members>HH_ProcessControl</members>
         <members>LD_LeadConvertOverride_CTRL</members>
         <members>LD_LeadConvertOverride_TEST</members>
         <members>LVL_LevelAssignBATCH_TEST</members>
@@ -164,7 +160,6 @@
         <members>OPP_OpportunityNaming_TEST</members>
         <members>OPP_PrimaryContact_BATCH</members>
         <members>OPP_PrimaryContact_TEST</members>
-        <members>OPP_ProcessControl</members>
         <members>OPP_SendAcknowledgmentBTN_CTRL</members>
         <members>OPP_SendAcknowledgmentBTN_TEST</members>
         <members>PMT_PaymentCreator</members>
@@ -183,14 +178,12 @@
         <members>RD_CascadeDeleteLookups_TDTM</members>
         <members>RD_CascadeDeleteLookups_TEST</members>
         <members>RD_InstallScript_BATCH</members>
-        <members>RD_ProcessControl</members>
         <members>RD_RecurringDonations</members>
         <members>RD_RecurringDonations_BATCH</members>
         <members>RD_RecurringDonations_Opp_TDTM</members>
         <members>RD_RecurringDonations_TDTM</members>
         <members>RD_RecurringDonations_TEST</members>
         <members>RD_RecurringDonations_TEST2</members>
-        <members>REL_ProcessControl</members>
         <members>REL_RelationshipsViewer_CTRL</members>
         <members>REL_Relationships_Cm_TDTM</members>
         <members>REL_Relationships_Con_TDTM</members>
@@ -256,12 +249,12 @@
         <members>STG_SettingsService</members>
         <members>STG_UninstallScript</members>
         <members>STG_UninstallScript_TEST</members>
-        <members>TDTM_AbstractProcessControl</members>
         <members>TDTM_Config_API</members>
         <members>TDTM_Config_API_Test</members>
         <members>TDTM_DefaultConfig</members>
         <members>TDTM_DMLgt200_TEST</members>
         <members>TDTM_ObjectDataGateway</members>
+        <members>TDTM_ProcessControl</members>
         <members>TDTM_Runnable</members>
         <members>TDTM_Runnable_TEST</members>
         <members>TDTM_TriggerActionHelper</members>

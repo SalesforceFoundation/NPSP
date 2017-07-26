@@ -51,7 +51,7 @@ public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
         list<npe03__Recurring_Donation__c> listRDUpdates = new list<npe03__Recurring_Donation__c>();
 
         npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
-        if (RD_ProcessControl.checkRecursionState()) {
+        if (TDTM_ProcessControl.checkRecursionState(TDTM_ProcessControl.flag.RD)) {
             return null;
         }
             
@@ -70,7 +70,7 @@ public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
         }
 
         if (triggerAction != TDTM_Runnable.Action.BeforeInsert && triggerAction != TDTM_Runnable.Action.BeforeUpdate) {
-            RD_ProcessControl.setRecursionFlag(true);
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, true);
         }
         DmlWrapper dmlWrapper = new DmlWrapper();
 
@@ -111,7 +111,7 @@ public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
         TDTM_TriggerHandler.processDML(dmlWrapper);
         dmlWrapper = null;
         if (triggerAction != TDTM_Runnable.Action.BeforeInsert && triggerAction != TDTM_Runnable.Action.BeforeUpdate) {
-            RD_ProcessControl.setRecursionFlag(false);
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
         }
         return null;
     }

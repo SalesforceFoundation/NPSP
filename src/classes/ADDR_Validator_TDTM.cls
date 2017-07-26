@@ -39,6 +39,13 @@
 public class ADDR_Validator_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
+    * @description To support DML operations with more than 200 records, use a static Set of Id's that
+    * have been passed to the verifyAddressRecords() method. This allows for a recursion check that goes
+    * by the Id's of the records as opposed to a simple boolean.
+    */
+    public static Set<Id> processedIdsForValidation = new Set<Id>();
+
+    /*******************************************************************************************************
     * @description Exception raised during the address validation process.
     */
     public class ADDR_Validator_Exception extends Exception { }
@@ -57,7 +64,7 @@ public class ADDR_Validator_TDTM extends TDTM_Runnable {
         // Look in the static list of previoysly processed Id's to determine if the record has already
         // gone through this trigger. If so, then don't process it a second time.
         Boolean recordsPreviouslyProcessed = false;
-        if (newList[0].Id != null && ADDR_ProcessControl.processedIdsForValidation.contains(newList[0].Id)) {
+        if (newList[0].Id != null && processedIdsForValidation.contains(newList[0].Id)) {
             recordsPreviouslyProcessed = true;
         }
 
@@ -81,7 +88,7 @@ public class ADDR_Validator_TDTM extends TDTM_Runnable {
                     // To support DML operations with more than 200 records, update a static list of Id's that
                     // have been submitted to this method.
                     for (SObject s : newList) {
-                        ADDR_ProcessControl.processedIdsForValidation.add((Id)s.get('Id'));
+                        processedIdsForValidation.add((Id)s.get('Id'));
                     }
                 } else if(system.isFuture()) {
                     UTIL_Debug.debug('****ADDR_Validator_TDTM called from future, addresses not verified.');

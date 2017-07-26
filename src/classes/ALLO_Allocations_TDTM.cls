@@ -83,25 +83,25 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         }
 
         // dispatch to the correct handler
-        if (objResult.getsObjectType() == Allocation__c.sObjectType && !ALLO_ProcessControl.checkRecursionState() &&
+        if (objResult.getsObjectType() == Allocation__c.sObjectType && !TDTM_ProcessControl.checkRecursionState(TDTM_ProcessControl.flag.ALLOC) &&
             (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate)) {
 
             runAllocationBeforeTriggerHandler(newlist, oldlist, triggerAction, objResult);
-        } else if (objResult.getsObjectType() == Allocation__c.sObjectType && !ALLO_ProcessControl.checkRecursionState() &&
+        } else if (objResult.getsObjectType() == Allocation__c.sObjectType && !TDTM_ProcessControl.checkRecursionState(TDTM_ProcessControl.flag.ALLOC) &&
             (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate || triggerAction == TDTM_Runnable.Action.AfterDelete)) {
 
             runAllocationAfterTriggerHandler(newlist, oldlist, triggerAction, objResult);
             //setting before to true for afterDelete case, to avoid running triggers on DML wrapper objects
-        } else if (objResult.getsObjectType() == Opportunity.sObjectType && !ALLO_ProcessControl.checkRecursionState()) {
+        } else if (objResult.getsObjectType() == Opportunity.sObjectType && !TDTM_ProcessControl.checkRecursionState(TDTM_ProcessControl.flag.ALLOC)) {
 
             runOpportunityTriggerHandler(newlist, oldlist, triggerAction, objResult);
         }
 
         // Increment the recursion flag, process the DML, and then decrement the recursion flag
-        ALLO_ProcessControl.setRecursionFlag(true);
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, true);
         TDTM_TriggerHandler.processDML(dmlWrapper);
         dmlWrapper = null;
-        ALLO_ProcessControl.setRecursionFlag(false);
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, false);
 
         return null;
     }

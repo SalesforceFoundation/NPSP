@@ -85,7 +85,7 @@ public class HH_HouseholdNaming_BATCH implements Database.Batchable<SObject> {
     * @return void  
     ********************************************************************************************************/
     public void execute(Database.BatchableContext bc, Sobject[] result) {
-        HH_ProcessControl.setRecursionFlag(true);
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
 
         //first, if this is coming from the VF settings interface, and the user just enabled
         //automatic household naming for the first time, we need to markup
@@ -185,7 +185,7 @@ public class HH_HouseholdNaming_BATCH implements Database.Batchable<SObject> {
         hhidlist.addall(hhids);
         
         hn.UpdateNames(hhidlist);
-        HH_ProcessControl.setRecursionFlag(false);
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
     }
     
     /*******************************************************************************************************

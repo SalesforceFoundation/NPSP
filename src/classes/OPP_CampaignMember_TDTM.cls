@@ -55,7 +55,7 @@ public class OPP_CampaignMember_TDTM extends TDTM_Runnable {
         
         dmlWrapper dmlWrapper = new DmlWrapper();
 
-        if (OPP_ProcessControl.checkRecursionState(OPP_ProcessControl.flagType.campaignMember)) {
+        if (TDTM_ProcessControl.checkRecursionState(TDTM_ProcessControl.flag.OPP_CampaignMember)) {
             return dmlWrapper;
         }
 
@@ -108,10 +108,10 @@ public class OPP_CampaignMember_TDTM extends TDTM_Runnable {
         }
 
         // Increment the recursion flag, process the DML, and then decrement the recursion flag
-        OPP_ProcessControl.setRecursionFlag(OPP_ProcessControl.flagType.campaignMember, true);
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.OPP_CampaignMember, true);
         TDTM_TriggerHandler.processDML(dmlWrapper);
         dmlWrapper = null;
-        OPP_ProcessControl.setRecursionFlag(OPP_ProcessControl.flagType.campaignMember, false);
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.OPP_CampaignMember, false);
 
         return null;
     }

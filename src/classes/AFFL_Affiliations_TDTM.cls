@@ -52,15 +52,15 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
         DmlWrapper wrapper;
 
         // dispatch to the correct handler
-        if (objResult.getsObjectType() == Contact.sObjectType && !AFFL_ProcessControl.checkRecursionState(AFFL_ProcessControl.flagType.doNotRunForContacts)) {
+        if (objResult.getsObjectType() == Contact.sObjectType && !TDTM_ProcessControl.checkRecursionState(TDTM_ProcessControl.flag.AFFL_doNotRunForContacts)) {
             wrapper = runContactTriggerHandler(newlist, oldlist, triggerAction, objResult);
 
-        } else if (objResult.getsObjectType() == npe5__Affiliation__c.sObjectType && !AFFL_ProcessControl.checkRecursionState(AFFL_ProcessControl.flagType.hasRunForAffiliations)) {
-            AFFL_ProcessControl.setRecursionFlag(AFFL_ProcessControl.flagType.hasRunForAffiliations, true);
+        } else if (objResult.getsObjectType() == npe5__Affiliation__c.sObjectType && !TDTM_ProcessControl.checkRecursionState(TDTM_ProcessControl.flag.AFFL_hasRunForAffiliations)) {
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.AFFL_hasRunForAffiliations, true);
             wrapper = runAfflTriggerHandler(newlist, oldlist, triggerAction, objResult);
 
-        } else if (objResult.getsObjectType() == Account.sObjectType && !AFFL_ProcessControl.checkRecursionState(AFFL_ProcessControl.flagType.hasRunForAccounts)) {
-            AFFL_ProcessControl.setRecursionFlag(AFFL_ProcessControl.flagType.hasRunForAccounts, true);
+        } else if (objResult.getsObjectType() == Account.sObjectType && !TDTM_ProcessControl.checkRecursionState(TDTM_ProcessControl.flag.AFFL_hasRunForAccounts)) {
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.AFFL_hasRunForAccounts, true);
             wrapper = runAccountTriggerHandler(newlist, oldlist, triggerAction, objResult);
 
         } else {
@@ -72,13 +72,13 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
 
         // Decrement the recursion counters based on related processing logic
         if (objResult.getsObjectType() == npe5__Affiliation__c.sObjectType) {
-            AFFL_ProcessControl.setRecursionFlag(AFFL_ProcessControl.flagType.hasRunForAffiliations, false);
-            if (AFFL_ProcessControl.checkRecursionState(AFFL_ProcessControl.flagType.hasRunForAccounts)) {
-                AFFL_ProcessControl.setRecursionFlag(AFFL_ProcessControl.flagType.doNotRunForContacts, false);
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.AFFL_hasRunForAffiliations, false);
+            if (TDTM_ProcessControl.checkRecursionState(TDTM_ProcessControl.flag.AFFL_hasRunForAccounts)) {
+                TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.AFFL_doNotRunForContacts, false);
             }
 
         } else if (objResult.getsObjectType() == Account.sObjectType) {
-            AFFL_ProcessControl.setRecursionFlag(AFFL_ProcessControl.flagType.hasRunForAccounts, false);
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.AFFL_hasRunForAccounts, false);
         }
 
         return null;
@@ -544,7 +544,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
             }
 
             if (!conForUpdate.isEmpty()) {
-                AFFL_ProcessControl.setRecursionFlag(AFFL_ProcessControl.flagType.doNotRunForContacts, true);
+                TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.AFFL_doNotRunForContacts, true);
                 dmlWrapper.objectsToUpdate.addAll((List<SObject>)conForUpdate);
             }
         }

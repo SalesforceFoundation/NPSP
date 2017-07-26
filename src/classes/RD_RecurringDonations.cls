@@ -600,7 +600,7 @@ public class RD_RecurringDonations {
             }
                     
             if (ConIDForRole == null){ 
-                if (createdOppIds.size() > 1 && !system.isFuture() && !system.isBatch() && !RD_ProcessControl.batchButton)
+                if (createdOppIds.size() > 1 && !system.isFuture() && !system.isBatch() && !RD_RecurringDonations_BATCH.isBatchButton)
                     oppContactRolesFuture(createdOppIds); 
                 else
                     oppContactRoles(createdOppIds);                    
@@ -611,7 +611,7 @@ public class RD_RecurringDonations {
                 ERR_Handler.processErrors(errors.errorRecords, ERR_Handler_API.Context.RD.name());
             }            
             
-            if (updateRecurringDonationSet.size() > 1 && !system.isBatch() && !system.isFuture() && !RD_ProcessControl.batchButton)
+            if (updateRecurringDonationSet.size() > 1 && !system.isBatch() && !system.isFuture() && !RD_RecurringDonations_BATCH.isBatchButton)
                 updateRecurringDonationOnOppChangeFuture(updateRecurringDonationSet); 
             else
                 updateRecurringDonationOnOppChange(updateRecurringDonationSet, null);
@@ -781,7 +781,7 @@ public class RD_RecurringDonations {
         }
         
         
-        if (system.isFuture() || RDOppMap.keySet().size() == 1 || system.isBatch() || RD_ProcessControl.batchButton){
+        if (system.isFuture() || RDOppMap.keySet().size() == 1 || system.isBatch() || RD_RecurringDonations_BATCH.isBatchButton){
             updateRecurringDonationOnOppChange(RDOppMap.keySet(), dmlWrapper);
         }          
         else{
@@ -1051,7 +1051,7 @@ public class RD_RecurringDonations {
             }
                     
             if (ConIDForRole == null /* || Test.isRunningTest() */){
-                if (createdOppIds.size() > 1 && !system.isFuture() && !system.isBatch() && !RD_ProcessControl.batchButton)
+                if (createdOppIds.size() > 1 && !system.isFuture() && !system.isBatch() && !RD_RecurringDonations_BATCH.isBatchButton)
                     oppContactRolesFuture(createdOppIds); 
                 else 
                     oppContactRoles(createdOppIds);                    
@@ -1063,7 +1063,7 @@ public class RD_RecurringDonations {
             }
         }
         
-        if (system.isFuture() || system.isBatch() || (recurringDonationsToEvaluate.size() == 1) || RD_ProcessControl.batchButton){
+        if (system.isFuture() || system.isBatch() || (recurringDonationsToEvaluate.size() == 1) || RD_RecurringDonations_BATCH.isBatchButton){
             updateRecurringDonationOnOppChange(RDID, null);
         }
         else{

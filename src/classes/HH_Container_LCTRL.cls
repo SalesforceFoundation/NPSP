@@ -331,7 +331,7 @@ public with sharing class HH_Container_LCTRL {
             // avoid saving of contacts from updating household names
             // to avoid record lock errors.  let the household be responsible
             // for updating its name.
-            HH_ProcessControl.setRecursionFlag(true);
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
             
             // allow potential duplicates when rules to warn are turned on.
             Database.DMLOptions dml = new Database.DMLOptions();
@@ -342,7 +342,7 @@ public with sharing class HH_Container_LCTRL {
                     throw new DmlException(sr.getErrors()[0].getMessage());
             }
             update listUpdate;
-            HH_ProcessControl.setRecursionFlag(false);
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
@@ -385,9 +385,9 @@ public with sharing class HH_Container_LCTRL {
             // but the user still may want auto-naming turned on.  our normal trigger flow
             // would think the user updated the name from what it was, and thus it should be
             // excluded from auto-naming!
-            HH_ProcessControl.setRecursionFlag(true);
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
             update hhCopy;
-            HH_ProcessControl.setRecursionFlag(false);
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
 
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
