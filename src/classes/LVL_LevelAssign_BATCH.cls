@@ -109,19 +109,15 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
                         // record the new level
                         matchedLvl = true;
                         if (lvlIdPrev != lvl.Id) {
-                            if (lvl.Previous_Level_Field__c != null) {
-                                try {
-                                    sobj.put(lvl.Previous_Level_Field__c, lvlIdPrev);
-                                } catch (exception ex) {
-                                    throw new LevelException(String.format(Label.lvlErrorInvalidLookupField, new list<String>{lvl.Previous_Level_Field__c, lvl.Name}));
-                                }
-                            }
+
+                            populatePreviousLevelField(sobj, lvl, lvlIdPrev);
                             
                             try {
                                 sobj.put(strLadder, lvl.Id);
                             } catch (exception ex) {
                                 throw new LevelException(String.format(Label.lvlErrorInvalidLookupField, new list<String>{strLadder, lvl.Name}));
                             }
+                            
                             mapSObjUpdate.put(sobj.Id, sobj);
                             
                             // apply the Engagement Plan
@@ -141,6 +137,11 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
                 } // levels
                 // After looping through all levels in the current ladder if no match found but level set clear level
                 if (!matchedLvl && lvlIdPrev != null) {
+                    //Use previous field's level to find which Previous_Level_Field__c needs to be populated
+                    Level__c previousLevel = (new Map<Id, Level__c>(listLvls)).get(lvlIdPrev);
+
+                    populatePreviousLevelField(sobj, previousLevel, lvlIdPrev);
+
                     sobj.put(strLadder, null);
                     mapSObjUpdate.put(sobj.Id, sobj);
                 }
@@ -150,6 +151,31 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
         // save 'em
         update mapSObjUpdate.values();     
         insert listEP;
+    }
+
+    /*******************************************************************************************************
+    * @description Populates Sobject's Previous Level field with a level previously stored in the Level Field 
+    * @param sobj Sobject
+    * @param level The level used to find out the Sobject's Previous Level Field
+    * @param prevLevelId An Id of a level previously specified in the Level Field
+    * @return void
+    */
+    private void populatePreviousLevelField(Sobject sobj, Level__c level, Id prevLevelId) {
+        if (level == null || level.Previous_Level_Field__c == null) {
+            return;
+        }
+        
+        try {
+            sobj.put(level.Previous_Level_Field__c, prevLevelId);
+
+        } catch(Exception ex) {
+            throw new LevelException(
+                String.format(
+                    Label.lvlErrorInvalidLookupField, 
+                    new List<String>{ level.Previous_Level_Field__c, level.Name }
+                )
+            );
+        }
     }
     
     private class LevelException extends Exception {}
