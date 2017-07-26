@@ -46,7 +46,7 @@ global with sharing class BDI_DataImport_API {
     global static final string RequireNoMatch = 'No Match'; // Always create.  Show error if any match.
     global static final string RequireExactMatch = 'Single Match'; // Use exact match. Show error if there isn't an exact match or there are no matches.
     global static final string ExactMatchOrCreate = 'Single Match or Create'; // Use exact match. Show error if there isn't an exact match. Create opportunity if there are no matches.
-    global static final string RequireBestMatch = ' Best Match'; // Use the best match. Show error if no match.
+    global static final string RequireBestMatch = 'Best Match'; // Use the best match. Show error if no match.
     global static final string BestMatchOrCreate = 'Best Match or Create'; // Use the best match. Create opportunity if no match.
 
     /*******************************************************************************************************
