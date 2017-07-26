@@ -1326,8 +1326,6 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         }
         
         // now update the Contacts to create their Affiliations
-	    // unfortunately, we must manually clear these static flags since we are doing 
-	    // a bunch of stuff in the same context.
         update mapConIdToConUpdate.values();
     }
 

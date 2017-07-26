@@ -83,8 +83,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         string closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
         o.StageName = closedstage;
         o.CloseDate = system.today();
-        RD_ProcessControl.setRecursionFlag(false);
-        Test.startTest();        
+        Test.startTest();
         //update opp
         update o;
         //call the update method

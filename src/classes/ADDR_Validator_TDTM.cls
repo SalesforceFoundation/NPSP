@@ -54,14 +54,14 @@ public class ADDR_Validator_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newList, List<SObject> oldList,
     TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-		// Look in the static list of previoysly processed Id's to determine if the record has already
-		// gone through this trigger. If so, then don't process it a second time.
+        // Look in the static list of previoysly processed Id's to determine if the record has already
+        // gone through this trigger. If so, then don't process it a second time.
         Boolean recordsPreviouslyProcessed = false;
         if (newList[0].Id != null && ADDR_ProcessControl.processedIdsForValidation.contains(newList[0].Id)) {
-			recordsPreviouslyProcessed = true;
+            recordsPreviouslyProcessed = true;
         }
-        
-        if(!ADDR_ProcessControl.checkValidationRecursionState() && !recordsPreviouslyProcessed) {
+
+        if(!recordsPreviouslyProcessed) {
             Addr_Verification_Settings__c settings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
             if ((triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) &&
                settings.enable_automatic_verification__c) {

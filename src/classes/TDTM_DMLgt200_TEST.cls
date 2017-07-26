@@ -32,17 +32,12 @@
  * @date 2017
  * @group TDTM
  * @group-content ../../ApexDocContent/TDTM.htm
- * @description Test class to validate behavior changes related to TDTM Static Flag handling
+ * @description Test class to validate behavior changes related to TDTM Static Flag handling, primarily focused on
+ * dml operations with more than 200 records.
  *
 ***/
 @isTest
 private class TDTM_DMLgt200_TEST {
-
-    /*********************************************************************************************************
-    * @description if you only want to run one test in this class, fill in its name here.
-    * if you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
 
     /* @description The number of records to insert for these tests. Inserting more than 200 records at once
     * will cause triggers to be called twice - once for the first group of 200 and then again for the remainder.
@@ -55,28 +50,25 @@ private class TDTM_DMLgt200_TEST {
     */
     @isTest
     static void test_contacts_with_affiliations() {
-        if (strTestOnly != '*' && strTestOnly != 'test_contacts_with_affiliations') return;
 
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
                 new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
 
-        Id orgRTId = [SELECT Id FROM RecordType WHERE SobjectType = 'Account' AND DeveloperName = 'Organization' AND IsActive = True LIMIT 1].Id;
-        Account orgAcct = new Account(Name='TestOrganization', RecordTypeId = orgRTId);
+        Account orgAcct = new Account(Name='TestOrganization');
         insert orgAcct;
 
         Test.startTest();
 
         // Create more than 200 Contact records and then validate that all of the Household Accounts were created
-        List<Contact> contacts = new List<Contact>();
-        for (Integer n=0; n<insertCnt; n++) {
-            contacts.add(new Contact(
-                    FirstName = 'TEST' + n,
-                    LastName = 'TestContact# ' + n,
-                    Title = 'TestTitle'
-            ));
+        List<Contact> contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(insertCnt);
+        for (Contact c : contacts) {
+            c.OtherCity = null;
+            c.Title = 'TestTitle';
         }
-        database.insert(contacts);
-        system.AssertEquals(insertCnt, [SELECT Count() FROM Account WHERE RecordType.DeveloperName = 'HH_Account'],
+        Database.DMLOptions dml = new Database.DMLOptions();
+        dml.DuplicateRuleHeader.AllowSave = true;
+        Database.insert(contacts, dml);
+        system.AssertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
                 'There should be exactly ' + insertCnt.format() + ' Household Account records');
 
         // Create Affiliation records for every Contact, setting the IsPrimary field to true
@@ -105,31 +97,28 @@ private class TDTM_DMLgt200_TEST {
     */
     @isTest
     static void test_contacts_with_primary_affiliations() {
-        if (strTestOnly != '*' && strTestOnly != 'test_contacts_with_primary_affiliations') return;
 
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
                 new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
 
-        Id orgRTId = [SELECT Id FROM RecordType WHERE SobjectType = 'Account' AND DeveloperName = 'Organization' AND IsActive = True LIMIT 1].Id;
-        Account orgAcct = new Account(Name='TestOrganization', RecordTypeId = orgRTId);
+        Account orgAcct = new Account(Name='TestOrganization');
         insert orgAcct;
 
         Test.startTest();
 
         // Create more than 200 Contact records and then validate that all of the Household Accounts were created
         // as well as all the related Affiliation recorsd
-        List<Contact> contacts = new List<Contact>();
-        for (Integer n=0; n<insertCnt; n++) {
-            contacts.add(new Contact(
-                    FirstName = 'TEST' + n,
-                    LastName = 'TestContact# ' + n,
-                    Title = 'TestTitle',
-                    Primary_Affiliation__c = orgAcct.Id
-            ));
+        List<Contact> contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(insertCnt);
+        for (Contact c : contacts) {
+            c.OtherCity = null;
+            c.Title = 'TestTitle';
+            c.Primary_Affiliation__c = orgAcct.Id;
         }
-        database.insert(contacts);
+        Database.DMLOptions dml = new Database.DMLOptions();
+        dml.DuplicateRuleHeader.AllowSave = true;
+        Database.insert(contacts, dml);
         Test.stopTest();
-        system.AssertEquals(insertCnt, [SELECT Count() FROM Account WHERE RecordType.DeveloperName = 'HH_Account'],
+        system.AssertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
                 'There should be exactly ' + insertCnt.format() + ' Household Account records');
         system.AssertEquals(insertCnt, [SELECT Count() FROM npe5__Affiliation__c WHERE npe5__Organization__c = :orgAcct.Id],
                 'There should be exactly ' + insertCnt.format() + ' Affiliations records');
@@ -142,21 +131,19 @@ private class TDTM_DMLgt200_TEST {
     */
     @isTest
     static void test_contacts_with_relationships() {
-        if (strTestOnly != '*' && strTestOnly != 'test_contacts_with_relationships') return;
 
         Test.startTest();
 
         // Create more than 200 Contact records and then validate that all of the Household Accounts were created
-        List<Contact> contacts = new List<Contact>();
-        for (Integer n=0; n<insertCnt; n++) {
-            contacts.add(new Contact(
-                    FirstName = 'TEST' + n,
-                    LastName = 'TestContact# ' + n,
-                    Title = 'TestTitle'
-            ));
+        List<Contact> contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(insertCnt);
+        for (Contact c : contacts) {
+            c.OtherCity = null;
+            c.Title = 'TestTitle';
         }
-        database.insert(contacts);
-        system.AssertEquals(insertCnt, [SELECT Count() FROM Account WHERE RecordType.DeveloperName = 'HH_Account'],
+        Database.DMLOptions dml = new Database.DMLOptions();
+        dml.DuplicateRuleHeader.AllowSave = true;
+        Database.insert(contacts, dml);
+        system.AssertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
                 'There should be exactly ' + insertCnt.format() + ' Household Account records');
 
         // Create Relationships between the Contacts
@@ -185,7 +172,6 @@ private class TDTM_DMLgt200_TEST {
     */
     @isTest
     static void test_opportunities_with_default_alloc() {
-        if (strTestOnly != '*' && strTestOnly != 'test_opportunities_with_default_alloc') return;
 
         Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
@@ -253,7 +239,6 @@ private class TDTM_DMLgt200_TEST {
     */
     @isTest
     static void test_recurring_donations() {
-        if (strTestOnly != '*' && strTestOnly != 'test_recurring_donations') return;
 
         Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
@@ -295,26 +280,24 @@ private class TDTM_DMLgt200_TEST {
     */
     @isTest
     static void test_addresses() {
-        if (strTestOnly != '*' && strTestOnly != 'test_addresses') return;
         Test.startTest();
 
         // Create more than 200 Contact records and then validate that all of the Household Accounts were created
-        List<Contact> contacts = new List<Contact>();
-        for (Integer n=0; n<insertCnt; n++) {
-            contacts.add(new Contact(
-                    FirstName = 'TEST' + n,
-                    LastName = 'TestContact# ' + n,
-                    MailingStreet = '1313 Mockingbird Lane',
-                    MailingCity = 'Munsterville',
-                    MailingState = 'Illinois',
-                    MailingPostalCode = '06123',
-                    MailingCountry = 'United States'
-            ));
+        List<Contact> contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(insertCnt);
+        for (Contact c : contacts) {
+            c.OtherCity = null;
+            c.MailingStreet = '1313 Mockingbird Lane';
+            c.MailingCity = 'Munsterville';
+            c.MailingState = 'Illinois';
+            c.MailingPostalCode = '06123';
+            c.MailingCountry = 'United States';
         }
-        database.insert(contacts);
+        Database.DMLOptions dml = new Database.DMLOptions();
+        dml.DuplicateRuleHeader.AllowSave = true;
+        Database.insert(contacts, dml);
         Test.stopTest();
 
-        system.AssertEquals(insertCnt, [SELECT Count() FROM Account WHERE RecordType.DeveloperName = 'HH_Account'],
+        system.AssertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
                 'There should be exactly ' + insertCnt.format() + ' Household Account records');
         system.AssertEquals(insertCnt, [SELECT Count() FROM Address__c WHERE MailingPostalCode__c = '06123'],
                 'There should be exactly ' + insertCnt.format() + ' Address Records');
@@ -327,26 +310,23 @@ private class TDTM_DMLgt200_TEST {
     */
     @isTest
     static void test_household_account_naming() {
-        if (strTestOnly != '*' && strTestOnly != 'test_household_account_naming') return;
-
         Test.startTest();
 
         // Create more than 200 Contact records and then validate that all of the Household Accounts were created
-        List<Contact> contacts = new List<Contact>();
-        for (Integer n=0; n<insertCnt; n++) {
-            contacts.add(new Contact(
-                FirstName = 'TEST' + n,
-                LastName = 'TestContact# ' + n ,
-                MailingStreet = '1313 Mockingbird Lane',
-                MailingCity = 'Munsterville',
-                MailingState = 'Illinois',
-                MailingPostalCode = '06123',
-                MailingCountry = 'United States'
-            ));
+        List<Contact> contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(insertCnt);
+        for (Contact c : contacts) {
+            c.OtherCity = null;
+            c.MailingStreet = '1313 Mockingbird Lane';
+            c.MailingCity = 'Munsterville';
+            c.MailingState = 'Illinois';
+            c.MailingPostalCode = '06123';
+            c.MailingCountry = 'United States';
         }
-        database.insert(contacts);
+        Database.DMLOptions dml = new Database.DMLOptions();
+        dml.DuplicateRuleHeader.AllowSave = true;
+        Database.insert(contacts, dml);
 
-        system.AssertEquals(insertCnt, [SELECT Count() FROM Account WHERE RecordType.DeveloperName = 'HH_Account'],
+        system.AssertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
                 'There should be exactly ' + insertCnt.format() + ' Accounts');
 
         // rename all the Contacts
@@ -369,30 +349,28 @@ private class TDTM_DMLgt200_TEST {
     */
     @isTest
     static void test_address_validation() {
-        if (strTestOnly != '*' && strTestOnly != 'test_address_validation') return;
 
         ADDR_Validator_TEST.createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
 
         // Create more than 200 Contact records and then validate that all of the Addresses were verified
-        List<Contact> contacts = new List<Contact>();
-        for (Integer n=0; n<insertCnt; n++) {
-            contacts.add(new Contact(
-                    FirstName = 'TEST' + n,
-                    LastName = 'TestContact# ' + n,
-                    MailingStreet = 'multiple-address',
-                    MailingCity = 'Cupertino',
-                    MailingState = 'California',
-                    MailingPostalCode = '95014',
-                    MailingCountry = 'United States'
-            ));
+        List<Contact> contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(insertCnt);
+        for (Contact c : contacts) {
+            c.OtherCity = null;
+            c.MailingStreet = 'multiple-address';
+            c.MailingCity = 'Cupertino';
+            c.MailingState = 'California';
+            c.MailingPostalCode = '95014';
+            c.MailingCountry = 'United States';
         }
         Test.StartTest();
-        database.insert(contacts);
+        Database.DMLOptions dml = new Database.DMLOptions();
+        dml.DuplicateRuleHeader.AllowSave = true;
+        Database.insert(contacts, dml);
         Test.StopTest();
 
         // check household created for contacts
-        system.AssertEquals(insertCnt, [SELECT Count() FROM Account WHERE RecordType.DeveloperName = 'HH_Account'],
+        system.AssertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
                 'There should be exactly ' + insertCnt.format() + ' Household Account records');
 
         // validate that all address records were validated
@@ -410,8 +388,7 @@ private class TDTM_DMLgt200_TEST {
      *   NOTE: THIS WILL FAIL IN AN ORG WITHOUT THE STATIC FLAG CHANGES
      */
     @isTest
-    private static void testAllocationsCreatedForManyOpenEndedRecurringDonations() {
-        if (strTestOnly != '*' && strTestOnly != 'testAllocationsCreatedForManyOpenEndedRecurringDonations') return;
+    static void testAllocationsCreatedForManyOpenEndedRecurringDonations() {
 
         Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
