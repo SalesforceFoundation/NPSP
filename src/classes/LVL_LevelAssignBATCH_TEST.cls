@@ -629,4 +629,175 @@ private class LVL_LevelAssignBATCH_TEST {
         }
     }
 
+    /*********************************************************************************************************
+    @description
+        Execute Level Assign Batch on Contacts having Source Field value outside of all levels
+    verify:
+        The Level Field is changed to blank.
+        The Previous Level Field is populated with the Level Field as it was before the batch has been run.
+    **********************************************************************************************************/  
+    static testMethod void previousLevelShouldBePopulatedWhenCurrentLevelIsChangedToBlank() {
+        Level__c[] levels = new Level__c[] {
+            new Level__c(
+                Name = 'Tin',
+                Target__c = 'Contact',
+                Source_Field__c = 'npo02__TotalOppAmount__c', 
+                Level_Field__c = 'npo02__LastMembershipLevel__c', 
+                Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c', 
+                Active__c = true, 
+                Minimum_Amount__c = 20, 
+                Maximum_Amount__c = 100
+            ),
+            new Level__c(
+                Name = 'Bronze',
+                Target__c = 'Contact',
+                Source_Field__c = 'npo02__TotalOppAmount__c', 
+                Level_Field__c = 'npo02__LastMembershipLevel__c', 
+                Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c', 
+                Active__c = true, 
+                Minimum_Amount__c = 100, 
+                Maximum_Amount__c = 1000
+            )
+        };
+        insert levels;
+
+        Contact[] contacts = new Contact[] {
+            new Contact(
+                LastName = 'PreviousLevelIsPopulated',
+                npo02__LastMembershipLevel__c = levels[0].id,
+                npo02__LastMembershipOrigin__c = levels[1].id,
+                npo02__TotalOppAmount__c = 10
+            ),
+            new Contact(
+                LastName = 'PreviousLevelIsBlank',
+                npo02__LastMembershipLevel__c = levels[1].id,
+                npo02__LastMembershipOrigin__c = null,
+                npo02__TotalOppAmount__c = 2000
+            )
+        };
+        insert contacts;
+
+        executeLevelAssignBatchForContact();
+
+        Map<Id, Contact> actualContactsById = new Map<Id, Contact>(getContacts());
+
+        for (Contact c : contacts) {
+            Contact actual = actualContactsById.get(c.Id);
+
+            //Level Field is blank since the value is outside of defined levels
+            System.assertEquals(null, actual.npo02__LastMembershipLevel__c);
+
+            //Previous Level Field is populated and equals to the Level Field before the batch has been run
+            System.assertNotEquals(null, actual.npo02__LastMembershipOrigin__c);
+            System.assertEquals(c.npo02__LastMembershipLevel__c, actual.npo02__LastMembershipOrigin__c);
+        }
+    }
+
+    /*********************************************************************************************************
+    @description
+        Execute Level Assign Batch on Contacts having Source Field value 
+        either in the same level or outside of all levels
+    verify:
+        Level Field and Previous Level Field values are not changed
+    **********************************************************************************************************/  
+    static testMethod void previousLevelShouldNotChangeWhenCurrentLevelDoesNotChange() {
+        Level__c[] levels = new Level__c[] {
+            new Level__c(
+                Name = 'Tin',
+                Target__c = 'Contact',
+                Source_Field__c = 'npo02__TotalOppAmount__c', 
+                Level_Field__c = 'npo02__LastMembershipLevel__c', 
+                Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c', 
+                Active__c = true, 
+                Minimum_Amount__c = 20, 
+                Maximum_Amount__c = 100
+            ),
+            new Level__c(
+                Name = 'Bronze',
+                Target__c = 'Contact',
+                Source_Field__c = 'npo02__TotalOppAmount__c', 
+                Level_Field__c = 'npo02__LastMembershipLevel__c', 
+                Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c', 
+                Active__c = true, 
+                Minimum_Amount__c = 100, 
+                Maximum_Amount__c = 1000
+            )
+        };
+        insert levels;
+
+        Contact[] contacts = new Contact[] {
+            new Contact(
+                LastName = 'PreviousLevelIsPopulated',
+                npo02__LastMembershipLevel__c = null,
+                npo02__LastMembershipOrigin__c = levels[0].id,
+                npo02__TotalOppAmount__c = 10
+            ),
+            new Contact(
+                LastName = 'PreviousLevelIsBlank',
+                npo02__LastMembershipLevel__c = null,
+                npo02__LastMembershipOrigin__c = null,
+                npo02__TotalOppAmount__c = 2000
+            ),
+            new Contact(
+                LastName = 'BothLevelsAreProvided',
+                npo02__LastMembershipLevel__c = levels[0].id,
+                npo02__LastMembershipOrigin__c = levels[1].id,
+                npo02__TotalOppAmount__c = 50
+            )
+        };
+        insert contacts;
+
+        executeLevelAssignBatchForContact();
+
+        Map<Id, Contact> actualContactsById = new Map<Id, Contact>(getContacts());
+
+        for (Contact c : contacts) {
+            Contact actual = actualContactsById.get(c.Id);
+
+            //Level Field is unchanged
+            System.assertEquals(c.npo02__LastMembershipLevel__c, actual.npo02__LastMembershipLevel__c);
+
+            //Previous Level Field is unchanged
+            System.assertEquals(c.npo02__LastMembershipOrigin__c, actual.npo02__LastMembershipOrigin__c);
+        }
+    }
+
+    // Helpers
+    ////////////
+
+    /*********************************************************************************************************
+    * @description Executes Level Assign Batch for Contact Sobject
+    * @return void
+    **********************************************************************************************************/
+    static void executeLevelAssignBatchForContact() {
+        String soql = 'SELECT Id, Name, npo02__TotalOppAmount__c, npo02__LastMembershipLevel__c, npo02__LastMembershipOrigin__c, CreatedDate, LastModifiedDate FROM Contact';
+        
+        executeLevelAssignBatch(soql, 'Contact');
+    }
+
+    /*********************************************************************************************************
+    * @description Executes Level Assign Batch
+    * @param soql String representing query to be executed in the batch
+    * @param sobjectType String representing the Sobject API Name
+    * @return void
+    **********************************************************************************************************/
+    static void executeLevelAssignBatch(String soql, String sobjectType) {
+        LVL_LevelAssign_BATCH batch = new LVL_LevelAssign_BATCH(soql, sobjectType);
+        
+        Test.startTest();
+        Database.executeBatch(batch);
+        Test.stopTest();
+    }
+
+    /*********************************************************************************************************
+    * @description Retrieves all Contacts from database
+    * @return Contact[] List of all Contacts
+    **********************************************************************************************************/
+    static Contact[] getContacts() {
+        return [
+            SELECT Id, Name, npo02__TotalOppAmount__c, npo02__LastMembershipLevel__c, npo02__LastMembershipOrigin__c
+            FROM Contact
+        ];        
+    }
+
 }
