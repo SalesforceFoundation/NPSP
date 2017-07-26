@@ -34,6 +34,7 @@
 * @description Provides process control to prevent relationship creation recursion in triggers 
 */
 public with sharing class REL_ProcessControl {
+
     /*******************************************************************************************************
     * @description flag to prevent recursion into the RD trigger handler/logic
     */

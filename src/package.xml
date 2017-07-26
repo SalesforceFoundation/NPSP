@@ -164,6 +164,7 @@
         <members>OPP_OpportunityNaming_TEST</members>
         <members>OPP_PrimaryContact_BATCH</members>
         <members>OPP_PrimaryContact_TEST</members>
+        <members>OPP_ProcessControl</members>
         <members>OPP_SendAcknowledgmentBTN_CTRL</members>
         <members>OPP_SendAcknowledgmentBTN_TEST</members>
         <members>PMT_PaymentCreator</members>

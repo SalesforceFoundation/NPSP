@@ -99,10 +99,10 @@ public with sharing class ADDR_Validator {
 	                    if(classInstance instanceof ADDR_IValidator) {
 	                        ADDR_IValidator validator = (ADDR_IValidator)classInstance;
 	                        //setting the flag to avoid running ADDR_Validator_TDTM again after the verification
-                            ADDR_ProcessControl.setValidationRecursionFlag(true);
+                            ADDR_ProcessControl.setRecursionFlag(ADDR_ProcessControl.flagType.hasRunValidation, true);
 	                        //updating the addresses with the verified version
                             update validator.verifyRecords(avList, settings);
-                            ADDR_ProcessControl.setValidationRecursionFlag(false);
+                            ADDR_ProcessControl.setRecursionFlag(ADDR_ProcessControl.flagType.hasRunValidation, false);
 	                    } else {
 	                        ERR_Handler.processError(new ValidationException(Label.Addr_Verification_Wrong_Interface), ERR_Handler_API.Context.ADDR);
 	                    }

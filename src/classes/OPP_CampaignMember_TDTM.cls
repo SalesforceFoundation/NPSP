@@ -41,9 +41,6 @@ public class OPP_CampaignMember_TDTM extends TDTM_Runnable {
     private List<Id> listCampaignId = new List<Id>();
     private List<String> listMemberStatus = new List<String>();
 
-    /** @description Static flag to prevent recursion */
-    private static Integer recursionFlag = 0;
-
     /*******************************************************************************************************
     * @description Creates and updates campaign members based on opportunity primary contact, primary 
     * campaign source, and the primary contact status field.
@@ -58,7 +55,7 @@ public class OPP_CampaignMember_TDTM extends TDTM_Runnable {
         
         dmlWrapper dmlWrapper = new DmlWrapper();
 
-        if (recursionFlag > 0) {
+        if (OPP_ProcessControl.checkRecursionState(OPP_ProcessControl.flagType.campaignMember)) {
             return dmlWrapper;
         }
 
@@ -111,10 +108,10 @@ public class OPP_CampaignMember_TDTM extends TDTM_Runnable {
         }
 
         // Increment the recursion flag, process the DML, and then decrement the recursion flag
-        setRecursionFlag(true);
+        OPP_ProcessControl.setRecursionFlag(OPP_ProcessControl.flagType.campaignMember, true);
         TDTM_TriggerHandler.processDML(dmlWrapper);
         dmlWrapper = null;
-        setRecursionFlag(false);
+        OPP_ProcessControl.setRecursionFlag(OPP_ProcessControl.flagType.campaignMember, false);
 
         return null;
     }
@@ -174,18 +171,5 @@ public class OPP_CampaignMember_TDTM extends TDTM_Runnable {
 
         listCampaignId.add(opp.CampaignId);
         listContactId.add(opp.Primary_Contact__c);
-    }
-
-    /*******************************************************************************************************
-    * @description Increment/Decrement the static flag counter that tracks whether this trigger has been
-    *   called alread
-    * @param b A boolean where true increments the counter and false decrements it.
-    * @return void This method modifies class variables and doesn't return anything.
-    ********************************************************************************************************/
-    public static void setRecursionFlag(boolean b) {
-        recursionFlag += (b ? 1 : -1);
-        if (recursionFlag < 0) {
-            recursionFlag = 0;
-        }
     }
 }

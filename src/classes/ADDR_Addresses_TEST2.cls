@@ -481,9 +481,7 @@ public with sharing class ADDR_Addresses_TEST2 {
         // Hack!  by setting our trigger handler as run,
         // we can insert the new seasonal addresses but not have them processed.
         // this way we can test the scheduled job!
-        ADDR_ProcessControl.setRecursionFlag(true);
         insert listAddrT;
-        ADDR_ProcessControl.setRecursionFlag(false);
 
         // run the scheduled batch directly
         Test.startTest();
@@ -564,9 +562,7 @@ public with sharing class ADDR_Addresses_TEST2 {
         // Hack!  by setting our trigger handler as run,
         // we can insert the new seasonal addresses but not have them processed.
         // this way we can test the scheduled job!
-        ADDR_ProcessControl.setRecursionFlag(true);
         update listAddrT;
-        ADDR_ProcessControl.setRecursionFlag(false);
 
         // run the scheduled batch directly
         Test.startTest();

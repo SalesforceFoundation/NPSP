@@ -31,18 +31,17 @@
  * @author Salesforce.org
  * @date 2017
  * @group Affiliations
- * @description Process control class to prevent trigger recursion process for affiliations handling
+ * @description Process control class to prevent trigger recursion process for Opportunity handling
  *
 ***/
-public class AFFL_ProcessControl {
+public class OPP_ProcessControl {
 
     /*******************************************************************************************************
-    * @description Enum to define the three recursion prevention types used by AFFL_Affiliations_TDTM
+    * @description Enum to define the recursion prevention types used by OPP TDTM triggers
+    * - campaignMember: Prevent recursion specifically for the OPP_CampaignMember_TDTM class
     */
     public enum flagType {
-        doNotRunForContacts,
-        hasRunForAffiliations,
-        hasRunForAccounts
+        campaignMember
     }
 
     /*******************************************************************************************************

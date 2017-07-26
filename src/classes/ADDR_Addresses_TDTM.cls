@@ -77,7 +77,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         //UTIL_Debug.debug('DJH**** ADDR_Addresses_TDTM ' + triggerAction + ' hasRun: ' + cHasRunAddrTrigger);
 
         // prevent recursion
-        if (ADDR_ProcessControl.checkRecursionState()) {
+        if (ADDR_ProcessControl.checkRecursionState(ADDR_ProcessControl.flagType.hasRunTrigger)) {
             //UTIL_Debug.debug('DJH**** stop Addr Trigger recursion in ADDR_Addresses_TDTM');
             return null;
         }
@@ -163,7 +163,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
         // AFTER INSERT & AFTER UPDATE & AFTER DELETE
         // now we have which HH Accounts to consider, and which to only use for Address Override updates.
-        ADDR_ProcessControl.setRecursionFlag(true);
+        ADDR_ProcessControl.setRecursionFlag(ADDR_ProcessControl.flagType.hasRunTrigger, true);
 
         DmlWrapper dmlWrapper = new DmlWrapper();
 
@@ -194,7 +194,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                     UTIL_Debug.debug(LoggingLevel.WARN, '**** Address: ' + addr + ' message: ' + error.Full_Message__c);
                 }
             }
-            ADDR_ProcessControl.setRecursionFlag(false);
+            ADDR_ProcessControl.setRecursionFlag(ADDR_ProcessControl.flagType.hasRunTrigger, false);
             return null;
         }
 
@@ -209,7 +209,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             if (listAddr.size() > 0)
                 delete listAddr;
         }
-        ADDR_ProcessControl.setRecursionFlag(false);
+        ADDR_ProcessControl.setRecursionFlag(ADDR_ProcessControl.flagType.hasRunTrigger, false);
         return null;
     }    
     
@@ -757,12 +757,12 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         // we'll go thru refreshCurrentHHAddress() again, this time allowing it to do the updates    
 
         // must manually set our semaphore, so when we update contacts and households, they don't try to create additional addresses
-        ADDR_ProcessControl.setRecursionFlag(true);
+        ADDR_ProcessControl.setRecursionFlag(ADDR_ProcessControl.flagType.hasRunTrigger, true);
 
         Dmlwrapper dmlWrapper = new Dmlwrapper();
         refreshCurrentHHAddress(mapAccIdAddr, dmlWrapper, false);
         TDTM_TriggerHandler.processDML(dmlWrapper);
-        ADDR_ProcessControl.setRecursionFlag(false);
+        ADDR_ProcessControl.setRecursionFlag(ADDR_ProcessControl.flagType.hasRunTrigger, false);
     }
     
     /*******************************************************************************************************

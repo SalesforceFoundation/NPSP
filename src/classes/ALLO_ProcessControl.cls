@@ -33,7 +33,7 @@
 * @group Allocations
 * @description Provides process control for Allocation related triggers
 */
-public with sharing class ALLO_ProcessControl {
+public class ALLO_ProcessControl {
     /*******************************************************************************************************
     * @description flag to prevent recursion into the RD trigger handler/logic
     */

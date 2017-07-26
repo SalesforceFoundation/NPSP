@@ -37,57 +37,43 @@
 public class ADDR_ProcessControl {
 
     /*******************************************************************************************************
-    * @description Flag to true to prevent the AfterUpdate trigger on the Contact from processing changes
-    * to the Contact's address that are being made by this BeforeUpdate trigger. Only used by ADDR_Contact_TDTM.
+    * @description Enum to define the three recursion prevention types used by AFFL_Affiliations_TDTM
+    * - hasRunTrigger: Prevent commom recursion through most of the ADDR triggers
+    * - hasRunValidation: Prevent recursion specifically in the Address Validation/Verification related triggers
+    * - hasRunContactOnBefore: Prevent the AfterUpdate trigger on the Contact from processing changes
+    *       to the Contact's address that are being made by this BeforeUpdate trigger. Only used by ADDR_Contact_TDTM.
     */
-    public static Boolean hasAlreadyRunBeforeOnContact = false;
+    public enum flagType {
+        hasRunTrigger,
+        hasRunContactOnBefore,
+        hasRunValidation
+    }
 
     /*******************************************************************************************************
-    * @description Flag to prevent recursion into the Address trigger handler/logic
+    * @description Map to track the specific recursion type status
     */
-    private static Integer recursionFlag = 0;
+    private static Map<flagType, Integer> recursionMap = new Map<flagType, Integer>();
 
     /*******************************************************************************************************
-    * @description Increment/Decrement the static flag counter that tracks whether the Address processing
+    * @description Increment/Decrement the static flag counter that tracks whether the processing
     *    trigger has been called already
     * @param b A boolean where true increments the counter and false decrements it.
     * @return void This method modifies class variables and doesn't return anything.
     ********************************************************************************************************/
-    public static void setRecursionFlag(boolean b) {
+    public static void setRecursionFlag(flagType flag, boolean b) {
+        Integer recursionFlag = (recursionMap.containsKey(flag) ? recursionMap.get(flag) : 0);
         recursionFlag += (b ? 1 : -1);
         if (recursionFlag < 0) {
             recursionFlag = 0;
         }
-        UTIL_Debug.debug('>>>>>> setRecursionFlag(' + b + ') ==> ' + recursionFlag);
+        recursionMap.put(flag, recursionFlag);
     }
 
-    /* @description Returns true if the recursionFlag value is greater than 1 */
-    public static Boolean checkRecursionState() {
-        UTIL_Debug.debug('>>>>>> checkRecursionState() ==> ' + recursionFlag);
-        return (recursionFlag > 0);
-    }
-
-    /*******************************************************************************************************
-    * @description Simple static flag to prevent execution of the address validation triggers
+    /********************************************************************************************************
+    * @description Returns true if the recursionFlag value is greater than 1
     */
-    private static Integer validationRecursionFlag = 0;
-    public static Boolean doNotExecuteValidationTrigger;
-
-    /* @description Returns true if the validationRecursionFlag value is greater than 1 */
-    public static Boolean checkValidationRecursionState() {
-        return (validationRecursionFlag > 0);
-    }
-
-    /*******************************************************************************************************
-    * @description Increment/Decrement the static flag counter used to prevent Address Validation recursion
-    * @param b A boolean where true increments the counter and false decrements it.
-    * @return void This method modifies class variables and doesn't return anything.
-    ********************************************************************************************************/
-    public static void setValidationRecursionFlag(boolean b) {
-        validationRecursionFlag += (b ? 1 : -1);
-        if (validationRecursionFlag < 0) {
-            validationRecursionFlag = 0;
-        }
+    public static Boolean checkRecursionState(flagType flag) {
+        return (recursionMap.containsKey(flag) ? recursionMap.get(flag) : 0) > 0;
     }
 
     /*******************************************************************************************************

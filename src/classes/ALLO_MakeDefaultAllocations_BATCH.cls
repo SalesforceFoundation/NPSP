@@ -133,14 +133,14 @@ public class ALLO_MakeDefaultAllocations_BATCH implements Database.Batchable<sOb
 
         //No error handling necessary, because the only place this is called from is the widget that displays the batch
         //process status in the UI.
+        ALLO_ProcessControl.setRecursionFlag(true);
         if (!listAlloForInsert.isEmpty()) {
-            ALLO_ProcessControl.setRecursionFlag(true);
             insert listAlloForInsert;
         }
         if (!listAlloForUpdate.isEmpty()) {
-            ALLO_ProcessControl.setRecursionFlag(true);
             update listAlloForUpdate;
         }
+        ALLO_ProcessControl.setRecursionFlag(false);
     }
     
     /** @description Batch process finish method, does nothing.*/

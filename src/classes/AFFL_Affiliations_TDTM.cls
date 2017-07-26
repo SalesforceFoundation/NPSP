@@ -52,15 +52,15 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
         DmlWrapper wrapper;
 
         // dispatch to the correct handler
-        if (objResult.getsObjectType() == Contact.sObjectType && AFFL_ProcessControl.doNotRunForContacts == 0) {
+        if (objResult.getsObjectType() == Contact.sObjectType && !AFFL_ProcessControl.checkRecursionState(AFFL_ProcessControl.flagType.doNotRunForContacts)) {
             wrapper = runContactTriggerHandler(newlist, oldlist, triggerAction, objResult);
 
-        } else if (objResult.getsObjectType() == npe5__Affiliation__c.sObjectType && AFFL_ProcessControl.hasRunForAffiliations == 0) {
-            AFFL_ProcessControl.hasRunForAffiliations++;
+        } else if (objResult.getsObjectType() == npe5__Affiliation__c.sObjectType && !AFFL_ProcessControl.checkRecursionState(AFFL_ProcessControl.flagType.hasRunForAffiliations)) {
+            AFFL_ProcessControl.setRecursionFlag(AFFL_ProcessControl.flagType.hasRunForAffiliations, true);
             wrapper = runAfflTriggerHandler(newlist, oldlist, triggerAction, objResult);
 
-        } else if (objResult.getsObjectType() == Account.sObjectType && AFFL_ProcessControl.hasRunForAccounts == 0) {
-            AFFL_ProcessControl.hasRunForAccounts++;
+        } else if (objResult.getsObjectType() == Account.sObjectType && !AFFL_ProcessControl.checkRecursionState(AFFL_ProcessControl.flagType.hasRunForAccounts)) {
+            AFFL_ProcessControl.setRecursionFlag(AFFL_ProcessControl.flagType.hasRunForAccounts, true);
             wrapper = runAccountTriggerHandler(newlist, oldlist, triggerAction, objResult);
 
         } else {
@@ -72,13 +72,13 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
 
         // Decrement the recursion counters based on related processing logic
         if (objResult.getsObjectType() == npe5__Affiliation__c.sObjectType) {
-            AFFL_ProcessControl.hasRunForAffiliations--;
-            if (AFFL_ProcessControl.doNotRunForContacts > 0) {
-                AFFL_ProcessControl.doNotRunForContacts--;
+            AFFL_ProcessControl.setRecursionFlag(AFFL_ProcessControl.flagType.hasRunForAffiliations, false);
+            if (AFFL_ProcessControl.checkRecursionState(AFFL_ProcessControl.flagType.hasRunForAccounts)) {
+                AFFL_ProcessControl.setRecursionFlag(AFFL_ProcessControl.flagType.doNotRunForContacts, false);
             }
 
         } else if (objResult.getsObjectType() == Account.sObjectType) {
-            AFFL_ProcessControl.hasRunForAccounts--;
+            AFFL_ProcessControl.setRecursionFlag(AFFL_ProcessControl.flagType.hasRunForAccounts, false);
         }
 
         return null;
@@ -544,7 +544,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
             }
 
             if (!conForUpdate.isEmpty()) {
-                AFFL_ProcessControl.doNotRunForContacts++;
+                AFFL_ProcessControl.setRecursionFlag(AFFL_ProcessControl.flagType.doNotRunForContacts, true);
                 dmlWrapper.objectsToUpdate.addAll((List<SObject>)conForUpdate);
             }
         }

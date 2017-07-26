@@ -197,13 +197,13 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                ) {
                 // note that we detect whether the address change is coming from the address trigger,
                 // in which case we don't want to create a new address.
-                if (ADDR_ProcessControl.checkRecursionState()) {
+                if (ADDR_ProcessControl.checkRecursionState(ADDR_ProcessControl.flagType.hasRunTrigger)) {
                 	//UTIL_Debug.debug('DJH**** stop Addr Trigger recursion in ADDR_Contact_TDTM');
                     continue;
                 }
                 // If the Before Insert/Update trigger on the Contact has already executed and taken action
                 // and this is an After Insert/Update trigger, simply reset the flag and exit out.
-                if (ADDR_ProcessControl.hasAlreadyRunBeforeOnContact == True &&
+                if (ADDR_ProcessControl.checkRecursionState(ADDR_ProcessControl.flagType.hasRunContactOnBefore) &&
                 (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate)) {
                     continue;
                 }
@@ -217,11 +217,11 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
 
         if (listConAddrSet.size() > 0 || listConAddrReset.size() > 0) {
             // to avoid pushing these address changes to the HH.
-            ADDR_ProcessControl.setRecursionFlag(true);
+            ADDR_ProcessControl.setRecursionFlag(ADDR_ProcessControl.flagType.hasRunTrigger, true);
             // set this flag to true to prevent the AfterUpdate trigger on the Contact from processing changes
             // to the Contact's address that are being made by this BeforeUpdate trigger.
             if (isBefore) {
-                ADDR_ProcessControl.hasAlreadyRunBeforeOnContact = True;
+                ADDR_ProcessControl.setRecursionFlag(ADDR_ProcessControl.flagType.hasRunContactOnBefore, true);
             }
         }
 
@@ -248,13 +248,13 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         TDTM_TriggerHandler.processDML(dmlWrapper);
 
         if (listConAddrSet.size() > 0 || listConAddrReset.size() > 0) {
-            ADDR_ProcessControl.setRecursionFlag(false);
+            ADDR_ProcessControl.setRecursionFlag(ADDR_ProcessControl.flagType.hasRunTrigger, false);
         }
 
         // If the Before Insert/Update trigger on the Contact has already executed and taken action
         // and this is an After Insert/Update trigger, reset the hasAlreadyRunBeforeOnContact flag
         if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-            ADDR_ProcessControl.hasAlreadyRunBeforeOnContact = False;
+            ADDR_ProcessControl.setRecursionFlag(ADDR_ProcessControl.flagType.hasRunContactOnBefore, false);
         }
 
         return null;
