@@ -470,6 +470,12 @@
         <name>ImportedDate__c</name>
     </fields>
     <fields>
+        <help><!-- an optional NPSP Data Import Batch this record belongs to --></help>
+        <label><!-- NPSP Data Import Batch --></label>
+        <name>NPSP_Data_Import_Batch__c</name>
+        <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
+    </fields>
+    <fields>
         <label><!-- Payment Import Status --></label>
         <name>PaymentImportStatus__c</name>
     </fields>
