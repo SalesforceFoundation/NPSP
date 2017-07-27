@@ -20,6 +20,8 @@ CumulusCI is a command line tool belt and set of reusable Python classes useful 
 2. Set CUMULUSCI_KEY environment variable
 3. **Skip** Project Initialization steps - the cloned repo is already set up for CumulusCI
 4. Create Connected App
+5. Connect the `github` service
+    - ```cci service connect github``` (NOTE: if you have 2FA enabled for your github account, you'll need to generate a [Github Personal Access Token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/) and use that as your password) 
 5. Connect the Developer Edition org you created in and set as default.
 6. Run the ```dev_org``` CCI flow
     - ```cci flow run dev_org```
