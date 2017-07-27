@@ -37,71 +37,40 @@
 */
 public with sharing class RP_YoutubeController {
 
-    private static final String CUSTOM_METADATA_YOUTUBE_NAME = 'Youtube';
-    private RP_Youtube__mdt youtubeMetadata;
-
     public YoutubeWrapper[] youtubeVideosData {get; set;}
     public YoutubeWrapper youtubeMainVideo {get; set;}
     public String youtubeChannelName {get; set;}
 
     public RP_YoutubeController() {
 
-        youtubeMetadata = [SELECT Id,
-                                  RP_Youtube_API_endpoint__c,
-                                  RP_Youtube_channel_name__c,
-                                  RP_Youtube_Playlist_Id__c
-                               FROM RP_Youtube__mdt
-                               WHERE DeveloperName =: CUSTOM_METADATA_YOUTUBE_NAME
-                               LIMIT 1
-                           ];
+        youtubeChannelName = RP_Constants.RP_YOUTUBE_CHANNEL_NAME;
+        youtubeVideosData = new YoutubeWrapper []{};
 
-        if (youtubeMetadata != null) {
-
-            youtubeChannelName = youtubeMetadata.RP_Youtube_channel_name__c;
-            youtubeVideosData = new YoutubeWrapper []{};
-
-            updateYoutubePlaylist();
-        }
-
+        loadYoutubePlaylistVideos();
     }
 
-    private void updateYoutubePlaylist() {
+    private void loadYoutubePlaylistVideos() {
 
-        String responseBody;
         RP_YoutubeClient client = new RP_YoutubeClient();
-        String salesforceOrgEndpoint = youtubeMetadata.RP_Youtube_API_endpoint__c + '/' + youtubeMetadata.RP_Youtube_Playlist_Id__c;
-        HttpResponse response = client.getSFORGInformation(salesforceOrgEndpoint);
+        HttpResponse response = client.getPlaylistVideos();
 
         if (response != null) {
 
-            responseBody = response.getBody();
+            String responseBody = response.getBody();
 
-            Map<String, Object> mapResponseBody = (Map<String, Object>) JSON.deserializeUntyped(responseBody);
+            Map<String, Object> responseBodyMap = (Map<String, Object>) JSON.deserializeUntyped(responseBody);
 
-            setData(mapResponseBody);
-
+            setData(responseBodyMap);
         }
-
     }
 
-    public void setData(Map<String, Object> mapResponseBody) {
+    public void setData(Map<String, Object> responseBodyMap) {
 
-        if (mapResponseBody != null) {
+        if (responseBodyMap != null && !responseBodyMap.isEmpty()) {
 
-            for (Object instance : (List<Object>)mapResponseBody.get('items')){
+            for (Object instance : (List<Object>) responseBodyMap.get('items')){
 
-                Map<String,Object> videoInfo = (Map<String,Object>)instance;
-                Map<String,Object> contentDetails = (Map<String,Object>)videoInfo.get('contentDetails');
-                Map<String,Object> snippet = (Map<String,Object>)videoInfo.get('snippet');
-                Map<String,Object> thumbnails = (Map<String,Object>)snippet.get('thumbnails');
-                Map<String,Object> maxResolutionThumbnail = (Map<String,Object>)thumbnails.get('maxres');
-
-                YoutubeWrapper video = new YoutubeWrapper();
-                video.videoId = (String)contentDetails.get('videoId');
-                video.videoTitle = (String)snippet.get('title');
-                video.videoDescription = (String)snippet.get('description');
-                video.videoThumbnail = (String)maxResolutionThumbnail.get('url'); // default, medium or high
-
+                YoutubeWrapper video = new YoutubeWrapper(instance);
                 youtubeVideosData.add(video);
             }
 
@@ -116,11 +85,19 @@ public with sharing class RP_YoutubeController {
         public String videoDescription {get; set;}
         public String videoThumbnail {get; set;}
 
-        public YoutubeWrapper () {
+        public YoutubeWrapper (Object instance) {
 
+            Map<String,Object> videoInfo = (Map<String,Object>) instance;
+            Map<String,Object> contentDetails = (Map<String,Object>) videoInfo.get('contentDetails');
+            Map<String,Object> snippet = (Map<String,Object>) videoInfo.get('snippet');
+            Map<String,Object> thumbnails = (Map<String,Object>) snippet.get('thumbnails');
+            Map<String,Object> maxResolutionThumbnail = (Map<String,Object>) thumbnails.get('maxres');
+
+            videoId = (String) contentDetails.get('videoId');
+            videoTitle = (String) snippet.get('title');
+            videoDescription = (String) snippet.get('description');
+            videoThumbnail = (String) maxResolutionThumbnail.get('url'); // default, medium or high
         }
-
     }
-
 
 }

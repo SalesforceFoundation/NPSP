@@ -35,69 +35,37 @@
 *
 * @description Component, includes Getting started links.
 */
-
 public with sharing class RP_GettingStartedController {
 
-    private static final String CUSTOM_METADATA_LINKS_NAME = 'RP_UrlLinks';
-
-    public LinksWrapper linksData { get; set;}
+    public LinksWrapper linksData {get; set;}
 
     public RP_GettingStartedController() {
 
-        loadLinks();
-
-    }
-
-    private void loadLinks() {
-
-        RP_Getting_Started_Links__mdt linksMetadata;
-
-        linksMetadata = [SELECT
-                            RP_Trailhead_Link__c,
-                            RP_Salesforce_Org_Link__c,
-                            RP_Us_Link__c,
-                            RP_Npsp_Link__c,
-                            RP_Webinar_Link__c,
-                            RP_Customer_Journey_Link__c,
-                            Label
-                            FROM RP_Getting_Started_Links__mdt
-                            WHERE DeveloperName = :CUSTOM_METADATA_LINKS_NAME
-                            LIMIT 1
-                        ];
-
-        if (linksMetadata != null) {
-
-            linksData = new LinksWrapper (linksMetadata);
-
-        }
-
+        linksData = new LinksWrapper ();
     }
 
     public class LinksWrapper {
 
-        public String trailheadLink { get; set;}
-        public String salesforceOrgLink { get; set;}
-        public String usLink { get; set;}
-        public String nspsLink { get; set;}
-        public String webinarLink { get; set;}
-        public String customerJourneyLink { get; set;}
+        public String trailheadLink {get; set;}
+        public String salesforceOrgLink {get; set;}
+        public String usLink {get; set;}
+        public String nspsLink {get; set;}
+        public String webinarLink {get; set;}
+        public String customerJourneyLink {get; set;}
 
-        public LinksWrapper (RP_Getting_Started_Links__mdt linksData) {
+        public LinksWrapper () {
 
-            trailheadLink = !String.isBlank(linksData.RP_Trailhead_Link__c) ? linksData.RP_Trailhead_Link__c : null;
+            trailheadLink = !String.isBlank(RP_Constants.RP_TRAILHEAD_LINK) ? RP_Constants.RP_TRAILHEAD_LINK : null;
 
-            salesforceOrgLink = !String.isBlank(linksData.RP_Salesforce_Org_Link__c) ? linksData.RP_Salesforce_Org_Link__c : null;
+            salesforceOrgLink = !String.isBlank(RP_Constants.RP_SALESFORCE_ORG_LINK) ? RP_Constants.RP_SALESFORCE_ORG_LINK : null;
 
-            usLink = !String.isBlank(linksData.RP_Us_Link__c) ? linksData.RP_Us_Link__c : null;
+            usLink = !String.isBlank(RP_Constants.RP_US_LINK) ? RP_Constants.RP_US_LINK : null;
 
-            nspsLink = !String.isBlank(linksData.RP_Npsp_Link__c) ? linksData.RP_Npsp_Link__c : null;
+            nspsLink = !String.isBlank(RP_Constants.RP_NPSP_LINK) ? RP_Constants.RP_NPSP_LINK : null;
 
-            webinarLink = !String.isBlank(linksData.RP_Webinar_Link__c) ? linksData.RP_Webinar_Link__c : null;
+            webinarLink = !String.isBlank(RP_Constants.RP_WEBINAR_LINK) ? RP_Constants.RP_WEBINAR_LINK : null;
 
-            customerJourneyLink = !String.isBlank(linksData.RP_Customer_Journey_Link__c) ? linksData.RP_Customer_Journey_Link__c : null;
-
+            customerJourneyLink = !String.isBlank(RP_Constants.RP_CUSTOMER_JOURNEY_LINK) ? RP_Constants.RP_CUSTOMER_JOURNEY_LINK : null;
         }
-
     }
-
 }

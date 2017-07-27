@@ -33,25 +33,25 @@
 *
 * @group Resource Page
 *
-* @description Component that coverage github functionality
+* @description Base HTTP Client.
 */
+public with sharing virtual class RP_HTTPClient {
 
-@isTest
-public with sharing class RP_GitHubTest {
+	protected HttpRequest request;
 
-    @isTest
-    public static void testGitHubReleaseNotesContent () {
+	public RP_HTTPClient() {
 
-        Test.setMock(HttpCalloutMock.class, new RP_GitHubTestMock());
+		request = new HttpRequest();
+        request.setTimeout(120000);
+        request.setMethod('GET');
+        request.setHeader('Content-Type', 'application/json');
+	}
 
-        Test.startTest();
+    public HttpResponse send() {
 
-        RP_GitHubController controller = new RP_GitHubController();
+        Http http = new Http();
+        HttpResponse response = http.send(request);
 
-        Test.stopTest();
-
-        System.assertNotEquals(controller, null);
-
+        return response;
     }
-
 }

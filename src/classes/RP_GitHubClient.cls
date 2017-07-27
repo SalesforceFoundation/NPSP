@@ -33,29 +33,17 @@
 *
 * @group Resource Page
 *
-* @description Client that request HEROKU APP to obtain latest release notes from github repository.
+* @description Github Http Client using Salesforce org HEROKU APP.
 */
+public with sharing class RP_GitHubClient extends RP_HTTPClient {
 
-public with sharing class RP_GitHubLatestReleaseClient {
+	public RP_GitHubClient() {
+        super();
+	}
 
-    public RP_GitHubLatestReleaseClient() {
+	public HttpResponse getLatestReleaseNotes() {
 
-    }
-
-    public HttpResponse getSFORGInformation(String salesforceOrgEndpoint) {
-
-        Http http = new Http();
-        HttpResponse response;
-        HttpRequest request = new HttpRequest();
-
-        request.setTimeout(120000);
-        request.setMethod('GET');
-        request.setHeader('Content-Type', 'application/json');
-        request.setEndpoint(salesforceOrgEndpoint);
-
-        response = http.send(request);
-
-        return response;
-    }
-
+		request.setEndpoint(RP_Constants.RP_GITHUB_SALESFORCE_ORG_ENDPOINT);
+		return send();
+	}
 }

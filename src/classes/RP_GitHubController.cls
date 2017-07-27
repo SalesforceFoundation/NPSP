@@ -37,55 +37,26 @@
 */
 public with sharing class RP_GitHubController {
 
-    private static final String CUSTOM_METADATA_LAST_REPOSITORY_NAME = 'RP_GitHubLastRepositoryVersion';
-
     public GitHubWrapper gitHubData {get; set;}
 
     public RP_GitHubController() {
 
-        updateGitHubLatestReleaseInformation();
+        loadLatestReleaseNotes();
     }
 
-    private String getSalesforceOrgEndpoint () {
+    private void loadLatestReleaseNotes() {
 
-        String salesforceOrgEndpoint = '';
-
-        RP_GitHub__mdt gitHubData;
-
-        gitHubData = [SELECT
-                        RP_GitHub_Salesforce_Org_Endpoint__c,
-                        Label
-                        FROM RP_Github__mdt
-                        WHERE DeveloperName =: CUSTOM_METADATA_LAST_REPOSITORY_NAME
-                        LIMIT 1
-                      ];
-
-        if (gitHubData != null) {
-
-            salesforceOrgEndpoint = gitHubData.RP_GitHub_Salesforce_Org_Endpoint__c;
-        }
-
-        return salesforceOrgEndpoint;
-
-    }
-
-    private void updateGitHubLatestReleaseInformation() {
-
-        String responseBody;
-        RP_GitHubLatestReleaseClient client = new RP_GitHubLatestReleaseClient();
-        String salesforceOrgEndpoint = getSalesforceOrgEndpoint();
-        HttpResponse response = client.getSFORGInformation(salesforceOrgEndpoint);
+        RP_GitHubClient client = new RP_GitHubClient();
+        HttpResponse response = client.getLatestReleaseNotes();
 
         if (response != null) {
 
-            responseBody = response.getBody();
+            String responseBody = response.getBody();
 
-            Map<String, Object> mapResponseBody = (Map<String, Object>) JSON.deserializeUntyped(responseBody);
+            Map<String, Object> responseBodyMap = (Map<String, Object>) JSON.deserializeUntyped(responseBody);
 
-            gitHubData = new GitHubWrapper(mapResponseBody);
-
+            gitHubData = new GitHubWrapper(responseBodyMap);
         }
-
     }
 
     public class GitHubWrapper {
@@ -96,28 +67,26 @@ public with sharing class RP_GitHubController {
         public String latestReleaseNotes {get; set;}
         public Object latestProductName {get; set;}
 
+        public GitHubWrapper(Map<String, Object> responseBodyMap) {
 
-        public GitHubWrapper (Map<String, Object> mapResponseBody) {
+            if (responseBodyMap != null && responseBodyMap.containsKey('latest_release')) {
 
-            if (mapResponseBody != null) {
+                Map<String, Object> latestReleaseMap = (Map<String, Object>) responseBodyMap.get('latest_release');
+                latestProductName = responseBodyMap.get('product_name');
 
-                Map<String, Object> mapLatestRelease = (Map<String, Object>) mapResponseBody.get('latest_release');
-                latestProductName = mapResponseBody.get('product_name');
+                if (latestReleaseMap != null && !latestReleaseMap.isEmpty()) {
 
-                if (mapLatestRelease != null) {
+                    latestReleaseNotes = (String) latestReleaseMap.get('release_notes_html');
+                    latestDownloadUrl = (String) latestReleaseMap.get('url');
+                    latestVersion = (String) latestReleaseMap.get('version');
 
-                    latestReleaseNotes = (String) mapLatestRelease.get('release_notes_html');
-                    latestDownloadUrl = (String) mapLatestRelease.get('url');
-                    latestVersion = (String) mapLatestRelease.get('version');
-
-                    String timeCreated = (String) mapLatestRelease.get('time_created');
-                    latestDate = formatDate (timeCreated);
+                    String timeCreated = (String) latestReleaseMap.get('time_created');
+                    latestDate = formatDate(timeCreated);
                 }
-
             }
         }
 
-        private String formatDate (String releaseDate) {
+        private String formatDate(String releaseDate) {
 
             String result = '';
 
@@ -134,8 +103,6 @@ public with sharing class RP_GitHubController {
 
             return result;
         }
-
     }
-
 
 }

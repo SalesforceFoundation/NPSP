@@ -33,25 +33,24 @@
 *
 * @group Resource Page
 *
-* @description Component that coverage github functionality
+* @description Constant values class.
 */
+public with sharing class RP_Constants {
 
-@isTest
-public with sharing class RP_GitHubTest {
+    // Configuration for the Youtube component.
+    public static final String RP_YOUTUBE_API_ENDPOINT = 'https://sfdo-status.herokuapp.com/api/youtube/playlists';
+    public static final String RP_YOUTUBE_CHANNEL_NAME = 'SalesforceFoundation';
+    public static final String RP_YOUTUBE_PLAYLIST_ID = 'PLU8xqF8ZASbXWAHIF0SB1P9_3G4vvRMXI';
 
-    @isTest
-    public static void testGitHubReleaseNotesContent () {
+    // Configuration for the GitHub component.
+    public static final String RP_GITHUB_SALESFORCE_ORG_ENDPOINT = 'https://sfdo-status.herokuapp.com/repo/api/SalesforceFoundation/Cumulus?format=json';
 
-        Test.setMock(HttpCalloutMock.class, new RP_GitHubTestMock());
-
-        Test.startTest();
-
-        RP_GitHubController controller = new RP_GitHubController();
-
-        Test.stopTest();
-
-        System.assertNotEquals(controller, null);
-
-    }
+    // Configuration for the Getting Started page links
+    public static final String RP_CUSTOMER_JOURNEY_LINK = 'https://www.marketingcloud.com/customer-journey-map-examples/';
+    public static final String RP_NPSP_LINK = 'http://www.salesforce.org/nonprofit/nonprofit-success-pack/';
+    public static final String RP_SALESFORCE_ORG_LINK = 'http://www.salesforce.org/';
+    public static final String RP_TRAILHEAD_LINK = 'https://trailhead.salesforce.com';
+    public static final String RP_US_LINK = 'http://www.salesforce.org/nonprofit/power-of-us/';
+    public static final String RP_WEBINAR_LINK = 'https://www.salesforce.com/events/webinars/';
 
 }

@@ -35,27 +35,16 @@
 *
 * @description Client to request HEROKU APP to videos from youtube NPSP How-To Series playlist on Salesforce.org channel
 */
-
-public with sharing class RP_YoutubeClient {
+public with sharing class RP_YoutubeClient extends RP_HTTPClient {
 
     public RP_YoutubeClient() {
-
+        super();
     }
 
-    public HttpResponse getSFORGInformation(String salesforceOrgEndpoint) {
+    public HttpResponse getPlaylistVideos() {
 
-        Http http = new Http();
-        HttpResponse response;
-        HttpRequest request = new HttpRequest();
-
-        request.setTimeout(120000);
-        request.setMethod('GET');
-        request.setHeader('Content-Type', 'application/json');
-        request.setEndpoint(salesforceOrgEndpoint);
-
-        response = http.send(request);
-
-        return response;
+		request.setEndpoint(RP_Constants.RP_YOUTUBE_API_ENDPOINT + '/' + RP_Constants.RP_YOUTUBE_PLAYLIST_ID);
+		return send();
     }
 
 }

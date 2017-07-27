@@ -33,25 +33,21 @@
 *
 * @group Resource Page
 *
-* @description Component that coverage github functionality
+* @description Component that coverage getting started functionality (links assing)
 */
 
 @isTest
-public with sharing class RP_GitHubTest {
+public with sharing class RP_GettingStartedTest {
 
     @isTest
-    public static void testGitHubReleaseNotesContent () {
-
-        Test.setMock(HttpCalloutMock.class, new RP_GitHubTestMock());
+    public static void testGettingStartedLinks () {
 
         Test.startTest();
 
-        RP_GitHubController controller = new RP_GitHubController();
+        RP_GettingStartedController controller = new RP_GettingStartedController();
 
         Test.stopTest();
 
         System.assertNotEquals(controller, null);
-
     }
-
 }
