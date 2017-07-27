@@ -1631,8 +1631,8 @@
         <members>Allocations_Settings__c</members>
         <members>Batch_Data_Entry_Settings__c</members>
         <members>Batch__c</members>
-        <members>DataImport__c</members>
         <members>DataImportBatch__c</members>
+        <members>DataImport__c</members>
         <members>Data_Import_Settings__c</members>
         <members>Engagement_Plan_Task__c</members>
         <members>Engagement_Plan_Template__c</members>
@@ -1723,6 +1723,7 @@
         <members>DataImportBatch__c-en_US</members>
         <members>DataImportBatch__c-es</members>
         <members>DataImportBatch__c-fr</members>
+        <members>DataImportBatch__c-iw</members>
         <members>DataImportBatch__c-ja</members>
         <members>DataImportBatch__c-nl_NL</members>
         <members>DataImport__c-de</members>
@@ -1733,6 +1734,7 @@
         <members>DataImport__c-ja</members>
         <members>DataImport__c-nl_NL</members>
         <members>Data_Import_Settings__c-de</members>
+        <members>Data_Import_Settings__c-en_US</members>
         <members>Data_Import_Settings__c-es</members>
         <members>Data_Import_Settings__c-fr</members>
         <members>Data_Import_Settings__c-iw</members>
