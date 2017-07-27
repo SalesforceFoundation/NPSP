@@ -766,6 +766,14 @@
         <name>bdiImported</name>
     </customLabels>
     <customLabels>
+        <label><!-- error when the importData() API is given a invalid Batch ID. --></label>
+        <name>bdiInvalidBatchId</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error message if the Donation Matching Behavior is invalid --></label>
+        <name>bdiInvalidDonationMatchingBehavior</name>
+    </customLabels>
+    <customLabels>
         <label>Combinado.</label>
         <name>bdiMatched</name>
     </customLabels>
@@ -3110,11 +3118,11 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>NPSP_Settings</name>
     </customTabs>
     <quickActions>
-        <label><!-- LogACall --></label>
+        <label><!-- Log a Call --></label>
         <name>LogACall</name>
     </quickActions>
     <quickActions>
-        <label><!-- NewAccount --></label>
+        <label><!-- New Account --></label>
         <name>NewAccount</name>
     </quickActions>
     <quickActions>
@@ -3122,7 +3130,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>NewContact</name>
     </quickActions>
     <quickActions>
-        <label><!-- NewNote --></label>
+        <label><!-- New Note --></label>
         <name>NewNote</name>
     </quickActions>
     <quickActions>
@@ -3130,7 +3138,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>NewOpportunity</name>
     </quickActions>
     <quickActions>
-        <label><!-- NewTask --></label>
+        <label><!-- New Task --></label>
         <name>NewTask</name>
     </quickActions>
     <quickActions>

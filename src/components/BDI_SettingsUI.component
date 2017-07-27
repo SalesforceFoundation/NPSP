@@ -111,12 +111,12 @@
                     <apex:outputPanel layout="block" styleClass="{!IF(isEditMode, 'slds-select_container', '')}">
                         <apex:selectList id="fldDonationMatchBehavior" value="{!diSettings.Donation_Matching_Behavior__c}" size="1" 
                             multiselect="false" styleClass="{!'slds-select' + IF(isReadOnlyMode, ' my-select-disabled', '')}" disabled="{!isReadOnlyMode}">
-                            <apex:selectOption itemLabel="{!$Label.bdiBehaviorDoNotMatch}" itemValue="DoNotMatch" />
-                            <apex:selectOption itemLabel="{!$Label.bdiBehaviorRequireNoMatch}" itemValue="RequireNoMatch" />
-                            <apex:selectOption itemLabel="{!$Label.bdiBehaviorRequireExactMatch}" itemValue="RequireExactMatch" />
-                            <apex:selectOption itemLabel="{!$Label.bdiBehaviorExactMatchOrCreate}" itemValue="ExactMatchOrCreate" />
-                            <apex:selectOption itemLabel="{!$Label.bdiBehaviorRequireBestMatch}" itemValue="RequireBestMatch" />
-                            <apex:selectOption itemLabel="{!$Label.bdiBehaviorBestMatchOrCreate}" itemValue="BestMatchOrCreate" />
+                            <apex:selectOption itemLabel="{!$Label.bdiBehaviorDoNotMatch}" itemValue="{!DoNotMatch}" />
+                            <apex:selectOption itemLabel="{!$Label.bdiBehaviorRequireNoMatch}" itemValue="{!RequireNoMatch}" />
+                            <apex:selectOption itemLabel="{!$Label.bdiBehaviorRequireExactMatch}" itemValue="{!RequireExactMatch}" />
+                            <apex:selectOption itemLabel="{!$Label.bdiBehaviorExactMatchOrCreate}" itemValue="{!ExactMatchOrCreate}" />
+                            <apex:selectOption itemLabel="{!$Label.bdiBehaviorRequireBestMatch}" itemValue="{!RequireBestMatch}" />
+                            <apex:selectOption itemLabel="{!$Label.bdiBehaviorBestMatchOrCreate}" itemValue="{!BestMatchOrCreate}" />
                         </apex:selectList>
                     </apex:outputPanel>
                 </div>

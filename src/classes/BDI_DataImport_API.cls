@@ -42,83 +42,69 @@ global with sharing class BDI_DataImport_API {
     * @description string values for different matching behaviors BDI can support.  couldn't use an enum
     * since we need to store it in a custom settings text field.
     */
-    global static final string DoNotMatch = 'DoNotMatch'; // Don't Match. Always create new Opportunities.
-    global static final string RequireNoMatch = 'RequireNoMatch'; // Always create.  Show error if any match.
-    global static final string RequireExactMatch = 'RequireExactMatch'; // Use exact match. Show error if there isn't an exact match or there are no matches.
-    global static final string ExactMatchOrCreate = 'ExactMatchOrCreate'; // Use exact match. Show error if there isn't an exact match. Create opportunity if there are no matches.
-    global static final string RequireBestMatch = 'RequireBestMatch'; // Use the best match. Show error if no match.
-    global static final string BestMatchOrCreate = 'BestMatchOrCreate'; // Use the best match. Create opportunity if no match.
+    global static final string DoNotMatch = 'Do Not Match'; // Don't Match. Always create new Opportunities.
+    global static final string RequireNoMatch = 'No Match'; // Always create.  Show error if any match.
+    global static final string RequireExactMatch = 'Single Match'; // Use exact match. Show error if there isn't an exact match or there are no matches.
+    global static final string ExactMatchOrCreate = 'Single Match or Create'; // Use exact match. Show error if there isn't an exact match. Create opportunity if there are no matches.
+    global static final string RequireBestMatch = 'Best Match'; // Use the best match. Show error if no match.
+    global static final string BestMatchOrCreate = 'Best Match or Create'; // Use the best match. Create opportunity if no match.
 
     /*******************************************************************************************************
-    * @description Imports all DataImport records that have not been previously imported. Their status is changed
-    * to imported, once the process fishishes.
+    * @description Imports all DataImport records that have not been previously imported and do not belong
+    * to any specific batch. Their status is changed to imported, once the process finishes.
     * @return ID The ID of the batch job that performs the data import.
     */
     global static ID importData() {
-        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-        Boolean batchRunning = false;
-        Id apexJobId;
-        try {
-            // ensure we are in the household account model!
-            if (!CAO_Constants.isHHAccountModel())
-                throw(new BDIException(Label.bdiHouseholdModelRequired));
-            
-            // validate settings
-            if (diSettings.Contact_Custom_Unique_ID__c != null) {
-                // make sure c1 and c2 have the appropriately named field
-                if (!UTIL_Describe.isValidField(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), 'Contact1_' + diSettings.Contact_Custom_Unique_ID__c) ||
-                   !UTIL_Describe.isValidField(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), 'Contact2_' + diSettings.Contact_Custom_Unique_ID__c)) {
-                    throw(new BDIException(string.format(Label.bdiContactCustomIdError, 
-                        new string[]{diSettings.Contact_Custom_Unique_ID__c, 
-                            'Contact1_' + diSettings.Contact_Custom_Unique_ID__c,
-                            'Contact2_' + diSettings.Contact_Custom_Unique_ID__c})));
-                }
-            }
-            
-            if (diSettings.Account_Custom_Unique_ID__c != null) {
-                // make sure a1 and a2 have the appropriately named field
-                if (!UTIL_Describe.isValidField(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), 'Account1_' + diSettings.Account_Custom_Unique_ID__c) ||
-                   !UTIL_Describe.isValidField(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), 'Account2_' + diSettings.Account_Custom_Unique_ID__c)) {
-                    throw(new BDIException(string.format(Label.bdiAccountCustomIdError, 
-                        new string[]{diSettings.Account_Custom_Unique_ID__c, 
-                            'Account1_' + diSettings.Account_Custom_Unique_ID__c,
-                            'Account2_' + diSettings.Account_Custom_Unique_ID__c})));
-                }
-            }
-            
-            
-            // save any settings changes.
-            try {
-                upsert diSettings;
-            } catch (Exception ex) {
-                // this is a complete hack to work around the bug
-                // https://github.com/SalesforceFoundation/Cumulus/issues/1094
-                // for reasons I cannot fathom, we get an error trying to upsert the
-                // settings object even though the UTIL_CustomSettingsFacade has already
-                // done an upsert on it.  This failure only occurs if there is no org defined
-                // custom setting instance.  The workaround is to catch the upsert failing, and
-                // just clear the Id and do an insert.
-                diSettings.Id = null;
-                insert diSettings;
-            }
-            
-            batchRunning = true;
-            BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
-            apexJobId = Database.executeBatch(bdi, integer.valueOf(diSettings.Batch_Size__c));
-            return apexJobId;
-
-        } catch (Exception ex) {
-            if (ApexPages.currentPage() != null) {
-                ApexPages.addMessage(new ApexPages.Message(
-                    ApexPages.Severity.ERROR,
-                    ex.getMessage()
-                ));
-            } else {
-                // if we are not in a context where we can notify the user of
-                // this exception, rethrow it
-                throw ex;
-            }
+        list<ProcessDataImportBatchesResult> listResult = processDataImportBatches(new list<ID>{null});
+        if (listResult != null) {
+            return listResult[0].apexJobId;
+        } else {
             return null;
         }
     }
+
+    /*******************************************************************************************************
+    * @description Imports all DataImport records that have not been previously imported.
+    * Their status is changed to imported, once the process finishes.
+    * @param batchId optional batch to scope processing to.
+    * @return ID The ID of the batch job that performs the data import.
+    */
+    @InvocableMethod(label='processDataImportBatches' description='starts the batch processing of a list of DataImport batches')
+    global static list<ProcessDataImportBatchesResult> processDataImportBatches(list<ID> listBatchId) {
+
+        list<ProcessDataImportBatchesResult> listResult = new list<ProcessDataImportBatchesResult>();
+
+        Savepoint sp = Database.setSavepoint();
+        for (ID batchId : listBatchId) {
+            try {
+                BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(batchId);
+                listResult.add(new ProcessDataImportBatchesResult(Database.executeBatch(bdi, integer.valueOf(bdi.diSettings.Batch_Size__c))));
+            } catch (exception ex) {
+                Database.rollback(sp);
+                ex.setMessage('Error encountered in batch: ' + batchId + '. ' + ex.getMessage());
+                throw ex;
+            }
+        }
+        return listResult;
+    }
+
+    /*******************************************************************************************************
+    * @description The return result object for each batch that is provided to processDataImportBatches()
+    */
+    global class ProcessDataImportBatchesResult {
+
+        /*******************************************************************************************************
+        * @description The return result object for each batch that is provided to processDataImportBatches()
+        */
+        @InvocableVariable
+        global ID apexJobId;
+
+        /*******************************************************************************************************
+        * @description constructor
+        */
+        ProcessDataImportBatchesResult(ID apexJobId) {
+            this.apexJobId = apexJobId;
+        }
+    }
+
 }

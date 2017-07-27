@@ -71,6 +71,8 @@ private with sharing class BDI_SettingsUI_TEST {
 
         Test.startTest();
 
+        diSettings.Donation_Matching_Behavior__c = 'bogus value';
+        system.assertEquals(false, BDI_SettingsUI_CTRL.saveBDISettings(diSettings));
         diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.BestMatchOrCreate;
         system.assertEquals(false, BDI_SettingsUI_CTRL.saveBDISettings(diSettings));
         diSettings.Donation_Matching_Rule__c = 'Donation_Date__c';
@@ -85,6 +87,11 @@ private with sharing class BDI_SettingsUI_TEST {
         system.assertEquals(false, BDI_SettingsUI_CTRL.saveBDISettings(diSettings));
         diSettings.Donation_Matching_Implementing_Class__c = 'BDI_MatchDonations';
         system.assertEquals(true, BDI_SettingsUI_CTRL.saveBDISettings(diSettings));
+
+        diSettings.Contact_Custom_Unique_ID__c = 'bogus field';
+        system.assertEquals(false, BDI_SettingsUI_CTRL.saveBDISettings(diSettings));
+        diSettings.Account_Custom_Unique_ID__c = 'bogus field';
+        system.assertEquals(false, BDI_SettingsUI_CTRL.saveBDISettings(diSettings));
 
         Test.stopTest();
     }

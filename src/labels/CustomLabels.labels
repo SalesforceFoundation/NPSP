@@ -1467,6 +1467,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Imported</value>
     </labels>
     <labels>
+        <fullName>bdiInvalidBatchId</fullName>
+        <categories>Data Import</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error when the importData() API is given a invalid Batch ID.</shortDescription>
+        <value>The NPSP Data Import Batch Id {0} is invalid.</value>
+    </labels>
+    <labels>
+        <fullName>bdiInvalidDonationMatchingBehavior</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error message if the Donation Matching Behavior is invalid</shortDescription>
+        <value>{0} is an invalid Donation Matching Behavior.</value>
+    </labels>
+    <labels>
         <fullName>bdiMatched</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -1504,7 +1520,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>error when numeric settings set to negative number</shortDescription>
-        <value>Number must be positive.</value>
+        <value>Number of Days from Donation Date must be a positive number.</value>
     </labels>
     <labels>
         <fullName>bdiRecordsFailed</fullName>

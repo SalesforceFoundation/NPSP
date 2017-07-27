@@ -40,7 +40,16 @@ public with sharing class BDI_SettingsUI_CTRL {
     * @description The Data Import settings object to work upon
     */
     public Data_Import_Settings__c diSettings { get; set; }
-    
+
+    /*********************************************************************************************************
+    * @description getter's to provide the page our API behaviors (which the page can't refer to directly)
+    */
+    public string getDoNotMatch() { return BDI_DataImport_API.DoNotMatch; }
+    public string getRequireNoMatch() { return BDI_DataImport_API.RequireNoMatch; }
+    public string getRequireExactMatch() { return BDI_DataImport_API.RequireExactMatch; }
+    public string getExactMatchOrCreate() { return BDI_DataImport_API.ExactMatchOrCreate; }
+    public string getRequireBestMatch() { return BDI_DataImport_API.RequireBestMatch; }
+    public string getBestMatchOrCreate() { return BDI_DataImport_API.BestMatchOrCreate; }
 
     /*******************************************************************************************************
     * @description is the panel in Edit Mode
@@ -155,41 +164,14 @@ public with sharing class BDI_SettingsUI_CTRL {
     */
     public static boolean saveBDISettings(Data_Import_Settings__c diSettings) {
 
-        // validate matching rules
-        if (diSettings.Donation_Matching_Behavior__c != null &&
-            diSettings.Donation_Matching_Behavior__c != BDI_DataImport_API.DoNotMatch &&
-            String.isBlank(diSettings.Donation_Matching_Rule__c)) {
-
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, Label.bdiDonationMatchingRuleEmpty));
+        try {
+            BDI_DataImport_BATCH.validateSettings(diSettings);
+            upsert diSettings;
+            return true;
+        } catch (Exception ex) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, ex.getMessage()));
             return false;
         }
-
-        // validate Donation Date Range
-        if (diSettings.Donation_Date_Range__c < 0) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, Label.bdiPositiveNumber));
-            return false;
-        }
-
-        // validate donation implementing class
-        string strClass = diSettings.Donation_Matching_Implementing_Class__c;
-        if (String.isNotBlank(strClass)) {
-            BDI_IMatchDonations iMatchDonations = null;
-            Type classType = Type.forName(strClass);
-            if (classType != null) {
-                Object classInstance = classType.newInstance();
-                if (classInstance instanceof BDI_IMatchDonations) {
-                    iMatchDonations = (BDI_IMatchDonations) classInstance;
-                }
-            }
-            if (iMatchDonations == null) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error,
-                    String.format(Label.bdiErrorInvalidIMatchDonations, new list<String>{strClass})));
-                return false;
-            }
-        }
-
-        upsert diSettings;
-        return true;
     }
 
 }
