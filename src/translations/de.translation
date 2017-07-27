@@ -772,6 +772,14 @@ Wenn Sie nicht wissen, wie diese Fehler behoben werden, senden Sie eine Nachrich
         <name>bdiImported</name>
     </customLabels>
     <customLabels>
+        <label><!-- error when the importData() API is given a invalid Batch ID. --></label>
+        <name>bdiInvalidBatchId</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error message if the Donation Matching Behavior is invalid --></label>
+        <name>bdiInvalidDonationMatchingBehavior</name>
+    </customLabels>
+    <customLabels>
         <label>Abgeglichen</label>
         <name>bdiMatched</name>
     </customLabels>
@@ -3129,11 +3137,11 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <name>NPSP_Settings</name>
     </customTabs>
     <quickActions>
-        <label><!-- LogACall --></label>
+        <label><!-- Log a Call --></label>
         <name>LogACall</name>
     </quickActions>
     <quickActions>
-        <label><!-- NewAccount --></label>
+        <label><!-- New Account --></label>
         <name>NewAccount</name>
     </quickActions>
     <quickActions>
@@ -3141,7 +3149,7 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <name>NewContact</name>
     </quickActions>
     <quickActions>
-        <label><!-- NewNote --></label>
+        <label><!-- New Note --></label>
         <name>NewNote</name>
     </quickActions>
     <quickActions>
@@ -3149,7 +3157,7 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <name>NewOpportunity</name>
     </quickActions>
     <quickActions>
-        <label><!-- NewTask --></label>
+        <label><!-- New Task --></label>
         <name>NewTask</name>
     </quickActions>
     <quickActions>
