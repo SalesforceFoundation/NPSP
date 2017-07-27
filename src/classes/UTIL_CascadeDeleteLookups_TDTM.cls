@@ -101,8 +101,6 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
         return new List<Cascade>();
     }
 
-    public static Boolean disableCascade = false;
-
     /*******************************************************************************************************
     * @description Performs cascade delete for lookup fields. Stashes records, deletes records, or undeletes
     * records depending on trigger action.
@@ -116,7 +114,7 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        if (disableCascade) {
+        if (TDTM_ProcessControl.checkRecursionState(TDTM_ProcessControl.flag.CascadeDeletes)) {
             return null;
         }
 
@@ -140,15 +138,15 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
                 }
             } catch (Exception ex) {}
 
-            disableCascade = true;
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.CascadeDeletes, true);
             doDelete();
-            disableCascade = false;
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.CascadeDeletes, false);
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterUndelete) {
-            disableCascade = true;
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.CascadeDeletes, true);
             doUndelete(newlist);
-            disableCascade = false;
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.CascadeDeletes, false);
         }
 
         return null;

@@ -70,7 +70,8 @@ public class TDTM_ProcessControl {
         HH,
         OPP_CampaignMember,
         RD,
-        REL
+        REL,
+        CascadeDeletes
     }
 
     /*******************************************************************************************************
