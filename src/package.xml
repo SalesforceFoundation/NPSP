@@ -208,10 +208,13 @@
         <members>RLLP_OppRollup_UTIL</members>
         <members>RLLP_OppSoftCreditRollup_BATCH</members>
         <members>RP_GettingStartedController</members>
+        <members>RP_GettingStartedTest</members>
+        <members>RP_GitHubClient</members>
         <members>RP_GitHubController</members>
-        <members>RP_GitHubLatestReleaseClient</members>
         <members>RP_GitHubTest</members>
+        <members>RP_Constants</members>
         <members>RP_GitHubTestMock</members>
+        <members>RP_HTTPClient</members>
         <members>RP_YoutubeClient</members>
         <members>RP_YoutubeController</members>
         <members>RP_YoutubeTest</members>
@@ -1916,6 +1919,7 @@
         <members>npe01__OppPayment__c</members>
         <members>npe4__Relationship__c</members>
         <members>npe5__Affiliation__c</members>
+        <members>RP_Getting_Started</members>
         <name>CustomTab</name>
     </types>
     <types>
@@ -2029,7 +2033,7 @@
     <types>
         <members>Cicero</members>
         <members>GoogleAPI</members>
-        <members>SalesforceOrgRepository</members>
+        <members>SFDOEndpoints</members>
         <members>SmartyStreets</members>
         <members>SmartyStreetsZip</members>
         <name>RemoteSiteSetting</name>
