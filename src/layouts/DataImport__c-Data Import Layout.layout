@@ -33,6 +33,10 @@
                 <behavior>Edit</behavior>
                 <field>ApexJobId__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>NPSP_Data_Import_Batch__c</field>
+            </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
     </layoutSections>

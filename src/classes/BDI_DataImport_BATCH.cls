@@ -39,47 +39,185 @@
 */
 public class BDI_DataImport_BATCH implements Database.Batchable<sObject> { 
 
+    /*******************************************************************************************************
+    * @description the soql string of DataImport records for the entire batch to run against
+    */
     private String strSoql;
-    
-    // constructor, which sets up our initial soql
-    public BDI_DataImport_BATCH() {
 
-        strSoql = 'SELECT ';
-        string strComma = '';
-        for (string strF : listStrDataImportFields) {
-            strSoql += strComma + strF;
-            strComma = ', ';
-        }
+    /*******************************************************************************************************
+    * @description constructor, which sets up our initial soql
+    */
+    public BDI_DataImport_BATCH() {
+        this(null);
+    }
+
+    /*******************************************************************************************************
+    * @description constructor that takes a specific batch, which sets up our initial soql
+    * and loads the appropriate data import settings.
+    */
+    public BDI_DataImport_BATCH(ID batchId) {
+
+        // construct or SOQL for the batch
+        strSoql = 'SELECT ' + string.join(listStrDataImportFields, ',');
         strSoql += ' FROM ' + UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
-        strSoql += ' WHERE Status__c <> \'' + label.bdiImported + '\' ';   
+        strSoql += ' WHERE Status__c <> \'' + label.bdiImported + '\' ';
+
+        if (batchId != null) {
+            strSoql += ' AND NPSP_Data_Import_Batch__c = \'' + batchId + '\'';
+        } else {
+            strSoql += ' AND NPSP_Data_Import_Batch__c = NULL';
+        }
         // this ensures consistency for our test code, but also should
         // help users figure out import problems by importing in a consistent order.
-        strSoql += ' ORDER BY Name ';                   
+        strSoql += ' ORDER BY Name ';
+
+        // now load our settings
+        loadSettings(batchId);
+
+        // and make sure settings are valid
+        validateSettings(diSettings);
+    }
+
+    /*******************************************************************************************************
+    * @description loads the data import settings to use for this batch.  these may be either from
+    * custom settings, or if a specific BatchId was specified, the settings specified for that batch.
+    * @param batchId optional batch to scope processing to.
+    * @return void
+    */
+    private void loadSettings(ID batchId) {
+
+        // load up the default or specific settings
+        if (batchId == null) {
+            diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        } else {
+            list<DataImportBatch__c> listDIBatch = BDI_DataImportBatch_SEL.selectByIds(new Set<Id>{batchId});
+            if (listDIBatch.size() == 1) {
+                DataImportBatch__c diBatch = listDIBatch[0];
+                diSettings = new Data_Import_Settings__c(
+                    Account_Custom_Unique_ID__c = diBatch.Account_Custom_Unique_ID__c,
+                    Batch_Size__c = diBatch.Batch_Process_Size__c,
+                    Contact_Custom_Unique_ID__c = diBatch.Contact_Custom_Unique_ID__c,
+                    Contact_Matching_Rule__c = diBatch.Contact_Matching_Rule__c,
+                    Donation_Matching_Behavior__c = diBatch.Donation_Matching_Behavior__c,
+                    Donation_Matching_Implementing_Class__c = diBatch.Donation_Matching_Implementing_Class__c,
+                    Donation_Matching_Rule__c = diBatch.Donation_Matching_Rule__c,
+                    Donation_Date_Range__c = diBatch.Donation_Date_Range__c
+                );
+            } else {
+                throw(new BDIException(string.format(Label.bdiInvalidBatchId, new string[]{batchId})));
+            }
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description validates the data import settings.  Used by UI as well as at runtime by the batch.
+    * throws an exception if there are any invalid settings.
+    * @return void
+    */
+    public static void validateSettings(Data_Import_Settings__c diSettings) {
+
+        // validate matching rules
+        if (diSettings.Donation_Matching_Behavior__c != null &&
+            diSettings.Donation_Matching_Behavior__c != BDI_DataImport_API.DoNotMatch &&
+            String.isBlank(diSettings.Donation_Matching_Rule__c)) {
+
+            throw(new BDIException(Label.bdiDonationMatchingRuleEmpty));
+        }
+
+        // validate Donation Date Range
+        if (diSettings.Donation_Date_Range__c < 0) {
+            throw(new BDIException(Label.bdiPositiveNumber));
+        }
+
+        // validate donation implementing class
+        string strClass = diSettings.Donation_Matching_Implementing_Class__c;
+        if (String.isNotBlank(strClass)) {
+            BDI_IMatchDonations iMatchDonations = null;
+            Type classType = Type.forName(strClass);
+            if (classType != null) {
+                Object classInstance = classType.newInstance();
+                if (classInstance instanceof BDI_IMatchDonations) {
+                    iMatchDonations = (BDI_IMatchDonations) classInstance;
+                }
+            }
+            if (iMatchDonations == null) {
+                throw(new BDIException(String.format(Label.bdiErrorInvalidIMatchDonations, new list<String>{strClass})));
+            }
+        }
+
+        // ensure we are in the household account model!
+        if (!CAO_Constants.isHHAccountModel())
+            throw(new BDIException(Label.bdiHouseholdModelRequired));
+
+        // validate settings
+        string strDataImportObj = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
+        if (diSettings.Contact_Custom_Unique_ID__c != null) {
+            // make sure c1 and c2 have the appropriately named field
+            // note that our tests have to use a standard Contact field that matches one of the DI custom fields, so we add __c
+            string strFieldname = diSettings.Contact_Custom_Unique_ID__c + (Test.isRunningTest() ? '__c' : '');
+            if (!UTIL_Describe.isValidField(strDataImportObj, UTIL_Namespace.StrTokenNSPrefix('Contact1_' + strFieldname)) ||
+                !UTIL_Describe.isValidField(strDataImportObj, UTIL_Namespace.StrTokenNSPrefix('Contact2_' + strFieldname))) {
+                throw(new BDIException(string.format(Label.bdiContactCustomIdError,
+                    new string[]{diSettings.Contact_Custom_Unique_ID__c,
+                        'Contact1_' + strFieldname,
+                        'Contact2_' + strFieldname})));
+            }
+        }
+
+        if (diSettings.Account_Custom_Unique_ID__c != null) {
+            // make sure a1 and a2 have the appropriately named field
+            // note that our tests have to use a standard Account field that matches one of the DI custom fields, so we add __c
+            string strFieldname = diSettings.Account_Custom_Unique_ID__c + (Test.isRunningTest() ? '__c' : '');
+            if (!UTIL_Describe.isValidField(strDataImportObj, UTIL_Namespace.StrTokenNSPrefix('Account1_' + strFieldname)) ||
+                !UTIL_Describe.isValidField(strDataImportObj, UTIL_Namespace.StrTokenNSPrefix('Account2_' + strFieldname))) {
+                throw(new BDIException(string.format(Label.bdiAccountCustomIdError,
+                    new string[]{diSettings.Account_Custom_Unique_ID__c,
+                        'Account1_' + strFieldname,
+                        'Account2_' + strFieldname})));
+            }
+        }
+
+        // make sure they have specified a valid Donation Matching Behavior
+        set<String> setDMBehavior = new set<String> {
+            BDI_DataImport_API.DoNotMatch,
+            BDI_DataImport_API.RequireNoMatch,
+            BDI_DataImport_API.RequireExactMatch,
+            BDI_DataImport_API.ExactMatchOrCreate,
+            BDI_DataImport_API.RequireBestMatch,
+            BDI_DataImport_API.BestMatchOrCreate
+        };
+        if (!setDMBehavior.contains(diSettings.Donation_Matching_Behavior__c)) {
+            throw(new BDIException(String.format(Label.bdiInvalidDonationMatchingBehavior, new String[]{diSettings.Donation_Matching_Behavior__c})));
+        }
     }
     
+    /*******************************************************************************************************
+    * @description Start method of the Batchable interface
+    * @return QueryLocator the BDI records to process
+    */
     public Database.QueryLocator start(Database.BatchableContext bc) {
         return Database.getQueryLocator(strSoql);
     }
     
-    // maps to keep track of the objects we will create.
-    // all are indexed by the object's matching key or the di.Id
+    /*******************************************************************************************************
+    * @description maps to keep track of the objects we will create.
+    * all are indexed by the object's matching key or the di.Id
+    */
     public map<string, Contact> mapDIKeyToContact = new map<string, Contact>();
     public map<string, Account> mapDIKeyToAccount = new map<string, Account>();
     private map<Id, Address__c> mapDIIdToAddr = new map<Id, Address__c>();
     public map<string, Id> mapStrNameToCampaignId = new map<string, Id>();
 
-    // holds the list of DataImport records we are currently processing
+    /*******************************************************************************************************
+    * @description holds the list of DataImport records we are currently processing
+    */
     public list<DataImport__c> listDI;
     
-    public Data_Import_Settings__c diSettings {
-        get {
-            if (diSettings == null) {
-                diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-            }
-            return diSettings;
-        }
-        private set;
-    }
+    /*******************************************************************************************************
+    * @description holds the data import settings to use for this batch.  these may be either from
+    * custom settings, or if a specific BatchId was specified, the settings specified for that batch.
+    */
+    public Data_Import_Settings__c diSettings { get; private set; }
 
     private boolean isFirstnameInContactMatchRules {
     	get {
@@ -311,7 +449,11 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     
     // our exception object for Field Level Security errors.
     private class flsException extends Exception {}
-    
+
+    // our exception object for BDI errors.
+    private class BDIException extends Exception {}
+
+
     // flag to allow us to test out field level security exception
     public static boolean failFieldLevelSecurity = false;
     
