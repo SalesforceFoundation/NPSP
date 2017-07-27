@@ -150,12 +150,13 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             throw(new BDIException(Label.bdiHouseholdModelRequired));
 
         // validate settings
+        string strDataImportObj = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
         if (diSettings.Contact_Custom_Unique_ID__c != null) {
             // make sure c1 and c2 have the appropriately named field
             // note that our tests have to use a standard Contact field that matches one of the DI custom fields, so we add __c
             string strFieldname = diSettings.Contact_Custom_Unique_ID__c + (Test.isRunningTest() ? '__c' : '');
-            if (!UTIL_Describe.isValidField(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), 'Contact1_' + strFieldname) ||
-                !UTIL_Describe.isValidField(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), 'Contact2_' + strFieldname)) {
+            if (!UTIL_Describe.isValidField(strDataImportObj, UTIL_Namespace.StrTokenNSPrefix('Contact1_' + strFieldname)) ||
+                !UTIL_Describe.isValidField(strDataImportObj, UTIL_Namespace.StrTokenNSPrefix('Contact2_' + strFieldname))) {
                 throw(new BDIException(string.format(Label.bdiContactCustomIdError,
                     new string[]{diSettings.Contact_Custom_Unique_ID__c,
                         'Contact1_' + strFieldname,
@@ -167,8 +168,8 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             // make sure a1 and a2 have the appropriately named field
             // note that our tests have to use a standard Account field that matches one of the DI custom fields, so we add __c
             string strFieldname = diSettings.Account_Custom_Unique_ID__c + (Test.isRunningTest() ? '__c' : '');
-            if (!UTIL_Describe.isValidField(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), 'Account1_' + strFieldname) ||
-                !UTIL_Describe.isValidField(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), 'Account2_' + strFieldname)) {
+            if (!UTIL_Describe.isValidField(strDataImportObj, UTIL_Namespace.StrTokenNSPrefix('Account1_' + strFieldname)) ||
+                !UTIL_Describe.isValidField(strDataImportObj, UTIL_Namespace.StrTokenNSPrefix('Account2_' + strFieldname))) {
                 throw(new BDIException(string.format(Label.bdiAccountCustomIdError,
                     new string[]{diSettings.Account_Custom_Unique_ID__c,
                         'Account1_' + strFieldname,
