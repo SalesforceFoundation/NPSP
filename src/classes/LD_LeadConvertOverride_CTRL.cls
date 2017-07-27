@@ -376,7 +376,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 	        }
 
 	        // avoid auto-affiliation creation by disabling the Affiliations Trigger for Contacts
-            TDTM_TriggerHandler.toggleTriggerState('Contact', 'AFFL_Affiliations_TDTM', false);
+            TDTM_ProcessControl.toggleTriggerState('Contact', 'AFFL_Affiliations_TDTM', false);
 
             // temporarily disable address management
             boolean hhAcctAddrDisabled = UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c;
@@ -517,7 +517,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             }
             if (afflAccId != null) {
                 // Re-Enable the Affilations Trigger for the Contact
-                TDTM_TriggerHandler.toggleTriggerState('Contact', 'AFFL_Affiliations_TDTM', true);
+                TDTM_ProcessControl.toggleTriggerState('Contact', 'AFFL_Affiliations_TDTM', true);
                 AFFL_Affiliations_TDTM.createNonDupeAffiliation(l, lcr.getContactId(), afflAccId, true);
             }
             
