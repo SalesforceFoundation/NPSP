@@ -135,9 +135,15 @@ public with sharing class BDI_DataImport_CTRL {
         }
 
         dtStart = system.now();
-        apexJobId = BDI_DataImport_API.importData();
-        if(apexJobId != null)
-            batchRunning = true;
+        try {
+            apexJobId = BDI_DataImport_API.importData();
+            if (apexJobId != null) {
+                batchRunning = true;
+            }
+        } catch (Exception ex) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
+            batchRunning = false;
+        }
         return null;
     }
 

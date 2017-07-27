@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value>Data Import Settings</value>
+        <value><!-- NPSP Data Import Batch --></value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value>Data Import Settings</value>
+        <value><!-- NPSP Data Import Batch --></value>
     </caseValues>
     <fields>
         <help><!-- An optional Unique Id field to use for Organization Account matching --></help>
@@ -14,14 +14,13 @@
         <name>Account_Custom_Unique_ID__c</name>
     </fields>
     <fields>
-        <help><!-- Specifies which rule to follow when trying to match Accounts in Data Import records against existing Accounts. --></help>
-        <label><!-- Account Matching Rule --></label>
-        <name>Account_Matching_Rule__c</name>
+        <label><!-- Batch Description --></label>
+        <name>Batch_Description__c</name>
     </fields>
     <fields>
-        <help><!-- The number of NPSP Data Import records to process in each batch. --></help>
+        <help><!-- The number of NPSP Data Import records to process at a time in each batch. --></help>
         <label><!-- Batch Process Size --></label>
-        <name>Batch_Size__c</name>
+        <name>Batch_Process_Size__c</name>
     </fields>
     <fields>
         <help><!-- An optional Unique Id field to use for Contact matching --></help>
@@ -42,6 +41,30 @@
         <help><!-- Defines how the Data Importer should handle matching Donations. You must choose a value. --></help>
         <label><!-- Donation Matching Behavior --></label>
         <name>Donation_Matching_Behavior__c</name>
+        <picklistValues>
+            <masterLabel>Best Match</masterLabel>
+            <translation><!-- Best Match --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Best Match or Create</masterLabel>
+            <translation><!-- Best Match or Create --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Do Not Match</masterLabel>
+            <translation><!-- Do Not Match --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>No Match</masterLabel>
+            <translation><!-- No Match --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Single Match</masterLabel>
+            <translation><!-- Single Match --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Single Match or Create</masterLabel>
+            <translation><!-- Single Match or Create --></translation>
+        </picklistValues>
     </fields>
     <fields>
         <help><!-- The developer name of an Apex class that implements the BDI_IMatching interface for Donations. Leave blank to let NPSP handle matching. --></help>
@@ -53,5 +76,6 @@
         <label><!-- Donation Matching Rule --></label>
         <name>Donation_Matching_Rule__c</name>
     </fields>
-    <startsWith>Consonant</startsWith>
+    <gender><!-- Feminine --></gender>
+    <nameFieldLabel><!-- Batch Name --></nameFieldLabel>
 </CustomObjectTranslation>
