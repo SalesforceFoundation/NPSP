@@ -52,6 +52,8 @@
         <members>BDE_BatchDataEntry_TEST</members>
         <members>BDE_BatchEntry_CTRL</members>
         <members>BDE_BatchEntry_TEST</members>
+        <members>BDI_DataImportAPI_TEST</members>
+        <members>BDI_DataImportBatch_SEL</members>
         <members>BDI_DataImportDeleteBTN_CTRL</members>
         <members>BDI_DataImportDeleteBTN_TEST</members>
         <members>BDI_DataImport_API</members>
@@ -547,6 +549,15 @@
         <members>Contact.Primary_Contact__c</members>
         <members>Contact.Soft_Credit_Last_N_Days__c</members>
         <members>Contact.is_Address_Override__c</members>
+        <members>DataImportBatch__c.Account_Custom_Unique_ID__c</members>
+        <members>DataImportBatch__c.Batch_Description__c</members>
+        <members>DataImportBatch__c.Batch_Process_Size__c</members>
+        <members>DataImportBatch__c.Contact_Custom_Unique_ID__c</members>
+        <members>DataImportBatch__c.Contact_Matching_Rule__c</members>
+        <members>DataImportBatch__c.Donation_Date_Range__c</members>
+        <members>DataImportBatch__c.Donation_Matching_Behavior__c</members>
+        <members>DataImportBatch__c.Donation_Matching_Implementing_Class__c</members>
+        <members>DataImportBatch__c.Donation_Matching_Rule__c</members>
         <members>DataImport__c.Account1ImportStatus__c</members>
         <members>DataImport__c.Account1Imported__c</members>
         <members>DataImport__c.Account1_City__c</members>
@@ -628,6 +639,7 @@
         <members>DataImport__c.HouseholdAccountImported__c</members>
         <members>DataImport__c.Household_Phone__c</members>
         <members>DataImport__c.ImportedDate__c</members>
+        <members>DataImport__c.NPSP_Data_Import_Batch__c</members>
         <members>DataImport__c.PaymentImportStatus__c</members>
         <members>DataImport__c.PaymentImported__c</members>
         <members>DataImport__c.Payment_Check_Reference_Number__c</members>
@@ -999,6 +1011,8 @@
         <members>bdiHouseholdModelRequired</members>
         <members>bdiIgnored</members>
         <members>bdiImported</members>
+        <members>bdiInvalidBatchId</members>
+        <members>bdiInvalidDonationMatchingBehavior</members>
         <members>bdiMatched</members>
         <members>bdiMatchedBest</members>
         <members>bdiMatchedId</members>
@@ -1577,6 +1591,7 @@
         <members>Allocations_Settings__c</members>
         <members>Batch_Data_Entry_Settings__c</members>
         <members>Batch__c</members>
+        <members>DataImportBatch__c</members>
         <members>DataImport__c</members>
         <members>Data_Import_Settings__c</members>
         <members>Engagement_Plan_Task__c</members>
@@ -1664,6 +1679,13 @@
         <members>Contact-iw</members>
         <members>Contact-ja</members>
         <members>Contact-nl_NL</members>
+        <members>DataImportBatch__c-de</members>
+        <members>DataImportBatch__c-en_US</members>
+        <members>DataImportBatch__c-es</members>
+        <members>DataImportBatch__c-fr</members>
+        <members>DataImportBatch__c-iw</members>
+        <members>DataImportBatch__c-ja</members>
+        <members>DataImportBatch__c-nl_NL</members>
         <members>DataImport__c-de</members>
         <members>DataImport__c-en_US</members>
         <members>DataImport__c-es</members>
@@ -1883,6 +1905,7 @@
         <members>Batch__c-Batch Layout</members>
         <members>Campaign-NPSP Campaign Layout</members>
         <members>Contact-Contact Layout</members>
+        <members>DataImportBatch__c-NPSP Data Import Batch Layout</members>
         <members>DataImport__c-Data Import Layout</members>
         <members>Engagement_Plan_Task__c-Engagement Plan Task Layout</members>
         <members>Engagement_Plan_Template__c-Engagement Plan Template Layout</members>
