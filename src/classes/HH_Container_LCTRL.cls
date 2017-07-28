@@ -242,7 +242,7 @@ public with sharing class HH_Container_LCTRL {
                     strSoql += ', MailingCountryCode, MailingStateCode ';
                 ******/
             
-            addHouseholdNamingContactFields(setContactFields);
+            setContactFields.addAll(HH_HouseholdNaming.iNaming.setHouseholdNameFieldsOnContact());
 
             return new list<String>(setContactFields);
         } catch (Exception ex) {
@@ -287,39 +287,6 @@ public with sharing class HH_Container_LCTRL {
         if (UTIL_Describe.isMiddleNameEnabled()) {
             fieldNames.add('MiddleName');
         }        
-    }
-
-    /*******************************************************************************************************
-    * @description Adds field names specified in the Household Naming configuration to a set of field names
-    * @param fieldNames Set of field names to add new fields into
-    * @return void
-    */
-    private static void addHouseholdNamingContactFields(Set<String> fieldNames) {  
-        addHouseholdNamingContactFields(fieldNames, HH_HouseholdNaming.iNaming.setHouseholdNameFieldsOnContact());
-    }
-
-    /*******************************************************************************************************
-    * @description Adds field names specified in the Household Naming configuration to a set of field names
-    * @param fieldNames Set of field names to add new fields into
-    * @param hhNamingContactFields Set of field names specified in the Household Naming configuration
-    * @return void
-    */
-    @TestVisible
-    private static void addHouseholdNamingContactFields(Set<String> fieldNames, Set<String> hhNamingContactFields) {          
-        if (hhNamingContactFields == null || hhNamingContactFields.isEmpty()) {
-            return;
-        }
-        
-        Set<String> upperCaseFieldNames = new Set<String>();
-        for (String fieldName : fieldNames) {
-            upperCaseFieldNames.add(fieldName.toUpperCase());
-        }
-        
-        for (String fieldName : hhNamingContactFields) {
-            if (!upperCaseFieldNames.contains(fieldName.toUpperCase())) {
-                fieldNames.add(fieldName);
-            }
-        }
     }
 
     /*******************************************************************************************************
