@@ -148,7 +148,7 @@
                     <apex:repeat value="{!potentialGifts}" var="g">
                         <tr>
                             <td>
-                                <apex:inputCheckbox value="{!selection[g.Id]}">
+                                <apex:inputCheckbox value="{!selection[g.Id]}" id="cbGift">
                                     <apex:actionSupport action="{!refresh}" event="onchange" rerender="totalSelected, totalUn" />
                                 </apex:inputCheckbox>
                             </td>
