@@ -1483,6 +1483,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>{0} is an invalid Donation Matching Behavior.</value>
     </labels>
     <labels>
+        <fullName>bdiLabelBatchInstructions</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>text on the data importer explaining  how to pick a batch to run</shortDescription>
+        <value>You can process all the Data Import records not associated with any NPSP Data Import Batch, or you can pick a specific NPSP Data Import Batch to process from the lookup.</value>
+    </labels>
+    <labels>
         <fullName>bdiMatched</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>

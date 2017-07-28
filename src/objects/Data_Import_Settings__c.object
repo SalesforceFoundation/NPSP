@@ -80,8 +80,8 @@
     </fields>
     <fields>
         <fullName>Donation_Matching_Behavior__c</fullName>
-        <defaultValue>&quot;DoNotMatch&quot;</defaultValue>
-        <description>Defines how the Data Importer should handle matching Donations.  Must be one of the following values: DoNotMatch, RequireNoMatch, RequireExactMatch, ExactMatchOrCreate, RequireBestMatch, BestMatchOrCreate.</description>
+        <defaultValue>&quot;Do Not Match&quot;</defaultValue>
+        <description>Defines how the Data Importer should handle matching Donations.  Must be one of the values defined in BDI_DataImport_API.</description>
         <externalId>false</externalId>
         <inlineHelpText>Defines how the Data Importer should handle matching Donations. You must choose a value.</inlineHelpText>
         <label>Donation Matching Behavior</label>

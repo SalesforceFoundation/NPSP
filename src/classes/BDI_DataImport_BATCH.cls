@@ -92,21 +92,47 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         } else {
             list<DataImportBatch__c> listDIBatch = BDI_DataImportBatch_SEL.selectByIds(new Set<Id>{batchId});
             if (listDIBatch.size() == 1) {
-                DataImportBatch__c diBatch = listDIBatch[0];
-                diSettings = new Data_Import_Settings__c(
-                    Account_Custom_Unique_ID__c = diBatch.Account_Custom_Unique_ID__c,
-                    Batch_Size__c = diBatch.Batch_Process_Size__c,
-                    Contact_Custom_Unique_ID__c = diBatch.Contact_Custom_Unique_ID__c,
-                    Contact_Matching_Rule__c = diBatch.Contact_Matching_Rule__c,
-                    Donation_Matching_Behavior__c = diBatch.Donation_Matching_Behavior__c,
-                    Donation_Matching_Implementing_Class__c = diBatch.Donation_Matching_Implementing_Class__c,
-                    Donation_Matching_Rule__c = diBatch.Donation_Matching_Rule__c,
-                    Donation_Date_Range__c = diBatch.Donation_Date_Range__c
-                );
+                diSettings = diSettingsFromDiBatch(listDIBatch[0]);
             } else {
                 throw(new BDIException(string.format(Label.bdiInvalidBatchId, new string[]{batchId})));
             }
         }
+    }
+
+    /*******************************************************************************************************
+    * @description creates a settings object from a batch object
+    * @param diBatch the batch to copy fields from
+    * @return Data_Import_Settings__c
+    */
+    public static Data_Import_Settings__c diSettingsFromDiBatch(DataImportBatch__c diBatch) {
+        return new Data_Import_Settings__c(
+            Account_Custom_Unique_ID__c = diBatch.Account_Custom_Unique_ID__c,
+            Batch_Size__c = diBatch.Batch_Process_Size__c,
+            Contact_Custom_Unique_ID__c = diBatch.Contact_Custom_Unique_ID__c,
+            Contact_Matching_Rule__c = diBatch.Contact_Matching_Rule__c,
+            Donation_Matching_Behavior__c = diBatch.Donation_Matching_Behavior__c,
+            Donation_Matching_Implementing_Class__c = diBatch.Donation_Matching_Implementing_Class__c,
+            Donation_Matching_Rule__c = diBatch.Donation_Matching_Rule__c,
+            Donation_Date_Range__c = diBatch.Donation_Date_Range__c
+        );
+    }
+
+    /*******************************************************************************************************
+    * @description creates a batch object from a settings object
+    * @param diSettings the settings to copy fields from
+    * @return DataImportBatch__c
+    */
+    public static DataImportBatch__c diBatchFromDiSettings(Data_Import_Settings__c diSettings) {
+        return new DataImportBatch__c(
+            Account_Custom_Unique_ID__c = diSettings.Account_Custom_Unique_ID__c,
+            Batch_Process_Size__c = diSettings.Batch_Size__c,
+            Contact_Custom_Unique_ID__c = diSettings.Contact_Custom_Unique_ID__c,
+            Contact_Matching_Rule__c = diSettings.Contact_Matching_Rule__c,
+            Donation_Matching_Behavior__c = diSettings.Donation_Matching_Behavior__c,
+            Donation_Matching_Implementing_Class__c = diSettings.Donation_Matching_Implementing_Class__c,
+            Donation_Matching_Rule__c = diSettings.Donation_Matching_Rule__c,
+            Donation_Date_Range__c = diSettings.Donation_Date_Range__c
+        );
     }
 
     /*******************************************************************************************************
@@ -122,6 +148,11 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             String.isBlank(diSettings.Donation_Matching_Rule__c)) {
 
             throw(new BDIException(Label.bdiDonationMatchingRuleEmpty));
+        }
+
+        // validate Batch Process Size
+        if (diSettings.Batch_Size__c == null || diSettings.Batch_Size__c < 0) {
+            throw(new BDIException(Label.bdiPositiveNumber));
         }
 
         // validate Donation Date Range
@@ -150,12 +181,13 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             throw(new BDIException(Label.bdiHouseholdModelRequired));
 
         // validate settings
+        string strDataImportObj = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
         if (diSettings.Contact_Custom_Unique_ID__c != null) {
             // make sure c1 and c2 have the appropriately named field
             // note that our tests have to use a standard Contact field that matches one of the DI custom fields, so we add __c
             string strFieldname = diSettings.Contact_Custom_Unique_ID__c + (Test.isRunningTest() ? '__c' : '');
-            if (!UTIL_Describe.isValidField(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), 'Contact1_' + strFieldname) ||
-                !UTIL_Describe.isValidField(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), 'Contact2_' + strFieldname)) {
+            if (!UTIL_Describe.isValidField(strDataImportObj, UTIL_Namespace.StrTokenNSPrefix('Contact1_' + strFieldname)) ||
+                !UTIL_Describe.isValidField(strDataImportObj, UTIL_Namespace.StrTokenNSPrefix('Contact2_' + strFieldname))) {
                 throw(new BDIException(string.format(Label.bdiContactCustomIdError,
                     new string[]{diSettings.Contact_Custom_Unique_ID__c,
                         'Contact1_' + strFieldname,
@@ -167,8 +199,8 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             // make sure a1 and a2 have the appropriately named field
             // note that our tests have to use a standard Account field that matches one of the DI custom fields, so we add __c
             string strFieldname = diSettings.Account_Custom_Unique_ID__c + (Test.isRunningTest() ? '__c' : '');
-            if (!UTIL_Describe.isValidField(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), 'Account1_' + strFieldname) ||
-                !UTIL_Describe.isValidField(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), 'Account2_' + strFieldname)) {
+            if (!UTIL_Describe.isValidField(strDataImportObj, UTIL_Namespace.StrTokenNSPrefix('Account1_' + strFieldname)) ||
+                !UTIL_Describe.isValidField(strDataImportObj, UTIL_Namespace.StrTokenNSPrefix('Account2_' + strFieldname))) {
                 throw(new BDIException(string.format(Label.bdiAccountCustomIdError,
                     new string[]{diSettings.Account_Custom_Unique_ID__c,
                         'Account1_' + strFieldname,

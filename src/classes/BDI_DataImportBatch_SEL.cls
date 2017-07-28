@@ -55,4 +55,14 @@ public with sharing class BDI_DataImportBatch_SEL {
             FROM DataImportBatch__c
             WHERE Id in :setBatchId];
     }
+
+    /*******************************************************************************************************
+    * @description queries the database for the Data Import Batch record with the specified Id
+    * @param batchId The batch to query for.
+    * @return DataImportBatch__c
+    */
+    public static DataImportBatch__c selectById(Id batchId) {
+        list<DataImportBatch__c> listBatches = selectByIds(new set<Id>{batchId});
+        return listBatches[0];
+    }
 }

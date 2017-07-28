@@ -10,7 +10,9 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>Clone</actionName>
-        <type>Default</type>
+        <content>BDI_BatchOverride</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
     </actionOverrides>
     <actionOverrides>
         <actionName>Delete</actionName>
@@ -18,7 +20,9 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>Edit</actionName>
-        <type>Default</type>
+        <content>BDI_BatchOverride</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
     </actionOverrides>
     <actionOverrides>
         <actionName>Follow</actionName>
@@ -30,7 +34,9 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>New</actionName>
-        <type>Default</type>
+        <content>BDI_BatchOverride</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
     </actionOverrides>
     <actionOverrides>
         <actionName>SaveEdit</actionName>
@@ -70,6 +76,7 @@
     <fields>
         <fullName>Batch_Description__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>An optional description about this batch.</inlineHelpText>
         <label>Batch Description</label>
         <length>32768</length>
         <trackTrending>false</trackTrending>
@@ -83,7 +90,7 @@
         <inlineHelpText>The number of NPSP Data Import records to process at a time in each batch.</inlineHelpText>
         <label>Batch Process Size</label>
         <precision>3</precision>
-        <required>false</required>
+        <required>true</required>
         <scale>0</scale>
         <trackTrending>false</trackTrending>
         <type>Number</type>
@@ -190,11 +197,39 @@
         <unique>false</unique>
     </fields>
     <label>NPSP Data Import Batch</label>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>OBJECT_ID</columns>
+        <columns>NAME</columns>
+        <columns>LAST_UPDATE</columns>
+        <columns>Batch_Description__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+        <language>en_US</language>
+    </listViews>
     <nameField>
         <label>Batch Name</label>
         <type>Text</type>
     </nameField>
     <pluralLabel>NPSP Data Import Batches</pluralLabel>
-    <searchLayouts/>
+    <searchLayouts>
+        <lookupDialogsAdditionalFields>Batch_Description__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>UPDATEDBY_USER</lookupDialogsAdditionalFields>
+        <searchResultsAdditionalFields>Batch_Description__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>UPDATEDBY_USER</searchResultsAdditionalFields>
+    </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
+    <webLinks>
+        <fullName>Import_Batch</fullName>
+        <availability>online</availability>
+        <description>invoke the Data Importer on all records associated with this Batch</description>
+        <displayType>button</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <height>600</height>
+        <linkType>url</linkType>
+        <masterLabel>Import Batch</masterLabel>
+        <openType>sidebar</openType>
+        <protected>false</protected>
+        <url>/apex/npsp__BDI_DataImport?batchId={!DataImportBatch__c.Id}&amp;retURL={!URLFOR(&apos;/&apos; + DataImportBatch__c.Id)}</url>
+    </webLinks>
 </CustomObject>
