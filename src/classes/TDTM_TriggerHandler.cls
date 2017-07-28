@@ -89,6 +89,9 @@ public class TDTM_TriggerHandler {
         List<SObject> classesToCall = dao.getclassesToCallForObject(describeObj.getLocalName(), thisAction);
 //        UTIL_Debug.debug(LoggingLevel.WARN, '****Classes To Call for ' + describeObj.getLocalName() + ': ' + JSON.serializePretty(classesToCall));
 
+        // fixup our trigger lists to deal with workflow rules
+        oldList = FixupOldList(thisAction, newList, oldList, describeObj);
+
         if(classesToCall != null && classesToCall.size() > 0) {
             //Run the relevant classes
             for (SObject classToCall : classesToCall) {
@@ -245,4 +248,61 @@ public class TDTM_TriggerHandler {
                     
         return errors;
     }
+
+
+    /*******************************************************************************************************
+    * @description a cache of SObject maps for each object type, used by FixupOldList()
+    */
+    private static map<Schema.DescribeSobjectResult, map<Id, SObject>> mapDescObjToMapOldForUpdates = new map<Schema.DescribeSobjectResult, Map<Id, SObject>>();
+
+    /*******************************************************************************************************
+    * @description Returns the correct old list of objects for the trigger, for the current context.  By
+    * caching the newList in all After triggers, it can provide the correct oldList in BeforeUpdate and
+    * AfterUpdate, that the system will incorrectly peg to the original execution context, rather than what
+    * state those objects are already in from preceding DML in the execution context.  Specifically, works
+    * around the issue that a workflow rule that runs after any of our inserts or update to objects, will
+    * contain the original state of those objects, rather than the current state.  This is a known system
+    * 'by design' feature that prevents our triggers from doing the right thing.
+    *
+    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.).
+    * @param newList the list of SObjects from trigger new.
+    * @param oldList the list of SObjects from trigger old.
+    * @param describeObj the describe for the SObject
+    * @return list<SObject> the correct oldList for the current trigger
+    */
+    private static list<SObject> FixupOldList(TDTM_Runnable.Action triggerAction, List<Sobject> newList, List<Sobject> oldList,
+        Schema.DescribeSobjectResult describeObj) {
+
+        // return cached objects if we have them
+        if (triggerAction == TDTM_Runnable.Action.AfterUpdate || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            list<SObject> listSObj = new List<SObject>();
+            Map<Id, SObject> mapIdToSObj = mapDescObjToMapOldForUpdates.get(describeObj);
+            if (mapIdToSObj != null) {
+
+                for (SObject sobj : oldList) {
+                    SObject sobjCached = mapIdToSObj.get(sobj.Id);
+                    if (sobjCached != null) {
+                        listSObj.add(sobjCached);
+                    } else {
+                        listSObj.add(sobj);
+                    }
+                }
+
+                // update oldList with the correct cached state of the objects
+                oldList = listSObj;
+                //UTIL_Debug.debug(LoggingLevel.WARN, '**** fixup oldList to : ' + oldList);
+            } else {
+                //UTIL_Debug.debug(LoggingLevel.WARN, '**** fixup not done since mapIdToSobj was null. mapDescObjToMapOldForUpdates:  ' + mapDescObjToMapOldForUpdates);
+            }
+        }
+
+        // now cache objects for future Update calls
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
+            mapDescObjToMapOldForUpdates.put(describeObj, new Map<Id, SObject>(newList));
+            //UTIL_Debug.debug(LoggingLevel.WARN, '**** cached newList: ' + newList);
+        }
+
+        return oldList;
+    }
+
 }
