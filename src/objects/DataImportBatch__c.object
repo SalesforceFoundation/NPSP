@@ -197,16 +197,6 @@
         <unique>false</unique>
     </fields>
     <label>NPSP Data Import Batch</label>
-    <listViews>
-        <fullName>All</fullName>
-        <columns>OBJECT_ID</columns>
-        <columns>NAME</columns>
-        <columns>LAST_UPDATE</columns>
-        <columns>Batch_Description__c</columns>
-        <filterScope>Everything</filterScope>
-        <label>All</label>
-        <language>en_US</language>
-    </listViews>
     <nameField>
         <label>Batch Name</label>
         <type>Text</type>
