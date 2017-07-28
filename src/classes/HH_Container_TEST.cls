@@ -404,6 +404,117 @@ private class HH_Container_TEST {
         Test.stopTest();
     }
 
+    /*********************************************************************************************************
+    @description
+        Test adding Contact field names into a set
+    verify:
+        Duplicate fields are not included in the returned set of field names
+    **********************************************************************************************************/ 
+    static testMethod void addHouseholdNamingContactFieldsShouldNotAddDuplicateNames() {
+        Set<String> fieldNames = new Set<String>();
+        Set<String> hhNamingContactFields = new Set<String>();
+
+        HH_Container_LCTRL.addHouseholdNamingContactFields(fieldNames, hhNamingContactFields);
+        System.assert(fieldNames.isEmpty());
+
+        hhNamingContactFields.add('foo');
+        HH_Container_LCTRL.addHouseholdNamingContactFields(fieldNames, hhNamingContactFields);
+        System.assertEquals(1, fieldNames.size());
+        System.assert(fieldNames.contains('foo'), fieldNames);
+
+        fieldNames.add('baR');
+        hhNamingContactFields.add('Bar');
+        HH_Container_LCTRL.addHouseholdNamingContactFields(fieldNames, hhNamingContactFields);
+        System.assertEquals(2, fieldNames.size());
+        System.assert(fieldNames.contains('foo') && fieldNames.contains('baR'), fieldNames);
+
+        hhNamingContactFields.add('Abc');
+        HH_Container_LCTRL.addHouseholdNamingContactFields(fieldNames, hhNamingContactFields);
+        System.assertEquals(3, fieldNames.size());
+        System.assert(fieldNames.contains('foo') && fieldNames.contains('baR') && fieldNames.contains('Abc'), fieldNames);
+
+        hhNamingContactFields.add('ABC');
+        HH_Container_LCTRL.addHouseholdNamingContactFields(fieldNames, hhNamingContactFields);
+        System.assertEquals(3, fieldNames.size());
+        System.assert(fieldNames.contains('foo') && fieldNames.contains('baR') && fieldNames.contains('Abc'), fieldNames);
+    }
+
+    /*********************************************************************************************************
+    @description
+        Test getContactFields() method
+    verify:
+        Expected field names are returned including:
+            - The MiddleName field (if the org has MiddleName enabled)
+            - Contact fields specified in Household Naming configuration
+    **********************************************************************************************************/  
+    static testMethod void getContactFieldsShouldReturnExpectedFieldNames() {
+        UTIL_CustomSettingsFacade.getHouseholdNamingSettingsForTests(
+            new Household_Naming_Settings__c(
+                Household_Name_Format__c = '{!LastName} Household',
+                Formal_Greeting_Format__c = '{!{!salutation} {!firstname} {!npe01__WorkEmail__c}} {!lastname}',
+                Informal_Greeting_Format__c = '{!{!FirstName}}',
+                Name_Connector__c = label.npo02.HouseholdNameConnector,
+                Name_Overrun__c = label.npo02.HouseholdNameOverrun,
+                Contact_Overrun_Count__c = 9,
+                Implementing_Class__c = 'HH_NameSpec'
+            )
+        );
+
+        List<String> lsFieldNames = HH_Container_LCTRL.getContactFields();
+        Set<String> fieldNames = new Set<String>(lsFieldNames);
+
+        System.assertEquals(fieldNames.size(), lsFieldNames.size());
+
+        //if the org has MiddleName enabled, verify the MiddleName is included in the output
+        if (UTIL_Describe.isMiddleNameEnabled()) {
+            System.assert(fieldNames.contains('MiddleName'), fieldNames);
+        }
+
+        //verify Household Naming Contact Names are included in the output
+        Set<String> hhNamingContactFields = HH_HouseholdNaming.iNaming.setHouseholdNameFieldsOnContact();
+
+        Set<String> upperCaseFieldNames = new Set<String>();
+        for (String fieldName : fieldNames) {
+            upperCaseFieldNames.add(fieldName.toUpperCase());
+        }
+
+        for (String fieldName : hhNamingContactFields) {
+            System.assert(upperCaseFieldNames.contains(fieldName.toUpperCase()), fieldName + ' is not in : ' + fieldNames);
+        }
+
+        //verify main mandatory fields are included in the output
+        for (String fieldName : new String[] {
+                'Id', 
+                'npo02__Household_Naming_Order__c', 
+                'FirstName', 
+                'LastName', 
+                'Salutation', 
+                'Name',
+                'npo02__Naming_Exclusions__c', 
+                'AccountId', 
+                UTIL_Namespace.StrTokenNSPrefix('HHId__c'),
+                UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Name__c'), 
+                UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Formal_Greeting__c'), 
+                UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Informal_Greeting__c'),
+                UTIL_Namespace.StrTokenNSPrefix('is_Address_Override__c'), 
+                UTIL_Namespace.StrTokenNSPrefix('Current_Address__c'), 
+                'npe01__Primary_Address_Type__c',
+                'MailingStreet', 
+                'MailingCity', 
+                'MailingState', 
+                'MailingPostalCode', 
+                'MailingCountry', 
+                'MailingLatitude', 
+                'MailingLongitude', 
+                'CreatedDate'
+            }
+        ) {
+            System.assert(fieldNames.contains(fieldName), fieldName + ' is not in : ' + fieldNames);
+        }
+    }
+
+    
+
     // Helpers
     ////////////
 
