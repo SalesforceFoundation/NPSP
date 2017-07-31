@@ -17,7 +17,12 @@
                             <lightning:icon iconName="standard:contact" class="slds-icon--small" size="small"/>
                         </div>
                         <div class="slds-media__body">
-                            <a href="{! '/' + v.contact.Id}" target="_blank">{!v.contact.Name}</a>
+                            <aura:if isTrue="{!v.contact.Id != null}">
+                            	<a href="{! '/' + v.contact.Id}" target="_blank">{!v.contact.Name}</a>
+                            	<aura:set attribute="else">
+                                    <ui:outputText value="{!v.contact.FirstName + ' ' + v.contact.LastName}"/>
+                                </aura:set>
+                            </aura:if>
                         </div>
                         <div class="slds-media__figure slds-m-right--none">
                             <lightning:buttonIcon iconName="utility:close" class="removeBtn" variant="bare"
