@@ -206,6 +206,7 @@ public with sharing class HH_Container_LCTRL {
     * @description returns a list of Contact Fields (developer name)
     * @return list<String> the list of Contact Fields
     */
+    @TestVisible
     private static list<String> getContactFields() {
         try {
             set<String> setContactFields = new Set<String>{
@@ -233,16 +234,16 @@ public with sharing class HH_Container_LCTRL {
                 'MailingLongitude', 
                 'CreatedDate'
             };
-            if (UTIL_Describe.isMiddleNameEnabled()) {
-                setContactFields.add('Middlename');
-            }
+
+            addContactMiddleNameField(setContactFields);
 
                 /*** until we support these, we don't want them to interfere with what the user specifies.
                 if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled)
                     strSoql += ', MailingCountryCode, MailingStateCode ';
                 ******/
-
+            
             setContactFields.addAll(HH_HouseholdNaming.iNaming.setHouseholdNameFieldsOnContact());
+
             return new list<String>(setContactFields);
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
@@ -271,10 +272,21 @@ public with sharing class HH_Container_LCTRL {
             'MailingCountry', 
             'MailingLatitude', 
             'MailingLongitude'};
-        if (UTIL_Describe.isMiddleNameEnabled()) {
-            setContactFields.add('Middlename');
-        }
+
+        addContactMiddleNameField(setContactFields);
+
         return setContactFields;
+    }
+
+    /*******************************************************************************************************
+    * @description Adds MiddleName field into the set of field names
+    * @param fieldNames Set of field names 
+    * @return void
+    */
+    private static void addContactMiddleNameField(Set<String> fieldNames) {        
+        if (UTIL_Describe.isMiddleNameEnabled()) {
+            fieldNames.add('MiddleName');
+        }        
     }
 
     /*******************************************************************************************************
