@@ -36,13 +36,13 @@
 */
 
 @isTest
-private with sharing class BDI_BatchOverride_TEST {
+public with sharing class BDI_BatchOverride_TEST {
 
     /*********************************************************************************************************
     * @description returns a new initialized DataImportBatch object
     * @returns DataImportBatch__c
     */
-    static DataImportBatch__c newDIBatch() {
+    public static DataImportBatch__c newDIBatch() {
 
         return new DataImportBatch__c(
             Name = 'testBatch',
@@ -128,10 +128,13 @@ private with sharing class BDI_BatchOverride_TEST {
 
         Test.startTest();
 
-        diBatch.Batch_Process_Size__c = -1;
+        diBatch.Name = null;
         system.assertEquals(null, ctrl.save());
 
         diBatch = newDIBatch();
+        diBatch.Batch_Process_Size__c = -1;
+        system.assertEquals(null, ctrl.save());
+
         diBatch.Donation_Matching_Behavior__c = 'bogus value';
         system.assertEquals(null, ctrl.save());
 

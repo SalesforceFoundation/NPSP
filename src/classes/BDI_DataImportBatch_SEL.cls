@@ -43,6 +43,7 @@ public with sharing class BDI_DataImportBatch_SEL {
     */
     public static list<DataImportBatch__c> selectByIds(Set<Id> setBatchId) {
         return [SELECT Id,
+                    Name,
                     Account_Custom_Unique_ID__c,
                     Batch_Description__c,
                     Batch_Process_Size__c,

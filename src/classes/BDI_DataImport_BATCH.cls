@@ -136,6 +136,21 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     }
 
     /*******************************************************************************************************
+    * @description validates the Batch's data import settings.  Used by UI as well as at runtime by the batch.
+    * throws an exception if there are any invalid settings.
+    * @param diBatch the batch to validate
+    * @return void
+    */
+    public static void validateSettings(DataImportBatch__c diBatch) {
+        // make sure name set
+        if (String.isBlank(diBatch.Name)) {
+            throw(new BDIException(Label.bdiErrorBatchNameRequired));
+        }
+        // defer all other validation to the actual settings
+        validateSettings(diSettingsFromDiBatch(diBatch));
+    }
+
+    /*******************************************************************************************************
     * @description validates the data import settings.  Used by UI as well as at runtime by the batch.
     * throws an exception if there are any invalid settings.
     * @return void

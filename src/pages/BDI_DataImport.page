@@ -125,7 +125,7 @@
                             <apex:commandButton value="{!$Label.stgBtnSave}" action="{!saveBDISettings}" immediate="false" styleClass="slds-button slds-button--brand" rendered="{!isEditMode}"/>
                             <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelBDISettings}" immediate="true" styleClass="slds-button slds-button--neutral" rendered="{!isEditMode}"/>
                         </div>
-                        <c:BDI_SettingsUI bdiBatch="{!diBatch}" editMode="{!isEditMode}" showBatchOnlyFields="false" />
+                        <c:BDI_SettingsUI bdiBatch="{!diBatch}" editMode="{!isEditMode}" showBatchOnlyFields="{!isTrueBatch}" />
                    </apex:outputText>
                 </div>
             </div>

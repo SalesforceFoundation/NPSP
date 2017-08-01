@@ -1347,6 +1347,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>When Donation matching is enabled, you must select one or more fields in Donation Matching Rule.</value>
     </labels>
     <labels>
+        <fullName>bdiErrorBatchNameRequired</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error when a batch is missing a name</shortDescription>
+        <value>Batch Name is a required field.</value>
+    </labels>
+    <labels>
         <fullName>bdiErrorDonationLookupMatch</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>

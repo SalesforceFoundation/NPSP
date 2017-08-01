@@ -148,4 +148,27 @@ private with sharing class BDI_DataImportCTRL_TEST {
 
         Test.stopTest();
     }
+
+    /*********************************************************************************************************
+    * @description operation:
+    *    test controller handles the batchId parameter (which is what the Start Import button on Batches
+    *    will use.
+    */
+    static testMethod void testBatchStartImportButton() {
+
+        DataImportBatch__c diBatch = BDI_BatchOverride_TEST.newDIBatch();
+        insert diBatch;
+
+        PageReference pageRef = Page.BDI_DataImport;
+        pageRef.getParameters().put('batchId', diBatch.Id);
+        Test.setCurrentPage(pageRef);
+        BDI_DataImport_CTRL ctrl = new BDI_DataImport_CTRL();
+
+        Test.startTest();
+        system.assertNotEquals(null, ctrl.diBatch);
+        system.assertEquals(diBatch.Id, ctrl.diBatch.Id);
+        system.assertEquals(diBatch.Name, ctrl.diBatch.Name);
+        Test.stopTest();
+    }
+
 }

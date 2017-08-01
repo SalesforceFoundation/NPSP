@@ -132,7 +132,7 @@ public with sharing class BDI_DataImport_CTRL {
     * @description whether we are processing a real saved batch, or just using custom settings with an
     * in-memory batch.
     */
-    private Boolean isTrueBatch {
+    public Boolean isTrueBatch {
         get {
             return diBatch.Id != null;
         }
@@ -178,7 +178,11 @@ public with sharing class BDI_DataImport_CTRL {
 
             // first validate the settings
             Data_Import_Settings__c diSettingsT = BDI_DataImport_BATCH.diSettingsFromDiBatch(diBatch);
-            BDI_DataImport_BATCH.validateSettings(diSettingsT);
+            if (isTrueBatch) {
+                BDI_DataImport_BATCH.validateSettings(diBatch);
+            } else {
+                BDI_DataImport_BATCH.validateSettings(diSettingsT);
+            }
 
             // update the correct object (batch vs custom settings)
             if (isTrueBatch) {
