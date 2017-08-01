@@ -460,6 +460,9 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         
         if (mapConAddrInsertNow.size() > 0 && isBefore) {
             insert mapConAddrInsertNow.values();
+            // Since we're inserting new Addresses in a Before Insert/Update scenario, set the flag to
+            // prevent the After Insert/Update Contact logic from executing when it's eventually called.
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, true);
 	        for (Contact con : mapConAddrInsertNow.keySet()) {
 	            Address__c addr = mapConAddrInsertNow.get(con);
 	            con.Current_Address__c = addr.Id;
