@@ -23,4 +23,7 @@ public with sharing class RLLP_Operation {
         this.destinationField = destinationField;
         this.year = year;
     }
+
+    //CMT constructor
+    //public RLLP_Operation(Operation__cmt){}
 }

@@ -7,8 +7,9 @@ private class RLLP_OppContact_TEST {
             Name = 'foo',
             Primary_Contact__c = con.Id,
             Amount = 8,
-            StageName = 'Closed Won',
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
             CloseDate = System.today(),
+            RecordTypeId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.SOBjectType),
             npe01__Member_Level__c = 'foo',
             npe01__Membership_Origin__c = 'bar'
         );
@@ -18,9 +19,9 @@ private class RLLP_OppContact_TEST {
         try {
             rollup.processDetails(new List<SObject>{queryopp});
             System.debug('njjc ' + rollup);
-            system.debug('njjc ' + rollup.getResults());
         } catch (Exception ex) {
             System.assert(false, ex + ' stack: ' + ex.getStackTraceString());
         }
+        System.assert(false, 'njjc results :' + rollup.getResults());
     }
 }
