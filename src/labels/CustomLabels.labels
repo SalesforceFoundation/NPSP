@@ -1496,7 +1496,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>text on the data importer explaining  how to pick a batch to run</shortDescription>
-        <value>You can process all the Data Import records not associated with any NPSP Data Import Batch, or you can pick a specific NPSP Data Import Batch to process from the lookup.</value>
+        <value>You can process all the Data Import records not associated with any NPSP Data Import Batch by leaving the field below blank, or you can pick a specific NPSP Data Import Batch to process from the lookup.</value>
     </labels>
     <labels>
         <fullName>bdiMatched</fullName>
@@ -1536,7 +1536,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>error when numeric settings set to negative number</shortDescription>
-        <value>Number of Days from Donation Date must be a positive number.</value>
+        <value>{0} must be a positive number.</value>
     </labels>
     <labels>
         <fullName>bdiRecordsFailed</fullName>
