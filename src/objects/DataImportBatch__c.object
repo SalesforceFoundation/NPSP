@@ -85,6 +85,7 @@
     </fields>
     <fields>
         <fullName>Batch_Process_Size__c</fullName>
+        <defaultValue>50</defaultValue>
         <description>The number of NPSP Data Import records to process at a time in each batch.</description>
         <externalId>false</externalId>
         <inlineHelpText>The number of NPSP Data Import records to process at a time in each batch.</inlineHelpText>
@@ -110,6 +111,7 @@
     </fields>
     <fields>
         <fullName>Contact_Matching_Rule__c</fullName>
+        <defaultValue>&quot;Firstname,Lastname,Email&quot;</defaultValue>
         <description>Specifies which rule to follow when trying to match Contacts in Data Import records against existing Contacts.</description>
         <externalId>false</externalId>
         <inlineHelpText>Specifies which rule to follow when trying to match Contacts in Data Import records against existing Contacts.</inlineHelpText>
@@ -136,6 +138,7 @@
     </fields>
     <fields>
         <fullName>Donation_Matching_Behavior__c</fullName>
+        <defaultValue>&quot;Do Not Match&quot;</defaultValue>
         <description>Defines how the Data Importer should handle matching Donations. You must choose a value.</description>
         <externalId>false</externalId>
         <inlineHelpText>Defines how the Data Importer should handle matching Donations. You must choose a value.</inlineHelpText>
@@ -186,6 +189,7 @@
     </fields>
     <fields>
         <fullName>Donation_Matching_Rule__c</fullName>
+        <defaultValue>&quot;npsp__Donation_Amount__c;npsp__Donation_Date&quot;</defaultValue>
         <description>Specifies which fields to match by when trying to match Donations in Data Import records against existing Opportunities and Payments. Control or Command click to select more than one field.</description>
         <externalId>false</externalId>
         <inlineHelpText>Specifies which fields to match by when trying to match Donations in Data Import records against existing Opportunities and Payments. Control or Command click to select more than one field.</inlineHelpText>
