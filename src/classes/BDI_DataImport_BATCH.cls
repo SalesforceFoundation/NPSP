@@ -157,22 +157,26 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     */
     public static void validateSettings(Data_Import_Settings__c diSettings) {
 
+        string strSettingsObj = UTIL_Namespace.StrTokenNSPrefix('Data_Import_Settings__c');
+        string strDataImportObj = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
+
         // validate matching rules
         if (diSettings.Donation_Matching_Behavior__c != null &&
             diSettings.Donation_Matching_Behavior__c != BDI_DataImport_API.DoNotMatch &&
             String.isBlank(diSettings.Donation_Matching_Rule__c)) {
-
             throw(new BDIException(Label.bdiDonationMatchingRuleEmpty));
         }
 
         // validate Batch Process Size
         if (diSettings.Batch_Size__c == null || diSettings.Batch_Size__c < 0) {
-            throw(new BDIException(Label.bdiPositiveNumber));
+            throw(new BDIException(String.format(Label.bdiPositiveNumber,
+                new list<String>{UTIL_Describe.getFieldLabelSafe(strSettingsObj, UTIL_Namespace.StrTokenNSPrefix('Batch_Size__c'))})));
         }
 
         // validate Donation Date Range
         if (diSettings.Donation_Date_Range__c < 0) {
-            throw(new BDIException(Label.bdiPositiveNumber));
+            throw(new BDIException(string.format(Label.bdiPositiveNumber,
+                new list<String>{UTIL_Describe.getFieldLabelSafe(strSettingsObj, UTIL_Namespace.StrTokenNSPrefix('Donation_Date_Range__c'))})));
         }
 
         // validate donation implementing class
@@ -196,7 +200,6 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             throw(new BDIException(Label.bdiHouseholdModelRequired));
 
         // validate settings
-        string strDataImportObj = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
         if (diSettings.Contact_Custom_Unique_ID__c != null) {
             // make sure c1 and c2 have the appropriately named field
             // note that our tests have to use a standard Contact field that matches one of the DI custom fields, so we add __c
