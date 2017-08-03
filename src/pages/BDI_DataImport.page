@@ -42,7 +42,7 @@
     </style>
 
     <div class="slds slds-p-bottom--x-large">
-        <apex:form id="idForm" styleClass="slds-p-bottom--x-large">
+        <apex:form id="idForm" html-novalidate="novalidate" styleClass="slds-p-bottom--x-large">
 
             <div class="slds-page-header slds-m-bottom--large" role="banner">
                 <div class="slds-media slds-media--center slds-media--responsive">

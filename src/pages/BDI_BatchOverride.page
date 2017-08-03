@@ -10,7 +10,7 @@
 
         <apex:slds />
         <div class="slds-scope">
-        <apex:form id="idForm">
+        <apex:form id="idForm" html-novalidate="novalidate" >
 
             <!-- PAGE HEADER -->
             <div class="slds-page-header">
@@ -32,7 +32,7 @@
                     </div>
                     <div class="slds-col slds-no-flex slds-grid slds-align-top">
                         <div class="slds-button-group" role="group">
-                            <apex:commandButton styleClass="slds-button slds-button--neutral" action="{!cancel}" value="{!$Label.stgBtnCancel}" />
+                            <apex:commandButton styleClass="slds-button slds-button--neutral" action="{!cancel}" value="{!$Label.stgBtnCancel}" immediate="true"/>
                             <apex:commandButton styleClass="slds-button slds-button--brand" action="{!save}" value="{!$Label.stgBtnSave}" />
                         </div>
                     </div>
