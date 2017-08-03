@@ -1292,6 +1292,32 @@ private class ACCT_IndividualAccounts_TEST {
         Test.stopTest();
     }
 
+    /*********************************************************************************************************
+    @description 
+        Test insert and update of a Contact when Household Naming Settings is invalid
+        and the Automatic Household Naming is turned off 
+    verify:
+        The Contact is created and updated successfully
+    **********************************************************************************************************/ 
+    private static testMethod void contactDmlShouldSucceedWhenHHNamingSettingsIsInvalidAndAutomaticHouseholdNamingIsTurnedOff() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c(
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR
+            )            
+        );
+
+        turnOffAutomaticHHNaming();
+        setupInvalidHHNamingSettings();
+
+        Contact contact = new Contact(LastName = 'AutoHHNamingTurnedOff');
+        Test.startTest();
+        insert contact;
+        Test.stopTest();
+
+        contact.FirstName = 'John';
+        update contact;
+    }
+
     // Helpers
     ////////////
 
@@ -1329,5 +1355,53 @@ private class ACCT_IndividualAccounts_TEST {
         }
         
         return newRecTypeId;
+    }
+
+    /*********************************************************************************************************
+    * @description Turns on Automatic Household Naming
+    * @return void
+    **********************************************************************************************************/
+    private static void turnOnAutomaticHHNaming() {
+        setupAutomaticHHNaming(true);
+    }
+
+    /*********************************************************************************************************
+    * @description Turns off Automatic Household Naming
+    * @return void
+    **********************************************************************************************************/
+    private static void turnOffAutomaticHHNaming() {
+        setupAutomaticHHNaming(false);
+    }
+
+    /*********************************************************************************************************
+    * @description Configures Household Settings' Automatic Household Naming field
+    * @param isOn Automatic Household Naming is turned on when parameter is true, otherwise, the settings is turned off
+    * @return void
+    **********************************************************************************************************/
+    private static void setupAutomaticHHNaming(Boolean isOn) {
+        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (
+                npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR,
+                npo02__Advanced_Household_Naming__c = isOn
+            )
+        );
+    }
+
+    /*********************************************************************************************************
+    * @description Configures Household Naming Settings with invalid Name and Greetings formats
+    * @return void
+    **********************************************************************************************************/
+    private static void setupInvalidHHNamingSettings() {
+        UTIL_CustomSettingsFacade.getHouseholdNamingSettingsForTests(
+        	new Household_Naming_Settings__c(
+                Household_Name_Format__c = '{!{!FirstName}} {!LastName}} Household', 
+        		Formal_Greeting_Format__c = '{!{!Title} {!FirstName}}}{!LastName}',
+                Informal_Greeting_Format__c = '{!{!FirstName}}}',
+        		Name_Connector__c = label.npo02.HouseholdNameConnector,
+       			Name_Overrun__c = label.npo02.HouseholdNameOverrun,
+        		Contact_Overrun_Count__c = 9,
+        		Implementing_Class__c = 'HH_NameSpec'
+            )
+        );
     }
 }

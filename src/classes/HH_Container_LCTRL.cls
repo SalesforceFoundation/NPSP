@@ -242,13 +242,20 @@ public with sharing class HH_Container_LCTRL {
                     strSoql += ', MailingCountryCode, MailingStateCode ';
                 ******/
             
-            setContactFields.addAll(HH_HouseholdNaming.iNaming.setHouseholdNameFieldsOnContact());
+            setContactFields.addAll(getHouseholdNamingContactFields());
 
             return new list<String>(setContactFields);
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
     }
+
+    private static Set<String> getHouseholdNamingContactFields() {
+        return isHHNamingAutomated()
+            ? HH_HouseholdNaming.iNaming.setHouseholdNameFieldsOnContact()
+            : new Set<String>();
+    }
+
 
     /*******************************************************************************************************
     * @description returns a set of Contact Fields (developer name) that must be editable
@@ -504,23 +511,35 @@ public with sharing class HH_Container_LCTRL {
     public static SObject getHHNamesGreetings(SObject hh, list<Contact> listCon) {
         try {
             // update naming exclusions field based on exclusion checkboxes
-            for (Contact con : listCon)
+            for (Contact con : listCon) {
                 HH_Households_TDTM.copyNamingExclusionsFromCheckboxes(con);
+            }
 
-            HH_HouseholdNaming hn = new HH_HouseholdNaming();
-            String strExclusions = (String)hh.get('npo02__SYSTEM_CUSTOM_NAMING__c');
+            if (!isHHNamingAutomated()) {
+                return hh;
+            }
+
+            HH_HouseholdNaming hhNaming = new HH_HouseholdNaming();
+            String strExclusions = (String) hh.get('npo02__SYSTEM_CUSTOM_NAMING__c');
             if (strExclusions == null)
                 strExclusions = '';
+                
             if (!strExclusions.contains('Name'))
-                hh.put('Name', hn.getHHName(listCon));
+                hh.put('Name', hhNaming.getHHName(listCon));
             if (!strExclusions.contains('Formal_Greeting__c'))
-                hh.put('npo02__Formal_Greeting__c', hn.getFormalName(listCon));
+                hh.put('npo02__Formal_Greeting__c', hhNaming.getFormalName(listCon));
             if (!strExclusions.contains('Informal_Greeting__c'))
-                hh.put('npo02__Informal_Greeting__c', hn.getInformalName(listCon));
+                hh.put('npo02__Informal_Greeting__c', hhNaming.getInformalName(listCon));
+
             return hh;
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
+    }
+
+    private static Boolean isHHNamingAutomated() {
+        npo02__Households_Settings__c hhNamingConfig = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+        return hhNamingConfig.npo02__Advanced_Household_Naming__c == true;
     }
 
     /*******************************************************************************************************

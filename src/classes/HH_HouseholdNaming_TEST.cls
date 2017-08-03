@@ -453,4 +453,119 @@ public class HH_HouseholdNaming_TEST {
         system.assertEquals('c1, c0 and c2', hh.npo02__Informal_greeting__c);
   
     }
+
+
+    /*********************************************************************************************************
+    @description
+        Test strContactSelectStmtAllNamingFields property when Household Naming Settings is valid
+        and the Automatic Household Naming is turned on 
+    verify:
+        Household Naming Settings fields are included in the SOQL.
+        No error is raised whent the SOQL is executed.
+    **********************************************************************************************************/  
+    private static testMethod void contactSoqlShouldContainHHNamingFieldsWhenAutomaticHouseholdNamingIsTurnedOn() {
+        turnOnAutomaticHHNaming();
+
+        UTIL_CustomSettingsFacade.getHouseholdNamingSettingsForTests(
+            new Household_Naming_Settings__c(
+                Household_Name_Format__c = 'The {!LastName}, {!{!FirstName} {!npe01__WorkEmail__c}} Family',
+                Formal_Greeting_Format__c = '{!{!Salutation} {!FirstName}} {!LastName}',
+                Informal_Greeting_Format__c = '{!{!FirstName}}',
+                Name_Connector__c = label.npo02.HouseholdNameConnector,
+                Name_Overrun__c = label.npo02.HouseholdNameOverrun,
+                Contact_Overrun_Count__c = 9,
+                Implementing_Class__c = 'HH_NameSpec'
+            )
+        );
+
+        String soql = new HH_HouseholdNaming().strContactSelectStmtAllNamingFields;
+
+        System.assert(soql.contains('Id'), soql);
+        System.assert(soql.contains('HHId__c'), soql);
+        System.assert(soql.contains('npo02__Naming_Exclusions__c'), soql);
+
+        //verify HH Naming settings fields are included
+        System.assert(soql.contains('LastName'), soql);
+        System.assert(soql.contains('FirstName'), soql);
+        System.assert(soql.contains('Salutation'), soql);
+        System.assert(soql.contains('npe01__WorkEmail__c'), soql);
+        
+        //verify the soql is valid and will not raise exceptions
+        System.assert(!soql.contains('}'), soql);
+        List<Contact> contacts = Database.Query(soql);
+    }
+
+    /*********************************************************************************************************
+    @description
+        Test strContactSelectStmtAllNamingFields property when Household Naming Settings is invalid
+        and the Automatic Household Naming is turned off
+    verify:
+        Household Naming Settings fields are not included in the SOQL.
+        No error is raised whent the SOQL is executed.
+    **********************************************************************************************************/  
+    private static testMethod void contactSoqlShouldNotContainHHNamingFieldsWhenAutomaticHouseholdNamingIsTurnedOff() {
+        turnOffAutomaticHHNaming();
+
+        //specify invalid name and greetings' formats
+        UTIL_CustomSettingsFacade.getHouseholdNamingSettingsForTests(
+            new Household_Naming_Settings__c(
+                Household_Name_Format__c = 'The {!LastName}, {!{!FirstName}}} {!npe01__WorkEmail__c}} Family',
+                Formal_Greeting_Format__c = '{!{!Salutation} {!FirstName}}} {!LastName}',
+                Informal_Greeting_Format__c = '{!{!FirstName}}}',
+                Name_Connector__c = label.npo02.HouseholdNameConnector,
+                Name_Overrun__c = label.npo02.HouseholdNameOverrun,
+                Contact_Overrun_Count__c = 9,
+                Implementing_Class__c = 'HH_NameSpec'
+            )
+        );
+
+        String soql = new HH_HouseholdNaming().strContactSelectStmtAllNamingFields;
+
+        System.assert(soql.contains('Id'), soql);
+        System.assert(soql.contains('HHId__c'), soql);
+        System.assert(soql.contains('npo02__Naming_Exclusions__c'), soql);
+
+        //verify HH Naming settings fields are not included
+        System.assert(!soql.contains('LastName'), soql);
+        System.assert(!soql.contains('FirstName'), soql);
+        System.assert(!soql.contains('Salutation'), soql);
+        System.assert(!soql.contains('npe01__WorkEmail__c'), soql);
+        
+        //verify the soql is valid and will not raise exceptions
+        System.assert(!soql.contains('}'), soql);
+        List<Contact> contacts = Database.Query(soql);
+    }
+
+    // Helpers
+    ////////////
+    
+    /*********************************************************************************************************
+    * @description Turns on Automatic Household Naming
+    * @return void
+    **********************************************************************************************************/
+    private static void turnOnAutomaticHHNaming() {
+        setupAutomaticHHNaming(true);
+    }
+
+    /*********************************************************************************************************
+    * @description Turns off Automatic Household Naming
+    * @return void
+    **********************************************************************************************************/
+    private static void turnOffAutomaticHHNaming() {
+        setupAutomaticHHNaming(false);
+    }
+
+    /*********************************************************************************************************
+    * @description Configures Household Settings' Automatic Household Naming field
+    * @param isOn Automatic Household Naming is turned on when parameter is true, otherwise, the settings is turned off
+    * @return void
+    **********************************************************************************************************/
+    private static void setupAutomaticHHNaming(Boolean isOn) {
+        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (
+                npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR,
+                npo02__Advanced_Household_Naming__c = isOn
+            )
+        );
+    }
 }

@@ -86,7 +86,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             map<Id, Contact> mapContactIdContactOwnerChange = new map<Id, Contact>();
             map<Id, Id> mapContactIdAccountIdOldMoveOpps = new map<Id, Id>();
             map<Id, Id> mapContactIdAccountIdNewMoveOpps = new map<Id, Id>();
-            Set<String> hhNamingFields = HH_HouseholdNaming.iNaming.setHouseholdNameFieldsOnContact();
+            Set<String> hhNamingFields = getHouseholdNamingContactFields();
 
             
             if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {                    
@@ -105,10 +105,9 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled)
                     strSoql += 'MailingCountryCode, MailingStateCode, OtherCountryCode, OtherStateCode, ';
                 
-                if (hhNamingFields.size() > 0) {
-                    for (String hhNameField : hhNamingFields) {
-                        if (!strSoql.containsIgnoreCase(hhNameField))
-                            strSoql += hhNameField + ',';
+                for (String hhNameField : hhNamingFields) {
+                    if (!strSoql.containsIgnoreCase(hhNameField)) {
+                        strSoql += hhNameField + ',';
                     }
                 }
 
@@ -317,6 +316,15 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             }
             
     return dmlWrapper;
+    }
+
+    private Set<String> getHouseholdNamingContactFields() {
+        npo02__Households_Settings__c hhNamingConfig = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+        Boolean isHHNamingAutomated = hhNamingConfig.npo02__Advanced_Household_Naming__c == true;
+
+        return isHHNamingAutomated
+            ? HH_HouseholdNaming.iNaming.setHouseholdNameFieldsOnContact()
+            : new Set<String>();
     }
 
     /*******************************************************************************************************

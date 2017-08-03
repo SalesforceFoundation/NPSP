@@ -60,24 +60,21 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
     * @return boolean 
     */
     public boolean isValidNameFormats() {
-        // make sure any custom name formats are valid.
-        if (STG_Panel.stgService.stgHH.npo02__Advanced_Household_Naming__c) {
-            string strSetting;        
-            try {
-                strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), UTIL_Namespace.StrTokenNSPrefix('Household_Name_Format__c'));
-                strNameSpecExample(STG_Panel.stgService.stgHN, 'Household_Name_Format__c', 2); 
-                strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), UTIL_Namespace.StrTokenNSPrefix('Formal_Greeting_Format__c'));
-                strNameSpecExample(STG_Panel.stgService.stgHN, 'Formal_Greeting_Format__c', 2); 
-                strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), UTIL_Namespace.StrTokenNSPrefix('Informal_Greeting_Format__c'));     
-                strNameSpecExample(STG_Panel.stgService.stgHN, 'Informal_Greeting_Format__c', 2);
-                return true; 
-            } catch (Exception ex) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 
-                    string.format(label.stgErrorInvalidNameFormat, new string[]{strSetting, ex.getMessage()})));
-                return false;           
-            }        
-        } 
-        return true;    
+        string strSetting;        
+        try {
+            strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), UTIL_Namespace.StrTokenNSPrefix('Household_Name_Format__c'));
+            strNameSpecExample(STG_Panel.stgService.stgHN, 'Household_Name_Format__c', 2); 
+            strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), UTIL_Namespace.StrTokenNSPrefix('Formal_Greeting_Format__c'));
+            strNameSpecExample(STG_Panel.stgService.stgHN, 'Formal_Greeting_Format__c', 2); 
+            strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), UTIL_Namespace.StrTokenNSPrefix('Informal_Greeting_Format__c'));     
+            strNameSpecExample(STG_Panel.stgService.stgHN, 'Informal_Greeting_Format__c', 2);
+            
+            return true; 
+        } catch (Exception ex) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 
+                string.format(label.stgErrorInvalidNameFormat, new string[]{strSetting, ex.getMessage()})));
+            return false;           
+        }      
     }
 
     /*********************************************************************************************************

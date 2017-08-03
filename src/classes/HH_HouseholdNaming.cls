@@ -261,17 +261,27 @@ public without sharing class HH_HouseholdNaming {
 		        //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
 		        string strSoql = 'SELECT Id, HHId__c, npo02__Naming_Exclusions__c';
 		        
-		        set<string> setStrField = iNaming.setHouseholdNameFieldsOnContact();
+		        set<string> setStrField = getHouseholdNamingContactFields();
 		        for (string strF : setStrField) {
                     if (strF == 'Salutation') strF = 'toLabel(Salutation)';
                     strSoql += ', ' + strF;
 		        }
+
 		        strSoql += ' FROM Contact ';
 		        strContactSelectStmtAllNamingFields = strSoql;
 	        }
 	        return strContactSelectStmtAllNamingFields;
         }
         private set;
+    }
+
+    private Set<String> getHouseholdNamingContactFields() {
+        npo02__Households_Settings__c hhNamingConfig = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+        Boolean isHHNamingAutomated = hhNamingConfig.npo02__Advanced_Household_Naming__c == true;
+
+        return isHHNamingAutomated
+            ? iNaming.setHouseholdNameFieldsOnContact()
+            : new Set<String>();
     }
 
     /*******************************************************************************************************
