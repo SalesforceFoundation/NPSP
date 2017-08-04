@@ -86,7 +86,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             map<Id, Contact> mapContactIdContactOwnerChange = new map<Id, Contact>();
             map<Id, Id> mapContactIdAccountIdOldMoveOpps = new map<Id, Id>();
             map<Id, Id> mapContactIdAccountIdNewMoveOpps = new map<Id, Id>();
-            Set<String> hhNamingFields = getHouseholdNamingContactFields();
+            Set<String> hhNamingFields = new HH_HouseholdNaming().getHouseholdNamingContactFields();
 
             
             if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {                    
@@ -315,16 +315,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 deleteContactAccountsIfEmpty(listContactAccountDelete, dmlWrapper);
             }
             
-    return dmlWrapper;
-    }
-
-    private Set<String> getHouseholdNamingContactFields() {
-        npo02__Households_Settings__c hhNamingConfig = UTIL_CustomSettingsFacade.getHouseholdsSettings();
-        Boolean isHHNamingAutomated = hhNamingConfig.npo02__Advanced_Household_Naming__c == true;
-
-        return isHHNamingAutomated
-            ? HH_HouseholdNaming.iNaming.setHouseholdNameFieldsOnContact()
-            : new Set<String>();
+        return dmlWrapper;
     }
 
     /*******************************************************************************************************

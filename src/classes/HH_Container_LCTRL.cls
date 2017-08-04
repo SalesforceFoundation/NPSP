@@ -242,18 +242,12 @@ public with sharing class HH_Container_LCTRL {
                     strSoql += ', MailingCountryCode, MailingStateCode ';
                 ******/
             
-            setContactFields.addAll(getHouseholdNamingContactFields());
+            setContactFields.addAll(new HH_HouseholdNaming().getHouseholdNamingContactFields());
 
             return new list<String>(setContactFields);
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
-    }
-
-    private static Set<String> getHouseholdNamingContactFields() {
-        return isHHNamingAutomated()
-            ? HH_HouseholdNaming.iNaming.setHouseholdNameFieldsOnContact()
-            : new Set<String>();
     }
 
 
@@ -515,11 +509,12 @@ public with sharing class HH_Container_LCTRL {
                 HH_Households_TDTM.copyNamingExclusionsFromCheckboxes(con);
             }
 
-            if (!isHHNamingAutomated()) {
+            HH_HouseholdNaming hhNaming = new HH_HouseholdNaming();
+
+            if (!hhNaming.isAutomaticNaming()) {
                 return hh;
             }
 
-            HH_HouseholdNaming hhNaming = new HH_HouseholdNaming();
             String strExclusions = (String) hh.get('npo02__SYSTEM_CUSTOM_NAMING__c');
             if (strExclusions == null)
                 strExclusions = '';
@@ -535,11 +530,6 @@ public with sharing class HH_Container_LCTRL {
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
-    }
-
-    private static Boolean isHHNamingAutomated() {
-        npo02__Households_Settings__c hhNamingConfig = UTIL_CustomSettingsFacade.getHouseholdsSettings();
-        return hhNamingConfig.npo02__Advanced_Household_Naming__c == true;
     }
 
     /*******************************************************************************************************

@@ -256,7 +256,7 @@ public with sharing class STG_SettingsManager_TEST {
         Tests that the name specs are valid in the Households panel
     verify:
         isValidNameFormats() returns false when any Household Naming Settings is invalid.
-        isValidNameFormats() returns true when Household Naming Settings is valid.
+        isValidNameFormats() returns true when all Household Naming Settings are valid.
     **********************************************************************************************************/ 
     public static testMethod void STG_PanelHouseholds_isValidNameFormatsShouldReturnFalseWhenHHNamingSettingsIsInvalid() {
         if (strTestOnly != '*' && strTestOnly != 'STG_PanelHouseholds_isValidNameFormatsShouldReturnFalseWhenHHNamingSettingsIsInvalid') return;

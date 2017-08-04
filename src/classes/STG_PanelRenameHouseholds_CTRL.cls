@@ -54,7 +54,7 @@ public with sharing class STG_PanelRenameHouseholds_CTRL extends STG_Panel {
     
     /*********************************************************************************************************
     * @description Action Method to run the Refresh Household Names batch process
-    * @return null
+    * @return PageReference The PageReference is null regardless if an error occurs or the batch runs successfully
     */
     public PageReference runBatch() {
         boolean isActivation = UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c == false;

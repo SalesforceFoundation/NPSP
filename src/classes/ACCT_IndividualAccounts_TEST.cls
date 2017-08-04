@@ -1294,7 +1294,7 @@ private class ACCT_IndividualAccounts_TEST {
 
     /*********************************************************************************************************
     @description 
-        Test insert and update of a Contact when Household Naming Settings is invalid
+        Test Contact insert and update when Household Naming Settings is invalid
         and the Automatic Household Naming is turned off 
     verify:
         The Contact is created and updated successfully
@@ -1316,6 +1316,8 @@ private class ACCT_IndividualAccounts_TEST {
 
         contact.FirstName = 'John';
         update contact;
+
+        System.assertEquals('John', [SELECT FirstName FROM Contact WHERE Id = :contact.Id][0].FirstName);
     }
 
     // Helpers
@@ -1392,15 +1394,34 @@ private class ACCT_IndividualAccounts_TEST {
     * @return void
     **********************************************************************************************************/
     private static void setupInvalidHHNamingSettings() {
+        setupHHNamingSettings('{!{!FirstName}} {!LastName}} Household', '{!{!Title} {!FirstName}}}{!LastName}', '{!{!FirstName}}}');
+    }
+
+    /*********************************************************************************************************
+    * @description Configures Household Naming Settings with valid Name and Greetings formats
+    * @return void
+    **********************************************************************************************************/
+    private static void setupHHNamingSettings() {
+        setupHHNamingSettings('{!LastName} Household', '{!{!Salutation} {!FirstName}} {!LastName}', '{!{!FirstName}}');
+    }
+
+    /*********************************************************************************************************
+    * @description Configures Household Naming Settings 
+    * @param hhNameFormat Household Naming Format
+    * @param formalGreetingFormat Formal Greeting Format
+    * @param informalGreetingFormat Informal Greeting Format
+    * @return void
+    **********************************************************************************************************/
+    private static void setupHHNamingSettings(String hhNameFormat, String formalGreetingFormat, String informalGreetingFormat) {
         UTIL_CustomSettingsFacade.getHouseholdNamingSettingsForTests(
-        	new Household_Naming_Settings__c(
-                Household_Name_Format__c = '{!{!FirstName}} {!LastName}} Household', 
-        		Formal_Greeting_Format__c = '{!{!Title} {!FirstName}}}{!LastName}',
-                Informal_Greeting_Format__c = '{!{!FirstName}}}',
-        		Name_Connector__c = label.npo02.HouseholdNameConnector,
-       			Name_Overrun__c = label.npo02.HouseholdNameOverrun,
-        		Contact_Overrun_Count__c = 9,
-        		Implementing_Class__c = 'HH_NameSpec'
+            new Household_Naming_Settings__c(
+                Household_Name_Format__c = hhNameFormat,
+                Formal_Greeting_Format__c = formalGreetingFormat,
+                Informal_Greeting_Format__c = informalGreetingFormat,
+                Name_Connector__c = label.npo02.HouseholdNameConnector,
+                Name_Overrun__c = label.npo02.HouseholdNameOverrun,
+                Contact_Overrun_Count__c = 9,
+                Implementing_Class__c = 'HH_NameSpec'
             )
         );
     }
