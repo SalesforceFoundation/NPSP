@@ -286,6 +286,110 @@ public with sharing class STG_SettingsManager_TEST {
 
     /*********************************************************************************************************
     @description 
+        Tests isValidNameFormats() when Household_Name_Format__c field format is invalid
+    verify:
+        The method returns false.    
+        The page contains an error message containing the field label.    
+    **********************************************************************************************************/ 
+    public static testMethod void STG_PanelHouseholds_isValidNameFormatsShouldAddPageErrorMessageWhenHHNameFormatIsInvalid() {
+        if (strTestOnly != '*' && strTestOnly != 'STG_PanelHouseholds_isValidNameFormatsShouldAddPageErrorMessageWhenHHNameFormatIsInvalid') return;
+
+        setupHHNamingSettings(            
+            '{!{!FirstName}} {!LastName}} Household',//invalid format
+            '{!{!Title} {!FirstName}}{!LastName}',
+            '{!{!FirstName}}'
+        );
+
+        testAndAssertPanelHouseholdPageErrorMessageFor('Household_Name_Format__c'); 
+    }
+
+    /*********************************************************************************************************
+    @description 
+        Tests isValidNameFormats() when Formal_Greeting_Format__c field format is invalid
+    verify:
+        The method returns false.    
+        The page contains an error message containing the field label.    
+    **********************************************************************************************************/ 
+    public static testMethod void STG_PanelHouseholds_isValidNameFormatsShouldAddPageErrorMessageWhenHHFormalGreetingFormatIsInvalid() {
+        if (strTestOnly != '*' && strTestOnly != 'STG_PanelHouseholds_isValidNameFormatsShouldAddPageErrorMessageWhenHHFormalGreetingFormatIsInvalid') return;
+
+        setupHHNamingSettings(            
+            '{!{!FirstName} {!LastName}} Household',
+            '{!{!Title} {!FirstName}}}{!LastName}',//invalid format
+            '{!{!FirstName}}'
+        );
+        
+        testAndAssertPanelHouseholdPageErrorMessageFor('Formal_Greeting_Format__c'); 
+    }
+
+    /*********************************************************************************************************
+    @description 
+        Tests isValidNameFormats() when Informal_Greeting_Format__c field format is invalid
+    verify:
+        The method returns false.    
+        The page contains an error message containing the field label.    
+    **********************************************************************************************************/ 
+    public static testMethod void STG_PanelHouseholds_isValidNameFormatsShouldAddPageErrorMessageWhenHHInformalGreetingFormatIsInvalid() {
+        if (strTestOnly != '*' && strTestOnly != 'STG_PanelHouseholds_isValidNameFormatsShouldAddPageErrorMessageWhenHHInformalGreetingFormatIsInvalid') return;
+
+        setupHHNamingSettings(            
+            '{!{!FirstName} {!LastName}} Household',
+            '{!{!Title} {!FirstName}}{!LastName}',
+            '{!{!FirstName}}}'//invalid format 
+        );
+
+        testAndAssertPanelHouseholdPageErrorMessageFor('Informal_Greeting_Format__c'); 
+    }
+
+    /*********************************************************************************************************
+    @description 
+        Tests isValidNameFormats() when a Household Naming Settings field format is invalid
+    verify:
+        The method returns false.    
+        The page contains an error message containing the field label.    
+    **********************************************************************************************************/ 
+    static void testAndAssertPanelHouseholdPageErrorMessageFor(String fieldName) {
+        Test.setCurrentPage(Page.STG_PanelHouseholds);
+
+        STG_PanelHouseholds_CTRL ctrl = new STG_PanelHouseholds_CTRL();
+        System.assertEquals(false, ctrl.isValidNameFormats());      
+        
+        String fieldLabel = UTIL_Describe.getFieldLabel(
+            UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), 
+            UTIL_Namespace.StrTokenNSPrefix(fieldName)
+        );
+        
+        UTIL_UnitTestData_TEST.assertPageHasError(fieldLabel); 
+        UTIL_UnitTestData_TEST.assertPageHasError('Invalid field'); 
+    }
+
+    /*********************************************************************************************************
+    @description 
+        Tests isValidNameFormats() when a Household Naming Settings field contains invalid API name 
+    verify:
+        The method returns false.    
+        The page contains an error message containing the user specified field name.    
+    **********************************************************************************************************/ 
+    public static testMethod void STG_PanelHouseholds_isValidNameFormatsShouldAddPageErrorMessageWhenHHNamingContactFieldIsNotCaseSensitiveApiName() {
+        if (strTestOnly != '*' && strTestOnly != 'STG_PanelHouseholds_isValidNameFormatsShouldAddPageErrorMessageWhenHHNamingContactFieldIsNotCaseSensitiveApiName') return;
+
+        setupHHNamingSettings(            
+            '{!{!FirstName} {!lastname}} Household', //lastname is not a correct case sensitive API Name
+            '{!{!Title} {!FirstName}}{!LastName}',
+            '{!{!FirstName}}'
+        );
+
+        Test.setCurrentPage(Page.STG_PanelHouseholds);
+
+        STG_PanelHouseholds_CTRL ctrl = new STG_PanelHouseholds_CTRL();
+        System.assertEquals(false, ctrl.isValidNameFormats());     
+
+        String expectedMessage = String.format(Label.stgErrorInvalidFieldApiName, new String[]{ 'lastname' }); 
+        UTIL_UnitTestData_TEST.assertPageHasError(expectedMessage); 
+    }
+
+    /*********************************************************************************************************
+    @description 
         Tests Refresh Household Names batch when Automatic Household Naming is turned off 
         and Household Naming Settings is invalid
     verify:
@@ -293,8 +397,8 @@ public with sharing class STG_SettingsManager_TEST {
         Automatic Household Naming field is still turned off.
         The Page contains an error.        
     **********************************************************************************************************/ 
-    private static testMethod void STG_PanelRenameHouseholds_runBatchShouldNotRunBatchWhenHHNamingSettingsIsInvalidAndTurnedOff() {
-        if (strTestOnly != '*' && strTestOnly != 'STG_PanelRenameHouseholds_runBatchShouldNotRunBatchWhenHHNamingSettingsIsInvalidAndTurnedOff') return;
+    private static testMethod void STG_PanelRenameHouseholds_shouldNotRunBatchWhenHHNamingSettingsIsInvalidAndAutomaticHHNamingTurnedOff() {
+        if (strTestOnly != '*' && strTestOnly != 'STG_PanelRenameHouseholds_shouldNotRunBatchWhenHHNamingSettingsIsInvalidAndAutomaticHHNamingTurnedOff') return;
 
         turnOffAutomaticHHNaming();
         setupInvalidHHNamingSettings();
@@ -324,8 +428,8 @@ public with sharing class STG_SettingsManager_TEST {
         Automatic Household Naming field is turned on.
         The Page contains no error.        
     **********************************************************************************************************/ 
-    private static testMethod void STG_PanelRenameHouseholds_runBatchShouldRunBatchWhenHHNamingSettingsIsValidAndTurnedOff() {
-        if (strTestOnly != '*' && strTestOnly != 'STG_PanelRenameHouseholds_runBatchShouldRunBatchWhenHHNamingSettingsIsValidAndTurnedOff') return;
+    private static testMethod void STG_PanelRenameHouseholds_shouldRunBatchWhenHHNamingSettingsIsValidAndAutomaticHHNamingTurnedOff() {
+        if (strTestOnly != '*' && strTestOnly != 'STG_PanelRenameHouseholds_shouldRunBatchWhenHHNamingSettingsIsValidAndAutomaticHHNamingTurnedOff') return;
 
         turnOffAutomaticHHNaming();
 
@@ -352,8 +456,8 @@ public with sharing class STG_SettingsManager_TEST {
         Household Naming batch has been run.
         The Page contains no error.        
     **********************************************************************************************************/ 
-    private static testMethod void STG_PanelRenameHouseholds_runBatchShouldRunBatchWhenAutomaticHHNamingIsTurnedOn() {
-        if (strTestOnly != '*' && strTestOnly != 'STG_PanelRenameHouseholds_runBatchShouldRunBatchWhenAutomaticHHNamingIsTurnedOn') return;
+    private static testMethod void STG_PanelRenameHouseholds_shouldRunBatchWhenAutomaticHHNamingIsTurnedOn() {
+        if (strTestOnly != '*' && strTestOnly != 'STG_PanelRenameHouseholds_shouldRunBatchWhenAutomaticHHNamingIsTurnedOn') return;
 
         turnOnAutomaticHHNaming();
 
@@ -1081,15 +1185,42 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     **********************************************************************************************************/
     private static void setupInvalidHHNamingSettings() {
+        setupHHNamingSettings(
+            '{!{!FirstName}} {!LastName}} Household',
+            '{!{!Title} {!FirstName}}}{!LastName}',
+            '{!{!FirstName}}}'
+        );
+    }
+
+    /*********************************************************************************************************
+    * @description Configures Household Naming Settings with valid Name and Greetings formats
+    * @return void
+    **********************************************************************************************************/
+    private static void setupHHNamingSettings() {
+        setupHHNamingSettings(            
+            '{!{!FirstName} {!LastName}} Household',
+            '{!{!Title} {!FirstName}}{!LastName}',
+            '{!{!FirstName}}'
+        );
+    }
+
+    /*********************************************************************************************************
+    * @description Configures Household Naming Settings 
+    * @param hhNameFormat Household Naming Format
+    * @param formalGreetingFormat Formal Greeting Format
+    * @param informalGreetingFormat Informal Greeting Format
+    * @return void
+    **********************************************************************************************************/
+    private static void setupHHNamingSettings(String hhNameFormat, String formalGreetingFormat, String informalGreetingFormat) {
         UTIL_CustomSettingsFacade.getHouseholdNamingSettingsForTests(
-        	new Household_Naming_Settings__c(
-                Household_Name_Format__c = '{!{!FirstName}} {!LastName}} Household', 
-        		Formal_Greeting_Format__c = '{!{!Title} {!FirstName}}}{!LastName}',
-                Informal_Greeting_Format__c = '{!{!FirstName}}}',
-        		Name_Connector__c = label.npo02.HouseholdNameConnector,
-       			Name_Overrun__c = label.npo02.HouseholdNameOverrun,
-        		Contact_Overrun_Count__c = 9,
-        		Implementing_Class__c = 'HH_NameSpec'
+            new Household_Naming_Settings__c(
+                Household_Name_Format__c = hhNameFormat,
+                Formal_Greeting_Format__c = formalGreetingFormat,
+                Informal_Greeting_Format__c = informalGreetingFormat,
+                Name_Connector__c = label.npo02.HouseholdNameConnector,
+                Name_Overrun__c = label.npo02.HouseholdNameOverrun,
+                Contact_Overrun_Count__c = 9,
+                Implementing_Class__c = 'HH_NameSpec'
             )
         );
     }

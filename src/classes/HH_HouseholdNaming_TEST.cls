@@ -475,6 +475,67 @@ public class HH_HouseholdNaming_TEST {
         List<Contact> contacts = Database.Query(soql);
     }
 
+    /*********************************************************************************************************
+    @description
+        Test getHouseholdNamingContactFields() method when Household Naming Settings is invalid
+        and the Automatic Household Naming is turned off
+    verify:
+        Returned set is empty.
+    **********************************************************************************************************/  
+    private static testMethod void getHouseholdNamingContactFieldsShouldReturnEmptySetWhenAutomaticHouseholdNamingIsTurnedOff() {
+        turnOffAutomaticHHNaming();
+        setupInvalidHHNamingSettings();
+
+        Set<String> fieldNames = new HH_HouseholdNaming().getHouseholdNamingContactFields();
+
+        System.assert(fieldNames.isEmpty(), fieldNames);
+    }
+    
+    /*********************************************************************************************************
+    @description
+        Test getHouseholdNamingContactFields() method when Household Naming Settings is valid
+        and the Automatic Household Naming is turned on
+    verify:
+        Returned set contains Contact field names specified in the Household Naming Settings.
+    **********************************************************************************************************/  
+    private static testMethod void getHouseholdNamingContactFieldsShouldReturnContactFieldNamesWhenAutomaticHouseholdNamingIsTurnedOn() {
+        turnOnAutomaticHHNaming();
+        setupHHNamingSettings();
+
+        Set<String> fieldNames = new HH_HouseholdNaming().getHouseholdNamingContactFields();
+
+        System.assertEquals(4, fieldNames.size(), fieldNames);  
+        
+        System.assert(fieldNames.contains('LastName'), fieldNames);
+        System.assert(fieldNames.contains('FirstName'), fieldNames);
+        System.assert(fieldNames.contains('Salutation'), fieldNames);
+        System.assert(fieldNames.contains('npe01__WorkEmail__c'), fieldNames);     
+    }
+
+    /*********************************************************************************************************
+    @description
+        Test isAutomaticNaming() method when the Automatic Household Naming is turned off
+    verify:
+        The method returns false.
+    **********************************************************************************************************/  
+    private static testMethod void isAutomaticNamingShouldReturnFalseWhenAutomaticHouseholdNamingIsTurnedOff() {
+        turnOffAutomaticHHNaming();
+
+        System.assert(!new HH_HouseholdNaming().isAutomaticNaming());
+    }
+
+    /*********************************************************************************************************
+    @description
+        Test isAutomaticNaming() method when the Automatic Household Naming is turned on
+    verify:
+        The method returns true.
+    **********************************************************************************************************/  
+    private static testMethod void isAutomaticNamingShouldReturnTrueWhenAutomaticHouseholdNamingIsTurnedOn() {
+        turnOnAutomaticHHNaming();
+
+        System.assert(new HH_HouseholdNaming().isAutomaticNaming());
+    }
+
     // Helpers
     ////////////
     

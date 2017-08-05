@@ -124,6 +124,8 @@
         <members>HH_HouseholdNaming</members>
         <members>HH_HouseholdNaming_BATCH</members>
         <members>HH_HouseholdNaming_TEST</members>
+		<members>HH_HouseholdNamingSettingValidator</members>
+		<members>HH_HouseholdNamingSettingValidator_TEST</members>
         <members>HH_Households</members>
         <members>HH_Households_TDTM</members>
         <members>HH_Households_TEST</members>
@@ -1338,6 +1340,7 @@
         <members>stgDontAutoScheduleHelpText</members>
         <members>stgErrorINaming</members>
         <members>stgErrorInvalidClass</members>
+        <members>stgErrorInvalidFieldApiName</members>
         <members>stgErrorInvalidNameFormat</members>
         <members>stgHHNameRefreshTitle</members>
         <members>stgHelpAccountModel</members>
