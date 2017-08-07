@@ -30,17 +30,36 @@
 /**
 * @author Salesforce.org
 * @date 2017
-*
-* @group Resource Page
-*
+* @group Getting Started
 * @description Component to set a mockup response from Salesforce Org HEROKU APP, in Youtube test classes.
 */
 
 public with sharing class RP_YoutubeTestMock implements HttpCalloutMock{
 
     private static String body;
+    private static String status;
+    private static Integer code;
 
-    public RP_YoutubeTestMock() {
+    public RP_YoutubeTestMock(Boolean failedRequest) {
+
+        code = 400;
+        status = 'error';
+
+        if (!failedRequest) {
+
+            setRequestBody();
+
+            code = 200;
+            status = 'ok';
+        }
+
+    }
+
+    /*******************************************************************************************************
+    * @description Set all information necesary to simulate a response from salesforce.org api endpoint (Youtube)
+    * @return void
+    */
+    private void setRequestBody() {
 
         Map<String, Object> bodyMap = new Map<String, Object> ();
         Map<String, Object> contentDetailsMap = new Map<String, Object> ();
@@ -66,15 +85,21 @@ public with sharing class RP_YoutubeTestMock implements HttpCalloutMock{
         bodyMap.put('items', dataItems);
 
         body = System.JSON.serialize(bodyMap);
-
     }
 
-    public HTTPResponse respond(HTTPRequest req) {
+
+
+    /*******************************************************************************************************
+    * @description operation to simulate a correct or failed response for Youtube videos data
+    * @param configured HTTPRequest data
+    * @return HTTPResponse
+    */
+    public HTTPResponse respond(HTTPRequest request) {
 
         HttpResponse response = new HttpResponse();
 
-        response.setStatusCode(200);
-        response.setStatus('ok');
+        response.setStatusCode(code);
+        response.setStatus(status);
 
         response.setBody(body);
 

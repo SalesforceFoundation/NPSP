@@ -30,21 +30,41 @@
 /**
 * @author Salesforce.org
 * @date 2017
-*
-* @group Resource Page
-*
+* @group Getting Started
 * @description Component to set a mockup response from Salesforce Org HEROKU APP, in GitHub test classes.
 */
 
-public with sharing class RP_GitHubTestMock implements HttpCalloutMock{
+public with sharing class RP_GitHubTestMock implements HttpCalloutMock {
 
     private static Map<String, Object> bodyMap;
     private static String body;
+    private static String status;
+    private static Integer code;
 
-    public RP_GitHubTestMock() {
 
-        bodyMap = new Map<String, Object> ();
-        Map<String, Object> bodyLatestDataMap = new Map<String, Object> ();
+    public RP_GitHubTestMock(Boolean failedRequest) {
+
+        code = 400;
+        status = 'error';
+
+        if (!failedRequest) {
+
+            setRequestBody();
+
+            code = 200;
+            status = 'ok';
+        }
+
+    }
+
+    /*******************************************************************************************************
+    * @description Set all information necesary to simulate a response from salesforce.org api endpoint (Github)
+    * @return void
+    */
+    private void setRequestBody() {
+
+        bodyMap = new Map<String, Object>();
+        Map<String, Object> bodyLatestDataMap = new Map<String, Object>();
 
         bodyLatestDataMap.put('name', '3.101');
         bodyLatestDataMap.put('version', '3.101');
@@ -59,12 +79,17 @@ public with sharing class RP_GitHubTestMock implements HttpCalloutMock{
 
     }
 
-    public HTTPResponse respond(HTTPRequest req) {
+    /*******************************************************************************************************
+    * @description operation to simulate a correct or failed response for Github release notes data
+    * @param configured HTTPRequest data
+    * @return HTTPResponse
+    */
+    public HTTPResponse respond(HTTPRequest request) {
 
         HttpResponse response = new HttpResponse();
 
-        response.setStatusCode(200);
-        response.setStatus('ok');
+        response.setStatusCode(code);
+        response.setStatus(status);
 
         response.setBody(body);
 

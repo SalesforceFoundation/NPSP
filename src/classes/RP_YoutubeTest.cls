@@ -30,28 +30,90 @@
 /**
 * @author Salesforce.org
 * @date 2017
-*
-* @group Resource Page
-*
+* @group Getting Started
 * @description Component that retrieves youtube videos from the Salesforce Fundation channel.
 */
 
 @isTest
 private class RP_YoutubeTest {
 
-    public static testmethod void testYoutubeListOfVideos () {
+    /*********************************************************************************************************
+    * @description operation
+    *        load youtube videos data from salesforce.org channel enable from Salesforce.org api (Youtube)
+    * verify:
+    *       YoutubeWrapper object is uploaded
+    */
+    @isTest
+    public static void testYoutubeListOfVideos () {
 
-        Test.setCurrentPage(Page.RP_Resources); //Applying page context here
-        Test.setMock(HttpCalloutMock.class, new RP_YoutubeTestMock());
+        Boolean failedRequest = false;
+
+        //Applying page context here
+        Test.setCurrentPage(Page.RP_Resources);
+
+        Test.setMock(HttpCalloutMock.class, new RP_YoutubeTestMock(failedRequest));
 
         Test.startTest();
 
         RP_YouTubeController controller = new RP_YouTubeController();
 
+        controller.loadYoutubePlaylistVideos();
+
         Test.stopTest();
 
+        // Asserting that the controller isn't null
         System.assertNotEquals(controller, null);
 
+        // Asserting that the list of wrapper object isn't returning null
+        System.assertNotEquals(controller.youtubeVideosData, null);
+
+        // Asserting that the wrapper object isn't returning null
+        System.assertNotEquals(controller.youtubeMainVideo, null);
+
+        // Asserting that youtube channel isn't returning null
+        System.assertNotEquals(controller.youtubeChannelName, null);
+
+        // Asserting that each property isn't returning null
+        System.assertNotEquals(controller.youtubeMainVideo.videoId, null);
+        System.assertNotEquals(controller.youtubeMainVideo.videoTitle, null);
+        System.assertNotEquals(controller.youtubeMainVideo.videoDescription, null);
+        System.assertNotEquals(controller.youtubeMainVideo.videoThumbnail, null);
+    }
+
+    /*********************************************************************************************************
+    * @description operation
+    *        test failed request from salesforce.org Api (Youtube)
+    * verify:
+    *       YoutubeWrapper object isn't uploaded
+    */
+    @isTest
+    public static void testFailedRequest() {
+
+        Boolean failedRequest = true;
+
+        Test.setMock(HttpCalloutMock.class, new RP_YoutubeTestMock(failedRequest));
+
+        RP_YouTubeController controller = new RP_YouTubeController();
+
+        Test.startTest();
+
+        controller.loadYoutubePlaylistVideos();
+
+        Test.stopTest();
+
+        RP_YouTubeController.YoutubeWrapper[] youtubeVideosData = new RP_YouTubeController.YoutubeWrapper[]{};
+
+        // Asserting that the controller isn't null
+        System.assertNotEquals(controller, null);
+
+        // Asserting that the list of wrapper object is returning empty
+        System.assertEquals(controller.youtubeVideosData, youtubeVideosData);
+
+        // Asserting that the wrapper object is returning null
+        System.assertEquals(controller.youtubeMainVideo, null);
+
+        // Asserting that youtube channel isn't returning null
+        System.assertEquals(controller.youtubeChannelName, RP_Constants.RP_YOUTUBE_CHANNEL_NAME);
     }
 
 }

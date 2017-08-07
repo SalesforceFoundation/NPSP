@@ -30,28 +30,99 @@
 /**
 * @author Salesforce.org
 * @date 2017
-*
-* @group Resource Page
-*
+* @group Getting Started
 * @description Component that coverage github functionality
 */
 
 @isTest
 public with sharing class RP_GitHubTest {
 
+    /*********************************************************************************************************
+    * @description operation
+    *        load GitHub latest release from last stable version enable from Salesforce.org api (Github)
+    * verify:
+    *       GitHubWrapper object is uploaded
+    */
     @isTest
-    public static void testGitHubReleaseNotesContent () {
+    public static void testLoadReleaseNotesFromSFORG() {
 
-        Test.setMock(HttpCalloutMock.class, new RP_GitHubTestMock());
+        Boolean failedRequest = false;
 
-        Test.startTest();
+        Test.setMock(HttpCalloutMock.class, new RP_GitHubTestMock(failedRequest));
 
         RP_GitHubController controller = new RP_GitHubController();
 
+        Test.startTest();
+
+        controller.loadLatestReleaseNotes();
+
         Test.stopTest();
 
+        // Asserting that the controller isn't null
         System.assertNotEquals(controller, null);
 
+        // Asserting that the wrapper object isn't returning null
+        System.assertNotEquals(controller.gitHubData, null);
+
+        // Asserting that each property isn't returning null
+        System.assertNotEquals(controller.gitHubData.latestDate, null);
+        System.assertNotEquals(controller.gitHubData.latestDownloadUrl, null);
+        System.assertNotEquals(controller.gitHubData.latestVersion, null);
+        System.assertNotEquals(controller.gitHubData.latestReleaseNotes, null);
+        System.assertNotEquals(controller.gitHubData.latestProductName, null);
+
+    }
+
+    /*********************************************************************************************************
+    * @description operation
+    *        test failed request from salesforce.org Api (Github)
+    * verify:
+    *       GitHubWrapper object isn't uploaded
+    */
+    @isTest
+    public static void testFailedRequest() {
+
+        Boolean failedRequest = true;
+
+        Test.setMock(HttpCalloutMock.class, new RP_GitHubTestMock(failedRequest));
+
+        RP_GitHubController controller = new RP_GitHubController();
+
+        Test.startTest();
+
+        controller.loadLatestReleaseNotes();
+
+        Test.stopTest();
+
+        // Asserting that the controller isn't null
+        System.assertNotEquals(controller, null);
+
+        // Asserting that the wrapper object is returning null
+        System.assertEquals(controller.gitHubData, null);
+
+    }
+
+    /*********************************************************************************************************
+    * @description operation
+    *        apply format to a String date and returns a new date with new format
+    * verify:
+    *       the date is formated correctly
+    */
+    @isTest
+    public static void testFormatDate() {
+
+        Map<String, Object> responseBodyMap = new Map<String, Object>();
+
+        RP_GitHubController.GitHubWrapper wrapper = new RP_GitHubController.GitHubWrapper(responseBodyMap);
+
+        Test.startTest();
+
+        String newDate = wrapper.formatDate('2017-07-17T17:50:03Z');
+
+        Test.stopTest();
+
+        // Asserting that the new format date is returning the same date with another format
+        System.assertEquals(newDate, '7/17/2017 5:50 pm');
     }
 
 }

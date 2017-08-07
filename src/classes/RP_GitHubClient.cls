@@ -30,20 +30,23 @@
 /**
 * @author Salesforce.org
 * @date 2017
-*
-* @group Resource Page
-*
+* @group Getting Started
 * @description Github Http Client using Salesforce org HEROKU APP.
 */
 public with sharing class RP_GitHubClient extends RP_HTTPClient {
 
-	public RP_GitHubClient() {
+    //Load base request information
+    public RP_GitHubClient() {
         super();
-	}
+    }
 
-	public HttpResponse getLatestReleaseNotes() {
+     /*******************************************************************************************************
+    * @description get release notes of salesforce org api(heroku) endpoint from github documentation
+    * @return HttpResponse
+    */
+    public HttpResponse getLatestReleaseNotes() {
 
-		request.setEndpoint(RP_Constants.RP_GITHUB_SALESFORCE_ORG_ENDPOINT);
-		return send();
-	}
+        request.setEndpoint(RP_Constants.RP_GITHUB_SALESFORCE_ORG_ENDPOINT);
+        return send();
+    }
 }

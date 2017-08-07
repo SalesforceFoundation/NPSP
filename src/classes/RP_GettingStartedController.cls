@@ -30,13 +30,13 @@
 /**
 * @author Salesforce.org
 * @date 2017
-*
-* @group Resource Page
-*
+* @group Getting Started
+* @group-content ../../ApexDocContent/RP_Getting_Started.htm
 * @description Component, includes Getting started links.
 */
 public with sharing class RP_GettingStartedController {
 
+    //Object used to load value of url links
     public LinksWrapper linksData {get; set;}
 
     public RP_GettingStartedController() {
@@ -44,28 +44,33 @@ public with sharing class RP_GettingStartedController {
         linksData = new LinksWrapper ();
     }
 
+    /*******************************************************************************************************
+    * @description inner class, used to access all links mediantly a unique object
+    */
+
     public class LinksWrapper {
 
         public String trailheadLink {get; set;}
         public String salesforceOrgLink {get; set;}
         public String usLink {get; set;}
-        public String nspsLink {get; set;}
+        public String npspLink {get; set;}
         public String webinarLink {get; set;}
         public String customerJourneyLink {get; set;}
 
+        //Load url links values
         public LinksWrapper () {
 
-            trailheadLink = !String.isBlank(RP_Constants.RP_TRAILHEAD_LINK) ? RP_Constants.RP_TRAILHEAD_LINK : null;
+            trailheadLink = RP_Constants.RP_TRAILHEAD_LINK;
 
-            salesforceOrgLink = !String.isBlank(RP_Constants.RP_SALESFORCE_ORG_LINK) ? RP_Constants.RP_SALESFORCE_ORG_LINK : null;
+            salesforceOrgLink = RP_Constants.RP_SALESFORCE_ORG_OFFICE_HOURS_LINK;
 
-            usLink = !String.isBlank(RP_Constants.RP_US_LINK) ? RP_Constants.RP_US_LINK : null;
+            usLink = RP_Constants.RP_US_LINK;
 
-            nspsLink = !String.isBlank(RP_Constants.RP_NPSP_LINK) ? RP_Constants.RP_NPSP_LINK : null;
+            npspLink = RP_Constants.RP_NPSP_DOCUMENTATION_LINK;
 
-            webinarLink = !String.isBlank(RP_Constants.RP_WEBINAR_LINK) ? RP_Constants.RP_WEBINAR_LINK : null;
+            webinarLink = RP_Constants.RP_WEBINAR_LINK;
 
-            customerJourneyLink = !String.isBlank(RP_Constants.RP_CUSTOMER_JOURNEY_LINK) ? RP_Constants.RP_CUSTOMER_JOURNEY_LINK : null;
+            customerJourneyLink = RP_Constants.RP_CUSTOMER_JOURNEY_LINK;
         }
     }
 }

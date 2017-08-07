@@ -30,16 +30,16 @@
 /**
 * @author Salesforce.org
 * @date 2017
-*
-* @group Resource Page
-*
+* @group Getting Started
 * @description Component that retrieves youtube videos from the Salesforce Fundation channel.
 */
 public with sharing class RP_YoutubeController {
 
+    //Variables used to load all information of videos from salesforce.org youtube channel
     public YoutubeWrapper[] youtubeVideosData {get; set;}
     public YoutubeWrapper youtubeMainVideo {get; set;}
     public String youtubeChannelName {get; set;}
+    public Boolean timeoutError {get; set;}
 
     public RP_YoutubeController() {
 
@@ -49,10 +49,16 @@ public with sharing class RP_YoutubeController {
         loadYoutubePlaylistVideos();
     }
 
-    private void loadYoutubePlaylistVideos() {
+    /*******************************************************************************************************
+    * @description method used to load information from salesforce.org youtube channel into a map
+    * @return void
+    */
+    @TestVisible private void loadYoutubePlaylistVideos() {
 
         RP_YoutubeClient client = new RP_YoutubeClient();
         HttpResponse response = client.getPlaylistVideos();
+
+        timeoutError = true;
 
         if (response != null) {
 
@@ -61,9 +67,17 @@ public with sharing class RP_YoutubeController {
             Map<String, Object> responseBodyMap = (Map<String, Object>) JSON.deserializeUntyped(responseBody);
 
             setData(responseBodyMap);
+
+            timeoutError = false;
         }
+
     }
 
+    /*******************************************************************************************************
+    * @description method used to load information from map to a YoutubeWrapper instance
+    * @param a deserialize json load in a map with the response values from salesforce org api
+    * @return void
+    */
     public void setData(Map<String, Object> responseBodyMap) {
 
         if (responseBodyMap != null && !responseBodyMap.isEmpty()) {
@@ -78,6 +92,10 @@ public with sharing class RP_YoutubeController {
         }
     }
 
+
+    /*******************************************************************************************************
+    * @description inner class, used to access salesforce.org youtube videos data
+    */
     public class YoutubeWrapper {
 
         public String videoId {get; set;}
@@ -85,6 +103,7 @@ public with sharing class RP_YoutubeController {
         public String videoDescription {get; set;}
         public String videoThumbnail {get; set;}
 
+        //Load map data into a YoutubeWrapper instance
         public YoutubeWrapper (Object instance) {
 
             Map<String,Object> videoInfo = (Map<String,Object>) instance;

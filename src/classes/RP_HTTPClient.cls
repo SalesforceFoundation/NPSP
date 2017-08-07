@@ -30,28 +30,38 @@
 /**
 * @author Salesforce.org
 * @date 2017
-*
-* @group Resource Page
-*
+* @group Getting Started
 * @description Base HTTP Client.
 */
 public with sharing virtual class RP_HTTPClient {
 
-	protected HttpRequest request;
+    protected HttpRequest request;
 
-	public RP_HTTPClient() {
+    //Set common information for each client implemented
+    public RP_HTTPClient() {
 
-		request = new HttpRequest();
-        request.setTimeout(120000);
+        request = new HttpRequest();
+        request.setTimeout(10000);
         request.setMethod('GET');
         request.setHeader('Content-Type', 'application/json');
-	}
+    }
 
+    /*******************************************************************************************************
+    * @description send a request to the any service according its endpoint value
+    * @return HttpResponse
+    */
     public HttpResponse send() {
 
-        Http http = new Http();
-        HttpResponse response = http.send(request);
+        try {
 
-        return response;
+            Http http = new Http();
+            HttpResponse response = http.send(request);
+
+            return response;
+        }
+        catch(exception e) {
+
+            return null;
+        }
     }
 }
