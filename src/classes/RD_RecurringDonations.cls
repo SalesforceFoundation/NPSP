@@ -260,39 +260,41 @@ public class RD_RecurringDonations {
     * currency iso fields.  Does not include the where clause since different callers have different
     * filtering needs.
     * @return string
-    */ 
+    */
     public static string strQueryRDNoWhere() {
-    	
-    	// these must be lowercase so set.contains() will work
+
+        // these must be lowercase so set.contains() will work
         set<string> existingFields = new set<string>{  'npe03__open_ended_status__c', 'npe03__next_payment_date__c', 'name', 'npe03__Paid_Amount__c',
-                                                       'npe03__organization__c', 'npe03__contact__c', 'npe03__installment_amount__c',
-                                                       'npe03__installments__c', 'npe03__amount__c', 'npe03__total__c', 'npe03__installment_period__c',
-                                                       'npe03__date_established__c', 'npe03__donor_name__c', 'npe03__schedule_type__c', 
-                                                       'npe03__recurring_donation_campaign__c', 'npe03__total_paid_installments__c', 'ownerid'};
-        
+                'npe03__organization__c', 'npe03__contact__c', 'npe03__installment_amount__c',
+                'npe03__installments__c', 'npe03__amount__c', 'npe03__total__c', 'npe03__installment_period__c',
+                'npe03__date_established__c', 'npe03__donor_name__c', 'npe03__schedule_type__c',
+                'npe03__recurring_donation_campaign__c', 'npe03__total_paid_installments__c', 'ownerid',
+                'always_use_last_day_of_month__c'};
+
         String queryRCD = 'select id';
         for (string s : existingFields){
-            queryRCD += ', ' + s;               
+            queryRCD += ', ' + s;
         }
-   
+
         //add any custom mapping to make sure we have the required fields
         for (string s : customFieldMappingSettings.keySet()){
-            string RDFieldName = customFieldMappingSettings.get(s).npe03__Recurring_Donation_Field__c;             
+            string RDFieldName = customFieldMappingSettings.get(s).npe03__Recurring_Donation_Field__c;
             if (!existingFields.contains(RDFieldName.toLowerCase()) && s != 'id'){
-               queryRCD = queryRCD + ',' + customFieldMappingSettings.get(s).npe03__Recurring_Donation_Field__c;
-               existingFields.add(RDFieldName.toLowerCase());   
+                queryRCD = queryRCD + ',' + customFieldMappingSettings.get(s).npe03__Recurring_Donation_Field__c;
+                existingFields.add(RDFieldName.toLowerCase());
             }
-        }       
-   
+        }
+
         //if currencyiso field exists add it to query for use later
-        if (isMultiCurrency)
+        if (isMultiCurrency) {
             queryRCD = queryRCD + ',CurrencyIsoCode';
-    
+        }
+
         queryRCD=queryRCD+' from npe03__Recurring_Donation__c';
-        
+
         return (queryRCD);
-    }   
-     
+    }
+
     /*******************************************************************************************************
     * @description Future method that creates new Opportunities for the specified Recurring Donations.
     * @param recurringDonations The list of RD's being created

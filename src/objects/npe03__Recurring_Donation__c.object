@@ -7,4 +7,14 @@
         <fields>npe03__Installment_Period__c</fields>
         <label>NPSP Recurring Donation Compact Layout</label>
     </compactLayouts>
+    <fields>
+        <fullName>Always_Use_Last_Day_Of_Month__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>When checked, all future donation installments will be set to the last day of the month, regardless of the actual date in the &quot;Next Donation Date&quot; field.</inlineHelpText>
+        <label>Always use last day of month</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
 </CustomObject>
