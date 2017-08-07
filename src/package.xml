@@ -1906,7 +1906,6 @@
         <members>npe01__OppPayment__c</members>
         <members>npe4__Relationship__c</members>
         <members>npe5__Affiliation__c</members>
-        <members>RP_Getting_Started</members>
         <name>CustomTab</name>
     </types>
     <types>
