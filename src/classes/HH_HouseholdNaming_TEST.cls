@@ -423,7 +423,7 @@ public class HH_HouseholdNaming_TEST {
         and the Automatic Household Naming is turned on 
     verify:
         Household Naming Settings fields are included in the SOQL.
-        No error is raised whent the SOQL is executed.
+        No error is raised when the SOQL is executed.
     **********************************************************************************************************/  
     private static testMethod void contactSoqlShouldContainHHNamingFieldsWhenAutomaticHouseholdNamingIsTurnedOn() {
         turnOnAutomaticHHNaming();
@@ -452,7 +452,7 @@ public class HH_HouseholdNaming_TEST {
         and the Automatic Household Naming is turned off
     verify:
         Household Naming Settings fields are not included in the SOQL.
-        No error is raised whent the SOQL is executed.
+        No error is raised when the SOQL is executed.
     **********************************************************************************************************/  
     private static testMethod void contactSoqlShouldNotContainHHNamingFieldsWhenAutomaticHouseholdNamingIsTurnedOff() {
         turnOffAutomaticHHNaming();

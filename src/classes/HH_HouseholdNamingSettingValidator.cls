@@ -38,20 +38,20 @@ public with sharing class HH_HouseholdNamingSettingValidator {
     /*********************************************************************************************************
     * @description List of example Contacts
     */
-	private static Contact[] exampleContacts {
+    private static Contact[] exampleContacts {
         get {
-			return exampleContacts = exampleContacts == null
-				? buildExampleContacts()
-				: exampleContacts;
-		}
+            return exampleContacts = exampleContacts == null
+                ? buildExampleContacts()
+                : exampleContacts;
+        }
         set;
     }
 
     /*********************************************************************************************************
     * @description The validator's constructor 
     */
-	public HH_HouseholdNamingSettingValidator() {
-	}
+    public HH_HouseholdNamingSettingValidator() {
+    }
 
     /*********************************************************************************************************
     * @description Validates Household Naming Settings
@@ -59,13 +59,13 @@ public with sharing class HH_HouseholdNamingSettingValidator {
     * @return Notification Contains reported validation errors
     */
 	public Notification validate(Household_Naming_Settings__c settings) {
-		Notification notification = new Notification();
+        Notification notification = new Notification();
 
-		HH_INaming hhNaming = validateImplementingClass(settings, notification);
+        HH_INaming hhNaming = validateImplementingClass(settings, notification);
 
-		validateFormatFields(settings, hhNaming, notification);
+        validateFormatFields(settings, hhNaming, notification);
 
-		return notification;
+        return notification;
 	}
 
     /*********************************************************************************************************
@@ -75,22 +75,22 @@ public with sharing class HH_HouseholdNamingSettingValidator {
     * @return HH_INaming An instance of a valid Implementing Class; null if the instance cannot be created.
     */
 	public HH_INaming validateImplementingClass(Household_Naming_Settings__c settings, Notification notification) {
-		String className = settings.Implementing_Class__c;  
+        String className = settings.Implementing_Class__c;  
         className = String.isBlank(className) ? 'HH_NameSpec' : className; 
 
         Type classType = Type.forName(className);
         if (classType == null) {   
-			notification.addError(Label.stgErrorInvalidClass);
-			return null;  
-		}
+        	notification.addError(Label.stgErrorInvalidClass);
+        	return null;  
+        }
 
-		Object classInstance = classType.newInstance();
-		if (classInstance instanceof HH_INaming) {
-			return (HH_INaming) classInstance;
-		} 
-		
-		notification.addError(Label.stgErrorINaming);
-		return null;  
+        Object classInstance = classType.newInstance();
+        if (classInstance instanceof HH_INaming) {
+        	return (HH_INaming) classInstance;
+        } 
+        
+        notification.addError(Label.stgErrorINaming);
+        return null;  
 	}
 
     /*********************************************************************************************************
@@ -100,21 +100,21 @@ public with sharing class HH_HouseholdNamingSettingValidator {
     * @param notification Contains reported validation errors
     * @return void
     */
-	private void validateFormatFields(Household_Naming_Settings__c settings, HH_INaming hhNaming, Notification notification) {
-		if (hhNaming == null) {
-			return;
-		}
+    private void validateFormatFields(Household_Naming_Settings__c settings, HH_INaming hhNaming, Notification notification) {
+        if (hhNaming == null) {
+        	return;
+        }
 
-		validateFormat('Household_Name_Format__c', settings, hhNaming, notification);
-		validateFormat('Formal_Greeting_Format__c', settings, hhNaming, notification);
-		validateFormat('Informal_Greeting_Format__c', settings, hhNaming, notification);
+        validateFormat('Household_Name_Format__c', settings, hhNaming, notification);
+        validateFormat('Formal_Greeting_Format__c', settings, hhNaming, notification);
+        validateFormat('Informal_Greeting_Format__c', settings, hhNaming, notification);
 
-		if (!notification.isSuccess()) {
-			//the rest of validation will run only if the format is correct
-			return; 
-		}
-		
-		validateContactFieldsApiName(hhNaming, notification);
+        if (!notification.isSuccess()) {
+        	//the rest of validation will run only if the format is correct
+        	return; 
+        }
+        
+        validateContactFieldsApiName(hhNaming, notification);
 	}
 
     /*********************************************************************************************************
@@ -125,17 +125,17 @@ public with sharing class HH_HouseholdNamingSettingValidator {
     * @param notification Contains reported validation errors
     * @return void
     */
-	private void validateFormat(
-		String fieldName, Household_Naming_Settings__c settings,
-		HH_INaming hhNaming, Notification notification
+    private void validateFormat(
+        String fieldName, Household_Naming_Settings__c settings,
+        HH_INaming hhNaming, Notification notification
 	) {
-		String fieldLabel = UTIL_Describe.getFieldLabel(
+        String fieldLabel = UTIL_Describe.getFieldLabel(
             UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), 
             UTIL_Namespace.StrTokenNSPrefix(fieldName)
         );
         
         try {
-			hhNaming.getExampleName(settings, fieldName, exampleContacts);
+            hhNaming.getExampleName(settings, fieldName, exampleContacts);
 
         } catch (Exception ex) {
             notification.addError(
@@ -150,8 +150,8 @@ public with sharing class HH_HouseholdNamingSettingValidator {
     * @param notification Contains reported validation errors
     * @return void
     */
-	private void validateContactFieldsApiName(HH_INaming hhNaming, Notification notification) {
-		Set<String> fieldApiNames = new Set<String>();
+    private void validateContactFieldsApiName(HH_INaming hhNaming, Notification notification) {
+        Set<String> fieldApiNames = new Set<String>();
         for (Schema.SObjectField field : Schema.SObjectType.Contact.fields.getMap().values()) {
             fieldApiNames.add(field.getDescribe().getName());
         }
@@ -171,78 +171,78 @@ public with sharing class HH_HouseholdNamingSettingValidator {
     * @description Builds list of example Contacts used to validate settings' format fields
     * @return Contact[]
     */
-	private static Contact[] buildExampleContacts() {
-		Account acc = new Account(
-			Name = 'Sample',
-			BillingCity = 'Seattle'
-		);
+    private static Contact[] buildExampleContacts() {
+        Account acc = new Account(
+            Name = 'Sample',
+            BillingCity = 'Seattle'
+        );
 
-		Contact c1 = new Contact();
-		c1.Account = acc;
-		c1.FirstName = 'Sam';
-		c1.LastName = 'Smith';
-		c1.Salutation = 'Dr.';
-		c1.MailingCity = 'Seattle';
+        Contact c1 = new Contact();
+        c1.Account = acc;
+        c1.FirstName = 'Sam';
+        c1.LastName = 'Smith';
+        c1.Salutation = 'Dr.';
+        c1.MailingCity = 'Seattle';
 
-		acc.npe01__One2OneContact__r = c1;
-		
-		Contact c2 = new Contact();
-		c2.Account = acc;
-		c2.FirstName = 'Sally';
-		c2.LastName = 'Smith';
-		c2.Salutation = 'Mrs.';
-		c2.MailingCity = 'Seattle';
-		
-		return new Contact[] { c1, c2 };
+        acc.npe01__One2OneContact__r = c1;
+        
+        Contact c2 = new Contact();
+        c2.Account = acc;
+        c2.FirstName = 'Sally';
+        c2.LastName = 'Smith';
+        c2.Salutation = 'Mrs.';
+        c2.MailingCity = 'Seattle';
+        
+        return new Contact[] { c1, c2 };
 	}
 
 	/*********************************************************************************************************
 	* @description Notification class containing Household Naming Settings validation errors 
 	*/
 	public class Notification {
-		/*********************************************************************************************************
-		* @description Contains validation errors 
-		*/
-		private String[] errors = new String[0];
-		
-		/*********************************************************************************************************
-		* @description Adds specified errors into the list of all errors
-		* @return Notification The instance of itself
-		*/
-		public Notification addErrors(String[] errors) {
-			if (errors != null) {
-				this.errors.addAll(errors);
-			}
+        /*********************************************************************************************************
+        * @description Contains validation errors 
+        */
+	    private String[] errors = new String[0];
+        
+        /*********************************************************************************************************
+        * @description Adds specified errors into the list of all errors
+        * @return Notification The instance of itself
+        */
+        public Notification addErrors(String[] errors) {
+        	if (errors != null) {
+                this.errors.addAll(errors);
+        	}
 
-			return this;
-		}
+        	return this;
+        }
 
-		/*********************************************************************************************************
-		* @description Adds specified error into the list of all errors
-		* @return Notification The instance of itself
-		*/
-		public Notification addError(String error) {
-			if (!String.isBlank(error)) {
-				errors.add(error);
-			}
+        /*********************************************************************************************************
+        * @description Adds specified error into the list of all errors
+        * @return Notification The instance of itself
+        */
+        public Notification addError(String error) {
+        	if (!String.isBlank(error)) {
+                errors.add(error);
+        	}
 
-			return this;
-		}
+        	return this;
+        }
 
-		/*********************************************************************************************************
-		* @description Returns errors
-		* @return String[] List of errors
-		*/
-		public String[] getErrors() {
-			return errors.clone();
-		}
+        /*********************************************************************************************************
+        * @description Returns errors
+        * @return String[] List of errors
+        */
+        public String[] getErrors() {
+            return errors.clone();
+        }
 
-		/*********************************************************************************************************
-		* @description Specifies if the Notification contains no error
-		* @return Boolean True if there are no errors, false otherwise
-		*/
-		public Boolean isSuccess() {
-			return errors.isEmpty();
-		}
+        /*********************************************************************************************************
+        * @description Specifies if the Notification contains no error
+        * @return Boolean True if there are no errors, false otherwise
+        */
+        public Boolean isSuccess() {
+            return errors.isEmpty();
+        }
 	}
 }

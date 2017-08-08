@@ -143,8 +143,8 @@ public without sharing class HH_HouseholdNaming {
         npo02__Households_Settings__c settings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
 
         return settings == null
-			? false
-			: settings.npo02__Advanced_Household_Naming__c == true;
+            ? false
+            : settings.npo02__Advanced_Household_Naming__c == true;
     }
 
     /*******************************************************************************************************
