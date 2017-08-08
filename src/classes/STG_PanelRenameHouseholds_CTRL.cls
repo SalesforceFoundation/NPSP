@@ -60,7 +60,7 @@ public with sharing class STG_PanelRenameHouseholds_CTRL extends STG_Panel {
         boolean isActivation = UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c == false;
 
         if (isActivation) {
-            if (!new STG_PanelHouseholds_CTRL().isValidHouseholdNamingSettings()) {
+            if (!new STG_PanelHouseholds_CTRL().isValidSettings()) {
                 return null;
             }
 

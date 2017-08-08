@@ -1339,8 +1339,8 @@
         <members>stgDocumentation</members>
         <members>stgDontAutoScheduleHelpText</members>
         <members>stgErrorINaming</members>
+        <members>stgErrorInvalidApiName</members>
         <members>stgErrorInvalidClass</members>
-        <members>stgErrorInvalidFieldApiName</members>
         <members>stgErrorInvalidNameFormat</members>
         <members>stgHHNameRefreshTitle</members>
         <members>stgHelpAccountModel</members>

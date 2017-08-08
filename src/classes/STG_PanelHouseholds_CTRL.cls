@@ -34,11 +34,6 @@
 * @description Controller for the Households panel.
 */
 public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
-
-    /*******************************************************************************************************
-    * @description Exception raised by the household panel.
-    */
-    public class STG_PanelHouseholdsException extends Exception {} 
     
     /*********************************************************************************************************
     * @description The panel's constructor 
@@ -59,87 +54,65 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
         return super.editSettings();
     }
 
-    public Boolean isValidHouseholdNamingSettings() {
-        if (STG_Panel.stgService.stgHH.npo02__Household_Rules__c != HH_Households.NO_HOUSEHOLDS_PROCESSOR &&
-           STG_Panel.stgService.stgCon.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR
-        ) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, system.Label.stgValidationHHAccountHHRules));
-            return false;
-        }
-
-        return isValidNameFormats();
-    }
-    
     /*********************************************************************************************************
-    * @description Returns whether the custom name formats are valid or not.
+    * @description Returns whether all relevant Settings fields are correct or not.
     * Adds an error Page Message for any errors.
     * @return boolean 
     */
-    public boolean isValidNameFormats() {
-        try {
-            validateFormat('Household_Name_Format__c');
-            validateFormat('Formal_Greeting_Format__c');
-            validateFormat('Informal_Greeting_Format__c');
-
-            validateHouseholdNamingContactFields();
-            
-            return true; 
-        } catch (Exception ex) {
-            ApexPages.addMessage(
-                new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage())
-            );
-            return false;           
-        }      
-    }
-
-    /*********************************************************************************************************
-    * @description Validates format of the specified Household Naming Settings field
-    * @param fieldName API name of the Household Naming Settings field
-    * @return void 
-    */
-    private void validateFormat(String fieldName) {
-        String fieldLabel = UTIL_Describe.getFieldLabel(
-            UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), 
-            UTIL_Namespace.StrTokenNSPrefix(fieldName)
-        );
-        
-        try {
-            strNameSpecExample(STG_Panel.stgService.stgHN, fieldName, 2); 
-
-        } catch (Exception ex) {
-            throw new STG_PanelHouseholdsException( 
-                String.format(label.stgErrorInvalidNameFormat, new String[]{ fieldLabel, ex.getMessage() })
-            );       
-        }  
-    }
-
-    /*********************************************************************************************************
-    * @description Validates a class implementing HH_Naming interface returns valid case sensitive field API Names
-    * @return void 
-    */
-    private void validateHouseholdNamingContactFields() {
-        Set<String> fieldApiNames = new Set<String>();
-        for (Schema.SObjectField field : Schema.SObjectType.Contact.fields.getMap().values()) {
-            fieldApiNames.add(field.getDescribe().getName());
+    public Boolean isValidSettings() {
+        if (STG_Panel.stgService.stgHH.npo02__Household_Rules__c != HH_Households.NO_HOUSEHOLDS_PROCESSOR &&
+           STG_Panel.stgService.stgCon.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR
+        ) {
+            addPageErrorMessage(system.Label.stgValidationHHAccountHHRules);
+            return false;
         }
 
-        Set<String> fieldNames = HH_HouseholdNaming.INaming.setHouseholdNameFieldsOnContact();
-        for (String fieldName : fieldNames) {
-            if (!fieldApiNames.contains(fieldName)) {
-                throw new STG_PanelHouseholdsException( 
-                    String.format(Label.stgErrorInvalidFieldApiName, new String[]{ fieldName })
-                );
+        return isValidHouseholdNamingSettings();
+    }
+    
+    /*********************************************************************************************************
+    * @description Returns whether the Household Naming Settings fields are correct or not.
+    * Adds an error Page Message for any errors.
+    * @return boolean 
+    */
+    private boolean isValidHouseholdNamingSettings() {
+        try {
+            HH_HouseholdNamingSettingValidator validator = new HH_HouseholdNamingSettingValidator();
+            HH_HouseholdNamingSettingValidator.Notification notification = validator.validate(STG_Panel.stgService.stgHN);
+
+            if (notification.isSuccess()) {
+                return true;
             }
-        }
+
+            // Display the first error only?
+            addPageErrorMessage(notification.getErrors()[0]);
+
+        } catch (Exception ex) {
+            addPageErrorMessage(ex.getMessage());
+        }  
+
+        return false;    
+    }
+
+    /*********************************************************************************************************
+    * @description Adds an error message to the page
+    * @param errorMessage Error message
+    * @return void 
+    */
+    private void addPageErrorMessage(String errorMessage) {
+        ApexPages.addMessage(
+            new ApexPages.Message(ApexPages.Severity.ERROR, errorMessage)
+        ); 
     }
 
     /*********************************************************************************************************
     * @description Action Method to save the current settings
-    * @return null 
+    * @return PageReference The returned PageReference is null 
     */
     public override PageReference saveSettings() {
-        if (!isValidHouseholdNamingSettings())
-            return null;        
+        if (!isValidSettings()) {
+            return null;  
+        }      
                 
         return super.saveSettings();
     }
@@ -293,33 +266,14 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
         list<Contact> listCon = new list<Contact>();
         for (integer i = 0; i < cContact && i < listConExamples.size(); i++)
             listCon.add(listConExamples[i]);
-            
-        // TO FIX? There is code duplication. Why don't we use HH_HouseholdNaming.iNaming 
-        // instead of determining the class and creating object every time this method is called?
-        /*
-        HH_INaming hhNaming = HH_HouseholdNaming.INaming;
-        if (hhNaming == null) {
-            return 'Implementing Class must exist and implement interface HH_INaming';//to create a custom label
-        }
 
-        return hhNaming.getExampleName(hns, strField, listCon);
-        */
+        HH_HouseholdNamingSettingValidator validator = new HH_HouseholdNamingSettingValidator();
+        HH_HouseholdNamingSettingValidator.Notification notification = new HH_HouseholdNamingSettingValidator.Notification();
+        HH_INaming hhNaming = validator.validateImplementingClass(hns, notification);
 
-        // call INaming interface dynamically  
-        string strClass = hns.Implementing_Class__c;  
-        if (strClass == null || strClass == '') strClass = 'HH_NameSpec';   
-        Type classType = Type.forName(strClass);
-        if (classType != null) {     
-            Object classInstance = classType.newInstance();
-            if (classInstance instanceof HH_INaming) {
-                HH_INaming n = (HH_INaming)classInstance;
-                return n.getExampleName(hns, strField, listCon);
-            } else {
-                return label.stgErrorINaming;
-            }
-        } else {
-            return label.stgErrorInvalidClass;
-        }
+        return notification.isSuccess()
+            ? hhNaming.getExampleName(hns, strField, listCon)
+            : notification.getErrors()[0];
     }    
 
     /**
