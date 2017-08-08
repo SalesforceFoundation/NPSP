@@ -58,7 +58,7 @@ public with sharing class HH_HouseholdNamingSettingValidator {
     * @param settings Household Naming Settings
     * @return Notification Contains reported validation errors
     */
-	public Notification validate(Household_Naming_Settings__c settings) {
+    public Notification validate(Household_Naming_Settings__c settings) {
         Notification notification = new Notification();
 
         HH_INaming hhNaming = validateImplementingClass(settings, notification);
@@ -66,7 +66,7 @@ public with sharing class HH_HouseholdNamingSettingValidator {
         validateFormatFields(settings, hhNaming, notification);
 
         return notification;
-	}
+    }
 
     /*********************************************************************************************************
     * @description Validates Household Naming Settings Implementing Class. Returns its instance if valid. 
@@ -74,24 +74,24 @@ public with sharing class HH_HouseholdNamingSettingValidator {
     * @param notification Contains reported validation errors
     * @return HH_INaming An instance of a valid Implementing Class; null if the instance cannot be created.
     */
-	public HH_INaming validateImplementingClass(Household_Naming_Settings__c settings, Notification notification) {
+    public HH_INaming validateImplementingClass(Household_Naming_Settings__c settings, Notification notification) {
         String className = settings.Implementing_Class__c;  
         className = String.isBlank(className) ? 'HH_NameSpec' : className; 
 
         Type classType = Type.forName(className);
         if (classType == null) {   
-        	notification.addError(Label.stgErrorInvalidClass);
-        	return null;  
+            notification.addError(Label.stgErrorInvalidClass);
+            return null;  
         }
 
         Object classInstance = classType.newInstance();
         if (classInstance instanceof HH_INaming) {
-        	return (HH_INaming) classInstance;
+            return (HH_INaming) classInstance;
         } 
         
         notification.addError(Label.stgErrorINaming);
         return null;  
-	}
+    }
 
     /*********************************************************************************************************
     * @description Validates Household Naming Settings format fields
@@ -102,7 +102,7 @@ public with sharing class HH_HouseholdNamingSettingValidator {
     */
     private void validateFormatFields(Household_Naming_Settings__c settings, HH_INaming hhNaming, Notification notification) {
         if (hhNaming == null) {
-        	return;
+            return;
         }
 
         validateFormat('Household_Name_Format__c', settings, hhNaming, notification);
@@ -110,12 +110,12 @@ public with sharing class HH_HouseholdNamingSettingValidator {
         validateFormat('Informal_Greeting_Format__c', settings, hhNaming, notification);
 
         if (!notification.isSuccess()) {
-        	//the rest of validation will run only if the format is correct
-        	return; 
+            //the rest of validation will run only if the format is correct
+            return; 
         }
         
         validateContactFieldsApiName(hhNaming, notification);
-	}
+    }
 
     /*********************************************************************************************************
     * @description Validates format of a field
@@ -128,7 +128,7 @@ public with sharing class HH_HouseholdNamingSettingValidator {
     private void validateFormat(
         String fieldName, Household_Naming_Settings__c settings,
         HH_INaming hhNaming, Notification notification
-	) {
+    ) {
         String fieldLabel = UTIL_Describe.getFieldLabel(
             UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), 
             UTIL_Namespace.StrTokenNSPrefix(fieldName)
@@ -142,7 +142,7 @@ public with sharing class HH_HouseholdNamingSettingValidator {
                 String.format(Label.stgErrorInvalidNameFormat, new String[]{ fieldLabel, ex.getMessage() })
             );       
         } 
-	} 
+    } 
 
     /*********************************************************************************************************
     * @description Validates whether Household Naming Settings format fields are correct case-sensitive API Names
@@ -165,7 +165,7 @@ public with sharing class HH_HouseholdNamingSettingValidator {
                 );
             }
         }
-	}
+    }
 
     /*********************************************************************************************************
     * @description Builds list of example Contacts used to validate settings' format fields
@@ -194,27 +194,27 @@ public with sharing class HH_HouseholdNamingSettingValidator {
         c2.MailingCity = 'Seattle';
         
         return new Contact[] { c1, c2 };
-	}
+    }
 
-	/*********************************************************************************************************
-	* @description Notification class containing Household Naming Settings validation errors 
-	*/
-	public class Notification {
+    /*********************************************************************************************************
+    * @description Notification class containing Household Naming Settings validation errors 
+    */
+    public class Notification {
         /*********************************************************************************************************
         * @description Contains validation errors 
         */
-	    private String[] errors = new String[0];
+        private String[] errors = new String[0];
         
         /*********************************************************************************************************
         * @description Adds specified errors into the list of all errors
         * @return Notification The instance of itself
         */
         public Notification addErrors(String[] errors) {
-        	if (errors != null) {
+            if (errors != null) {
                 this.errors.addAll(errors);
-        	}
+            }
 
-        	return this;
+            return this;
         }
 
         /*********************************************************************************************************
@@ -222,11 +222,11 @@ public with sharing class HH_HouseholdNamingSettingValidator {
         * @return Notification The instance of itself
         */
         public Notification addError(String error) {
-        	if (!String.isBlank(error)) {
+            if (!String.isBlank(error)) {
                 errors.add(error);
-        	}
+            }
 
-        	return this;
+            return this;
         }
 
         /*********************************************************************************************************
@@ -244,5 +244,5 @@ public with sharing class HH_HouseholdNamingSettingValidator {
         public Boolean isSuccess() {
             return errors.isEmpty();
         }
-	}
+    }
 }
