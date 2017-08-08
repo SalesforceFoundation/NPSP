@@ -11,7 +11,7 @@
         <fullName>Always_Use_Last_Day_Of_Month__c</fullName>
         <defaultValue>false</defaultValue>
         <externalId>false</externalId>
-        <inlineHelpText>When checked, all future donation installments will be set to the last day of the month, regardless of the actual date in the &quot;Next Donation Date&quot; field.</inlineHelpText>
+        <inlineHelpText>When checked, all future monthly or quarterly donation installments will be set to the last day of the month, regardless of the actual date in the &quot;Next Donation Date&quot; field. This is ignored when the installment period is not set to Monthly or Quarterly.</inlineHelpText>
         <label>Always use last day of month</label>
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>

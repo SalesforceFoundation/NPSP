@@ -86,6 +86,11 @@ public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
                      r.npe03__Open_Ended_Status__c != system.label.npe03.RecurringDonationClosedStatus)) {
                     r.addError(system.label.npe03.RecurringDonationTooManyInstallmentsError);
                 }            
+                // Reset this field to false if the installment period is not Monthly or Quarterly
+                if (r.Always_Use_Last_Day_Of_Month__c == true && r.npe03__Installment_Period__c != system.label.npe03.RecurringDonationInstallmentPeriodMonthly
+                        && r.npe03__Installment_Period__c != system.label.npe03.RecurringDonationInstallmentPeriodQuarterly) {
+                    r.Always_Use_Last_Day_Of_Month__c = false;
+                }
             } else if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
                 mapIdRDInserts.put(r.id, r);
             } else if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
