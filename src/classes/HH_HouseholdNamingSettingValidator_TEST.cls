@@ -51,54 +51,54 @@ private class HH_HouseholdNamingSettingValidator_TEST {
     /*********************************************************************************************************
     * @description Notification used to store and verify errors (if any) reported during validation
     */
-	private static HH_HouseholdNamingSettingValidator.Notification notification;
+    private static HH_HouseholdNamingSettingValidator.Notification notification;
     /*********************************************************************************************************
     * @description Validator used to validate Household Naming Settings
     */
-	private static HH_HouseholdNamingSettingValidator validator;
+    private static HH_HouseholdNamingSettingValidator validator;
 
 
     /*********************************************************************************************************
     * @description Static method to initialize variables before each unit test
     */
-	static {
-		validator = new HH_HouseholdNamingSettingValidator();
-		notification = new HH_HouseholdNamingSettingValidator.Notification();
-	}
-	
+    static {
+        validator = new HH_HouseholdNamingSettingValidator();
+        notification = new HH_HouseholdNamingSettingValidator.Notification();
+    }
+    
     /*********************************************************************************************************
     @description
         Test validation of Implementing Class when specified class does not exist
     verify:
         The notification contains an error
     **********************************************************************************************************/  
-	private static testMethod void validateImplementingClassShouldAddErrorWhenClassDoesNotExist() {
-		Household_Naming_Settings__c settings = setupHHNamingSettings();
+    private static testMethod void validateImplementingClassShouldAddErrorWhenClassDoesNotExist() {
+    Household_Naming_Settings__c settings = setupHHNamingSettings();
         settings.Implementing_Class__c = 'foo'; 
 
-		HH_INaming hhNaming = validator.validateImplementingClass(settings, notification);
+        HH_INaming hhNaming = validator.validateImplementingClass(settings, notification);
 
         System.assertEquals(null, hhNaming);
 
         assertError(Label.stgErrorInvalidClass, notification);
-	}
-	
+    }
+    
     /*********************************************************************************************************
     @description
         Test validation of Implementing Class when specified class does not implement INaming interface
     verify:
         The notification contains an error
     **********************************************************************************************************/  
-	private static testMethod void validateImplementingClassShouldAddErrorWhenClassDoesNotImplementINamingInterface() {
+    private static testMethod void validateImplementingClassShouldAddErrorWhenClassDoesNotImplementINamingInterface() {
         Household_Naming_Settings__c settings = setupHHNamingSettings();
         settings.Implementing_Class__c = 'HH_HouseholdNaming'; 
 
-		HH_INaming hhNaming = validator.validateImplementingClass(settings, notification);
+        HH_INaming hhNaming = validator.validateImplementingClass(settings, notification);
 
         System.assertEquals(null, hhNaming);
         
         assertError(Label.stgErrorINaming, notification);
-	}
+    }
 
     /*********************************************************************************************************
     @description
@@ -106,16 +106,16 @@ private class HH_HouseholdNamingSettingValidator_TEST {
     verify:
         The notification does not contain any error. Returned object is a HH_NameSpec instance.
     **********************************************************************************************************/  
-	private static testMethod void validateImplementingClassShouldNotAddErrorWhenClassIsNotSpecified() {
+    private static testMethod void validateImplementingClassShouldNotAddErrorWhenClassIsNotSpecified() {
         Household_Naming_Settings__c settings = setupHHNamingSettings();
         settings.Implementing_Class__c = null; 
 
-		HH_NameSpec hhNaming = (HH_NameSpec) validator.validateImplementingClass(settings, notification);
+        HH_NameSpec hhNaming = (HH_NameSpec) validator.validateImplementingClass(settings, notification);
 
         System.assertNotEquals(null, hhNaming);
 
         assertSuccess(notification);
-	}
+    }
 
     /*********************************************************************************************************
     @description
@@ -123,15 +123,15 @@ private class HH_HouseholdNamingSettingValidator_TEST {
     verify:
         The notification does not contain any error
     **********************************************************************************************************/  
-	private static testMethod void validateImplementingClassShouldNotAddErrorWhenClassImplementsINamingInterface() {
+    private static testMethod void validateImplementingClassShouldNotAddErrorWhenClassImplementsINamingInterface() {
         Household_Naming_Settings__c settings = setupHHNamingSettings(); 
 
         HH_INaming hhNaming = validator.validateImplementingClass(settings, notification);
 
         System.assertNotEquals(null, hhNaming);
-		
+    
         assertSuccess(notification);
-	}
+    }
 
     /*********************************************************************************************************
     @description
@@ -139,14 +139,14 @@ private class HH_HouseholdNamingSettingValidator_TEST {
     verify:
         The notification contains an error
     **********************************************************************************************************/  
-	private static testMethod void validateShouldAddErrorWhenHHNameFormatIsInvalid() {
+    private static testMethod void validateShouldAddErrorWhenHHNameFormatIsInvalid() {
         Household_Naming_Settings__c settings = setupHHNamingSettings();
         settings.Household_Name_Format__c = INVALID_HHNAME_FORMAT; 
 
-		notification = validator.validate(settings);
+        notification = validator.validate(settings);
 
         assertErrorContainsInvalidFieldMessage('Household_Name_Format__c', notification);
-	}
+    }
 
     /*********************************************************************************************************
     @description
@@ -154,14 +154,14 @@ private class HH_HouseholdNamingSettingValidator_TEST {
     verify:
         The notification contains an error
     **********************************************************************************************************/ 
-	private static testMethod void validateShouldAddErrorWhenFormalGreetingFormatIsInvalid() {
+    private static testMethod void validateShouldAddErrorWhenFormalGreetingFormatIsInvalid() {
         Household_Naming_Settings__c settings = setupHHNamingSettings();
         settings.Formal_Greeting_Format__c = INVALID_FORMAL_GREETING_FORMAT; 
 
-		notification = validator.validate(settings);
+        notification = validator.validate(settings);
 
         assertErrorContainsInvalidFieldMessage('Formal_Greeting_Format__c', notification);
-	}
+    }
 
     /*********************************************************************************************************
     @description
@@ -169,14 +169,14 @@ private class HH_HouseholdNamingSettingValidator_TEST {
     verify:
         The notification contains an error
     **********************************************************************************************************/ 
-	private static testMethod void validateShouldAddErrorWhenInformalGreetingFormatIsInvalid() {
+    private static testMethod void validateShouldAddErrorWhenInformalGreetingFormatIsInvalid() {
         Household_Naming_Settings__c settings = setupHHNamingSettings();
         settings.Informal_Greeting_Format__c = INVALID_INFORMAL_GREETING_FORMAT; 
 
-		notification = validator.validate(settings);
+        notification = validator.validate(settings);
 
         assertErrorContainsInvalidFieldMessage('Informal_Greeting_Format__c', notification);
-	}
+    }
 
     /*********************************************************************************************************
     @description
@@ -184,18 +184,18 @@ private class HH_HouseholdNamingSettingValidator_TEST {
     verify:
         The notification contains an error for each field that is not correct case-sensitive API Name
     **********************************************************************************************************/ 
-	private static testMethod void validateShouldAddErrorWhenContactFieldsApiNameIsInvalid() {
+    private static testMethod void validateShouldAddErrorWhenContactFieldsApiNameIsInvalid() {
         Household_Naming_Settings__c settings = setupHHNamingSettings();
         settings.Household_Name_Format__c = 'The {!lastname}, {!{!FirstName} {!npe01__workemail__c}} Family'; 
 
-		notification = validator.validate(settings);
+        notification = validator.validate(settings);
 
         String[] expectedErrors = new String[] {
             String.format(Label.stgErrorInvalidApiName, new String[]{ 'lastname' }),
             String.format(Label.stgErrorInvalidApiName, new String[]{ 'npe01__workemail__c' })
         };
         assertErrors(expectedErrors, notification); 
-	}
+    }
 
     /*********************************************************************************************************
     @description
@@ -203,14 +203,14 @@ private class HH_HouseholdNamingSettingValidator_TEST {
     verify:
         The notification does not contain any error
     **********************************************************************************************************/ 
-	private static testMethod void validateShouldNotAddErrorWhenAFormatFieldIsNull() {
+    private static testMethod void validateShouldNotAddErrorWhenAFormatFieldIsNull() {
         Household_Naming_Settings__c settings = setupHHNamingSettings();
         settings.Household_Name_Format__c = null;
 
-		notification = validator.validate(settings);
-		
+        notification = validator.validate(settings);
+    
         assertSuccess(notification);
-	}
+    }
 
     /*********************************************************************************************************
     @description
@@ -219,14 +219,14 @@ private class HH_HouseholdNamingSettingValidator_TEST {
     verify:
         The notification contains an error
     **********************************************************************************************************/ 
-	private static testMethod void validateShouldAddInvalidClassErrorWhenClassAndFormatFieldsAreInvalid() {
+    private static testMethod void validateShouldAddInvalidClassErrorWhenClassAndFormatFieldsAreInvalid() {
         Household_Naming_Settings__c settings = setupInvalidHHNamingSettings(); 
         settings.Implementing_Class__c = 'foo';
 
-		notification = validator.validate(settings);
+        notification = validator.validate(settings);
 
         assertError(Label.stgErrorInvalidClass, notification);
-	}
+    }
 
     /*********************************************************************************************************
     @description
@@ -234,18 +234,18 @@ private class HH_HouseholdNamingSettingValidator_TEST {
     verify:
         The notification contains errors for all format fields
     **********************************************************************************************************/ 
-	private static testMethod void validateShouldAddErrorsWhenAllThreeFormatFieldsAreInvalid() {
+    private static testMethod void validateShouldAddErrorsWhenAllThreeFormatFieldsAreInvalid() {
         Household_Naming_Settings__c settings = setupInvalidHHNamingSettings();
 
-		notification = validator.validate(settings);
+        notification = validator.validate(settings);
 
         System.assert(!notification.isSuccess());
 
-		String[] actualErrors = notification.getErrors();
+        String[] actualErrors = notification.getErrors();
 
         System.assertEquals(3, actualErrors.size(), actualErrors);
         System.assertEquals(3, new Set<String>(actualErrors).size());
-	}
+    }
 
     /*********************************************************************************************************
     @description
@@ -253,18 +253,18 @@ private class HH_HouseholdNamingSettingValidator_TEST {
     verify:
         The notification does not contain any error
     **********************************************************************************************************/ 
-	private static testMethod void validateShouldNotAddErrorWhenAllHHSettingsFieldsAreValid() {
+    private static testMethod void validateShouldNotAddErrorWhenAllHHSettingsFieldsAreValid() {
         Household_Naming_Settings__c settings = setupHHNamingSettings(); 
 
-		notification = validator.validate(settings);
+        notification = validator.validate(settings);
         
         assertSuccess(notification);
-	}
+    }
 
-	// Helpers
-	////////////
+    // Helpers
+    ////////////
 
-	/*********************************************************************************************************
+    /*********************************************************************************************************
     * @description Configures Household Naming Settings with invalid Name and Greetings formats
     * @return Household_Naming_Settings__c Household Naming Settings
     **********************************************************************************************************/
@@ -282,7 +282,7 @@ private class HH_HouseholdNamingSettingValidator_TEST {
     **********************************************************************************************************/
     private static Household_Naming_Settings__c setupHHNamingSettings() {
         return setupHHNamingSettings(            
-			'The {!LastName}, {!{!FirstName} {!npe01__WorkEmail__c}} Family',
+            'The {!LastName}, {!{!FirstName} {!npe01__WorkEmail__c}} Family',
             '{!{!Title} {!FirstName}}{!LastName}',
             '{!{!FirstName}}'
         );
@@ -316,8 +316,8 @@ private class HH_HouseholdNamingSettingValidator_TEST {
     **********************************************************************************************************/
     private static void assertSuccess(HH_HouseholdNamingSettingValidator.Notification n) {
         System.assert(n.isSuccess(), n.getErrors());
-		
-		System.assert(n.getErrors().isEmpty(), n.getErrors());
+    
+        System.assert(n.getErrors().isEmpty(), n.getErrors());
     }
 
     /*********************************************************************************************************
@@ -338,16 +338,16 @@ private class HH_HouseholdNamingSettingValidator_TEST {
     **********************************************************************************************************/
     private static void assertErrors(String[] expectedErrors, HH_HouseholdNamingSettingValidator.Notification n) {
         System.assert(!n.isSuccess());
-		
-		String[] actualErrors = n.getErrors();
+    
+        String[] actualErrors = n.getErrors();
 
-		System.assertEquals(expectedErrors.size(), actualErrors.size(), actualErrors);
+        System.assertEquals(expectedErrors.size(), actualErrors.size(), actualErrors);
 
         Set<String> expected = new Set<String>(expectedErrors);
         Set<String> actual = new Set<String>(actualErrors);
 
-		System.assertEquals(expected.size(), actual.size(), actual);
-		System.assert(expected.containsAll(actual), actual);
+        System.assertEquals(expected.size(), actual.size(), actual);
+        System.assert(expected.containsAll(actual), actual);
     }
 
     /*********************************************************************************************************
@@ -364,10 +364,10 @@ private class HH_HouseholdNamingSettingValidator_TEST {
 
         System.assert(!n.isSuccess());
 
-		String[] actualErrors = n.getErrors();
+        String[] actualErrors = n.getErrors();
 
         System.assertEquals(1, actualErrors.size(), actualErrors);
-		
+    
         for (String error : actualErrors) {
             if (error.contains(fieldLabel) && error.contains('Invalid field')) {
                 return;
