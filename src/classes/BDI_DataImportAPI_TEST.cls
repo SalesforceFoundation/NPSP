@@ -61,7 +61,9 @@ public with sharing class BDI_DataImportAPI_TEST {
         batch.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
         batch.Donation_Matching_Behavior__c = BDI_DataImport_API.BestMatchOrCreate;
-        batch.Process_with_Scheduled_Job__c = autoProcess;
+        if (autoProcess) {
+            batch.Import_Using_Scheduled_Job__c = 'To Be Imported';
+        }
         insert batch;
         return batch;
     }

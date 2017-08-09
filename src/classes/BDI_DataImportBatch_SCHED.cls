@@ -41,7 +41,7 @@ public without sharing class BDI_DataImportBatch_SCHED implements Schedulable {
     public void execute(SchedulableContext context) {
         try {
             // get the Id's of batches we should process
-            list<Id> listIdBatches = BDI_DataImportBatch_SEL.selectWithScheduledProcessing();
+            list<Id> listIdBatches = BDI_DataImportBatch_SEL.selectUsingScheduledProcessing();
 
             // if we found some, process via our api
             if (listIdBatches.size() > 0) {

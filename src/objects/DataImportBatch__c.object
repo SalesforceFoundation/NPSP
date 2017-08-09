@@ -201,14 +201,30 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Process_with_Scheduled_Job__c</fullName>
-        <defaultValue>false</defaultValue>
-        <description>When checked, the NPSP Data Import Batch will be automatically processed based on the schedule for the associated job.</description>
+        <fullName>Import_Using_Scheduled_Job__c</fullName>
+        <description>Controls whether the NPSP Data Import Batch will be automatically processed based on the schedule for the associated job.</description>
         <externalId>false</externalId>
-        <inlineHelpText>When checked, the NPSP Data Import Batch will be automatically processed based on the schedule for the associated job.</inlineHelpText>
-        <label>Process with Scheduled Job</label>
+        <inlineHelpText>Controls whether the NPSP Data Import Batch will be automatically processed based on the schedule for the associated job.</inlineHelpText>
+        <label>Import Using Scheduled Job</label>
+        <required>false</required>
         <trackTrending>false</trackTrending>
-        <type>Checkbox</type>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>To Be Imported</fullName>
+                    <default>false</default>
+                    <label>To Be Imported</label>
+                </value>
+                <value>
+                    <fullName>Imported</fullName>
+                    <default>false</default>
+                    <label>Imported</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
     </fields>
     <label>NPSP Data Import Batch</label>
     <nameField>

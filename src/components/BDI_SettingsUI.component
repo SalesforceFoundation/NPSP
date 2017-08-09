@@ -62,13 +62,13 @@
             <div class="slds-form-element">
                 <label class="slds-form-element__label">
                     <apex:outputLabel for="fldProcess">
-                            {!$ObjectType.DataImportBatch__c.Fields.Process_with_Scheduled_Job__c.Label}
+                            {!$ObjectType.DataImportBatch__c.Fields.Import_Using_Scheduled_Job__c.Label}
                     </apex:outputLabel>
                 </label>
-                <c:UTIL_Tooltip tooltip="{!$ObjectType.DataImportBatch__c.Fields.Process_with_Scheduled_Job__c.InlineHelpText}" />
+                <c:UTIL_Tooltip tooltip="{!$ObjectType.DataImportBatch__c.Fields.Import_Using_Scheduled_Job__c.InlineHelpText}" />
                 <div class="slds-form-element__control">
-                    <apex:inputField id="fldProcess" value="{!diBatch.Process_with_Scheduled_Job__c}" styleClass="slds-checkbox" rendered="{!isEditMode}" />
-                    <apex:outputField id="fldProcessRO" value="{!diBatch.Process_with_Scheduled_Job__c}" styleClass="slds-checkbox" rendered="{!isReadOnlyMode}"/>
+                    <apex:inputField id="fldProcess" value="{!diBatch.Import_Using_Scheduled_Job__c}" styleClass="slds-input" rendered="{!isEditMode}" />
+                    <apex:outputField id="fldProcessRO" value="{!diBatch.Import_Using_Scheduled_Job__c}" styleClass="slds-input" rendered="{!isReadOnlyMode}"/>
                 </div>
             </div>
         </apex:outputPanel>

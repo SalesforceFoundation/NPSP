@@ -53,7 +53,7 @@ public with sharing class BDI_DataImportBatch_SEL {
                     Donation_Matching_Implementing_Class__c,
                     Donation_Matching_Rule__c,
                     Donation_Date_Range__c,
-                    Process_with_Scheduled_Job__c
+                    Import_Using_Scheduled_Job__c
             FROM DataImportBatch__c
             WHERE Id in :setBatchId];
     }
@@ -73,25 +73,10 @@ public with sharing class BDI_DataImportBatch_SEL {
     * processing, and have DI records to import.
     * @return list<Id>
     */
-    public static list<Id> selectWithScheduledProcessing() {
-        List<Id> listIdBatches = new List<Id>();
-
-        for (DataImportBatch__c diBatch : [SELECT
-            Id,
-            (SELECT
-                Id
-                FROM NPSP_Data_Imports__r
-                WHERE Status__c != :Label.bdiImported LIMIT 1)
+    public static list<Id> selectUsingScheduledProcessing() {
+        Map<Id, DataImportBatch__c> mapIdToBatch = new Map<Id, DataImportBatch__c>([SELECT Id
             FROM DataImportBatch__c
-            WHERE Process_with_Scheduled_Job__c = TRUE]) {
-
-            // only include batches that have DI records to import
-            if (diBatch.NPSP_Data_Imports__r != null && diBatch.NPSP_Data_Imports__r.size() > 0) {
-                listIdBatches.add(diBatch.Id);
-            }
-        }
-
-        return listIdBatches;
+            WHERE Import_Using_Scheduled_Job__c = 'To Be Imported']);
+        return new List<Id>(mapIdToBatch.keySet());
     }
-
 }
