@@ -434,7 +434,6 @@ public class RD_RecurringDonations {
                                         
                     OppCloseDate = getNextDate(OppCloseDate, r);
 
-                    // TODO: Rewrite this to use the NPSP settings for Opportunity Naming
                     String oName = '';
                     oName += r.npe03__Donor_Name__c; 
                     oName += ' ';
