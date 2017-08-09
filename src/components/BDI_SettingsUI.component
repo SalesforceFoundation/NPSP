@@ -67,8 +67,8 @@
                 </label>
                 <c:UTIL_Tooltip tooltip="{!$ObjectType.DataImportBatch__c.Fields.Import_Using_Scheduled_Job__c.InlineHelpText}" />
                 <div class="slds-form-element__control">
-                    <apex:inputField id="fldProcess" value="{!diBatch.Import_Using_Scheduled_Job__c}" styleClass="slds-input" rendered="{!isEditMode}" />
-                    <apex:outputField id="fldProcessRO" value="{!diBatch.Import_Using_Scheduled_Job__c}" styleClass="slds-input" rendered="{!isReadOnlyMode}"/>
+                    <apex:inputField id="fldProcess" value="{!diBatch.Import_Using_Scheduled_Job__c}" styleClass="slds-select" rendered="{!isEditMode}" />
+                    <apex:outputField id="fldProcessRO" value="{!diBatch.Import_Using_Scheduled_Job__c}" styleClass="slds-select" rendered="{!isReadOnlyMode}"/>
                 </div>
             </div>
         </apex:outputPanel>
