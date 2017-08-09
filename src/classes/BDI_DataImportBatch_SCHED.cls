@@ -48,8 +48,10 @@ public without sharing class BDI_DataImportBatch_SCHED implements Schedulable {
 
                 // ensure we don't blow thru available soql limits, as we will
                 // issue one soql per batch to initialize it.
+                // also avoid async limits.
                 integer maxSOQL = limits.getLimitQueries() - limits.getQueries();
-                integer numTrim = listIDBatches.size() - maxSOQL;
+                integer maxAsync = limits.getLimitQueueableJobs() - limits.getQueueableJobs();
+                integer numTrim = listIDBatches.size() - math.min(maxAsync, maxSOQL);
 
                 if (numTrim > 0) {
                     for (integer i = listIDBatches.size()-1; numTrim > 0; i--) {
