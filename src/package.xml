@@ -296,6 +296,8 @@
         <members>UTIL_UnitTestData_TEST</members>
         <members>UTIL_Version_API</members>
         <members>UTIL_iSoqlListViewConsumer</members>
+        <members>BDI_DataImportBatch_SCHED</members>
+        <members>BDI_DataImportBatch_TEST</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -562,6 +564,7 @@
         <members>DataImportBatch__c.Donation_Matching_Behavior__c</members>
         <members>DataImportBatch__c.Donation_Matching_Implementing_Class__c</members>
         <members>DataImportBatch__c.Donation_Matching_Rule__c</members>
+        <members>DataImportBatch__c.Process_with_Scheduled_Job__c</members>
         <members>DataImport__c.Account1ImportStatus__c</members>
         <members>DataImport__c.Account1Imported__c</members>
         <members>DataImport__c.Account1_City__c</members>

@@ -41,7 +41,7 @@ public with sharing class BDI_DataImportAPI_TEST {
     /*********************************************************************************************************
     * @description utility to create a new DI record for the specified batch
     */
-    private static DataImport__c newDI(ID batchId, String firstname, String lastname) {
+    public static DataImport__c newDI(ID batchId, String firstname, String lastname) {
         return new DataImport__c(
             Contact1_Firstname__c = firstname,
             Contact1_Lastname__c = lastname,
@@ -53,7 +53,7 @@ public with sharing class BDI_DataImportAPI_TEST {
     /*********************************************************************************************************
     * @description utility to create & save a new DI batch
     */
-    private static DataImportBatch__c newBatch(String name) {
+    public static DataImportBatch__c newBatch(String name, boolean autoProcess) {
         DataImportBatch__c batch = new DataImportBatch__c();
         batch.Name = name;
         batch.Batch_Process_Size__c = 200;
@@ -61,6 +61,7 @@ public with sharing class BDI_DataImportAPI_TEST {
         batch.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
         batch.Donation_Matching_Behavior__c = BDI_DataImport_API.BestMatchOrCreate;
+        batch.Process_with_Scheduled_Job__c = autoProcess;
         insert batch;
         return batch;
     }
@@ -75,10 +76,10 @@ public with sharing class BDI_DataImportAPI_TEST {
     static testMethod void processNoBatch() {
         list<DataImport__c> listDI = new list<DataImport__c>();
 
-        DataImportBatch__c batch1 = newBatch('b1');
+        DataImportBatch__c batch1 = newBatch('b1', false);
         listDI.add(newDI(batch1.Id, 'c1', 'C1'));
 
-        DataImportBatch__c batch2 = newBatch('b2');
+        DataImportBatch__c batch2 = newBatch('b2', false);
         listDI.add(newDI(batch2.Id, 'c2', 'C2'));
 
         listDI.add(newDI(null, 'c3', 'C3'));
@@ -115,10 +116,10 @@ public with sharing class BDI_DataImportAPI_TEST {
     static testMethod void processSingleBatch() {
         list<DataImport__c> listDI = new list<DataImport__c>();
 
-        DataImportBatch__c batch1 = newBatch('b1');
+        DataImportBatch__c batch1 = newBatch('b1', false);
         listDI.add(newDI(batch1.Id, 'c1', 'C1'));
 
-        DataImportBatch__c batch2 = newBatch('b2');
+        DataImportBatch__c batch2 = newBatch('b2', false);
         listDI.add(newDI(batch2.Id, 'c2', 'C2'));
 
         listDI.add(newDI(null, 'c3', 'C3'));
@@ -155,10 +156,10 @@ public with sharing class BDI_DataImportAPI_TEST {
     static testMethod void processTwoBatches() {
         list<DataImport__c> listDI = new list<DataImport__c>();
 
-        DataImportBatch__c batch1 = newBatch('b1');
+        DataImportBatch__c batch1 = newBatch('b1', false);
         listDI.add(newDI(batch1.Id, 'c1', 'C1'));
 
-        DataImportBatch__c batch2 = newBatch('b2');
+        DataImportBatch__c batch2 = newBatch('b2', false);
         listDI.add(newDI(batch2.Id, 'c2', 'C2'));
 
         listDI.add(newDI(null, 'c3', 'C3'));
@@ -197,10 +198,10 @@ public with sharing class BDI_DataImportAPI_TEST {
     static testMethod void processErrorBatch() {
         list<DataImport__c> listDI = new list<DataImport__c>();
 
-        DataImportBatch__c batch1 = newBatch('b1');
+        DataImportBatch__c batch1 = newBatch('b1', false);
         listDI.add(newDI(batch1.Id, 'c1', 'C1'));
 
-        DataImportBatch__c batch2 = newBatch('b2');
+        DataImportBatch__c batch2 = newBatch('b2', false);
         listDI.add(newDI(batch2.Id, 'c2', 'C2'));
 
         listDI.add(newDI(null, 'c3', 'C3'));

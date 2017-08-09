@@ -61,7 +61,8 @@ public with sharing class BDI_BatchOverride_CTRL {
                 UTIL_Namespace.StrTokenNSPrefix('Donation_Date_Range__c'),
                 UTIL_Namespace.StrTokenNSPrefix('Donation_Matching_Behavior__c'),
                 UTIL_Namespace.StrTokenNSPrefix('Donation_Matching_Implementing_Class__c'),
-                UTIL_Namespace.StrTokenNSPrefix('Donation_Matching_Rule__c')
+                UTIL_Namespace.StrTokenNSPrefix('Donation_Matching_Rule__c'),
+                UTIL_Namespace.StrTokenNSPrefix('Process_with_Scheduled_Job__c')
             };
             controller.addFields(listFields);
         }

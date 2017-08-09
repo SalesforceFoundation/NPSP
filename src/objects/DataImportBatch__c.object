@@ -200,6 +200,16 @@
         <type>Text</type>
         <unique>false</unique>
     </fields>
+    <fields>
+        <fullName>Process_with_Scheduled_Job__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>When checked, the NPSP Data Import Batch will be automatically processed based on the schedule for the associated job.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>When checked, the NPSP Data Import Batch will be automatically processed based on the schedule for the associated job.</inlineHelpText>
+        <label>Process with Scheduled Job</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
     <label>NPSP Data Import Batch</label>
     <nameField>
         <label>Batch Name</label>

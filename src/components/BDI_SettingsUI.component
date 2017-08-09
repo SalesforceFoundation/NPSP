@@ -19,8 +19,7 @@
             <div class="slds-form-element">
                 <label class="slds-form-element__label">
                     <apex:outputLabel for="fldName">
-                        <apex:outputPanel rendered="{!isEditMode}" styleClass="required slds-required">*</apex:outputPanel>
-                        {!$ObjectType.DataImportBatch__c.Fields.Name.Label}
+                        <apex:outputPanel rendered="{!isEditMode}" styleClass="required slds-required">*</apex:outputPanel>{!$ObjectType.DataImportBatch__c.Fields.Name.Label}
                     </apex:outputLabel>
                 </label>
                 <c:UTIL_Tooltip tooltip="{!$ObjectType.DataImportBatch__c.Fields.Name.InlineHelpText}" />
@@ -48,8 +47,7 @@
             <div class="slds-form-element">
                 <label class="slds-form-element__label">
                     <apex:outputLabel for="fldBatch" >
-                        <apex:outputPanel rendered="{!isEditMode}" styleClass="required slds-required">*</apex:outputPanel>
-                        {!$ObjectType.DataImportBatch__c.Fields.Batch_Process_Size__c.Label}
+                        <apex:outputPanel rendered="{!isEditMode}" styleClass="required slds-required">*</apex:outputPanel>{!$ObjectType.DataImportBatch__c.Fields.Batch_Process_Size__c.Label}
                     </apex:outputLabel>
                 </label>
                 <c:UTIL_Tooltip tooltip="{!$ObjectType.DataImportBatch__c.Fields.Batch_Process_Size__c.InlineHelpText}" />
@@ -59,7 +57,22 @@
                 </div>
             </div>
         </div>
-        
+
+        <apex:outputPanel layout="block" styleClass="slds-form slds-form_stacked slds-m-left_large slds-p-top_x-small " rendered="{!isShowBatchOnlyFields}" >
+            <div class="slds-form-element">
+                <label class="slds-form-element__label">
+                    <apex:outputLabel for="fldProcess">
+                            {!$ObjectType.DataImportBatch__c.Fields.Process_with_Scheduled_Job__c.Label}
+                    </apex:outputLabel>
+                </label>
+                <c:UTIL_Tooltip tooltip="{!$ObjectType.DataImportBatch__c.Fields.Process_with_Scheduled_Job__c.InlineHelpText}" />
+                <div class="slds-form-element__control">
+                    <apex:inputField id="fldProcess" value="{!diBatch.Process_with_Scheduled_Job__c}" styleClass="slds-checkbox" rendered="{!isEditMode}" />
+                    <apex:outputField id="fldProcessRO" value="{!diBatch.Process_with_Scheduled_Job__c}" styleClass="slds-checkbox" rendered="{!isReadOnlyMode}"/>
+                </div>
+            </div>
+        </apex:outputPanel>
+
         <div class="slds-section slds-is-open slds-p-around_xx-small slds-theme_shade">
             <h2 class="slds-section__title slds-m-left_small ">
                 <span class="slds-truncate slds-p-horizontal_small" title="Section Title">{!$Label.bdiSettingsSectionContactMatching}</span>
@@ -70,8 +83,7 @@
             <div class="slds-form-element">
                 <label class="slds-form-element__label">
                     <apex:outputLabel for="fldConMatchRule" >
-                        <apex:outputPanel rendered="{!isEditMode}" styleClass="required slds-required">*</apex:outputPanel>
-                        {!$ObjectType.DataImportBatch__c.Fields.Contact_Matching_Rule__c.Label}
+                        <apex:outputPanel rendered="{!isEditMode}" styleClass="required slds-required">*</apex:outputPanel>{!$ObjectType.DataImportBatch__c.Fields.Contact_Matching_Rule__c.Label}
                     </apex:outputLabel>
                 </label>
                 <c:UTIL_Tooltip tooltip="{!$ObjectType.DataImportBatch__c.Fields.Contact_Matching_Rule__c.InlineHelpText}" />
@@ -131,8 +143,7 @@
             <div class="slds-form-element">
                 <label class="slds-form-element__label">
                     <apex:outputLabel for="fldDonationMatchRule" >
-                        <apex:outputPanel rendered="{!isEditMode}" styleClass="required slds-required">*</apex:outputPanel>
-                        {!$ObjectType.DataImportBatch__c.Fields.Donation_Matching_Rule__c.Label}
+                        <apex:outputPanel rendered="{!isEditMode}" styleClass="required slds-required">*</apex:outputPanel>{!$ObjectType.DataImportBatch__c.Fields.Donation_Matching_Rule__c.Label}
                     </apex:outputLabel>
                 </label>
                 <c:UTIL_Tooltip tooltip="{!$ObjectType.DataImportBatch__c.Fields.Donation_Matching_Rule__c.InlineHelpText}" />
@@ -140,12 +151,13 @@
                     <c:STG_DataBoundMultiSelect settingObject="{!diBatch}" fieldname="Donation_Matching_Rule__c" listSO="{!listSODonationFields}" inEditMode="{!isEditMode}" />
                 </div>
             </div>
+        </div>
 
+        <div class="slds-form slds-form_stacked slds-m-left_large slds-p-top_x-small slds-p-bottom_x-small">
             <div class="slds-form-element">
                 <label class="slds-form-element__label">
                     <apex:outputLabel for="fldDonationMatchBehavior" >
-                        <apex:outputPanel rendered="{!isEditMode}" styleClass="required slds-required">*</apex:outputPanel>
-                        {!$ObjectType.DataImportBatch__c.Fields.Donation_Matching_Behavior__c.Label}
+                        <apex:outputPanel rendered="{!isEditMode}" styleClass="required slds-required">*</apex:outputPanel>{!$ObjectType.DataImportBatch__c.Fields.Donation_Matching_Behavior__c.Label}
                     </apex:outputLabel>
                 </label>
                 <c:UTIL_Tooltip tooltip="{!$ObjectType.DataImportBatch__c.Fields.Donation_Matching_Behavior__c.InlineHelpText}" />
@@ -169,8 +181,7 @@
             <div class="slds-form-element">
                 <label class="slds-form-element__label">
                     <apex:outputLabel for="fldDonationDateRange" >
-                        <apex:outputPanel rendered="{!isEditMode}" styleClass="required slds-required">*</apex:outputPanel>
-                        {!$ObjectType.DataImportBatch__c.Fields.Donation_Date_Range__c.Label}
+                        <apex:outputPanel rendered="{!isEditMode}" styleClass="required slds-required">*</apex:outputPanel>{!$ObjectType.DataImportBatch__c.Fields.Donation_Date_Range__c.Label}
                     </apex:outputLabel>
                 </label>
                 <c:UTIL_Tooltip tooltip="{!$ObjectType.DataImportBatch__c.Fields.Donation_Date_Range__c.InlineHelpText}" />
