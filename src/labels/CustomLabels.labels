@@ -4100,7 +4100,7 @@ To view these jobs, search for Scheduled Jobs in Salesforce Setup.</value>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgErrorInvalidApiName</shortDescription>
-        <value>The field name {0} is not the correct case sensitive API Name</value>
+        <value>The naming format fields are case sensitive. The field, {0}, does not match the correct case of the API field name.</value>
     </labels>
     <labels>
         <fullName>stgHHNameRefreshTitle</fullName>

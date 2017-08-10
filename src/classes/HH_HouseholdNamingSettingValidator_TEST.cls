@@ -261,6 +261,48 @@ private class HH_HouseholdNamingSettingValidator_TEST {
         assertSuccess(notification);
     }
 
+    /*********************************************************************************************************
+    @description
+        Test isValidApiName() when a field is valid case sensitive API Name for the Sobject
+    verify:
+        The method returns true
+    **********************************************************************************************************/ 
+    private static testMethod void isValidApiNameShouldReturnTrueWhenFieldNameIsValid() {
+        Map<String, Schema.DescribeFieldResult> contactFieldResultsByName = validator.getFieldResultsByName(Contact.SObjectType);
+
+        for (String fieldName : new String[] {
+            'Name', 'FirstName', 'LastName',
+            'AccountId', 'Account.Id', 'Account.Name', 
+            'Account.BillingCity', 'Account.npe01__One2OneContact__c',
+            'Account.npe01__One2OneContact__r.LastName',
+            'OwnerId', 'Owner.Name'
+        }) {
+            System.assert(validator.isValidApiName(fieldName, contactFieldResultsByName), 'Expected valid field result: ' + fieldName);
+        }
+    }
+
+    /*********************************************************************************************************
+    @description
+        Test isValidApiName() when a field name is invalid case sensitive API Name for the Sobject
+    verify:
+        The method returns false
+    **********************************************************************************************************/ 
+    private static testMethod void isValidApiNameShouldReturnFalseWhenFieldNameIsInvalid() {
+        Map<String, Schema.DescribeFieldResult> contactFieldResultsByName = validator.getFieldResultsByName(Contact.SObjectType);
+
+        for (String fieldName : new String[] {
+            null, '', ' ',
+            'firstname', 'Firstname', 'FirstName__c',
+            'foo', 'Account.foo', 
+            'Account.npe01__One2OneContact__r.foo',
+            'Account.npe01__One2OneContact__r.',
+            'Account.npe01__One2OneContact__c.foo',
+            'Owner.foo'
+        }) {
+            System.assert(!validator.isValidApiName(fieldName, contactFieldResultsByName), 'Expected invalid field result: ' + fieldName);
+        }
+    }
+
     // Helpers
     ////////////
 

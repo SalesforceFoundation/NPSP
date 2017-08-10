@@ -151,21 +151,91 @@ public with sharing class HH_HouseholdNamingSettingValidator {
     * @return void
     */
     private void validateContactFieldsApiName(HH_INaming hhNaming, Notification notification) {
-        Set<String> fieldApiNames = new Set<String>();
-        for (Schema.SObjectField field : Schema.SObjectType.Contact.fields.getMap().values()) {
-            fieldApiNames.add(field.getDescribe().getName());
-        }
+		Map<String, Schema.DescribeFieldResult> contactFieldResultsByName = getFieldResultsByName(Contact.SObjectType);
+		Set<String> fieldNames = hhNaming.setHouseholdNameFieldsOnContact();
 
-        Set<String> fieldNames = hhNaming.setHouseholdNameFieldsOnContact();
-
-        for (String fieldName : fieldNames) {
-            if (!fieldApiNames.contains(fieldName)) {
-                notification.addError( 
+		for (String fieldName : fieldNames) {
+			if (!isValidApiName(fieldName, contactFieldResultsByName)) {
+				notification.addError( 
                     String.format(Label.stgErrorInvalidApiName, new String[]{ fieldName })
                 );
-            }
-        }
+			}
+		}
     }
+
+    /*********************************************************************************************************
+    * @description Validates if field name is a valid API Name for an Sobject 
+    * @param fieldName Field name
+    * @param fieldResultsByFieldName The Sobject's field results mapped by a field name or a relationship name
+    * @return Boolean
+    */
+	@TestVisible
+	private Boolean isValidApiName(String fieldName, Map<String, Schema.DescribeFieldResult> fieldResultsByFieldName) {
+		if (String.isBlank(fieldName)) {
+			return false;
+		}
+
+		if (fieldResultsByFieldName.keySet().contains(fieldName)) {
+			return true;
+		}
+
+		String[] nameParts = fieldName.split('\\.');
+		Boolean isReferenceField = nameParts.size() > 1;
+
+		if (!isReferenceField) { 
+			return false;
+		}
+		
+		String relationshipName = nameParts[0];
+
+		return isValidApiName(fieldName.substringAfter('.'), fieldResultsByFieldName.get(relationshipName));
+	}
+
+    /*********************************************************************************************************
+    * @description Validates if field name is a valid API Name for the referenced Sobject 
+    * @param fieldName Field name
+    * @param referenceFieldResult The reference (Lookup, M-D) field result
+    * @return Boolean
+    */
+	private Boolean isValidApiName(String fieldName, Schema.DescribeFieldResult referenceFieldResult) {
+		Schema.SObjectType[] references = referenceFieldResult == null 
+			? null 
+			: referenceFieldResult.getReferenceTo();
+
+		if (String.isBlank(fieldName) || references == null) { 
+			return false; 
+		}
+
+		for (Schema.SObjectType referenceTo : references) {
+			if (isValidApiName(fieldName, getFieldResultsByName(referenceTo))) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+	
+    /*********************************************************************************************************
+    * @description Returns Sobject field results mapped by a field name or a relationship name
+    * @param sobjectType Schema.SobjectType
+    * @return Map<String, Schema.DescribeFieldResult>
+    */
+	@TestVisible
+	private Map<String, Schema.DescribeFieldResult> getFieldResultsByName(Schema.SobjectType sobjectType) {
+		Map<String, Schema.DescribeFieldResult> fieldResults = new Map<String, Schema.DescribeFieldResult>();
+
+		for (Schema.SObjectField field : sobjectType.getDescribe().fields.getMap().values()) {
+			Schema.DescribeFieldResult fieldResult = field.getDescribe();
+
+			fieldResults.put(fieldResult.getName(), fieldResult);
+
+			if (String.isNotBlank(fieldResult.getRelationshipName())) {
+				fieldResults.put(fieldResult.getRelationshipName(), fieldResult);
+			}
+		}
+
+		return fieldResults;
+	}
 
     /*********************************************************************************************************
     * @description Builds list of example Contacts used to validate settings' format fields
