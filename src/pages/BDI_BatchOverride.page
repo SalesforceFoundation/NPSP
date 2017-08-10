@@ -1,0 +1,56 @@
+<apex:page standardController="DataImportBatch__c" extensions="BDI_BatchOverride_CTRL" showHeader="true" applyHtmlTag="true" applyBodyTag="true"
+    docType="html-5.0"
+    standardStylesheets="false"
+>
+    <!-- we need this html tag to get the SVG to work in visualforce.  but we also need the applyHtmlTag=true to allow showHeader=true.
+    one would think this wouldn't work, but somehow it is allowed and makes the SVG work! -->
+
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
+
+        <apex:slds />
+        <div class="slds-scope">
+        <apex:form id="idForm" html-novalidate="novalidate" >
+
+            <!-- PAGE HEADER -->
+            <div class="slds-page-header">
+                <div class="slds-grid">
+                    <div class="slds-col slds-has-flexi-truncate">
+                        <div class="slds-media slds-no-space slds-grow">
+                            <div class="slds-media__figure">
+                              <span class="slds-icon_container slds-icon-custom-custom18">
+                                <svg class="slds-icon" aria-hidden="true">
+                                  <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/custom-sprite/svg/symbols.svg#custom17')}" ></use>
+                                </svg>
+                              </span>
+                            </div>
+                            <div class="slds-media__body">
+                                <p class="slds-text-title_caps slds-line-height_reset">{!$ObjectType.DataImportBatch__c.Label}</p>
+                                <h1 class="slds-page-header__title slds-m-right_small slds-align-middle slds-truncate" title="{!diBatch.Name}">{!diBatch.Name}</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-no-flex slds-grid slds-align-top">
+                        <div class="slds-button-group" role="group">
+                            <apex:commandButton styleClass="slds-button slds-button--neutral" action="{!cancel}" value="{!$Label.stgBtnCancel}" immediate="true"/>
+                            <apex:commandButton styleClass="slds-button slds-button--brand" action="{!save}" value="{!$Label.stgBtnSave}" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /PAGE HEADER -->
+
+            <c:UTIL_PageMessages />
+
+            <!-- BODY -->
+            <div class="slds-grid slds-m-around--medium" >
+                <div class="slds-size--3-of-5">
+                    <c:BDI_SettingsUI bdiBatch="{!diBatch}" editMode="true" showBatchOnlyFields="true" />
+                </div>
+            </div>
+            <!-- /BODY -->
+
+        </apex:form>
+        </div>
+    </html>
+</apex:page>

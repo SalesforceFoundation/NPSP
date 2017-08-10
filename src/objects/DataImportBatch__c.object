@@ -10,7 +10,9 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>Clone</actionName>
-        <type>Default</type>
+        <content>BDI_BatchOverride</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
     </actionOverrides>
     <actionOverrides>
         <actionName>Delete</actionName>
@@ -18,7 +20,9 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>Edit</actionName>
-        <type>Default</type>
+        <content>BDI_BatchOverride</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
     </actionOverrides>
     <actionOverrides>
         <actionName>Follow</actionName>
@@ -30,7 +34,9 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>New</actionName>
-        <type>Default</type>
+        <content>BDI_BatchOverride</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
     </actionOverrides>
     <actionOverrides>
         <actionName>SaveEdit</actionName>
@@ -70,6 +76,7 @@
     <fields>
         <fullName>Batch_Description__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>An optional description about this batch.</inlineHelpText>
         <label>Batch Description</label>
         <length>32768</length>
         <trackTrending>false</trackTrending>
@@ -78,12 +85,13 @@
     </fields>
     <fields>
         <fullName>Batch_Process_Size__c</fullName>
+        <defaultValue>50</defaultValue>
         <description>The number of NPSP Data Import records to process at a time in each batch.</description>
         <externalId>false</externalId>
         <inlineHelpText>The number of NPSP Data Import records to process at a time in each batch.</inlineHelpText>
         <label>Batch Process Size</label>
         <precision>3</precision>
-        <required>false</required>
+        <required>true</required>
         <scale>0</scale>
         <trackTrending>false</trackTrending>
         <type>Number</type>
@@ -103,6 +111,7 @@
     </fields>
     <fields>
         <fullName>Contact_Matching_Rule__c</fullName>
+        <defaultValue>&quot;Firstname,Lastname,Email&quot;</defaultValue>
         <description>Specifies which rule to follow when trying to match Contacts in Data Import records against existing Contacts.</description>
         <externalId>false</externalId>
         <inlineHelpText>Specifies which rule to follow when trying to match Contacts in Data Import records against existing Contacts.</inlineHelpText>
@@ -129,6 +138,7 @@
     </fields>
     <fields>
         <fullName>Donation_Matching_Behavior__c</fullName>
+        <defaultValue>&quot;Do Not Match&quot;</defaultValue>
         <description>Defines how the Data Importer should handle matching Donations. You must choose a value.</description>
         <externalId>false</externalId>
         <inlineHelpText>Defines how the Data Importer should handle matching Donations. You must choose a value.</inlineHelpText>
@@ -179,6 +189,7 @@
     </fields>
     <fields>
         <fullName>Donation_Matching_Rule__c</fullName>
+        <defaultValue>&quot;npsp__Donation_Amount__c;npsp__Donation_Date&quot;</defaultValue>
         <description>Specifies which fields to match by when trying to match Donations in Data Import records against existing Opportunities and Payments. Control or Command click to select more than one field.</description>
         <externalId>false</externalId>
         <inlineHelpText>Specifies which fields to match by when trying to match Donations in Data Import records against existing Opportunities and Payments. Control or Command click to select more than one field.</inlineHelpText>
@@ -189,12 +200,62 @@
         <type>Text</type>
         <unique>false</unique>
     </fields>
+    <fields>
+        <fullName>Import_Using_Scheduled_Job__c</fullName>
+        <description>Controls whether the NPSP Data Import Batch will be automatically processed based on the schedule for the associated job.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Controls whether the NPSP Data Import Batch will be automatically processed based on the schedule for the associated job.</inlineHelpText>
+        <label>Import Using Scheduled Job</label>
+        <picklist>
+            <picklistValues>
+                <fullName>To Be Imported</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Imported</fullName>
+                <default>false</default>
+            </picklistValues>
+            <restrictedPicklist>true</restrictedPicklist>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
     <label>NPSP Data Import Batch</label>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>OBJECT_ID</columns>
+        <columns>NAME</columns>
+        <columns>LAST_UPDATE</columns>
+        <columns>Batch_Description__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+        <language>en_US</language>
+    </listViews>
     <nameField>
         <label>Batch Name</label>
         <type>Text</type>
     </nameField>
     <pluralLabel>NPSP Data Import Batches</pluralLabel>
-    <searchLayouts/>
+    <searchLayouts>
+        <lookupDialogsAdditionalFields>Batch_Description__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>UPDATEDBY_USER</lookupDialogsAdditionalFields>
+        <searchResultsAdditionalFields>Batch_Description__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>UPDATEDBY_USER</searchResultsAdditionalFields>
+    </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
+    <webLinks>
+        <fullName>Import_Batch</fullName>
+        <availability>online</availability>
+        <description>invoke the Data Importer on all records associated with this Batch</description>
+        <displayType>button</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <height>600</height>
+        <linkType>url</linkType>
+        <masterLabel>Import Batch</masterLabel>
+        <openType>sidebar</openType>
+        <protected>false</protected>
+        <url>/apex/npsp__BDI_DataImport?batchId={!DataImportBatch__c.Id}&amp;retURL={!URLFOR(&apos;/&apos; + DataImportBatch__c.Id)}</url>
+    </webLinks>
 </CustomObject>
