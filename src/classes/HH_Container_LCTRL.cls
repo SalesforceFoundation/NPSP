@@ -206,6 +206,7 @@ public with sharing class HH_Container_LCTRL {
     * @description returns a list of Contact Fields (developer name)
     * @return list<String> the list of Contact Fields
     */
+    @TestVisible
     private static list<String> getContactFields() {
         try {
             set<String> setContactFields = new Set<String>{
@@ -234,12 +235,15 @@ public with sharing class HH_Container_LCTRL {
                 'CreatedDate'
             };
 
+            addContactMiddleNameField(setContactFields);
+
                 /*** until we support these, we don't want them to interfere with what the user specifies.
                 if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled)
                     strSoql += ', MailingCountryCode, MailingStateCode ';
                 ******/
-
+            
             setContactFields.addAll(HH_HouseholdNaming.iNaming.setHouseholdNameFieldsOnContact());
+
             return new list<String>(setContactFields);
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
@@ -267,8 +271,22 @@ public with sharing class HH_Container_LCTRL {
             'MailingPostalCode', 
             'MailingCountry', 
             'MailingLatitude', 
-            'MailingLongitude'};        
+            'MailingLongitude'};
+
+        addContactMiddleNameField(setContactFields);
+
         return setContactFields;
+    }
+
+    /*******************************************************************************************************
+    * @description Adds MiddleName field into the set of field names
+    * @param fieldNames Set of field names 
+    * @return void
+    */
+    private static void addContactMiddleNameField(Set<String> fieldNames) {        
+        if (UTIL_Describe.isMiddleNameEnabled()) {
+            fieldNames.add('MiddleName');
+        }        
     }
 
     /*******************************************************************************************************
@@ -313,15 +331,15 @@ public with sharing class HH_Container_LCTRL {
                 UTIL_Describe.copyObjectFLS('Contact', con, con2, listStrFld);
                 // Due to the complexity of working in both the Household and Account Household models,
                 // we need to skip the security check on the Household field.
-                    con2.npo02__Household__c = con.npo02__Household__c;
+                con2.npo02__Household__c = con.npo02__Household__c;
                 if (con.Id != null) {
                     listUpdate.add(con2);
                 } else {
                     listInsert.add(con2);
                 }
             }
-            
 
+            
             // avoid saving of contacts from updating household names
             // to avoid record lock errors.  let the household be responsible
             // for updating its name.
@@ -340,27 +358,6 @@ public with sharing class HH_Container_LCTRL {
             throw new AuraHandledException(ex.getMessage());
         }
     }
-
-    /*******************************************************************************************************
-    * @description deletes the Contacts in the database
-    * @param listCon The list of Contacts to delete
-    * @return void
-    @AuraEnabled
-    public static void deleteContacts(list<Contact> listCon) {
-        try {
-            if (listCon.size() == 0)
-                return;
-            
-            // Check object permissions
-            if (!Contact.sObjectType.getDescribe().isDeletable()) {
-                throw new System.NoAccessException();    
-            }
-            delete listCon;
-        } catch (Exception ex) {
-            throw new AuraHandledException(ex.getMessage());
-        }
-    }
-    */
 
     /*******************************************************************************************************
     * @description saves any changes to the Household in the database
@@ -440,23 +437,62 @@ public with sharing class HH_Container_LCTRL {
     */
     @AuraEnabled
     public static void saveHouseholdPage(SObject hh, list<Contact> listCon, list<Contact> listConRemove, list<Account>listHHMerge) {
-
-        // save the Household
         updateHousehold(hh);
         
         // need to merge any households (Accounts only) before we save contacts
         // so we avoid deleting a household if that contact was the last one in the hh.
-        if (listHHMerge != null && listHHMerge.size() > 0) {
+        if (isNotEmpty(listHHMerge)) {
             mergeHouseholds((Account)hh, listHHMerge);
         }
+
+        List<Contact> contacts = new List<Contact>(listCon);
+        contacts.addAll(listConRemove);        
+        upsertContacts(contacts);  
         
-        // save the contacts
-        upsertContacts(listCon);
-        
-        // remove any contacts
-        upsertContacts(listConRemove);                
+        if (isNotEmpty(listHHMerge)) {
+            cleanupAddresses(new List<Id>{ (Id) hh.get('Id') });
+        }          
+    }    
+
+    /*******************************************************************************************************
+    * @description Checks if the Account list is not empty
+    * @param accounts The list of Accounts
+    * @return Boolean True is the list is not empty, false if the list is null or empty
+    */
+    private static Boolean isNotEmpty(List<Account> accounts) {
+        return accounts != null && !accounts.isEmpty();
     }
 
+    /*******************************************************************************************************
+    * @description Cleans up/refreshes the Addresses for specified Account Ids
+    * @param accountIds List of Account Ids
+    * @return void
+    */
+    private static void cleanupAddresses(List<Id> accountIds) {
+        Id[] cleanupAccountIds = new Id[0];       
+        
+        for (Account acc : [SELECT npe01__SYSTEM_AccountType__c FROM Account WHERE Id IN :accountIds]) {
+            if (isHouseholdOrOrganization(acc)) {
+                cleanupAccountIds.add(acc.Id);
+            }           
+        }
+
+        ADDR_Addresses_TDTM.cleanupAccountAddresses(cleanupAccountIds);
+    }
+
+    /*******************************************************************************************************
+    * @description Verifies the Account Type
+    * @param acc An Account
+    * @return Boolean True if the Account Type is Household Account or another type 
+    * except One-to-One Individual and Bucket Individual Account types
+    */
+    private static Boolean isHouseholdOrOrganization(Account acc) {
+        return acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE ||
+            (
+                acc.npe01__SYSTEM_AccountType__c != CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE &&
+                acc.npe01__SYSTEM_AccountType__c != CAO_Constants.BUCKET_ORGANIZATION_TYPE
+            );
+    } 
 
     /*******************************************************************************************************
     * @description sets the Household Name and Greetings on the Household object, given the list of Contacts

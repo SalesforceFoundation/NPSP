@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <help>תאריך אישור</help>
+        <label>תאריך אישור</label>
+        <name>Acknowledgment_Date__c</name>
+    </fields>
+    <fields>
+        <help>מצב האישור של תרומה זו.</help>
+        <label>מצב אישור</label>
+        <name>Acknowledgment_Status__c</name>
+        <picklistValues>
+            <masterLabel>Acknowledged</masterLabel>
+            <translation>אושר</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Do Not Acknowledge</masterLabel>
+            <translation>אל תאשר</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Email Acknowledgment Not Sent</masterLabel>
+            <translation>אישור בדואר אלקטרוני לא נשלח</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Email Acknowledgment Now</masterLabel>
+            <translation>שלח אישור בדואר אלקטרוני כעת</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>To Be Acknowledged</masterLabel>
+            <translation>לאישור</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>התאריך שבו התורם התבקש להעניק את התרומה, לעומת תאריך סגירת ההזדמנות שהארגון עשוי לקבוע כמועד היצירה הראשון של ההזדמנות, או כמועד הזכייה בהזדמנות.</help>
+        <label>תאריך בקשה</label>
+        <name>Ask_Date__c</name>
+    </fields>
+    <fields>
+        <label>אצווה</label>
+        <name>Batch__c</name>
+        <relationshipLabel>הזדמנויות</relationshipLabel>
+    </fields>
+    <fields>
+        <help>הערות המסבירות מדוע בקשת התרומה לא הניבה הצלחה.</help>
+        <label>סיבה לסגירה ללא זכייה</label>
+        <name>Closed_Lost_Reason__c</name>
+    </fields>
+    <fields>
+        <help>ערך השוק ההוגן של תרומה שוות-ערך.</help>
+        <label>ערך שוק הוגן</label>
+        <name>Fair_Market_Value__c</name>
+    </fields>
+    <fields>
+        <help>סיווג סוג הבקשה עבור הזדמנות זו.</help>
+        <label>אסטרטגיית תרומה</label>
+        <name>Gift_Strategy__c</name>
+        <picklistValues>
+            <masterLabel>New Donor</masterLabel>
+            <translation>תורם חדש</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Renewal</masterLabel>
+            <translation>חידוש</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Upgrade</masterLabel>
+            <translation>שדרוג</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>התאריך של יצירת המענק, בהתאם למסמך או החוזה שנשלח על-ידי הארגון הפילנתרופי.</help>
+        <label>תאריך חוזה מענק</label>
+        <name>Grant_Contract_Date__c</name>
+    </fields>
+    <fields>
+        <help>מעקב אחר מספרים ייחודיים שלעתים מוקצים על-ידי ארגונים פילנתרופיים.</help>
+        <label>מספר חוזה מענק</label>
+        <name>Grant_Contract_Number__c</name>
+    </fields>
+    <fields>
+        <label>תאריך סיום תקופת מענק</label>
+        <name>Grant_Period_End_Date__c</name>
+    </fields>
+    <fields>
+        <label>תאריך התחלת תקופת מענק</label>
+        <name>Grant_Period_Start_Date__c</name>
+    </fields>
+    <fields>
+        <help>מתאר את תחומי המימון של המענק. ניתן להזין כאן כל מידע שתבחר. לדוגמה, ניתן להזין את שם התוכנית שאליה קשור המענק.</help>
+        <label>תחומי התוכנית</label>
+        <name>Grant_Program_Area_s__c</name>
+    </fields>
+    <fields>
+        <help>כתובת URL המפנה אל דרישות לקבלת המענק באתר של יוצר המענק.</help>
+        <label>אתר אינטרנט עם דרישות המענק</label>
+        <name>Grant_Requirements_Website__c</name>
+    </fields>
+    <fields>
+        <help>רשומת איש הקשר הקיימת של מקבל ההוקרה עבור תרומה זו.</help>
+        <label>איש קשר של מקבל הוקרה</label>
+        <name>Honoree_Contact__c</name>
+        <relationshipLabel>הזדמנויות (איש קשר מקבל הוקרה)</relationshipLabel>
+    </fields>
+    <fields>
+        <help>שם מקבל ההוקרה שצוין על-ידי התורם. אם שדה זה ריק, ושדה איש הקשר של מקבל ההוקרה מכיל ערך, מערכת Salesforce תמלא את השדה בערך זה באופן אוטומטי.</help>
+        <label>שם מקבל הוקרה</label>
+        <name>Honoree_Name__c</name>
+    </fields>
+    <fields>
+        <help>כל טקסט עשיר המתאר את התרומה שוות-הערך, כולל תמונות.</help>
+        <label>תיאור תרומה שוות-ערך</label>
+        <name>In_Kind_Description__c</name>
+    </fields>
+    <fields>
+        <help>אפשרות זו מסומנת אם התורם סיפק את ערך השוק ההוגן של תרומה שוות-ערך זו.</help>
+        <label>ערך מוצהר על-ידי התורם</label>
+        <name>In_Kind_Donor_Declared_Value__c</name>
+    </fields>
+    <fields>
+        <help>הסוג של התרומה שוות-הערך.</help>
+        <label>סוג תרומה שוות-ערך</label>
+        <name>In_Kind_Type__c</name>
+        <picklistValues>
+            <masterLabel>Goods</masterLabel>
+            <translation>מוצרים</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Services</masterLabel>
+            <translation>שירותים</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>אם אפשרות זו מסומנת, היא מציינת שהמענק הוא חידוש של מענק קודם.</help>
+        <label>חידוש מענק</label>
+        <name>Is_Grant_Renewal__c</name>
+    </fields>
+    <fields>
+        <help><!-- The account of the company who will match this gift. --></help>
+        <label>חשבון השוואת תרומות</label>
+        <name>Matching_Gift_Account__c</name>
+        <relationshipLabel>תרומות שוות</relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The name of the company who will match this gift. --></help>
+        <label>מעסיק משווה תרומה</label>
+        <name>Matching_Gift_Employer__c</name>
+    </fields>
+    <fields>
+        <help><!-- The status of this gift being matched. --></help>
+        <label>מצב השוואת תרומה</label>
+        <name>Matching_Gift_Status__c</name>
+        <picklistValues>
+            <masterLabel>Potential</masterLabel>
+            <translation>פוטנציאלי</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Received</masterLabel>
+            <translation>התקבל</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Submitted</masterLabel>
+            <translation>נשלח</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- The employer&apos;s matching gift for this employee&apos;s gift. --></help>
+        <label>השוואת תרומה</label>
+        <name>Matching_Gift__c</name>
+        <relationshipLabel>תרומות שוות</relationshipLabel>
+    </fields>
+    <fields>
+        <help>NPSP מעדכנת שדה זה באופן אוטומטי בהתאם לרשומה הבאה של תאריך היעד למענק.</help>
+        <label>תאריך המענק הבא</label>
+        <name>Next_Grant_Deadline_Due_Date__c</name>
+    </fields>
+    <fields>
+        <help>הודעה מותאמת אישית עבור נמען ההודעות.</help>
+        <label>הודעת מידע</label>
+        <name>Notification_Message__c</name>
+    </fields>
+    <fields>
+        <help>כיצד צריך ליידע את נמען ההודעות.</help>
+        <label>העדפת הודעה</label>
+        <name>Notification_Preference__c</name>
+        <picklistValues>
+            <masterLabel>Do Not Notify</masterLabel>
+            <translation>אל תודיע</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Email</masterLabel>
+            <translation>דואר אלקטרוני</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Phone</masterLabel>
+            <translation>טלפון</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Postal Mail</masterLabel>
+            <translation>כתובת למשלוח דואר</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>רשומת איש הקשר הקיימת של האדם שיש ליידע בנוגע לתרומה זו.</help>
+        <label>איש קשר של נמען הודעה</label>
+        <name>Notification_Recipient_Contact__c</name>
+        <relationshipLabel>הזדמנויות (נמען הודעות)</relationshipLabel>
+    </fields>
+    <fields>
+        <help>פרטי ההתקשרות (כפי שסופקו על-ידי התורם) של נמען ההודעות.</help>
+        <label>פרטי נמען הודעות</label>
+        <name>Notification_Recipient_Information__c</name>
+    </fields>
+    <fields>
+        <help>השם (כפי שסופק על-ידי התורם) של האדם שיש ליידע בנוגע לתרומה זו. אם שדה זה ריק, ושדה איש הקשר של נמען ההודעות מכיל ערך, מערכת Salesforce תמלא את השדה בערך זה באופן אוטומטי.</help>
+        <label>שם נמען הודעות</label>
+        <name>Notification_Recipient_Name__c</name>
+    </fields>
+    <fields>
+        <help>אם מענק זה הוא חידוש של מענק קודם, השתמש בשדה זה לקישור בין רשומה זו והרשומה הקודמת.</help>
+        <label>מענק/תרומה קודמת</label>
+        <name>Previous_Grant_Opportunity__c</name>
+        <relationshipLabel>מענקים/תרומות קשורים</relationshipLabel>
+    </fields>
+    <fields>
+        <help>המצב שבו יש להשתמש בעת יצירה של חבר במבצע עבור איש הקשר הראשי ומקור המבצע הראשי של הזדמנות זו. השאר ריק כדי להשתמש כברירת מחדל במצב של תגובה עבור הזדמנויות סגורות/זכייה, ובמצב של ללא תגובה עבור הזדמנויות אחרות.</help>
+        <label>מצב חבר במבצע של איש קשר ראשי</label>
+        <name>Primary_Contact_Campaign_Member_Status__c</name>
+    </fields>
+    <fields>
+        <help>איש הקשר הראשי עבור הזדמנות זו. תפקיד איש הקשר הראשי נשמר מסונכרן עם שדה זה. עבור תרומות אישיות, הדבר מונע שיוך עבור הזדמנות זו.</help>
+        <label>איש קשר ראשי</label>
+        <name>Primary_Contact__c</name>
+        <relationshipLabel>הזדמנויות</relationshipLabel>
+    </fields>
+    <fields>
+        <help>התאריך שבו התורם זוהה כזכאי לתרומה זו.</help>
+        <label>תאריך זכאות</label>
+        <name>Qualified_Date__c</name>
+    </fields>
+    <fields>
+        <help>שם תשלום להכללה במתן השם להזדמנות. מציג את מספר התשלום במירכאות עבור תרומות חוזרות עם סיום פתוח, או את מספר התשלום מתוך הסה&quot;כ עבור תרומות חוזרות שהוגדר עבורן מספר תשלומים.</help>
+        <label>שם תשלום תרומה חוזרת</label>
+        <name>Recurring_Donation_Installment_Name__c</name>
+    </fields>
+    <fields>
+        <help>מספר התשלום בלוח הזמנים של התרומה החוזרת בהזדמנות זו.</help>
+        <label>מספר תשלום תרומה חוזרת</label>
+        <name>Recurring_Donation_Installment_Number__c</name>
+    </fields>
+    <fields>
+        <help>הסכום שאתה מבקש. המספר עשוי להיות שונה מהסכום הסופי שיוענק.</help>
+        <label>סכום מבוקש</label>
+        <name>Requested_Amount__c</name>
+    </fields>
+    <fields>
+        <help>מציין אם התרומה היא בהוקרה או לזכרו של אדם.</help>
+        <label>סוג הוקרה</label>
+        <name>Tribute_Type__c</name>
+        <picklistValues>
+            <masterLabel>Honor</masterLabel>
+            <translation>הוקרה</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Memorial</masterLabel>
+            <translation>זיכרון</translation>
+        </picklistValues>
+    </fields>
+    <layouts>
+        <layout>Donation Layout</layout>
+        <sections>
+            <label>פרטי תרומה</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label><!-- Matching Gift Information --></label>
+            <section>Matching Gift Information</section>
+        </sections>
+        <sections>
+            <label>פרטי תשלום</label>
+            <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label><!-- Tribute Information --></label>
+            <section>Tribute Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Grant Layout</layout>
+        <sections>
+            <label>פרטי תרומה</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>פרטי מענק</label>
+            <section>Grant Information</section>
+        </sections>
+        <sections>
+            <label>פרטי תשלום</label>
+            <section>Payment Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>In-Kind Gift Layout</layout>
+        <sections>
+            <label>פרטי תרומה</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>פרטי שווה-ערך</label>
+            <section>In-Kind Information</section>
+        </sections>
+        <sections>
+            <label>פרטי הוקרה</label>
+            <section>Tribute Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Major Gift Layout</layout>
+        <sections>
+            <label>פרטי תרומה</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>פרטי תרומה גדולה</label>
+            <section>Major Gift Information</section>
+        </sections>
+        <sections>
+            <label><!-- Matching Gift Information --></label>
+            <section>Matching Gift Information</section>
+        </sections>
+        <sections>
+            <label>פרטי תשלום</label>
+            <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label><!-- Tribute Information --></label>
+            <section>Tribute Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Matching Gift Layout</layout>
+        <sections>
+            <label>פרטי תרומה</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>פרטי תשלום</label>
+            <section>Payment Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Membership Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>שדות</label>
+            <section>Fields</section>
+        </sections>
+        <sections>
+            <label>פרטי חבר</label>
+            <section>Member Information</section>
+        </sections>
+        <sections>
+            <label>פרטי תשלום</label>
+            <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label><!-- System Information --></label>
+            <section>System Information</section>
+        </sections>
+    </layouts>
+    <quickActions>
+        <label>תשלום חדש</label>
+        <name>New_Payment</name>
+    </quickActions>
+    <quickActions>
+        <label>עדכון מהיר</label>
+        <name>Quick_Update</name>
+    </quickActions>
+    <webLinks>
+        <label>שלח אישור בדואר אלקטרוני</label>
+        <name>Email_Acknowledgment</name>
+    </webLinks>
+    <webLinks>
+        <label>שלח אישורים בדואר אלקטרוני</label>
+        <name>Email_Acknowledgments</name>
+    </webLinks>
+    <webLinks>
+        <label>חיפוש תרומות שוות</label>
+        <name>Find_Matched_Gifts</name>
+    </webLinks>
+    <webLinks>
+        <label>נהל קרדיט</label>
+        <name>Manage_Soft_Credits</name>
+    </webLinks>
+    <webLinks>
+        <label>רענן שם</label>
+        <name>Refresh_Name</name>
+    </webLinks>
+</CustomObjectTranslation>

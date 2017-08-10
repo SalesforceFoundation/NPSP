@@ -32,7 +32,7 @@
         <description>The number of NPSP Data Import records to process in each batch.</description>
         <externalId>false</externalId>
         <inlineHelpText>The number of NPSP Data Import records to process in each batch.</inlineHelpText>
-        <label>Batch Size</label>
+        <label>Batch Process Size</label>
         <precision>3</precision>
         <required>false</required>
         <scale>0</scale>
@@ -58,6 +58,57 @@
         <externalId>false</externalId>
         <inlineHelpText>Specifies which rule to follow when trying to match Contacts in Data Import records against existing Contacts.</inlineHelpText>
         <label>Contact Matching Rule</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Donation_Date_Range__c</fullName>
+        <defaultValue>0</defaultValue>
+        <description>Enter the number of days from the Donation Date that the Data Importer should consider when looking for a matching Opportunity or Payment. The Data Importer will choose the matching Opportunity or Payment whose date falls within the number of days AND is closest to the Donation Date.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Enter the number of days from the Donation Date to consider when looking for a matching Opportunity or Payment. The Data Importer will choose the matching Opp or Payment whose date falls within the number of days AND is closest to the Donation Date.</inlineHelpText>
+        <label>Number of Days from Donation Date</label>
+        <precision>2</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Donation_Matching_Behavior__c</fullName>
+        <defaultValue>&quot;DoNotMatch&quot;</defaultValue>
+        <description>Defines how the Data Importer should handle matching Donations.  Must be one of the following values: DoNotMatch, RequireNoMatch, RequireExactMatch, ExactMatchOrCreate, RequireBestMatch, BestMatchOrCreate.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Defines how the Data Importer should handle matching Donations. You must choose a value.</inlineHelpText>
+        <label>Donation Matching Behavior</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Donation_Matching_Implementing_Class__c</fullName>
+        <description>The full developer name of an Apex class that implements the BDI_IMatching interface for Donations.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The developer name of an Apex class that implements the BDI_IMatching interface for Donations. Leave blank to let NPSP handle matching.</inlineHelpText>
+        <label>Donation Matching Implementing Class</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Donation_Matching_Rule__c</fullName>
+        <description>Specifies which fields to match by when trying to match Donations in Data Import records against existing Opportunities and Payments.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Specifies which fields to match by when trying to match Donations in Data Import records against existing Opportunities and Payments. Control or Command click to select more than one field.</inlineHelpText>
+        <label>Donation Matching Rule</label>
         <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>

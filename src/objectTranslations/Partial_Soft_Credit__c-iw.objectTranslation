@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <article>None</article>
+        <plural>false</plural>
+        <value><!-- Partial Soft Credit --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>false</plural>
+        <value><!-- הPartial Soft Credit --></value>
+    </caseValues>
+    <caseValues>
+        <article>None</article>
+        <plural>true</plural>
+        <value><!-- Partial Soft Credit --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>true</plural>
+        <value><!-- הPartial Soft Credit --></value>
+    </caseValues>
+    <fields>
+        <help>הסכום שעבורו יוענק קרדיט.</help>
+        <label>כמות</label>
+        <name>Amount__c</name>
+    </fields>
+    <fields>
+        <help>השם המלא של איש הקשר.</help>
+        <label>שם איש קשר</label>
+        <name>Contact_Name__c</name>
+    </fields>
+    <fields>
+        <help>OpportunityContactRole שעליו יחול קרדיט זה.</help>
+        <label>מזהה תפקיד איש קשר</label>
+        <name>Contact_Role_ID__c</name>
+    </fields>
+    <fields>
+        <help>אישר הקשר שיקבל את הקרדיט.</help>
+        <label>איש קשר</label>
+        <name>Contact__c</name>
+        <relationshipLabel>קרדיט חלקי</relationshipLabel>
+    </fields>
+    <fields>
+        <help>ההזדמנות שעליה יחול קרדיט זה.</help>
+        <label>הזדמנות</label>
+        <name>Opportunity__c</name>
+        <relationshipLabel>קרדיט חלקי</relationshipLabel>
+    </fields>
+    <fields>
+        <help>התפקיד של קרדיט זה.</help>
+        <label>שם תפקיד</label>
+        <name>Role_Name__c</name>
+    </fields>
+    <gender><!-- Masculine --></gender>
+    <layouts>
+        <layout>Partial Soft Credit Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Partial Soft Credit Name --></nameFieldLabel>
+    <webLinks>
+        <label>נהל קרדיט</label>
+        <name>Manage_Soft_Credits</name>
+    </webLinks>
+</CustomObjectTranslation>

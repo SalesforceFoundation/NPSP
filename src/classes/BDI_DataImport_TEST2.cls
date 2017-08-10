@@ -136,91 +136,22 @@ private with sharing class BDI_DataImport_TEST2 {
         // instantiate the controller
         BDI_DataImport_CTRL ctrl = new BDI_DataImport_CTRL();
         
-        ctrl.diSettings.Account_Custom_Unique_ID__c = 'Name';
+        ctrl.diSettings.Contact_Custom_Unique_ID__c = 'bad field';
         ctrl.importData();
         system.assertEquals(false, ctrl.batchRunning);
         
-        ctrl.diSettings.Account_Custom_Unique_ID__c = null;
-        ctrl.diSettings.Account_Custom_Unique_ID__c = 'Lastname';        
+        ctrl.diSettings.Account_Custom_Unique_ID__c = 'another bad field';
+        ctrl.importData();
+        system.assertEquals(false, ctrl.batchRunning);
+        
+        ctrl.diSettings.Donation_Matching_Rule__c = BDI_DataImport_API.RequireExactMatch;
+        ctrl.diSettings.Donation_Matching_Behavior__c = null;
         ctrl.importData();
         system.assertEquals(false, ctrl.batchRunning);
         
         Test.stopTest();
     }
-
-   /*********************************************************************************************************
-    * @description operation: 
-    *    test the Delete All Data Import Records button 
-    * verify: 
-    *    all records deleted
-    **********************************************************************************************************/            
-    static testMethod void TestDeleteAllDIRecordsBtn() {
-        if (strTestOnly != '*' && strTestOnly != 'TestDeleteAllDIRecordsBtn') return;
-            
-        list<DataImport__c> listDI = new list<DataImport__c>();
-        listDI.add(BDI_DataImport_TEST.newDI('c1', 'C1', 'c2', 'C2'));
-        listDI.add(BDI_DataImport_TEST.newDI('c3', 'C3', 'c4', 'C4'));
-        listDI.add(BDI_DataImport_TEST.newDI('c3', 'C3', 'c4', 'C4'));
-        listDI.add(BDI_DataImport_TEST.newDI('c3', 'C3', 'c4', 'C4'));
-        listDI[0].Status__c = label.bdiImported;
-        listDI[1].Status__c = label.bdiFailed;
-        insert listDI;
-        
-        Test.startTest();
-
-        // create the page 
-        Test.setCurrentPage(Page.BDI_DataImport); 
-
-        // instantiate the controller
-        BDI_DataImport_CTRL ctrl = new BDI_DataImport_CTRL();
-
-        // call the deleteAll method
-        ctrl.deleteAllDIRecords();
-        Test.stopTest();
-
-        // verify results
-        listDI = [select Id, Status__c from DataImport__c];
-        system.assertEquals(0, listDI.size());
-    }
-
-   /*********************************************************************************************************
-    * @description operation: 
-    *    test the Delete Imported Data Import Records button 
-    * verify: 
-    *    all records deleted
-    **********************************************************************************************************/            
-    static testMethod void TestDeleteImportedDIRecordsBtn() {
-        if (strTestOnly != '*' && strTestOnly != 'TestDeleteImportedDIRecordsBtn') return;
-            
-        list<DataImport__c> listDI = new list<DataImport__c>();
-        listDI.add(BDI_DataImport_TEST.newDI('c1', 'C1', 'c2', 'C2'));
-        listDI.add(BDI_DataImport_TEST.newDI('c3', 'C3', 'c4', 'C4'));
-        listDI.add(BDI_DataImport_TEST.newDI('c3', 'C3', 'c4', 'C4'));
-        listDI.add(BDI_DataImport_TEST.newDI('c3', 'C3', 'c4', 'C4'));
-        listDI[0].Status__c = label.bdiImported;
-        listDI[1].Status__c = label.bdiFailed;
-        listDI[3].Status__c = label.bdiImported;
-        insert listDI;
-        
-        Test.startTest();
-
-        // create the page 
-        Test.setCurrentPage(Page.BDI_DataImport); 
-
-        // instantiate the controller
-        BDI_DataImport_CTRL ctrl = new BDI_DataImport_CTRL();
-
-        // call the deleteAll method
-        ctrl.deleteImportedDIRecords();
-        Test.stopTest();
-
-        // verify results
-        listDI = [select Id, Status__c from DataImport__c order by Status__c];
-        system.assertEquals(2, listDI.size());
-        system.assertEquals(null, listDI[0].Status__c);
-        system.assertEquals(label.bdiFailed, listDI[1].Status__c);
-    }
-
+    
     /*********************************************************************************************************
     * @description operation: 
     *    import matching contacts within multiple di records in the same batch, using different email fields 
@@ -1708,7 +1639,13 @@ private with sharing class BDI_DataImport_TEST2 {
           
         //run batch data import
         Test.StartTest();
-        system.assertEquals(null, BDI_DataImport_API.importData());
+        try {
+            BDI_DataImport_API.importData();
+            system.assert(false, 'importData should have thrown exception');
+        } catch (exception ex) {
+            system.assert(ex.getMessage().contains('Household Account model'));
+        }
         Test.stopTest();
     }
+    
 }

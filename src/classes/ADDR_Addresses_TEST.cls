@@ -1183,6 +1183,123 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
+        Add an existing Contact to a Household. 
+        Pre-populate the Contact's address with the Household Address
+        in the same way Manage Household pre-populates Contact's Mailing Address with Account's Billing Address.  
+    verify:
+        The Contact's current Address is equal to the new Household Address.
+        Contact's "Primary Address Type" is the same as the Address' "Address Type".
+    **********************************************************************************************************/        
+    static testMethod void addExistingContactToNewHouseholdShouldSyncPrimaryAddressTypeWithAddressType() {
+        if (strTestOnly != '*' && strTestOnly != 'addExistingContactToNewHouseholdShouldSyncPrimaryAddressTypeWithAddressType') return;
+        
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                Simple_Address_Change_Treated_as_Update__c = true
+            )
+        );
+
+        Integer hhSize = 1;
+        Integer contactSize = 1; 
+        createHHTestData(hhSize, contactSize);
+
+        Account account = new Account(Name = 'AccountWithoutAddress');
+        insert account;
+        Contact contact = new Contact(LastName = 'TestPrimaryAddressTypeExistingContact', AccountId = account.Id);
+        insert contact;
+
+        Test.startTest();
+
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+
+        contact.accountId = listAccT[0].Id;
+        populateContactAddress(contact, listAddrT[0]);
+        update contact;
+
+        Test.stopTest();
+
+        Map<Id, Address__c[]> addressesByHh = getAddressesByHousehold();
+        System.assertEquals(hhSize, addressesByHh.size());
+
+        for (Address__c addr : listAddrT) {
+            Address__c[] addresses = addressesByHh.get(addr.Household_Account__c);
+            System.assert(addresses != null && addresses.size() == 1, addresses);
+
+            assertEquals(addr, addresses[0]);
+        }
+
+        Contact[] contacts = getContacts();
+        System.assertEquals(listConT.size() + 1, contacts.size());
+
+        for (Contact c : contacts) {
+            System.assertEquals(listAccT[0].id, c.AccountId);
+
+            Address__c[] addresses = addressesByHh.get(c.AccountId);
+            System.assert(addresses != null && addresses.size() == 1, addresses);
+            
+            System.assertNotEquals(null, c.npe01__Primary_Address_Type__c);
+            assertEqualAddresses(addresses[0], c);
+        }
+    }
+
+    /*********************************************************************************************************
+    @description
+        Add a new Contact to a Household. 
+        Pre-populate the Contact's address with the Household Address
+        in the same way standard Salesforce pre-populates Contact's Mailing Address with Account's Billing Address.  
+    verify:
+        The Contact's current Address is equal to the new Household Address.
+        Contact's "Primary Address Type" is the same as the Address' "Address Type".
+    **********************************************************************************************************/
+    static testMethod void addNewContactToHouseholdShouldSyncPrimaryAddressTypeWithAddressType() {
+        if (strTestOnly != '*' && strTestOnly != 'addNewContactToHouseholdShouldSyncPrimaryAddressTypeWithAddressType') return;
+        
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                Simple_Address_Change_Treated_as_Update__c = true
+            )
+        );
+
+        Integer hhSize = 1;
+        Integer contactSize = 1; 
+        createHHTestData(hhSize, contactSize);
+
+        Test.startTest();
+
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+
+        Contact contact = new Contact(LastName = 'TestPrimaryAddressTypeNewContact', AccountId = listAccT[0].Id);
+        populateContactAddress(contact, listAddrT[0]);
+        insert contact;
+
+        Test.stopTest();
+
+        Map<Id, Address__c[]> addressesByHh = getAddressesByHousehold();
+        System.assertEquals(hhSize, addressesByHh.size());
+
+        for (Address__c addr : listAddrT) {
+            Address__c[] addresses = addressesByHh.get(addr.Household_Account__c);
+            System.assert(addresses != null && addresses.size() == 1, addresses);
+
+            assertEquals(addr, addresses[0]);
+        }
+
+        Contact[] contacts = getContacts();
+        System.assertEquals(listConT.size() + 1, contacts.size());
+
+        for (Contact c : contacts) {
+            Address__c[] addresses = addressesByHh.get(c.AccountId);
+            System.assert(addresses != null && addresses.size() == 1, addresses);
+            
+            System.assertNotEquals(null, c.npe01__Primary_Address_Type__c);
+            assertEqualAddresses(addresses[0], c);
+        }
+    }
+
+    /*********************************************************************************************************
+    @description
         update contacts' mailing address with just a case change, to cause an update to default Address object  
     verify:
         existing Default Address updated
@@ -1578,5 +1695,186 @@ public with sharing class ADDR_Addresses_TEST {
             boolean fSeasonal = (addr.MailingStreet__c.contains('New Seasonal Street'));
             system.assertEquals(!fSeasonal, addr.Default_Address__c);
         }        
-    }   
+    } 
+         
+    /*********************************************************************************************************
+    @description
+        Execute ContactRepository.getContacts() for an Account not having any Contact 
+    verify:
+        Method returns empty Contact list
+    **********************************************************************************************************/       
+    static testMethod void ContactRepository_getContactsShouldReturnEmptyListWhenAccountHasNoContacts() {
+        if (strTestOnly != '*' && strTestOnly != 'ContactRepository_getContactsShouldReturnEmptyListWhenAccountHasNoContacts') return;
+
+        Account account = new Account(Name = 'AccountWithoutContacts');
+        insert account;
+
+        ADDR_Addresses_TDTM.ContactRepository contactRepo = new ADDR_Addresses_TDTM.ContactRepository(new Set<Id>{ account.Id });   
+
+        Contact[] contacts = contactRepo.getContacts(account.Id);
+        System.assertEquals(0, contacts.size());
+    }  
+
+    /*********************************************************************************************************
+    @description
+        Execute ContactRepository.getContacts() for Acconts having Contacts 
+    verify:
+        Method returns expected Contact list for each Account
+    **********************************************************************************************************/  
+    static testMethod void ContactRepository_getContactsShouldReturnContactsWhenAccountHasContacts() {
+        if (strTestOnly != '*' && strTestOnly != 'ContactRepository_getContactsShouldReturnContactsWhenAccountHasContacts') return;        
+        
+        Integer hhSize = 2;
+        Integer contactSize = 2; 
+        createHHTestData(hhSize, contactSize);
+
+        ADDR_Addresses_TDTM.ContactRepository contactRepo = new ADDR_Addresses_TDTM.ContactRepository(extractIds(listAccT)); 
+       
+        testAndAssertContactRepositoryGetContacts(contactRepo, listAccT, listConT);      
+    }
+
+    /*********************************************************************************************************
+    @description
+        Execute ContactRepository.getContacts() for an Account not passed to the ContactRepository constructor 
+    verify:
+        Method returns expected Contact list for each Account
+    **********************************************************************************************************/  
+    static testMethod void ContactRepository_getContactsShouldReturnContactsWhenAccountHasNotBeenPassedToConstructor() {
+        if (strTestOnly != '*' && strTestOnly != 'ContactRepository_getContactsShouldReturnContactsWhenAccountHasNotBeenPassedToConstructor') return;        
+        
+        Integer hhSize = 2;
+        Integer contactSize = 2; 
+        createHHTestData(hhSize, contactSize);
+
+        ADDR_Addresses_TDTM.ContactRepository contactRepo = new ADDR_Addresses_TDTM.ContactRepository(new Set<Id>()); 
+        testAndAssertContactRepositoryGetContacts(contactRepo, listAccT, listConT);   
+
+        contactRepo = new ADDR_Addresses_TDTM.ContactRepository(new Set<Id>{ listAccT[0].Id }); 
+        testAndAssertContactRepositoryGetContacts(contactRepo, listAccT, listConT);    
+    }
+
+    /*********************************************************************************************************
+    @description
+        Execute ContactRepository.getContacts() for each Account in the input argument Account list 
+    verify:
+        Method returns expected Contact list for each Account
+    **********************************************************************************************************/  
+    static void testAndAssertContactRepositoryGetContacts(ADDR_Addresses_TDTM.ContactRepository contactRepo, List<Account> accounts, List<Contact> contacts) { 
+        Map<Id, Contact[]> contactsByAccountId = new Map<Id, Contact[]>();
+        for (Contact c : contacts) {
+            if (!contactsByAccountId.containsKey(c.AccountId)) {
+                contactsByAccountId.put(c.AccountId, new Contact[0]);
+            }
+            contactsByAccountId.get(c.AccountId).add(c);
+        }
+
+        for (Account account : accounts) {
+            Contact[] expectedContacts = contactsByAccountId.get(account.Id);
+            Contact[] actualContacts = contactRepo.getContacts(account.Id);
+
+            System.assertEquals(expectedContacts.size(), actualContacts.size());
+            System.assert(extractIds(expectedContacts).containsAll(extractIds(actualContacts)));
+        }    
+    }
+
+    // Helpers
+    ////////////
+
+    /*********************************************************************************************************
+    * @description Populates Contact's Mailing Address from the Address
+    * @param c Contact
+    * @param sourceAddress Address
+    **********************************************************************************************************/
+    static void populateContactAddress(Contact c, Address__c sourceAddress) {
+        c.MailingStreet = sourceAddress.MailingStreet__c;
+        c.MailingCity = sourceAddress.MailingCity__c;
+        c.MailingState = sourceAddress.MailingState__c;
+        c.MailingPostalCode = sourceAddress.MailingPostalCode__c;
+        c.MailingCountry = sourceAddress.MailingCountry__c;
+    }
+
+    /*********************************************************************************************************
+    * @description Creates mapping of Addresses by a Household
+    * @return Map<Id, Address__c[]> Map of Addresses by a Household
+    **********************************************************************************************************/
+    static Map<Id, Address__c[]> getAddressesByHousehold() {
+        Map<Id, Address__c[]> addressesByHh = new Map<Id, Address__c[]>();
+
+        for (Address__c addr : getAddresses()) {
+            if (!addressesByHh.containsKey(addr.Household_Account__c)) {
+                addressesByHh.put(addr.Household_Account__c, new Address__c[0]);
+            }
+
+            addressesByHh.get(addr.Household_Account__c).add(addr);
+        }
+
+        return addressesByHh;
+    }
+
+    /*********************************************************************************************************
+    * @description Retrieves all Addresses from database
+    * @return Address__c[] List of all Addresses
+    **********************************************************************************************************/
+    static Address__c[] getAddresses() {
+        return [
+            SELECT Id, Default_Address__c, Household_Account__c, Address_Type__c,
+                MailingStreet__c, MailingCity__c, MailingState__c,
+                MailingPostalCode__c, MailingCountry__c
+            FROM Address__c
+        ];
+    }
+
+    /*********************************************************************************************************
+    * @description Retrieves all Contacts from database
+    * @return Contact[] List of all Contacts
+    **********************************************************************************************************/
+    static Contact[] getContacts() {
+        return [
+            SELECT Id, Name, AccountId, is_Address_Override__c, 
+                Current_Address__c, npe01__Primary_Address_Type__c,
+                MailingStreet, MailingCity, MailingState, MailingPostalCode, 
+                MailingCountry, MailingLatitude, MailingLongitude 
+            FROM Contact
+        ];        
+    }
+
+    /*********************************************************************************************************
+    * @description Extracts Ids of Sobjects
+    * @param sobjects List of Sobjects
+    * @return Set<Id> Set of Sobjects' Ids
+    **********************************************************************************************************/
+    static Set<Id> extractIds(List<Sobject> sobjects) {
+        return (new Map<Id, Sobject>(sobjects)).keySet();
+    }
+
+    /*********************************************************************************************************
+    * @description Asserts that an actual Address has the same values as the expected Address
+    * @param expected An Address with expected values
+    * @param actual An Address that needs to be verified
+    * @return void
+    **********************************************************************************************************/
+    static void assertEquals(Address__c expected, Address__c actual) {
+        System.assertEquals(expected.Address_Type__c, actual.Address_Type__c);
+        System.assertEquals(expected.MailingStreet__c, actual.MailingStreet__c);
+        System.assertEquals(expected.MailingCity__c, actual.MailingCity__c);
+        System.assertEquals(expected.MailingState__c, actual.MailingState__c);
+        System.assertEquals(expected.MailingPostalCode__c, actual.MailingPostalCode__c);
+        System.assertEquals(expected.MailingCountry__c, actual.MailingCountry__c);
+    }
+
+    /*********************************************************************************************************
+    * @description Asserts that a Contact's Address is the same as the expected Address
+    * @param expected An Address with expected values
+    * @param c Contact for which Mailing Address needs to be verified
+    * @return void
+    **********************************************************************************************************/
+    static void assertEqualAddresses(Address__c expected, Contact c) {
+        System.assertEquals(expected.Id, c.Current_Address__c);
+        System.assertEquals(expected.Address_Type__c, c.npe01__Primary_Address_Type__c);
+        System.assertEquals(expected.MailingStreet__c, c.MailingStreet);
+        System.assertEquals(expected.MailingCity__c, c.MailingCity);
+        System.assertEquals(expected.MailingState__c, c.MailingState);
+        System.assertEquals(expected.MailingPostalCode__c, c.MailingPostalCode);
+        System.assertEquals(expected.MailingCountry__c, c.MailingCountry);
+    }
 }

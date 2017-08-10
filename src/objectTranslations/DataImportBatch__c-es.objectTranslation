@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- NPSP Data Import Batch --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- NPSP Data Import Batch --></value>
+    </caseValues>
+    <fields>
+        <help><!-- An optional Unique Id field to use for Organization Account matching --></help>
+        <label><!-- Account Custom Unique ID --></label>
+        <name>Account_Custom_Unique_ID__c</name>
+    </fields>
+    <fields>
+        <label><!-- Batch Description --></label>
+        <name>Batch_Description__c</name>
+    </fields>
+    <fields>
+        <help><!-- The number of NPSP Data Import records to process at a time in each batch. --></help>
+        <label><!-- Batch Process Size --></label>
+        <name>Batch_Process_Size__c</name>
+    </fields>
+    <fields>
+        <help><!-- An optional Unique Id field to use for Contact matching --></help>
+        <label><!-- Contact Custom Unique ID --></label>
+        <name>Contact_Custom_Unique_ID__c</name>
+    </fields>
+    <fields>
+        <help><!-- Specifies which rule to follow when trying to match Contacts in Data Import records against existing Contacts. --></help>
+        <label><!-- Contact Matching Rule --></label>
+        <name>Contact_Matching_Rule__c</name>
+    </fields>
+    <fields>
+        <help><!-- Enter the number of days from the Donation Date to consider when looking for a matching Opportunity or Payment. The Data Importer will choose the matching Opp or Payment whose date falls within the number of days AND is closest to the Donation Date. --></help>
+        <label><!-- Number of Days from Donation Date --></label>
+        <name>Donation_Date_Range__c</name>
+    </fields>
+    <fields>
+        <help><!-- Defines how the Data Importer should handle matching Donations. You must choose a value. --></help>
+        <label><!-- Donation Matching Behavior --></label>
+        <name>Donation_Matching_Behavior__c</name>
+        <picklistValues>
+            <masterLabel>Best Match</masterLabel>
+            <translation><!-- Best Match --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Best Match or Create</masterLabel>
+            <translation><!-- Best Match or Create --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Do Not Match</masterLabel>
+            <translation><!-- Do Not Match --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>No Match</masterLabel>
+            <translation><!-- No Match --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Single Match</masterLabel>
+            <translation><!-- Single Match --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Single Match or Create</masterLabel>
+            <translation><!-- Single Match or Create --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- The developer name of an Apex class that implements the BDI_IMatching interface for Donations. Leave blank to let NPSP handle matching. --></help>
+        <label><!-- Donation Matching Implementing Class --></label>
+        <name>Donation_Matching_Implementing_Class__c</name>
+    </fields>
+    <fields>
+        <help><!-- Specifies which fields to match by when trying to match Donations in Data Import records against existing Opportunities and Payments. Control or Command click to select more than one field. --></help>
+        <label><!-- Donation Matching Rule --></label>
+        <name>Donation_Matching_Rule__c</name>
+    </fields>
+    <gender><!-- Feminine --></gender>
+    <nameFieldLabel><!-- Batch Name --></nameFieldLabel>
+</CustomObjectTranslation>

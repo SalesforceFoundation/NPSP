@@ -16,17 +16,14 @@ project:
         homepage: ApexDocContent/homepage.htm
         banner: ApexDocContent/projectheader.htm
     dependencies:
-        - namespace: npo02
-          version: 3.8
-          dependencies:
-            - namespace: npe01
-              version: 3.6
-        - namespace: npe03
-          version: 3.9
-        - namespace: npe4
-          version: 3.5
-        - namespace: npe5
-          version: 3.5
+        # npo02 (includes npe01)
+        - github: https://github.com/SalesforceFoundation/Households
+        # npe03
+        - github: https://github.com/SalesforceFoundation/Recurring_Donations
+        # npe4
+        - github: https://github.com/SalesforceFoundation/Relationships
+        # npe5
+        - github: https://github.com/SalesforceFoundation/Affiliations
 
 tasks:
     download_browser_tests:
@@ -37,6 +34,20 @@ tasks:
             dir: browser_tests
             subfolder: NPSP-Browser-Tests-master
 
+    download_ldv_tests:
+        description: Downloads the NPSP-LDV-Tests repository
+        class_path: cumulusci.tasks.util.DownloadZip
+        options:
+            dir: ldv_tests
+            subfolder: Cumulus-LDV-Tests-master
+            url: 'https://github.com/SalesforceFoundation/Cumulus-LDV-Tests/archive/master.zip'
+
+    deploy_ldv_tests:
+        description: Deploy the LDV-Tests repo to your org.
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: ldv_tests/src
+        
     deploy_dev_config:
         description: Deploys the post install configuration for an unmanaged DE org
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -58,7 +69,7 @@ tasks:
         description: Runs the Ruby/Watir browser tests in the browsertests folder using Firefox
         class_path: cumulusci.tasks.command.SalesforceBrowserTest
         options:
-            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber -c features/ --tags ~@flaky --tags ~@chrome' 
+            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber --format pretty --format junit --out ../junit -c features/ --tags ~@flaky --tags ~@chrome' 
             dir: '.'
             env:
                 SELENIUM_BROWSER: firefox
@@ -67,7 +78,7 @@ tasks:
         description: Runs the Ruby/Watir browser tests in the browsertests folder using Chrome
         class_path: cumulusci.tasks.command.SalesforceBrowserTest
         options:
-            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber -c features/ --tags ~@firefox --tags ~@flaky'
+            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber --format pretty --format junit --out ../junit -c features/ --tags ~@firefox --tags ~@flaky'
             dir: '.'
             env:
                 SELENIUM_BROWSER: chrome
@@ -76,17 +87,17 @@ tasks:
         description: Runs the Ruby/Watir browser tests in the browsertests folder against unmanaged metadata in Firefox
         class_path: cumulusci.tasks.command.SalesforceBrowserTest
         options:
-            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber -c features/ --tags ~@flaky --tags ~@chrome' 
+            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber --format pretty --format junit --out ../junit -c features/ --tags ~@flaky --tags ~@chrome' 
             dir: '.'
             env:
                 SELENIUM_BROWSER: firefox
                 TARGET_ORG: unmanaged
 
-    rowsertests_unmanaged_chrome:
+    browsertests_unmanaged_chrome:
         description: Runs the Ruby/Watir browser tests in the browsertests folder against unmanaged metadata in Chrome
         class_path: cumulusci.tasks.command.SalesforceBrowserTest
         options:
-            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber -c features/ --tags ~@firefox --tags ~@flaky'
+            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber --format pretty --format junit --out ../junit -c features/ --tags ~@firefox --tags ~@flaky'
             dir: '.'
             env:
                 SELENIUM_BROWSER: chrome
@@ -125,6 +136,20 @@ tasks:
                 - Account
                 - Allocation__c
                 - General_Accounting_Unit__c
+                - Campaign
+
+    test_data_delete_managed:
+        description: 'WARNING: Deletes all data in the objects specified in the objects option.'
+        class_path: cumulusci.tasks.bulkdata.DeleteData
+        options:
+            objects:
+                - Opportunity
+                - npe03__Recurring_Donation__c
+                - Case
+                - Contact
+                - Account
+                - npsp__Allocation__c
+                - npsp__General_Accounting_Unit__c
                 - Campaign
 
 flows:
@@ -199,7 +224,7 @@ flows:
                 task: browsertests_unmanaged_chrome
                 options:
                     use_saucelabs: True
-
+     
     dev_org:
         tasks:
             8:
@@ -222,6 +247,16 @@ flows:
             2:
                 task: test_data_dev_org
 
+    test_data_dev_org_managed:
+        description: 'WARNING: This flow deletes all data first, then loads the complete test data set based on 100 Contacts into the target org.'
+        tasks:
+            1:
+                task: test_data_delete_managed
+            2:
+                task: test_data_dev_org
+                options:
+                    mapping: testdata/mapping_managed.yml
+
     test_data_1k:
         description: 'WARNING: This flow deletes all data first, then loads the complete test data set based on 1,024 Contacts into the target org.'
         tasks:
@@ -229,6 +264,18 @@ flows:
                 task: test_data_delete
             2:
                 task: test_data_1k
+
+    ldv_tests:
+        description: 'Deploys and runs LDV tests'
+        tasks:
+            1:
+                task: download_ldv_tests
+            2:
+                task: deploy_ldv_tests
+            3:
+                task: run_tests
+                options:
+                    test_name_match: LDV_%
 
 orgs:
     scratch:
