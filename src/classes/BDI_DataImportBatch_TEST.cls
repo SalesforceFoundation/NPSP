@@ -130,8 +130,9 @@ public with sharing class BDI_DataImportBatch_TEST {
 
         // check apex batch is in the job list
         List<AsyncApexJob> jobsApexBatch = [select Id, ApexClassID, ApexClass.Name, Status, JobType from AsyncApexJob where JobType = 'BatchApex'];
-        if (jobsApexBatch.size() > 0)
-        System.assertEquals('BDI_DataImport_BATCH', jobsApexBatch[0].ApexClass.Name, 'expecting specific batch job');
+        if (jobsApexBatch.size() > 0) {
+            System.assertEquals('BDI_DataImport_BATCH', jobsApexBatch[0].ApexClass.Name, 'expecting specific batch job');
+        }
 
         return jobsApexBatch.size();
     }

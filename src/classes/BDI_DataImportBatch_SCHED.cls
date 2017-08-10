@@ -37,6 +37,7 @@ public without sharing class BDI_DataImportBatch_SCHED implements Schedulable {
 
     /*******************************************************************************************************
     * @description Schedulable execute method executes this batch job.
+    * @return void
     */
     public void execute(SchedulableContext context) {
         try {

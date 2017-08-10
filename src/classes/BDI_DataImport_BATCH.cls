@@ -71,31 +71,45 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         // help users figure out import problems by importing in a consistent order.
         strSoql += ' ORDER BY Name ';
 
+        // load the optional Batch
+        loadBatch(batchId);
+
         // now load our settings
-        loadSettings(batchId);
+        loadSettings();
 
         // and make sure settings are valid
         validateSettings(diSettings);
     }
 
     /*******************************************************************************************************
-    * @description loads the data import settings to use for this batch.  these may be either from
-    * custom settings, or if a specific BatchId was specified, the settings specified for that batch.
+    * @description loads the data import batch.
     * @param batchId optional batch to scope processing to.
     * @return void
     */
-    private void loadSettings(ID batchId) {
+    private void loadBatch(ID batchId) {
 
-        // load up the default or specific settings
-        if (batchId == null) {
-            diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-        } else {
+        if (batchId != null) {
             list<DataImportBatch__c> listDIBatch = BDI_DataImportBatch_SEL.selectByIds(new Set<Id>{batchId});
             if (listDIBatch.size() == 1) {
-                diSettings = diSettingsFromDiBatch(listDIBatch[0]);
+                diBatch = listDIBatch[0];
             } else {
                 throw(new BDIException(string.format(Label.bdiInvalidBatchId, new string[]{batchId})));
             }
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description loads the data import settings to use for this batch.  these may be either from
+    * custom settings, or if a specific BatchId was specified, the settings specified for that batch.
+    * @return void
+    */
+    private void loadSettings() {
+
+        // load up the default or specific settings
+        if (diBatch == null) {
+            diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        } else {
+            diSettings = diSettingsFromDiBatch(diBatch);
         }
     }
 
@@ -267,6 +281,11 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     * custom settings, or if a specific BatchId was specified, the settings specified for that batch.
     */
     public Data_Import_Settings__c diSettings { get; private set; }
+
+    /*******************************************************************************************************
+    * @description the optional DataImportBatch we are processing records for
+    */
+    private DataImportBatch__c diBatch;
 
     private boolean isFirstnameInContactMatchRules {
     	get {
@@ -480,8 +499,24 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             di.put(strStatusField, strError.left(255));
     }
             
-    // required method for Batchable.  Nothing we need to do though!
-    public void finish(Database.BatchableContext bc) {}
+    /*******************************************************************************************************
+    * @description Batchable finish method, that will update the (optional) Batch's
+    * Import_Using_Scheduled_Job__c field, if all records were successfully imported.
+    * @param bc The BatchableContext
+    * @return void
+    */
+    public void finish(Database.BatchableContext bc) {
+        if (diBatch != null && diBatch.Import_Using_Scheduled_Job__c == 'To Be Imported') {
+            integer cRecords = [SELECT COUNT()
+                FROM DataImport__c
+                WHERE NPSP_Data_Import_Batch__c = :diBatch.Id AND Status__c != :label.bdiImported];
+            if (cRecords == 0) {
+                diBatch.Import_Using_Scheduled_Job__c = 'Imported';
+                update diBatch;
+            }
+        }
+
+    }
 
     // utility to return all fields from the Data Import object
     public static list<string> listStrDataImportFields { 
