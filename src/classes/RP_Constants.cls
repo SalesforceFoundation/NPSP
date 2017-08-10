@@ -44,11 +44,11 @@ public with sharing class RP_Constants {
     public static final String RP_GITHUB_SALESFORCE_ORG_ENDPOINT = 'https://sfdo-status.herokuapp.com/repo/api/SalesforceFoundation/Cumulus?format=json';
 
     // Configuration for the Getting Started page links
-    public static final String RP_CUSTOMER_JOURNEY_LINK = 'https://www.marketingcloud.com/customer-journey-map-examples/';
+    public static final String RP_CUSTOMER_JOURNEY_LINK = 'https://www.marketingcloud.com/customer-journey-map-examples';
     public static final String RP_NPSP_DOCUMENTATION_LINK = 'https://powerofus.force.com/articles/Resource/NPSP-Documentation';
     public static final String RP_SALESFORCE_ORG_OFFICE_HOURS_LINK = 'https://powerofus.force.com/articles/Customer_Service/Salesforce-com-Foundation-Weekly-Office-Hours';
     public static final String RP_TRAILHEAD_LINK = 'https://trailhead.salesforce.com';
-    public static final String RP_US_LINK = 'http://www.salesforce.org/nonprofit/power-of-us/';
-    public static final String RP_WEBINAR_LINK = 'https://www.salesforce.com/events/webinars/';
+    public static final String RP_US_LINK = 'http://www.salesforce.org/nonprofit/power-of-us';
+    public static final String RP_WEBINAR_LINK = 'https://www.salesforce.com/events';
 
 }
