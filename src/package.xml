@@ -1944,6 +1944,7 @@
         <members>Batch__c.All</members>
         <members>Batch__c.Completed_Batches</members>
         <members>Batch__c.Open_Batches</members>
+        <members>DataImportBatch__c.All</members>
         <members>DataImport__c.All</members>
         <members>DataImport__c.Failed_Data_Imports</members>
         <members>DataImport__c.Succesfully_Imported</members>
