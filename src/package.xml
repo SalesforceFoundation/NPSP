@@ -1261,6 +1261,7 @@
         <members>pmtWizardCreateSchedule</members>
         <members>pmtWizardFirstPaymentDate</members>
         <members>pmtWizardInterval</members>
+        <members>pmtWizardMonth</members>
         <members>pmtWizardMsgNoOppFound</members>
         <members>pmtWizardNoUnpaidAmount</members>
         <members>pmtWizardNoWriteoffAmount</members>
@@ -1274,8 +1275,10 @@
         <members>pmtWizardSubtitle</members>
         <members>pmtWizardToBeCreated</members>
         <members>pmtWizardWarning</members>
+        <members>pmtWizardWeek</members>
         <members>pmtWizardWriteoffDate</members>
         <members>pmtWizardWriteoffMessage</members>
+        <members>pmtWizardYear</members>
         <members>pscDeleteRow</members>
         <members>pscManageSoftCreditsAdd</members>
         <members>pscManageSoftCreditsAmount</members>
