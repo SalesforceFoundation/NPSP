@@ -66,11 +66,6 @@
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
-            <field>npe01__Payment_Date__c</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
             <field>npe01__Payment_Method__c</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
