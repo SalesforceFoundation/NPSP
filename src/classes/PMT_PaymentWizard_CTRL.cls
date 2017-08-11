@@ -74,7 +74,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     public boolean isScheduleWizard{get; set;}    
 
     /*******************************************************************************************************
-    * @description is this opportunity in a closed/lost stage`
+    * @description is this opportunity in a closed/lost stage
     */ 
     public boolean isClosedLost{get; set;}
     
