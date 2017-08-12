@@ -98,12 +98,12 @@ private class HH_Container_TEST {
         Test.startTest();
 
         Contact[] contacts = HH_Container_LCTRL.getContacts(hhA.Id);
-        System.assert(contacts != null && contacts.size() == 1, contacts);
-        System.assertEquals(conA.Id, contacts[0].Id);
+        System.assert(contacts != null && contacts.size() == 1, 'Only one contact should be in the Household Account: ' + contacts);
+        System.assertEquals(conA.Id, contacts[0].Id, 'Contact should not change in the Household Account');
 
         contacts = HH_Container_LCTRL.getContacts(hhO.Id);
-        System.assert(contacts != null && contacts.size() == 1, contacts);
-        System.assertEquals(conO.Id, contacts[0].Id);
+        System.assert(contacts != null && contacts.size() == 1, 'Only one contact should be in the Household Object: ' + contacts);
+        System.assertEquals(conO.Id, contacts[0].Id, 'Contact should not change in the Household Object');
 
         Test.stopTest();
     }  
@@ -373,9 +373,9 @@ private class HH_Container_TEST {
 
         Account actual = (Account) HH_Container_LCTRL.getHHNamesGreetings(hhA, new Contact[]{ conA, conO });
 
-        System.assertEquals(hhA.Name, actual.Name);
-        System.assertEquals(hhA.npo02__Formal_Greeting__c, actual.npo02__Formal_Greeting__c);
-        System.assertEquals(hhA.npo02__Informal_Greeting__c, actual.npo02__Informal_Greeting__c);
+        System.assertEquals(hhA.Name, actual.Name, 'Household Name should not change');
+        System.assertEquals(hhA.npo02__Formal_Greeting__c, actual.npo02__Formal_Greeting__c, 'Formal Greeting should not change');
+        System.assertEquals(hhA.npo02__Informal_Greeting__c, actual.npo02__Informal_Greeting__c, 'Informal Greeting should not change');
         
         Test.stopTest();        
     }
@@ -395,9 +395,9 @@ private class HH_Container_TEST {
 
         hhA = (Account) HH_Container_LCTRL.getHHNamesGreetings(hhA, new Contact[]{ conA, conO });
 
-        system.assertEquals('conA and conO Household', hhA.Name);
-        system.assertEquals('cA conA and cO conO', hhA.npo02__Formal_Greeting__c );
-        system.assertEquals('cA and cO', hhA.npo02__Informal_Greeting__c );
+        system.assertEquals('conA and conO Household', hhA.Name, 'Household Name should correspond to the format');
+        system.assertEquals('cA conA and cO conO', hhA.npo02__Formal_Greeting__c, 'Formal Greeting should correspond to the format');
+        system.assertEquals('cA and cO', hhA.npo02__Informal_Greeting__c, 'Informal Greeting should correspond to the format');
         
         Test.stopTest();        
     }
@@ -503,7 +503,7 @@ private class HH_Container_TEST {
                 'MailingLatitude', 'MailingLongitude', 'CreatedDate'
             }
         ) {
-            System.assert(fieldNames.contains(fieldName), fieldName + ' is not in : ' + fieldNames);
+            System.assert(fieldNames.contains(fieldName), fieldName + ' should be in: ' + fieldNames);
         }
     }
     

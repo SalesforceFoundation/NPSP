@@ -78,7 +78,7 @@ private class HH_HouseholdNamingSettingValidator_TEST {
 
         HH_INaming hhNaming = validator.validateImplementingClass(settings, notification);
 
-        System.assertEquals(null, hhNaming);
+        System.assertEquals(null, hhNaming, 'HH_INaming should be null');
 
         assertError(Label.stgErrorInvalidClass, notification);
     }
@@ -95,7 +95,7 @@ private class HH_HouseholdNamingSettingValidator_TEST {
 
         HH_INaming hhNaming = validator.validateImplementingClass(settings, notification);
 
-        System.assertEquals(null, hhNaming);
+        System.assertEquals(null, hhNaming, 'HH_INaming should be null');
         
         assertError(Label.stgErrorINaming, notification);
     }
@@ -112,7 +112,7 @@ private class HH_HouseholdNamingSettingValidator_TEST {
 
         HH_NameSpec hhNaming = (HH_NameSpec) validator.validateImplementingClass(settings, notification);
 
-        System.assertNotEquals(null, hhNaming);
+        System.assertNotEquals(null, hhNaming, 'HH_INaming should be an HH_NameSpec instance');
 
         assertSuccess(notification);
     }
@@ -128,7 +128,7 @@ private class HH_HouseholdNamingSettingValidator_TEST {
 
         HH_INaming hhNaming = validator.validateImplementingClass(settings, notification);
 
-        System.assertNotEquals(null, hhNaming);
+        System.assertNotEquals(null, hhNaming, 'HH_INaming instance should be returned');
     
         assertSuccess(notification);
     }
@@ -239,7 +239,7 @@ private class HH_HouseholdNamingSettingValidator_TEST {
 
         notification = validator.validate(settings);
 
-        System.assert(!notification.isSuccess());
+        System.assert(!notification.isSuccess(), 'Notification should contain validation errors');
 
         String[] actualErrors = notification.getErrors();
 
@@ -261,47 +261,6 @@ private class HH_HouseholdNamingSettingValidator_TEST {
         assertSuccess(notification);
     }
 
-    /*********************************************************************************************************
-    @description
-        Test isValidApiName() when a field is valid case sensitive API Name for the Sobject
-    verify:
-        The method returns true
-    **********************************************************************************************************/ 
-    private static testMethod void isValidApiNameShouldReturnTrueWhenFieldNameIsValid() {
-        Map<String, Schema.DescribeFieldResult> contactFieldResultsByName = validator.getFieldResultsByName(Contact.SObjectType);
-
-        for (String fieldName : new String[] {
-            'Name', 'FirstName', 'LastName',
-            'AccountId', 'Account.Id', 'Account.Name', 
-            'Account.BillingCity', 'Account.npe01__One2OneContact__c',
-            'Account.npe01__One2OneContact__r.LastName',
-            'OwnerId', 'Owner.Name'
-        }) {
-            System.assert(validator.isValidApiName(fieldName, contactFieldResultsByName), 'Expected valid field result: ' + fieldName);
-        }
-    }
-
-    /*********************************************************************************************************
-    @description
-        Test isValidApiName() when a field name is invalid case sensitive API Name for the Sobject
-    verify:
-        The method returns false
-    **********************************************************************************************************/ 
-    private static testMethod void isValidApiNameShouldReturnFalseWhenFieldNameIsInvalid() {
-        Map<String, Schema.DescribeFieldResult> contactFieldResultsByName = validator.getFieldResultsByName(Contact.SObjectType);
-
-        for (String fieldName : new String[] {
-            null, '', ' ',
-            'firstname', 'Firstname', 'FirstName__c',
-            'foo', 'Account.foo', 
-            'Account.npe01__One2OneContact__r.foo',
-            'Account.npe01__One2OneContact__r.',
-            'Account.npe01__One2OneContact__c.foo',
-            'Owner.foo'
-        }) {
-            System.assert(!validator.isValidApiName(fieldName, contactFieldResultsByName), 'Expected invalid field result: ' + fieldName);
-        }
-    }
 
     // Helpers
     ////////////
@@ -359,7 +318,7 @@ private class HH_HouseholdNamingSettingValidator_TEST {
     private static void assertSuccess(HH_HouseholdNamingSettingValidator.Notification n) {
         System.assert(n.isSuccess(), n.getErrors());
     
-        System.assert(n.getErrors().isEmpty(), n.getErrors());
+        System.assert(n.getErrors().isEmpty(), 'Notification should not contain any error: ' + n.getErrors());
     }
 
     /*********************************************************************************************************
@@ -383,13 +342,13 @@ private class HH_HouseholdNamingSettingValidator_TEST {
     
         String[] actualErrors = n.getErrors();
 
-        System.assertEquals(expectedErrors.size(), actualErrors.size(), actualErrors);
+        System.assertEquals(expectedErrors.size(), actualErrors.size(), 'Expected and actual errors size should be the same. Expected: ' + expectedErrors + '; Actual: ' + actualErrors);
 
         Set<String> expected = new Set<String>(expectedErrors);
         Set<String> actual = new Set<String>(actualErrors);
 
-        System.assertEquals(expected.size(), actual.size(), actual);
-        System.assert(expected.containsAll(actual), actual);
+        System.assertEquals(expected.size(), actual.size(), 'Expected and actual unique errors size should be the same. Expected: ' + expected + '; Actual: ' + actual);
+        System.assert(expected.containsAll(actual), 'Expected and actual errors should be the same. Expected: ' + expected + '; Actual: ' + actual);
     }
 
     /*********************************************************************************************************
@@ -408,7 +367,7 @@ private class HH_HouseholdNamingSettingValidator_TEST {
 
         String[] actualErrors = n.getErrors();
 
-        System.assertEquals(1, actualErrors.size(), actualErrors);
+        System.assertEquals(1, actualErrors.size(), 'Only one error should exist in: ' + actualErrors);
     
         for (String error : actualErrors) {
             if (error.contains(fieldLabel) && error.contains('Invalid field')) {
@@ -416,6 +375,6 @@ private class HH_HouseholdNamingSettingValidator_TEST {
             }
         }
 
-        System.assert(false, actualErrors);
+        System.assert(false, fieldName + ' should be in: ' + actualErrors);
     }
 }

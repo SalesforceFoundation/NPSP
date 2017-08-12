@@ -270,7 +270,7 @@ public with sharing class STG_SettingsManager_TEST {
         Test.setCurrentPage(Page.STG_PanelHouseholds);
 
         STG_PanelHouseholds_CTRL ctrl = new STG_PanelHouseholds_CTRL();
-        System.assertEquals(false, ctrl.isValidSettings());     
+        System.assertEquals(false, ctrl.isValidSettings(), 'Household Naming Settings should be invalid');     
         
         UTIL_UnitTestData_TEST.assertPageHasError(Label.stgValidationHHAccountHHRules); 
     }
@@ -291,21 +291,21 @@ public with sharing class STG_SettingsManager_TEST {
         for (Boolean isAutomaticHouseholdNaming : new Boolean[] { true, false }) {
             STG_Panel.stgService.stgHH.npo02__Advanced_Household_Naming__c = isAutomaticHouseholdNaming;
 
-            system.assertEquals(true, panel.isValidSettings());        
+            system.assertEquals(true, panel.isValidSettings(), 'Household Naming Settings should be valid');        
 
             STG_Panel.stgService.stgHN.Household_Name_Format__c = '{!{!bogus}}';
-            system.assertEquals(false, panel.isValidSettings());      
+            system.assertEquals(false, panel.isValidSettings(), 'Household Name Format should be invalid');      
 
             STG_Panel.stgService.stgHN.Household_Name_Format__c = '{!{!FirstName}} {!LastName} Family';        
             STG_Panel.stgService.stgHN.Formal_Greeting_Format__c = '{!{!bogus}}';
-            system.assertEquals(false, panel.isValidSettings());     
+            system.assertEquals(false, panel.isValidSettings(), 'Household Formal Greeting Format should be invalid');     
 
             STG_Panel.stgService.stgHN.Formal_Greeting_Format__c = '{!{!Salutation} {!FirstName}} {!LastName}';               
             STG_Panel.stgService.stgHN.Informal_Greeting_Format__c = '{!{!bogus}}';
-            system.assertEquals(false, panel.isValidSettings());     
+            system.assertEquals(false, panel.isValidSettings(), 'Household Informal Greeting Format should be invalid');     
 
             STG_Panel.stgService.stgHN.Informal_Greeting_Format__c = '{!{!FirstName}}';
-            system.assertEquals(true, panel.isValidSettings());   
+            system.assertEquals(true, panel.isValidSettings(), 'Household Naming Settings should be valid');   
         }     
     }
 
@@ -325,7 +325,7 @@ public with sharing class STG_SettingsManager_TEST {
         Test.setCurrentPage(Page.STG_PanelHouseholds);
 
         STG_PanelHouseholds_CTRL ctrl = new STG_PanelHouseholds_CTRL();
-        System.assertEquals(false, ctrl.isValidSettings());      
+        System.assertEquals(false, ctrl.isValidSettings(), 'Household Naming Settings should be invalid');      
         
         String fieldLabel = UTIL_Describe.getFieldLabel(
             UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), 
@@ -350,14 +350,14 @@ public with sharing class STG_SettingsManager_TEST {
         Test.setCurrentPage(Page.STG_PanelHouseholds);
 
         STG_PanelHouseholds_CTRL ctrl = new STG_PanelHouseholds_CTRL();
-        System.assertEquals(true, ctrl.isValidSettings());      
+        System.assertEquals(true, ctrl.isValidSettings(), 'Household Naming Settings should be valid');      
         
         STG_Panel.stgService.stgHN.Household_Name_Format__c = '{!{!FirstName}} {!LastName}} Household'; //invalid format        
-        System.assertEquals(false, ctrl.isValidSettings());    
+        System.assertEquals(false, ctrl.isValidSettings(), 'Household Naming Settings should be invalid');    
         UTIL_UnitTestData_TEST.assertPageHasError('Invalid field'); 
 
         STG_Panel.stgService.stgHN.Household_Name_Format__c = '{!{!FirstName} {!LastName}} Household'; 
-        System.assertEquals(true, ctrl.isValidSettings());      
+        System.assertEquals(true, ctrl.isValidSettings(), 'Household Naming Settings should be valid');      
     }
 
     /*********************************************************************************************************
@@ -376,7 +376,7 @@ public with sharing class STG_SettingsManager_TEST {
 
             System.assert(false, 'Expected exception for invalid format field');
         } catch(Exception e) {
-            System.assert(e.getMessage().contains('Invalid field'));
+            System.assert(e.getMessage().contains('Invalid field'), 'An exception should contain Invalid Field message instead: ' + e.getMessage());
         }    
     }
 
@@ -393,7 +393,7 @@ public with sharing class STG_SettingsManager_TEST {
 
         String exampleName = STG_PanelHouseholds_CTRL.strNameSpecExample(STG_Panel.stgService.stgHN, 'Household_Name_Format__c', 2);
 
-        System.assert(!String.isBlank(exampleName));
+        System.assert(String.isNotBlank(exampleName), 'An example name should be returned');
     }
 
     /*********************************************************************************************************
@@ -410,7 +410,7 @@ public with sharing class STG_SettingsManager_TEST {
 
         String exampleName = STG_PanelHouseholds_CTRL.strNameSpecExample(STG_Panel.stgService.stgHN, 'Household_Name_Format__c', 2);
 
-        System.assertEquals(Label.stgErrorInvalidClass, exampleName);
+        System.assertEquals(Label.stgErrorInvalidClass, exampleName, 'Expected error message should be returned');
     }
 
     /*********************************************************************************************************
@@ -431,15 +431,15 @@ public with sharing class STG_SettingsManager_TEST {
         Test.setCurrentPage(Page.STG_PanelRenameHouseholds);
 
         STG_PanelRenameHouseholds_CTRL ctrl = new STG_PanelRenameHouseholds_CTRL();
-        System.assert(!ctrl.isRunningBatch);
+        System.assert(!ctrl.isRunningBatch, 'The batch should not run');
 
         Test.startTest();
         PageReference pg = ctrl.runBatch();
         Test.stopTest();
 
-        System.assertEquals(null, pg);
-        System.assert(!ctrl.isRunningBatch);
-        System.assertEquals(false, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c);        
+        System.assertEquals(null, pg, 'Returned PageReference should be null');
+        System.assert(!ctrl.isRunningBatch, 'The batch should not run');
+        System.assertEquals(false, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c, 'Automatic Household Naming should be turned off');        
         
         UTIL_UnitTestData_TEST.assertPageHasError('Invalid field');
     }
@@ -461,17 +461,17 @@ public with sharing class STG_SettingsManager_TEST {
         Test.setCurrentPage(Page.STG_PanelRenameHouseholds);
 
         STG_PanelRenameHouseholds_CTRL ctrl = new STG_PanelRenameHouseholds_CTRL();
-        System.assert(!ctrl.isRunningBatch);
+        System.assert(!ctrl.isRunningBatch, 'The batch should not run');
 
         Test.startTest();
         PageReference pg = ctrl.runBatch();
         Test.stopTest();
 
-        System.assertEquals(null, pg);
-        System.assert(ctrl.isRunningBatch);
-        System.assertEquals(true, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c);    
+        System.assertEquals(null, pg, 'Returned PageReference should be null');
+        System.assert(ctrl.isRunningBatch, 'The batch should run');
+        System.assertEquals(true, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c, 'Automatic Household Naming should be turned on');    
         
-        System.assertEquals(0, ApexPages.getMessages().size());
+        System.assertEquals(0, ApexPages.getMessages().size(), 'The page should not contain any error: ' + ApexPages.getMessages());
     }
 
     /*********************************************************************************************************
@@ -489,17 +489,17 @@ public with sharing class STG_SettingsManager_TEST {
         Test.setCurrentPage(Page.STG_PanelRenameHouseholds);
 
         STG_PanelRenameHouseholds_CTRL ctrl = new STG_PanelRenameHouseholds_CTRL();
-        System.assert(!ctrl.isRunningBatch);
+        System.assert(!ctrl.isRunningBatch, 'The batch should not run');
 
         Test.startTest();
         PageReference pg = ctrl.runBatch();
         Test.stopTest();
 
-        System.assertEquals(null, pg);
-        System.assert(ctrl.isRunningBatch);    
-        System.assertEquals(true, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c);    
+        System.assertEquals(null, pg, 'Returned PageReference should be null');
+        System.assert(ctrl.isRunningBatch, 'The batch should run');    
+        System.assertEquals(true, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c, 'Automatic Household Naming should be turned on');    
 
-        System.assertEquals(0, ApexPages.getMessages().size());
+        System.assertEquals(0, ApexPages.getMessages().size(), 'The page should not contain any error: ' + ApexPages.getMessages());
     }
 
     /*********************************************************************************************************

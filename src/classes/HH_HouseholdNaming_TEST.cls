@@ -431,19 +431,21 @@ public class HH_HouseholdNaming_TEST {
 
         String soql = new HH_HouseholdNaming().strContactSelectStmtAllNamingFields;
 
-        System.assert(soql.contains('Id'), soql);
-        System.assert(soql.contains('HHId__c'), soql);
-        System.assert(soql.contains('npo02__Naming_Exclusions__c'), soql);
-
-        //verify HH Naming settings fields are included
-        System.assert(soql.contains('LastName'), soql);
-        System.assert(soql.contains('FirstName'), soql);
-        System.assert(soql.contains('Salutation'), soql);
-        System.assert(soql.contains('npe01__WorkEmail__c'), soql);
+        for (String fieldName : new String[] { 
+            'Id', 'HHId__c', 'npo02__Naming_Exclusions__c', // mandatory fields
+            'LastName', 'FirstName', 'Salutation', 'npe01__WorkEmail__c' //HH Naming fields
+        }) {
+            System.assert(soql.contains(fieldName), fieldName + ' should be in the SOQL: ' + soql);
+        }
         
         //verify the soql is valid and will not raise exceptions
-        System.assert(!soql.contains('}'), soql);
-        List<Contact> contacts = Database.Query(soql);
+        System.assert(!soql.contains('}'), 'SOQL should be correct: ' + soql);
+        
+        try {
+            List<Contact> contacts = Database.Query(soql);
+        } catch (Exception e) {
+            System.assert(false, 'Unexpected error raised for SOQL: ' + soql);
+        }
     }
 
     /*********************************************************************************************************
@@ -460,19 +462,26 @@ public class HH_HouseholdNaming_TEST {
 
         String soql = new HH_HouseholdNaming().strContactSelectStmtAllNamingFields;
 
-        System.assert(soql.contains('Id'), soql);
-        System.assert(soql.contains('HHId__c'), soql);
-        System.assert(soql.contains('npo02__Naming_Exclusions__c'), soql);
+        for (String fieldName : new String[] { 
+            'Id', 'HHId__c', 'npo02__Naming_Exclusions__c' // mandatory fields
+        }) {
+            System.assert(soql.contains(fieldName), fieldName + ' should be in the SOQL: ' + soql);
+        }
 
-        //verify HH Naming settings fields are not included
-        System.assert(!soql.contains('LastName'), soql);
-        System.assert(!soql.contains('FirstName'), soql);
-        System.assert(!soql.contains('Salutation'), soql);
-        System.assert(!soql.contains('npe01__WorkEmail__c'), soql);
+        for (String fieldName : new String[] { 
+            'LastName', 'FirstName', 'Salutation', 'npe01__WorkEmail__c' //HH Naming fields
+        }) {
+            System.assert(!soql.contains(fieldName), fieldName + ' should not be in the SOQL: ' + soql);
+        }
         
         //verify the soql is valid and will not raise exceptions
-        System.assert(!soql.contains('}'), soql);
-        List<Contact> contacts = Database.Query(soql);
+        System.assert(!soql.contains('}'), 'SOQL should be correct: ' + soql);
+
+        try {
+            List<Contact> contacts = Database.Query(soql);
+        } catch (Exception e) {
+            System.assert(false, 'Unexpected error raised for SOQL: ' + soql);
+        }
     }
 
     /*********************************************************************************************************
@@ -488,7 +497,7 @@ public class HH_HouseholdNaming_TEST {
 
         Set<String> fieldNames = new HH_HouseholdNaming().getHouseholdNamingContactFields();
 
-        System.assert(fieldNames.isEmpty(), fieldNames);
+        System.assert(fieldNames.isEmpty(), 'No field name should be returned: ' + fieldNames);
     }
     
     /*********************************************************************************************************
@@ -506,10 +515,11 @@ public class HH_HouseholdNaming_TEST {
 
         System.assertEquals(4, fieldNames.size(), fieldNames);  
         
-        System.assert(fieldNames.contains('LastName'), fieldNames);
-        System.assert(fieldNames.contains('FirstName'), fieldNames);
-        System.assert(fieldNames.contains('Salutation'), fieldNames);
-        System.assert(fieldNames.contains('npe01__WorkEmail__c'), fieldNames);     
+        for (String fieldName : new String[] {
+            'LastName', 'FirstName', 'Salutation', 'npe01__WorkEmail__c' //HH Naming fields
+        }) {
+            System.assert(fieldNames.contains(fieldName), fieldName + ' should be in: ' + fieldNames);
+        }    
     }
 
     /*********************************************************************************************************
@@ -521,7 +531,7 @@ public class HH_HouseholdNaming_TEST {
     private static testMethod void isAutomaticNamingShouldReturnFalseWhenAutomaticHouseholdNamingIsTurnedOff() {
         turnOffAutomaticHHNaming();
 
-        System.assert(!new HH_HouseholdNaming().isAutomaticNaming());
+        System.assert(!new HH_HouseholdNaming().isAutomaticNaming(), 'Automatic Household Naming should be turned off');
     }
 
     /*********************************************************************************************************
@@ -533,7 +543,7 @@ public class HH_HouseholdNaming_TEST {
     private static testMethod void isAutomaticNamingShouldReturnTrueWhenAutomaticHouseholdNamingIsTurnedOn() {
         turnOnAutomaticHHNaming();
 
-        System.assert(new HH_HouseholdNaming().isAutomaticNaming());
+        System.assert(new HH_HouseholdNaming().isAutomaticNaming(), 'Automatic Household Naming should be turned on');
     }
 
     // Helpers

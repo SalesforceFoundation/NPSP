@@ -1300,24 +1300,26 @@ private class ACCT_IndividualAccounts_TEST {
         The Contact is created and updated successfully
     **********************************************************************************************************/ 
     private static testMethod void contactDmlShouldSucceedWhenHHNamingSettingsIsInvalidAndAutomaticHouseholdNamingIsTurnedOff() {
-        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-            new npe01__Contacts_and_Orgs_Settings__c(
-                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR
-            )            
-        );
-
         turnOffAutomaticHHNaming();
         setupInvalidHHNamingSettings();
 
-        Contact contact = new Contact(LastName = 'AutoHHNamingTurnedOff');
-        Test.startTest();
-        insert contact;
-        Test.stopTest();
+        Contact contact = new Contact(LastName = 'Smith');
+        try {
+            insert contact;
 
-        contact.FirstName = 'John';
-        update contact;
+        } catch (Exception e) {
+            System.assert(false, 'Unexpected error on Contact insert: ' + e.getMessage());
+        }
 
-        System.assertEquals('John', [SELECT FirstName FROM Contact WHERE Id = :contact.Id][0].FirstName);
+        try {
+            contact.FirstName = 'John';
+            update contact;
+
+        } catch (Exception e) {
+            System.assert(false, 'Unexpected error on Contact update: ' + e.getMessage());
+        }
+
+        System.assertEquals('John', [SELECT FirstName FROM Contact WHERE Id = :contact.Id][0].FirstName, 'Contact update should succeed');
     }
 
     // Helpers

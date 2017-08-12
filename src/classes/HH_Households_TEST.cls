@@ -165,20 +165,28 @@ public with sharing class HH_Households_TEST {
         setupInvalidHHNamingSettings();
         
         Contact contact = new Contact(FirstName = 'John', LastName = 'Smith');
-        insert contact;
+        try {
+            insert contact;
+        } catch (Exception e) {
+            System.assert(false, 'Unexpected error on Contact insert: ' + e.getMessage());
+        }
   
         npo02__Household__c hh = getHouseholdForContact(contact.id);
     
-        System.assertEquals('Smith ' + system.label.npo02.DefaultHouseholdName, hh.Name);
-        System.assertEquals(null, hh.npo02__Formal_Greeting__c);
-        System.assertEquals(null, hh.npo02__Informal_Greeting__c);
+        System.assertEquals('Smith ' + system.label.npo02.DefaultHouseholdName, hh.Name, 'Household Name should be default household name');
+        System.assertEquals(null, hh.npo02__Formal_Greeting__c, 'Formal Greeting should not be populated');
+        System.assertEquals(null, hh.npo02__Informal_Greeting__c, 'Informal Greeting should not be populated');
 
         contact.LastName = 'Smith Jones';
         Test.startTest();
-        update contact;
+        try {
+            update contact;
+        } catch (Exception e) {
+            System.assert(false, 'Unexpected error on Contact update: ' + e.getMessage());
+        }
         Test.stopTest();
 
-        System.assertEquals('Smith Jones', [SELECT LastName FROM Contact WHERE Id = :contact.Id][0].LastName);
+        System.assertEquals('Smith Jones', [SELECT LastName FROM Contact WHERE Id = :contact.Id][0].LastName, 'Household Name should be the same as Contact LastName');
     }  
     
     /*********************************************************************************************************
