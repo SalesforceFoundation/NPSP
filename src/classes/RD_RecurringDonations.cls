@@ -1133,13 +1133,13 @@ public class RD_RecurringDonations {
     private static date dtEndOfMonthFixup(date dt, npe03__Recurring_Donation__c rd) {
         if (dt.day() == 31 || rd.Always_Use_Last_Day_Of_Month__c == true) {
             dt = date.newInstance(dt.year(), dt.month(), date.daysInMonth(dt.year(), dt.Month()));
-        } else if (dt.day() >= 28 && rd.npe03__Next_Payment_Date__c != null) {
-            // To handle a scenario where the DateEstablished is the >= 29 for a Monthly Donation,
-            // when the system gets around to February, it'll change the next donation to 28/29
+        } else if (dt.day() >= 28 && (rd.npe03__Next_Payment_Date__c != null || rd.npe03__Date_Established__c != null)) {
+            // To handle a scenario where the NextPayment or DateEstablished is the >= 29 for a Monthly
+            // Donation, when the system gets around to February, it'll change the next donation to 28/29
             // which then causes all subsequent months to be set to the 28th (or 29th).
             // This logic ensures that the calculated End Of Month date takes this into account
             // rather than just use the DayOfMonth from the previous installment.
-            Date estDate = rd.npe03__Next_Payment_Date__c;
+            Date estDate = (rd.npe03__Next_Payment_Date__c != null ? rd.npe03__Next_Payment_Date__c : rd.npe03__Date_Established__c);
             Integer dayOfMonth = (date.daysInMonth(dt.year(), dt.Month()) < estDate.day() ?
                     date.daysInMonth(dt.year(), dt.Month()) : estDate.day());
             dt = date.newInstance(dt.year(), dt.month(), dayOfMonth);
