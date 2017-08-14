@@ -242,13 +242,14 @@ public with sharing class HH_Container_LCTRL {
                     strSoql += ', MailingCountryCode, MailingStateCode ';
                 ******/
             
-            setContactFields.addAll(HH_HouseholdNaming.iNaming.setHouseholdNameFieldsOnContact());
+            setContactFields.addAll(new HH_HouseholdNaming().getHouseholdNamingContactFields());
 
             return new list<String>(setContactFields);
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
     }
+
 
     /*******************************************************************************************************
     * @description returns a set of Contact Fields (developer name) that must be editable
@@ -504,19 +505,27 @@ public with sharing class HH_Container_LCTRL {
     public static SObject getHHNamesGreetings(SObject hh, list<Contact> listCon) {
         try {
             // update naming exclusions field based on exclusion checkboxes
-            for (Contact con : listCon)
+            for (Contact con : listCon) {
                 HH_Households_TDTM.copyNamingExclusionsFromCheckboxes(con);
+            }
 
-            HH_HouseholdNaming hn = new HH_HouseholdNaming();
-            String strExclusions = (String)hh.get('npo02__SYSTEM_CUSTOM_NAMING__c');
+            HH_HouseholdNaming hhNaming = new HH_HouseholdNaming();
+
+            if (!hhNaming.isAutomaticNaming()) {
+                return hh;
+            }
+
+            String strExclusions = (String) hh.get('npo02__SYSTEM_CUSTOM_NAMING__c');
             if (strExclusions == null)
                 strExclusions = '';
+                
             if (!strExclusions.contains('Name'))
-                hh.put('Name', hn.getHHName(listCon));
+                hh.put('Name', hhNaming.getHHName(listCon));
             if (!strExclusions.contains('Formal_Greeting__c'))
-                hh.put('npo02__Formal_Greeting__c', hn.getFormalName(listCon));
+                hh.put('npo02__Formal_Greeting__c', hhNaming.getFormalName(listCon));
             if (!strExclusions.contains('Informal_Greeting__c'))
-                hh.put('npo02__Informal_Greeting__c', hn.getInformalName(listCon));
+                hh.put('npo02__Informal_Greeting__c', hhNaming.getInformalName(listCon));
+
             return hh;
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());

@@ -150,7 +150,44 @@ public with sharing class HH_Households_TEST {
 
         Contact[] updatedContacts = [select npo02__household__r.npo02__Formal_Greeting__c  from Contact where id=:con.id];
         system.assertEquals('Handy Man '+CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,updatedContacts[0].npo02__household__r.npo02__Formal_Greeting__c  );
-    }    
+    } 
+
+    /*********************************************************************************************************
+    @description
+        Test Contact insert and update when Household Naming Settings is invalid
+        and the Automatic Household Naming is turned off 
+    verify:
+        The Contact is created and updated successfully
+    **********************************************************************************************************/  
+    static testMethod void contactDmlShouldSucceedWhenHHNamingSettingsIsInvalidAndAutomaticHouseholdNamingIsTurnedOff() {  
+        setupContactSettingsOneToOneProcessor();         
+        turnOffAutomaticHHNamingForAllHouseholdProcessor();
+        setupInvalidHHNamingSettings();
+        
+        Contact contact = new Contact(FirstName = 'John', LastName = 'Smith');
+        try {
+            insert contact;
+        } catch (Exception e) {
+            System.assert(false, 'Unexpected error on Contact insert: ' + e.getMessage());
+        }
+  
+        npo02__Household__c hh = getHouseholdForContact(contact.id);
+    
+        System.assertEquals('Smith ' + system.label.npo02.DefaultHouseholdName, hh.Name, 'Household Name should be default household name');
+        System.assertEquals(null, hh.npo02__Formal_Greeting__c, 'Formal Greeting should not be populated');
+        System.assertEquals(null, hh.npo02__Informal_Greeting__c, 'Informal Greeting should not be populated');
+
+        contact.LastName = 'Smith Jones';
+        Test.startTest();
+        try {
+            update contact;
+        } catch (Exception e) {
+            System.assert(false, 'Unexpected error on Contact update: ' + e.getMessage());
+        }
+        Test.stopTest();
+
+        System.assertEquals('Smith Jones', [SELECT LastName FROM Contact WHERE Id = :contact.Id][0].LastName, 'Household Name should be the same as Contact LastName');
+    }  
     
     /*********************************************************************************************************
     * @description Tests insert private individual with all contacts processor
@@ -427,7 +464,6 @@ public with sharing class HH_Households_TEST {
         
         npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_INDIVIDUALS_PROCESSOR));
         
-        String lastname = 'SmithForTest99';
         Contact con = new Contact(
             FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
             LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
@@ -487,121 +523,6 @@ public with sharing class HH_Households_TEST {
         system.assert(remainingHousehold.size()==1);
         system.assertEquals(1, remainingHousehold[0].Number_Of_Household_Members__c);
     }
-
-/************************************ Not Used ***************************************
-    /*********************************************************************************************************
-    * @description 
-
-    static testMethod void getHouseholdTransactionTotal_test()
-    {
-        npo02__Household__c h = new npo02__Household__c(Name='Test Household');
-        insert h;
-        Contact c = new Contact(
-            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
-            npo02__Household__c=h.Id
-        );
-        insert c;
-        Opportunity o = new Opportunity(Name='test oppty',CloseDate=System.Today(),StageName=UTIL_UnitTestData_TEST.getClosedWonStage(),Amount=100);
-        insert o;
-        OpportunityContactRole ocr = new OpportunityContactRole(OpportunityId=o.Id,ContactId=c.Id,Role='Test');
-        insert ocr;
-        system.assertEquals(system.label.npo02.DefaultHouseholdTransactionCurrency + '100.00',HH_Households.getHouseholdTransactionTotal(h.id));
-    }
-    
-    /*********************************************************************************************************
-    * @description 
-    static testMethod void getHouseholdLastTransaction_test()
-    {
-        Integer year = 2005;
-        Integer month = 10;
-        Integer day = 10;
-        npo02__Household__c h = new npo02__Household__c(Name='Test Household');
-        insert h;
-        Contact c = new Contact(
-            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
-            npo02__Household__c=h.Id
-        );
-        insert c;
-        Opportunity o = new Opportunity(Name='test oppty',CloseDate=date.newInstance(year,month,day),StageName=UTIL_UnitTestData_TEST.getClosedWonStage(),Amount=100);
-        insert o;
-        OpportunityContactRole ocr = new OpportunityContactRole(OpportunityId=o.Id,ContactId=c.Id,Role='Test');
-        insert ocr;
-        system.assertEquals(String.valueOf(year)+'-'+String.valueOf(month)+'-'+String.valueOf(day),HH_Households.getHouseholdLastTransaction(h.id));
-    }
-*****************************************/
-    
-/**** deprecated in Cumulus
-     /// visualforce and apex methods for totals
-    static testMethod void getHouseholdTransactionAmount_test()
-    {
-        
-        npo02__Household__c h = new npo02__Household__c(Name='Test Household');
-        insert h;
-        Contact c = new Contact(
-            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
-            npo02__Household__c=h.Id
-        );
-        insert c;
-        Opportunity o = new Opportunity(Name='test oppty',CloseDate=date.newInstance(2007,3,3),StageName=UTIL_UnitTestData_TEST.getClosedWonStage(),Amount=100);
-        insert o;
-        OpportunityContactRole ocr = new OpportunityContactRole(OpportunityId=o.Id,ContactId=c.Id,Role='Test');
-        insert ocr;
-        
-        //pass contact into the controller
-        ApexPages.StandardController sc = new ApexPages.standardController(h);
-        //pass the controller into the extension
-        HouseholdTransactionHistory_EXT ext = new HouseholdTransactionHistory_EXT(sc);  
-        
-        system.assertEquals(system.label.npo02.DefaultHouseholdTransactionCurrency + '100.00',ext.getHouseholdTransactionTotal());
-    }
-    
-    /// visualforce and apex methods for totals
-    static testMethod void getHouseholdLastTransactionDate_test()
-    {
-        Integer year = 2005;
-        Integer month = 10;
-        Integer day = 10;
-        
-        npo02__Household__c h = new npo02__Household__c(Name='Test Household');
-        insert h;
-        Contact c = new Contact(
-            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
-            npo02__Household__c=h.Id
-        );
-        insert c;
-        Opportunity o = new Opportunity(Name='test oppty',CloseDate=date.newInstance(year,month,day),StageName=UTIL_UnitTestData_TEST.getClosedWonStage(),Amount=100);
-        insert o;
-        OpportunityContactRole ocr = new OpportunityContactRole(OpportunityId=o.Id,ContactId=c.Id,Role='Test');
-        insert ocr;
-        
-        //pass contact into the controller
-        ApexPages.StandardController sc = new ApexPages.standardController(h);
-        //pass the controller into the extension
-        HouseholdTransactionHistory_EXT ext = new HouseholdTransactionHistory_EXT(sc);
-        
-        system.assertEquals(String.valueOf(day) + '/' + String.valueOf(month) + '/' + String.valueOf(year),ext.getLastTransactionDate());
-    }
-****/
     
     /*********************************************************************************************************
     * @description Tests moving a contact from one household to another, leaving the old household empty.
@@ -825,5 +746,108 @@ public with sharing class HH_Households_TEST {
         system.assertEquals('Smith ' + system.label.npo02.DefaultHouseholdName, hh.Name);
         system.assertEquals('Joe Smith', hh.npo02__Formal_greeting__c);
         system.assertEquals('Joe', hh.npo02__Informal_greeting__c);
+    } 
+
+    // Helpers
+    ////////////
+
+    /*********************************************************************************************************
+    * @description Turns on Automatic Household Naming
+    * @return void
+    **********************************************************************************************************/
+    private static void turnOnAutomaticHHNamingForAllHouseholdProcessor() {
+        setupAutomaticHHNamingForAllHouseholdProcessor(true);
+    }
+
+    /*********************************************************************************************************
+    * @description Turns off Automatic Household Naming
+    * @return void
+    **********************************************************************************************************/
+    private static void turnOffAutomaticHHNamingForAllHouseholdProcessor() {
+        setupAutomaticHHNamingForAllHouseholdProcessor(false);
+    }
+
+    /*********************************************************************************************************
+    * @description Configures Household Settings' Automatic Household Naming field
+    * @param isOn Automatic Household Naming is turned on when parameter is true, otherwise, the settings is turned off
+    * @return void
+    **********************************************************************************************************/
+    private static void setupAutomaticHHNamingForAllHouseholdProcessor(Boolean isOn) {
+        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (
+                npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                npo02__Advanced_Household_Naming__c = isOn
+            )
+        );
+    }
+
+    /*********************************************************************************************************
+    * @description Configures Household Naming Settings with invalid Name and Greetings formats
+    * @return void
+    **********************************************************************************************************/
+    private static void setupInvalidHHNamingSettings() {
+        setupHHNamingSettings('{!{!FirstName}} {!LastName}} Household', '{!{!Title} {!FirstName}}}{!LastName}', '{!{!FirstName}}}');
+    }
+
+    /*********************************************************************************************************
+    * @description Configures Household Naming Settings with valid Name and Greetings formats
+    * @return void
+    **********************************************************************************************************/
+    private static void setupHHNamingSettings() {
+        setupHHNamingSettings('{!LastName} Household', '{!{!Title}} {!LastName}', '{!{!FirstName}}');
+    }
+
+    /*********************************************************************************************************
+    * @description Configures Household Naming Settings 
+    * @param hhNameFormat Household Naming Format
+    * @param formalGreetingFormat Formal Greeting Format
+    * @param informalGreetingFormat Informal Greeting Format
+    * @return void
+    **********************************************************************************************************/
+    private static void setupHHNamingSettings(String hhNameFormat, String formalGreetingFormat, String informalGreetingFormat) {
+        UTIL_CustomSettingsFacade.getHouseholdNamingSettingsForTests(
+            new Household_Naming_Settings__c(
+                Household_Name_Format__c = hhNameFormat,
+                Formal_Greeting_Format__c = formalGreetingFormat,
+                Informal_Greeting_Format__c = informalGreetingFormat,
+                Name_Connector__c = label.npo02.HouseholdNameConnector,
+                Name_Overrun__c = label.npo02.HouseholdNameOverrun,
+                Contact_Overrun_Count__c = 9,
+                Implementing_Class__c = 'HH_NameSpec'
+            )
+        );
+    }
+
+    /*********************************************************************************************************
+    * @description Sets up Contact Settings with Account Processor = CAO_Constants.ONE_TO_ONE_PROCESSOR
+    * @return void
+    **********************************************************************************************************/
+    private static void setupContactSettingsOneToOneProcessor() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c(
+                npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR
+            )
+        );
+    }
+
+    /*********************************************************************************************************
+    * @description Retrieves Household object referenced by the Contact 
+    * @param contactId Id of the Contact
+    * @return npo02__Household__c Household object or null if the Contact has no Household reference
+    **********************************************************************************************************/
+    private static npo02__Household__c getHouseholdForContact(Id contactId) {
+        Contact[] contacts = [
+            SELECT npo02__Household__c, 
+                npo02__Household__r.Id, npo02__Household__r.Name, 
+                npo02__Household__r.npo02__Formal_greeting__c, 
+                npo02__Household__r.npo02__Informal_greeting__c 
+            FROM Contact 
+            WHERE Id = :contactId
+        ];
+        System.assert(contacts != null);
+        
+        return contacts[0].npo02__Household__c == null
+            ? null
+            : contacts[0].npo02__Household__r;
     }
 }

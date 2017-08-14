@@ -230,46 +230,9 @@ public class HH_HouseholdNaming_TEST {
         //update our newly updated contact's households
         HH_HouseholdNaming hn = new HH_HouseholdNaming();
         test.startTest();
-        hn.UpdateNames(newhhids);
+        hn.UpdateNames(newhhids);        
         
-        //take teh list of contacts in each of the households in newhhids, and run them
-        //back through the public string calls to test them - this never quite worked -
-        // i think something about how HHs are created, with the contact re-update is causing
-        //an issue in testing
-       /* 
-        map<id, npo02__Household__c> hhmap = new map<id, npo02__Household__c>([select npo02__SYSTEM_CUSTOM_NAMING__c, Name, npo02__Informal_greeting__c, npo02__Formal_greeting__c from npo02__Household__c where id IN :newhhids]);
-        
-        list<Contact> lc = new list<contact>([select npo02__household__r.id, 
-        npo02__household__r.name, npo02__household__r.npo02__Informal_Greeting__c, FirstName, Salutation, LastName, 
-        npo02__Naming_Exclusions__c, npo02__household__r.npo02__SYSTEM_CUSTOM_NAMING__c,
-        npo02__household__r.npo02__Formal_Greeting__c from Contact where npo02__household__r.id IN :newhhids]);
-        
-        map<id,list <Contact>> hhidContactMap = new map<id, list <Contact>>();
-        for (Contact c : lc){
-            if(!hhIDContactMap.containskey(c.npo02__household__r.id)){
-                hhIDContactMap.put(c.npo02__household__r.id, new list<Contact>{c});
-            }
-            else{
-                list<Contact> conlist = hhIDContactMap.get(c.npo02__household__r.id);
-                conlist.add(c);                
-            }
-        }
-        
-        //for each one, run its contact through the  test methods
-        //and compare it with the household values from teh first contact
-        //record              
-        for (id HHID : hhidContactMap.keySet()){
-            if (hhidcontactmap.get(hhid)[0].npo02__household__r.npo02__SYSTEM_CUSTOM_NAMING__c != null){
-                system.assert(!hhidcontactmap.get(hhid)[0].npo02__household__r.npo02__SYSTEM_CUSTOM_NAMING__c.contains('Name'));
-                system.assert(!hhidcontactmap.get(hhid)[0].npo02__household__r.npo02__SYSTEM_CUSTOM_NAMING__c.contains('npo02__Informal_Greeting__c'));
-                system.assert(!hhidcontactmap.get(hhid)[0].npo02__household__r.npo02__SYSTEM_CUSTOM_NAMING__c.contains('npo02__Formal_Greeting__c'));
-            } 
-            system.assertEquals(hhMap.get(hhid).Name, hn.getHHName(hhidcontactmap.get(hhid)));
-            system.assertEquals(hhidcontactmap.get(hhid)[0].npo02__household__r.npo02__Informal_Greeting__c, hn.getInformalName(hhidcontactmap.get(hhid)));
-            system.assertEquals(hhidcontactmap.get(hhid)[0].npo02__household__r.npo02__Formal_Greeting__c, hn.getFormalName(hhidcontactmap.get(hhid)));
-        }       
-        */
-    test.stopTest();        
+        test.stopTest();        
     }
     
     /*********************************************************************************************************
@@ -452,5 +415,211 @@ public class HH_HouseholdNaming_TEST {
         system.assertEquals('c1, c0 and c2 smith', hh.npo02__Formal_greeting__c);
         system.assertEquals('c1, c0 and c2', hh.npo02__Informal_greeting__c);
   
+    }
+
+    /*********************************************************************************************************
+    @description
+        Test strContactSelectStmtAllNamingFields property when Household Naming Settings is valid
+        and the Automatic Household Naming is turned on 
+    verify:
+        Household Naming Settings fields are included in the SOQL.
+        No error is raised when the SOQL is executed.
+    **********************************************************************************************************/  
+    private static testMethod void contactSoqlShouldContainHHNamingFieldsWhenAutomaticHouseholdNamingIsTurnedOn() {
+        turnOnAutomaticHHNaming();
+        setupHHNamingSettings();
+
+        String soql = new HH_HouseholdNaming().strContactSelectStmtAllNamingFields;
+
+        for (String fieldName : new String[] { 
+            'Id', 'HHId__c', 'npo02__Naming_Exclusions__c', // mandatory fields
+            'LastName', 'FirstName', 'Salutation', 'npe01__WorkEmail__c' //HH Naming fields
+        }) {
+            System.assert(soql.contains(fieldName), fieldName + ' should be in the SOQL: ' + soql);
+        }
+        
+        //verify the soql is valid and will not raise exceptions
+        System.assert(!soql.contains('}'), 'SOQL should be correct: ' + soql);
+        
+        try {
+            List<Contact> contacts = Database.Query(soql);
+        } catch (Exception e) {
+            System.assert(false, 'Unexpected error raised for SOQL: ' + soql);
+        }
+    }
+
+    /*********************************************************************************************************
+    @description
+        Test strContactSelectStmtAllNamingFields property when Household Naming Settings is invalid
+        and the Automatic Household Naming is turned off
+    verify:
+        Household Naming Settings fields are not included in the SOQL.
+        No error is raised when the SOQL is executed.
+    **********************************************************************************************************/  
+    private static testMethod void contactSoqlShouldNotContainHHNamingFieldsWhenAutomaticHouseholdNamingIsTurnedOff() {
+        turnOffAutomaticHHNaming();
+        setupInvalidHHNamingSettings();
+
+        String soql = new HH_HouseholdNaming().strContactSelectStmtAllNamingFields;
+
+        for (String fieldName : new String[] { 
+            'Id', 'HHId__c', 'npo02__Naming_Exclusions__c' // mandatory fields
+        }) {
+            System.assert(soql.contains(fieldName), fieldName + ' should be in the SOQL: ' + soql);
+        }
+
+        for (String fieldName : new String[] { 
+            'LastName', 'FirstName', 'Salutation', 'npe01__WorkEmail__c' //HH Naming fields
+        }) {
+            System.assert(!soql.contains(fieldName), fieldName + ' should not be in the SOQL: ' + soql);
+        }
+        
+        //verify the soql is valid and will not raise exceptions
+        System.assert(!soql.contains('}'), 'SOQL should be correct: ' + soql);
+
+        try {
+            List<Contact> contacts = Database.Query(soql);
+        } catch (Exception e) {
+            System.assert(false, 'Unexpected error raised for SOQL: ' + soql);
+        }
+    }
+
+    /*********************************************************************************************************
+    @description
+        Test getHouseholdNamingContactFields() method when Household Naming Settings is invalid
+        and the Automatic Household Naming is turned off
+    verify:
+        Returned set is empty.
+    **********************************************************************************************************/  
+    private static testMethod void getHouseholdNamingContactFieldsShouldReturnEmptySetWhenAutomaticHouseholdNamingIsTurnedOff() {
+        turnOffAutomaticHHNaming();
+        setupInvalidHHNamingSettings();
+
+        Set<String> fieldNames = new HH_HouseholdNaming().getHouseholdNamingContactFields();
+
+        System.assert(fieldNames.isEmpty(), 'No field name should be returned: ' + fieldNames);
+    }
+    
+    /*********************************************************************************************************
+    @description
+        Test getHouseholdNamingContactFields() method when Household Naming Settings is valid
+        and the Automatic Household Naming is turned on
+    verify:
+        Returned set contains Contact field names specified in the Household Naming Settings.
+    **********************************************************************************************************/  
+    private static testMethod void getHouseholdNamingContactFieldsShouldReturnContactFieldNamesWhenAutomaticHouseholdNamingIsTurnedOn() {
+        turnOnAutomaticHHNaming();
+        setupHHNamingSettings();
+
+        Set<String> fieldNames = new HH_HouseholdNaming().getHouseholdNamingContactFields();
+
+        System.assertEquals(4, fieldNames.size(), fieldNames);  
+        
+        for (String fieldName : new String[] {
+            'LastName', 'FirstName', 'Salutation', 'npe01__WorkEmail__c' //HH Naming fields
+        }) {
+            System.assert(fieldNames.contains(fieldName), fieldName + ' should be in: ' + fieldNames);
+        }    
+    }
+
+    /*********************************************************************************************************
+    @description
+        Test isAutomaticNaming() method when the Automatic Household Naming is turned off
+    verify:
+        The method returns false.
+    **********************************************************************************************************/  
+    private static testMethod void isAutomaticNamingShouldReturnFalseWhenAutomaticHouseholdNamingIsTurnedOff() {
+        turnOffAutomaticHHNaming();
+
+        System.assert(!new HH_HouseholdNaming().isAutomaticNaming(), 'Automatic Household Naming should be turned off');
+    }
+
+    /*********************************************************************************************************
+    @description
+        Test isAutomaticNaming() method when the Automatic Household Naming is turned on
+    verify:
+        The method returns true.
+    **********************************************************************************************************/  
+    private static testMethod void isAutomaticNamingShouldReturnTrueWhenAutomaticHouseholdNamingIsTurnedOn() {
+        turnOnAutomaticHHNaming();
+
+        System.assert(new HH_HouseholdNaming().isAutomaticNaming(), 'Automatic Household Naming should be turned on');
+    }
+
+    // Helpers
+    ////////////
+    
+    /*********************************************************************************************************
+    * @description Turns on Automatic Household Naming
+    * @return void
+    **********************************************************************************************************/
+    private static void turnOnAutomaticHHNaming() {
+        setupAutomaticHHNaming(true);
+    }
+
+    /*********************************************************************************************************
+    * @description Turns off Automatic Household Naming
+    * @return void
+    **********************************************************************************************************/
+    private static void turnOffAutomaticHHNaming() {
+        setupAutomaticHHNaming(false);
+    }
+
+    /*********************************************************************************************************
+    * @description Configures Household Settings' Automatic Household Naming field
+    * @param isOn Automatic Household Naming is turned on when parameter is true, otherwise, the settings is turned off
+    * @return void
+    **********************************************************************************************************/
+    private static void setupAutomaticHHNaming(Boolean isOn) {
+        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (
+                npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR,
+                npo02__Advanced_Household_Naming__c = isOn
+            )
+        );
+    }
+    /*********************************************************************************************************
+    * @description Configures Household Naming Settings with invalid Name and Greetings formats
+    * @return void
+    **********************************************************************************************************/
+    private static void setupInvalidHHNamingSettings() {
+        setupHHNamingSettings(
+            'The {!LastName}, {!{!FirstName}}} {!npe01__WorkEmail__c}} Family',
+            '{!{!Salutation} {!FirstName}}} {!LastName}',
+            '{!{!FirstName}}}'
+        );
+    }
+
+    /*********************************************************************************************************
+    * @description Configures Household Naming Settings with valid Name and Greetings formats
+    * @return void
+    **********************************************************************************************************/
+    private static void setupHHNamingSettings() {
+        setupHHNamingSettings(
+            'The {!LastName}, {!{!FirstName} {!npe01__WorkEmail__c}} Family',
+            '{!{!Salutation} {!FirstName}} {!LastName}',
+            '{!{!FirstName}}'
+        );
+    }
+
+    /*********************************************************************************************************
+    * @description Configures Household Naming Settings 
+    * @param hhNameFormat Household Naming Format
+    * @param formalGreetingFormat Formal Greeting Format
+    * @param informalGreetingFormat Informal Greeting Format
+    * @return void
+    **********************************************************************************************************/
+    private static void setupHHNamingSettings(String hhNameFormat, String formalGreetingFormat, String informalGreetingFormat) {
+        UTIL_CustomSettingsFacade.getHouseholdNamingSettingsForTests(
+            new Household_Naming_Settings__c(
+                Household_Name_Format__c = hhNameFormat,
+                Formal_Greeting_Format__c = formalGreetingFormat,
+                Informal_Greeting_Format__c = informalGreetingFormat,
+                Name_Connector__c = label.npo02.HouseholdNameConnector,
+                Name_Overrun__c = label.npo02.HouseholdNameOverrun,
+                Contact_Overrun_Count__c = 9,
+                Implementing_Class__c = 'HH_NameSpec'
+            )
+        );
     }
 }

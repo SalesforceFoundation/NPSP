@@ -84,6 +84,72 @@ public with sharing class UTIL_Describe_TEST {
         } catch (exception e) {
             system.assertEquals('Invalid field name \'sdlkfjsdlkfjsldkfjlsdkfj\'', e.getMessage());
         } 
-    }       
+    }  
+
+    /*********************************************************************************************************
+    @description
+        Test getFieldResultsByName() for an Sobject
+    verify:
+        The method returns field results by the field name or relationship name for the specified Sobject
+    **********************************************************************************************************/ 
+    private static testMethod void getFieldResultsByNameShouldReturnFieldResultsForAnSobject() {
+        Map<String, Schema.DescribeFieldResult> fieldResultsByName = UTIL_Describe.getFieldResultsByName(Contact.SObjectType);
+
+        for (String fieldName : new String[] {
+            'FirstName', 'AccountId', 'Account', 'OwnerId', 'Owner'
+        }) {
+            System.assert(fieldResultsByName.containsKey(fieldName), fieldName + ' should be in Contact fields: ' + fieldResultsByName.keySet());
+        }
+        
+        fieldResultsByName = UTIL_Describe.getFieldResultsByName(Opportunity.SObjectType);
+
+        for (String fieldName : new String[] {
+            'Name', 'StageName', 'AccountId', 'Account'
+        }) {
+            System.assert(fieldResultsByName.containsKey(fieldName), fieldName + ' should be in Opportunity fields: ' + fieldResultsByName.keySet());
+        }
+    }
+
+    /*********************************************************************************************************
+    @description
+        Test isValidApiName() when a field is valid case sensitive API Name for the Sobject
+    verify:
+        The method returns true
+    **********************************************************************************************************/ 
+    private static testMethod void isValidApiNameShouldReturnTrueWhenFieldNameIsValid() {
+        Map<String, Schema.DescribeFieldResult> contactFieldResultsByName = UTIL_Describe.getFieldResultsByName(Contact.SObjectType);
+
+        for (String fieldName : new String[] {
+            'Name', 'FirstName', 'LastName',
+            'AccountId', 'Account.Id', 'Account.Name', 
+            'Account.BillingCity', 'Account.npe01__One2OneContact__c',
+            'Account.npe01__One2OneContact__r.LastName',
+            'OwnerId', 'Owner.Name'
+        }) {
+            System.assert(UTIL_Describe.isValidApiName(fieldName, contactFieldResultsByName), fieldName + ' should be valid');
+        }
+    }
+
+    /*********************************************************************************************************
+    @description
+        Test isValidApiName() when a field name is invalid case sensitive API Name for the Sobject
+    verify:
+        The method returns false
+    **********************************************************************************************************/ 
+    private static testMethod void isValidApiNameShouldReturnFalseWhenFieldNameIsInvalid() {
+        Map<String, Schema.DescribeFieldResult> contactFieldResultsByName = UTIL_Describe.getFieldResultsByName(Contact.SObjectType);
+
+        for (String fieldName : new String[] {
+            null, '', ' ',
+            'firstname', 'Firstname', 'FirstName__c',
+            'foo', 'Account.foo', 
+            'Account.npe01__One2OneContact__r.foo',
+            'Account.npe01__One2OneContact__r.',
+            'Account.npe01__One2OneContact__c.foo',
+            'Owner.foo'
+        }) {
+            System.assert(!UTIL_Describe.isValidApiName(fieldName, contactFieldResultsByName), fieldName + ' should be invalid');
+        }
+    }     
 
 }
