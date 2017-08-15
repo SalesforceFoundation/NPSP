@@ -180,25 +180,6 @@ private class HH_HouseholdNamingSettingValidator_TEST {
 
     /*********************************************************************************************************
     @description
-        Test validation of API Names for Contact fields specified in all format fields. 
-    verify:
-        The notification contains an error for each field that is not correct case-sensitive API Name
-    **********************************************************************************************************/ 
-    private static testMethod void validateShouldAddErrorWhenContactFieldsApiNameIsInvalid() {
-        Household_Naming_Settings__c settings = setupHHNamingSettings();
-        settings.Household_Name_Format__c = 'The {!lastname}, {!{!FirstName} {!npe01__workemail__c}} Family'; 
-
-        notification = validator.validate(settings);
-
-        String[] expectedErrors = new String[] {
-            String.format(Label.stgErrorInvalidApiName, new String[]{ 'lastname' }),
-            String.format(Label.stgErrorInvalidApiName, new String[]{ 'npe01__workemail__c' })
-        };
-        assertErrors(expectedErrors, notification); 
-    }
-
-    /*********************************************************************************************************
-    @description
         Test validation when a format field is empty
     verify:
         The notification does not contain any error

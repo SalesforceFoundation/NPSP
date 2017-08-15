@@ -108,13 +108,6 @@ public with sharing class HH_HouseholdNamingSettingValidator {
         validateFormat('Household_Name_Format__c', settings, hhNaming, notification);
         validateFormat('Formal_Greeting_Format__c', settings, hhNaming, notification);
         validateFormat('Informal_Greeting_Format__c', settings, hhNaming, notification);
-
-        if (!notification.isSuccess()) {
-            //the rest of validation will run only if the format is correct
-            return; 
-        }
-        
-        validateContactFieldsApiName(hhNaming, notification);
     }
 
     /*********************************************************************************************************
@@ -143,25 +136,6 @@ public with sharing class HH_HouseholdNamingSettingValidator {
             );       
         } 
     } 
-
-    /*********************************************************************************************************
-    * @description Validates whether Household Naming Settings format fields are correct case-sensitive API Names
-    * @param hhNaming An instance of the settings' Implementing Class
-    * @param notification Contains reported validation errors
-    * @return void
-    */
-    private void validateContactFieldsApiName(HH_INaming hhNaming, Notification notification) {
-        Map<String, Schema.DescribeFieldResult> contactFieldResultsByName = UTIL_Describe.getFieldResultsByName(Contact.SObjectType);
-        Set<String> fieldNames = hhNaming.setHouseholdNameFieldsOnContact();
-
-        for (String fieldName : fieldNames) {
-            if (!UTIL_Describe.isValidApiName(fieldName, contactFieldResultsByName)) {
-                notification.addError( 
-                    String.format(Label.stgErrorInvalidApiName, new String[]{ fieldName })
-                );
-            }
-        }
-    }
 
     /*********************************************************************************************************
     * @description Builds list of example Contacts used to validate settings' format fields

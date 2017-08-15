@@ -38,6 +38,11 @@
 public without sharing class HH_HouseholdNaming {
 
     /*******************************************************************************************************
+    * @description Exception raised by the Household Naming
+    */
+    public class HouseholdNamingException extends Exception {} 
+
+    /*******************************************************************************************************
     * @description future method to update the household names for the specified households
     * @param hhids the list of household Id's (either Household__c or Account Id's)
     * @return void
@@ -228,13 +233,33 @@ public without sharing class HH_HouseholdNaming {
     }
 
     /*******************************************************************************************************
-    * @description Returns Contact field names specified in the Household Naming Settings 
-    * @return Set<String> Set of Contact field names if the Automatic Household Naming is enabled; otherwise, an empty set
+    * @description Returns Contact fields specified in the Household Naming Settings format fields 
+    * @return Set<String> Set of Contact field API names if the Automatic Household Naming is enabled; otherwise, an empty set
     */
     public Set<String> getHouseholdNamingContactFields() {
-        return isAutomaticNaming()
-            ? iNaming.setHouseholdNameFieldsOnContact()
-            : new Set<String>();
+        if (!isAutomaticNaming()) {
+            return new Set<String>();
+        }
+    
+        Set<String> fieldNames = iNaming.setHouseholdNameFieldsOnContact();
+        if (fieldNames == null || fieldNames.isEmpty()) {
+            return new Set<String>();
+        }
+
+        Map<String, Schema.SObjectField> contactFieldsByName = Contact.SobjectType.getDescribe().fields.getMap();
+
+        Set<String> apiNames = new Set<String>();
+        for (String fieldName : fieldNames) {
+            Schema.SObjectField field = contactFieldsByName.get(fieldName.toLowerCase());
+
+            if (field == null) {
+                throw new HouseholdNamingException(String.format(Label.hhErrorInvalidContactFieldName, new String[]{ fieldName }));
+            }
+
+            apiNames.add(field.getDescribe().getName());
+        }
+
+        return apiNames;
     }
 
     /*******************************************************************************************************

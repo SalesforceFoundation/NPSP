@@ -513,13 +513,61 @@ public class HH_HouseholdNaming_TEST {
 
         Set<String> fieldNames = new HH_HouseholdNaming().getHouseholdNamingContactFields();
 
-        System.assertEquals(4, fieldNames.size(), fieldNames);  
+        System.assertEquals(4, fieldNames.size(), 'Actual fields: ' + fieldNames);  
         
         for (String fieldName : new String[] {
-            'LastName', 'FirstName', 'Salutation', 'npe01__WorkEmail__c' //HH Naming fields
+            'LastName', 'FirstName', 'Salutation', 'npe01__WorkEmail__c' 
         }) {
             System.assert(fieldNames.contains(fieldName), fieldName + ' should be in: ' + fieldNames);
         }    
+    }
+
+    /*********************************************************************************************************
+    @description
+        Test getHouseholdNamingContactFields() method when Household Naming Settings format field contains
+        different case API names
+    verify:
+        Returned set contains Contact field API names.
+    **********************************************************************************************************/  
+    private static testMethod void getHouseholdNamingContactFieldsShouldReturnUniqueContactFieldApiNames() {
+        turnOnAutomaticHHNaming();
+
+        Household_Naming_Settings__c settings = setupHHNamingSettings();
+        settings.Household_Name_Format__c = 'The {!lastname}, {!{!FirstName}} Family';
+        settings.Formal_Greeting_Format__c = '{!{!SALUTATION} {!FirstName}} {!LastName}';
+
+        Set<String> fieldNames = new HH_HouseholdNaming().getHouseholdNamingContactFields();
+
+        Set<String> expectedFieldNames = new Set<String>{ 'LastName', 'FirstName', 'Salutation' };
+
+        System.assertEquals(expectedFieldNames.size(), fieldNames.size(), 'Actual fields: ' + fieldNames);  
+        
+        System.assert(expectedFieldNames.containsAll(fieldNames), 'Expected names: ' + expectedFieldNames + '; Actual names: ' + fieldNames);
+    }
+
+    /*********************************************************************************************************
+    @description
+        Test getHouseholdNamingContactFields() method when a deleted Contact field name is included in a
+        Household Naming Settings format field
+    verify:
+        An exception is thrown.
+    **********************************************************************************************************/  
+    private static testMethod void getHouseholdNamingContactFieldsShouldThrowExceptionWhenHHNamingFormatFieldContainsInvalidContactField() {
+        turnOnAutomaticHHNaming();
+
+        Household_Naming_Settings__c settings = setupHHNamingSettings();
+        settings.Household_Name_Format__c = 'The {!deletedField__c}, {!{!FirstName}} Family';
+
+        try {
+            Set<String> fieldNames = new HH_HouseholdNaming().getHouseholdNamingContactFields();
+
+            System.assert(false, 'An exception should have been thrown for invalid field name');
+        } catch (Exception e) {
+            System.assertEquals(
+                String.format(Label.hhErrorInvalidContactFieldName, new String[]{ 'deletedField__c' }),
+                e.getMessage()
+            );
+        }
     }
 
     /*********************************************************************************************************
@@ -580,10 +628,10 @@ public class HH_HouseholdNaming_TEST {
     }
     /*********************************************************************************************************
     * @description Configures Household Naming Settings with invalid Name and Greetings formats
-    * @return void
+    * @return Household_Naming_Settings__c
     **********************************************************************************************************/
-    private static void setupInvalidHHNamingSettings() {
-        setupHHNamingSettings(
+    private static Household_Naming_Settings__c setupInvalidHHNamingSettings() {
+        return setupHHNamingSettings(
             'The {!LastName}, {!{!FirstName}}} {!npe01__WorkEmail__c}} Family',
             '{!{!Salutation} {!FirstName}}} {!LastName}',
             '{!{!FirstName}}}'
@@ -592,10 +640,10 @@ public class HH_HouseholdNaming_TEST {
 
     /*********************************************************************************************************
     * @description Configures Household Naming Settings with valid Name and Greetings formats
-    * @return void
+    * @return Household_Naming_Settings__c
     **********************************************************************************************************/
-    private static void setupHHNamingSettings() {
-        setupHHNamingSettings(
+    private static Household_Naming_Settings__c setupHHNamingSettings() {
+        return setupHHNamingSettings(
             'The {!LastName}, {!{!FirstName} {!npe01__WorkEmail__c}} Family',
             '{!{!Salutation} {!FirstName}} {!LastName}',
             '{!{!FirstName}}'
@@ -607,10 +655,10 @@ public class HH_HouseholdNaming_TEST {
     * @param hhNameFormat Household Naming Format
     * @param formalGreetingFormat Formal Greeting Format
     * @param informalGreetingFormat Informal Greeting Format
-    * @return void
+    * @return Household_Naming_Settings__c
     **********************************************************************************************************/
-    private static void setupHHNamingSettings(String hhNameFormat, String formalGreetingFormat, String informalGreetingFormat) {
-        UTIL_CustomSettingsFacade.getHouseholdNamingSettingsForTests(
+    private static Household_Naming_Settings__c setupHHNamingSettings(String hhNameFormat, String formalGreetingFormat, String informalGreetingFormat) {
+        return UTIL_CustomSettingsFacade.getHouseholdNamingSettingsForTests(
             new Household_Naming_Settings__c(
                 Household_Name_Format__c = hhNameFormat,
                 Formal_Greeting_Format__c = formalGreetingFormat,

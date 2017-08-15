@@ -1174,6 +1174,7 @@
         <members>hhCmpDedupeLabelOpenReport</members>
         <members>hhCmpDedupeNoReport</members>
         <members>hhCmpDedupeStatus</members>
+        <members>hhErrorInvalidContactFieldName</members>
         <members>isARequiredField</members>
         <members>labelListViewFirst</members>
         <members>labelListViewLast</members>
@@ -1339,7 +1340,6 @@
         <members>stgDocumentation</members>
         <members>stgDontAutoScheduleHelpText</members>
         <members>stgErrorINaming</members>
-        <members>stgErrorInvalidApiName</members>
         <members>stgErrorInvalidClass</members>
         <members>stgErrorInvalidNameFormat</members>
         <members>stgHHNameRefreshTitle</members>
