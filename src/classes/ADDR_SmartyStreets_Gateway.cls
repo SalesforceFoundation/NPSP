@@ -92,10 +92,11 @@ public with sharing class ADDR_SmartyStreets_Gateway {
     */
     public List<AddressResponse> verifyAddresses(List<AddressRequest> addresses) {
 
-        if (addresses == null || addresses.isEmpty())
+        if (addresses == null || addresses.isEmpty()) {
             return null;
-        else if (addresses.size() > 100) //This is a smartyStreets limit
+        } else if (addresses.size() > 100) { //This is a smartyStreets limit
             throw new LiveAddressException(Label.Address_Verification_Limit);
+        }
 
         String endpoint;
         if (settings.Address_Verification_Endpoint__c != null) {
@@ -213,7 +214,13 @@ public with sharing class ADDR_SmartyStreets_Gateway {
 	               req.setBody('invalid-zip');
 	            response = mockResponseGenerator.respond(req);
 	        } else {
-	        	// execute the request
+                if (Test.isRunningTest() && req.getBody().contains('multiple-address')) {
+                    // To allow for the mock reponse to include the correct # of response addresses, pass in
+                    // this header element with the payload size
+                    req.setHeader('bodySize', payload.size().format());
+                    UTIL_Debug.debug(LoggingLevel.WARN, '****Send Response Size ' + req.getHeader('bodySize'));
+                }
+                // execute the request
 	        	response = h.send(req);
 	        }
     	} else {

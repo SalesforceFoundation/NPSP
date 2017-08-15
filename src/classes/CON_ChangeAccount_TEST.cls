@@ -377,10 +377,8 @@ public with sharing class CON_ChangeAccount_TEST {
         con.MailingStreet = 'street override';
         con.MailingCity = 'city override';
         con.is_Address_Override__c = true;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         update con;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        
+
         // move the first contact in the first account to the other account.
         con.AccountId = ADDR_Addresses_TEST.listAccT[1].Id;
         Test.startTest();
