@@ -45,7 +45,7 @@ public without sharing class HH_HouseholdNaming {
     @future
     public static void FutureUpdateNames(list<id> hhids){
         //set our process control to avoid recursive updating on household records
-        HH_ProcessControl.inFutureContext = true;
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
 
         //create a new instance of the HH_HouseholdNaming class -
         //and pass in our param
@@ -54,7 +54,7 @@ public without sharing class HH_HouseholdNaming {
 
         hn.UpdateNames(hhids);
 
-        HH_ProcessControl.inFutureContext = false;    
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);    
     }
 
     /*******************************************************************************************************
@@ -68,7 +68,7 @@ public without sharing class HH_HouseholdNaming {
     public void UpdateNames(list<id> hhids){
 
         //we need this turned on to prevent recursive triggering on household creation
-        HH_ProcessControl.inFutureContext = true;
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
 
         //get all of the contacts and their associated households
         //return them in the order of household and then household naming order
@@ -131,7 +131,7 @@ public without sharing class HH_HouseholdNaming {
         	update hhupdatelist;
         }
 
-        HH_ProcessControl.inFutureContext = false;
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
     }
 
 
@@ -317,7 +317,7 @@ public without sharing class HH_HouseholdNaming {
         //and marks them as such so they won't be updated
         //need to use a process control class to avoid recursion when async updates occur
         //in non async updates, this won't fire again, so we don't need to worry
-        if (!HH_ProcessControl.inFutureContext &&
+        if (!TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.HH)  &&
             (triggerAction == TDTM_Runnable.Action.BeforeUpdate || triggerAction == TDTM_Runnable.Action.AfterUpdate)) {
 
             // no need to do any of this name checking if we aren't using auto household naming.
