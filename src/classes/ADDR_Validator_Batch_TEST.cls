@@ -71,8 +71,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
         contact.MailingPostalCode = '95014'; 
         contact.MailingCountry = 'United States';
         insert contact;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        
+
         //check household got created for contact
         contact = [select Account.Id from Contact where Id = :contact.Id];
         Id accountId = contact.Account.Id;
@@ -139,8 +138,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
 	        contacts.add(contact);
         }
         insert contacts;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        
+
         //check households got created for contacts
         List<Id> AccountIDs = new List<Id>();
         List<Contact> contactsWithAccId = [select Account.Id from Contact where Id IN :contacts];
@@ -190,8 +188,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
         contact.MailingPostalCode = '90210';
         contact.MailingCity = 'single-zip';
         insert contact;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        
+
         //check household got created for contact
         contact = [select Account.Id from Contact where Id = :contact.Id];
         Id accountId = contact.Account.Id;
@@ -245,8 +242,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
         zipContact.MailingPostalCode = '90210';
         
         insert new Contact[] {addressContact, zipContact};
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false; 
-        
+
         //check household got created for contact
         addressContact = [select Account.Id from Contact where Id = :addressContact.Id];
         Id addrAccountId = addressContact.Account.Id;

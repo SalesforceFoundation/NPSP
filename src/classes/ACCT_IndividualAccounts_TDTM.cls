@@ -202,14 +202,18 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                         */
                         else if (CAO_Constants.isOneToOne() && c.npe01__Private__c != true && 
                             (c.AccountId == null || (mapAccountIdAccount.containsKey(c.AccountId) && mapAccountIdAccount.get(c.AccountId).npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE)) ) {
-                            
+
                             // Avoid updating a contact with the 1:1 account of another contact  
-                            if (c.AccountId != null && mapAccountIdAccount.get(c.AccountId).npe01__One2OneContact__c != c.Id &&
+                            if (c.AccountId != null &&
+                                mapAccountIdAccount.get(c.AccountId).npe01__One2OneContact__c != c.Id &&
                                 mapAccountIdAccount.get(c.AccountId).npe01__One2OneContact__c != null &&
-                                // only do this fix if this update is currently happening.
-                                // this avoids an account merge from being undone by a later update to the contact
-                                c.AccountId != oldContacts[i].AccountId) {  
-                                c.AccountId = null;
+                                c.AccountId != oldContacts[i].AccountId) {
+
+                                // we need to know if this account change is due to an Account Merge, in which case we want to allow it.
+                                boolean isDeletedOldAccount = [select count() from Account where Id =: oldContacts[i].AccountId] == 0;
+                                if (!isDeletedOldAccount) {
+                                    c.AccountId = null;
+                                }
                             }
                             
                             if (c.AccountId == null)

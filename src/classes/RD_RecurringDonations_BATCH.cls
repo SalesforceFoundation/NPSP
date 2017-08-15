@@ -33,9 +33,14 @@
 * @group Recurring Donations
 * @description Class provides a batchable wrapper for open ended recurring donations
 */
-public without sharing class RD_RecurringDonations_BATCH implements Database.Batchable<sObject>, Database.Stateful, 
+public without sharing class RD_RecurringDonations_BATCH implements Database.Batchable<sObject>, Database.Stateful,
 Schedulable {
-    
+
+    /*******************************************************************************************************
+    * @description Flag to specify when running the Refresh Opportunities button on Recurring Donations
+    */
+    public static Boolean isBatchButton = false;
+
     /*******************************************************************************************************
     * @description holds the query of all recurring donations to process
     */ 
@@ -57,9 +62,9 @@ Schedulable {
     public RD_RecurringDonations_BATCH() {
         query = RD_RecurringDonations.strQueryRDNoWhere();
         query += ' where npe03__Open_Ended_Status__c = \'' + system.label.npe03.RecurringDonationOpenStatus + '\'';
-        RD_ProcessControl.batchButton = true;
+        RD_RecurringDonations_BATCH.isBatchButton = true;
     }
-        
+
     /*******************************************************************************************************
     * @description Executes the RD Batch process.
     */ 
@@ -86,7 +91,7 @@ Schedulable {
     * @return void  
     */
     public void execute(Database.BatchableContext bc, Sobject[] result) {
-        RD_ProcessControl.batchButton = true;
+        RD_RecurringDonations_BATCH.isBatchButton = true;
         recCount += result.size();
         failuresCount = RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(result);
     }

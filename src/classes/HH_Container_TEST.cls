@@ -241,7 +241,6 @@ private class HH_Container_TEST {
         Account[] accountsToMerge = new Account[] { accounts[1], accounts[2] };
 
         Test.startTest();
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         HH_Container_LCTRL.saveHouseholdPage(accounts[0], hhContacts, hhContactsToRemove, accountsToMerge);
         Test.stopTest();
 
@@ -313,7 +312,6 @@ private class HH_Container_TEST {
         Account[] accountsToMerge = new Account[0];
 
         Test.startTest();
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         HH_Container_LCTRL.saveHouseholdPage(accounts[0], hhContacts, hhContactsToRemove, accountsToMerge);
         Test.stopTest();
 
