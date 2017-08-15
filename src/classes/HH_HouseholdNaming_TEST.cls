@@ -529,7 +529,7 @@ public class HH_HouseholdNaming_TEST {
     verify:
         Returned set contains Contact field API names.
     **********************************************************************************************************/  
-    private static testMethod void getHouseholdNamingContactFieldsShouldReturnUniqueContactFieldApiNames() {
+    private static testMethod void getHouseholdNamingContactFieldsShouldReturnUniqueContactFieldNames() {
         turnOnAutomaticHHNaming();
 
         Household_Naming_Settings__c settings = setupHHNamingSettings();
@@ -540,7 +540,36 @@ public class HH_HouseholdNaming_TEST {
 
         Set<String> expectedFieldNames = new Set<String>{ 'LastName', 'FirstName', 'Salutation' };
 
-        System.assertEquals(expectedFieldNames.size(), fieldNames.size(), 'Actual fields: ' + fieldNames);  
+        System.assertEquals(expectedFieldNames.size(), fieldNames.size(), 'Expected names: ' + expectedFieldNames + '; Actual names: ' + fieldNames);  
+        
+        System.assert(expectedFieldNames.containsAll(fieldNames), 'Expected names: ' + expectedFieldNames + '; Actual names: ' + fieldNames);
+    }
+
+    /*********************************************************************************************************
+    @description
+        Test getHouseholdNamingContactFields() method when reference fields are included in 
+        Household Naming Settings format field 
+    verify:
+        Returned set contains Contact field API names.
+    **********************************************************************************************************/  
+    private static testMethod void getHouseholdNamingContactFieldsShouldReturnContactReferenceFields() {
+        turnOnAutomaticHHNaming();
+
+        setupHHNamingSettings(
+            'The {!Account.npe01__One2OneContact__r.primary_Affiliation__r.name}, {!{!AccountId}} Family',
+            '{!{!ownerId} {!owner.name}} {!account.Name}',
+            '{!{!FirstName}}'
+        );
+
+        Set<String> fieldNames = new HH_HouseholdNaming().getHouseholdNamingContactFields();
+
+        Set<String> expectedFieldNames = new Set<String>{ 
+            'Account.npe01__One2OneContact__r.Primary_Affiliation__r.Name', 
+            'AccountId', 'OwnerId', 'Owner.Name', 'Account.Name', 'FirstName',
+            'LastName' // LastName is added to the HH Naming fields even if it is not in format fields
+        };
+
+        System.assertEquals(expectedFieldNames.size(), fieldNames.size(), 'Expected names: ' + expectedFieldNames + '; Actual names: ' + fieldNames);  
         
         System.assert(expectedFieldNames.containsAll(fieldNames), 'Expected names: ' + expectedFieldNames + '; Actual names: ' + fieldNames);
     }

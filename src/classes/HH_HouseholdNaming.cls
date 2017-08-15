@@ -233,8 +233,11 @@ public without sharing class HH_HouseholdNaming {
     }
 
     /*******************************************************************************************************
-    * @description Returns Contact fields specified in the Household Naming Settings format fields 
-    * @return Set<String> Set of Contact field API names if the Automatic Household Naming is enabled; otherwise, an empty set
+    * @description Returns Contact fields specified in the Household Naming Settings format fields.
+    * This is a top layer for iNaming.setHouseholdNameFieldsOnContact() method which can be also implemented 
+    * by a client so it is important to validate returned Contact fields. 
+    * @return Set<String> If the Automatic Household Naming is enabled, return set of Contact field API names; 
+    * otherwise, an empty set
     */
     public Set<String> getHouseholdNamingContactFields() {
         if (!isAutomaticNaming()) {
@@ -246,17 +249,17 @@ public without sharing class HH_HouseholdNaming {
             return new Set<String>();
         }
 
-        Map<String, Schema.SObjectField> contactFieldsByName = Contact.SobjectType.getDescribe().fields.getMap();
+        Map<String, Schema.DescribeFieldResult> contactFieldResultsByName = UTIL_Describe.getFieldResultsByName(Contact.SObjectType);
 
         Set<String> apiNames = new Set<String>();
         for (String fieldName : fieldNames) {
-            Schema.SObjectField field = contactFieldsByName.get(fieldName.toLowerCase());
-
-            if (field == null) {
+            String apiName = UTIL_Describe.getFieldApiName(fieldName, contactFieldResultsByName);
+            
+            if (String.isBlank(apiName)) {
                 throw new HouseholdNamingException(String.format(Label.hhErrorInvalidContactFieldName, new String[]{ fieldName }));
             }
 
-            apiNames.add(field.getDescribe().getName());
+            apiNames.add(apiName);
         }
 
         return apiNames;

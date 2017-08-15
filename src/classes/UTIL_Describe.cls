@@ -304,59 +304,89 @@ public class UTIL_Describe {
     }
 
     /*********************************************************************************************************
-    * @description Validates if field name is a valid API Name for an Sobject 
+    * @description Validates if a field is valid for an Sobject 
     * @param fieldName Field name
     * @param fieldResultsByFieldName The Sobject's field results mapped by a field name or a relationship name
     * @return Boolean
     */
-    public static Boolean isValidApiName(String fieldName, Map<String, Schema.DescribeFieldResult> fieldResultsByFieldName) {
+    public static Boolean isValidField(String fieldName, Map<String, Schema.DescribeFieldResult> fieldResultsByFieldName) {
+
+        return String.isNotBlank(getFieldApiName(fieldName, fieldResultsByFieldName));
+    }
+
+    /*********************************************************************************************************
+    * @description Returns API Name for a field or null if the field is invalid 
+    * @param fieldName Field name
+    * @param fieldResultsByFieldName The Sobject's field results mapped by a field name or a relationship name
+    * @return String
+    */
+    public static String getFieldApiName(String fieldName, Map<String, Schema.DescribeFieldResult> fieldResultsByFieldName) {
+        String apiName = getApiName(fieldName, fieldResultsByFieldName);
+
+        return String.isNotBlank(apiName) && apiName.equalsIgnoreCase(fieldName) 
+            ? apiName 
+            : null;
+    }
+    
+    /*********************************************************************************************************
+    * @description Returns API Name for a field or null if the field is invalid 
+    * @param fieldName Field name
+    * @param fieldResultsByFieldName The Sobject's field results mapped by a field name or a relationship name
+    * @return String
+    */
+    private static String getApiName(String fieldName, Map<String, Schema.DescribeFieldResult> fieldResultsByFieldName) {
         if (String.isBlank(fieldName)) {
-            return false;
+            return null;
         }
 
-        if (fieldResultsByFieldName.keySet().contains(fieldName)) {
-            return true;
+        Schema.DescribeFieldResult fieldResult = fieldResultsByFieldName.get(fieldName.toLowerCase());
+
+        if (fieldResult != null) {
+            return fieldResult.getName();
         }
 
         String[] nameParts = fieldName.split('\\.');
         Boolean isReferenceField = nameParts.size() > 1;
 
         if (!isReferenceField) { 
-            return false;
+            return null;
         }
         
         String relationshipName = nameParts[0];
         String referenceFieldName = fieldName.substringAfter('.');
+        Schema.DescribeFieldResult referenceFieldResult = fieldResultsByFieldName.get(relationshipName.toLowerCase());
 
-        return isValidApiNameOnReferenceSobject(referenceFieldName, fieldResultsByFieldName.get(relationshipName));
+        return getApiNameOnReferenceSobject(referenceFieldName, referenceFieldResult);
     }
 
     /*********************************************************************************************************
-    * @description Validates if field name is a valid API Name for the referenced Sobject 
+    * @description Returns API Name for a field or null if the field is invalid for the referenced Sobject 
     * @param fieldName Field name
     * @param referenceFieldResult The reference (Lookup, M-D) field result
-    * @return Boolean
+    * @return String
     */
-    private static Boolean isValidApiNameOnReferenceSobject(String fieldName, Schema.DescribeFieldResult referenceFieldResult) {
+    private static String getApiNameOnReferenceSobject(String fieldName, Schema.DescribeFieldResult referenceFieldResult) {
         Schema.SObjectType[] references = referenceFieldResult == null 
             ? null 
             : referenceFieldResult.getReferenceTo();
 
         if (String.isBlank(fieldName) || references == null) { 
-            return false; 
+            return null; 
         }
 
         for (Schema.SObjectType referenceTo : references) {
-            if (isValidApiName(fieldName, getFieldResultsByName(referenceTo))) {
-                return true;
+            String apiName = getApiName(fieldName, getFieldResultsByName(referenceTo));
+
+            if (String.isNotBlank(apiName)) {
+                return referenceFieldResult.getRelationshipName() + '.' + apiName;
             }
         }
 
-        return false;
+        return null;
     }
 
     /*********************************************************************************************************
-    * @description Returns Sobject field results mapped by a field name or a relationship name
+    * @description Returns Sobject field results mapped by a lower case field name or a relationship name
     * @param sobjectType Schema.SobjectType
     * @return Map<String, Schema.DescribeFieldResult>
     */
@@ -366,10 +396,10 @@ public class UTIL_Describe {
         for (Schema.SObjectField field : sobjectType.getDescribe().fields.getMap().values()) {
             Schema.DescribeFieldResult fieldResult = field.getDescribe();
 
-            fieldResults.put(fieldResult.getName(), fieldResult);
+            fieldResults.put(fieldResult.getName().toLowerCase(), fieldResult);
 
             if (String.isNotBlank(fieldResult.getRelationshipName())) {
-                fieldResults.put(fieldResult.getRelationshipName(), fieldResult);
+                fieldResults.put(fieldResult.getRelationshipName().toLowerCase(), fieldResult);
             }
         }
 

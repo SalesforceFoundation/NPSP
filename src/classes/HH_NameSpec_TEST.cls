@@ -274,6 +274,9 @@ private with sharing class HH_NameSpec_TEST {
         hns.Household_Name_Format__c = 'The {!LastName} ({!{!FirstName}}) Family';
         system.assertEquals('The Doe (John), Smith (Sally) & Doe (Jane) Family', ns.getExampleName(hns, 'Household_Name_Format__c', listCon));
 
+        hns.Household_Name_Format__c = 'The {!LASTNAME} ({!{!firstName}}) Family';
+        system.assertEquals('The Doe (John), Smith (Sally) & Doe (Jane) Family', ns.getExampleName(hns, 'Household_Name_Format__c', listCon));
+
         hns.Formal_Greeting_Format__c = '{!{!Salutation} {!FirstName}} {!LastName}';
         system.assertEquals('Mr John Doe, Mrs Sally Smith & Ms Jane Doe', ns.getExampleName(hns, 'Formal_Greeting_Format__c', listCon));
 
@@ -329,6 +332,9 @@ private with sharing class HH_NameSpec_TEST {
         system.assertEquals('The *john@doe.com*, *sally@smith.com* & *jane@doe.com* Family', ns.getExampleName(hns, 'Household_Name_Format__c', listCon));
 
         hns.Household_Name_Format__c = 'The {!{!FirstName} {!npe01__WorkEmail__c}} Family';
+        system.assertEquals('The John john@doe.com, Sally sally@smith.com & Jane jane@doe.com Family', ns.getExampleName(hns, 'Household_Name_Format__c', listCon));
+
+        hns.Household_Name_Format__c = 'The {!{!FIRSTname} {!npe01__WORKEMAIL__C}} Family';
         system.assertEquals('The John john@doe.com, Sally sally@smith.com & Jane jane@doe.com Family', ns.getExampleName(hns, 'Household_Name_Format__c', listCon));
     
         hns.Formal_Greeting_Format__c = 'The {!*{!Salutation} {!FirstName}*} Family';
@@ -391,6 +397,51 @@ private with sharing class HH_NameSpec_TEST {
 
         hns.Informal_Greeting_Format__c = 'The {!{!FirstName} {!npe01__WorkEmail__c}} {!FirstName} {!npe01__WorkEmail__c} Family';
         system.assertEquals('The John john@doe.com, Jane jane@doe.com & Sally John john@doe.com Family', ns.getExampleName(hns, 'Informal_Greeting_Format__c', listCon));
+    }
+
+    /*********************************************************************************************************
+    @description
+    operation:
+        Test Household Name, and Formal/Informal greetings when Contact API names are case insensitive
+    verify:
+        HH Name, Formal Greeting, and Informal Greeting are correct
+    **********************************************************************************************************/            
+    static testMethod void testHHNamingWhenContactApiNamesAreCaseInsensitive() {
+        if (strTestOnly != '*' && strTestOnly != 'testHHNamingWhenContactApiNamesAreCaseInsensitive') return;
+                
+        Contact[] listCon = new Contact[] {
+            new Contact (
+                Salutation = 'Skipper',
+                FirstName = 'John',
+                LastName = 'Doe'
+            ),
+            new Contact (
+                FirstName = 'Jane',
+                LastName = 'Smith'
+            )
+        };
+               
+        HH_NameSpec ns = new HH_NameSpec();
+        Household_Naming_Settings__c hns = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
+        hns.Name_Connector__c = '&';
+        
+        hns.Household_Name_Format__c = '{!lastname} Family';
+        system.assertEquals('Doe & Smith Family', ns.getExampleName(hns, 'Household_Name_Format__c', listCon));
+        
+        hns.Household_Name_Format__c = 'HH - {!LASTname}, {!{!FIRSTname}} Family';
+        system.assertEquals('HH - Doe, John & Smith, Jane Family', ns.getExampleName(hns, 'Household_Name_Format__c', listCon));
+
+        hns.Household_Name_Format__c = 'The {!LASTNAME} ({!{!FIRSTNAME}}) Family';
+        system.assertEquals('The Doe (John) & Smith (Jane) Family', ns.getExampleName(hns, 'Household_Name_Format__c', listCon));
+
+        hns.Formal_Greeting_Format__c = '{!{!salutation} {!firstNAME}} {!lAsTnAmE}';
+        system.assertEquals('Skipper John Doe & Jane Smith', ns.getExampleName(hns, 'Formal_Greeting_Format__c', listCon));
+
+        hns.Informal_Greeting_Format__c = '{!{!lastNAME} Dude}';
+        system.assertEquals('Doe Dude & Smith Dude', ns.getExampleName(hns, 'Informal_Greeting_Format__c', listCon));   
+
+        hns.Informal_Greeting_Format__c = '{!{!firstname} Dude}';
+        system.assertEquals('John Dude & Jane Dude', ns.getExampleName(hns, 'Informal_Greeting_Format__c', listCon));   
     }
 
     /*********************************************************************************************************
