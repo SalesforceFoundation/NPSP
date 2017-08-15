@@ -75,6 +75,9 @@
                                         <li>{!$Label.bdiDataImporterInfoLine2b}</li>
                                         <li>{!$Label.bdiDataImporterInfoLine3}</li>
                                         <li>{!$Label.bdiDataImporterInfoLine4}</li>
+                                        <li style="list-style-type: none;" class="slds-m-top--medium">
+                                            <b>{!$Label.bdiDataImporterNumToProcess}&nbsp;{!crecToProcess}</b>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -83,28 +86,8 @@
                 
                     <apex:outputText rendered="{!NOT(batchRunning) && NOT(isEditMode)}">
                         <div class="slds-container--large">
-                            <div class="slds-m-bottom--large">
-                                    {!$Label.bdiLabelBatchInstructions}
-                            </div>
-
                             <div class="slds-grid slds-grid--align-center">
                                 <div class="slds-form slds-form_stacked slds-m-left_large">
-                                    <div class="slds-form-element">
-                                        <label class="slds-form-element__label">
-                                            <apex:outputLabel for="fldBatch" >{!$ObjectType.DataImport__c.Fields.NPSP_Data_Import_Batch__c.Label}</apex:outputLabel>
-                                        </label>
-                                        <div class="slds-form-element__control">
-                                            <apex:inputField id="fldBatch" value="{!diTemp.NPSP_Data_Import_Batch__c}" styleClass="lookupInput" >
-                                                <apex:actionSupport event="onchange" action="{!batchChange}" />
-                                            </apex:inputField>
-                                        </div>
-                                        <ul>
-                                            <li style="list-style-type: none;" class="slds-m-top--medium">
-                                                <b>{!$Label.bdiDataImporterNumToProcess}&nbsp;{!crecToProcess}</b>
-                                            </li>
-                                        </ul>
-                                    </div>
-
                                     <div class="slds-form-element">
                                         <div class="slds-form-element__control">
                                             <apex:commandButton value="{!$Label.bdiRunBtn}" action="{!importData}" immediate="false" styleClass="slds-button slds-button--brand" rerender="idForm"/>

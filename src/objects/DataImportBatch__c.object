@@ -201,26 +201,50 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Import_Using_Scheduled_Job__c</fullName>
-        <description>Controls whether the NPSP Data Import Batch will be automatically processed based on the schedule for the associated job.</description>
+        <fullName>Last_Processed_On__c</fullName>
+        <description>The date and time when the batch was last processed.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Controls whether the NPSP Data Import Batch will be automatically processed based on the schedule for the associated job.</inlineHelpText>
-        <label>Import Using Scheduled Job</label>
-        <picklist>
-            <picklistValues>
-                <fullName>To Be Imported</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Imported</fullName>
-                <default>false</default>
-            </picklistValues>
-            <restrictedPicklist>true</restrictedPicklist>
-            <sorted>false</sorted>
-        </picklist>
+        <inlineHelpText>The date and time when the batch was last processed.</inlineHelpText>
+        <label>Last Processed On</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
-        <type>Picklist</type>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Process_Using_Scheduled_Job__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>When checked, the NPSP Data Import Batch will be automatically processed based on the schedule for the associated job.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>When checked, the NPSP Data Import Batch will be automatically processed based on the schedule for the associated job.</inlineHelpText>
+        <label>Process Using Scheduled Job</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Records_Failed__c</fullName>
+        <description>Shows the number of records that failed to be successfully processed on the date listed in the Last Processed On field.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Shows the number of records that failed to be successfully processed on the date listed in the Last Processed On field.</inlineHelpText>
+        <label>Records Failed</label>
+        <precision>8</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Records_Successfully_Processed__c</fullName>
+        <description>Shows the number of records that were successfully processed on the date listed in the Last Processed On field.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Shows the number of records that were successfully processed on the date listed in the Last Processed On field.</inlineHelpText>
+        <label>Records Successfully Processed</label>
+        <precision>8</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
     </fields>
     <label>NPSP Data Import Batch</label>
     <listViews>

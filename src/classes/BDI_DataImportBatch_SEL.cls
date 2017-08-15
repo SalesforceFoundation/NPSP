@@ -53,7 +53,10 @@ public with sharing class BDI_DataImportBatch_SEL {
                     Donation_Matching_Implementing_Class__c,
                     Donation_Matching_Rule__c,
                     Donation_Date_Range__c,
-                    Import_Using_Scheduled_Job__c
+                    Process_Using_Scheduled_Job__c,
+                    Last_Processed_On__c,
+                    Records_Failed__c,
+                    Records_Successfully_Processed__c
             FROM DataImportBatch__c
             WHERE Id in :setBatchId];
     }
@@ -74,9 +77,10 @@ public with sharing class BDI_DataImportBatch_SEL {
     * @return list<Id>
     */
     public static list<Id> selectUsingScheduledProcessing() {
-        Map<Id, DataImportBatch__c> mapIdToBatch = new Map<Id, DataImportBatch__c>([SELECT Id
+        Map<Id, DataImportBatch__c> mapIdToBatch = new Map<Id, DataImportBatch__c>([
+            SELECT Id
             FROM DataImportBatch__c
-            WHERE Import_Using_Scheduled_Job__c = 'To Be Imported']);
+            WHERE Process_Using_Scheduled_Job__c = TRUE]);
         return new List<Id>(mapIdToBatch.keySet());
     }
 }

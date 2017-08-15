@@ -61,9 +61,7 @@ public with sharing class BDI_DataImportAPI_TEST {
         batch.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
         batch.Donation_Matching_Behavior__c = BDI_DataImport_API.BestMatchOrCreate;
-        if (autoProcess) {
-            batch.Import_Using_Scheduled_Job__c = 'To Be Imported';
-        }
+        batch.Process_Using_Scheduled_Job__c = autoProcess;
         insert batch;
         return batch;
     }
@@ -106,6 +104,14 @@ public with sharing class BDI_DataImportAPI_TEST {
         system.assertEquals(null, listDI[0].Status__c);
         system.assertEquals(null, listDI[1].Status__c);
         system.assertEquals(label.bdiImported, listDI[2].Status__c);
+
+        list<DataImportBatch__c> listBatches = [SELECT Id, Last_Processed_On__c, Records_Failed__c, Records_Successfully_Processed__c FROM DataImportBatch__c];
+        system.assertEquals(2, listBatches.size());
+        for (DataImportBatch__c batch : listBatches) {
+            system.assertEquals(null, batch.Last_Processed_On__c);
+            system.assertEquals(null, batch.Records_Failed__c);
+            system.assertEquals(null, batch.Records_Successfully_Processed__c);
+        }
     }
 
     /*********************************************************************************************************
@@ -146,6 +152,20 @@ public with sharing class BDI_DataImportAPI_TEST {
         system.assertEquals(label.bdiImported, listDI[0].Status__c);
         system.assertEquals(null, listDI[1].Status__c);
         system.assertEquals(null, listDI[2].Status__c);
+
+        list<DataImportBatch__c> listBatches = [SELECT Id, Last_Processed_On__c, Records_Failed__c, Records_Successfully_Processed__c FROM DataImportBatch__c];
+        system.assertEquals(2, listBatches.size());
+        for (DataImportBatch__c batch : listBatches) {
+            if (batch.Id == batch1.Id) {
+                system.assertNotEquals(null, batch.Last_Processed_On__c);
+                system.assertEquals(0, batch.Records_Failed__c);
+                system.assertEquals(1, batch.Records_Successfully_Processed__c);
+            } else {
+                system.assertEquals(null, batch.Last_Processed_On__c);
+                system.assertEquals(null, batch.Records_Failed__c);
+                system.assertEquals(null, batch.Records_Successfully_Processed__c);
+            }
+        }
     }
 
     /*********************************************************************************************************
@@ -188,6 +208,14 @@ public with sharing class BDI_DataImportAPI_TEST {
         system.assertEquals(label.bdiImported, listDI[0].Status__c);
         system.assertEquals(label.bdiImported, listDI[1].Status__c);
         system.assertEquals(null, listDI[2].Status__c);
+
+        list<DataImportBatch__c> listBatches = [SELECT Id, Last_Processed_On__c, Records_Failed__c, Records_Successfully_Processed__c FROM DataImportBatch__c];
+        system.assertEquals(2, listBatches.size());
+        for (DataImportBatch__c batch : listBatches) {
+            system.assertNotEquals(null, batch.Last_Processed_On__c);
+            system.assertEquals(0, batch.Records_Failed__c);
+            system.assertEquals(1, batch.Records_Successfully_Processed__c);
+        }
     }
 
     /*********************************************************************************************************
@@ -230,6 +258,14 @@ public with sharing class BDI_DataImportAPI_TEST {
         system.assertEquals(null, listDI[0].Status__c);
         system.assertEquals(null, listDI[1].Status__c);
         system.assertEquals(null, listDI[2].Status__c);
+
+        list<DataImportBatch__c> listBatches = [SELECT Id, Last_Processed_On__c, Records_Failed__c, Records_Successfully_Processed__c FROM DataImportBatch__c];
+        system.assertEquals(2, listBatches.size());
+        for (DataImportBatch__c batch : listBatches) {
+            system.assertEquals(null, batch.Last_Processed_On__c);
+            system.assertEquals(null, batch.Records_Failed__c);
+            system.assertEquals(null, batch.Records_Successfully_Processed__c);
+        }
     }
 
 }

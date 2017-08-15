@@ -144,16 +144,6 @@ public with sharing class BDI_DataImport_CTRL {
     public boolean isEditMode { get; set; }
 
     /*********************************************************************************************************
-    * @description actionMethod to load up the chosen batch, or revert to no batch
-    * @return null
-    */
-    public PageReference batchChange() {
-        loadBatchAndSettings(diTemp.NPSP_Data_Import_Batch__c);
-        return null;
-    }
-
-    
-    /*********************************************************************************************************
     * @description puts the Settings panel into Edit mode
     * @return null
     */

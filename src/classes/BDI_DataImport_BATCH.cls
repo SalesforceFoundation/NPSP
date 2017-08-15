@@ -557,20 +557,28 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     }
             
     /*******************************************************************************************************
-    * @description Batchable finish method, that will update the (optional) Batch's
-    * Import_Using_Scheduled_Job__c field, if all records were successfully imported.
+    * @description Batchable finish method, that will update the (optional) Batch's statistics.
     * @param bc The BatchableContext
     * @return void
     */
     public void finish(Database.BatchableContext bc) {
-        if (diBatch != null && diBatch.Import_Using_Scheduled_Job__c == 'To Be Imported') {
-            integer cRecords = [SELECT COUNT()
+        if (diBatch != null) {
+            ID apexJobId = bc.getJobId();
+            integer cRecordsProcessed = [SELECT COUNT()
                 FROM DataImport__c
-                WHERE NPSP_Data_Import_Batch__c = :diBatch.Id AND Status__c != :label.bdiImported];
-            if (cRecords == 0) {
-                diBatch.Import_Using_Scheduled_Job__c = 'Imported';
-                update diBatch;
-            }
+                WHERE NPSP_Data_Import_Batch__c = :diBatch.Id
+                    AND ApexJobId__c = :apexJobId];
+            integer cRecordsSucceeded = [SELECT COUNT()
+                FROM DataImport__c
+                WHERE NPSP_Data_Import_Batch__c = :diBatch.Id
+                    AND Status__c = :label.bdiImported
+                    AND ApexJobId__c = :apexJobId];
+            integer cRecordsFailed = cRecordsProcessed - cRecordsSucceeded;
+
+            diBatch.Last_Processed_On__c = System.now();
+            diBatch.Records_Successfully_Processed__c = cRecordsSucceeded;
+            diBatch.Records_Failed__c = cRecordsFailed;
+            update diBatch;
         }
 
     }
