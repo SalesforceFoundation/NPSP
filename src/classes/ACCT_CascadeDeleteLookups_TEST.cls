@@ -88,8 +88,6 @@ private class ACCT_CascadeDeleteLookups_TEST {
 		List<Allocation__c> deletedAllo = [SELECT Id FROM Allocation__c WHERE Id=:allo.Id AND IsDeleted=true ALL ROWS];
         System.assertEquals(1, deletedAllo.size(), 'Allocation should be cascade deleted when recurring donation is deleted.');
 
-        //flag needs to be reset as the delete and undelete are in the same context for tests.
-        UTIL_CascadeDeleteLookups_TDTM.disableCascade = false;
         undelete acc;
 
         errors = [SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c FROM Error__c];
@@ -163,8 +161,6 @@ private class ACCT_CascadeDeleteLookups_TEST {
         queryRel = [SELECT id FROM npe4__Relationship__c WHERE IsDeleted = true ALL ROWS];
         System.assertEquals(2, queryRel.size(), 'Both relationships should be deleted when the account is deleted.');
 
-        //flag needs to be reset as the delete and undelete are in the same context for tests.
-        UTIL_CascadeDeleteLookups_TDTM.disableCascade = false;
         undelete acc;
 
         queryRel = [SELECT id FROM npe4__Relationship__c];
