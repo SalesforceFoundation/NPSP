@@ -424,7 +424,7 @@ private class ACCT_IndividualAccounts_TEST {
     private static void editContactDuringDetachProcessor(string strProcessor) {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
-                
+
         String newContactMailingStreet = '123 Elm St';
 
         Contact con = new Contact(
@@ -437,43 +437,50 @@ private class ACCT_IndividualAccounts_TEST {
             npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert con;
-        
-        Contact[] insertedContacts = [Select AccountId from Contact where id=:con.id];      
-        
+
+        Contact[] insertedContacts = [Select AccountId from Contact where id=:con.id];
+
         Id originalAccountId = insertedContacts[0].AccountId;
-        
+
         String updatedContactLastName = 'Contact_forTestsChange';
         String updateContactMailingStreet = '234 Oak St';
-        
+
         con.AccountId = null;
         con.LastName = updatedContactLastName;
         con.MailingStreet = updateContactMailingStreet;
         Test.startTest();
         update con;
         Test.stopTest();
-        
-        Contact[] updatedContacts = [Select FirstName, LastName, AccountId,Account.Name,Account.npe01__One2OneContact__c,MailingStreet,npe01__Organization_Type__c,Account.BillingStreet from Contact where id=:con.id];
-        
+
+        Contact[] updatedContacts = [Select FirstName, LastName, AccountId,Account.Name,Account.npe01__One2OneContact__c,
+                MailingStreet,npe01__Organization_Type__c,Account.BillingStreet from Contact where id=:con.id];
+
         //AccountId of updated contact should match the orignial Account
         system.assertEquals(originalAccountId,updatedContacts[0].AccountId);
-        
+
         //org type should be set correctly
-        if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR)            
-            system.assertEquals(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE,updatedContacts[0].npe01__Organization_Type__c);
-        else if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR)            
-            system.assertEquals(CAO_Constants.HH_ACCOUNT_TYPE,updatedContacts[0].npe01__Organization_Type__c);
-        
+        if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR) {
+            system.assertEquals(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, updatedContacts[0].npe01__Organization_Type__c);
+        } else if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
+            system.assertEquals(CAO_Constants.HH_ACCOUNT_TYPE, updatedContacts[0].npe01__Organization_Type__c);
+        }
+
         //the account should have been named correctly
-        if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR)            
-            system.assertEquals(updatedContacts[0].FirstName + ' ' + updatedContacts[0].LastName,updatedContacts[0].Account.Name);
-        else if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR)            
-            system.assertEquals(updatedContacts[0].LastName + ' Household',updatedContacts[0].Account.Name);
-        
+        if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR) {
+            system.assertEquals(updatedContacts[0].FirstName + ' ' + updatedContacts[0].LastName, updatedContacts[0].Account.Name);
+        } else if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
+            system.assertEquals(updatedContacts[0].LastName + ' Household', updatedContacts[0].Account.Name);
+            system.assertEquals(2, [SELECT Count() FROM Address__c WHERE Household_Account__c = :originalAccountId],
+                'There should two addresses attached to the Household');
+            system.assertEquals(1, [SELECT Count() FROM Address__c WHERE MailingStreet__c = :updateContactMailingStreet],
+                'There should one address with the new street attached to the Household');
+        }
+
         //addresses should be sync'd
-        if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR) {           
-	        system.assertEquals(updateContactMailingStreet,updatedContacts[0].MailingStreet);
-	        system.assertEquals(updatedContacts[0].MailingStreet,updatedContacts[0].Account.BillingStreet);
-        } 
+        if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR) {
+            system.assertEquals(updateContactMailingStreet,updatedContacts[0].MailingStreet);
+            system.assertEquals(updatedContacts[0].MailingStreet,updatedContacts[0].Account.BillingStreet);
+        }
     }
 
     /*********************************************************************************************************
