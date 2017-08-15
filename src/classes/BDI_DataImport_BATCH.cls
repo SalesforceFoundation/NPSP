@@ -216,27 +216,41 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         // validate settings
         if (diSettings.Contact_Custom_Unique_ID__c != null) {
             // make sure c1 and c2 have the appropriately named field
-            // note that our tests have to use a standard Contact field that matches one of the DI custom fields, so we add __c
-            string strFieldname = diSettings.Contact_Custom_Unique_ID__c + (Test.isRunningTest() ? '__c' : '');
-            if (!UTIL_Describe.isValidField(strDataImportObj, UTIL_Namespace.StrTokenNSPrefix('Contact1_' + strFieldname)) ||
-                !UTIL_Describe.isValidField(strDataImportObj, UTIL_Namespace.StrTokenNSPrefix('Contact2_' + strFieldname))) {
+            string strFieldname = diSettings.Contact_Custom_Unique_ID__c;
+            string strContact1 = 'Contact1_' + strFieldname;
+            string strContact2 = 'Contact2_' + strFieldname;
+
+            // note that our tests have to use a standard Contact field that matches one of the DI custom fields,
+            // so we add __c and our potential namespace
+            if (Test.isRunningTest()) {
+                strContact1 = UTIL_Namespace.StrTokenNSPrefix('Contact1_' + strFieldname + '__c');
+                strContact2 = UTIL_Namespace.StrTokenNSPrefix('Contact2_' + strFieldname + '__c');
+            }
+
+            if (!UTIL_Describe.isValidField(strDataImportObj, strContact1) ||
+                !UTIL_Describe.isValidField(strDataImportObj, strContact2)) {
                 throw(new BDIException(string.format(Label.bdiContactCustomIdError,
-                    new string[]{diSettings.Contact_Custom_Unique_ID__c,
-                        'Contact1_' + strFieldname,
-                        'Contact2_' + strFieldname})));
+                    new string[]{diSettings.Contact_Custom_Unique_ID__c, strContact1, strContact2})));
             }
         }
 
         if (diSettings.Account_Custom_Unique_ID__c != null) {
             // make sure a1 and a2 have the appropriately named field
-            // note that our tests have to use a standard Account field that matches one of the DI custom fields, so we add __c
-            string strFieldname = diSettings.Account_Custom_Unique_ID__c + (Test.isRunningTest() ? '__c' : '');
-            if (!UTIL_Describe.isValidField(strDataImportObj, UTIL_Namespace.StrTokenNSPrefix('Account1_' + strFieldname)) ||
-                !UTIL_Describe.isValidField(strDataImportObj, UTIL_Namespace.StrTokenNSPrefix('Account2_' + strFieldname))) {
+            string strFieldname = diSettings.Account_Custom_Unique_ID__c;
+            string strAccount1 = 'Account1_' + strFieldname;
+            string strAccount2 = 'Account2_' + strFieldname;
+
+            // note that our tests have to use a standard Account field that matches one of the DI custom fields,
+            // so we add __c and our potential namespace
+            if (Test.isRunningTest()) {
+                strAccount1 = UTIL_Namespace.StrTokenNSPrefix('Account1_' + strFieldname + '__c');
+                strAccount2 = UTIL_Namespace.StrTokenNSPrefix('Account2_' + strFieldname + '__c');
+            }
+
+            if (!UTIL_Describe.isValidField(strDataImportObj, strAccount1) ||
+                !UTIL_Describe.isValidField(strDataImportObj, strAccount2)) {
                 throw(new BDIException(string.format(Label.bdiAccountCustomIdError,
-                    new string[]{diSettings.Account_Custom_Unique_ID__c,
-                        'Account1_' + strFieldname,
-                        'Account2_' + strFieldname})));
+                    new string[]{diSettings.Account_Custom_Unique_ID__c, strAccount1, strAccount2})));
             }
         }
 
