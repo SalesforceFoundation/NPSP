@@ -226,7 +226,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
 
         try {
             if (!listAlloForDelete.isEmpty()) {
-                ALLO_Allocations_TDTM.resetFlags(false);
+                TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, false);
                 delete listAlloForDelete;
 
                 //allow user to delete all GAUs and save with one empty GAU
@@ -234,11 +234,11 @@ public with sharing class ALLO_ManageAllocations_CTRL {
                     return source;
             }
             if (!listAlloForUpdate.isEmpty()) {
-                ALLO_Allocations_TDTM.resetFlags(false);
+                TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, false);
                 update listAlloForUpdate;
             }
             if (!listAlloForInsert.isEmpty()) {
-                ALLO_Allocations_TDTM.resetFlags(false);
+                TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, false);
                 insert listAlloForInsert;
             }
             
