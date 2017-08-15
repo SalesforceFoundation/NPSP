@@ -101,8 +101,6 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
         return new List<Cascade>();
     }
 
-    public static Boolean disableCascade = false;
-
     /*******************************************************************************************************
     * @description Performs cascade delete for lookup fields. Stashes records, deletes records, or undeletes
     * records depending on trigger action.
@@ -116,7 +114,7 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        if (disableCascade) {
+        if (TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.CascadeDeletes)) {
             return null;
         }
 
@@ -124,6 +122,10 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
             doStash(oldlist);
             addDeletionErrors();
             processDeletionErrors(objResult.getSObjectType().getDescribe().getName());
+            
+            for (Cascade cc : getCascades()) {
+                cc.parents.clear();
+            }
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
@@ -136,15 +138,16 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
                 }
             } catch (Exception ex) {}
 
-            disableCascade = true;
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.CascadeDeletes, true);
             doDelete();
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.CascadeDeletes, false);
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterUndelete) {
-            disableCascade = true;
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.CascadeDeletes, true);
             doUndelete(newlist);
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.CascadeDeletes, false);
         }
-
 
         return null;
     }
@@ -265,6 +268,7 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
                 forDelete.addAll(cc.children.values());
             }
             cc.children.clear();
+            cc.childToParent.clear();
         }
         if (!forDelete.isEmpty()) {
             List<Database.DeleteResult> delResults = Database.delete(forDelete, false);

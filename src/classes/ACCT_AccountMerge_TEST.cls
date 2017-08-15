@@ -169,11 +169,8 @@ private with sharing class ACCT_AccountMerge_TEST {
             con.MailingCountry = 'United States';
             con.is_Address_Override__c = true;
         }
-        // clear our triggers recursion prevention since we starting a new test
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         update ADDR_Addresses_TEST.listConT;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        
+
         // decide who wins (and remember who was primary contact)
         Account accWinner = [select Id, Name, npe01__One2OneContact__c from Account where Id = :ADDR_Addresses_TEST.listAccT[1].Id];
         list<Account> listAccLoser = new list<Account>();
@@ -306,14 +303,12 @@ private with sharing class ACCT_AccountMerge_TEST {
         }
         
         insert listAcc;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-                
+
         // create one additional unique address
         Account acc = listAcc[0];
         acc.BillingStreet = '987 xyz';
         acc.BillingCity = 'Bellevue';
         update acc;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         system.assertEquals(4, [select count() from Address__c]);
         system.assertEquals(3, [select count() from Address__c where Default_Address__c = true]);  
 
