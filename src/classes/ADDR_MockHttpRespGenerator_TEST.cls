@@ -38,103 +38,107 @@
 public with sharing class ADDR_MockHttpRespGenerator_TEST implements HttpCalloutMock {
   
     public HTTPResponse respond(HTTPRequest req) {
-    	UTIL_Debug.debug(LoggingLevel.WARN, '****Mock responding.');
-    	
-    	String singleAddressResponse = 
-	        '['+
-	        '   {'+
-	        '       "input_index": 0,'+
-	        '       "candidate_index": 0,'+
-	        '       "delivery_line_1": "1 Infinite Loop",'+
-	        '       "last_line": "Cupertino CA 95014-2083",'+
-	        '       "delivery_point_barcode": "950142083017",'+
-	        '       "components": {'+
-	        '           "primary_number": "1",'+
-	        '           "street_name": "Infinite",'+
-	        '           "street_suffix": "Loop",'+
-	        '           "city_name": "Cupertino",'+
-	        '           "state_abbreviation": "CA",'+
-	        '           "zipcode": "95014",'+
-	        '           "plus4_code": "2083",'+
-	        '           "delivery_point": "01",'+
-	        '           "delivery_point_check_digit": "7"'+
-	        '       },'+
-	        '       "metadata": {'+
-	        '           "record_type": "S",'+
-	        '           "county_fips": "06085",'+
-	        '           "county_name": "Santa Clara",'+
-	        '           "carrier_route": "C067",'+
-	        '           "congressional_district": "15",'+
-	        '           "rdi": "Commercial",'+
-	        '           "latitude": 37.33118,'+
-	        '           "longitude": -122.03062,'+
-	        '           "precision": "Zip9"'+
-	        '       },'+
-	        '       "analysis": {'+
-	        '           "dpv_match_code": "Y",'+
-	        '           "dpv_footnotes": "AABB",'+
-	        '           "dpv_cmra": "N",'+
-	        '           "dpv_vacant": "N",'+
-	        '           "active": "Y"'+
-	        '       }'+
-	        '   }' + 
-	        ']';
-	        
-	    String multipleAddressResponse = '[';    
-	
-	    //100 results if the maximum that SmartyStreets will return
-        for(Integer i = 0; i < 100; i++) {
-	        multipleAddressResponse = multipleAddressResponse +
-	        '   {'+
-	        '       "input_index": ' + i + ','+
-	        '       "candidate_index": 0,'+
-	        '       "delivery_line_1": "1 Infinite Loop",'+
-	        '       "last_line": "Cupertino CA 95014-2083",'+
-	        '       "delivery_point_barcode": "950142083017",'+
-	        '       "components": {'+
-	        '           "primary_number": "1",'+
-	        '           "street_name": "Infinite",'+
-	        '           "street_suffix": "Loop",'+
-	        '           "city_name": "Cupertino",'+
-	        '           "state_abbreviation": "CA",'+
-	        '           "zipcode": "95014",'+
-	        '           "plus4_code": "2083",'+
-	        '           "delivery_point": "01",'+
-	        '           "delivery_point_check_digit": "7"'+
-	        '       },'+
-	        '       "metadata": {'+
-	        '           "record_type": "S",'+
-	        '           "county_fips": "06085",'+
-	        '           "county_name": "Santa Clara",'+
-	        '           "carrier_route": "C067",'+
-	        '           "congressional_district": "15",'+
-	        '           "rdi": "Commercial",'+
-	        '           "latitude": 37.33118,'+
-	        '           "longitude": -122.03062,'+
-	        '           "precision": "Zip9"'+
-	        '       },'+
-	        '       "analysis": {'+
-	        '           "dpv_match_code": "Y",'+
-	        '           "dpv_footnotes": "AABB",'+
-	        '           "dpv_cmra": "N",'+
-	        '           "dpv_vacant": "N",'+
-	        '           "active": "Y"'+
-	        '       }'+
-	        '   }';
-	        if(i < 99) 
-	           multipleAddressResponse = multipleAddressResponse + ',';	
-	    }
-	    
-	    multipleAddressResponse = multipleAddressResponse + ']';
+        UTIL_Debug.debug(LoggingLevel.WARN, '****Mock responding.');
+
+        String singleAddressResponse =
+            '['+
+            '   {'+
+            '       "input_index": 0,'+
+            '       "candidate_index": 0,'+
+            '       "delivery_line_1": "1 Infinite Loop",'+
+            '       "last_line": "Cupertino CA 95014-2083",'+
+            '       "delivery_point_barcode": "950142083017",'+
+            '       "components": {'+
+            '           "primary_number": "1",'+
+            '           "street_name": "Infinite",'+
+            '           "street_suffix": "Loop",'+
+            '           "city_name": "Cupertino",'+
+            '           "state_abbreviation": "CA",'+
+            '           "zipcode": "95014",'+
+            '           "plus4_code": "2083",'+
+            '           "delivery_point": "01",'+
+            '           "delivery_point_check_digit": "7"'+
+            '       },'+
+            '       "metadata": {'+
+            '           "record_type": "S",'+
+            '           "county_fips": "06085",'+
+            '           "county_name": "Santa Clara",'+
+            '           "carrier_route": "C067",'+
+            '           "congressional_district": "15",'+
+            '           "rdi": "Commercial",'+
+            '           "latitude": 37.33118,'+
+            '           "longitude": -122.03062,'+
+            '           "precision": "Zip9"'+
+            '       },'+
+            '       "analysis": {'+
+            '           "dpv_match_code": "Y",'+
+            '           "dpv_footnotes": "AABB",'+
+            '           "dpv_cmra": "N",'+
+            '           "dpv_vacant": "N",'+
+            '           "active": "Y"'+
+            '       }'+
+            '   }' +
+            ']';
+
+        String multipleAddressResponse = '[';
+
+        //100 results if the maximum that SmartyStreets will return
+        //Allow for a reponse size other than 100 when a bodySize header is passed to the mock
+        Integer responseCnt = 100;
+        if (req.getHeader('bodySize') != null) {
+            responseCnt = Math.Min(100, Integer.valueOf(req.getHeader('bodySize')));
+        }
+
+        for(Integer i = 0; i < responseCnt; i++) {
+            multipleAddressResponse = multipleAddressResponse +
+            '   {'+
+            '       "input_index": ' + i + ','+
+            '       "candidate_index": 0,'+
+            '       "delivery_line_1": "1 Infinite Loop",'+
+            '       "last_line": "Cupertino CA 95014-2083",'+
+            '       "delivery_point_barcode": "950142083017",'+
+            '       "components": {'+
+            '           "primary_number": "1",'+
+            '           "street_name": "Infinite",'+
+            '           "street_suffix": "Loop",'+
+            '           "city_name": "Cupertino",'+
+            '           "state_abbreviation": "CA",'+
+            '           "zipcode": "95014",'+
+            '           "plus4_code": "2083",'+
+            '           "delivery_point": "01",'+
+            '           "delivery_point_check_digit": "7"'+
+            '       },'+
+            '       "metadata": {'+
+            '           "record_type": "S",'+
+            '           "county_fips": "06085",'+
+            '           "county_name": "Santa Clara",'+
+            '           "carrier_route": "C067",'+
+            '           "congressional_district": "15",'+
+            '           "rdi": "Commercial",'+
+            '           "latitude": 37.33118,'+
+            '           "longitude": -122.03062,'+
+            '           "precision": "Zip9"'+
+            '       },'+
+            '       "analysis": {'+
+            '           "dpv_match_code": "Y",'+
+            '           "dpv_footnotes": "AABB",'+
+            '           "dpv_cmra": "N",'+
+            '           "dpv_vacant": "N",'+
+            '           "active": "Y"'+
+            '       }'+
+            '   },';
+        }
+
+        multipleAddressResponse = multipleAddressResponse.removeEnd(',') + ']';
         
         String invalidAddressResponse = '[]';
                 
-	    String ambiguousAddressResponse = '[{"input_index":0,"candidate_index":0,"delivery_line_1":"1 N Rosedale St","last_line":"Baltimore MD 21229-3737","delivery_point_barcode":"212293737013","components":{"primary_number":"1","street_predirection":"N","street_name":"Rosedale","street_suffix":"St","city_name":"Baltimore","state_abbreviation":"MD","zipcode":"21229","plus4_code":"3737","delivery_point":"01","delivery_point_check_digit":"3"},"metadata":{"record_type":"S","county_fips":"24510","county_name":"Baltimore City","carrier_route":"C047","congressional_district":"07","rdi":"Residential","elot_sequence":"0059","elot_sort":"A","latitude":39.28661,"longitude":-76.66901,"precision":"Zip9"},"analysis":{"dpv_match_code":"Y","dpv_footnotes":"AABB","dpv_cmra":"N","dpv_vacant":"N","active":"Y"}},' +
-	         '{"input_index":0,"candidate_index":1,"delivery_line_1":"1 S Rosedale St","last_line":"Baltimore MD 21229-3739","delivery_point_barcode":"212293739011","components":{"primary_number":"1","street_predirection":"S","street_name":"Rosedale","street_suffix":"St","city_name":"Baltimore","state_abbreviation":"MD","zipcode":"21229","plus4_code":"3739","delivery_point":"01","delivery_point_check_digit":"1"},"metadata":{"record_type":"S","county_fips":"24510","county_name":"Baltimore City","carrier_route":"C047","congressional_district":"07","rdi":"Residential","elot_sequence":"0064","elot_sort":"A","latitude":39.28543,"longitude":-76.66896,"precision":"Zip9"},"analysis":{"dpv_match_code":"Y","dpv_footnotes":"AABB","dpv_cmra":"N","dpv_vacant":"N","active":"Y"}}]';
-	    
-	    String zipResponse = '[{"city_states":[{"city":"Clinton","state_abbreviation":"WA","state":"Washington"},{"city":"Maxwelton","state_abbreviation":"WA","state":"Washington"},{"city":"POSSESSION","state_abbreviation":"WA","state":"Washington"}],"zipcodes":[{"zipcode":"98236","latitude":47.957763,"longitude":-122.401269}]}]';
-	
-	    String invalidZipResponse = '[{"input_index":0,"status":"invalid_zipcode","reason":"Invalid ZIP Code."}]';
+        String ambiguousAddressResponse = '[{"input_index":0,"candidate_index":0,"delivery_line_1":"1 N Rosedale St","last_line":"Baltimore MD 21229-3737","delivery_point_barcode":"212293737013","components":{"primary_number":"1","street_predirection":"N","street_name":"Rosedale","street_suffix":"St","city_name":"Baltimore","state_abbreviation":"MD","zipcode":"21229","plus4_code":"3737","delivery_point":"01","delivery_point_check_digit":"3"},"metadata":{"record_type":"S","county_fips":"24510","county_name":"Baltimore City","carrier_route":"C047","congressional_district":"07","rdi":"Residential","elot_sequence":"0059","elot_sort":"A","latitude":39.28661,"longitude":-76.66901,"precision":"Zip9"},"analysis":{"dpv_match_code":"Y","dpv_footnotes":"AABB","dpv_cmra":"N","dpv_vacant":"N","active":"Y"}},' +
+             '{"input_index":0,"candidate_index":1,"delivery_line_1":"1 S Rosedale St","last_line":"Baltimore MD 21229-3739","delivery_point_barcode":"212293739011","components":{"primary_number":"1","street_predirection":"S","street_name":"Rosedale","street_suffix":"St","city_name":"Baltimore","state_abbreviation":"MD","zipcode":"21229","plus4_code":"3739","delivery_point":"01","delivery_point_check_digit":"1"},"metadata":{"record_type":"S","county_fips":"24510","county_name":"Baltimore City","carrier_route":"C047","congressional_district":"07","rdi":"Residential","elot_sequence":"0064","elot_sort":"A","latitude":39.28543,"longitude":-76.66896,"precision":"Zip9"},"analysis":{"dpv_match_code":"Y","dpv_footnotes":"AABB","dpv_cmra":"N","dpv_vacant":"N","active":"Y"}}]';
+
+        String zipResponse = '[{"city_states":[{"city":"Clinton","state_abbreviation":"WA","state":"Washington"},{"city":"Maxwelton","state_abbreviation":"WA","state":"Washington"},{"city":"POSSESSION","state_abbreviation":"WA","state":"Washington"}],"zipcodes":[{"zipcode":"98236","latitude":47.957763,"longitude":-122.401269}]}]';
+
+        String invalidZipResponse = '[{"input_index":0,"status":"invalid_zipcode","reason":"Invalid ZIP Code."}]';
     
     
         UTIL_Debug.debug(LoggingLevel.WARN, '****Request received by mock: \n' + req.getBody());
@@ -158,22 +162,22 @@ public with sharing class ADDR_MockHttpRespGenerator_TEST implements HttpCallout
             res.setStatus('OK');   
             
             if(req.getBody().contains('single-address')) {
-            	UTIL_Debug.debug(LoggingLevel.WARN, '****Returning simple address mock response');
-            	res.setBody(singleAddressResponse);
+                UTIL_Debug.debug(LoggingLevel.WARN, '****Returning simple address mock response');
+                res.setBody(singleAddressResponse);
             } else if(req.getBody().contains('multiple-address')) {
                 UTIL_Debug.debug(LoggingLevel.WARN, '****Returning multiple address mock response');
                 res.setBody(multipleAddressResponse);
             } else if(req.getBody().contains('invalid-address')) {
-            	UTIL_Debug.debug(LoggingLevel.WARN, '****Returning invalid address mock response');
+                UTIL_Debug.debug(LoggingLevel.WARN, '****Returning invalid address mock response');
                 res.setBody(invalidAddressResponse);
             } else if(req.getBody().contains('ambiguous-address')) {
-            	UTIL_Debug.debug(LoggingLevel.WARN, '****Returning simple ambiguos mock response');
+                UTIL_Debug.debug(LoggingLevel.WARN, '****Returning simple ambiguos mock response');
                 res.setBody(ambiguousAddressResponse);            
             } else if(req.getBody().contains('single-zip')) {
-            	UTIL_Debug.debug(LoggingLevel.WARN, '****Returning single zip mock response');
+                UTIL_Debug.debug(LoggingLevel.WARN, '****Returning single zip mock response');
                 res.setBody(zipResponse); 
             } else if(req.getBody().contains('invalid-zip')) {
-            	UTIL_Debug.debug(LoggingLevel.WARN, '****Returning invalid zip mock response');
+                UTIL_Debug.debug(LoggingLevel.WARN, '****Returning invalid zip mock response');
                 res.setBody(invalidZipResponse);
             }
         }

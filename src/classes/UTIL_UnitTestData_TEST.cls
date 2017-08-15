@@ -515,10 +515,7 @@ public class UTIL_UnitTestData_TEST {
                 con.MailingCity = 'City' + iUnique + iCon;
             }
         }        
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        insert listConT;        
-        // clear our triggers recursion prevention since we are starting a new test
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        insert listConT;
     }
 
     private static testMethod void testCreateNewUserWithDefaultRole() {
