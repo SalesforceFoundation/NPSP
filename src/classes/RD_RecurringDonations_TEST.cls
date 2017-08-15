@@ -237,7 +237,7 @@ public class RD_RecurringDonations_TEST {
         r2.npe03__Organization__c = a.Id;
         r2.npe03__Amount__c = 100;
         r2.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodMonthly;
-        r2.npe03__Date_Established__c = date.newinstance(1970,6,12);
+        r2.npe03__Date_Established__c = date.newinstance(1970,6,30);
         r2.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationDivideValue;
         r2.npe03__Open_Ended_Status__c = 'None'; 
         insert r2;
@@ -245,11 +245,11 @@ public class RD_RecurringDonations_TEST {
         Opportunity[] installments2 = [select Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r2.id];
         system.assertEquals(3,installments2.size());
         system.assertEquals(33.33,installments2[0].Amount);
-        system.assertEquals(date.newinstance(1970,6,12),installments2[0].CloseDate);
+        system.assertEquals(date.newinstance(1970,6,30),installments2[0].CloseDate);
         system.assertEquals(33.33,installments2[1].Amount);
-        system.assertEquals(date.newinstance(1970,7,12),installments2[1].CloseDate);
+        system.assertEquals(date.newinstance(1970,7,30),installments2[1].CloseDate);
         system.assertEquals(33.34,installments2[2].Amount);
-        system.assertEquals(date.newinstance(1970,8,12),installments2[2].CloseDate);
+        system.assertEquals(date.newinstance(1970,8,30),installments2[2].CloseDate);
         system.assertEquals(a.id,installments2[0].AccountId);
         UTIL_Debug.debug('**** '+installments2);
 
