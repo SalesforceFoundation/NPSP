@@ -375,10 +375,9 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 lc.setAccountID(CAO_Constants.getIndividualAccountID());
 	        }
 
-	        // avoid auto-affiliation creation
-            AFFL_Affiliations_TDTM.doNotRunForContacts = true;
-            AFFL_Affiliations_TDTM.hasRunForAccounts = true;
-            
+	        // avoid auto-affiliation creation by disabling the Affiliations Trigger for Contacts
+            TDTM_ProcessControl.toggleTriggerState('Contact', 'AFFL_Affiliations_TDTM', false);
+
             // temporarily disable address management
             boolean hhAcctAddrDisabled = UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c;
             boolean orgAcctAddrEnabled = UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c;
@@ -517,9 +516,9 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             	afflAccId = strAfflAccountId;
             }
             if (afflAccId != null) {
-                AFFL_Affiliations_TDTM.doNotRunForContacts = false;
-                AFFL_Affiliations_TDTM.hasRunForAccounts = false;
-                AFFL_Affiliations_TDTM.createNonDupeAffiliation(l, lcr.getContactId(), afflAccId, true); 
+                // Re-Enable the Affilations Trigger for the Contact
+                TDTM_ProcessControl.toggleTriggerState('Contact', 'AFFL_Affiliations_TDTM', true);
+                AFFL_Affiliations_TDTM.createNonDupeAffiliation(l, lcr.getContactId(), afflAccId, true);
             }
             
             //// Opportunity Cleanup 
