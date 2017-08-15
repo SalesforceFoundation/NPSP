@@ -47,7 +47,7 @@ public class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
             
-        RD_ProcessControl.hasRun = true;
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, true);
         DmlWrapper dmlWrapper = new DmlWrapper();
         
         set<id> rdIDs = new set<id>();        
@@ -99,14 +99,18 @@ public class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
                                                                                           
         //recurring donations that need to be updated      
         if (rdcount > 0) {
-            if (rdcount == 1 || system.isBatch() || system.isFuture() || RD_ProcessControl.batchButton) {
+            if (rdcount == 1 || system.isBatch() || system.isFuture() || RD_RecurringDonations_BATCH.isBatchButton) {
                 RD_RecurringDonations.updateRecurringDonationOnOppChange(rdIds, dmlWrapper); 
             }
             else {
                 RD_RecurringDonations.updateRecurringDonationOnOppChangeFuture(rdIds);                                        
             }
         }
-        
-        return dmlWrapper;
+
+        TDTM_TriggerHandler.processDML(dmlWrapper);
+        dmlWrapper = null;
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
+
+        return null;
     }
 }

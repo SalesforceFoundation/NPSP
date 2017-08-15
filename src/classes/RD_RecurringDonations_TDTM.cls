@@ -51,16 +51,18 @@ public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
         list<npe03__Recurring_Donation__c> listRDUpdates = new list<npe03__Recurring_Donation__c>();
 
         npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
-        if (RD_ProcessControl.hasRun) 
+        if (TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.RD)) {
             return null;
+        }
             
         map<string, npe03__Custom_Installment_Settings__c> customInstallmentsMap
                 = UTIL_ListCustomSettingsFacade.getMapCustomInstallmentSettings();
 
         if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
             set<Id> setRDId = new set<Id>();
-            for (SObject s : newlist) 
-               setRDId.add(s.Id);
+            for (SObject s : newlist) {
+                setRDId.add(s.Id);
+            }
             newlist = RD_RecurringDonations.requeryListRD(setRDId);
             // since we recreate newlist, we can't assume it is same order as oldlist.
             // luckily we don't need oldlist for the AfterInsert scenario.
@@ -70,8 +72,9 @@ public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
             newlist = oldlist;
         }
 
-        if (triggerAction != TDTM_Runnable.Action.BeforeInsert && triggerAction != TDTM_Runnable.Action.BeforeUpdate)
-            RD_ProcessControl.hasRun = true;
+        if (triggerAction != TDTM_Runnable.Action.BeforeInsert && triggerAction != TDTM_Runnable.Action.BeforeUpdate) {
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, true);
+        }
         DmlWrapper dmlWrapper = new DmlWrapper();
 
         for (SObject sobj : newlist) {
@@ -108,13 +111,19 @@ public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
         }
         
         if (!mapIdRDInserts.isEmpty()) {
-            if (mapIdRDInserts.keySet().size() == 1 || system.isFuture() || system.isBatch())            
+            if (mapIdRDInserts.keySet().size() == 1 || system.isFuture() || system.isBatch()) {
                 RD_RecurringDonations.insertOppsOnRecurringDonationInsert(mapIdRDInserts.values());
-            else
+            } else {
                 RD_RecurringDonations.insertOppsOnRecurringDonationInsertFuture(mapIdRDInserts.keySet());
+            }
         }
-        
-    return dmlWrapper;        
+
+        TDTM_TriggerHandler.processDML(dmlWrapper);
+        dmlWrapper = null;
+        if (triggerAction != TDTM_Runnable.Action.BeforeInsert && triggerAction != TDTM_Runnable.Action.BeforeUpdate) {
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
+        }
+        return null;
     }
             
 }

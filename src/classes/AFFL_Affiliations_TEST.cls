@@ -71,7 +71,6 @@ public class AFFL_Affiliations_TEST {
         insert acc2;
         
         Test.startTest();
-        AFFL_Affiliations_TDTM.doNotRunForContacts = false;
         contact.AccountId = acc2.id;
         update contact;
         Test.stopTest();
@@ -163,7 +162,6 @@ public class AFFL_Affiliations_TEST {
         
         con.AccountId = acc2.id;
         Test.startTest();      
-        AFFL_Affiliations_TDTM.doNotRunForContacts = false;
         update con;
         Test.stopTest();
           
@@ -327,7 +325,6 @@ public class AFFL_Affiliations_TEST {
         System.assertEquals(2, listAffl.size());
 
         Test.startTest();
-        AFFL_Affiliations_TDTM.doNotRunForContacts = false;
         // now update our contacts with a Primary Affiliation
         for (Contact con : listCon) 
             con.Primary_Affiliation__c = listAcc[4].Id; // Org1  
@@ -388,7 +385,6 @@ public class AFFL_Affiliations_TEST {
         System.assertEquals(2, listAffl.size());
 
         Test.startTest();
-        AFFL_Affiliations_TDTM.doNotRunForContacts = false;
         // now update our contacts with a Primary Affiliation and a different account
         for (Contact con : listCon) {
             con.AccountId = listAcc[4].Id; // Org1  
@@ -457,7 +453,6 @@ public class AFFL_Affiliations_TEST {
         System.assertEquals(9, listAffl.size());
 
         Test.startTest();
-        AFFL_Affiliations_TDTM.doNotRunForContacts = false;
         // now update our contacts to a different account
         for (Contact con : listCon) {
             con.AccountId = listAcc[5].Id; // Org2  
@@ -532,7 +527,6 @@ public class AFFL_Affiliations_TEST {
         System.assertEquals(9, listAffl.size());
 
         Test.startTest();
-        AFFL_Affiliations_TDTM.doNotRunForContacts = false;
         // now clear our primary affilation
         for (Contact con : listCon) {
             con.Primary_Affiliation__c = null; 
@@ -601,7 +595,6 @@ public class AFFL_Affiliations_TEST {
         	listAffl.add(affl);
         }
         // must manually clear this, since our context is still active
-        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
         insert listAffl;
         
         // make sure primary affiliation set on Contacts
@@ -616,7 +609,6 @@ public class AFFL_Affiliations_TEST {
         	affl.npe5__Primary__c = false;
         }
         // must manually clear this, since our context is still active
-        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
         update listAffl;
         
         // make sure cleared on the contacts
@@ -679,7 +671,6 @@ public class AFFL_Affiliations_TEST {
             listAffl.add(affl);
         }
         // must manually clear this, since our context is still active
-        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
         insert listAffl;
         
         // make sure primary affiliation set on Contacts
@@ -701,8 +692,6 @@ public class AFFL_Affiliations_TEST {
             listAffl.add(affl);
         }
         // must manually clear this, since our context is still active
-        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
-        AFFL_Affiliations_TDTM.doNotRunForContacts = false;
         insert listAffl;
                 
         // make sure primary affiliation set on Contacts
@@ -741,7 +730,6 @@ public class AFFL_Affiliations_TEST {
         insert listCon;
 
         test.StartTest();
-        AFFL_Affiliations_TDTM.hasRunForAccounts = false;
         Account acc = new Account(Name='foo', npe01__One2OneContact__c=listCon[0].id, npe01__SYSTEMIsIndividual__c=false);
         insert acc;
         
@@ -754,7 +742,6 @@ public class AFFL_Affiliations_TEST {
         system.assertEquals(listcon[0].title, queryAffl[0].npe5__Role__c, 'The affiliation\'s role should match the first contact\'s title.');
         system.assertEquals(System.Today(), queryAffl[0].npe5__StartDate__c, 'The affiliation\'s start date should be today.');
         
-        AFFL_Affiliations_TDTM.hasRunForAccounts = false;
         acc.npe01__One2OneContact__c = listCon[1].id;
         update acc;
         test.StopTest();
@@ -807,7 +794,6 @@ public class AFFL_Affiliations_TEST {
         Contact queryCon = [SELECT Id, Primary_Affiliation__c FROM Contact WHERE Id = :con.id];
         system.assertEquals(acc.id, queryCon.Primary_Affiliation__c, 'Contact should have primary affiliation set.');
 
-        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
         delete affl;
         
         errors = [SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c FROM Error__c];
@@ -816,7 +802,6 @@ public class AFFL_Affiliations_TEST {
         queryCon = [SELECT Id, Primary_Affiliation__c FROM Contact WHERE Id = :con.id];
         system.assertEquals(null, con.Primary_Affiliation__c, 'Contact primary affiliation should be blank.');
 
-        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
         undelete affl;
 
         queryCon = [SELECT Id, Primary_Affiliation__c FROM Contact WHERE Id = :con.id];
@@ -847,7 +832,6 @@ public class AFFL_Affiliations_TEST {
         npe5__Affiliation__c queryAffl = [SELECT Id, npe5__Primary__c FROM npe5__Affiliation__c WHERE npe5__Contact__c = :con.id];
         System.assert(queryAffl.npe5__Primary__c, 'Affiliation should be marked primary.');
 
-        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
         delete queryAffl;
 
         Contact queryCon = [SELECT Id, Primary_Affiliation__c FROM Contact WHERE Id = :con.id];
@@ -863,16 +847,13 @@ public class AFFL_Affiliations_TEST {
             npe5__Primary__c = true,
             npe5__Status__c = system.label.npe5.DefaultCurrentStatus
         );
-        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
-        
+
         Test.startTest();
         insert affl;
         Test.stopTest();
 
         queryCon = [SELECT Id, Primary_Affiliation__c FROM Contact WHERE Id = :con.id];
         system.assertEquals(newPrimary.id, queryCon.Primary_Affiliation__c, 'Contact should have primary affiliation set.');
-
-        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
 
         undelete queryAffl;
 

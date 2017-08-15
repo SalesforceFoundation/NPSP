@@ -60,8 +60,7 @@ private class CON_ContactMerge_TEST2 {
         
         // note that we include addresses so the household pass will deal with merging household accounts with address objects.
         system.assertEquals(false, contactSettingsForTests.Household_Account_Addresses_Disabled__c);
-        system.assertEquals(false, ADDR_Addresses_TDTM.hasRunAddrTrigger);
-        
+
         Contact con = UTIL_UnitTestData_TEST.getContact();
         con.MailingStreet = '123 45th St';
         con.MailingCity = 'Seattle';
@@ -79,11 +78,8 @@ private class CON_ContactMerge_TEST2 {
         //insert new Contact[]{con, con2, con3};
         // insert our contacts seperately, to ensure they get different Lastmodified times.
         insert con;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false; 
         insert con2;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false; 
         insert con3;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false; 
 
         TDTM_DefaultConfig.stopTestDataInit();
         
@@ -122,8 +118,7 @@ private class CON_ContactMerge_TEST2 {
         CON_ContactMerge_TEST.selectMasterRecord(controller, con3.id);
         
         //merge them
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false; 
-        Test.startTest();               
+        Test.startTest();
         controller.mergeContacts();
         // to flush our future calls that fix related data up!        
         Test.stopTest();
