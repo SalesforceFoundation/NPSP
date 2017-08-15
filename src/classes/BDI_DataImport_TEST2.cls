@@ -38,7 +38,7 @@
 @isTest
 private with sharing class BDI_DataImport_TEST2 {
 
-    /**
+    /*********************************************************************************************************
     * @description if you only want to run one test in this class, fill in its name here.
     * if you want to run all tests, then use '*'
     */
