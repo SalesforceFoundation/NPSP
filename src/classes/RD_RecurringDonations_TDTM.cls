@@ -51,7 +51,7 @@ public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
         list<npe03__Recurring_Donation__c> listRDUpdates = new list<npe03__Recurring_Donation__c>();
 
         npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
-        if (TDTM_ProcessControl.checkRecursionState(TDTM_ProcessControl.flag.RD)) {
+        if (TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.RD)) {
             return null;
         }
             

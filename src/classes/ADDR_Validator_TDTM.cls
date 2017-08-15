@@ -64,7 +64,7 @@ public class ADDR_Validator_TDTM extends TDTM_Runnable {
         // Look in the static list of previoysly processed Id's to determine if the record has already
         // gone through this trigger. If so, then don't process it a second time.
         Boolean recordsPreviouslyProcessed = false;
-        if (newList[0].Id != null && processedIdsForValidation.contains(newList[0].Id)) {
+        if (newList !=  null && newList[0].Id != null && processedIdsForValidation.contains(newList[0].Id)) {
             recordsPreviouslyProcessed = true;
         }
 

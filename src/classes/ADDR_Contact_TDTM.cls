@@ -197,13 +197,13 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                ) {
                 // note that we detect whether the address change is coming from the address trigger,
                 // in which case we don't want to create a new address.
-                if (TDTM_ProcessControl.checkRecursionState(TDTM_ProcessControl.flag.ADDR_hasRunTrigger)) {
+                if (TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ADDR_hasRunTrigger)) {
                 	//UTIL_Debug.debug('DJH**** stop Addr Trigger recursion in ADDR_Contact_TDTM');
                     continue;
                 }
                 // If the Before Insert/Update trigger on the Contact has already executed and taken action
                 // and this is an After Insert/Update trigger, simply reset the flag and exit out.
-                if (TDTM_ProcessControl.checkRecursionState(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore) &&
+                if (TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore) &&
                 (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate)) {
                     continue;
                 }

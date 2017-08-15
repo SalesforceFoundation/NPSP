@@ -99,7 +99,7 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
     private DmlWrapper runForRelationships(List<npe4__Relationship__c> newlist, List<npe4__Relationship__c> oldlist, 
     TDTM_Runnable.Action triggerAction) {
 
-        if (TDTM_ProcessControl.checkRecursionState(TDTM_ProcessControl.flag.REL)) {
+        if (TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.REL)) {
             return null;
         }
 

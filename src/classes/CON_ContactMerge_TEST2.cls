@@ -60,8 +60,7 @@ private class CON_ContactMerge_TEST2 {
         
         // note that we include addresses so the household pass will deal with merging household accounts with address objects.
         system.assertEquals(false, contactSettingsForTests.Household_Account_Addresses_Disabled__c);
-//        system.assertEquals(0, ADDR_Addresses_TDTM.cHasRunAddrTrigger);
-        
+
         Contact con = UTIL_UnitTestData_TEST.getContact();
         con.MailingStreet = '123 45th St';
         con.MailingCity = 'Seattle';

@@ -97,7 +97,7 @@ public class TDTM_ProcessControl {
     /********************************************************************************************************
     * @description Returns true if the recursionFlag value is greater than 1
     */
-    public static Boolean checkRecursionState(flag f) {
+    public static Boolean isRecursive(flag f) {
         return (recursionMap.containsKey(f) ? recursionMap.get(f) : 0) > 0;
     }
 

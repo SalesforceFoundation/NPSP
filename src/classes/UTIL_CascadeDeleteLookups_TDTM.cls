@@ -114,7 +114,7 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        if (TDTM_ProcessControl.checkRecursionState(TDTM_ProcessControl.flag.CascadeDeletes)) {
+        if (TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.CascadeDeletes)) {
             return null;
         }
 

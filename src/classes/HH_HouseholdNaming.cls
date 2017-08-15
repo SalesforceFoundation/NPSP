@@ -296,7 +296,7 @@ public without sharing class HH_HouseholdNaming {
         //and marks them as such so they won't be updated
         //need to use a process control class to avoid recursion when async updates occur
         //in non async updates, this won't fire again, so we don't need to worry
-        if (!TDTM_ProcessControl.checkRecursionState(TDTM_ProcessControl.flag.HH)  &&
+        if (!TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.HH)  &&
             (triggerAction == TDTM_Runnable.Action.BeforeUpdate || triggerAction == TDTM_Runnable.Action.AfterUpdate)) {
 
             // no need to do any of this name checking if we aren't using auto household naming.

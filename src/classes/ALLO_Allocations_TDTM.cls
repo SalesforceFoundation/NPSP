@@ -83,16 +83,16 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         }
 
         // dispatch to the correct handler
-        if (objResult.getsObjectType() == Allocation__c.sObjectType && !TDTM_ProcessControl.checkRecursionState(TDTM_ProcessControl.flag.ALLOC) &&
+        if (objResult.getsObjectType() == Allocation__c.sObjectType && !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC) &&
             (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate)) {
 
             runAllocationBeforeTriggerHandler(newlist, oldlist, triggerAction, objResult);
-        } else if (objResult.getsObjectType() == Allocation__c.sObjectType && !TDTM_ProcessControl.checkRecursionState(TDTM_ProcessControl.flag.ALLOC) &&
+        } else if (objResult.getsObjectType() == Allocation__c.sObjectType && !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC) &&
             (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate || triggerAction == TDTM_Runnable.Action.AfterDelete)) {
 
             runAllocationAfterTriggerHandler(newlist, oldlist, triggerAction, objResult);
             //setting before to true for afterDelete case, to avoid running triggers on DML wrapper objects
-        } else if (objResult.getsObjectType() == Opportunity.sObjectType && !TDTM_ProcessControl.checkRecursionState(TDTM_ProcessControl.flag.ALLOC)) {
+        } else if (objResult.getsObjectType() == Opportunity.sObjectType && !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC)) {
 
             runOpportunityTriggerHandler(newlist, oldlist, triggerAction, objResult);
         }

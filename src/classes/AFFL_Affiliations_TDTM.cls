@@ -52,14 +52,14 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
         DmlWrapper wrapper;
 
         // dispatch to the correct handler
-        if (objResult.getsObjectType() == Contact.sObjectType && !TDTM_ProcessControl.checkRecursionState(TDTM_ProcessControl.flag.AFFL_doNotRunForContacts)) {
+        if (objResult.getsObjectType() == Contact.sObjectType && !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.AFFL_doNotRunForContacts)) {
             wrapper = runContactTriggerHandler(newlist, oldlist, triggerAction, objResult);
 
-        } else if (objResult.getsObjectType() == npe5__Affiliation__c.sObjectType && !TDTM_ProcessControl.checkRecursionState(TDTM_ProcessControl.flag.AFFL_hasRunForAffiliations)) {
+        } else if (objResult.getsObjectType() == npe5__Affiliation__c.sObjectType && !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.AFFL_hasRunForAffiliations)) {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.AFFL_hasRunForAffiliations, true);
             wrapper = runAfflTriggerHandler(newlist, oldlist, triggerAction, objResult);
 
-        } else if (objResult.getsObjectType() == Account.sObjectType && !TDTM_ProcessControl.checkRecursionState(TDTM_ProcessControl.flag.AFFL_hasRunForAccounts)) {
+        } else if (objResult.getsObjectType() == Account.sObjectType && !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.AFFL_hasRunForAccounts)) {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.AFFL_hasRunForAccounts, true);
             wrapper = runAccountTriggerHandler(newlist, oldlist, triggerAction, objResult);
 
@@ -73,7 +73,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
         // Decrement the recursion counters based on related processing logic
         if (objResult.getsObjectType() == npe5__Affiliation__c.sObjectType) {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.AFFL_hasRunForAffiliations, false);
-            if (TDTM_ProcessControl.checkRecursionState(TDTM_ProcessControl.flag.AFFL_hasRunForAccounts)) {
+            if (TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.AFFL_hasRunForAccounts)) {
                 TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.AFFL_doNotRunForContacts, false);
             }
 

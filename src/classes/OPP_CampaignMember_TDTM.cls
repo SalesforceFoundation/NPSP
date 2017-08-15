@@ -55,7 +55,7 @@ public class OPP_CampaignMember_TDTM extends TDTM_Runnable {
         
         dmlWrapper dmlWrapper = new DmlWrapper();
 
-        if (TDTM_ProcessControl.checkRecursionState(TDTM_ProcessControl.flag.OPP_CampaignMember)) {
+        if (TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.OPP_CampaignMember)) {
             return dmlWrapper;
         }
 
