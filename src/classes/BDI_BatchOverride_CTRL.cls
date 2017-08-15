@@ -69,10 +69,14 @@ public with sharing class BDI_BatchOverride_CTRL {
 
         diBatch = (DataImportBatch__c) controller.getRecord();
 
-        // our multiselect list of donation related fields holds keys in lowercase
-        if (diBatch.Donation_Matching_Rule__c != null) {
-            diBatch.Donation_Matching_Rule__c = diBatch.Donation_Matching_Rule__c.toLowerCase();
+        // for some reason, New override doesn't get default values set
+        if (diBatch.Donation_Matching_Rule__c == null) {
+            diBatch.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
+                UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
         }
+
+        // our multiselect list of donation related fields holds keys in lowercase
+        diBatch.Donation_Matching_Rule__c = diBatch.Donation_Matching_Rule__c.toLowerCase();
 
         //if clone param is set, this is the clone button override
         Map<String, String> params = ApexPages.currentPage().getParameters();
