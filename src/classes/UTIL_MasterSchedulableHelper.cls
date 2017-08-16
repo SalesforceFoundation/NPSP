@@ -156,7 +156,7 @@ public without sharing class UTIL_MasterSchedulableHelper {
         }
 
         // If rescheduling all jobs was required, set the flag to true so it doens't do it again
-        if (rescheduleAllJobs) {
+        if (!Test.isRunningTest() && rescheduleAllJobs) {
             orgErrorSettings.Sandbox_Jobs_Rescheduled__c = true;
             update orgErrorSettings;
         }
