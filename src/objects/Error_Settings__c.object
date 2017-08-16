@@ -70,7 +70,7 @@ To view these jobs, search for Scheduled Jobs in Salesforce Setup.</description>
         <type>TextArea</type>
     </fields>
     <fields>
-        <fullName>SYSTEM_Sandbox_Jobs_Rescheduled__c</fullName>
+        <fullName>Sandbox_Jobs_Rescheduled__c</fullName>
         <defaultValue>false</defaultValue>
         <description>Used to track when NPSP apex jobs have been deleted and rescheduled in a Sandbox. It should remain unchecked in all Production orgs</description>
         <externalId>false</externalId>

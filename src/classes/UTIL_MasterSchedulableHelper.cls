@@ -127,7 +127,7 @@ public without sharing class UTIL_MasterSchedulableHelper {
 
         // always delete and reschedule all jobs in this particular scenario
         Error_Settings__c orgErrorSettings = UTIL_CustomSettingsFacade.getOrgErrorSettings();
-        Boolean rescheduleAllJobs = (UTIL_Namespace.isSandbox() && orgErrorSettings.SYSTEM_Sandbox_Jobs_Rescheduled__c == false);
+        Boolean rescheduleAllJobs = (UTIL_Namespace.isSandbox() && orgErrorSettings.Sandbox_Jobs_Rescheduled__c == false);
 
         //query for all scheduled apex
         for (CronTrigger ct : [SELECT Id, CronExpression, CronJobDetail.Name, CreatedBy.Name, CreatedBy.IsActive FROM CronTrigger WHERE CronJobDetail.JobType = '7']) {
@@ -157,7 +157,7 @@ public without sharing class UTIL_MasterSchedulableHelper {
 
         // If rescheduling all jobs was required, set the flag to true so it doens't do it again
         if (rescheduleAllJobs) {
-            orgErrorSettings.SYSTEM_Sandbox_Jobs_Rescheduled__c = true;
+            orgErrorSettings.Sandbox_Jobs_Rescheduled__c = true;
             update orgErrorSettings;
         }
     }
