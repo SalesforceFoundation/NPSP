@@ -690,6 +690,7 @@
         <members>Error_Settings__c.Error_Notifications_On__c</members>
         <members>Error_Settings__c.Error_Notifications_To__c</members>
         <members>Error_Settings__c.Store_Errors_On__c</members>
+        <members>Error_Settings__c.SYSTEM_Sandbox_Jobs_Rescheduled__c</members>
         <members>Error__c.Context_Type__c</members>
         <members>Error__c.Datetime__c</members>
         <members>Error__c.Email_Sent__c</members>

@@ -124,7 +124,11 @@ public without sharing class UTIL_MasterSchedulableHelper {
     public static void setScheduledJobs() {
 
         Map<String, CronTrigger> scheduledJobs = new Map<String, CronTrigger>();
-        
+
+        // always delete and reschedule all jobs in this particular scenario
+        Error_Settings__c orgErrorSettings = UTIL_CustomSettingsFacade.getOrgErrorSettings();
+        Boolean rescheduleAllJobs = (UTIL_Namespace.isSandbox() && orgErrorSettings.SYSTEM_Sandbox_Jobs_Rescheduled__c == false);
+
         //query for all scheduled apex
         for (CronTrigger ct : [SELECT Id, CronExpression, CronJobDetail.Name, CreatedBy.Name, CreatedBy.IsActive FROM CronTrigger WHERE CronJobDetail.JobType = '7']) {
             scheduledJobs.put(ct.CronJobDetail.Name, ct);
@@ -140,15 +144,21 @@ public without sharing class UTIL_MasterSchedulableHelper {
                 //if it's already scheduled, but the ghost user or an inactve user scheduled it, 
                 //then abort and reschedule
                 CronTrigger currentJob = scheduledJobs.get(jobName);
-                if (currentJob.CreatedBy.Name == 'Nonprofit Success Pack' || !currentJob.CreatedBy.isActive) {
+                if (rescheduleAllJobs || currentJob.CreatedBy.Name == 'Nonprofit Success Pack' || !currentJob.CreatedBy.isActive) {
                     System.abortJob(currentJob.Id);
-                    
+
                     //reuse their CronExpression so it's scheduled at the time they chose
                     defaultScheduledJobs.get(jobName)[0] = currentJob.CronExpression;
 
                     createJob(jobName);
                 }
             }
+        }
+
+        // If rescheduling all jobs was required, set the flag to true so it doens't do it again
+        if (rescheduleAllJobs) {
+            orgErrorSettings.SYSTEM_Sandbox_Jobs_Rescheduled__c = true;
+            update orgErrorSettings;
         }
     }
 
