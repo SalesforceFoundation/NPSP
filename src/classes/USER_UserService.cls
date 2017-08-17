@@ -1,0 +1,253 @@
+/*
+    Copyright (c) 2017, Salesforce.org
+    All rights reserved.
+    
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+    
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Salesforce.org nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    POSSIBILITY OF SUCH DAMAGE.
+*/
+
+/**
+* @author Salesforce.org
+* @date 2017
+* @group User
+* @description Service Class to handle actions on the User object.
+*/
+public with sharing class USER_UserService {
+
+	//================================
+	// Constants
+	//================================
+	public static final String SYSTEM_ADMINISTRATOR = 'System Administrator';
+	public static final String OBJECT_ID_PREFIX_USER = '005';
+	public static final String ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS = 'All Sys Admins';
+	public static final String JOB_TYPE_SCHEDULED_APEX = '7';
+	public static final String ERROR_TYPE_SCHEDULED_APEX = 'Scheduled Apex Error';
+	public static final String OBJECT_TYPE_USER = 'User';
+	public static final String ERROR_MESSAGE_SCHEDULED_APEX = 'An InActive or Frozen User has Scheduled Jobs associated to them.';
+	public static final String CONTEXT_TYPE_USER = 'User';
+	
+
+	//================================
+	// isSysAdmin
+	// Determines if each User in the List is a Sys Admin based on ProfileId
+	//================================
+	public static Map<Id, Boolean> isSysAdmin(List<User> updatedUsers) {
+		Map<Id, Boolean> userIdToIsSysAdmin = new Map<Id, Boolean>();
+		
+		// Retrieve the SysAdmin Profile Id
+		Id sysAdminId = retrieveSysAdminProfileId();
+
+		// Determine if the User is a SysAdmin
+		if(null != updatedUsers && !updatedUsers.isEmpty()) {
+			for(User currentUser : updatedUsers) {
+				if(sysAdminId == currentUser.ProfileId) {
+					userIdToIsSysAdmin.put(currentUser.Id, true);
+				} else {
+					userIdToIsSysAdmin.put(currentUser.Id, false);
+				}
+			}
+		}
+
+		return userIdToIsSysAdmin;
+	}
+
+
+	//================================
+	// isActiveUser
+	//================================
+	public static Map<Id, Boolean> isActiveUser(List<User> updatedUsers) {
+		Map<Id, Boolean> userIdToIsActive = new Map<Id, Boolean>();
+		
+		// Determine if the User isActive
+		if(null != updatedUsers && !updatedUsers.isEmpty()) {
+			for(User currentUser : updatedUsers) {
+				if(currentUser.IsActive) {
+					userIdToIsActive.put(currentUser.Id, true);
+				} else {
+					userIdToIsActive.put(currentUser.Id, false);
+				}
+			}
+		}
+
+		return userIdToIsActive;
+	}
+
+
+	//================================
+	// isFrozenUser
+	//================================
+	public static Map<Id, Boolean> isFrozenUser(List<User> updatedUsers) {
+		Map<Id, Boolean> userIdToIsFrozen = new Map<Id, Boolean>();
+
+		// Retrieve the UserLogin records for the updatedUsers
+		if(null != updatedUsers && !updatedUsers.isEmpty()) {
+			Map<Id, Boolean> userLoginUserIdToIsFrozen = retrieveUserLogins(updatedUsers);
+			
+			// Populate the Map with UserId and IsFrozen
+			for(User currentUser : updatedUsers) {
+				userIdToIsFrozen.put(currentUser.Id, userLoginUserIdToIsFrozen.get(currentUser.Id));
+			}
+		}
+
+		return userIdToIsFrozen;
+	}
+	
+
+	//================================
+	// applySysAdminIsActiveIsFrozenStatusChanges
+	//================================
+	@future
+	public static void applySysAdminIsActiveIsFrozenStatusChanges(Set<Id> sysAdminUserIds) {
+		// Sets Error Notification recipient to All Sys Admin
+		setErrorNotificationToAllSysAdmins(sysAdminUserIds);
+
+		// Logs an Error and Emails the Sys Admins
+		handleScheduledJobsSubmittedByInActiveIsFrozenSysAdmin(sysAdminUserIds);
+	}
+
+
+	//================================
+	// setErrorNotificationToAllSysAdmins
+	// If Error Notification recipient set to User and is an InActive/IsFrozen User, then set recipient to All Sys Admins
+	//================================
+	public static void setErrorNotificationToAllSysAdmins(Set<Id> sysAdminUserIds) {
+		Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings();
+		
+		if(errorSettings.Error_Notifications_To__c.startsWith(OBJECT_ID_PREFIX_USER)) {
+			// Check if one of the sysAdminUserIds is the Error Notification recipient
+			for(Id currentSysAdminId: sysAdminUserIds) {
+				if(errorSettings.Error_Notifications_To__c == currentSysAdminId) {
+					// Set Error Notification recipient to All Sys Admin
+					errorSettings.Error_Notifications_To__c = ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS;
+					Database.update(errorSettings, true);
+					break;
+				}
+			}
+		}
+	}
+
+
+	//================================
+	// handleScheduledJobsSubmittedByInActiveIsFrozenSysAdmin
+	//================================
+	public static void handleScheduledJobsSubmittedByInActiveIsFrozenSysAdmin(Set<Id> sysAdminUserIds) {
+		Boolean breakOuterCircle = false;
+
+		List<CronTrigger> scheduledJobs = retrieveScheduledJobs(sysAdminUserIds);
+
+		for(Id currentSysAdminId : sysAdminUserIds) {
+			for(CronTrigger eachScheduledJob : scheduledJobs) {
+				if(currentSysAdminId == eachScheduledJob.OwnerId) {
+					notifySysAdminsAboutInActiveIsFrozenSysAdminUser();
+					breakOuterCircle = true;
+					break;
+				}
+			}
+			if(breakOuterCircle) {
+				break;	
+			}
+		}
+	}
+
+
+	//================================
+	// notifySysAdminsAboutInActiveIsFrozenSysAdminUser
+	//================================
+	@testVisible
+	private static void notifySysAdminsAboutInActiveIsFrozenSysAdminUser() {
+		logInActiveIsFrozenUserError();
+		sendInActiveIsFrozenUserEmail();
+	}
+
+
+	//================================
+	// logInActiveIsFrozenUserError()
+	//================================
+	@testVisible
+	private static void logInActiveIsFrozenUserError() {
+		Error__c inActiveIsFrozenError = new Error__c(Error_Type__c = ERROR_TYPE_SCHEDULED_APEX,
+														Object_Type__c = OBJECT_TYPE_USER,
+														Datetime__c = System.now(), 
+														Full_Message__c = ERROR_MESSAGE_SCHEDULED_APEX);
+
+		Database.insert(inActiveIsFrozenError, true);
+	}
+
+
+	//================================
+	// sendInActiveFrozenUserEmail()
+	//================================
+	@testVisible
+	private static void sendInActiveIsFrozenUserEmail() {
+		ERR_Notifier.sendErrorNotifications(CONTEXT_TYPE_USER);
+	}
+
+
+	//================================
+	// retrieveSysAdminProfileId
+	//================================
+	private static Id retrieveSysAdminProfileId() {
+		Id sysAdminProfileId = null; 
+
+		List<Profile> sysAdminProfile = [SELECT Id FROM Profile WHERE Name = :SYSTEM_ADMINISTRATOR];
+		if(!sysAdminProfile.isEmpty()) {
+			sysAdminProfileId = sysAdminProfile[0].Id;
+		}
+		
+		return sysAdminProfileId;
+	}
+	
+
+	//================================
+	// retrieveUserLogins
+	//================================
+	private static Map<Id, Boolean> retrieveUserLogins(List<User> updatedUsers) {
+		Map<Id, Boolean> userIdToIsFrozen = new Map<Id, Boolean>();
+		
+		List<UserLogin> currentUserLogins = [SELECT IsFrozen, UserId FROM UserLogin WHERE UserId IN :updatedUsers];
+		for(UserLogin eachUserLogin : currentUserLogins) {
+			userIdToIsFrozen.put(eachUserLogin.UserId, eachUserLogin.IsFrozen);
+		}
+
+		return userIdToIsFrozen;
+	}
+
+
+	//================================
+	// retrieveScheduledJobs
+	//================================
+	private static List<CronTrigger> retrieveScheduledJobs(Set<Id> sysAdminUserIds) {
+		List<CronTrigger> scheduledJobs = new List<CronTrigger>();
+
+		scheduledJobs = [SELECT Id, OwnerId 
+							FROM CronTrigger 
+							WHERE OwnerId IN :sysAdminUserIds
+							AND CronJobDetail.JobType = :JOB_TYPE_SCHEDULED_APEX];
+
+		return scheduledJobs;
+	}
+
+
+} // end class USER_UserService

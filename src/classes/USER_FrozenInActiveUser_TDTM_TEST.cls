@@ -1,0 +1,158 @@
+/*
+    Copyright (c) 2017, Salesforce.org
+    All rights reserved.
+    
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+    
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Salesforce.org nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    POSSIBILITY OF SUCH DAMAGE.
+*/
+
+/**
+* @author Salesforce.org
+* @date 2017
+* @group User
+* @description Trigger handler on User object to handle User status changes.
+*/
+
+@isTest
+public with sharing class USER_FrozenInActiveUser_TDTM_TEST {
+	//================================
+	// Constants
+	//================================
+	public static final String SYSTEM_ADMINISTRATOR = 'System Administrator';
+	public static final String ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS = 'All Sys Admins';
+	
+	
+	//================================
+	// testRunOverrideBeforeInser()
+	//================================
+	@isTest
+	private static void testRunOverrideBeforeInser() {
+		USER_FrozenInActiveUser_TDTM userFrozenInActiveUserTDTM = new USER_FrozenInActiveUser_TDTM();
+		userFrozenInActiveUserTDTM.run(null, null, TDTM_Runnable.Action.BeforeInsert, null);
+	}
+
+
+	//================================
+	// testRunOverrideBeforeUpdate()
+	//================================
+	@isTest
+	private static void testRunOverrideBeforeUpdate() {
+		USER_FrozenInActiveUser_TDTM userFrozenInActiveUserTDTM = new USER_FrozenInActiveUser_TDTM();
+		userFrozenInActiveUserTDTM.run(null, null, TDTM_Runnable.Action.BeforeUpdate, null);
+	}
+
+
+	//================================
+	// testRunOverrideBeforeDelete()
+	//================================
+	@isTest
+	private static void testRunOverrideBeforeDelete() {
+		USER_FrozenInActiveUser_TDTM userFrozenInActiveUserTDTM = new USER_FrozenInActiveUser_TDTM();
+		userFrozenInActiveUserTDTM.run(null, null, TDTM_Runnable.Action.BeforeDelete, null);
+	}
+
+
+	//================================
+	// testRunOverrideAfterInsert()
+	//================================
+	@isTest
+	private static void testRunOverrideAfterInsert() {
+		USER_FrozenInActiveUser_TDTM userFrozenInActiveUserTDTM = new USER_FrozenInActiveUser_TDTM();
+		userFrozenInActiveUserTDTM.run(null, null, TDTM_Runnable.Action.AfterInsert, null);
+	}
+
+
+	//================================
+	// testRunOverrideAfterUpdate()
+	//================================
+	@isTest
+	private static void testRunOverrideAfterUpdate() {
+		USER_FrozenInActiveUser_TDTM userFrozenInActiveUserTDTM = new USER_FrozenInActiveUser_TDTM();
+
+		List<User> newUsers = createUsers();
+
+		// Freeze a User
+        List<UserLogin> currentUserLogin = [SELECT IsFrozen, UserId FROM UserLogin WHERE UserId = :newUsers[1].Id];
+		currentUserLogin[0].IsFrozen = true;
+		Database.update(currentUserLogin, false);
+
+		Test.startTest();
+		userFrozenInActiveUserTDTM.run(newUsers, null, TDTM_Runnable.Action.AfterUpdate, null);
+		Test.stopTest();
+
+		Error_Settings__c errorSettingsSysAdmin = UTIL_CustomSettingsFacade.getErrorSettings();
+        System.assertEquals(ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS, errorSettingsSysAdmin.Error_Notifications_To__c);
+	}
+
+
+	//================================
+	// testRunOverrideAfterDelete()
+	//================================
+	@isTest
+	private static void testRunOverrideAfterDelete() {
+		USER_FrozenInActiveUser_TDTM userFrozenInActiveUserTDTM = new USER_FrozenInActiveUser_TDTM();
+		userFrozenInActiveUserTDTM.run(null, null, TDTM_Runnable.Action.AfterDelete, null);
+	}
+
+
+	//================================
+	// testRunOverrideAfterUnDelete()
+	//================================
+	@isTest
+	private static void testRunOverrideAfterUnDelete() {
+		USER_FrozenInActiveUser_TDTM userFrozenInActiveUserTDTM = new USER_FrozenInActiveUser_TDTM();
+		userFrozenInActiveUserTDTM.run(null, null, TDTM_Runnable.Action.AfterUndelete, null);
+	}
+
+
+	//================================
+	// createUser()
+	//================================
+	private static List<User> createUsers() {
+		List<User> newUsers = new List<User>();
+
+		// Create new Users with SysAdmin Profile
+		Id sysAdminId = [SELECT Id FROM Profile WHERE Name = :SYSTEM_ADMINISTRATOR][0].Id;
+        User newUserA = new User(LastName = 'TestSysAdminUserA', Email = 'test.sysAdminA@email.com', ProfileId = sysAdminId,
+                            		isActive = true, UserName = 'test.sysAdminA@email.com',
+                            		Alias = 'tu093521', TimeZoneSidKey = 'America/Los_Angeles',
+                            		LocaleSidKey = 'en_US', LanguageLocaleKey = 'en_US',
+                            		EmailEncodingKey = 'ISO-8859-1');
+
+        User newUserB = new User(LastName = 'TestSysAdminUserB', Email = 'test.sysAdminB@email.com', ProfileId = sysAdminId,
+                            		isActive = false, UserName = 'test.sysAdminB@email.com',
+                            		Alias = 'tu093521', TimeZoneSidKey = 'America/Los_Angeles',
+                            		LocaleSidKey = 'en_US', LanguageLocaleKey = 'en_US',
+                            		EmailEncodingKey = 'ISO-8859-1');
+
+        newUsers.add(newUserA);
+        newUsers.add(newUserB);
+		insert newUsers;
+
+        return newUsers;
+	}
+
+
+} // end class USER_FrozenInActiveUser_TDTM_TEST

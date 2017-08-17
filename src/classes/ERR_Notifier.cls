@@ -38,6 +38,8 @@ public class ERR_Notifier {
 
     public static NotificationOptions notificationOptions = new NotificationOptions();
     
+    public static final String CONTEXT_USER = 'User';
+
     /*******************************************************************************************************
     * @description Inner class with the 3 types of notification options: user, chatter group, and all system
     *              administrators.
@@ -58,7 +60,7 @@ public class ERR_Notifier {
 
         Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings();
         String errorNotifRecipient = errorSettings.Error_Notifications_To__c;
-            
+
         if (errorSettings.Error_Notifications_On__c == true && errorNotifRecipient != null) {
 
             //We will post to chatter, if enabled
@@ -68,13 +70,13 @@ public class ERR_Notifier {
             //We will send email
             } else {
                 List<String> sendList = new List<String>();
-                if (errorNotifRecipient instanceof id && errorNotifRecipient.startsWith(NotificationOptions.user)) {
+                if (errorNotifRecipient instanceof id && errorNotifRecipient.startsWith(NotificationOptions.user) && context != CONTEXT_USER) {
                     List<User> useremaillist = new List<User>();
-                    useremaillist = [select email from User where id = :errorNotifRecipient and isActive = true];
+                    useremaillist = [SELECT email FROM User WHERE id = :errorNotifRecipient AND isActive = true];
                     for (User u : useremaillist)
                         sendList.add(u.email);
-                } else if(errorNotifRecipient == NotificationOptions.sysAdmins) {
-                    list<User> sysadminlist = [select email from User where User.Profile.Name = 'System Administrator' and isActive = true];
+                } else if(errorNotifRecipient == NotificationOptions.sysAdmins || context == CONTEXT_USER) {
+                    List<User> sysadminlist = [SELECT email FROM User WHERE User.Profile.Name = 'System Administrator' AND isActive = true];
                     for (User u : sysadminlist) {
                         sendList.add(u.email);
                     }
