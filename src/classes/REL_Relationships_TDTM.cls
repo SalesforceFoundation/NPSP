@@ -309,11 +309,13 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
             }
         
             list<id> rIDs = new list<id>();
-                
+
             for (npe4__Relationship__c r : rList){
             //    rIDs.add(r.npe4__RelatedContact__c);
-                rIDs.add(r.npe4__Contact__c);
-            }            
+                if (r.npe4__Contact__c != null) {
+                    rIDs.add(r.npe4__Contact__c);
+                }
+            }
             
             String query_string = 'select id, Salutation';            
             String gender_field = '';
@@ -328,7 +330,12 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
             map<id, Contact> cMap = new map<id,Contact>((List<Contact>)database.query(query_string));
             
             for(npe4__Relationship__c r : rList){
-                
+
+                // Skip any records where the related reciprical contact is null
+                if (r.npe4__Contact__c == null) {
+                    continue;
+                }
+
                 npe4__Relationship__c copy = (npe4__Relationship__c)rCopy[counter];
 
                 Contact relatedContact = cMap.get(r.npe4__Contact__c);
