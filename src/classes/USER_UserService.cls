@@ -45,7 +45,7 @@ public with sharing class USER_UserService {
 	public static final String JOB_TYPE_SCHEDULED_APEX = '7';
 	public static final String ERROR_TYPE_SCHEDULED_APEX = 'Scheduled Apex Error';
 	public static final String OBJECT_TYPE_USER = 'User';
-	public static final String ERROR_MESSAGE_SCHEDULED_APEX = 'An InActive or Frozen User has Scheduled Jobs associated to them.';
+	public static final String ERROR_MESSAGE_SCHEDULED_APEX = 'There are scheduled jobs owned by an inactive or frozen user. Review your scheduled jobs and ensure the owner of each one is an active user.';
 	public static final String CONTEXT_TYPE_USER = 'User';
 	
 

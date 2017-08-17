@@ -41,7 +41,7 @@ public with sharing class USER_UserService_TEST {
 	//================================
 	public static final String SYSTEM_ADMINISTRATOR = 'System Administrator';
 	public static final String OBJECT_TYPE_USER = 'User';
-	public static final String ERROR_MESSAGE_SCHEDULED_APEX = 'An InActive or Frozen User has Scheduled Jobs associated to them.';
+	public static final String ERROR_MESSAGE_SCHEDULED_APEX = 'There are scheduled jobs owned by an inactive or frozen user. Review your scheduled jobs and ensure the owner of each one is an active user.';
 	public static final String ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS = 'All Sys Admins';
 	public static final String CONTEXT_TYPE_USER = 'User';
 	public static final String JOB_TYPE_SCHEDULED_APEX = '7';
