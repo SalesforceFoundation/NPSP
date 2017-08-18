@@ -159,10 +159,10 @@ public with sharing class HH_Households_TEST {
     verify:
         The Contact is created and updated successfully
     **********************************************************************************************************/  
-    static testMethod void contactDmlShouldSucceedWhenHHNamingSettingsIsInvalidAndAutomaticHouseholdNamingIsTurnedOff() {  
+    static testMethod void testContactDmlWhenAutomaticHHNamingIsOff() {  
         setupContactSettingsOneToOneProcessor();         
         turnOffAutomaticHHNamingForAllHouseholdProcessor();
-        setupInvalidHHNamingSettings();
+        UTIL_UnitTestData_TEST.setupInvalidHHNamingSettings();
         
         Contact contact = new Contact(FirstName = 'John', LastName = 'Smith');
         try {
@@ -777,43 +777,6 @@ public with sharing class HH_Households_TEST {
             new npo02__Households_Settings__c (
                 npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                 npo02__Advanced_Household_Naming__c = isOn
-            )
-        );
-    }
-
-    /*********************************************************************************************************
-    * @description Configures Household Naming Settings with invalid Name and Greetings formats
-    * @return void
-    **********************************************************************************************************/
-    private static void setupInvalidHHNamingSettings() {
-        setupHHNamingSettings('{!{!FirstName}} {!LastName}} Household', '{!{!Title} {!FirstName}}}{!LastName}', '{!{!FirstName}}}');
-    }
-
-    /*********************************************************************************************************
-    * @description Configures Household Naming Settings with valid Name and Greetings formats
-    * @return void
-    **********************************************************************************************************/
-    private static void setupHHNamingSettings() {
-        setupHHNamingSettings('{!LastName} Household', '{!{!Title}} {!LastName}', '{!{!FirstName}}');
-    }
-
-    /*********************************************************************************************************
-    * @description Configures Household Naming Settings 
-    * @param hhNameFormat Household Naming Format
-    * @param formalGreetingFormat Formal Greeting Format
-    * @param informalGreetingFormat Informal Greeting Format
-    * @return void
-    **********************************************************************************************************/
-    private static void setupHHNamingSettings(String hhNameFormat, String formalGreetingFormat, String informalGreetingFormat) {
-        UTIL_CustomSettingsFacade.getHouseholdNamingSettingsForTests(
-            new Household_Naming_Settings__c(
-                Household_Name_Format__c = hhNameFormat,
-                Formal_Greeting_Format__c = formalGreetingFormat,
-                Informal_Greeting_Format__c = informalGreetingFormat,
-                Name_Connector__c = label.npo02.HouseholdNameConnector,
-                Name_Overrun__c = label.npo02.HouseholdNameOverrun,
-                Contact_Overrun_Count__c = 9,
-                Implementing_Class__c = 'HH_NameSpec'
             )
         );
     }

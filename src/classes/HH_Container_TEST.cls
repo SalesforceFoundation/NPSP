@@ -89,9 +89,9 @@ private class HH_Container_TEST {
     verify:
         Contacts are retrieved successfully
     **********************************************************************************************************/  
-    static testMethod void getContactsShouldReturnContactsWhenHHNamingSettingsIsInvalidAndAutomaticHouseholdNamingIsTurnedOff() {
-        turnOffAutomaticHHNaming();
-        setupInvalidHHNamingSettings();
+    static testMethod void testContactsAreReturnedWhenHHNamingSettingsIsInvalidAndAutomaticHHNamingIsOff() {
+        UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
+        UTIL_UnitTestData_TEST.setupInvalidHHNamingSettings();
 
         initTestData();
 
@@ -361,9 +361,9 @@ private class HH_Container_TEST {
     verify:
         Name and Formal/Informal Greetings are not modified on the Household
     **********************************************************************************************************/  
-    static testMethod void getHHNamesGreetingsShouldNotModifyNameAndGreetingsOnHouseholdWhenHHNamingSettingsIsInvalidAndAutomaticHouseholdNamingIsTurnedOff() {
-        turnOffAutomaticHHNaming();
-        setupInvalidHHNamingSettings();
+    static testMethod void testHHNameAndGreetingsAreNotModifiedWhenAutomaticHHNamingIsOff() {
+        UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
+        UTIL_UnitTestData_TEST.setupInvalidHHNamingSettings();
 
         initTestData();
  
@@ -385,8 +385,8 @@ private class HH_Container_TEST {
     verify:
         Name and Formal/Informal Greetings are set on the Household
     **********************************************************************************************************/  
-    static testMethod void getHHNamesGreetingsShouldModifyNameAndGreetingsOnHouseholdWhenAutomaticHouseholdNamingIsTurnedOn() {
-        turnOnAutomaticHHNaming();
+    static testMethod void testHHNameAndGreetingsAreModifiedWhenAutomaticHHNamingIsOn() {
+        UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
         initTestData();
  
         Test.startTest();
@@ -466,7 +466,7 @@ private class HH_Container_TEST {
             - Contact fields specified in Household Naming configuration
     **********************************************************************************************************/  
     static testMethod void getContactFieldsShouldReturnExpectedFieldNames() {
-        setupHHNamingSettings();
+        UTIL_UnitTestData_TEST.setupHHNamingSettings();
 
         List<String> lsFieldNames = HH_Container_LCTRL.getContactFields();
         Set<String> fieldNames = new Set<String>(lsFieldNames);
@@ -632,72 +632,5 @@ private class HH_Container_TEST {
                 BillingState, BillingPostalCode, BillingCountry
             FROM Account
         ];
-    }
-
-    /*********************************************************************************************************
-    * @description Turns on Automatic Household Naming
-    * @return void
-    **********************************************************************************************************/
-    private static void turnOnAutomaticHHNaming() {
-        setupAutomaticHHNaming(true);
-    }
-
-    /*********************************************************************************************************
-    * @description Turns off Automatic Household Naming
-    * @return void
-    **********************************************************************************************************/
-    private static void turnOffAutomaticHHNaming() {
-        setupAutomaticHHNaming(false);
-    }
-
-    /*********************************************************************************************************
-    * @description Configures Household Settings' Automatic Household Naming field
-    * @param isOn Automatic Household Naming is turned on when parameter is true, otherwise, the settings is turned off
-    * @return void
-    **********************************************************************************************************/
-    private static void setupAutomaticHHNaming(Boolean isOn) {
-        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
-            new npo02__Households_Settings__c (
-                npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR,
-                npo02__Advanced_Household_Naming__c = isOn
-            )
-        );
-    }
-
-    /*********************************************************************************************************
-    * @description Configures Household Naming Settings with invalid Name and Greetings formats
-    * @return void
-    **********************************************************************************************************/
-    private static void setupInvalidHHNamingSettings() {
-        setupHHNamingSettings('{!{!FirstName}} {!LastName}} Household', '{!{!Title} {!FirstName}}}{!LastName}', '{!{!FirstName}}}');
-    }
-
-    /*********************************************************************************************************
-    * @description Configures Household Naming Settings with valid Name and Greetings formats
-    * @return void
-    **********************************************************************************************************/
-    private static void setupHHNamingSettings() {
-        setupHHNamingSettings('{!LastName} Household', '{!{!Salutation} {!FirstName}} {!LastName}', '{!{!FirstName}}');
-    }
-
-    /*********************************************************************************************************
-    * @description Configures Household Naming Settings 
-    * @param hhNameFormat Household Naming Format
-    * @param formalGreetingFormat Formal Greeting Format
-    * @param informalGreetingFormat Informal Greeting Format
-    * @return void
-    **********************************************************************************************************/
-    private static void setupHHNamingSettings(String hhNameFormat, String formalGreetingFormat, String informalGreetingFormat) {
-        UTIL_CustomSettingsFacade.getHouseholdNamingSettingsForTests(
-            new Household_Naming_Settings__c(
-                Household_Name_Format__c = hhNameFormat,
-                Formal_Greeting_Format__c = formalGreetingFormat,
-                Informal_Greeting_Format__c = informalGreetingFormat,
-                Name_Connector__c = label.npo02.HouseholdNameConnector,
-                Name_Overrun__c = label.npo02.HouseholdNameOverrun,
-                Contact_Overrun_Count__c = 9,
-                Implementing_Class__c = 'HH_NameSpec'
-            )
-        );
     }
 }

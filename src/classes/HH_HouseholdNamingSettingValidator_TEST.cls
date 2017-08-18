@@ -35,36 +35,16 @@
 */
 @isTest
 private class HH_HouseholdNamingSettingValidator_TEST {
-    /*********************************************************************************************************
-    * @description Constant containing invalid Household Name Format 
-    */
-    private static final String INVALID_HHNAME_FORMAT = 'The {!LastName}, {!{!FirstName}} {!npe01__WorkEmail__c}} Family';
-    /*********************************************************************************************************
-    * @description Constant containing invalid Formal Greeting Format 
-    */
-    private static final String INVALID_FORMAL_GREETING_FORMAT = '{!{!Title} {!FirstName}}}{!LastName}';
-    /*********************************************************************************************************
-    * @description Constant containing invalid Informal Greeting Format 
-    */
-    private static final String INVALID_INFORMAL_GREETING_FORMAT = '{!{!FirstName}}}';
 
     /*********************************************************************************************************
     * @description Notification used to store and verify errors (if any) reported during validation
     */
-    private static HH_HouseholdNamingSettingValidator.Notification notification;
+    private static HH_HouseholdNamingSettingValidator.Notification notification = new HH_HouseholdNamingSettingValidator.Notification();
     /*********************************************************************************************************
     * @description Validator used to validate Household Naming Settings
     */
-    private static HH_HouseholdNamingSettingValidator validator;
+    private static HH_HouseholdNamingSettingValidator validator = new HH_HouseholdNamingSettingValidator();
 
-
-    /*********************************************************************************************************
-    * @description Static method to initialize variables before each unit test
-    */
-    static {
-        validator = new HH_HouseholdNamingSettingValidator();
-        notification = new HH_HouseholdNamingSettingValidator.Notification();
-    }
     
     /*********************************************************************************************************
     @description
@@ -72,8 +52,8 @@ private class HH_HouseholdNamingSettingValidator_TEST {
     verify:
         The notification contains an error
     **********************************************************************************************************/  
-    private static testMethod void validateImplementingClassShouldAddErrorWhenClassDoesNotExist() {
-    Household_Naming_Settings__c settings = setupHHNamingSettings();
+    private static testMethod void testErrorWhenClassDoesNotExist() {
+    Household_Naming_Settings__c settings = UTIL_UnitTestData_TEST.setupHHNamingSettings();
         settings.Implementing_Class__c = 'foo'; 
 
         HH_INaming hhNaming = validator.validateImplementingClass(settings, notification);
@@ -89,8 +69,8 @@ private class HH_HouseholdNamingSettingValidator_TEST {
     verify:
         The notification contains an error
     **********************************************************************************************************/  
-    private static testMethod void validateImplementingClassShouldAddErrorWhenClassDoesNotImplementINamingInterface() {
-        Household_Naming_Settings__c settings = setupHHNamingSettings();
+    private static testMethod void testErrorWhenClassDoesNotImplementINamingInterface() {
+        Household_Naming_Settings__c settings = UTIL_UnitTestData_TEST.setupHHNamingSettings();
         settings.Implementing_Class__c = 'HH_HouseholdNaming'; 
 
         HH_INaming hhNaming = validator.validateImplementingClass(settings, notification);
@@ -106,8 +86,8 @@ private class HH_HouseholdNamingSettingValidator_TEST {
     verify:
         The notification does not contain any error. Returned object is a HH_NameSpec instance.
     **********************************************************************************************************/  
-    private static testMethod void validateImplementingClassShouldNotAddErrorWhenClassIsNotSpecified() {
-        Household_Naming_Settings__c settings = setupHHNamingSettings();
+    private static testMethod void testSuccessWhenClassIsNotSpecified() {
+        Household_Naming_Settings__c settings = UTIL_UnitTestData_TEST.setupHHNamingSettings();
         settings.Implementing_Class__c = null; 
 
         HH_NameSpec hhNaming = (HH_NameSpec) validator.validateImplementingClass(settings, notification);
@@ -123,8 +103,8 @@ private class HH_HouseholdNamingSettingValidator_TEST {
     verify:
         The notification does not contain any error
     **********************************************************************************************************/  
-    private static testMethod void validateImplementingClassShouldNotAddErrorWhenClassImplementsINamingInterface() {
-        Household_Naming_Settings__c settings = setupHHNamingSettings(); 
+    private static testMethod void testSuccessWhenClassImplementsINamingInterface() {
+        Household_Naming_Settings__c settings = UTIL_UnitTestData_TEST.setupHHNamingSettings(); 
 
         HH_INaming hhNaming = validator.validateImplementingClass(settings, notification);
 
@@ -139,9 +119,9 @@ private class HH_HouseholdNamingSettingValidator_TEST {
     verify:
         The notification contains an error
     **********************************************************************************************************/  
-    private static testMethod void validateShouldAddErrorWhenHHNameFormatIsInvalid() {
-        Household_Naming_Settings__c settings = setupHHNamingSettings();
-        settings.Household_Name_Format__c = INVALID_HHNAME_FORMAT; 
+    private static testMethod void testErrorWhenHHNameFormatIsInvalid() {
+        Household_Naming_Settings__c settings = UTIL_UnitTestData_TEST.setupHHNamingSettings();
+        settings.Household_Name_Format__c = 'The {!LastName}, {!{!FirstName}} {!npe01__WorkEmail__c}} Family'; 
 
         notification = validator.validate(settings);
 
@@ -154,9 +134,9 @@ private class HH_HouseholdNamingSettingValidator_TEST {
     verify:
         The notification contains an error
     **********************************************************************************************************/ 
-    private static testMethod void validateShouldAddErrorWhenFormalGreetingFormatIsInvalid() {
-        Household_Naming_Settings__c settings = setupHHNamingSettings();
-        settings.Formal_Greeting_Format__c = INVALID_FORMAL_GREETING_FORMAT; 
+    private static testMethod void testErrorWhenFormalGreetingFormatIsInvalid() {
+        Household_Naming_Settings__c settings = UTIL_UnitTestData_TEST.setupHHNamingSettings();
+        settings.Formal_Greeting_Format__c = '{!{!Title} {!FirstName}}}{!LastName}'; 
 
         notification = validator.validate(settings);
 
@@ -169,9 +149,9 @@ private class HH_HouseholdNamingSettingValidator_TEST {
     verify:
         The notification contains an error
     **********************************************************************************************************/ 
-    private static testMethod void validateShouldAddErrorWhenInformalGreetingFormatIsInvalid() {
-        Household_Naming_Settings__c settings = setupHHNamingSettings();
-        settings.Informal_Greeting_Format__c = INVALID_INFORMAL_GREETING_FORMAT; 
+    private static testMethod void testErrorWhenInformalGreetingFormatIsInvalid() {
+        Household_Naming_Settings__c settings = UTIL_UnitTestData_TEST.setupHHNamingSettings();
+        settings.Informal_Greeting_Format__c = '{!{!FirstName}}}'; 
 
         notification = validator.validate(settings);
 
@@ -184,8 +164,8 @@ private class HH_HouseholdNamingSettingValidator_TEST {
     verify:
         The notification does not contain any error
     **********************************************************************************************************/ 
-    private static testMethod void validateShouldNotAddErrorWhenAFormatFieldIsNull() {
-        Household_Naming_Settings__c settings = setupHHNamingSettings();
+    private static testMethod void testSuccessWhenFormatFieldIsNull() {
+        Household_Naming_Settings__c settings = UTIL_UnitTestData_TEST.setupHHNamingSettings();
         settings.Household_Name_Format__c = null;
 
         notification = validator.validate(settings);
@@ -200,8 +180,8 @@ private class HH_HouseholdNamingSettingValidator_TEST {
     verify:
         The notification contains an error
     **********************************************************************************************************/ 
-    private static testMethod void validateShouldAddInvalidClassErrorWhenClassAndFormatFieldsAreInvalid() {
-        Household_Naming_Settings__c settings = setupInvalidHHNamingSettings(); 
+    private static testMethod void testInvalidClassErrorWhenClassAndFormatFieldsAreInvalid() {
+        Household_Naming_Settings__c settings = UTIL_UnitTestData_TEST.setupInvalidHHNamingSettings(); 
         settings.Implementing_Class__c = 'foo';
 
         notification = validator.validate(settings);
@@ -215,8 +195,8 @@ private class HH_HouseholdNamingSettingValidator_TEST {
     verify:
         The notification contains errors for all format fields
     **********************************************************************************************************/ 
-    private static testMethod void validateShouldAddErrorsWhenAllThreeFormatFieldsAreInvalid() {
-        Household_Naming_Settings__c settings = setupInvalidHHNamingSettings();
+    private static testMethod void testErrorsWhenAllFormatFieldsAreInvalid() {
+        Household_Naming_Settings__c settings = UTIL_UnitTestData_TEST.setupInvalidHHNamingSettings();
 
         notification = validator.validate(settings);
 
@@ -234,8 +214,8 @@ private class HH_HouseholdNamingSettingValidator_TEST {
     verify:
         The notification does not contain any error
     **********************************************************************************************************/ 
-    private static testMethod void validateShouldNotAddErrorWhenAllHHSettingsFieldsAreValid() {
-        Household_Naming_Settings__c settings = setupHHNamingSettings(); 
+    private static testMethod void testSuccessWhenAllHHSettingsFieldsAreValid() {
+        Household_Naming_Settings__c settings = UTIL_UnitTestData_TEST.setupHHNamingSettings(); 
 
         notification = validator.validate(settings);
         
@@ -245,51 +225,6 @@ private class HH_HouseholdNamingSettingValidator_TEST {
 
     // Helpers
     ////////////
-
-    /*********************************************************************************************************
-    * @description Configures Household Naming Settings with invalid Name and Greetings formats
-    * @return Household_Naming_Settings__c Household Naming Settings
-    **********************************************************************************************************/
-    private static Household_Naming_Settings__c setupInvalidHHNamingSettings() {
-        return setupHHNamingSettings(
-            INVALID_HHNAME_FORMAT,
-            INVALID_FORMAL_GREETING_FORMAT,
-            INVALID_INFORMAL_GREETING_FORMAT
-        );
-    }
-
-    /*********************************************************************************************************
-    * @description Configures Household Naming Settings with valid Name and Greetings formats
-    * @return Household_Naming_Settings__c Household Naming Settings
-    **********************************************************************************************************/
-    private static Household_Naming_Settings__c setupHHNamingSettings() {
-        return setupHHNamingSettings(            
-            'The {!LastName}, {!{!FirstName} {!npe01__WorkEmail__c}} Family',
-            '{!{!Title} {!FirstName}}{!LastName}',
-            '{!{!FirstName}}'
-        );
-    }
-
-    /*********************************************************************************************************
-    * @description Configures Household Naming Settings 
-    * @param hhNameFormat Household Name Format
-    * @param formalGreetingFormat Formal Greeting Format
-    * @param informalGreetingFormat Informal Greeting Format
-    * @return Household_Naming_Settings__c Household Naming Settings
-    **********************************************************************************************************/
-    private static Household_Naming_Settings__c setupHHNamingSettings(String hhNameFormat, String formalGreetingFormat, String informalGreetingFormat) {
-        return UTIL_CustomSettingsFacade.getHouseholdNamingSettingsForTests(
-            new Household_Naming_Settings__c(
-                Household_Name_Format__c = hhNameFormat,
-                Formal_Greeting_Format__c = formalGreetingFormat,
-                Informal_Greeting_Format__c = informalGreetingFormat,
-                Name_Connector__c = label.npo02.HouseholdNameConnector,
-                Name_Overrun__c = label.npo02.HouseholdNameOverrun,
-                Contact_Overrun_Count__c = 9,
-                Implementing_Class__c = 'HH_NameSpec'
-            )
-        );
-    }
 
     /*********************************************************************************************************
     * @description Asserts the notification does not contain any error

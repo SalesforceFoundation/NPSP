@@ -234,184 +234,7 @@ public with sharing class STG_SettingsManager_TEST {
         STG_Panel.stgService.stgCon.npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR;
         panel.saveSettings();
         system.assertEquals('One-to-One', UTIL_CustomSettingsFacade.getOrgContactsSettings().npe01__Account_Processor__c);
-    }
-
-    /*********************************************************************************************************
-    * @description Tests the Households panel
-    * @return void
-    */
-    public static testMethod void STG_PanelHouseholds_testPanelHouseholds() {
-        if (strTestOnly != '*' && strTestOnly != 'STG_PanelHouseholds_testPanelHouseholds') return;
-
-        STG_PanelHouseholds_CTRL panel = new STG_PanelHouseholds_CTRL();
-        system.assertEquals('idPanelHH', panel.idPanel());
-
-        STG_Panel.stgService.stgHH.npo02__Advanced_Household_Naming__c = false;
-        panel.saveSettings();
-        system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgHouseholdsSettings().npo02__Advanced_Household_Naming__c);
-    }
-
-    /*********************************************************************************************************
-    @description 
-        Tests isValidSettings() when the Account Model is set to 'Household Account' but 
-        Household Rules are not set to 'No Contacts'
-    verify:
-        The method returns false.    
-        The page contains an error message.    
-    **********************************************************************************************************/ 
-    public static testMethod void STG_PanelHouseholds_isValidSettingsShouldAddPageErrorMessageWhenAccountModelIsNotAsExpected() {
-        if (strTestOnly != '*' && strTestOnly != 'STG_PanelHouseholds_isValidSettingsShouldAddPageErrorMessageWhenAccountModelIsNotAsExpected') return;
-
-        setupHHNamingSettings();
-
-        STG_Panel.stgService.stgHH.npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR;
-        STG_Panel.stgService.stgCon.npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR;
-        
-        Test.setCurrentPage(Page.STG_PanelHouseholds);
-
-        STG_PanelHouseholds_CTRL ctrl = new STG_PanelHouseholds_CTRL();
-        System.assertEquals(false, ctrl.isValidSettings(), 'Household Naming Settings should be invalid');     
-        
-        UTIL_UnitTestData_TEST.assertPageHasError(Label.stgValidationHHAccountHHRules); 
-    }
-
-    /*********************************************************************************************************
-    @description 
-        Tests that the name specs are valid in the Households panel regardless 
-        if the Automatic Household Naming is checked
-    verify:
-        isValidSettings() returns false when any Household Naming Settings field is invalid.
-        isValidSettings() returns true when all Household Naming Settings fields are valid.
-    **********************************************************************************************************/ 
-    public static testMethod void STG_PanelHouseholds_isValidSettingsShouldValidateHHNamingSettingsRegardlessOfAutomaticHouseholdNaming() {
-        if (strTestOnly != '*' && strTestOnly != 'STG_PanelHouseholds_isValidSettingsShouldValidateHHNamingSettingsRegardlessOfAutomaticHouseholdNaming') return;
-
-        STG_PanelHouseholds_CTRL panel = new STG_PanelHouseholds_CTRL();        
-
-        for (Boolean isAutomaticHouseholdNaming : new Boolean[] { true, false }) {
-            STG_Panel.stgService.stgHH.npo02__Advanced_Household_Naming__c = isAutomaticHouseholdNaming;
-
-            system.assertEquals(true, panel.isValidSettings(), 'Household Naming Settings should be valid');        
-
-            STG_Panel.stgService.stgHN.Household_Name_Format__c = '{!{!bogus}}';
-            system.assertEquals(false, panel.isValidSettings(), 'Household Name Format should be invalid');      
-
-            STG_Panel.stgService.stgHN.Household_Name_Format__c = '{!{!FirstName}} {!LastName} Family';        
-            STG_Panel.stgService.stgHN.Formal_Greeting_Format__c = '{!{!bogus}}';
-            system.assertEquals(false, panel.isValidSettings(), 'Household Formal Greeting Format should be invalid');     
-
-            STG_Panel.stgService.stgHN.Formal_Greeting_Format__c = '{!{!Salutation} {!FirstName}} {!LastName}';               
-            STG_Panel.stgService.stgHN.Informal_Greeting_Format__c = '{!{!bogus}}';
-            system.assertEquals(false, panel.isValidSettings(), 'Household Informal Greeting Format should be invalid');     
-
-            STG_Panel.stgService.stgHN.Informal_Greeting_Format__c = '{!{!FirstName}}';
-            system.assertEquals(true, panel.isValidSettings(), 'Household Naming Settings should be valid');   
-        }     
-    }
-
-    /*********************************************************************************************************
-    @description 
-        Tests isValidSettings() when a Household Naming Settings field is invalid
-    verify:
-        The method returns false.    
-        The page contains an error message containing the field label.    
-    **********************************************************************************************************/ 
-    public static testMethod void STG_PanelHouseholds_isValidSettingsShouldAddPageErrorMessageWhenHHNamingSettingsFieldIsInvalid() {
-        if (strTestOnly != '*' && strTestOnly != 'STG_PanelHouseholds_isValidSettingsShouldAddPageErrorMessageWhenHHNamingSettingsFieldIsInvalid') return;
-
-        Household_Naming_Settings__c settings = setupHHNamingSettings();
-        settings.Household_Name_Format__c = '{!{!FirstName}} {!LastName}} Household';//invalid format
-        
-        Test.setCurrentPage(Page.STG_PanelHouseholds);
-
-        STG_PanelHouseholds_CTRL ctrl = new STG_PanelHouseholds_CTRL();
-        System.assertEquals(false, ctrl.isValidSettings(), 'Household Naming Settings should be invalid');      
-        
-        String fieldLabel = UTIL_Describe.getFieldLabel(
-            UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), 
-            UTIL_Namespace.StrTokenNSPrefix('Household_Name_Format__c')
-        );
-        
-        UTIL_UnitTestData_TEST.assertPageHasError(fieldLabel); 
-        UTIL_UnitTestData_TEST.assertPageHasError('Invalid field'); 
-    }
-
-    /*********************************************************************************************************
-    @description 
-        Tests that isValidSettings() validates user changed Household Naming Settings 
-    verify:
-        The method returns false if a Household Naming Settings field is invalid 
-    **********************************************************************************************************/ 
-    public static testMethod void STG_PanelHouseholds_isValidSettingsShouldValidateUserChangesOfHHNamingSettings() {
-        if (strTestOnly != '*' && strTestOnly != 'STG_PanelHouseholds_isValidSettingsShouldValidateUserChangesOfHHNamingSettings') return;
-        
-        setupHHNamingSettings();
-        
-        Test.setCurrentPage(Page.STG_PanelHouseholds);
-
-        STG_PanelHouseholds_CTRL ctrl = new STG_PanelHouseholds_CTRL();
-        System.assertEquals(true, ctrl.isValidSettings(), 'Household Naming Settings should be valid');      
-        
-        STG_Panel.stgService.stgHN.Household_Name_Format__c = '{!{!FirstName}} {!LastName}} Household'; //invalid format        
-        System.assertEquals(false, ctrl.isValidSettings(), 'Household Naming Settings should be invalid');    
-        UTIL_UnitTestData_TEST.assertPageHasError('Invalid field'); 
-
-        STG_Panel.stgService.stgHN.Household_Name_Format__c = '{!{!FirstName} {!LastName}} Household'; 
-        System.assertEquals(true, ctrl.isValidSettings(), 'Household Naming Settings should be valid');      
-    }
-
-    /*********************************************************************************************************
-    @description 
-        Tests strNameSpecExample when a Household Naming Settings format field is invalid
-    verify:
-        The method throws an exception
-    **********************************************************************************************************/ 
-    public static testMethod void STG_PanelHouseholds_strNameSpecExampleShouldThrowExceptionWhenHHNamingSettingsFieldIsInvalid() {
-        if (strTestOnly != '*' && strTestOnly != 'STG_PanelHouseholds_strNameSpecExampleShouldThrowExceptionWhenHHNamingSettingsFieldIsInvalid') return;
-        
-        setupInvalidHHNamingSettings();
-
-        try {
-            String exampleName = STG_PanelHouseholds_CTRL.strNameSpecExample(STG_Panel.stgService.stgHN, 'Household_Name_Format__c', 2);
-
-            System.assert(false, 'Expected exception for invalid format field');
-        } catch(Exception e) {
-            System.assert(e.getMessage().contains('Invalid field'), 'An exception should contain Invalid Field message instead: ' + e.getMessage());
-        }    
-    }
-
-    /*********************************************************************************************************
-    @description 
-        Tests strNameSpecExample when a Household Name Format field is valid
-    verify:
-        The method returns a Household Name example 
-    **********************************************************************************************************/ 
-    public static testMethod void STG_PanelHouseholds_strNameSpecExampleShouldReturnHouseholdNameExampleWhenHHNameFormatFieldIsValid() {
-        if (strTestOnly != '*' && strTestOnly != 'STG_PanelHouseholds_strNameSpecExampleShouldReturnHouseholdNameExampleWhenHHNameFormatFieldIsValid') return;
-        
-        setupHHNamingSettings();
-
-        String exampleName = STG_PanelHouseholds_CTRL.strNameSpecExample(STG_Panel.stgService.stgHN, 'Household_Name_Format__c', 2);
-
-        System.assert(String.isNotBlank(exampleName), 'An example name should be returned');
-    }
-
-    /*********************************************************************************************************
-    @description 
-        Tests strNameSpecExample when Implementing Class is invalid
-    verify:
-        The method returns an error message
-    **********************************************************************************************************/ 
-    public static testMethod void STG_PanelHouseholds_strNameSpecExampleShouldReturnErrorMessageWhenImplementingClassIsInvalid() {
-        if (strTestOnly != '*' && strTestOnly != 'STG_PanelHouseholds_strNameSpecExampleShouldReturnErrorMessageWhenImplementingClassIsInvalid') return;
-        
-        Household_Naming_Settings__c settings = setupHHNamingSettings();
-        settings.Implementing_Class__c = 'foo';
-
-        String exampleName = STG_PanelHouseholds_CTRL.strNameSpecExample(STG_Panel.stgService.stgHN, 'Household_Name_Format__c', 2);
-
-        System.assertEquals(Label.stgErrorInvalidClass, exampleName, 'Expected error message should be returned');
-    }
+    }    
 
     /*********************************************************************************************************
     @description 
@@ -422,11 +245,11 @@ public with sharing class STG_SettingsManager_TEST {
         Automatic Household Naming field is still turned off.
         The Page contains an error.        
     **********************************************************************************************************/ 
-    private static testMethod void STG_PanelRenameHouseholds_shouldNotRunBatchWhenHHNamingSettingsIsInvalidAndAutomaticHHNamingTurnedOff() {
-        if (strTestOnly != '*' && strTestOnly != 'STG_PanelRenameHouseholds_shouldNotRunBatchWhenHHNamingSettingsIsInvalidAndAutomaticHHNamingTurnedOff') return;
+    private static testMethod void testPanelRenameHHDoesNotRunBatchWhenHHNamingSettingsIsInvalid() {
+        if (strTestOnly != '*' && strTestOnly != 'testPanelRenameHHDoesNotRunBatchWhenHHNamingSettingsIsInvalid') return;
 
-        turnOffAutomaticHHNaming();
-        setupInvalidHHNamingSettings();
+        UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
+        UTIL_UnitTestData_TEST.setupInvalidHHNamingSettings();
 
         Test.setCurrentPage(Page.STG_PanelRenameHouseholds);
 
@@ -453,10 +276,10 @@ public with sharing class STG_SettingsManager_TEST {
         Automatic Household Naming field is turned on.
         The Page contains no error.        
     **********************************************************************************************************/ 
-    private static testMethod void STG_PanelRenameHouseholds_shouldRunBatchWhenHHNamingSettingsIsValidAndAutomaticHHNamingTurnedOff() {
-        if (strTestOnly != '*' && strTestOnly != 'STG_PanelRenameHouseholds_shouldRunBatchWhenHHNamingSettingsIsValidAndAutomaticHHNamingTurnedOff') return;
+    private static testMethod void testPanelRenameHHRunsBatchWhenAutomaticHHNamingIsOff() {
+        if (strTestOnly != '*' && strTestOnly != 'testPanelRenameHHRunsBatchWhenAutomaticHHNamingIsOff') return;
 
-        turnOffAutomaticHHNaming();
+        UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
 
         Test.setCurrentPage(Page.STG_PanelRenameHouseholds);
 
@@ -481,10 +304,10 @@ public with sharing class STG_SettingsManager_TEST {
         Household Naming batch has been run.
         The Page contains no error.        
     **********************************************************************************************************/ 
-    private static testMethod void STG_PanelRenameHouseholds_shouldRunBatchWhenAutomaticHHNamingIsTurnedOn() {
-        if (strTestOnly != '*' && strTestOnly != 'STG_PanelRenameHouseholds_shouldRunBatchWhenAutomaticHHNamingIsTurnedOn') return;
+    private static testMethod void testPanelRenameHHRunsBatchWhenAutomaticHHNamingIsOn() {
+        if (strTestOnly != '*' && strTestOnly != 'testPanelRenameHHRunsBatchWhenAutomaticHHNamingIsOn') return;
 
-        turnOnAutomaticHHNaming();
+        UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
 
         Test.setCurrentPage(Page.STG_PanelRenameHouseholds);
 
@@ -1170,84 +993,6 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(false, panel.isRunningBatch);
         panel.runBatch();
         system.assertEquals(true, panel.isRunningBatch);
-    }
-
-    //Helpers
-    //////////
-
-    /*********************************************************************************************************
-    * @description Turns on Automatic Household Naming
-    * @return void
-    **********************************************************************************************************/
-    private static void turnOnAutomaticHHNaming() {
-        setupAutomaticHHNaming(true);
-    }
-
-    /*********************************************************************************************************
-    * @description Turns off Automatic Household Naming
-    * @return void
-    **********************************************************************************************************/
-    private static void turnOffAutomaticHHNaming() {
-        setupAutomaticHHNaming(false);
-    }
-
-    /*********************************************************************************************************
-    * @description Configures Household Settings' Automatic Household Naming field
-    * @param isOn Automatic Household Naming is turned on when parameter is true, otherwise, the settings is turned off
-    * @return void
-    **********************************************************************************************************/
-    private static void setupAutomaticHHNaming(Boolean isOn) {
-        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
-            new npo02__Households_Settings__c (
-                npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR,
-                npo02__Advanced_Household_Naming__c = isOn
-            )
-        );
-    }
-
-    /*********************************************************************************************************
-    * @description Configures Household Naming Settings with invalid Name and Greetings formats
-    * @return Household_Naming_Settings__c
-    **********************************************************************************************************/
-    private static Household_Naming_Settings__c setupInvalidHHNamingSettings() {
-        return setupHHNamingSettings(
-            '{!{!FirstName}} {!LastName}} Household',
-            '{!{!Title} {!FirstName}}}{!LastName}',
-            '{!{!FirstName}}}'
-        );
-    }
-
-    /*********************************************************************************************************
-    * @description Configures Household Naming Settings with valid Name and Greetings formats
-    * @return Household_Naming_Settings__c
-    **********************************************************************************************************/
-    private static Household_Naming_Settings__c setupHHNamingSettings() {
-        return setupHHNamingSettings(            
-            '{!{!FirstName} {!LastName}} Household',
-            '{!{!Title} {!FirstName}}{!LastName}',
-            '{!{!FirstName}}'
-        );
-    }
-
-    /*********************************************************************************************************
-    * @description Configures Household Naming Settings 
-    * @param hhNameFormat Household Naming Format
-    * @param formalGreetingFormat Formal Greeting Format
-    * @param informalGreetingFormat Informal Greeting Format
-    * @return Household_Naming_Settings__c
-    **********************************************************************************************************/
-    private static Household_Naming_Settings__c setupHHNamingSettings(String hhNameFormat, String formalGreetingFormat, String informalGreetingFormat) {
-        return UTIL_CustomSettingsFacade.getHouseholdNamingSettingsForTests(
-            new Household_Naming_Settings__c(
-                Household_Name_Format__c = hhNameFormat,
-                Formal_Greeting_Format__c = formalGreetingFormat,
-                Informal_Greeting_Format__c = informalGreetingFormat,
-                Name_Connector__c = label.npo02.HouseholdNameConnector,
-                Name_Overrun__c = label.npo02.HouseholdNameOverrun,
-                Contact_Overrun_Count__c = 9,
-                Implementing_Class__c = 'HH_NameSpec'
-            )
-        );
-    }
+    }   
 
 }

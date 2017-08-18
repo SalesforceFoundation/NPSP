@@ -402,12 +402,12 @@ private with sharing class HH_NameSpec_TEST {
     /*********************************************************************************************************
     @description
     operation:
-        Test Household Name, and Formal/Informal greetings when Contact API names are case insensitive
+        Test Household Name, and Formal/Informal greetings when Contact field names are case insensitive
     verify:
         HH Name, Formal Greeting, and Informal Greeting are correct
     **********************************************************************************************************/            
-    static testMethod void testHHNamingWhenContactApiNamesAreCaseInsensitive() {
-        if (strTestOnly != '*' && strTestOnly != 'testHHNamingWhenContactApiNamesAreCaseInsensitive') return;
+    static testMethod void testHHNamingWhenContactFieldNamesAreCaseInsensitive() {
+        if (strTestOnly != '*' && strTestOnly != 'testHHNamingWhenContactFieldNamesAreCaseInsensitive') return;
                 
         Contact[] listCon = new Contact[] {
             new Contact (

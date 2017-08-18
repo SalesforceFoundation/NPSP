@@ -76,20 +76,16 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
     * @return boolean 
     */
     private boolean isValidHouseholdNamingSettings() {
-        try {
-            HH_HouseholdNamingSettingValidator validator = new HH_HouseholdNamingSettingValidator();
-            HH_HouseholdNamingSettingValidator.Notification notification = validator.validate(STG_Panel.stgService.stgHN);
+        HH_HouseholdNamingSettingValidator validator = new HH_HouseholdNamingSettingValidator();
+        HH_HouseholdNamingSettingValidator.Notification notification = validator.validate(STG_Panel.stgService.stgHN);
 
-            if (notification.isSuccess()) {
-                return true;
-            }
+        if (notification.isSuccess()) {
+            return true;
+        }
 
-            // Display the first error only?
-            addPageErrorMessage(notification.getErrors()[0]);
-
-        } catch (Exception ex) {
-            addPageErrorMessage(ex.getMessage());
-        }  
+        for (String error : notification.getErrors()) {
+            addPageErrorMessage(error);
+        }
 
         return false;    
     }

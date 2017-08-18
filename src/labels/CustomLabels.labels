@@ -2752,14 +2752,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>- Household Duplicate</value>
     </labels>
     <labels>
-        <fullName>hhErrorInvalidContactFieldName</fullName>
-        <categories>Households, Household Naming</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>hhErrorInvalidContactFieldName</shortDescription>
-        <value>The field, {0}, does not match any field name on Contact.</value>
-    </labels>
-    <labels>
         <fullName>isARequiredField</fullName>
         <language>en_US</language>
         <protected>false</protected>

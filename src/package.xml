@@ -224,6 +224,7 @@
         <members>STG_PanelHealthCheck_CTRL</members>
         <members>STG_PanelHealthCheck_TEST</members>
         <members>STG_PanelHouseholds_CTRL</members>
+        <members>STG_PanelHouseholds_TEST</members>
         <members>STG_PanelLeads_CTRL</members>
         <members>STG_PanelLvlAssignBatch_CTRL</members>
         <members>STG_PanelMakeDefaultAllocations_CTRL</members>
@@ -1174,7 +1175,6 @@
         <members>hhCmpDedupeLabelOpenReport</members>
         <members>hhCmpDedupeNoReport</members>
         <members>hhCmpDedupeStatus</members>
-        <members>hhErrorInvalidContactFieldName</members>
         <members>isARequiredField</members>
         <members>labelListViewFirst</members>
         <members>labelListViewLast</members>
