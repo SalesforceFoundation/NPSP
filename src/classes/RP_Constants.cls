@@ -41,7 +41,7 @@ public with sharing class RP_Constants {
     public static final String RP_YOUTUBE_PLAYLIST_ID = 'PLU8xqF8ZASbXWAHIF0SB1P9_3G4vvRMXI';
 
     // Configuration for the GitHub component.
-    public static final String RP_GITHUB_SALESFORCE_ORG_ENDPOINT = 'https://sfdo-status.herokuapp.com/repo/api/SalesforceFoundation/Cumulus?format=json';
+    public static final String RP_GITHUB_SALESFORCE_ORG_ENDPOINT = 'https://sfdo-status.herokuapp.com/api/repository/SalesforceFoundation/Cumulus?format=json';
 
     // Configuration for the Getting Started page links
     public static final String RP_CUSTOMER_JOURNEY_LINK = 'https://www.marketingcloud.com/customer-journey-map-examples';
