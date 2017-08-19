@@ -49,10 +49,11 @@ public with sharing class USER_UserService {
 	public static final String CONTEXT_TYPE_USER = 'User';
 	
 
-	//================================
-	// isSysAdmin
-	// Determines if each User in the List is a Sys Admin based on ProfileId
-	//================================
+	/*********************************************************************************************************
+    * @description Determines if each User in the List is a Sys Admin based on ProfileId.
+    * @param updatedUsers The users that were modified.
+    * @return A Map containing the UserId and Boolean value based on the User's Profile.
+    **********************************************************************************************************/
 	public static Map<Id, Boolean> isSysAdmin(List<User> updatedUsers) {
 		Map<Id, Boolean> userIdToIsSysAdmin = new Map<Id, Boolean>();
 		
@@ -74,9 +75,11 @@ public with sharing class USER_UserService {
 	}
 
 
-	//================================
-	// isActiveUser
-	//================================
+	/*********************************************************************************************************
+    * @description Determines if each User in the List is active based on IsActive field.
+    * @param updatedUsers The users that were modified.
+    * @return A Map containing the UserId and Boolean value based on the User's IsActive status.
+    **********************************************************************************************************/
 	public static Map<Id, Boolean> isActiveUser(List<User> updatedUsers) {
 		Map<Id, Boolean> userIdToIsActive = new Map<Id, Boolean>();
 		
@@ -95,9 +98,11 @@ public with sharing class USER_UserService {
 	}
 
 
-	//================================
-	// isFrozenUser
-	//================================
+	/*********************************************************************************************************
+    * @description Determines if each User in the List is frozen based on IsFrozen field.
+    * @param updatedUsers The user(s) that were modified.
+    * @return A Map containing the UserId and Boolean value based on the User's IsFrozen status.
+    **********************************************************************************************************/
 	public static Map<Id, Boolean> isFrozenUser(List<User> updatedUsers) {
 		Map<Id, Boolean> userIdToIsFrozen = new Map<Id, Boolean>();
 
@@ -115,9 +120,11 @@ public with sharing class USER_UserService {
 	}
 	
 
-	//================================
-	// applySysAdminIsActiveIsFrozenStatusChanges
-	//================================
+	/*********************************************************************************************************
+    * @description Handles User changes to IsActive/IsFrozen status by updating the Error Notification Recipients, logging an Error__c, and notifying the org's System Administrators.
+    * @param sysAdminUserIds The User Ids that were modified.
+    * @return void
+    **********************************************************************************************************/
 	@future
 	public static void applySysAdminIsActiveIsFrozenStatusChanges(Set<Id> sysAdminUserIds) {
 		// Sets Error Notification recipient to All Sys Admin
@@ -128,10 +135,11 @@ public with sharing class USER_UserService {
 	}
 
 
-	//================================
-	// setErrorNotificationToAllSysAdmins
-	// If Error Notification recipient set to User and is an InActive/IsFrozen User, then set recipient to All Sys Admins
-	//================================
+	/*********************************************************************************************************
+    * @description Sets the NPSP Settings Error Notification Recipients to All Sys Admins.
+    * @param sysAdminUserIds The User Ids that were modified.
+    * @return void
+    **********************************************************************************************************/
 	public static void setErrorNotificationToAllSysAdmins(Set<Id> sysAdminUserIds) {
 		Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings();
 		
@@ -149,9 +157,11 @@ public with sharing class USER_UserService {
 	}
 
 
-	//================================
-	// handleScheduledJobsSubmittedByInActiveIsFrozenSysAdmin
-	//================================
+	/*********************************************************************************************************
+    * @description Determines if a User is the owner of the Scheduled Jobs.
+    * @param sysAdminUserIds The User Ids that were modified.
+    * @return void
+    **********************************************************************************************************/
 	public static void handleScheduledJobsSubmittedByInActiveIsFrozenSysAdmin(Set<Id> sysAdminUserIds) {
 		Boolean breakOuterCircle = false;
 
@@ -172,9 +182,10 @@ public with sharing class USER_UserService {
 	}
 
 
-	//================================
-	// notifySysAdminsAboutInActiveIsFrozenSysAdminUser
-	//================================
+	/*********************************************************************************************************
+    * @description Logs an Error__c record and emails the org's System Administrators.
+    * @return void
+    **********************************************************************************************************/
 	@testVisible
 	private static void notifySysAdminsAboutInActiveIsFrozenSysAdminUser() {
 		logInActiveIsFrozenUserError();
@@ -182,9 +193,10 @@ public with sharing class USER_UserService {
 	}
 
 
-	//================================
-	// logInActiveIsFrozenUserError()
-	//================================
+	/*********************************************************************************************************
+    * @description Logs an Error__c record.
+    * @return void
+    **********************************************************************************************************/
 	@testVisible
 	private static void logInActiveIsFrozenUserError() {
 		Error__c inActiveIsFrozenError = new Error__c(Error_Type__c = ERROR_TYPE_SCHEDULED_APEX,
@@ -196,18 +208,20 @@ public with sharing class USER_UserService {
 	}
 
 
-	//================================
-	// sendInActiveFrozenUserEmail()
-	//================================
+	/*********************************************************************************************************
+    * @description Emails the org's System Administrators.
+    * @return void
+    **********************************************************************************************************/
 	@testVisible
 	private static void sendInActiveIsFrozenUserEmail() {
 		ERR_Notifier.sendErrorNotifications(CONTEXT_TYPE_USER);
 	}
 
 
-	//================================
-	// retrieveSysAdminProfileId
-	//================================
+	/*********************************************************************************************************
+    * @description Utility method to retrieve the System Adminstrator's ProfileId.
+    * @return Id The Id of the System Administrator Profile.
+    **********************************************************************************************************/
 	private static Id retrieveSysAdminProfileId() {
 		Id sysAdminProfileId = null; 
 
@@ -220,9 +234,11 @@ public with sharing class USER_UserService {
 	}
 	
 
-	//================================
-	// retrieveUserLogins
-	//================================
+	/*********************************************************************************************************
+    * @description Retrieves the UserLogin records for Users.
+    * @param updatedUsers The users that were modified.
+    * @return A Map containing the UserId and Boolean value based on the User's IsFrozen status.
+    **********************************************************************************************************/
 	private static Map<Id, Boolean> retrieveUserLogins(List<User> updatedUsers) {
 		Map<Id, Boolean> userIdToIsFrozen = new Map<Id, Boolean>();
 		
@@ -235,9 +251,11 @@ public with sharing class USER_UserService {
 	}
 
 
-	//================================
-	// retrieveScheduledJobs
-	//================================
+	/*********************************************************************************************************
+    * @description Retrieves the Scheduled Jobs that are owned by the Users.
+    * @param sysAdminUserIds The User Ids that were modified.
+    * @return List of Scheduled Jobs.
+    **********************************************************************************************************/
 	private static List<CronTrigger> retrieveScheduledJobs(Set<Id> sysAdminUserIds) {
 		List<CronTrigger> scheduledJobs = new List<CronTrigger>();
 

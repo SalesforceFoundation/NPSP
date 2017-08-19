@@ -44,51 +44,51 @@ public with sharing class USER_FrozenInActiveUser_TDTM_TEST {
 	public static final String ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS = 'All Sys Admins';
 	
 	
-	//================================
-	// testRunOverrideBeforeInser()
-	//================================
-	@isTest
-	private static void testRunOverrideBeforeInser() {
+	/*********************************************************************************************************
+    * @description Tests the handling of the TDTM_Runnable.Action for BeforeInsert 
+    * @return void
+    **********************************************************************************************************/
+    private static testMethod void testRunOverrideBeforeInser() {
 		USER_FrozenInActiveUser_TDTM userFrozenInActiveUserTDTM = new USER_FrozenInActiveUser_TDTM();
 		userFrozenInActiveUserTDTM.run(null, null, TDTM_Runnable.Action.BeforeInsert, null);
 	}
 
 
-	//================================
-	// testRunOverrideBeforeUpdate()
-	//================================
-	@isTest
-	private static void testRunOverrideBeforeUpdate() {
+	/*********************************************************************************************************
+    * @description Tests the handling of the TDTM_Runnable.Action for BeforeUpdate
+    * @return void
+    **********************************************************************************************************/
+    private static testMethod void testRunOverrideBeforeUpdate() {
 		USER_FrozenInActiveUser_TDTM userFrozenInActiveUserTDTM = new USER_FrozenInActiveUser_TDTM();
 		userFrozenInActiveUserTDTM.run(null, null, TDTM_Runnable.Action.BeforeUpdate, null);
 	}
 
 
-	//================================
-	// testRunOverrideBeforeDelete()
-	//================================
-	@isTest
-	private static void testRunOverrideBeforeDelete() {
+	/*********************************************************************************************************
+    * @description Tests the handling of the TDTM_Runnable.Action for BeforeDelete
+    * @return void
+    **********************************************************************************************************/
+    private static testMethod void testRunOverrideBeforeDelete() {
 		USER_FrozenInActiveUser_TDTM userFrozenInActiveUserTDTM = new USER_FrozenInActiveUser_TDTM();
 		userFrozenInActiveUserTDTM.run(null, null, TDTM_Runnable.Action.BeforeDelete, null);
 	}
 
 
-	//================================
-	// testRunOverrideAfterInsert()
-	//================================
-	@isTest
-	private static void testRunOverrideAfterInsert() {
+	/*********************************************************************************************************
+    * @description Tests the handling of the TDTM_Runnable.Action for AfterInsert 
+    * @return void
+    **********************************************************************************************************/
+    private static testMethod void testRunOverrideAfterInsert() {
 		USER_FrozenInActiveUser_TDTM userFrozenInActiveUserTDTM = new USER_FrozenInActiveUser_TDTM();
 		userFrozenInActiveUserTDTM.run(null, null, TDTM_Runnable.Action.AfterInsert, null);
 	}
 
 
-	//================================
-	// testRunOverrideAfterUpdate()
-	//================================
-	@isTest
-	private static void testRunOverrideAfterUpdate() {
+	/*********************************************************************************************************
+    * @description Tests the handling of the TDTM_Runnable.Action for AfterUpdate 
+    * @return void
+    **********************************************************************************************************/
+    private static testMethod void testRunOverrideAfterUpdate() {
 		USER_FrozenInActiveUser_TDTM userFrozenInActiveUserTDTM = new USER_FrozenInActiveUser_TDTM();
 
 		List<User> newUsers = createUsers();
@@ -107,30 +107,31 @@ public with sharing class USER_FrozenInActiveUser_TDTM_TEST {
 	}
 
 
-	//================================
-	// testRunOverrideAfterDelete()
-	//================================
-	@isTest
-	private static void testRunOverrideAfterDelete() {
+	/*********************************************************************************************************
+    * @description Tests the handling of the TDTM_Runnable.Action for AfterDelete 
+    * @return void
+    **********************************************************************************************************/
+    private static testMethod void testRunOverrideAfterDelete() {
 		USER_FrozenInActiveUser_TDTM userFrozenInActiveUserTDTM = new USER_FrozenInActiveUser_TDTM();
 		userFrozenInActiveUserTDTM.run(null, null, TDTM_Runnable.Action.AfterDelete, null);
 	}
 
 
-	//================================
-	// testRunOverrideAfterUnDelete()
-	//================================
-	@isTest
-	private static void testRunOverrideAfterUnDelete() {
+	/*********************************************************************************************************
+    * @description Tests the handling of the TDTM_Runnable.Action for AfterUndelete 
+    * @return void
+    **********************************************************************************************************/
+    private static testMethod void testRunOverrideAfterUnDelete() {
 		USER_FrozenInActiveUser_TDTM userFrozenInActiveUserTDTM = new USER_FrozenInActiveUser_TDTM();
 		userFrozenInActiveUserTDTM.run(null, null, TDTM_Runnable.Action.AfterUndelete, null);
 	}
 
 
-	//================================
-	// createUser()
-	//================================
-	private static List<User> createUsers() {
+	/*********************************************************************************************************
+    * @description Utility method to create Users with System Administrator profile and sets their IsActive status accordingly.
+    * @return List containing the newly created Users.
+    **********************************************************************************************************/
+    private static List<User> createUsers() {
 		List<User> newUsers = new List<User>();
 
 		// Create new Users with SysAdmin Profile
@@ -143,7 +144,7 @@ public with sharing class USER_FrozenInActiveUser_TDTM_TEST {
 
         User newUserB = new User(LastName = 'TestSysAdminUserB', Email = 'test.sysAdminB@email.com', ProfileId = sysAdminId,
                             		isActive = false, UserName = 'test.sysAdminB@email.com',
-                            		Alias = 'tu093521', TimeZoneSidKey = 'America/Los_Angeles',
+                            		Alias = 'tu093522', TimeZoneSidKey = 'America/Los_Angeles',
                             		LocaleSidKey = 'en_US', LanguageLocaleKey = 'en_US',
                             		EmailEncodingKey = 'ISO-8859-1');
 

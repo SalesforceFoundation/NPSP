@@ -47,42 +47,39 @@ public with sharing class USER_UserService_TEST {
 	public static final String JOB_TYPE_SCHEDULED_APEX = '7';
 	
 
-	//================================
-	// testIsSysAdmin()
-	// Determines if each User in the List is a Sys Admin based on ProfileId
-	//================================
-    @isTest
-    private static void testIsSysAdmin() {
+	/*********************************************************************************************************
+    * @description Tests if modified Users are System Administrators.
+    * @return void
+    **********************************************************************************************************/
+    private static testMethod void testIsSysAdmin() {
     	List<User> newUsers = createUsers();
-
+        
     	Map<Id, Boolean> userIdToIsSysAdmin = USER_UserService.isSysAdmin(newUsers);
-    	List<Boolean> isSysAdminProfiles = userIdToIsSysAdmin.values();
-
-    	System.assertEquals(true, isSysAdminProfiles[0]);
-    	System.assertEquals(true, isSysAdminProfiles[1]);
+    	
+    	System.assertEquals(true, userIdToIsSysAdmin.get(newUsers[0].Id));
+        System.assertEquals(true, userIdToIsSysAdmin.get(newUsers[1].Id));
     }
 
 
-    //================================
-	// testIsActiveUser
-	//================================
-	@isTest
-    private static void testIsActiveUser() {
+    /*********************************************************************************************************
+    * @description Tests the IsActive status for Users.
+    * @return void
+    **********************************************************************************************************/
+    private static testMethod void testIsActiveUser() {
         List<User> newUsers = createUsers();
-
+        
     	Map<Id, Boolean> userIdToIsActive = USER_UserService.isActiveUser(newUsers);
-    	List<Boolean> activeStatuses = userIdToIsActive.values();
 
-    	System.assertEquals(true, activeStatuses[0]);
-		System.assertEquals(false, activeStatuses[1]);
+    	System.assertEquals(true, userIdToIsActive.get(newUsers[0].Id));
+        System.assertEquals(false, userIdToIsActive.get(newUsers[1].Id));
     }
 
 
-	//================================
-	// testIsFrozenUser
-	//================================
-	@isTest
-    private static void testIsFrozenUser() {
+	/*********************************************************************************************************
+    * @description Tests the IsFrozen status for Users.
+    * @return void
+    **********************************************************************************************************/
+    private static testMethod void testIsFrozenUser() {
         List<User> newUsers = createUsers();
 
         // Freeze a User
@@ -93,15 +90,16 @@ public with sharing class USER_UserService_TEST {
     	Map<Id, Boolean> userIdToIsFrozen = USER_UserService.isFrozenUser(newUsers);
     	List<Boolean> frozenStatuses = userIdToIsFrozen.values();
 
-    	System.assertEquals(false, frozenStatuses[0]);
-    	System.assertEquals(true, frozenStatuses[1]);
+    	System.assertEquals(false, userIdToIsFrozen.get(newUsers[0].Id));
+    	System.assertEquals(true, userIdToIsFrozen.get(newUsers[1].Id));
     }
 
 
-	//================================
-	// testApplySysAdminIsActiveIsFrozenStatusChanges
-	//================================
-	@isTest private static void testApplySysAdminIsActiveIsFrozenStatusChanges() {
+	/*********************************************************************************************************
+    * @description Tests the handling of IsActive/IsFrozen changes for Users.
+    * @return void
+    **********************************************************************************************************/
+    private static testMethod void testApplySysAdminIsActiveIsFrozenStatusChanges() {
 		List<User> newUsers = createUsers();
     	Set<Id> sysAdminIds = new Map<Id, User>(newUsers).keySet();
 
@@ -120,11 +118,11 @@ public with sharing class USER_UserService_TEST {
 	}
 
 
-	//================================
-	// testSetErrorNotificationToAllSysAdmins
-	//================================
-	@isTest
-    private static void testSetErrorNotificationToAllSysAdmins() {
+	/*********************************************************************************************************
+    * @description Tests setting the NPSP Settings Error Notification Recipients to All Sys Admins.
+    * @return void
+    **********************************************************************************************************/
+    private static testMethod void testSetErrorNotificationToAllSysAdmins() {
     	List<User> newUsers = createUsers();
     	Set<Id> sysAdminIds = new Map<Id, User>(newUsers).keySet();
 
@@ -143,11 +141,11 @@ public with sharing class USER_UserService_TEST {
     }
 
 
-   	//================================
-	// testHandleScheduledJobsSubmittedByInActiveIsFrozenSysAdmin
-	//================================
-	@isTest
-    private static void testHandleScheduledJobsSubmittedByInActiveIsFrozenSysAdmin() {
+   	/*********************************************************************************************************
+    * @description Tests if User is the owner of Scheduled Jobs and calls the methods that logs an error and sends an email.
+    * @return void
+    **********************************************************************************************************/
+    private static testMethod void testHandleScheduledJobsSubmittedByInActiveIsFrozenSysAdmin() {
     	List<User> newUsers = createUsers();
     	Set<Id> sysAdminIds = new Map<Id, User>(newUsers).keySet();
 
@@ -166,11 +164,11 @@ public with sharing class USER_UserService_TEST {
     }
     
 
-    //================================
-	// testNotifySysAdminsAboutInActiveIsFrozenSysAdminUser
-	//================================
-	@isTest
-    private static void testNotifySysAdminsAboutInActiveIsFrozenSysAdminUser() {
+    /*********************************************************************************************************
+    * @description Tests logging and Error__c and sending and email to System Administrators.
+    * @return void
+    **********************************************************************************************************/
+    private static testMethod void testNotifySysAdminsAboutInActiveIsFrozenSysAdminUser() {
     	Test.startTest();
         USER_UserService.notifySysAdminsAboutInActiveIsFrozenSysAdminUser();
         Test.stopTest();
@@ -180,11 +178,11 @@ public with sharing class USER_UserService_TEST {
     }
    
 	
-	//================================
-	// logInActiveIsFrozenUserError
-	//================================
-	@isTest
-    private static void testLogInActiveIsFrozenUserError() {
+	/*********************************************************************************************************
+    * @description Tests logging and Error__c record.
+    * @return void
+    **********************************************************************************************************/
+    private static testMethod void testLogInActiveIsFrozenUserError() {
     	Test.startTest();
         USER_UserService.logInActiveIsFrozenUserError();
         Test.stopTest();
@@ -194,11 +192,11 @@ public with sharing class USER_UserService_TEST {
     }
 
 
-	//================================
-	// sendInActiveFrozenUserEmail
-	//================================
-	@isTest
-    private static void testSendInActiveFrozenUserEmail() {
+	/*********************************************************************************************************
+    * @description Tests the sending of the Scheduled Jobs error email to System Administrators.
+    * @return void
+    **********************************************************************************************************/
+    private static testMethod void testSendInActiveFrozenUserEmail() {
     	Test.startTest();
         USER_UserService.logInActiveIsFrozenUserError();
         
@@ -210,32 +208,33 @@ public with sharing class USER_UserService_TEST {
     }
 
 
-    //================================
-	// createUsers
-	//================================
-	private static List<User> createUsers() {
+    /*********************************************************************************************************
+    * @description Utility method to create Users with System Administrator profile and sets their IsActive status accordingly.
+    * @return List containing the newly created Users.
+    **********************************************************************************************************/
+    private static List<User> createUsers() {
 		List<User> newUsers = new List<User>();
 
-		// Create new Users with SysAdmin Profile
-		Id sysAdminId = [SELECT Id FROM Profile WHERE Name = :SYSTEM_ADMINISTRATOR][0].Id;
+        // Create new Users with SysAdmin Profile
+        Id sysAdminId = [SELECT Id FROM Profile WHERE Name = :SYSTEM_ADMINISTRATOR][0].Id;
         User newUserA = new User(LastName = 'TestSysAdminUserA', Email = 'test.sysAdminA@email.com', ProfileId = sysAdminId,
-                            		isActive = true, UserName = 'test.sysAdminA@email.com',
-                            		Alias = 'tu093521', TimeZoneSidKey = 'America/Los_Angeles',
-                            		LocaleSidKey = 'en_US', LanguageLocaleKey = 'en_US',
-                            		EmailEncodingKey = 'ISO-8859-1');
+                                    isActive = true, UserName = 'test.sysAdminA@email.com',
+                                    Alias = 'tu093521', TimeZoneSidKey = 'America/Los_Angeles',
+                                    LocaleSidKey = 'en_US', LanguageLocaleKey = 'en_US',
+                                    EmailEncodingKey = 'ISO-8859-1');
 
         User newUserB = new User(LastName = 'TestSysAdminUserB', Email = 'test.sysAdminB@email.com', ProfileId = sysAdminId,
-                            		isActive = false, UserName = 'test.sysAdminB@email.com',
-                            		Alias = 'tu093521', TimeZoneSidKey = 'America/Los_Angeles',
-                            		LocaleSidKey = 'en_US', LanguageLocaleKey = 'en_US',
-                            		EmailEncodingKey = 'ISO-8859-1');
+                                    isActive = false, UserName = 'test.sysAdminB@email.com',
+                                    Alias = 'tu093522', TimeZoneSidKey = 'America/Los_Angeles',
+                                    LocaleSidKey = 'en_US', LanguageLocaleKey = 'en_US',
+                                    EmailEncodingKey = 'ISO-8859-1');
 
         newUsers.add(newUserA);
         newUsers.add(newUserB);
-		insert newUsers;
+        insert newUsers;
 
         return newUsers;
 	}
-	
+
 
 } // end class USER_UserService_TEST

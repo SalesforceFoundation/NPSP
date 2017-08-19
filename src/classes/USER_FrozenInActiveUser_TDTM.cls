@@ -82,54 +82,63 @@ public class USER_FrozenInActiveUser_TDTM extends TDTM_Runnable {
 	}
  
 
- 	//================================
-	// BEFORE INSERT
-	//================================
-	public void onBeforeInsert() {}
+ 	/*********************************************************************************************************
+    * @description Handles the TDTM_Runnable.Action for BeforeInsert 
+    * @return void
+    **********************************************************************************************************/
+    public void onBeforeInsert() {}
 
 	
-	//================================
-	// BEFORE UPDATE
-	//================================
-	public void onBeforeUpdate() {}
+	/*********************************************************************************************************
+    * @description Handles the TDTM_Runnable.Action for BeforeUpdate
+    * @return void
+    **********************************************************************************************************/
+    public void onBeforeUpdate() {}
 
 
-	//================================
-	// BEFORE DELETE
-	//================================
-	public void onBeforeDelete() {}
+	/*********************************************************************************************************
+    * @description Handles the TDTM_Runnable.Action for BeforeDelete 
+    * @return void
+    **********************************************************************************************************/
+    public void onBeforeDelete() {}
 
 
-	//================================
-	// AFTER INSERT
-	//================================
-	public void onAfterInsert() {}
+	/*********************************************************************************************************
+    * @description Handles the TDTM_Runnable.Action for AfterInsert 
+    * @return void
+    **********************************************************************************************************/
+    public void onAfterInsert() {}
 
 
-	//================================
-	// AFTER UPDATE
-	//================================
-	public void onAfterUpdate(List<SObject> newlist) {
+	/*********************************************************************************************************
+    * @description Handles the TDTM_Runnable.Action for AfterUpdate 
+    * @return void
+    **********************************************************************************************************/
+    public void onAfterUpdate(List<SObject> newlist) {
 		handleIsActiveIsFrozenStatusChanges(newlist);
 	}
 
 
-	//================================
-	// AFTER DELETE
-	//================================
-	public void onAfterDelete() {}
+	/*********************************************************************************************************
+    * @description Handles the TDTM_Runnable.Action for AfterDelete 
+    * @return void
+    **********************************************************************************************************/
+    public void onAfterDelete() {}
 
 
-	//================================
-	// AFTER UNDELETE
-	//================================
-	public void onAfterUnDelete() {}
+	/*********************************************************************************************************
+    * @description Handles the TDTM_Runnable.Action for AfterUndelete 
+    * @return void
+    **********************************************************************************************************/
+    public void onAfterUnDelete() {}
 
 
-	//================================
-	// handleIsActiveIsFrozenStatusChanges
-	//================================
-	private void handleIsActiveIsFrozenStatusChanges(List<SObject> newlist) {
+	/*********************************************************************************************************
+    * @description Handles IsActive/IsFrozen changes for Users.
+    * @param newList List of Users from trigger new.
+    * @return void
+    **********************************************************************************************************/
+    private void handleIsActiveIsFrozenStatusChanges(List<SObject> newlist) {
 		Map<Id, Boolean> userIdToIsSysAdmin = USER_UserService.isSysAdmin(newlist);
 		Map<Id, Boolean> userIdToIsActive = USER_UserService.isActiveUser(newlist);
 		Map<Id, Boolean> userIdToIsFrozen = USER_UserService.isFrozenUser(newlist);
