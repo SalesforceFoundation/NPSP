@@ -56,7 +56,8 @@ public with sharing class BDI_DataImportBatch_SEL {
                     Process_Using_Scheduled_Job__c,
                     Last_Processed_On__c,
                     Records_Failed__c,
-                    Records_Successfully_Processed__c
+                    Records_Successfully_Processed__c,
+                    Post_Process_Implementing_Class__c
             FROM DataImportBatch__c
             WHERE Id in :setBatchId];
     }
