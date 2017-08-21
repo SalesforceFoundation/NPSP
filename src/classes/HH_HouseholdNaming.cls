@@ -289,7 +289,7 @@ public without sharing class HH_HouseholdNaming {
                 };
                 selectFields.addAll(getHouseholdNamingContactFields());
 
-		        strContactSelectStmtAllNamingFields = new UTIL_Query()
+                strContactSelectStmtAllNamingFields = new UTIL_Query()
                     .withSelectFields(selectFields)
                     .withToLabelSalutation()
                     .withFrom('Contact')

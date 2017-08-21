@@ -35,180 +35,180 @@
 */
 public with sharing class UTIL_Query {
     /** @description Exception raised by the Query builder */
-	public class UTIL_QueryException extends Exception {} 
+    public class UTIL_QueryException extends Exception {} 
 
     /** @description Error message when no SELECT field is provided */
-	private static final String SELECT_FIELDS_REQUIRED = 'At least one SELECT field is required.';
+    private static final String SELECT_FIELDS_REQUIRED = 'At least one SELECT field is required.';
     /** @description Error message when provided SELECT field is empty or null */
-	private static final String SELECT_FIELD_CANNOT_BE_EMPTY = 'SELECT field cannot be empty or null.';
+    private static final String SELECT_FIELD_CANNOT_BE_EMPTY = 'SELECT field cannot be empty or null.';
     /** @description Error message when FROM value is not provided */
-	private static final String FROM_ENTITY_REQUIRED = 'The FROM value is required.';
+    private static final String FROM_ENTITY_REQUIRED = 'The FROM value is required.';
     /** @description Error message when provided WHERE clause is empty or null */
-	private static final String WHERE_CLAUSE_CANNOT_BE_EMPTY = 'WHERE clause cannot be empty or null.';
+    private static final String WHERE_CLAUSE_CANNOT_BE_EMPTY = 'WHERE clause cannot be empty or null.';
 
     /** @description Operator AND used in the WHERE clause */
-	private static final String AND_OPERATOR = ' AND ';
+    private static final String AND_OPERATOR = ' AND ';
 
     /** @description Contains field names used in the SOQL' SELECT segment */
-	private String[] selectFields = new String[0];
+    private String[] selectFields = new String[0];
     /** @description An Sobject name or a relationship name used in the SOQL's FROM segment */
-	private String entity = null;
+    private String entity = null;
     /** @description WHERE clauses used in the SOQL's WHERE segment */ 
-	private String[] whereClauses = new String[0];
+    private String[] whereClauses = new String[0];
     /** @description Indicates if toLabel() should be used on the Salutation field  */ 
-	private Boolean isToLabelSalutation = false;
+    private Boolean isToLabelSalutation = false;
 
     /*********************************************************************************************************
     * @description The constructor
     */
-	public UTIL_Query() {
-	}
+    public UTIL_Query() {
+    }
 
     /*********************************************************************************************************
     * @description Registers SELECT fields
     * @param fieldNames Set of field names
     * @return UTIL_Query The instance of the Query builder
     */
-	public UTIL_Query withSelectFields(Set<String> fieldNames) {
-		return withSelectFields(new List<String>(fieldNames));     
-	} 
-	
+    public UTIL_Query withSelectFields(Set<String> fieldNames) {
+        return withSelectFields(new List<String>(fieldNames));     
+    } 
+    
     /*********************************************************************************************************
     * @description Registers SELECT fields
     * @param fieldNames List of field names
     * @return UTIL_Query The instance of the Query builder
     */
-	public UTIL_Query withSelectFields(String[] fieldNames) {
-		selectFields.addAll(fieldNames);            
-		return this;
-	}  
+    public UTIL_Query withSelectFields(String[] fieldNames) {
+        selectFields.addAll(fieldNames);            
+        return this;
+    }  
 
     /*********************************************************************************************************
     * @description Indicates to use toLabel() on the Salutation field
     * @return UTIL_Query The instance of the Query builder
     */
-	public UTIL_Query withToLabelSalutation() {
-		isToLabelSalutation = true;
-		return this;
-	}     
-	
+    public UTIL_Query withToLabelSalutation() {
+        isToLabelSalutation = true;
+        return this;
+    }     
+    
     /*********************************************************************************************************
     * @description Registers the FROM Sobject
     * @param sobjectType Type of the Sobject
     * @return UTIL_Query The instance of the Query builder
     */
-	public UTIL_Query withFrom(Schema.SObjectType sobjectType) {           
-		return withFrom(sobjectType.getDescribe().getName());
-	}
-	
+    public UTIL_Query withFrom(Schema.SObjectType sobjectType) {           
+        return withFrom(sobjectType.getDescribe().getName());
+    }
+    
     /*********************************************************************************************************
     * @description Registers FROM entity
     * @param entity An Sobject name or a relationship name
     * @return UTIL_Query The instance of the Query builder
     */
-	public UTIL_Query withFrom(String entity) {
-		this.entity = entity;            
-		return this;
-	}        
-	
+    public UTIL_Query withFrom(String entity) {
+        this.entity = entity;            
+        return this;
+    }        
+    
     /*********************************************************************************************************
     * @description Registers a clause to be used in the SOQL's WHERE clause
     * @param whereClause A WHERE clause
     * @return UTIL_Query The instance of the Query builder
     */
-	public UTIL_Query withWhere(String whereClause) {
-		return withWhere(new String[]{ whereClause });  
-	}
-	
+    public UTIL_Query withWhere(String whereClause) {
+        return withWhere(new String[]{ whereClause });  
+    }
+    
     /*********************************************************************************************************
     * @description Registers WHERE clauses
     * @param whereClauses A list of WHERE clauses
     * @return UTIL_Query The instance of the Query builder
     */
-	public UTIL_Query withWhere(String[] whereClauses) {
-		if (whereClauses != null && !whereClauses.isEmpty()) {
-			this.whereClauses.addAll(whereClauses);    
-		}
-		return this;
-	} 
-	
+    public UTIL_Query withWhere(String[] whereClauses) {
+        if (whereClauses != null && !whereClauses.isEmpty()) {
+            this.whereClauses.addAll(whereClauses);    
+        }
+        return this;
+    } 
+    
     /*********************************************************************************************************
     * @description Validates and builds a SOQL 
     * @return String The SOQL
     */
-	public String build() {
-		if (String.isBlank(entity)) {
-			throw new UTIL_QueryException(FROM_ENTITY_REQUIRED);
-		}
+    public String build() {
+        if (String.isBlank(entity)) {
+            throw new UTIL_QueryException(FROM_ENTITY_REQUIRED);
+        }
 
-		String[] uniqueSelectFields = buildSelectFields();
-		if (uniqueSelectFields.isEmpty()) {
-			throw new UTIL_QueryException(SELECT_FIELDS_REQUIRED);
-		}
+        String[] uniqueSelectFields = buildSelectFields();
+        if (uniqueSelectFields.isEmpty()) {
+            throw new UTIL_QueryException(SELECT_FIELDS_REQUIRED);
+        }
 
-		return String.format(
-			'SELECT {0} FROM {1} {2}',
-			new String[] { String.join(uniqueSelectFields, ', '), entity, buildWhereClause() }
-		).trim();
-	}
+        return String.format(
+            'SELECT {0} FROM {1} {2}',
+            new String[] { String.join(uniqueSelectFields, ', '), entity, buildWhereClause() }
+        ).trim();
+    }
 
     /*********************************************************************************************************
     * @description Validates SELECT fields and removes duplicates
     * @return String[] List of field names.
     */
-	private String[] buildSelectFields() {
-		String[] fields = new String[0];
+    private String[] buildSelectFields() {
+        String[] fields = new String[0];
 
-		Set<String> collectedFields = new Set<String>();
-		for (String fieldName : selectFields) {
-			if (String.isBlank(fieldName)) {
-				throw new UTIL_QueryException(SELECT_FIELD_CANNOT_BE_EMPTY);
-			} 
-			
-			if (collectedFields.contains(fieldName.toLowerCase())) {
-				continue;
-			}
+        Set<String> collectedFields = new Set<String>();
+        for (String fieldName : selectFields) {
+            if (String.isBlank(fieldName)) {
+                throw new UTIL_QueryException(SELECT_FIELD_CANNOT_BE_EMPTY);
+            } 
+            
+            if (collectedFields.contains(fieldName.toLowerCase())) {
+                continue;
+            }
 
-			fields.add(buildField(fieldName));
-			collectedFields.add(fieldName.toLowerCase());
-		}
+            fields.add(buildField(fieldName));
+            collectedFields.add(fieldName.toLowerCase());
+        }
 
-		return fields;
-	}
+        return fields;
+    }
 
     /*********************************************************************************************************
     * @description Prepares a field to be used in the SOQL's SELECT segment
     * @param fieldName A field name
     * @return String The field name
     */
-	private String buildField(String fieldName) {
-		if (isToLabelSalutation && fieldName.equalsIgnoreCase('Salutation')) {
-			return String.format('toLabel({0})', new String[] { fieldName });
-		}
+    private String buildField(String fieldName) {
+        if (isToLabelSalutation && fieldName.equalsIgnoreCase('Salutation')) {
+            return String.format('toLabel({0})', new String[] { fieldName });
+        }
 
-		return fieldName;
-	}	       
+        return fieldName;
+    }           
 
     /*********************************************************************************************************
     * @description Validates and builds the WHERE clause
     * @return String The WHERE clause
     */
-	private String buildWhereClause() {
-		if (whereClauses.isEmpty()) {
-			return '';
-		}
-		
-		String soqlWhere = ''; 
-		
-		for (String clause : whereClauses) {
-			if (String.isBlank(clause)) {
-				throw new UTIL_QueryException(WHERE_CLAUSE_CANNOT_BE_EMPTY);
-			}
+    private String buildWhereClause() {
+        if (whereClauses.isEmpty()) {
+            return '';
+        }
+        
+        String soqlWhere = ''; 
+        
+        for (String clause : whereClauses) {
+            if (String.isBlank(clause)) {
+                throw new UTIL_QueryException(WHERE_CLAUSE_CANNOT_BE_EMPTY);
+            }
 
-			soqlWhere += String.isBlank(soqlWhere) ? '' : AND_OPERATOR;
-			soqlWhere += clause;
-		}
-		
-		return String.isBlank(soqlWhere) ? '' : 'WHERE ' + soqlWhere;
-	}  
+            soqlWhere += String.isBlank(soqlWhere) ? '' : AND_OPERATOR;
+            soqlWhere += clause;
+        }
+        
+        return String.isBlank(soqlWhere) ? '' : 'WHERE ' + soqlWhere;
+    }  
 }

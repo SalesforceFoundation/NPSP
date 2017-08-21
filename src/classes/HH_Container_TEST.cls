@@ -182,20 +182,19 @@ private class HH_Container_TEST {
 
         //verify main mandatory fields are included in the output
         for (String fieldName : new String[] {
-                'Id', 'npo02__Household_Naming_Order__c', 
-                'FirstName', 'LastName', 'Salutation', 
-                'Name', 'npo02__Naming_Exclusions__c', 'AccountId', 
-                UTIL_Namespace.StrTokenNSPrefix('HHId__c'),
-                UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Name__c'), 
-                UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Formal_Greeting__c'), 
-                UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Informal_Greeting__c'),
-                UTIL_Namespace.StrTokenNSPrefix('is_Address_Override__c'), 
-                UTIL_Namespace.StrTokenNSPrefix('Current_Address__c'), 
-                'npe01__Primary_Address_Type__c','MailingStreet', 'MailingCity', 
-                'MailingState', 'MailingPostalCode', 'MailingCountry', 
-                'MailingLatitude', 'MailingLongitude', 'CreatedDate'
-            }
-        ) {
+            'Id', 'npo02__Household_Naming_Order__c', 
+            'FirstName', 'LastName', 'Salutation', 
+            'Name', 'npo02__Naming_Exclusions__c', 'AccountId', 
+            UTIL_Namespace.StrTokenNSPrefix('HHId__c'),
+            UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Name__c'), 
+            UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Formal_Greeting__c'), 
+            UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Informal_Greeting__c'),
+            UTIL_Namespace.StrTokenNSPrefix('is_Address_Override__c'), 
+            UTIL_Namespace.StrTokenNSPrefix('Current_Address__c'), 
+            'npe01__Primary_Address_Type__c','MailingStreet', 'MailingCity', 
+            'MailingState', 'MailingPostalCode', 'MailingCountry', 
+            'MailingLatitude', 'MailingLongitude', 'CreatedDate'
+        }) {
             System.assert(fieldNames.contains(fieldName), fieldName + ' should be in: ' + fieldNames);
         }
     } 

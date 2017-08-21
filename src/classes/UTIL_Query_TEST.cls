@@ -36,26 +36,26 @@
 @isTest
 private class UTIL_Query_TEST {
 	
-	/*********************************************************************************************************
+    /*********************************************************************************************************
     @description 
         Tests SOQL builder when duplicate fields are added to SELECT fields
     verify:
         The SOQL contains unique field names 
     **********************************************************************************************************/   
     private static testMethod void testSoqlDoesNotContainDuplicateSelectFields() {
-		String[] selectFields = new String[] {
-			'Id', 'accountId', 'ACCOUNTid',
-			'npo02__Household__r.Number_of_HOUSEHOLD_Members__c',
-			'npo02__Household__r.NUMBER_of_Household_MEMBERS__C',
-			'firstname', 'FirstName', 'FIRSTNAME', 'FIRSTname'
-		};
+        String[] selectFields = new String[] {
+            'Id', 'accountId', 'ACCOUNTid',
+            'npo02__Household__r.Number_of_HOUSEHOLD_Members__c',
+            'npo02__Household__r.NUMBER_of_Household_MEMBERS__C',
+            'firstname', 'FirstName', 'FIRSTNAME', 'FIRSTname'
+        };
 
         String soql = new UTIL_Query()
-			.withSelectFields(selectFields)
-			.withFrom('Contact')
-			.build();
-		
-		String expectedSoql = 'SELECT Id, accountId, npo02__Household__r.Number_of_HOUSEHOLD_Members__c, firstname FROM Contact';
+            .withSelectFields(selectFields)
+            .withFrom('Contact')
+            .build();
+        
+        String expectedSoql = 'SELECT Id, accountId, npo02__Household__r.Number_of_HOUSEHOLD_Members__c, firstname FROM Contact';
 
         System.assertEquals(expectedSoql, soql, 'SOQL should exclude duplicate field names');
     }
@@ -67,14 +67,14 @@ private class UTIL_Query_TEST {
         The SOQL contains SELECT fields and a FROM value
     **********************************************************************************************************/   
     private static testMethod void testSoqlIsCorrectWhenWhereClauseIsNotProvided() {
-		String[] selectFields = new String[] { 'Id', 'Name' };
+        String[] selectFields = new String[] { 'Id', 'Name' };
 
         String soql = new UTIL_Query()
-			.withSelectFields(selectFields)
-			.withFrom('Account')
-			.build();
-		
-		String expectedSoql = 'SELECT Id, Name FROM Account';
+            .withSelectFields(selectFields)
+            .withFrom('Account')
+            .build();
+        
+        String expectedSoql = 'SELECT Id, Name FROM Account';
 
         System.assertEquals(expectedSoql, soql, 'SOQL should be correct without WHERE clause');
     }
@@ -95,15 +95,15 @@ private class UTIL_Query_TEST {
 
         Account[] expectedAccounts = new Account[] { accounts[0], accounts[1] };
 
-		String[] selectFields = new String[] { 'Id', 'Name' };
+        String[] selectFields = new String[] { 'Id', 'Name' };
 
         String soql = new UTIL_Query()
-			.withSelectFields(selectFields)
-			.withFrom('Account')
+            .withSelectFields(selectFields)
+            .withFrom('Account')
             .withWhere('Id IN :expectedAccounts')
-			.build();
-		
-		String expectedSoql = 'SELECT Id, Name FROM Account WHERE Id IN :expectedAccounts';
+            .build();
+        
+        String expectedSoql = 'SELECT Id, Name FROM Account WHERE Id IN :expectedAccounts';
 
         System.assertEquals(expectedSoql, soql, 'SOQL should include WHERE clause');
 
@@ -162,11 +162,11 @@ private class UTIL_Query_TEST {
         The build() throws an exception
     **********************************************************************************************************/   
     private static testMethod void testSoqlBuildFailsWhenFromValueIsNotProvided() {
-		String[] selectFields = new String[] { 'Id', 'Name' };
+        String[] selectFields = new String[] { 'Id', 'Name' };
 
         try {
             String soql = new UTIL_Query()
-			    .withSelectFields(selectFields)
+                .withSelectFields(selectFields)
                 .build();
 
             System.assert(false, 'An exception should be thrown when SOQL has no FROM value');
@@ -182,7 +182,7 @@ private class UTIL_Query_TEST {
         The build() throws an exception
     **********************************************************************************************************/   
     private static testMethod void testSoqlBuildFailsWhenWhereClauseIsEmpty() {
-		String[] selectFields = new String[] { 'Id', 'Name' };
+        String[] selectFields = new String[] { 'Id', 'Name' };
 
         for (String whereClause : new String[] { ' ', '', null}) {
             try {
