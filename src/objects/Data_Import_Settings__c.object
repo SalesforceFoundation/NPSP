@@ -117,6 +117,18 @@
         <type>Text</type>
         <unique>false</unique>
     </fields>
+    <fields>
+        <fullName>Post_Process_Implementing_Class__c</fullName>
+        <description>The developer name of an Apex class that implements the BDI_IPostProcess interface for NPSP Data Import records.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The developer name of an Apex class that implements the BDI_IPostProcess interface for NPSP Data Import records.</inlineHelpText>
+        <label>Post Process Implementing Class</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
     <label>Data Import Settings</label>
     <visibility>Public</visibility>
 </CustomObject>

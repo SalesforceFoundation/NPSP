@@ -211,6 +211,19 @@
             </div>
         </div>
 
+        <div class="slds-form slds-form_stacked slds-m-left_large">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label">
+                    <apex:outputLabel for="fldPostProcessMatchClass" value="{!$ObjectType.DataImportBatch__c.Fields.Post_Process_Implementing_Class__c.Label}"/>
+                </label>
+                <c:UTIL_Tooltip tooltip="{!$ObjectType.DataImportBatch__c.Fields.Post_Process_Implementing_Class__c.InlineHelpText}" />
+                <div class="slds-form-element__control">
+                    <apex:inputField id="fldPostProcessMatchClass" value="{!diBatch.Post_Process_Implementing_Class__c}" styleClass="slds-input" rendered="{!isEditMode}"/>
+                    <apex:outputField id="fldPostProcessMatchClassRO" value="{!diBatch.Post_Process_Implementing_Class__c}" styleClass="slds-input" rendered="{!isReadOnlyMode}"/>
+                </div>
+            </div>
+        </div>
+
     </apex:outputPanel>
 
     <script type="text/javascript">

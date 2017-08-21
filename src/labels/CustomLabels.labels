@@ -1407,8 +1407,8 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Data Importer</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>error thrown if specified class doesn&apos;t support BDI_IMatchDonations</shortDescription>
-        <value>The Apex class {0} was not found or does not support the BDI_IMatchDonations interface.</value>
+        <shortDescription>error thrown if specified class doesn&apos;t support the given BDI interface</shortDescription>
+        <value>The Apex class {0} was not found or does not support the {1} interface.</value>
     </labels>
     <labels>
         <fullName>bdiErrorInvalidLastname</fullName>

@@ -127,7 +127,8 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             Donation_Matching_Behavior__c = diBatch.Donation_Matching_Behavior__c,
             Donation_Matching_Implementing_Class__c = diBatch.Donation_Matching_Implementing_Class__c,
             Donation_Matching_Rule__c = diBatch.Donation_Matching_Rule__c,
-            Donation_Date_Range__c = diBatch.Donation_Date_Range__c
+            Donation_Date_Range__c = diBatch.Donation_Date_Range__c,
+            Post_Process_Implementing_Class__c = diBatch.Post_Process_Implementing_Class__c
         );
     }
 
@@ -145,7 +146,8 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             Donation_Matching_Behavior__c = diSettings.Donation_Matching_Behavior__c,
             Donation_Matching_Implementing_Class__c = diSettings.Donation_Matching_Implementing_Class__c,
             Donation_Matching_Rule__c = diSettings.Donation_Matching_Rule__c,
-            Donation_Date_Range__c = diSettings.Donation_Date_Range__c
+            Donation_Date_Range__c = diSettings.Donation_Date_Range__c,
+            Post_Process_Implementing_Class__c = diSettings.Post_Process_Implementing_Class__c
         );
     }
 
@@ -193,21 +195,11 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
                 new list<String>{UTIL_Describe.getFieldLabelSafe(strSettingsObj, UTIL_Namespace.StrTokenNSPrefix('Donation_Date_Range__c'))})));
         }
 
-        // validate donation implementing class
-        string strClass = diSettings.Donation_Matching_Implementing_Class__c;
-        if (String.isNotBlank(strClass)) {
-            BDI_IMatchDonations iMatchDonations = null;
-            Type classType = Type.forName(strClass);
-            if (classType != null) {
-                Object classInstance = classType.newInstance();
-                if (classInstance instanceof BDI_IMatchDonations) {
-                    iMatchDonations = (BDI_IMatchDonations) classInstance;
-                }
-            }
-            if (iMatchDonations == null) {
-                throw(new BDIException(String.format(Label.bdiErrorInvalidIMatchDonations, new list<String>{strClass})));
-            }
-        }
+        // validate donation implementing class by instantiating it
+        instantiateClassForInterface('BDI_IMatchDonations', diSettings.Donation_Matching_Implementing_Class__c);
+
+        // validate post process implementing class by instantiating it
+        instantiateClassForInterface('BDI_IPostProcess', diSettings.Post_Process_Implementing_Class__c);
 
         // ensure we are in the household account model!
         if (!CAO_Constants.isHHAccountModel())
@@ -473,39 +465,9 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
 
             importCampaignMembers();
 
-            // update final status for each DI
-            for (DataImport__c di: listDI) {
-                if (di.Status__c == null)
-                    di.Status__c = label.bdiImported;
-                di.ImportedDate__c = system.now();
-                di.ApexJobId__c = bc.getJobId();
-                
-                // because a contact might be first imported in C1 location, but then moved to another 
-                // household since it later shows up in C2, location, we can't be assured that the
-                // contact's original household account is the same (and valid). Thus we must fixup
-                // all Household Account Id lookups in our di records.
-                if (di.Status__c == label.bdiImported) {
-                    Contact c1 = ContactFromDi(di, 1);
-                    if (c1 != null)
-                        di.HouseholdAccountImported__c = c1.AccountId;
-                } else {
-                    di.HouseholdAccountImported__c = null;                    
-                }
-                
-                // our matching marks non-matches with created, assuming they will get created
-                // but if there were errors that stopped that creation, let's clear the status
-                if (di.Contact1Imported__c == null && di.Contact1ImportStatus__c == label.bdiCreated)
-                    di.Contact1ImportStatus__c = null;
-                if (di.Contact2Imported__c == null && di.Contact2ImportStatus__c == label.bdiCreated)
-                    di.Contact2ImportStatus__c = null;
-                if (di.Account1Imported__c == null && di.Account1ImportStatus__c == label.bdiCreated)
-                    di.Account1ImportStatus__c = null;
-                if (di.Account2Imported__c == null && di.Account2ImportStatus__c == label.bdiCreated)
-                    di.Account2ImportStatus__c = null;
-            }
-            
-            //UTIL_Debug.debug('****DJH final update to listDI: ' + listDI);
-            update listDI;
+            updateDIStatuses(bc);
+
+            customPostProcess();
     
         } catch (Exception e) {
             //UTIL_Debug.debug('****DJH Exception ' + e);
@@ -539,6 +501,82 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
             // then it would rollback our setting of failure state in the DI records.
             // so we just return, and rely on our Data Import ui to notify the user.
         }
+    }
+
+    /*******************************************************************************************************
+    * @description updates the status of each DI record and commits them to the database
+    * @return void
+    */
+    private void updateDIStatuses(Database.BatchableContext bc) {
+        // update final status for each DI
+        for (DataImport__c di: listDI) {
+            if (di.Status__c == null)
+                di.Status__c = label.bdiImported;
+            di.ImportedDate__c = system.now();
+            di.ApexJobId__c = bc.getJobId();
+
+            // because a contact might be first imported in C1 location, but then moved to another
+            // household since it later shows up in C2, location, we can't be assured that the
+            // contact's original household account is the same (and valid). Thus we must fixup
+            // all Household Account Id lookups in our di records.
+            if (di.Status__c == label.bdiImported) {
+                Contact c1 = ContactFromDi(di, 1);
+                if (c1 != null)
+                    di.HouseholdAccountImported__c = c1.AccountId;
+            } else {
+                di.HouseholdAccountImported__c = null;
+            }
+
+            // our matching marks non-matches with created, assuming they will get created
+            // but if there were errors that stopped that creation, let's clear the status
+            if (di.Contact1Imported__c == null && di.Contact1ImportStatus__c == label.bdiCreated)
+                di.Contact1ImportStatus__c = null;
+            if (di.Contact2Imported__c == null && di.Contact2ImportStatus__c == label.bdiCreated)
+                di.Contact2ImportStatus__c = null;
+            if (di.Account1Imported__c == null && di.Account1ImportStatus__c == label.bdiCreated)
+                di.Account1ImportStatus__c = null;
+            if (di.Account2Imported__c == null && di.Account2ImportStatus__c == label.bdiCreated)
+                di.Account2ImportStatus__c = null;
+        }
+
+        //UTIL_Debug.debug('****DJH final update to listDI: ' + listDI);
+        update listDI;
+    }
+
+    /*******************************************************************************************************
+    * @description if the user has specified a custom post process class, invoke it with our saved
+    * DI records
+    * @return void
+    */
+    private void customPostProcess() {
+        BDI_IPostProcess iPostProcess = (BDI_IPostProcess)instantiateClassForInterface('BDI_IPostProcess', diSettings.Post_Process_Implementing_Class__c);
+        if (iPostProcess != null) {
+            iPostProcess.process(this);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description instantiate a class for the provided interface
+    */
+    public static Object instantiateClassForInterface(String strInterface, String strClass) {
+
+        if (strClass == null || strClass == '') {
+            return null;
+        }
+
+        Type classType = Type.forName(strClass);
+        if (classType != null) {
+            Object classInstance = classType.newInstance();
+
+            if (strInterface == 'BDI_IPostProcess' && classInstance instanceOf BDI_IPostProcess) {
+                return classInstance;
+            }
+
+            if (strInterface == 'BDI_IMatchDonations' && classInstance instanceOf BDI_IMatchDonations) {
+                return classInstance;
+            }
+        }
+        throw new BDIException(String.format(Label.bdiErrorInvalidIMatchDonations, new list<String>{strClass, strInterface}));
     }
 
     /*******************************************************************************************************

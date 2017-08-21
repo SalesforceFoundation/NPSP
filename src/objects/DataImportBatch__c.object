@@ -56,7 +56,7 @@
     <enableActivities>false</enableActivities>
     <enableBulkApi>true</enableBulkApi>
     <enableFeeds>false</enableFeeds>
-    <enableHistory>false</enableHistory>
+    <enableHistory>true</enableHistory>
     <enableReports>true</enableReports>
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
@@ -69,6 +69,7 @@
         <label>Account Custom Unique ID</label>
         <length>255</length>
         <required>false</required>
+        <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
@@ -79,6 +80,7 @@
         <inlineHelpText>An optional description about this batch.</inlineHelpText>
         <label>Batch Description</label>
         <length>32768</length>
+        <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>LongTextArea</type>
         <visibleLines>3</visibleLines>
@@ -93,6 +95,7 @@
         <precision>3</precision>
         <required>true</required>
         <scale>0</scale>
+        <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>Number</type>
         <unique>false</unique>
@@ -105,6 +108,7 @@
         <label>Contact Custom Unique ID</label>
         <length>255</length>
         <required>false</required>
+        <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
@@ -118,6 +122,7 @@
         <label>Contact Matching Rule</label>
         <length>255</length>
         <required>true</required>
+        <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
@@ -132,6 +137,7 @@
         <precision>2</precision>
         <required>true</required>
         <scale>0</scale>
+        <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>Number</type>
         <unique>false</unique>
@@ -172,6 +178,7 @@
             <sorted>false</sorted>
         </picklist>
         <required>true</required>
+        <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
     </fields>
@@ -183,6 +190,7 @@
         <label>Donation Matching Implementing Class</label>
         <length>255</length>
         <required>false</required>
+        <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
@@ -196,6 +204,7 @@
         <label>Donation Matching Rule</label>
         <length>255</length>
         <required>true</required>
+        <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
@@ -207,8 +216,22 @@
         <inlineHelpText>The date and time when the batch was last processed.</inlineHelpText>
         <label>Last Processed On</label>
         <required>false</required>
+        <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Post_Process_Implementing_Class__c</fullName>
+        <description>The developer name of an Apex class that implements the BDI_IPostProcess interface for NPSP Data Import records.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The developer name of an Apex class that implements the BDI_IPostProcess interface for NPSP Data Import records.</inlineHelpText>
+        <label>Post Process Implementing Class</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Process_Using_Scheduled_Job__c</fullName>
@@ -217,6 +240,7 @@
         <externalId>false</externalId>
         <inlineHelpText>When checked, the NPSP Data Import Batch will be automatically processed based on the schedule for the associated job.</inlineHelpText>
         <label>Process Using Scheduled Job</label>
+        <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
@@ -229,6 +253,7 @@
         <precision>8</precision>
         <required>false</required>
         <scale>0</scale>
+        <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>Number</type>
         <unique>false</unique>
@@ -242,6 +267,7 @@
         <precision>8</precision>
         <required>false</required>
         <scale>0</scale>
+        <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>Number</type>
         <unique>false</unique>
@@ -259,6 +285,7 @@
     </listViews>
     <nameField>
         <label>Batch Name</label>
+        <trackHistory>false</trackHistory>
         <type>Text</type>
     </nameField>
     <pluralLabel>NPSP Data Import Batches</pluralLabel>
@@ -270,14 +297,14 @@
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <webLinks>
-        <fullName>Import_Batch</fullName>
+        <fullName>Process_Batch</fullName>
         <availability>online</availability>
         <description>invoke the Data Importer on all records associated with this Batch</description>
         <displayType>button</displayType>
         <encodingKey>UTF-8</encodingKey>
         <height>600</height>
         <linkType>url</linkType>
-        <masterLabel>Import Batch</masterLabel>
+        <masterLabel>Process Batch</masterLabel>
         <openType>sidebar</openType>
         <protected>false</protected>
         <url>/apex/npsp__BDI_DataImport?batchId={!DataImportBatch__c.Id}&amp;retURL={!URLFOR(&apos;/&apos; + DataImportBatch__c.Id)}</url>
