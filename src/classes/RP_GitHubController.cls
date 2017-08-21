@@ -86,9 +86,9 @@ public with sharing class RP_GitHubController {
         */
         public GitHubWrapper(Map<String, Object> responseBodyMap) {
 
-            if (responseBodyMap != null && responseBodyMap.containsKey('latest_release')) {
+            if (responseBodyMap != null && responseBodyMap.containsKey('production_release')) {
 
-                Map<String, Object> latestReleaseMap = (Map<String, Object>) responseBodyMap.get('latest_release');
+                Map<String, Object> latestReleaseMap = (Map<String, Object>) responseBodyMap.get('production_release');
                 latestProductName = responseBodyMap.get('product_name');
 
                 if (latestReleaseMap != null && !latestReleaseMap.isEmpty()) {

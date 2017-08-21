@@ -57,7 +57,6 @@ public with sharing class RP_YoutubeController {
 
         RP_YoutubeClient client = new RP_YoutubeClient();
         HttpResponse response = client.getPlaylistVideos();
-
         timeoutError = true;
 
         if (response != null) {
