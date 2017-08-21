@@ -38,14 +38,14 @@ private class STG_PanelHouseholds_TEST {
     /*********************************************************************************************************
     * @description Constant representing Household_Naming_Settings__c.Household_Name_Format__c field name
     */
-	private static final String HH_NAME_FORMAT_FIELD = 'Household_Name_Format__c';
+    private static final String HH_NAME_FORMAT_FIELD = 'Household_Name_Format__c';
 
     /*********************************************************************************************************
     * @description Constant representing Household_Naming_Settings__c.Formal_Greeting_Format__c field name
     */
-	private static final String HH_FORMAL_GREETING_FORMAT_FIELD = 'Formal_Greeting_Format__c';
-	
-	/*********************************************************************************************************
+    private static final String HH_FORMAL_GREETING_FORMAT_FIELD = 'Formal_Greeting_Format__c';
+    
+    /*********************************************************************************************************
     @description 
         Tests panel returns expected panel Id
     verify:
@@ -54,11 +54,11 @@ private class STG_PanelHouseholds_TEST {
     private static testMethod void testPanelHasPanelId() {
         STG_PanelHouseholds_CTRL panel = new STG_PanelHouseholds_CTRL();
         System.assertEquals('idPanelHH', panel.idPanel());
-	}
+    }
 
-	/*********************************************************************************************************
+    /*********************************************************************************************************
     * @description 
-		Tests save of Automatic Household Naming 
+        Tests save of Automatic Household Naming 
     verify:
         The settings field is saved as user specified it  
     **********************************************************************************************************/   
@@ -142,15 +142,15 @@ private class STG_PanelHouseholds_TEST {
         STG_PanelHouseholds_CTRL ctrl = new STG_PanelHouseholds_CTRL();
         System.assertEquals(false, ctrl.isValidSettings(), 'Household Naming Settings should be invalid'); 
 
-		for (String fieldName : new Set<String>{ HH_NAME_FORMAT_FIELD, HH_FORMAL_GREETING_FORMAT_FIELD }) {          
-			String fieldLabel = UTIL_Describe.getFieldLabel(
-				UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), 
-				UTIL_Namespace.StrTokenNSPrefix(fieldName)
-			);
-			
-			UTIL_UnitTestData_TEST.assertPageHasError(fieldLabel); 
-			UTIL_UnitTestData_TEST.assertPageHasError('Invalid field'); 
-		}
+        for (String fieldName : new Set<String>{ HH_NAME_FORMAT_FIELD, HH_FORMAL_GREETING_FORMAT_FIELD }) {          
+            String fieldLabel = UTIL_Describe.getFieldLabel(
+                UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), 
+                UTIL_Namespace.StrTokenNSPrefix(fieldName)
+            );
+            
+            UTIL_UnitTestData_TEST.assertPageHasError(fieldLabel); 
+            UTIL_UnitTestData_TEST.assertPageHasError('Invalid field'); 
+        }
     }
 
     /*********************************************************************************************************
@@ -221,5 +221,5 @@ private class STG_PanelHouseholds_TEST {
 
         System.assertEquals(Label.stgErrorInvalidClass, exampleName, 'Expected error message should be returned');
     }
-	
+    
 }

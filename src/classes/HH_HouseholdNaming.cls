@@ -38,11 +38,6 @@
 public without sharing class HH_HouseholdNaming {
 
     /*******************************************************************************************************
-    * @description Exception raised by the Household Naming
-    */
-    public class HouseholdNamingException extends Exception {} 
-
-    /*******************************************************************************************************
     * @description future method to update the household names for the specified households
     * @param hhids the list of household Id's (either Household__c or Account Id's)
     * @return void
@@ -289,16 +284,16 @@ public without sharing class HH_HouseholdNaming {
         get {
 	        if (strContactSelectStmtAllNamingFields == null) {
 		        //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
-		        string strSoql = 'SELECT Id, HHId__c, npo02__Naming_Exclusions__c';
-		        
-		        set<string> setStrField = getHouseholdNamingContactFields();
-		        for (string strF : setStrField) {
-                    if (strF == 'Salutation') strF = 'toLabel(Salutation)';
-                    strSoql += ', ' + strF;
-		        }
+                String[] selectFields = new String[]{
+                    'Id', 'HHId__c', 'npo02__Naming_Exclusions__c'
+                };
+                selectFields.addAll(getHouseholdNamingContactFields());
 
-		        strSoql += ' FROM Contact ';
-		        strContactSelectStmtAllNamingFields = strSoql;
+		        strContactSelectStmtAllNamingFields = new UTIL_Query()
+                    .withSelectFields(selectFields)
+                    .withToLabelSalutation()
+                    .withFrom('Contact')
+                    .build();
 	        }
 	        return strContactSelectStmtAllNamingFields;
         }
