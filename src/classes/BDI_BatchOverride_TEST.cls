@@ -150,6 +150,11 @@ public with sharing class BDI_BatchOverride_TEST {
         diBatch.Donation_Matching_Implementing_Class__c = 'foo';
         system.assertEquals(null, ctrl.save());
 
+
+        diBatch = newDIBatch();
+        diBatch.Post_Process_Implementing_Class__c = 'bar';
+        system.assertEquals(null, ctrl.save());
+
         diBatch = newDIBatch();
         diBatch.Contact_Custom_Unique_ID__c = 'bogus field';
         system.assertEquals(null, ctrl.save());
