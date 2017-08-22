@@ -234,45 +234,95 @@ public with sharing class STG_SettingsManager_TEST {
         STG_Panel.stgService.stgCon.npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR;
         panel.saveSettings();
         system.assertEquals('One-to-One', UTIL_CustomSettingsFacade.getOrgContactsSettings().npe01__Account_Processor__c);
+    }    
+
+    /*********************************************************************************************************
+    @description 
+        Tests Refresh Household Names batch when Automatic Household Naming is turned off 
+        and Household Naming Settings is invalid
+    verify:
+        Household Naming batch has not been run.
+        Automatic Household Naming field is still turned off.
+        The Page contains an error.        
+    **********************************************************************************************************/ 
+    private static testMethod void testPanelRenameHHDoesNotRunBatchWhenHHNamingSettingsIsInvalid() {
+        if (strTestOnly != '*' && strTestOnly != 'testPanelRenameHHDoesNotRunBatchWhenHHNamingSettingsIsInvalid') return;
+
+        UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
+        UTIL_UnitTestData_TEST.setupInvalidHHNamingSettings();
+
+        Test.setCurrentPage(Page.STG_PanelRenameHouseholds);
+
+        STG_PanelRenameHouseholds_CTRL ctrl = new STG_PanelRenameHouseholds_CTRL();
+        System.assert(!ctrl.isRunningBatch, 'The batch should not run');
+
+        Test.startTest();
+        PageReference pg = ctrl.runBatch();
+        Test.stopTest();
+
+        System.assertEquals(null, pg, 'Returned PageReference should be null');
+        System.assert(!ctrl.isRunningBatch, 'The batch should not run');
+        System.assertEquals(false, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c, 'Automatic Household Naming should be turned off');        
+        
+        UTIL_UnitTestData_TEST.assertPageHasError('Invalid field');
     }
 
     /*********************************************************************************************************
-    * @description Tests the Households panel
-    * @return void
-    */
-    public static testMethod void testPanelHouseholds() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelHouseholds') return;
-        STG_PanelHouseholds_CTRL panel = new STG_PanelHouseholds_CTRL();
-        system.assertEquals('idPanelHH', panel.idPanel());
-        STG_Panel.stgService.stgHH.npo02__Advanced_Household_Naming__c = false;
-        panel.saveSettings();
-        system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgHouseholdsSettings().npo02__Advanced_Household_Naming__c);
+    @description 
+        Tests Refresh Household Names batch when Automatic Household Naming is turned off 
+        and Household Naming Settings is valid
+    verify:
+        Household Naming batch has been run.
+        Automatic Household Naming field is turned on.
+        The Page contains no error.        
+    **********************************************************************************************************/ 
+    private static testMethod void testPanelRenameHHRunsBatchWhenAutomaticHHNamingIsOff() {
+        if (strTestOnly != '*' && strTestOnly != 'testPanelRenameHHRunsBatchWhenAutomaticHHNamingIsOff') return;
+
+        UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
+
+        Test.setCurrentPage(Page.STG_PanelRenameHouseholds);
+
+        STG_PanelRenameHouseholds_CTRL ctrl = new STG_PanelRenameHouseholds_CTRL();
+        System.assert(!ctrl.isRunningBatch, 'The batch should not run');
+
+        Test.startTest();
+        PageReference pg = ctrl.runBatch();
+        Test.stopTest();
+
+        System.assertEquals(null, pg, 'Returned PageReference should be null');
+        System.assert(ctrl.isRunningBatch, 'The batch should run');
+        System.assertEquals(true, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c, 'Automatic Household Naming should be turned on');    
+        
+        System.assertEquals(0, ApexPages.getMessages().size(), 'The page should not contain any error: ' + ApexPages.getMessages());
     }
 
     /*********************************************************************************************************
-    * @description Tests that the name specs are valid in the Households panel
-    * @return void
-    */
-    public static testMethod void testNameSpecs() {
-        if (strTestOnly != '*' && strTestOnly != 'testNameSpecs') return;
-        STG_PanelHouseholds_CTRL panel = new STG_PanelHouseholds_CTRL();
-        
-        STG_Panel.stgService.stgHH.npo02__Advanced_Household_Naming__c = true;
-        system.assertEquals(true, panel.isValidNameFormats());        
+    @description 
+        Tests Refresh Household Names batch when Automatic Household Naming is turned on
+    verify:
+        Household Naming batch has been run.
+        The Page contains no error.        
+    **********************************************************************************************************/ 
+    private static testMethod void testPanelRenameHHRunsBatchWhenAutomaticHHNamingIsOn() {
+        if (strTestOnly != '*' && strTestOnly != 'testPanelRenameHHRunsBatchWhenAutomaticHHNamingIsOn') return;
 
-        STG_Panel.stgService.stgHN.Household_Name_Format__c = '{!{!bogus}}';
-        system.assertEquals(false, panel.isValidNameFormats());        
-        STG_Panel.stgService.stgHN.Household_Name_Format__c = '{!{!FirstName}} {!LastName} Family';
-        
-        STG_Panel.stgService.stgHN.Formal_Greeting_Format__c = '{!{!bogus}}';
-        system.assertEquals(false, panel.isValidNameFormats());        
-        STG_Panel.stgService.stgHN.Formal_Greeting_Format__c = '{!{!Salutation} {!FirstName}} {!LastName}';
-               
-        STG_Panel.stgService.stgHN.Informal_Greeting_Format__c = '{!{!bogus}}';
-        system.assertEquals(false, panel.isValidNameFormats());        
-        STG_Panel.stgService.stgHN.Informal_Greeting_Format__c = '{!{!FirstName}}';
+        UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
 
-        system.assertEquals(true, panel.isValidNameFormats());        
+        Test.setCurrentPage(Page.STG_PanelRenameHouseholds);
+
+        STG_PanelRenameHouseholds_CTRL ctrl = new STG_PanelRenameHouseholds_CTRL();
+        System.assert(!ctrl.isRunningBatch, 'The batch should not run');
+
+        Test.startTest();
+        PageReference pg = ctrl.runBatch();
+        Test.stopTest();
+
+        System.assertEquals(null, pg, 'Returned PageReference should be null');
+        System.assert(ctrl.isRunningBatch, 'The batch should run');    
+        System.assertEquals(true, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c, 'Automatic Household Naming should be turned on');    
+
+        System.assertEquals(0, ApexPages.getMessages().size(), 'The page should not contain any error: ' + ApexPages.getMessages());
     }
 
     /*********************************************************************************************************
@@ -943,6 +993,6 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(false, panel.isRunningBatch);
         panel.runBatch();
         system.assertEquals(true, panel.isRunningBatch);
-    }
+    }   
 
 }

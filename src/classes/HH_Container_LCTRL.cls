@@ -173,41 +173,41 @@ public with sharing class HH_Container_LCTRL {
     */
     public static string getContactSelectQueryWithFls() {
         //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
-        list<string> listStrField = getContactFields();
-        string strSoql = 'SELECT ';
-        string strComma = '';                
-        set<String> setCheckUpdate = setUpdateableContactFields();
+        Set<String> selectFields = getContactFields();
+        Set<String> setCheckUpdate = setUpdateableContactFields();
         
-        for (string strF : listStrField) {
-            
+        for (string strF : selectFields) {
+
             if (!strF.contains('.')) {
                 // check field level security (but not on compound lookup fields)
                 DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('Contact', strF);
                 if (dfr == null || !dfr.isAccessible() || ((setCheckUpdate.contains(strF) && !dfr.isUpdateable())))
                     throw (new permsException(string.format(label.flsError, new string[]{'Contact' + '.' + strF})));
             }
-                
-            strSoql += strComma + strF;
-            strComma = ',';
         }
         // add a few fields we need for contact merge and standard code that
         // we don't have these in our set of fields, because we want to avoid FLS on them,
         // since we want to support both HH Accounts and Objects, but we expect customers might
         // only grant permissions on the model they are currently using, but we may have data in both models.
         // the find autocomplete lookup also uses this code, so it needs to see both types of households.
-        strSoql += ', npo02__Household__c'; 
-        strSoql += ', Account.Number_of_Household_Members__c, npo02__Household__r.Number_of_Household_Members__c ';
-        strSoql += ', Account.Name, npo02__Household__r.Name ';
-        strSoql += ' FROM Contact ';
-        return strSoql;
+        selectFields.add('npo02__Household__c'); 
+        selectFields.add('Account.Number_of_Household_Members__c');
+        selectFields.add('npo02__Household__r.Number_of_Household_Members__c');
+        selectFields.add('Account.Name');
+        selectFields.add('npo02__Household__r.Name');
+
+        return new UTIL_Query()
+            .withSelectFields(selectFields)
+            .withFrom('Contact')
+            .build();
     }
 
     /*******************************************************************************************************
-    * @description returns a list of Contact Fields (developer name)
-    * @return list<String> the list of Contact Fields
+    * @description Returns Contact Fields (developer name)
+    * @return Set<String> Set of Contact Fields
     */
     @TestVisible
-    private static list<String> getContactFields() {
+    private static Set<String> getContactFields() {
         try {
             set<String> setContactFields = new Set<String>{
                 'Id', 
@@ -242,13 +242,14 @@ public with sharing class HH_Container_LCTRL {
                     strSoql += ', MailingCountryCode, MailingStateCode ';
                 ******/
             
-            setContactFields.addAll(HH_HouseholdNaming.iNaming.setHouseholdNameFieldsOnContact());
+            setContactFields.addAll(new HH_HouseholdNaming().getHouseholdNamingContactFields());
 
-            return new list<String>(setContactFields);
+            return setContactFields;
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
     }
+
 
     /*******************************************************************************************************
     * @description returns a set of Contact Fields (developer name) that must be editable
@@ -505,19 +506,27 @@ public with sharing class HH_Container_LCTRL {
     public static SObject getHHNamesGreetings(SObject hh, list<Contact> listCon) {
         try {
             // update naming exclusions field based on exclusion checkboxes
-            for (Contact con : listCon)
+            for (Contact con : listCon) {
                 HH_Households_TDTM.copyNamingExclusionsFromCheckboxes(con);
+            }
 
-            HH_HouseholdNaming hn = new HH_HouseholdNaming();
-            String strExclusions = (String)hh.get('npo02__SYSTEM_CUSTOM_NAMING__c');
+            HH_HouseholdNaming hhNaming = new HH_HouseholdNaming();
+
+            if (!hhNaming.isAutomaticNaming()) {
+                return hh;
+            }
+
+            String strExclusions = (String) hh.get('npo02__SYSTEM_CUSTOM_NAMING__c');
             if (strExclusions == null)
                 strExclusions = '';
+                
             if (!strExclusions.contains('Name'))
-                hh.put('Name', hn.getHHName(listCon));
+                hh.put('Name', hhNaming.getHHName(listCon));
             if (!strExclusions.contains('Formal_Greeting__c'))
-                hh.put('npo02__Formal_Greeting__c', hn.getFormalName(listCon));
+                hh.put('npo02__Formal_Greeting__c', hhNaming.getFormalName(listCon));
             if (!strExclusions.contains('Informal_Greeting__c'))
-                hh.put('npo02__Informal_Greeting__c', hn.getInformalName(listCon));
+                hh.put('npo02__Informal_Greeting__c', hhNaming.getInformalName(listCon));
+
             return hh;
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());

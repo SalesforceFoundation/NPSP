@@ -1299,6 +1299,75 @@ private class ACCT_IndividualAccounts_TEST {
         Test.stopTest();
     }
 
+    /*********************************************************************************************************
+    @description 
+        Test Contact insert and update when Household Naming Settings is invalid
+        and the Automatic Household Naming is turned off 
+    verify:
+        The Contact is created and updated successfully
+    **********************************************************************************************************/ 
+    private static testMethod void testContactDmlWhenHHNamingSettingsIsInvalidAndAutomaticHHNamingIsOff() {
+        UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
+        UTIL_UnitTestData_TEST.setupInvalidHHNamingSettings();
+
+        Contact contact = new Contact(LastName = 'Smith');
+        try {
+            insert contact;
+
+        } catch (Exception e) {
+            System.assert(false, 'Unexpected error on Contact insert: ' + e.getMessage());
+        }
+
+        try {
+            contact.FirstName = 'John';
+            update contact;
+
+        } catch (Exception e) {
+            System.assert(false, 'Unexpected error on Contact update: ' + e.getMessage());
+        }
+
+        System.assertEquals('John', [SELECT FirstName FROM Contact WHERE Id = :contact.Id][0].FirstName, 'Contact update should succeed');
+    }
+
+    /*********************************************************************************************************
+    @description 
+        Test SOQL built by buildContactSoql()
+    verify:
+        The SOQL retrieves data for specified Contacts only.
+        The SOQL contains no duplicate field.
+        The SOQL contains Household Naming fields.
+    **********************************************************************************************************/ 
+    private static testMethod void testContactSoqlReturnsQueryForSpecifiedContacts() {
+        Set<String> hhNamingFields = new Set<String>{ 'FIRSTname', 'PhOnE', 'Fax', 'lastname', 'LastName', 'npe01__WorkEmail__c'};
+
+        String soql = new ACCT_IndividualAccounts_TDTM().buildContactSoql(hhNamingFields);
+
+        System.assert(soql.contains('npe01__WorkEmail__c'));// the only field added from Household Naming fields
+
+        Contact[] contacts = new Contact[]{
+            new Contact(LastName = 'testSoql1'),
+            new Contact(LastName = 'testSoql2')
+        };
+        insert contacts;
+
+        insert new Contact(LastName = 'testSoqlExclude');
+
+        // Verify the SOQL is correct and there is no duplicate field error raised
+        Contact[] actualContacts;
+        try {
+            actualContacts = Database.query(soql);
+        } catch (Exception e) {
+            System.assert(false, 'Unexpected error when SOQL (' + soql + ') has been run: ' + e.getMessage());
+        }
+
+        System.assert(actualContacts != null, 'Contacts should be returned when the SOQL is has been run');
+        System.assertEquals(contacts.size(), actualContacts.size(), 'Expected Contacts: ' + contacts + '; Actual Contacts: ' + actualContacts);
+        System.assert(
+            new Map<Id, Contact>(contacts).keySet().containsAll(new Map<Id, Contact>(actualContacts).keySet()), 
+            'Expected Contacts: ' + contacts + '; Actual Contacts: ' + actualContacts
+        );
+    }
+
     // Helpers
     ////////////
 
@@ -1337,4 +1406,5 @@ private class ACCT_IndividualAccounts_TEST {
         
         return newRecTypeId;
     }
+
 }
