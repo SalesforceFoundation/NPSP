@@ -81,6 +81,123 @@ private class HH_Container_TEST {
                 
         Test.stopTest();
     }
+    
+    /*********************************************************************************************************
+    @description
+        Test getContacts() method when Household Naming Settings is invalid
+        and the Automatic Household Naming is turned off 
+    verify:
+        Contacts are retrieved successfully
+    **********************************************************************************************************/  
+    static testMethod void testContactsAreReturnedWhenHHNamingSettingsIsInvalidAndAutomaticHHNamingIsOff() {
+        UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
+        UTIL_UnitTestData_TEST.setupInvalidHHNamingSettings();
+
+        initTestData();
+
+        Test.startTest();
+
+        Contact[] contacts = HH_Container_LCTRL.getContacts(hhA.Id);
+        System.assert(contacts != null && contacts.size() == 1, 'Only one contact should be in the Household Account: ' + contacts);
+        System.assertEquals(conA.Id, contacts[0].Id, 'Contact should not change in the Household Account');
+
+        contacts = HH_Container_LCTRL.getContacts(hhO.Id);
+        System.assert(contacts != null && contacts.size() == 1, 'Only one contact should be in the Household Object: ' + contacts);
+        System.assertEquals(conO.Id, contacts[0].Id, 'Contact should not change in the Household Object');
+
+        Test.stopTest();
+    }     
+     
+    /*********************************************************************************************************
+    @description
+        Test getContactSelectQueryWithFls() builds expected SOQL
+    verify:
+        The SOQL is correct
+    **********************************************************************************************************/  
+    static testMethod void testContactSoqlIsCorrect() {
+        UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
+        UTIL_UnitTestData_TEST.setupHHNamingSettings(            
+            '{!{!FIRSTname} {!LASTname}} Household',
+            '{!{!Title} {!firstname}} {!lastname}',
+            '{!{!firstNAME}}'
+        );
+
+        String soql = HH_Container_LCTRL.getContactSelectQueryWithFls();
+
+        Set<String> expectedFieldNames = HH_Container_LCTRL.getContactFields();
+        expectedFieldNames.addAll(new Set<String>{ 
+            'npo02__Household__c', 'Account.Number_of_Household_Members__c',
+            'npo02__Household__r.Number_of_Household_Members__c',
+            'Account.Name', 'npo02__Household__r.Name',
+            'FirstName', 'LastName', 'Title' // Household Naming fields
+        });
+
+        for (String fieldName : expectedFieldNames) {
+            System.assert(soql.containsIgnoreCase(fieldName), fieldName + ' should be in the SOQL: ' + soql); 
+        }
+
+        System.assert(soql.endsWith(' FROM Contact'), 'The SOQL should query all Contacts: ' + soql);
+
+        Contact[] contacts = new Contact[]{
+            new Contact(LastName = 'testSoql1'),
+            new Contact(LastName = 'testSoql2')
+        };
+        insert contacts;
+
+        // Verify the SOQL is correct and there is no duplicate field error raised
+        Contact[] actualContacts;
+        try {
+            actualContacts = Database.query(soql);
+        } catch (Exception e) {
+            System.assert(false, 'Unexpected error when SOQL (' + soql + ') has been run: ' + e.getMessage());
+        }
+
+        System.assertEquals(contacts.size(), actualContacts.size(), 'Expected Contacts: ' + contacts + '; Actual Contacts: ' + actualContacts);
+    }     
+
+    /*********************************************************************************************************
+    @description
+        Test getContactFields() method
+    verify:
+        Expected field names are returned including:
+            - The MiddleName field (if the org has MiddleName enabled)
+            - Contact fields specified in Household Naming configuration
+    **********************************************************************************************************/  
+    static testMethod void testGetContactFieldsReturnsExpectedFieldNames() {
+        UTIL_UnitTestData_TEST.setupHHNamingSettings();
+
+        Set<String> fieldNames = HH_Container_LCTRL.getContactFields();
+
+        //if the org has MiddleName enabled, verify the MiddleName is included in the output
+        if (UTIL_Describe.isMiddleNameEnabled()) {
+            System.assert(fieldNames.contains('MiddleName'), fieldNames);
+        }
+
+        //verify Household Naming Contact Names are included in the output
+        Set<String> hhNamingContactFields = HH_HouseholdNaming.iNaming.setHouseholdNameFieldsOnContact();
+
+        for (String fieldName : hhNamingContactFields) {
+            System.assert(fieldNames.contains(fieldName), fieldName + ' should be in: ' + fieldNames);
+        }
+
+        //verify main mandatory fields are included in the output
+        for (String fieldName : new String[] {
+            'Id', 'npo02__Household_Naming_Order__c', 
+            'FirstName', 'LastName', 'Salutation', 
+            'Name', 'npo02__Naming_Exclusions__c', 'AccountId', 
+            UTIL_Namespace.StrTokenNSPrefix('HHId__c'),
+            UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Name__c'), 
+            UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Formal_Greeting__c'), 
+            UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Informal_Greeting__c'),
+            UTIL_Namespace.StrTokenNSPrefix('is_Address_Override__c'), 
+            UTIL_Namespace.StrTokenNSPrefix('Current_Address__c'), 
+            'npe01__Primary_Address_Type__c','MailingStreet', 'MailingCity', 
+            'MailingState', 'MailingPostalCode', 'MailingCountry', 
+            'MailingLatitude', 'MailingLongitude', 'CreatedDate'
+        }) {
+            System.assert(fieldNames.contains(fieldName), fieldName + ' should be in: ' + fieldNames);
+        }
+    } 
 
     /*********************************************************************************************************
     * @description Tests getAddresses()
@@ -327,20 +444,49 @@ private class HH_Container_TEST {
             }     
         } 
     }    
-    
+
     /*********************************************************************************************************
-    * @description Tests getHHNamesGreetings()
-    */
-    public static testMethod void testGetHHNamesGreetings() { 
+    @description
+        Test getHHNamesGreetings() method when Household Naming Settings is invalid 
+        and the Automatic Household Naming is turned off 
+    verify:
+        Name and Formal/Informal Greetings are not modified on the Household
+    **********************************************************************************************************/  
+    static testMethod void testHHNameAndGreetingsAreNotModifiedWhenAutomaticHHNamingIsOff() {
+        UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
+        UTIL_UnitTestData_TEST.setupInvalidHHNamingSettings();
+
         initTestData();
-        list<Contact> listCon = new list<Contact>{conA, conO};
  
         Test.startTest();
 
-        hhA = (Account)HH_Container_LCTRL.getHHNamesGreetings(hhA, listCon);
-        system.assertEquals('conA and conO Household', hhA.Name);
-        system.assertEquals('cA conA and cO conO', hhA.npo02__Formal_Greeting__c );
-        system.assertEquals('cA and cO', hhA.npo02__Informal_Greeting__c );
+        Account actual = (Account) HH_Container_LCTRL.getHHNamesGreetings(hhA, new Contact[]{ conA, conO });
+
+        System.assertEquals(hhA.Name, actual.Name, 'Household Name should not change');
+        System.assertEquals(hhA.npo02__Formal_Greeting__c, actual.npo02__Formal_Greeting__c, 'Formal Greeting should not change');
+        System.assertEquals(hhA.npo02__Informal_Greeting__c, actual.npo02__Informal_Greeting__c, 'Informal Greeting should not change');
+        
+        Test.stopTest();        
+    }
+
+    /*********************************************************************************************************
+    @description
+        Test getHHNamesGreetings() method when Household Naming Settings is valid
+        and the Automatic Household Naming is turned on 
+    verify:
+        Name and Formal/Informal Greetings are set on the Household
+    **********************************************************************************************************/  
+    static testMethod void testHHNameAndGreetingsAreModifiedWhenAutomaticHHNamingIsOn() {
+        UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
+        initTestData();
+ 
+        Test.startTest();
+
+        hhA = (Account) HH_Container_LCTRL.getHHNamesGreetings(hhA, new Contact[]{ conA, conO });
+
+        system.assertEquals('conA and conO Household', hhA.Name, 'Household Name should correspond to the format');
+        system.assertEquals('cA conA and cO conO', hhA.npo02__Formal_Greeting__c, 'Formal Greeting should correspond to the format');
+        system.assertEquals('cA and cO', hhA.npo02__Informal_Greeting__c, 'Informal Greeting should correspond to the format');
         
         Test.stopTest();        
     }
@@ -401,80 +547,10 @@ private class HH_Container_TEST {
         
         Test.stopTest();
     }
-
-    /*********************************************************************************************************
-    @description
-        Test getContactFields() method
-    verify:
-        Expected field names are returned including:
-            - The MiddleName field (if the org has MiddleName enabled)
-            - Contact fields specified in Household Naming configuration
-    **********************************************************************************************************/  
-    static testMethod void getContactFieldsShouldReturnExpectedFieldNames() {
-        UTIL_CustomSettingsFacade.getHouseholdNamingSettingsForTests(
-            new Household_Naming_Settings__c(
-                Household_Name_Format__c = '{!LastName} Household',
-                Formal_Greeting_Format__c = '{!{!Salutation} {!FirstName}} {!LastName}',
-                Informal_Greeting_Format__c = '{!{!FirstName}}',
-                Name_Connector__c = label.npo02.HouseholdNameConnector,
-                Name_Overrun__c = label.npo02.HouseholdNameOverrun,
-                Contact_Overrun_Count__c = 9,
-                Implementing_Class__c = 'HH_NameSpec'
-            )
-        );
-
-        List<String> lsFieldNames = HH_Container_LCTRL.getContactFields();
-        Set<String> fieldNames = new Set<String>(lsFieldNames);
-
-        System.assertEquals(fieldNames.size(), lsFieldNames.size());
-
-        //if the org has MiddleName enabled, verify the MiddleName is included in the output
-        if (UTIL_Describe.isMiddleNameEnabled()) {
-            System.assert(fieldNames.contains('MiddleName'), fieldNames);
-        }
-
-        //verify Household Naming Contact Names are included in the output
-        Set<String> hhNamingContactFields = HH_HouseholdNaming.iNaming.setHouseholdNameFieldsOnContact();
-
-        for (String fieldName : hhNamingContactFields) {
-            System.assert(fieldNames.contains(fieldName), fieldName + ' is not in : ' + fieldNames);
-        }
-
-        //verify main mandatory fields are included in the output
-        for (String fieldName : new String[] {
-                'Id', 
-                'npo02__Household_Naming_Order__c', 
-                'FirstName', 
-                'LastName', 
-                'Salutation', 
-                'Name',
-                'npo02__Naming_Exclusions__c', 
-                'AccountId', 
-                UTIL_Namespace.StrTokenNSPrefix('HHId__c'),
-                UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Name__c'), 
-                UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Formal_Greeting__c'), 
-                UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Informal_Greeting__c'),
-                UTIL_Namespace.StrTokenNSPrefix('is_Address_Override__c'), 
-                UTIL_Namespace.StrTokenNSPrefix('Current_Address__c'), 
-                'npe01__Primary_Address_Type__c',
-                'MailingStreet', 
-                'MailingCity', 
-                'MailingState', 
-                'MailingPostalCode', 
-                'MailingCountry', 
-                'MailingLatitude', 
-                'MailingLongitude', 
-                'CreatedDate'
-            }
-        ) {
-            System.assert(fieldNames.contains(fieldName), fieldName + ' is not in : ' + fieldNames);
-        }
-    }
-
     
 
     // Helpers
-    ////////////
+    ////////////    
 
     /*********************************************************************************************************
     * @description Builds Accounts with Household Account Type

@@ -86,7 +86,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             map<Id, Contact> mapContactIdContactOwnerChange = new map<Id, Contact>();
             map<Id, Id> mapContactIdAccountIdOldMoveOpps = new map<Id, Id>();
             map<Id, Id> mapContactIdAccountIdNewMoveOpps = new map<Id, Id>();
-            Set<String> hhNamingFields = HH_HouseholdNaming.iNaming.setHouseholdNameFieldsOnContact();
+            Set<String> hhNamingFields = new HH_HouseholdNaming().getHouseholdNamingContactFields();
 
             
             if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {                    
@@ -96,24 +96,10 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                     setAccountId.add(c.AccountId);
                 mapAccountIdAccount = new Map<Id,Account>([select Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c from Account where Id IN :setAccountId]);
             } else if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate || triggerAction == TDTM_Runnable.Action.AfterUndelete) {
-               // requery to get correct Account values (and all the other fields we will look at)
-               string strSoql = 'select id,npe01__Private__c,AccountId,Account.npe01__SYSTEMIsIndividual__c,' +
-                    'Account.npe01__SYSTEM_AccountType__c,Account.npe01__One2OneContact__c,npe01__Organization_Type__c,Account.Name,' +
-                    'firstname, lastname, OwnerId, Salutation, npo02__Naming_Exclusions__c, npo02__Household_Naming_Order__c,' +
-                    'MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, MailingLatitude, MailingLongitude, ' + 
-                    'OtherStreet, OtherCity, OtherState, OtherPostalCode, OtherCountry, OtherLatitude, OtherLongitude, '; 
-                if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled)
-                    strSoql += 'MailingCountryCode, MailingStateCode, OtherCountryCode, OtherStateCode, ';
-                
-                if (hhNamingFields.size() > 0) {
-                    for (String hhNameField : hhNamingFields) {
-                        if (!strSoql.containsIgnoreCase(hhNameField))
-                            strSoql += hhNameField + ',';
-                    }
-                }
 
-                strSoql += 'Phone, Fax from Contact where Id IN :contacts';
-                contacts = database.query(strSoql);
+                // requery to get correct Account values (and all the other fields we will look at)
+                String soql = buildContactSoql(hhNamingFields);                
+                contacts = database.query(soql);
             }        
                         
             // AFTER DELETE
@@ -320,7 +306,39 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 deleteContactAccountsIfEmpty(listContactAccountDelete, dmlWrapper);
             }
             
-    return dmlWrapper;
+        return dmlWrapper;
+    }
+
+    /*******************************************************************************************************
+    * @description Builds SOQL on Contact Sobject. Fields include Household Naming Settings Format fields.
+    * @param hhNamingFields Household Naming Settings Format field names
+    * @return String SOQL
+    */ 
+    @TestVisible
+    private String buildContactSoql(Set<String> hhNamingFields) {
+        List<String> selectFields = new List<String>{
+            'Id', 'npe01__Private__c', 'AccountId', 'Account.npe01__SYSTEMIsIndividual__c',
+            'Account.npe01__SYSTEM_AccountType__c', 'Account.npe01__One2OneContact__c', 'npe01__Organization_Type__c', 'Account.Name',
+            'FirstName', 'LastName', 'OwnerId', 'Salutation', 'npo02__Naming_Exclusions__c', 'npo02__Household_Naming_Order__c',
+            'MailingStreet', 'MailingCity', 'MailingState', 'MailingPostalCode', 'MailingCountry', 'MailingLatitude', 'MailingLongitude',
+            'OtherStreet', 'OtherCity', 'OtherState', 'OtherPostalCode', 'OtherCountry', 'OtherLatitude', 'OtherLongitude',
+            'Phone', 'Fax'
+        };
+        
+        if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
+            selectFields.add('MailingCountryCode');
+            selectFields.add('MailingStateCode');
+            selectFields.add('OtherCountryCode'); 
+            selectFields.add('OtherStateCode');
+        }
+
+        selectFields.addAll(hhNamingFields);
+
+        return new UTIL_Query()
+            .withSelectFields(selectFields)
+            .withFrom('Contact')
+            .withWhere('Id IN :contacts')
+            .build();
     }
 
     /*******************************************************************************************************
