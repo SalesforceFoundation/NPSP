@@ -130,6 +130,8 @@
         <members>HH_HouseholdNaming</members>
         <members>HH_HouseholdNaming_BATCH</members>
         <members>HH_HouseholdNaming_TEST</members>
+        <members>HH_HouseholdNamingSettingValidator</members>
+        <members>HH_HouseholdNamingSettingValidator_TEST</members>
         <members>HH_Households</members>
         <members>HH_Households_TDTM</members>
         <members>HH_Households_TEST</members>
@@ -228,6 +230,7 @@
         <members>STG_PanelHealthCheck_CTRL</members>
         <members>STG_PanelHealthCheck_TEST</members>
         <members>STG_PanelHouseholds_CTRL</members>
+        <members>STG_PanelHouseholds_TEST</members>
         <members>STG_PanelLeads_CTRL</members>
         <members>STG_PanelLvlAssignBatch_CTRL</members>
         <members>STG_PanelMakeDefaultAllocations_CTRL</members>
@@ -287,6 +290,8 @@
         <members>UTIL_Namespace</members>
         <members>UTIL_Namespace_TEST</members>
         <members>UTIL_PageMessages_CTRL</members>
+        <members>UTIL_Query</members>
+        <members>UTIL_Query_TEST</members>
         <members>UTIL_RecordTypeSettingsUpdate</members>
         <members>UTIL_RecordTypeSettingsUpdate_TEST</members>
         <members>UTIL_RecordTypes</members>
