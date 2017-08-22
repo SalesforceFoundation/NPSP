@@ -73,7 +73,7 @@ public with sharing class RP_GitHubTestMock implements HttpCalloutMock {
         bodyLatestDataMap.put('time_created', '2017-07-05T12:00:00Z');
 
         bodyMap.put('product_name', 'Nonprofit Success Pack');
-        bodyMap.put('latest_release', bodyLatestDataMap);
+        bodyMap.put('production_release', bodyLatestDataMap);
 
         body = System.JSON.serialize(bodyMap);
 
