@@ -70,10 +70,10 @@ public with sharing class BDI_DataImport_TEST {
         return new DataImport__c(
            Contact1_Firstname__c = firstname,
            Contact1_Lastname__c = lastname,
-           Contact1_Personal_Email__c = firstname + '@' + lastname + '.com',
+           Contact1_Personal_Email__c = (lastname == null ? null : firstname + '@' + lastname + '.com'),
            Contact2_Firstname__c = firstname2,
            Contact2_Lastname__c = lastname2,
-           Contact2_Personal_Email__c = firstname2 + '@' + lastname2 + '.com'
+           Contact2_Personal_Email__c = (lastname2 == null ? null : firstname2 + '@' + lastname2 + '.com')
         );
     }
 
