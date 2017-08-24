@@ -45,7 +45,7 @@ public without sharing class HH_HouseholdNaming {
     @future
     public static void FutureUpdateNames(list<id> hhids){
         //set our process control to avoid recursive updating on household records
-        HH_ProcessControl.inFutureContext = true;
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
 
         //create a new instance of the HH_HouseholdNaming class -
         //and pass in our param
@@ -54,7 +54,7 @@ public without sharing class HH_HouseholdNaming {
 
         hn.UpdateNames(hhids);
 
-        HH_ProcessControl.inFutureContext = false;    
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);    
     }
 
     /*******************************************************************************************************
@@ -68,7 +68,7 @@ public without sharing class HH_HouseholdNaming {
     public void UpdateNames(list<id> hhids){
 
         //we need this turned on to prevent recursive triggering on household creation
-        HH_ProcessControl.inFutureContext = true;
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
 
         //get all of the contacts and their associated households
         //return them in the order of household and then household naming order
@@ -100,14 +100,12 @@ public without sharing class HH_HouseholdNaming {
             }
         }
 
-        npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
-
         //loop through the households needing name changes, if necessary, make them.
         for (SObject h : hhupdatelist){
             ID hhId = string.valueOf(h.get('Id'));
             list<Contact> listCon = hhIDContactMap.get(hhId);
 
-            if (hs.npo02__Advanced_Household_Naming__c == true) {
+            if (isAutomaticNaming()) {
 	            string customnameparam = '';
 	            if (h.get('npo02__SYSTEM_CUSTOM_NAMING__c') != null){
 	                customnameparam = string.valueOf(h.get('npo02__SYSTEM_CUSTOM_NAMING__c'));
@@ -133,9 +131,21 @@ public without sharing class HH_HouseholdNaming {
         	update hhupdatelist;
         }
 
-        HH_ProcessControl.inFutureContext = false;
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
     }
 
+
+    /*******************************************************************************************************
+    * @description Returns Automatic Household Naming setting
+    * @return Boolean True if the Automatic Household Naming is checked, false otherwise
+    */
+    public Boolean isAutomaticNaming() {
+        npo02__Households_Settings__c settings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+
+        return settings == null
+            ? false
+            : settings.npo02__Advanced_Household_Naming__c == true;
+    }
 
     /*******************************************************************************************************
     * @description our cached copy of the Household Naming Settings
@@ -218,6 +228,21 @@ public without sharing class HH_HouseholdNaming {
     }
 
     /*******************************************************************************************************
+    * @description Returns Contact fields specified in the Household Naming Settings format fields.
+    * @return Set<String> If the Automatic Household Naming is enabled, return set of Contact field API names; 
+    * otherwise, an empty set
+    */
+    public Set<String> getHouseholdNamingContactFields() {
+        if (!isAutomaticNaming()) {
+            return new Set<String>();
+        }
+    
+        Set<String> fieldNames = iNaming.setHouseholdNameFieldsOnContact();
+
+        return fieldNames == null ? new Set<String>() : fieldNames;
+    }
+
+    /*******************************************************************************************************
     * @description executes the batch job to update all household names
     * @param isActivation whether this is being called when npo02__Advanced_Household_Naming__c is being turned on
     * @return void
@@ -259,15 +284,16 @@ public without sharing class HH_HouseholdNaming {
         get {
 	        if (strContactSelectStmtAllNamingFields == null) {
 		        //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
-		        string strSoql = 'SELECT Id, HHId__c, npo02__Naming_Exclusions__c';
-		        
-		        set<string> setStrField = iNaming.setHouseholdNameFieldsOnContact();
-		        for (string strF : setStrField) {
-                    if (strF == 'Salutation') strF = 'toLabel(Salutation)';
-                    strSoql += ', ' + strF;
-		        }
-		        strSoql += ' FROM Contact ';
-		        strContactSelectStmtAllNamingFields = strSoql;
+                String[] selectFields = new String[]{
+                    'Id', 'HHId__c', 'npo02__Naming_Exclusions__c'
+                };
+                selectFields.addAll(getHouseholdNamingContactFields());
+
+                strContactSelectStmtAllNamingFields = new UTIL_Query()
+                    .withSelectFields(selectFields)
+                    .withToLabelSalutation()
+                    .withFrom('Contact')
+                    .build();
 	        }
 	        return strContactSelectStmtAllNamingFields;
         }
@@ -296,13 +322,14 @@ public without sharing class HH_HouseholdNaming {
         //and marks them as such so they won't be updated
         //need to use a process control class to avoid recursion when async updates occur
         //in non async updates, this won't fire again, so we don't need to worry
-        if (!HH_ProcessControl.inFutureContext &&
+        if (!TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.HH)  &&
             (triggerAction == TDTM_Runnable.Action.BeforeUpdate || triggerAction == TDTM_Runnable.Action.AfterUpdate)) {
 
             // no need to do any of this name checking if we aren't using auto household naming.
             // even though UpdateNames() keeps Number of Household Members updated, there is no need
             // to call it from here which is just trying to detect manual hh name changes.
-            if (hs != null && hs.npo02__Advanced_Household_Naming__c == true ) {
+            
+            if (hs != null && hs.npo02__Advanced_Household_Naming__c == true) {
                 // AfterUpdate data
                 list<id> hhlist = new list<id>();
 

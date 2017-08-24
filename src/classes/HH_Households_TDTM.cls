@@ -175,7 +175,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                     
                     if (c.npo02__household__c != null) {
                         if (hhNamingFields == null)
-                            hhNamingFields = HH_HouseholdNaming.iNaming.setHouseholdNameFieldsOnContact();
+                            hhNamingFields = new HH_HouseholdNaming().getHouseholdNamingContactFields();
                             
                         for (String fieldName : hhNamingFields) {
                             // make sure to use case sensitive comparison

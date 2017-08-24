@@ -260,39 +260,41 @@ public class RD_RecurringDonations {
     * currency iso fields.  Does not include the where clause since different callers have different
     * filtering needs.
     * @return string
-    */ 
+    */
     public static string strQueryRDNoWhere() {
-    	
-    	// these must be lowercase so set.contains() will work
+
+        // these must be lowercase so set.contains() will work
         set<string> existingFields = new set<string>{  'npe03__open_ended_status__c', 'npe03__next_payment_date__c', 'name', 'npe03__Paid_Amount__c',
-                                                       'npe03__organization__c', 'npe03__contact__c', 'npe03__installment_amount__c',
-                                                       'npe03__installments__c', 'npe03__amount__c', 'npe03__total__c', 'npe03__installment_period__c',
-                                                       'npe03__date_established__c', 'npe03__donor_name__c', 'npe03__schedule_type__c', 
-                                                       'npe03__recurring_donation_campaign__c', 'npe03__total_paid_installments__c', 'ownerid'};
-        
+                'npe03__organization__c', 'npe03__contact__c', 'npe03__installment_amount__c',
+                'npe03__installments__c', 'npe03__amount__c', 'npe03__total__c', 'npe03__installment_period__c',
+                'npe03__date_established__c', 'npe03__donor_name__c', 'npe03__schedule_type__c',
+                'npe03__recurring_donation_campaign__c', 'npe03__total_paid_installments__c', 'ownerid',
+                'always_use_last_day_of_month__c'};
+
         String queryRCD = 'select id';
         for (string s : existingFields){
-            queryRCD += ', ' + s;               
+            queryRCD += ', ' + s;
         }
-   
+
         //add any custom mapping to make sure we have the required fields
         for (string s : customFieldMappingSettings.keySet()){
-            string RDFieldName = customFieldMappingSettings.get(s).npe03__Recurring_Donation_Field__c;             
+            string RDFieldName = customFieldMappingSettings.get(s).npe03__Recurring_Donation_Field__c;
             if (!existingFields.contains(RDFieldName.toLowerCase()) && s != 'id'){
-               queryRCD = queryRCD + ',' + customFieldMappingSettings.get(s).npe03__Recurring_Donation_Field__c;
-               existingFields.add(RDFieldName.toLowerCase());   
+                queryRCD = queryRCD + ',' + customFieldMappingSettings.get(s).npe03__Recurring_Donation_Field__c;
+                existingFields.add(RDFieldName.toLowerCase());
             }
-        }       
-   
+        }
+
         //if currencyiso field exists add it to query for use later
-        if (isMultiCurrency)
+        if (isMultiCurrency) {
             queryRCD = queryRCD + ',CurrencyIsoCode';
-    
+        }
+
         queryRCD=queryRCD+' from npe03__Recurring_Donation__c';
-        
+
         return (queryRCD);
-    }   
-     
+    }
+
     /*******************************************************************************************************
     * @description Future method that creates new Opportunities for the specified Recurring Donations.
     * @param recurringDonations The list of RD's being created
@@ -348,13 +350,8 @@ public class RD_RecurringDonations {
                 Decimal installs = r.npe03__Installments__c;
                 Integer installments = (installs == null ? 0 : installs.intValue());
                     
-                date OppCloseDate;             
-                if (r.npe03__Next_Payment_Date__c != null)                     
-                    OppCloseDate = r.npe03__Next_Payment_Date__c;
-                else{
-                    OppCloseDate = r.npe03__Date_Established__c;                                                                        
-                }                                             
-                
+                date OppCloseDate = getStartDate(r);
+
                 Integer j=0;
                 decimal installmentAmount = r.npe03__Installment_Amount__c;
 
@@ -436,7 +433,7 @@ public class RD_RecurringDonations {
                     *********************************/
                                         
                     OppCloseDate = getNextDate(OppCloseDate, r);
-                
+
                     String oName = '';
                     oName += r.npe03__Donor_Name__c; 
                     oName += ' ';
@@ -483,13 +480,8 @@ public class RD_RecurringDonations {
                 //if its not 'open', we're not doing anything to it
                 if (r.npe03__Open_Ended_Status__c == system.label.npe03.RecurringDonationOpenStatus){
                     //get settings so we can figure out how many donations to create                    
-                    date OppCloseDate;
-                  
-                    if (r.npe03__Next_Payment_Date__c != null)                     
-                        OppCloseDate = r.npe03__Next_Payment_Date__c;
-                    else{
-                        OppCloseDate = r.npe03__Date_Established__c;                                                                        
-                    }                                             
+                    date OppCloseDate = getStartDate(r);
+
                     /*
                     if (r.npe03__Total_Paid_Installments__c > 0){
                             OppCloseDate = getNextDate(OppCloseDate, r);
@@ -600,7 +592,7 @@ public class RD_RecurringDonations {
             }
                     
             if (ConIDForRole == null){ 
-                if (createdOppIds.size() > 1 && !system.isFuture() && !system.isBatch() && !RD_ProcessControl.batchButton)
+                if (createdOppIds.size() > 1 && !system.isFuture() && !system.isBatch() && !RD_RecurringDonations_BATCH.isBatchButton)
                     oppContactRolesFuture(createdOppIds); 
                 else
                     oppContactRoles(createdOppIds);                    
@@ -611,7 +603,7 @@ public class RD_RecurringDonations {
                 ERR_Handler.processErrors(errors.errorRecords, ERR_Handler_API.Context.RD.name());
             }            
             
-            if (updateRecurringDonationSet.size() > 1 && !system.isBatch() && !system.isFuture() && !RD_ProcessControl.batchButton)
+            if (updateRecurringDonationSet.size() > 1 && !system.isBatch() && !system.isFuture() && !RD_RecurringDonations_BATCH.isBatchButton)
                 updateRecurringDonationOnOppChangeFuture(updateRecurringDonationSet); 
             else
                 updateRecurringDonationOnOppChange(updateRecurringDonationSet, null);
@@ -734,10 +726,8 @@ public class RD_RecurringDonations {
         //loop through existing opps for each RD and update according to values on the RD
         for (id RDid : RDOppMap.keySet()){
             
-            date PaymentDate = RDMap.get(RDid).npe03__Next_Payment_Date__c;
-            if (PaymentDate == null)
-                PaymentDate = RDMap.get(RDid).npe03__Date_Established__c;
-            
+            date PaymentDate = getStartDate(RDMap.get(RDid));
+
             for (Opportunity o : RDOppMap.get(RDid)){
                 
                 o.Amount = rdMap.get(RDid).npe03__Amount__c;
@@ -781,7 +771,7 @@ public class RD_RecurringDonations {
         }
         
         
-        if (system.isFuture() || RDOppMap.keySet().size() == 1 || system.isBatch() || RD_ProcessControl.batchButton){
+        if (system.isFuture() || RDOppMap.keySet().size() == 1 || system.isBatch() || RD_RecurringDonations_BATCH.isBatchButton){
             updateRecurringDonationOnOppChange(RDOppMap.keySet(), dmlWrapper);
         }          
         else{
@@ -816,10 +806,10 @@ public class RD_RecurringDonations {
             boolean cfmFieldChanged=false;
             for (string s : customFieldMappingSettings.keySet()){
                 npe03__Custom_Field_Mapping__c cfm = customFieldMappingSettings.get(s);
-               if(oldRD.get(cfm.npe03__Recurring_Donation_Field__c)!=r.get(cfm.npe03__Recurring_Donation_Field__c)){
+                if(oldRD.get(cfm.npe03__Recurring_Donation_Field__c)!=r.get(cfm.npe03__Recurring_Donation_Field__c)){
                     cfmFieldChanged=true;
-               }
-            }  
+                }
+            }
             //if we're closing an open ended donation, modify the existing opps as required by the custom setting
             if (r.npe03__Open_Ended_Status__c == closedlabel && oldRD.npe03__Open_Ended_Status__c != r.npe03__Open_Ended_Status__c){
                 newlycloseddonations.add(r);        
@@ -835,8 +825,9 @@ public class RD_RecurringDonations {
                     r.npe03__Recurring_Donation_Campaign__c != oldRD.npe03__Recurring_Donation_Campaign__c ||
                     r.npe03__Organization__c != oldRD.npe03__Organization__c ||
                     r.npe03__Next_Payment_Date__c != oldRD.npe03__Next_Payment_Date__c ||
+                    r.Always_Use_Last_Day_Of_Month__c != oldRD.Always_Use_Last_Day_Of_Month__c ||
                     cfmFieldChanged==true
-                    ){             
+                    ){
                     reevaluateopps.add(r.id);
                 }
                 else if (r.npe03__Installment_Period__c != oldRD.npe03__Installment_Period__c || r.npe03__Contact__c != oldRD.npe03__Contact__c){
@@ -976,7 +967,7 @@ public class RD_RecurringDonations {
                         //multicurrency?
                         if(isMultiCurrency)
                             o.put(OppCurrencyField,rd.get(RDCurrencyField));
-                    
+
                         //account or contact?
                         if (rd.npe03__Organization__c != null){
                            o.AccountId = rd.npe03__Organization__c;
@@ -987,12 +978,12 @@ public class RD_RecurringDonations {
                             if (ConIDForRole != null){
                                 o.put('npe01__Contact_Id_For_Role__c', (string)c.id);
                             }
-                        }                    
-                    
-                        o.CloseDate = oppclosedate;                                                                                        
+                        }
+
+                        o.CloseDate = oppclosedate;
                         string oName = rd.npe03__Donor_Name__c + ' ' + system.label.npe03.RecurringDonationPrefix +
                         ' (' + string.valueOf(oppCounter) + ') ' + o.CloseDate.format();
-                    
+
                         o.Name = oName;
                         o.Amount = rd.npe03__Amount__c;
                         o.StageName = system.label.npe03.RecurringDonationStageName;                    
@@ -1004,15 +995,15 @@ public class RD_RecurringDonations {
                             npe03__Custom_Field_Mapping__c cfm = customFieldMappingSettings.get(s);
                             o.put(cfm.npe03__Opportunity_Field__c, rd.get(cfm.npe03__Recurring_Donation_Field__c));
                         }
-                    
+
                         if (rd.npe03__Recurring_Donation_Campaign__c != null && (rds.npe03__Add_Campaign_to_All_Opportunites__c || oppCounter == 1)){
                             o.CampaignId = rd.npe03__Recurring_Donation_Campaign__c;
                         }
-                        
+
 	                    if (rds.npe03__Record_Type__c != null){
 	                        o.put('RecordTypeId', rds.npe03__Record_Type__c);
 	                    }
-                                            
+
                         oppCounter++;
                         oppInsertList.add(o);                   
                         oppclosedate = getNextDate(oppclosedate, rd);
@@ -1051,7 +1042,7 @@ public class RD_RecurringDonations {
             }
                     
             if (ConIDForRole == null /* || Test.isRunningTest() */){
-                if (createdOppIds.size() > 1 && !system.isFuture() && !system.isBatch() && !RD_ProcessControl.batchButton)
+                if (createdOppIds.size() > 1 && !system.isFuture() && !system.isBatch() && !RD_RecurringDonations_BATCH.isBatchButton)
                     oppContactRolesFuture(createdOppIds); 
                 else 
                     oppContactRoles(createdOppIds);                    
@@ -1063,7 +1054,7 @@ public class RD_RecurringDonations {
             }
         }
         
-        if (system.isFuture() || system.isBatch() || (recurringDonationsToEvaluate.size() == 1) || RD_ProcessControl.batchButton){
+        if (system.isFuture() || system.isBatch() || (recurringDonationsToEvaluate.size() == 1) || RD_RecurringDonations_BATCH.isBatchButton){
             updateRecurringDonationOnOppChange(RDID, null);
         }
         else{
@@ -1111,23 +1102,49 @@ public class RD_RecurringDonations {
     }
 
     /*******************************************************************************************************
-    * @description Returns the last day of month for the provided date, assuming is set for
-    * the 28th or later.  This is a way to avoid the last day of month getting pushed to the
-    * 30th, and then the 28th.  Note that if Date Established is >= 28, we assume it instead.
+    * @description Returns the date to start the installment with based on the period type and dates
+    * @param r recurring donation record
+    * @return date First date to use for created Donations
+    */
+    private static date getStartDate(npe03__Recurring_Donation__c r) {
+        Date startDt;
+        if (r.npe03__Next_Payment_Date__c != null)
+            startDt = r.npe03__Next_Payment_Date__c;
+        else {
+            startDt = r.npe03__Date_Established__c;
+        }
+
+        if (r.npe03__Installment_Period__c == system.label.npe03.RecurringDonationInstallmentPeriodMonthly
+                || r.npe03__Installment_Period__c == system.label.npe03.RecurringDonationInstallmentPeriodQuarterly) {
+            // For monthly or quarterly installments only, the initial date needs to be tweaked to be the appropriate
+            // start date in the current month
+            startDt = dtEndOfMonthFixup(startDt, r); // fix the date to account for end of month
+        }
+        return startDt;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns the last day of month for the provided date if the Day of Month is either the
+    * the 31st or the Always_Use_Last_Day_Of_Month__c box has been checked. Otherwise, use the specific
+    * date they have set.
     * @param dt The date to analyze
-    * @return date Either the passed in date, or the last day of the month if the provided date
-    * was >= the 28th.
-    */ 
-    private static date dtEndOfMonthFixup(Date dt, npe03__Recurring_Donation__c rd) {
-        if (dt.day() >= 28) {
-            // only push to end of month if we are pretty sure they weren't trying specifically for the 28th-30th.
-            if (rd.npe03__Date_Established__c != null && rd.npe03__Date_Established__c.day() >= 28 &&
-                rd.npe03__Date_Established__c.day() <= date.daysInMonth(dt.year(), dt.Month()))
-                dt = date.newInstance(dt.year(), dt.month(), rd.npe03__Date_Established__c.day());
-            else
-                dt = date.newInstance(dt.year(), dt.month(), date.daysInMonth(dt.year(), dt.Month()));
-        } 
-        return dt;   	
+    * @return date Either the passed in date, or the last day of the month
+    */
+    private static date dtEndOfMonthFixup(date dt, npe03__Recurring_Donation__c rd) {
+        if (dt.day() == 31 || rd.Always_Use_Last_Day_Of_Month__c == true) {
+            dt = date.newInstance(dt.year(), dt.month(), date.daysInMonth(dt.year(), dt.Month()));
+        } else if (dt.day() >= 28 && (rd.npe03__Next_Payment_Date__c != null || rd.npe03__Date_Established__c != null)) {
+            // To handle a scenario where the NextPayment or DateEstablished is the >= 29 for a Monthly
+            // Donation, when the system gets around to February, it'll change the next donation to 28/29
+            // which then causes all subsequent months to be set to the 28th (or 29th).
+            // This logic ensures that the calculated End Of Month date takes this into account
+            // rather than just use the DayOfMonth from the previous installment.
+            Date estDate = (rd.npe03__Next_Payment_Date__c != null ? rd.npe03__Next_Payment_Date__c : rd.npe03__Date_Established__c);
+            Integer dayOfMonth = (date.daysInMonth(dt.year(), dt.Month()) < estDate.day() ?
+                    date.daysInMonth(dt.year(), dt.Month()) : estDate.day());
+            dt = date.newInstance(dt.year(), dt.month(), dayOfMonth);
+        }
+        return dt;
     }
 
     /*******************************************************************************************************
@@ -1136,60 +1153,60 @@ public class RD_RecurringDonations {
     * @param rd The Recurring Donation.
     * @return date 
     */ 
-    private static date getNextDate(date CalcDate, npe03__Recurring_Donation__c rd) {
+    private static date getNextDate(Date calcDate, npe03__Recurring_Donation__c rd) {
         npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
         string InstallmentType = rd.npe03__Installment_Period__c;
-        
+
         if (InstallmentType == system.label.npe03.RecurringDonationInstallmentPeriodYearly){
-            CalcDate = CalcDate.addYears(1);
+            calcDate = calcDate.addYears(1);
         } 
         else if (InstallmentType == system.label.npe03.RecurringDonationInstallmentPeriodQuarterly){
-            CalcDate = CalcDate.addMonths(3);
-            CalcDate = dtEndOfMonthFixup(CalcDate, rd);
+            calcDate = calcDate.addMonths(3);
+            calcDate = dtEndOfMonthFixup(calcDate, rd);
         } 
         else if (InstallmentType == system.label.npe03.RecurringDonationInstallmentPeriodMonthly){
-            CalcDate = CalcDate.addMonths(1);
-            CalcDate = dtEndOfMonthFixup(CalcDate, rd);
+            calcDate = calcDate.addMonths(1);
+            calcDate = dtEndOfMonthFixup(calcDate, rd);
         } 
         else if (InstallmentType == system.label.npe03.RecurringDonationInstallmentPeriodWeekly){
-            CalcDate = CalcDate.addDays(7);
+            calcDate = calcDate.addDays(7);
         }
-      /*  else if (InstallmentType == system.label.npe03.RecurringDonationInstallmentPeriodCustom){ 
+        /*  else if (InstallmentType == system.label.npe03.RecurringDonationInstallmentPeriodCustom){
             CalcDate = CalcDate.addDays((integer)rds.Custom_Days__c);
         }*/
         else if (InstallmentType == system.label.npe03.RecurringDonationInstallmentPeriod1stand15th){
-            //increment it by one day until we hit either the 1st or 15th            
+            //increment it by one day until we hit either the 1st or 15th
             do{
-                CalcDate = CalcDate.addDays(1);
-            }while (CalcDate.day() != 15 && CalcDate.day() != 1);
-        }        
+                calcDate = calcDate.addDays(1);
+            }while (calcDate.day() != 15 && calcDate.day() != 1);
+        }
         else{
             map<string, npe03__Custom_Installment_Settings__c> cisMap = UTIL_ListCustomSettingsFacade.getMapCustomInstallmentSettings();
             //handle custom installment types           
             if (cisMap.containsKey(InstallmentType)){
                 npe03__Custom_Installment_Settings__c c = cisMap.get(InstallmentType);
-                
+
                 if (c.npe03__Increment__c == 'Days'){
-                    CalcDate = CalcDate.addDays(integer.valueOf(c.npe03__Value__c));
+                    calcDate = calcDate.addDays(integer.valueOf(c.npe03__Value__c));
                 }
                 else if (c.npe03__Increment__c == 'Weeks'){
-                    CalcDate = CalcDate.addDays(integer.valueOf(c.npe03__Value__c * 7));
+                    calcDate = calcDate.addDays(integer.valueOf(c.npe03__Value__c * 7));
                 }
                 else if (c.npe03__Increment__c == 'Months'){
-                    CalcDate = CalcDate.addMonths(integer.valueOf(c.npe03__Value__c));
-                    CalcDate = dtEndOfMonthFixup(CalcDate, rd);                    
+                    calcDate = calcDate.addMonths(integer.valueOf(c.npe03__Value__c));
+                    calcDate = dtEndOfMonthFixup(calcDate, rd);
                 }
                 else if (c.npe03__Increment__c == 'Years'){
-                    CalcDate = CalcDate.addYears(integer.valueOf(c.npe03__Value__c));
-                }           
+                    calcDate = calcDate.addYears(integer.valueOf(c.npe03__Value__c));
+                }
             }
             //if its not a valid value, set it to the max last payment date plus the 
-            //the open ended value so we only create one opp max                           
+            //the open ended value so we only create one opp max
             else{   
-                CalcDate = CalcDate.addMonths((integer)rds.npe03__Opportunity_Forecast_Months__c);
-                CalcDate = dtEndOfMonthFixup(CalcDate, rd);            
-            }                
+                calcDate = calcDate.addMonths((integer)rds.npe03__Opportunity_Forecast_Months__c);
+                calcDate = dtEndOfMonthFixup(calcDate, rd);
+            }
         }
-        return CalcDate;
+        return calcDate;
     }
 }

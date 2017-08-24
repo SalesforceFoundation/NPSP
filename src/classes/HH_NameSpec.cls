@@ -217,7 +217,7 @@ public with sharing class HH_NameSpec implements HH_INaming {
     */
     private static string strNameFromNameSpec(NameSpec ns, list<Contact> listCon) {
         Integer cCon = listCon.size();    
-        Boolean isNoLastnames = ns.strFullNameSpec.indexOf(chLToken + 'LastName' + chRToken) == -1;
+        Boolean isNoLastnames = ns.strFullNameSpec.toUpperCase().indexOf(chLToken + 'LASTNAME' + chRToken) == -1;
         Boolean isLastNameOnlyFormat = !isNoLastnames && ns.setStrFieldsInNameSpec().size() == 1;
         Set<String> processedLastNames = new Set<String>();
         String[] names = new String[0];
