@@ -194,7 +194,16 @@
         <members>REL_Relationships_TDTM</members>
         <members>REL_Relationships_TEST</members>
         <members>REL_Utils</members>
+        <members>RLLP_Definition</members>
+        <members>RLLP_Engine</members>
+        <members>RLLP_Engine_TEST</members>
+        <members>RLLP_Exclusion</members>
+        <members>RLLP_FiscalYears</members>
+        <members>RLLP_Operation</members>
         <members>RLLP_OppAccRollup_BATCH</members>
+        <members>RLLP_OppAccount</members>
+        <members>RLLP_OppAccount_BATCH</members>
+        <members>RLLP_OppAccount_TEST</members>
         <members>RLLP_OppContactRollup_BATCH</members>
         <members>RLLP_OppHouseholdRollup_BATCH</members>
         <members>RLLP_OppPartialSoftCreditRollup</members>
