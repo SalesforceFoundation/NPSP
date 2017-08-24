@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>Attribution_Field__c</fullName>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <label>Attribution Field</label>
+        <referenceTo>FieldDefinition</referenceTo>
+        <relationshipLabel>Rollup_Definitions</relationshipLabel>
+        <relationshipName>Rollup_Definitions</relationshipName>
+        <required>false</required>
+        <type>MetadataRelationship</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Attribution_Object__c</fullName>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <label>Attribution Object</label>
+        <referenceTo>EntityDefinition</referenceTo>
+        <relationshipLabel>Rollup_Definitions2</relationshipLabel>
+        <relationshipName>Rollup_Definitions2</relationshipName>
+        <required>false</required>
+        <type>MetadataRelationship</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Description__c</fullName>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <label>Description</label>
+        <required>false</required>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Detail_Attribution_Field__c</fullName>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <label>Detail Attribution Field</label>
+        <referenceTo>FieldDefinition</referenceTo>
+        <relationshipLabel>Rollup_Definitions1</relationshipLabel>
+        <relationshipName>Rollup_Definitions1</relationshipName>
+        <required>false</required>
+        <type>MetadataRelationship</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Detail_Object__c</fullName>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <label>Detail Object</label>
+        <referenceTo>EntityDefinition</referenceTo>
+        <relationshipLabel>Rollup_Definitions1</relationshipLabel>
+        <relationshipName>Rollup_Definitions1</relationshipName>
+        <required>true</required>
+        <type>MetadataRelationship</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Summary_Object__c</fullName>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <label>Summary Object</label>
+        <referenceTo>EntityDefinition</referenceTo>
+        <relationshipLabel>Rollup_Definitions</relationshipLabel>
+        <relationshipName>Rollup_Definitions</relationshipName>
+        <required>true</required>
+        <type>MetadataRelationship</type>
+        <unique>false</unique>
+    </fields>
+    <label>Rollup Definition</label>
+    <pluralLabel>Rollup Definitions</pluralLabel>
+    <visibility>Public</visibility>
+</CustomObject>
