@@ -279,6 +279,10 @@
         <members>UTIL_CascadeDeleteLookups_TDTM</members>
         <members>UTIL_Currency</members>
         <members>UTIL_Currency_TEST</members>
+        <members>UTIL_CurrencyCache</members>
+        <members>UTIL_CurrencyCache_TEST</members>
+        <members>UTIL_CurrencyConversion</members>
+        <members>UTIL_CurrencyConversion_TEST</members>
         <members>UTIL_CustomSettingsFacade</members>
         <members>UTIL_CustomSettings_API</members>
         <members>UTIL_Debug</members>
@@ -293,6 +297,7 @@
         <members>UTIL_Namespace</members>
         <members>UTIL_Namespace_TEST</members>
         <members>UTIL_PageMessages_CTRL</members>
+        <members>UTIL_PlatformCache</members>
         <members>UTIL_Query</members>
         <members>UTIL_Query_TEST</members>
         <members>UTIL_RecordTypeSettingsUpdate</members>
@@ -828,6 +833,7 @@
         <members>npe01__Contacts_And_Orgs_Settings__c.Organizational_Account_Addresses_Enabled__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Payments_Auto_Close_Stage_Name__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Simple_Address_Change_Treated_as_Update__c</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.Use_Dated_Conversion_Rates__c</members>
         <members>npe01__OppPayment__c.Payment_Acknowledged_Date__c</members>
         <members>npe01__OppPayment__c.Payment_Acknowledgment_Status__c</members>
         <members>npe03__Recurring_Donation__c.Always_Use_Last_Day_Of_Month__c</members>

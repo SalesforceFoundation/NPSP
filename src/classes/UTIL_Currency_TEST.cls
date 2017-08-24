@@ -191,6 +191,7 @@ public class UTIL_Currency_TEST {
      */
     public class UtilCurrencyMock implements UTIL_Currency.Interface_x {
         public Boolean isMultiCurrencyOrganizationReturn;
+        public Boolean isAdvancedCurrencyManagementEnabledReturn = false;
         public String getDefaultCurrencyReturn;
         public String getDefaultCurrencySymbolReturn;
         public Id getCurrencySymbolRecordId;
@@ -199,6 +200,8 @@ public class UTIL_Currency_TEST {
         public String getCurrencyIsoCodeQueryReturn;
         public Id queryCurrencyIsoCodeRecordId;
         public String queryCurrencyIsoCodeReturn;
+        public String orgDefaultCurrencyReturn;
+
         public Boolean isMultiCurrencyOrganization() {
             return isMultiCurrencyOrganizationReturn;
         }
@@ -219,6 +222,12 @@ public class UTIL_Currency_TEST {
         public String queryCurrencyIsoCode(Id recordId) {
             queryCurrencyIsoCodeRecordId = recordId;
             return queryCurrencyIsoCodeReturn;
+        }
+        public Boolean isAdvancedCurrencyManagementEnabled() {
+            return isAdvancedCurrencyManagementEnabledReturn;
+        }
+        public String getOrgDefaultCurrency() {
+            return orgDefaultCurrencyReturn;
         }
     }
 }

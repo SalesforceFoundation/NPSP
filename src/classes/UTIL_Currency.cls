@@ -37,6 +37,8 @@ public with sharing class UTIL_Currency implements UTIL_Currency.Interface_x {
 
     public interface Interface_x {
         Boolean isMultiCurrencyOrganization();
+        Boolean isAdvancedCurrencyManagementEnabled();
+        String getOrgDefaultCurrency();
         String getDefaultCurrency();
         String getDefaultCurrencySymbol();
         String getCurrencySymbol(Id recordId);
@@ -68,6 +70,41 @@ public with sharing class UTIL_Currency implements UTIL_Currency.Interface_x {
      */
     public Boolean isMultiCurrencyOrganization() {
         return UserInfo.isMultiCurrencyOrganization();
+    }
+
+    /**
+     * @description Returns true if Advanced Currency Management is enabled in the org
+     * - technically this will return true even if the Admin disables ACM after it's enabled the first time
+     * - TODO: working on a solution for this still
+     */
+    private Boolean isACMEnabled = null;
+    public Boolean isAdvancedCurrencyManagementEnabled() {
+        if (isACMEnabled == null) {
+            if (isMultiCurrencyOrganization()) {
+                isACMEnabled = Schema.getGlobalDescribe().containsKey('DatedConversionRate');
+            } else {
+                isACMEnabled = false;
+            }
+        }
+        return isACMEnabled;
+    }
+
+    /**
+     * @description Returns the organizations default currency
+     * TODO -- Consider placing this in the organization cache
+     */
+    private static String orgDefaultCurrencyCode;
+    public String getOrgDefaultCurrency() {
+        if (orgDefaultCurrencyCode == null) {
+            if (UserInfo.isMultiCurrencyOrganization()) {
+                String soql = 'SELECT IsoCode FROM CurrencyType WHERE IsCorporate = True LIMIT 1';
+                SObject currObj = database.query(soql);
+                orgDefaultCurrencyCode = (String)currObj.get('IsoCode');
+            } else {
+                orgDefaultCurrencyCode = '';
+            }
+        }
+        return orgDefaultCurrencyCode;
     }
 
     /**
