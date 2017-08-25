@@ -1259,6 +1259,7 @@
         <members>oppNamingBoth</members>
         <members>oppNamingIndividual</members>
         <members>oppNamingOrganizational</members>
+        <members>pmtModifyCurrency</members>
         <members>pmtWizardBtnCalcPayments</members>
         <members>pmtWizardBtnCreatePayments</members>
         <members>pmtWizardBtnRemovePaidPayments</members>
