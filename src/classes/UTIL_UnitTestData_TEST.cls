@@ -515,10 +515,7 @@ public class UTIL_UnitTestData_TEST {
                 con.MailingCity = 'City' + iUnique + iCon;
             }
         }        
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        insert listConT;        
-        // clear our triggers recursion prevention since we are starting a new test
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        insert listConT;
     }
 
     private static testMethod void testCreateNewUserWithDefaultRole() {
@@ -571,6 +568,81 @@ public class UTIL_UnitTestData_TEST {
 
         System.assertEquals(false, returnedUser.IsActive);
         System.assertEquals(false, queriedUser.IsActive);
+    }
+
+    /*********************************************************************************************************
+    * @description Turns on Automatic Household Naming
+    * @return void
+    **********************************************************************************************************/
+    public static void turnOnAutomaticHHNaming() {
+        setupAutomaticHHNaming(true);
+    }
+
+    /*********************************************************************************************************
+    * @description Turns off Automatic Household Naming
+    * @return void
+    **********************************************************************************************************/
+    public static void turnOffAutomaticHHNaming() {
+        setupAutomaticHHNaming(false);
+    }
+
+    /*********************************************************************************************************
+    * @description Configures Household Settings' Automatic Household Naming field
+    * @param isOn Automatic Household Naming is turned on when parameter is true, otherwise, the settings is turned off
+    * @return void
+    **********************************************************************************************************/
+    public static void setupAutomaticHHNaming(Boolean isOn) {
+        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (
+                npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR,
+                npo02__Advanced_Household_Naming__c = isOn
+            )
+        );
+    }
+
+    /*********************************************************************************************************
+    * @description Configures Household Naming Settings with invalid Name and Greetings formats
+    * @return Household_Naming_Settings__c
+    **********************************************************************************************************/
+    public static Household_Naming_Settings__c setupInvalidHHNamingSettings() {
+        return setupHHNamingSettings(
+            '{!{!FirstName}} {!LastName}} Household',
+            '{!{!Title} {!FirstName}}}{!LastName}',
+            '{!{!FirstName}}}'
+        );
+    }
+
+    /*********************************************************************************************************
+    * @description Configures Household Naming Settings with valid Name and Greetings formats
+    * @return Household_Naming_Settings__c
+    **********************************************************************************************************/
+    public static Household_Naming_Settings__c setupHHNamingSettings() {
+        return setupHHNamingSettings(            
+            '{!{!FirstName} {!LastName}} Household',
+            '{!{!Title} {!FirstName}} {!LastName}',
+            '{!{!FirstName}}'
+        );
+    }
+
+    /*********************************************************************************************************
+    * @description Configures Household Naming Settings 
+    * @param hhNameFormat Household Naming Format
+    * @param formalGreetingFormat Formal Greeting Format
+    * @param informalGreetingFormat Informal Greeting Format
+    * @return Household_Naming_Settings__c
+    **********************************************************************************************************/
+    public static Household_Naming_Settings__c setupHHNamingSettings(String hhNameFormat, String formalGreetingFormat, String informalGreetingFormat) {
+        return UTIL_CustomSettingsFacade.getHouseholdNamingSettingsForTests(
+            new Household_Naming_Settings__c(
+                Household_Name_Format__c = hhNameFormat,
+                Formal_Greeting_Format__c = formalGreetingFormat,
+                Informal_Greeting_Format__c = informalGreetingFormat,
+                Name_Connector__c = label.npo02.HouseholdNameConnector,
+                Name_Overrun__c = label.npo02.HouseholdNameOverrun,
+                Contact_Overrun_Count__c = 9,
+                Implementing_Class__c = 'HH_NameSpec'
+            )
+        );
     }
 
 }

@@ -37,18 +37,20 @@
 * and if we are already in a future to deal with the trigger handler, we can't call the future verification api!
 */
 public class ADDR_Validator_TDTM extends TDTM_Runnable {
-	
-	/*******************************************************************************************************
+
+    /*******************************************************************************************************
+    * @description To support DML operations with more than 200 records, use a static Set of Id's that
+    * have been passed to the verifyAddressRecords() method. This allows for a recursion check that goes
+    * by the Id's of the records as opposed to a simple boolean.
+    */
+    public static Set<Id> processedIdsForValidation = new Set<Id>();
+
+    /*******************************************************************************************************
     * @description Exception raised during the address validation process.
     */
-	public class ADDR_Validator_Exception extends Exception { }
-	
-	/*******************************************************************************************************
-    * @description Indicates whether the class has been run in the current context.
-    */
-	public static Boolean alreadyRun = false;
-	
-	/*******************************************************************************************************
+    public class ADDR_Validator_Exception extends Exception { }
+
+    /*******************************************************************************************************
     * @description Verifies new or modified address records, if verification enabled in the settings.
     * @param listNew The list of Addresses from trigger new. 
     * @param listOld The list of Addresses from trigger old. 
@@ -56,40 +58,51 @@ public class ADDR_Validator_TDTM extends TDTM_Runnable {
     * @param objResult The describe for Addresses.
     * @return dmlWrapper The wrapper with the records to perform DML on. 
     */
-	public override DmlWrapper run(List<SObject> newList, List<SObject> oldList, 
-    TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) { 
-        
-        if(!alreadyRun) {
-	        Addr_Verification_Settings__c settings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
-	        if ((triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) &&
-	           settings.enable_automatic_verification__c) {        	
-	        	for(SObject so : newList) {
-	        		Address__c address = (Address__c)so;
-	        		if(!system.isFuture() && !system.isBatch()) {
-	        		    address.Verification_Status__c = Label.Addr_Pending_Verification;
-	        		} else {
-	        			address.Verification_Status__c = Label.Addr_Verification_Required;
-	        		}	
-        	    }
-	        }
+    public override DmlWrapper run(List<SObject> newList, List<SObject> oldList,
+    TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+
+        // Look in the static list of previoysly processed Id's to determine if the record has already
+        // gone through this trigger. If so, then don't process it a second time.
+        Boolean recordsPreviouslyProcessed = false;
+        if (newList !=  null && newList[0].Id != null && processedIdsForValidation.contains(newList[0].Id)) {
+            recordsPreviouslyProcessed = true;
+        }
+
+        if(!recordsPreviouslyProcessed) {
+            Addr_Verification_Settings__c settings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
+            if ((triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) &&
+               settings.enable_automatic_verification__c) {
+                for(SObject so : newList) {
+                    Address__c address = (Address__c)so;
+                    if(!system.isFuture() && !system.isBatch()) {
+                        address.Verification_Status__c = Label.Addr_Pending_Verification;
+                    } else {
+                        address.Verification_Status__c = Label.Addr_Verification_Required;
+                    }
+                }
+            }
             if ((triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) &&
-	           settings.enable_automatic_verification__c) {
+               settings.enable_automatic_verification__c) {
                 if(!system.isFuture() && !system.isBatch()) {
                     ADDR_Validator.verifyRecordsFuture(new Map<Id, SObject>(newList).keyset());
-                    alreadyRun = true;
+                    // To support DML operations with more than 200 records, update a static list of Id's that
+                    // have been submitted to this method.
+                    for (SObject s : newList) {
+                        processedIdsForValidation.add((Id)s.get('Id'));
+                    }
                 } else if(system.isFuture()) {
                     UTIL_Debug.debug('****ADDR_Validator_TDTM called from future, addresses not verified.');
                     /*We don't want to log an error here. Instead, we'll just do a debug statement.
-                	ERR_Handler.processError(new ADDR_Validator_Exception('ADDR_Validator_TDTM called from future'), 
-                	                           ERR_Handler_API.Context.ADDR);*/
+                    ERR_Handler.processError(new ADDR_Validator_Exception('ADDR_Validator_TDTM called from future'),
+                                               ERR_Handler_API.Context.ADDR);*/
                 } else if(system.isBatch()) {
-                	UTIL_Debug.debug('****ADDR_Validator_TDTM called from batch, addresses not verified.');
+                    UTIL_Debug.debug('****ADDR_Validator_TDTM called from batch, addresses not verified.');
                     /*We don't want to log an error here. Instead, we'll just do a debug statement.
 
                     ERR_Handler.processError(new ADDR_Validator_Exception('ADDR_Validator_TDTM called from batch'), 
                                                ERR_Handler_API.Context.ADDR);*/
                 }
-	        }
+            }
         }
         //we cannot return records to perform DML on because the address verification has to run
         //in a future for making external web service calls
