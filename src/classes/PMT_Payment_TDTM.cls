@@ -157,7 +157,7 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
         List<npe01__OppPayment__c> paymentsToChanage = database.query(soql);
 
         for (npe01__OppPayment__c pmt : paymentsToChanage) {
-            Opportunity opp = (Opportunity)pmt.getSObject('npe01__Opportunity__c');
+            Opportunity opp = (Opportunity)pmt.getSObject('npe01__Opportunity__r');
             pmt.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
             dmlWrapper.objectsToUpdate.add(pmt);
         }

@@ -101,7 +101,7 @@ private class PMT_Payment_TEST {
         }
 
         // Verify that the Payment CurrencyIsoCode is updated when the Opportunity CurrencyIsoCode is changed
-        pmt.put('CurrencyIsoCode', (String)nonDefaultCurrencyType.get('IsoCode'));
+        opp.put('CurrencyIsoCode', (String)nonDefaultCurrencyType.get('IsoCode'));
         update opp;
         soql = 'SELECT Id, CurrencyIsoCode FROM npe01__OppPayment__c WHERE npe01__Opportunity__c = \'' + opp.Id + '\' LIMIT 1';
         pmt = database.query(soql);
