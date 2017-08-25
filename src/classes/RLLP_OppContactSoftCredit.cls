@@ -1,9 +1,8 @@
-public with sharing class RLLP_OppContactSoftCredit extends RLLP_Definition {
+public with sharing class RLLP_OppContactSoftCredit{}/* extends RLLP_Definition {
 //method to take a list of Opportunities
 //method to take a list of Accounts
 
 //what class do I choose to do the querying of existing records to see if I update them or not?
-
     private static Set<String> excludedOppTypes = new Set<String>();
     private static Set<Id> excludedOppRecordTypes = new Set<Id>();
     private static Integer nDays = UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Rollup_N_Day_Value__c.intValue();
@@ -76,4 +75,4 @@ public with sharing class RLLP_OppContactSoftCredit extends RLLP_Definition {
             return false;
         }
     }
-}
+}*/
