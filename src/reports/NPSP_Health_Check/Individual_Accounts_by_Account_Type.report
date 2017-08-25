@@ -25,6 +25,7 @@
     <filter>
         <criteriaItems>
             <column>Account.npe01__SYSTEM_AccountType__c</column>
+            <isUnlocked>false</isUnlocked>
             <operator>notEqual</operator>
             <value></value>
         </criteriaItems>
