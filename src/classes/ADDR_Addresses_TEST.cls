@@ -1005,52 +1005,53 @@ public with sharing class ADDR_Addresses_TEST {
         contact gets new address
     **********************************************************************************************************/
     static testMethod void updateContactsStateAndCountryPicklistsEnabledAddressMarkOverride() {
-        if (strTestOnly != '*' && strTestOnly != 'updateConAddrMarkOverride') return;
+        if(ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
+            if ('*' != strTestOnly
+                && 'updateContactsStateAndCountryPicklistsEnabledAddressMarkOverride' != strTestOnly) {
+                return;
+            }
 
-        // this creates a default Address for each HH
-        createHHTestData(cHH, cCon);
+            // This creates a default Address for each HH
+            createHHTestData(cHH, cCon);
 
-        // modify the contact addresses directly, and set override
-        List<Contact> listCon = new List<Contact>();
-        for (integer i = 0; i < cHH*cCon; i++) {
-            Contact con = listConT[i];
-            con.MailingStreet = 'Direct Street Edit';
-            con.MailingCity = 'Direct City Edit';
-            if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
+            // Modify the contact addresses directly, and set override
+            List<Contact> listCon = new List<Contact>();
+            for (integer i = 0; i < cHH*cCon; i++) {
+                Contact con = listConT[i];
+                con.MailingStreet = 'Direct Street Edit';
                 con.put('MailingStateCode', 'CA');
                 con.put('MailingCountryCode', 'US');
+                con.is_Address_Override__c = true;
+                listCon.add(con);
             }
-            con.is_Address_Override__c = true;
-            listCon.add(con);
-        }
-        
-        Test.startTest();
-        update listCon;
-        Test.stopTest();
 
-        // verify that the HH and Contacts do not share the same address
-        Map<Id, Account> mapAccIdAcc = new Map<Id, Account>([SELECT Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingStateCode, BillingCountryCode, BillingLatitude, BillingLongitude FROM Account]);
-        listCon = [SELECT Id, Name, AccountId, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, MailingStateCode, MailingCountryCode, MailingLatitude, MailingLongitude FROM Contact];
+            Test.startTest();
+            update listCon;
+            Test.stopTest();
 
-        for (Contact con : listCon) {
-            Account acc = mapAccIdAcc.get(con.AccountId);
-            System.assertEquals(false, isMatchAddressAccCon(acc, con));
-            System.assertEquals(true, con.MailingStateCode.equals('CA'));
-            System.assertEquals(true, con.MailingCountryCode.equals('US'));
-            System.assertEquals(false, acc.BillingStateCode.contains('CA'));
-            System.assertEquals(true, acc.BillingCountryCode.contains('US'));
-            System.assertEquals(true, con.is_Address_Override__c);
-            System.assertNotEquals(null, con.Current_Address__c);
-        }
+            List<Account> retrievedAccounts = database.query(buildAccountSoql());
+            Map<Id, Account> mapAccIdAcc = new Map<Id, Account>(retrievedAccounts);
+            listCon = database.query(buildContactSoql());
 
-         // verify the previous addresses got Default cleared.
-        List<Address__c> listAddr = [SELECT Id, Default_Address__c, MailingStreet__c, Household_Account__c FROM Address__c];
-        System.assertEquals(cHH * cCon + cHH, listAddr.size());
-        for (Address__c addr : listAddr) {
-            Boolean isNewEdit = (addr.MailingStreet__c.contains('Direct Street Edit'));
-            System.assertNotEquals(isNewEdit, addr.Default_Address__c);
+            for (Contact con : listCon) {
+                Account acc = mapAccIdAcc.get(con.AccountId);
+                System.assertEquals(false, isMatchAddressAccCon(acc, con));
+                System.assertEquals(true, con.MailingState.equals('California'));
+                System.assertEquals(false, acc.BillingState.equals('California'));
+                System.assertEquals(true, con.is_Address_Override__c);
+                System.assertNotEquals(null, con.Current_Address__c);
+            }
+
+             // Verify the previous addresses got Default cleared.
+            List<Address__c> listAddr = database.query(buildAddressSoql());
+            System.assertEquals(cHH * cCon + cHH, listAddr.size());
+            for (Address__c addr : listAddr) {
+                Boolean isNewEdit = (addr.MailingStreet__c.contains('Direct Street Edit'));
+                System.assertNotEquals(isNewEdit, addr.Default_Address__c);
+            }
         }
     }
+
 
     /*********************************************************************************************************
     @description
@@ -1892,6 +1893,66 @@ public with sharing class ADDR_Addresses_TEST {
         System.assertEquals(expected.MailingState__c, c.MailingState);
         System.assertEquals(expected.MailingPostalCode__c, c.MailingPostalCode);
         System.assertEquals(expected.MailingCountry__c, c.MailingCountry);
+    }
+
+
+    /*******************************************************************************************************
+    * @description Builds SOQL for Contact sObject. Fields include standard Mailing fields as well as the one for State and Country Picklist enabled.
+    * @return String SOQL
+    */
+    private static String buildContactSoql() {
+        List<String> selectFields
+            = new List<String>{'Id', 'AccountId', 'is_Address_Override__c', 'Current_Address__c',
+                                'MailingStreet', 'MailingCity', 'MailingState', 'MailingCountry', 'MailingPostalCode',
+                                'MailingLatitude', 'MailingLongitude'};
+
+        if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
+            selectFields.add('MailingCountryCode');
+            selectFields.add('MailingStateCode');
+            selectFields.add('OtherCountryCode');
+            selectFields.add('OtherStateCode');
+        }
+
+        return new UTIL_Query()
+            .withSelectFields(selectFields)
+            .withFrom('Contact')
+            .build();
+    }
+
+
+    /*******************************************************************************************************
+    * @description Builds SOQL for Account sObject. Fields include standard Billing fields as well as the one for State and Country Picklist enabled.
+    * @return String SOQL
+    */
+    private static String buildAccountSoql() {
+        List<String> selectFields
+            = new List<String>{'Id', 'BillingStreet', 'BillingCity', 'BillingState',  'BillingCountry',
+                                'BillingPostalCode', 'BillingLatitude', 'BillingLongitude'};
+
+        if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
+            selectFields.add('BillingCountryCode');
+            selectFields.add('BillingStateCode');
+        }
+
+        return new UTIL_Query()
+            .withSelectFields(selectFields)
+            .withFrom('Account')
+            .build();
+    }
+
+
+    /*******************************************************************************************************
+    * @description Builds SOQL for Address sObject. Fields include standard Billing fields as well as the one for State and Country Picklist enabled.
+    * @return String SOQL
+    */
+    private static String buildAddressSoql() {
+        List<String> selectFields
+            = new List<String>{'Id', 'Default_Address__c', 'MailingStreet__c', 'Household_Account__c'};
+
+        return new UTIL_Query()
+            .withSelectFields(selectFields)
+            .withFrom('Address__c')
+            .build();
     }
 
 }
