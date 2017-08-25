@@ -1023,7 +1023,7 @@ public with sharing class ADDR_Addresses_TEST {
             con.is_Address_Override__c = true;
             listCon.add(con);
         }
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        
         Test.startTest();
         update listCon;
         Test.stopTest();
