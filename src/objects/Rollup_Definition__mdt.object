@@ -5,6 +5,7 @@
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
         <label>Attribution Field</label>
+        <metadataRelationshipControllingField>Rollup_Definition__mdt.Attribution_Object__c</metadataRelationshipControllingField>
         <referenceTo>FieldDefinition</referenceTo>
         <relationshipLabel>Rollup_Definitions</relationshipLabel>
         <relationshipName>Rollup_Definitions</relationshipName>
@@ -37,6 +38,7 @@
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
         <label>Detail Attribution Field</label>
+        <metadataRelationshipControllingField>Rollup_Definition__mdt.Detail_Object__c</metadataRelationshipControllingField>
         <referenceTo>FieldDefinition</referenceTo>
         <relationshipLabel>Rollup_Definitions1</relationshipLabel>
         <relationshipName>Rollup_Definitions1</relationshipName>

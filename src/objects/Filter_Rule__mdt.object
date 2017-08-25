@@ -15,6 +15,7 @@
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
         <label>Field</label>
+        <metadataRelationshipControllingField>Filter_Rule__mdt.Object__c</metadataRelationshipControllingField>
         <referenceTo>FieldDefinition</referenceTo>
         <relationshipLabel>Filter_Rules</relationshipLabel>
         <relationshipName>Filter_Rules</relationshipName>
@@ -51,56 +52,69 @@
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
         <label>Operator</label>
-        <picklist>
-            <picklistValues>
-                <fullName>Equals</fullName>
-                <default>true</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Not Equals</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Greater</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Less</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Greater or Equal</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Less or Equal</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Starts With</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Contains</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Does Not Contain</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Is Included</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Is Not Included</fullName>
-                <default>false</default>
-            </picklistValues>
-            <restrictedPicklist>true</restrictedPicklist>
-            <sorted>false</sorted>
-        </picklist>
         <required>true</required>
         <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Equals</fullName>
+                    <default>true</default>
+                    <label>Equals</label>
+                </value>
+                <value>
+                    <fullName>Not Equals</fullName>
+                    <default>false</default>
+                    <label>Not Equals</label>
+                </value>
+                <value>
+                    <fullName>Greater</fullName>
+                    <default>false</default>
+                    <label>Greater</label>
+                </value>
+                <value>
+                    <fullName>Less</fullName>
+                    <default>false</default>
+                    <label>Less</label>
+                </value>
+                <value>
+                    <fullName>Greater or Equal</fullName>
+                    <default>false</default>
+                    <label>Greater or Equal</label>
+                </value>
+                <value>
+                    <fullName>Less or Equal</fullName>
+                    <default>false</default>
+                    <label>Less or Equal</label>
+                </value>
+                <value>
+                    <fullName>Starts With</fullName>
+                    <default>false</default>
+                    <label>Starts With</label>
+                </value>
+                <value>
+                    <fullName>Contains</fullName>
+                    <default>false</default>
+                    <label>Contains</label>
+                </value>
+                <value>
+                    <fullName>Does Not Contain</fullName>
+                    <default>false</default>
+                    <label>Does Not Contain</label>
+                </value>
+                <value>
+                    <fullName>Is Included</fullName>
+                    <default>false</default>
+                    <label>Is Included</label>
+                </value>
+                <value>
+                    <fullName>Is Not Included</fullName>
+                    <default>false</default>
+                    <label>Is Not Included</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
     </fields>
     <label>Filter Rule</label>
     <pluralLabel>Filter Rules</pluralLabel>

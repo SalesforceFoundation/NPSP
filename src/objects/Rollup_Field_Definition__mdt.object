@@ -5,6 +5,7 @@
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
         <label>Amount Field</label>
+        <metadataRelationshipControllingField>Rollup_Field_Definition__mdt.Detail_Object__c</metadataRelationshipControllingField>
         <referenceTo>FieldDefinition</referenceTo>
         <relationshipLabel>Rollup_Field_Definitions</relationshipLabel>
         <relationshipName>Rollup_Field_Definitions</relationshipName>
@@ -17,6 +18,7 @@
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
         <label>Attribution Field</label>
+        <metadataRelationshipControllingField>Rollup_Field_Definition__mdt.Attribution_Object__c</metadataRelationshipControllingField>
         <referenceTo>FieldDefinition</referenceTo>
         <relationshipLabel>Rollup_Field_Definitions3</relationshipLabel>
         <relationshipName>Rollup_Field_Definitions3</relationshipName>
@@ -41,6 +43,7 @@
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
         <label>Date Field</label>
+        <metadataRelationshipControllingField>Rollup_Field_Definition__mdt.Detail_Object__c</metadataRelationshipControllingField>
         <referenceTo>FieldDefinition</referenceTo>
         <relationshipLabel>Rollup_Field_Definitions1</relationshipLabel>
         <relationshipName>Rollup_Field_Definitions1</relationshipName>
@@ -62,6 +65,7 @@
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
         <label>Detail Attribution Field</label>
+        <metadataRelationshipControllingField>Rollup_Field_Definition__mdt.Detail_Object__c</metadataRelationshipControllingField>
         <referenceTo>FieldDefinition</referenceTo>
         <relationshipLabel>Rollup_Field_Definitions4</relationshipLabel>
         <relationshipName>Rollup_Field_Definitions4</relationshipName>
@@ -74,6 +78,7 @@
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
         <label>Detail Field</label>
+        <metadataRelationshipControllingField>Rollup_Field_Definition__mdt.Detail_Object__c</metadataRelationshipControllingField>
         <referenceTo>FieldDefinition</referenceTo>
         <relationshipLabel>Rollup_Field_Definitions2</relationshipLabel>
         <relationshipName>Rollup_Field_Definitions2</relationshipName>
@@ -118,48 +123,59 @@
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
         <label>Operation</label>
-        <picklist>
-            <picklistValues>
-                <fullName>Count</fullName>
-                <default>true</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Sum</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Average</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Largest</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Smallest</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>First</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Last</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Years Donated</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Donor Streak</fullName>
-                <default>false</default>
-            </picklistValues>
-            <restrictedPicklist>true</restrictedPicklist>
-            <sorted>false</sorted>
-        </picklist>
         <required>false</required>
         <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Count</fullName>
+                    <default>true</default>
+                    <label>Count</label>
+                </value>
+                <value>
+                    <fullName>Sum</fullName>
+                    <default>false</default>
+                    <label>Sum</label>
+                </value>
+                <value>
+                    <fullName>Average</fullName>
+                    <default>false</default>
+                    <label>Average</label>
+                </value>
+                <value>
+                    <fullName>Largest</fullName>
+                    <default>false</default>
+                    <label>Largest</label>
+                </value>
+                <value>
+                    <fullName>Smallest</fullName>
+                    <default>false</default>
+                    <label>Smallest</label>
+                </value>
+                <value>
+                    <fullName>First</fullName>
+                    <default>false</default>
+                    <label>First</label>
+                </value>
+                <value>
+                    <fullName>Last</fullName>
+                    <default>false</default>
+                    <label>Last</label>
+                </value>
+                <value>
+                    <fullName>Years Donated</fullName>
+                    <default>false</default>
+                    <label>Years Donated</label>
+                </value>
+                <value>
+                    <fullName>Donor Streak</fullName>
+                    <default>false</default>
+                    <label>Donor Streak</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
     </fields>
     <fields>
         <fullName>Rollup_Definition__c</fullName>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Rollup Field Definition --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Rollup Field Definition --></value>
+    </caseValues>
+    <fields>
+        <label><!-- Amount Field --></label>
+        <name>Amount_Field__c</name>
+    </fields>
+    <fields>
+        <label><!-- Attribution Field --></label>
+        <name>Attribution_Field__c</name>
+    </fields>
+    <fields>
+        <label><!-- Attribution Object --></label>
+        <name>Attribution_Object__c</name>
+    </fields>
+    <fields>
+        <label><!-- Date Field --></label>
+        <name>Date_Field__c</name>
+    </fields>
+    <fields>
+        <label><!-- Description --></label>
+        <name>Description__c</name>
+    </fields>
+    <fields>
+        <label><!-- Detail Attribution Field --></label>
+        <name>Detail_Attribution_Field__c</name>
+    </fields>
+    <fields>
+        <label><!-- Detail Field --></label>
+        <name>Detail_Field__c</name>
+    </fields>
+    <fields>
+        <label><!-- Detail Object --></label>
+        <name>Detail_Object__c</name>
+    </fields>
+    <fields>
+        <label><!-- Filter Group --></label>
+        <name>Filter_Group__c</name>
+        <relationshipLabel><!-- Rollup Field Definitions --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Is Active --></label>
+        <name>Is_Active__c</name>
+    </fields>
+    <fields>
+        <label><!-- Operation --></label>
+        <name>Operation__c</name>
+        <picklistValues>
+            <masterLabel>Average</masterLabel>
+            <translation><!-- Average --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Count</masterLabel>
+            <translation><!-- Count --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Donor Streak</masterLabel>
+            <translation><!-- Donor Streak --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>First</masterLabel>
+            <translation><!-- First --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Largest</masterLabel>
+            <translation><!-- Largest --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Last</masterLabel>
+            <translation><!-- Last --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Smallest</masterLabel>
+            <translation><!-- Smallest --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Sum</masterLabel>
+            <translation><!-- Sum --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Years Donated</masterLabel>
+            <translation><!-- Years Donated --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Rollup Definition --></label>
+        <name>Rollup_Definition__c</name>
+        <relationshipLabel><!-- Rollup Field Definitions --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Years Back --></label>
+        <name>Years_Back__c</name>
+    </fields>
+    <gender><!-- Feminine --></gender>
+</CustomObjectTranslation>

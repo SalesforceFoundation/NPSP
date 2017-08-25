@@ -51,7 +51,6 @@
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <externalSharingModel>ReadWrite</externalSharingModel>
     <label>DEPRECATED-Fund</label>
     <nameField>
         <label>DEPRECATED-Fund Name</label>

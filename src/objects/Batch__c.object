@@ -58,7 +58,6 @@
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <externalSharingModel>ReadWrite</externalSharingModel>
     <fieldSets>
         <fullName>BatchDetailView</fullName>
         <description>The batch information fields to be displayed above the data entry panel.</description>

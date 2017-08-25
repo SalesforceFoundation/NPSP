@@ -396,11 +396,6 @@
         <name>Donation_Name__c</name>
     </fields>
     <fields>
-        <help><!-- A comma separated list of ID&apos;s to the first 10 possible Opportunity matches to a donation. --></help>
-        <label><!-- Donation Possible Matches --></label>
-        <name>Donation_Possible_Matches__c</name>
-    </fields>
-    <fields>
         <help>Le nom du type d’enregistrement d’opportunité à utiliser pour le don. Le type d’enregistrement par défaut sera utilisé si ce nom est laissé vide.</help>
         <label>Nom de type d’enregistrement du don</label>
         <name>Donation_Record_Type_Name__c</name>
@@ -470,21 +465,6 @@
         <name>ImportedDate__c</name>
     </fields>
     <fields>
-        <help><!-- an optional NPSP Data Import Batch this record belongs to --></help>
-        <label><!-- NPSP Data Import Batch --></label>
-        <name>NPSP_Data_Import_Batch__c</name>
-        <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
-    </fields>
-    <fields>
-        <label><!-- Payment Import Status --></label>
-        <name>PaymentImportStatus__c</name>
-    </fields>
-    <fields>
-        <label><!-- Payment Imported --></label>
-        <name>PaymentImported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
-    </fields>
-    <fields>
         <help><!-- Payment.npe01__Check_Reference_Number__c --></help>
         <label>Chèque de paiement / Numéro de référence</label>
         <name>Payment_Check_Reference_Number__c</name>
@@ -493,11 +473,6 @@
         <help><!-- Payment.npe01__Payment_Method__c --></help>
         <label>Mode de paiement</label>
         <name>Payment_Method__c</name>
-    </fields>
-    <fields>
-        <help><!-- A comma separated list of ID&apos;s to the first 10 possible Payment matches to a donation. --></help>
-        <label><!-- Payment Possible Matches --></label>
-        <name>Payment_Possible_Matches__c</name>
     </fields>
     <fields>
         <help>Le statut de l’importation de l’enregistrement d’importation de données.</help>

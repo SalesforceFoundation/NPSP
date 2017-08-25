@@ -1863,6 +1863,30 @@
         <members>Trigger_Handler__c-iw</members>
         <members>Trigger_Handler__c-ja</members>
         <members>Trigger_Handler__c-nl_NL</members>
+        <members>Filter_Group__mdt-de</members>
+        <members>Filter_Group__mdt-en_US</members>
+        <members>Filter_Group__mdt-es</members>
+        <members>Filter_Group__mdt-fr</members>
+        <members>Filter_Group__mdt-ja</members>
+        <members>Filter_Group__mdt-nl_NL</members>
+        <members>Filter_Rule__mdt-de</members>
+        <members>Filter_Rule__mdt-en_US</members>
+        <members>Filter_Rule__mdt-es</members>
+        <members>Filter_Rule__mdt-fr</members>
+        <members>Filter_Rule__mdt-ja</members>
+        <members>Filter_Rule__mdt-nl_NL</members>
+        <members>Rollup_Definition__mdt-de</members>
+        <members>Rollup_Definition__mdt-en_US</members>
+        <members>Rollup_Definition__mdt-es</members>
+        <members>Rollup_Definition__mdt-fr</members>
+        <members>Rollup_Definition__mdt-ja</members>
+        <members>Rollup_Definition__mdt-nl_NL</members>
+        <members>Rollup_Field_Definition__mdt-de</members>
+        <members>Rollup_Field_Definition__mdt-en_US</members>
+        <members>Rollup_Field_Definition__mdt-es</members>
+        <members>Rollup_Field_Definition__mdt-fr</members>
+        <members>Rollup_Field_Definition__mdt-ja</members>
+        <members>Rollup_Field_Definition__mdt-nl_NL</members>
         <members>npe01__Contacts_And_Orgs_Settings__c-de</members>
         <members>npe01__Contacts_And_Orgs_Settings__c-es</members>
         <members>npe01__Contacts_And_Orgs_Settings__c-fr</members>
