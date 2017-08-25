@@ -140,7 +140,7 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
     * @description Updates an opportunity's payment record when currency on the Opportunity is changed.
-    * @param listOpps A list of opportunities whose amount or currency has changed.
+    * @param listOpps A list of opportunities whose currency has changed.
     * @return void This method modifies the dmlWrapper var and does not return anything
     ********************************************************************************************************/
     private static void opportunityAmountCurrencyChange(list<Opportunity> listOpps, DmlWrapper dmlWrapper){
@@ -153,10 +153,8 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
 
         // Get a list of the Payment records by Opportunity
         String soql = 'SELECT Id, CurrencyIsoCode, npe01__Opportunity__r.CurrencyIsoCode FROM npe01__OppPayment__c ' +
-        'WHERE npe01__Opportunity__c IN :oppIds ORDER BY npe01__Opportunity__c';
-        List<npe01__OppPayment__c> paymentsToChanage = database.query(soql);
-
-        for (npe01__OppPayment__c pmt : paymentsToChanage) {
+            'WHERE npe01__Opportunity__c IN :oppIds ORDER BY npe01__Opportunity__c';
+        for (npe01__OppPayment__c pmt : database.query(soql)) {
             Opportunity opp = (Opportunity)pmt.getSObject('npe01__Opportunity__r');
             pmt.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
             dmlWrapper.objectsToUpdate.add(pmt);

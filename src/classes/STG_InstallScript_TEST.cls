@@ -170,9 +170,12 @@ public with sharing class STG_InstallScript_TEST {
         
         //Verify that all the TDTM classes have been deactivated (since all the NPSP disable flags were on)
         List<Trigger_Handler__c> afterScriptConfig = [select Active__c, Class__c from Trigger_Handler__c where Class__c IN :tdtmClasses];     
-        //The -1 is because there are two NPSP flags (npe01__DISABLE_OpportunityAccount_trigger__c and 
-        //npe01__DISABLE_OpportunityContactRoles_trigger__c) that point to the same TDTM class (OPP_OpportunityContactRoles_TDTM)
-        System.assertEquals(tdtmClassesWithValues.size() - 1, afterScriptConfig.size());     
+        // This used to -1 because there are two NPSP flags (npe01__DISABLE_OpportunityAccount_trigger__c and
+        // npe01__DISABLE_OpportunityContactRoles_trigger__c) that point to the same TDTM class
+        // (OPP_OpportunityContactRoles_TDTM. However, a new trigger on the Payment object was added using the
+        // same PMT_Payment_TDTM class referenced in the above list of getNpspToCumulusMap(). That nets out the
+        // -1 to 0.
+        System.assertEquals(tdtmClassesWithValues.size(), afterScriptConfig.size());
         for(Trigger_Handler__c handler : afterScriptConfig) {
             UTIL_Debug.debug('****Is class ' + handler.Class__c + ' still active: ' + handler.Active__c);
             System.assertEquals(false, handler.Active__c);
