@@ -1046,28 +1046,31 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * @param strAddrType if not null, copy to address.Address_Type__c
     * @return void
     */ 
-    public static void copyAddressStdSObjAddr(sobject sobjSrc, string strFieldPrefixSrc, Address__c addr, string strAddrType) {
-        addr.MailingStreet__c = (string)sobjSrc.get(strFieldPrefixSrc + 'Street');
+    public static void copyAddressStdSObjAddr(sobject sobjSrc, String strFieldPrefixSrc, Address__c addr, String strAddrType) {
+        addr.MailingStreet__c = (String)sobjSrc.get(strFieldPrefixSrc + 'Street');
         handleMultilineStreet(addr);
-        addr.MailingCity__c = (string)sobjSrc.get(strFieldPrefixSrc + 'City');
-        addr.MailingPostalCode__c = (string)sobjSrc.get(strFieldPrefixSrc + 'PostalCode');
-        addr.MailingState__c = (string)sobjSrc.get(strFieldPrefixSrc + 'State');
-        addr.MailingCountry__c = (string)sobjSrc.get(strFieldPrefixSrc + 'Country');
-        addr.Geolocation__Latitude__s = (decimal)sobjSrc.get(strFieldPrefixSrc + 'Latitude');
-        addr.Geolocation__Longitude__s = (decimal)sobjSrc.get(strFieldPrefixSrc + 'Longitude');
+        addr.MailingCity__c = (String)sobjSrc.get(strFieldPrefixSrc + 'City');
+        addr.MailingPostalCode__c = (String)sobjSrc.get(strFieldPrefixSrc + 'PostalCode');
+        addr.MailingState__c = (String)sobjSrc.get(strFieldPrefixSrc + 'State');
+        addr.MailingCountry__c = (String)sobjSrc.get(strFieldPrefixSrc + 'Country');
+        addr.Geolocation__Latitude__s = (Decimal)sobjSrc.get(strFieldPrefixSrc + 'Latitude');
+        addr.Geolocation__Longitude__s = (Decimal)sobjSrc.get(strFieldPrefixSrc + 'Longitude');
 
         // try to find state and country by code if they aren't specified?
         if (isStateCountryPicklistsEnabled) {
 
             // lookup country if needed, by country code
-            string strCountryCode = (string)sobjSrc.get(strFieldPrefixSrc + 'CountryCode');
-            if (addr.MailingCountry__c == null && strCountryCode != null) {
+            String strCountryCode = (String)sobjSrc.get(strFieldPrefixSrc + 'CountryCode');
+            if (null != strCountryCode && null == addr.MailingCountry__c) {
                 addr.MailingCountry__c = validCountriesByCode.get(strCountryCode.toUpperCase());
             }
             
             // lookup state if needed, by country code and state code.
-            string strStateCode = (string)sobjSrc.get(strFieldPrefixSrc + 'StateCode');
-            if (addr.MailingState__c == null && strCountryCode != null && strStateCode != null) {
+            String strStateCode = (String)sobjSrc.get(strFieldPrefixSrc + 'StateCode');      
+            if (null != strCountryCode && null != strStateCode
+                && (null == addr.MailingState__c
+                    || (null != validStatesByLabel && validStatesByLabel.containsKey(addr.MailingState__c.toUpperCase())
+                        && !strStateCode.equals(validStatesByLabel.get(addr.MailingState__c.toUpperCase()))))) {
                 // assume it's a valid statecode
                 addr.MailingState__c = strStateCode;
             }

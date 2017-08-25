@@ -1038,6 +1038,62 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
+        update contacts' mailing address (with State & Country Picklists enabled) and mark it as override, to cause creation of new non-default Address object
+    verify:
+        new Address created
+        HH sticks with default Address
+        contact gets new address
+    **********************************************************************************************************/
+    static testMethod void updateContactsStateAndCountryPicklistsEnabledAddressMarkOverride() {
+        if (strTestOnly != '*' && strTestOnly != 'updateConAddrMarkOverride') return;
+
+        // this creates a default Address for each HH
+        createHHTestData(cHH, cCon);
+
+        // modify the contact addresses directly, and set override
+        List<Contact> listCon = new List<Contact>();
+        for (integer i = 0; i < cHH*cCon; i++) {
+            Contact con = listConT[i];
+            con.MailingStreet = 'Direct Street Edit';
+            con.MailingCity = 'Direct City Edit';
+            if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
+                con.put('MailingStateCode', 'CA');
+                con.put('MailingCountryCode', 'US');
+            }
+            con.is_Address_Override__c = true;
+            listCon.add(con);
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        Test.startTest();
+        update listCon;
+        Test.stopTest();
+
+        // verify that the HH and Contacts do not share the same address
+        Map<Id, Account> mapAccIdAcc = new Map<Id, Account>([SELECT Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingStateCode, BillingCountryCode, BillingLatitude, BillingLongitude FROM Account]);
+        listCon = [SELECT Id, Name, AccountId, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, MailingStateCode, MailingCountryCode, MailingLatitude, MailingLongitude FROM Contact];
+
+        for (Contact con : listCon) {
+            Account acc = mapAccIdAcc.get(con.AccountId);
+            System.assertEquals(false, isMatchAddressAccCon(acc, con));
+            System.assertEquals(true, con.MailingStateCode.equals('CA'));
+            System.assertEquals(true, con.MailingCountryCode.equals('US'));
+            System.assertEquals(false, acc.BillingStateCode.contains('CA'));
+            System.assertEquals(true, acc.BillingCountryCode.contains('US'));
+            System.assertEquals(true, con.is_Address_Override__c);
+            System.assertNotEquals(null, con.Current_Address__c);
+        }
+
+         // verify the previous addresses got Default cleared.
+        List<Address__c> listAddr = [SELECT Id, Default_Address__c, MailingStreet__c, Household_Account__c FROM Address__c];
+        System.assertEquals(cHH * cCon + cHH, listAddr.size());
+        for (Address__c addr : listAddr) {
+            Boolean isNewEdit = (addr.MailingStreet__c.contains('Direct Street Edit'));
+            System.assertNotEquals(isNewEdit, addr.Default_Address__c);
+        }
+    }
+
+    /*********************************************************************************************************
+    @description
         update contacts' mailing address to cause an update to default Address object  
     verify:
         existing Default Address updated
