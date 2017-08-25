@@ -273,7 +273,7 @@ public with sharing class RLLP_OppRollup_TEST {
 
             //since we're running rollup code on a manually created contact, we have to manually set currency field in multicurrency
             if (RLLP_OppRollup_UTIL.isMultiCurrency()) {
-                TestCons[0].put(RLLP_OppRollup_UTIL.mcFieldValues.get('Contact'), RLLP_OppRollup_UTIL.currCorporate);
+                TestCons[0].put(RLLP_OppRollup_UTIL.mcFieldValues.get('Contact'), UTIL_Currency.getInstance().getOrgDefaultCurrency());
             }
 
             insert TestCons;
@@ -371,7 +371,7 @@ public with sharing class RLLP_OppRollup_TEST {
 
             //since we're running rollup code on a manually created contact, we have to manually set currency field in multicurrency
             if (RLLP_OppRollup_UTIL.isMultiCurrency()) {
-                TestCons[0].put(RLLP_OppRollup_UTIL.mcFieldValues.get('Contact'), RLLP_OppRollup_UTIL.currCorporate);
+                TestCons[0].put(RLLP_OppRollup_UTIL.mcFieldValues.get('Contact'), UTIL_Currency.getInstance().getOrgDefaultCurrency());
             }
  
             insert TestCons;
@@ -470,7 +470,7 @@ public with sharing class RLLP_OppRollup_TEST {
 
             //since we're running rollup code on a manually created contact, we have to manually set currency field in multicurrency
             if (RLLP_OppRollup_UTIL.isMultiCurrency()) {
-                TestCons[0].put(RLLP_OppRollup_UTIL.mcFieldValues.get('Contact'), RLLP_OppRollup_UTIL.currCorporate);
+                TestCons[0].put(RLLP_OppRollup_UTIL.mcFieldValues.get('Contact'), UTIL_Currency.getInstance().getOrgDefaultCurrency());
             }
  
             insert TestCons;

@@ -180,7 +180,8 @@ public class RD_RecurringDonations {
 
         //get the cumulative values to update the recurring donations
         //update the rc next payment date 
-        //and the paid ammounts and paid installments 
+        //and the paid ammounts and paid installments
+        // TODO: For Currency Conversion to work with ACM enabled, cannot use an aggregate query to sum the amount
         for (sobject obj : [select count(id) oppcount, MIN(CloseDate) MinDate, MAX(CloseDate) MaxDate, SUM(Amount) Total,
                                   isClosed, npe03__Recurring_Donation__c rdid, isWon
                                   from Opportunity where npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c <> :closedLabel 
@@ -223,11 +224,13 @@ public class RD_RecurringDonations {
                     rd.npe03__Last_Payment_Date__c = (date)obj.get('MaxDate');
 
                     //convert rollup total to RD's currency
-                    if (RLLP_OppRollup_UTIL.isMultiCurrency())
-                        rd.npe03__Paid_Amount__c = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)rd.get(RDCurrencyField), (decimal)obj.get('Total'));
-                    else
-                        rd.npe03__Paid_Amount__c = (decimal)obj.get('Total');
+                    if (UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
+                        rd.npe03__Paid_Amount__c = UTIL_CurrencyConversion.convertAmount((Decimal)obj.get('Total'), Date.Today(),
+                                UTIL_Currency.getInstance().getOrgDefaultCurrency(), (string) rd.get(RDCurrencyField));
 
+                    } else {
+                        rd.npe03__Paid_Amount__c = (decimal) obj.get('Total');
+                    }
                     rd.npe03__Total_Paid_Installments__c = (integer)obj.get('oppcount');
                     updateMap.put(rdid, rd);                        
                 }                   

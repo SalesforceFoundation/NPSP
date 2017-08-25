@@ -146,7 +146,7 @@ public class UTIL_UnitTestData_TEST {
             );
             //since we're running rollup code on a manually created contacts in RLLP_OppRollup_TEST, we have to manually set currency field in multicurrency
             if (RLLP_OppRollup_UTIL.isMultiCurrency()) {
-                newCon.put(RLLP_OppRollup_UTIL.mcFieldValues.get('Contact'), RLLP_OppRollup_UTIL.currCorporate);
+                newCon.put(RLLP_OppRollup_UTIL.mcFieldValues.get('Contact'), UTIL_Currency.getInstance().getOrgDefaultCurrency());
             }
 
             ContactsToAdd.add (newCon);
