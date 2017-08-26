@@ -885,12 +885,23 @@ public without sharing class RLLP_OppRollup {
         
         //deal with user rollups
         if (RLLP_OppRollup_UTIL.urfsMap.size() > 0){
+
             for (string s : RLLP_OppRollup_UTIL.urfsMap.keyset()){
-                if (obj.getSObjectType().getDescribe().getName() == RLLP_OppRollup_UTIL.urfsMap.get(s).npo02__Object_Name__c){
+
+                if (obj.getSObjectType().getDescribe().getName() == RLLP_OppRollup_UTIL.urfsMap.get(s).npo02__Object_Name__c) {
+
                     npo02__User_Rollup_Field_Settings__c urfs = RLLP_OppRollup_UTIL.urfsMap.get(s);
-                    string x = urfs.Name;                   
-                    if (r.get(x) != null)
-                       obj.put(urfs.npo02__Target_Field__c, r.get(x));
+                    string x = urfs.Name;
+                    Schema.DescribeFieldResult f = UTIL_Describe.getFieldDescribe('Opportunity', RLLP_OppRollup_UTIL.urfsMap.get(s).npo02__Source_Field__c);
+
+                    if (r.get(x) != null) {
+                        // calculate amounts into correct currency if needed, and only if source is a Currency field. Assumes that the UDR config is valid.
+                        if (f.getType() == Schema.Displaytype.Currency && RLLP_OppRollup_UTIL.isMultiCurrency()) {
+                            obj.put(urfs.npo02__Target_Field__c, RLLP_OppRollup_UTIL.ConvertFromCorporate((string) obj.get('CurrencyIsoCode'), (decimal) r.get(x)));
+                        } else {
+                            obj.put(urfs.npo02__Target_Field__c, r.get(x));
+                        }
+                    }
                 }
             }
         } 
