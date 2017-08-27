@@ -46,7 +46,6 @@ public with sharing class USER_UserService {
 	public static final String ERROR_TYPE_SCHEDULED_APEX = 'Scheduled Apex Error';
 	public static final String OBJECT_TYPE_USER = 'User';
 	public static final String ERROR_MESSAGE_SCHEDULED_APEX = 'There are scheduled jobs owned by an inactive or frozen user. Review your scheduled jobs and ensure the owner of each one is an active user.';
-	public static final String CONTEXT_TYPE_USER = 'User';
 	
 
 	/*********************************************************************************************************
@@ -63,11 +62,7 @@ public with sharing class USER_UserService {
 		// Determine if the User is a SysAdmin
 		if(null != updatedUsers && !updatedUsers.isEmpty()) {
 			for(User currentUser : updatedUsers) {
-				if(sysAdminId == currentUser.ProfileId) {
-					userIdToIsSysAdmin.put(currentUser.Id, true);
-				} else {
-					userIdToIsSysAdmin.put(currentUser.Id, false);
-				}
+				userIdToIsSysAdmin.put(currentUser.Id, sysAdminId == currentUser.ProfileId);
 			}
 		}
 
@@ -86,11 +81,7 @@ public with sharing class USER_UserService {
 		// Determine if the User isActive
 		if(null != updatedUsers && !updatedUsers.isEmpty()) {
 			for(User currentUser : updatedUsers) {
-				if(currentUser.IsActive) {
-					userIdToIsActive.put(currentUser.Id, true);
-				} else {
-					userIdToIsActive.put(currentUser.Id, false);
-				}
+				userIdToIsActive.put(currentUser.Id, currentUser.IsActive);
 			}
 		}
 
@@ -108,11 +99,11 @@ public with sharing class USER_UserService {
 
 		// Retrieve the UserLogin records for the updatedUsers
 		if(null != updatedUsers && !updatedUsers.isEmpty()) {
-			Map<Id, Boolean> userLoginUserIdToIsFrozen = retrieveUserLogins(updatedUsers);
-			
+			List<UserLogin> currentUserLogins = retrieveUserLogins(updatedUsers);
+
 			// Populate the Map with UserId and IsFrozen
-			for(User currentUser : updatedUsers) {
-				userIdToIsFrozen.put(currentUser.Id, userLoginUserIdToIsFrozen.get(currentUser.Id));
+			for(UserLogin eachUserLogin : currentUserLogins) {
+				userIdToIsFrozen.put(eachUserLogin.UserId, eachUserLogin.IsFrozen);
 			}
 		}
 
@@ -126,9 +117,9 @@ public with sharing class USER_UserService {
     * @return void
     **********************************************************************************************************/
 	@future
-	public static void applySysAdminIsActiveIsFrozenStatusChanges(Set<Id> sysAdminUserIds) {
-		// Sets Error Notification recipient to All Sys Admin
-		setErrorNotificationToAllSysAdmins(sysAdminUserIds);
+	public static void applySysAdminIsActiveIsFrozenStatusChangesFuture(Set<Id> sysAdminUserIds) {
+		// Sets Error Notification recipient to All Sys Admin for Inactive/Frozen Users
+		setErrorNotificationToAllSysAdminsForInActiveFrozenUsers(sysAdminUserIds);
 
 		// Logs an Error and Emails the Sys Admins
 		handleScheduledJobsSubmittedByInActiveIsFrozenSysAdmin(sysAdminUserIds);
@@ -136,11 +127,11 @@ public with sharing class USER_UserService {
 
 
 	/*********************************************************************************************************
-    * @description Sets the NPSP Settings Error Notification Recipients to All Sys Admins.
+    * @description Sets the NPSP Settings Error Notification Recipients to All Sys Admins for Inactive/Frozen.
     * @param sysAdminUserIds The User Ids that were modified.
     * @return void
     **********************************************************************************************************/
-	public static void setErrorNotificationToAllSysAdmins(Set<Id> sysAdminUserIds) {
+	public static void setErrorNotificationToAllSysAdminsForInActiveFrozenUsers(Set<Id> sysAdminUserIds) {
 		Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings();
 		
 		if(errorSettings.Error_Notifications_To__c.startsWith(OBJECT_ID_PREFIX_USER)) {
@@ -158,25 +149,19 @@ public with sharing class USER_UserService {
 
 
 	/*********************************************************************************************************
-    * @description Determines if a User is the owner of the Scheduled Jobs.
+    * @description Determines if an Inactive/Frozen User is the owner of the Scheduled Jobs and emails the org's System Administrators.
     * @param sysAdminUserIds The User Ids that were modified.
     * @return void
     **********************************************************************************************************/
 	public static void handleScheduledJobsSubmittedByInActiveIsFrozenSysAdmin(Set<Id> sysAdminUserIds) {
-		Boolean breakOuterCircle = false;
-
 		List<CronTrigger> scheduledJobs = retrieveScheduledJobs(sysAdminUserIds);
 
 		for(Id currentSysAdminId : sysAdminUserIds) {
 			for(CronTrigger eachScheduledJob : scheduledJobs) {
 				if(currentSysAdminId == eachScheduledJob.OwnerId) {
 					notifySysAdminsAboutInActiveIsFrozenSysAdminUser();
-					breakOuterCircle = true;
-					break;
+					return;
 				}
-			}
-			if(breakOuterCircle) {
-				break;	
 			}
 		}
 	}
@@ -202,7 +187,7 @@ public with sharing class USER_UserService {
 		Error__c inActiveIsFrozenError = new Error__c(Error_Type__c = ERROR_TYPE_SCHEDULED_APEX,
 														Object_Type__c = OBJECT_TYPE_USER,
 														Datetime__c = System.now(), 
-														Full_Message__c = ERROR_MESSAGE_SCHEDULED_APEX);
+														Full_Message__c = Label.InactiveFrozenScheduledJobsOwnerErrMsg);
 
 		Database.insert(inActiveIsFrozenError, true);
 	}
@@ -214,7 +199,7 @@ public with sharing class USER_UserService {
     **********************************************************************************************************/
 	@testVisible
 	private static void sendInActiveIsFrozenUserEmail() {
-		ERR_Notifier.sendErrorNotifications(CONTEXT_TYPE_USER);
+		ERR_Notifier.sendErrorNotifications(ERR_Handler_API.Context.USER.name());
 	}
 
 
@@ -237,17 +222,14 @@ public with sharing class USER_UserService {
 	/*********************************************************************************************************
     * @description Retrieves the UserLogin records for Users.
     * @param updatedUsers The users that were modified.
-    * @return A Map containing the UserId and Boolean value based on the User's IsFrozen status.
+    * @return A List containing the UserLogin records.
     **********************************************************************************************************/
-	private static Map<Id, Boolean> retrieveUserLogins(List<User> updatedUsers) {
-		Map<Id, Boolean> userIdToIsFrozen = new Map<Id, Boolean>();
-		
-		List<UserLogin> currentUserLogins = [SELECT IsFrozen, UserId FROM UserLogin WHERE UserId IN :updatedUsers];
-		for(UserLogin eachUserLogin : currentUserLogins) {
-			userIdToIsFrozen.put(eachUserLogin.UserId, eachUserLogin.IsFrozen);
-		}
+	private static List <UserLogin>retrieveUserLogins(List<User> updatedUsers) {
+		List<UserLogin> currentUserLogins = new List<UserLogin>();
 
-		return userIdToIsFrozen;
+		currentUserLogins = [SELECT IsFrozen, UserId FROM UserLogin WHERE UserId IN :updatedUsers];
+
+		return currentUserLogins;
 	}
 
 

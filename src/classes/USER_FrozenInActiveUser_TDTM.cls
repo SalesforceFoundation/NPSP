@@ -39,7 +39,7 @@ public class USER_FrozenInActiveUser_TDTM extends TDTM_Runnable {
 	
 	public USER_FrozenInActiveUser_TDTM() {}
 
-	/*******************************************************************************************************
+    /*******************************************************************************************************
     * @description Trigger Handler on Opportunity that handles managing Opportunity Contact Roles
     * @param listNew List of Opportunities from trigger new. 
     * @param listOld List of Opportunities from trigger old. 
@@ -47,112 +47,114 @@ public class USER_FrozenInActiveUser_TDTM extends TDTM_Runnable {
     * @param objResult DescribeSObjectResult for Opportunity 
     * @return dmlWrapper The objects to insert/update/delete
     ********************************************************************************************************/
-	public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
-        							TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+    public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist,
+						              TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-		DmlWrapper dmlWrapper = new DmlWrapper();
-        
-		//================================
-		// Determine which handler method to call based on the triggerAction
-		//================================
-		if(TDTM_Runnable.Action.BeforeInsert == triggerAction) {
-			onBeforeInsert();
+        DmlWrapper dmlWrapper = new DmlWrapper();
 
-		} else if(TDTM_Runnable.Action.BeforeUpdate == triggerAction) {
-			onBeforeUpdate();
+        //================================
+        // Determine which handler method to call based on the triggerAction
+        //================================
+        if(TDTM_Runnable.Action.BeforeInsert == triggerAction) {
+            onBeforeInsert();
 
-		} else if(TDTM_Runnable.Action.BeforeDelete == triggerAction) {
-			onBeforeDelete();
+        } else if(TDTM_Runnable.Action.BeforeUpdate == triggerAction) {
+            onBeforeUpdate();
 
-		} else if(TDTM_Runnable.Action.AfterInsert == triggerAction) {
-			onAfterInsert();
+        } else if(TDTM_Runnable.Action.BeforeDelete == triggerAction) {
+            onBeforeDelete();
 
-		} else if(TDTM_Runnable.Action.AfterUpdate == triggerAction) {
-			onAfterUpdate(newlist);
+        } else if(TDTM_Runnable.Action.AfterInsert == triggerAction) {
+            onAfterInsert();
 
-		} else if(TDTM_Runnable.Action.AfterDelete == triggerAction) {
-			onAfterDelete();
+        } else if(TDTM_Runnable.Action.AfterUpdate == triggerAction) {
+            onAfterUpdate(newlist);
 
-		} else if(TDTM_Runnable.Action.AfterUndelete == triggerAction) {
-			onAfterUnDelete();
+        } else if(TDTM_Runnable.Action.AfterDelete == triggerAction) {
+            onAfterDelete();
 
-		}
+        } else if(TDTM_Runnable.Action.AfterUndelete == triggerAction) {
+            onAfterUnDelete();
 
-		return dmlWrapper;
-	}
+        }
+
+        return dmlWrapper;
+    }
  
 
- 	/*********************************************************************************************************
+    /*********************************************************************************************************
     * @description Handles the TDTM_Runnable.Action for BeforeInsert 
     * @return void
     **********************************************************************************************************/
     public void onBeforeInsert() {}
 
-	
-	/*********************************************************************************************************
+
+    /*********************************************************************************************************
     * @description Handles the TDTM_Runnable.Action for BeforeUpdate
     * @return void
     **********************************************************************************************************/
     public void onBeforeUpdate() {}
 
 
-	/*********************************************************************************************************
+    /*********************************************************************************************************
     * @description Handles the TDTM_Runnable.Action for BeforeDelete 
     * @return void
     **********************************************************************************************************/
     public void onBeforeDelete() {}
 
 
-	/*********************************************************************************************************
+    /*********************************************************************************************************
     * @description Handles the TDTM_Runnable.Action for AfterInsert 
     * @return void
     **********************************************************************************************************/
     public void onAfterInsert() {}
 
 
-	/*********************************************************************************************************
+    /*********************************************************************************************************
     * @description Handles the TDTM_Runnable.Action for AfterUpdate 
     * @return void
     **********************************************************************************************************/
     public void onAfterUpdate(List<SObject> newlist) {
-		handleIsActiveIsFrozenStatusChanges(newlist);
-	}
+        handleIsActiveIsFrozenStatusChanges(newlist);
+    }
 
 
-	/*********************************************************************************************************
+    /*********************************************************************************************************
     * @description Handles the TDTM_Runnable.Action for AfterDelete 
     * @return void
     **********************************************************************************************************/
     public void onAfterDelete() {}
 
 
-	/*********************************************************************************************************
+    /*********************************************************************************************************
     * @description Handles the TDTM_Runnable.Action for AfterUndelete 
     * @return void
     **********************************************************************************************************/
     public void onAfterUnDelete() {}
 
 
-	/*********************************************************************************************************
+    /*********************************************************************************************************
     * @description Handles IsActive/IsFrozen changes for Users.
     * @param newList List of Users from trigger new.
     * @return void
     **********************************************************************************************************/
     private void handleIsActiveIsFrozenStatusChanges(List<SObject> newlist) {
-		Map<Id, Boolean> userIdToIsSysAdmin = USER_UserService.isSysAdmin(newlist);
-		Map<Id, Boolean> userIdToIsActive = USER_UserService.isActiveUser(newlist);
-		Map<Id, Boolean> userIdToIsFrozen = USER_UserService.isFrozenUser(newlist);
+        Set<Id> inactiveOrFrozenSysAdminUserIds = new Set<Id>();
 
-		Set<Id> sysAdminUserIds = userIdToIsSysAdmin.keySet();
-		for(Id currentUserId : sysAdminUserIds) {
-			if(userIdToIsSysAdmin.get(currentUserId)      
-				&& (!userIdToIsActive.get(currentUserId)
-				 	|| userIdToIsFrozen.get(currentUserId))) {
+        Map<Id, Boolean> userIdToIsSysAdmin = USER_UserService.isSysAdmin(newlist);
+        Map<Id, Boolean> userIdToIsActive = USER_UserService.isActiveUser(newlist);
+        Map<Id, Boolean> userIdToIsFrozen = USER_UserService.isFrozenUser(newlist);
 
-				USER_UserService.applySysAdminIsActiveIsFrozenStatusChanges(sysAdminUserIds);
-			}
-		}
-	}
+        for(Id currentUserId : userIdToIsSysAdmin.keySet()) {
+            if(userIdToIsSysAdmin.get(currentUserId)
+                && (!userIdToIsActive.get(currentUserId)
+                    || userIdToIsFrozen.get(currentUserId))) {
+                inactiveOrFrozenSysAdminUserIds.add(currentUserId);
+            }
+        }
+
+        USER_UserService.applySysAdminIsActiveIsFrozenStatusChangesFuture(inactiveOrFrozenSysAdminUserIds);
+    }
 
     
 } // end class USER_FrozenInActiveUser_TDTM
