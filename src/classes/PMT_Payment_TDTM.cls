@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org 
-* @date 201
+* @date 2017
 * @group Payments
 * @group-content ../../ApexDocContent/Payments.htm
 * @description trigger handler on Payment and Opportunity objects for supporting Payments
@@ -60,11 +60,9 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     public static DmlWrapper runForPayments(List<npe01__OppPayment__c> newlist, List<npe01__OppPayment__c> oldlist,
             TDTM_Runnable.Action triggerAction) {
 
-        // Only need to execute this logic if multi-currency is enabled
         if (!UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
             return null;
         }
-        // only executing this trigger for before insert/update logic
         if (triggerAction != TDTM_Runnable.Action.BeforeInsert && triggerAction != TDTM_Runnable.Action.BeforeUpdate) {
             return null;
         }
@@ -82,10 +80,11 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
             npe01__OppPayment__c pmt = newlist[i];
 
             String oppCurrency = (String)mapOfOpps.get(pmt.npe01__Opportunity__c).get('CurrencyIsoCode');
+            String pmtCurrency = (String)pmt.get('CurrencyIsoCode');
+            String oldPmtCurrency = (oldList != null ? (String)oldlist[i].get('CurrencyIsoCode') : null);
 
             // Prevent the Payment CurrencyCode from being modified directly
-            if (triggerAction == TDTM_Runnable.Action.BeforeUpdate && pmt.get('CurrencyIsoCode') != oldlist[i].get('CurrencyIsoCode') &&
-                    (String)pmt.get('CurrencyIsoCode') != oppCurrency) {
+            if (triggerAction == TDTM_Runnable.Action.BeforeUpdate && pmtCurrency != oldPmtCurrency && pmtCurrency != oppCurrency) {
                 pmt.addError(Label.pmtModifyCurrency);
             } else if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
                 // Default the Payment CurrencyIsoCode to the value from the parent Opportunity
@@ -107,14 +106,8 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     public static DmlWrapper runForOpportunities(List<Opportunity> newlist, List<Opportunity> oldlist,
             TDTM_Runnable.Action triggerAction) {
 
-        map<Id, Opportunity> mapIdOppNew;
-        map<Id, Opportunity> mapIdOppOld;
-        if (newlist != null) {
-            mapIdOppNew = new map<id, Opportunity>(newlist);
-        }
-        if (oldlist != null) {
-            mapIdOppOld = new map<id, Opportunity>(oldlist);
-        }
+        Map<Id, Opportunity> mapIdOppNew = (newlist != null ? new Map<Id, Opportunity>(newlist) : new Map<Id, Opportunity>());
+        Map<Id, Opportunity> mapIdOppOld = (oldlist != null ? new Map<Id, Opportunity>(oldlist) : new Map<Id, Opportunity>());
 
         DmlWrapper dmlWrapper = new DmlWrapper();
 
@@ -122,19 +115,18 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
         PMT_PaymentCreator pc = new PMT_PaymentCreator(mapIdOppNew, mapIdOppOld, triggerAction, dmlWrapper);
 
         //if currency has changed, reset payment currencies
-        list<Opportunity> listOppsForProcessing = new list<Opportunity>();
-        for (integer i=0; i<newlist.size(); i++) {
-            Opportunity opp = newlist[i];
-            if (triggerAction == TDTM_Runnable.Action.AfterUpdate && UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
+        if (triggerAction == TDTM_Runnable.Action.AfterUpdate && UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
+            List<Opportunity> listOppsForProcessing = new List<Opportunity>();
+            for (integer i = 0; i < newlist.size(); i++) {
+                Opportunity opp = newlist[i];
                 if (opp.get('CurrencyIsoCode') != oldlist[i].get('CurrencyIsoCode')) {
                     listOppsForProcessing.add(opp);
                 }
             }
+            if (listOppsForProcessing.size() > 0) {
+                setPaymentCurrencyFromOpportunity(listOppsForProcessing, dmlWrapper);
+            }
         }
-        if (listOppsForProcessing.size() > 0) {
-            opportunityAmountCurrencyChange(listOppsForProcessing, dmlWrapper);
-        }
-
         return dmlWrapper;
     }
 
@@ -143,15 +135,12 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     * @param listOpps A list of opportunities whose currency has changed.
     * @return void This method modifies the dmlWrapper var and does not return anything
     ********************************************************************************************************/
-    private static void opportunityAmountCurrencyChange(list<Opportunity> listOpps, DmlWrapper dmlWrapper){
+    private static void setPaymentCurrencyFromOpportunity(list<Opportunity> listOpps, DmlWrapper dmlWrapper){
 
         // Get a list of the Opportunity Id's
-        Set<Id> oppIds = new Set<Id>();
-        for (Opportunity opp : listOpps) {
-            oppIds.add(opp.Id);
-        }
+        Set<Id> oppIds = (new Map<Id, Opportunity>(listOpps)).keySet();
 
-        // Get a list of the Payment records by Opportunity
+        // Get a list of the Payment records by Opportunity and update the CurrencyIsoCode value
         String soql = 'SELECT Id, CurrencyIsoCode, npe01__Opportunity__r.CurrencyIsoCode FROM npe01__OppPayment__c ' +
             'WHERE npe01__Opportunity__c IN :oppIds ORDER BY npe01__Opportunity__c';
         for (npe01__OppPayment__c pmt : database.query(soql)) {

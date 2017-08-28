@@ -37,12 +37,12 @@
 private class PMT_Payment_TEST {
 
     /** @description Non default currency type sObject for this org.*/
-    public static sObject nonDefaultCurrencyType;
+    private static sObject nonDefaultCurrencyType;
     /** @description Default currency type sObject for this org.*/
-    public static sObject defaultCurrencyType;
+    private static sObject defaultCurrencyType;
 
     /** @description Queries currency types and fills class variables.*/
-    public static void setupISOCodes() {
+    private static void setupISOCodes() {
         if (nonDefaultCurrencyType!=null || defaultCurrencyType!=null)
             return;
         else {
@@ -56,6 +56,10 @@ private class PMT_Payment_TEST {
         }
     }
 
+    /**
+     * @description Validate that an error is thrown when the CurrencyIsoCode is modified on Payment record directly.
+     * Also validate that a change to the CurrencyIsoCode on the Opportunity record is copied down the Payment records.
+     */
     static testMethod void test_MultiCurrency() {
         //only run test in multicurrency orgs
         if (!userInfo.isMultiCurrencyOrganization()) {
@@ -64,8 +68,7 @@ private class PMT_Payment_TEST {
 
         setupISOCodes();
 
-        npe01__Contacts_And_Orgs_Settings__c PaymentsSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-                new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true));
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true));
 
         Account acc = new Account(Name='foo');
         insert acc;
@@ -82,8 +85,7 @@ private class PMT_Payment_TEST {
         String soql = 'SELECT Id, CurrencyIsoCode FROM Opportunity WHERE Id = \'' + opp.Id + '\' LIMIT 1';
         opp = database.query(soql);
 
-        soql = 'SELECT Id, CurrencyIsoCode FROM npe01__OppPayment__c WHERE npe01__Opportunity__c = \'' + opp.Id + '\' LIMIT 1';
-        npe01__OppPayment__c pmt = database.query(soql);
+        npe01__OppPayment__c pmt = getPaymentRecord(opp.Id);
         System.AssertEquals((String)opp.get('CurrencyIsoCode'), (String)pmt.get('CurrencyIsoCode'));
 
         // If there is no active non-default currency just exit out at this point.
@@ -98,13 +100,19 @@ private class PMT_Payment_TEST {
             System.Assert(False, 'Updating the Payment.CurrencyIsoCode directly should have failed');
         } catch (Exception ex) {
             // GOOD!
+            System.Assert(ex.getMessage().contains(System.Label.pmtModifyCurrency), 'Error message should contain "' +
+                    System.Label.pmtModifyCurrency + '"');
         }
 
         // Verify that the Payment CurrencyIsoCode is updated when the Opportunity CurrencyIsoCode is changed
         opp.put('CurrencyIsoCode', (String)nonDefaultCurrencyType.get('IsoCode'));
         update opp;
-        soql = 'SELECT Id, CurrencyIsoCode FROM npe01__OppPayment__c WHERE npe01__Opportunity__c = \'' + opp.Id + '\' LIMIT 1';
-        pmt = database.query(soql);
+        pmt = getPaymentRecord(opp.Id);
         System.AssertEquals((String)opp.get('CurrencyIsoCode'), (String)pmt.get('CurrencyIsoCode'));
+    }
+
+    private static npe01__OppPayment__c getPaymentRecord(Id oppId) {
+        String soql = 'SELECT Id, CurrencyIsoCode FROM npe01__OppPayment__c WHERE npe01__Opportunity__c = \'' + oppId + '\' LIMIT 1';
+        return (npe01__OppPayment__c)database.query(soql);
     }
 }

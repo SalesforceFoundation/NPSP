@@ -175,10 +175,10 @@ public with sharing class STG_InstallScript_TEST {
         // (OPP_OpportunityContactRoles_TDTM. However, a new trigger on the Payment object was added using the
         // same PMT_Payment_TDTM class referenced in the above list of getNpspToCumulusMap(). That nets out the
         // -1 to 0.
-        System.assertEquals(tdtmClassesWithValues.size(), afterScriptConfig.size());
+        System.assertEquals(tdtmClassesWithValues.size(), afterScriptConfig.size(),
+            'The number of inactive handler classes does not match the expected value');
         for(Trigger_Handler__c handler : afterScriptConfig) {
-            UTIL_Debug.debug('****Is class ' + handler.Class__c + ' still active: ' + handler.Active__c);
-            System.assertEquals(false, handler.Active__c);
+            System.assertEquals(false, handler.Active__c, 'This handler should have be marked as inactive: ' + handler);
         }
         
         //Assert old flags have been properly disabled
