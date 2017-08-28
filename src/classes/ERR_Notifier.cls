@@ -38,8 +38,6 @@ public class ERR_Notifier {
 
     public static NotificationOptions notificationOptions = new NotificationOptions();
     
-    public static final String CONTEXT_USER = 'User';
-
     /*******************************************************************************************************
     * @description Inner class with the 3 types of notification options: user, chatter group, and all system
     *              administrators.
@@ -70,12 +68,12 @@ public class ERR_Notifier {
             //We will send email
             } else {
                 List<String> sendList = new List<String>();
-                if (errorNotifRecipient instanceof id && errorNotifRecipient.startsWith(NotificationOptions.user) && context != CONTEXT_USER) {
+                if (errorNotifRecipient instanceof id && errorNotifRecipient.startsWith(NotificationOptions.user)) {
                     List<User> useremaillist = new List<User>();
                     useremaillist = [SELECT email FROM User WHERE id = :errorNotifRecipient AND isActive = true];
                     for (User u : useremaillist)
                         sendList.add(u.email);
-                } else if(errorNotifRecipient == NotificationOptions.sysAdmins || context == CONTEXT_USER) {
+                } else if(errorNotifRecipient == NotificationOptions.sysAdmins) {
                     List<User> sysadminlist = [SELECT email FROM User WHERE User.Profile.Name = 'System Administrator' AND isActive = true];
                     for (User u : sysadminlist) {
                         sendList.add(u.email);
