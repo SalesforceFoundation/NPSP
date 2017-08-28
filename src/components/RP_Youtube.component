@@ -1,0 +1,92 @@
+<apex:component controller="RP_YoutubeController">
+
+    <h2 class="slds-text-heading_medium"> {!$Label.RP_ProductNameLabel} {!$Label.RP_Videos}</h2>
+
+    <apex:outputPanel rendered="{!!timeoutError}">
+        <div class="slds-box slds-m-top_medium slds-p-top_none youtube-section"  >
+            <div class="slds-grid slds-wrap slds-grid_pull-padded" >
+                <div id="selectedVideo" class="slds-p-horizontal_small slds-size_9-of-12 video-wrapper">
+                    <div class="video-list" data-tooltip="{!youtubeMainVideo.videoTitle}" />
+                </div>
+
+                <div id="videos" class="slds-p-horizontal_small slds-size_3-of-12" >
+                    <apex:repeat value="{!youtubeVideosData}" var="video" id="theVideos">
+                        <div class="video-list" data-tooltip="{!video.videoTitle}">
+                            <img id="{!video.videoId}" src="{!video.videoThumbnail}" class='video-thumbnail' alt="{!video.videoTitle}"/>
+                        </div>
+                        <hr class='videos-hr' />
+                    </apex:repeat>
+                </div>
+
+                <div class="slds-p-horizontal_small slds-size_1-of-1 slds-large-size_3-of-3 large-column" >
+                    <div class="slds-clearfix">
+                        <div class="slds-float_right">
+                            <apex:outputLink target="_blank" value="https://www.youtube.com/{!JSENCODE(youtubeChannelName)}" styleClass="links">
+                                {!$Label.RP_YoutubeChannel}
+                            </apex:outputLink>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </apex:outputPanel>
+
+    <apex:outputPanel rendered="{!timeoutError}">
+        <div class="spinner slds-spinner_container slds-is-relative slds-m-around_xx-large slds-align_absolute-center" >
+            <div role="status" class="slds-spinner slds-spinner_medium">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </apex:outputPanel>
+
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, 'RP_GettingStarted/js/loadMainVideo.js')}"/>
+
+    <script type="text/javascript">
+
+        function showVideoList() {
+
+            if (document.getElementById("videos") != null) {
+
+                try {
+
+                    assignClicks("videos");
+
+                    loadMainVideo('{!youtubeMainVideo.videoId}');
+
+                } catch (ex) {
+
+                    alert(ex.message);
+                }
+            }
+        }
+
+        function assignClicks(divName){
+
+            var thumbnails = document.getElementById(divName).getElementsByTagName('img');
+
+            for (var i = 0; i < thumbnails.length; i++) {
+
+                (function (i) {
+
+                    var thumbnailId = thumbnails[i].id;
+
+                    var thumbnail = thumbnails[i];
+
+                    thumbnail.addEventListener("click", function(e){
+
+                        loadMainVideo(thumbnailId);
+                    });
+                })(i);
+            }
+        }
+
+
+    </script>
+
+    <script type="text/javascript">
+        showVideoList();
+    </script>
+
+</apex:component>
