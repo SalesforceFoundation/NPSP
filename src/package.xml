@@ -2043,7 +2043,6 @@
     </types>
     <types>
         <members>CumulusStaticResources</members>
-        <members>RP_Resources</members>
         <members>SLDS</members>
         <members>sfdo203</members>
         <name>StaticResource</name>
