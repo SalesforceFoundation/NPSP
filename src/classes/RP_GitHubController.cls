@@ -97,7 +97,7 @@ public with sharing class RP_GitHubController {
                     latestDownloadUrl = (String) latestReleaseMap.get('url');
                     latestVersion = (String) latestReleaseMap.get('version');
 
-                    String timeCreated = (String) latestReleaseMap.get('time_created');
+                    String timeCreated = (String) latestReleaseMap.get('time_push_prod');
                     latestDate = formatDate(timeCreated);
                 }
             }
