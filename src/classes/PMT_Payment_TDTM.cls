@@ -36,6 +36,14 @@
 */
 public class PMT_Payment_TDTM extends TDTM_Runnable {
 
+    /*******************************************************************************************************
+    * @description Trigger Handler on on Opportunity or Payment related to the Paymetn object
+    * @param newlist the list of Opportunity or Payments from trigger new.
+    * @param oldlist the list of Opportunity or Payments from trigger old.
+    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.).
+    * @param objResult the describe for related object
+    * @return dmlWrapper.
+    ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist,
             TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
@@ -50,11 +58,10 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description Trigger Handler on Payment for managing multi-currency related items
+    * @description Trigger Handler on Payment for managing Payments
     * @param newlist the list of Payments from trigger new.
     * @param oldlist the list of Payments from trigger old.
     * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.).
-    * @param objResult the describe for Payment (none currently)
     * @return dmlWrapper.
     ********************************************************************************************************/
     public static DmlWrapper runForPayments(List<npe01__OppPayment__c> newlist, List<npe01__OppPayment__c> oldlist,
@@ -100,8 +107,7 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     * @param newlist the list of Opps from trigger new. 
     * @param oldlist the list of Opps from trigger old. 
     * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
-    * @param objResult the describe for Opportunity 
-    * @return dmlWrapper. 
+    * @return dmlWrapper.
     ********************************************************************************************************/
     public static DmlWrapper runForOpportunities(List<Opportunity> newlist, List<Opportunity> oldlist,
             TDTM_Runnable.Action triggerAction) {
