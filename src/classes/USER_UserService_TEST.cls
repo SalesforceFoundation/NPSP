@@ -27,6 +27,7 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
+
 /**
 * @author Salesforce.org
 * @date 2017 
@@ -41,7 +42,7 @@ public with sharing class USER_UserService_TEST {
     * @return void
     **********************************************************************************************************/
     private static testMethod void testIsSysAdmin() {
-        List<User> newUsers = USER_FrozenInActiveUser_TDTM_TEST.createUsers();
+        List<User> newUsers = createUsers();
 
         Map<Id, Boolean> userIdToIsSysAdmin = USER_UserService.isSysAdmin(newUsers);
 
@@ -55,7 +56,7 @@ public with sharing class USER_UserService_TEST {
     * @return void
     **********************************************************************************************************/
     private static testMethod void testIsActiveUser() {
-        List<User> newUsers = USER_FrozenInActiveUser_TDTM_TEST.createUsers();
+        List<User> newUsers = createUsers();
 
         Map<Id, Boolean> userIdToIsActive = USER_UserService.isActiveUser(newUsers);
 
@@ -69,7 +70,7 @@ public with sharing class USER_UserService_TEST {
     * @return void
     **********************************************************************************************************/
     private static testMethod void testIsFrozenUser() {
-        List<User> newUsers = USER_FrozenInActiveUser_TDTM_TEST.createUsers();
+        List<User> newUsers = createUsers();
 
         // Freeze a User
         List<UserLogin> currentUserLogin = [SELECT IsFrozen, UserId FROM UserLogin WHERE UserId = :newUsers[1].Id];
@@ -89,7 +90,7 @@ public with sharing class USER_UserService_TEST {
     * @return void
     **********************************************************************************************************/
     private static testMethod void testApplySysAdminIsActiveIsFrozenStatusChanges() {
-        List<User> newUsers = USER_FrozenInActiveUser_TDTM_TEST.createUsers();
+        List<User> newUsers = createUsers();
         Set<Id> sysAdminIds = new Map<Id, User>(newUsers).keySet();
 
         // Create and insert an Error_Settings__c record with an IsFrozen User to update via setErrorNotificationToAllSysAdmins accordingly
@@ -112,7 +113,7 @@ public with sharing class USER_UserService_TEST {
     * @return void
     **********************************************************************************************************/
     private static testMethod void testSetErrorNotificationToAllSysAdmins() {
-        List<User> newUsers = USER_FrozenInActiveUser_TDTM_TEST.createUsers();
+        List<User> newUsers = createUsers();
         Set<Id> sysAdminIds = new Map<Id, User>(newUsers).keySet();
 
         // Create and insert an Error_Settings__c record with an IsFrozen User to update via setErrorNotificationToAllSysAdmins accordingly
@@ -135,7 +136,7 @@ public with sharing class USER_UserService_TEST {
     * @return void
     **********************************************************************************************************/
     private static testMethod void testHandleScheduledJobsSubmittedByInActiveIsFrozenSysAdmin() {
-        List<User> newUsers = USER_FrozenInActiveUser_TDTM_TEST.createUsers();
+        List<User> newUsers = createUsers();
         Set<Id> sysAdminIds = new Map<Id, User>(newUsers).keySet();
 
         List<CronTrigger> jobs = [SELECT Id FROM CronTrigger];
@@ -213,6 +214,35 @@ public with sharing class USER_UserService_TEST {
 
         List<Error__c> retrievedErrorTypeAfterEmailSent = [SELECT Email_Sent__c FROM Error__c WHERE Object_Type__c = :USER_UserService.OBJECT_TYPE_USER];
         System.assertEquals(true, retrievedErrorTypeAfterEmailSent[0].Email_Sent__c);
+    }
+
+
+    /*********************************************************************************************************
+    * @description Utility method to create Users with System Administrator profile and sets their IsActive status accordingly.
+    * @return List containing the newly created Users.
+    **********************************************************************************************************/
+    public static List<User> createUsers() {
+        List<User> newUsers = new List<User>();
+
+        // Create new Users with SysAdmin Profile
+        Id sysAdminId = [SELECT Id FROM Profile WHERE Name = :USER_UserService.SYSTEM_ADMINISTRATOR][0].Id;
+        User newUserA = new User(LastName = 'TestSysAdminUserA', Email = 'test.sysAdminA@email.com', ProfileId = sysAdminId,
+                                    isActive = true, UserName = 'test.sysAdminA@email.com',
+                                    Alias = 'tu093521', TimeZoneSidKey = 'America/Los_Angeles',
+                                    LocaleSidKey = 'en_US', LanguageLocaleKey = 'en_US',
+                                    EmailEncodingKey = 'ISO-8859-1');
+
+        User newUserB = new User(LastName = 'TestSysAdminUserB', Email = 'test.sysAdminB@email.com', ProfileId = sysAdminId,
+                                    isActive = false, UserName = 'test.sysAdminB@email.com',
+                                    Alias = 'tu093522', TimeZoneSidKey = 'America/Los_Angeles',
+                                    LocaleSidKey = 'en_US', LanguageLocaleKey = 'en_US',
+                                    EmailEncodingKey = 'ISO-8859-1');
+
+        newUsers.add(newUserA);
+        newUsers.add(newUserB);
+        insert newUsers;
+
+        return newUsers;
     }
 
 
