@@ -40,25 +40,9 @@
 public with sharing class BDI_DataImportService {
 
     /*******************************************************************************************************
-    * @description constructor (no batchId specified)
+    * @description constructor
     */
     public BDI_DataImportService() {
-        this(null);
-    }
-
-    /*******************************************************************************************************
-    * @description constructor that takes a specific batch, which loads the appropriate data import settings.
-    */
-    public BDI_DataImportService(ID batchId) {
-
-        // load the optional Batch
-        loadBatch(batchId);
-
-        // now load our settings
-        loadSettings();
-
-        // and make sure settings are valid
-        validateSettings(diSettings);
     }
 
     /*******************************************************************************************************
@@ -87,35 +71,33 @@ public with sharing class BDI_DataImportService {
 
     /*******************************************************************************************************
     * @description loads the data import batch.
-    * @param batchId optional batch to scope processing to.
-    * @return void
+    * @param batchId id of batch to load
+    * @return DataImportBatch__c
     */
-    public void loadBatch(ID batchId) {
+    private static DataImportBatch__c loadBatch(ID batchId) {
 
-        if (batchId != null) {
-            list<DataImportBatch__c> listDIBatch = BDI_DataImportBatch_SEL.selectByIds(new Set<Id>{batchId});
-            if (listDIBatch.size() == 1) {
-                diBatch = listDIBatch[0];
-            } else {
-                throw(new BDIException(string.format(Label.bdiInvalidBatchId, new string[]{batchId})));
-            }
+        list<DataImportBatch__c> listDIBatch = BDI_DataImportBatch_SEL.selectByIds(new Set<Id>{batchId});
+        if (listDIBatch.size() == 1) {
+            return listDIBatch[0];
+        } else {
+            throw(new BDIException(string.format(Label.bdiInvalidBatchId, new string[]{batchId})));
         }
     }
 
     /*******************************************************************************************************
     * @description loads the data import settings to use for this batch.  these may be either from
     * custom settings, or if a specific BatchId was specified, the settings specified for that batch.
-    * @return void
+    * @param batchId the batch to load settings from. if null, use custom settings.
+    * @return Data_Import_Settings__c
     */
-    public Data_Import_Settings__c loadSettings() {
+    public static Data_Import_Settings__c loadSettings(Id batchId) {
 
         // load up the default or specific settings
-        if (diBatch == null) {
-            diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        if (batchId == null) {
+            return UTIL_CustomSettingsFacade.getDataImportSettings();
         } else {
-            diSettings = diSettingsFromDiBatch(diBatch);
+            return diSettingsFromDiBatch(loadBatch(batchId));
         }
-        return diSettings;
     }
 
     /*******************************************************************************************************
@@ -267,11 +249,13 @@ public with sharing class BDI_DataImportService {
 
     /*******************************************************************************************************
     * @description update the (optional) Batch's statistics.
-    * @param bc The BatchableContext
+    * @param apexJobId the apexJob this process was running under
+    * @param batchId the Id of the batch to update
     * @return void
     */
-    public void updateDIBatchStatistics(Id apexJobId) {
-        if (diBatch != null) {
+    public static void updateDIBatchStatistics(Id apexJobId, Id batchId) {
+        if (batchId != null) {
+            DataImportBatch__c diBatch = loadBatch(batchId);
             integer cRecordsProcessed = [
                 SELECT COUNT()
                 FROM DataImport__c
@@ -313,11 +297,6 @@ public with sharing class BDI_DataImportService {
     * custom settings, or if a specific BatchId was specified, the settings specified for that batch.
     */
     public Data_Import_Settings__c diSettings { get; private set; }
-
-    /*******************************************************************************************************
-    * @description the optional DataImportBatch we are processing records for
-    */
-    public DataImportBatch__c diBatch;
 
     /*******************************************************************************************************
     * @description whether the firstname field is in our contact matching rules
@@ -458,15 +437,29 @@ public with sharing class BDI_DataImportService {
 
     /*******************************************************************************************************
     * @description The real work gets done here! Given a list of di records, process them.
+    * @param apexJobId the apexJob that this is executing under
+    * @param diSettings the settings to control processing behavior
     * @param listDI a list of Data Import records to import
     * @return void
     */
-    public void execute(Id apexJobId, List<DataImport__c> listDI) {
+    public static void execute(Id apexJobId, Data_Import_Settings__c diSettings, List<DataImport__c> listDI) {
+        BDI_DataImportService bdi = new BDI_DataImportService();
+        bdi.process(apexJobId, diSettings, listDI);
+    }
 
+    /*******************************************************************************************************
+    * @description The real work gets done here! Given a list of di records, process them.
+    * @param apexJobId the apexJob that this is executing under
+    * @param diSettings the settings to control processing behavior
+    * @param listDI a list of Data Import records to import
+    * @return void
+    */
+    public void process(Id apexJobId, Data_Import_Settings__c diSettings, List<DataImport__c> listDI) {
         SavePoint sp = Database.setSavepoint();
 
         try {
             this.listDI = listDI;
+            this.diSettings = diSettings;
 
             // first set a clean state for each DI
             for (DataImport__c di: listDI) {

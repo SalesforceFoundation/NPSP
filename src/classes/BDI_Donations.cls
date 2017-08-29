@@ -90,20 +90,8 @@ public class BDI_Donations {
     private BDI_IMatchDonations iMatchDonations {
         get {
             if (iMatchDonations == null) {
-                string strClass = bdi.diSettings.Donation_Matching_Implementing_Class__c;
-                if (strClass == null || strClass == '') {
-                    strClass = 'BDI_MatchDonations';
-                }
-                Type classType = Type.forName(strClass);
-                if (classType != null) {
-                    Object classInstance = classType.newInstance();
-                    if (classInstance instanceof BDI_IMatchDonations) {
-                        iMatchDonations = (BDI_IMatchDonations)classInstance;
-                    }
-                }
-                if (iMatchDonations == null) {
-                    throw new BDIException(String.format(Label.bdiErrorInvalidIMatchDonations, new list<String>{strClass}));                    
-                }
+                iMatchDonations = (BDI_IMatchDonations)BDI_DataImportService.instantiateClassForInterface('BDI_IMatchDonations',
+                    bdi.diSettings.Donation_Matching_Implementing_Class__c);
             }
             return iMatchDonations;
         }

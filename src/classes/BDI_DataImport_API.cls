@@ -78,7 +78,7 @@ global with sharing class BDI_DataImport_API {
         for (ID batchId : listBatchId) {
             try {
                 BDI_DataImport_BATCH batch = new BDI_DataImport_BATCH(batchId);
-                listResult.add(new ProcessDataImportBatchesResult(Database.executeBatch(batch, integer.valueOf(batch.bdi.diSettings.Batch_Size__c))));
+                listResult.add(new ProcessDataImportBatchesResult(Database.executeBatch(batch, integer.valueOf(batch.diSettings.Batch_Size__c))));
             } catch (exception ex) {
                 Database.rollback(sp);
                 ex.setMessage('Error encountered in batch: ' + batchId + '. ' + ex.getMessage());

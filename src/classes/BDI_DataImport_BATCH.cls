@@ -45,9 +45,14 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     private String strSoql;
 
     /*******************************************************************************************************
-    * @description the Data Import Service
+    * @description the Data Import Settings to use for this batch
     */
-    public BDI_DataImportService bdi;
+    public Data_Import_Settings__c diSettings;
+
+    /*******************************************************************************************************
+    * @description the optional Data Import Batch being processed
+    */
+    public Id batchId;
 
     /*******************************************************************************************************
     * @description constructor, which sets up our initial soql
@@ -61,9 +66,14 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     * and loads the appropriate data import settings.
     */
     public BDI_DataImport_BATCH(ID batchId) {
+        // remember our batchId
+        this.batchId = batchId;
 
-        // load up the service
-        bdi = new BDI_DataImportService(batchId);
+        // now load our settings
+        diSettings = BDI_DataImportService.loadSettings(batchId);
+
+        // and make sure settings are valid
+        BDI_DataImportService.validateSettings(diSettings);
 
         // get the appropriate soql for the DI records
         strSoql = BDI_DataImportService.strSoqlForBatchProcess(batchId);
@@ -83,7 +93,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     * @return void
     */
     public void execute(Database.BatchableContext bc, List<DataImport__c> listDI) {
-       bdi.execute(bc.getJobId(), listDI);
+        BDI_DataImportService.execute(bc.getJobId(), diSettings, listDI);
     }
 
     /*******************************************************************************************************
@@ -92,6 +102,6 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     * @return void
     */
     public void finish(Database.BatchableContext bc) {
-        bdi.updateDIBatchStatistics(bc.getJobId());
+        BDI_DataImportService.updateDIBatchStatistics(bc.getJobId(), batchId);
     }
 }
