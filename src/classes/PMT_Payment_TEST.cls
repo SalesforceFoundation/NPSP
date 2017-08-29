@@ -60,7 +60,8 @@ private class PMT_Payment_TEST {
      * @description Validate that an error is thrown when the CurrencyIsoCode is modified on Payment record directly.
      * Also validate that a change to the CurrencyIsoCode on the Opportunity record is copied down the Payment records.
      */
-    static testMethod void test_MultiCurrency() {
+    static testMethod void testPaymentCurrIsInSyncWithOppCurrInMultiCurrencyOrg() {
+
         //only run test in multicurrency orgs
         if (!userInfo.isMultiCurrencyOrganization()) {
             return;
