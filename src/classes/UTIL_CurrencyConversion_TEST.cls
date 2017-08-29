@@ -36,7 +36,10 @@
 @isTest
 private class UTIL_CurrencyConversion_TEST {
 
-    static testMethod void test_CurrencyConversion() {
+    /**
+     * @description Validate proper currency conversion math when dated exchange rates are enabled in an org
+     */
+    static testMethod void test_CurrencyConversionWithDatedRates() {
 
         UtilCurrencyCacheMock mockcurrCache = new UtilCurrencyCacheMock();
         UTIL_CurrencyCache.instance = mockcurrCache;
@@ -49,9 +52,12 @@ private class UTIL_CurrencyConversion_TEST {
         mockCurr.isAdvancedCurrencyManagementEnabledReturn = false;
         mockCurr.isMultiCurrencyOrganizationReturn = true;
 
+        Test.startTest();
+
         // The default rate for CAD -> USD will be 1.25
         mockcurrCache.effectiveRatesReturn = new List<Decimal>{ 1.25 };
         mockcurrCache.effectiveDatesReturn = new List<Date>{ Date.Parse('01/01/1900') };
+
         System.AssertEquals( 1.25, UTIL_CurrencyCache.getEffectiveExchangeRate('CAD', Date.Parse('03/15/2017')));
         System.AssertEquals( 800, UTIL_CurrencyConversion.convertAmount(1000, Date.Today(), 'CAD', 'USD'));
 
@@ -66,6 +72,7 @@ private class UTIL_CurrencyConversion_TEST {
         // $1000 CAD converted to Euro's should be 1470.59 given the exchange rates above
         System.AssertEquals( 680, UTIL_CurrencyConversion.convertAmount(1000, Date.Today(), 'CAD', 'EUR'));
 
+        // Verify that converting to/from the same currency always returns the same value
         System.AssertEquals( 1000, UTIL_CurrencyConversion.convertAmount(1000, Date.Today().addDays(95), 'CAD', 'CAD'));
     }
 

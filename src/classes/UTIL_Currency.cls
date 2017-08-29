@@ -90,8 +90,7 @@ public with sharing class UTIL_Currency implements UTIL_Currency.Interface_x {
     }
 
     /**
-     * @description Returns the organizations default currency
-     * TODO -- Consider placing this in the organization cache
+     * @description Returns the organizations default currency code
      */
     private static String orgDefaultCurrencyCode;
     public String getOrgDefaultCurrency() {

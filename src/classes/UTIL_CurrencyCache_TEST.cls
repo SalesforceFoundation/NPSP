@@ -36,6 +36,9 @@
 @isTest
 private class UTIL_CurrencyCache_TEST {
 
+    /**
+     * @description Validate advanced currency conversion logic using a defined set of effective dates and rates
+     */
     static testMethod void test_AdvancedCurrencyConversion() {
 
         UtilCurrencyCacheMock mockcurrCache = new UtilCurrencyCacheMock();
@@ -52,22 +55,35 @@ private class UTIL_CurrencyCache_TEST {
         System.AssertEquals(False, UTIL_CurrencyCache.getInstance().isOrgCacheAvailable());
         System.AssertEquals(null, UTIL_CurrencyCache.orgCache);
         System.AssertEquals( 1.25, UTIL_CurrencyCache.getEffectiveExchangeRate('CAD', Date.Parse('03/15/2017')));
-        UTIL_CurrencyCache.getInstance().resetCurrencyCache();
-
     }
 
-    static testMethod void test_CurrencyCacheMethods() {
-
+    /**
+     * @description Validate that the cache is working, though there's really no way to know if the Org has an
+     * org cache or not so this test is really just validating that the static var cache is storing and retrieving
+     * the values as expected
+     */
+    static testMethod void test_CurrencyCache_StaticCacheVar() {
         // We won't really know if the client has a cache or not, so don't assume a response
         System.AssertNotEquals(null, UTIL_CurrencyCache.getInstance().isOrgCacheAvailable());
+
+        // Populate the static var version of the currency cache to use for the tests below
+        UTIL_CurrencyCache.cachedRatesByCurrency.put('CAD', getDummyRates(Date.Today().AddYears(-1), 0.75));
+
+        // The cache should now have one currency code
+        System.AssertEquals(1, UTIL_CurrencyCache.cachedRatesByCurrency.size(), 'The cache should not be empty');
+
+        // validate that some values are returned for the CAD code
         System.AssertNotEquals(null, UTIL_CurrencyCache.getInstance().getRateMapForCurrencies(new List<String>{'CAD'}));
+
+        // Wipe the cahce and confirm it's wiped
         UTIL_CurrencyCache.getInstance().resetCurrencyCache();
+        System.AssertEquals(0, UTIL_CurrencyCache.cachedRatesByCurrency.size(), 'The cache should be empty');
     }
 
     /**
      * @description Generate a set of effective dates and somewhat random exchange rates to
      * use for testing.
-     * @param
+     * @param Start Date and Starting Value
      */
     private static Map<String, List<Object>> getDummyRates(Date startDt, Decimal seedValue) {
         List<Date> dts = new List<Date>();
@@ -114,6 +130,5 @@ private class UTIL_CurrencyCache_TEST {
                     UTIL_CurrencyCache.LIST_TYPE_EXCH_RATES => effectiveRatesReturn});
             return mapOfEffRatesByCurrencyCode;
         }
-
     }
 }

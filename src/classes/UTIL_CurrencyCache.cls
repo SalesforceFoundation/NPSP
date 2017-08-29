@@ -46,6 +46,10 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
 
     /**
      * @description Cache of rates/effective dates by currency iso code
+     * Example: 'CAD' => Map<String, List<Object>>{
+     *                      'Dates' => List<Date>,
+     *                      'Rates' => List<Decimal>
+     *                   }
      */
     @TestVisible
     private static Map<String, Map<String, List<Object>>> cachedRatesByCurrency =
@@ -64,20 +68,22 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
     public static Decimal getEffectiveExchangeRate(String currCode, Date dt) {
         List<Date> effDates;
         List<Decimal> rates;
+        // If the current static var cache does not have a value for the CurrencyCode
+        // look in the Platform cache first (if available) and if not retrieve from the database.
         if (!cachedRatesByCurrency.containsKey(currCode)) {
             if (getInstance().isOrgCacheAvailable()) {
                 cachedRatesByCurrency.put(currCode, (Map<String, List<Object>>) orgCache.get(CurrencyCache.class, currCode));
             } else {
-                cachedRatesByCurrency.put(currCode, getInstance().getRateMapForCurrencies(new List<String>{
-                        currCode
-                }).get(currCode));
+                cachedRatesByCurrency.put(currCode, getInstance().getRateMapForCurrencies(new List<String>{ currCode }).get(currCode));
             }
         }
+
+        // If a set of rates was retrieved, find the effective rate based on the date
         if (cachedRatesByCurrency.containsKey(currCode)) {
             effDates = (List<Date>) cachedRatesByCurrency.get(currCode).get(LIST_TYPE_EFF_DATES);
             rates = (List<Decimal>) cachedRatesByCurrency.get(currCode).get(LIST_TYPE_EXCH_RATES);
 
-            // The list of effective dates is
+            // The list of effective dates is in descending date order
             for (Integer n = 0; n < effDates.size(); n++) {
                 if (dt >= effDates[n]) {
                     return rates[n];
@@ -127,10 +133,10 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
      * CacheBuilder is smart enough to use the values in the cache if they exist and if not it will call the
      * code witin the doLoad() method below to retrieve the values and then store them in the cache so they're
      * available on the next call.
+     * However, if the cache isn't available at all, the cachebuilder interface cannot be used.
      */
     public class CurrencyCache implements Cache.CacheBuilder {
         public Map<String, List<Object>> doLoad(String currCode) {
-            UTIL_Debug.debug( ' >>>> in CacheBuilder.doLoad() <<<<<' );
             return getInstance().getRateMapForCurrencies(new List<String>{currCode}).get(currCode);
         }
     }
@@ -174,7 +180,6 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
                     'FROM DatedConversionRate ' +
                     'WHERE IsoCode IN :currCodes ' +
                     'ORDER By IsoCode, StartDate DESC';
-            UTIL_Debug.debug( '>>> QUERY DatedConversionRate <<<<' );
             for (SObject dcr : database.query(soql)) {
                 String currCode = (String) dcr.get('IsoCode');
                 Map<String, List<Object>> effectiveRatesAndDates = mapOfEffRatesByCurrencyCode.get(currCode);
@@ -194,9 +199,8 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
         } else if (UserInfo.isMultiCurrencyOrganization()) {
 
             // If ACM is not enabled, query the standard rate table and create a single rate
-            // instance per currency code for all currency codes
+            // instance per currency code for all currency codes with an effective date of 1/1/900.
             String soql = 'SELECT IsoCode, ConversionRate FROM CurrencyType WHERE IsActive = True';
-            UTIL_Debug.debug( '>>> QUERY CurrencyType <<<<' );
             for (SObject dcr : database.query(soql)) {
                 String currCode = (String) dcr.get('IsoCode');
                 Map<String, List<Object>> effectiveRatesAndDates = new Map<String, List<Object>>{

@@ -35,6 +35,9 @@
 */
 public class UTIL_PlatformCache {
 
+    /**
+     * @description The expected name for the platform cache partition created by the customer org
+     */
     private static final String NPSP_CACHE_NAME = 'local.npsp';
 
     /**
@@ -43,19 +46,21 @@ public class UTIL_PlatformCache {
     public static Cache.OrgPartition orgCache;
 
     /**
-     * @description Has the Org Cache been retrieved (orgCache can still be null if there is no cache to retrieve)
+     * @description Has the Org Cache been retrieved? (OrgCache can still be null if there is no cache to retrieve)
      */
     private static Boolean orgCacheRetrieved = false;
 
     /**
-    * @description Returns true if an organization cache is available for npsp
+    * @description Returns true if an organization cache is available for npsp AND initializes the
+    * organization cache static var above.
     */
     public static Boolean isOrgCacheAvailable() {
         if (!orgCacheRetrieved) {
             try {
                 orgCache = Cache.Org.getPartition(NPSP_CACHE_NAME);
             } catch (Exception ex) {
-                // no cache available, so ignore the error and continue
+                // no cache available, so ignore the error and continue, but set the boolean var to true
+                // so we don't go through this code a second time
             }
             orgCacheRetrieved = true;
         }

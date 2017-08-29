@@ -63,6 +63,26 @@ public class UTIL_Currency_TEST {
     }
 
     /**
+     * @description Validate UTIL_Currency.getOrgDefaultCurrency() response
+     * value as UserInfo.getDefaultCurrency()
+     */
+    @isTest
+    private static void testGetDefaultOrgCurrencyMethod() {
+        UTIL_Currency actual = new UTIL_Currency();
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            String soql = 'SELECT IsoCode FROM CurrencyType WHERE IsCorporate = True LIMIT 1';
+            SObject currObj = database.query(soql);
+            String orgDefaultCurrency = (String)currObj.get('IsoCode');
+            System.assertEquals(
+                    orgDefaultCurrency,
+                    actual.getDefaultCurrency()
+            );
+        } else {
+            System.assert(String.isEmpty(actual.getOrgDefaultCurrency()));
+        }
+    }
+
+    /**
      * @description UTIL_Currency implements the Singleton pattern.  If the
      * class has already been instantiated, it should be returned by
      * getInstance().
