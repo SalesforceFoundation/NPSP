@@ -131,7 +131,6 @@ private class PMT_Payment_TEST {
                 StageName = UTIL_UnitTestData_TEST.getClosedWonStage());
         insert opp;
 
-        npe01__OppPayment__c pmt = getPaymentRecord(opp.Id);
 
         // Verify that the Payment CurrencyIsoCode is updated when the Opportunity CurrencyIsoCode is changed
         opp.put('CurrencyIsoCode', (String) nonDefaultCurrencyType.get('IsoCode'));
@@ -139,7 +138,7 @@ private class PMT_Payment_TEST {
 
         Test.stopTest();
 
-        pmt = getPaymentRecord(opp.Id);
+        npe01__OppPayment__c pmt = getPaymentRecord(opp.Id);
         System.AssertEquals((String) opp.get('CurrencyIsoCode'), (String) pmt.get('CurrencyIsoCode'));
     }
 
