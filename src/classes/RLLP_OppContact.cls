@@ -31,13 +31,13 @@ public with sharing class RLLP_OppContact extends RLLP_Definition {
         standardRollup.operations.add(new RLLP_Operation(Contact.npo02__OppsClosedThisYear__c, RLLP_Operation.RollupType.COUNT, String.valueOf(thisYear)));
 
         standardRollup.exclusions.put(Opportunity.SObjectType, new List<RLLP_Exclusion>());
-        standardRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.RecordTypeId, RLLP_Exclusion.Operators.IS_NOT_INCLUDED, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Excluded_Account_Opp_Rectypes__c));
-        standardRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.Type, RLLP_Exclusion.Operators.IS_NOT_INCLUDED, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Excluded_Account_Opp_Types__c));
-        standardRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.IsClosed, RLLP_Exclusion.Operators.EQUALS, 'false'));
-        standardRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.IsWon, RLLP_Exclusion.Operators.EQUALS, 'false'));
+        standardRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.RecordTypeId, RLLP_Exclusion.Operator.IS_NOT_INCLUDED, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Excluded_Account_Opp_Rectypes__c));
+        standardRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.Type, RLLP_Exclusion.Operator.IS_NOT_INCLUDED, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Excluded_Account_Opp_Types__c));
+        standardRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.IsClosed, RLLP_Exclusion.Operator.EQUALS, 'false'));
+        standardRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.IsWon, RLLP_Exclusion.Operator.EQUALS, 'false'));
 
         standardRollup.exclusions.put(OpportunityContactRole.SObjectType, new List<RLLP_Exclusion>());
-        standardRollup.exclusions.get(OpportunityContactRole.SObjectType).add(new RLLP_Exclusion(OpportunityContactRole.SObjectType, OpportunityContactRole.IsPrimary, RLLP_Exclusion.Operators.EQUALS, 'false'));
+        standardRollup.exclusions.get(OpportunityContactRole.SObjectType).add(new RLLP_Exclusion(OpportunityContactRole.SObjectType, OpportunityContactRole.IsPrimary, RLLP_Exclusion.Operator.EQUALS, 'false'));
 
         wrappers.add(standardRollup);
 
@@ -52,12 +52,12 @@ public with sharing class RLLP_OppContact extends RLLP_Definition {
         membershipRollup.operations.add(new RLLP_Operation(Contact.npo02__TotalMembershipOppAmount__c, RLLP_Operation.RollupType.SUM));
 
         membershipRollup.exclusions.put(Opportunity.SObjectType, new List<RLLP_Exclusion>());
-        membershipRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.RecordTypeId, RLLP_Exclusion.Operators.IS_NOT_INCLUDED, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Excluded_Account_Opp_Rectypes__c));
-        membershipRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.Type, RLLP_Exclusion.Operators.IS_NOT_INCLUDED, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Excluded_Account_Opp_Types__c));
-        membershipRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.IsClosed, RLLP_Exclusion.Operators.EQUALS, 'false'));
-        membershipRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.IsWon, RLLP_Exclusion.Operators.EQUALS, 'false'));
+        membershipRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.RecordTypeId, RLLP_Exclusion.Operator.IS_NOT_INCLUDED, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Excluded_Account_Opp_Rectypes__c));
+        membershipRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.Type, RLLP_Exclusion.Operator.IS_NOT_INCLUDED, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Excluded_Account_Opp_Types__c));
+        membershipRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.IsClosed, RLLP_Exclusion.Operator.EQUALS, 'false'));
+        membershipRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.IsWon, RLLP_Exclusion.Operator.EQUALS, 'false'));
 
-        membershipRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.RecordTypeId, RLLP_Exclusion.Operators.NOT_EQUALS, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Membership_Record_Types__c));
+        membershipRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.RecordTypeId, RLLP_Exclusion.Operator.NOT_EQUALS, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Membership_Record_Types__c));
 
         wrappers.add(membershipRollup);
 
@@ -66,13 +66,13 @@ public with sharing class RLLP_OppContact extends RLLP_Definition {
         nDaysRollup.operations.add(new RLLP_Operation(Contact.npo02__OppsClosedLastNDays__c, RLLP_Operation.RollupType.COUNT));
 
         nDaysRollup.exclusions.put(Opportunity.SObjectType, new List<RLLP_Exclusion>());
-        nDaysRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.RecordTypeId, RLLP_Exclusion.Operators.IS_NOT_INCLUDED, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Excluded_Account_Opp_Rectypes__c));
-        nDaysRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.Type, RLLP_Exclusion.Operators.IS_NOT_INCLUDED, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Excluded_Account_Opp_Types__c));
-        nDaysRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.IsClosed, RLLP_Exclusion.Operators.EQUALS, 'false'));
-        nDaysRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.IsWon, RLLP_Exclusion.Operators.EQUALS, 'false'));
+        nDaysRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.RecordTypeId, RLLP_Exclusion.Operator.IS_NOT_INCLUDED, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Excluded_Account_Opp_Rectypes__c));
+        nDaysRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.Type, RLLP_Exclusion.Operator.IS_NOT_INCLUDED, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Excluded_Account_Opp_Types__c));
+        nDaysRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.IsClosed, RLLP_Exclusion.Operator.EQUALS, 'false'));
+        nDaysRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.IsWon, RLLP_Exclusion.Operator.EQUALS, 'false'));
 
-        nDaysRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.CloseDate, RLLP_Exclusion.Operators.LESS, '-' + UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Rollup_N_Day_Value__c));
-        nDaysRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.CloseDate, RLLP_Exclusion.Operators.GREATER, '0'));
+        nDaysRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.CloseDate, RLLP_Exclusion.Operator.LESS, '-' + UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Rollup_N_Day_Value__c));
+        nDaysRollup.exclusions.get(Opportunity.SObjectType).add(new RLLP_Exclusion(Opportunity.SObjectType, Opportunity.CloseDate, RLLP_Exclusion.Operator.GREATER, '0'));
 
         wrappers.add(nDaysRollup);
 

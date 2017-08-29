@@ -59,10 +59,16 @@ public class ALLO_Multicurrency_TDTM extends TDTM_Runnable {
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
         //if this is a multicurrency org, update child objects 
-        if (UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
+        if (UTIL_Currency.getInstance().isMultiCurrencyOrganization() && !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC)) {
             wrapper.objectsToUpdate.addAll((list<sObject>) updateAllocationCurrencyFromParent(newlist, oldlist));
+
+            // Increment the recursion flag to prevent the allocation triggers from running,
+            // process the DML, and then decrement the recursion flag
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, true);
+            TDTM_TriggerHandler.processDML(wrapper);
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, false);
         }
-        return wrapper;
+        return null;
     }
 
     /*******************************************************************************************************

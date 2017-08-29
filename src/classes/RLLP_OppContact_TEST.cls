@@ -22,6 +22,6 @@ private class RLLP_OppContact_TEST {
         } catch (Exception ex) {
             System.assert(false, ex + ' stack: ' + ex.getStackTraceString());
         }
-        System.assert(false, 'njjc results :' + rollup.getResults());
+//        System.assert(false, 'njjc results :' + rollup.getResults());
     }
 }

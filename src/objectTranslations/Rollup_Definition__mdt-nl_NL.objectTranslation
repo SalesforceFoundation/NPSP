@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Rollup Definition --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Rollup Definition --></value>
+    </caseValues>
+    <fields>
+        <label><!-- Attribution Field --></label>
+        <name>Attribution_Field__c</name>
+    </fields>
+    <fields>
+        <label><!-- Attribution Object --></label>
+        <name>Attribution_Object__c</name>
+    </fields>
+    <fields>
+        <label><!-- Description --></label>
+        <name>Description__c</name>
+    </fields>
+    <fields>
+        <label><!-- Detail Attribution Field --></label>
+        <name>Detail_Attribution_Field__c</name>
+    </fields>
+    <fields>
+        <label><!-- Detail Object --></label>
+        <name>Detail_Object__c</name>
+    </fields>
+    <fields>
+        <label><!-- Summary Object --></label>
+        <name>Summary_Object__c</name>
+    </fields>
+    <gender><!-- Neuter --></gender>
+</CustomObjectTranslation>

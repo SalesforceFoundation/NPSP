@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>Amount_Field__c</fullName>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <label>Amount Field</label>
+        <metadataRelationshipControllingField>Rollup_Field_Definition__mdt.Detail_Object__c</metadataRelationshipControllingField>
+        <referenceTo>FieldDefinition</referenceTo>
+        <relationshipLabel>Rollup_Field_Definitions</relationshipLabel>
+        <relationshipName>Rollup_Field_Definitions</relationshipName>
+        <required>true</required>
+        <type>MetadataRelationship</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Attribution_Field__c</fullName>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <label>Attribution Field</label>
+        <metadataRelationshipControllingField>Rollup_Field_Definition__mdt.Attribution_Object__c</metadataRelationshipControllingField>
+        <referenceTo>FieldDefinition</referenceTo>
+        <relationshipLabel>Rollup_Field_Definitions3</relationshipLabel>
+        <relationshipName>Rollup_Field_Definitions3</relationshipName>
+        <required>false</required>
+        <type>MetadataRelationship</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Attribution_Object__c</fullName>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <label>Attribution Object</label>
+        <referenceTo>EntityDefinition</referenceTo>
+        <relationshipLabel>Rollup_Field_Definitions1</relationshipLabel>
+        <relationshipName>Rollup_Field_Definitions1</relationshipName>
+        <required>false</required>
+        <type>MetadataRelationship</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Date_Field__c</fullName>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <label>Date Field</label>
+        <metadataRelationshipControllingField>Rollup_Field_Definition__mdt.Detail_Object__c</metadataRelationshipControllingField>
+        <referenceTo>FieldDefinition</referenceTo>
+        <relationshipLabel>Rollup_Field_Definitions1</relationshipLabel>
+        <relationshipName>Rollup_Field_Definitions1</relationshipName>
+        <required>true</required>
+        <type>MetadataRelationship</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Description__c</fullName>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <label>Description</label>
+        <length>32768</length>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Detail_Attribution_Field__c</fullName>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <label>Detail Attribution Field</label>
+        <metadataRelationshipControllingField>Rollup_Field_Definition__mdt.Detail_Object__c</metadataRelationshipControllingField>
+        <referenceTo>FieldDefinition</referenceTo>
+        <relationshipLabel>Rollup_Field_Definitions4</relationshipLabel>
+        <relationshipName>Rollup_Field_Definitions4</relationshipName>
+        <required>false</required>
+        <type>MetadataRelationship</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Detail_Field__c</fullName>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <label>Detail Field</label>
+        <metadataRelationshipControllingField>Rollup_Field_Definition__mdt.Detail_Object__c</metadataRelationshipControllingField>
+        <referenceTo>FieldDefinition</referenceTo>
+        <relationshipLabel>Rollup_Field_Definitions2</relationshipLabel>
+        <relationshipName>Rollup_Field_Definitions2</relationshipName>
+        <required>false</required>
+        <type>MetadataRelationship</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Detail_Object__c</fullName>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <label>Detail Object</label>
+        <referenceTo>EntityDefinition</referenceTo>
+        <relationshipLabel>Rollup_Field_Definitions</relationshipLabel>
+        <relationshipName>Rollup_Field_Definitions</relationshipName>
+        <required>true</required>
+        <type>MetadataRelationship</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Filter_Group__c</fullName>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <label>Filter Group</label>
+        <referenceTo>Filter_Group__mdt</referenceTo>
+        <relationshipLabel>Rollup Field Definitions</relationshipLabel>
+        <relationshipName>Rollup_Field_Definitions</relationshipName>
+        <required>false</required>
+        <type>MetadataRelationship</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Is_Active__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <label>Is Active</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Operation__c</fullName>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <label>Operation</label>
+        <required>false</required>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Count</fullName>
+                    <default>true</default>
+                    <label>Count</label>
+                </value>
+                <value>
+                    <fullName>Sum</fullName>
+                    <default>false</default>
+                    <label>Sum</label>
+                </value>
+                <value>
+                    <fullName>Average</fullName>
+                    <default>false</default>
+                    <label>Average</label>
+                </value>
+                <value>
+                    <fullName>Largest</fullName>
+                    <default>false</default>
+                    <label>Largest</label>
+                </value>
+                <value>
+                    <fullName>Smallest</fullName>
+                    <default>false</default>
+                    <label>Smallest</label>
+                </value>
+                <value>
+                    <fullName>First</fullName>
+                    <default>false</default>
+                    <label>First</label>
+                </value>
+                <value>
+                    <fullName>Last</fullName>
+                    <default>false</default>
+                    <label>Last</label>
+                </value>
+                <value>
+                    <fullName>Years Donated</fullName>
+                    <default>false</default>
+                    <label>Years Donated</label>
+                </value>
+                <value>
+                    <fullName>Donor Streak</fullName>
+                    <default>false</default>
+                    <label>Donor Streak</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>Rollup_Definition__c</fullName>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <label>Rollup Definition</label>
+        <referenceTo>Rollup_Definition__mdt</referenceTo>
+        <relationshipLabel>Rollup Field Definitions</relationshipLabel>
+        <relationshipName>Rollup_Field_Definitions_del</relationshipName>
+        <required>false</required>
+        <type>MetadataRelationship</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Years_Back__c</fullName>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <label>Years Back</label>
+        <precision>3</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <label>Rollup Field Definition</label>
+    <pluralLabel>Rollup Field Definitions</pluralLabel>
+    <visibility>Public</visibility>
+</CustomObject>

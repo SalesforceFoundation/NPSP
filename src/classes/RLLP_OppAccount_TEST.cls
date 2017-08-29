@@ -61,7 +61,8 @@ private class RLLP_OppAccount_TEST {
         } catch (Exception ex) {
             System.assert(false, ex + ' stack: ' + ex.getStackTraceString());
         }
-        System.assert(false, 'njjc results :' + rollup.getResults());
+        system.debug('njjc heap' + Limits.getHeapSize());
+        //System.assert(false, 'njjc results :' + rollup.getResults());
 
     }
 }

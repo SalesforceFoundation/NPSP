@@ -14,7 +14,7 @@ public class RLLP_Wrapper {
         if (exclusions.containsKey(objType)) {
             for (RLLP_Exclusion exclusion : exclusions.get(objType)) {
                 if (exclusion.isExcluded(detail)) {
-                    system.debug('njjc Excluded! ' + exclusion.field + ' ' + exclusion.operator + ' ' + exclusion.constant);
+                    system.debug('njjc Excluded! ' + exclusion.field + ' ' + exclusion.operation + ' ' + exclusion.constant);
                     return true;
                 }
             }

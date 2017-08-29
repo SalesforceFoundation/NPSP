@@ -799,40 +799,49 @@
         <externalId>false</externalId>
         <inlineHelpText>The general program area(s) that this organization funds.</inlineHelpText>
         <label>Funding Focus</label>
-        <picklist>
-            <picklistValues>
-                <fullName>Animal Welfare</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Arts and Culture</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Capacity Building</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Education</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Environmental</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Health Services</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Human Services</fullName>
-                <default>false</default>
-            </picklistValues>
-            <sorted>false</sorted>
-        </picklist>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
         <type>MultiselectPicklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Animal Welfare</fullName>
+                    <default>false</default>
+                    <label>Animal Welfare</label>
+                </value>
+                <value>
+                    <fullName>Arts and Culture</fullName>
+                    <default>false</default>
+                    <label>Arts and Culture</label>
+                </value>
+                <value>
+                    <fullName>Capacity Building</fullName>
+                    <default>false</default>
+                    <label>Capacity Building</label>
+                </value>
+                <value>
+                    <fullName>Education</fullName>
+                    <default>false</default>
+                    <label>Education</label>
+                </value>
+                <value>
+                    <fullName>Environmental</fullName>
+                    <default>false</default>
+                    <label>Environmental</label>
+                </value>
+                <value>
+                    <fullName>Health Services</fullName>
+                    <default>false</default>
+                    <label>Health Services</label>
+                </value>
+                <value>
+                    <fullName>Human Services</fullName>
+                    <default>false</default>
+                    <label>Human Services</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
         <visibleLines>4</visibleLines>
     </fields>
     <fields>

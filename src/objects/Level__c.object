@@ -25,10 +25,6 @@
         <type>Visualforce</type>
     </actionOverrides>
     <actionOverrides>
-        <actionName>Follow</actionName>
-        <type>Default</type>
-    </actionOverrides>
-    <actionOverrides>
         <actionName>List</actionName>
         <type>Default</type>
     </actionOverrides>
@@ -188,22 +184,26 @@
         <externalId>false</externalId>
         <inlineHelpText>The object that this Level applies to.</inlineHelpText>
         <label>Target</label>
-        <picklist>
-            <picklistValues>
-                <fullName>Account</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Contact</fullName>
-                <default>false</default>
-            </picklistValues>
-            <restrictedPicklist>true</restrictedPicklist>
-            <sorted>false</sorted>
-        </picklist>
         <required>false</required>
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Account</fullName>
+                    <default>false</default>
+                    <label>Account</label>
+                </value>
+                <value>
+                    <fullName>Contact</fullName>
+                    <default>false</default>
+                    <label>Contact</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
     </fields>
     <label>Level</label>
     <listViews>
@@ -267,4 +267,5 @@
         <errorDisplayField>Target__c</errorDisplayField>
         <errorMessage>Target is a required field on Level.  Please specify the Target object for this Level.</errorMessage>
     </validationRules>
+    <visibility>Public</visibility>
 </CustomObject>
