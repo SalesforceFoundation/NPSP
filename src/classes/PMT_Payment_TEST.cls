@@ -56,11 +56,57 @@ private class PMT_Payment_TEST {
         }
     }
 
+    @TestSetup
+    static void test_createTestData() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true));
+        Account acc = new Account(Name='foo');
+        insert acc;
+    }
+
     /**
-     * @description Validate that an error is thrown when the CurrencyIsoCode is modified on Payment record directly.
-     * Also validate that a change to the CurrencyIsoCode on the Opportunity record is copied down the Payment records.
+     * @description Validate that new payment records created with an opportunity get the CurrencyIsoCode set
+     * properly to the Opportunities currency code
      */
-    static testMethod void testPaymentCurrIsInSyncWithOppCurrInMultiCurrencyOrg() {
+    static testMethod void test_newPaymentCurrencyMatchesOpportunity() {
+
+        //only run test in multicurrency orgs
+        if (!userInfo.isMultiCurrencyOrganization()) {
+            return;
+        }
+
+        Account acc = [SELECT Id FROM Account LIMIT 1];
+
+        setupISOCodes();
+        // If there is no active non-default currency just exit out at this point.
+        if (nonDefaultCurrencyType == null) {
+            return;
+        }
+
+        Test.startTest();
+
+        Opportunity opp = new Opportunity(
+                Name = 'success',
+                Amount = 10,
+                AccountID = acc.id,
+                CloseDate = system.today(),
+                StageName = UTIL_UnitTestData_TEST.getClosedWonStage());
+        opp.put('CurrencyIsoCode', (String) nonDefaultCurrencyType.get('IsoCode'));
+        insert opp;
+
+        Test.StopTest();
+
+        String soql = 'SELECT Id, CurrencyIsoCode FROM Opportunity WHERE Id = \'' + opp.Id + '\' LIMIT 1';
+        opp = database.query(soql);
+
+        npe01__OppPayment__c pmt = getPaymentRecord(opp.Id);
+        System.AssertEquals((String) opp.get('CurrencyIsoCode'), (String) pmt.get('CurrencyIsoCode'));
+    }
+
+    /**
+     * @description Validate that a change to the CurrencyIsoCode on the Opportunity record is copied
+     * down the Payment records.
+     */
+    static testMethod void test_UpdatePaymentCurrencyFromOpportunity() {
 
         //only run test in multicurrency orgs
         if (!userInfo.isMultiCurrencyOrganization()) {
@@ -68,11 +114,53 @@ private class PMT_Payment_TEST {
         }
 
         setupISOCodes();
+        // If there is no active non-default currency just exit out at this point.
+        if (nonDefaultCurrencyType == null) {
+            return;
+        }
 
-        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true));
+        Account acc = [SELECT Id FROM Account LIMIT 1];
 
-        Account acc = new Account(Name='foo');
-        insert acc;
+        Test.startTest();
+
+        Opportunity opp = new Opportunity(
+                Name = 'success',
+                Amount = 10,
+                AccountID = acc.id,
+                CloseDate = system.today(),
+                StageName = UTIL_UnitTestData_TEST.getClosedWonStage());
+        insert opp;
+
+        npe01__OppPayment__c pmt = getPaymentRecord(opp.Id);
+
+        // Verify that the Payment CurrencyIsoCode is updated when the Opportunity CurrencyIsoCode is changed
+        opp.put('CurrencyIsoCode', (String) nonDefaultCurrencyType.get('IsoCode'));
+        update opp;
+
+        Test.stopTest();
+
+        pmt = getPaymentRecord(opp.Id);
+        System.AssertEquals((String) opp.get('CurrencyIsoCode'), (String) pmt.get('CurrencyIsoCode'));
+    }
+
+    /**
+     * @description Validate that an error is thrown when the CurrencyIsoCode is modified on Payment record directly
+     * or when a new payment is added with a different currency code than the parent opportunity.
+     */
+    static testMethod void test_BlockPaymentCurrencyChange() {
+
+        //only run test in multicurrency orgs
+        if (!userInfo.isMultiCurrencyOrganization()) {
+            return;
+        }
+
+        setupISOCodes();
+        // If there is no active non-default currency just exit out at this point.
+        if (nonDefaultCurrencyType == null) {
+            return;
+        }
+
+        Account acc = [SELECT Id FROM Account LIMIT 1];
 
         Test.startTest();
 
@@ -83,16 +171,8 @@ private class PMT_Payment_TEST {
                 CloseDate=system.today(),
                 StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
         insert opp;
-        String soql = 'SELECT Id, CurrencyIsoCode FROM Opportunity WHERE Id = \'' + opp.Id + '\' LIMIT 1';
-        opp = database.query(soql);
 
         npe01__OppPayment__c pmt = getPaymentRecord(opp.Id);
-        System.AssertEquals((String)opp.get('CurrencyIsoCode'), (String)pmt.get('CurrencyIsoCode'));
-
-        // If there is no active non-default currency just exit out at this point.
-        if (nonDefaultCurrencyType == null) {
-            return;
-        }
 
         // Verify that individual changes to the Payment CurrencyIsoCode are blocked
         pmt.put('CurrencyIsoCode', (String)nonDefaultCurrencyType.get('IsoCode'));
@@ -105,18 +185,12 @@ private class PMT_Payment_TEST {
                     System.Label.pmtModifyCurrency + '"');
         }
 
-        // Verify that the Payment CurrencyIsoCode is updated when the Opportunity CurrencyIsoCode is changed
-        opp.put('CurrencyIsoCode', (String)nonDefaultCurrencyType.get('IsoCode'));
-        update opp;
-        pmt = getPaymentRecord(opp.Id);
-        System.AssertEquals((String)opp.get('CurrencyIsoCode'), (String)pmt.get('CurrencyIsoCode'));
-
         // Verify that a new Payment cannot be inserted with a different currencyIsoCode
         pmt = new npe01__OppPayment__c(
             npe01__Opportunity__c = opp.Id,
             npe01__Payment_Amount__c = 100
         );
-        pmt.put('CurrencyIsoCode', (String)defaultCurrencyType.get('IsoCode'));
+        pmt.put('CurrencyIsoCode', (String)nonDefaultCurrencyType.get('IsoCode'));
         try {
             insert pmt;
             System.Assert(False, 'Inserting the Payment.CurrencyIsoCode directly should have failed');

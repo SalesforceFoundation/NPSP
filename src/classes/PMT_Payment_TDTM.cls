@@ -99,7 +99,7 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
                 pmt.addError(Label.pmtModifyCurrency);
 
             } else if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-                // Otherwise efault the Payment CurrencyIsoCode to the value from the parent Opportunity
+                // Otherwise default the Payment CurrencyIsoCode to the value from the parent Opportunity
                 pmt.put('CurrencyIsoCode', oppCurrency);
             }
         }
