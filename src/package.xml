@@ -219,6 +219,18 @@
         <members>RLLP_OppRollup_UTIL</members>
         <members>RLLP_OppSoftCreditRollup_BATCH</members>
         <members>RLLP_Wrapper</members>
+        <members>RP_GettingStartedController</members>
+        <members>RP_GettingStartedTest</members>
+        <members>RP_GitHubClient</members>
+        <members>RP_GitHubController</members>
+        <members>RP_GitHubTest</members>
+        <members>RP_Constants</members>
+        <members>RP_GitHubTestMock</members>
+        <members>RP_HTTPClient</members>
+        <members>RP_YoutubeClient</members>
+        <members>RP_YoutubeController</members>
+        <members>RP_YoutubeTest</members>
+        <members>RP_YoutubeTestMock</members>
         <members>STG_DataBoundMultiSelect_CTRL</members>
         <members>STG_InstallScript</members>
         <members>STG_InstallScript_TEST</members>
@@ -314,6 +326,9 @@
     </types>
     <types>
         <members>BDI_SettingsUI</members>
+        <members>RP_GettingStarted</members>
+        <members>RP_GitHub</members>
+        <members>RP_Youtube</members>
         <members>STG_DataBoundMultiSelect</members>
         <members>STG_PageHeader</members>
         <members>UTIL_FormField</members>
@@ -354,6 +369,7 @@
         <members>PSC_ManageSoftCredits</members>
         <members>RD_AddDonationsBTN</members>
         <members>REL_RelationshipsViewer</members>
+        <members>RP_Resources</members>
         <members>STG_PanelAddrVerification</members>
         <members>STG_PanelAffiliations</members>
         <members>STG_PanelAlloBatch</members>
@@ -1339,6 +1355,28 @@
         <members>pscManageSoftCreditsType</members>
         <members>pscManageSoftCreditsUnaccounted</members>
         <members>pscManageSoftCreditsValidateTotals</members>
+        <members>RP_CustomerJourneyLinkLabel</members>
+        <members>RP_DeeperParagraph</members>
+        <members>RP_DeeperSubtitle</members>
+        <members>RP_GettingStarted</members>
+        <members>RP_GitHubSubtitle</members>
+        <members>RP_GitHubTitle</members>
+        <members>RP_NpspLinkLabel</members>
+        <members>RP_ProductNameLabel</members>
+        <members>RP_ReleaseGitHub</members>
+        <members>RP_ReleaseNotesLink</members>
+        <members>RP_SalesforceOrgLinkLabel</members>
+        <members>RP_SubTitle</members>
+        <members>RP_Title</members>
+        <members>RP_TrailheadLinkLabel</members>
+        <members>RP_TrailheadParagraph</members>
+        <members>RP_TrailheadSubtitle</members>
+        <members>RP_UsHubLinkLabel</members>
+        <members>RP_USParagraph</members>
+        <members>RP_UsSubtitle</members>
+        <members>RP_Videos</members>
+        <members>RP_WebinarLinkLabel</members>
+        <members>RP_YoutubeChannel</members>
         <members>sendAcknowledgmentFailedStatus</members>
         <members>sendAcknowledgmentFailureReasons</members>
         <members>sendAcknowledgmentFireStatus</members>
@@ -2052,6 +2090,7 @@
     <types>
         <members>Cicero</members>
         <members>GoogleAPI</members>
+        <members>SFDOEndpoints</members>
         <members>SmartyStreets</members>
         <members>SmartyStreetsZip</members>
         <name>RemoteSiteSetting</name>
