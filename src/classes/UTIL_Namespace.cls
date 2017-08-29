@@ -116,9 +116,9 @@ public class UTIL_Namespace {
     * @return true if running in sandbox. false otherwise.
     ********************************************************************************************************/
     public static Boolean isSandbox() {
-	    return URL.getSalesforceBaseUrl().getHost().left(2).equalsignorecase('cs');
-	}
-	
+        return [SELECT IsSandbox FROM Organization WHERE Id = :UserInfo.getOrganizationId()].IsSandbox;
+    }
+
 	/*******************************************************************************************************
     * @description Static method that returns the real email if it's a sandbox email.
     * @return string with user's email.
