@@ -55,60 +55,13 @@ public class USER_FrozenInActiveUser_TDTM extends TDTM_Runnable {
         //================================
         // Determine which handler method to call based on the triggerAction
         //================================
-        if(TDTM_Runnable.Action.BeforeInsert == triggerAction) {
-            onBeforeInsert();
-
-        } else if(TDTM_Runnable.Action.BeforeUpdate == triggerAction) {
-            onBeforeUpdate();
-
-        } else if(TDTM_Runnable.Action.BeforeDelete == triggerAction) {
-            onBeforeDelete();
-
-        } else if(TDTM_Runnable.Action.AfterInsert == triggerAction) {
-            onAfterInsert();
-
-        } else if(TDTM_Runnable.Action.AfterUpdate == triggerAction) {
+        if(TDTM_Runnable.Action.AfterUpdate == triggerAction) {
             onAfterUpdate(newlist);
-
-        } else if(TDTM_Runnable.Action.AfterDelete == triggerAction) {
-            onAfterDelete();
-
-        } else if(TDTM_Runnable.Action.AfterUndelete == triggerAction) {
-            onAfterUnDelete();
-
         }
 
         return dmlWrapper;
     }
  
-
-    /*********************************************************************************************************
-    * @description Handles the TDTM_Runnable.Action for BeforeInsert 
-    * @return void
-    **********************************************************************************************************/
-    public void onBeforeInsert() {}
-
-
-    /*********************************************************************************************************
-    * @description Handles the TDTM_Runnable.Action for BeforeUpdate
-    * @return void
-    **********************************************************************************************************/
-    public void onBeforeUpdate() {}
-
-
-    /*********************************************************************************************************
-    * @description Handles the TDTM_Runnable.Action for BeforeDelete 
-    * @return void
-    **********************************************************************************************************/
-    public void onBeforeDelete() {}
-
-
-    /*********************************************************************************************************
-    * @description Handles the TDTM_Runnable.Action for AfterInsert 
-    * @return void
-    **********************************************************************************************************/
-    public void onAfterInsert() {}
-
 
     /*********************************************************************************************************
     * @description Handles the TDTM_Runnable.Action for AfterUpdate 
@@ -117,20 +70,6 @@ public class USER_FrozenInActiveUser_TDTM extends TDTM_Runnable {
     public void onAfterUpdate(List<SObject> newlist) {
         handleIsActiveIsFrozenStatusChanges(newlist);
     }
-
-
-    /*********************************************************************************************************
-    * @description Handles the TDTM_Runnable.Action for AfterDelete 
-    * @return void
-    **********************************************************************************************************/
-    public void onAfterDelete() {}
-
-
-    /*********************************************************************************************************
-    * @description Handles the TDTM_Runnable.Action for AfterUndelete 
-    * @return void
-    **********************************************************************************************************/
-    public void onAfterUnDelete() {}
 
 
     /*********************************************************************************************************
