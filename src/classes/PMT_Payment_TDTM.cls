@@ -93,8 +93,13 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
             // Prevent the Payment CurrencyCode from being modified directly
             if (triggerAction == TDTM_Runnable.Action.BeforeUpdate && pmtCurrency != oldPmtCurrency && pmtCurrency != oppCurrency) {
                 pmt.addError(Label.pmtModifyCurrency);
+
+            } else if (triggerAction == TDTM_Runnable.Action.BeforeInsert && pmtCurrency != oppCurrency && pmtCurrency != null) {
+                // If the User is attempting to set the Payment Currency to something different than the Opp currency
+                pmt.addError(Label.pmtModifyCurrency);
+
             } else if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-                // Default the Payment CurrencyIsoCode to the value from the parent Opportunity
+                // Otherwise efault the Payment CurrencyIsoCode to the value from the parent Opportunity
                 pmt.put('CurrencyIsoCode', oppCurrency);
             }
         }

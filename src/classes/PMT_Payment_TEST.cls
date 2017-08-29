@@ -109,6 +109,21 @@ private class PMT_Payment_TEST {
         update opp;
         pmt = getPaymentRecord(opp.Id);
         System.AssertEquals((String)opp.get('CurrencyIsoCode'), (String)pmt.get('CurrencyIsoCode'));
+
+        // Verify that a new Payment cannot be inserted with a different currencyIsoCode
+        pmt = new npe01__OppPayment__c(
+            npe01__Opportunity__c = opp.Id,
+            npe01__Payment_Amount__c = 100
+        );
+        pmt.put('CurrencyIsoCode', (String)defaultCurrencyType.get('IsoCode'));
+        try {
+            insert pmt;
+            System.Assert(False, 'Inserting the Payment.CurrencyIsoCode directly should have failed');
+        } catch (Exception ex) {
+            // GOOD!
+            System.Assert(ex.getMessage().contains(System.Label.pmtModifyCurrency), 'Error message should contain "' +
+                    System.Label.pmtModifyCurrency + '"');
+        }
     }
 
     private static npe01__OppPayment__c getPaymentRecord(Id oppId) {
