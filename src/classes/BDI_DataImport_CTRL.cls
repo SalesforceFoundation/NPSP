@@ -84,12 +84,12 @@ public with sharing class BDI_DataImport_CTRL {
         if (string.isNotBlank(strBatchId)) {
             // load up the batch and get our settings from it
             diBatch = BDI_DataImportBatch_SEL.selectById(strBatchId);
-            diSettings = BDI_DataImport_BATCH.diSettingsFromDiBatch(diBatch);
+            diSettings = BDI_DataImportService.diSettingsFromDiBatch(diBatch);
             diTemp.NPSP_Data_Import_Batch__c = diBatch.Id;
         } else {
             diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
             // need to create our in-memory batch to hold the custom settings
-            diBatch = BDI_DataImport_BATCH.diBatchFromDiSettings(diSettings);
+            diBatch = BDI_DataImportService.diBatchFromDiSettings(diSettings);
         }
 
         // our picklist options hold lowercase DIfields
@@ -167,11 +167,11 @@ public with sharing class BDI_DataImport_CTRL {
             }
 
             // first validate the settings
-            Data_Import_Settings__c diSettingsT = BDI_DataImport_BATCH.diSettingsFromDiBatch(diBatch);
+            Data_Import_Settings__c diSettingsT = BDI_DataImportService.diSettingsFromDiBatch(diBatch);
             if (isTrueBatch) {
-                BDI_DataImport_BATCH.validateSettings(diBatch);
+                BDI_DataImportService.validateSettings(diBatch);
             } else {
-                BDI_DataImport_BATCH.validateSettings(diSettingsT);
+                BDI_DataImportService.validateSettings(diSettingsT);
             }
 
             // update the correct object (batch vs custom settings)

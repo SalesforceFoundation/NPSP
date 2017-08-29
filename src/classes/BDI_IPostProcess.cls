@@ -41,5 +41,5 @@ public interface BDI_IPostProcess {
     * @param bdi The BDI instance currently running
     * @return void
     */
-    void process(BDI_DataImport_BATCH bdi);
+    void process(BDI_DataImportService bdi);
 }

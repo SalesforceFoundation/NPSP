@@ -1419,7 +1419,7 @@ private with sharing class BDI_DataImport_TEST2 {
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
-        BDI_DataImport_BATCH.failFieldLevelSecurity = true;
+        BDI_DataImportService.failFieldLevelSecurity = true;
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
     

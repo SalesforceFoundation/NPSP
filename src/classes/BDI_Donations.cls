@@ -39,17 +39,17 @@ public class BDI_Donations {
 
     /*******************************************************************************************************
     * @description constructor for the BDI Donations helper
-    * @param bdi The Batch Data Import object the helper should use
+    * @param bdi The Batch Data Import Service the helper should use
     * @return void
     */ 
-    public BDI_Donations(BDI_DataImport_BATCH bdi) {
+    public BDI_Donations(BDI_DataImportService bdi) {
         this.bdi = bdi;
     }
 
     /*******************************************************************************************************
-    * @description The Batch Data Import object the helper should use
+    * @description The Batch Data Import Service the helper should use
     */ 
-    private BDI_DataImport_BATCH bdi { get; set; }
+    private BDI_DataImportService bdi { get; set; }
     
     /*******************************************************************************************************
     * @description map to track the Opportunity created/matched for each DI record
@@ -116,8 +116,8 @@ public class BDI_Donations {
     public static map<String, String> mapDIFieldToOppField {
         get {
             if (mapDIFieldToOppField == null) {
-                mapDIFieldToOppField = BDI_DataImport_BATCH.mapFieldsForDIObject('Opportunity', 'Opportunity', 
-                    BDI_DataImport_BATCH.listStrDataImportFields);
+                mapDIFieldToOppField = BDI_DataImportService.mapFieldsForDIObject('Opportunity', 'Opportunity', 
+                    BDI_DataImportService.listStrDataImportFields);
             }
             return mapDIFieldToOppField;
         }
@@ -130,8 +130,8 @@ public class BDI_Donations {
     public static map<string, string> mapDIFieldToPmtField { 
         get {
             if (mapDIFieldToPmtField == null) {
-                mapDIFieldToPmtField = BDI_DataImport_BATCH.mapFieldsForDIObject('Payment', 'npe01__OppPayment__c', 
-                    BDI_DataImport_BATCH.listStrDataImportFields);
+                mapDIFieldToPmtField = BDI_DataImportService.mapFieldsForDIObject('Payment', 'npe01__OppPayment__c', 
+                    BDI_DataImportService.listStrDataImportFields);
                 // special case Donation fields we defaultly map to Opp fields, but we will use with Payments too!
                 mapDIFieldToPmtField.put(UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c').toLowercase(), 'npe01__Payment_Amount__c');
                 mapDIFieldToPmtField.put(UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c').toLowercase(), 'npe01__Payment_Date__c');
@@ -425,7 +425,7 @@ public class BDI_Donations {
                 if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c').toLowercase() && di.PaymentImported__c != null) {
                     continue;
                 }
-                BDI_DataImport_BATCH.isCopiedDIField(di, strDIField, opp, mapDIFieldToOppField);
+                BDI_DataImportService.isCopiedDIField(di, strDIField, opp, mapDIFieldToOppField);
             }
             
             // the Opp is ready!
@@ -498,7 +498,7 @@ public class BDI_Donations {
                 if (pmt != null) {
                     integer cPropSet = 0;
                     for (string strDIField : mapDIFieldToPmtField.keySet()) {
-                        if (BDI_DataImport_BATCH.isCopiedDIField(di, strDIField, pmt, mapDIFieldToPmtField)) {
+                        if (BDI_DataImportService.isCopiedDIField(di, strDIField, pmt, mapDIFieldToPmtField)) {
                             cPropSet++;
                         }
                     }                    

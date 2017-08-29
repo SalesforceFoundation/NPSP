@@ -40,7 +40,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
     /*******************************************************************************************************
     * @description the bdi we are invoked from
     */ 
-    private BDI_DataImport_BATCH bdi { get; set; }
+    private BDI_DataImportService bdi { get; set; }
 
     /*******************************************************************************************************
     * @description the map of DI Donation Fields to Opportunity Fields
@@ -48,8 +48,8 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
     private static map<String, String> mapDIFieldToOppField {
         get {
             if (mapDIFieldToOppField == null) {
-                mapDIFieldToOppField = BDI_DataImport_BATCH.mapFieldsForDIObject('Opportunity', 'Opportunity', 
-                    BDI_DataImport_BATCH.listStrDataImportFields);
+                mapDIFieldToOppField = BDI_DataImportService.mapFieldsForDIObject('Opportunity', 'Opportunity', 
+                    BDI_DataImportService.listStrDataImportFields);
             }
             return mapDIFieldToOppField;
         }
@@ -62,8 +62,8 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
     private static map<string, string> mapDIFieldToPmtField { 
         get {
             if (mapDIFieldToPmtField == null) {
-                mapDIFieldToPmtField = BDI_DataImport_BATCH.mapFieldsForDIObject('Payment', 'npe01__OppPayment__c', 
-                    BDI_DataImport_BATCH.listStrDataImportFields);
+                mapDIFieldToPmtField = BDI_DataImportService.mapFieldsForDIObject('Payment', 'npe01__OppPayment__c', 
+                    BDI_DataImportService.listStrDataImportFields);
                 // special case Donation fields we defaultly map to Opp fields, but we will use with Payments too!
                 // note that these two work for matching rules.  
                 mapDIFieldToPmtField.put(UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c').toLowercase(), 'npe01__Payment_Amount__c');
@@ -84,7 +84,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
     * @param mapDIIdToPmt Map to fill in of DI Id's to matched Payments
     * @return void
     */ 
-    public void match(BDI_DataImport_BATCH bdi, list<DataImport__c> listDI,
+    public void match(BDI_DataImportService bdi, list<DataImport__c> listDI,
         map<Id, Opportunity> mapDIIdToOpp, map<Id, npe01__OppPayment__c> mapDIIdToPmt) {
 
         this.bdi = bdi;

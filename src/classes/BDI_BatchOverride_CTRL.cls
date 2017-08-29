@@ -92,7 +92,7 @@ public with sharing class BDI_BatchOverride_CTRL {
     */
     public PageReference save() {
         try {
-            BDI_DataImport_BATCH.validateSettings(diBatch);
+            BDI_DataImportService.validateSettings(diBatch);
             upsert diBatch;
             return new PageReference('/' + diBatch.Id);
         } catch (Exception ex) {

@@ -100,7 +100,7 @@ public with sharing class BDI_PostProcess_TEST {
         * @param bdi The BDI instance currently running
         * @return void
         */
-        public void process(BDI_DataImport_BATCH bdi) {
+        public void process(BDI_DataImportService bdi) {
 
             List<npe4__Relationship__c> listRel = new List<npe4__Relationship__c>();
 
