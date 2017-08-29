@@ -172,6 +172,7 @@
         <members>PMT_PaymentWizard_CTRL</members>
         <members>PMT_PaymentWizard_TEST</members>
         <members>PMT_Payment_TDTM</members>
+        <members>PMT_Payment_TEST</members>
         <members>PSC_ManageSoftCredits_CTRL</members>
         <members>PSC_ManageSoftCredits_TEST</members>
         <members>PSC_Opportunity_TDTM</members>
@@ -411,6 +412,7 @@
         <members>TDTM_Level</members>
         <members>TDTM_Opportunity</members>
         <members>TDTM_PartialSoftCredit</members>
+        <members>TDTM_Payment</members>
         <members>TDTM_RecurringDonation</members>
         <members>TDTM_Relationship</members>
         <members>TDTM_Task</members>
@@ -1276,6 +1278,7 @@
         <members>oppNamingBoth</members>
         <members>oppNamingIndividual</members>
         <members>oppNamingOrganizational</members>
+        <members>pmtModifyCurrency</members>
         <members>pmtWizardBtnCalcPayments</members>
         <members>pmtWizardBtnCreatePayments</members>
         <members>pmtWizardBtnRemovePaidPayments</members>
