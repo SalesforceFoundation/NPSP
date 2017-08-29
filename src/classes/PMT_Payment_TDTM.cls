@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2012, Salesforce.org
+    Copyright (c) 2017, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -29,33 +29,136 @@
 */
 /**
 * @author Salesforce.org 
-* @date 2014 
+* @date 2017
 * @group Payments
 * @group-content ../../ApexDocContent/Payments.htm
-* @description trigger handler on Opps for supporting Payments 
+* @description trigger handler on Payment and Opportunity objects for supporting Payments
 */
 public class PMT_Payment_TDTM extends TDTM_Runnable {
+
+    /*******************************************************************************************************
+    * @description Trigger Handler on on Opportunity or Payment related to the Paymetn object
+    * @param newlist the list of Opportunity or Payments from trigger new.
+    * @param oldlist the list of Opportunity or Payments from trigger old.
+    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.).
+    * @param objResult the describe for related object
+    * @return dmlWrapper.
+    ********************************************************************************************************/
+    public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist,
+            TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+
+        DmlWrapper dmlWrapper = new DmlWrapper();
+        if (objResult.getsObjectType() == Opportunity.sObjectType) {
+            dmlWrapper = runForOpportunities(newlist, oldlist, triggerAction);
+        } else if (objResult.getsObjectType() == npe01__OppPayment__c.sObjectType) {
+            dmlWrapper = runForPayments(newlist, oldlist, triggerAction);
+        }
+
+        return dmlWrapper;
+    }
+
+    /*******************************************************************************************************
+    * @description Trigger Handler on Payment for managing Payments
+    * @param newlist the list of Payments from trigger new.
+    * @param oldlist the list of Payments from trigger old.
+    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.).
+    * @return dmlWrapper.
+    ********************************************************************************************************/
+    public static DmlWrapper runForPayments(List<npe01__OppPayment__c> newlist, List<npe01__OppPayment__c> oldlist,
+            TDTM_Runnable.Action triggerAction) {
+
+        if (!UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
+            return null;
+        }
+        if (triggerAction != TDTM_Runnable.Action.BeforeInsert && triggerAction != TDTM_Runnable.Action.BeforeUpdate) {
+            return null;
+        }
+
+        Set<Id> oppIds = new Set<Id>();
+        for (npe01__OppPayment__c pmt : newlist) {
+            oppIds.add(pmt.npe01__Opportunity__c);
+        }
+
+        String soql = 'SELECT Id, CurrencyIsoCode, CloseDate FROM Opportunity WHERE Id IN :oppIds';
+        Map<Id, Opportunity> mapOfOpps = new Map<Id, Opportunity>((List<Opportunity>)database.query(soql));
+
+        // Validation and default the CurrencyIsoCode for new records
+        for (integer i=0; i<newlist.size(); i++) {
+            npe01__OppPayment__c pmt = newlist[i];
+
+            String oppCurrency = (String)mapOfOpps.get(pmt.npe01__Opportunity__c).get('CurrencyIsoCode');
+            String pmtCurrency = (String)pmt.get('CurrencyIsoCode');
+            String oldPmtCurrency = (oldList != null ? (String)oldlist[i].get('CurrencyIsoCode') : null);
+
+            // Prevent the Payment CurrencyCode from being modified directly
+            if (triggerAction == TDTM_Runnable.Action.BeforeUpdate && pmtCurrency != oldPmtCurrency && pmtCurrency != oppCurrency) {
+                pmt.addError(Label.pmtModifyCurrency);
+
+            } else if (triggerAction == TDTM_Runnable.Action.BeforeInsert && pmtCurrency != oppCurrency && pmtCurrency != null) {
+                // If the User is attempting to set the Payment Currency to something different than the Opp currency
+                pmt.addError(Label.pmtModifyCurrency);
+
+            } else if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
+                // Otherwise default the Payment CurrencyIsoCode to the value from the parent Opportunity
+                pmt.put('CurrencyIsoCode', oppCurrency);
+            }
+        }
+
+        return null;
+    }
 
     /*******************************************************************************************************
     * @description Trigger Handler on Opportunities for managing Payments
     * @param newlist the list of Opps from trigger new. 
     * @param oldlist the list of Opps from trigger old. 
     * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
-    * @param objResult the describe for Opportunity 
-    * @return dmlWrapper. 
+    * @return dmlWrapper.
     ********************************************************************************************************/
-    public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
-    TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+    public static DmlWrapper runForOpportunities(List<Opportunity> newlist, List<Opportunity> oldlist,
+            TDTM_Runnable.Action triggerAction) {
 
-        map<Id, Opportunity> mapIdOppNew;
-        map<Id, Opportunity> mapIdOppOld;
-        if (newlist != null) 
-           mapIdOppNew = new map<id, Opportunity>((list<Opportunity>) newlist);
-        if (oldlist != null) 
-           mapIdOppOld = new map<id, Opportunity>((list<Opportunity>) oldlist);
-                       
-        DmlWrapper dmlWrapper = new dmlWrapper();
-        PMT_PaymentCreator pc = new PMT_PaymentCreator(mapIdOppNew, mapIdOppOld, triggerAction, dmlWrapper); 
+        Map<Id, Opportunity> mapIdOppNew = (newlist != null ? new Map<Id, Opportunity>(newlist) : new Map<Id, Opportunity>());
+        Map<Id, Opportunity> mapIdOppOld = (oldlist != null ? new Map<Id, Opportunity>(oldlist) : new Map<Id, Opportunity>());
+
+        DmlWrapper dmlWrapper = new DmlWrapper();
+
+        // Create new Payments as necessary
+        PMT_PaymentCreator pc = new PMT_PaymentCreator(mapIdOppNew, mapIdOppOld, triggerAction, dmlWrapper);
+
+        //if currency has changed, reset payment currencies
+        if (triggerAction == TDTM_Runnable.Action.AfterUpdate && UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
+            List<Opportunity> listOppsForProcessing = new List<Opportunity>();
+            for (integer i = 0; i < newlist.size(); i++) {
+                Opportunity opp = newlist[i];
+                if (opp.get('CurrencyIsoCode') != oldlist[i].get('CurrencyIsoCode')) {
+                    listOppsForProcessing.add(opp);
+                }
+            }
+            if (listOppsForProcessing.size() > 0) {
+                setPaymentCurrencyFromOpportunity(listOppsForProcessing, dmlWrapper);
+            }
+        }
         return dmlWrapper;
     }
+
+    /*******************************************************************************************************
+    * @description Updates an opportunity's payment record when currency on the Opportunity is changed.
+    * @param listOpps A list of opportunities whose currency has changed.
+    * @return void This method modifies the dmlWrapper var and does not return anything
+    ********************************************************************************************************/
+    private static void setPaymentCurrencyFromOpportunity(list<Opportunity> listOpps, DmlWrapper dmlWrapper){
+
+        // Get a list of the Opportunity Id's
+        Set<Id> oppIds = (new Map<Id, Opportunity>(listOpps)).keySet();
+
+        // Get a list of the Payment records by Opportunity and update the CurrencyIsoCode value
+        String soql = 'SELECT Id, CurrencyIsoCode, npe01__Opportunity__r.CurrencyIsoCode FROM npe01__OppPayment__c ' +
+            'WHERE npe01__Opportunity__c IN :oppIds ORDER BY npe01__Opportunity__c';
+        for (npe01__OppPayment__c pmt : database.query(soql)) {
+            Opportunity opp = (Opportunity)pmt.getSObject('npe01__Opportunity__r');
+            pmt.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
+            dmlWrapper.objectsToUpdate.add(pmt);
+        }
+    }
+
 }

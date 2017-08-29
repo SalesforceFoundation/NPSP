@@ -233,13 +233,15 @@ public class ALLO_Multicurrency_TEST {
 
         setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
 
-        //setting flags to not create default allocations for the new opportunities
+        //  Turn off the allocation triggers so it doesn't create a default
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, true);
 
         Account acc = new Account(Name='foo');
         insert acc;
         Opportunity opp = new Opportunity(Name='foo', Amount = 8, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
         opp.put('CurrencyIsoCode', nonDefaultCurrencyType.get('IsoCode'));
         insert opp;
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, false);
 
 
         list<Allocation__c>  queryAllo = [SELECT Id, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c];
