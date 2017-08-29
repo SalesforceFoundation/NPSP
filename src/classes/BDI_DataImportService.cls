@@ -37,7 +37,7 @@
 * The Data Import Service for BDI that processes Data Import records
 *
 */
-public with sharing class BDI_DataImportService {
+global with sharing class BDI_DataImportService {
 
     /*******************************************************************************************************
     * @description constructor
@@ -290,13 +290,13 @@ public with sharing class BDI_DataImportService {
     /*******************************************************************************************************
     * @description holds the list of DataImport records we are currently processing
     */
-    public list<DataImport__c> listDI;
+    global list<DataImport__c> listDI;
 
     /*******************************************************************************************************
     * @description holds the data import settings to use for this batch.  these may be either from
     * custom settings, or if a specific BatchId was specified, the settings specified for that batch.
     */
-    public Data_Import_Settings__c diSettings { get; private set; }
+    global Data_Import_Settings__c diSettings { get; private set; }
 
     /*******************************************************************************************************
     * @description whether the firstname field is in our contact matching rules
@@ -616,7 +616,7 @@ public with sharing class BDI_DataImportService {
     /*******************************************************************************************************
     * @description list of all the fields in the Data Import object
     */
-    public static list<string> listStrDataImportFields {
+    global static list<string> listStrDataImportFields {
         get {
             if (listStrDataImportFields == null) {
                 Map<String, Schema.SObjectField> mapS = Schema.SObjectType.DataImport__c.fields.getMap();
@@ -651,7 +651,7 @@ public with sharing class BDI_DataImportService {
     * @param listStrDIFields the DataImport fields to consider
     * @return map<String, String> a map of DataImport fields to underlying object fields (eg, Donation_Amount__c => Amount)
     */
-    public static map<string, string> mapFieldsForDIObject(string strObj, string strBaseObj, list<string> listStrDIFields) {
+    global static map<string, string> mapFieldsForDIObject(string strObj, string strBaseObj, list<string> listStrDIFields) {
         map<string, string> mapDIFieldToObjField = new map<string, string>();
         for (string strF : listStrDIFields) {
             DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), strF);
@@ -1570,7 +1570,7 @@ public with sharing class BDI_DataImportService {
     * @param iCon 1 specifies Contact1 otherwise use Contact2
     * @return Contact the found Contact
     */
-    public Contact ContactFromDi(DataImport__c di, integer iCon) {
+    global Contact ContactFromDi(DataImport__c di, integer iCon) {
         for (string diKey : listDiKeyCx(di, iCon == 1 ? 'Contact1' : 'Contact2')) {
             Contact con = mapDIKeyToContact.get(diKey);
             if (con != null)
@@ -1819,7 +1819,7 @@ public with sharing class BDI_DataImportService {
     * @param iAcc 1 specifies Account1 otherwise use Account2
     * @return Account the found Account
     */
-    public Account AccountFromDi(DataImport__c di, integer iAcc) {
+    global Account AccountFromDi(DataImport__c di, integer iAcc) {
         for (string diKey : listDiKeyAx(di, iAcc == 1 ? 'Account1' : 'Account2')) {
             Account acc = mapDIKeyToAccount.get(diKey);
             if (acc != null)

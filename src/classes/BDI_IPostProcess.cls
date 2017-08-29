@@ -33,7 +33,7 @@
 * @group Batch Data Import
 * @description Interface for classes that will provide Post Processing of Data Import records
 */
-public interface BDI_IPostProcess {
+global interface BDI_IPostProcess {
 
     /*******************************************************************************************************
     * @description Perform any additional processing steps after NPSP has completed processing all Data

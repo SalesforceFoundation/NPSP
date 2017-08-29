@@ -35,7 +35,7 @@
 * (Opportunities and Payments) for BDI
 *
 */
-public interface BDI_IMatchDonations {
+global interface BDI_IMatchDonations {
     
     /*******************************************************************************************************
     * @description For each of the provided Data Import records, find their existing Opportunity and Payment to
