@@ -3569,6 +3569,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Organization Donations</value>
     </labels>
     <labels>
+        <fullName>pmtModifyCurrency</fullName>
+        <categories>Payment, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pmtModifyCurrency</shortDescription>
+        <value>You can&apos;t modify payment currencies directly. A payment&apos;s currency is updated when the parent Opportunity currency is modified.</value>
+    </labels>
+    <labels>
         <fullName>pmtWizardBtnCalcPayments</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
