@@ -40,6 +40,7 @@ public with sharing class RP_YoutubeController {
     public YoutubeWrapper youtubeMainVideo {get; set;}
     public String youtubeChannelName {get; set;}
     public Boolean timeoutError {get; set;}
+    public Boolean remoteSiteSettingIsNotActive {get; set;}
 
     public RP_YoutubeController() {
 
@@ -58,7 +59,8 @@ public with sharing class RP_YoutubeController {
         RP_YoutubeClient client = new RP_YoutubeClient();
         HttpResponse response = client.getPlaylistVideos();
         timeoutError = true;
-
+        remoteSiteSettingIsNotActive = client.remoteSiteSettingIsNotActive;
+        
         if (response != null) {
 
             String responseBody = response.getBody();
