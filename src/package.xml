@@ -1368,6 +1368,7 @@
         <members>RP_ProductNameLabel</members>
         <members>RP_ReleaseGitHub</members>
         <members>RP_ReleaseNotesLink</members>
+        <members>RP_Remote_Site_Settings_Deactivated</members>
         <members>RP_SalesforceOrgLinkLabel</members>
         <members>RP_SubTitle</members>
         <members>RP_Title</members>
