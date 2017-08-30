@@ -1239,7 +1239,7 @@ public with sharing class ADDR_Addresses_TEST {
         System.assertEquals('California', addressWithState.MailingState__c);
 
         Test.startTest();
-        System.assertEquals(true, ADDR_Addresses_TDTM.isMatchingStateCode(con.MailingStateCode, addressWithState.MailingState__c));
+        System.assertEquals(true, ADDR_Addresses_TDTM.isMatchingStateCode('CA', addressWithState.MailingState__c));
         Test.stopTest();
     }
 
