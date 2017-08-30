@@ -998,58 +998,249 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
-        update contacts' mailing address (with State & Country Picklists enabled) and mark it as override, to cause creation of new non-default Address object
+        Update Contact's mailing address (with State & Country Picklists enabled) and mark it as override,
+        to cause creation of a new non-default Address record with the State & Country values set as expected.
     verify:
-        new Address created
+        Contact gets new address
         HH sticks with default Address
-        contact gets new address
+        New Address created with State value set as expected
     **********************************************************************************************************/
-    static testMethod void updateContactsStateAndCountryPicklistsEnabledAddressMarkOverride() {
-        if(ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
-            if ('*' != strTestOnly
-                && 'updateContactsStateAndCountryPicklistsEnabledAddressMarkOverride' != strTestOnly) {
-                return;
-            }
+    static testMethod void testContactAddressOverrideForStateChangeWithStateAndCountryPicklistEnabled() {
+        if (!ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
+            return;
+        }
 
-            // This creates a default Address for each HH
-            createHHTestData(cHH, cCon);
+        if (strTestOnly != '*' && strTestOnly != 'testContactAddressMarkOverrideWithStateAndCountryPicklistsEnabled') {
+            return;
+        }
 
-            // Modify the contact addresses directly, and set override
-            List<Contact> listCon = new List<Contact>();
-            for (integer i = 0; i < cHH*cCon; i++) {
-                Contact con = listConT[i];
-                con.MailingStreet = 'Direct Street Edit';
-                con.put('MailingStateCode', 'CA');
-                con.put('MailingCountryCode', 'US');
-                con.is_Address_Override__c = true;
-                listCon.add(con);
-            }
+        Integer hhSize = 1;
+        Integer contactSize = 1;
 
-            Test.startTest();
-            update listCon;
-            Test.stopTest();
+        // This creates a default Address for each HH
+        createHHTestData(hhSize, contactSize);
+        System.assertEquals(1, getAddresses().size());
 
-            List<Account> retrievedAccounts = database.query(buildAccountSoql());
-            Map<Id, Account> mapAccIdAcc = new Map<Id, Account>(retrievedAccounts);
-            listCon = database.query(buildContactSoql());
+        // Modify the Contact addresses directly, and set override
+        Contact con = listConT[0];
+        con.put('MailingStateCode', 'CA');
+        con.put('MailingCountryCode', 'US');
+        con.is_Address_Override__c = true;
 
-            for (Contact con : listCon) {
-                Account acc = mapAccIdAcc.get(con.AccountId);
-                System.assertEquals(false, isMatchAddressAccCon(acc, con));
-                System.assertEquals(true, con.MailingState.equals('California'));
-                System.assertEquals(false, acc.BillingState.equals('California'));
-                System.assertEquals(true, con.is_Address_Override__c);
-                System.assertNotEquals(null, con.Current_Address__c);
-            }
+        Test.startTest();
+        update con;
+        Test.stopTest();
 
-             // Verify the previous addresses got Default cleared.
-            List<Address__c> listAddr = database.query(buildAddressSoql());
-            System.assertEquals(cHH * cCon + cHH, listAddr.size());
-            for (Address__c addr : listAddr) {
-                Boolean isNewEdit = (addr.MailingStreet__c.contains('Direct Street Edit'));
-                System.assertNotEquals(isNewEdit, addr.Default_Address__c);
+        // Verify a new Address record was created
+        List<Address__c> listAddr = getAddresses();
+        System.assertEquals(2, listAddr.size());
+
+        // Populate a Map of AccountId to Address record
+        Map<Id, Address__c> accountIdToAddress = new Map<Id, Address__c>();
+        for(Address__c eachAddress : listAddr) {
+            if(eachAddress.Default_Address__c) {
+              accountIdToAddress.put(eachAddress.Household_Account__c, eachAddress);
             }
         }
+
+        // Verify the Account's Billing Address info matches the Default Address record
+        List<Account> retrievedAccounts = Database.query(buildAccountSoql());
+        assertEquals(listAddrT[0], accountIdToAddress.get(retrievedAccounts[0].Id));
+
+        // Verify the Contact's Address was updated as expected and that the Household and Contact Addresses are different.
+        Map<Id, Account> accountIdToAccount = new Map<Id, Account>(retrievedAccounts);
+        List<Contact> listCon = Database.query(buildContactSoql());
+        for (Contact eachContact : listCon) {
+            System.assertEquals(true, eachContact.MailingState.equals('California'));
+            System.assertEquals(true, eachContact.is_Address_Override__c);
+            System.assertNotEquals(null, eachContact.Current_Address__c);
+
+            Account eachContactAccount = accountIdToAccount.get(eachContact.AccountId);
+            System.assertEquals(false, isMatchAddressAccCon(eachContactAccount, eachContact));
+        }
+
+        // Verify the New Address created matches the Contact's Address and not set the Default
+        for (Integer i = 0; i < listAddr.size(); i++) {
+            if(listAddr[i].MailingState__c.equals('California')) {
+                assertEqualAddresses(listAddr[i], listCon[i]);
+                System.assertEquals(false, listAddr[i].Default_Address__c);
+            }
+        }
+    }
+
+
+    /*********************************************************************************************************
+    @description
+        Update Address' Mailing Country and State (with State & Country Picklists enabled) when the Country is empty
+        or the State empty and/or mismatched.
+    verify:
+        New Address' Country and State fields are updated with the source sObject's CountryCode and StateCode values
+    **********************************************************************************************************/
+    static testMethod void testUpdateAddressCountryAndStateWithAccountOrContactCountryCodeAndStateCode() {
+        if (!ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
+            return;
+        }
+
+        if (strTestOnly != '*' && strTestOnly != 'testUpdateAddressCountryAndStateWithAccountOrContactCountryCodeAndStateCode') {
+            return;
+        }
+
+        Integer hhSize = 1;
+        Integer contactSize = 1;
+
+        // This creates a default Address for each HH
+        createHHTestData(hhSize, contactSize);
+
+        Contact con = listConT[0];
+        con.put('MailingStateCode', 'CA');
+        con.put('MailingCountryCode', 'US');
+        con.is_Address_Override__c = true;
+
+        Address__c addressWithoutCountryState = listAddrT[0];
+        System.assertEquals('Washington', listAddrT[0].MailingState__c);
+        System.assertEquals('United States', listAddrT[0].MailingCountry__c);
+
+        // Set the Mailing State and Country to null
+        addressWithoutCountryState.MailingState__c = null;
+        addressWithoutCountryState.MailingCountry__c = null;
+        update addressWithoutCountryState;
+
+        System.assertEquals(null, addressWithoutCountryState.MailingState__c);
+        System.assertEquals(null, addressWithoutCountryState.MailingCountry__c);
+
+        Test.startTest();
+        ADDR_Addresses_TDTM.updateAddressCountryAndStateWithAccountOrContactCountryCodeAndStateCode(con, 'Mailing', addressWithoutCountryState);
+        Test.stopTest();
+
+        System.assertEquals('CA', addressWithoutCountryState.MailingState__c);
+        System.assertEquals('United States', addressWithoutCountryState.MailingCountry__c);
+    }
+
+
+    /*********************************************************************************************************
+    @description
+        Update Address' Mailing Country (with State & Country Picklists enabled) when the Country is empty.
+    verify:
+        New Address' Country field is updated with the source sObject's CountryCode value
+    **********************************************************************************************************/
+    static testMethod void testUpdateEmptyAddressMailingCountryWithAccountOrContactCountryCode() {
+        if (!ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
+            return;
+        }
+
+        if (strTestOnly != '*' && strTestOnly != 'testUpdateEmptyAddressMailingCountryWithAccountOrContactCountryCode') {
+            return;
+        }
+
+        Integer hhSize = 1;
+        Integer contactSize = 1;
+
+        // This creates a default Address for each HH
+        createHHTestData(hhSize, contactSize);
+
+        Contact con = listConT[0];
+        con.put('MailingCountryCode', 'US');
+        con.is_Address_Override__c = true;
+
+        Address__c addressWithoutCountry = listAddrT[0];
+        System.assertEquals('United States', listAddrT[0].MailingCountry__c);
+
+        // Set the Mailing Country to null
+        addressWithoutCountry.MailingCountry__c = null;
+        update addressWithoutCountry;
+        System.assertEquals(null, addressWithoutCountry.MailingCountry__c);
+
+        Test.startTest();
+        ADDR_Addresses_TDTM.updateEmptyAddressMailingCountryWithAccountOrContactCountryCode(con, 'Mailing', addressWithoutCountry);
+        Test.stopTest();
+
+        System.assertEquals('United States', addressWithoutCountry.MailingCountry__c);
+    }
+
+
+    /*********************************************************************************************************
+    @description
+        Update Address' Mailing State (with State & Country Picklists enabled) when the State is empty
+        and/or mismatched.
+    verify:
+        New Address' State field is updated with the source sObject's StateCode value
+    **********************************************************************************************************/
+    static testMethod void testUpdateEmptyOrMismatchedAddressMailingStateWithAccountOrContactStateCode() {
+        if (!ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
+            return;
+        }
+
+        if (strTestOnly != '*' && strTestOnly != 'testUpdateEmptyOrMismatchedAddressMailingStateWithAccountOrContactStateCode') {
+            return;
+        }
+
+        Integer hhSize = 1;
+        Integer contactSize = 1;
+
+        // This creates a default Address for each HH
+        createHHTestData(hhSize, contactSize);
+
+        Contact con = listConT[0];
+        con.put('MailingStateCode', 'CA');
+        con.is_Address_Override__c = true;
+
+        Address__c addressWithoutState = listAddrT[0];
+        System.assertEquals('Washington', listAddrT[0].MailingState__c);
+
+        // Set the Mailing State to null
+        addressWithoutState.MailingState__c = null;
+        update addressWithoutState;
+        System.assertEquals(null, addressWithoutState.MailingState__c);
+
+        Test.startTest();
+        ADDR_Addresses_TDTM.updateEmptyOrMismatchedAddressMailingStateWithAccountOrContactStateCode(con, 'Mailing', addressWithoutState);
+        Test.stopTest();
+
+        System.assertEquals('CA', addressWithoutState.MailingState__c);
+    }
+
+
+    /*********************************************************************************************************
+    @description
+        Update Address' Mailing State (with State & Country Picklists enabled) when the State is empty
+        and/or mismatched.
+    verify:
+        New Address' State field is updated with the source sObject's StateCode value
+        New Address' State field (used as a Map's key) matches the source sObject's StateCode
+    **********************************************************************************************************/
+    static testMethod void testIsMatchingStateCode() {
+        if (!ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
+            return;
+        }
+
+        if (strTestOnly != '*' && strTestOnly != 'testIsMatchingStateCode') {
+            return;
+        }
+
+        Integer hhSize = 1;
+        Integer contactSize = 1;
+
+        // This creates a default Address for each HH
+        createHHTestData(hhSize, contactSize);
+
+        Contact con = listConT[0];
+        con.put('MailingStateCode', 'CA');
+        con.is_Address_Override__c = true;
+
+        Address__c addressWithState = listAddrT[0];
+        System.assertEquals('Washington', listAddrT[0].MailingState__c);
+
+        addressWithState.MailingState__c = null;
+        update addressWithState;
+        System.assertEquals(null, addressWithState.MailingState__c);
+
+        addressWithState.MailingState__c = 'California';
+        update addressWithState;
+        System.assertEquals('California', addressWithState.MailingState__c);
+
+        Test.startTest();
+        System.assertEquals(true, ADDR_Addresses_TDTM.isMatchingStateCode(con.MailingStateCode, addressWithState.MailingState__c));
+        Test.stopTest();
     }
 
 
@@ -1901,10 +2092,10 @@ public with sharing class ADDR_Addresses_TEST {
     * @return String SOQL
     */
     private static String buildContactSoql() {
-        List<String> selectFields
-            = new List<String>{'Id', 'AccountId', 'is_Address_Override__c', 'Current_Address__c',
-                                'MailingStreet', 'MailingCity', 'MailingState', 'MailingCountry', 'MailingPostalCode',
-                                'MailingLatitude', 'MailingLongitude'};
+        List<String> selectFields = new List<String>{
+            'Id', 'AccountId', 'is_Address_Override__c', 'Current_Address__c',
+            'MailingStreet', 'MailingCity', 'MailingState', 'MailingCountry', 'MailingPostalCode',
+            'MailingLatitude', 'MailingLongitude'};
 
         if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
             selectFields.add('MailingCountryCode');
@@ -1925,9 +2116,9 @@ public with sharing class ADDR_Addresses_TEST {
     * @return String SOQL
     */
     private static String buildAccountSoql() {
-        List<String> selectFields
-            = new List<String>{'Id', 'BillingStreet', 'BillingCity', 'BillingState',  'BillingCountry',
-                                'BillingPostalCode', 'BillingLatitude', 'BillingLongitude'};
+        List<String> selectFields = new List<String>{
+            'Id', 'BillingStreet', 'BillingCity', 'BillingState',  'BillingCountry',
+            'BillingPostalCode', 'BillingLatitude', 'BillingLongitude'};
 
         if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
             selectFields.add('BillingCountryCode');
@@ -1940,19 +2131,5 @@ public with sharing class ADDR_Addresses_TEST {
             .build();
     }
 
-
-    /*******************************************************************************************************
-    * @description Builds SOQL for Address sObject. Fields include standard Billing fields as well as the one for State and Country Picklist enabled.
-    * @return String SOQL
-    */
-    private static String buildAddressSoql() {
-        List<String> selectFields
-            = new List<String>{'Id', 'Default_Address__c', 'MailingStreet__c', 'Household_Account__c'};
-
-        return new UTIL_Query()
-            .withSelectFields(selectFields)
-            .withFrom('Address__c')
-            .build();
-    }
 
 }

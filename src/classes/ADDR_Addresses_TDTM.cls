@@ -1048,7 +1048,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * @param strAddrType if not null, copy to address.Address_Type__c
     * @return void
     */ 
-    public static void copyAddressStdSObjAddr(sobject sobjSrc, String strFieldPrefixSrc, Address__c addr, String strAddrType) {
+    public static void copyAddressStdSObjAddr(sObject sobjSrc, String strFieldPrefixSrc, Address__c addr, String strAddrType) {
         addr.MailingStreet__c = (String)sobjSrc.get(strFieldPrefixSrc + 'Street');
         handleMultilineStreet(addr);
         addr.MailingCity__c = (String)sobjSrc.get(strFieldPrefixSrc + 'City');
@@ -1058,24 +1058,9 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         addr.Geolocation__Latitude__s = (Decimal)sobjSrc.get(strFieldPrefixSrc + 'Latitude');
         addr.Geolocation__Longitude__s = (Decimal)sobjSrc.get(strFieldPrefixSrc + 'Longitude');
 
-        // try to find state and country by code if they aren't specified?
+        // Update the Address' Country and State by Country and State Code if they aren't specified
         if (isStateCountryPicklistsEnabled) {
-
-            // lookup country if needed, by country code
-            String strCountryCode = (String)sobjSrc.get(strFieldPrefixSrc + 'CountryCode');
-            if (null != strCountryCode && null == addr.MailingCountry__c) {
-                addr.MailingCountry__c = validCountriesByCode.get(strCountryCode.toUpperCase());
-            }
-
-            // lookup state if needed, by country code and state code.
-            String strStateCode = (String)sobjSrc.get(strFieldPrefixSrc + 'StateCode');      
-            if (null != strCountryCode && null != strStateCode
-                && (null == addr.MailingState__c
-                    || (null != validStatesByLabel && validStatesByLabel.containsKey(addr.MailingState__c.toUpperCase())
-                        && !strStateCode.equals(validStatesByLabel.get(addr.MailingState__c.toUpperCase()))))) {
-                // assume it's a valid statecode
-                addr.MailingState__c = strStateCode;
-            }
+            updateAddressCountryAndStateWithAccountOrContactCountryCodeAndStateCode(sobjSrc, strFieldPrefixSrc, addr);
         }
 
         // if specified, also include Address Type
@@ -1090,6 +1075,88 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
         //UTIL_Debug.debug('****DJH: copyAddressStdSobjAddr: ' + sobjSrc + ' ' + addr);
     }
+
+
+    /*******************************************************************************************************
+    * @description Updates the Address record's MailingCountry and MailingState fields when they are empty
+    *              and/or mismatched with the Account's BillingCountryCode and BillingStateCode
+    *              or Contact's MailingCountryCode and MailingStateCode values accordingly.
+    * @param sobjSrc the source Account or Contact
+    * @param strFieldPrefix the address fields to copy to, ie., Mailing, Other, Billing, Shipping
+    * @param addr the Address object to update accordingly
+    * @return void
+    */
+    @testVisible
+    private static void updateAddressCountryAndStateWithAccountOrContactCountryCodeAndStateCode(sObject sobjSrc, String strFieldPrefixSrc, Address__c addr) {
+        // Update the Address Mailing Country with Billing/Mailing CountryCode accordingly
+        updateEmptyAddressMailingCountryWithAccountOrContactCountryCode(sobjSrc, strFieldPrefixSrc, addr);
+
+        // Update the Address Mailing State with Billing/Mailing State Code accordingly
+        updateEmptyOrMismatchedAddressMailingStateWithAccountOrContactStateCode(sobjSrc, strFieldPrefixSrc, addr); 
+    }
+
+
+    /*******************************************************************************************************
+    * @description Updates the Address record's MailingCountry field when it is empty
+    *              with the Account's BillingCountryCode or Contact's MailingCountryCode value.
+    * @param sobjSrc the source Account or Contact
+    * @param strFieldPrefix the address fields to copy to, ie., Mailing, Other, Billing, Shipping
+    * @param addr the Address object to update accordingly
+    * @return void
+    */
+    @testVisible
+    private static void updateEmptyAddressMailingCountryWithAccountOrContactCountryCode(sObject sobjSrc, String strFieldPrefixSrc, Address__c addr) {
+        // Lookup Country if needed, by Country Code
+        String strCountryCode = (String)sobjSrc.get(strFieldPrefixSrc + 'CountryCode');
+
+        if (String.isNotBlank(strCountryCode) && String.isEmpty(addr.MailingCountry__c)) {
+            addr.MailingCountry__c = validCountriesByCode.get(strCountryCode.toUpperCase());
+        }
+    }
+
+
+    /*******************************************************************************************************
+    * @description Updates the Address record's MailingState fields when it is empty
+    *              and/or mismatched with the Account's BillingStateCode or Contact's MailingStateCode value.
+    * @param sobjSrc the source Account or Contact
+    * @param strFieldPrefix the address fields to copy to, ie., Mailing, Other, Billing, Shipping
+    * @param addr the Address object to update accordingly
+    * @return void
+    */
+    @testVisible
+    private static void updateEmptyOrMismatchedAddressMailingStateWithAccountOrContactStateCode(sObject sobjSrc, String strFieldPrefixSrc, Address__c addr) {
+        // Lookup State if needed, by Country Code and State Code.
+        String strStateCode = (String)sobjSrc.get(strFieldPrefixSrc + 'StateCode');
+
+        if (String.isNotBlank(strStateCode)
+            && (String.isEmpty(addr.MailingState__c) || !isMatchingStateCode(strStateCode, addr.MailingState__c))) {
+
+            // Assume it's a valid statecode
+            addr.MailingState__c = strStateCode;
+        }
+    }
+
+
+    /*******************************************************************************************************
+    * @description Determines if the Contact's or Account's state code matches the Addresses Mailing State
+    *              by looking up
+    * @param strStateCode the Contact's or Account's state code
+    * @param addr the Address object to update accordingly
+    * @return void
+    */
+    @testVisible
+    private static Boolean isMatchingStateCode(String strStateCode, String addressMailingState) {
+        Boolean isMatchingStateCode = false;
+
+        if(String.isNotBlank(addressMailingState)
+            && validStatesByLabel != null && validStatesByLabel.containsKey(addressMailingState.toUpperCase())) {
+
+             isMatchingStateCode = strStateCode.equals(validStatesByLabel.get(addressMailingState.toUpperCase()));
+        }
+
+        return isMatchingStateCode;
+    }
+
 
     /*******************************************************************************************************
     * @description Utility to copy Address fields from an Address object to a Contact or Account.
