@@ -92,6 +92,9 @@ public class BDI_Donations {
             if (iMatchDonations == null) {
                 iMatchDonations = (BDI_IMatchDonations)BDI_DataImportService.instantiateClassForInterface('BDI_IMatchDonations',
                     bdi.diSettings.Donation_Matching_Implementing_Class__c);
+                if (iMatchDonations == null) {
+                    iMatchDonations = new BDI_MatchDonations();
+                }
             }
             return iMatchDonations;
         }
