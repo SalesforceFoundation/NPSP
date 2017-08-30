@@ -35,6 +35,8 @@
 */
 public with sharing virtual class RP_HTTPClient {
 
+    public Boolean remoteSiteSettingIsNotActive {get; set;}
+
     protected HttpRequest request;
 
     //Set common information for each client implemented
@@ -60,6 +62,13 @@ public with sharing virtual class RP_HTTPClient {
             return response;
         }
         catch(exception e) {
+
+            String message = e.getMessage();
+
+            if (message.contains('Unauthorized endpoint')) {
+
+                remoteSiteSettingIsNotActive = true;
+            }
 
             return null;
         }
