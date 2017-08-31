@@ -51,6 +51,10 @@ private class TDTM_DMLgt200_TEST {
     @isTest
     static void test_contacts_with_affiliations() {
 
+        UTIL_Debug.enabled = false;     // Override debug logging for this test because it's an expensive operation
+        disableRelationshipTriggers();
+        disableUnusedContactTriggers();
+
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
                 new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
 
@@ -98,6 +102,10 @@ private class TDTM_DMLgt200_TEST {
     @isTest
     static void test_contacts_with_primary_affiliations() {
 
+        UTIL_Debug.enabled = false;     // Override debug logging for this test because it's an expensive operation
+        disableRelationshipTriggers();
+        disableUnusedContactTriggers();
+
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
                 new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
 
@@ -131,6 +139,9 @@ private class TDTM_DMLgt200_TEST {
     */
     @isTest
     static void test_contacts_with_relationships() {
+
+        UTIL_Debug.enabled = false;     // Override debug logging for this test because it's an expensive operation
+        disableAffiliationsTriggers();
 
         Test.startTest();
 
@@ -172,6 +183,10 @@ private class TDTM_DMLgt200_TEST {
     */
     @isTest
     static void test_opportunities_with_default_alloc() {
+
+        UTIL_Debug.enabled = false;     // Override debug logging for this test because it's an expensive operation
+        disableRollupTriggers();
+        disableUnusedContactTriggers();
 
         Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
@@ -240,6 +255,11 @@ private class TDTM_DMLgt200_TEST {
     @isTest
     static void test_recurring_donations() {
 
+        UTIL_Debug.enabled = false;     // Override debug logging for this test because it's an expensive operation
+        disableRollupTriggers();
+        disableUnusedContactTriggers();
+        disableOCRTriggers();
+
         Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
 
@@ -280,6 +300,13 @@ private class TDTM_DMLgt200_TEST {
     */
     @isTest
     static void test_addresses() {
+
+        UTIL_Debug.enabled = false;     // Override debug logging for this test because it's an expensive operation
+        disableAffiliationsTriggers();
+        disableRelationshipTriggers();
+        disableUnusedContactTriggers();
+        disableHHNamingTriggers();
+
         Test.startTest();
 
         // Create more than 200 Contact records and then validate that all of the Household Accounts were created
@@ -310,18 +337,16 @@ private class TDTM_DMLgt200_TEST {
     */
     @isTest
     static void test_household_account_naming() {
+
+        UTIL_Debug.enabled = false;     // Override debug logging for this test because it's an expensive operation
+        disableAffiliationsTriggers();
+        disableRelationshipTriggers();
+        disableUnusedContactTriggers();
+
         Test.startTest();
 
         // Create more than 200 Contact records and then validate that all of the Household Accounts were created
         List<Contact> contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(insertCnt);
-        for (Contact c : contacts) {
-            c.OtherCity = null;
-            c.MailingStreet = '1313 Mockingbird Lane';
-            c.MailingCity = 'Munsterville';
-            c.MailingState = 'Illinois';
-            c.MailingPostalCode = '06123';
-            c.MailingCountry = 'United States';
-        }
         Database.DMLOptions dml = new Database.DMLOptions();
         dml.DuplicateRuleHeader.AllowSave = true;
         Database.insert(contacts, dml);
@@ -352,6 +377,12 @@ private class TDTM_DMLgt200_TEST {
 
         ADDR_Validator_TEST.createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
+
+        UTIL_Debug.enabled = false;     // Override debug logging for this test because it's an expensive operation
+        disableAffiliationsTriggers();
+        disableRelationshipTriggers();
+        disableUnusedContactTriggers();
+        disableHHNamingTriggers();
 
         // Create more than 200 Contact records and then validate that all of the Addresses were verified
         List<Contact> contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(insertCnt);
@@ -389,6 +420,8 @@ private class TDTM_DMLgt200_TEST {
      */
     @isTest
     static void testAllocationsCreatedForManyOpenEndedRecurringDonations() {
+
+        UTIL_Debug.enabled = false;     // Override debug logging for this test because it's an expensive operation
 
         Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
@@ -439,4 +472,55 @@ private class TDTM_DMLgt200_TEST {
         System.assertEquals(240, [SELECT Count() FROM Allocation__c WHERE Opportunity__c IN :createdOpportunities],
                 'There should be 240 generated default allocations records');
     }
+
+    /* @description Disable all Affiliations related trigger handlers when not needed to improve performance */
+    private static void disableAffiliationsTriggers() {
+        createDefaultTDTMHandlers();
+        TDTM_ProcessControl.toggleTriggerState('Contact', 'AFFL_Affiliations_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Account', 'AFFL_Affiliations_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('npe5__Affiliation__c', 'AFFL_Affiliations_TDTM', false);
+    }
+    /* @description Disable all Relationship related trigger handlers when not needed to improve performance */
+    private static void disableRelationshipTriggers() {
+        createDefaultTDTMHandlers();
+        TDTM_ProcessControl.toggleTriggerState('CampaignMember', 'REL_Relationships_Cm_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Contact', 'REL_Relationships_Con_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('npe4__Relationship__c', 'REL_Relationships_TDTM', false);
+    }
+    /* @description Disable all OppContactRole related trigger handlers when not needed to improve performance */
+    private static void disableOCRTriggers() {
+        createDefaultTDTMHandlers();
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'OPP_OpportunityContactRoles_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'HH_OppContactRoles_TDTM', false);
+    }
+    /* @description Disable all OppRollup related trigger handlers when not needed to improve performance */
+    private static void disableRollupTriggers() {
+        createDefaultTDTMHandlers();
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'RLLP_OppRollup_TDTM', false);
+    }
+    /* @description Disable all Account/Contact Merge related trigger handlers when not needed to improve performance */
+    private static void disableUnusedContactTriggers() {
+        createDefaultTDTMHandlers();
+        TDTM_ProcessControl.toggleTriggerState('Contact', 'CON_ContactMerge_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Account', 'ACCT_AccountMerge_TDTM', false);
+    }
+    /* @description Disable all HH Naming related trigger handlers and setting when not needed to improve performance */
+    private static void disableHHNamingTriggers() {
+        createDefaultTDTMHandlers();
+        TDTM_ProcessControl.toggleTriggerState('Contact', 'HH_Households_TDTM', false);
+        UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
+    }
+
+    /**
+     * @description Create the default trigger handler records if they haven't already been created
+     */
+    private static Boolean haveTriggerRecordsBeenCreated = false;
+    private static void createDefaultTDTMHandlers() {
+        if (!haveTriggerRecordsBeenCreated && TDTM_Config_API.getCachedRecords().size() == 0) {
+            insert TDTM_DefaultConfig.getDefaultRecords();
+            TDTM_ObjectDataGateway.ClearCachedTriggerHandlersForTest();
+            haveTriggerRecordsBeenCreated = true;
+        }
+    }
+
 }
