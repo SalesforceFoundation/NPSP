@@ -100,4 +100,12 @@ public class UTIL_Debug {
             );
         }
     }
+
+    /*******************************************************************************************************
+    * @description Force the enabled static var to false regardless of the Test.isRunningTest() or custom settings value.
+    */
+    public static void disableDebugLogging() {
+        enabled = false;
+    }
+
 }
