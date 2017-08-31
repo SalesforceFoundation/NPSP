@@ -33,7 +33,11 @@
  * @group TDTM
  * @group-content ../../ApexDocContent/TDTM.htm
  * @description Test class to validate behavior changes related to TDTM Static Flag handling, primarily focused on
- * dml operations with more than 200 records.
+ * dml operations with more than 200 records. Unit tests in this class are generally meant to push limits beyond
+ * what most of our unit tests will normally do by inserting more than 200 records at a time. This causes Salesforce
+ * to execute each set of triggers twice (once for a block of 200 records and then again for a block of 10 records).
+ * These tests validate that all expected functionality completes properly even when the triggers are executed twice
+ * as described (i.e., we're testing that our static flag recursion control logic works properly in this scenario).
  *
 ***/
 @isTest
