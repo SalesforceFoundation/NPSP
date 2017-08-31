@@ -1229,6 +1229,7 @@
         <members>lblSalutation</members>
         <members>lblState</members>
         <members>lblStreet</members>
+        <members>lblYouAreHere</members>
         <members>leadConvertAccountName</members>
         <members>leadConvertAffilationName</members>
         <members>leadConvertAffiliateExistingAccount</members>

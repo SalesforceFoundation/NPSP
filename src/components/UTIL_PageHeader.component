@@ -1,0 +1,68 @@
+<apex:component >
+    <apex:attribute name="parentEntityLabel" type="String" required="true"
+        description="Breadcrumb label for parent entity."/>
+    <apex:attribute name="parentAction" type="String" required="true"
+        description="Breadcrumb action for parent entity"/>
+    <apex:attribute name="parentRecordName" type="String" required="true"
+        description="Breadcrumb label for parent record."/>
+    <apex:attribute name="parentRecordAction" type="String" required="true"
+        description="Breadcrumb action for parent record."/>
+    <apex:attribute name="title" type="String" default=""
+        description="Header title under breadcrumb."/>
+    <apex:attribute name="subtitle" type="String" default=""
+        description="Subtitle under breadcrumb title."/>
+    <apex:attribute name="showCancelBtn" type="Boolean" default="true"
+        description="Set to false to hide cancel button, default is true"/>
+    <apex:attribute name="cancelAction" type="ApexPages.Action" default=""
+        description="Action for cancel button."/>
+    <!-- Cannot assign a label as default - using isBlank check when setting the value -->
+    <apex:attribute name="cancelLabel" type="String"
+        description="Label for cancel button. When blank will display stgBtnCancel label."/>
+    <apex:attribute name="cancelImmediate" type="Boolean" default="true"
+        description="Whether the cancel action should be immediate, defaults to true."/>
+    <apex:attribute name="showSaveBtn" type="Boolean" default="true"
+        description="Set to false to hide save button, default is true"/>
+    <apex:attribute name="saveAction" type="ApexPages.Action" default=""
+        description="Action for save button."/>
+    <!-- Cannot assign a label as default - using isBlank check when setting the value -->
+    <apex:attribute name="saveLabel" type="String"
+        description="Label for save button. When blank will display stgBtnSave label."/>
+    <apex:attribute name="saveImmediate" type="Boolean" default="false"
+        description="Whether the save action should be immediate, defaults to true."/>
+    <apex:attribute name="saveDisabled" type="Boolean" default="false"
+        description="Whether the save button should be disabled, defaults to false."/>
+
+    <div class="slds-page-header" role="banner">
+        <div class="slds-grid">
+            <div class="slds-col slds-col_padded">
+                <nav role="navigation">
+                    <p id="bread-crumb-label" class="slds-assistive-text">{!$Label.lblYouAreHere}</p>
+                    <ol class="slds-breadcrumb slds-list_horizontal slds-wrap" aria-labelledby="bread-crumb-label">
+                        <li class="slds-breadcrumb__item slds-text-title_caps">
+                            <a href="{!parentAction}">{!parentEntityLabel}</a>
+                        </li>
+                        <li class="slds-breadcrumb__item slds-text-title_caps">
+                            <a href="{!parentRecordAction}">
+                                {!parentRecordName}
+                            </a>
+                        </li>
+                    </ol>
+                </nav>              
+                <h1 class="slds-text-heading--medium slds-p-top-medium">
+                    <apex:outputText value="{!title}" />
+                </h1>
+                <p class="slds-text-body_small slds-m-top_x-small">{!subtitle}</p>
+            </div>
+            <div class="slds-col slds-no-flex slds-align-middle">
+                <div class="slds-button-group" role="group">
+                    <apex:commandButton id="cancelBTN" styleClass="slds-button slds-button_neutral" action="{!cancelAction}"
+                        value="{!BLANKVALUE(cancelLabel,$Label.stgBtnCancel)}"  immediate="{!cancelImmediate}"
+                        rendered="{!showCancelBtn}"/>
+                    <apex:commandButton id="saveCloseBTN" styleClass="slds-button slds-button_brand" action="{!saveAction}"
+                        value="{!BLANKVALUE(saveLabel,$Label.stgBtnSave)}" immediate="{!saveImmediate}" disabled="{!saveDisabled}"
+                        rendered="{!showSaveBtn}"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</apex:component>

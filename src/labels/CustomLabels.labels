@@ -3184,6 +3184,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Street</value>
     </labels>
     <labels>
+        <fullName>lblYouAreHere</fullName>
+        <categories>UTIL_PageHeader</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>lblYouAreHere</shortDescription>
+        <value>You are here:</value>
+    </labels>
+    <labels>
         <fullName>leadConvertAccountName</fullName>
         <categories>Lead Converter</categories>
         <language>en_US</language>
