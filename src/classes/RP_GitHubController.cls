@@ -38,6 +38,7 @@ public with sharing class RP_GitHubController {
     //Object used to load all information related to github release notes
     public GitHubWrapper gitHubData {get; set;}
     public Boolean timeoutError {get; set;}
+    public Boolean remoteSiteSettingIsNotActive {get; set;}
 
     public RP_GitHubController() {
 
@@ -53,7 +54,8 @@ public with sharing class RP_GitHubController {
         RP_GitHubClient client = new RP_GitHubClient();
         HttpResponse response = client.getLatestReleaseNotes();
         timeoutError = true;
-
+        remoteSiteSettingIsNotActive = client.remoteSiteSettingIsNotActive;
+        
         if (response != null) {
 
             String responseBody = response.getBody();
