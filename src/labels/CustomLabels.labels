@@ -3385,7 +3385,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>lvlBtnSaveAndNew</fullName>
-        <categories>Levels</categories>
+        <categories>UTIL_PageHeader</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Save &amp; New button on the Level Edit page</shortDescription>

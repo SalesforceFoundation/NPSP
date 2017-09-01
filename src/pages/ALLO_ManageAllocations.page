@@ -150,8 +150,9 @@
     <apex:form id="theForm">
         <div class="slds">
             <!-- PAGE HEADER -->
-            <c:UTIL_PageHeader parentEntityLabel="{!objectLabelPlural}" parentAction="javascript:window.urlHome();"
-                parentRecordName="{!objectName}" parentRecordAction="/{!parentId}" title="{!pageTitle}"
+            <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="{!objectLabelPlural}"
+                parentAction="javascript:window.urlHome();" parentRecordName="{!objectName}"
+                parentRecordAction="/{!parentId}" header="{!pageTitle}" icon="custom" iconCategory="standard"
                 cancelAction="{!cancel}" saveAction="{!saveClose}" saveDisabled="{!opp<>null&&parentAmount==0}"/>
             <div> 
                 <apex:pageMessages id="messages"/>

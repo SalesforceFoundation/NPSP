@@ -109,6 +109,8 @@ public with sharing class UTIL_Namespace_TEST {
         str = Label.alloTotals;
         str = Label.alloCampaignExceedsOppAmount;
         str = Label.alloUnallocated;
+        str = Label.alloBtnCancel;
+        str = Label.alloBtnSaveAndClose;
         str = Label.stgHelpBatchCreateDefault;
         str = Label.addrHHAddressAlwaysDefault;
         str = Label.Addr_Verification_Cant_Load_Class;

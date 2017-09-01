@@ -321,10 +321,10 @@
         <members>STG_PageHeader</members>
         <members>UTIL_FormField</members>
         <members>UTIL_InputField</members>
-        <members>UTIL_PageHeader</members>
         <members>UTIL_JobProgress</members>
         <members>UTIL_JobProgressLightning</members>
         <members>UTIL_NavigateBack</members>
+        <members>UTIL_PageHeader</members>
         <members>UTIL_PageMessages</members>
         <members>UTIL_SoqlListView</members>
         <members>UTIL_Tooltip</members>
