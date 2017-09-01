@@ -33,7 +33,11 @@
  * @group TDTM
  * @group-content ../../ApexDocContent/TDTM.htm
  * @description Test class to validate behavior changes related to TDTM Static Flag handling, primarily focused on
- * dml operations with more than 200 records.
+ * dml operations with more than 200 records. Unit tests in this class are generally meant to push limits beyond
+ * what most of our unit tests will normally do by inserting more than 200 records at a time. This causes Salesforce
+ * to execute each set of triggers twice (once for a block of 200 records and then again for a block of 10 records).
+ * These tests validate that all expected functionality completes properly even when the triggers are executed twice
+ * as described (i.e., we're testing that our static flag recursion control logic works properly in this scenario).
  *
 ***/
 @isTest
@@ -50,6 +54,10 @@ private class TDTM_DMLgt200_TEST {
     */
     @isTest
     static void test_contacts_with_affiliations() {
+
+        UTIL_Debug.disableDebugLogging();     // Override debug logging for this test because it's an expensive operation
+        UTIL_UnitTestData_TEST.disableRelationshipTriggers();
+        UTIL_UnitTestData_TEST.disableMergeTriggers();
 
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
                 new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
@@ -98,6 +106,10 @@ private class TDTM_DMLgt200_TEST {
     @isTest
     static void test_contacts_with_primary_affiliations() {
 
+        UTIL_Debug.disableDebugLogging();     // Override debug logging for this test because it's an expensive operation
+        UTIL_UnitTestData_TEST.disableRelationshipTriggers();
+        UTIL_UnitTestData_TEST.disableMergeTriggers();
+
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
                 new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
 
@@ -131,6 +143,10 @@ private class TDTM_DMLgt200_TEST {
     */
     @isTest
     static void test_contacts_with_relationships() {
+
+        UTIL_Debug.disableDebugLogging();     // Override debug logging for this test because it's an expensive operation
+        UTIL_UnitTestData_TEST.disableAffiliationsTriggers();
+        UTIL_UnitTestData_TEST.disableMergeTriggers();
 
         Test.startTest();
 
@@ -172,6 +188,11 @@ private class TDTM_DMLgt200_TEST {
     */
     @isTest
     static void test_opportunities_with_default_alloc() {
+
+        UTIL_Debug.disableDebugLogging();     // Override debug logging for this test because it's an expensive operation
+        UTIL_UnitTestData_TEST.disableRollupTriggers();
+        UTIL_UnitTestData_TEST.disableMergeTriggers();
+        UTIL_UnitTestData_TEST.disableOppNonOCRTriggers();
 
         Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
@@ -240,6 +261,12 @@ private class TDTM_DMLgt200_TEST {
     @isTest
     static void test_recurring_donations() {
 
+        UTIL_Debug.disableDebugLogging();     // Override debug logging for this test because it's an expensive operation
+        UTIL_UnitTestData_TEST.disableRollupTriggers();
+        UTIL_UnitTestData_TEST.disableMergeTriggers();
+        UTIL_UnitTestData_TEST.disableOCRTriggers();
+        UTIL_UnitTestData_TEST.disableOppNonOCRTriggers();
+
         Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
 
@@ -280,6 +307,13 @@ private class TDTM_DMLgt200_TEST {
     */
     @isTest
     static void test_addresses() {
+
+        UTIL_Debug.disableDebugLogging();     // Override debug logging for this test because it's an expensive operation
+        UTIL_UnitTestData_TEST.disableAffiliationsTriggers();
+        UTIL_UnitTestData_TEST.disableRelationshipTriggers();
+        UTIL_UnitTestData_TEST.disableMergeTriggers();
+        UTIL_UnitTestData_TEST.disableHHNamingTriggers();
+
         Test.startTest();
 
         // Create more than 200 Contact records and then validate that all of the Household Accounts were created
@@ -310,18 +344,16 @@ private class TDTM_DMLgt200_TEST {
     */
     @isTest
     static void test_household_account_naming() {
+
+        UTIL_Debug.disableDebugLogging();     // Override debug logging for this test because it's an expensive operation
+        UTIL_UnitTestData_TEST.disableAffiliationsTriggers();
+        UTIL_UnitTestData_TEST.disableRelationshipTriggers();
+        UTIL_UnitTestData_TEST.disableMergeTriggers();
+
         Test.startTest();
 
         // Create more than 200 Contact records and then validate that all of the Household Accounts were created
         List<Contact> contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(insertCnt);
-        for (Contact c : contacts) {
-            c.OtherCity = null;
-            c.MailingStreet = '1313 Mockingbird Lane';
-            c.MailingCity = 'Munsterville';
-            c.MailingState = 'Illinois';
-            c.MailingPostalCode = '06123';
-            c.MailingCountry = 'United States';
-        }
         Database.DMLOptions dml = new Database.DMLOptions();
         dml.DuplicateRuleHeader.AllowSave = true;
         Database.insert(contacts, dml);
@@ -352,6 +384,12 @@ private class TDTM_DMLgt200_TEST {
 
         ADDR_Validator_TEST.createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
+
+        UTIL_Debug.disableDebugLogging();     // Override debug logging for this test because it's an expensive operation
+        UTIL_UnitTestData_TEST.disableAffiliationsTriggers();
+        UTIL_UnitTestData_TEST.disableRelationshipTriggers();
+        UTIL_UnitTestData_TEST.disableMergeTriggers();
+        UTIL_UnitTestData_TEST.disableHHNamingTriggers();
 
         // Create more than 200 Contact records and then validate that all of the Addresses were verified
         List<Contact> contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(insertCnt);
@@ -389,6 +427,8 @@ private class TDTM_DMLgt200_TEST {
      */
     @isTest
     static void testAllocationsCreatedForManyOpenEndedRecurringDonations() {
+
+        UTIL_Debug.disableDebugLogging();     // Override debug logging for this test because it's an expensive operation
 
         Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
@@ -439,4 +479,5 @@ private class TDTM_DMLgt200_TEST {
         System.assertEquals(240, [SELECT Count() FROM Allocation__c WHERE Opportunity__c IN :createdOpportunities],
                 'There should be 240 generated default allocations records');
     }
+
 }
