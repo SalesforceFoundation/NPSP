@@ -275,7 +275,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         
 
         if (!setRecDonId.isEmpty() || !setOppIds.isEmpty()) {
-            string oppQuery = 'SELECT Id, Amount, npe03__Recurring_Donation__c, CampaignId';
+            string oppQuery = 'SELECT Id, Amount, npe03__Recurring_Donation__c, CampaignId, CloseDate';
             if (UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
                 oppQuery += ', CurrencyIsoCode';
             }

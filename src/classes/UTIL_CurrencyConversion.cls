@@ -39,6 +39,10 @@ public class UTIL_CurrencyConversion {
      * @description Returns the proper effective rate to use based on the date and the from/to currencies
      * Leverages the UTIL_CurrencyCache class to handle either standard or dated exchanges as well as the
      * platform cache if it's been allocated.
+     * @param dt - Effective Date to use for conversion (or null to use the current date)
+     * @param fromCurr - The currency to convert from
+     * @param toCurr - The currency to convert to.
+     * @return Exchange Rate
      */
     public static Decimal getExchangeRate(Date dt, String fromCurr, String toCurr) {
 
@@ -47,7 +51,7 @@ public class UTIL_CurrencyConversion {
             return 1;
         }
 
-        // Retrieve the conversino rate from the "From" Currency to the Org Default Currency
+        // Retrieve the conversion rate from the "From" Currency to the Org Default Currency
         Decimal fromRate = UTIL_CurrencyCache.getEffectiveExchangeRate(fromCurr, dt);
 
         // If the "to" currency is the org default, just return the fromRate
@@ -64,6 +68,11 @@ public class UTIL_CurrencyConversion {
 
     /**
      * @description Returns the converted amount to the toCurr using the proper exchange rate.
+     * @param amt - The amount to convert
+     * @param dt - Effective Date to use for conversion (or null to use the current date)
+     * @param fromCurr - The currency to convert from
+     * @param toCurr - The currency to convert to.
+     * @return Amount converted to the toCurr using the applied effective date
      */
     public static Decimal convertAmount(Decimal amt, Date dt, String fromCurr, String toCurr) {
         if (fromCurr == toCurr) {

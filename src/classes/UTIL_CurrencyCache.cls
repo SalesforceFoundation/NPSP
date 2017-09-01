@@ -64,10 +64,14 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
 
     /**
      * @description Return a specific exchange rate from the cache for the specified currency code and effective date.
+     * @param currCode - The currency to retrieve a rate for
+     * @param dt - Effective Date to find a rate for (or null to use the current date)
+     * @return Exchange Rate
      */
     public static Decimal getEffectiveExchangeRate(String currCode, Date dt) {
-        List<Date> effDates;
-        List<Decimal> rates;
+        List<Date> effDates = new List<Date>();
+        List<Decimal> rates = new List<Decimal>();
+
         // If the current static var cache does not have a value for the CurrencyCode
         // look in the Platform cache first (if available) and if not retrieve from the database.
         if (!cachedRatesByCurrency.containsKey(currCode)) {
@@ -83,6 +87,10 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
             effDates = (List<Date>) cachedRatesByCurrency.get(currCode).get(LIST_TYPE_EFF_DATES);
             rates = (List<Decimal>) cachedRatesByCurrency.get(currCode).get(LIST_TYPE_EXCH_RATES);
 
+            if (dt == null) {
+                dt = Date.Today();
+            }
+
             // The list of effective dates is in descending date order
             for (Integer n = 0; n < effDates.size(); n++) {
                 if (dt >= effDates[n]) {
@@ -91,7 +99,7 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
             }
         }
 
-        // TODO: no rate found - now what? Throw an exception maybe?
+        // TODO: no rate found - now what? Throw an exception maybe; or just return 1?
         return -1;
     }
 
@@ -145,7 +153,10 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
     // INSTANCE METHODS IN THE INTERFACE AVAILBLE FOR MOCKING IN TESTS
     // ====================================================================
 
-    /** @description Interface and overridable methods */
+    /**
+     * @description public Interface to enable mocking of this class functionality for unit tests in orgs
+     * that may or may not have multicurrency and/or platform cache enabled.
+     */
     public interface Interface_x {
         Boolean isOrgCacheAvailable();
         void resetCurrencyCache();
@@ -161,8 +172,8 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
 
     /**
      * @description Given a list of currency codes, returns a map of effective dates and related exchange rates
-     *  pulling from either the CurrencyType or DatedConversionRate object.
-     * @param List of currency codes
+     * pulling from either the CurrencyType or DatedConversionRate object.
+     * @param List of currency codes to retrieve data for
      * @return Map<CurrencyCode, Map<ListTypeConstant, List<Date|Decimal>>>
      */
     public Map<String, Map<String, List<Object>>> getRateMapForCurrencies(List<String> currCodes) {

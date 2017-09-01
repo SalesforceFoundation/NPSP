@@ -35,6 +35,10 @@
 */
 public with sharing class UTIL_Currency implements UTIL_Currency.Interface_x {
 
+    /**
+     * @description public Interface to enable mocking of this class functionality for unit tests in orgs
+     * that may or may not have multicurrency enabled.
+     */
     public interface Interface_x {
         Boolean isMultiCurrencyOrganization();
         Boolean isAdvancedCurrencyManagementEnabled();
@@ -90,7 +94,7 @@ public with sharing class UTIL_Currency implements UTIL_Currency.Interface_x {
     }
 
     /**
-     * @description Returns the organizations default currency code
+     * @description Returns the organizations default currency code (i.e., "Corporate" or "Home" Currency)
      */
     private static String orgDefaultCurrencyCode;
     public String getOrgDefaultCurrency() {
@@ -107,25 +111,26 @@ public with sharing class UTIL_Currency implements UTIL_Currency.Interface_x {
     }
 
     /**
-     * @description Wrapper for UserInfo.getDefaultCurrency()
+     * @description Wrapper for UserInfo.getDefaultCurrency(). Returns the context user's default currency code
+     * for multiple currency organizations or the organization's currency code for single currency organizations.
      */
     public String getDefaultCurrency() {
         return UserInfo.getDefaultCurrency();
     }
 
     /**
-     * @description For single currency orgs, return the symbol of the org's
-     * currency or the org's currency ISO code if no symbol is known for that
+     * @description For single currency orgs, return the symbol of the user's
+     * default currency or the user's currency ISO code if no symbol is known for that
      * currency
      *
      * @return String
      */
     public String getDefaultCurrencySymbol() {
-        String orgCurrency = UTIL_Currency.getInstance().getDefaultCurrency();
-        if (currencySymbols.containsKey(orgCurrency)) {
-            return currencySymbols.get(orgCurrency);
+        String userCurrency = UTIL_Currency.getInstance().getDefaultCurrency();
+        if (currencySymbols.containsKey(userCurrency)) {
+            return currencySymbols.get(userCurrency);
         } else {
-            return orgCurrency;
+            return userCurrency;
         }
     }
 
