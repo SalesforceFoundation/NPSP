@@ -111,20 +111,26 @@ public with sharing class RP_GitHubTest {
     @isTest
     public static void testFormatDate() {
 
+        User user = UTIL_UnitTestData_TEST.createNewUserForTests(Datetime.now().getTime() + 'gettingstarteduser@salesforce.org.test');
+
         Map<String, Object> responseBodyMap = new Map<String, Object>();
 
         RP_GitHubController.GitHubWrapper wrapper = new RP_GitHubController.GitHubWrapper(responseBodyMap);
 
         Test.startTest();
 
-        String newDate = wrapper.formatDate('2017-07-17T17:50:03Z');
+        String newDate = null;
+
+        System.runAs(user) {
+
+            newDate = wrapper.formatDate('2017-07-17T17:50:03Z');
+        }
 
         Test.stopTest();
 
         // Asserting that the new format date is returning the same date with another format
-        // This only works if the user's timezone is Pacific, and locale is English-US.
-        // need a better way to assert what we expect that takes into account the user's timezone and locale.
-        //System.assertEquals(newDate, '7/17/2017 5:50 pm');
+        System.assertEquals(newDate, '7/17/2017 5:50 pm');
+
     }
 
 }
