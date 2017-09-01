@@ -39,7 +39,7 @@
                 <aura:if isTrue="{!!empty(v.label)}">
                     <label class="slds-form-element__label">{!v.label}</label>
                 </aura:if>
-                <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--right">
+                <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right">
                     <lightning:icon iconName="utility:search" 
                         class="slds-input__icon slds-icon-text-default" size="x-small"/>
                     <ui:inputText aura:id="input"
