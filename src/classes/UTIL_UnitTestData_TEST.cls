@@ -645,4 +645,65 @@ public class UTIL_UnitTestData_TEST {
         );
     }
 
+    // =====================================================================================================
+    // Methods to disable blocks of TDTM trigger handlers to aid in staying within unit test governor limits
+    // =====================================================================================================
+
+    /* @description Disable all Affiliations related trigger handlers when not needed to improve performance */
+    public static void disableAffiliationsTriggers() {
+        createDefaultTDTMHandlers();
+        TDTM_ProcessControl.toggleTriggerState('Contact', 'AFFL_Affiliations_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Account', 'AFFL_Affiliations_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('npe5__Affiliation__c', 'AFFL_Affiliations_TDTM', false);
+    }
+    /* @description Disable all Relationship related trigger handlers when not needed to improve performance */
+    public static void disableRelationshipTriggers() {
+        createDefaultTDTMHandlers();
+        TDTM_ProcessControl.toggleTriggerState('CampaignMember', 'REL_Relationships_Cm_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Contact', 'REL_Relationships_Con_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('npe4__Relationship__c', 'REL_Relationships_TDTM', false);
+    }
+    /* @description Disable all OppContactRole elated trigger handlers when not needed to improve performance */
+    public static void disableOCRTriggers() {
+        createDefaultTDTMHandlers();
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'OPP_OpportunityContactRoles_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'HH_OppContactRoles_TDTM', false);
+    }
+    /* @description Disable all non-OCR related Opportunity trigger handlers when not needed to improve performance */
+    public static void disableOppNonOCRTriggers() {
+        createDefaultTDTMHandlers();
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'MTCH_Opportunity_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'PSC_Opportunity_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'OPP_CampaignMember_TDTM', false);
+    }
+    /* @description Disable all OppRollup related trigger handlers when not needed to improve performance */
+    public static void disableRollupTriggers() {
+        createDefaultTDTMHandlers();
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'RLLP_OppRollup_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Task', 'EP_TaskRollup_TDTM', false);
+    }
+    /* @description Disable all Account/Contact Merge related trigger handlers when not needed to improve performance */
+    public static void disableMergeTriggers() {
+        createDefaultTDTMHandlers();
+        TDTM_ProcessControl.toggleTriggerState('Contact', 'CON_ContactMerge_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Account', 'ACCT_AccountMerge_TDTM', false);
+    }
+    /* @description Disable all HH Naming related trigger handlers and setting when not needed to improve performance */
+    public static void disableHHNamingTriggers() {
+        createDefaultTDTMHandlers();
+        TDTM_ProcessControl.toggleTriggerState('Contact', 'HH_Households_TDTM', false);
+        UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
+    }
+
+    /**
+     * @description Create the default trigger handler records if they haven't already been created
+     */
+    private static Boolean haveTriggerRecordsBeenCreated = false;
+    private static void createDefaultTDTMHandlers() {
+        if (!haveTriggerRecordsBeenCreated && TDTM_Config_API.getCachedRecords().size() == 0) {
+            insert TDTM_DefaultConfig.getDefaultRecords();
+            TDTM_ObjectDataGateway.ClearCachedTriggerHandlersForTest();
+            haveTriggerRecordsBeenCreated = true;
+        }
+    }
 }
