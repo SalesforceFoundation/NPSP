@@ -1139,7 +1139,7 @@ public with sharing class ADDR_Addresses_TEST {
 
         addressEmptyState.MailingState__c = 'NY';
         ADDR_Addresses_TDTM.populateAddressStateFromStateCode(con, 'Mailing', addressEmptyState);
-        System.assertEquals('stateCode', addressEmptyState.MailingState__c);
+        System.assertEquals(stateCode, addressEmptyState.MailingState__c);
 
         Test.stopTest();
     }
@@ -1147,7 +1147,7 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
-        Creates a new Address and checks if the Mailing State matches the source sObject's StateCode.
+        Checks if the Mailing State matches the source sObject's StateCode.
     verify:
         Returns false if the Address Mailing State is empty
         Returns false if the Address Mailing State does not match the StateCode
