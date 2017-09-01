@@ -147,7 +147,10 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                                 <label class="slds-form-element__label" for="oppPmtMade">{!$ObjectType.Opportunity.Fields.npe01__Payments_Made__c.Label}</label>
                                 <div class="slds-form-element__control">
                                     <span class="slds-form-element__static">
-                                        <apex:outputField value="{!currentOpp.npe01__Payments_Made__c}" id="oppPmtMade"/>
+                                        <span class="slds-form-element__addon">{!currencySymbol}</span>
+                                        <apex:outputText value="{0, number, ###,##0.00}"  id="oppPmtMade">
+                                            <apex:param value="{!totalPaymentsMade}"/>
+                                        </apex:outputText>
                                     </span>
                                 </div>
                             </div>
@@ -155,7 +158,10 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                                 <label class="slds-form-element__label" for="oppAmtOutstanding">{!$ObjectType.Opportunity.Fields.npe01__Amount_Outstanding__c.Label}</label>
                                 <div class="slds-form-element__control">
                                     <span class="slds-form-element__static">
-                                        <apex:outputField value="{!currentOpp.npe01__Amount_Outstanding__c}" id="oppAmtOutstanding"/>
+                                        <span class="slds-form-element__addon">{!currencySymbol}</span>
+                                        <apex:outputText value="{0, number, ###,##0.00}"  id="oppAmtOutstanding">
+                                            <apex:param value="{!amountOutstanding}"/>
+                                        </apex:outputText>
                                     </span>
                                 </div>
                             </div>
@@ -313,13 +319,19 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                             <div class="slds-form-element">
                                 <label class="slds-form-element__label" for="oppPmtMade2">{!$ObjectType.Opportunity.Fields.npe01__Payments_Made__c.Label}</label>
                                 <div class="slds-form-element__control">
-                                    <apex:outputField value="{!currentOpp.npe01__Payments_Made__c}" id="oppPmtMade2" styleClass="slds-form-element__static"/>
+                                    <span class="slds-form-element__addon">{!currencySymbol}</span>
+                                    <apex:outputText value="{0, number, ###,##0.00}"  id="oppPmtMade2" styleClass="slds-form-element__static">
+                                        <apex:param value="{!totalPaymentsMade}"/>
+                                    </apex:outputText>
                                 </div>
                             </div>
                             <div class="slds-form-element">
                                 <label class="slds-form-element__label" for="oppAmtOutstanding2">{!$ObjectType.Opportunity.Fields.npe01__Amount_Outstanding__c.Label}</label>
                                 <div class="slds-form-element__control">
-                                    <apex:outputField value="{!currentOpp.npe01__Amount_Outstanding__c}" id="oppAmtOutstanding2" styleClass="slds-form-element__static"/>
+                                    <span class="slds-form-element__addon">{!currencySymbol}</span>
+                                    <apex:outputText value="{0, number, ###,##0.00}"  id="oppAmtOutstanding2" styleClass="slds-form-element__static">
+                                        <apex:param value="{!amountOutstanding}"/>
+                                    </apex:outputText>
                                 </div>
                             </div>
                         </div>
@@ -339,7 +351,7 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                     <div class="slds-notify slds-notify--alert slds-theme--inverse-text slds-theme--alert-texture slds-m-around--medium" role="alert">
                         <apex:outputText value="{!$Label.pmtWizardWriteoffMessage}">
                            <apex:param value="{!outstanding_payments}"/>
-                           <apex:param value="{!currentOpp.npe01__Amount_Outstanding__c}"/>
+                           <apex:param value="{!currencySymbol}{!amountOutstanding}"/>
                         </apex:outputText>
                     </div>
                     <div class="slds-grid slds-wrap slds-grid--align-center">

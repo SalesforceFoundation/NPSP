@@ -35,6 +35,12 @@
 */
 public class PMT_PaymentCreator {
 
+    /* @description Retrieve info about specific fields that may or may not exist on the objects */
+    private static final SObjectField OppCurrencyField = Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode');
+    private static final SObjectField PaymentCurrencyField = Schema.sObjectType.npe01__OppPayment__c.fields.getMap().get('CurrencyIsoCode');
+    private static final SObjectField OppRecordTypeId = Schema.sObjectType.Opportunity.fields.getMap().get('RecordTypeId');
+
+
     /*******************************************************************************************************
     * @description map of Opportunity to Payment field mappings, validated to only contain mappings that
     * are of compatible types.
@@ -146,12 +152,6 @@ public class PMT_PaymentCreator {
             list<npe01__OppPayment__c> paymentsToDelete = new list<npe01__OppPayment__c>();
             list<Opportunity> updatedOpps = new list<Opportunity>();
             
-            // James Melville Added to support multi-currency sfdc.  */
-            // CurrencyIsoCode doesn't exist in non-multi-currency orgs
-            SObjectField OppCurrencyField = Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode');
-            SObjectField PaymentCurrencyField = Schema.sObjectType.npe01__OppPayment__c.fields.getMap().get('CurrencyIsoCode');    
-            SObjectField OppRecordTypeId = Schema.sObjectType.Opportunity.fields.getMap().get('RecordTypeId');
-
             if (TDTM_Runnable.Action.BeforeUpdate == ta) {
                 if (!String.isEmpty(ContactSettings.Payments_Auto_Close_Stage_Name__c)) {
                     String closedStageName = ContactSettings.Payments_Auto_Close_Stage_Name__c;
@@ -167,84 +167,66 @@ public class PMT_PaymentCreator {
 
             //SOQL for Updated Opps and Related Payments.  Queries for known fields and field in custom Payment Field Mappings.
             if (ta == TDTM_Runnable.Action.AfterUpdate){
-                String soqlStatement = '';
-                soqlStatement += 'select id, CloseDate, Amount, isClosed, isWon, npe01__Do_Not_Automatically_Create_Payment__c, Type, ';
-                if (OppRecordTypeId != null)
-                    soqlStatement += 'RecordTypeId, ';
-                for (string s : paymentMappings.keyset()) {
-                    npe01__Payment_Field_Mapping_Settings__c pfms = paymentMappings.get(s);
-                    if (!soqlStatement.contains(pfms.npe01__Opportunity_Field__c)) {               
-                        soqlStatement += pfms.npe01__Opportunity_Field__c + ', ';
-                    }   
-                }
-                if (OppCurrencyField!=null)
-                    soqlStatement += 'CurrencyIsoCode, ';
-                soqlStatement += 'npe01__payments_made__c, ';
-                string soqlSub = '(SELECT id, npe01__Paid__c, npe01__Payment_Amount__c, npe01__Payment_Date__c, npe01__Written_Off__c, ';
-                for (string s : paymentMappings.keyset()) {
-                    npe01__Payment_Field_Mapping_Settings__c pfms = paymentMappings.get(s);
-                    if (!soqlSub.contains(pfms.npe01__Payment_Field__c)) {               
-                        soqlSub += pfms.npe01__Payment_Field__c + ', ';   
-                    }
-                }
-                soqlStatement += soqlSub;
-                soqlStatement += 'npe01__scheduled_date__c ';
-                soqlStatement += 'from Opportunity.npe01__OppPayment__r WHERE npe01__Opportunity__c IN :newOpps) from Opportunity WHERE id in :newOpps';
-                updatedOpps = Database.query(soqlStatement);
+                String query = buildOppsQuery();
+                query += 'WHERE Id IN :newOpps';
+                updatedOpps = Database.query(query);
             }
     
             //IF Trigger is Insert, Create a new Payment
             if( ta == TDTM_Runnable.Action.AfterInsert){
                 for (Opportunity thisOpp : newOpps){
                     
-                    if (isNoPaymentForOpp(thisOpp))
+                    if (isNoPaymentForOpp(thisOpp)) {
                         continue;
+                    }
                         
-                    // if opp is closed won with no payments scheduled or made, add an automatic payment
-                        if ( /*(thisOpp.IsClosed && thisOpp.IsWon) && */
-                                        thisOpp.amount > 0 && thisOpp.npe01__payments_made__c == 0 && thisOpp.npe01__Number_of_Payments__c == 0) {
-                                npe01__oppPayment__c op = new npe01__oppPayment__c(
-                                    npe01__opportunity__c = thisOpp.id
-                                );
-                                
-                                //in multicurrency SFDC set the payment currency field to equal to the opp currency
-                                if(PaymentCurrencyField != null && OppCurrencyField != null)
-                                    op.put(PaymentCurrencyField, thisOpp.get(OppCurrencyField));
-                                
-                                op.npe01__payment_amount__c = thisOpp.amount;
-                            
-                            if (paymentMappings.size() > 0){
-                                for (string s : paymentMappings.keyset()){
-                                        npe01__Payment_Field_Mapping_Settings__c pfms = paymentMappings.get(s);
-                                        string x = pfms.npe01__Opportunity_Field__c;
-                                        if (thisOpp.get(x) != null)
-                                           op.put(pfms.npe01__Payment_Field__c, thisOpp.get(x));
+                    // if has no payments scheduled or made, add an automatic payment
+                    // Can there ever be a scenario where these fields are anything other than zero during an AfterInsert?
+                    if (thisOpp.amount > 0 && thisOpp.npe01__payments_made__c == 0 && thisOpp.npe01__Number_of_Payments__c == 0) {
+
+                        npe01__oppPayment__c op = new npe01__oppPayment__c(
+                            npe01__opportunity__c = thisOpp.id
+                        );
+
+                        //in multicurrency SFDC set the payment currency field to equal to the opp currency
+                        if(PaymentCurrencyField != null && OppCurrencyField != null) {
+                            op.put(PaymentCurrencyField, thisOpp.get(OppCurrencyField));
+                        }
+                        op.npe01__payment_amount__c = thisOpp.amount;
+
+                        if (paymentMappings.size() > 0){
+                            for (string s : paymentMappings.keyset()){
+                                npe01__Payment_Field_Mapping_Settings__c pfms = paymentMappings.get(s);
+                                string x = pfms.npe01__Opportunity_Field__c;
+                                if (thisOpp.get(x) != null) {
+                                    op.put(pfms.npe01__Payment_Field__c, thisOpp.get(x));
                                 }
                             }
-                            
-                            if (thisOpp.IsClosed && thisOpp.IsWon){
-                                op.npe01__paid__c = true;
-                                op.npe01__payment_date__c = thisOpp.closeDate;
-                            }
-                            
-                            if (!thisOpp.IsClosed){
-                                op.npe01__paid__c = false;
-                                op.npe01__scheduled_date__c = thisOpp.closeDate;
-                            }
-                            
-                            paymentsToInsert.add(op);
                         }
-                        /*
-                        else if (!thisOpp.IsClosed && 
-                                        thisOpp.amount > 0 && thisOpp.npe01__payments_made__c == 0 && thisOpp.npe01__Number_of_Payments__c == 0 && !thisOpp.npe01__Do_Not_Automatically_Create_Payment__c) {
-                            paymentsToInsert.add(new npe01__oppPayment__c(
-                                npe01__opportunity__c = thisOpp.id,
-                                npe01__scheduled_date__c = thisOpp.closeDate,
-                                npe01__payment_amount__c = thisOpp.amount,
-                                npe01__paid__c = false
-                            ));
+
+                        if (thisOpp.IsClosed && thisOpp.IsWon){
+                            op.npe01__paid__c = true;
+                            op.npe01__payment_date__c = thisOpp.closeDate;
                         }
-                        */
+
+                        if (!thisOpp.IsClosed){
+                            op.npe01__paid__c = false;
+                            op.npe01__scheduled_date__c = thisOpp.closeDate;
+                        }
+
+                        paymentsToInsert.add(op);
+                    }
+                    /*
+                    else if (!thisOpp.IsClosed &&
+                                    thisOpp.amount > 0 && thisOpp.npe01__payments_made__c == 0 && thisOpp.npe01__Number_of_Payments__c == 0 && !thisOpp.npe01__Do_Not_Automatically_Create_Payment__c) {
+                        paymentsToInsert.add(new npe01__oppPayment__c(
+                            npe01__opportunity__c = thisOpp.id,
+                            npe01__scheduled_date__c = thisOpp.closeDate,
+                            npe01__payment_amount__c = thisOpp.amount,
+                            npe01__paid__c = false
+                        ));
+                    }
+                    */
                 }
                 // put in the payment for closed opps       
                 if (!paymentsToInsert.isEmpty()) 
@@ -266,8 +248,11 @@ public class PMT_PaymentCreator {
                             mappingsUpdated = true;
                         }
                     }
-                
-                     
+
+                    // Use a method to determine the value for total payments that takes Advanced Currency Management
+                    // into consideration.
+                    Decimal totalPaymentsMade = getPaymentsMade(thisOpp);
+
                     if (thisOpp.npe01__OppPayment__r.size() > 0){
                          // if opp is updated, update the automatic payment
                         if ( ((thisOpp.Amount != oldOpp.Amount) || (thisOpp.CloseDate != oldOpp.CloseDate) || mappingsUpdated == true) &&
@@ -276,7 +261,7 @@ public class PMT_PaymentCreator {
                                 thisOpp.npe01__OppPayment__r.size() == 1 &&
                                 thisOpp.npe01__OppPayment__r[0].npe01__paid__c == False &&
                                 !thisOpp.isClosed && thisOpp.amount > 0 &&
-                                thisOpp.npe01__payments_made__c == 0) {
+                                totalPaymentsMade == 0) {
                             thisOpp.npe01__OppPayment__r[0].npe01__scheduled_date__c = thisOpp.closeDate;
                             thisOpp.npe01__OppPayment__r[0].npe01__payment_amount__c = thisOpp.amount;
                             
@@ -298,7 +283,7 @@ public class PMT_PaymentCreator {
                                 thisOpp.npe01__OppPayment__r.size() == 1 &&
                                 thisOpp.npe01__OppPayment__r[0].npe01__paid__c == False &&
                                 thisOpp.isClosed && thisOpp.isWon && thisOpp.amount > 0 &&
-                                thisOpp.npe01__payments_made__c == 0) {
+                                totalPaymentsMade == 0) {
                             thisOpp.npe01__OppPayment__r[0].npe01__payment_date__c = thisOpp.closeDate;
                             thisOpp.npe01__OppPayment__r[0].npe01__payment_amount__c = thisOpp.amount;
                             thisOpp.npe01__OppPayment__r[0].npe01__paid__c = true;
@@ -360,6 +345,7 @@ public class PMT_PaymentCreator {
      * @param closedStageName The name of an opportunity stage that corresponds to Closed/Won to transition to if all payments are determined to be received
      * @return void
      */
+// TODO: Need to figure out how to deal with npe01__Payments_Made__c for both the OLD and NEW Opportunity
     private void closeOpportunityIfAllPaymentsReceived(Opportunity oldOpp, Opportunity newOpp, String closedStageName) {
         Boolean amountUpdated = (oldOpp.Amount != newOpp.Amount);
         Boolean paymentAmountReceivedUpdated = (oldOpp.npe01__Payments_Made__c != newOpp.npe01__Payments_Made__c);
@@ -377,5 +363,87 @@ public class PMT_PaymentCreator {
         ) {
             newOpp.StageName = closedStageName;
         }
+    }
+
+    /*******************************************************************************************************
+    * @description When Advanced Currency Management is enabled in an org, the packaged rollups and formula
+    * from the Payment object will not work. This method will detect that scenario and return either the
+    * value from the formula or calculate the Amount Outstanding from the payment records
+    * track this.
+    * @return Decimal amount outstanding
+    */
+    public static Decimal getAmountOutstanding(Opportunity currentOpp) {
+        if (!UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled()) {
+            return currentOpp.npe01__Amount_Outstanding__c;
+        } else {
+            // calculate the value since the roll-ups and formula are not functional with ACM
+            Decimal totalPayments = 0;
+            Decimal amtWrittenOff = 0;
+            for (npe01__OppPayment__c pmt : currentOpp.npe01__OppPayment__r) {
+                if (pmt.npe01__Paid__c == true) {
+                    totalPayments += pmt.npe01__Payment_Amount__c;
+                }
+                if (pmt.npe01__Written_Off__c == true) {
+                    amtWrittenOff += pmt.npe01__Payment_Amount__c;
+                }
+            }
+            return (currentOpp.Amount = totalPayments - amtWrittenOff);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description When Advanced Currency Management is enabled in an org, the packaged rollups and formula
+    * from the Payment object will not work. This method will detect that scenario and return either the
+    * value from the formula or calculate the Amount Outstanding from the payment records
+    * track this.
+    * @return Decimal amount outstanding
+    */
+    public static Decimal getPaymentsMade(Opportunity currentOpp) {
+        if (!UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled()) {
+            return currentOpp.npe01__Payments_Made__c;
+        } else {
+            // calculate the value since the roll-ups and formula are not functional with ACM
+            Decimal totalPayments = 0;
+            for (npe01__OppPayment__c pmt : currentOpp.npe01__OppPayment__r) {
+                if (pmt.npe01__Paid__c == true) {
+                    totalPayments += pmt.npe01__Payment_Amount__c;
+                }
+            }
+            return totalPayments;
+        }
+    }
+
+    /**
+     * @description Build a query string to retrieve a list of Opportunities with a subquery on the Payments object
+     * @return SOQL string
+     */
+    public static String buildOppsQuery() {
+        String soqlStatement = '';
+        soqlStatement += 'SELECT Id, CloseDate, Amount, isClosed, isWon, npe01__Do_Not_Automatically_Create_Payment__c, Type, ';
+        if (OppRecordTypeId != null) {
+            soqlStatement += 'RecordTypeId, ';
+        }
+        for (string s : paymentMappings.keyset()) {
+            npe01__Payment_Field_Mapping_Settings__c pfms = paymentMappings.get(s);
+            if (!soqlStatement.contains(pfms.npe01__Opportunity_Field__c)) {
+                soqlStatement += pfms.npe01__Opportunity_Field__c + ', ';
+            }
+        }
+        if (OppCurrencyField!=null) {
+            soqlStatement += 'CurrencyIsoCode, ';
+        }
+        soqlStatement += 'npe01__payments_made__c, ';
+        string soqlSub = '(SELECT id, npe01__Paid__c, npe01__Payment_Amount__c, npe01__Payment_Date__c, npe01__Written_Off__c, ';
+        for (string s : paymentMappings.keyset()) {
+            npe01__Payment_Field_Mapping_Settings__c pfms = paymentMappings.get(s);
+            if (!soqlSub.contains(pfms.npe01__Payment_Field__c)) {
+                soqlSub += pfms.npe01__Payment_Field__c + ', ';
+            }
+        }
+        soqlStatement += soqlSub;
+        soqlStatement += 'npe01__scheduled_date__c ';
+        soqlStatement += 'FROM Opportunity.npe01__OppPayment__r) FROM Opportunity ';
+
+        return soqlStatement;
     }
 }
