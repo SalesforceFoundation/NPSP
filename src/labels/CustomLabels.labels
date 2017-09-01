@@ -862,6 +862,13 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <value>Read full release notes &gt;</value>
     </labels>
     <labels>
+        <fullName>RP_Remote_Site_Settings_Deactivated</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RP Remote Site Settings Deactivated</shortDescription>
+        <value>To take advantage of all the new functionality on the Getting Started page, you need to make sure the Remote Site is active. Go to Setup, search for Remote Site Settings, then click Edit next to SFDOEndpoints. Ensure that the Active box is checked, then click Save.</value>
+    </labels>
+    <labels>
         <fullName>RP_SalesforceOrgLinkLabel</fullName>
         <language>en_US</language>
         <protected>true</protected>
