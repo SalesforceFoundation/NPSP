@@ -1016,6 +1016,8 @@ public with sharing class ADDR_Addresses_TEST {
 
         Integer hhSize = 1;
         Integer contactSize = 1;
+        String state = 'California';
+        String stateCode = 'CA';
 
         // This creates a default Address for each HH
         createHHTestData(hhSize, contactSize);
@@ -1023,7 +1025,7 @@ public with sharing class ADDR_Addresses_TEST {
 
         // Modify the Contact addresses directly, and set override
         Contact con = listConT[0];
-        con.put('MailingStateCode', 'CA');
+        con.put('MailingStateCode', stateCode);
         con.is_Address_Override__c = true;
 
         Test.startTest();
@@ -1036,9 +1038,12 @@ public with sharing class ADDR_Addresses_TEST {
 
         // Find the default Address
         Address__c defaultAddress = null;
+        Address__c newAddress = null;
         for (Address__c eachAddress : retrievedAddresses) {
             if (eachAddress.Default_Address__c) {
                 defaultAddress = eachAddress;
+            } else {
+                newAddress = eachAddress;
             }
         }
 
@@ -1050,7 +1055,7 @@ public with sharing class ADDR_Addresses_TEST {
         Map<Id, Account> accountIdToAccount = new Map<Id, Account>(retrievedAccounts);
         List<Contact> listCon = Database.query(buildContactSoql());
 
-        System.assertEquals('California', listCon[0].MailingState);
+        System.assertEquals(state, listCon[0].MailingState);
         System.assertEquals(true, listCon[0].is_Address_Override__c);
         System.assertNotEquals(null, listCon[0].Current_Address__c);
 
@@ -1058,11 +1063,8 @@ public with sharing class ADDR_Addresses_TEST {
         System.assertEquals(false, isMatchAddressAccCon(eachContactAccount, listCon[0]));
 
         // Verify the new Address Mailing State matches Contact's MailingStateCode and not set as the Default
-        Set<Address__c> newAddress = new Set<Address__c>(retrievedAddresses);
-        if (newAddress.remove(defaultAddress)) {
-            System.assertEquals('CA', new List<Address__c>(newAddress)[0].MailingState__c);
-            System.assertEquals(false, new List<Address__c>(newAddress)[0].Default_Address__c);
-        }
+        System.assertEquals(stateCode, newAddress.MailingState__c);
+        System.assertEquals(false, newAddress.Default_Address__c);
     }
 
 
@@ -1088,14 +1090,15 @@ public with sharing class ADDR_Addresses_TEST {
 
         Test.startTest();
 
-        // Verify the Mailing Country remains empty when the source sObject's CountryCode is empty
+        String countryCode = 'US';
+        String country = 'United States';
+
         ADDR_Addresses_TDTM.populateAddressCountryFromCountryCode(con, 'Mailing', addressEmptyCountry);
         System.assertEquals(null, addressEmptyCountry.MailingCountry__c);
 
-        // Verify the Mailing Country is populated with the source sObject's CountryCode value
-        con.put('MailingCountryCode', 'US');
+        con.put('MailingCountryCode', countryCode);
         ADDR_Addresses_TDTM.populateAddressCountryFromCountryCode(con, 'Mailing', addressEmptyCountry);
-        System.assertEquals('United States', addressEmptyCountry.MailingCountry__c);
+        System.assertEquals(country, addressEmptyCountry.MailingCountry__c);
 
         Test.stopTest();
     }
@@ -1125,19 +1128,18 @@ public with sharing class ADDR_Addresses_TEST {
 
         Test.startTest();
 
-        // Verify the Mailing State remains empty when the source sObject's StateCode is empty
+        String stateCode = 'CA';
+
         ADDR_Addresses_TDTM.populateAddressStateFromStateCode(con, 'Mailing', addressEmptyState);
         System.assertEquals(null, addressEmptyState.MailingState__c);
 
-        // Verify the empty Mailing State is populated with the source sObject's StateCode value
-        con.put('MailingStateCode', 'CA');
+        con.put('MailingStateCode', stateCode);
         ADDR_Addresses_TDTM.populateAddressStateFromStateCode(con, 'Mailing', addressEmptyState);
-        System.assertEquals('CA', addressEmptyState.MailingState__c);
+        System.assertEquals(stateCode, addressEmptyState.MailingState__c);
 
-        // Verify the mismatched Mailing State is populated with the source sObject's StateCode value
         addressEmptyState.MailingState__c = 'NY';
         ADDR_Addresses_TDTM.populateAddressStateFromStateCode(con, 'Mailing', addressEmptyState);
-        System.assertEquals('CA', addressEmptyState.MailingState__c);
+        System.assertEquals('stateCode', addressEmptyState.MailingState__c);
 
         Test.stopTest();
     }
@@ -1164,17 +1166,16 @@ public with sharing class ADDR_Addresses_TEST {
 
         Test.startTest();
 
-        // Verify the method returns false when the Mailing State is empty
+        String stateCode = 'CA';
+
         addressMatch.MailingState__c = null;
-        System.assertEquals(false, ADDR_Addresses_TDTM.isMatchingStateCode('CA', addressMatch.MailingState__c));
+        System.assertEquals(false, ADDR_Addresses_TDTM.isMatchingStateCode(stateCode, addressMatch.MailingState__c));
 
-        // Verify the method returns false when the Mailing State does not match the StateCode
         addressMatch.MailingState__c = 'Hawaii';
-        System.assertEquals(false, ADDR_Addresses_TDTM.isMatchingStateCode('CA', addressMatch.MailingState__c));
+        System.assertEquals(false, ADDR_Addresses_TDTM.isMatchingStateCode(stateCode, addressMatch.MailingState__c));
 
-        // Verify the method returns true when the Mailing State matches the StateCode
         addressMatch.MailingState__c = 'California';
-        System.assertEquals(true, ADDR_Addresses_TDTM.isMatchingStateCode('CA', addressMatch.MailingState__c));
+        System.assertEquals(true, ADDR_Addresses_TDTM.isMatchingStateCode(stateCode, addressMatch.MailingState__c));
 
         Test.stopTest();
     }

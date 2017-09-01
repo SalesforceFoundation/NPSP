@@ -1045,7 +1045,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * @param sobjSrc the source Contact or Account
     * @param fieldPrefixSrc the address fields to copy from, ie., Mailing, Other, Shipping, Billing
     * @param addr the Address object to copy to
-    * @param strAddrType if not null, copy to address.Address_Type__c
+    * @param addrType if not null, copy to address.Address_Type__c
     * @return void
     */ 
     public static void copyAddressStdSObjAddr(sObject sobjSrc, String fieldPrefixSrc, Address__c addr, String addrType) {
@@ -1133,8 +1133,8 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }
 
         String mappedMailingState = (validStatesByLabel == null)
-        ? ''
-        : validStatesByLabel.get(addressMailingState.toUpperCase());
+            ? ''
+            : validStatesByLabel.get(addressMailingState.toUpperCase());
 
         return stateCode.equalsIgnoreCase(mappedMailingState);
     }
