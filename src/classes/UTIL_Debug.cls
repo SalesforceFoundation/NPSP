@@ -100,4 +100,16 @@ public class UTIL_Debug {
             );
         }
     }
+
+    /*******************************************************************************************************
+    * @description Force the enabled static var to false regardless of the Test.isRunningTest() or custom
+    * settings value to prevent all system.debug() logging through this class. Debug statements can be
+    * expensive in terms of cpu time especially if they're called repitively in loops, through recursive
+    * triggers, or repetitive operations. Disabling debug statements can help reduce the change of an apex
+    * cpu time out in a unit test.
+    */
+    public static void disableDebugLogging() {
+        enabled = false;
+    }
+
 }
