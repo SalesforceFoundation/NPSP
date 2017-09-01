@@ -163,6 +163,10 @@ public class UTIL_Currency_TEST {
             'FOO',
             actual.getCurrencySymbol(recordId)
         );
+        System.assertEquals(
+            '$',
+            actual.getCurrencySymbol('USD')
+        );
 
         System.assertEquals(
             recordId,
@@ -233,6 +237,9 @@ public class UTIL_Currency_TEST {
         }
         public String getCurrencySymbol(Id recordId) {
             getCurrencySymbolRecordId = recordId;
+            return getCurrencySymbolReturn;
+        }
+        public String getCurrencySymbol(String currCode) {
             return getCurrencySymbolReturn;
         }
         public String getCurrencyIsoCodeQuery(Id recordId) {
