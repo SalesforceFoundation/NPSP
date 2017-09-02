@@ -998,6 +998,191 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
+        Update Contact's mailing address and mark it as override, to cause creation of a new non-default Address 
+        record with the Mailing State value set as expected when State & Country Picklists are enabled.
+    verify:
+        Contact gets new Address
+        HH sticks with default Address
+        New Address created with State value set as expected
+    **********************************************************************************************************/
+    static testMethod void testAddressOverrideCreatesNewAddressWhenStateCodeIsChanged() {
+        if (!ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
+            return;
+        }
+
+        if (strTestOnly != '*' && strTestOnly != 'testAddressOverrideCreatesNewAddressWhenStateCodeIsChanged') {
+            return;
+        }
+
+        Integer hhSize = 1;
+        Integer contactSize = 1;
+        String state = 'California';
+        String stateCode = 'CA';
+
+        // This creates a default Address for each HH
+        createHHTestData(hhSize, contactSize);
+        System.assertEquals(1, getAddresses().size());
+
+        // Modify the Contact addresses directly, and set override
+        Contact con = listConT[0];
+        con.put('MailingStateCode', stateCode);
+        con.is_Address_Override__c = true;
+
+        Test.startTest();
+        update con;
+        Test.stopTest();
+
+        // Verify a new Address record was created
+        List<Address__c> retrievedAddresses = getAddresses();
+        System.assertEquals(2, retrievedAddresses.size());
+
+        // Find the default Address
+        Address__c defaultAddress = null;
+        Address__c newAddress = null;
+        for (Address__c eachAddress : retrievedAddresses) {
+            if (eachAddress.Default_Address__c) {
+                defaultAddress = eachAddress;
+            } else {
+                newAddress = eachAddress;
+            }
+        }
+
+        // Verify the Account's Billing Address info matches the Default Address record
+        assertEquals(listAddrT[0], defaultAddress);
+
+        // Verify the Contact's Address was updated as expected and that the Household and Contact Addresses are different.
+        List<Account> retrievedAccounts = Database.query(buildAccountSoql());
+        Map<Id, Account> accountIdToAccount = new Map<Id, Account>(retrievedAccounts);
+        List<Contact> listCon = Database.query(buildContactSoql());
+
+        System.assertEquals(state, listCon[0].MailingState);
+        System.assertEquals(true, listCon[0].is_Address_Override__c);
+        System.assertNotEquals(null, listCon[0].Current_Address__c);
+
+        Account eachContactAccount = accountIdToAccount.get(listCon[0].AccountId);
+        System.assertEquals(false, isMatchAddressAccCon(eachContactAccount, listCon[0]));
+
+        // Verify the new Address Mailing State matches Contact's MailingStateCode and not set as the Default
+        System.assertEquals(stateCode, newAddress.MailingState__c);
+        System.assertEquals(false, newAddress.Default_Address__c);
+    }
+
+
+    /*********************************************************************************************************
+    @description
+        Update Address' Mailing Country when it is empty and State & Country Picklists are enabled.
+    verify:
+        Does not populate the Address' Mailing Country if the source sObject's CountryCode is empty
+        Populates the Address' Mailing Country with the source sObject's CountryCode value if the Mailing Country is empty
+    **********************************************************************************************************/
+    static testMethod void testEmptyAddressCountryIsPopulatedFromCountryCode() {
+        if (!ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
+            return;
+        }
+
+        if (strTestOnly != '*' && strTestOnly != 'testEmptyAddressCountryIsPopulatedFromCountryCode') {
+            return;
+        }
+
+        Contact con = new Contact();
+        con.put('MailingCountryCode', null);
+        Address__c addressEmptyCountry = new Address__c(MailingCountry__c = null);
+
+        Test.startTest();
+
+        String countryCode = 'US';
+        String country = 'United States';
+
+        ADDR_Addresses_TDTM.populateAddressCountryFromCountryCode(con, 'Mailing', addressEmptyCountry);
+        System.assertEquals(null, addressEmptyCountry.MailingCountry__c);
+
+        con.put('MailingCountryCode', countryCode);
+        ADDR_Addresses_TDTM.populateAddressCountryFromCountryCode(con, 'Mailing', addressEmptyCountry);
+        System.assertEquals(country, addressEmptyCountry.MailingCountry__c);
+
+        Test.stopTest();
+    }
+
+
+    /*********************************************************************************************************
+    @description
+        Update the Address' Mailing State when it is empty or does not match the source sObject's StateCode 
+        and State & Country Picklists are enabled.
+    verify:
+        Does not populate the Address' Mailing State if the source sObject's StateCode is empty
+        Populate the Address' Mailing State with the source sObject's StateCode value if the Mailing State is empty
+        Populate the Address' Mailing State with the source sObject's StateCode value if the Mailing State does not match the StateCode
+    **********************************************************************************************************/
+    static testMethod void testEmptyAddressStateIsPopulatedFromStateCode() {
+        if (!ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
+            return;
+        }
+
+        if (strTestOnly != '*' && strTestOnly != 'testEmptyAddressStateIsPopulatedFromStateCode') {
+            return;
+        }
+
+        Contact con = new Contact();
+        con.put('MailingStateCode', null);
+        Address__c addressEmptyState = new Address__c(MailingState__c = null);
+
+        Test.startTest();
+
+        String stateCode = 'CA';
+
+        ADDR_Addresses_TDTM.populateAddressStateFromStateCode(con, 'Mailing', addressEmptyState);
+        System.assertEquals(null, addressEmptyState.MailingState__c);
+
+        con.put('MailingStateCode', stateCode);
+        ADDR_Addresses_TDTM.populateAddressStateFromStateCode(con, 'Mailing', addressEmptyState);
+        System.assertEquals(stateCode, addressEmptyState.MailingState__c);
+
+        addressEmptyState.MailingState__c = 'NY';
+        ADDR_Addresses_TDTM.populateAddressStateFromStateCode(con, 'Mailing', addressEmptyState);
+        System.assertEquals(stateCode, addressEmptyState.MailingState__c);
+
+        Test.stopTest();
+    }
+
+
+    /*********************************************************************************************************
+    @description
+        Checks if the Mailing State matches the source sObject's StateCode.
+    verify:
+        Returns false if the Address Mailing State is empty
+        Returns false if the Address Mailing State does not match the StateCode
+        Returns true if the Address Mailing State matches the StateCode
+    **********************************************************************************************************/
+    static testMethod void testIsMatchingStateCode() {
+        if (!ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
+            return;
+        }
+
+        if (strTestOnly != '*' && strTestOnly != 'testIsMatchingStateCode') {
+            return;
+        }
+
+        Address__c addressMatch = new Address__c();
+
+        Test.startTest();
+
+        String stateCode = 'CA';
+
+        addressMatch.MailingState__c = null;
+        System.assertEquals(false, ADDR_Addresses_TDTM.isMatchingStateCode(stateCode, addressMatch.MailingState__c));
+
+        addressMatch.MailingState__c = 'Hawaii';
+        System.assertEquals(false, ADDR_Addresses_TDTM.isMatchingStateCode(stateCode, addressMatch.MailingState__c));
+
+        addressMatch.MailingState__c = 'California';
+        System.assertEquals(true, ADDR_Addresses_TDTM.isMatchingStateCode(stateCode, addressMatch.MailingState__c));
+
+        Test.stopTest();
+    }
+
+
+    /*********************************************************************************************************
+    @description
         update contacts' mailing address to cause an update to default Address object
     verify:
         existing Default Address updated
@@ -1837,5 +2022,51 @@ public with sharing class ADDR_Addresses_TEST {
         System.assertEquals(expected.MailingPostalCode__c, c.MailingPostalCode);
         System.assertEquals(expected.MailingCountry__c, c.MailingCountry);
     }
+
+
+    /*******************************************************************************************************
+    * @description Builds SOQL for Contact sObject. Fields include standard Mailing fields as well as the one for State and Country Picklist enabled.
+    * @return String SOQL
+    */
+    private static String buildContactSoql() {
+        List<String> selectFields = new List<String>{
+            'Id', 'AccountId', 'is_Address_Override__c', 'Current_Address__c',
+            'MailingStreet', 'MailingCity', 'MailingState', 'MailingCountry', 'MailingPostalCode',
+            'MailingLatitude', 'MailingLongitude', 'npe01__Primary_Address_Type__c'};
+
+        if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
+            selectFields.add('MailingCountryCode');
+            selectFields.add('MailingStateCode');
+            selectFields.add('OtherCountryCode');
+            selectFields.add('OtherStateCode');
+        }
+
+        return new UTIL_Query()
+            .withSelectFields(selectFields)
+            .withFrom('Contact')
+            .build();
+    }
+
+
+    /*******************************************************************************************************
+    * @description Builds SOQL for Account sObject. Fields include standard Billing fields as well as the one for State and Country Picklist enabled.
+    * @return String SOQL
+    */
+    private static String buildAccountSoql() {
+        List<String> selectFields = new List<String>{
+            'Id', 'BillingStreet', 'BillingCity', 'BillingState',  'BillingCountry',
+            'BillingPostalCode', 'BillingLatitude', 'BillingLongitude'};
+
+        if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
+            selectFields.add('BillingCountryCode');
+            selectFields.add('BillingStateCode');
+        }
+
+        return new UTIL_Query()
+            .withSelectFields(selectFields)
+            .withFrom('Account')
+            .build();
+    }
+
 
 }
