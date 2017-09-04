@@ -373,7 +373,8 @@ public class PMT_PaymentCreator {
     * @return Decimal amount outstanding
     */
     public static Decimal getAmountOutstanding(Opportunity currentOpp) {
-        if (!UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled()) {
+        // !UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled()
+        if (false) {
             return currentOpp.npe01__Amount_Outstanding__c;
         } else {
             // calculate the value since the roll-ups and formula are not functional with ACM
@@ -387,7 +388,7 @@ public class PMT_PaymentCreator {
                     amtWrittenOff += pmt.npe01__Payment_Amount__c;
                 }
             }
-            return (currentOpp.Amount = totalPayments - amtWrittenOff);
+            return (currentOpp.Amount - totalPayments - amtWrittenOff);
         }
     }
 
@@ -399,7 +400,8 @@ public class PMT_PaymentCreator {
     * @return Decimal amount outstanding
     */
     public static Decimal getPaymentsMade(Opportunity currentOpp) {
-        if (!UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled()) {
+        // !UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled()
+        if (false) {
             return currentOpp.npe01__Payments_Made__c;
         } else {
             // calculate the value since the roll-ups and formula are not functional with ACM

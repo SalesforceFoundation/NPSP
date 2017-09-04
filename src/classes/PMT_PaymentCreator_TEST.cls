@@ -623,36 +623,10 @@ private with sharing class PMT_PaymentCreator_TEST {
             return opp.npe01__OppPayment__r;
         }
         public Decimal getTotalPaymentsMade() {
-            if (!UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled()) {
-                return opp.npe01__Payments_Made__c;
-            } else {
-                // calculate the value since the roll-ups and formula are not functional with ACM
-                Decimal totalPayments = 0;
-                for (npe01__OppPayment__c pmt : opp.npe01__OppPayment__r) {
-                    if (pmt.npe01__Paid__c == true) {
-                        totalPayments += pmt.npe01__Payment_Amount__c;
-                    }
-                }
-                return totalPayments;
-            }
+            return PMT_PaymentCreator.getPaymentsMade(this.opp);
         }
         public Decimal getAmountOutstanding() {
-            if (!UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled()) {
-                return opp.npe01__Amount_Outstanding__c;
-            } else {
-                // calculate the value since the roll-ups and formula are not functional with ACM
-                Decimal totalPayments = 0;
-                Decimal amtWrittenOff = 0;
-                for (npe01__OppPayment__c pmt : opp.npe01__OppPayment__r) {
-                    if (pmt.npe01__Paid__c == true) {
-                        totalPayments += pmt.npe01__Payment_Amount__c;
-                    }
-                    if (pmt.npe01__Written_Off__c == true) {
-                        amtWrittenOff += pmt.npe01__Payment_Amount__c;
-                    }
-                }
-                return (opp.Amount = totalPayments - amtWrittenOff);
-            }
+            return PMT_PaymentCreator.getAmountOutstanding(this.opp);
         }
         public void deletePayments() {
             delete getPayments();
