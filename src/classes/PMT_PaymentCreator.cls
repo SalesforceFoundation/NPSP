@@ -370,6 +370,7 @@ public class PMT_PaymentCreator {
     * from the Payment object will not work. This method will detect that scenario and return either the
     * value from the formula or calculate the Amount Outstanding from the payment records
     * track this.
+    * @param currentOpp = Opportunity object with a subquery on all Payment records
     * @return Decimal amount outstanding
     */
     public static Decimal getAmountOutstanding(Opportunity currentOpp) {
@@ -395,9 +396,10 @@ public class PMT_PaymentCreator {
     /*******************************************************************************************************
     * @description When Advanced Currency Management is enabled in an org, the packaged rollups and formula
     * from the Payment object will not work. This method will detect that scenario and return either the
-    * value from the formula or calculate the Amount Outstanding from the payment records
+    * value from the formula or calculate the Total Payments (Paid) from the payment records
     * track this.
-    * @return Decimal amount outstanding
+    * @param currentOpp = Opportunity object with a subquery on all Payment records
+    * @return Decimal total of payment records where Paid = True
     */
     public static Decimal getPaymentsMade(Opportunity currentOpp) {
         // !UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled()
@@ -416,10 +418,11 @@ public class PMT_PaymentCreator {
     }
 
     /**
-     * @description Build a query string to retrieve a list of Opportunities with a subquery on the Payments object
+     * @description Build a query string to retrieve a list of Opportunities with a subquery on the Payments object.
+     * Does not include a Where clause.
      * @return SOQL string
      */
-    public static String buildOppsQuery() {
+    private static String buildOppsQuery() {
         String soqlStatement = '';
         soqlStatement += 'SELECT Id, CloseDate, Amount, isClosed, isWon, npe01__Do_Not_Automatically_Create_Payment__c, Type, ';
         if (OppRecordTypeId != null) {
