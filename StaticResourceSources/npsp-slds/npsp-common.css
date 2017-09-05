@@ -31,6 +31,11 @@ input.lookupInputSLDS {
     min-height: calc(1.875rem + 2px);
     margin-right: -30px !important;
 }
+/* slds sets any multiselect to a smaller line height, but in visualforce, a single select looks like a multi with size=1, so this fixes the height */
+.slds-scope .slds-select[size="1"] {
+    min-height: calc(1.875rem + (1px * 2));
+    height: calc(1.875rem + (1px * 2));
+}
 .dateFixup span.dateFormat {
     position: absolute;
     right: .75rem;
