@@ -894,15 +894,14 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Resources Page - Trailhead Link</shortDescription>
-        <value>Visit Trailhead</value>
+        <value>Getting Started with Salesforce and NPSP Trailmix</value>
     </labels>
     <labels>
         <fullName>RP_TrailheadParagraph</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Resources Page - Trailhead Paragraph</shortDescription>
-        <value>Get started with the Nonprofit Success Pack by learning the basics of Salesforce and donor and vounteer management.
-Getting Started with Salesforce and NPSP Trailmix</value>
+        <value>Get started with the Nonprofit Success Pack by learning the basics of Salesforce and donor and volunteer management.</value>
     </labels>
     <labels>
         <fullName>RP_TrailheadSubtitle</fullName>
