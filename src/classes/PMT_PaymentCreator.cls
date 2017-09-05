@@ -144,34 +144,53 @@ public class PMT_PaymentCreator {
         TDTM_Runnable.DMLWrapper dmlWrapper) {
         
         npe01__Contacts_And_Orgs_Settings__c ContactSettings = UTIL_CustomSettingsFacade.getContactsSettings();
-                    
+
+        Boolean isACMEnabled = true; /* TODO: UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled(); */
+
+        // If ACM is enabled in an organization, changes to the Payment object will not roll-up to (and cause triggers
+        // to execute) on the Opportunity. The trigger on the Payment Object is used to detect a new/updated payment
+        // and to handle auto-closing the Opportunity if necessary. However, if the Opportunity.Amount is updated to
+        // match the total of the payments, the Opportunity must still be closed. The issue is that when ACM is enabled
+        // the npe01__Payments_Made__c rollup field on the Opportunity does not work. In this case, we have to force
+        // a requery of the Opportunities (with a sub-query on Payments) to allow the actual Payment Amount to be
+        // queried.
+
         if (ContactSettings != null && ContactSettings.npe01__Payments_Enabled__c == true){
             list<Opportunity> newOpps = newOppsMap.values();
+            list<Opportunity> updatedOpps = new list<Opportunity>();
+            Map<Id, Opportunity> newOppsMapRequeried = new Map<Id, Opportunity>();
             list<npe01__OppPayment__c> paymentsToInsert = new list<npe01__OppPayment__c>();
             list<npe01__OppPayment__c> paymentsToUpdate = new list<npe01__OppPayment__c>();
             list<npe01__OppPayment__c> paymentsToDelete = new list<npe01__OppPayment__c>();
-            list<Opportunity> updatedOpps = new list<Opportunity>();
-            
+
+            // SOQL for Updated Opps and Related Payments.
+            // AfterUpdate => Queries for known fields and field in custom Payment Field Mappings.
+            // BeforeUpdate AND IsACMEnabled => Used to handle summing total payments when ACM is enabled in the org.
+            if (ta == TDTM_Runnable.Action.AfterUpdate || (isACMEnabled && ta == TDTM_Runnable.Action.BeforeUpdate)) {
+                String query = buildOppsQuery() + 'WHERE Id IN :newOpps';
+                updatedOpps = database.query(query);
+                if (isACMEnabled && ta == TDTM_Runnable.Action.BeforeUpdate) {
+                    newOppsMapRequeried = new Map<Id, Opportunity>((List<Opportunity>)(updatedOpps));
+                }
+            }
+
             if (TDTM_Runnable.Action.BeforeUpdate == ta) {
                 if (!String.isEmpty(ContactSettings.Payments_Auto_Close_Stage_Name__c)) {
                     String closedStageName = ContactSettings.Payments_Auto_Close_Stage_Name__c;
-                    for (Opportunity opp : newOppsMap.values()) {
+                    for (Opportunity opp : newOpps) {
+
+                        Decimal totalPaymentAmount = (isACMEnabled
+                                ? PMT_PaymentCreator.getPaymentsMade(newOppsMapRequeried.get(opp.Id)) : opp.npe01__Payments_Made__c);
                         closeOpportunityIfAllPaymentsReceived(
                             oldOppsMap.get(opp.Id),
                             opp,
-                            closedStageName
+                            closedStageName,
+                            totalPaymentAmount
                         );
                     }
                 }
             }
 
-            //SOQL for Updated Opps and Related Payments.  Queries for known fields and field in custom Payment Field Mappings.
-            if (ta == TDTM_Runnable.Action.AfterUpdate){
-                String query = buildOppsQuery();
-                query += 'WHERE Id IN :newOpps';
-                updatedOpps = Database.query(query);
-            }
-    
             //IF Trigger is Insert, Create a new Payment
             if( ta == TDTM_Runnable.Action.AfterInsert){
                 for (Opportunity thisOpp : newOpps){
@@ -340,18 +359,21 @@ public class PMT_PaymentCreator {
      * @description Close an opportunity if all payments have been received.
      * This will update the StageName of newOpp, in place, if "all payments
      * received" conditions are satisfied.
+     * This method will not execute if Advanced Currency Mgt is enabled. In that
+     * case, a trigger on the Payment object is used to auto-close the Opportunity.
      * @param oldOpp The opportunity before being updated
      * @param newOpp The opportunity after being updated
      * @param closedStageName The name of an opportunity stage that corresponds to Closed/Won to transition to if all payments are determined to be received
+     * @param totalPaymentAmount The total amount of all Paid Payment records for the Opportunity
      * @return void
      */
-// TODO: Need to figure out how to deal with npe01__Payments_Made__c for both the OLD and NEW Opportunity
-    private void closeOpportunityIfAllPaymentsReceived(Opportunity oldOpp, Opportunity newOpp, String closedStageName) {
+    private void closeOpportunityIfAllPaymentsReceived(Opportunity oldOpp, Opportunity newOpp, String closedStageName,
+            Decimal totalPaymentAmount) {
         Boolean amountUpdated = (oldOpp.Amount != newOpp.Amount);
-        Boolean paymentAmountReceivedUpdated = (oldOpp.npe01__Payments_Made__c != newOpp.npe01__Payments_Made__c);
+        Boolean paymentAmountReceivedUpdated = (oldOpp.npe01__Payments_Made__c != totalPaymentAmount);
         Boolean amountPositive = (newOpp.Amount > 0);
         Boolean isNotAndWasNotClosed = (!oldOpp.IsClosed && !newOpp.IsClosed);
-        Boolean amountEqualPaymentReceived = (newOpp.Amount == newOpp.npe01__Payments_Made__c);
+        Boolean amountEqualPaymentReceived = (newOpp.Amount == totalPaymentAmount);
         Boolean stageNameSpecified = !String.isEmpty(closedStageName);
 
         if (
@@ -374,8 +396,8 @@ public class PMT_PaymentCreator {
     * @return Decimal amount outstanding
     */
     public static Decimal getAmountOutstanding(Opportunity currentOpp) {
-        // !UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled()
-        if (false) {
+        // TODO
+        if (false /* !UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled() */ ) {
             return currentOpp.npe01__Amount_Outstanding__c;
         } else {
             // calculate the value since the roll-ups and formula are not functional with ACM
@@ -402,8 +424,8 @@ public class PMT_PaymentCreator {
     * @return Decimal total of payment records where Paid = True
     */
     public static Decimal getPaymentsMade(Opportunity currentOpp) {
-        // !UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled()
-        if (false) {
+        // TODO
+        if (false /* !UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled() */ ) {
             return currentOpp.npe01__Payments_Made__c;
         } else {
             // calculate the value since the roll-ups and formula are not functional with ACM

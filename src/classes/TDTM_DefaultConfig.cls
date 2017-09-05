@@ -197,7 +197,7 @@ public without sharing class TDTM_DefaultConfig {
         // Payment records - currency code validation
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
                 Class__c = 'PMT_Payment_TDTM', Load_Order__c = 0, Object__c = 'npe01__OppPayment__c',
-                Trigger_Action__c = 'BeforeUpdate;BeforeInsert'));
+                Trigger_Action__c = 'BeforeUpdate;BeforeInsert;AfterInsert;AfterUpdate'));
 
         // OpportunityContactRoles on Opportunity
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
