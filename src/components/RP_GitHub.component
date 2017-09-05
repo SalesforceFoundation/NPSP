@@ -44,7 +44,7 @@
 
                 <div class="slds-col slds-p-top_large slds-p-left_small">
 
-                    <apex:outputText styleClass="slds-text-heading_medium github-title" value="{!$Label.RP_ProductNameLabel} v{!gitHubData.latestVersion} "> </apex:outputText>
+                    <apex:outputLink target="_blank" rendered="{!NOT(ISBLANK(gitHubData.latestDownloadUrl))}" value="{!gitHubData.latestDownloadUrl}" styleClass="slds-text-heading_medium links"> {!$Label.RP_ProductNameLabel} v{!gitHubData.latestVersion} </apex:outputLink>
 
                     <p> {!$Label.RP_ReleaseGitHub} <apex:outputText value=" {!gitHubData.latestDate}"> </apex:outputText> </p>
 
