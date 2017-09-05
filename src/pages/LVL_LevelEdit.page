@@ -54,7 +54,7 @@
                                         onstart="document.getElementById('divLoading').style.display = 'inline';"
                                         onstop="document.getElementById('divLoading').style.display = 'none';" />
                                     <div class="slds-spinner_small mySpinner" id="divLoading" >
-                                        <img src="{!URLFOR($Resource.sfdo203, '/assets/images/spinners/slds_spinner_brand.gif')}" alt="{!$Label.labelMessageLoading}" />
+                                        <img src="{!URLFOR($Asset.SLDS, '/assets/images/spinners/slds_spinner_brand.gif')}" alt="{!$Label.labelMessageLoading}" />
                                     </div>
                                 </apex:inputField>
                             </div>
@@ -126,6 +126,6 @@
             </div>
         
         </div> <!-- myBodyContent -->
-      </div> <!-- sfdo203 -->
+      </div> <!-- slds -->
     </apex:form>
 </apex:page>
