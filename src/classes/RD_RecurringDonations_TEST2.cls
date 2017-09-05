@@ -1026,7 +1026,6 @@ private with sharing class RD_RecurringDonations_TEST2 {
         }
     }
 
-    /* Commenting this out temporarily
     static testMethod void testOpenEndedMonthlyEndDates(){
         if (strTestOnly != '*' && strTestOnly != 'testOpenEndedMonthlyEndDates') return;
 
@@ -1035,18 +1034,18 @@ private with sharing class RD_RecurringDonations_TEST2 {
             npe03__Opportunity_Forecast_Months__c = 12,
             npe03__Maximum_Donations__c = 50,
             npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()        
-            ));             
-        
+            ));
+
         Account a = new Account();
         a.Name = 'test Individual';
         insert a;
-        
+
         Contact c = new Contact();
         c.FirstName = 'test';
         c.LastName = 'contact';
         c.AccountId = a.Id;
-        insert c;       
-        
+        insert c;
+
         Campaign camp = new Campaign(name = 'Campaign', isActive = true);
         insert camp;
         
@@ -1062,7 +1061,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         RD.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
         RD.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
         rdlist.add(RD);
-        
+
         RD = RD.clone(false);
         RD.Name = 'testEndOfMonth';
         RD.Always_Use_Last_Day_Of_Month__c = true;
@@ -1072,10 +1071,18 @@ private with sharing class RD_RecurringDonations_TEST2 {
         RD = RD.clone(false);
         RD.Name = 'test30th';
         RD.Always_Use_Last_Day_Of_Month__c = false;
-        // TODO: The calculated StartDate is causing the test to fail if the current month has only 30 days.
-        Date startDt = system.today().toStartOfMonth().addMonths(1).addDays(-2);
+
+        // Find a start date for a month that has 30 days and calculate an offset from the current month
+        // to use in the asserts below to account for the fact that Opp installments are only created from
+        // the current month forward even if the start date is months in the future. Theoretically could just
+        // subtract a day from 10/31 to get 10/31 (for example), but that won't work in February. As a result
+        // it's better to just skip ahead months to find one with exactly 30 days and then use that offset
+        // for the asserts.
+        Date startDt = system.today().toStartOfMonth().addMonths(1).addDays(-1);
+        Integer opps30thMonthOffset = 0;
         while (startDt.day() != 30) {
             startDt = startDt.addMonths(2).toStartOfMonth().addDays(-1);
+            opps30thMonthOffset++;
         }
         RD.npe03__Date_Established__c = startDt;
         RD.npe03__Next_Payment_Date__c = null;
@@ -1084,36 +1091,48 @@ private with sharing class RD_RecurringDonations_TEST2 {
         test.startTest();
         insert rdlist;
         test.stopTest();
-        
+
         list<Opportunity> listOpp28th = [select Id, CloseDate from Opportunity where npe03__Recurring_Donation__r.Name = 'test28th' order by CloseDate];
-        system.assertEquals(12, listOpp28th.size());
+        system.assertEquals(12, listOpp28th.size(), 'There should be 12 Opps with a Close Date of the 28th');
         for (Opportunity opp : listOpp28th) {
-            system.assertEquals(28, opp.CloseDate.Day());
+            system.assertEquals(28, opp.CloseDate.Day(), 'The Opp.CloseDate.Day should be the 28th');
         }
 
         // All Installments should be on the 30th except for February, which should be on the last day of the month
         list<Opportunity> listOpp30th = [select Id, CloseDate from Opportunity where npe03__Recurring_Donation__r.Name = 'test30th' order by CloseDate];
-        system.assertEquals(12, listOpp30th.size());
+        system.assertEquals(12-opps30thMonthOffset, listOpp30th.size(), 'There should be ' + (12-opps30thMonthOffset) +
+                ' Opps with a Close Date of the 30th');
         for (Opportunity opp : listOpp28th) {
             if (opp.CloseDate.Month() != 2) {
-                system.assertEquals(28, opp.CloseDate.Day());
+                system.assertEquals(28, opp.CloseDate.Day(), 'The Opp.CloseDate.Day should be the 28th');
             } else {
-                system.assertEquals(Date.DaysInMonth(opp.CloseDate.Year(), 2), opp.CloseDate.Day());
+                system.assertEquals(Date.DaysInMonth(opp.CloseDate.Year(), 2), opp.CloseDate.Day(),
+                'The installment close date for February should be on the last day of February for the year');
             }
         }
 
         // All Installments should be on the last day of the month
         list<Opportunity> listOppEnd = [select Id, CloseDate from Opportunity where npe03__Recurring_Donation__r.Name = 'testEndOfMonth' order by CloseDate];
-        system.assertEquals(12, listOppEnd.size());
+        system.assertEquals(12, listOppEnd.size(), 'There should be 12 Opps with a close date of the last day of the month');
         for (Opportunity opp : listOppEnd) {
-            system.assertEquals(Date.DaysInMonth(opp.CloseDate.Year(), opp.CloseDate.Month()), opp.CloseDate.Day(), opp.CloseDate);
+            system.assertEquals(Date.DaysInMonth(opp.CloseDate.Year(), opp.CloseDate.Month()), opp.CloseDate.Day(),
+                'The Opps Close Date should be the very last day of the month: ' + opp.CloseDate);
         }
-        
+
+        // For each created installment (going by the 30th), compare the month to the created installments for
+        // the 28th installments. There will always be 12 of those, but there may be less installments for the
+        // ones with a close date of the 30th if the start date was in the future.
+        for (integer i = 0; i < 12-opps30thMonthOffset; i++) {
+            Integer expectedMonth = (listOpp28th[i].CloseDate.Month() + opps30thMonthOffset > 12
+                    ? (listOpp28th[i].CloseDate.Month() + opps30thMonthOffset) - 12
+                    : listOpp28th[i].CloseDate.Month() + opps30thMonthOffset);
+            system.assertEquals(expectedMonth, listOpp30th[i].CloseDate.Month(),
+                'The opportunity close date should be on the 30th of the month');
+        }
         for (integer i = 0; i < 12; i++) {
-            system.assertEquals(listOpp28th[i].CloseDate.Month(), listOpp30th[i].CloseDate.Month());
             system.assertEquals(listOpp28th[i].CloseDate.Month(), listOppEnd[i].CloseDate.Month());
         }
-    }*/
+    }
 
     static testMethod void testOrphanedRd() {
         if (strTestOnly != '*' && strTestOnly != 'testOrphanedRd') return;
