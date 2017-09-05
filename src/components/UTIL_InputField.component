@@ -19,7 +19,7 @@
                                 'textarea', 'slds-textarea',
                                 'picklist', 'slds-select',
                                 'multipicklist', 'slds-select multipicklistSLDSFixup',
-                                'reference', IF(field=='RecordTypeId', 'slds-select', 'lookupInput203 ' + field),
+                                'reference', IF(field=='RecordTypeId', 'slds-select', 'lookupInputSLDS ' + field),
                                 'slds-input')}">
         <apex:actionSupport event="onchange" action="{!actSupAction}" reRender="{!actSupReRender}" rendered="{!actSup}" status="{!actSupStatus}" immediate="{!actSupImmediate}"/>
     </apex:inputField>
