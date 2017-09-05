@@ -145,7 +145,8 @@ public class PMT_PaymentCreator {
         
         npe01__Contacts_And_Orgs_Settings__c ContactSettings = UTIL_CustomSettingsFacade.getContactsSettings();
 
-        Boolean isACMEnabled = true; /* TODO: UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled(); */
+        // TODO: Update when merge with full Multi-Currency support branch
+        Boolean isACMEnabled = true; /* UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled(); */
 
         // If ACM is enabled in an organization, changes to the Payment object will not roll-up to (and cause triggers
         // to execute) on the Opportunity. The trigger on the Payment Object is used to detect a new/updated payment
@@ -396,7 +397,7 @@ public class PMT_PaymentCreator {
     * @return Decimal amount outstanding
     */
     public static Decimal getAmountOutstanding(Opportunity currentOpp) {
-        // TODO
+        // TODO: Update when merge with full Multi-Currency support branch
         if (false /* !UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled() */ ) {
             return currentOpp.npe01__Amount_Outstanding__c;
         } else {
@@ -424,7 +425,7 @@ public class PMT_PaymentCreator {
     * @return Decimal total of payment records where Paid = True
     */
     public static Decimal getPaymentsMade(Opportunity currentOpp) {
-        // TODO
+        // TODO: Update when merge with full Multi-Currency support branch
         if (false /* !UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled() */ ) {
             return currentOpp.npe01__Payments_Made__c;
         } else {
