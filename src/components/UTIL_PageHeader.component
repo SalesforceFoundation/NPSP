@@ -80,8 +80,8 @@
                     </apex:outputPanel>
 
                     <div class="slds-media__body">
-                        <p class="slds-text-heading--label">{!headerLabel}</p>
-                        <h1 class="slds-page-header__title slds-m-right--small slds-truncate slds-align-middle">{!header}</h1>
+                        <p class="slds-text-heading_label">{!headerLabel}</p>
+                        <h1 class="slds-page-header__title slds-m-right_small slds-truncate slds-align-middle">{!header}</h1>
                     </div>
                 </div>
 
