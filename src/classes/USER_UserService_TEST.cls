@@ -32,13 +32,13 @@
 * @author Salesforce.org
 * @date 2017 
 * @group User
-* @description Tests for USER_UserService class.
+* @description Test class for the USER_UserService class.
 */
 
 @isTest
 public with sharing class USER_UserService_TEST {
     /*********************************************************************************************************
-    * @description Tests if modified Users are System Administrators.
+    * @description Tests if Users are System Administrators.
     * @return void
     **********************************************************************************************************/
     private static testMethod void testIsSysAdmin() {
@@ -66,41 +66,20 @@ public with sharing class USER_UserService_TEST {
 
 
     /*********************************************************************************************************
-    * @description Tests the IsFrozen status for Users.
+    * @description Tests the handling of deactivated System Administrators.
     * @return void
     **********************************************************************************************************/
-    private static testMethod void testIsFrozenUser() {
-        List<User> newUsers = createUsers();
-
-        // Freeze a User
-        List<UserLogin> currentUserLogin = [SELECT IsFrozen, UserId FROM UserLogin WHERE UserId = :newUsers[1].Id];
-        currentUserLogin[0].IsFrozen = true;
-        Database.update(currentUserLogin, false);
-
-        Map<Id, Boolean> userIdToIsFrozen = USER_UserService.isFrozenUser(newUsers);
-        List<Boolean> frozenStatuses = userIdToIsFrozen.values();
-
-        System.assertEquals(false, userIdToIsFrozen.get(newUsers[0].Id));
-        System.assertEquals(true, userIdToIsFrozen.get(newUsers[1].Id));
-    }
-
-
-    /*********************************************************************************************************
-    * @description Tests the handling of IsActive/IsFrozen changes for Users.
-    * @return void
-    **********************************************************************************************************/
-    private static testMethod void testApplySysAdminIsActiveIsFrozenStatusChanges() {
+    private static testMethod void testDeactivatedSysAdminHandling() {
         List<User> newUsers = createUsers();
         Set<Id> sysAdminIds = new Map<Id, User>(newUsers).keySet();
 
-        // Create and insert an Error_Settings__c record with an IsFrozen User to update via setErrorNotificationToAllSysAdmins accordingly
         UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(Error_Notifications_On__c = true, 
             Error_Notifications_To__c = newUsers[1].Id, Store_Errors_On__c = true));
         Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings();
         Database.insert(errorSettings, true);
 
         Test.startTest();
-        USER_UserService.applySysAdminIsActiveIsFrozenStatusChangesFuture(sysAdminIds);
+        USER_UserService.handleDeactivatedSysAdminFuture(sysAdminIds);
         Test.stopTest();
 
         Error_Settings__c errorSettingsSysAdmin = UTIL_CustomSettingsFacade.getErrorSettings();
@@ -109,21 +88,20 @@ public with sharing class USER_UserService_TEST {
 
 
     /*********************************************************************************************************
-    * @description Tests setting the NPSP Settings Error Notification Recipients to All Sys Admins.
+    * @description Tests setting the NPSP Settings Error Notification Recipients to 'All Sys Admins'.
     * @return void
     **********************************************************************************************************/
     private static testMethod void testSetErrorNotificationToAllSysAdmins() {
         List<User> newUsers = createUsers();
         Set<Id> sysAdminIds = new Map<Id, User>(newUsers).keySet();
 
-        // Create and insert an Error_Settings__c record with an IsFrozen User to update via setErrorNotificationToAllSysAdmins accordingly
         UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(Error_Notifications_On__c = true, 
             Error_Notifications_To__c = newUsers[1].Id, Store_Errors_On__c = true));
         Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings();
         Database.insert(errorSettings, true);
 
         Test.startTest();
-        USER_UserService.setErrorNotificationToAllSysAdminsForInActiveFrozenUsers(sysAdminIds);
+        USER_UserService.setErrorNotificationToAllSysAdminsForInActiveSysAdmin(sysAdminIds);
         Test.stopTest();
 
         Error_Settings__c errorSettingsSysAdmin = UTIL_CustomSettingsFacade.getErrorSettings();
@@ -132,15 +110,16 @@ public with sharing class USER_UserService_TEST {
 
 
     /*********************************************************************************************************
-    * @description Tests if User is the owner of Scheduled Jobs and calls the methods that logs an error and sends an email.
+    * @description Tests if System Administrator is the owner of Scheduled Jobs and calls the methods that
+    *              log an error and send an email.
     * @return void
     **********************************************************************************************************/
-    private static testMethod void testHandleScheduledJobsSubmittedByInActiveIsFrozenSysAdmin() {
+    private static testMethod void testHandleScheduledJobsSubmittedByInActiveSysAdmin() {
         List<User> newUsers = createUsers();
         Set<Id> sysAdminIds = new Map<Id, User>(newUsers).keySet();
 
         List<CronTrigger> jobs = [SELECT Id FROM CronTrigger];
-        for(CronTrigger eachJob : jobs) {
+        for (CronTrigger eachJob : jobs) {
             System.abortJob(eachJob.Id);
         }
 
@@ -152,38 +131,32 @@ public with sharing class USER_UserService_TEST {
                                             FROM CronTrigger
                                             WHERE CronJobDetail.JobType = :USER_UserService.JOB_TYPE_SCHEDULED_APEX];
 
-        // Freeze a User
-        List<UserLogin> currentUserLogin = [SELECT IsFrozen, UserId FROM UserLogin WHERE UserId = :newUsers[0].Id];
-        currentUserLogin[0].IsFrozen = true;
-        Database.update(currentUserLogin, false);
-
-
         Test.startTest();
-        USER_UserService.handleScheduledJobsSubmittedByInActiveIsFrozenSysAdmin(sysAdminIds);
+        USER_UserService.handleScheduledJobsSubmittedByInActiveSysAdmin(sysAdminIds);
         Test.stopTest();
 
-        if(!scheduledJobs.isEmpty()) {
-            System.assertEquals(9, scheduledJobs.size());
+        if (!scheduledJobs.isEmpty()) {
+            System.assertEquals(USER_UserService.NUMBER_OF_SCHEDULED_JOBS, scheduledJobs.size());
         }
 
-        List<Error__c> retrievedErrorTypeAfterEmailSent = [SELECT Email_Sent__c FROM Error__c WHERE Object_Type__c = :USER_UserService.OBJECT_TYPE_USER];
-        System.assertNotEquals(null, retrievedErrorTypeAfterEmailSent);
-        System.assertEquals(true, retrievedErrorTypeAfterEmailSent[0].Email_Sent__c);
+        List<Error__c> retrievedErrorAfterEmailSent = [SELECT Email_Sent__c FROM Error__c WHERE Object_Type__c = :USER_UserService.OBJECT_TYPE_USER];
+        System.assertNotEquals(null, retrievedErrorAfterEmailSent);
+        System.assertEquals(true, retrievedErrorAfterEmailSent[0].Email_Sent__c);
     }
 
 
     /*********************************************************************************************************
-    * @description Tests logging and Error__c and sending and email to System Administrators.
+    * @description Tests logging and Error__c and sending an email to the org's System Administrators.
     * @return void
     **********************************************************************************************************/
-    private static testMethod void testNotifySysAdminsAboutInActiveIsFrozenSysAdminUser() {
+    private static testMethod void testNotifyingSysAdminsAboutInActiveSysAdminUser() {
         Test.startTest();
-        USER_UserService.notifySysAdminsAboutInActiveIsFrozenSysAdminUser();
+        USER_UserService.notifySysAdminsAboutInActiveSysAdminUser();
         Test.stopTest();
 
-        List<Error__c> retrievedErrorTypeAfterEmailSent = [SELECT Email_Sent__c, Full_Message__c FROM Error__c WHERE Object_Type__c = :USER_UserService.OBJECT_TYPE_USER];
-        System.assertEquals(Label.InactiveFrozenScheduledJobsOwnerErrMsg, retrievedErrorTypeAfterEmailSent[0].Full_Message__c);
-        System.assertEquals(true, retrievedErrorTypeAfterEmailSent[0].Email_Sent__c);
+        List<Error__c> retrievedErrorAfterEmailSent = [SELECT Email_Sent__c, Full_Message__c FROM Error__c WHERE Object_Type__c = :USER_UserService.OBJECT_TYPE_USER];
+        System.assertEquals(Label.InactiveScheduledJobsOwnerErrMsg, retrievedErrorAfterEmailSent[0].Full_Message__c);
+        System.assertEquals(true, retrievedErrorAfterEmailSent[0].Email_Sent__c);
     }
 
 
@@ -191,13 +164,13 @@ public with sharing class USER_UserService_TEST {
     * @description Tests logging and Error__c record.
     * @return void
     **********************************************************************************************************/
-    private static testMethod void testLogInActiveIsFrozenUserError() {
+    private static testMethod void testLoggingInActiveSysAdminError() {
         Test.startTest();
-        USER_UserService.logInActiveIsFrozenUserError();
+        USER_UserService.logInActiveSysAdminError();
         Test.stopTest();
 
-        List<Error__c> retrievedErrorType = [SELECT Full_Message__c FROM Error__c WHERE Object_Type__c = :USER_UserService.OBJECT_TYPE_USER];
-        System.assertEquals(Label.InactiveFrozenScheduledJobsOwnerErrMsg, retrievedErrorType[0].Full_Message__c);
+        List<Error__c> retrievedError = [SELECT Full_Message__c FROM Error__c WHERE Object_Type__c = :USER_UserService.OBJECT_TYPE_USER];
+        System.assertEquals(Label.InactiveScheduledJobsOwnerErrMsg, retrievedError[0].Full_Message__c);
     }
 
 
@@ -205,20 +178,21 @@ public with sharing class USER_UserService_TEST {
     * @description Tests the sending of the Scheduled Jobs error email to System Administrators.
     * @return void
     **********************************************************************************************************/
-    private static testMethod void testSendInActiveFrozenUserEmail() {
+    private static testMethod void testSendingInActiveSysAdminEmail() {
         Test.startTest();
-        USER_UserService.logInActiveIsFrozenUserError();
+        USER_UserService.logInActiveSysAdminError();
 
-        USER_UserService.sendInActiveIsFrozenUserEmail();
+        USER_UserService.sendInActiveSysAdminEmail();
         Test.stopTest();
 
-        List<Error__c> retrievedErrorTypeAfterEmailSent = [SELECT Email_Sent__c FROM Error__c WHERE Object_Type__c = :USER_UserService.OBJECT_TYPE_USER];
-        System.assertEquals(true, retrievedErrorTypeAfterEmailSent[0].Email_Sent__c);
+        List<Error__c> retrievedErrorAfterEmailSent = [SELECT Email_Sent__c FROM Error__c WHERE Object_Type__c = :USER_UserService.OBJECT_TYPE_USER];
+        System.assertEquals(true, retrievedErrorAfterEmailSent[0].Email_Sent__c);
     }
 
 
     /*********************************************************************************************************
-    * @description Utility method to create Users with System Administrator profile and sets their IsActive status accordingly.
+    * @description Utility method to create Users with System Administrator profile and sets their
+    *              IsActive status accordingly.
     * @return List containing the newly created Users.
     **********************************************************************************************************/
     public static List<User> createUsers() {
@@ -246,4 +220,4 @@ public with sharing class USER_UserService_TEST {
     }
 
 
-} // end class USER_UserService_TEST
+}

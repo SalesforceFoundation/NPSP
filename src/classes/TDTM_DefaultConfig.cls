@@ -294,7 +294,7 @@ public without sharing class TDTM_DefaultConfig {
 
         // User
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
-              Class__c = 'USER_FrozenInActiveUser_TDTM', Load_Order__c = 0, Object__c = 'User',
+              Class__c = 'USER_InActiveUser_TDTM', Load_Order__c = 0, Object__c = 'User',
               Trigger_Action__c = 'AfterUpdate'));
 
         // Level support

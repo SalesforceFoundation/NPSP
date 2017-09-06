@@ -35,32 +35,27 @@
 * @description Service Class to handle actions on the User object.
 */
 public with sharing class USER_UserService {
-
-    //================================
-    // Constants
-    //================================
     public static final String SYSTEM_ADMINISTRATOR = 'System Administrator';
     public static final String OBJECT_ID_PREFIX_USER = '005';
     public static final String ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS = 'All Sys Admins';
     public static final String JOB_TYPE_SCHEDULED_APEX = '7';
     public static final String ERROR_TYPE_SCHEDULED_APEX = 'Scheduled Apex Error';
     public static final String OBJECT_TYPE_USER = 'User';
+    public static final Integer NUMBER_OF_SCHEDULED_JOBS = 9;
 
 
     /*********************************************************************************************************
-    * @description Determines if each User in the List is a Sys Admin based on ProfileId.
-    * @param updatedUsers The users that were modified.
-    * @return A Map containing the UserId and Boolean value based on the User's Profile.
+    * @description Determines if a User in the List is a System Administrator based on ProfileId.
+    * @param updatedUsers The User records of the deactivated System Administrators.
+    * @return A Map containing the UserId and Boolean value based on the User's ProfileId.
     **********************************************************************************************************/
     public static Map<Id, Boolean> isSysAdmin(List<User> updatedUsers) {
         Map<Id, Boolean> userIdToIsSysAdmin = new Map<Id, Boolean>();
 
-        // Retrieve the SysAdmin Profile Id
         Id sysAdminId = retrieveSysAdminProfileId();
 
-        // Determine if the User is a SysAdmin
-        if(null != updatedUsers && !updatedUsers.isEmpty()) {
-            for(User currentUser : updatedUsers) {
+        if (updatedUsers != null && !updatedUsers.isEmpty()) {
+            for (User currentUser : updatedUsers) {
                 userIdToIsSysAdmin.put(currentUser.Id, sysAdminId == currentUser.ProfileId);
             }
         }
@@ -70,16 +65,15 @@ public with sharing class USER_UserService {
 
 
     /*********************************************************************************************************
-    * @description Determines if each User in the List is active based on IsActive field.
-    * @param updatedUsers The users that were modified.
+    * @description Determines if a User in the List is active based on IsActive field.
+    * @param updatedUsers The User records of the deactivated System Administrators.
     * @return A Map containing the UserId and Boolean value based on the User's IsActive status.
     **********************************************************************************************************/
     public static Map<Id, Boolean> isActiveUser(List<User> updatedUsers) {
         Map<Id, Boolean> userIdToIsActive = new Map<Id, Boolean>();
 
-        // Determine if the User isActive
-        if(null != updatedUsers && !updatedUsers.isEmpty()) {
-            for(User currentUser : updatedUsers) {
+        if (updatedUsers != null && !updatedUsers.isEmpty()) {
+            for (User currentUser : updatedUsers) {
                 userIdToIsActive.put(currentUser.Id, currentUser.IsActive);
             }
         }
@@ -89,57 +83,35 @@ public with sharing class USER_UserService {
 
 
     /*********************************************************************************************************
-    * @description Determines if each User in the List is frozen based on IsFrozen field.
-    * @param updatedUsers The user(s) that were modified.
-    * @return A Map containing the UserId and Boolean value based on the User's IsFrozen status.
-    **********************************************************************************************************/
-    public static Map<Id, Boolean> isFrozenUser(List<User> updatedUsers) {
-        Map<Id, Boolean> userIdToIsFrozen = new Map<Id, Boolean>();
-
-        // Retrieve the UserLogin records for the updatedUsers
-        if(null != updatedUsers && !updatedUsers.isEmpty()) {
-            List<UserLogin> currentUserLogins = retrieveUserLogins(updatedUsers);
-
-            // Populate the Map with UserId and IsFrozen
-            for(UserLogin eachUserLogin : currentUserLogins) {
-                userIdToIsFrozen.put(eachUserLogin.UserId, eachUserLogin.IsFrozen);
-            }
-        }
-
-        return userIdToIsFrozen;
-    }
-	
-
-    /*********************************************************************************************************
-    * @description Handles User changes to IsActive/IsFrozen status by updating the Error Notification Recipients,
-    *              logging an Error__c, and notifying the org's System Administrators.
-    *              @future is used to handle the MIXED_DML_OPERATION that occurs when updating the User's isActive field along with other dml operations.
-    * @param sysAdminUserIds The User Ids that were modified.
+    * @description Handles the deactivation of a System Administrator by performing the following tasks:
+    *               1) Sets the Error Notification Recipients to 'All Sys Admins' when set to the deactivated
+    *                  System Administrator.
+    *               2) Logs an Error record and adds it to the Error Log.
+    *               3) Sends an email to the org's System Administrators when the deactived
+    *                  System Administrator is the owner of Scheduled Jobs.
+    * @param sysAdminUserIds The User Ids of the deactivated System Administrators
     * @return void
     **********************************************************************************************************/
     @future
-    public static void applySysAdminIsActiveIsFrozenStatusChangesFuture(Set<Id> sysAdminUserIds) {
-        // Sets Error Notification recipient to All Sys Admin for Inactive/Frozen Users
-        setErrorNotificationToAllSysAdminsForInActiveFrozenUsers(sysAdminUserIds);
+    public static void handleDeactivatedSysAdminFuture(Set<Id> sysAdminUserIds) {
+        setErrorNotificationToAllSysAdminsForInActiveSysAdmin(sysAdminUserIds);
 
-        // Logs an Error and Emails the Sys Admins
-        handleScheduledJobsSubmittedByInActiveIsFrozenSysAdmin(sysAdminUserIds);
+        handleScheduledJobsSubmittedByInActiveSysAdmin(sysAdminUserIds);
     }
 
 
     /*********************************************************************************************************
-    * @description Sets the NPSP Settings Error Notification Recipients to All Sys Admins for Inactive/Frozen.
-    * @param sysAdminUserIds The User Ids that were modified.
+    * @description Sets the NPSP Settings Error Notification Recipients to 'All Sys Admins' for Inactive
+    *              System Administrator.
+    * @param sysAdminUserIds The User Ids of the deactivated System Administrators.
     * @return void
     **********************************************************************************************************/
-    public static void setErrorNotificationToAllSysAdminsForInActiveFrozenUsers(Set<Id> sysAdminUserIds) {
+    public static void setErrorNotificationToAllSysAdminsForInActiveSysAdmin(Set<Id> sysAdminUserIds) {
         Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings();
 
-        if(errorSettings.Error_Notifications_To__c.startsWith(OBJECT_ID_PREFIX_USER)) {
-            // Check if one of the sysAdminUserIds is the Error Notification recipient
-            for(Id currentSysAdminId: sysAdminUserIds) {
-                if(errorSettings.Error_Notifications_To__c == currentSysAdminId) {
-                    // Set Error Notification recipient to All Sys Admin
+        if (errorSettings.Error_Notifications_To__c.startsWith(OBJECT_ID_PREFIX_USER)) {
+            for (Id currentSysAdminId: sysAdminUserIds) {
+                if (errorSettings.Error_Notifications_To__c == currentSysAdminId) {
                     errorSettings.Error_Notifications_To__c = ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS;
                     Database.update(errorSettings, true);
                     break;
@@ -150,17 +122,18 @@ public with sharing class USER_UserService {
 
 
     /*********************************************************************************************************
-    * @description Determines if an Inactive/Frozen User is the owner of the Scheduled Jobs and emails the org's System Administrators.
-    * @param sysAdminUserIds The User Ids that were modified.
+    * @description Determines if an Inactive User is the owner of Scheduled Jobs and notifies the org's
+    *              other System Administrators.
+    * @param sysAdminUserIds The User Ids of the deactivated System Administrators.
     * @return void
     **********************************************************************************************************/
-    public static void handleScheduledJobsSubmittedByInActiveIsFrozenSysAdmin(Set<Id> sysAdminUserIds) {
+    public static void handleScheduledJobsSubmittedByInActiveSysAdmin(Set<Id> sysAdminUserIds) {
         List<CronTrigger> scheduledJobs = retrieveScheduledJobs(sysAdminUserIds);
 
-        for(Id currentSysAdminId : sysAdminUserIds) {
-            for(CronTrigger eachScheduledJob : scheduledJobs) {
-                if(currentSysAdminId == eachScheduledJob.OwnerId) {
-                    notifySysAdminsAboutInActiveIsFrozenSysAdminUser();
+        for (Id currentSysAdminId : sysAdminUserIds) {
+            for (CronTrigger eachScheduledJob : scheduledJobs) {
+                if (currentSysAdminId == eachScheduledJob.OwnerId) {
+                    notifySysAdminsAboutInActiveSysAdminUser();
                     return;
                 }
             }
@@ -173,33 +146,34 @@ public with sharing class USER_UserService {
     * @return void
     **********************************************************************************************************/
     @testVisible
-    private static void notifySysAdminsAboutInActiveIsFrozenSysAdminUser() {
-        logInActiveIsFrozenUserError();
-        sendInActiveIsFrozenUserEmail();
+    private static void notifySysAdminsAboutInActiveSysAdminUser() {
+        logInActiveSysAdminError();
+        sendInActiveSysAdminEmail();
     }
 
 
     /*********************************************************************************************************
-    * @description Logs an Error__c record.
+    * @description Logs an Error__c record for the Inactive System Administrator who owns Scheduled Jobs.
     * @return void
     **********************************************************************************************************/
     @testVisible
-    private static void logInActiveIsFrozenUserError() {
-        Error__c inActiveIsFrozenError = new Error__c(Error_Type__c = ERROR_TYPE_SCHEDULED_APEX,
-                                                        Object_Type__c = OBJECT_TYPE_USER,
-                                                        Datetime__c = System.now(), 
-                                                        Full_Message__c = Label.InactiveFrozenScheduledJobsOwnerErrMsg);
+    private static void logInActiveSysAdminError() {
+        Error__c inActiveError = new Error__c(Error_Type__c = ERROR_TYPE_SCHEDULED_APEX,
+                                                Object_Type__c = OBJECT_TYPE_USER,
+                                                Datetime__c = System.now(), 
+                                                Full_Message__c = Label.InactiveScheduledJobsOwnerErrMsg);
 
-        Database.insert(inActiveIsFrozenError, true);
+        Database.insert(inActiveError, true);
     }
 
 
     /*********************************************************************************************************
-    * @description Emails the org's System Administrators.
+    * @description Emails the org's System Administrators for the Inactive System Administrator who owns
+    *              Scheduled Jobs.
     * @return void
     **********************************************************************************************************/
     @testVisible
-    private static void sendInActiveIsFrozenUserEmail() {
+    private static void sendInActiveSysAdminEmail() {
         ERR_Notifier.sendErrorNotifications(ERR_Handler_API.Context.USER.name());
     }
 
@@ -212,25 +186,11 @@ public with sharing class USER_UserService {
         Id sysAdminProfileId = null;
 
         List<Profile> sysAdminProfile = [SELECT Id FROM Profile WHERE Name = :SYSTEM_ADMINISTRATOR];
-        if(!sysAdminProfile.isEmpty()) {
+        if (!sysAdminProfile.isEmpty()) {
             sysAdminProfileId = sysAdminProfile[0].Id;
         }
 
         return sysAdminProfileId;
-    }
-
-
-    /*********************************************************************************************************
-    * @description Retrieves the UserLogin records for Users.
-    * @param updatedUsers The users that were modified.
-    * @return A List containing the UserLogin records.
-    **********************************************************************************************************/
-    private static List <UserLogin>retrieveUserLogins(List<User> updatedUsers) {
-        List<UserLogin> currentUserLogins = new List<UserLogin>();
-
-        currentUserLogins = [SELECT IsFrozen, UserId FROM UserLogin WHERE UserId IN :updatedUsers];
-
-        return currentUserLogins;
     }
 
 
@@ -251,4 +211,4 @@ public with sharing class USER_UserService {
     }
 
 
-} // end class USER_UserService
+}
