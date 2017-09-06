@@ -43,6 +43,9 @@ public class UTIL_CurrencyConversion {
      */
     public static Boolean alwaysUseStandardCurrencyRate = false;
 
+    private static final Integer RATE_DECIMAL_PLACES = 6;
+    private static final Integer FINAL_DECIMAL_PLACES = 2;
+
     /**
      * @description Returns the proper effective rate to use based on the date and the from/to currencies
      * Leverages the UTIL_CurrencyCache class to handle either standard or dated exchanges as well as the
@@ -76,7 +79,7 @@ public class UTIL_CurrencyConversion {
 
         // Otherwise we have to calculate the rate between the two currencies.
         Decimal toRate = UTIL_CurrencyCache.getEffectiveExchangeRate(toCurr, dt);
-        Decimal effRate = fromRate.divide(toRate, 6, System.RoundingMode.HALF_UP);
+        Decimal effRate = fromRate.divide(toRate, RATE_DECIMAL_PLACES, System.RoundingMode.HALF_UP);
 
         return effRate;
     }
@@ -94,7 +97,9 @@ public class UTIL_CurrencyConversion {
             return amt;
         } else {
             Decimal effRate = getExchangeRate(dt, fromCurr, toCurr);
-            return amt.divide(effRate, 2, System.RoundingMode.HALF_UP);
+            Decimal converted1 = amt.divide(effRate, RATE_DECIMAL_PLACES, System.RoundingMode.HALF_UP) * 100;
+            Decimal converted2 = Decimal.ValueOf(converted1.Round( System.RoundingMode.HALF_UP));
+            return converted2.divide(100, FINAL_DECIMAL_PLACES, System.RoundingMode.HALF_UP);
         }
     }
 
