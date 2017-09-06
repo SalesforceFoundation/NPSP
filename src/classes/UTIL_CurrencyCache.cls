@@ -43,6 +43,8 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
     private static final String LIST_TYPE_EFF_DATES = 'Dates';
     @TestVisible
     private static final String LIST_TYPE_EXCH_RATES = 'Rates';
+    @TestVisible
+    public static final Date DEFAULT_DATE = Date.newInstance(0001, 1, 1); // 12/30/0000 -- old date to use for standard rates
 
     /**
      * @description Cache of rates/effective dates by currency iso code
@@ -55,8 +57,8 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
     private static Map<String, Map<String, List<Object>>> cachedRatesByCurrency =
             new Map<String, Map<String, List<Object>>>();
 
-    /* Retrieve and cache the contact settings the first time this class is loaded only */
-    private static final npe01__Contacts_And_Orgs_Settings__c contactSettings = UTIL_CustomSettingsFacade.getContactsSettings();
+    /* Retrieve and cache the household settings the first time this class is loaded only */
+    private static final npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
 
     // ====================================================================
     // PRIMARY EXPOSED STATIC METHODS
@@ -100,7 +102,7 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
         }
 
         // TODO: no rate found - now what? Throw an exception maybe; or just return 1?
-        return -1;
+        return 1;
     }
 
     /**
@@ -182,7 +184,7 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
 
         // Even if ACM is enabled, the Admin may choose to not use dated conversion rates for roll-ups.
         Boolean useDatedConversionRates = UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled()
-                && contactSettings.Use_Dated_Conversion_Rates__c == true;
+                && householdSettings.Use_Dated_Conversion_Rates__c == true;
 
         if (useDatedConversionRates) {
             // When ACM is enabled, query the DatedConversionRate table to retrieve the effective dates
@@ -202,21 +204,41 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
                 }
                 Date dt = (Date) dcr.get('StartDate');
                 Decimal rt = (Decimal) dcr.get('ConversionRate');
+                if (dt == DEFAULT_DATE) {
+                    // Salesforce uses the default date of 1/1/1900 as their oldest date
+                    // but we want to use that same date for our default oldest date as well
+                    // when dated exchange rates are NOT being used. To work around this
+                    // we just add one year to Salesforce's default old date to make it unique.
+                    dt = DEFAULT_DATE.addYears(1);
+                }
                 effectiveRatesAndDates.get(LIST_TYPE_EFF_DATES).add(dt);
                 effectiveRatesAndDates.get(LIST_TYPE_EXCH_RATES).add(rt);
                 mapOfEffRatesByCurrencyCode.put(currCode, effectiveRatesAndDates);
             }
 
-        } else if (UserInfo.isMultiCurrencyOrganization()) {
+            // If dated exchange rates are in affect, we still need to capture the 'default'
+            // standard rate to use in the specific scenario of determing the exchange rate
+            // against the legacy rollups that are based on aggragate soql. Do that by adding one
+            // rate to the table with an effective date of 1/1/1900
+            soql = 'SELECT IsoCode, ConversionRate FROM CurrencyType WHERE IsActive = True' +
+                    ' AND IsoCode IN :currCodes';
+            for (SObject scr : database.query(soql)) {
+                String currCode = (String) scr.get('IsoCode');
+                Map<String, List<Object>> effectiveRatesAndDates = mapOfEffRatesByCurrencyCode.get(currCode);
+                effectiveRatesAndDates.get(LIST_TYPE_EFF_DATES).add(DEFAULT_DATE);
+                effectiveRatesAndDates.get(LIST_TYPE_EXCH_RATES).add((Decimal) scr.get('ConversionRate'));
+                mapOfEffRatesByCurrencyCode.put(currCode, effectiveRatesAndDates);
+            }
 
+        } else if (UserInfo.isMultiCurrencyOrganization()) {
             // If ACM is not enabled, query the standard rate table and create a single rate
             // instance per currency code for all currency codes with an effective date of 1/1/900.
             String soql = 'SELECT IsoCode, ConversionRate FROM CurrencyType WHERE IsActive = True';
-            for (SObject dcr : database.query(soql)) {
-                String currCode = (String) dcr.get('IsoCode');
+            for (SObject scr : database.query(soql)) {
+                String currCode = (String) scr.get('IsoCode');
                 Map<String, List<Object>> effectiveRatesAndDates = new Map<String, List<Object>>{
-                        LIST_TYPE_EFF_DATES => new List<Date>{ Date.newInstance(1900, 1, 1) },
-                        LIST_TYPE_EXCH_RATES => new List<Decimal>{ (Decimal) dcr.get('ConversionRate') }
+                        LIST_TYPE_EFF_DATES => new List<Date>{ DEFAULT_DATE },
+                        LIST_TYPE_EXCH_RATES => new List<Decimal>{ (Decimal) scr.get('ConversionRate') }
                 };
                 mapOfEffRatesByCurrencyCode.put(currCode, effectiveRatesAndDates);
             }

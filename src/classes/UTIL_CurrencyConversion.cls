@@ -36,6 +36,14 @@
 public class UTIL_CurrencyConversion {
 
     /**
+     * @description Static flag to force the conversion logic to always use the standard currency rates
+     * rather than dated exchange rates (if enabled). This is necessary to support the legacy roll-ups that
+     * are based on aggragate queries since those only use the standard (i.e., default rate) rather than
+     * the dated exchange rate.
+     */
+    public static Boolean alwaysUseStandardCurrencyRate = false;
+
+    /**
      * @description Returns the proper effective rate to use based on the date and the from/to currencies
      * Leverages the UTIL_CurrencyCache class to handle either standard or dated exchanges as well as the
      * platform cache if it's been allocated.
@@ -49,6 +57,11 @@ public class UTIL_CurrencyConversion {
         // If the from and to currencies are the same, just return 1
         if (fromCurr == toCurr) {
             return 1;
+        }
+
+        // Force the date to the default (1/1/1900) if this flag is set to true
+        if (alwaysUseStandardCurrencyRate == true) {
+            dt = UTIL_CurrencyCache.DEFAULT_DATE;
         }
 
         // Retrieve the conversion rate from the "From" Currency to the Org Default Currency

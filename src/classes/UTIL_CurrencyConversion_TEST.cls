@@ -49,17 +49,26 @@ private class UTIL_CurrencyConversion_TEST {
         UTIL_Currency.instance = mockCurr;
         mockCurr.orgDefaultCurrencyReturn = 'USD';
         mockCurr.getDefaultCurrencyReturn = 'USD';
-        mockCurr.isAdvancedCurrencyManagementEnabledReturn = false;
+        mockCurr.isAdvancedCurrencyManagementEnabledReturn = false; // we're forcing the rates rather than attempting to query
         mockCurr.isMultiCurrencyOrganizationReturn = true;
+
+        // Note: each time the mockCurrCache is queried for a new currency code it will use the rates
+        // defined in the effectiveRatesReturn and effectiveDatesReturn properties. The actual currency
+        // code does not matter as long as it changes each time we want to use a different set of rates/dates.
 
         Test.startTest();
 
+        // TEST 1: Verify a simple single exchange rate
+        // =====================================================
         // The default rate for CAD -> USD will be 1.25
         mockcurrCache.effectiveRatesReturn = new List<Decimal>{ 1.25 };
-        mockcurrCache.effectiveDatesReturn = new List<Date>{ Date.Parse('01/01/1900') };
+        mockcurrCache.effectiveDatesReturn = new List<Date>{ UTIL_CurrencyCache.DEFAULT_DATE };
 
         System.AssertEquals( 1.25, UTIL_CurrencyCache.getEffectiveExchangeRate('CAD', Date.Parse('03/15/2017')));
         System.AssertEquals( 800, UTIL_CurrencyConversion.convertAmount(1000, Date.Today(), 'CAD', 'USD'));
+
+        // TEST 2: Verify converting from one non-USD currency to another non-USD currency
+        // ===============================================================================
 
         // The default rate for EUR -> USD will be 0.85
         mockcurrCache.effectiveRatesReturn = new List<Decimal>{ 0.85 };
@@ -74,6 +83,21 @@ private class UTIL_CurrencyConversion_TEST {
 
         // Verify that converting to/from the same currency always returns the same value
         System.AssertEquals( 1000, UTIL_CurrencyConversion.convertAmount(1000, Date.Today().addDays(95), 'CAD', 'CAD'));
+
+        // TEST 3: Test when the UTIL_CurrencyConversion.alwaysUseStandardCurrencyRate flag is set to true
+        // ===============================================================================================
+
+        // There are two rates for XYZ->USD. The first is the current rate with an effective date of 2 years ago
+        // and the second is the 'default' rate to use when alwaysUseStandardCurrencyRate is set to true.
+        mockcurrCache.effectiveRatesReturn = new List<Decimal>{ 1.25, 1.50 };
+        mockcurrCache.effectiveDatesReturn = new List<Date>{ Date.Today().addYears(-2), UTIL_CurrencyCache.DEFAULT_DATE };
+
+        // The exchange rate for today should be 1.25
+        System.AssertEquals( 1.25, UTIL_CurrencyConversion.getExchangeRate(Date.Today(), 'XYZ', 'USD'));
+
+        // When this flag is set it should get the 'default' rate of 1.50
+        UTIL_CurrencyConversion.alwaysUseStandardCurrencyRate = true;
+        System.AssertEquals( 1.50, UTIL_CurrencyConversion.getExchangeRate(Date.Today(), 'XYZ', 'USD'));
     }
 
     /**
