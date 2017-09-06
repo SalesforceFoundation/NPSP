@@ -61,7 +61,9 @@ public class UTIL_CurrencyConversion {
 
         // Force the date to the default (1/1/1900) if this flag is set to true
         if (alwaysUseStandardCurrencyRate == true) {
-            dt = UTIL_CurrencyCache.DEFAULT_DATE;
+            dt = null;
+        } else if (dt == null) {
+            dt = Date.today();
         }
 
         // Retrieve the conversion rate from the "From" Currency to the Org Default Currency

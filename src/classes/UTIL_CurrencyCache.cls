@@ -39,23 +39,12 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
     // STATIC VARS USED TO HOLD VALUES THROUGH THE EXECUTION CONTEXT
     // ====================================================================
 
-    @TestVisible
-    private static final String LIST_TYPE_EFF_DATES = 'Dates';
-    @TestVisible
-    private static final String LIST_TYPE_EXCH_RATES = 'Rates';
-    @TestVisible
-    public static final Date DEFAULT_DATE = Date.newInstance(0001, 1, 1); // 12/30/0000 -- old date to use for standard rates
-
     /**
      * @description Cache of rates/effective dates by currency iso code
-     * Example: 'CAD' => Map<String, List<Object>>{
-     *                      'Dates' => List<Date>,
-     *                      'Rates' => List<Decimal>
-     *                   }
      */
     @TestVisible
-    private static Map<String, Map<String, List<Object>>> cachedRatesByCurrency =
-            new Map<String, Map<String, List<Object>>>();
+    private static Map<String, UTIL_CurrencyCache.CurrencyData> cachedMapOfRatesByCurrencyCode =
+            new Map<String, UTIL_CurrencyCache.CurrencyData>();
 
     /* Retrieve and cache the household settings the first time this class is loaded only */
     private static final npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
@@ -67,36 +56,32 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
     /**
      * @description Return a specific exchange rate from the cache for the specified currency code and effective date.
      * @param currCode - The currency to retrieve a rate for
-     * @param dt - Effective Date to find a rate for (or null to use the current date)
+     * @param dt - Effective Date to find a rate for. Use null to return the org's default rate for this currency.
      * @return Exchange Rate
      */
     public static Decimal getEffectiveExchangeRate(String currCode, Date dt) {
-        List<Date> effDates = new List<Date>();
-        List<Decimal> rates = new List<Decimal>();
-
         // If the current static var cache does not have a value for the CurrencyCode
         // look in the Platform cache first (if available) and if not retrieve from the database.
-        if (!cachedRatesByCurrency.containsKey(currCode)) {
+        if (!cachedMapOfRatesByCurrencyCode.containsKey(currCode)) {
             if (getInstance().isOrgCacheAvailable()) {
-                cachedRatesByCurrency.put(currCode, (Map<String, List<Object>>) orgCache.get(CurrencyCache.class, currCode));
+                cachedMapOfRatesByCurrencyCode.put(currCode, (UTIL_CurrencyCache.CurrencyData)orgCache.get(CurrencyCache.class, currCode));
             } else {
-                cachedRatesByCurrency.put(currCode, getInstance().getRateMapForCurrencies(new List<String>{ currCode }).get(currCode));
+                cachedMapOfRatesByCurrencyCode.put(currCode, getInstance().getRateMapForCurrencies(new List<String>{ currCode }).get(currCode));
             }
         }
 
         // If a set of rates was retrieved, find the effective rate based on the date
-        if (cachedRatesByCurrency.containsKey(currCode)) {
-            effDates = (List<Date>) cachedRatesByCurrency.get(currCode).get(LIST_TYPE_EFF_DATES);
-            rates = (List<Decimal>) cachedRatesByCurrency.get(currCode).get(LIST_TYPE_EXCH_RATES);
+        if (cachedMapOfRatesByCurrencyCode.containsKey(currCode)) {
+            UTIL_CurrencyCache.CurrencyData currData = cachedMapOfRatesByCurrencyCode.get(currCode);
 
             if (dt == null) {
-                dt = Date.Today();
+                return currData.defaultRate;
             }
 
             // The list of effective dates is in descending date order
-            for (Integer n = 0; n < effDates.size(); n++) {
-                if (dt >= effDates[n]) {
-                    return rates[n];
+            for (Integer n = 0; n < currData.effectiveDates.size(); n++) {
+                if (dt >= currData.effectiveDates[n]) {
+                    return currData.rates[n];
                 }
             }
         }
@@ -146,7 +131,7 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
      * However, if the cache isn't available at all, the cachebuilder interface cannot be used.
      */
     public class CurrencyCache implements Cache.CacheBuilder {
-        public Map<String, List<Object>> doLoad(String currCode) {
+        public UTIL_CurrencyCache.CurrencyData doLoad(String currCode) {
             return getInstance().getRateMapForCurrencies(new List<String>{currCode}).get(currCode);
         }
     }
@@ -162,7 +147,7 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
     public interface Interface_x {
         Boolean isOrgCacheAvailable();
         void resetCurrencyCache();
-        Map<String, Map<String, List<Object>>> getRateMapForCurrencies(List<String> currCodes);
+        Map<String, UTIL_CurrencyCache.CurrencyData> getRateMapForCurrencies(List<String> currCodes);
     }
 
     /**
@@ -178,9 +163,10 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
      * @param List of currency codes to retrieve data for
      * @return Map<CurrencyCode, Map<ListTypeConstant, List<Date|Decimal>>>
      */
-    public Map<String, Map<String, List<Object>>> getRateMapForCurrencies(List<String> currCodes) {
-        Map<String, Map<String, List<Object>>> mapOfEffRatesByCurrencyCode
-                = new Map<String, Map<String, List<Object>>>();
+    public Map<String, UTIL_CurrencyCache.CurrencyData> getRateMapForCurrencies(List<String> currCodes) {
+
+        Map<String, UTIL_CurrencyCache.CurrencyData> mapOfCurrencyDataByCurrencyCode
+                = new Map<String, UTIL_CurrencyCache.CurrencyData>();
 
         // Even if ACM is enabled, the Admin may choose to not use dated conversion rates for roll-ups.
         Boolean useDatedConversionRates = UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled()
@@ -194,56 +180,45 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
                     'WHERE IsoCode IN :currCodes ' +
                     'ORDER By IsoCode, StartDate DESC';
             for (SObject dcr : database.query(soql)) {
+
                 String currCode = (String) dcr.get('IsoCode');
-                Map<String, List<Object>> effectiveRatesAndDates = mapOfEffRatesByCurrencyCode.get(currCode);
-                if (effectiveRatesAndDates == null) {
-                    effectiveRatesAndDates = new Map<String, List<Object>>{
-                            LIST_TYPE_EFF_DATES => new List<Date>(),
-                            LIST_TYPE_EXCH_RATES => new List<Decimal>()
-                    };
+                UTIL_CurrencyCache.CurrencyData currData = mapOfCurrencyDataByCurrencyCode.get(currCode);
+                if (currData == null) {
+                    currData = new UTIL_CurrencyCache.CurrencyData();
                 }
+
                 Date dt = (Date) dcr.get('StartDate');
                 Decimal rt = (Decimal) dcr.get('ConversionRate');
-                if (dt == DEFAULT_DATE) {
-                    // Salesforce uses the default date of 1/1/1900 as their oldest date
-                    // but we want to use that same date for our default oldest date as well
-                    // when dated exchange rates are NOT being used. To work around this
-                    // we just add one year to Salesforce's default old date to make it unique.
-                    dt = DEFAULT_DATE.addYears(1);
-                }
-                effectiveRatesAndDates.get(LIST_TYPE_EFF_DATES).add(dt);
-                effectiveRatesAndDates.get(LIST_TYPE_EXCH_RATES).add(rt);
-                mapOfEffRatesByCurrencyCode.put(currCode, effectiveRatesAndDates);
+                currData.effectiveDates.add(dt);
+                currData.rates.add(rt);
+                mapOfCurrencyDataByCurrencyCode.put(currCode, currData);
             }
 
-            // If dated exchange rates are in affect, we still need to capture the 'default'
-            // standard rate to use in the specific scenario of determing the exchange rate
-            // against the legacy rollups that are based on aggragate soql. Do that by adding one
-            // rate to the table with an effective date of 1/1/1900
-            soql = 'SELECT IsoCode, ConversionRate FROM CurrencyType WHERE IsActive = True' +
-                    ' AND IsoCode IN :currCodes';
-            for (SObject scr : database.query(soql)) {
-                String currCode = (String) scr.get('IsoCode');
-                Map<String, List<Object>> effectiveRatesAndDates = mapOfEffRatesByCurrencyCode.get(currCode);
-                effectiveRatesAndDates.get(LIST_TYPE_EFF_DATES).add(DEFAULT_DATE);
-                effectiveRatesAndDates.get(LIST_TYPE_EXCH_RATES).add((Decimal) scr.get('ConversionRate'));
-                mapOfEffRatesByCurrencyCode.put(currCode, effectiveRatesAndDates);
-            }
 
-        } else if (UserInfo.isMultiCurrencyOrganization()) {
+        }
+        if (UserInfo.isMultiCurrencyOrganization()) {
             // If ACM is not enabled, query the standard rate table and create a single rate
             // instance per currency code for all currency codes with an effective date of 1/1/900.
             String soql = 'SELECT IsoCode, ConversionRate FROM CurrencyType WHERE IsActive = True';
+            if (useDatedConversionRates) {
+                // If dated exchange rates are in affect, we still need to capture the 'default'
+                // standard rate to use in the specific scenario of determing the exchange rate
+                // against the legacy rollups that are based on aggragate soql.
+                soql += ' AND IsoCode IN :currCodes';
+            }
             for (SObject scr : database.query(soql)) {
                 String currCode = (String) scr.get('IsoCode');
-                Map<String, List<Object>> effectiveRatesAndDates = new Map<String, List<Object>>{
-                        LIST_TYPE_EFF_DATES => new List<Date>{ DEFAULT_DATE },
-                        LIST_TYPE_EXCH_RATES => new List<Decimal>{ (Decimal) scr.get('ConversionRate') }
-                };
-                mapOfEffRatesByCurrencyCode.put(currCode, effectiveRatesAndDates);
+
+                UTIL_CurrencyCache.CurrencyData currData = mapOfCurrencyDataByCurrencyCode.get(currCode);
+                if (currData == null) {
+                    currData = new UTIL_CurrencyCache.CurrencyData();
+                }
+
+                currData.defaultRate = (Decimal)scr.get('ConversionRate');
+                mapOfCurrencyDataByCurrencyCode.put(currCode, currData);
             }
         }
-        return mapOfEffRatesByCurrencyCode;
+        return mapOfCurrencyDataByCurrencyCode;
     }
 
     /**
@@ -255,7 +230,22 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
                 orgCache.remove(CurrencyCache.class, key);
             }
         }
-        UTIL_CurrencyCache.cachedRatesByCurrency.clear();
+        UTIL_CurrencyCache.cachedMapOfRatesByCurrencyCode.clear();
     }
 
+    /**
+     * @description Inner class for dated exchange rates. The 'defaultRate' value is the default exchange rate
+     * to use when dated exchange rates are no enabled AND when the getEffectiveRate() method is called with the
+     * flag to retrieve only the default (non-dated) rate.
+     */
+    public class CurrencyData {
+        public List<Date> effectiveDates {get; set; }
+        public List<Decimal> rates {get; set; }
+        public Decimal defaultRate {get; set; }
+
+        public CurrencyData() {
+            this.effectiveDates = new List<Date>();
+            this.rates = new List<Decimal>();
+        }
+    }
 }

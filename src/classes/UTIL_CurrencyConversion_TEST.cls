@@ -36,6 +36,7 @@
 @isTest
 private class UTIL_CurrencyConversion_TEST {
 
+    private static final Date DEFAULT_DATE = Date.newInstance(1900,1,1);
     /**
      * @description Validate proper currency conversion math when dated exchange rates are enabled in an org
      */
@@ -62,7 +63,7 @@ private class UTIL_CurrencyConversion_TEST {
         // =====================================================
         // The default rate for CAD -> USD will be 1.25
         mockcurrCache.effectiveRatesReturn = new List<Decimal>{ 1.25 };
-        mockcurrCache.effectiveDatesReturn = new List<Date>{ UTIL_CurrencyCache.DEFAULT_DATE };
+        mockcurrCache.effectiveDatesReturn = new List<Date>{ DEFAULT_DATE };
 
         System.AssertEquals( 1.25, UTIL_CurrencyCache.getEffectiveExchangeRate('CAD', Date.Parse('03/15/2017')));
         System.AssertEquals( 800, UTIL_CurrencyConversion.convertAmount(1000, Date.Today(), 'CAD', 'USD'));
@@ -89,11 +90,15 @@ private class UTIL_CurrencyConversion_TEST {
 
         // There are two rates for XYZ->USD. The first is the current rate with an effective date of 2 years ago
         // and the second is the 'default' rate to use when alwaysUseStandardCurrencyRate is set to true.
-        mockcurrCache.effectiveRatesReturn = new List<Decimal>{ 1.25, 1.50 };
-        mockcurrCache.effectiveDatesReturn = new List<Date>{ Date.Today().addYears(-2), UTIL_CurrencyCache.DEFAULT_DATE };
+        mockcurrCache.effectiveRatesReturn = new List<Decimal>{ 1.25, 1.75 };
+        mockcurrCache.effectiveDatesReturn = new List<Date>{ Date.Today().addYears(-2), DEFAULT_DATE };
+        mockcurrCache.defaultRate = 1.50;
 
         // The exchange rate for today should be 1.25
-        System.AssertEquals( 1.25, UTIL_CurrencyConversion.getExchangeRate(Date.Today(), 'XYZ', 'USD'));
+        System.AssertEquals( 1.25, UTIL_CurrencyConversion.getExchangeRate(null, 'XYZ', 'USD'));
+
+        // The exchange rate for 1/1/201- should be 1.75
+        System.AssertEquals( 1.75, UTIL_CurrencyConversion.getExchangeRate(Date.newInstance(2010,1,1), 'XYZ', 'USD'));
 
         // When this flag is set it should get the 'default' rate of 1.50
         UTIL_CurrencyConversion.alwaysUseStandardCurrencyRate = true;
@@ -108,6 +113,7 @@ private class UTIL_CurrencyConversion_TEST {
     public class UtilCurrencyCacheMock implements UTIL_CurrencyCache.Interface_x {
         public List<Date> effectiveDatesReturn;
         public List<Decimal> effectiveRatesReturn;
+        public Decimal defaultRate;
 
         public boolean isOrgCacheAvailable() {
             return false;
@@ -115,13 +121,17 @@ private class UTIL_CurrencyConversion_TEST {
 
         public void resetCurrencyCache() { }
 
-        public Map<String, Map<String, List<Object>>> getRateMapForCurrencies(List<String> currCodes) {
-            Map<String, Map<String, List<Object>>> mapOfEffRatesByCurrencyCode
-                    = new Map<String, Map<String, List<Object>>>();
-            mapOfEffRatesByCurrencyCode.put(currCodes[0], new Map<String, List<Object>>{
-                    UTIL_CurrencyCache.LIST_TYPE_EFF_DATES => effectiveDatesReturn,
-                    UTIL_CurrencyCache.LIST_TYPE_EXCH_RATES => effectiveRatesReturn});
-            return mapOfEffRatesByCurrencyCode;
+        public Map<String, UTIL_CurrencyCache.CurrencyData> getRateMapForCurrencies(List<String> currCodes) {
+            Map<String, UTIL_CurrencyCache.CurrencyData> mapOfCurrencyDataByCurrencyCode
+                    = new Map<String, UTIL_CurrencyCache.CurrencyData>();
+
+            UTIL_CurrencyCache.CurrencyData currData = new UTIL_CurrencyCache.CurrencyData();
+            currData.effectiveDates = effectiveDatesReturn;
+            currData.rates = effectiveRatesReturn;
+            currData.defaultRate = defaultRate;
+
+            mapOfCurrencyDataByCurrencyCode.put(currCodes[0], currData);
+            return mapOfCurrencyDataByCurrencyCode;
         }
 
     }
