@@ -139,7 +139,10 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                                 <label class="slds-form-element__label" for="oppAmount">{!$ObjectType.Opportunity.Fields.Amount.Label}</label>
                                 <div class="slds-form-element__control">
                                     <span class="slds-form-element__static">
-                                        <apex:outputField value="{!currentOpp.Amount}" id="oppAmount"/>
+                                        <span class="slds-form-element__addon">{!currencySymbol}</span>
+                                        <apex:outputText value="{0, number, ###,##0.00}" id="oppAmount">
+                                            <apex:param value="{!currentOpp.Amount}"/>
+                                        </apex:outputText>
                                     </span>
                                 </div>
                             </div>
@@ -313,7 +316,10 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                             <div class="slds-form-element">
                                 <label class="slds-form-element__label" for="oppAmount4">{!$ObjectType.Opportunity.Fields.Amount.Label}</label>
                                 <div class="slds-form-element__control">
-                                    <apex:outputField value="{!currentOpp.Amount}" id="oppAmount4" styleClass="slds-form-element__static"/>
+                                    <span class="slds-form-element__addon">{!currencySymbol}</span>
+                                    <apex:outputText value="{0, number, ###,##0.00}" id="oppAmount4" styleClass="slds-form-element__static">
+                                        <apex:param value="{!currentOpp.Amount}"/>
+                                    </apex:outputText>
                                 </div>
                             </div>
                             <div class="slds-form-element">
