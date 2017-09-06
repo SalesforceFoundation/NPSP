@@ -94,8 +94,8 @@
                     <apex:commandButton id="saveBTN" styleClass="slds-button slds-button_brand" action="{!saveAction}"
                         value="{!BLANKVALUE(saveLabel,$Label.stgBtnSave)}" immediate="{!saveImmediate}" disabled="{!saveDisabled}"
                         rendered="{!showSaveBtn}"/>
-                    <apex:commandButton id="saveAndNewBTN" styleClass="slds-button slds-button_neutral" action="{!saveAndAction}"
-                        value="{!BLANKVALUE(saveAndNewLabel,$Label.lvlBtnSaveAndNew)}" immediate="{!saveImmediate}"
+                    <apex:commandButton id="saveAndNewBTN" styleClass="slds-button slds-button_neutral" action="{!saveAndNewAction}"
+                        value="{!BLANKVALUE(saveAndNewLabel,$Label.lvlBtnSaveAndNew)}" immediate="{!saveAndNewImmediate}"
                         disabled="{!saveAndNewDisabled}" rendered="{!showSaveAndNewBtn}"/>
                 </div>
             </div>
