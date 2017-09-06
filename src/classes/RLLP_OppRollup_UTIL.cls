@@ -70,6 +70,8 @@ public without sharing class RLLP_OppRollup_UTIL {
     public static Map<String, SObjectField> mcFieldValues = new Map<String, SObjectField>();
     /** @description Determines if multi-currency is enabled. */
     private static boolean multiCurrency;
+    /** @description This organization's default corporate currency. */
+    public static string currCorporate = UTIL_Currency.getInstance().getOrgDefaultCurrency();
 
     /*** User Rollups ***/
     /** @description map of object and rollup field. */
@@ -320,8 +322,8 @@ public without sharing class RLLP_OppRollup_UTIL {
     * @return Boolean representing whether or not multi-currency is enabled.
     */
     public static boolean isMultiCurrency(){                    
-        if (multiCurrency==null){
 
+        if (multiCurrency==null){
             //create currency field handles for later dynamic dml
             mcFieldValues.put('Opportunity', Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode'));
             mcFieldValues.put('Account', Schema.sObjectType.Account.fields.getMap().get('CurrencyIsoCode'));
@@ -331,13 +333,36 @@ public without sharing class RLLP_OppRollup_UTIL {
             //are we in a multi-currency org?
             if (UTIL_Currency.getInstance().isMultiCurrencyOrganization() &&
                     mcFieldValues.get('Opportunity') != null && mcFieldValues.get('Account') != null &&
-                    mcFieldValues.get('npo02__Household__c') != null && mcFieldValues.get('Contact') != null){
+                    mcFieldValues.get('npo02__Household__c') != null && mcFieldValues.get('Contact') != null) {
                 multiCurrency = true;
+            } else {
+                multiCurrency = false;
             }
-            else
-                multiCurrency = false; 
-        }        
+        }
         return multiCurrency;
+    }
+
+    /*******************************************************************************************************
+    * @description Converts an amount from the corporate currency to a given currency.
+    * @param ISO A string of the currency's iso code that we wish to convert the amount to.
+    * @param amt A decimal of the amount to convert.
+    * @return decimal The converted amount.
+    ********************************************************************************************************/
+    //do a conversion from amount in corporate currency to the currency specified by the ISO code
+    public static decimal convertFromCorporate(String ISO,Decimal amt) {
+        return convertCurrency(currCorporate, ISO, amt);
+    }
+
+    /*******************************************************************************************************
+    * @description Converts an amount from any given currency to any other currency.
+    * @param fromISO A string of the currency's iso code of the amount we wish to convert.
+    * @param toISO A string of the currency's iso code that we wish to convert the amount to.
+    * @param amt A decimal of the amount to convert.
+    * @return decimal The converted amount.
+    ********************************************************************************************************/
+    public static decimal convertCurrency(String fromISO, String toISO, Decimal amt) {
+        UTIL_CurrencyConversion.alwaysUseStandardCurrencyRate = true;
+        return UTIL_CurrencyConversion.convertAmount(amt, null, fromISO, toISO);
     }
 
     /*********************************************************************************************************

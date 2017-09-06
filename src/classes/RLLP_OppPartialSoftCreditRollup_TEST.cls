@@ -407,9 +407,8 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
         listCon = [select Id, Lastname, npo02__Soft_Credit_This_Year__c, npo02__Soft_Credit_Total__c,
             Number_of_Soft_Credits_This_Year__c, Number_of_Soft_Credits__c from Contact];
         system.assertEquals(1, listCon.size());
-        
-        Decimal convertedAmount = 2 * UTIL_CurrencyConversion.convertAmount(5, Date.Today(),
-                (string)nonDefaultCurrencyType.get('IsoCode'), (string)defaultCurrencyType.get('IsoCode') );
+
+        decimal convertedAmount = 2 * RLLP_OppRollup_UTIL.convertCurrency((string)nonDefaultCurrencyType.get('IsoCode'), (string)defaultCurrencyType.get('IsoCode'), 5);
 
         system.assertEquals(10+convertedAmount, listCon[0].npo02__Soft_Credit_This_Year__c);
         system.assertEquals(10+convertedAmount, listCon[0].npo02__Soft_Credit_Total__c);

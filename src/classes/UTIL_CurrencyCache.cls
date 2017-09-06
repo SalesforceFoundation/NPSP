@@ -60,28 +60,32 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
      * @return Exchange Rate
      */
     public static Decimal getEffectiveExchangeRate(String currCode, Date dt) {
-        // If the current static var cache does not have a value for the CurrencyCode
-        // look in the Platform cache first (if available) and if not retrieve from the database.
-        if (!cachedMapOfRatesByCurrencyCode.containsKey(currCode)) {
-            if (getInstance().isOrgCacheAvailable()) {
-                cachedMapOfRatesByCurrencyCode.put(currCode, (UTIL_CurrencyCache.CurrencyData)orgCache.get(CurrencyCache.class, currCode));
-            } else {
-                cachedMapOfRatesByCurrencyCode.put(currCode, getInstance().getRateMapForCurrencies(new List<String>{ currCode }).get(currCode));
-            }
-        }
-
-        // If a set of rates was retrieved, find the effective rate based on the date
-        if (cachedMapOfRatesByCurrencyCode.containsKey(currCode)) {
-            UTIL_CurrencyCache.CurrencyData currData = cachedMapOfRatesByCurrencyCode.get(currCode);
-
-            if (dt == null || currData.rates.size() == 0) {
-                return currData.defaultRate;
+        if (currCode != null) {
+            // If the current static var cache does not have a value for the CurrencyCode
+            // look in the Platform cache first (if available) and if not retrieve from the database.
+            if (!cachedMapOfRatesByCurrencyCode.containsKey(currCode)) {
+                if (getInstance().isOrgCacheAvailable()) {
+                    cachedMapOfRatesByCurrencyCode.put(currCode, (UTIL_CurrencyCache.CurrencyData) orgCache.get(CurrencyCache.class, currCode));
+                } else {
+                    cachedMapOfRatesByCurrencyCode.put(currCode, getInstance().getRateMapForCurrencies(new List<String>{
+                            currCode
+                    }).get(currCode));
+                }
             }
 
-            // The list of effective dates is in descending date order
-            for (Integer n = 0; n < currData.effectiveDates.size(); n++) {
-                if (dt >= currData.effectiveDates[n]) {
-                    return currData.rates[n];
+            // If a set of rates was retrieved, find the effective rate based on the date
+            if (cachedMapOfRatesByCurrencyCode.containsKey(currCode)) {
+                UTIL_CurrencyCache.CurrencyData currData = cachedMapOfRatesByCurrencyCode.get(currCode);
+
+                if (dt == null || currData.rates.size() == 0) {
+                    return currData.defaultRate;
+                }
+
+                // The list of effective dates is in descending date order
+                for (Integer n = 0; n < currData.effectiveDates.size(); n++) {
+                    if (dt >= currData.effectiveDates[n]) {
+                        return currData.rates[n];
+                    }
                 }
             }
         }

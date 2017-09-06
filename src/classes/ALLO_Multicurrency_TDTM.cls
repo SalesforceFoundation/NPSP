@@ -155,4 +155,38 @@ public class ALLO_Multicurrency_TDTM extends TDTM_Runnable {
 
         return results;
     }
+
+
+    /**
+     * @description Wrapper for the utility method to determine if multi-currency is enabled in the org
+     * The target utility class can be mocked for unit tests.
+     * @return True if multi-currency is enabled in the org
+     */
+    public static Boolean isMultiCurrency() {
+        return UTIL_Currency.getInstance().isMultiCurrencyOrganization();
+    }
+
+    /*******************************************************************************************************
+    * @description Converts an amount from the corporate currency to a given currency.
+    * @param ISO A string of the currency's iso code that we wish to convert the amount to.
+    * @param amt A decimal of the amount to convert.
+    * @return decimal The converted amount.
+    ********************************************************************************************************/
+    //do a conversion from amount in corporate currency to the currency specified by the ISO code
+    public static decimal convertFromCorporate(String ISO,Decimal amt) {
+        return convertCurrency(currCorporate, ISO, amt);
+    }
+
+
+    /*******************************************************************************************************
+    * @description Converts an amount from any given currency to any other currency.
+    * @param fromISO A string of the currency's iso code of the amount we wish to convert.
+    * @param toISO A string of the currency's iso code that we wish to convert the amount to.
+    * @param amt A decimal of the amount to convert.
+    * @return decimal The converted amount.
+    ********************************************************************************************************/
+    public static decimal convertCurrency(String fromISO, String toISO, Decimal amt) {
+        UTIL_CurrencyConversion.alwaysUseStandardCurrencyRate = true;
+        return UTIL_CurrencyConversion.convertAmount(amt, null, fromISO, toISO);
+    }
 }

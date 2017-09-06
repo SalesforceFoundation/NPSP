@@ -57,8 +57,8 @@ public class UTIL_CurrencyConversion {
      */
     public static Decimal getExchangeRate(Date dt, String fromCurr, String toCurr) {
 
-        // If the from and to currencies are the same, just return 1
-        if (fromCurr == toCurr) {
+        // If multi-currency is not enabled at all OR the from and to currencies are the same, just return 1
+        if (!UTIL_Currency.getInstance().isMultiCurrencyOrganization() || fromCurr == toCurr) {
             return 1;
         }
 
@@ -93,7 +93,7 @@ public class UTIL_CurrencyConversion {
      * @return Amount converted to the toCurr using the applied effective date
      */
     public static Decimal convertAmount(Decimal amt, Date dt, String fromCurr, String toCurr) {
-        if (fromCurr == toCurr) {
+        if (!UTIL_Currency.getInstance().isMultiCurrencyOrganization() || fromCurr == toCurr) {
             return amt;
         } else {
             Decimal effRate = getExchangeRate(dt, fromCurr, toCurr);
