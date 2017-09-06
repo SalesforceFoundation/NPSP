@@ -152,7 +152,7 @@
             <!-- PAGE HEADER -->
             <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="{!objectLabelPlural}"
                 parentAction="javascript:window.urlHome();" parentRecordName="{!objectName}"
-                parentRecordAction="/{!parentId}" header="{!pageTitle}" icon="custom" iconCategory="standard"
+                parentRecordAction="/{!parentId}" header="{!pageTitle}" icon="custom_120" iconCategory="standard"
                 cancelAction="{!cancel}" saveAction="{!saveClose}" saveDisabled="{!opp<>null&&parentAmount==0}"/>
             <div> 
                 <apex:pageMessages id="messages"/>

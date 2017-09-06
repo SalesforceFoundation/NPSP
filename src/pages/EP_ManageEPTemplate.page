@@ -11,21 +11,9 @@
                     <div class="slds-spinner__dot-b"></div>
                 </div>
             </div>
-            <!-- PAGE HEADER -->
-            <div class="slds-page-header" role="banner">
-              <div class="slds-grid">
-                <div class="slds-col">
-                  <h1 class="slds-text-heading_medium">{!$Label.EPManageTemplate}</h1>
-                </div>
-                <div class="slds-col slds-no-flex slds-align-middle">
-                    <div class="slds-button-group" role="group">
-                        <apex:commandButton id="saveCloseBTN" styleClass="slds-button slds-button_brand" action="{!saveClose}" value="{!$Label.stgBtnSave}" immediate="false"/>
-                        <apex:commandButton id="cancelBTN" styleClass="slds-button slds-button_neutral" action="{!cancel}" value="{!$Label.stgBtnCancel}"  immediate="true"/>
-                    </div>
-                </div>
-              </div>
-            </div>
-            <!-- / PAGE HEADER -->
+
+            <c:UTIL_PageHeader headerLabel="{!$Label.EPManageTemplate}" header="{!template.Name}" icon="custom62_120" iconCategory="custom"
+                cancelAction="{!cancel}" saveAction="{!saveClose}"/>
             
             <apex:outputPanel id="panelErrors">
                 <c:UTIL_PageMessages html-class="slds-grid slds-grid_align-center slds-m-bottom_small"/>

@@ -35,7 +35,7 @@
             if (oc) input.setAttribute("onchange", oc);
 
             // Swap out the search icon
-            if (ftype == 'reference' && field != 'RecordTypeId') {
+            if (ftype === 'reference' && field !== 'RecordTypeId') {
                 input.style.visibility = "";
                 var lkSpan = input.parentElement;
                 var lkLink = lkSpan.querySelector("a");

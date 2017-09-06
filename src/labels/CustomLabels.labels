@@ -4040,7 +4040,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>stgBtnCancel</fullName>
-        <categories>Settings</categories>
+        <categories>Settings, UTIL_PageHeader</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgBtnCancel</shortDescription>
@@ -4216,7 +4216,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>stgBtnSave</fullName>
-        <categories>Settings</categories>
+        <categories>Settings, UTIL_PageHeader</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgBtnSave</shortDescription>
