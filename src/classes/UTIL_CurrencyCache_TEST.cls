@@ -45,16 +45,22 @@ private class UTIL_CurrencyCache_TEST {
         mockcurrCache.isOrgCacheAvailableReturn = false;
         // Dates list must always be in descending order
         mockcurrCache.effectiveDatesReturn = new List<Date>{
-                Date.Parse('05/01/2017'), Date.Parse('03/01/2017'), Date.Parse('01/01/2017')
+                Date.Parse('05/01/2017'), Date.Parse('03/01/2017'), Date.Parse('01/01/2000')
         };
         mockcurrCache.effectiveRatesReturn = new List<Decimal>{
                 1.35, 1.25, 1.5
         };
+        mockcurrCache.defaultRate = 1.55;
         UTIL_CurrencyCache.instance = mockcurrCache;
 
         System.AssertEquals(False, UTIL_CurrencyCache.getInstance().isOrgCacheAvailable());
         System.AssertEquals(null, UTIL_CurrencyCache.orgCache);
-        System.AssertEquals( 1.25, UTIL_CurrencyCache.getEffectiveExchangeRate('CAD', Date.Parse('03/15/2017')));
+        System.AssertEquals( 1.25, UTIL_CurrencyCache.getEffectiveExchangeRate('CAD', Date.Parse('03/15/2017')),
+            'Should return the effective rate for 3/15/2017');
+        System.AssertEquals( 1.50, UTIL_CurrencyCache.getEffectiveExchangeRate('CAD', Date.Parse('01/01/2010')),
+                'Should return the effective rate for 1/1/2010');
+        System.AssertEquals( 1.55, UTIL_CurrencyCache.getEffectiveExchangeRate('CAD', null),
+                'Should return the org default effective rate');
     }
 
     /**
@@ -67,17 +73,17 @@ private class UTIL_CurrencyCache_TEST {
         System.AssertNotEquals(null, UTIL_CurrencyCache.getInstance().isOrgCacheAvailable());
 
         // Populate the static var version of the currency cache to use for the tests below
-        UTIL_CurrencyCache.cachedRatesByCurrency.put('CAD', getDummyRates(Date.Today().AddYears(-1), 0.75));
+        UTIL_CurrencyCache.cachedMapOfRatesByCurrencyCode.put('CAD', getDummyRates(Date.Today().AddYears(-1), 0.75));
 
         // The cache should now have one currency code
-        System.AssertEquals(1, UTIL_CurrencyCache.cachedRatesByCurrency.size(), 'The cache should not be empty');
+        System.AssertEquals(1, UTIL_CurrencyCache.cachedMapOfRatesByCurrencyCode.size(), 'The cache should not be empty');
 
         // validate that some values are returned for the CAD code
         System.AssertNotEquals(null, UTIL_CurrencyCache.getInstance().getRateMapForCurrencies(new List<String>{'CAD'}));
 
         // Wipe the cahce and confirm it's wiped
         UTIL_CurrencyCache.getInstance().resetCurrencyCache();
-        System.AssertEquals(0, UTIL_CurrencyCache.cachedRatesByCurrency.size(), 'The cache should be empty');
+        System.AssertEquals(0, UTIL_CurrencyCache.cachedMapOfRatesByCurrencyCode.size(), 'The cache should be empty');
     }
 
     /**
@@ -85,7 +91,7 @@ private class UTIL_CurrencyCache_TEST {
      * use for testing.
      * @param Start Date and Starting Value
      */
-    private static Map<String, List<Object>> getDummyRates(Date startDt, Decimal seedValue) {
+    private static UTIL_CurrencyCache.CurrencyData getDummyRates(Date startDt, Decimal seedValue) {
         List<Date> dts = new List<Date>();
         List<Decimal> rates = new List<Decimal>();
         Date dt = startDt;
@@ -99,9 +105,11 @@ private class UTIL_CurrencyCache_TEST {
             rt = ((rtStart + ((Math.random()/100) * multiplier))*1000000).round(System.RoundingMode.HALF_UP);
             rt = rt.divide(1000000,4);
         }
-        return new Map<String, List<Object>>{
-                UTIL_CurrencyCache.LIST_TYPE_EFF_DATES => dts,
-                UTIL_CurrencyCache.LIST_TYPE_EXCH_RATES => rates};
+        UTIL_CurrencyCache.CurrencyData currData = new UTIL_CurrencyCache.CurrencyData();
+        currData.effectiveDates = dts;
+        currData.rates = rates;
+        currData.defaultRate = seedValue;
+        return currData;
     }
 
     /**
@@ -113,22 +121,27 @@ private class UTIL_CurrencyCache_TEST {
         public Boolean isOrgCacheAvailableReturn;
         public List<Date> effectiveDatesReturn;
         public List<Decimal> effectiveRatesReturn;
+        public Decimal defaultRate;
 
         public boolean isOrgCacheAvailable() {
             return isOrgCacheAvailableReturn;
         }
 
         public void resetCurrencyCache() {
-            UTIL_CurrencyCache.cachedRatesByCurrency.clear();
+            UTIL_CurrencyCache.cachedMapOfRatesByCurrencyCode.clear();
         }
 
-        public Map<String, Map<String, List<Object>>> getRateMapForCurrencies(List<String> currCodes) {
-            Map<String, Map<String, List<Object>>> mapOfEffRatesByCurrencyCode
-                    = new Map<String, Map<String, List<Object>>>();
-            mapOfEffRatesByCurrencyCode.put(currCodes[0], new Map<String, List<Object>>{
-                    UTIL_CurrencyCache.LIST_TYPE_EFF_DATES => effectiveDatesReturn,
-                    UTIL_CurrencyCache.LIST_TYPE_EXCH_RATES => effectiveRatesReturn});
-            return mapOfEffRatesByCurrencyCode;
+        public Map<String, UTIL_CurrencyCache.CurrencyData> getRateMapForCurrencies(List<String> currCodes) {
+            Map<String, UTIL_CurrencyCache.CurrencyData> mapOfCurrencyDataByCurrencyCode
+                    = new Map<String, UTIL_CurrencyCache.CurrencyData>();
+
+            UTIL_CurrencyCache.CurrencyData currData = new UTIL_CurrencyCache.CurrencyData();
+            currData.effectiveDates = effectiveDatesReturn;
+            currData.rates = effectiveRatesReturn;
+            currData.defaultRate = defaultRate;
+
+            mapOfCurrencyDataByCurrencyCode.put(currCodes[0], currData);
+            return mapOfCurrencyDataByCurrencyCode;
         }
     }
 }

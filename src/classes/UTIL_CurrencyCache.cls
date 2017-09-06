@@ -74,7 +74,7 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
         if (cachedMapOfRatesByCurrencyCode.containsKey(currCode)) {
             UTIL_CurrencyCache.CurrencyData currData = cachedMapOfRatesByCurrencyCode.get(currCode);
 
-            if (dt == null) {
+            if (dt == null || currData.rates.size() == 0) {
                 return currData.defaultRate;
             }
 
