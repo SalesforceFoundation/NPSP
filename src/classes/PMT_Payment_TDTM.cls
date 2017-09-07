@@ -152,11 +152,12 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
         Set<Id> oppIds = (new Map<Id, Opportunity>(listOpps)).keySet();
 
         // Get a list of the Payment records by Opportunity and update the CurrencyIsoCode value
-        String soql = 'SELECT Id, CurrencyIsoCode, npe01__Opportunity__r.CurrencyIsoCode FROM npe01__OppPayment__c ' +
+        String soql = 'SELECT Id, CurrencyIsoCode, npe01__Payment_Amount__c, npe01__Opportunity__r.CurrencyIsoCode FROM npe01__OppPayment__c ' +
             'WHERE npe01__Opportunity__c IN :oppIds ORDER BY npe01__Opportunity__c';
         for (npe01__OppPayment__c pmt : database.query(soql)) {
             Opportunity opp = (Opportunity)pmt.getSObject('npe01__Opportunity__r');
             pmt.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
+            pmt.put('npe01__Payment_Amount__c', pmt.npe01__Payment_Amount__c);
             dmlWrapper.objectsToUpdate.add(pmt);
         }
     }
