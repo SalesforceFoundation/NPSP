@@ -140,6 +140,7 @@ private class PMT_Payment_TEST {
 
         npe01__OppPayment__c pmt = getPaymentRecord(opp.Id);
         System.AssertEquals((String) opp.get('CurrencyIsoCode'), (String) pmt.get('CurrencyIsoCode'));
+        System.AssertEquals(opp.Amount, (Double)pmt.npe01__Payment_Amount__c);
     }
 
     /**
@@ -201,7 +202,8 @@ private class PMT_Payment_TEST {
     }
 
     private static npe01__OppPayment__c getPaymentRecord(Id oppId) {
-        String soql = 'SELECT Id, CurrencyIsoCode FROM npe01__OppPayment__c WHERE npe01__Opportunity__c = \'' + oppId + '\' LIMIT 1';
+        String soql = 'SELECT Id, CurrencyIsoCode, npe01__Payment_Amount__c ' +
+                ' FROM npe01__OppPayment__c WHERE npe01__Opportunity__c = \'' + oppId + '\' LIMIT 1';
         return (npe01__OppPayment__c)database.query(soql);
     }
 }
