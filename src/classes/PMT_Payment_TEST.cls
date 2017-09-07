@@ -216,7 +216,7 @@ private class PMT_Payment_TEST {
         mock.getCurrencySymbolReturn = 'USD';
         mock.isMultiCurrencyOrganizationReturn = true;
         // TODO: Update when merge with full Multi-Currency support branch
-        // mock.isAdvancedMultiCurrencyOrgReturn = true;
+        // mock.isAdvancedCurrencyManagementEnabledReturn = true;
         UTIL_Currency.instance = mock;
 
         String closedWonStage = UTIL_UnitTestData_TEST.getClosedWonStage();
