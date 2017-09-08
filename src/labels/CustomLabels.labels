@@ -3631,6 +3631,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Interval</value>
     </labels>
     <labels>
+        <fullName>pmtWizardMonth</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardMonth</shortDescription>
+        <value>Month</value>
+    </labels>
+    <labels>
         <fullName>pmtWizardMsgNoOppFound</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
@@ -3735,6 +3743,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Warning</value>
     </labels>
     <labels>
+        <fullName>pmtWizardWeek</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardWeek</shortDescription>
+        <value>Week</value>
+    </labels>
+    <labels>
         <fullName>pmtWizardWriteoffDate</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
@@ -3749,6 +3765,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>pmtWizardWriteoffMessage</shortDescription>
         <value>You are preparing to write off {0} Payment(s) totaling {1}.</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardYear</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardYear</shortDescription>
+        <value>Year</value>
     </labels>
     <labels>
         <fullName>pscDeleteRow</fullName>
