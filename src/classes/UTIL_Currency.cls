@@ -40,6 +40,7 @@ public with sharing class UTIL_Currency implements UTIL_Currency.Interface_x {
         String getDefaultCurrency();
         String getDefaultCurrencySymbol();
         String getCurrencySymbol(Id recordId);
+        String getCurrencySymbol(String currCode);
         String getCurrencyIsoCodeQuery(Id recordId);
         String queryCurrencyIsoCode(Id recordId);
     }
@@ -108,6 +109,20 @@ public with sharing class UTIL_Currency implements UTIL_Currency.Interface_x {
         Interface_x currencyUtil = UTIL_Currency.getInstance();
         if (currencyUtil.isMultiCurrencyOrganization() && recordId != null) {
             return currencyUtil.queryCurrencyIsoCode(recordId);
+        } else {
+            return currencyUtil.getDefaultCurrencySymbol();
+        }
+    }
+
+    /**
+     * @description Return the currency symbol appropriate for the given currency code.
+     * @param CurencyIsoCode
+     * @return String
+     */
+    public String getCurrencySymbol(String currCode) {
+        Interface_x currencyUtil = UTIL_Currency.getInstance();
+        if (currencyUtil.isMultiCurrencyOrganization() && currCode != null) {
+            return currencySymbols.get(currCode);
         } else {
             return currencyUtil.getDefaultCurrencySymbol();
         }
