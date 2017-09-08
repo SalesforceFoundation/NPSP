@@ -41,7 +41,6 @@ public with sharing class USER_UserService {
     public static final String JOB_TYPE_SCHEDULED_APEX = '7';
     public static final String ERROR_TYPE_SCHEDULED_APEX = 'Scheduled Apex Error';
     public static final String OBJECT_TYPE_USER = 'User';
-    public static final Integer NUMBER_OF_SCHEDULED_JOBS = 9;
 
 
     /*********************************************************************************************************

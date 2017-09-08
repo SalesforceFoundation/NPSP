@@ -135,10 +135,6 @@ public with sharing class USER_UserService_TEST {
         USER_UserService.handleScheduledJobsSubmittedByInActiveSysAdmin(sysAdminIds);
         Test.stopTest();
 
-        if (!scheduledJobs.isEmpty()) {
-            System.assertEquals(USER_UserService.NUMBER_OF_SCHEDULED_JOBS, scheduledJobs.size());
-        }
-
         List<Error__c> retrievedErrorAfterEmailSent = [SELECT Email_Sent__c FROM Error__c WHERE Object_Type__c = :USER_UserService.OBJECT_TYPE_USER];
         System.assertNotEquals(null, retrievedErrorAfterEmailSent);
         System.assertEquals(true, retrievedErrorAfterEmailSent[0].Email_Sent__c);
