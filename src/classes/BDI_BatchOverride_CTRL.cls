@@ -42,12 +42,17 @@ public with sharing class BDI_BatchOverride_CTRL {
     public DataImportBatch__c diBatch { get; set; }
 
     /*******************************************************************************************************
+    * @description after successful save set to true to redirect page
+    */ 
+    public Boolean redirect {get; set;}
+
+    /*******************************************************************************************************
     * @description constructor for the page
     * @param controller the StandardController for the page
     * @return nothing
     */
     public BDI_BatchOverride_CTRL(ApexPages.StandardController controller) {
-
+        redirect = false;
         // since our page doesn't directly refer to the Batch fields, we must explicitly list them
         if (!Test.isRunningTest()) {
             List<String> listFields = new List<String>{
@@ -94,11 +99,11 @@ public with sharing class BDI_BatchOverride_CTRL {
         try {
             BDI_DataImportService.validateSettings(diBatch);
             upsert diBatch;
-            return new PageReference('/' + diBatch.Id);
+            redirect = true;
         } catch (Exception ex) {
             ApexPages.addMessages(ex);
-            return null;
         }
+        return null;
     }
 
 }
