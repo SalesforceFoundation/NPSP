@@ -19,6 +19,8 @@
         description="The name of the icon .png to display in the header, e.g. account_120, custom1_120"/>
     <apex:attribute name="iconCategory" type="String" default=""
         description="The category the icon belongs to, e.g. standard, utility"/>
+    <apex:attribute name="iconContainer" type="String"
+        description="The icon name for the container class will default to the icon name, e.g. account, custom1"/>
     <!-- Cancel button attributes -->
     <apex:attribute name="showCancelBtn" type="Boolean" default="true"
         description="Set to false to hide cancel button, default is true"/>
@@ -74,7 +76,7 @@
 
                 <div class="slds-media slds-media_center slds-has-flexi-truncate">
                     <apex:outputPanel layout="block" rendered="{!icon != ''}" styleClass="slds-media__figure">
-                        <span class="slds-icon_container slds-icon-{!iconCategory}-{!LEFT(icon, FIND('_', icon)-1)}">
+                        <span class="slds-icon_container slds-icon-{!iconCategory}-{!BLANKVALUE(iconContainer,LEFT(icon, FIND('_', icon)-1))}">
                             <img src="{!URLFOR($Asset.SLDS, 'assets/icons/'+iconCategory+'/'+icon+'.png')}" alt="{!iconCategory} Icon" height="32" width="32"/>
                         </span>
                     </apex:outputPanel>
