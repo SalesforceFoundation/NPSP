@@ -1026,94 +1026,140 @@ private with sharing class RD_RecurringDonations_TEST2 {
         }
     }
 
-    /* Commenting this out temporarily
-    static testMethod void testOpenEndedMonthlyEndDates(){
-        if (strTestOnly != '*' && strTestOnly != 'testOpenEndedMonthlyEndDates') return;
+    static testMethod void testOpenEndedMonthlyEndDates_28th(){
+        if (strTestOnly != '*' && strTestOnly != 'testOpenEndedMonthlyEndDates_28th') return;
 
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
             new npe03__Recurring_Donations_Settings__c(
             npe03__Opportunity_Forecast_Months__c = 12,
-            npe03__Maximum_Donations__c = 50,
-            npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()        
-            ));             
-        
-        Account a = new Account();
-        a.Name = 'test Individual';
-        insert a;
-        
-        Contact c = new Contact();
-        c.FirstName = 'test';
-        c.LastName = 'contact';
-        c.AccountId = a.Id;
-        insert c;       
-        
-        Campaign camp = new Campaign(name = 'Campaign', isActive = true);
-        insert camp;
-        
-        list<npe03__Recurring_Donation__c> rdlist = new list<npe03__Recurring_Donation__c>();
+            npe03__Maximum_Donations__c = 50
+            ));
+
+        Contact c = new Contact(
+            FirstName = 'test',
+            LastName = 'contact'
+        );
+        insert c;
+        Account a = [SELECT Id FROM Account WHERE Id IN (SELECT AccountId FROM Contact WHERE Id = :c.Id) LIMIT 1];
 
         // This should create Installments with a date of the 28th.
-        npe03__Recurring_Donation__c RD = new npe03__Recurring_Donation__c();
-        RD.Name = 'test28th';
-        RD.npe03__Contact__c = c.Id;
-        RD.npe03__Amount__c = 100;
-        RD.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodMonthly;
-        RD.npe03__Date_Established__c = system.today().toStartOfMonth().addDays(27);
-        RD.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
-        RD.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
-        rdlist.add(RD);
-        
-        RD = RD.clone(false);
-        RD.Name = 'testEndOfMonth';
-        RD.Always_Use_Last_Day_Of_Month__c = true;
-        rdlist.add(RD);
-
-        // This should create Installments with a date of the 30th.
-        RD = RD.clone(false);
-        RD.Name = 'test30th';
-        RD.Always_Use_Last_Day_Of_Month__c = false;
-        // TODO: The calculated StartDate is causing the test to fail if the current month has only 30 days.
-        Date startDt = system.today().toStartOfMonth().addMonths(1).addDays(-2);
-        while (startDt.day() != 30) {
-            startDt = startDt.addMonths(2).toStartOfMonth().addDays(-1);
-        }
-        RD.npe03__Date_Established__c = startDt;
-        RD.npe03__Next_Payment_Date__c = null;
-        rdlist.add(RD);
+        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c();
+        rd.Name = 'test28th';
+        rd.npe03__Contact__c = c.Id;
+        rd.npe03__Amount__c = 100;
+        rd.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodMonthly;
+        rd.npe03__Date_Established__c = system.today().toStartOfMonth().addDays(27);
+        rd.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
+        rd.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
 
         test.startTest();
-        insert rdlist;
+        insert rd;
         test.stopTest();
-        
-        list<Opportunity> listOpp28th = [select Id, CloseDate from Opportunity where npe03__Recurring_Donation__r.Name = 'test28th' order by CloseDate];
-        system.assertEquals(12, listOpp28th.size());
+
+        List<Opportunity> listOpp28th = [SELECT Id, CloseDate FROM Opportunity WHERE npe03__Recurring_Donation__r.Name = 'test28th' order by CloseDate];
+        system.assertEquals(12, listOpp28th.size(), 'There should be 12 Opps with a Close Date of the 28th');
         for (Opportunity opp : listOpp28th) {
-            system.assertEquals(28, opp.CloseDate.Day());
+            system.assertEquals(28, opp.CloseDate.Day(), 'The Opp.CloseDate.Day should be the 28th');
         }
+    }
+
+    static testMethod void testOpenEndedMonthlyEndDates_30th(){
+        if (strTestOnly != '*' && strTestOnly != 'testOpenEndedMonthlyEndDates_30th') return;
+
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+                new npe03__Recurring_Donations_Settings__c(
+                        npe03__Opportunity_Forecast_Months__c = 12,
+                        npe03__Maximum_Donations__c = 50
+                ));
+
+        Contact c = new Contact(
+                FirstName = 'test',
+                LastName = 'contact'
+        );
+        insert c;
+        Account a = [SELECT Id FROM Account WHERE Id IN (SELECT AccountId FROM Contact WHERE Id = :c.Id) LIMIT 1];
+
+        // This should create Installments with a date of the 28th.
+        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c();
+        rd.Name = 'test30th';
+        rd.npe03__Contact__c = c.Id;
+        rd.npe03__Amount__c = 100;
+        rd.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodMonthly;
+        rd.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
+        rd.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
+
+        // Find a start date for a month that has 30 days and calculate an offset from the current month
+        // to use in the asserts below to account for the fact that Opp installments are only created from
+        // the current month forward even if the start date is months in the future. Theoretically could just
+        // subtract a day from 10/31 to get 10/31 (for example), but that won't work in February. As a result
+        // it's better to just skip ahead months to find one with exactly 30 days and then use that offset
+        // for the asserts.
+        Date startDt = system.today().toStartOfMonth().addMonths(1).addDays(-1);
+        Integer opps30thMonthOffset = 0;
+        while (startDt.day() != 30) {
+            startDt = startDt.addMonths(2).toStartOfMonth().addDays(-1);
+            opps30thMonthOffset++;
+        }
+        rd.npe03__Date_Established__c = startDt;
+        rd.npe03__Next_Payment_Date__c = null;
+
+        test.startTest();
+        insert rd;
+        test.stopTest();
 
         // All Installments should be on the 30th except for February, which should be on the last day of the month
-        list<Opportunity> listOpp30th = [select Id, CloseDate from Opportunity where npe03__Recurring_Donation__r.Name = 'test30th' order by CloseDate];
-        system.assertEquals(12, listOpp30th.size());
-        for (Opportunity opp : listOpp28th) {
+        List<Opportunity> listOpp30th = [SELECT Id, CloseDate FROM Opportunity WHERE npe03__Recurring_Donation__r.Name = 'test30th' order by CloseDate];
+        system.assertEquals(12-opps30thMonthOffset, listOpp30th.size(), 'There should be ' + (12-opps30thMonthOffset) +
+                ' Opps with a Close Date of the 30th');
+        for (Opportunity opp : listOpp30th) {
             if (opp.CloseDate.Month() != 2) {
-                system.assertEquals(28, opp.CloseDate.Day());
+                system.assertEquals(30, opp.CloseDate.Day(), 'The Opp.CloseDate.Day should be the 30th');
             } else {
-                system.assertEquals(Date.DaysInMonth(opp.CloseDate.Year(), 2), opp.CloseDate.Day());
+                system.assertEquals(Date.DaysInMonth(opp.CloseDate.Year(), 2), opp.CloseDate.Day(),
+                        'The installment close date for February should be on the last day of February for the year');
             }
         }
+    }
+
+    static testMethod void testOpenEndedMonthlyEndDates_EOM(){
+        if (strTestOnly != '*' && strTestOnly != 'testOpenEndedMonthlyEndDates_EOM') return;
+
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+                new npe03__Recurring_Donations_Settings__c(
+                        npe03__Opportunity_Forecast_Months__c = 12,
+                        npe03__Maximum_Donations__c = 50
+                ));
+
+        Contact c = new Contact(
+                FirstName = 'test',
+                LastName = 'contact'
+        );
+        insert c;
+        Account a = [SELECT Id FROM Account WHERE Id IN (SELECT AccountId FROM Contact WHERE Id = :c.Id) LIMIT 1];
+
+        // This should create Installments with a date of the 28th.
+        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c();
+        rd.Name = 'testEndOfMonth';
+        rd.npe03__Contact__c = c.Id;
+        rd.npe03__Amount__c = 100;
+        rd.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodMonthly;
+        rd.npe03__Date_Established__c = system.today().toStartOfMonth().addDays(12);    // this shouldn't matter
+        rd.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
+        rd.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
+        rd.Always_Use_Last_Day_Of_Month__c = true;
+
+        test.startTest();
+        insert rd;
+        test.stopTest();
 
         // All Installments should be on the last day of the month
-        list<Opportunity> listOppEnd = [select Id, CloseDate from Opportunity where npe03__Recurring_Donation__r.Name = 'testEndOfMonth' order by CloseDate];
-        system.assertEquals(12, listOppEnd.size());
+        List<Opportunity> listOppEnd = [SELECT Id, CloseDate FROM Opportunity WHERE npe03__Recurring_Donation__r.Name = 'testEndOfMonth' order by CloseDate];
+        system.assertEquals(12, listOppEnd.size(), 'There should be 12 Opps with a close date of the last day of the month');
         for (Opportunity opp : listOppEnd) {
-            system.assertEquals(Date.DaysInMonth(opp.CloseDate.Year(), opp.CloseDate.Month()), opp.CloseDate.Day(), opp.CloseDate);
+            system.assertEquals(Date.DaysInMonth(opp.CloseDate.Year(), opp.CloseDate.Month()), opp.CloseDate.Day(),
+                    'The Opps Close Date should be the very last day of the month: ' + opp.CloseDate);
         }
-        
-        for (integer i = 0; i < 12; i++) {
-            system.assertEquals(listOpp28th[i].CloseDate.Month(), listOpp30th[i].CloseDate.Month());
-            system.assertEquals(listOpp28th[i].CloseDate.Month(), listOppEnd[i].CloseDate.Month());
-        }
-    }*/
+    }
 
     static testMethod void testOrphanedRd() {
         if (strTestOnly != '*' && strTestOnly != 'testOrphanedRd') return;
