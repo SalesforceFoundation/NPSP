@@ -64,10 +64,11 @@ public with sharing class BDI_BatchOverride_TEST {
         BDI_BatchOverride_CTRL ctrl = new BDI_BatchOverride_CTRL(new ApexPages.StandardController(diBatch));
 
         Test.startTest();
-        system.assertNotEquals(null, ctrl.save());
+        System.assertEquals(null, ctrl.save(), 'The page should always return null on save and use redirect flag for javascript navigation on page');
         Test.stopTest();
 
-        system.assertEquals(1, [select count() from DataImportBatch__c]);
+        System.assert(ctrl.redirect, 'The page should save successfully and set redirect to true.');
+        System.assertEquals(1, [select count() from DataImportBatch__c]);
     }
 
     /*********************************************************************************************************
@@ -83,10 +84,11 @@ public with sharing class BDI_BatchOverride_TEST {
 
         Test.startTest();
         ctrl.diBatch.Name = 'testBatchModified';
-        system.assertNotEquals(null, ctrl.save());
+        System.assertEquals(null, ctrl.save(), 'The page should always return null on save and use redirect flag for javascript navigation on page');
         Test.stopTest();
 
-        system.assertEquals(1, [select count() from DataImportBatch__c where Name = 'testBatchModified']);
+        System.assert(ctrl.redirect, 'The page should save successfully and set redirect to true.');
+        System.assertEquals(1, [select count() from DataImportBatch__c where Name = 'testBatchModified']);
     }
 
     /*********************************************************************************************************
@@ -105,11 +107,12 @@ public with sharing class BDI_BatchOverride_TEST {
         BDI_BatchOverride_CTRL ctrl = new BDI_BatchOverride_CTRL(new ApexPages.StandardController(diBatch));
 
         Test.startTest();
-        system.assertNotEquals(null, ctrl.save());
+        System.assertEquals(null, ctrl.save(), 'The page should always return null on save and use redirect flag for javascript navigation on page');
         Test.stopTest();
 
-        system.assertEquals(2, [select count() from DataImportBatch__c]);
-        system.assertEquals(1, [select count() from DataImportBatch__c where Name = 'testBatch - Cloned']);
+        System.assert(ctrl.redirect, 'The page should save successfully and set redirect to true.');
+        System.assertEquals(2, [select count() from DataImportBatch__c]);
+        System.assertEquals(1, [select count() from DataImportBatch__c where Name = 'testBatch - Cloned']);
     }
 
     /*********************************************************************************************************
@@ -129,39 +132,48 @@ public with sharing class BDI_BatchOverride_TEST {
         Test.startTest();
 
         diBatch.Name = null;
-        system.assertEquals(null, ctrl.save());
+        System.assertEquals(null, ctrl.save(), 'The page should always return null on save and use redirect flag for javascript navigation on page');
+        System.assert(!ctrl.redirect, 'The page should fail to save without a name and redirect should remain false.');
 
         diBatch = newDIBatch();
         diBatch.Batch_Process_Size__c = -1;
-        system.assertEquals(null, ctrl.save());
+        System.assertEquals(null, ctrl.save(), 'The page should always return null on save and use redirect flag for javascript navigation on page');
+        System.assert(!ctrl.redirect, 'The page should fail to save with a negative batch size and redirect should remain false.');
 
         diBatch.Donation_Matching_Behavior__c = 'bogus value';
-        system.assertEquals(null, ctrl.save());
+        System.assertEquals(null, ctrl.save(), 'The page should always return null on save and use redirect flag for javascript navigation on page');
+        System.assert(!ctrl.redirect, 'The page should fail to save with an invalid matching behavior and redirect should remain false.');
 
         diBatch = newDIBatch();
         diBatch.Donation_Matching_Rule__c = 'Donation_Date__c';
-        system.assertEquals(null, ctrl.save());
+        System.assertEquals(null, ctrl.save(), 'The page should always return null on save and use redirect flag for javascript navigation on page');
+        System.assert(!ctrl.redirect, 'The page should fail to save with an invalid matching rule and redirect should remain false.');
 
         diBatch = newDIBatch();
         diBatch.Donation_Date_Range__c = -1;
-        system.assertEquals(null, ctrl.save());
+        System.assertEquals(null, ctrl.save(), 'The page should always return null on save and use redirect flag for javascript navigation on page');
+        System.assert(!ctrl.redirect, 'The page should fail to save with a negative date range and redirect should remain false.');
 
         diBatch = newDIBatch();
         diBatch.Donation_Matching_Implementing_Class__c = 'foo';
-        system.assertEquals(null, ctrl.save());
+        System.assertEquals(null, ctrl.save(), 'The page should always return null on save and use redirect flag for javascript navigation on page');
+        System.assert(!ctrl.redirect, 'The page should fail to save with an invalid matching implementation class and redirect should remain false.');
 
 
         diBatch = newDIBatch();
         diBatch.Post_Process_Implementing_Class__c = 'bar';
-        system.assertEquals(null, ctrl.save());
+        System.assertEquals(null, ctrl.save(), 'The page should always return null on save and use redirect flag for javascript navigation on page');
+        System.assert(!ctrl.redirect, 'The page should fail to save with an invalid process implementation class and redirect should remain false.');
 
         diBatch = newDIBatch();
         diBatch.Contact_Custom_Unique_ID__c = 'bogus field';
-        system.assertEquals(null, ctrl.save());
+        System.assertEquals(null, ctrl.save(), 'The page should always return null on save and use redirect flag for javascript navigation on page');
+        System.assert(!ctrl.redirect, 'The page should fail to save with an invalid contact unique id field and redirect should remain false.');
 
         diBatch = newDIBatch();
         diBatch.Account_Custom_Unique_ID__c = 'bogus field';
-        system.assertEquals(null, ctrl.save());
+        System.assertEquals(null, ctrl.save(), 'The page should always return null on save and use redirect flag for javascript navigation on page');
+        System.assert(!ctrl.redirect, 'The page should fail to save with an invalid account unique id field and redirect should remain false.');
 
         Test.stopTest();
     }
