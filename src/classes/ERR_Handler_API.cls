@@ -73,7 +73,9 @@ global class ERR_Handler_API {
 	    /* @description Settings context. */
 	    STTG, 
 	    /* @description Table-Driven Trigger Management context. */
-	    TDTM
+	    TDTM,
+        /* @description USERcontext. */
+        USER
     }
      
     /*******************************************************************************************************

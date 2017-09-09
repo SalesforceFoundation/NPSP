@@ -696,6 +696,14 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <value>Hidden for security</value>
     </labels>
     <labels>
+        <fullName>InactiveScheduledJobsOwnerErrMsg</fullName>
+        <categories>User</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>InactiveScheduledJobsOwnerErrMsg</shortDescription>
+        <value>There are scheduled jobs owned by an inactive user. Review your scheduled jobs and ensure the owner of each one is an active user.</value>
+    </labels>
+    <labels>
         <fullName>NameRequired</fullName>
         <categories>Engagement Plans, Errors</categories>
         <language>en_US</language>
