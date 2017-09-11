@@ -572,6 +572,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     * @description Verifies that the default trigger handlers exist in the Trigger_Handler object, and warns
     * about any NPSP triggers marked as Async.
     */
+    @TestVisible
     private void verifyTriggerHandlers() {
         try {
             List<Trigger_Handler__c> listHandlersDefault = TDTM_DefaultConfig.getDefaultRecords();

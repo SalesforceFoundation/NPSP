@@ -170,4 +170,47 @@ public with sharing class STG_PanelHealthCheck_TEST {
         system.assertEquals(1,  hc.listDR[0].strDetails.countMatches('<br/>'));
         system.assertEquals(STG_PanelHealthCheck_CTRL.statusError, hc.listDR[0].strStatus);
     }
+
+    /*******************************************************************************************************
+    * @description verify trigger handler action comparisons work as expected if case & sequence are not an exact match
+    */
+    static testMethod void verifyTriggerHandlers_succeed() {
+        List<Trigger_Handler__c> listHandlersDefault = TDTM_DefaultConfig.getDefaultRecords();
+        for (Trigger_Handler__c th : listHandlersDefault) {
+            if (th.Trigger_Action__c == 'BeforeUpdate;AfterUpdate') {
+                // Change the order of these in the list to verify that the logic ignores sequence & caes
+                th.Trigger_Action__c = 'AfterUpdate;Beforeupdate';
+                break;
+            }
+        }
+        insert listHandlersDefault;
+
+        Test.startTest();
+
+        STG_PanelHealthCheck_CTRL hc = new STG_PanelHealthCheck_CTRL();
+        hc.verifyTriggerHandlers();
+
+        System.assertEquals(STG_PanelHealthCheck_CTRL.statusSuccess, hc.listDR[0].strStatus,
+                'The result status should be Success\n' + hc.listDR[0]);
+    }
+
+    /*******************************************************************************************************
+    * @description verify that the trigger handler check picks up a missing trigger and a load order change
+    */
+    static testMethod void verifyTriggerHandlers_fail() {
+        List<Trigger_Handler__c> listHandlersDefault = TDTM_DefaultConfig.getDefaultRecords();
+        listHandlersDefault[1].Load_Order__c = 10;
+        insert listHandlersDefault;
+        delete listHandlersDefault[0];  // delete one record
+
+        Test.startTest();
+
+        STG_PanelHealthCheck_CTRL hc = new STG_PanelHealthCheck_CTRL();
+        hc.verifyTriggerHandlers();
+
+        System.assertEquals(STG_PanelHealthCheck_CTRL.statusWarning, hc.listDR[0].strStatus,
+                'The result status should be Warning\n' + hc.listDR[0]);
+        System.assertEquals(2, hc.listDR[0].strDetails.countMatches('<li>'),
+                'There should be two warning messages generated for this\n' + hc.listDR[0]);
+    }
 }
