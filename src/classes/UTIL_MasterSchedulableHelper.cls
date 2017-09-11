@@ -71,7 +71,8 @@ public without sharing class UTIL_MasterSchedulableHelper {
         'NPSP 05 - GAU Allocation Rollups'          => new List<String>{'0 0 23 ? * *', 'ALLO_Rollup_SCHED'},
         'NPSP 06 - Recurring Donation Updates'      => new List<String>{'0 0 23 ? * *', 'RD_RecurringDonations_BATCH'},
         'NPSP 07 - Seasonal Address Updates'        => new List<String>{'0 0 23 ? * *', 'ADDR_Seasonal_SCHED'},
-        'NPSP 08 - Level Assignment Updates'        => new List<String>{'0 0 4 ? * *',  'LVL_LevelAssign_SCHED'}
+        'NPSP 08 - Level Assignment Updates'        => new List<String>{'0 0 4 ? * *',  'LVL_LevelAssign_SCHED'},
+        'NPSP 09 - Data Import Batch Processing'    => new List<String>{'0 0 22 ? * *', 'BDI_DataImportBatch_SCHED'}
     };
 
     /*******************************************************************************************************

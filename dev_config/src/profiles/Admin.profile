@@ -98,6 +98,10 @@
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
     <tabVisibilities>
+        <tab>DataImportBatch__c</tab>
+        <visibility>DefaultOn</visibility>
+    </tabVisibilities>
+    <tabVisibilities>
         <tab>Engagement_Plan_Template__c</tab>
         <visibility>DefaultOn</visibility>
     </tabVisibilities>

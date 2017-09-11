@@ -1,9 +1,8 @@
 <apex:page controller="BDI_DataImport_CTRL"
-    title="NPSP Data Import"
+    title="{!$Label.bdiDataImporterTitle}"
     tabStyle="DataImport__c"
     showHeader="true"
     sidebar="false"
-    action="{!preload}"
     docType="html-5.0"
     standardStylesheets="false">
 
@@ -12,6 +11,8 @@
     <apex:slds />
     
     <style type="text/css">
+
+        /* the progress markup below uses the following 6 css rules. */
         svg {
             width: 100%;
             height: 100%;
@@ -41,7 +42,7 @@
     </style>
 
     <div class="slds slds-p-bottom--x-large">
-        <apex:form id="idForm" styleClass="slds-p-bottom--x-large">
+        <apex:form id="idForm" html-novalidate="novalidate" styleClass="slds-p-bottom--x-large">
 
             <div class="slds-page-header slds-m-bottom--large" role="banner">
                 <div class="slds-media slds-media--center slds-media--responsive">
@@ -86,10 +87,12 @@
                     <apex:outputText rendered="{!NOT(batchRunning) && NOT(isEditMode)}">
                         <div class="slds-container--large">
                             <div class="slds-grid slds-grid--align-center">
-                                <div class="slds-form-element">
-                                    <div class="slds-form-element__control">
-                                        <apex:commandButton value="{!$Label.bdiRunBtn}" action="{!importData}" immediate="false" styleClass="slds-button slds-button--brand" rerender="idForm"/>
-                                        <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!close}" immediate="true" styleClass="slds-button slds-button--neutral" />
+                                <div class="slds-form slds-form_stacked slds-m-left_large">
+                                    <div class="slds-form-element">
+                                        <div class="slds-form-element__control">
+                                            <apex:commandButton value="{!$Label.bdiRunBtn}" action="{!importData}" immediate="false" styleClass="slds-button slds-button--brand" rerender="idForm"/>
+                                            <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!close}" immediate="true" styleClass="slds-button slds-button--neutral" />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -105,7 +108,7 @@
                             <apex:commandButton value="{!$Label.stgBtnSave}" action="{!saveBDISettings}" immediate="false" styleClass="slds-button slds-button--brand" rendered="{!isEditMode}"/>
                             <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelBDISettings}" immediate="true" styleClass="slds-button slds-button--neutral" rendered="{!isEditMode}"/>
                         </div>
-                        <c:BDI_SettingsUI bdiSettings="{!diSettings}" editMode="{!isEditMode}" />
+                        <c:BDI_SettingsUI bdiBatch="{!diBatch}" editMode="{!isEditMode}" showBatchOnlyFields="{!isTrueBatch}" />
                    </apex:outputText>
                 </div>
             </div>

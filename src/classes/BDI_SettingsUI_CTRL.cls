@@ -32,14 +32,16 @@
 * @date 2017
 * @group Batch Data Import
 * @group-content ../../ApexDocContent/BatchDataImport.htm
-* @description controller for the NPSP Data Importer Settings UI visualforce component page 
+* @description controller for the NPSP Data Importer Batch/Settings UI visualforce component page
+* since a DataImportBatch is a superset of DataImportSettings, this component page binds to a
+* batch object, and optionally just hides the batch specific fields.
 */
 public with sharing class BDI_SettingsUI_CTRL {
     
     /*********************************************************************************************************
-    * @description The Data Import settings object to work upon
+    * @description The Data Import batch/settings object to work upon
     */
-    public Data_Import_Settings__c diSettings { get; set; }
+    public DataImportBatch__c diBatch { get; set; }
 
     /*********************************************************************************************************
     * @description getter's to provide the page our API behaviors (which the page can't refer to directly)
@@ -72,9 +74,15 @@ public with sharing class BDI_SettingsUI_CTRL {
             return !isEditMode;
         }
     }
-    
+
+    /*******************************************************************************************************
+    * @description should we display fields that are only in DataImportBatch, but not in DataImportSettings
+    */
+    public boolean isShowBatchOnlyFields { get; set; }
+
     /*********************************************************************************************************
-    * @description The list of SelectOptions of Donation fields from the BDI object 
+    * @description The list of SelectOptions of Donation fields from the BDI object. note that the option
+    * keys are stored in lowercase.
     */
     public list<SelectOption> listSODonationFields {
         get {
@@ -104,24 +112,8 @@ public with sharing class BDI_SettingsUI_CTRL {
     public list<SelectOption> listSOContactUniqueID {
         get {
             if (listSOContactUniqueID == null) {
-                listSOContactUniqueID = new list<SelectOption>();
-                //add a default option
-                listSOContactUniqueID.add(new SelectOption('', Label.stgLabelNone));
-                            
-                Map<String, Schema.DescribeFieldResult> mapNameToDfr = UTIL_Describe.getAllFieldsDescribe('Contact');               
-                for (Schema.DescribeFieldResult dfr : mapNameToDfr.values()) {
-                    //only allow custom fields that have no namespace
-                    if (dfr.isCustom() && dfr.getName().countMatches('__') == 1) {
-                        Schema.Displaytype dt = dfr.getType();
-                        // only strings and numbers
-                        if (dt == Schema.DisplayType.String ||
-                           dt == Schema.DisplayType.Integer ||
-                           dt == Schema.DisplayType.Double) {
-                           listSOContactUniqueID.add(new SelectOption(dfr.getName(), dfr.getLabel()));
-                        } 
-                    }               
-                }
-            }               
+                listSOContactUniqueID = listSOForObject('Contact');
+            }
             return listSOContactUniqueID;
         }
         private set;
@@ -133,45 +125,36 @@ public with sharing class BDI_SettingsUI_CTRL {
     public list<SelectOption> listSOAccountUniqueID {
         get {
             if (listSOAccountUniqueID == null) {
-                listSOAccountUniqueID = new list<SelectOption>();
-                //add a default option
-                listSOAccountUniqueID.add(new SelectOption('', Label.stgLabelNone));
-                                           
-                Map<String, Schema.DescribeFieldResult> mapNameToDfr = UTIL_Describe.getAllFieldsDescribe('Account');               
-                for (Schema.DescribeFieldResult dfr : mapNameToDfr.values()) {
-                    //only allow custom fields that have no namespace
-                    if (dfr.isCustom() && dfr.getName().countMatches('__') == 1) {
-                        Schema.Displaytype dt = dfr.getType();
-                        // only strings and numbers
-                        if (dt == Schema.DisplayType.String ||
-                           dt == Schema.DisplayType.Integer ||
-                           dt == Schema.DisplayType.Double) {
-                           listSOAccountUniqueID.add(new SelectOption(dfr.getName(), dfr.getLabel()));
-                        } 
-                    }               
-                }
-            }               
+                listSOAccountUniqueID = listSOForObject('Account');
+            }
             return listSOAccountUniqueID;
         }
         private set;
     }
 
     /*********************************************************************************************************
-    * @description saves the provided Settings.  since we want this operation controlled by the containing
-    * page, it is static to be callable by the controlling page.  it must pass the settings instance however.
-    * @param diSettings The BDI settings to save
-    * @return True if success, False if error.
+    * @description creates a list of SelectOptions of potential Unique ID fields from the specified object
+    * @param strObject the object to query fields on
+    * @return list<SelectOption>
     */
-    public static boolean saveBDISettings(Data_Import_Settings__c diSettings) {
+    private list<SelectOption> listSOForObject(String strObject) {
+        list<SelectOption> listSO = new list<SelectOption>();
+        // add a default option
+        listSO.add(new SelectOption('', Label.stgLabelNone));
 
-        try {
-            BDI_DataImport_BATCH.validateSettings(diSettings);
-            upsert diSettings;
-            return true;
-        } catch (Exception ex) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, ex.getMessage()));
-            return false;
+        Map<String, Schema.DescribeFieldResult> mapNameToDfr = UTIL_Describe.getAllFieldsDescribe(strObject);
+        for (Schema.DescribeFieldResult dfr : mapNameToDfr.values()) {
+            // only allow custom fields that have no namespace
+            if (dfr.isCustom() && dfr.getName().countMatches('__') == 1) {
+                Schema.Displaytype dt = dfr.getType();
+                // only strings and numbers
+                if (dt == Schema.DisplayType.String ||
+                    dt == Schema.DisplayType.Integer ||
+                    dt == Schema.DisplayType.Double) {
+                    listSO.add(new SelectOption(dfr.getName(), dfr.getLabel()));
+                }
+            }
         }
+        return listSO;
     }
-
 }
