@@ -94,14 +94,25 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     @TestVisible
     private String currencySymbol;
 
+    /**
+     * @description Query of the Parent Records CurrencyIsoCode value to use when retrieving the currency symbol.
+     */
+    @TestVisible
+    private String parentCurrencyCode;
+
     /** @description Constructor queries for the parent object and the allocations, and fills out attributes.*/
     public ALLO_ManageAllocations_CTRL(ApexPages.StandardSetController ssc) {
 
         parentId = ApexPages.currentPage().getParameters().get('id');
         parentAmount = 0;
 
+        String soql = 'SELECT Id, Name ';
         if (parentId.getSObjectType() == Opportunity.sObjectType) {
-            opp = [SELECT Id, Name, Amount FROM Opportunity WHERE Id = :parentId];
+            if (UserInfo.isMultiCurrencyOrganization()) {
+                soql += ', CurrencyIsoCode ';
+            }
+            soql += ', Amount FROM Opportunity WHERE Id = :parentId LIMIT 1';
+            opp = database.query(soql);
 
             pageTitle = Label.alloManageOppAllocations;
             objectName = opp.Name;
@@ -112,22 +123,39 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             if (opp.Amount!=null) {
                 parentAmount = opp.Amount;
             }
+            if (UserInfo.isMultiCurrencyOrganization()) {
+                this.parentCurrencyCode = (String)opp.get('CurrencyIsoCode');
+            }
             if (parentAmount==0) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Warning, Label.alloCantAllocateNothing));
             }
         } else if (parentId.getSObjectType() == Campaign.sObjectType) {
-            cam = [SELECT Id, Name FROM Campaign WHERE Id = :parentId];
+            if (UserInfo.isMultiCurrencyOrganization()) {
+                soql += ', CurrencyIsoCode ';
+            }
+            soql += ' FROM Campaign WHERE Id = :parentId LIMIT 1';
+            cam = database.query(soql);
 
             pageTitle = Label.alloManageCampaignAllocations;
             objectName = cam.Name;
+            if (UserInfo.isMultiCurrencyOrganization()) {
+                this.parentCurrencyCode = (String)cam.get('CurrencyIsoCode');
+            }
 
             populateObjectParameters(Campaign.sObjectType);
 
         } else if (parentId.getSObjectType() == npe03__Recurring_Donation__c.sObjectType) {
-            rd = [SELECT Id, Name FROM npe03__Recurring_Donation__c WHERE Id = :parentId];
+            if (UserInfo.isMultiCurrencyOrganization()) {
+                soql += ', CurrencyIsoCode ';
+            }
+            soql += ' FROM npe03__Recurring_Donation__c WHERE Id = :parentId LIMIT 1';
+            rd = database.query(soql);
 
             pageTitle = Label.alloManageRecurringDonationAllocations;
             objectName = rd.Name;
+            if (UserInfo.isMultiCurrencyOrganization()) {
+                this.parentCurrencyCode = (String)rd.get('CurrencyIsoCode');
+            }
 
             populateObjectParameters(npe03__Recurring_Donation__c.sObjectType);
         }
@@ -174,8 +202,8 @@ public with sharing class ALLO_ManageAllocations_CTRL {
      * @return String A currency symbol or currency ISO code
      */
     public String getCurrencySymbol() {
-        if (currencySymbol == null) {
-            currencySymbol = UTIL_Currency.getInstance().getCurrencySymbol(parentId);
+        if (currencySymbol == null && parentCurrencyCode != null) {
+            currencySymbol = UTIL_Currency.getInstance().getCurrencySymbol(this.parentCurrencyCode);
         }
         return currencySymbol;
     }

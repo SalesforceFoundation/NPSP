@@ -45,10 +45,7 @@ public with sharing class UTIL_Currency implements UTIL_Currency.Interface_x {
         String getOrgDefaultCurrency();
         String getDefaultCurrency();
         String getDefaultCurrencySymbol();
-        String getCurrencySymbol(Id recordId);
         String getCurrencySymbol(String currCode);
-        String getCurrencyIsoCodeQuery(Id recordId);
-        String queryCurrencyIsoCode(Id recordId);
     }
 
     /** @description Store instance for Singleton pattern */
@@ -136,26 +133,6 @@ public with sharing class UTIL_Currency implements UTIL_Currency.Interface_x {
     }
 
     /**
-     * @description Return the currency symbol appropriate for the given record
-     * id.
-     * If the org is multi currency enabled, it will return the
-     * currency iso code from the given record.  If the org is not multi
-     * currency enabled, it will return the symbol for the currency of the org,
-     * or the currency iso code if no symbol is known.
-     *
-     * @param recordId The id of the record to determine currency symbol from
-     * @return String
-     */
-    public String getCurrencySymbol(Id recordId) {
-        Interface_x currencyUtil = UTIL_Currency.getInstance();
-        if (currencyUtil.isMultiCurrencyOrganization() && recordId != null) {
-            return currencyUtil.queryCurrencyIsoCode(recordId);
-        } else {
-            return currencyUtil.getDefaultCurrencySymbol();
-        }
-    }
-
-    /**
      * @description Return the currency symbol appropriate for the given currency code.
      * @param CurencyIsoCode
      * @return String
@@ -167,34 +144,6 @@ public with sharing class UTIL_Currency implements UTIL_Currency.Interface_x {
         } else {
             return currencyUtil.getDefaultCurrencySymbol();
         }
-    }
-
-    /**
-     * @description Build a SOQL string to query CurrencyIsoCode from the
-     * object identified by the given record id
-     *
-     * @param recordId The id of the record that should be queried
-     * @return String
-     */
-    public String getCurrencyIsoCodeQuery(Id recordId) {
-        String objectName = recordId.getSobjectType().getDescribe().getName();
-        return String.format(
-            'SELECT CurrencyIsoCode FROM {0} WHERE Id = \'\'{1}\'\' LIMIT 1',
-            new List<String>{objectName, recordId}
-        );
-    }
-
-    /**
-     * @description Query the database for the CurrencyIsoCode of the object
-     * identified by the given record id
-     *
-     * @param recordId The id of the record that should be queried
-     * @return String
-     */
-    public String queryCurrencyIsoCode(Id recordId) {
-        String isoCodeQuery = UTIL_Currency.getInstance().getCurrencyIsoCodeQuery(recordId);
-        sObject objectWithCurrency = Database.query(isoCodeQuery);
-        return (String) objectWithCurrency.get('CurrencyIsoCode');
     }
 
     /**

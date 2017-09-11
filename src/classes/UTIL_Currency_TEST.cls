@@ -152,7 +152,6 @@ public class UTIL_Currency_TEST {
      */
     @isTest
     private static void testGetCurrencySymbolQueriesForCodeIfMultiCurrency() {
-        Id recordId = Account.sObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
         UTIL_Currency actual = new UTIL_Currency();
         UtilCurrencyMock mock = new UtilCurrencyMock();
         mock.isMultiCurrencyOrganizationReturn = true;
@@ -160,17 +159,8 @@ public class UTIL_Currency_TEST {
         UTIL_Currency.instance = mock;
 
         System.assertEquals(
-            'FOO',
-            actual.getCurrencySymbol(recordId)
-        );
-        System.assertEquals(
             '$',
             actual.getCurrencySymbol('USD')
-        );
-
-        System.assertEquals(
-            recordId,
-            mock.queryCurrencyIsoCodeRecordId
         );
     }
 
@@ -181,7 +171,6 @@ public class UTIL_Currency_TEST {
      */
     @isTest
     private static void testGetCurrencySymbolReturnsDefaultCurrencySymbolIfSingleCurrency() {
-        Id recordId = Account.sObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
         UTIL_Currency actual = new UTIL_Currency();
         UtilCurrencyMock mock = new UtilCurrencyMock();
         mock.isMultiCurrencyOrganizationReturn = false;
@@ -190,21 +179,7 @@ public class UTIL_Currency_TEST {
 
         System.assertEquals(
             '$',
-            actual.getCurrencySymbol(recordId)
-        );
-    }
-
-    /**
-     * @description Calling getCurrencyIsoCodeQuery() should properly build a
-     * query that retrieves the CurrencyIsoCode of the given record.
-     */
-    @isTest
-    private static void testGetCurrencyIsoCodeQueryBuildsCorrectQuery() {
-        Id recordId = Account.sObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
-
-        System.assertEquals(
-            'SELECT CurrencyIsoCode FROM Account WHERE Id = \'001000000000001AAA\' LIMIT 1',
-            UTIL_Currency.getInstance().getCurrencyIsoCodeQuery(recordId)
+            actual.getCurrencySymbol('USD')
         );
     }
 
@@ -218,11 +193,8 @@ public class UTIL_Currency_TEST {
         public Boolean isAdvancedCurrencyManagementEnabledReturn = false;
         public String getDefaultCurrencyReturn;
         public String getDefaultCurrencySymbolReturn;
-        public Id getCurrencySymbolRecordId;
         public String getCurrencySymbolReturn;
-        public Id getCurrencyIsoCodeQueryRecordId;
         public String getCurrencyIsoCodeQueryReturn;
-        public Id queryCurrencyIsoCodeRecordId;
         public String queryCurrencyIsoCodeReturn;
         public String orgDefaultCurrencyReturn;
 
@@ -235,20 +207,8 @@ public class UTIL_Currency_TEST {
         public String getDefaultCurrencySymbol() {
             return getDefaultCurrencySymbolReturn;
         }
-        public String getCurrencySymbol(Id recordId) {
-            getCurrencySymbolRecordId = recordId;
-            return getCurrencySymbolReturn;
-        }
         public String getCurrencySymbol(String currCode) {
             return getCurrencySymbolReturn;
-        }
-        public String getCurrencyIsoCodeQuery(Id recordId) {
-            getCurrencyIsoCodeQueryRecordId = recordId;
-            return getCurrencyIsoCodeQueryReturn;
-        }
-        public String queryCurrencyIsoCode(Id recordId) {
-            queryCurrencyIsoCodeRecordId = recordId;
-            return queryCurrencyIsoCodeReturn;
         }
         public Boolean isAdvancedCurrencyManagementEnabled() {
             return isAdvancedCurrencyManagementEnabledReturn;
