@@ -76,49 +76,6 @@ public without sharing class UTIL_MasterSchedulableHelper {
     };
 
     /*******************************************************************************************************
-    * @description Schedules all NPSP jobs based on whether they are marked Active in the old Schedulable__c
-    * table, then clears the Schedulable__c table. If some jobs were disabled, sets the setting to prevent
-    * NPSP from auto scheduling them in the future. This method is only called from the post install script. 
-    * @return void
-    */
-    public static void scheduleJobsFromOldObject() {
-        List<Schedulable__c> scheduleObjects = [SELECT Id, Class_Name__c, Active__c FROM Schedulable__c];
-
-        Boolean allJobsActive = true;
-        for (Schedulable__c sched : scheduleObjects) { 
-            if (!sched.Active__c) {
-                allJobsActive = false;
-            }
-        }
-
-        //if all jobs are still active or no records are in the schedulable table, schedule them all. 
-        //This will be the default once this method has run once, since we are
-        //deleting all Schedulable__c records at the end of this method.
-        if (scheduleObjects.isEmpty() || allJobsActive) {
-            setScheduledJobs();
-        } else {
-            //there was no Schedulable__c object for error processing, so create it anyway
-            createJob('NPSP 00 - Error Processing');
-            for (Schedulable__c sched : scheduleObjects) {
-                if (sched.Active__c) {
-                    for (String jobName : defaultScheduledJobs.keySet()) {
-                        if (sched.Class_Name__c.equalsIgnoreCase(defaultScheduledJobs.get(jobname)[1])) {
-                            createJob(jobName);
-                        }
-                    }
-                }
-            }
-            Error_Settings__c orgErrorSettings = UTIL_CustomSettingsFacade.getOrgErrorSettings();
-            orgErrorSettings.Don_t_Auto_Schedule_Default_NPSP_Jobs__c = true;
-            if (!Test.isRunningTest()) {
-                update orgErrorSettings;
-            }
-        }
-
-        delete scheduleObjects;
-    }
-
-    /*******************************************************************************************************
     * @description Schedules all NPSP jobs that are not already scheduled.
     * @return void
     */
