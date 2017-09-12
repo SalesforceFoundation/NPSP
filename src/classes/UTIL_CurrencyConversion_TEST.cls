@@ -65,7 +65,7 @@ private class UTIL_CurrencyConversion_TEST {
         mockcurrCache.effectiveRatesReturn = new List<Decimal>{ 1.25 };
         mockcurrCache.effectiveDatesReturn = new List<Date>{ DEFAULT_DATE };
 
-        System.AssertEquals( 1.25, UTIL_CurrencyCache.getEffectiveExchangeRate('CAD', Date.Parse('03/15/2017')));
+        System.AssertEquals( 1.25, UTIL_CurrencyCache.getEffectiveExchangeRate('CAD', Date.newInstance(2017,3,15)));
         System.AssertEquals( 800, UTIL_CurrencyConversion.convertAmount(1000, Date.Today(), 'CAD', 'USD'));
 
         // TEST 2: Verify converting from one non-USD currency to another non-USD currency
@@ -73,7 +73,7 @@ private class UTIL_CurrencyConversion_TEST {
 
         // The default rate for EUR -> USD will be 0.85
         mockcurrCache.effectiveRatesReturn = new List<Decimal>{ 0.85 };
-        System.AssertEquals( 0.85, UTIL_CurrencyCache.getEffectiveExchangeRate('EUR', Date.Parse('03/15/2017')));
+        System.AssertEquals( 0.85, UTIL_CurrencyCache.getEffectiveExchangeRate('EUR', Date.newInstance(2017,3,15)));
         System.AssertEquals( 1176.47, UTIL_CurrencyConversion.convertAmount(1000, Date.Today(), 'EUR', 'USD'));
 
         // Now figure out what the conversion rate is from Canadian Dollars to Euro's

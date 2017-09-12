@@ -45,7 +45,7 @@ private class UTIL_CurrencyCache_TEST {
         mockcurrCache.isOrgCacheAvailableReturn = false;
         // Dates list must always be in descending order
         mockcurrCache.effectiveDatesReturn = new List<Date>{
-                Date.Parse('05/01/2017'), Date.Parse('03/01/2017'), Date.Parse('01/01/2000')
+                Date.newInstance(2017,05,01), Date.newInstance(2017,03,01), Date.newInstance(2000,01,01)
         };
         mockcurrCache.effectiveRatesReturn = new List<Decimal>{
                 1.35, 1.25, 1.5
@@ -55,9 +55,9 @@ private class UTIL_CurrencyCache_TEST {
 
         System.AssertEquals(False, UTIL_CurrencyCache.getInstance().isOrgCacheAvailable());
         System.AssertEquals(null, UTIL_CurrencyCache.orgCache);
-        System.AssertEquals( 1.25, UTIL_CurrencyCache.getEffectiveExchangeRate('CAD', Date.Parse('03/15/2017')),
+        System.AssertEquals( 1.25, UTIL_CurrencyCache.getEffectiveExchangeRate('CAD', Date.newInstance(2017,3,15)),
             'Should return the effective rate for 3/15/2017');
-        System.AssertEquals( 1.50, UTIL_CurrencyCache.getEffectiveExchangeRate('CAD', Date.Parse('01/01/2010')),
+        System.AssertEquals( 1.50, UTIL_CurrencyCache.getEffectiveExchangeRate('CAD', Date.newInstance(2010,01,01)),
                 'Should return the effective rate for 1/1/2010');
         System.AssertEquals( 1.55, UTIL_CurrencyCache.getEffectiveExchangeRate('CAD', null),
                 'Should return the org default effective rate');
