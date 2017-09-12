@@ -59,7 +59,7 @@ public with sharing class BDI_PostProcess_TEST {
 
         // set the specified settings
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-        diSettings.Post_Process_Implementing_Class__c = UTIL_Namespace.StrTokenNSPrefix('BDI_PostProcess_TEST.MyPostProcess');
+        diSettings.Post_Process_Implementing_Class__c = UTIL_Namespace.StrTokenNSPrefixDotNotation('BDI_PostProcess_TEST.MyPostProcess');
 
         //run batch data import
         Test.StartTest();
