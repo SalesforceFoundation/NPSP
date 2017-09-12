@@ -1,6 +1,7 @@
 <apex:component controller="BDI_SettingsUI_CTRL" selfClosing="true" >
-    <apex:attribute name="bdiSettings" type="Data_Import_Settings__c" assignTo="{!diSettings}" description="the BDI settings object we are binding to." />
+    <apex:attribute name="bdiBatch" type="DataImportBatch__c" assignTo="{!diBatch}" description="the BDI batch/settings object we are binding to." />
     <apex:attribute name="editMode" type="Boolean" assignTo="{!isEditMode}" description="display in Edit mode (or Read Only mode)" />
+    <apex:attribute name="showBatchOnlyFields" type="Boolean" assignTo="{!isShowBatchOnlyFields}" description="whether to include fields that exist on DataImportBatch, but not DataImportSettings" />
 
     <style>
         .slds-scope .slds-select[disabled].my-select-disabled  {
@@ -13,35 +14,82 @@
     </style>
     
     <apex:outputPanel id="panelSettings" styleClass="slds">
-    
-        <div class="slds-form slds-form_stacked slds-m-left--large">
+
+        <apex:outputPanel layout="block" styleClass="slds-form slds-form_stacked slds-m-left_large" rendered="{!isShowBatchOnlyFields}" >
             <div class="slds-form-element">
                 <label class="slds-form-element__label">
-                    <apex:outputLabel for="fldBatch" value="{!$ObjectType.Data_Import_Settings__c.Fields.Batch_Size__c.Label}"/>
+                    <apex:outputLabel for="fldName">
+                        <apex:outputPanel rendered="{!isEditMode}" styleClass="required slds-required">*</apex:outputPanel>{!$ObjectType.DataImportBatch__c.Fields.Name.Label}
+                    </apex:outputLabel>
                 </label>
-                <c:UTIL_Tooltip tooltip="{!$ObjectType.Data_Import_Settings__c.Fields.Batch_Size__c.InlineHelpText}" />
+                <c:UTIL_Tooltip tooltip="{!$ObjectType.DataImportBatch__c.Fields.Name.InlineHelpText}" />
                 <div class="slds-form-element__control">
-                    <apex:inputField id="fldBatch" value="{!diSettings.Batch_Size__c}" type="number" styleClass="slds-input" rendered="{!isEditMode}" />
-                    <apex:outputField id="fldBatchRO" value="{!diSettings.Batch_Size__c}" styleClass="slds-input" rendered="{!isReadOnlyMode}"/>
+                    <apex:inputField id="fldName" value="{!diBatch.Name}" styleClass="slds-input" rendered="{!isEditMode}" />
+                    <apex:outputField id="fldNameRO" value="{!diBatch.Name}" styleClass="slds-input" rendered="{!isReadOnlyMode}"/>
+                </div>
+            </div>
+        </apex:outputPanel>
+
+        <apex:outputPanel layout="block" styleClass="slds-form slds-form_stacked slds-m-left_large slds-p-top_x-small slds-p-bottom_x-small" rendered="{!isShowBatchOnlyFields}" >
+            <div class="slds-form-element">
+                <label class="slds-form-element__label">
+                    <apex:outputLabel for="fldDesc" value="{!$ObjectType.DataImportBatch__c.Fields.Batch_Description__c.Label}"/>
+                </label>
+                <c:UTIL_Tooltip tooltip="{!$ObjectType.DataImportBatch__c.Fields.Batch_Description__c.InlineHelpText}" />
+                <div class="slds-form-element__control">
+                    <apex:inputField id="fldDesc" value="{!diBatch.Batch_Description__c}" styleClass="slds-input " rendered="{!isEditMode}" />
+                    <apex:outputField id="fldDescRO" value="{!diBatch.Batch_Description__c}" styleClass="slds-input" rendered="{!isReadOnlyMode}"/>
+                </div>
+            </div>
+        </apex:outputPanel>
+
+        <div class="slds-form slds-form_stacked slds-m-left_large">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label">
+                    <apex:outputLabel for="fldBatch" >
+                        <apex:outputPanel rendered="{!isEditMode}" styleClass="required slds-required">*</apex:outputPanel>{!$ObjectType.DataImportBatch__c.Fields.Batch_Process_Size__c.Label}
+                    </apex:outputLabel>
+                </label>
+                <c:UTIL_Tooltip tooltip="{!$ObjectType.DataImportBatch__c.Fields.Batch_Process_Size__c.InlineHelpText}" />
+                <div class="slds-form-element__control">
+                    <apex:inputField id="fldBatch" value="{!diBatch.Batch_Process_Size__c}" type="number" styleClass="slds-input" rendered="{!isEditMode}" />
+                    <apex:outputField id="fldBatchRO" value="{!diBatch.Batch_Process_Size__c}" styleClass="slds-input" rendered="{!isReadOnlyMode}"/>
                 </div>
             </div>
         </div>
-        
-        <div class="slds-section slds-is-open slds-p-around--xx-small slds-theme--shade">
-            <h2 class="slds-section__title slds-m-left--small ">
+
+        <apex:outputPanel layout="block" styleClass="slds-form slds-form_stacked slds-m-left_large slds-p-top_x-small " rendered="{!isShowBatchOnlyFields}" >
+            <div class="slds-form-element">
+                <label class="slds-form-element__label">
+                    <apex:outputLabel for="fldProcess">
+                            {!$ObjectType.DataImportBatch__c.Fields.Process_Using_Scheduled_Job__c.Label}
+                    </apex:outputLabel>
+                </label>
+                <c:UTIL_Tooltip tooltip="{!$ObjectType.DataImportBatch__c.Fields.Process_Using_Scheduled_Job__c.InlineHelpText}" />
+                <div class="slds-form-element__control">
+                    <apex:inputField id="fldProcess" value="{!diBatch.Process_Using_Scheduled_Job__c}" styleClass="slds-checkbox" rendered="{!isEditMode}" />
+                    <apex:outputField id="fldProcessRO" value="{!diBatch.Process_Using_Scheduled_Job__c}" styleClass="slds-checkbox" rendered="{!isReadOnlyMode}"/>
+                </div>
+            </div>
+        </apex:outputPanel>
+
+        <div class="slds-section slds-is-open slds-p-around_xx-small slds-theme_shade">
+            <h2 class="slds-section__title slds-m-left_small ">
                 <span class="slds-truncate slds-p-horizontal_small" title="Section Title">{!$Label.bdiSettingsSectionContactMatching}</span>
             </h2>
         </div>
                             
-        <div class="slds-form slds-form_stacked slds-m-left--large">
+        <div class="slds-form slds-form_stacked slds-m-left_large">
             <div class="slds-form-element">
                 <label class="slds-form-element__label">
-                    <apex:outputLabel for="fldConMatchRule" value="{!$ObjectType.Data_Import_Settings__c.Fields.Contact_Matching_Rule__c.Label}"/>
+                    <apex:outputLabel for="fldConMatchRule" >
+                        <apex:outputPanel rendered="{!isEditMode}" styleClass="required slds-required">*</apex:outputPanel>{!$ObjectType.DataImportBatch__c.Fields.Contact_Matching_Rule__c.Label}
+                    </apex:outputLabel>
                 </label>
-                <c:UTIL_Tooltip tooltip="{!$ObjectType.Data_Import_Settings__c.Fields.Contact_Matching_Rule__c.InlineHelpText}" />
+                <c:UTIL_Tooltip tooltip="{!$ObjectType.DataImportBatch__c.Fields.Contact_Matching_Rule__c.InlineHelpText}" />
                 <div class="slds-form-element__control">
                     <apex:outputPanel layout="block" styleClass="slds-select_container" rendered="{!isEditMode}">
-                        <apex:selectList id="fldConMatchRule" value="{!diSettings.Contact_Matching_Rule__c}" size="1" multiselect="false" styleClass="slds-select" >
+                        <apex:selectList id="fldConMatchRule" value="{!diBatch.Contact_Matching_Rule__c}" size="1" multiselect="false" styleClass="slds-select" >
                             <apex:selectOption itemLabel="{!$Label.bdiContactMatchFnameLnameEmail}" itemValue="Firstname,Lastname,Email" />
                             <apex:selectOption itemLabel="{!$Label.bdiContactMatchLnameEmail}" itemValue="Lastname,Email" />
                             <apex:selectOption itemLabel="{!$Label.bdiContactMatchFnameEmail}" itemValue="Firstname,Email" />
@@ -50,66 +98,72 @@
                             <apex:selectOption itemLabel="{!$Label.bdiContactMatchFnameLnamePhone}" itemValue="Firstname,Lastname,Phone" />
                         </apex:selectList>
                     </apex:outputPanel>
-                    <apex:outputField id="fldConMatchRuleRO" value="{!diSettings.Contact_Matching_Rule__c}" styleClass="slds-input" rendered="{!isReadOnlyMode}"/>
+                    <apex:outputField id="fldConMatchRuleRO" value="{!diBatch.Contact_Matching_Rule__c}" styleClass="slds-input" rendered="{!isReadOnlyMode}"/>
                 </div>
             </div>
 
             <div class="slds-form-element">
                 <label class="slds-form-element__label">
-                    <apex:outputLabel for="fldConUniqueId" value="{!$ObjectType.Data_Import_Settings__c.Fields.Contact_Custom_Unique_ID__c.Label}"/>
+                    <apex:outputLabel for="fldConUniqueId" value="{!$ObjectType.DataImportBatch__c.Fields.Contact_Custom_Unique_ID__c.Label}"/>
                 </label>
-                <c:UTIL_Tooltip tooltip="{!$ObjectType.Data_Import_Settings__c.Fields.Contact_Custom_Unique_ID__c.InlineHelpText}" />
+                <c:UTIL_Tooltip tooltip="{!$ObjectType.DataImportBatch__c.Fields.Contact_Custom_Unique_ID__c.InlineHelpText}" />
                 <div class="slds-form-element__control">
                     <apex:outputPanel layout="block" styleClass="slds-select_container" rendered="{!isEditMode}">
-                        <apex:selectList id="fldConUniqueId" value="{!diSettings.Contact_Custom_Unique_ID__c}" size="1" multiselect="false" styleClass="slds-select" >
+                        <apex:selectList id="fldConUniqueId" value="{!diBatch.Contact_Custom_Unique_ID__c}" size="1" multiselect="false" styleClass="slds-select" >
                             <apex:selectOptions value="{!listSOContactUniqueID}"/>
                         </apex:selectList>
                     </apex:outputPanel>
-                    <apex:outputField id="fldConUniqueIdRO" value="{!diSettings.Contact_Custom_Unique_ID__c}" styleClass="slds-input" rendered="{!isReadOnlyMode}"/>
+                    <apex:outputField id="fldConUniqueIdRO" value="{!diBatch.Contact_Custom_Unique_ID__c}" styleClass="slds-input" rendered="{!isReadOnlyMode}"/>
                 </div>
             </div>
 
             <div class="slds-form-element">
                 <label class="slds-form-element__label">
-                    <apex:outputLabel for="fldAccUniqueId" value="{!$ObjectType.Data_Import_Settings__c.Fields.Account_Custom_Unique_ID__c.Label}"/>
+                    <apex:outputLabel for="fldAccUniqueId" value="{!$ObjectType.DataImportBatch__c.Fields.Account_Custom_Unique_ID__c.Label}"/>
                 </label>
-                <c:UTIL_Tooltip tooltip="{!$ObjectType.Data_Import_Settings__c.Fields.Account_Custom_Unique_ID__c.InlineHelpText}" />
+                <c:UTIL_Tooltip tooltip="{!$ObjectType.DataImportBatch__c.Fields.Account_Custom_Unique_ID__c.InlineHelpText}" />
                 <div class="slds-form-element__control">
                     <apex:outputPanel layout="block" styleClass="slds-select_container" rendered="{!isEditMode}">
-                        <apex:selectList id="fldAccUniqueId" value="{!diSettings.Account_Custom_Unique_ID__c}" size="1" multiselect="false" styleClass="slds-select">
+                        <apex:selectList id="fldAccUniqueId" value="{!diBatch.Account_Custom_Unique_ID__c}" size="1" multiselect="false" styleClass="slds-select">
                             <apex:selectOptions value="{!listSOAccountUniqueID}"/>
                         </apex:selectList>
                     </apex:outputPanel>
-                    <apex:outputField id="fldAccUniqueIdRO" value="{!diSettings.Account_Custom_Unique_ID__c}" styleClass="slds-input" rendered="{!isReadOnlyMode}"/>
+                    <apex:outputField id="fldAccUniqueIdRO" value="{!diBatch.Account_Custom_Unique_ID__c}" styleClass="slds-input" rendered="{!isReadOnlyMode}"/>
                 </div>
             </div>
         </div>
         
-        <div class="slds-section slds-is-open slds-p-around--xx-small slds-theme--shade">
-            <h3 class="slds-section__title slds-m-left--small ">
+        <div class="slds-section slds-is-open slds-p-around_xx-small slds-theme_shade">
+            <h3 class="slds-section__title slds-m-left_small ">
                 <span class="slds-truncate slds-p-horizontal_small" title="Section Title">{!$Label.bdiSettingsSectionDonationMatching}</span>
             </h3>
         </div>                    
         
-        <div class="slds-form slds-form_stacked slds-m-left--large">
+        <div class="slds-form slds-form_stacked slds-m-left_large">
             <div class="slds-form-element">
                 <label class="slds-form-element__label">
-                    <apex:outputLabel for="fldDonationMatchRule" value="{!$ObjectType.Data_Import_Settings__c.Fields.Donation_Matching_Rule__c.Label}"/>
+                    <apex:outputLabel for="fldDonationMatchRule" >
+                        <apex:outputPanel rendered="{!isEditMode}" styleClass="required slds-required">*</apex:outputPanel>{!$ObjectType.DataImportBatch__c.Fields.Donation_Matching_Rule__c.Label}
+                    </apex:outputLabel>
                 </label>
-                <c:UTIL_Tooltip tooltip="{!$ObjectType.Data_Import_Settings__c.Fields.Donation_Matching_Rule__c.InlineHelpText}" />
+                <c:UTIL_Tooltip tooltip="{!$ObjectType.DataImportBatch__c.Fields.Donation_Matching_Rule__c.InlineHelpText}" />
                 <div class="slds-form-element__control">
-                    <c:STG_DataBoundMultiSelect settingObject="{!diSettings}" fieldname="Donation_Matching_Rule__c" listSO="{!listSODonationFields}" inEditMode="{!isEditMode}" />
+                    <c:STG_DataBoundMultiSelect settingObject="{!diBatch}" fieldname="Donation_Matching_Rule__c" listSO="{!listSODonationFields}" inEditMode="{!isEditMode}" />
                 </div>
             </div>
+        </div>
 
+        <div class="slds-form slds-form_stacked slds-m-left_large slds-p-top_x-small slds-p-bottom_x-small">
             <div class="slds-form-element">
                 <label class="slds-form-element__label">
-                    <apex:outputLabel for="fldDonationMatchBehavior" value="{!$ObjectType.Data_Import_Settings__c.Fields.Donation_Matching_Behavior__c.Label}"/>
+                    <apex:outputLabel for="fldDonationMatchBehavior" >
+                        <apex:outputPanel rendered="{!isEditMode}" styleClass="required slds-required">*</apex:outputPanel>{!$ObjectType.DataImportBatch__c.Fields.Donation_Matching_Behavior__c.Label}
+                    </apex:outputLabel>
                 </label>
-                <c:UTIL_Tooltip tooltip="{!$ObjectType.Data_Import_Settings__c.Fields.Donation_Matching_Behavior__c.InlineHelpText}" />
+                <c:UTIL_Tooltip tooltip="{!$ObjectType.DataImportBatch__c.Fields.Donation_Matching_Behavior__c.InlineHelpText}" />
                 <div class="slds-form-element__control">
                     <apex:outputPanel layout="block" styleClass="{!IF(isEditMode, 'slds-select_container', '')}">
-                        <apex:selectList id="fldDonationMatchBehavior" value="{!diSettings.Donation_Matching_Behavior__c}" size="1" 
+                        <apex:selectList id="fldDonationMatchBehavior" value="{!diBatch.Donation_Matching_Behavior__c}" size="1"
                             multiselect="false" styleClass="{!'slds-select' + IF(isReadOnlyMode, ' my-select-disabled', '')}" disabled="{!isReadOnlyMode}">
                             <apex:selectOption itemLabel="{!$Label.bdiBehaviorDoNotMatch}" itemValue="{!DoNotMatch}" />
                             <apex:selectOption itemLabel="{!$Label.bdiBehaviorRequireNoMatch}" itemValue="{!RequireNoMatch}" />
@@ -123,34 +177,49 @@
             </div>
         </div>
 
-        <div class="slds-form slds-form_stacked slds-m-left--large">
+        <div class="slds-form slds-form_stacked slds-m-left_large">
             <div class="slds-form-element">
                 <label class="slds-form-element__label">
-                    <apex:outputLabel for="fldDonationDateRange" value="{!$ObjectType.Data_Import_Settings__c.Fields.Donation_Date_Range__c.Label}"/>
+                    <apex:outputLabel for="fldDonationDateRange" >
+                        <apex:outputPanel rendered="{!isEditMode}" styleClass="required slds-required">*</apex:outputPanel>{!$ObjectType.DataImportBatch__c.Fields.Donation_Date_Range__c.Label}
+                    </apex:outputLabel>
                 </label>
-                <c:UTIL_Tooltip tooltip="{!$ObjectType.Data_Import_Settings__c.Fields.Donation_Date_Range__c.InlineHelpText}" />
+                <c:UTIL_Tooltip tooltip="{!$ObjectType.DataImportBatch__c.Fields.Donation_Date_Range__c.InlineHelpText}" />
                 <div class="slds-form-element__control">
-                    <apex:inputField id="fldDonationDateRange" value="{!diSettings.Donation_Date_Range__c}" type="number" styleClass="slds-input" rendered="{!isEditMode}" />
-                    <apex:outputField id="fldDonationDateRangeRO" value="{!diSettings.Donation_Date_Range__c}" styleClass="slds-input" rendered="{!isReadOnlyMode}"/>
+                    <apex:inputField id="fldDonationDateRange" value="{!diBatch.Donation_Date_Range__c}" type="number" styleClass="slds-input" rendered="{!isEditMode}" />
+                    <apex:outputField id="fldDonationDateRangeRO" value="{!diBatch.Donation_Date_Range__c}" styleClass="slds-input" rendered="{!isReadOnlyMode}"/>
                 </div>
             </div>
         </div>
 
-        <div class="slds-section slds-is-open slds-p-around--xx-small slds-theme--shade">
-            <h4 class="slds-section__title slds-m-left--small ">
+        <div class="slds-section slds-is-open slds-p-around_xx-small slds-theme_shade">
+            <h4 class="slds-section__title slds-m-left_small ">
                 <span class="slds-truncate slds-p-horizontal_small" title="Section Title">{!$Label.bdiSettingsSectionExtensibility}</span>
             </h4>
         </div>                    
         
-        <div class="slds-form slds-form_stacked slds-m-left--large">
+        <div class="slds-form slds-form_stacked slds-m-left_large">
             <div class="slds-form-element">
                 <label class="slds-form-element__label">
-                    <apex:outputLabel for="fldDonationMatchClass" value="{!$ObjectType.Data_Import_Settings__c.Fields.Donation_Matching_Implementing_Class__c.Label}"/>
+                    <apex:outputLabel for="fldDonationMatchClass" value="{!$ObjectType.DataImportBatch__c.Fields.Donation_Matching_Implementing_Class__c.Label}"/>
                 </label>
-                <c:UTIL_Tooltip tooltip="{!$ObjectType.Data_Import_Settings__c.Fields.Donation_Matching_Implementing_Class__c.InlineHelpText}" />
+                <c:UTIL_Tooltip tooltip="{!$ObjectType.DataImportBatch__c.Fields.Donation_Matching_Implementing_Class__c.InlineHelpText}" />
                 <div class="slds-form-element__control">
-                    <apex:inputField id="fldDonationMatchClass" value="{!diSettings.Donation_Matching_Implementing_Class__c}" styleClass="slds-input" rendered="{!isEditMode}"/>
-                    <apex:outputField id="fldDonationMatchClassRO" value="{!diSettings.Donation_Matching_Implementing_Class__c}" styleClass="slds-input" rendered="{!isReadOnlyMode}"/>
+                    <apex:inputField id="fldDonationMatchClass" value="{!diBatch.Donation_Matching_Implementing_Class__c}" styleClass="slds-input" rendered="{!isEditMode}"/>
+                    <apex:outputField id="fldDonationMatchClassRO" value="{!diBatch.Donation_Matching_Implementing_Class__c}" styleClass="slds-input" rendered="{!isReadOnlyMode}"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="slds-form slds-form_stacked slds-m-left_large">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label">
+                    <apex:outputLabel for="fldPostProcessMatchClass" value="{!$ObjectType.DataImportBatch__c.Fields.Post_Process_Implementing_Class__c.Label}"/>
+                </label>
+                <c:UTIL_Tooltip tooltip="{!$ObjectType.DataImportBatch__c.Fields.Post_Process_Implementing_Class__c.InlineHelpText}" />
+                <div class="slds-form-element__control">
+                    <apex:inputField id="fldPostProcessMatchClass" value="{!diBatch.Post_Process_Implementing_Class__c}" styleClass="slds-input" rendered="{!isEditMode}"/>
+                    <apex:outputField id="fldPostProcessMatchClassRO" value="{!diBatch.Post_Process_Implementing_Class__c}" styleClass="slds-input" rendered="{!isReadOnlyMode}"/>
                 </div>
             </div>
         </div>
@@ -162,7 +231,7 @@
         // even trying html-tabIndex and tabindexhint.  focus kept ending up on the last control instead!
         window.addEventListener('load', function() {
             if ({!isEditMode}) {
-                var fld = document.getElementById('{!$Component.fldBatch}');
+                var fld = document.getElementById('{!IF(isShowBatchOnlyFields, $Component.fldName, $Component.fldBatch)}');
                 if (fld !== null) {
                     fld.focus();
                 }
