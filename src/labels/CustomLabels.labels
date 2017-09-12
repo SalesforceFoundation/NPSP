@@ -1516,6 +1516,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>When Donation matching is enabled, you must select one or more fields in Donation Matching Rule.</value>
     </labels>
     <labels>
+        <fullName>bdiErrorBatchNameRequired</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error when a batch is missing a name</shortDescription>
+        <value>Batch Name is a required field.</value>
+    </labels>
+    <labels>
         <fullName>bdiErrorDonationLookupMatch</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -1568,8 +1576,8 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Data Importer</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>error thrown if specified class doesn&apos;t support BDI_IMatchDonations</shortDescription>
-        <value>The Apex class {0} was not found or does not support the BDI_IMatchDonations interface.</value>
+        <shortDescription>error thrown if specified class doesn&apos;t support the given BDI interface</shortDescription>
+        <value>The Apex class {0} was not found or does not support the {1} interface.</value>
     </labels>
     <labels>
         <fullName>bdiErrorInvalidLastname</fullName>
@@ -1689,7 +1697,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>error when numeric settings set to negative number</shortDescription>
-        <value>Number of Days from Donation Date must be a positive number.</value>
+        <value>{0} must be a positive number.</value>
     </labels>
     <labels>
         <fullName>bdiRecordsFailed</fullName>

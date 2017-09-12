@@ -36,54 +36,115 @@
 */
 
 public with sharing class BDI_DataImport_CTRL {
+
+    /*******************************************************************************************************
+    * @description is the batch currently running
+    */
     public Boolean batchRunning { get; set; }
+
+    /*******************************************************************************************************
+    * @description the job Id of the currently running batch
+    */
     private ID apexJobId;
+
+    /*******************************************************************************************************
+    * @description when the batch process was started
+    */
     private DateTime dtStart;
 
+    /*******************************************************************************************************
+    * @description does the user have permissions to update these batch/settings
+    */
     public boolean userCanEditSettings {
         get {
-            return Data_Import_Settings__c.SobjectType.getDescribe().isUpdateable();
+            return isTrueBatch ?
+                DataImportBatch__c.SobjectType.getDescribe().isUpdateable() :
+                Data_Import_Settings__c.SobjectType.getDescribe().isUpdateable();
         }
     }
     
+    /*******************************************************************************************************
+    * @description constructor
+    */
     public BDI_DataImport_CTRL() {
         batchRunning = false;
         apexJobId = null;
         dtStart = null;
         isEditMode = false;
+
+        // load up default settings or a specified batch
+        loadBatchAndSettings(ApexPages.currentPage().getParameters().get('batchId'));
     }
 
-    public PageReference preload() { 
-        // force loading data import settings.
-        // for some reason, just leaving the references to diSettings in the page
-        // wasn't enough to get the settings initially saved (the upsert in the CustomSettingsFacade failed),
-        // and our explicit upsert when running the batch would hit a runtime error.
-        // by referring to diSettings in our initial action method, the upsert from the Facade succeeds,
-        // and our later upsert succeeds!
-        diSettings = diSettings;     
-        
+    /*******************************************************************************************************
+    * @description loads up the specified batch and it settings, or loads custom settings if no batch
+    * @return null
+    */
+    private void loadBatchAndSettings(string strBatchId) {
+        if (string.isNotBlank(strBatchId)) {
+            // load up the batch and get our settings from it
+            diBatch = BDI_DataImportBatch_SEL.selectById(strBatchId);
+            diSettings = BDI_DataImportService.diSettingsFromDiBatch(diBatch);
+            diTemp.NPSP_Data_Import_Batch__c = diBatch.Id;
+        } else {
+            diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+            // need to create our in-memory batch to hold the custom settings
+            diBatch = BDI_DataImportService.diBatchFromDiSettings(diSettings);
+        }
+
+        // our picklist options hold lowercase DIfields
+        diBatch.Donation_Matching_Rule__c = diBatch.Donation_Matching_Rule__c.toLowercase();
+    }
+
+    /*******************************************************************************************************
+    * @description initial actionMethod called when page first loaded.  handles loading custom settings.
+    * @return null
+    */
+    public PageReference preload() {
         return null;
     }
     
-    public Data_Import_Settings__c diSettings {
+    /*******************************************************************************************************
+    * @description the initial custom settings object we defaultly load.  will be converted to a diBatch.
+    */
+    private Data_Import_Settings__c diSettings { get; set; }
+
+    /*******************************************************************************************************
+    * @description the current batch we are going to process.  it will be an in-memory only batch (no Id)
+    * if we are going to process records that have no batch.
+    */
+    public DataImportBatch__c diBatch { get; private set; }
+
+    /*******************************************************************************************************
+    * @description a temporary DataImport record, we can use to bind the Batch lookup to in the UI.
+    */
+    public DataImport__c diTemp {
         get {
-            if (diSettings == null) {
-                diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-                // our picklist options hold lowercase DIfields
-                diSettings.Donation_Matching_Rule__c = diSettings.Donation_Matching_Rule__c.toLowercase();
+            if (diTemp == null) {
+                diTemp = new DataImport__c();
             }
-            return diSettings;
+            return diTemp;
         }
         private set;
+    }
+
+    /*******************************************************************************************************
+    * @description whether we are processing a real saved batch, or just using custom settings with an
+    * in-memory batch.
+    */
+    public Boolean isTrueBatch {
+        get {
+            return diBatch.Id != null;
+        }
     }
     
     /*******************************************************************************************************
     * @description is the panel in Edit Mode
     */ 
     public boolean isEditMode { get; set; }
-    
+
     /*********************************************************************************************************
-    * @description puts the Settings panel into Edit mode.
+    * @description puts the Settings panel into Edit mode
     * @return null
     */
     public PageReference editBDISettings() {
@@ -92,15 +153,41 @@ public with sharing class BDI_DataImport_CTRL {
     }        
 
     /*********************************************************************************************************
-    * @description saves the Settings, and puts panel into readonly mode.
+    * @description saves the Batch/Settings, and puts panel into readonly mode.
     * @return null
     */
     public PageReference saveBDISettings() {
 
-        if (BDI_SettingsUI_CTRL.saveBDISettings(diSettings)) {
+        try {
+            if (!userCanEditSettings) {
+                String strObj = isTrueBatch ?
+                    DataImportBatch__c.SobjectType.class.getName() :
+                    Data_Import_Settings__c.SObjectType.class.getName();
+                throw(new BDIException(String.format(Label.flsError, new list<String>{strObj})));
+            }
+
+            // first validate the settings
+            Data_Import_Settings__c diSettingsT = BDI_DataImportService.diSettingsFromDiBatch(diBatch);
+            if (isTrueBatch) {
+                BDI_DataImportService.validateSettings(diBatch);
+            } else {
+                BDI_DataImportService.validateSettings(diSettingsT);
+            }
+
+            // update the correct object (batch vs custom settings)
+            if (isTrueBatch) {
+                upsert diBatch;
+            } else {
+                diSettingsT.Id = diSettings.Id;
+                upsert diSettingsT;
+                diSettings = diSettingsT;
+            }
             isEditMode = false;
+        } catch (Exception ex) {
+            ApexPages.addMessages(ex);
         }
         return null;
+
     }        
     
     /*********************************************************************************************************
@@ -130,13 +217,12 @@ public with sharing class BDI_DataImport_CTRL {
     * @return null
     */
     public PageReference importData() {
-        if (userCanEditSettings && !BDI_SettingsUI_CTRL.saveBDISettings(diSettings)) {
-            return null;
-        }
 
         dtStart = system.now();
         try {
-            apexJobId = BDI_DataImport_API.importData();
+            list<BDI_DataImport_API.ProcessDataImportBatchesResult> listResults =
+                BDI_DataImport_API.processDataImportBatches(new list<Id>{diBatch.Id});
+            apexJobId = listResults[0].apexJobId;
             if (apexJobId != null) {
                 batchRunning = true;
             }
@@ -147,6 +233,14 @@ public with sharing class BDI_DataImport_CTRL {
         return null;
     }
 
+    /*******************************************************************************************************
+    * @description our exception object for BDI errors.
+    */
+    private class BDIException extends Exception {}
+
+    /*******************************************************************************************************
+    * @description the AsyncApexJob for the running batch job
+    */
     public AsyncApexJob aaj {
         get {
             if (apexJobId != null) {
@@ -159,6 +253,9 @@ public with sharing class BDI_DataImport_CTRL {
         private set;
     }
     
+    /*******************************************************************************************************
+    * @description the current status of the batch job
+    */
     public string strBatchStatus {
         get {
             string strLabel = (aaj.Status == 'Processing' ? label.bdiStatusProcessing : label.bdiStatusProcessed);
@@ -166,7 +263,10 @@ public with sharing class BDI_DataImport_CTRL {
         }
     }
     
-    public integer crecProcessed { 
+    /*******************************************************************************************************
+    * @description the number of records processed for the batch job
+    */
+    public integer crecProcessed {
         get {
             if (apexJobId != null) {
                 crecProcessed = [select count() from DataImport__c where ApexJobId__c = :apexJobId];
@@ -177,7 +277,10 @@ public with sharing class BDI_DataImport_CTRL {
         set;
     }
 
-    public integer crecImported { 
+    /*******************************************************************************************************
+    * @description the number of records successfully imported for the batch job
+    */
+    public integer crecImported {
         get {
             if (apexJobId != null) {
                 crecImported = [select count() from DataImport__c where Status__c = :label.bdiImported and ApexJobId__c = :apexJobId];
@@ -188,7 +291,10 @@ public with sharing class BDI_DataImport_CTRL {
         set;
     }
 
-    public integer crecFailed { 
+    /*******************************************************************************************************
+    * @description the number of records that failed to import for the batch job
+    */
+    public integer crecFailed {
         get {
             if (apexJobId != null) {
                 crecFailed = [select count() from DataImport__c where Status__c = :label.bdiFailed and ApexJobId__c = :apexJobId];
@@ -199,21 +305,31 @@ public with sharing class BDI_DataImport_CTRL {
         set;
     }
 
+    /*******************************************************************************************************
+    * @description the number of records remaining to process for the batch job
+    */
     public integer crecToProcess {
         get {
-            crecToProcess = [select count() from DataImport__c where Status__c <> :label.bdiImported];
+            crecToProcess = [select count() from DataImport__c where Status__c <> :label.bdiImported and
+                NPSP_Data_Import_Batch__c = :diBatch.Id];
             return crecToProcess;
         }
         set;
     }
 
-    public boolean isBatchJobCompleted { 
+    /*******************************************************************************************************
+    * @description whether the batch job has completed processing
+    */
+    public boolean isBatchJobCompleted {
         get {
             return (batchRunning == true && (aaj.Status == 'Completed' || aaj.Status == 'Failed' || aaj.Status == 'Aborted'));
         }
         set;
     }
 
+    /*******************************************************************************************************
+    * @description the percentage completed for the batch job
+    */
     public integer percentComplete {
         get {
             if (aaj != null) {
@@ -242,6 +358,9 @@ public with sharing class BDI_DataImport_CTRL {
         private set;
     }
 
+    /*******************************************************************************************************
+    * @description the amount of time, formatted as a string, spent processing the batch job
+    */
     public string strTimeSpent {
         get {
             if (dtStart != null && !isBatchJobCompleted) {

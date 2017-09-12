@@ -28,7 +28,7 @@
     </fields>
     <fields>
         <fullName>Batch_Size__c</fullName>
-        <defaultValue>20</defaultValue>
+        <defaultValue>50</defaultValue>
         <description>The number of NPSP Data Import records to process in each batch.</description>
         <externalId>false</externalId>
         <inlineHelpText>The number of NPSP Data Import records to process in each batch.</inlineHelpText>
@@ -54,6 +54,7 @@
     </fields>
     <fields>
         <fullName>Contact_Matching_Rule__c</fullName>
+        <defaultValue>&quot;Firstname,Lastname,Email&quot;</defaultValue>
         <description>Specifies which rule to follow when trying to match Contacts in Data Import records against existing Contacts.</description>
         <externalId>false</externalId>
         <inlineHelpText>Specifies which rule to follow when trying to match Contacts in Data Import records against existing Contacts.</inlineHelpText>
@@ -80,8 +81,8 @@
     </fields>
     <fields>
         <fullName>Donation_Matching_Behavior__c</fullName>
-        <defaultValue>&quot;DoNotMatch&quot;</defaultValue>
-        <description>Defines how the Data Importer should handle matching Donations.  Must be one of the following values: DoNotMatch, RequireNoMatch, RequireExactMatch, ExactMatchOrCreate, RequireBestMatch, BestMatchOrCreate.</description>
+        <defaultValue>&quot;Do Not Match&quot;</defaultValue>
+        <description>Defines how the Data Importer should handle matching Donations.  Must be one of the values defined in BDI_DataImport_API.</description>
         <externalId>false</externalId>
         <inlineHelpText>Defines how the Data Importer should handle matching Donations. You must choose a value.</inlineHelpText>
         <label>Donation Matching Behavior</label>
@@ -105,10 +106,23 @@
     </fields>
     <fields>
         <fullName>Donation_Matching_Rule__c</fullName>
+        <defaultValue>&quot;npsp__Donation_Amount__c;npsp__Donation_Date&quot;</defaultValue>
         <description>Specifies which fields to match by when trying to match Donations in Data Import records against existing Opportunities and Payments.</description>
         <externalId>false</externalId>
         <inlineHelpText>Specifies which fields to match by when trying to match Donations in Data Import records against existing Opportunities and Payments. Control or Command click to select more than one field.</inlineHelpText>
         <label>Donation Matching Rule</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Post_Process_Implementing_Class__c</fullName>
+        <description>The developer name of an Apex class that implements the BDI_IPostProcess interface for NPSP Data Import records.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The developer name of an Apex class that implements the BDI_IPostProcess interface for NPSP Data Import records.</inlineHelpText>
+        <label>Post Process Implementing Class</label>
         <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>

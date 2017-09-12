@@ -35,7 +35,7 @@
 * (Opportunities and Payments) for BDI
 *
 */
-public interface BDI_IMatchDonations {
+global interface BDI_IMatchDonations {
     
     /*******************************************************************************************************
     * @description For each of the provided Data Import records, find their existing Opportunity and Payment to
@@ -47,6 +47,6 @@ public interface BDI_IMatchDonations {
     * @param mapDIIdToPmt Map to fill in of DI Id's to matched Payments
     * @return void
     */ 
-    void match(BDI_DataImport_BATCH bdi, list<DataImport__c> listDI, 
+    void match(BDI_DataImportService bdi, list<DataImport__c> listDI,
         map<Id, Opportunity> mapDIIdToOpp, map<Id, npe01__OppPayment__c> mapDIIdToPmt);
 }

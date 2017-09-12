@@ -38,13 +38,18 @@
 @isTest
 public with sharing class BDI_DataImport_TEST {
 
-    /**
+    /*******************************************************************************************************
     * @description if you only want to run one test in this class, fill in its name here.
     * if you want to run all tests, then use '*'
     */
     private static string strTestOnly = '*';
     
-    // utility to create a new di record    
+    /*******************************************************************************************************
+    * @description creates a new di record for tests
+    * @param firstname the firstname to specify for Contact1
+    * @param lastname the lastname to specify for Contact1
+    * @return DataImport__c the new Data Import record
+    */
     public static DataImport__c newDI(string firstname, string lastname) {
         return new DataImport__c(
            Contact1_Firstname__c = firstname,
@@ -53,15 +58,22 @@ public with sharing class BDI_DataImport_TEST {
         );
     }
 
-    // utility to create a new di record    
+    /*******************************************************************************************************
+    * @description creates a new di record for tests
+    * @param firstname the firstname to specify for Contact1
+    * @param lastname the lastname to specify for Contact1
+    * @param firstname2 the firstname to specify for Contact2
+    * @param lastname2 the lastname to specify for Contact2
+    * @return DataImport__c the new Data Import record
+    */
     public static DataImport__c newDI(string firstname, string lastname, string firstname2, string lastname2) {
         return new DataImport__c(
            Contact1_Firstname__c = firstname,
            Contact1_Lastname__c = lastname,
-           Contact1_Personal_Email__c = firstname + '@' + lastname + '.com',
+           Contact1_Personal_Email__c = (lastname == null ? null : firstname + '@' + lastname + '.com'),
            Contact2_Firstname__c = firstname2,
            Contact2_Lastname__c = lastname2,
-           Contact2_Personal_Email__c = firstname2 + '@' + lastname2 + '.com'
+           Contact2_Personal_Email__c = (lastname2 == null ? null : firstname2 + '@' + lastname2 + '.com')
         );
     }
 
