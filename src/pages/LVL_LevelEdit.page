@@ -1,6 +1,6 @@
 <apex:page standardController="Level__c" extensions="LVL_LevelEdit_CTRL" showHeader="true" standardStylesheets="true" >
-    <apex:stylesheet value="{!URLFOR($Resource.sfdo203, '/assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
+    <apex:slds />
     
     <style>
         .mySpinner {
@@ -13,44 +13,28 @@
     </style>
             
     <apex:form >
-      <div class="sfdo203">
+      <div class="slds">
     
-        <!-- PAGE HEADER -->
-        <div class="slds-page-header" role="banner">
-            <div class="slds-grid">
-                <div class="slds-col">
-                    <p class="slds-text-heading--label">{!$ObjectType.Level__c.Label}</p>              
-                    <h1 class="slds-page-header__title slds-m-right--small slds-truncate slds-align-middle">{!Level__c.Name}</h1>
-                </div>        
-
-                <div class="slds-col slds-no-flex slds-align-middle">
-                    <div class="slds-button-group" role="group">
-                        <apex:commandButton styleClass="slds-button slds-button--neutral" action="{!cancel}" value="{!$Label.stgBtnCancel}" />
-                        <apex:commandButton styleClass="slds-button slds-button--brand" action="{!save}" value="{!$Label.stgBtnSave}" />
-                        <apex:commandButton styleClass="slds-button slds-button--neutral" action="{!saveAndNew}" value="{!$Label.lvlBtnSaveAndNew}" />
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- /PAGE HEADER -->
+        <c:UTIL_PageHeader headerLabel="{!$ObjectType.Level__c.Label}" header="{!Level__c.Name}" icon="custom11_120" iconCategory="custom"
+                cancelAction="{!cancel}" saveAction="{!save}" saveAndNewAction="{!saveAndNew}" showSaveAndNewBtn="true"/>
         
         <c:UTIL_PageMessages />
                 
         <!-- outer div of body below header -->
         <div class="myBodyContent" >
         
-            <div class="slds-grid slds-grid--align-spread slds-m-top--medium slds-m-left--medium slds-m-right--medium">
+            <div class="slds-grid slds-grid_align-spread slds-m-top_medium slds-m-left_medium slds-m-right_medium">
             
-                <fieldset class="slds-form--compound slds-size--4-of-5">
+                <fieldset class="slds-form_compound slds-size_4-of-5">
                     <div class="form-element__group">
                         <div class="slds-form-element__row">
-                            <div class="slds-form-element slds-size--1-of-2">
+                            <div class="slds-form-element slds-size_1-of-2">
                                 <apex:outputLabel for="fldName" styleClass="slds-form-element__label uiLabel-left form-element__label uiLabel" >
                                     <span class="required slds-required">*</span>{!$ObjectType.Level__c.Fields.Name.Label}
                                 </apex:outputLabel>
                                 <apex:inputField id="fldName" required="true" value="{!Level__c.Name}" label="" styleClass="slds-input" />
                             </div>
-                            <div class="slds-form-element slds-size--1-of-2">
+                            <div class="slds-form-element slds-size_1-of-2">
                                 <apex:outputLabel for="fldMinAmount" styleClass="slds-form-element__label uiLabel-left form-element__label uiLabel" >
                                     {!$ObjectType.Level__c.Fields.Minimum_Amount__c.Label}
                                 </apex:outputLabel>
@@ -59,7 +43,7 @@
                         </div>
 
                         <div class="slds-form-element__row">
-                            <div class="slds-form-element slds-size--1-of-2">
+                            <div class="slds-form-element slds-size_1-of-2">
                                 <apex:outputLabel for="fldTarget" styleClass="slds-form-element__label uiLabel-left form-element__label uiLabel" >
                                     <span class="required slds-required">*</span>{!$ObjectType.Level__c.Fields.Target__c.Label}
                                 </apex:outputLabel>
@@ -69,12 +53,12 @@
                                     <apex:actionStatus id="statusRefill"
                                         onstart="document.getElementById('divLoading').style.display = 'inline';"
                                         onstop="document.getElementById('divLoading').style.display = 'none';" />
-                                    <div class="slds-spinner--small mySpinner" id="divLoading" >
-                                        <img src="{!URLFOR($Resource.sfdo203, '/assets/images/spinners/slds_spinner_brand.gif')}" alt="{!$Label.labelMessageLoading}" />
+                                    <div class="slds-spinner_small mySpinner" id="divLoading" >
+                                        <img src="{!URLFOR($Asset.SLDS, '/assets/images/spinners/slds_spinner_brand.gif')}" alt="{!$Label.labelMessageLoading}" />
                                     </div>
                                 </apex:inputField>
                             </div>
-                            <div class="slds-form-element slds-size--1-of-2">
+                            <div class="slds-form-element slds-size_1-of-2">
                                 <apex:outputLabel for="fldMaxAmount" styleClass="slds-form-element__label uiLabel-left form-element__label uiLabel" >
                                     {!$ObjectType.Level__c.Fields.Maximum_Amount__c.Label}
                                 </apex:outputLabel>
@@ -83,7 +67,7 @@
                         </div>
 
                         <div class="slds-form-element__row">
-                            <div class="slds-form-element slds-size--1-of-2">
+                            <div class="slds-form-element slds-size_1-of-2">
                                 <apex:outputLabel for="fldSourceField" styleClass="slds-form-element__label uiLabel-left form-element__label uiLabel" >
                                     <span class="required slds-required">*</span>{!$ObjectType.Level__c.Fields.Source_Field__c.Label}
                                 </apex:outputLabel>
@@ -94,11 +78,11 @@
                             <c:UTIL_FormField field="Engagement_Plan_Template__c"
                                 sObj="{!Level__c}"
                                 sObjType="Level__c"
-                                styleClass="slds-size--1-of-2"/>
+                                styleClass="slds-size_1-of-2"/>
                         </div>
 
                         <div class="slds-form-element__row">
-                            <div class="slds-form-element slds-size--1-of-2">
+                            <div class="slds-form-element slds-size_1-of-2">
                                 <apex:outputLabel for="fldLevel" styleClass="slds-form-element__label uiLabel-left form-element__label uiLabel" >
                                     <span class="required slds-required">*</span>{!$ObjectType.Level__c.Fields.Level_Field__c.Label}
                                 </apex:outputLabel>
@@ -109,11 +93,11 @@
                             <c:UTIL_FormField field="Active__c"
                                 sObj="{!Level__c}"
                                 sObjType="Level__c"
-                                styleClass="slds-size--1-of-2"/>
+                                styleClass="slds-size_1-of-2"/>
                         </div>
 
                         <div class="slds-form-element__row">
-                            <div class="slds-form-element slds-size--1-of-2">
+                            <div class="slds-form-element slds-size_1-of-2">
                                 <apex:outputLabel for="fldPreviousLevel" styleClass="slds-form-element__label uiLabel-left form-element__label uiLabel" >
                                     {!$ObjectType.Level__c.Fields.Previous_Level_Field__c.Label}
                                 </apex:outputLabel>
@@ -121,7 +105,7 @@
                                     <apex:selectOptions value="{!listSOLevelFields}"  />
                                 </apex:selectList>
                             </div>
-                            <div class="slds-form-element slds-size--1-of-2">
+                            <div class="slds-form-element slds-size_1-of-2">
                             </div>
                         </div>
 
@@ -129,9 +113,9 @@
                 </fieldset>            
             </div>            
             
-            <div class="slds-grid slds-grid--align-spread slds-m-bottom--medium slds-m-left--medium slds-m-right--medium">
+            <div class="slds-grid slds-grid_align-spread slds-m-bottom_medium slds-m-left_medium slds-m-right_medium">
             
-                <div class="slds-form--stacked slds-size--4-of-5" >                        
+                <div class="slds-form_stacked slds-size_4-of-5" >
                     <apex:repeat value="{!$ObjectType.Level__c.FieldSets.LevelEdit}" var="f">
                         <c:UTIL_FormField field="{!f.fieldPath}"
                                     sObj="{!Level__c}"
@@ -142,6 +126,6 @@
             </div>
         
         </div> <!-- myBodyContent -->
-      </div> <!-- sfdo203 -->
+      </div> <!-- slds -->
     </apex:form>
 </apex:page>
