@@ -48,51 +48,14 @@ private with sharing class BDI_SettingsUI_TEST {
         
         // instantiate the controller
         BDI_SettingsUI_CTRL ctrl = new BDI_SettingsUI_CTRL();
-        ctrl.diSettings = new Data_Import_Settings__c();
-        
+        ctrl.diBatch = new DataImportBatch__c();
+
         Test.startTest();
         system.assertEquals(false, ctrl.isEditMode);
         system.assertEquals(true, ctrl.isReadOnlyMode);
         system.assertNotEquals(null, ctrl.listSODonationFields);
         system.assertNotEquals(null, ctrl.listSOContactUniqueID);
         system.assertNotEquals(null, ctrl.listSOAccountUniqueID);
-        Test.stopTest();
-    }
-
-    /*********************************************************************************************************
-    * @description operation:
-    *    test validation of save method
-    * verify:
-    *    errors detected
-    **********************************************************************************************************/
-    static testMethod void testBDISettingsUISaveValidation() {
-
-        Data_Import_Settings__c diSettings = new Data_Import_Settings__c();
-
-        Test.startTest();
-
-        diSettings.Donation_Matching_Behavior__c = 'bogus value';
-        system.assertEquals(false, BDI_SettingsUI_CTRL.saveBDISettings(diSettings));
-        diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.BestMatchOrCreate;
-        system.assertEquals(false, BDI_SettingsUI_CTRL.saveBDISettings(diSettings));
-        diSettings.Donation_Matching_Rule__c = 'Donation_Date__c';
-        system.assertEquals(true, BDI_SettingsUI_CTRL.saveBDISettings(diSettings));
-
-        diSettings.Donation_Date_Range__c = -1;
-        system.assertEquals(false, BDI_SettingsUI_CTRL.saveBDISettings(diSettings));
-        diSettings.Donation_Date_Range__c = 1;
-        system.assertEquals(true, BDI_SettingsUI_CTRL.saveBDISettings(diSettings));
-
-        diSettings.Donation_Matching_Implementing_Class__c = 'foo';
-        system.assertEquals(false, BDI_SettingsUI_CTRL.saveBDISettings(diSettings));
-        diSettings.Donation_Matching_Implementing_Class__c = 'BDI_MatchDonations';
-        system.assertEquals(true, BDI_SettingsUI_CTRL.saveBDISettings(diSettings));
-
-        diSettings.Contact_Custom_Unique_ID__c = 'bogus field';
-        system.assertEquals(false, BDI_SettingsUI_CTRL.saveBDISettings(diSettings));
-        diSettings.Account_Custom_Unique_ID__c = 'bogus field';
-        system.assertEquals(false, BDI_SettingsUI_CTRL.saveBDISettings(diSettings));
-
         Test.stopTest();
     }
 

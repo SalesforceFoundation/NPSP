@@ -32,126 +32,18 @@
 * @date 2014
 * @group Batch Data Import
 * @group-content ../../ApexDocContent/BatchDataImport.htm
-* @description tests specific to the Batch Data Importer user interface and error handling
+* @description tests specific to the Batch Data Importer and error handling
 */
 
 @isTest
 private with sharing class BDI_DataImport_TEST2 {
 
-    /**
+    /*********************************************************************************************************
     * @description if you only want to run one test in this class, fill in its name here.
     * if you want to run all tests, then use '*'
     */
     private static string strTestOnly = '*';
-    
-    /*********************************************************************************************************
-    * @description operation: 
-    *    run data import through the visualforce page 
-    * verify: 
-    *    all code tested in controller
-    **********************************************************************************************************/            
-    static testMethod void TestBDIVisualforcePage() {
-        if (strTestOnly != '*' && strTestOnly != 'TestBDIVisualforcePage') return;
-            
-        list<DataImport__c> listDI = new list<DataImport__c>();
-        listDI.add(BDI_DataImport_TEST.newDI('c1', 'C1', 'c2', 'C2'));
-        listDI.add(BDI_DataImport_TEST.newDI('c3', 'C3', 'c4', 'C4'));
-        listDI[0].Account1_Name__c = 'A1';
-        listDI[0].Donation_Amount__c = 100;
-        listDI[1].Donation_Amount__c = 200;
-        insert listDI;
-        
-        Test.startTest();
 
-        // create the page 
-        Test.setCurrentPage(Page.BDI_DataImport); 
-
-        // instantiate the controller
-        BDI_DataImport_CTRL ctrl = new BDI_DataImport_CTRL();
-
-        system.assertEquals(2, ctrl.crecToProcess);
-        system.assertEquals(false, ctrl.isBatchJobCompleted);
-        system.assertEquals(null, ctrl.crecProcessed);
-        system.assertEquals(null, ctrl.crecImported);
-        system.assertEquals(null, ctrl.crecFailed);
-        
-        ctrl.importData();
-        Test.stopTest();
-
-        system.assertEquals(true, ctrl.isBatchJobCompleted);
-        system.assertEquals(100, ctrl.percentComplete);
-        system.assertEquals(null, ctrl.strTimeSpent);
-        system.assertNotEquals(null, ctrl.aaj);
-        system.assertEquals(2, ctrl.crecProcessed);
-        system.assertEquals(2, ctrl.crecImported);
-        system.assertEquals(0, ctrl.crecFailed);
-        system.assertEquals(0, ctrl.crecToProcess);
-        system.assertNotEquals(null, ctrl.close());
-
-         // verify expected results
-        list<Contact> listCon = [select Id, Name from Contact order by Name];
-        system.assertEquals(4, listCon.size());
-        system.assertEquals('c1 C1', listCon[0].Name);
-        
-        list<Account> listAcc = [select Id, Name from Account order by Name];
-        system.assertEquals(3, listAcc.size());
-        
-        list<Opportunity> listOpp = [select Id, Name, Amount, AccountId from Opportunity order by Name];
-        system.assertEquals(2, listOpp.size());
-        system.assertEquals(100, listOpp[0].Amount);
-
-        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c, 
-            Contact2Imported__c, Contact2ImportStatus__c from DataImport__c];
-        system.assertEquals(2, listDI.size());
-        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
-        system.assertEquals(listDI[0].Contact2Imported__c, listCon[1].Id);
-        system.assertEquals(listDI[1].Contact1Imported__c, listCon[2].Id);
-        system.assertEquals(listDI[1].Contact2Imported__c, listCon[3].Id);
-        system.assertNotEquals(null, listDI[0].HouseholdAccountImported__c);
-        system.assertNotEquals(null, listDI[1].HouseholdAccountImported__c);
-        system.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
-        system.assertEquals(label.bdiCreated, listDI[0].Contact2ImportStatus__c);        
-        system.assertEquals(label.bdiCreated, listDI[1].Contact1ImportStatus__c);
-        system.assertEquals(label.bdiCreated, listDI[1].Contact2ImportStatus__c);        
-    }
-
-    /*********************************************************************************************************
-    * @description operation: 
-    *    test validation rules for settings on visualforce page 
-    * verify: 
-    *    all code tested in controller
-    **********************************************************************************************************/            
-    static testMethod void TestBDIVisualforcePageValidation() {
-        if (strTestOnly != '*' && strTestOnly != 'TestBDIVisualforcePageValidation') return;
-            
-        list<DataImport__c> listDI = new list<DataImport__c>();
-        listDI.add(BDI_DataImport_TEST.newDI('c1', 'C1', 'c2', 'C2'));
-        insert listDI;
-        
-        Test.startTest();
-
-        // create the page 
-        Test.setCurrentPage(Page.BDI_DataImport); 
-
-        // instantiate the controller
-        BDI_DataImport_CTRL ctrl = new BDI_DataImport_CTRL();
-        
-        ctrl.diSettings.Contact_Custom_Unique_ID__c = 'bad field';
-        ctrl.importData();
-        system.assertEquals(false, ctrl.batchRunning);
-        
-        ctrl.diSettings.Account_Custom_Unique_ID__c = 'another bad field';
-        ctrl.importData();
-        system.assertEquals(false, ctrl.batchRunning);
-        
-        ctrl.diSettings.Donation_Matching_Rule__c = BDI_DataImport_API.RequireExactMatch;
-        ctrl.diSettings.Donation_Matching_Behavior__c = null;
-        ctrl.importData();
-        system.assertEquals(false, ctrl.batchRunning);
-        
-        Test.stopTest();
-    }
-    
     /*********************************************************************************************************
     * @description operation: 
     *    import matching contacts within multiple di records in the same batch, using different email fields 
@@ -1527,7 +1419,7 @@ private with sharing class BDI_DataImport_TEST2 {
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
-        BDI_DataImport_BATCH.failFieldLevelSecurity = true;
+        BDI_DataImportService.failFieldLevelSecurity = true;
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
     

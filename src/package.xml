@@ -52,8 +52,13 @@
         <members>BDE_BatchDataEntry_TEST</members>
         <members>BDE_BatchEntry_CTRL</members>
         <members>BDE_BatchEntry_TEST</members>
+        <members>BDI_BatchOverride_CTRL</members>
+        <members>BDI_BatchOverride_TEST</members>
         <members>BDI_DataImportAPI_TEST</members>
+        <members>BDI_DataImportBatch_SCHED</members>
         <members>BDI_DataImportBatch_SEL</members>
+        <members>BDI_DataImportBatch_TEST</members>
+        <members>BDI_DataImportCTRL_TEST</members>
         <members>BDI_DataImportDeleteBTN_CTRL</members>
         <members>BDI_DataImportDeleteBTN_TEST</members>
         <members>BDI_DataImport_API</members>
@@ -64,7 +69,9 @@
         <members>BDI_Donations</members>
         <members>BDI_Donations_TEST</members>
         <members>BDI_IMatchDonations</members>
+        <members>BDI_IPostProcess</members>
         <members>BDI_MatchDonations</members>
+        <members>BDI_PostProcess_TEST</members>
         <members>BDI_SettingsUI_CTRL</members>
         <members>BDI_SettingsUI_TEST</members>
         <members>CAM_CascadeDeleteLookups_TDTM</members>
@@ -314,6 +321,7 @@
         <members>UTIL_UnitTestData_TEST</members>
         <members>UTIL_Version_API</members>
         <members>UTIL_iSoqlListViewConsumer</members>
+        <members>BDI_DataImportService</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -340,6 +348,7 @@
         <members>ALLO_ManageAllocations</members>
         <members>ALLO_RollupBTN</members>
         <members>BDE_BatchEntry</members>
+        <members>BDI_BatchOverride</members>
         <members>BDI_DataImport</members>
         <members>BDI_DataImportDeleteBTN</members>
         <members>CONV_Account_Conversion</members>
@@ -585,6 +594,11 @@
         <members>DataImportBatch__c.Donation_Matching_Behavior__c</members>
         <members>DataImportBatch__c.Donation_Matching_Implementing_Class__c</members>
         <members>DataImportBatch__c.Donation_Matching_Rule__c</members>
+        <members>DataImportBatch__c.Last_Processed_On__c</members>
+        <members>DataImportBatch__c.Post_Process_Implementing_Class__c</members>
+        <members>DataImportBatch__c.Process_Using_Scheduled_Job__c</members>
+        <members>DataImportBatch__c.Records_Failed__c</members>
+        <members>DataImportBatch__c.Records_Successfully_Processed__c</members>
         <members>DataImport__c.Account1ImportStatus__c</members>
         <members>DataImport__c.Account1Imported__c</members>
         <members>DataImport__c.Account1_City__c</members>
@@ -682,6 +696,7 @@
         <members>Data_Import_Settings__c.Donation_Matching_Behavior__c</members>
         <members>Data_Import_Settings__c.Donation_Matching_Implementing_Class__c</members>
         <members>Data_Import_Settings__c.Donation_Matching_Rule__c</members>
+        <members>Data_Import_Settings__c.Post_Process_Implementing_Class__c</members>
         <members>Engagement_Plan_Task__c.Assigned_To__c</members>
         <members>Engagement_Plan_Task__c.Comments__c</members>
         <members>Engagement_Plan_Task__c.Days_After__c</members>
@@ -1025,6 +1040,7 @@
         <members>bdiDataImporterTitle</members>
         <members>bdiDonation</members>
         <members>bdiDonationMatchingRuleEmpty</members>
+        <members>bdiErrorBatchNameRequired</members>
         <members>bdiErrorDonationLookupMatch</members>
         <members>bdiErrorDonationMultiMatch</members>
         <members>bdiErrorDonationNoMatch</members>
@@ -1912,6 +1928,7 @@
         <members>Address__c</members>
         <members>Batch_Data_Entry</members>
         <members>Contact_Merge</members>
+        <members>DataImportBatch__c</members>
         <members>DataImport__c</members>
         <members>Engagement_Plan_Template__c</members>
         <members>General_Accounting_Unit__c</members>
@@ -1987,6 +2004,7 @@
         <members>Batch__c.All</members>
         <members>Batch__c.Completed_Batches</members>
         <members>Batch__c.Open_Batches</members>
+        <members>DataImportBatch__c.All</members>
         <members>DataImport__c.All</members>
         <members>DataImport__c.Failed_Data_Imports</members>
         <members>DataImport__c.Succesfully_Imported</members>
@@ -2075,6 +2093,7 @@
         <members>Address__c.Verify_Address</members>
         <members>Allocation__c.Manage_Allocations</members>
         <members>Contact.Merge_Contacts</members>
+        <members>DataImportBatch__c.Process_Batch</members>
         <members>DataImport__c.Delete_All_Data_Import_Records</members>
         <members>DataImport__c.Delete_Imported_Data_Import_Records</members>
         <members>DataImport__c.Process_Data_Import</members>
