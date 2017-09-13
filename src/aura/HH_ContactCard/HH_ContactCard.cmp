@@ -8,13 +8,13 @@
 
     <!-- markup follows... -->
 
-    <div class="slds-card slds-p-around--none">
-        <div class="slds-card__header slds-p-around--small">
-            <div class="slds-tile slds-tile--board slds-m-around--none" style="margin:0;">
+    <div class="slds-card slds-p-around_none">
+        <div class="slds-card__header slds-p-around_small">
+            <div class="slds-tile slds-tile_board slds-m-around_none" style="margin:0;">
                 <span class="slds-tile__title slds-truncate">
-                    <div class="slds-media slds-media--center slds-has-flexi-truncate">
+                    <div class="slds-media slds-media_center slds-has-flexi-truncate">
                         <div class="slds-media__figure">
-                            <lightning:icon iconName="standard:contact" class="slds-icon--small" size="small"/>
+                            <lightning:icon iconName="standard:contact" class="slds-icon_small" size="small"/>
                         </div>
                         <div class="slds-media__body">
                             <aura:if isTrue="{!v.contact.Id != null}">
@@ -24,7 +24,7 @@
                                 </aura:set>
                             </aura:if>
                         </div>
-                        <div class="slds-media__figure slds-m-right--none">
+                        <div class="slds-media__figure slds-m-right_none">
                             <lightning:buttonIcon iconName="utility:close" class="removeBtn" variant="bare"
                                 onclick="{!c.removeContact}" alternativeText="{!$Label.c.btnRemove}"/>
                         </div>
@@ -33,9 +33,9 @@
             </div>
             <!-- slds-tile -->
         </div>
-        <div class="slds-card__body slds-m-around--x-small slds-p-vertical--none">
+        <div class="slds-card__body slds-m-around_x-small slds-p-vertical_none">
             <!-- address -->
-            <div class="slds-text-body--small slds-m-bottom--small">
+            <div class="slds-text-body_small slds-m-bottom_small">
                 <ui:outputText value="{!v.contact.MailingStreet}" /><br/>
                 <ui:outputText value="{!v.contact.MailingCity + (v.contact.MailingState != null ? ', ' : '') + v.contact.MailingState + ' ' + v.contact.MailingPostalCode + ' '}" /><br/>
                 <ui:outputText value="{!v.contact.MailingCountry}" />
@@ -53,7 +53,7 @@
                                 <ui:inputCheckbox aura:id="Exclude_from_Household_Name__c"
                                     class="slds-checkbox" change="{!c.onCheck}"
                                     value="{!v.contact.Exclude_from_Household_Name__c }"/>
-                                <span class="slds-checkbox--faux"></span>
+                                <span class="slds-checkbox_faux"></span>
                                 <span class="slds-form-element__label" for="exHHName">{!$Label.c.lblHouseholdName} </span>
                             </label>
                         </div>
@@ -64,7 +64,7 @@
                                 <ui:inputCheckbox aura:id="Exclude_from_Household_Formal_Greeting__c"
                                     class="slds-checkbox" change="{!c.onCheck}"
                                     value="{!v.contact.Exclude_from_Household_Formal_Greeting__c }"/>
-                                <span class="slds-checkbox--faux"></span>
+                                <span class="slds-checkbox_faux"></span>
                                 <span class="slds-form-element__label">{!$Label.c.lblFormalGreeting} </span>
                             </label>
                         </div>
@@ -75,7 +75,7 @@
                                 <ui:inputCheckbox aura:id="Exclude_from_Household_Informal_Greeting__c"
                                 class="slds-checkbox" change="{!c.onCheck}"
                                 value="{!v.contact.Exclude_from_Household_Informal_Greeting__c }"/>
-                                <span class="slds-checkbox--faux"></span>
+                                <span class="slds-checkbox_faux"></span>
                                 <span class="slds-form-element__label">{!$Label.c.lblInformalGreeting} </span>
                             </label>
                         </div>
