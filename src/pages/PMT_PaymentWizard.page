@@ -195,7 +195,9 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                         </div>
                         <div class="slds-col slds-col--padded">
                             <div class="slds-form-element">
-                                <label class="slds-form-element__label" for="firstPmtDate">{!$Label.pmtWizardFirstPaymentDate}</label>
+                                <label class="slds-form-element__label" for="firstPmtDate">
+                                    <abbr class="slds-required" title="required">*</abbr>{!$Label.pmtWizardFirstPaymentDate}
+                                </label>
                                 <div class="slds-form-element__control dateInputPicker">
                                     <apex:inputField value="{!samplePayment.npe01__Scheduled_Date__c}" id="firstPmtDate" styleClass="slds-input"/>
                                 </div>
@@ -225,7 +227,7 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                                 <th scope="col" class="slds-cell-wrap">{!$Label.pmtWizardPaymentNumber}</th>
                                 <apex:repeat value="{!$ObjectType.npe01__OppPayment__c.FieldSets.Payment_Wizard}" var="field">
                                      <th scope="col" class="slds-cell-wrap"><span class="slds-truncate">
-                                        <apex:outputText value="{!IF($ObjectType.npe01__OppPayment__c.fields[field].type == 'reference', $ObjectType.Contact.fields[field].relationshipName, field.label)}"/>
+                                        <apex:outputText value="{!field.label}"/>
                                     </span></th>
                                 </apex:repeat>
                             </tr>

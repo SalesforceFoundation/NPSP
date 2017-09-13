@@ -3465,7 +3465,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>pmtWizardMonth</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>pmtWizardMonth</shortDescription>
         <value>Month</value>
     </labels>
@@ -3577,7 +3577,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>pmtWizardWeek</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>pmtWizardWeek</shortDescription>
         <value>Week</value>
     </labels>
@@ -3601,7 +3601,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>pmtWizardYear</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>pmtWizardYear</shortDescription>
         <value>Year</value>
     </labels>
