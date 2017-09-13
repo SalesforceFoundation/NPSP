@@ -6,36 +6,35 @@
     standardStylesheets="false"
     action="{!runCheck}">
 
+    <apex:slds />
+
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/modal.js')}"/>
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
-    <apex:stylesheet value="{!URLFOR($Resource.SLDS, '/0_12_2/assets/styles/salesforce-lightning-design-system-vf.min.css')}"/>
+
 
     <div class="slds">
 
         <div id="all_content">
 
-            <div class="slds-page-header slds-m-bottom--large" role="banner">
-                <div class="slds-media slds-media--center slds-media--responsive">
-                    <div class="slds-media__body">
-                        <h3 class="slds-text-heading--medium slds-m-bottom--large">{!$Label.CONV_Page_Title}</h3>
-                        <p>{!$Label.CONV_Page_Description}</p>
-                    </div>
-                    <div class="slds-media__figure slds-media__figure--reverse">
-                        <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/RGB_npsp-stacked-color.png')}" class="img-rounded img-responsive" style="height: 75px" alt="NPSP Logo"/>
-                    </div>
-                </div>
-            </div>
+            <!-- PAGE HEADER -->
+            <apex:form id="pgHeader">
+                <c:UTIL_PageHeader showBreadcrumb="false"
+                                   headerLabel="{!$Label.CONV_Page_Title}"
+                                   header="{!$Label.CONV_Page_Description}"
+                                   useNPSPicon="true" smallSubtitleFont="true"
+                                   showSaveBtn="false" showCancelBtn="false"/>
+            </apex:form>
 
-            <c:UTIL_PageMessages id="pageMessages" html-class="slds-grid slds-m-horizontal--xx-large"/>
+            <c:UTIL_PageMessages id="pageMessages" html-class="slds-grid slds-m-horizontal_xx-large"/>
 
-            <div id="warning_content" class="slds-m-top--medium">
-                <div class="slds-grid slds-m-bottom--large">
-                    <div class="slds-col slds-size--1-of-2 slds-p-right--x-large slds-p-left--xx-large slds-col-rule--right">
-                        <h3 class="slds-text-heading--small slds-m-bottom--medium">
+            <div id="warning_content" class="slds-m-top_medium">
+                <div class="slds-grid slds-m-bottom_large">
+                    <div class="slds-col slds-size_1-of-2 slds-p-right_x-large slds-p-left_xx-large slds-col-rule_right">
+                        <h3 class="slds-text-heading_small slds-m-bottom_medium">
                             {!$Label.CONV_Important_Info_Header}
                         </h3>
 
-                        <p class="slds-m-bottom--large">
+                        <p class="slds-m-bottom_large">
                             {!$Label.CONV_Permanent_Change}
                         </p>
 
@@ -44,7 +43,7 @@
                                 <div class="slds-form-element">
                                     <label class="slds-checkbox" for="check-users-logged-out">
                                         <input name="checkbox" type="checkbox" id="check-users-logged-out" />
-                                        <span class="slds-checkbox--faux"></span>
+                                        <span class="slds-checkbox_faux"></span>
                                         <span class="slds-form-element__label">{!$Label.CONV_All_Users_Logged_Out}</span>
                                     </label>
                                 </div>
@@ -52,7 +51,7 @@
                                 <div class="slds-form-element">
                                     <label class="slds-checkbox" for="check-data-backedup">
                                         <input name="checkbox" type="checkbox" id="check-data-backedup" />
-                                        <span class="slds-checkbox--faux"></span>
+                                        <span class="slds-checkbox_faux"></span>
                                         <span class="slds-form-element__label">{!$Label.CONV_All_Backed_Up}</span>
                                     </label>
                                 </div>
@@ -60,7 +59,7 @@
                                 <div class="slds-form-element">
                                     <label class="slds-checkbox" for="check-dup-disabled">
                                         <input name="checkbox" type="checkbox" id="check-dup-disabled" />
-                                        <span class="slds-checkbox--faux"></span>
+                                        <span class="slds-checkbox_faux"></span>
                                         <span class="slds-form-element__label">{!$Label.CONV_All_Dup_Rules_Disabled}</span>
                                     </label>
                                 </div>
@@ -68,7 +67,7 @@
                                 <div class="slds-form-element">
                                     <label class="slds-checkbox" for="check-sandbox-first">
                                         <input name="checkbox" type="checkbox" id="check-sandbox-first" />
-                                        <span class="slds-checkbox--faux"></span>
+                                        <span class="slds-checkbox_faux"></span>
                                         <span class="slds-form-element__label">{!$Label.CONV_Tested_in_Sandbox}</span>
                                     </label>
                                 </div>
@@ -76,7 +75,7 @@
                                 <div class="slds-form-element">
                                     <label class="slds-checkbox" for="check-inactiveuser">
                                         <input name="checkbox" type="checkbox" id="check-inactiveuser" />
-                                        <span class="slds-checkbox--faux"></span>
+                                        <span class="slds-checkbox_faux"></span>
                                         <span class="slds-form-element__label">{!$Label.CONV_Record_Ownership_Transferred}</span>
                                     </label>
                                 </div>
@@ -84,7 +83,7 @@
                                 <div class="slds-form-element">
                                     <label class="slds-checkbox" for="check-wf-validation">
                                         <input name="checkbox" type="checkbox" id="check-wf-validation" />
-                                        <span class="slds-checkbox--faux"></span>
+                                        <span class="slds-checkbox_faux"></span>
                                         <span class="slds-form-element__label">{!$Label.CONV_All_WFR_Disabled}</span>
                                     </label>
                                 </div>
@@ -92,7 +91,7 @@
                                 <div class="slds-form-element">
                                     <label class="slds-checkbox" for="check-required-fields">
                                         <input name="checkbox" type="checkbox" id="check-required-fields" />
-                                        <span class="slds-checkbox--faux"></span>
+                                        <span class="slds-checkbox_faux"></span>
                                         <span class="slds-form-element__label">{!$Label.CONV_All_Required_Removed}</span>
                                     </label>
                                 </div>
@@ -100,7 +99,7 @@
                                 <div class="slds-form-element">
                                     <label class="slds-checkbox" for="check-households">
                                         <input name="checkbox" type="checkbox" id="check-households" />
-                                        <span class="slds-checkbox--faux"></span>
+                                        <span class="slds-checkbox_faux"></span>
                                         <span class="slds-form-element__label">{!$Label.CONV_Only_Household_Contacts}</span>
                                     </label>
                                 </div>
@@ -108,7 +107,7 @@
                                 <div class="slds-form-element">
                                     <label class="slds-checkbox" for="check-apps">
                                         <input name="checkbox" type="checkbox" id="check-apps" />
-                                        <span class="slds-checkbox--faux"></span>
+                                        <span class="slds-checkbox_faux"></span>
                                         <span class="slds-form-element__label">{!$Label.CONV_Non_NPSP_Apps}</span>
                                     </label>
                                 </div>
@@ -116,7 +115,7 @@
                                 <div class="slds-form-element">
                                     <label class="slds-checkbox" for="check-consult">
                                         <input name="checkbox" type="checkbox" id="check-consult" />
-                                        <span class="slds-checkbox--faux"></span>
+                                        <span class="slds-checkbox_faux"></span>
                                         <span class="slds-form-element__label">{!$Label.CONV_Local_Expert}</span>
                                     </label>
                                 </div>
@@ -124,7 +123,7 @@
                                 <div class="slds-form-element">
                                     <label class="slds-checkbox" for="check-risk">
                                         <input name="checkbox" type="checkbox" id="check-risk" />
-                                        <span class="slds-checkbox--faux"></span>
+                                        <span class="slds-checkbox_faux"></span>
                                         <span class="slds-form-element__label">{!$Label.CONV_Accept_Risk}</span>
                                     </label>
                                 </div>
@@ -133,16 +132,16 @@
                         </div>
                     </div>
 
-                    <div class="slds-col slds-size--1-of-2 slds-p-left--x-large slds-p-right--xx-large">
-                        <h3 class="slds-text-heading--small slds-m-bottom--medium">
+                    <div class="slds-col slds-size_1-of-2 slds-p-left_x-large slds-p-right_xx-large">
+                        <h3 class="slds-text-heading_small slds-m-bottom_medium">
                             {!$Label.CONV_What_This_Tool_Does}
                         </h3>
 
-                        <p class="slds-m-bottom--large">
+                        <p class="slds-m-bottom_large">
                             {!$Label.CONV_Batching_Explanation}
                         </p>
 
-                        <ul class="slds-list--dotted">
+                        <ul class="slds-list_dotted">
                             <li>{!$Label.CONV_All_Triggers_Disabled}</li>
                             <li>{!$Label.CONV_All_Households_Selected}</li>
                             <li>{!$Label.CONV_New_Households_Created}</li>
@@ -160,13 +159,13 @@
                     </div>
                 </div>
 
-                <div class="slds-grid slds-m-bottom--large">
-                    <div class="slds-col slds-size--1-of-1 slds-m-horizontal--xx-large slds-col-rule--top">
-                        <h3 class="slds-text-heading--small slds-m-vertical--medium">
+                <div class="slds-grid slds-m-bottom_large">
+                    <div class="slds-col slds-size_1-of-1 slds-m-horizontal_xx-large slds-col-rule_top">
+                        <h3 class="slds-text-heading_small slds-m-vertical_medium">
                             {!$Label.CONV_Configuration_Options}
                         </h3>
 
-                        <p class="slds-m-bottom--medium">
+                        <p class="slds-m-bottom_medium">
                             {!$Label.CONV_Original_HH_Id}
                         </p>
 
@@ -184,8 +183,8 @@
                                 </div>
                             </div>
 
-                            <div class="slds-form-element slds-m-top--large">
-                                <button type="button" class="slds-button slds-button--brand" data-toggle="modal" data-target="warning_modal" id="conversionBTN">
+                            <div class="slds-form-element slds-m-top_large">
+                                <button type="button" class="slds-button slds-button_brand" data-toggle="modal" data-target="warning_modal" id="conversionBTN">
                                     {!$Label.CONV_Begin}
                                 </button>
                             </div>
@@ -195,7 +194,7 @@
                 </div>
             </div>
 
-            <div class="slds-container--large slds-container--center">
+            <div class="slds-container_large slds-container_center">
                 <c:UTIL_JobProgressLightning id="jobProgress"
                     eventTargetId="{!$Component.jobProgress}"
                     strBatchComponentLabel="{!$Label.CONV_Conversion_Process}"
@@ -212,9 +211,9 @@
             <div id="warning_modal" tabindex="-1" aria-hidden="true" aria-labelledby="warning_modal_heading" role="dialog" class="slds-modal">
                 <div class="slds-modal__container">
                     <div class="slds-modal__header">
-                        <h2 id="warning_modal_heading" class="slds-text-heading--medium">{!$Label.CONV_Warning}</h2>
-                        <button class="slds-button slds-button--icon-inverse slds-modal__close" data-dismiss="modal" data-target="warning_modal">
-                            <svg aria-hidden="true" class="slds-button__icon slds-button__icon--large" data-dismiss="modal" data-target="warning_modal" viewBox="0 0 24 24">
+                        <h2 id="warning_modal_heading" class="slds-text-heading_medium">{!$Label.CONV_Warning}</h2>
+                        <button class="slds-button slds-button_icon-inverse slds-modal__close" data-dismiss="modal" data-target="warning_modal">
+                            <svg aria-hidden="true" class="slds-button__icon slds-button__icon_large" data-dismiss="modal" data-target="warning_modal" viewBox="0 0 24 24">
                                 <path  data-dismiss="modal" data-target="warning_modal" d="M14.6 11.9l6-6c.3-.3.3-.7 0-1l-.9-1c-.3-.3-.7-.3-1 0L12.6 10c-.1.2-.4.2-.6 0L6 3.9c-.3-.3-.7-.3-1 0l-1 .9c-.3.3-.3.7 0 1l6.1 6.1c.1.1.1.4 0 .6L4 18.6c-.3.3-.3.7 0 1l.9.9c.3.3.7.3 1 0l6.1-6c.2-.2.5-.2.6 0l6.1 6c.3.3.7.3 1 0l.9-.9c.3-.3.3-.7 0-1l-6-6c-.2-.2-.2-.5 0-.7z"/>
                             </svg>
                             <span class="slds-assistive-text">Close</span>
@@ -226,9 +225,9 @@
                         </p>
                     </div>
                     <div class="slds-modal__footer">
-                        <div class="slds-x-small-buttons--horizontal">
-                            <button class="slds-button slds-button--neutral" data-dismiss="modal" data-target="warning_modal">{!$Label.CONV_Cancel}</button>
-                            <button id="warning_modal_proceed_button" class="slds-button slds-button--neutral slds-button--brand" data-dismiss="modal" data-target="warning_modal">{!$Label.CONV_Proceed}</button>
+                        <div class="slds-x-small-buttons_horizontal">
+                            <button class="slds-button slds-button_neutral" data-dismiss="modal" data-target="warning_modal">{!$Label.CONV_Cancel}</button>
+                            <button id="warning_modal_proceed_button" class="slds-button slds-button_neutral slds-button_brand" data-dismiss="modal" data-target="warning_modal">{!$Label.CONV_Proceed}</button>
                         </div>
                     </div>
                 </div>
