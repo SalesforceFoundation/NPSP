@@ -1828,12 +1828,92 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Failed to create Account for Contact {0} {1}. {2}</value>
     </labels>
     <labels>
+        <fullName>conMergeBtnLabel</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>conMergeBtnLabel</shortDescription>
+        <value>Merge</value>
+    </labels>
+    <labels>
         <fullName>conMergeErrNoPersonAccounts</fullName>
         <categories>Contact Merge</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>conMergeErrNoPersonAccounts</shortDescription>
         <value>Person accounts are not supported.</value>
+    </labels>
+    <labels>
+        <fullName>conMergeFoundContacts</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>conMergeFoundContacts</shortDescription>
+        <value>Found Contacts</value>
+    </labels>
+    <labels>
+        <fullName>conMergePageTitle</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>conMergePageTitle</shortDescription>
+        <value>Contact Merge</value>
+    </labels>
+    <labels>
+        <fullName>conMergePageTitleDetail</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>conMergePageTitleDetail</shortDescription>
+        <value>Merge Duplicate Contact Records</value>
+    </labels>
+    <labels>
+        <fullName>conMergeSearchPlaceholder</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>conMergeSearchPlaceholder</shortDescription>
+        <value>Search Contacts</value>
+    </labels>
+    <labels>
+        <fullName>conMergeSelectAll</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>conMergeSelectAll</shortDescription>
+        <value>select All</value>
+    </labels>
+    <labels>
+        <fullName>conMergeSelectContact</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>conMergeSelectContact</shortDescription>
+        <value>Select Contact</value>
+    </labels>
+    <labels>
+        <fullName>conMergeSelectedContacts</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>conMergeSelectedContacts</shortDescription>
+        <value>Selected Contacts</value>
+    </labels>
+    <labels>
+        <fullName>conMergeStageComplete</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>conMergeStageComplete</shortDescription>
+        <value>Stage Complete</value>
+    </labels>
+    <labels>
+        <fullName>conMergeWinnerAsstText</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>conMergeWinnerAsstText</shortDescription>
+        <value>Choose this column as the master record</value>
     </labels>
     <labels>
         <fullName>engagementPlanCantEdit</fullName>
@@ -3063,6 +3143,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Do you want to remove this Contact from this Household on Save?</value>
     </labels>
     <labels>
+        <fullName>lblExtendedStatus</fullName>
+        <categories>UTIL_JobProgressLightning</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>lblExtendedStatus</shortDescription>
+        <value>Extended Status</value>
+    </labels>
+    <labels>
         <fullName>lblFindInContacts</fullName>
         <categories>Manage Household UI</categories>
         <language>en_US</language>
@@ -3167,6 +3255,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Postal Code</value>
     </labels>
     <labels>
+        <fullName>lblProgress</fullName>
+        <categories>UTIL_JobProgressLightning</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>lblProgress</shortDescription>
+        <value>Progress</value>
+    </labels>
+    <labels>
         <fullName>lblRequired</fullName>
         <categories>Engagement Plan, UTIL_FormField</categories>
         <language>en_US</language>
@@ -3189,6 +3285,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>lblState</shortDescription>
         <value>State</value>
+    </labels>
+    <labels>
+        <fullName>lblStatus</fullName>
+        <categories>UTIL_JobProgressLightning</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>lblStatus</shortDescription>
+        <value>Status</value>
     </labels>
     <labels>
         <fullName>lblStreet</fullName>

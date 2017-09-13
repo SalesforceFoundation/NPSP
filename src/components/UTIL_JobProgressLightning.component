@@ -45,63 +45,63 @@
     <apex:outputPanel layout="block" id="jobProgressContainer" styleClass="slds">
         <div class="slds-card">
             <div class="slds-card__header">
-                <h3 class="slds-text-heading_small">{!batchComponentLabel}</h3>
+                <h3 class="slds-text-heading--small slds-text-heading_small">{!batchComponentLabel}</h3>
             </div>
             <div data-job-progress="list-container" class="slds-card__body">
-                <div class="slds-spinner_large slds-container_center slds-m-vertical_xx-large">
+                <div class="slds-spinner--large slds-container--center slds-m-vertical--xx-large slds-spinner_large slds-container_center slds-m-vertical_xx-large">
                     <img src="{!URLFOR($Resource.SLDS, '/0_12_2/assets/images/spinners/slds_spinner_brand.gif')}" alt="Loading..." />
                 </div>
             </div>
         </div>
 
 
-        <ul data-job-progress="template" class="slds-list_vertical">
-            <li class="slds-list__item slds-m-bottom_large">
+        <ul data-job-progress="template" class="slds-list--vertical slds-list_vertical">
+            <li class="slds-list__item slds-m-bottom--large slds-m-bottom_large">
                 <div class="slds-media slds-tile slds-wrap">
-                    <div class="slds-media__figure slds-size_2-of-12">
+                    <div class="slds-media__figure slds-size--2-of-12 slds-size_2-of-12">
                         <svg viewbox="0 0 34 34">
                             <circle class="progressCircle" stroke-dasharray="0 100" r="16" cx="17" cy="17"/>
                             <g transform="matrix(0.5, 0, 0, 0.5, 8.5, 8.5)">
-                                <text x="17" y="17" class="slds-text-heading_small percentCompleted"></text>
+                                <text x="17" y="17" class="slds-text-heading--small slds-text-heading_small percentCompleted"></text>
                             </g>
                         </svg>
                     </div>
-                    <div class="slds-media__body slds-size_10-of-12">
+                    <div class="slds-media__body slds-size--10-of-12 slds-size_10-of-12">
                         <div class="slds-tile__title slds-grid">
-                            <p class="slds-truncate slds-col slds-small-size_2-of-3 slds-medium-size_1-of-2 className"></p>
-                            <div class="slds-col slds-small-size_1-of-3 slds-medium-size_1-of-2 slds-small-show">
+                            <p class="slds-truncate slds-col slds-small-size--2-of-3 slds-medium-size--1-of-2 slds-small-size_2-of-3 slds-medium-size_1-of-2"></p>
+                            <div class="slds-col slds-small-size--1-of-3 slds-medium-size--1-of-2 slds-small-size_1-of-3 slds-medium-size_1-of-2 slds-small-show">
                                 <span class="slds-badge completionBadge"><span class="status"></span></span>
                             </div>
                         </div>
                         <div class="slds-tile__detail">
-                            <p class="slds-text-body_small slds-truncate">
+                            <p class="slds-text-body--small slds-text-body_small slds-truncate">
                                 Started by <span class="createdByName"></span> <span class="createdDate"></span>
                             </p>
-                            <dl class="slds-dl_horizontal slds-text-body_small">
+                            <dl class="slds-dl--horizontal slds-text-body--small slds-dl_horizontal slds-text-body_small">
                                 <div class="slds-x-small-show-only">
-                                    <dt class="slds-dl_horizontal__label slds-medium-size_2-of-12 slds-x-small-show-only">
-                                        <span class="slds-truncate">Status:</span>
+                                    <dt class="slds-dl--horizontal__label slds-medium-size--2-of-12 slds-dl_horizontal__label slds-medium-size_2-of-12 slds-x-small-show-only">
+                                        <span class="slds-truncate">{!$Label.lblStatus}:</span>
                                     </dt>
-                                    <dd class="slds-dl_horizontal__detail slds-tile__meta slds-medium-size_10-of-12 slds-x-small-show-only">
+                                    <dd class="slds-dl--horizontal__detail slds-dl_horizontal__detail slds-tile__meta slds-medium-size--10-of-12 slds-medium-size_10-of-12 slds-x-small-show-only">
                                         <span class="slds-truncate status"></span>
                                     </dd>
                                 </div>
-                                <dt class="slds-dl_horizontal__label slds-medium-size_2-of-12">
-                                    <span class="slds-truncate">Progress:</span>
+                                <dt class="slds-dl--horizontal__label slds-dl_horizontal__label slds-medium-size--2-of-12 slds-medium-size_2-of-12">
+                                    <span class="slds-truncate">{!$Label.lblProgress}:</span>
                                 </dt>
-                                <dd class="slds-dl_horizontal__detail slds-tile__meta slds-medium-size_10-of-12">
+                                <dd class="slds-dl--horizontal__detail slds-dl_horizontal__detail slds-tile__meta slds-medium-size--10-of-12 slds-medium-size_10-of-12">
                                     <span class="slds-truncate"><span class="jobItemsProcessed"></span> of <span class="totalJobItems"></span> batches processed</span>
                                 </dd>
-                                <dt class="slds-dl_horizontal__label slds-medium-size_2-of-12 completedDateContainer">
-                                    <span class="slds-truncate">Completed:</span>
+                                <dt class="slds-dl--horizontal__label slds-dl_horizontal__label slds-medium-size--2-of-12 slds-medium-size_2-of-12 completedDateContainer">
+                                    <span class="slds-truncate">{!$Label.statusCompleted}:</span>
                                 </dt>
-                                <dd class="slds-dl_horizontal__detail slds-tile__meta slds-medium-size_10-of-12 completedDateContainer">
+                                <dd class="slds-dl--horizontal__detail slds-dl_horizontal__detail slds-tile__meta slds-medium-size--10-of-12 slds-medium-size_10-of-12 completedDateContainer">
                                     <span class="slds-truncate completedDate"></span>
                                 </dd>
-                                <dt class="slds-dl_horizontal__label slds-medium-size_2-of-12 extendedStatusContainer">
-                                    <span class="slds-truncate">Extended Status:</span>
+                                <dt class="slds-dl--horizontal__label slds-dl_horizontal__label slds-medium-size--2-of-12 slds-medium-size_2-of-12 extendedStatusContainer">
+                                    <span class="slds-truncate">{!$Label.lblExtendedStatus}:</span>
                                 </dt>
-                                <dd class="slds-dl_horizontal__detail slds-tile__meta slds-medium-size_10-of-12 extendedStatusContainer">
+                                <dd class="slds-dl--horizontal__detail slds-dl_horizontal__detail slds-tile__meta slds-medium-size--10-of-12 slds-medium-size_10-of-12 extendedStatusContainer">
                                     <span class="slds-truncate extendedStatus"></span>
                                 </dd>
                             </dl>
@@ -128,7 +128,7 @@
             "completionBadge": {
                 "html": function (params) {
                     var themeClass = getThemeClass(this.status, this.numberOfErrors);
-                    params.element.setAttribute("class", "slds-badge slds-theme_" + themeClass);
+                    params.element.setAttribute("class", "slds-badge slds-theme--" + themeClass + " slds-theme_" + themeClass );
                 }
             },
             "createdDate": {
