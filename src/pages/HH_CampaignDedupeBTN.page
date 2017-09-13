@@ -1,13 +1,37 @@
-<apex:page standardController="Campaign" extensions="HH_CampaignDedupeBTN_CTRL" action="{!runreport}" >
+<apex:page standardController="Campaign" extensions="HH_CampaignDedupeBTN_CTRL" action="{!runreport}" showHeader="true" >
 
-    <br/><br/>    
-    <p><apex:outputLink target="_self" title="{!$Label.hhCmpDedupLabelReturnToCmp}"  value="{!returnURL}" >{!$Label.hhCmpDedupLabelReturnToCmp}</apex:outputLink></p>
-    <apex:PageMessages />
-    <apex:outputPanel rendered="{!reportURL != null}">
-	    <br/><br/>
-	    <apex:form >   
-		    <c:UTIL_JobProgress strBatchComponentLabel="{!$Label.hhCmpDedupeBatchProgressTitle}" cNumberOfJobs="1" bRerenderOnComplete="true" />
-	        <p><apex:outputLink target="_self" title="Report"  value="{!reportURL}" >{!$Label.hhCmpDedupeLabelOpenReport}</apex:outputLink></p>
+    <apex:slds />
+
+    <style type="text/css">
+        .slds {
+            margin-left: 10px;
+            margin-righ: 10px;
+        }
+    </style>
+
+    <div class="slds">
+
+        <!-- PAGE HEADER -->
+        <apex:form id="pgHeader">
+            <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="Campaign"
+            parentAction="javascript:window.urlHome();" parentRecordName="{!Campaign.Name}"
+            parentRecordAction="/{!Campaign.Id}" header="{!$Label.hhCmpDedupeBatchProgressTitle}" icon="campaign_120" iconCategory="standard"
+            showSaveBtn="false" showCancelBtn="false"/>
         </apex:form>
-    </apex:outputPanel>
+
+        <apex:outputPanel id="panelErrors">
+            <br/>
+            <c:UTIL_PageMessages />
+        </apex:outputPanel>
+
+        <apex:outputPanel rendered="{!reportURL != null}">
+            <br/>
+            <apex:form >
+                <c:UTIL_JobProgressLightning strBatchComponentLabel="{!$Label.hhCmpDedupeBatchProgressTitle}" cNumberOfJobs="1" bRerenderOnComplete="true" />
+                <br/>
+                <apex:outputLink target="_self" title="Report"  value="{!reportURL}" styleClass="slds-button slds-button_brand">{!$Label.hhCmpDedupeLabelOpenReport}</apex:outputLink>
+                    <!--<button class=""></button>-->
+            </apex:form>
+        </apex:outputPanel>
+    </div>
 </apex:page>
