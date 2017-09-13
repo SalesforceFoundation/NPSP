@@ -9,18 +9,18 @@
 
     <apex:outputText rendered="{!NOT(useToast)}">
         <style type="text/css">
-            #page_messages .slds-notify--toast {
+            #page_messages .slds-notify_toast, #page_messages .slds-notify--toast {
                 display: block;
             }
         </style>
     </apex:outputText>
 
-    <div class="sfdo203 slds" id="page_messages">
+    <div class="slds" id="page_messages">
         <div class="{!IF(useToast, 'slds-notify-container', '')}">
             <apex:repeat value="{!pageMessages}" var="m">
-                <div role="alert" class="slds-notify slds-notify--toast slds-theme--{!m.severityTheme}">
-                    <button class="slds-button slds-notify__close {!IF(m.severityTheme != 'warning', 'slds-button--icon-inverse', '')}">
-                        <svg class="slds-button__icon slds-button__icon--large" aria-hidden="true">
+                <div role="alert" class="slds-notify slds-notify_toast slds-notify--toast slds-theme_{!m.severityTheme} slds-theme--{!m.severityTheme}">
+                    <button class="slds-button slds-notify__close {!IF(m.severityTheme != 'warning', 'slds-button_icon-inverse slds-button--icon-inverse', '')}">
+                        <svg class="slds-button__icon slds-button__icon_large slds-button__icon--large" aria-hidden="true">
                             <path d="M14.6 11.9l6-6c.3-.3.3-.7 0-1l-.9-1c-.3-.3-.7-.3-1 0L12.6 10c-.1.2-.4.2-.6 0L6 3.9c-.3-.3-.7-.3-1 0l-1 .9c-.3.3-.3.7 0 1l6.1 6.1c.1.1.1.4 0 .6L4 18.6c-.3.3-.3.7 0 1l.9.9c.3.3.7.3 1 0l6.1-6c.2-.2.5-.2.6 0l6.1 6c.3.3.7.3 1 0l.9-.9c.3-.3.3-.7 0-1l-6-6c-.2-.2-.2-.5 0-.7z"/>
                         </svg>
                         <span class="slds-assistive-text">Close</span>
@@ -50,11 +50,11 @@
                                 </apex:outputText>
                             </div>
                             <div class="slds-media__body">
-                                <h2 class="slds-text-heading--small">
+                                <h2 class="slds-text-heading_small slds-text-heading--small">
                                     <apex:outputText value="{!m.severityLabel}: " rendered="{!'' != m.severityLabel}"/>
                                     <apex:outputText value="{!m.summary}" escape="false"/>
                                 </h2>
-                                <apex:outputText styleClass="slds-m-top--medium" value="{!m.detail}" escape="false" rendered="{!AND(NOT(ISBLANK(m.detail)), NOT(m.summary == m.detail))}"/>
+                                <apex:outputText styleClass="slds-m-top_medium slds-m-top--medium" value="{!m.detail}" escape="false" rendered="{!AND(NOT(ISBLANK(m.detail)), NOT(m.summary == m.detail))}"/>
                             </div>
                         </div>
                     </div>

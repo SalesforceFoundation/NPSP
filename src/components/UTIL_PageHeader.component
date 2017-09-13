@@ -1,0 +1,106 @@
+<apex:component >
+    <!-- Breadcrumb attributes -->
+    <apex:attribute name="showBreadcrumb" type="Boolean" default="false"
+        description="Set to true to display the breadcrumb navigation, default is false"/>
+    <apex:attribute name="parentEntityLabel" type="String"
+        description="Breadcrumb label for parent entity."/>
+    <apex:attribute name="parentAction" type="String"
+        description="Breadcrumb action for parent entity"/>
+    <apex:attribute name="parentRecordName" type="String"
+        description="Breadcrumb label for parent record."/>
+    <apex:attribute name="parentRecordAction" type="String"
+        description="Breadcrumb action for parent record."/>
+    <!-- Page header title attributes -->
+    <apex:attribute name="headerLabel" type="String" default=""
+        description="Header title under breadcrumb."/>
+    <apex:attribute name="header" type="String" default=""
+        description="Subtitle under breadcrumb title."/>
+    <apex:attribute name="icon" type="String" default=""
+        description="The name of the icon .png to display in the header, e.g. account_120, custom1_120"/>
+    <apex:attribute name="iconCategory" type="String" default=""
+        description="The category the icon belongs to, e.g. standard, utility"/>
+    <apex:attribute name="iconContainer" type="String"
+        description="The icon name for the container class will default to the icon name, e.g. account, custom1"/>
+    <!-- Cancel button attributes -->
+    <apex:attribute name="showCancelBtn" type="Boolean" default="true"
+        description="Set to false to hide cancel button, default is true"/>
+    <apex:attribute name="cancelAction" type="ApexPages.Action" default=""
+        description="Action for cancel button."/>
+    <apex:attribute name="cancelLabel" type="String"
+        description="Label for cancel button. When blank will display stgBtnCancel label."/>
+    <apex:attribute name="cancelImmediate" type="Boolean" default="true"
+        description="Whether the cancel action should be immediate, defaults to true."/>
+    <apex:attribute name="cancelDisabled" type="Boolean" default="false"
+        description="Whether the cancel button should be disabled, defaults to false."/>
+    <!-- Save button attributes -->
+    <apex:attribute name="showSaveBtn" type="Boolean" default="true"
+        description="Set to false to hide save button, default is true"/>
+    <apex:attribute name="saveAction" type="ApexPages.Action" default=""
+        description="Action for save button."/>
+    <apex:attribute name="saveLabel" type="String"
+        description="Label for save button. When blank will display stgBtnSave label."/>
+    <apex:attribute name="saveImmediate" type="Boolean" default="false"
+        description="Whether the save action should be immediate, defaults to true."/>
+    <apex:attribute name="saveDisabled" type="Boolean" default="false"
+        description="Whether the save button should be disabled, defaults to false."/>
+    <!-- Save and new button attributes -->
+    <apex:attribute name="showSaveAndNewBtn" type="Boolean" default="false"
+        description="Set to false to hide save button, default is false"/>
+    <apex:attribute name="saveAndNewAction" type="ApexPages.Action" default=""
+        description="Action for save button."/>
+    <apex:attribute name="saveAndNewLabel" type="String"
+        description="Label for save and new button."/>
+    <apex:attribute name="saveAndNewImmediate" type="Boolean" default="false"
+        description="Whether the save and new action should be immediate, defaults to true."/>
+    <apex:attribute name="saveAndNewDisabled" type="Boolean" default="false"
+        description="Whether the save and new button should be disabled, defaults to false."/>
+
+    <div class="slds-page-header" role="banner">
+        <div class="slds-grid">
+            <div class="slds-col slds-col_padded">
+                <apex:outputPanel layout="none" rendered="{!showBreadcrumb}">
+                    <nav role="navigation" class="slds-p-bottom_x-small">
+                        <p id="bread-crumb-label" class="slds-assistive-text">{!$Label.lblYouAreHere}</p>
+                        <ol class="slds-breadcrumb slds-list_horizontal slds-wrap" aria-labelledby="bread-crumb-label">
+                            <li class="slds-breadcrumb__item slds-text-title_caps">
+                                <a href="{!parentAction}">{!parentEntityLabel}</a>
+                            </li>
+                            <li class="slds-breadcrumb__item slds-text-title_caps">
+                                <a href="{!parentRecordAction}">
+                                    {!parentRecordName}
+                                </a>
+                            </li>
+                        </ol>
+                    </nav>
+                </apex:outputPanel>
+
+                <div class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <apex:outputPanel layout="block" rendered="{!icon != ''}" styleClass="slds-media__figure">
+                        <span class="slds-icon_container slds-icon-{!iconCategory}-{!BLANKVALUE(iconContainer,LEFT(icon, FIND('_', icon)-1))}">
+                            <img src="{!URLFOR($Asset.SLDS, 'assets/icons/'+iconCategory+'/'+icon+'.png')}" alt="{!iconCategory} Icon" height="32" width="32"/>
+                        </span>
+                    </apex:outputPanel>
+
+                    <div class="slds-media__body">
+                        <p class="slds-text-heading_label">{!headerLabel}</p>
+                        <h1 class="slds-page-header__title slds-m-right_small slds-truncate slds-align-middle">{!header}</h1>
+                    </div>
+                </div>
+
+            </div>
+            <div class="slds-col slds-no-flex slds-align-middle">
+                <div class="slds-button-group" role="group">
+                    <apex:commandButton id="cancelBTN" styleClass="slds-button slds-button_neutral" action="{!cancelAction}"
+                        value="{!BLANKVALUE(cancelLabel,$Label.stgBtnCancel)}"  immediate="{!cancelImmediate}" disabled="{!cancelDisabled}"
+                        rendered="{!showCancelBtn}"/>
+                    <apex:commandButton id="saveBTN" styleClass="slds-button slds-button_brand" action="{!saveAction}"
+                        value="{!BLANKVALUE(saveLabel,$Label.stgBtnSave)}" immediate="{!saveImmediate}" disabled="{!saveDisabled}"
+                        rendered="{!showSaveBtn}"/>
+                    <apex:commandButton id="saveAndNewBTN" styleClass="slds-button slds-button_neutral" action="{!saveAndNewAction}"
+                        value="{!BLANKVALUE(saveAndNewLabel,$Label.lvlBtnSaveAndNew)}" immediate="{!saveAndNewImmediate}"
+                        disabled="{!saveAndNewDisabled}" rendered="{!showSaveAndNewBtn}"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</apex:component>

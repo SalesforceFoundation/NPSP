@@ -9,12 +9,13 @@ project:
         uninstall_class: STG_UninstallScript
     git:
         repo_url: https://github.com/SalesforceFoundation/Cumulus
-        default_branch: dev
         prefix_beta: uat/
         prefix_release: rel/
     apexdoc:
         homepage: ApexDocContent/homepage.htm
         banner: ApexDocContent/projectheader.htm
+        branch: gh-pages
+        repo_dir: ApexDocumentation
     dependencies:
         # npo02 (includes npe01)
         - github: https://github.com/SalesforceFoundation/Households
@@ -54,8 +55,14 @@ tasks:
         options:
             path: dev_config/src
 
+    deploy_dev_config_managed:
+        description: Deploys the post install configuration for a managed DE org
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: dev_config/src_managed
+
     deploy_dev_config_delete:
-        description: Deploys the metadata deletions for the post install unmanaged DE org config
+        description: Deploys the metadata deletions for the post install DE org config
         class_path: cumulusci.tasks.salesforce.Deploy
         options:
             path: dev_config/delete
@@ -238,6 +245,20 @@ flows:
                 task: mrbelvedere_publish
                 options:
                     tag: ^^github_release.tag_name
+
+    install_beta:
+        tasks:
+            6:
+                task: deploy_dev_config_delete
+            7:
+                task: deploy_dev_config_managed
+
+    install_prod:
+        tasks:
+            6:
+                task: deploy_dev_config_delete
+            7:
+                task: deploy_dev_config_managed
 
     test_data_dev_org:
         description: 'WARNING: This flow deletes all data first, then loads the complete test data set based on 100 Contacts into the target org.'

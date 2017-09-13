@@ -4,15 +4,15 @@
             <div class="slds-media slds-tile slds-hint-parent">
                 <div class="slds-media__figure">
                     <lightning:icon iconName="{!'standard:' + (!empty(v.value.HHId__c) ? 'household' : 'contact')}"
-                        class="slds-icon--small" size="small"/>
+                        class="slds-icon_small" size="small"/>
                 </div>
                 <div class="slds-media__body">
-                    <div class="slds-grid slds-grid--align-spread slds-has-flexi-truncate">
+                    <div class="slds-grid slds-grid_align-spread slds-has-flexi-truncate">
                         <p class="slds-tile__title slds-truncate">{!v.value.Name}</p>
                         <lightning:buttonIcon iconName="utility:new" variant="bare" onclick="{!c.handleClick}"
                             class="slds-shrink-none" size="large" alternativeText="{!$Label.npo02.Add}" />
                     </div>
-                    <div class="slds-tile__detail slds-text-body--small">
+                    <div class="slds-tile__detail slds-text-body_small">
                         <ul>
                             <aura:if isTrue="{!v.value.npo02__Household__r.Name != null}" >
                                 <li>{!v.value.npo02__Household__r.Name}</li>

@@ -98,20 +98,25 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
     */
     private DmlWrapper runForRelationships(List<npe4__Relationship__c> newlist, List<npe4__Relationship__c> oldlist, 
     TDTM_Runnable.Action triggerAction) {
-    	    
-    	DmlWrapper mainWrapper = new DmlWrapper();
-    	
+
+        if (TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.REL)) {
+            return null;
+        }
+
+        DmlWrapper mainWrapper = new DmlWrapper();
+
         // Relationship list for termination updates
         List<npe4__Relationship__c> origrelationships = new List<npe4__Relationship__c>();
         List<npe4__Relationship__c> relationshipsToCreate = new List<npe4__Relationship__c>();
         List<npe4__Relationship__c> relationshipsToUpdate = new List<npe4__Relationship__c>();
         List<npe4__Relationship__c> relationshipsToDelete = new List<npe4__Relationship__c>();
         List<npe4__Relationship__c> reciprocalsToUpdate = new List<npe4__Relationship__c>();
-        
+
+        // Set the recursion flag up front because there could be DML operations before the main method ends.
         if (triggerAction == TDTM_Runnable.Action.afterUpdate) {
-            REL_ProcessControl.hasRun = true;
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.REL, true);
         }
-        
+
         Integer i = 0;          // processing counter            
         for(npe4__Relationship__c r : newlist) {
             // AFTER INSERT
@@ -169,10 +174,11 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
             mainWrapper.objectsToDelete.addAll((List<SObject>)relationshipsToDelete);
         }
 
+        TDTM_TriggerHandler.processDML(mainWrapper);
         if (triggerAction == TDTM_Runnable.Action.afterUpdate) {
-            REL_ProcessControl.hasRun = false;
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.REL, false);
         }
-        return mainWrapper;
+        return null;
     }
 
     /*******************************************************************************************************
@@ -303,11 +309,13 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
             }
         
             list<id> rIDs = new list<id>();
-                
+
             for (npe4__Relationship__c r : rList){
             //    rIDs.add(r.npe4__RelatedContact__c);
-                rIDs.add(r.npe4__Contact__c);
-            }            
+                if (r.npe4__Contact__c != null) {
+                    rIDs.add(r.npe4__Contact__c);
+                }
+            }
             
             String query_string = 'select id, Salutation';            
             String gender_field = '';
@@ -322,7 +330,12 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
             map<id, Contact> cMap = new map<id,Contact>((List<Contact>)database.query(query_string));
             
             for(npe4__Relationship__c r : rList){
-                
+
+                // Skip any records where the related reciprical contact is null
+                if (r.npe4__Contact__c == null) {
+                    continue;
+                }
+
                 npe4__Relationship__c copy = (npe4__Relationship__c)rCopy[counter];
 
                 Contact relatedContact = cMap.get(r.npe4__Contact__c);

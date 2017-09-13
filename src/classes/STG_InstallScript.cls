@@ -52,7 +52,6 @@ global without sharing class STG_InstallScript implements InstallHandler {
                 insertTdtmDefaults(null);
             }
             UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
-            UTIL_MasterSchedulableHelper.scheduleJobsFromOldObject();
         } catch(Exception e) {
             sendEmailOnInstallError(e, context);
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);

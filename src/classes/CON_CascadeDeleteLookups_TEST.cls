@@ -183,8 +183,6 @@ private class CON_CascadeDeleteLookups_TEST {
         queryRel = [SELECT id FROM npe4__Relationship__c WHERE IsDeleted = true ALL ROWS];
         System.assertEquals(2, queryRel.size(), 'Both relationships should be deleted when the account is deleted.');
 
-        //flag needs to be reset as the delete and undelete are in the same context for tests.
-        UTIL_CascadeDeleteLookups_TDTM.disableCascade = false;
         undelete con1;
 
         queryRel = [SELECT id FROM npe4__Relationship__c];

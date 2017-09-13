@@ -112,11 +112,14 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         }
         
         Map<Id,Account> primaryAccounts = new Map<Id,Account>([select id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c from Account where id IN :oppAccounts]);
-        List<Contact> primaryContacts = [select AccountId,Account.Id,Account.npe01__SYSTEM_AccountType__c from Contact where Id IN :primaryContactIds];
-
-        for (Contact thisContact : primaryContacts)
-            if (thisContact.AccountId!=null)
-                contactsAndOneToOneAccounts.put(thisContact.Id,thisContact.Account);
+        if (!primaryContactIds.isEmpty()) {
+            for (Contact thisContact : [select AccountId,Account.Id,Account.npe01__SYSTEM_AccountType__c from Contact
+                    where Id IN :primaryContactIds]) {
+                if (thisContact.AccountId != null) {
+                    contactsAndOneToOneAccounts.put(thisContact.Id, thisContact.Account);
+                }
+            }
+        }
 
         //loop through opps again and then put the right accountid on the opp
         for (Opportunity o : oppList) {

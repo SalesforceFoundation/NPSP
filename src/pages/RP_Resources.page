@@ -1,0 +1,48 @@
+<apex:page showHeader="true" sidebar="false" standardStylesheets="false" applyBodyTag="false">
+
+<html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+    <meta name="viewport" content="width=device-width" />
+
+    <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, 'RP_GettingStarted/SLDSSCOPED/assets/styles/salesforce-lightning-design-system-vf.min.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, 'RP_GettingStarted/css/style.css' )}"/>
+
+    <body class="bodyDiv" >
+
+        <div class="RP slds-p-horizontal_xx-large">
+
+            <div class="slds-clearfix">
+                <div class="slds-float_left">
+                    <img class="slds-p-vertical_medium" id="sfImage" src="{!URLFOR($Resource.CumulusStaticResources, 'RP_GettingStarted/images/Image_SF.png' )}" width="80" height="40"/>
+                    <img class="slds-p-vertical_medium" id="productImage" src="{!URLFOR($Resource.CumulusStaticResources, 'RP_GettingStarted/images/Image_ProductLogo.png' )}" width="80" height="40"/>
+                </div>
+            </div>
+
+            <div class="slds-grid">
+                <h1 class="slds-text-heading_large" >{!$Label.RP_Title} {!$Label.RP_ProductNameLabel}!</h1>
+            </div>
+
+            <div class="slds-grid">
+                <h2 class="slds-p-vertical_x-small">{!$Label.RP_SubTitle} </h2>
+            </div>
+
+            <div class="slds-box slds-m-bottom_medium getting-started-section">
+                <c:RP_GettingStarted />
+            </div>
+
+            <div class="demo-only demo-only--sizing slds-grid slds-wrap">
+                <div class="slds-m-vertical_large slds-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-2">
+                    <c:RP_Youtube />
+                </div>
+
+                <div class="slds-m-vertical_large slds-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-2">
+                    <c:RP_GitHub />
+                </div>
+            </div>
+
+        </div>
+
+    </body>
+
+</html>
+</apex:page>

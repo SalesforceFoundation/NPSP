@@ -1,0 +1,103 @@
+<apex:component controller="RP_GitHubController" allowDML="true">
+
+<html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+    <h2 class="slds-text-heading_medium">{!$Label.RP_GitHubTitle}</h2>
+
+    <apex:outputPanel rendered="{!timeoutError}">
+        <!-- Show a warning if the remote site setting is inactive-->
+        <apex:outputPanel rendered="{!remoteSiteSettingIsNotActive}" >
+            <div class="slds-m-vertical_large slds-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--11-of-12"  >
+                <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
+                    <span class="slds-assistive-text">warning</span>
+                    <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small" title="Description of icon when needed">
+                        <svg class="slds-icon slds-icon_x-small" aria-hidden="true">
+                            <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#warning')}"></use>
+                        </svg>
+                    </span>
+                    <h2><apex:outputtext value="{!$Label.RP_Remote_Site_Settings_Deactivated}" /></h2>
+                </div>
+            </div>
+        </apex:outputPanel>
+        <!-- Do NOT show the spinner if the remote site setting is inactive-->
+        <apex:outputPanel rendered="{!!remoteSiteSettingIsNotActive}" >
+            <div class="spinner slds-spinner_container slds-is-relative slds-m-around_xx-large slds-align_absolute-center" >
+                <div role="status" class="slds-spinner slds-spinner_medium">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+        </apex:outputPanel>
+    </apex:outputPanel>
+
+    <apex:outputPanel id="githubSection" rendered="{!!timeoutError}">
+
+        <div class="slds-box slds-m-vertical_medium github-section">
+
+            <div class="slds-grid">
+
+                <div class="slds-col">
+
+                    <img class="slds-p-vertical_medium slds-float_right" id="releaseImage" src="{!URLFOR($Resource.CumulusStaticResources, 'RP_GettingStarted/images/Image_ReleaseIcon.png' )}" width="55" height="40"/>
+                </div>
+
+                <div class="slds-col slds-p-top_large slds-p-left_small">
+
+                    <apex:outputLink target="_blank" rendered="{!NOT(ISBLANK(gitHubData.latestDownloadUrl))}" value="{!gitHubData.latestDownloadUrl}" styleClass="slds-text-heading_medium links"> {!$Label.RP_ProductNameLabel} v{!gitHubData.latestVersion} </apex:outputLink>
+
+                    <p> {!$Label.RP_ReleaseGitHub} <apex:outputText value=" {!gitHubData.latestDate}"> </apex:outputText> </p>
+
+                </div>
+            </div>
+
+            <div class="slds-grid">
+
+                <div class="slds-col slds-m-horizontal_medium slds-align_absolute-center">
+
+                    <svg class="slds-icon slds-icon-text-default slds-icon--x-small" aria-hidden="true">
+                        <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#info')}"></use>
+                    </svg>
+                    <p class="slds-p-horizontal_small github-subtitle" > {!$Label.RP_ProductNameLabel} {!$Label.RP_GitHubSubtitle}</p>
+
+                </div>
+
+            </div>
+
+            <div id="notes" class="slds-p-around_medium">
+
+                <div class="slds-p-horizontal_medium slds-p-vertical_small release-notes" layout="block">
+
+                    <apex:OutputText value="{!IF(ISBLANK(gitHubData.latestReleaseNotes), 'No changes', gitHubData.latestReleaseNotes)}" escape="false"></apex:OutputText>
+
+                </div>
+
+             </div>
+
+        </div>
+
+        <div class="slds-scope slds-clearfix">
+
+          <div class="slds-float_right">
+
+            <apex:outputLink target="_blank" rendered="{!NOT(ISBLANK(gitHubData.latestDownloadUrl))}" value="{!gitHubData.latestDownloadUrl}" styleClass="links"> {!$Label.RP_ReleaseNotesLink} </apex:outputLink>
+
+          </div>
+
+        </div>
+
+    </apex:outputPanel>
+
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, 'jquery/jquery-2.2.4.min.js')}"/>
+
+    <script>
+        $(function() {
+            $('div.release-notes > p > a[href]').attr('target', '_blank');
+            $('div.release-notes > div > a[href]').attr('target', '_blank');
+            $('div.release-notes > a[href]').attr('target', '_blank');
+        });
+    </script>
+
+</html>
+
+</apex:component>

@@ -123,7 +123,6 @@ public class ALLO_Multicurrency_TEST {
         queryAllo = database.query('SELECT Id, CurrencyIsoCode FROM Allocation__c');
         system.assertEquals(nonDefaultCurrencyType.get('IsoCode'), queryAllo[0].get('CurrencyIsoCode'), 'Allocation should have an updated non-default currency type.');
 
-        ALLO_Allocations_TDTM.resetFlags(false);
         Opportunity opp = new Opportunity(Name='success', Amount = 10, AccountID=acc.id, CampaignId=cam.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
         insert opp;
 
@@ -136,7 +135,6 @@ public class ALLO_Multicurrency_TEST {
 
 
         //update the currency manually, an exception should be thrown.
-        ALLO_Allocations_TDTM.resetFlags(false);
         queryAllo[0].put('CurrencyIsoCode',nonDefaultCurrencyType.get('IsoCode'));
 
         Exception ex = null;
@@ -182,7 +180,6 @@ public class ALLO_Multicurrency_TEST {
         list<Allocation__c> alloForInsert = new list<Allocation__c>();
         alloForInsert.add(new Allocation__c(Opportunity__c=oppsForInsert[0].id, Amount__c = 8, General_Accounting_Unit__c = gau.id));
         alloForInsert.add(new Allocation__c(Opportunity__c=oppsForInsert[1].id, Amount__c = 8, General_Accounting_Unit__c = gau.id));
-        ALLO_Allocations_TDTM.resetFlags(false);
         insert alloForInsert;
 
         id alloid = alloForInsert[1].id;
@@ -236,14 +233,15 @@ public class ALLO_Multicurrency_TEST {
 
         setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
 
-        //setting flags to not create default allocations for the new opportunities
-        ALLO_Allocations_TDTM.resetFlags(true);
+        //  Turn off the allocation triggers so it doesn't create a default
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, true);
 
         Account acc = new Account(Name='foo');
         insert acc;
         Opportunity opp = new Opportunity(Name='foo', Amount = 8, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
         opp.put('CurrencyIsoCode', nonDefaultCurrencyType.get('IsoCode'));
         insert opp;
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, false);
 
 
         list<Allocation__c>  queryAllo = [SELECT Id, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c];

@@ -43,6 +43,7 @@ public with sharing class BDI_DataImportBatch_SEL {
     */
     public static list<DataImportBatch__c> selectByIds(Set<Id> setBatchId) {
         return [SELECT Id,
+                    Name,
                     Account_Custom_Unique_ID__c,
                     Batch_Description__c,
                     Batch_Process_Size__c,
@@ -51,8 +52,36 @@ public with sharing class BDI_DataImportBatch_SEL {
                     Donation_Matching_Behavior__c,
                     Donation_Matching_Implementing_Class__c,
                     Donation_Matching_Rule__c,
-                    Donation_Date_Range__c
+                    Donation_Date_Range__c,
+                    Process_Using_Scheduled_Job__c,
+                    Last_Processed_On__c,
+                    Records_Failed__c,
+                    Records_Successfully_Processed__c,
+                    Post_Process_Implementing_Class__c
             FROM DataImportBatch__c
             WHERE Id in :setBatchId];
+    }
+
+    /*******************************************************************************************************
+    * @description queries the database for the Data Import Batch record with the specified Id
+    * @param batchId The batch to query for.
+    * @return DataImportBatch__c
+    */
+    public static DataImportBatch__c selectById(Id batchId) {
+        list<DataImportBatch__c> listBatches = selectByIds(new set<Id>{batchId});
+        return listBatches[0];
+    }
+
+    /*******************************************************************************************************
+    * @description queries the database for all Data Import Batch records that are marked with Scheduled
+    * processing, and have DI records to import.
+    * @return list<Id>
+    */
+    public static list<Id> selectUsingScheduledProcessing() {
+        Map<Id, DataImportBatch__c> mapIdToBatch = new Map<Id, DataImportBatch__c>([
+            SELECT Id
+            FROM DataImportBatch__c
+            WHERE Process_Using_Scheduled_Job__c = TRUE]);
+        return new List<Id>(mapIdToBatch.keySet());
     }
 }

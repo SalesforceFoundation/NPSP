@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2012, Salesforce.org
+    Copyright (c) 2017 Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -13,7 +13,7 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -26,23 +26,15 @@
     LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
-*/
-/**
-* @author Salesforce.org
-* @date 2012 (2.0)
-* @group Recurring Donations
-* @description Semaphore for recursion prevention in Recurring Donations 
-*/
-public with sharing class RD_ProcessControl {
+*/ 
 
-    /*******************************************************************************************************
-    * @description flag to prevent recursion into the RD trigger handler/logic
-    */ 
-    public static boolean hasRun = false;
+trigger TDTM_User on User (after delete, after insert, after undelete, after update, 
+							before delete, before insert, before update) {
 
-    /*******************************************************************************************************
-    * @description flag to specify when running the Refresh Opportunities button on a RD.
-    */ 
-    public static boolean batchButton = false;
-
+	// Initializes the TDTM handler that figures out which classes need to be called, and calls them.
+	TDTM_TriggerHandler handler = new TDTM_TriggerHandler();  
+    
+    handler.run(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, 
+    			Trigger.isDelete, Trigger.isUnDelete, Trigger.new, Trigger.old, 
+    			Schema.Sobjecttype.User, new TDTM_ObjectDataGateway());
 }

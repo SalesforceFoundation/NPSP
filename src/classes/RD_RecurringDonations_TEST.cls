@@ -237,7 +237,7 @@ public class RD_RecurringDonations_TEST {
         r2.npe03__Organization__c = a.Id;
         r2.npe03__Amount__c = 100;
         r2.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodMonthly;
-        r2.npe03__Date_Established__c = date.newinstance(1970,6,12);
+        r2.npe03__Date_Established__c = date.newinstance(1970,6,30);
         r2.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationDivideValue;
         r2.npe03__Open_Ended_Status__c = 'None'; 
         insert r2;
@@ -245,14 +245,13 @@ public class RD_RecurringDonations_TEST {
         Opportunity[] installments2 = [select Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r2.id];
         system.assertEquals(3,installments2.size());
         system.assertEquals(33.33,installments2[0].Amount);
-        system.assertEquals(date.newinstance(1970,6,12),installments2[0].CloseDate);
+        system.assertEquals(date.newinstance(1970,6,30),installments2[0].CloseDate);
         system.assertEquals(33.33,installments2[1].Amount);
-        system.assertEquals(date.newinstance(1970,7,12),installments2[1].CloseDate);
+        system.assertEquals(date.newinstance(1970,7,30),installments2[1].CloseDate);
         system.assertEquals(33.34,installments2[2].Amount);
-        system.assertEquals(date.newinstance(1970,8,12),installments2[2].CloseDate);
+        system.assertEquals(date.newinstance(1970,8,30),installments2[2].CloseDate);
         system.assertEquals(a.id,installments2[0].AccountId);
         UTIL_Debug.debug('**** '+installments2);
-        RD_ProcessControl.hasRun = false;
 
         delete r2;
         
@@ -261,8 +260,6 @@ public class RD_RecurringDonations_TEST {
         system.assertEquals(3,installments3.size());
         system.assertEquals(33.33,installments3[0].Amount);
 
-        //flag needs to be reset as the delete and undelete are in the same context for tests.
-        UTIL_CascadeDeleteLookups_TDTM.disableCascade = false;
         undelete r2;
 
         installments3 = [select Amount, IsDeleted from Opportunity where npe03__Recurring_Donation__c = :r2.id];
@@ -429,7 +426,6 @@ public class RD_RecurringDonations_TEST {
         integer cOpp =  originalOpps.size();
         system.assert(cOpp == 52 || cOpp == 53);        
         system.assertEquals(100, originalOpps[0].Amount);
-        RD_ProcessControl.hasRun = false;
         Test.startTest();
         r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodMonthly;
         update r1;
@@ -469,7 +465,6 @@ public class RD_RecurringDonations_TEST {
         r1.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
         r1.npe03__Next_Payment_Date__c = system.today();
        
-        RD_ProcessControl.hasRun = false;
         Test.startTest();
         insert r1;
         Test.stopTest();
@@ -516,7 +511,6 @@ public class RD_RecurringDonations_TEST {
         integer cOpp =  originalOpps.size();
         system.assert(cOpp == 52 || cOpp == 53);        
         system.assertEquals(100, originalOpps[0].Amount);
-        RD_ProcessControl.hasRun = false;
         Test.startTest();
         r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodYearly;
         update r1;
@@ -560,7 +554,6 @@ public class RD_RecurringDonations_TEST {
         
         system.assertEquals(12, originalOpps.size());
         system.assertEquals(100, originalOpps[0].Amount);
-        RD_ProcessControl.hasRun = false;
         Test.startTest();
         r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodWeekly;
         update r1;
@@ -606,7 +599,6 @@ public class RD_RecurringDonations_TEST {
         integer cOpp =  originalOpps.size();
         system.assert(cOpp == 52 || cOpp == 53);        
         system.assertEquals(100, originalOpps[0].Amount);
-        RD_ProcessControl.hasRun = false;
         Test.startTest();
         r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodQuarterly;
         update r1;
@@ -657,8 +649,7 @@ public class RD_RecurringDonations_TEST {
         string closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
         o.StageName = closedstage;
         o.CloseDate = system.today();
-        RD_ProcessControl.hasRun = false;
-        Test.startTest();        
+        Test.startTest();
         //update opp
         update o;
         //call the update method
@@ -715,8 +706,7 @@ public class RD_RecurringDonations_TEST {
         o1.StageName = closedstage;
         o1.CloseDate = system.today();
         list<Opportunity> oppList = new list<Opportunity>{o1};
-        RD_ProcessControl.hasRun = false;
-        Test.startTest();        
+        Test.startTest();
         //update opp
         update oppList;
         //call the update method
@@ -771,8 +761,7 @@ public class RD_RecurringDonations_TEST {
         string closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
         o.StageName = closedstage;
         o.CloseDate = system.today();
-        RD_ProcessControl.hasRun = false;
-        Test.startTest();        
+        Test.startTest();
         //update opp
         update o;
         //call the update method
@@ -833,8 +822,7 @@ public class RD_RecurringDonations_TEST {
         string closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
         o.StageName = closedstage;
         o.CloseDate = system.today();
-        RD_ProcessControl.hasRun = false;
-        Test.startTest();        
+        Test.startTest();
         //update opp
         update o;
         //call the update method
@@ -895,8 +883,7 @@ public class RD_RecurringDonations_TEST {
         string closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
         o.StageName = closedstage;
         o.CloseDate = system.today();
-        RD_ProcessControl.hasRun = false;
-        Test.startTest();        
+        Test.startTest();
         //update opp
         update o;
         //call the update method        
@@ -957,8 +944,7 @@ public class RD_RecurringDonations_TEST {
         string closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
         o.StageName = closedstage;
         o.CloseDate = system.today();
-        RD_ProcessControl.hasRun = false;
-        Test.startTest();        
+        Test.startTest();
         //update opp
         update o;
         //call the update method
@@ -1020,8 +1006,7 @@ public class RD_RecurringDonations_TEST {
         string closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
         o.StageName = closedstage;
         o.CloseDate = system.today();
-        RD_ProcessControl.hasRun = false;
-        Test.startTest();        
+        Test.startTest();
         //update opp
         update o;
         //call the update method

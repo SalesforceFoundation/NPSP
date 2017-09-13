@@ -51,7 +51,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
     ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
-        	
+
         DmlWrapper dmlWrapper = new DmlWrapper();        
         list<Contact> listConAddrSet = new list<Contact>(); 
         Set<Contact> setConCreateAddr = new Set<Contact>();
@@ -61,10 +61,12 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         boolean acctHasAddress = false;
         boolean acctChanged = false;
 
+        //UTIL_Debug.debug('DJH**** ADDR_Contact_TDTM ' + triggerAction + ' hasRun: ' + ADDR_Addresses_TDTM.cHasRunAddrTrigger);
+
 		// bail out if address mgmt turned off.
         if (UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c)
         	return dmlWrapper;
-                
+
         // Rules:
         // inserting new contact - make their address a new default address, unless they say it is an override
         // updating an existing contact - make their address a new default address, unless they say it is an override
@@ -82,7 +84,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             }
             mapAccountIdAccount = new Map<Id,Account>([select Id, npe01__SYSTEM_AccountType__c,
                 (select Id from Addresses__r) from Account where Id IN :setAccountId]);
-        }        
+        }
        
         integer i = -1;        
         for (SObject so : listNew) {
@@ -115,8 +117,8 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                         mapAddrIdIsOverride.put(con.Current_Address__c, true);
                 } else if (isContactAddressEmpty(con) && acctHasAddress) {
                 	// if the contact has no address specified and the household has a default address, pick up the hh default.
-                    listConAddrReset.add(con);                	
-                } 
+                    listConAddrReset.add(con);
+                }
             }
             
             // BEFORE UPDATE
@@ -155,17 +157,17 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                             listConAddrReset.add(con);
                         }
             	    } else { // create a new address on the account
-                        setConCreateAddr.add(con);                    
-            	    }                
+                        setConCreateAddr.add(con);
+            	    }
             	} else {
             	
 	                // highest priority. if they are changing to a new Current Address, refill from it.
 	            	if (con.Current_Address__c != conOld.Current_Address__c && con.Current_Address__c != null) {
-                        //UTIL_Debug.debug('****DJH: current address changed');            		
+                        //UTIL_Debug.debug('****DJH: current address changed');
 	                    listConAddrSet.add(con);
 	                    if (con.is_Address_Override__c)
 	                        // track which address's need their dates updated
-	                        mapAddrIdIsOverride.put(con.Current_Address__c, true);                    
+	                        mapAddrIdIsOverride.put(con.Current_Address__c, true);
 	            	}
 	            	
 	            	// second priority.  if they are clearing isAddressOverride, and no address fields change, refill from the Default Address
@@ -179,7 +181,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
 	            	
 	                // third priority.  if MailingAddress fields changed, update the existing address object or create a new one.
 	                // this is handled in the next block, since we do it for both new contacts and updated contacts.
-                }            	            	
+                }
             }
     
             // BEFORE UPDATE & AFTER UPDATE & BEFORE INSERT && AFTER INSERT
@@ -195,40 +197,67 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                ) {
                 // note that we detect whether the address change is coming from the address trigger,
                 // in which case we don't want to create a new address.
-                if (ADDR_Addresses_TDTM.hasRunAddrTrigger) {
+                if (TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ADDR_hasRunTrigger)) {
                 	//UTIL_Debug.debug('DJH**** stop Addr Trigger recursion in ADDR_Contact_TDTM');
+                    continue;
+                }
+                // If the Before Insert/Update trigger on the Contact has already executed and taken action
+                // and this is an After Insert/Update trigger, simply reset the flag and exit out.
+                if (TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore) &&
+                (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate)) {
                     continue;
                 }
 
                 // if the contacts address changed or if the contact with an address moves to a new household remember the contact
-                if (isContactAddressChanged(con, conOld) || (acctChanged && !isContactAddressEmpty(con))) 
+                if (isContactAddressChanged(con, conOld) || (acctChanged && !isContactAddressEmpty(con))) {
                     setConCreateAddr.add(con);
-            }             
+                }
+            }
         }
-        
-        // set the mailing address for contacts who specify an address lookup or override
-        if (listConAddrSet.size() > 0) {
+
+        if (listConAddrSet.size() > 0 || listConAddrReset.size() > 0) {
             // to avoid pushing these address changes to the HH.
-            ADDR_Addresses_TDTM.hasRunAddrTrigger = true;
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
+            // set this flag to true to prevent the AfterUpdate trigger on the Contact from processing changes
+            // to the Contact's address that are being made by this BeforeUpdate trigger.
+            if (isBefore) {
+                TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, true);
+            }
+        }
+
+            // set the mailing address for contacts who specify an address lookup or override
+        if (listConAddrSet.size() > 0) {
             setConAddrFromLookup(listConAddrSet, dmlWrapper, triggerAction);
         }
         
         // reset the mailing address for contacts who no longer have an address override
         if (listConAddrReset.size() > 0) {
-        	resetConAddr(listConAddrReset);
-            // to avoid pushing these address changes to the HH.
-            ADDR_Addresses_TDTM.hasRunAddrTrigger = true;
+            resetConAddr(listConAddrReset);
         }
         
         // update the Latest date fields on any address overrides
-        if (mapAddrIdIsOverride.size() > 0) 
+        if (mapAddrIdIsOverride.size() > 0) {
             updateAddrIsOverride(mapAddrIdIsOverride, dmlWrapper);
-            
+        }
+
         // create any new Default Address objects
-        if (setConCreateAddr.size() > 0)
+        if (setConCreateAddr.size() > 0) {
             createAddrFromCon(new List<Contact>(setConCreateAddr), dmlWrapper, triggerAction);
-            
-        return dmlWrapper;    
+        }
+
+        TDTM_TriggerHandler.processDML(dmlWrapper);
+
+        if (listConAddrSet.size() > 0 || listConAddrReset.size() > 0) {
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
+        }
+
+        // If the Before Insert/Update trigger on the Contact has already executed and taken action
+        // and this is an After Insert/Update trigger, reset the hasAlreadyRunBeforeOnContact flag
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, false);
+        }
+
+        return null;
     }
 
     /*******************************************************************************************************
@@ -388,27 +417,30 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             
             // if found a match
             if (addrDup != null) {
-            	// record the match in the contact
-            	if (isBefore) {
+                // record the match in the contact
+                if (isBefore) {
                     con.Current_Address__c = addrDup.Id;
                     
                     //reset the Primary Address Type only; resetting other fields on Contact will create a new Address
                     con.npe01__Primary_Address_Type__c = con.npe01__Primary_Address_Type__c == null
                         ? addrDup.Address_Type__c
                         : con.npe01__Primary_Address_Type__c;
-                       
-            	} else { 	                
+
+                // Prevent an address that was just inserted by the BeforeInsert trigger from being udpated
+                // a second time by the AfterInsert trigger.
+                } else {
 	                // if it is a fuzzy match, not exact, then we want to update the existing address.
 	                if (ADDR_Addresses_TDTM.isAddressChanged(addrNew, addrDup, true)) {
 	                    ADDR_Addresses_TDTM.copyAddressObj(addrNew, addrDup);
-	                    if (!con.is_Address_Override__c && !addrDup.Default_Address__c)
-	                        addrDup.Default_Address__c = true;
+	                    if (!con.is_Address_Override__c && !addrDup.Default_Address__c) {
+                            addrDup.Default_Address__c = true;
+                        }
 	                    listAddrUpdateDefault.add(addrDup);
 	                }                  
 	                // exact match. we aren't specifying override, so the address should become the new hh default address
 	                else if (!con.is_Address_Override__c && !addrDup.Default_Address__c) {
-	                	addrDup.Default_Address__c = true;
-	                	listAddrUpdateDefault.add(addrDup);
+                        addrDup.Default_Address__c = true;
+                        listAddrUpdateDefault.add(addrDup);
 	                }
                 }
             }
@@ -427,11 +459,14 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         }
         
         if (mapConAddrInsertNow.size() > 0 && isBefore) {
-	        insert mapConAddrInsertNow.values();
+            insert mapConAddrInsertNow.values();
+            // Since we're inserting new Addresses in a Before Insert/Update scenario, set the flag to
+            // prevent the After Insert/Update Contact logic from executing when it's eventually called.
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, true);
 	        for (Contact con : mapConAddrInsertNow.keySet()) {
 	            Address__c addr = mapConAddrInsertNow.get(con);
 	            con.Current_Address__c = addr.Id;
-	        }        
+	        }
         }    
         
         if (listAddrUpdateDefault.size() > 0 && !isBefore) {

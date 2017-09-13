@@ -162,22 +162,23 @@ public with sharing class STG_InstallScript_TEST {
         //Get the TDTM classes that map to the NPSP flags
         List<String> tdtmClasses = TDTM_DefaultConfig.getNpspToCumulusMap().values();
         //Remove empty values
-        List<String> tdtmClassesWithValues = new List<String>();
+        Set<String> tdtmClassesWithValues = new Set<String>();
         for(String tdtmClass : tdtmClasses) {
-            if(!String.isBlank(tdtmClass))
-               tdtmClassesWithValues.add(tdtmClass);
+            if(!String.isBlank(tdtmClass)) {
+                tdtmClassesWithValues.add(tdtmClass);
+            }
         }
         
         //Verify that all the TDTM classes have been deactivated (since all the NPSP disable flags were on)
-        List<Trigger_Handler__c> afterScriptConfig = [select Active__c, Class__c from Trigger_Handler__c where Class__c IN :tdtmClasses];     
-        //The -1 is because there are two NPSP flags (npe01__DISABLE_OpportunityAccount_trigger__c and 
-        //npe01__DISABLE_OpportunityContactRoles_trigger__c) that point to the same TDTM class (OPP_OpportunityContactRoles_TDTM)
-        System.assertEquals(tdtmClassesWithValues.size() - 1, afterScriptConfig.size());     
-        for(Trigger_Handler__c handler : afterScriptConfig) {
-            UTIL_Debug.debug('****Is class ' + handler.Class__c + ' still active: ' + handler.Active__c);
-            System.assertEquals(false, handler.Active__c);
+        Set<String> afterScriptConfigClassNames = new Set<String>();
+        for(Trigger_Handler__c handler : [select Active__c, Class__c from Trigger_Handler__c where Class__c IN :tdtmClasses]) {
+            System.assertEquals(false, handler.Active__c, 'This handler should have be marked as inactive: ' + handler);
+            afterScriptConfigClassNames.add(handler.Class__c);
         }
-        
+
+        System.assertEquals(tdtmClassesWithValues.size(), afterScriptConfigClassNames.size(),
+                'The number of inactive handler classes does not match the expected value');
+
         //Assert old flags have been properly disabled
         assertNpspFlagsDeactivated();
     }
