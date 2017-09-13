@@ -50,33 +50,33 @@
             <div aura:id="divUIMessageContainer" />
 
             <!-- PAGE HEADER -->
-            <div class="slds-page-header slds-p-bottom--medium" role="banner">
+            <div class="slds-page-header slds-p-bottom_medium" role="banner">
                 <div class="slds-grid">
                     <div class="slds-col">
-                        <nav role="navigation" class="slds-p-bottom--x-small">
+                        <nav role="navigation" class="slds-p-bottom_x-small">
                             <p id="bread-crumb-label" class="slds-assistive-text">You are here:</p>
-                            <ol class="slds-breadcrumb slds-list--horizontal" aria-labelledby="bread-crumb-label">
-                                <li class="slds-breadcrumb__item slds-text-heading--label"><a href="{!'/' + v.hhTypePrefix}">{!$Label.c.lblHousehold}</a></li>
-                                <li class="slds-breadcrumb__item slds-text-heading--label"><a href="{!'/' + v.hhId}">{!v.hh.Name}</a></li>
+                            <ol class="slds-breadcrumb slds-list_horizontal" aria-labelledby="bread-crumb-label">
+                                <li class="slds-breadcrumb__item slds-text-heading_label"><a href="{!'/' + v.hhTypePrefix}">{!$Label.c.lblHousehold}</a></li>
+                                <li class="slds-breadcrumb__item slds-text-heading_label"><a href="{!'/' + v.hhId}">{!v.hh.Name}</a></li>
                             </ol>
                         </nav>
-                        <div class="slds-media slds-media--center slds-has-flexi-truncate">
+                        <div class="slds-media slds-media_center slds-has-flexi-truncate">
                             <div class="slds-media__figure">
-                                <lightning:icon iconName="standard:household" class="slds-icon--medium"/>
+                                <lightning:icon iconName="standard:household" class="slds-icon_medium"/>
                             </div>
                             <div class="slds-media__body">
-                                <h1 class="slds-text-heading--medium">{!$Label.npo02.ManageHousehold}</h1>
+                                <h1 class="slds-text-heading_medium">{!$Label.npo02.ManageHousehold}</h1>
                             </div>
                         </div>
                     </div>
                     <div class="slds-col slds-no-flex slds-align-middle">
                         <div class="slds-button-group" role="group">
-                            <ui:button class="slds-button slds-button--neutral"
+                            <ui:button class="slds-button slds-button_neutral"
                                 aura:id="buttonCancel"
                                 buttonTitle="{!$Label.c.stgBtnCancel}"
                                 label="{!$Label.c.stgBtnCancel}"
                                 press="{!c.close}" />
-                            <ui:button class="slds-button slds-button--brand"
+                            <ui:button class="slds-button slds-button_brand"
                                 aura:id="buttonSave"
                                 buttonTitle="{!$Label.c.stgBtnSave}"
                                 label="{!$Label.c.stgBtnSave}"
@@ -91,7 +91,7 @@
             <!-- Spinner for waiting feedback -->
             <aura:if isTrue="{!v.showSpinner}">
                 <div class="slds-spinner_container">
-                    <div class="slds-spinner--brand slds-spinner slds-spinner--medium" aria-hidden="false" role="alert">
+                    <div class="slds-spinner_brand slds-spinner slds-spinner_medium" aria-hidden="false" role="alert">
                         <div class="slds-spinner__dot-a"></div>
                         <div class="slds-spinner__dot-b"></div>
                     </div>
@@ -102,10 +102,10 @@
             <div class="myBodyContent">
 
                 <!-- the Contact Cards & Canvas section -->
-                <div class="slds-p-bottom--small">
+                <div class="slds-p-bottom_small">
                     <div class="slds-grid">
-                        <div class="slds-col slds-text-heading--label slds-p-around--x-small">{!$Label.npo02.HouseholdMembers}</div>
-                        <div class="slds-col slds-text-align--right slds-p-around--x-small">
+                        <div class="slds-col slds-text-heading_label slds-p-around_x-small">{!$Label.npo02.HouseholdMembers}</div>
+                        <div class="slds-col slds-text-align_right slds-p-around_x-small">
                             <!-- the autocomplete component for finding and adding contacts -->
                             <c:HH_AutoComplete aura:id="HHAutoComplete" hhId="{!v.hhId}" namespacePrefix="{!v.namespacePrefix}" listCon="{!v.listCon}" />                            
                         </div>
@@ -114,24 +114,24 @@
                 </div>
 
                 <!-- the Address section -->
-                <div class="slds-p-bottom--large">
-                    <div class="slds-text-heading--label slds-p-around--x-small">{!$Label.npo02.HouseholdAddress}</div>
+                <div class="slds-p-bottom_large">
+                    <div class="slds-text-heading_label slds-p-around_x-small">{!$Label.npo02.HouseholdAddress}</div>
                     <c:HH_AddressMgr listAddr="{!v.listAddr}" aura:id="addrMgr" />
                 </div>
 
                 <!-- the section for our 3 special naming & greeting fields -->
-                <div class="slds-text-heading--label slds-p-around--x-small">{!$Label.npo02.HouseholdDetails}</div>
-                <div class="slds-grid slds-grid--align-spread slds-m-around--medium">
-                    <div class="slds-form--stacked" style="width:80%" >
+                <div class="slds-text-heading_label slds-p-around_x-small">{!$Label.npo02.HouseholdDetails}</div>
+                <div class="slds-grid slds-grid_align-spread slds-m-around_medium">
+                    <div class="slds-form_stacked" style="width:80%" >
 
                         <ui:inputText value="{!v.hh.Name}" aura:id="txtHHName" class="slds-input" required="true"
                             label="Household Name" labelClass="slds-form-element__label" change="{!c.onTextChange}" />
-                        <div class="slds-form-element slds-m-bottom--medium">
+                        <div class="slds-form-element slds-m-bottom_medium">
                             <div class="slds-form-element__control">
                                 <label class="slds-checkbox">
                                     <ui:inputCheckbox aura:id="cbxAutoHHName" class="slds-checkbox"
                                         change="{!c.onCheck}" value="{!v.isAutoName}"/>
-                                    <span class="slds-checkbox--faux"></span>
+                                    <span class="slds-checkbox_faux"></span>
                                     <span class="slds-form-element__label" for="exHHName">{!$Label.npo02.AutoName}</span>
                                 </label>
                             </div>
@@ -139,12 +139,12 @@
 
                         <ui:inputText value="{!v.hh.npo02__Formal_Greeting__c}" aura:id="txtFormalGreeting" class="slds-input"
                             label="Formal Greeting" labelClass="slds-form-element__label" change="{!c.onTextChange}" />
-                        <div class="slds-form-element slds-m-bottom--medium">
+                        <div class="slds-form-element slds-m-bottom_medium">
                             <div class="slds-form-element__control">
                                 <label class="slds-checkbox">
                                     <ui:inputCheckbox aura:id="cbxAutoFormalGreeting" class="slds-checkbox"
                                         change="{!c.onCheck}" value="{!v.isAutoFormalGreeting}"/>
-                                    <span class="slds-checkbox--faux"></span>
+                                    <span class="slds-checkbox_faux"></span>
                                     <span class="slds-form-element__label" for="cbxAutoFormalGreeting">{!$Label.npo02.AutoFormalGreeting}</span>
                                 </label>
                             </div>
@@ -157,7 +157,7 @@
                                 <label class="slds-checkbox">
                                     <ui:inputCheckbox aura:id="cbxAutoInformalGreeting" class="slds-checkbox"
                                         change="{!c.onCheck}" value="{!v.isAutoInformalGreeting}"/>
-                                    <span class="slds-checkbox--faux"></span>
+                                    <span class="slds-checkbox_faux"></span>
                                     <span class="slds-form-element__label" for="cbxAutoInformalGreeting">{!$Label.npo02.AutoInformalGreeting}</span>
                                 </label>
                             </div>
@@ -174,16 +174,16 @@
                         <div class="slds-modal__header">
                             <lightning:buttonIcon iconName="utility:close" class="slds-modal__close" variant="bare-inverse"
                                 size="large" onclick="{!c.cancelRemoveContact}" alternativeText="{!$Label.c.bdiBtnClose}" />
-                            <h2 id="searchPopupLabel" class="slds-text-heading--medium">{!$Label.c.lblDeleteContact}</h2>
+                            <h2 id="searchPopupLabel" class="slds-text-heading_medium">{!$Label.c.lblDeleteContact}</h2>
                         </div>
 
-                        <div class="slds-modal__content slds-p-around--medium">
+                        <div class="slds-modal__content slds-p-around_medium">
                             <div>
                                 <p>{!$Label.c.lblDeleteContactPrompt}</p>
                             </div>
                         </div> <!-- /slds-modal__content -->
                         <div class="slds-modal__footer">
-                            <div class="slds-x-small-buttons--horizontal">
+                            <div class="slds-x-small-buttons_horizontal">
                                 <lightning:button variant="neutral" label="{!$Label.c.stgBtnCancel}"
                                     onclick="{!c.cancelRemoveContact}"/>
                                 <lightning:button variant="destructive" label="{!$Label.c.btnRemove}"
@@ -192,7 +192,7 @@
                         </div>
                     </div> <!-- /slds-modal__container -->
                 </div> <!-- /slds-modal -->
-                <div class="slds-backdrop slds-backdrop--open"></div>
+                <div class="slds-backdrop slds-backdrop_open"></div>
             </aura:if>
             <!-- /REMOVE CONTACT POPUP -->
 
@@ -204,27 +204,27 @@
                         <div class="slds-modal__header">
                             <lightning:buttonIcon iconName="utility:close" class="slds-modal__close" variant="bare-inverse"
                                 size="large" onclick="{!c.cancelMergeHHPopup}" alternativeText="{!$Label.c.bdiBtnClose}" />
-                            <h2 id="searchPopupLabel" class="slds-text-heading--medium">{!$Label.c.lblMergeHHTitle}</h2>
+                            <h2 id="searchPopupLabel" class="slds-text-heading_medium">{!$Label.c.lblMergeHHTitle}</h2>
                         </div>
 
-                        <div class="slds-modal__content slds-p-around--medium">
+                        <div class="slds-modal__content slds-p-around_medium">
                             <div>
                                 <p>{!format($Label.c.lblMergeHHPrompt, v.conAdd.FirstName + ' ' + v.conAdd.LastName)}</p>
                             </div>
                         </div> <!-- /slds-modal__content -->
                         <div class="slds-modal__footer">
-                            <div class="slds-x-small-buttons--horizontal">
-                                <ui:button class="slds-button slds-button--neutral"
+                            <div class="slds-x-small-buttons_horizontal">
+                                <ui:button class="slds-button slds-button_neutral"
                                     aura:id="btnCancelHHMerge"
                                     buttonTitle="{!$Label.c.stgBtnCancel}"
                                     label="{!$Label.c.stgBtnCancel}"
                                     press="{!c.cancelMergeHHPopup}" />
-                                <ui:button class="slds-button slds-button--neutral"
+                                <ui:button class="slds-button slds-button_neutral"
                                     aura:id="btnAddContact"
                                     buttonTitle="{!format($Label.c.lblBtnAddContact, v.conAdd.FirstName + ' ' + v.conAdd.LastName)}"
                                     label="{!format($Label.c.lblBtnAddContact, v.conAdd.FirstName + ' ' + v.conAdd.LastName)}"
                                     press="{!c.doAddContact}" />
-                                <ui:button class="slds-button slds-button--brand"
+                                <ui:button class="slds-button slds-button_brand"
                                     aura:id="btnMergeHH"
                                     buttonTitle="{!$Label.c.lblBtnAddAllHHMembers}"
                                     label="{!$Label.c.lblBtnAddAllHHMembers}"
@@ -233,7 +233,7 @@
                         </div>
                     </div> <!-- /slds-modal__container -->
                 </div> <!-- /slds-modal -->
-                <div class="slds-backdrop slds-backdrop--open"></div>
+                <div class="slds-backdrop slds-backdrop_open"></div>
             </aura:if>
             <!-- /MERGE HH POPUP -->
 
@@ -245,12 +245,12 @@
                         <div class="slds-modal__header">
                             <lightning:buttonIcon iconName="utility:close" class="slds-modal__close" variant="bare-inverse"
                                 size="large" onclick="{!c.cancelNewContact}" alternativeText="{!$Label.c.bdiBtnClose}" />
-                            <h2 id="searchPopupLabel" class="slds-text-heading--medium">{!$Label.npo02.NewContact}</h2>
+                            <h2 id="searchPopupLabel" class="slds-text-heading_medium">{!$Label.npo02.NewContact}</h2>
                         </div>
 
-                        <div class="slds-modal__content slds-p-around--medium">
+                        <div class="slds-modal__content slds-p-around_medium">
                             <div aura:id="divUIMessageNewContactPopup" />
-                            <div class="slds-form--stacked">
+                            <div class="slds-form_stacked">
                                 <div class="slds-form-element">
                                     <ui:inputSelect aura:id="selSalutation" label="{!$Label.c.lblSalutation}"
                                         change="{!c.onSalutationChange}" class="slds-select slds-input slds-form-element__control" labelClass="slds-form-element__label" >
@@ -271,13 +271,13 @@
                         </div> <!-- /slds-modal__content -->
 
                         <div class="slds-modal__footer">
-                            <div class="slds-x-small-buttons--horizontal">
-                                <ui:button class="slds-button slds-button--neutral"
+                            <div class="slds-x-small-buttons_horizontal">
+                                <ui:button class="slds-button slds-button_neutral"
                                     aura:id="btnCancelNew"
                                     buttonTitle="{!$Label.c.stgBtnCancel}"
                                     label="{!$Label.c.stgBtnCancel}"
                                     press="{!c.cancelNewContact}" />
-                                <ui:button class="slds-button slds-button--brand"
+                                <ui:button class="slds-button slds-button_brand"
                                     aura:id="btnNew"
                                     buttonTitle="{!$Label.npo02.NewContact}"
                                     label="{!$Label.npo02.NewContact}"
@@ -286,7 +286,7 @@
                         </div>
                     </div> <!-- /slds-modal__container -->
                 </div> <!-- /slds-modal -->
-                <div class="slds-backdrop slds-backdrop--open"></div>
+                <div class="slds-backdrop slds-backdrop_open"></div>
             </aura:if>
             <!-- /NEW CONTACT POPUP -->
 

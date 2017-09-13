@@ -16,7 +16,11 @@ input.lookupInput {
     min-height: calc(34px + 2px);
     margin-right: -30px;
 }
-input.lookupInput203 {
+/* added to get the lookup icon button back within the input field, which didn't seem to work when using <apex:slds/> */
+.slds-scope input.lookupInput {
+    margin-right: -30px;
+}
+input.lookupInputSLDS {
     background-color: white;
     background-image: none;
     color: #16325c;
@@ -29,16 +33,10 @@ input.lookupInput203 {
     padding: 0 1rem 0 .75rem;
     line-height: 1.875rem;
     min-height: calc(1.875rem + 2px);
-    margin-right: -30px;
+    margin-right: -30px !important;
 }
-
-/* added to get the lookup icon button back within the input field, which didn't seem to work when using <apex:slds/> */
-.slds-scope input.lookupInput {
-    margin-right: -30px;
-}
-
-/* slds203 sets any multiselect to a smaller line height, but in visualforce, a single select looks like a multi with size=1, so this fixes the height */
-.sfdo203 .slds-select[size="1"] {
+/* slds sets any multiselect to a smaller line height, but in visualforce, a single select looks like a multi with size=1, so this fixes the height */
+.slds-scope .slds-select[size="1"] {
     min-height: calc(1.875rem + (1px * 2));
     height: calc(1.875rem + (1px * 2));
 }

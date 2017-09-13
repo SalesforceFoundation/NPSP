@@ -3199,6 +3199,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Street</value>
     </labels>
     <labels>
+        <fullName>lblYouAreHere</fullName>
+        <categories>UTIL_PageHeader</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>lblYouAreHere</shortDescription>
+        <value>You are here:</value>
+    </labels>
+    <labels>
         <fullName>leadConvertAccountName</fullName>
         <categories>Lead Converter</categories>
         <language>en_US</language>
@@ -3392,7 +3400,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>lvlBtnSaveAndNew</fullName>
-        <categories>Levels</categories>
+        <categories>UTIL_PageHeader</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Save &amp; New button on the Level Edit page</shortDescription>
@@ -4048,7 +4056,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>stgBtnCancel</fullName>
-        <categories>Settings</categories>
+        <categories>Settings, UTIL_PageHeader</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgBtnCancel</shortDescription>
@@ -4224,7 +4232,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>stgBtnSave</fullName>
-        <categories>Settings</categories>
+        <categories>Settings, UTIL_PageHeader</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgBtnSave</shortDescription>
