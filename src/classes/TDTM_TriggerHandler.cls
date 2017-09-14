@@ -79,6 +79,9 @@ public class TDTM_TriggerHandler {
 
         // If there are no records, insert the defaults.
         if(!defaultRecordsInserted && dao.isEmpty()) {
+            if (describeObj == Schema.SObjectType.User) {
+                return;
+            }
             List<Trigger_Handler__c> defaultConfig = TDTM_DefaultConfig.getDefaultRecords();
             insert defaultConfig;
             defaultRecordsInserted = true;

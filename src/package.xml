@@ -288,6 +288,7 @@
         <members>TDTM_iTableDataGateway</members>
         <members>USER_InActiveUser_TDTM</members>
         <members>USER_InActiveUser_TDTM_TEST</members>
+        <members>USER_MixedDML_TEST</members>
         <members>USER_UserService</members>
         <members>USER_UserService_TEST</members>
         <members>UTIL_AbstractRollup_BATCH</members>
