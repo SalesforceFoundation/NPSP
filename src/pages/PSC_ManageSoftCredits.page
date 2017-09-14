@@ -1,37 +1,19 @@
-<apex:page standardController="Opportunity" extensions="PSC_ManageSoftCredits_CTRL" showHeader="true" standardStylesheets="false" >
-    <apex:stylesheet value="{!URLFOR($Resource.SLDS, '/0_12_2/assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
+<apex:page standardController="Opportunity" extensions="PSC_ManageSoftCredits_CTRL" showHeader="true" standardStylesheets="false" docType="html-5.0">
+
+    <apex:slds />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
     
     <apex:form >
-      <div class="slds">
-    
-        <!-- PAGE HEADER -->
-        <div class="slds-page-header" role="banner">
-            <div class="slds-grid">
-                <div class="slds-col">
-                    <nav role="navigation">
-                        <p id="bread-crumb-label" class="slds-assistive-text">You are here:</p>
-                        <ol class="slds-breadcrumb slds-list--horizontal" aria-labelledby="bread-crumb-label">
-                            <li class="slds-list__item slds-text-heading--label"><a class="slds-type-focus" href="{!URLFOR($Action.Opportunity.Tab, $ObjectType.Opportunity)}" >{!$ObjectType.Opportunity.LabelPlural}</a></li>
-                            <li class="slds-list__item slds-text-heading--label"><a class="slds-type-focus" href="/{!opp.Id}">{!opp.Name}</a></li>
-                        </ol>
-                    </nav>              
-                    <h1 class="slds-text-heading--medium slds-p-top-medium">{!$Label.pscManageSoftCreditsTitle}</h1>
-                    <p class="slds-text-body--small slds-m-top--x-small">
-                        <apex:outputText value="{!$Label.mtchItems}"><apex:param value="{!numberOfSoftCredits}" /></apex:outputText>
-                    </p>
-                </div>        
+    <div class="slds">
 
-                <div class="slds-col slds-no-flex slds-align-middle">
-                    <div class="slds-button-group" role="group">
-                        <apex:commandButton styleClass="slds-button slds-button--neutral" action="{!cancel}" value="{!$Label.stgBtnCancel}" />
-                        <apex:commandButton styleClass="slds-button slds-button--brand" action="{!save}" value="{!$Label.stgBtnSave}" />
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- /PAGE HEADER -->
-        
+        <apex:variable var="headerSubtitle" value="{! SUBSTITUTE($Label.mtchItems, '{0}', TEXT(numberOfSoftCredits))}" />
+        <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="Opportunity"
+                         parentAction="{!If (NOT(ISNULL(opp)), URLFOR($Action.Opportunity.View, opp.Id), '')}" parentRecordName="{!opp.Name}"
+                         parentRecordAction="/{!opp.Id}"
+                         header="{! $Label.pscManageSoftCreditsTitle }" headerLabel="{!headerSubtitle}"
+                         icon="opportunity_120" iconCategory="standard"
+                         saveAction="{!save}" cancelAction="{!cancel}"/>
+
         <apex:actionFunction name="refresh" action="{!refresh}" reRender="totalSelected, totalUn" />
         <c:UTIL_PageMessages />
         
@@ -39,7 +21,7 @@
         <div class="myBodyContent">
         
             <!-- SUMMARY INFO PANEL -->
-            <div class="slds-grid slds-p-around--medium slds-p-bottom--large slds-theme--default">            
+            <div class="slds-grid slds-p-around_medium slds-p-bottom_large slds-theme_default">
                 <div class="slds-col slds-align-middle" id="account">
                     <label class="slds-form-element__label" for="lnkAccount">{!$Label.pscManageSoftCreditsPrimaryDonor}</label><br/>
                     <a id="lnkAccount" href="/{!PrimaryContactId}"><apex:outputText value="{!PrimaryContactName}" /></a>
@@ -68,8 +50,8 @@
                         <apex:outputText id="txtUnaccountedPercent" value="{0, number,0.00%}"><apex:param value="{!IF(AND(NOT(ISBLANK(opp.Amount)), opp.Amount > 0), (opp.Amount-oppTotalSoftCredit.Amount)/opp.Amount, 0)}" /></apex:outputText>
                     </apex:outputPanel>
                 </apex:outputPanel>
-                <div class="slds-col slds-no-flex slds-align-middle slds-box slds-theme--default">
-                    <p class="slds-text-heading--label slds-p-bottom--x-small">{!$Label.pscManageSoftCreditsRestrictions}</p>
+                <div class="slds-col slds-no-flex slds-align-middle slds-box slds-theme_default">
+                    <p class="slds-text-heading_label slds-p-bottom_x-small">{!$Label.pscManageSoftCreditsRestrictions}</p>
                     <apex:selectRadio value="{!isAmount}">
                         <apex:selectOption itemValue="true" itemLabel="{!$Label.pscManageSoftCreditsAmount}" />
                         <apex:selectOption itemValue="false" itemLabel="{!$Label.pscManageSoftCreditsPercent}" />
@@ -83,8 +65,8 @@
             
             <!-- PSC TABLE -->
             <apex:outputPanel id="tablePanel">
-                <table class="slds-table slds-table--bordered">
-                    <thead><tr class="slds-text-heading--label">
+                <table class="slds-table slds-table_bordered">
+                    <thead><tr class="slds-text-heading_label">
                         <th>{!$ObjectType.Partial_Soft_Credit__c.Fields.Contact__c.Label}</th>
                         <th>{!$ObjectType.Partial_Soft_Credit__c.Fields.Role_Name__c.Label}</th>
                         <th style="text-align:center">{!$Label.pscManageSoftCreditsType}</th>
@@ -95,9 +77,9 @@
                     <apex:repeat value="{!softCredits}" var="credit">
                     <tr>
                         <td>
-                            <apex:inputField styleClass="lookupInput" value="{!credit.contactRole.ContactId}" required="false">
-                                <apex:actionSupport action="{!refresh}" event="onchange" rerender="totalSelected, totalUn" />
-                            </apex:inputField>
+                            <c:UTIL_FormField sObj="{!credit.contactRole}" sObjType="OpportunityContactRole" field="ContactId"
+                                  showLabel="false" actSup="true" actSupAction="{!refresh}" actSupReRender="totalSelected, totalUn"/>
+
                         </td>
                         <td>
                             <div class="slds-form-element__control slds-select_container">
@@ -116,14 +98,14 @@
                         </td>
                         <td>
                             <apex:outputPanel id="amountField">
-                                <apex:inputField styleClass="slds-input" value="{!credit.partial.Amount__c}" rendered="{!NOT(credit.fullCredit)}">
-                                    <apex:actionSupport action="{!refresh}" event="onchange" reRender="totalSelected, totalUn" />
-                                </apex:inputField>
+                                <c:UTIL_FormField sObj="{!credit.partial}" sObjType="Partial_Soft_Credit__c" field="Amount__c"
+                                                  showLabel="false" actSup="true" actSupAction="{!refresh}" actSupReRender="totalSelected, totalUn"
+                                                  rendered="{!NOT(credit.fullCredit)}"/>
                                 <apex:outputText styleClass="slds-form-element__static" value="{!credit.partial.Amount__c}" rendered="{!credit.fullCredit}" />
                             </apex:outputPanel>
                         </td>
                         <td>
-                            <apex:commandButton styleClass="slds-button slds-button--destructive" value="{!$Label.alloDeleteRow}" id="delRowBTN" title="{!$Label.alloDeleteRow}" action="{!delRow}" reRender="tablePanel, totalSelected, totalUn" immediate="true">
+                            <apex:commandButton styleClass="slds-button slds-button_destructive" value="{!$Label.alloDeleteRow}" id="delRowBTN" title="{!$Label.alloDeleteRow}" action="{!delRow}" reRender="tablePanel, totalSelected, totalUn" immediate="true">
                                 <span class="slds-form-element__label slds-assistive-text">
                                     {!$Label.pscDeleteRow} {!cnt}
                                 </span>
@@ -138,10 +120,10 @@
             </apex:outputPanel>
             <!-- /PSC TABLE -->
             
-            <div class="slds-p-around--medium">
+            <div class="slds-p-around_medium">
                 <apex:commandLink action="{!addAnotherSoftCredit}" value="{!$Label.pscManageSoftCreditsAdd}" reRender="tablePanel" />
             </div>
         </div> <!-- myBodyContent -->
-      </div> <!-- slds -->
+    </div> <!-- slds -->
     </apex:form>
 </apex:page>

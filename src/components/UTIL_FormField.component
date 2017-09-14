@@ -57,7 +57,7 @@
     <apex:outputPanel layout="block" styleClass="{!'slds-form-element ' + styleClass + fixup}" id="divInput"
         rendered="{!($ObjectType[sObjType].fields[field].updateable
                     || $ObjectType[sObjType].fields[field].createable && sObj['Id']=='') && $ObjectType[sObjType].fields[field].type != 'boolean'}">        
-        <apex:outputLabel for="inputX" styleClass="slds-form-element__label" rendered="{!ftype!='boolean'}">
+        <apex:outputLabel for="inputX" styleClass="slds-form-element__label" rendered="{!showLabel == true && ftype!='boolean'}">
             <apex:outputText rendered="{!required}">
                 <abbr class="slds-required" title="{!$Label.lblRequired}">*</abbr>
             </apex:outputText>
