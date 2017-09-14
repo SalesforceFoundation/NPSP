@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>Admin</members>
+        <name>Profile</name>
+    </types>
+    <types>
+        <members>Contact</members>
+        <members>Lead</members>
+        <members>Opportunity</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>Nonprofit_CRM</members>
+        <name>CustomApplication</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>Layout</name>
+    </types>
+    <types>
+        <members>npe01__OppPayment__c.Write_Off_Payments</members>
+        <members>npe01__OppPayment__c.Schedule_Payments</members>
+        <name>WebLink</name>
+    </types>
+    <version>40.0</version>
+</Package>
