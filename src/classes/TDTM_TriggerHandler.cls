@@ -79,6 +79,7 @@ public class TDTM_TriggerHandler {
 
         // If there are no records, insert the defaults.
         if(!defaultRecordsInserted && dao.isEmpty()) {
+            // We will not insert the default records when Triggered by the User object to prevent MixedDML errors
             if (describeObj == Schema.SObjectType.User) {
                 return;
             }
