@@ -37,8 +37,10 @@
 @isTest
 public with sharing class USER_MixedDML_TEST {
     private static testMethod void testInsertingUserWithTriggerHandlerMixedDML() {
+        System.assert([SELECT Id FROM Trigger_Handler__c].isEmpty(), 'There should be no trigger handler records found!');
         List<User> newUsers = USER_UserService_TEST.createUsers();
         newUsers[0].IsActive = false;
         update newUsers[0];
+        System.assert([SELECT Id FROM Trigger_Handler__c].isEmpty(), 'There should still be no trigger handler records found!');
     }
 }
