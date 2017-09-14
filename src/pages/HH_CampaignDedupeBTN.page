@@ -30,7 +30,6 @@
                 <c:UTIL_JobProgressLightning strBatchComponentLabel="{!$Label.hhCmpDedupeBatchProgressTitle}" cNumberOfJobs="1" bRerenderOnComplete="true" />
                 <br/>
                 <apex:outputLink target="_self" title="Report"  value="{!reportURL}" styleClass="slds-button slds-button_brand">{!$Label.hhCmpDedupeLabelOpenReport}</apex:outputLink>
-                    <!--<button class=""></button>-->
             </apex:form>
         </apex:outputPanel>
     </div>

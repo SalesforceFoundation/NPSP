@@ -5,6 +5,7 @@
     recordSetVar="cons"
     showHeader="true"
     sidebar="false"
+    docType="html-5.0"
     standardStylesheets="false">
 
     <apex:slds />

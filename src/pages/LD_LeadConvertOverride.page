@@ -1,7 +1,10 @@
-<apex:page standardController="Lead" extensions="LD_LeadConvertOverride_CTRL" title="{!$Label.leadConvertPageTitle} {!l.Name}" standardStylesheets="false" docType="html-5.0">
+<apex:page standardController="Lead" extensions="LD_LeadConvertOverride_CTRL"
+           title="{!$Label.leadConvertPageTitle} {!l.Name}"
+           standardStylesheets="false" docType="html-5.0">
 
+    <apex:slds />
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/modal.js')}"/>
-    <apex:stylesheet value="{!URLFOR($Resource.SLDS, '/0_12_2/assets/styles/salesforce-lightning-design-system-vf.min.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 
     <style type="text/css">
         input.lookupInput {
@@ -27,23 +30,23 @@
     </style>
 
     <div class="slds">
-        <apex:form id="pbEdit" styleClass="slds-form--stacked">
+        <apex:form id="pbEdit" styleClass="slds-form_stacked">
             <div class="hide-when-modal-open">
 
-                <div class="slds-page-header slds-m-bottom--medium" role="banner">
+                <div class="slds-page-header slds-m-bottom_medium" role="banner">
                     <div class="slds-grid">
                         <div class="slds-col slds-has-flexi-truncate">
-                            <h1 class="slds-page-header__title slds-truncate slds-text-heading--medium">
+                            <h1 class="slds-page-header__title slds-truncate slds-text-heading_medium">
                                 {!$Label.leadConvertSectionTitle}
                             </h1>
-                            <p class="slds-text-heading--label slds-page-header__info">
+                            <p class="slds-text-heading_label slds-page-header__info">
                                 <apex:outputText value="{!l.Name}"/>
                             </p>
                         </div>
                         <div class="slds-col slds-no-flex">
                             <div class="slds-button-group" role="group">
-                                <apex:commandButton value="{!$Label.leadConvertBtnCancel}" action="{!cancel}" styleClass="slds-button slds-button--neutral"/>
-                                <apex:commandButton value="{!$Label.leadConvertBtnConvert}" action="{!convertLeadNow}" styleClass="slds-button slds-button--brand"/>
+                                <apex:commandButton value="{!$Label.leadConvertBtnCancel}" action="{!cancel}" styleClass="slds-button slds-button_neutral"/>
+                                <apex:commandButton value="{!$Label.leadConvertBtnConvert}" action="{!convertLeadNow}" styleClass="slds-button slds-button_brand"/>
                             </div>
                         </div>
                     </div>
@@ -53,7 +56,7 @@
                     <c:UTIL_PageMessages />
                 </div>
 
-                <div class="slds-p-horizontal--large">
+                <div class="slds-p-horizontal_large">
 
                     <div class="slds-form-element slds-is-required">
                         <label class="slds-form-element__label">
@@ -67,7 +70,7 @@
                     <div class="slds-form-element">
                         <label class="slds-checkbox">
                             <apex:inputCheckbox value="{!sendEmailToOwner}"/>
-                            <span class="slds-checkbox--faux"></span>
+                            <span class="slds-checkbox_faux"></span>
                             <span class="slds-form-element__label">
                                 <apex:outputText value="{!$Label.leadConvertSendEmail}"/>
                             </span>
@@ -148,7 +151,7 @@
                         <div class="slds-form-element">
                             <label class="slds-checkbox">
                                 <apex:inputCheckbox value="{!doNotCreateOpp}"/>
-                                <span class="slds-checkbox--faux"></span>
+                                <span class="slds-checkbox_faux"></span>
                                 <span class="slds-form-element__label">
                                     <apex:outputText value="{!$Label.leadConvertNewOpp}">
                                        <apex:param value="{!$ObjectType.Opportunity.Label}"/>
@@ -189,21 +192,21 @@
             <div>
                 <div id="contact_modal" tabindex="-1" aria-hidden="true" role="dialog" class="slds-modal">
                     <div class="slds-modal__container">
-                        <div class="slds-modal__header slds-theme--shade">
-                            <h2 class="slds-text-heading--medium">Contact Details</h2>
-                            <button type="button" class="slds-button slds-button--icon-inverse slds-modal__close" data-dismiss="modal" data-target="contact_modal">
-                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon--large" viewBox="0 0 24 24" data-target="contact_modal">
+                        <div class="slds-modal__header slds-theme_shade">
+                            <h2 class="slds-text-heading_medium">Contact Details</h2>
+                            <button type="button" class="slds-button slds-button_icon-inverse slds-modal__close" data-dismiss="modal" data-target="contact_modal">
+                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_large" viewBox="0 0 24 24" data-target="contact_modal">
                                     <path data-target="contact_modal" d="M14.6 11.9l6-6c.3-.3.3-.7 0-1l-.9-1c-.3-.3-.7-.3-1 0L12.6 10c-.1.2-.4.2-.6 0L6 3.9c-.3-.3-.7-.3-1 0l-1 .9c-.3.3-.3.7 0 1l6.1 6.1c.1.1.1.4 0 .6L4 18.6c-.3.3-.3.7 0 1l.9.9c.3.3.7.3 1 0l6.1-6c.2-.2.5-.2.6 0l6.1 6c.3.3.7.3 1 0l.9-.9c.3-.3.3-.7 0-1l-6-6c-.2-.2-.2-.5 0-.7z"/>
                                 </svg>
                                 <span class="slds-assistive-text">Close</span>
                             </button>
                         </div>
                         <div class="slds-modal__content">
-                            <div class="slds-panel slds-grid slds-grid--vertical slds-nowrap">
-                                <div class="slds-form--stacked slds-grow slds-scrollable--y">
+                            <div class="slds-panel slds-grid slds-grid_vertical slds-nowrap">
+                                <div class="slds-form_stacked slds-grow slds-scrollable_y">
                                     <div class="slds-panel__section">
                                         <apex:repeat value="{!conFieldSet}" var="f">
-                                            <div class="slds-form-element slds-has-divider--bottom">
+                                            <div class="slds-form-element slds-has-divider_bottom">
                                                 <span class="slds-form-element__label">
                                                     <apex:outputLabel value="{!f.label}"/>
                                                 </span>
@@ -218,9 +221,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="slds-modal__footer slds-theme--default">
-                            <div class="slds-x-small-buttons--horizontal">
-                                <button class="slds-button slds-button--neutral" data-dismiss="modal" data-target="contact_modal">Close</button>
+                        <div class="slds-modal__footer slds-theme_default">
+                            <div class="slds-x-small-buttons_horizontal">
+                                <button class="slds-button slds-button_neutral" data-dismiss="modal" data-target="contact_modal">Close</button>
                             </div>
                         </div>
                     </div>
