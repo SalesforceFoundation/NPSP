@@ -37,6 +37,10 @@
 
 @isTest
 public with sharing class USER_InActiveUser_TDTM_TEST {
+    @TestSetup
+    static void testSetup() {
+        insert TDTM_DefaultConfig.getDefaultRecords();
+    }
     /*********************************************************************************************************
     * @description Tests the handling of deactivating a System Administrator via the TDTM_Runnable.Action 
     *               for AfterUpdate.
