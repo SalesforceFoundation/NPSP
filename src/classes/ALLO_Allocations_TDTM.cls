@@ -156,7 +156,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     listOppsForProcessing.add(opp);
                 }
                 //if currency has changed, reset allocation currencies
-                if (ALLO_Multicurrency_TDTM.isMultiCurrency()) {
+                if (UserInfo.isMultiCurrencyOrganization()) {
                     if (opp.get('CurrencyIsoCode') != oldlist[i].get('CurrencyIsoCode')) {
                         listOppsForProcessing.add(opp);
                     }
@@ -209,7 +209,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 allo.addError(Label.alloNegativePercent);
             //manually updated currency
             if (triggerAction == TDTM_Runnable.Action.BeforeUpdate &&
-                    ALLO_Multicurrency_TDTM.isMultiCurrency() &&
+                    UserInfo.isMultiCurrencyOrganization() &&
                     allo.get('CurrencyIsoCode') != oldList[i].get('CurrencyIsoCode')) {
                 allo.addError(Label.alloModifyCurrency);
             }
@@ -478,7 +478,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                                 dmlWrapper.objectsToInsert.add(oppWrap.defaultAllo);
                             } else if (oppWrap.defaultAllo.Amount__c != remainder || (UserInfo.isMultiCurrencyOrganization() && oppWrap.defaultAllo.get('CurrencyIsoCode') != opp.get('CurrencyIsoCode'))) {
                                 oppWrap.defaultAllo.Amount__c = remainder;
-                                if (ALLO_Multicurrency_TDTM.isMultiCurrency()) {
+                                if (UserInfo.isMultiCurrencyOrganization()) {
                                     oppWrap.defaultAllo.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
                                 }
                                 dmlWrapper.objectsToUpdate.add(oppWrap.defaultAllo);
