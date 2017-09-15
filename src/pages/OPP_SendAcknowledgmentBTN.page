@@ -3,25 +3,22 @@
     recordSetVar="listOpp"
     action="{!SendAcknowledgment}"
     standardStylesheets="false"
-    title="{!$Label.sendAcknowledgmentPageTitle}">
-    <apex:slds />
+    title="{!$Label.sendAcknowledgmentPageTitle}"
+    docType="html-5.0">
 
+    <apex:slds />
+    
     <apex:form id="vfForm">
         <div class="slds">
             <!-- PAGE HEADER -->
-            <div class="slds-page-header slds-p-bottom_small" role="banner">
-                <div class="slds-grid">
-                    <div class="slds-col">
-                        <h1 class="slds-text-heading_medium">{!$Label.sendAcknowledgmentPageTitle}</h1>
-                    </div>
-                    <div class="slds-col slds-no-flex slds-align-middle">
-                        <div class="slds-button-group" role="group">
-                            <apex:commandButton id="close" styleClass="slds-button slds-button_neutral" action="{!close}"
-                                value="{!$Label.sendAcknowledgmentReturnLinkLabel}" immediate="true" reRender="vfForm"/>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="Opportunity"
+                               parentAction="{! URLFOR($Action.Opportunity.View, recordId)}"
+                               parentRecordAction="/{!recordId}"
+                               header="{!$Label.sendAcknowledgmentPageTitle}"
+                               icon="opportunity_120" iconCategory="standard"
+                               showSaveBtn="false" cancelLabel="{!$Label.sendAcknowledgmentReturnLinkLabel}"
+                               cancelAction="{!close}" cancelImmediate="true" />
+
             <!-- PAGE MESSAGE -->
             <c:UTIL_PageMessages />
             <!-- PAGE RETURN -->
@@ -34,7 +31,7 @@
                         <ul class="slds-list_dotted">
                             <apex:repeat value="{!listOppNotSent}" var="opp">
                                 <li class="slds-item">
-                                    <apex:outputLink value="/{!opp.Id}" target="_blank">{!opp.Name}</apex:outputLink>
+                                    <apex:outputLink onClick="navigateToSObjectNewWindow('{!opp.Id}');">{!opp.Name}</apex:outputLink>
                                 </li>
                             </apex:repeat>
                         </ul>
@@ -43,4 +40,15 @@
             </apex:outputPanel>
         </div>
     </apex:form>
+    <script>
+        function navigateToSObjectNewWindow(recordId) {
+            if (typeof sforce !== "undefined" && sforce !== null) {
+                // Salesforce1 navigation
+                sforce.one.navigateToSObject(recordId);
+            } else {
+                // Desktop navigation
+                window.open('/' + recordId, '_blank');
+            }
+        }
+    </script>
 </apex:page>

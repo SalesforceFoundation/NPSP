@@ -183,7 +183,18 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
     * @return null to the calling page
     */
     public PageReference close() {
-        redirect = true;
-        return null;
+        PageReference pg;
+        if (UserInfo.getUiThemeDisplayed() == 'Theme4d') {
+            // If running in LEX, return to the view of the current Opportunity or the main list view of Opps
+            if (listOpp.size() == 1) {
+                pg = new ApexPages.StandardController(listOpp[0]).view();
+            } else {
+                pg = new PageReference('/006');
+            }
+            pg.setRedirect(true);
+        } else {
+            redirect = true;
+        }
+        return pg;
     }
 }

@@ -33,24 +33,14 @@
         <apex:form id="pbEdit" styleClass="slds-form_stacked">
             <div class="hide-when-modal-open">
 
-                <div class="slds-page-header slds-m-bottom_medium" role="banner">
-                    <div class="slds-grid">
-                        <div class="slds-col slds-has-flexi-truncate">
-                            <h1 class="slds-page-header__title slds-truncate slds-text-heading_medium">
-                                {!$Label.leadConvertSectionTitle}
-                            </h1>
-                            <p class="slds-text-heading_label slds-page-header__info">
-                                <apex:outputText value="{!l.Name}"/>
-                            </p>
-                        </div>
-                        <div class="slds-col slds-no-flex">
-                            <div class="slds-button-group" role="group">
-                                <apex:commandButton value="{!$Label.leadConvertBtnCancel}" action="{!cancel}" styleClass="slds-button slds-button_neutral"/>
-                                <apex:commandButton value="{!$Label.leadConvertBtnConvert}" action="{!convertLeadNow}" styleClass="slds-button slds-button_brand"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <!-- Page Header -->
+                <c:UTIL_PageHeader showBreadcrumb="false" parentEntityLabel="Lead"
+                                   parentAction="{! URLFOR($Action.Lead.View, l.Id)}" parentRecordName="{!l.Name}"
+                                   parentRecordAction="/{!l.Id}"
+                                   header="{! $Label.leadConvertSectionTitle }" headerLabel="{!l.Name}"
+                                   icon="lead_120" iconCategory="standard"
+                                   saveAction="{!convertLeadNow}" saveLabel="{!$Label.leadConvertBtnConvert}"
+                                   cancelAction="{!cancel}" cancelLabel="{!$Label.leadConvertBtnCancel}"/>
 
                 <div>
                     <c:UTIL_PageMessages />
@@ -59,12 +49,7 @@
                 <div class="slds-p-horizontal_large">
 
                     <div class="slds-form-element slds-is-required">
-                        <label class="slds-form-element__label">
-                            <apex:outputText value="{!$Label.leadConvertOwner}"/>
-                        </label>
-                        <div class="slds-form-element__control">
-                            <apex:inputField styleClass="lookupInput" value="{!dummyCon.OwnerId}"/>
-                        </div>
+                        <c:UTIL_FormField sObjType="Contact" sObj="{!dummyCon}" field="OwnerId" labelOverride="{!$Label.leadConvertOwner}" />
                     </div>
 
                     <div class="slds-form-element">
@@ -177,14 +162,7 @@
 
 
                     <div class="slds-form-element">
-                        <label class="slds-form-element__label">
-                            <apex:outputText value="{!$Label.leadConvertStatus}"/>
-                        </label>
-                        <div class="slds-form-element__control">
-                            <div class="slds-select_container">
-                                <apex:inputField value="{!l.Status}" styleClass="slds-select" id="ldStatus"/>
-                            </div>
-                        </div>
+                        <c:UTIL_FormField sObjType="Lead" sObj="{!l}" field="Status" labelOverride="{!$Label.leadConvertStatus}" />
                     </div>
                 </div>
             </div>
