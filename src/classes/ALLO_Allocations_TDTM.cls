@@ -276,7 +276,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
         if (!setRecDonId.isEmpty() || !setOppIds.isEmpty()) {
             string oppQuery = 'SELECT Id, Amount, npe03__Recurring_Donation__c, CampaignId';
-            if (ALLO_Multicurrency_TDTM.isMultiCurrency()) {
+            if (UserInfo.isMultiCurrencyOrganization()) {
                 oppQuery += ', CurrencyIsoCode';
             }
             oppQuery+=' FROM Opportunity WHERE (Opportunity.isClosed = FALSE AND npe03__Recurring_Donation__c IN :setRecDonId) OR ID IN :setOppIds';
@@ -376,7 +376,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     allo.Opportunity__c = opp.id;
                     
                     //if this is a multicurrency org, recalculate the amount and set the CurrencyIsoCode
-                    if (ALLO_Multicurrency_TDTM.isMultiCurrency()) {
+                    if (UserInfo.isMultiCurrencyOrganization()) {
                         if (allo.Amount__c!=null) {
                             allo.Amount__c = ALLO_Multicurrency_TDTM.convertCurrency(
                                 (string)allo.get('CurrencyIsoCode'),
@@ -455,12 +455,12 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                             allo.Amount__c = (oppWrap.parentAmount * allo.Percent__c * .01).setScale(2);
                             oppWrap.totalAmount += allo.Amount__c;
                             
-                            if (ALLO_Multicurrency_TDTM.isMultiCurrency()) {
+                            if (UserInfo.isMultiCurrencyOrganization()) {
                                 allo.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
                             }
                             dmlWrapper.objectsToUpdate.add(allo);
                         //if just the currency changed, recalculate the currency
-                        } else if (ALLO_Multicurrency_TDTM.isMultiCurrency() && allo.get('CurrencyIsoCode') != opp.get('CurrencyIsoCode')) {
+                        } else if (UserInfo.isMultiCurrencyOrganization() && allo.get('CurrencyIsoCode') != opp.get('CurrencyIsoCode')) {
                             allo.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
                             dmlWrapper.objectsToUpdate.add(allo);
                         }
@@ -476,7 +476,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                                 oppWrap.defaultAllo = makeDefaultAllocation(opp);
                                 oppWrap.defaultAllo.Amount__c = remainder;
                                 dmlWrapper.objectsToInsert.add(oppWrap.defaultAllo);
-                            } else if (oppWrap.defaultAllo.Amount__c != remainder || (ALLO_Multicurrency_TDTM.isMultiCurrency() && oppWrap.defaultAllo.get('CurrencyIsoCode') != opp.get('CurrencyIsoCode'))) {
+                            } else if (oppWrap.defaultAllo.Amount__c != remainder || (UserInfo.isMultiCurrencyOrganization() && oppWrap.defaultAllo.get('CurrencyIsoCode') != opp.get('CurrencyIsoCode'))) {
                                 oppWrap.defaultAllo.Amount__c = remainder;
                                 if (ALLO_Multicurrency_TDTM.isMultiCurrency()) {
                                     oppWrap.defaultAllo.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
@@ -633,7 +633,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             'Amount__c, Percent__c, General_Accounting_Unit__c, General_Accounting_Unit__r.Active__c';
         
         //query for multicurrency string if multicurrency org
-        if (ALLO_Multicurrency_TDTM.isMultiCurrency()) {
+        if (UserInfo.isMultiCurrencyOrganization()) {
             alloQueryString += ', CurrencyIsoCode';
         }
         alloQueryString += ' FROM Allocation__c WHERE (Opportunity__c IN :setParentId OR Campaign__c IN :setParentId OR Recurring_Donation__c IN :setParentId)';
@@ -718,7 +718,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             Amount__c = opp.Amount,
             General_Accounting_Unit__c = idDefaultGAU
         );
-        if (ALLO_Multicurrency_TDTM.isMultiCurrency()) {
+        if (UserInfo.isMultiCurrencyOrganization()) {
             defaultAllo.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
         }
         return defaultAllo;
