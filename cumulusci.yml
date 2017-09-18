@@ -62,7 +62,7 @@ tasks:
             path: dev_config/src_managed
 
     deploy_dev_config_qa:
-        description: Deploys the post install configuration for an unmanaged DE org for qa, with layout and button changes to accommodate no namespace
+        description: Deploys the post install configuration for an unmanaged DE org for qa, with test fields, layout and button changes to accommodate no namespace
         class_path: cumulusci.tasks.salesforce.Deploy
         options:
             path: dev_config/src_qa
