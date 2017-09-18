@@ -676,18 +676,19 @@ global with sharing class BDI_DataImportService {
 
                     // make sure they have permissions to modify the target field
                     // we can't do this in all tests, because many profiles won't have FLS set for all our new fields!
-                    // also they may have enabled "Set Audit Fields upon Record Creation", which doesn't seem to change the
-                    // describe results!
-                    if (strField != 'CreatedDate' &&
-                        strField != 'CreatedById' &&
-                        strField != 'LastModifiedDate' &&
-                        strField != 'LastModifiedById' &&
-                        (!Test.isRunningTest() || failFieldLevelSecurity)) {
+                    if (!Test.isRunningTest() || failFieldLevelSecurity) {
                         dfr = UTIL_Describe.getFieldDescribe(strBaseObj, strField);
-                        if (failFieldLevelSecurity)
-                            dfr = null;
-                        if (dfr == null || !dfr.isAccessible() || !dfr.isUpdateable())
-                            throw (new flsException(string.format(label.flsError, new string[]{strBaseObj + '.' + strField})));
+                        Set<String> setAuditFields = new Set<String>{'createddate', 'createdbyid', 'lastmodifieddate', 'lastmodifiedbyid'};
+                        Boolean isAuditField = setAuditFields.contains(strField.toLowerCase());
+
+                        if (failFieldLevelSecurity ||
+                            dfr == null ||
+                            !dfr.isCreateable() ||
+                            (!isAuditField && !dfr.isUpdateable())) {
+                                throw (new flsException(string.format(label.flsError, new string[]{
+                                    strBaseObj + '.' + strField
+                                })));
+                        }
                     }
 
                     mapDIFieldToObjField.put(strF, strField);
