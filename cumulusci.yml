@@ -61,6 +61,12 @@ tasks:
         options:
             path: dev_config/src_managed
 
+    deploy_dev_config_qa:
+        description: Deploys the post install configuration for an unmanaged DE org for qa, with layout and button changes to accommodate no namespace
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: dev_config/src_qa
+
     deploy_dev_config_delete:
         description: Deploys the metadata deletions for the post install DE org config
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -231,13 +237,22 @@ flows:
                 task: browsertests_unmanaged_chrome
                 options:
                     use_saucelabs: True
-     
+
     dev_org:
         tasks:
             8:
                 task: deploy_dev_config_delete
             9:
                 task: deploy_dev_config
+
+    qa_config:
+        tasks:
+            1:
+                task: deploy_dev_config_qa
+            2:
+                task: update_admin_profile
+            3:
+                task: test_data_dev_org
 
     release_beta:
         tasks:
@@ -306,3 +321,9 @@ orgs:
             config_file: orgs/beta_multicurrency.json
         browsertest_classic:
             config_file: orgs/browsertest_classic.json
+        prerelease:
+            config_file: orgs/prerelease.json
+        trial:
+            config_file: orgs/trial.json
+        enterprise:
+            config_file: orgs/enterprise.json

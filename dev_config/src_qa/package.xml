@@ -5,6 +5,7 @@
         <name>Profile</name>
     </types>
     <types>
+        <members>Account</members>
         <members>Contact</members>
         <members>Lead</members>
         <members>Opportunity</members>

@@ -6,6 +6,17 @@
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>Visualforce</type>
     </actionOverrides>
+    <fields>
+        <fullName>Custom_Unique_ID_c__c</fullName>
+        <caseSensitive>false</caseSensitive>
+        <externalId>true</externalId>
+        <label>Custom_Unique_ID__c</label>
+        <length>10</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>true</unique>
+    </fields>
     <webLinks>
         <fullName>Relationships_Viewer</fullName>
         <availability>online</availability>
