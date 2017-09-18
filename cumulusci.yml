@@ -27,14 +27,6 @@ project:
         - github: https://github.com/SalesforceFoundation/Affiliations
 
 tasks:
-    download_browser_tests:
-        description: Downloads the browser tests from the NPSP-Browser-Tests Github repository.
-        class_path: cumulusci.tasks.util.DownloadZip
-        options:
-            url: 'https://github.com/SalesforceFoundation/NPSP-Browser-Tests/archive/master.zip'
-            dir: browser_tests
-            subfolder: NPSP-Browser-Tests-master
-
     download_ldv_tests:
         description: Downloads the NPSP-LDV-Tests repository
         class_path: cumulusci.tasks.util.DownloadZip
@@ -164,40 +156,30 @@ flows:
         description: Runs the browser tests locally against a managed package in Firefox
         tasks:
             1:
-                task: download_browser_tests
-            2:
                 task: browsertests_firefox
 
     browsertests_chrome:
         description: Runs the browser tests locally against a managed package in Chrome
         tasks:
             1:
-                task: download_browser_tests
-            2:
                 task: browsertests_chrome
 
     browsertests_unmanaged_firefox:
         description: Runs the browser tests via SauceLabs against the unmanaged metadata in Firefox
         tasks:
             1:
-                task: download_browser_tests
-            2:
                 task: browsertests_unmanaged_firefox
 
     browsertests_unmanaged_chrome:
         description: Runs the browser tests via SauceLabs against the unmanaged metadata in Chrome
         tasks:
             1:
-                task: download_browser_tests
-            2:
                 task: browsertests_unmanaged_chrome
 
     ci_browsertests_firefox:
         description: Runs the browser tests via SauceLabs against a managed package in Firefox
         tasks:
             1:
-                task: download_browser_tests
-            2:
                 task: browsertests_firefox
                 options:
                     use_saucelabs: True
@@ -206,8 +188,6 @@ flows:
         description: Runs the browser tests via SauceLabs against a managed package in Chrome
         tasks:
             1:
-                task: download_browser_tests
-            2:
                 task: browsertests_chrome
                 options:
                     use_saucelabs: True
@@ -216,8 +196,6 @@ flows:
         description: Runs the browser tests via SauceLabs against the unmanaged metadata in Firefox
         tasks:
             1:
-                task: download_browser_tests
-            2:
                 task: browsertests_unmanaged_firefox
                 options:
                     use_saucelabs: True
@@ -226,8 +204,6 @@ flows:
         description: Runs the browser tests via SauceLabs against the unmanaged metadata in Chrome
         tasks:
             1:
-                task: download_browser_tests
-            2:
                 task: browsertests_unmanaged_chrome
                 options:
                     use_saucelabs: True
