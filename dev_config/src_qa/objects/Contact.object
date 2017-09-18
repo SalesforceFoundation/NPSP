@@ -7,16 +7,28 @@
         <type>Visualforce</type>
     </actionOverrides>
     <fields>
-        <fullName>Custom_Unique_ID_c__c</fullName>
+        <fullName>Custom_Unique_ID__c</fullName>
         <caseSensitive>false</caseSensitive>
         <externalId>true</externalId>
-        <label>Custom_Unique_ID__c</label>
+        <label>Custom Unique ID</label>
         <length>10</length>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
         <type>Text</type>
         <unique>true</unique>
     </fields>
+    <webLinks>
+        <fullName>Copy_Address_to_Household</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <height>600</height>
+        <linkType>url</linkType>
+        <masterLabel>Copy Address to Household NNS</masterLabel>
+        <openType>sidebar</openType>
+        <protected>false</protected>
+        <url>/apex/ADDR_CopyAddrHHObjBTN?id={!Contact.Id}</url>
+    </webLinks>
     <webLinks>
         <fullName>Relationships_Viewer</fullName>
         <availability>online</availability>

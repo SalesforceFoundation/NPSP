@@ -27,6 +27,10 @@
                 <field>Amount</field>
             </layoutItems>
             <layoutItems>
+                <behavior>Edit</behavior>
+                <field>User_Defined_Rollup_Field__c</field>
+            </layoutItems>
+            <layoutItems>
                 <behavior>Required</behavior>
                 <field>CloseDate</field>
             </layoutItems>
