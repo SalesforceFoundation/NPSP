@@ -679,7 +679,9 @@ global with sharing class BDI_DataImportService {
                     // also they may have enabled "Set Audit Fields upon Record Creation", which doesn't seem to change the
                     // describe results!
                     if (strField != 'CreatedDate' &&
+                        strField != 'CreatedById' &&
                         strField != 'LastModifiedDate' &&
+                        strField != 'LastModifiedById' &&
                         (!Test.isRunningTest() || failFieldLevelSecurity)) {
                         dfr = UTIL_Describe.getFieldDescribe(strBaseObj, strField);
                         if (failFieldLevelSecurity)
