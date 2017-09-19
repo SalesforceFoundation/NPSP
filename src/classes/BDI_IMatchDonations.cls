@@ -31,7 +31,8 @@
 * @author Salesforce.org
 * @date 2017
 * @group Batch Data Import
-* @description Interface for classes that will provide Matching of Donations 
+* @group-content ../../ApexDocContent/BatchDataImport.htm
+* @description Interface for classes that will provide Matching of Donations
 * (Opportunities and Payments) for BDI
 *
 */
