@@ -3,6 +3,7 @@
     <customButtons>Find_Matched_Gifts</customButtons>
     <customButtons>Email_Acknowledgment</customButtons>
     <customButtons>Manage_Soft_Credits</customButtons>
+    <customButtons>Refresh_Name</customButtons>
     <excludeButtons>Submit</excludeButtons>
     <layoutSections>
         <customLabel>true</customLabel>
