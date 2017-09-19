@@ -31,6 +31,7 @@
 * @author Salesforce.org
 * @date 2017
 * @group Batch Data Import
+* @group-content ../../ApexDocContent/BatchDataImport.htm
 * @description Interface for classes that will provide Post Processing of Data Import records
 */
 global interface BDI_IPostProcess {
