@@ -30,8 +30,8 @@
 /**
 * @author Salesforce.org
 * @date 2017
-* @group BDI
-* @group-content ../../ApexDocContent/BDI.htm
+* @group Batch Data Import
+* @group-content ../../ApexDocContent/BatchDataImport.htm
 * @description Selector class for the DataImportBatch SObject
 */
 public with sharing class BDI_DataImportBatch_SEL {

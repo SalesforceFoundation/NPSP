@@ -31,6 +31,7 @@
 * @author Salesforce.org
 * @date 2017
 * @group Batch Data Import
+* @group-content ../../ApexDocContent/BatchDataImport.htm
 * @description Provides a default implementation of the BDI_IMatchDonations interface, which supports matching
 * imported Donations with their appropriate Opportunity and Payment.
 *
