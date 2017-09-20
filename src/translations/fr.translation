@@ -1772,6 +1772,10 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>pmtWizardInterval</name>
     </customLabels>
     <customLabels>
+        <label>Mois</label>
+        <name>pmtWizardMonth</name>
+    </customLabels>
+    <customLabels>
         <label>Aucune opportunité trouvée.</label>
         <name>pmtWizardMsgNoOppFound</name>
     </customLabels>
@@ -1824,12 +1828,20 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>pmtWizardWarning</name>
     </customLabels>
     <customLabels>
+        <label>Semaine</label>
+        <name>pmtWizardWeek</name>
+    </customLabels>
+    <customLabels>
         <label>Quelle date voulez-vous utiliser ?</label>
         <name>pmtWizardWriteoffDate</name>
     </customLabels>
     <customLabels>
         <label>Vous êtes sur le point de déduire {0} paiements totalisant {1}.</label>
         <name>pmtWizardWriteoffMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Année</label>
+        <name>pmtWizardYear</name>
     </customLabels>
     <customLabels>
         <label>Supprimer la ligne</label>

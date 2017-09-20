@@ -1,5 +1,5 @@
-<apex:page controller="PMT_PaymentWizard_CTRL" tabStyle="Opportunity" standardStylesheets="true">
-    <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
+<apex:page controller="PMT_PaymentWizard_CTRL" title="{!IF(isWriteoffWizard,$Label.pmtWizardSectionWriteoff,$Label.pmtWizardSubtitle)}" tabStyle="Opportunity" standardStylesheets="true">
+    <apex:slds />
     <apex:stylesheet value="{!URLFOR($Resource.SLDS, '/0_12_2/assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
 
 <!--
@@ -101,7 +101,7 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
 
         <div class="container slds-p-around--medium">
             <!-- Opportunity Info -->
-            <apex:outputText rendered="{!AND(NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true, isScheduleWizard == true)}">
+            <apex:outputText rendered="{!AND(NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true, isScheduleWizard == true)}" >
                 <div class="slds-section-title--divider">
                     {!$Label.pmtWizardSectionTitle}
                 </div>
@@ -195,7 +195,9 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                         </div>
                         <div class="slds-col slds-col--padded">
                             <div class="slds-form-element">
-                                <label class="slds-form-element__label" for="firstPmtDate">{!$Label.pmtWizardFirstPaymentDate}</label>
+                                <label class="slds-form-element__label" for="firstPmtDate">
+                                    <abbr class="slds-required" title="required">*</abbr>{!$Label.pmtWizardFirstPaymentDate}
+                                </label>
                                 <div class="slds-form-element__control dateInputPicker">
                                     <apex:inputField value="{!samplePayment.npe01__Scheduled_Date__c}" id="firstPmtDate" styleClass="slds-input"/>
                                 </div>
@@ -222,11 +224,12 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                     <table class="slds-table" >
                         <thead>
                             <tr class="slds-text-heading--label">
-                                <th scope="col"><span class="slds-truncate">{!$Label.pmtWizardPaymentNumber}</span></th>
-                                <th scope="col"><span class="slds-truncate">{!$ObjectType.npe01__OppPayment__c.Fields.npe01__Payment_Amount__c.Label}</span></th>
-                                <th scope="col"><span class="slds-truncate">{!$ObjectType.npe01__OppPayment__c.Fields.npe01__Scheduled_Date__c.Label}</span></th>
-                                <th scope="col"><span class="slds-truncate">{!$ObjectType.npe01__OppPayment__c.Fields.npe01__Payment_Date__c.Label}</span></th>
-                                <th scope="col"><span class="slds-truncate">{!$ObjectType.npe01__OppPayment__c.Fields.npe01__Paid__c.Label}</span></th>
+                                <th scope="col" class="slds-cell-wrap">{!$Label.pmtWizardPaymentNumber}</th>
+                                <apex:repeat value="{!pmtFieldSet}" var="fLbl">
+                                     <th scope="col" class="slds-cell-wrap"><span class="slds-truncate">
+                                        <apex:outputText value="{!fLbl.label}"/>
+                                    </span></th>
+                                </apex:repeat>
                             </tr>
                         </thead>
                         <apex:repeat value="{!payments}" var="p">
@@ -236,26 +239,16 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                                         <apex:outputText value="{!p.paymentNumber}"/>
                                     </div>
                                 </td>
-                                <td>
-                                    <div class="slds-form-element">
-                                        <apex:inputField value="{!p.OppPayment.npe01__Payment_Amount__c}" styleClass="slds-input slds-input--small"/>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="slds-form-element" style="margin-right: 105px">
-                                        <apex:inputField value="{!p.OppPayment.npe01__Scheduled_Date__c}" styleClass="slds-input slds-input--small"/>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="slds-form-element" style="margin-right: 105px">
-                                        <apex:inputField value="{!p.OppPayment.npe01__Payment_Date__c}" styleClass="slds-input slds-input--small"/>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="slds-form-element">
-                                        <apex:inputField value="{!p.OppPayment.npe01__Paid__c}" styleClass="slds-input slds-input--small"/>
-                                    </div>
-                                </td>
+                                <apex:repeat value="{!pmtFieldSet}" var="f"> 
+                                    <td>
+                                        <div class="slds-form-element slds-truncate">
+                                            <c:UTIL_InputField field="{!f.fieldPath}"
+                                                              sObj="{!p.OppPayment}"
+                                                              sObjType="npe01__OppPayment__c"
+                                                              required="!f.DBRequired || f.Required}" />
+                                        </div>
+                                    </td>
+                                </apex:repeat>
                             </tr>
                         </apex:repeat>
                     </table>

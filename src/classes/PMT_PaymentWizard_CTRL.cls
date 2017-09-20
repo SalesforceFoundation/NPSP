@@ -253,7 +253,13 @@ public with sharing class PMT_PaymentWizard_CTRL {
             decimal remainder = OppAmountFloat - (paymentAmount * numberOfPayments);
     
             // get the start date
-            date nextDate = samplePayment.npe01__Scheduled_Date__c;
+            Date nextDate;
+            if (samplePayment.npe01__Scheduled_Date__c != null) {
+                nextDate = samplePayment.npe01__Scheduled_Date__c;
+            } else {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR,System.Label.exceptionRequiredField + ' ' + System.Label.pmtWizardFirstPaymentDate));
+                return null;
+            }
             
             // Multicurrency support
             // James Melville 05/03/2011 Added to support multi-currency sfdc.  */
@@ -378,10 +384,24 @@ public with sharing class PMT_PaymentWizard_CTRL {
     */ 
     public List<SelectOption> getIntervalUnits() {
         List<SelectOption> options = new List<SelectOption>();
-        options.add(new SelectOption('Week','Week'));
-        options.add(new SelectOption('Month','Month'));
-        options.add(new SelectOption('Year','Year'));
+        options.add(new SelectOption('Week',System.Label.pmtWizardWeek));
+        options.add(new SelectOption('Month',System.Label.pmtWizardMonth));
+        options.add(new SelectOption('Year',System.Label.pmtWizardYear));
         return options;
+    }
+
+    /*******************************************************************************************************
+    * @description holds the list of FieldSetMembers from the appropriate field set.
+    * @return List<Schema.FieldSetMember>
+    */
+    public List<Schema.FieldSetMember> pmtFieldSet {
+        get {
+            if (pmtFieldSet == null) {
+                    pmtFieldSet = Schema.SObjectType.npe01__OppPayment__c.FieldSets.Payment_WizardFS.getFields();
+            }
+            return pmtFieldSet;
+        }
+        private set;
     }
 
     /*******************************************************************************************************
