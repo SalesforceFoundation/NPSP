@@ -9,7 +9,7 @@
     </compactLayouts>
     <enableEnhancedLookup>false</enableEnhancedLookup>
     <fieldSets>
-        <fullName>Payment_Wizard</fullName>
+        <fullName>Payment_WizardFS</fullName>
         <availableFields>
             <field>npe01__Check_Reference_Number__c</field>
             <isFieldManaged>false</isFieldManaged>
@@ -22,16 +22,6 @@
         </availableFields>
         <availableFields>
             <field>IsDeleted</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>LastModifiedById</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>LastModifiedDate</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </availableFields>
@@ -86,7 +76,7 @@
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </displayedFields>
-        <label>Payment Wizard</label>
+        <label>Payment Wizard FS</label>
     </fieldSets>
     <fields>
         <fullName>Payment_Acknowledged_Date__c</fullName>

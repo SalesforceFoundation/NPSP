@@ -1,5 +1,5 @@
 <apex:page controller="PMT_PaymentWizard_CTRL" title="{!IF(isWriteoffWizard,$Label.pmtWizardSectionWriteoff,$Label.pmtWizardSubtitle)}" tabStyle="Opportunity" standardStylesheets="true">
-    <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
+    <apex:slds />
     <apex:stylesheet value="{!URLFOR($Resource.SLDS, '/0_12_2/assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
 
 <!--
@@ -225,9 +225,9 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                         <thead>
                             <tr class="slds-text-heading--label">
                                 <th scope="col" class="slds-cell-wrap">{!$Label.pmtWizardPaymentNumber}</th>
-                                <apex:repeat value="{!$ObjectType.npe01__OppPayment__c.FieldSets.Payment_Wizard}" var="field">
+                                <apex:repeat value="{!pmtFieldSet}" var="fLbl">
                                      <th scope="col" class="slds-cell-wrap"><span class="slds-truncate">
-                                        <apex:outputText value="{!field.label}"/>
+                                        <apex:outputText value="{!fLbl.label}"/>
                                     </span></th>
                                 </apex:repeat>
                             </tr>
@@ -239,10 +239,13 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                                         <apex:outputText value="{!p.paymentNumber}"/>
                                     </div>
                                 </td>
-                                <apex:repeat value="{!$ObjectType.npe01__OppPayment__c.FieldSets.Payment_Wizard}" var="field">
+                                <apex:repeat value="{!pmtFieldSet}" var="f"> 
                                     <td>
                                         <div class="slds-form-element slds-truncate">
-                                            <apex:inputField value="{!p.oppPayment[field]}" styleClass="slds-input slds-input-small" />
+                                            <c:UTIL_InputField field="{!f.fieldPath}"
+                                                              sObj="{!p.OppPayment}"
+                                                              sObjType="npe01__OppPayment__c"
+                                                              required="!f.DBRequired || f.Required}" />
                                         </div>
                                     </td>
                                 </apex:repeat>

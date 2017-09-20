@@ -397,7 +397,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     public List<Schema.FieldSetMember> pmtFieldSet {
         get {
             if (pmtFieldSet == null) {
-                    pmtFieldSet = Schema.SObjectType.npe01__OppPayment__c.FieldSets.Payment_Wizard.getFields();
+                    pmtFieldSet = Schema.SObjectType.npe01__OppPayment__c.FieldSets.Payment_WizardFS.getFields();
             }
             return pmtFieldSet;
         }
