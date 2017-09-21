@@ -29,7 +29,7 @@
 
             <!-- PAGE HEADER -->
             <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="Opportunity"
-                           parentAction="{!URLFOR($Action.Opportunity.View, Opportunity.Id)}" parentRecordName="{!Opportunity.Name}"
+                           parentAction="/006" parentRecordName="{!Opportunity.Name}"
                            parentRecordAction="/{!Opportunity.Id}" headerLabel="{!$Label.mtchFindMatchedGiftsSectionHeader}"
                            icon="opportunity_120" iconCategory="standard"
                            saveAction="{!saveAndClose}" cancelAction="{!cancel}"/>
@@ -37,70 +37,66 @@
             <br/>
 
             <!-- SUMMARY INFO PANEL -->
-            <div class="slds-card">
-            <div class="slds-card__body">
-                <div class="slds-grid">
-                    <div class="slds-col_padded slds-size_1-of-4">
-                        <dl>
-                            <dt>
-                                <p class="slds-text-heading_label slds-truncate" title="{!$Label.mtchTotalMatchingGift}">
-                                    {!$Label.mtchTotalMatchingGift}
-                                </p>
-                            </dt>
-                            <dd>
-                                <p class="slds-text-body_regular slds-truncate">
-                                    <apex:outputField value="{!opp.Amount}"/>
-                                </p>
-                            </dd>
-                        </dl>
-                    </div>
-                    <div class="slds-col_padded slds-size_1-of-4">
-                        <dl>
-                            <dt>
-                                <p class="slds-text-heading_label slds-truncate" title="{!$ObjectType.Account.Fields.Matching_Gift_Percent__c.Label}">
-                                    {!$ObjectType.Account.Fields.Matching_Gift_Percent__c.Label}
-                                </p>
-                            </dt>
-                            <dd>
-                                <p class="slds-text-body_regular slds-truncate">
-                                    <apex:outputText value="{0,number,0}%" id="txtMatchPercent">
-                                        <apex:param value="{!matchingGiftPercent}"/>
-                                    </apex:outputText>
-                                </p>
-                            </dd>
-                        </dl>
-                    </div>
-                    <div class="slds-col_padded slds-size_1-of-4">
-                        <dl>
-                            <dt>
-                                <p class="slds-text-heading_label slds-truncate" title="{!$Label.mtchTotalSelected}">
-                                    {!$Label.mtchTotalSelected}
-                                </p>
-                            </dt>
-                            <dd>
-                                <p class="slds-text-body_regular slds-truncate">
-                                    <apex:outputField id="totalSelected" value="{!oppTotalSelected.Amount}"/>
-                                </p>
-                            </dd>
-                        </dl>
-                    </div>
-                    <div class="slds-col_padded slds-size_1-of-4">
-                        <dl>
-                            <dt>
-                                <p class="slds-text-heading_label slds-truncate" title="{!$Label.mtchTotalUnaccounted}">
-                                    {!$Label.mtchTotalUnaccounted}
-                                </p>
-                            </dt>
-                            <dd>
-                                <p class="slds-text-body_regular slds-truncate">
-                                    <apex:outputField id="totalUn" value="{!oppTotalUnaccounted.Amount}"/>
-                                </p>
-                            </dd>
-                        </dl>
-                    </div>
-                </div> <!-- slds-grid -->
-            </div>
-            </div>
+            <div class="slds-grid slds-p-around_medium">
+                <div class="slds-col_padded slds-size_1-of-4">
+                    <dl>
+                        <dt>
+                            <p class="slds-text-heading_label slds-truncate" title="{!$Label.mtchTotalMatchingGift}">
+                                {!$Label.mtchTotalMatchingGift}
+                            </p>
+                        </dt>
+                        <dd>
+                            <p class="slds-text-body_regular slds-truncate">
+                                <apex:outputField value="{!opp.Amount}"/>
+                            </p>
+                        </dd>
+                    </dl>
+                </div>
+                <div class="slds-col_padded slds-size_1-of-4">
+                    <dl>
+                        <dt>
+                            <p class="slds-text-heading_label slds-truncate" title="{!$ObjectType.Account.Fields.Matching_Gift_Percent__c.Label}">
+                                {!$ObjectType.Account.Fields.Matching_Gift_Percent__c.Label}
+                            </p>
+                        </dt>
+                        <dd>
+                            <p class="slds-text-body_regular slds-truncate">
+                                <apex:outputText value="{0,number,0}%" id="txtMatchPercent">
+                                    <apex:param value="{!matchingGiftPercent}"/>
+                                </apex:outputText>
+                            </p>
+                        </dd>
+                    </dl>
+                </div>
+                <div class="slds-col_padded slds-size_1-of-4">
+                    <dl>
+                        <dt>
+                            <p class="slds-text-heading_label slds-truncate" title="{!$Label.mtchTotalSelected}">
+                                {!$Label.mtchTotalSelected}
+                            </p>
+                        </dt>
+                        <dd>
+                            <p class="slds-text-body_regular slds-truncate">
+                                <apex:outputField id="totalSelected" value="{!oppTotalSelected.Amount}"/>
+                            </p>
+                        </dd>
+                    </dl>
+                </div>
+                <div class="slds-col_padded slds-size_1-of-4">
+                    <dl>
+                        <dt>
+                            <p class="slds-text-heading_label slds-truncate" title="{!$Label.mtchTotalUnaccounted}">
+                                {!$Label.mtchTotalUnaccounted}
+                            </p>
+                        </dt>
+                        <dd>
+                            <p class="slds-text-body_regular slds-truncate">
+                                <apex:outputField id="totalUn" value="{!oppTotalUnaccounted.Amount}"/>
+                            </p>
+                        </dd>
+                    </dl>
+                </div>
+            </div> <!-- slds-grid -->
             <!-- /SUMMARY INFO PANEL -->
 
             <c:UTIL_PageMessages />
@@ -171,30 +167,20 @@
                             <div class="slds-grid">
                                 <div class="slds-col_padded-medium slds-col_padded-around">
                                     <div class="slds-form_stacked">
-                                        <div class="slds-form-element">
-                                            <c:UTIL_FormField sObj="{!searchFieldsWrapper}" sObjType="Contact" field="AccountId" styleClass="lookupInput slds-input_small" />
-                                        </div>
-                                        <div class="slds-form-element">
-                                            <c:UTIL_FormField sObj="{!searchFieldsWrapper}" sObjType="Contact" field="ReportsToId" styleClass="lookupInput slds-input_small"
-                                                labelOverride="{!$ObjectType.Opportunity.fields.Primary_Contact__c.Label}"/>
-                                        </div>
-                                        <div class="slds-form-element">
-                                            <c:UTIL_FormField sObj="{!searchFieldsWrapper}" sObjType="Contact" field="First_Soft_Credit_Amount__c" styleClass="lookupInput slds-input_small"
-                                                labelOverride="{!$ObjectType.Opportunity.fields.Amount.Label}"/>
-                                        </div>
+                                        <c:UTIL_FormField sObj="{!searchFieldsWrapper}" sObjType="Contact" field="AccountId" styleClass="lookupInput slds-input_small" />
+                                        <c:UTIL_FormField sObj="{!searchFieldsWrapper}" sObjType="Contact" field="ReportsToId" styleClass="lookupInput slds-input_small"
+                                            labelOverride="{!$ObjectType.Opportunity.fields.Primary_Contact__c.Label}"/>
+                                        <c:UTIL_FormField sObj="{!searchFieldsWrapper}" sObjType="Contact" field="First_Soft_Credit_Amount__c" styleClass="lookupInput slds-input_small"
+                                            labelOverride="{!$ObjectType.Opportunity.fields.Amount.Label}"/>
                                     </div>
                                 </div>
 
-                                <div class="slds-col_padded-medium">
+                                <div class="slds-col_padded-medium slds-col_padded-around">
                                     <div class="slds-form_stacked">
-                                        <div class="slds-form-element">
-                                            <c:UTIL_FormField sObj="{!searchFieldsWrapper}" sObjType="Contact" field="First_Soft_Credit_Date__c" styleClass="lookupInput slds-input_small"
-                                              labelOverride="{!$Label.mtchCloseDateStart}"/>
-                                        </div>
-                                        <div class="slds-form-element">
-                                            <c:UTIL_FormField sObj="{!searchFieldsWrapper}" sObjType="Contact" field="Last_Soft_Credit_Date__c" styleClass="lookupInput slds-input_small"
-                                              labelOverride="{!$Label.mtchCloseDateEnd}"/>
-                                        </div>
+                                        <c:UTIL_FormField sObj="{!searchFieldsWrapper}" sObjType="Contact" field="First_Soft_Credit_Date__c" styleClass="lookupInput slds-input_small"
+                                          labelOverride="{!$Label.mtchCloseDateStart}"/>
+                                        <c:UTIL_FormField sObj="{!searchFieldsWrapper}" sObjType="Contact" field="Last_Soft_Credit_Date__c" styleClass="lookupInput slds-input_small"
+                                          labelOverride="{!$Label.mtchCloseDateEnd}"/>
                                   </div>
                               </div>
                             </div> <!-- /slds-grid -->

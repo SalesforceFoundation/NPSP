@@ -34,8 +34,8 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
 
         <!-- Page Header -->
         <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="Opportunity"
-                           parentAction="{!If (NOT(ISNULL(currentOpp)), URLFOR($Action.Opportunity.View, currentOpp.Id), '')}" parentRecordName="{!currentOpp.Name}"
-                           parentRecordAction="/{!currentOpp.Id}"
+                           parentAction="/006" parentRecordName="{!currentOpp.Name}"
+                           parentRecordAction="{!If (NOT(ISNULL(currentOpp)), URLFOR($Action.Opportunity.View, currentOpp.Id), '')}"
                            header="{!IF( NOT(isWriteoffWizard), $Label.pmtWizardSubtitle, $Label.pmtWizardSectionWriteoff)}"
                            icon="opportunity_120" iconCategory="standard"
                            showSaveBtn="false" cancelAction="{!If (NOT(ISNULL(currentOpp)), URLFOR($Action.Opportunity.View, currentOpp.Id), '')}"/>
@@ -46,7 +46,7 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
         </apex:outputPanel>
 
         <!--Custom buttons/links depending on specific page conditions-->
-        <apex:outputPanel rendered="{!AND(NOT(ISNULL(CurrentOpp)),NOT(haveAmount), NOT(isClosedLost), paymentsSettings.npe01__Payments_Enabled__c, NOT(removePaidPayments))}">
+        <apex:outputPanel rendered="{!AND(NOT(ISNULL(CurrentOpp)),NOT(haveAmount), NOT(isClosedLost), paymentsSettings.npe01__Payments_Enabled__c, NOT(removePaidPayments), isScheduleWizard)}">
             <div class="slds-grid slds-grid_align-center">
                 <div class="slds-col">
                     <apex:commandButton action="{!RemovePaidPayments}" value="{!$Label.pmtWizardBtnRemovePaidPayments}"
@@ -133,7 +133,7 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                     <div class="slds-section-title_divider">
                         {!$Label.pmtWizardCreateSchedule}
                     </div>
-                    <div class="slds-grid slds-wrap slds-form_horizontal">
+                    <div class="slds-grid slds-wrap slds-form_horizontal slds-p-top_x-small">
                         <div class="slds-col slds-col_padded">
                             <div class="slds-form-element">
                                 <label class="slds-form-element__label">{!$Label.pmtWizardNumberOfPayments}</label>
@@ -233,7 +233,7 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                 </div>
             </div>
 
-           <!-- START PAYMENT WRITEOFF  --> 
+            <!-- START PAYMENT WRITEOFF  -->
             <apex:outputText rendered="{!AND(NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true, isWriteoffWizard == true)}" styleClass="slds-p-around_medium">
                 <div class="slds-m-around_medium slds-p-top_medium">
                     <div class="slds-section-title_divider">

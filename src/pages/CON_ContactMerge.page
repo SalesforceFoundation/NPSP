@@ -17,9 +17,7 @@
 
         <!-- PAGE HEADER -->
         <apex:form id="pgHeader">
-            <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="Contact"
-                               parentAction="{!URLFOR($Action.Contact.List, $ObjectType.Contact)}" parentRecordName="{!Contact.Name}"
-                               parentRecordAction="/{!Contact.Id}" headerLabel="{!$Label.conMergePageTitle}"
+            <c:UTIL_PageHeader headerLabel="{!$Label.conMergePageTitle}"
                                header="{!$Label.conMergePageTitleDetail}"
                                icon="contact_120" iconCategory="standard"
                                showSaveBtn="false" showCancelBtn="false"/>
@@ -297,7 +295,7 @@
                                     <span class="slds-assistive-text">{!$Label.bdiBtnClose}</span>
                                 </button>
                             </div>
-                            <div class="slds-modal__content">
+                            <div class="slds-modal__content slds-p-around_medium">
                                 <div>
                                     <p class="slds-text-align_center">
                                         <apex:outputText value="{!$Label.npe01__contact_merge_error_confirm_message}"/>

@@ -3,6 +3,12 @@
 
     <apex:slds />
 
-    <c:UTIL_PageMessages />
-    <c:UTIL_NavigateBack recordId="{!Opportunity.Id}" redirect="{!redirect}"/>
+    <apex:form>
+        <c:UTIL_PageHeader header="{!$ObjectType.Opportunity.Label}"
+                           icon="opportunity_120" iconCategory="standard"
+                           showSaveBtn="false"
+                           cancelAction="{!cancel}" cancelImmediate="true" />
+        <c:UTIL_PageMessages />
+        <c:UTIL_NavigateBack recordId="{!Opportunity.Id}" redirect="{!redirect}"/>
+    </apex:form>
 </apex:page>

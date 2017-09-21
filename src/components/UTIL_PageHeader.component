@@ -36,6 +36,8 @@
         description="Whether the cancel action should be immediate, defaults to true."/>
     <apex:attribute name="cancelDisabled" type="Boolean" default="false"
         description="Whether the cancel button should be disabled, defaults to false."/>
+    <apex:attribute name="cancelReRender" type="String"
+        description="Part of page to rerender when cancel is pressed."/>
     <!-- Save button attributes -->
     <apex:attribute name="showSaveBtn" type="Boolean" default="true"
         description="Set to false to hide save button, default is true"/>
@@ -106,7 +108,7 @@
                 <div class="slds-button-group" role="group">
                     <apex:commandButton id="cancelBTN" styleClass="slds-button slds-button_neutral" action="{!cancelAction}"
                         value="{!BLANKVALUE(cancelLabel,$Label.stgBtnCancel)}"  immediate="{!cancelImmediate}" disabled="{!cancelDisabled}"
-                        rendered="{!showCancelBtn}"/>
+                        rendered="{!showCancelBtn}" reRender="{!cancelReRender}"/>
                     <apex:commandButton id="saveBTN" styleClass="slds-button slds-button_brand" action="{!saveAction}"
                         value="{!BLANKVALUE(saveLabel,$Label.stgBtnSave)}" immediate="{!saveImmediate}" disabled="{!saveDisabled}"
                         rendered="{!showSaveBtn}"/>

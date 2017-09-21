@@ -37,13 +37,13 @@
             <apex:outputLabel for="outputX" styleClass="slds-form-element__label" rendered="{!showLabel == true && ftype!='boolean'}">
                 {!label}
             </apex:outputLabel>
-            <div class="{!'slds-form-element__control' + IF(ftype!='boolean', ' slds-has-divider--bottom slds-p-left--small','')}">
+            <div class="{!'slds-form-element__control' + IF(ftype!='boolean', ' slds-has-divider_bottom slds-p-left_small','')}">
                 <!-- Blank space fixes issue where an empty span on read only fields were blank causing the line to shift when no value present -->
                 <apex:outputField id="outputX" value="{!sObj[field]}" styleClass="slds-form-element__static" rendered="{!ftype!='boolean'}">&nbsp;</apex:outputField>
                 <apex:outputPanel layout="{!IF(ftype=='boolean', 'inline', 'none')}" styleClass="{!IF(ftype=='boolean', 'slds-checkbox', '')}">
                     <apex:outputLabel for="outputCB" styleClass="slds-checkbox__label" rendered="{!ftype=='boolean'}">
                         <apex:inputCheckbox value="{!sObj[field]}" id="outputCB" disabled="true" rendered="{!ftype=='boolean'}" />
-                        <span class="slds-checkbox--faux"></span>
+                        <span class="slds-checkbox_faux"></span>
                         <apex:outputPanel rendered="{!showLabel == true}" layout="none">
                             <span class="slds-form-element__label">{!label}</span>
                         </apex:outputPanel>
@@ -79,7 +79,7 @@
                 <apex:inputField id="inputCB" value="{!sObj[field]}" label="">
                     <apex:actionSupport event="onchange" action="{!actSupAction}" reRender="{!actSupReRender}" rendered="{!actSup}" status="{!actSupStatus}" immediate="{!actSupImmediate}"/>
                 </apex:inputField>
-                    <span class="slds-checkbox--faux"></span>
+                    <span class="slds-checkbox_faux"></span>
                     <apex:outputPanel rendered="{!showLabel == true}" layout="none">
                         <span class="slds-form-element__label">{!label}</span>
                     </apex:outputPanel>

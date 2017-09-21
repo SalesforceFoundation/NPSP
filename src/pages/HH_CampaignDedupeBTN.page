@@ -1,4 +1,4 @@
-<apex:page standardController="Campaign" extensions="HH_CampaignDedupeBTN_CTRL" action="{!runreport}" showHeader="true" >
+<apex:page standardController="Campaign" extensions="HH_CampaignDedupeBTN_CTRL" showHeader="true">
 
     <apex:slds />
 
@@ -14,9 +14,10 @@
         <!-- PAGE HEADER -->
         <apex:form id="pgHeader">
             <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="Campaign"
-            parentAction="javascript:window.urlHome();" parentRecordName="{!Campaign.Name}"
-            parentRecordAction="/{!Campaign.Id}" header="{!$Label.hhCmpDedupeBatchProgressTitle}" icon="campaign_120" iconCategory="standard"
-            showSaveBtn="false" showCancelBtn="false"/>
+                               parentAction="/701" parentRecordName="{!Campaign.Name}"
+                               parentRecordAction="/{!Campaign.Id}" header="{!$Label.hhCmpDedupeBatchProgressTitle}"
+                               icon="campaign_120" iconCategory="standard"
+                               showSaveBtn="false" showCancelBtn="false"/>
         </apex:form>
 
         <apex:outputPanel id="panelErrors">

@@ -11,13 +11,11 @@
     <apex:form id="vfForm">
         <div class="slds">
             <!-- PAGE HEADER -->
-            <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="Opportunity"
-                               parentAction="{! URLFOR($Action.Opportunity.View, recordId)}"
-                               parentRecordAction="/{!recordId}"
+            <c:UTIL_PageHeader headerLabel="{!$ObjectType.Opportunity.Label}"
                                header="{!$Label.sendAcknowledgmentPageTitle}"
                                icon="opportunity_120" iconCategory="standard"
-                               showSaveBtn="false" cancelLabel="{!$Label.sendAcknowledgmentReturnLinkLabel}"
-                               cancelAction="{!close}" cancelImmediate="true" />
+                               showSaveBtn="false" cancelLabel="{!$Label.bdiBtnClose}"
+                               cancelAction="{!close}" cancelReRender="vfForm"/>
 
             <!-- PAGE MESSAGE -->
             <c:UTIL_PageMessages />
@@ -31,7 +29,7 @@
                         <ul class="slds-list_dotted">
                             <apex:repeat value="{!listOppNotSent}" var="opp">
                                 <li class="slds-item">
-                                    <apex:outputLink onClick="navigateToSObjectNewWindow('{!opp.Id}');">{!opp.Name}</apex:outputLink>
+                                    <a href="/{!opp.Id}" target="_blank">{!opp.Name}</a>
                                 </li>
                             </apex:repeat>
                         </ul>
@@ -40,15 +38,4 @@
             </apex:outputPanel>
         </div>
     </apex:form>
-    <script>
-        function navigateToSObjectNewWindow(recordId) {
-            if (typeof sforce !== "undefined" && sforce !== null) {
-                // Salesforce1 navigation
-                sforce.one.navigateToSObject(recordId);
-            } else {
-                // Desktop navigation
-                window.open('/' + recordId, '_blank');
-            }
-        }
-    </script>
 </apex:page>

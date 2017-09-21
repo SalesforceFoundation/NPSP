@@ -18,8 +18,7 @@
 
             <!-- PAGE HEADER -->
             <apex:form id="pgHeader">
-                <c:UTIL_PageHeader showBreadcrumb="false"
-                                   headerLabel="{!$Label.CONV_Page_Title}"
+                <c:UTIL_PageHeader headerLabel="{!$Label.CONV_Page_Title}"
                                    header="{!$Label.CONV_Page_Description}"
                                    useNPSPicon="true" smallSubtitleFont="true"
                                    showSaveBtn="false" showCancelBtn="false"/>
@@ -194,7 +193,7 @@
                 </div>
             </div>
 
-            <div class="slds-container_large slds-container_center">
+            <div class="slds-container_large slds-container_center slds-p-top_medium">
                 <c:UTIL_JobProgressLightning id="jobProgress"
                     eventTargetId="{!$Component.jobProgress}"
                     strBatchComponentLabel="{!$Label.CONV_Conversion_Process}"
@@ -219,7 +218,7 @@
                             <span class="slds-assistive-text">Close</span>
                         </button>
                     </div>
-                    <div class="slds-modal__content">
+                    <div class="slds-modal__content slds-p-around_medium">
                         <p>
                             {!$Label.CONV_Fundamental_Changes}
                         </p>

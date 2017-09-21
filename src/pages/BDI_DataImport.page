@@ -44,15 +44,14 @@
         <apex:form id="idForm" html-novalidate="novalidate" styleClass="slds-p-bottom_x-large">
 
             <!-- PAGE HEADER -->
-            <c:UTIL_PageHeader showBreadcrumb="false"
-                               headerLabel="{!$Label.bdiDataImporterTitle}"
+            <c:UTIL_PageHeader headerLabel="{!$Label.bdiDataImporterTitle}"
                                header="{!$Label.bdiDataImporterDescription}"
                                useNPSPicon="true" smallSubtitleFont="true"
                                showSaveBtn="false" showCancelBtn="false"/>
 
             <c:UTIL_PageMessages />
 
-            <div class="slds-grid">
+            <div class="slds-grid slds-p-top_medium">
                 <div class="slds-size_1-of-2 slds-m-horizontal_large">
                     <apex:outputText rendered="{!NOT(batchRunning)}">
                         <div class="slds-container_large slds-container_center">

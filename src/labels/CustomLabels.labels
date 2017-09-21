@@ -1333,7 +1333,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>bdiBtnClose</fullName>
-        <categories>Data Importer</categories>
+        <categories>Data Importer, Opportunity Send Acknowledgment</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiBtnClose</shortDescription>
@@ -1831,7 +1831,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>conMergeBtnLabel</fullName>
         <categories>Contact Merge</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>conMergeBtnLabel</shortDescription>
         <value>Merge</value>
     </labels>
@@ -1847,7 +1847,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>conMergeFoundContacts</fullName>
         <categories>Contact Merge</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>conMergeFoundContacts</shortDescription>
         <value>Found Contacts</value>
     </labels>
@@ -1855,7 +1855,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>conMergePageTitle</fullName>
         <categories>Contact Merge</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>conMergePageTitle</shortDescription>
         <value>Contact Merge</value>
     </labels>
@@ -1863,7 +1863,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>conMergePageTitleDetail</fullName>
         <categories>Contact Merge</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>conMergePageTitleDetail</shortDescription>
         <value>Merge Duplicate Contact Records</value>
     </labels>
@@ -1871,7 +1871,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>conMergeSearchPlaceholder</fullName>
         <categories>Contact Merge</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>conMergeSearchPlaceholder</shortDescription>
         <value>Search Contacts</value>
     </labels>
@@ -1879,15 +1879,15 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>conMergeSelectAll</fullName>
         <categories>Contact Merge</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>conMergeSelectAll</shortDescription>
-        <value>select All</value>
+        <value>Select All</value>
     </labels>
     <labels>
         <fullName>conMergeSelectContact</fullName>
         <categories>Contact Merge</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>conMergeSelectContact</shortDescription>
         <value>Select Contact</value>
     </labels>
@@ -1895,7 +1895,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>conMergeSelectedContacts</fullName>
         <categories>Contact Merge</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>conMergeSelectedContacts</shortDescription>
         <value>Selected Contacts</value>
     </labels>
@@ -1903,7 +1903,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>conMergeStageComplete</fullName>
         <categories>Contact Merge</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>conMergeStageComplete</shortDescription>
         <value>Stage Complete</value>
     </labels>
@@ -1911,7 +1911,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>conMergeWinnerAsstText</fullName>
         <categories>Contact Merge</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>conMergeWinnerAsstText</shortDescription>
         <value>Choose this column as the master record</value>
     </labels>
