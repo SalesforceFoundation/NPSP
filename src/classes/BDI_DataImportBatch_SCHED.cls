@@ -30,7 +30,8 @@
 /**
 * @author Salesforce.org
 * @date 2017
-* @group BDI
+* @group Batch Data Import
+* @group-content ../../ApexDocContent/BatchDataImport.htm
 * @description Schedulable class that creates the batch processes to process any specified NPSP Data Import Batches
 */
 public without sharing class BDI_DataImportBatch_SCHED implements Schedulable {
