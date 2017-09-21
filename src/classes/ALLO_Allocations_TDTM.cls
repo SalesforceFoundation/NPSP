@@ -394,8 +394,8 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                         }
                         allo.put('CurrencyIsoCode',opp.get('CurrencyIsoCode'));
                     }
-
-                    if (allo.Percent__c != null && allo.Percent__c > 0) {
+                    
+                    if (allo.Percent__c != null) {
                         allo.Amount__c = (Opp.Amount * allo.Percent__c * .01).setScale(2);
                     }
                     
