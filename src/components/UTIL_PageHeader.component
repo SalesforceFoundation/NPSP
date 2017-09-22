@@ -49,6 +49,8 @@
         description="Whether the save action should be immediate, defaults to true."/>
     <apex:attribute name="saveDisabled" type="Boolean" default="false"
         description="Whether the save button should be disabled, defaults to false."/>
+    <apex:attribute name="saveReRender" type="String"
+        description="Part of page to rerender when save is pressed."/>
     <!-- Save and new button attributes -->
     <apex:attribute name="showSaveAndNewBtn" type="Boolean" default="false"
         description="Set to false to hide save button, default is false"/>
@@ -111,7 +113,7 @@
                         rendered="{!showCancelBtn}" reRender="{!cancelReRender}"/>
                     <apex:commandButton id="saveBTN" styleClass="slds-button slds-button_brand" action="{!saveAction}"
                         value="{!BLANKVALUE(saveLabel,$Label.stgBtnSave)}" immediate="{!saveImmediate}" disabled="{!saveDisabled}"
-                        rendered="{!showSaveBtn}"/>
+                        rendered="{!showSaveBtn}" reRender="{!saveReRender}"/>
                     <apex:commandButton id="saveAndNewBTN" styleClass="slds-button slds-button_neutral" action="{!saveAndNewAction}"
                         value="{!BLANKVALUE(saveAndNewLabel,$Label.lvlBtnSaveAndNew)}" immediate="{!saveAndNewImmediate}"
                         disabled="{!saveAndNewDisabled}" rendered="{!showSaveAndNewBtn}"/>

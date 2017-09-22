@@ -3,8 +3,9 @@
 
     <apex:slds />
 
-    <apex:form>
-        <c:UTIL_PageHeader header="{!$ObjectType.Opportunity.Label}"
+    <apex:form >
+        <c:UTIL_PageHeader headerLabel="{!$ObjectType.Opportunity.Label}"
+                           header="{!Opportunity.Name}"
                            icon="opportunity_120" iconCategory="standard"
                            showSaveBtn="false"
                            cancelAction="{!cancel}" cancelImmediate="true" />

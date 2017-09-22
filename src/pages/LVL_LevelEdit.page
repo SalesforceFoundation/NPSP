@@ -1,4 +1,4 @@
-<apex:page standardController="Level__c" extensions="LVL_LevelEdit_CTRL" showHeader="true" standardStylesheets="true" >
+<apex:page standardController="Level__c" extensions="LVL_LevelEdit_CTRL" showHeader="true" standardStylesheets="true" title="{!$ObjectType.Level__c.labelPlural}">
     <apex:slds />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 
