@@ -1,6 +1,6 @@
 <apex:page standardController="Lead" extensions="LD_LeadConvertOverride_CTRL"
            title="{!$Label.leadConvertPageTitle} {!l.Name}"
-           standardStylesheets="false" docType="html-5.0">
+           standardStylesheets="true" docType="html-5.0">
 
     <apex:slds />
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/modal.js')}"/>
@@ -34,10 +34,10 @@
             <div class="hide-when-modal-open">
 
                 <!-- Page Header -->
-                <c:UTIL_PageHeader showBreadcrumb="false" parentEntityLabel="Lead"
-                                   parentAction="{! URLFOR($Action.Lead.View, l.Id)}" parentRecordName="{!l.Name}"
+                <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="Lead"
+                                   parentAction="/00Q" parentRecordName="{!l.Name}"
                                    parentRecordAction="/{!l.Id}"
-                                   header="{! $Label.leadConvertSectionTitle }" headerLabel="{!l.Name}"
+                                   headerLabel="{! $Label.leadConvertSectionTitle }" header="{!l.Name}"
                                    icon="lead_120" iconCategory="standard"
                                    saveAction="{!convertLeadNow}" saveLabel="{!$Label.leadConvertBtnConvert}"
                                    cancelAction="{!cancel}" cancelLabel="{!$Label.leadConvertBtnCancel}"/>

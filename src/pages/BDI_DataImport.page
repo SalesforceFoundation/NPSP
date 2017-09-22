@@ -4,7 +4,7 @@
     showHeader="true"
     sidebar="false"
     docType="html-5.0"
-    standardStylesheets="false">
+    standardStylesheets="true">
 
     <apex:slds />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />

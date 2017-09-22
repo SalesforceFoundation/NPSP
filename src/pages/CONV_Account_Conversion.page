@@ -3,7 +3,7 @@
     tabStyle="npo02__Household__c"
     showHeader="true"
     sidebar="false"
-    standardStylesheets="false"
+    standardStylesheets="true"
     action="{!runCheck}">
 
     <apex:slds />

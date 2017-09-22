@@ -2,7 +2,7 @@
     extensions="OPP_SendAcknowledgmentBTN_CTRL"
     recordSetVar="listOpp"
     action="{!SendAcknowledgment}"
-    standardStylesheets="false"
+    standardStylesheets="true"
     title="{!$Label.sendAcknowledgmentPageTitle}"
     docType="html-5.0">
 
