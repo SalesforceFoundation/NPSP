@@ -289,7 +289,7 @@ public with sharing class ADDR_Validator_TEST {
         Address__c[] av = [select Verified__c, Ambiguous__c, Verification_Status__c from Address__c 
                             where Household_Account__c = :accountId];       
         System.assertEquals(1, av.size());
-        System.assertEquals(false, av[0].Verified__c);
+        System.assertEquals(true, av[0].Verified__c);
         System.assertEquals(true, av[0].Ambiguous__c);
         System.assertEquals(Label.Addr_Verified, av[0].Verification_Status__c);
     }
