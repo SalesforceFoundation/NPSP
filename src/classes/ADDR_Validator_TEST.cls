@@ -446,7 +446,7 @@ public with sharing class ADDR_Validator_TEST {
         Id accountId = contact.Account.Id;
         System.assertNotEquals(null, accountId);
         
-        Address__c[] av = [select MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c, 
+        Address__c[] av = [select Id, MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c, 
                 Verification_Status__c from Address__c where Household_Account__c = :accountId];
         System.assertEquals(1, av.size());
         System.assertEquals(false, av[0].Verified__c);
@@ -465,5 +465,19 @@ public with sharing class ADDR_Validator_TEST {
         System.assertEquals(null, updatedAddress.Verification_Status__c, 'Address should not have been verified');
         System.assertEquals('single-address', updatedAddress.MailingStreet__c);
 
+        //now, use the button and make sure the address verification happens, despite the fact that Verified is already checked.
+        PageReference pageRef = Page.ADDR_ValidatorBTN;
+        pageRef.getParameters().put('id', av[0].Id);
+        Test.setCurrentPage(pageRef);
+
+        ApexPages.StandardController standardController = new ApexPages.StandardController(av[0]);
+        ADDR_Validator ctrl = new ADDR_Validator(standardController);
+
+        ctrl.verifyAddressButton();
+
+        updatedAddress = [SELECT Id, MailingStreet__c, Verified__c, Verification_Status__c FROM Address__c WHERE Id = :av[0].Id];
+        System.assertEquals(true, updatedAddress.Verified__c);
+        System.assertEquals(Label.Addr_Verified, updatedAddress.Verification_Status__c, 'Address should have been verified');
+        System.assertEquals('1 Infinite Loop', updatedAddress.MailingStreet__c);
     }
 }
