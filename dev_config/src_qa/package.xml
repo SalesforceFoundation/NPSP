@@ -6,9 +6,7 @@
     </types>
     <types>
         <members>Account</members>
-        <members>Campaign</members>
         <members>Contact</members>
-        <members>DataImport__c</members>
         <members>Lead</members>
         <members>Opportunity</members>
         <name>CustomObject</name>
@@ -16,20 +14,6 @@
     <types>
         <members>Nonprofit_CRM</members>
         <name>CustomApplication</name>
-    </types>
-    <types>
-        <members>*</members>
-        <name>Layout</name>
-    </types>
-    <types>
-        <members>DataImport__c.Delete_All_Data_Import_Records</members>
-        <members>DataImport__c.Delete_Imported_Data_Import_Records</members>
-        <members>DataImport__c.Process_Data_Import</members>
-        <members>Campaign.Household_Mailing_List</members>
-        <members>npe01__OppPayment__c.Write_Off_Payments</members>
-        <members>npe01__OppPayment__c.Schedule_Payments</members>
-        <members>Partial_Soft_Credit__c.Manage_Soft_Credits</members>
-        <name>WebLink</name>
     </types>
     <version>40.0</version>
 </Package>
