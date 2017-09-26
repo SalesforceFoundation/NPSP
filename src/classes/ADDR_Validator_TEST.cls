@@ -289,7 +289,7 @@ public with sharing class ADDR_Validator_TEST {
         Address__c[] av = [select Verified__c, Ambiguous__c, Verification_Status__c from Address__c 
                             where Household_Account__c = :accountId];       
         System.assertEquals(1, av.size());
-        System.assertEquals(false, av[0].Verified__c);
+        System.assertEquals(true, av[0].Verified__c);
         System.assertEquals(true, av[0].Ambiguous__c);
         System.assertEquals(Label.Addr_Verified, av[0].Verification_Status__c);
     }
@@ -424,5 +424,60 @@ public with sharing class ADDR_Validator_TEST {
         UTIL_Debug.debug('****Error message: ' + sc.apiSettingsErrorMessage);
         System.assertEquals(true, sc.apiSettingsErrorMessage.contains('Auth ID cannot be blank'));
         System.assertEquals(true, sc.apiSettingsErrorMessage.contains('Auth Token cannot be blank'));
+    }
+
+    static testMethod void dontValidatePreviouslyValidatedAddresses() {
+        if (strTestOnly != '*' && strTestOnly != 'dontValidatePreviouslyValidatedAddresses') return;
+        
+        // address validation is async, so no way to successfully test if other related triggers are already async!
+        if (hasAsyncAddrTriggers()) return;
+        
+        Contact contact = new contact(firstname='Test', lastname='Person'); 
+        contact.MailingStreet = 'single-address';
+        contact.MailingCity = 'Cupertino';
+        contact.MailingState = 'California';
+        contact.MailingPostalCode = '95014';
+        contact.MailingCountry = 'United States';
+        
+        insert contact;
+        
+        //check household got created for contact
+        contact = [select Account.Id from Contact where Id = :contact.Id];
+        Id accountId = contact.Account.Id;
+        System.assertNotEquals(null, accountId);
+        
+        Address__c[] av = [select Id, MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c, 
+                Verification_Status__c from Address__c where Household_Account__c = :accountId];
+        System.assertEquals(1, av.size());
+        System.assertEquals(false, av[0].Verified__c);
+        System.assertEquals(null, av[0].Verification_Status__c);
+        
+        createDefaultSettings();
+        Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());        
+        av[0].Verified__c = true;
+        
+        Test.StartTest();
+        update av[0];
+        Test.StopTest();
+        
+        Address__c updatedAddress = [SELECT Id, MailingStreet__c, Verified__c, Verification_Status__c FROM Address__c WHERE Id = :av[0].Id];
+        System.assertEquals(true, updatedAddress.Verified__c);
+        System.assertEquals(null, updatedAddress.Verification_Status__c, 'Address should not have been verified');
+        System.assertEquals('single-address', updatedAddress.MailingStreet__c);
+
+        //now, use the button and make sure the address verification happens, despite the fact that Verified is already checked.
+        PageReference pageRef = Page.ADDR_ValidatorBTN;
+        pageRef.getParameters().put('id', av[0].Id);
+        Test.setCurrentPage(pageRef);
+
+        ApexPages.StandardController standardController = new ApexPages.StandardController(av[0]);
+        ADDR_Validator ctrl = new ADDR_Validator(standardController);
+
+        ctrl.verifyAddressButton();
+
+        updatedAddress = [SELECT Id, MailingStreet__c, Verified__c, Verification_Status__c FROM Address__c WHERE Id = :av[0].Id];
+        System.assertEquals(true, updatedAddress.Verified__c);
+        System.assertEquals(Label.Addr_Verified, updatedAddress.Verification_Status__c, 'Address should have been verified');
+        System.assertEquals('1 Infinite Loop', updatedAddress.MailingStreet__c);
     }
 }
