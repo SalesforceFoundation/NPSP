@@ -1,6 +1,6 @@
 <apex:page standardController="Engagement_Plan_Template__c" extensions="EP_ManageEPTemplate_CTRL" standardStylesheets="true" showHeader="true" title="{!$Label.EPManageTemplate}">
-    <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
     <apex:slds />
+    <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <apex:form id="theForm">

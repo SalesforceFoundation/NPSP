@@ -146,22 +146,22 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @description Constructor for the wizard that initializes data structures
     */ 
     public PMT_PaymentWizard_CTRL() {
-        redirect = false;
-
+        this.redirect = this.removePaidPayments = false;
         if(ApexPages.currentPage().getParameters().get('wtype') == 'writeoff'){
             PaymentWriteoffWizard();
-            isWriteoffWizard = true;
-            isScheduleWizard = false;
+            this.isWriteoffWizard = true;
+            this.isScheduleWizard = false;
             
         }
         else if (ApexPages.currentPage().getParameters().get('wtype') == 'payment'){
             SetupPaymentWizard();
-            isWriteoffWizard = false;
-            isScheduleWizard = true;            
+            this.isWriteoffWizard = false;
+            this.isScheduleWizard = true;
         }
         else{           
             //error?
-        }       
+        }
+        getPageValidationMessages();
     }
     
     /*******************************************************************************************************
@@ -306,6 +306,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
             }
             
         }
+        getPageValidationMessages();
         return null;
     }
     
@@ -333,6 +334,28 @@ public with sharing class PMT_PaymentWizard_CTRL {
     		ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
     	}
         return null;
+    }
+
+    /*******************************************************************************************************
+    * @description Verify data conditions and add any necessary page messages that need to be rendered.
+    */
+    public void getPageValidationMessages() {
+        getPaymentsSettings();
+        if (paymentsSettings == null || paymentsSettings.npe01__Payments_Enabled__c == false) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardPaymentsDisabledTitle, System.Label.pmtWizardPaymentsDisabled));
+        } else {
+            if (!removePaidPayments && isScheduleWizard == true && currentOpp != null && haveAmount == false && isClosedLost == false) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardNoUnpaidAmount));
+            } else if (!removePaidPayments && isWriteoffWizard == true && currentOpp != null && haveAmount == false) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardNoWriteoffAmount));
+            }
+        }
+        if (currentOpp != null && isClosedLost == true) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardClosedLost));
+        }
+        if (currentOpp == null) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.pmtWizardMsgNoOppFound));
+        }
     }
 
     /*******************************************************************************************************

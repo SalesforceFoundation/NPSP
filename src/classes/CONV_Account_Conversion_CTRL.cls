@@ -179,9 +179,7 @@ public with sharing class CONV_Account_Conversion_CTRL {
     * @return PageReference
     */
     public PageReference cancel() {
-        PageReference ref = new PageReference('/home/home.jsp');
-        ref.setRedirect(true);
-        return ref;
+        return USER_UserService.getHomePageReference();
     }
 
     /*******************************************************************************************************
