@@ -47,7 +47,7 @@ public with sharing class ADDR_Validator {
         id addrId = ApexPages.currentPage().getParameters().get('id');
         if (addrId != null) {
             set<id> setAddrId = new Set<Id>{addrId};
-            verifyRecords(setAddrId);
+            verifyRecords(setAddrId, true);
         }
         return null;
     }
@@ -59,22 +59,30 @@ public with sharing class ADDR_Validator {
     */
     @future(callout=true)
     public static void verifyRecordsFuture(set<id> recordIds) {
-        verifyRecords(recordIds);
+        verifyRecords(recordIds, false);
     }
     
     /*******************************************************************************************************
     * @description Verifies a set of address records.
     * @param recordIds A set containing the IDs of the address records to verify.
+    * @param attemptAlreadyVerifiedRecords Whether addresses already marked Verified should be verified again.
     * @return void
     */
-    public static void verifyRecords(set<id> recordIds) {
-    	UTIL_Debug.debug(LoggingLevel.WARN, '****Retrieving data records');
+    public static void verifyRecords(Set<Id> recordIds, Boolean attemptAlreadyVerifiedRecords) {
+        UTIL_Debug.debug(LoggingLevel.WARN, '****Retrieving data records');
         //query for all the indicated verification records
-        list<Address__c> avList = [ select Id, Name, CreatedDate, LastModifiedDate, 
-            MailingStreet__c, MailingStreet2__c, Formula_MailingStreetAddress__c, MailingCity__c, MailingCountry__c, MailingState__c, MailingPostalCode__c, 
-            Verified__c, API_Response__c, Geolocation__Latitude__s, Geolocation__Longitude__s, Formula_MailingAddress__c,
-            Congressional_District__c, County_Name__c from Address__c where id in : recordIds];
-
+        list<Address__c> avList; 
+        if (attemptAlreadyVerifiedRecords) {
+            avList = [SELECT Id, Name, CreatedDate, LastModifiedDate, 
+                MailingStreet__c, MailingStreet2__c, Formula_MailingStreetAddress__c, MailingCity__c, MailingCountry__c, MailingState__c, MailingPostalCode__c, 
+                Verified__c, API_Response__c, Geolocation__Latitude__s, Geolocation__Longitude__s, Formula_MailingAddress__c,
+                Congressional_District__c, County_Name__c FROM Address__c WHERE Id IN :recordIds];
+        } else {
+            avList = [SELECT Id, Name, CreatedDate, LastModifiedDate, 
+                MailingStreet__c, MailingStreet2__c, Formula_MailingStreetAddress__c, MailingCity__c, MailingCountry__c, MailingState__c, MailingPostalCode__c, 
+                Verified__c, API_Response__c, Geolocation__Latitude__s, Geolocation__Longitude__s, Formula_MailingAddress__c,
+                Congressional_District__c, County_Name__c FROM Address__c WHERE Id IN :recordIds AND Verified__c = false];
+        }
         verifyAddressRecords(avList);
     }
     
