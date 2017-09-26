@@ -173,7 +173,6 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
                 }
                 addr.API_Response__c = responseBody;
                 
-                boolean foundData = false;
                 if (cresp != null && cresp.response != null && cresp.response.results != null && cresp.response.results.candidates != null) {
                     list<Candidates> listCandidates = cresp.response.results.candidates;  
     
@@ -190,7 +189,6 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
                             if (district.district_type == 'NATIONAL_LOWER') {
                                 addr.Congressional_District__c = district.district_id;
                                 addr.MailingCountry__c = district.country;
-                                foundData = true;
                             }
 
                             if (district.district_type == 'STATE_UPPER')
@@ -216,7 +214,7 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
                         addr.Geolocation__Longitude__s = decimal.valueOf(candidate.x);
                     }
                 }   
-                addr.Verified__c = foundData;
+                addr.Verified__c = true;
                 addr.Verification_Status__c = 'Response Received';
                 return addr;
             } else {
