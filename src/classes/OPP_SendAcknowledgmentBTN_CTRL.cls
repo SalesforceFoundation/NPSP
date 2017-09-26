@@ -180,7 +180,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
 
     /*******************************************************************************************************
     * @description Action method called to close and return.
-    * @return null to the calling page
+    * @return PageReference - null will be redirected via javascript
     */
     public PageReference close() {
         redirect = true;

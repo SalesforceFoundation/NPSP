@@ -205,9 +205,12 @@ public with sharing class BDI_DataImport_CTRL {
     */
     public PageReference close() {
         String retUrl = ApexPages.currentPage().getParameters().get('retURL');
-        if (String.isBlank(retUrl)) retUrl = '/home/home.jsp';
-
-        PageReference p = new PageReference(retUrl);
+        PageReference p;
+        if (!String.isBlank(retUrl)) {
+            p = new PageReference(retUrl);
+        } else {
+            p = USER_UserService.getHomePageReference();
+        }
         p.setRedirect(true);
         return p;
     }

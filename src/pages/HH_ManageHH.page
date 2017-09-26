@@ -1,9 +1,9 @@
 <apex:page controller="HH_ManageHH_CTRL" standardStylesheets="true" showHeader="true" docType="html-5.0" >
     <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <apex:includeLightning />
+        <apex:slds />
         <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
         <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-2.2.4.js')}"/>
-        <apex:slds />
 
         <style>
             .required {
