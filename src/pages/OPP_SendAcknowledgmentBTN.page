@@ -2,26 +2,21 @@
     extensions="OPP_SendAcknowledgmentBTN_CTRL"
     recordSetVar="listOpp"
     action="{!SendAcknowledgment}"
-    standardStylesheets="false"
-    title="{!$Label.sendAcknowledgmentPageTitle}">
-    <apex:slds />
+    standardStylesheets="true"
+    title="{!$Label.sendAcknowledgmentPageTitle}"
+    docType="html-5.0">
 
+    <apex:slds />
+    
     <apex:form id="vfForm">
         <div class="slds">
             <!-- PAGE HEADER -->
-            <div class="slds-page-header slds-p-bottom_small" role="banner">
-                <div class="slds-grid">
-                    <div class="slds-col">
-                        <h1 class="slds-text-heading_medium">{!$Label.sendAcknowledgmentPageTitle}</h1>
-                    </div>
-                    <div class="slds-col slds-no-flex slds-align-middle">
-                        <div class="slds-button-group" role="group">
-                            <apex:commandButton id="close" styleClass="slds-button slds-button_neutral" action="{!close}"
-                                value="{!$Label.sendAcknowledgmentReturnLinkLabel}" immediate="true" reRender="vfForm"/>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <c:UTIL_PageHeader headerLabel="{!$ObjectType.Opportunity.Label}"
+                               header="{!$Label.sendAcknowledgmentPageTitle}"
+                               icon="opportunity_120" iconCategory="standard"
+                               showSaveBtn="false" cancelLabel="{!$Label.bdiBtnClose}"
+                               cancelAction="{!close}" cancelReRender="vfForm"/>
+
             <!-- PAGE MESSAGE -->
             <c:UTIL_PageMessages />
             <!-- PAGE RETURN -->
@@ -34,7 +29,7 @@
                         <ul class="slds-list_dotted">
                             <apex:repeat value="{!listOppNotSent}" var="opp">
                                 <li class="slds-item">
-                                    <apex:outputLink value="/{!opp.Id}" target="_blank">{!opp.Name}</apex:outputLink>
+                                    <a href="/{!opp.Id}" target="_blank">{!opp.Name}</a>
                                 </li>
                             </apex:repeat>
                         </ul>
