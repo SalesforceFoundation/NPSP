@@ -13,7 +13,7 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
         }
         td:first-child {
          width: 8%;
-     }
+        }
     </style>
 
     <script>
