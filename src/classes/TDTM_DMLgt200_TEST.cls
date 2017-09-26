@@ -183,11 +183,11 @@ private class TDTM_DMLgt200_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Test creating 200+ Opportunities with a default allocation through a Campaign
+    * @description Test creating 200+ Opportunities with a linked Campaign allocation
     *   NOTE: THIS WILL FAIL IN AN ORG WITHOUT THE STATIC FLAG CHANGES
     */
     @isTest
-    static void test_opportunities_with_default_alloc() {
+    static void testBulkOpportunitiesWithCampaignAlloc() {
 
         UTIL_Debug.disableDebugLogging();     // Override debug logging for this test because it's an expensive operation
         UTIL_UnitTestData_TEST.disableRollupTriggers();
@@ -196,49 +196,52 @@ private class TDTM_DMLgt200_TEST {
 
         Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
-        c = [SELECT Id, AccountId FROM Contact WHERE Id = :c.Id LIMIT 1];
+        c = [SELECT Id, AccountId FROM Contact WHERE Id = :c.Id];
 
-        General_Accounting_Unit__c gau1 = new General_Accounting_Unit__c(
-                Name = 'TestGAU',
-                Active__c = True
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(
+            Name = 'DefaultSettingsGau',
+            Active__c = True
         );
-        General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(
-                Name = 'DefaultForCampaign',
-                Active__c = True
+        General_Accounting_Unit__c campaignGau = new General_Accounting_Unit__c(
+            Name = 'CampaignGau',
+            Active__c = True
         );
-        insert new List<General_Accounting_Unit__c>{gau1, gau2};
+        insert new List<General_Accounting_Unit__c>{ defaultGau, campaignGau };
 
-        UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(new Allocations_Settings__c(
-                Default_Allocations_Enabled__c = true, Default__c = gau1.Id));
+        UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(
+            new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.Id)
+        );
 
         Campaign camp = new Campaign(Name = 'UNITTEST', IsActive = True);
         insert camp;
 
         Allocation__c campAlloc = new Allocation__c(
-                Campaign__c = camp.Id,
-                General_Accounting_Unit__c = gau2.Id,
-                Percent__c = 100
+            Campaign__c = camp.Id,
+            General_Accounting_Unit__c = campaignGau.Id,
+            Percent__c = 100
         );
         insert campAlloc;
 
         Test.startTest();
 
         // Create 200+ Opportunity Records
+        Date closeDate = Date.Today().addMonths(1);
+        String closedWonStage = UTIL_UnitTestData_TEST.getClosedWonStage();        
         List<Opportunity> opps = new List<Opportunity>();
-        for (Integer n=0; n<insertCnt; n++) {
+
+        for (Integer n = 0; n < insertCnt; n++) {
             opps.add(new Opportunity(
-                    Name = 'MASS INSERT TEST ' + n,
-                    Primary_Contact__c = c.Id,
-                    CampaignId = camp.Id,
-                    CloseDate = Date.Today().addMonths(1),
-                    StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
+                Name = 'MASS INSERT TEST ' + n,
+                Primary_Contact__c = c.Id,
+                CampaignId = camp.Id,
+                CloseDate = closeDate,
+                StageName = closedWonStage
             ));
         }
         database.insert(opps);
 
-        system.AssertEquals(0, [SELECT Count() FROM Allocation__c
-                                        WHERE Opportunity__c IN :opps],
-                'There should be exactly zero default Allocations');
+        system.AssertEquals(0, [SELECT Count() FROM Allocation__c WHERE Opportunity__c IN :opps],
+            'There should be exactly zero Allocations for Opportunities without Amount');
 
         // Populate the Amount field on the Opportunity to allow the allocations to be applied
         for (Opportunity o : opps) {
@@ -247,11 +250,18 @@ private class TDTM_DMLgt200_TEST {
         database.update(opps);
 
         Test.stopTest();
-        // NOTE: For now, validating that it's applying the Settings Default GAU as opposed to the
-        // the GAU that is attached to the Campaign.
-        system.AssertEquals(insertCnt, [SELECT Count() FROM Allocation__c
-                                        WHERE Opportunity__c IN :opps AND General_Accounting_Unit__c = :gau1.Id],
-                'There should be exactly ' + insertCnt.format() + ' default Allocations');
+
+        system.AssertEquals(
+            insertCnt,
+            [SELECT Count() FROM Allocation__c WHERE Opportunity__c IN :opps AND General_Accounting_Unit__c = :campaignGau.Id],
+            'There should be exactly ' + insertCnt.format() + ' Campaign related Allocations'
+        );
+
+        system.AssertEquals(
+            0,
+            [SELECT Count() FROM Allocation__c WHERE Opportunity__c IN :opps AND General_Accounting_Unit__c = :defaultGau.Id],
+            'There should be exactly zero Default Settings Allocations'
+        );
     }
 
     /*********************************************************************************************************
