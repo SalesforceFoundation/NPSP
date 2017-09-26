@@ -209,5 +209,19 @@ public with sharing class USER_UserService {
         return scheduledJobs;
     }
 
-
+    /*********************************************************************************************************
+    * @description Return a page reference to the appropriate Salesforce Home Page depending on which UI the
+    * current user is in (Classic or LEX).
+    * @return Page Reference.
+    **********************************************************************************************************/
+    public static pageReference getHomePageReference() {
+        PageReference ref;
+        if (UserInfo.getUiThemeDisplayed() == 'Theme4d') {
+            ref = new PageReference('/one/one.app#/home');
+        } else {
+            ref = new PageReference('/home/home.jsp');
+        }
+        ref.setRedirect(true);
+        return ref;
+    }
 }
