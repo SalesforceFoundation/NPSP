@@ -61,7 +61,6 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
             <!--Main Content-->
             <div class="container slds-p-around_medium">
                 <!-- Opportunity Info -->
-
                 <apex:outputText rendered="{!AND(NOT(ISNULL(paymentsSettings)), paymentsSettings.npe01__Payments_Enabled__c == true, isScheduleWizard == true)}">
                     <div class="slds-section-title_divider">
                         {!$Label.pmtWizardSectionTitle}
@@ -195,7 +194,7 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                                                               sObj="{!p.OppPayment}"
                                                               sObjType="npe01__OppPayment__c"
                                                               showLabel="false"
-                                                              required="!f.DBRequired || f.Required}" />
+                                                              required="{!f.DBRequired || f.Required}" />
                                         </td>
                                     </apex:repeat>
                                 </tr>
