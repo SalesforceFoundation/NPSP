@@ -1,7 +1,7 @@
 <apex:page standardController="Allocation__c" recordSetVar="allocations" extensions="ALLO_ManageAllocations_CTRL" title="Manage Allocations" tabStyle="Allocation__c" showHeader="true" sidebar="true" cache="false" >
+    <apex:slds />
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
-    <apex:slds />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script type="text/javascript">

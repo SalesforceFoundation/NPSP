@@ -4,12 +4,11 @@
     showHeader="true"
     sidebar="false"
     docType="html-5.0"
-    standardStylesheets="false">
-
-    <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
+    standardStylesheets="true">
 
     <apex:slds />
-    
+    <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
+
     <style type="text/css">
 
         /* the progress markup below uses the following 6 css rules. */
@@ -41,30 +40,24 @@
         }
     </style>
 
-    <div class="slds slds-p-bottom--x-large">
-        <apex:form id="idForm" html-novalidate="novalidate" styleClass="slds-p-bottom--x-large">
+    <div class="slds slds-p-bottom_x-large">
+        <apex:form id="idForm" html-novalidate="novalidate" styleClass="slds-p-bottom_x-large">
 
-            <div class="slds-page-header slds-m-bottom--large" role="banner">
-                <div class="slds-media slds-media--center slds-media--responsive">
-                    <div class="slds-media__body">
-                        <h3 class="slds-text-heading--medium slds-m-bottom--large">{!$Label.bdiDataImporterTitle}</h3>
-                        <p>{!$Label.bdiDataImporterDescription}</p>
-                    </div>
-                    <div class="slds-media__figure slds-media__figure--reverse">
-                        <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/RGB_npsp-stacked-color.png')}" class="img-rounded img-responsive" style="height: 75px" alt="NPSP Logo"/>
-                    </div>
-                </div>
-            </div>
-            
+            <!-- PAGE HEADER -->
+            <c:UTIL_PageHeader headerLabel="{!$Label.bdiDataImporterTitle}"
+                               header="{!$Label.bdiDataImporterDescription}"
+                               useNPSPicon="true" smallSubtitleFont="true"
+                               showSaveBtn="false" showCancelBtn="false"/>
+
             <c:UTIL_PageMessages />
 
-            <div class="slds-grid">
-                <div class="slds-size--1-of-2 slds-m-horizontal--large">
+            <div class="slds-grid slds-p-top_medium">
+                <div class="slds-size_1-of-2 slds-m-horizontal_large">
                     <apex:outputText rendered="{!NOT(batchRunning)}">
-                        <div class="slds-container--large slds-container--center">
+                        <div class="slds-container_large slds-container_center">
         
-                            <div  class="slds-m-bottom--large">
-                                <div class="slds-text-heading--small slds-m-bottom--medium">
+                            <div  class="slds-m-bottom_large">
+                                <div class="slds-text-heading_small slds-m-bottom_medium">
                                     {!$Label.bdiDataImporterInfoTitle}
                                 </div>
         
@@ -75,7 +68,7 @@
                                         <li>{!$Label.bdiDataImporterInfoLine2b}</li>
                                         <li>{!$Label.bdiDataImporterInfoLine3}</li>
                                         <li>{!$Label.bdiDataImporterInfoLine4}</li>
-                                        <li style="list-style-type: none;" class="slds-m-top--medium">
+                                        <li style="list-style-type: none;" class="slds-m-top_medium">
                                             <b>{!$Label.bdiDataImporterNumToProcess}&nbsp;{!crecToProcess}</b>
                                         </li>
                                     </ul>
@@ -85,13 +78,13 @@
                     </apex:outputText>
                 
                     <apex:outputText rendered="{!NOT(batchRunning) && NOT(isEditMode)}">
-                        <div class="slds-container--large">
-                            <div class="slds-grid slds-grid--align-center">
+                        <div class="slds-container_large">
+                            <div class="slds-grid slds-grid_align-center">
                                 <div class="slds-form slds-form_stacked slds-m-left_large">
                                     <div class="slds-form-element">
                                         <div class="slds-form-element__control">
-                                            <apex:commandButton value="{!$Label.bdiRunBtn}" action="{!importData}" immediate="false" styleClass="slds-button slds-button--brand" rerender="idForm"/>
-                                            <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!close}" immediate="true" styleClass="slds-button slds-button--neutral" />
+                                            <apex:commandButton value="{!$Label.bdiRunBtn}" action="{!importData}" immediate="false" styleClass="slds-button slds-button_brand" rerender="idForm"/>
+                                            <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!close}" immediate="true" styleClass="slds-button slds-button_neutral" />
                                         </div>
                                     </div>
                                 </div>
@@ -100,13 +93,13 @@
                     </apex:outputText>
                 </div>
 
-                <div class="slds-size--1-of-2 slds-m-horizontal--large">        
+                <div class="slds-size_1-of-2 slds-m-horizontal_large">
                     <apex:outputText rendered="{!AND(NOT(batchRunning), userCanEditSettings)}">
-                        <div class="slds-text-heading--small slds-m-bottom--medium">
+                        <div class="slds-text-heading_small slds-m-bottom_medium">
                             {!$Label.bdiDataImporterConfigTitle}&nbsp;&nbsp;&nbsp;&nbsp;
-                            <apex:commandButton value="{!$Label.stgBtnEdit}" action="{!editBDISettings}" immediate="true" styleClass="slds-button slds-button--neutral" rendered="{!NOT(isEditMode)}"/>
-                            <apex:commandButton value="{!$Label.stgBtnSave}" action="{!saveBDISettings}" immediate="false" styleClass="slds-button slds-button--brand" rendered="{!isEditMode}"/>
-                            <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelBDISettings}" immediate="true" styleClass="slds-button slds-button--neutral" rendered="{!isEditMode}"/>
+                            <apex:commandButton value="{!$Label.stgBtnEdit}" action="{!editBDISettings}" immediate="true" styleClass="slds-button slds-button_neutral" rendered="{!NOT(isEditMode)}"/>
+                            <apex:commandButton value="{!$Label.stgBtnSave}" action="{!saveBDISettings}" immediate="false" styleClass="slds-button slds-button_brand" rendered="{!isEditMode}"/>
+                            <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelBDISettings}" immediate="true" styleClass="slds-button slds-button_neutral" rendered="{!isEditMode}"/>
                         </div>
                         <c:BDI_SettingsUI bdiBatch="{!diBatch}" editMode="{!isEditMode}" showBatchOnlyFields="{!isTrueBatch}" />
                    </apex:outputText>
@@ -114,7 +107,7 @@
             </div>
 
             <apex:outputText rendered="{!batchRunning}" >
-                <div class="slds-container--large slds-container--center">
+                <div class="slds-container_large slds-container_center">
                     <apex:outputText id="batchpanel">
                         <apex:outputPanel id="panelSummary" rendered="{!batchRunning}" >
                             <apex:actionPoller rerender="panelSummary" interval="5" enabled="{!NOT(isBatchJobCompleted)}"/>
@@ -126,68 +119,68 @@
 
                             <div class="slds-card">
                                 <div class="slds-card__header slds-grid">
-                                    <h3 class="slds-text-heading--small slds-has-flexi-truncate">{!$Label.bdiDataImporterTitle}</h3>
+                                    <h3 class="slds-text-heading_small slds-has-flexi-truncate">{!$Label.bdiDataImporterTitle}</h3>
                                     <div class="slds-no-flex">
-                                        <apex:commandButton value="{!$Label.bdiBtnClose}" action="{!close}" immediate="true" styleClass="slds-button slds-button--neutral" />
+                                        <apex:commandButton value="{!$Label.bdiBtnClose}" action="{!close}" immediate="true" styleClass="slds-button slds-button_neutral" />
                                     </div>
                                 </div>
                                 <div class="slds-card__body">
                                     <div class="slds-media slds-tile slds-wrap">
-                                        <div class="slds-media__figure slds-size--2-of-12">
+                                        <div class="slds-media__figure slds-size_2-of-12">
                                             <svg viewbox="0 0 34 34">
                                                 <circle class="{!statusTheme}" stroke-dasharray="{!percentComplete} 100" r="16" cx="17" cy="17"/>
                                                 <g transform="matrix(0.5, 0, 0, 0.5, 8.5, 8.5)">
-                                                    <text x="17" y="17" class="slds-text-heading--small">{!percentComplete}%</text>
+                                                    <text x="17" y="17" class="slds-text-heading_small">{!percentComplete}%</text>
                                                 </g>
                                             </svg>
                                         </div>
-                                        <div class="slds-media__body slds-size--10-of-12">
+                                        <div class="slds-media__body slds-size_10-of-12">
                                             <div class="slds-tile__title slds-grid">
-                                                <p class="slds-truncate slds-col slds-size--2-of-6">
+                                                <p class="slds-truncate slds-col slds-size_2-of-6">
                                                     {!aaj.ApexClass.Name}
                                                 </p>
-                                                <div class="slds-col slds-size--4-of-6">
-                                                    <span class="slds-badge slds-theme--{!statusTheme}">{!badgeText}</span>
+                                                <div class="slds-col slds-size_4-of-6">
+                                                    <span class="slds-badge slds-theme_{!statusTheme}">{!badgeText}</span>
                                                 </div>
                                             </div>
                                             <div class="slds-tile__detail">
-                                                <p class="slds-text-body--small slds-truncate">{!strBatchStatus}</p>
-                                                <dl class="slds-dl--horizontal slds-text-body--small slds-m-top--x-small">
-                                                    <dt class="slds-dl--horizontal__label slds-size--3-of-12">
+                                                <p class="slds-text-body_small slds-truncate">{!strBatchStatus}</p>
+                                                <dl class="slds-dl_horizontal slds-text-body_small slds-m-top_x-small">
+                                                    <dt class="slds-dl_horizontal__label slds-size_3-of-12">
                                                         {!$Label.bdiStatus}
                                                     </dt>
-                                                    <dd class="slds-dl--horizontal__detail slds-tile__meta slds-size--9-of-12">
+                                                    <dd class="slds-dl_horizontal__detail slds-tile__meta slds-size_9-of-12">
                                                         {!statusText}
                                                     </dd>
-                                                    <dt class="slds-dl--horizontal__label slds-size--3-of-12">
+                                                    <dt class="slds-dl_horizontal__label slds-size_3-of-12">
                                                         {!$Label.bdiTime}
                                                     </dt>
-                                                    <dd class="slds-dl--horizontal__detail slds-tile__meta slds-size--9-of-12">
+                                                    <dd class="slds-dl_horizontal__detail slds-tile__meta slds-size_9-of-12">
                                                         {!strTimeSpent}
                                                     </dd>
-                                                    <dt class="slds-dl--horizontal__label slds-size--3-of-12">
+                                                    <dt class="slds-dl_horizontal__label slds-size_3-of-12">
                                                         {!$Label.bdiRecordsProcessed}
                                                     </dt>
-                                                    <dd class="slds-dl--horizontal__detail slds-tile__meta slds-size--9-of-12">
+                                                    <dd class="slds-dl_horizontal__detail slds-tile__meta slds-size_9-of-12">
                                                         {!crecProcessed}
                                                     </dd>
-                                                    <dt class="slds-dl--horizontal__label slds-size--3-of-12">
+                                                    <dt class="slds-dl_horizontal__label slds-size_3-of-12">
                                                         {!$Label.bdiRecordsImported}
                                                     </dt>
-                                                    <dd class="slds-dl--horizontal__detail slds-tile__meta slds-size--9-of-12">
+                                                    <dd class="slds-dl_horizontal__detail slds-tile__meta slds-size_9-of-12">
                                                         {!crecImported}
                                                     </dd>
-                                                    <dt class="slds-dl--horizontal__label slds-size--3-of-12">
+                                                    <dt class="slds-dl_horizontal__label slds-size_3-of-12">
                                                         {!$Label.bdiRecordsFailed}
                                                     </dt>
-                                                    <dd class="slds-dl--horizontal__detail slds-tile__meta slds-size--9-of-12">
+                                                    <dd class="slds-dl_horizontal__detail slds-tile__meta slds-size_9-of-12">
                                                         {!crecFailed}
                                                     </dd>
                                                     <apex:outputText rendered="{!aaj.ExtendedStatus != null}">
-                                                        <dt class="slds-dl--horizontal__label slds-size--3-of-12">
+                                                        <dt class="slds-dl_horizontal__label slds-size_3-of-12">
                                                             {!$Label.bdiBatchException}
                                                         </dt>
-                                                        <dd class="slds-dl--horizontal__detail slds-tile__meta slds-size--9-of-12">
+                                                        <dd class="slds-dl_horizontal__detail slds-tile__meta slds-size_9-of-12">
                                                             {!aaj.ExtendedStatus}
                                                         </dd>
                                                     </apex:outputText>

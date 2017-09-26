@@ -5,6 +5,8 @@
     <apex:attribute name="onchange" type="String"  default="" description="On change event."/>
     <apex:attribute name="required" type="Boolean" default="false" description="When true marks the field as required, defaults to false." />
     <apex:attribute name="styleClass" type="String" default="" description="The style to apply to the outer form element." />
+    <apex:attribute name="labelOverride" type="String" default="" description="Override the standard field label with this text" />
+    <apex:attribute name="showLabel" type="Boolean" default="true" description="When false, hide the field label" />
 
     <!-- Action Support assumes onchange event and calling page has an action status component on the page -->
     <apex:attribute name="actSup" type="Boolean" default="false" description="When true the input field will render action support, defaults to false." />
@@ -22,25 +24,29 @@
         value="{!IF(dependent,
                     IF(ftype=='picklist', ' dependentPicklistFixup', ' dependentMultiPicklistFixup'),
                     IF(CONTAINS(ftype,'date'),' dateFixup', ''))}"/>
+
     <!-- The field label to be displayed -->
-    <apex:variable var="label" value="{!$ObjectType[sObjType].fields[field].label}"/>
+    <apex:variable var="label" value="{!$ObjectType[sObjType].fields[field].label}" rendered="{!labelOverride == ''}"/>
+    <apex:variable var="label" value="{!labelOverride}" rendered="{!labelOverride != ''}"/>
 
     <!-- Read only fields will be displayed as outputfields with a bottom divider per slds standards, checkboxes will render as disabled input checkboxes -->
     <apex:outputPanel layout="none" id="divOutput"
         rendered="{!((!$ObjectType[sObjType].fields[field].updateable && sObj['Id']!='')
                     || !$ObjectType[sObjType].fields[field].createable) && $ObjectType[sObjType].fields[field].accessible}">
         <div class="{!'slds-form-element ' + styleClass}">
-            <apex:outputLabel for="outputX" styleClass="slds-form-element__label" rendered="{!ftype!='boolean'}">
+            <apex:outputLabel for="outputX" styleClass="slds-form-element__label" rendered="{!showLabel == true && ftype!='boolean'}">
                 {!label}
             </apex:outputLabel>
-            <div class="{!'slds-form-element__control' + IF(ftype!='boolean', ' slds-has-divider--bottom slds-p-left--small','')}">
+            <div class="{!'slds-form-element__control' + IF(ftype!='boolean', ' slds-has-divider_bottom slds-p-left_small','')}">
                 <!-- Blank space fixes issue where an empty span on read only fields were blank causing the line to shift when no value present -->
                 <apex:outputField id="outputX" value="{!sObj[field]}" styleClass="slds-form-element__static" rendered="{!ftype!='boolean'}">&nbsp;</apex:outputField>
                 <apex:outputPanel layout="{!IF(ftype=='boolean', 'inline', 'none')}" styleClass="{!IF(ftype=='boolean', 'slds-checkbox', '')}">
                     <apex:outputLabel for="outputCB" styleClass="slds-checkbox__label" rendered="{!ftype=='boolean'}">
                         <apex:inputCheckbox value="{!sObj[field]}" id="outputCB" disabled="true" rendered="{!ftype=='boolean'}" />
-                        <span class="slds-checkbox--faux"></span>
-                        <span class="slds-form-element__label">{!label}</span>
+                        <span class="slds-checkbox_faux"></span>
+                        <apex:outputPanel rendered="{!showLabel == true}" layout="none">
+                            <span class="slds-form-element__label">{!label}</span>
+                        </apex:outputPanel>
                     </apex:outputLabel>
                 </apex:outputPanel>
             </div>
@@ -51,10 +57,11 @@
     <apex:outputPanel layout="block" styleClass="{!'slds-form-element ' + styleClass + fixup}" id="divInput"
         rendered="{!($ObjectType[sObjType].fields[field].updateable
                     || $ObjectType[sObjType].fields[field].createable && sObj['Id']=='') && $ObjectType[sObjType].fields[field].type != 'boolean'}">        
-        <apex:outputLabel for="inputX" styleClass="slds-form-element__label" rendered="{!ftype!='boolean'}">
+        <apex:outputLabel for="inputX" styleClass="slds-form-element__label" rendered="{!showLabel == true && ftype!='boolean'}">
             <apex:outputText rendered="{!required}">
                 <abbr class="slds-required" title="{!$Label.lblRequired}">*</abbr>
-            </apex:outputText>{!label}
+            </apex:outputText>
+            <apex:outputText rendered="{!showLabel == true}" value="{!label}"/>
         </apex:outputLabel>
         <div class="slds-form-element__control">
             <c:UTIL_InputField field="{!field}" sObj="{!sObj}" sObjType="{!sObjType}" onchange="{!onchange}" actSupAction="{!actSupAction}"
@@ -72,8 +79,10 @@
                 <apex:inputField id="inputCB" value="{!sObj[field]}" label="">
                     <apex:actionSupport event="onchange" action="{!actSupAction}" reRender="{!actSupReRender}" rendered="{!actSup}" status="{!actSupStatus}" immediate="{!actSupImmediate}"/>
                 </apex:inputField>
-                    <span class="slds-checkbox--faux"></span>
-                    <span class="slds-form-element__label">{!label}</span>
+                    <span class="slds-checkbox_faux"></span>
+                    <apex:outputPanel rendered="{!showLabel == true}" layout="none">
+                        <span class="slds-form-element__label">{!label}</span>
+                    </apex:outputPanel>
             </apex:outputLabel>
         </div>
         <script type="text/javascript">

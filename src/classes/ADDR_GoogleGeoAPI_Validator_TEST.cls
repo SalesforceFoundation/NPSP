@@ -126,7 +126,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator_TEST {
         Test.StopTest();
 
         System.assertEquals(1, returnedAddress.size());
-        System.assertEquals(false, returnedAddress[0].Verified__c);
+        System.assertEquals(true, returnedAddress[0].Verified__c);
         System.assertEquals(true, returnedAddress[0].Ambiguous__c);
     }
 
