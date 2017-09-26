@@ -65,6 +65,7 @@ public with sharing class ADDR_Validator {
     /*******************************************************************************************************
     * @description Verifies a set of address records.
     * @param recordIds A set containing the IDs of the address records to verify.
+    * @param attemptAlreadyVerifiedRecords Whether addresses already marked Verified should be verified again.
     * @return void
     */
     public static void verifyRecords(Set<Id> recordIds, Boolean attemptAlreadyVerifiedRecords) {
