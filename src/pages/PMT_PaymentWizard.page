@@ -170,7 +170,7 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                         <div class="slds-section-title_divider" id="pmtsToCreateTitle">
                             {!$Label.pmtWizardToBeCreated}
                         </div>
-                        <table class="slds-table" >
+                        <table class="slds-table" id="pmtTable">
                             <thead>
                                 <tr class="slds-text-heading_label">
                                     <th scope="col" class="slds-cell-wrap">{!$Label.pmtWizardPaymentNumber}</th>
