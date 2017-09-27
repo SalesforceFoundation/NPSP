@@ -62,7 +62,7 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
             <div class="container slds-p-around_medium">
                 <!-- Opportunity Info -->
                 <apex:outputText rendered="{!AND(NOT(ISNULL(paymentsSettings)), paymentsSettings.npe01__Payments_Enabled__c == true, isScheduleWizard == true)}">
-                    <div class="slds-section-title_divider">
+                    <div class="slds-section-title_divider" id="pmtWizardTitle">
                         {!$Label.pmtWizardSectionTitle}
                     </div>
                     <apex:outputText rendered="{!NOT(ISNULL(currentOpp))}">
@@ -126,7 +126,7 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
 
                     <!-- Create payment schedule -->
                     <apex:outputText rendered="{!AND(NOT(isClosedLost), OR(haveAmount, removePaidPayments))}" styleClass="slds-m-around_medium slds-p-top_medium">
-                        <div class="slds-section-title_divider">
+                        <div class="slds-section-title_divider" id="pmtCreateTitle">
                             {!$Label.pmtWizardCreateSchedule}
                         </div>
                         <div class="slds-grid slds-wrap slds-form_horizontal slds-p-top_x-small">
@@ -167,7 +167,7 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                     </div>
                     <!-- Show Payments to be Created -->
                     <apex:outputText rendered="{!AND(NOT(isClosedLost), payments.size>0, OR(haveAmount, removePaidPayments))}" styleClass="slds-p-around_medium">
-                        <div class="slds-section-title_divider">
+                        <div class="slds-section-title_divider" id="pmtsToCreateTitle">
                             {!$Label.pmtWizardToBeCreated}
                         </div>
                         <table class="slds-table" >
@@ -213,7 +213,7 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
 
                 <!-- START PAYMENT WRITEOFF  -->
                 <apex:outputText rendered="{!AND(NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true, isWriteoffWizard == true)}" styleClass="slds-p-around_medium">
-                    <div class="slds-section-title_divider">
+                    <div class="slds-section-title_divider" id="pmtWizardTitle2">
                         {!$Label.pmtWizardSectionTitle}
                     </div>
                     <apex:outputText rendered="{!NOT(ISNULL(currentOpp))}">
@@ -276,7 +276,7 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                     </apex:outputText>
 
                     <apex:outputText rendered="{!AND(NOT(ISNULL(CurrentOpp)), haveAmount, NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true)}" styleClass="slds-p-around_medium">
-                        <div class="slds-section-title_divider">
+                        <div class="slds-section-title_divider" id="writeoffPmtsTitle">
                             {!$Label.pmtWizardSectionWriteoffPayments}
                         </div>
                         <div class="slds-m-around_medium">
