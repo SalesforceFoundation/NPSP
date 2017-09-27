@@ -388,7 +388,8 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         Component.Apex.CommandButton addTaskButton = new Component.Apex.CommandButton(
             styleClass = 'slds-button slds-button--brand slds-float--left',
             rerender = 'taskTree',
-            immediate = false
+            immediate = false,
+            id = 'btnAddTask'
         );
         addTaskButton.expressions.action = '{!addTask}';
         addTaskButton.expressions.value = '{!$Label.EPAddTask}';
@@ -445,7 +446,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
 
         Component.Apex.OutputText addDependentTaskButton = new Component.Apex.OutputText(
             value='<button onclick="addDependentTaskJS(\''+ wrapper.level +'\');return false;" '+ 
-            'class="slds-button slds-button--brand">' + Label.EPAddDependentTask + 
+            'class="slds-button slds-button--brand" id="btnAddDepTask">' + Label.EPAddDependentTask + 
             '<span class="slds-assistive-text"> ' + Label.EPTo + Schema.Sobjecttype.Task.getLabel() + ' ' + wrapper.level + 
             '</span></button>',
             escape=false
@@ -453,7 +454,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
          
         Component.Apex.OutputText deleteTaskButton = new Component.Apex.OutputText(
             value='<button onclick="deleteTaskJS(\''+ wrapper.level +'\');return false;" '+ 
-            'class="slds-button slds-button--destructive">' + Label.EPDeleteTask +
+            'class="slds-button slds-button--destructive" id="btnDelTask">' + Label.EPDeleteTask +
             '<span class="slds-assistive-text">' + wrapper.level + 
             '</span></button>',
             escape=false
