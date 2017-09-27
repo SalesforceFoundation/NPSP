@@ -71,10 +71,10 @@
                 $('#totalAmount').text(reformatCurrency(unallocated));
                 if (unallocated < 0) {
                     $('#totalAmount').css({ "color": "red", "font-weight": "bold" });
-                    $('[id$="saveCloseBTN"]').attr('disabled','disabled');
+                    $('[id$="saveBTN"]').attr('disabled','disabled');
                 } else {
                     $('#totalAmount').css({ "color": "black", "font-weight": "normal" });
-                    $('[id$="saveCloseBTN"]').removeAttr('disabled');
+                    $('[id$="saveBTN"]').removeAttr('disabled');
                 }
             } else {
                 $('#totalAmount').text(reformatCurrency((Math.round(sumAmount)/100).toFixed(2)));
