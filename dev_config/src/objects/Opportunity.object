@@ -6,21 +6,6 @@
         <businessProcess>NPSP_Default</businessProcess>
         <label>Donation</label>
         <picklistValues>
-            <picklist>DeliveryInstallationStatus__c</picklist>
-            <values>
-                <fullName>Completed</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>In progress</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Yet to begin</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-        <picklistValues>
             <picklist>ForecastCategoryName</picklist>
             <values>
                 <fullName>Best Case</fullName>
@@ -132,21 +117,6 @@
         <active>true</active>
         <businessProcess>NPSP_Default</businessProcess>
         <label>Grant</label>
-        <picklistValues>
-            <picklist>DeliveryInstallationStatus__c</picklist>
-            <values>
-                <fullName>Completed</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>In progress</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Yet to begin</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
         <picklistValues>
             <picklist>ForecastCategoryName</picklist>
             <values>
@@ -260,21 +230,6 @@
         <businessProcess>NPSP_Default</businessProcess>
         <label>In Kind</label>
         <picklistValues>
-            <picklist>DeliveryInstallationStatus__c</picklist>
-            <values>
-                <fullName>Completed</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>In progress</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Yet to begin</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-        <picklistValues>
             <picklist>ForecastCategoryName</picklist>
             <values>
                 <fullName>Best Case</fullName>
@@ -386,21 +341,6 @@
         <active>true</active>
         <businessProcess>NPSP_Default</businessProcess>
         <label>Major Gift</label>
-        <picklistValues>
-            <picklist>DeliveryInstallationStatus__c</picklist>
-            <values>
-                <fullName>Completed</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>In progress</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Yet to begin</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
         <picklistValues>
             <picklist>ForecastCategoryName</picklist>
             <values>
@@ -514,21 +454,6 @@
         <businessProcess>NPSP_Default</businessProcess>
         <label>Matching</label>
         <picklistValues>
-            <picklist>DeliveryInstallationStatus__c</picklist>
-            <values>
-                <fullName>Completed</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>In progress</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Yet to begin</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-        <picklistValues>
             <picklist>ForecastCategoryName</picklist>
             <values>
                 <fullName>Best Case</fullName>
@@ -640,21 +565,6 @@
         <active>true</active>
         <businessProcess>NPSP_Default</businessProcess>
         <label>Membership</label>
-        <picklistValues>
-            <picklist>DeliveryInstallationStatus__c</picklist>
-            <values>
-                <fullName>Completed</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>In progress</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Yet to begin</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
         <picklistValues>
             <picklist>ForecastCategoryName</picklist>
             <values>
