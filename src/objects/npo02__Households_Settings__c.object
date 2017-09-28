@@ -17,7 +17,7 @@
         <fullName>Use_Dated_Conversion_Rates__c</fullName>
         <defaultValue>false</defaultValue>
         <externalId>false</externalId>
-        <inlineHelpText>heck this box to use Dated Conversion Rates when Advanced Currency Management is enabled in this Organization. If unchecked and ACM is enabled, all NPSP roll-ups will use the default exchange rate for by currency.</inlineHelpText>
+        <inlineHelpText>Check this box to use Dated Conversion Rates when Advanced Currency Management is enabled in this Organization. If unchecked and ACM is enabled, all NPSP roll-ups will use the default exchange rate for by currency.</inlineHelpText>
         <label>Use Dated Conversion Rates if available</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>

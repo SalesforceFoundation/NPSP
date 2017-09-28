@@ -64,13 +64,7 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
             // If the current static var cache does not have a value for the CurrencyCode
             // look in the Platform cache first (if available) and if not retrieve from the database.
             if (!cachedMapOfRatesByCurrencyCode.containsKey(currCode)) {
-                if (getInstance().isOrgCacheAvailable()) {
-                    cachedMapOfRatesByCurrencyCode.put(currCode, (UTIL_CurrencyCache.CurrencyData) orgCache.get(CurrencyCache.class, currCode));
-                } else {
-                    cachedMapOfRatesByCurrencyCode.put(currCode, getInstance().getRateMapForCurrencies(new List<String>{
-                            currCode
-                    }).get(currCode));
-                }
+                retrieveAndCacheExchangeRates(currCode);
             }
 
             // If a set of rates was retrieved, find the effective rate based on the date
@@ -95,6 +89,21 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
     }
 
     /**
+     * @description If the currency has not already been cached - either in the org cache or the static var,
+     * initiate the appropriate retrieve and storage actions.
+     * @returns nothing
+     */
+    private static void retrieveAndCacheExchangeRates(String currCode) {
+        if (getInstance().isOrgCacheAvailable()) {
+            cachedMapOfRatesByCurrencyCode.put(currCode, (UTIL_CurrencyCache.CurrencyData) orgCache.get(CurrencyCache.class, currCode));
+        } else {
+            cachedMapOfRatesByCurrencyCode.put(currCode, getInstance().getRateMapForCurrencies(new List<String>{
+                    currCode
+            }).get(currCode));
+        }
+    }
+
+    /**
      * @description Returns the OrganizationCache object from the UTIL_PlatformCache class
      * or null if there is no npsp org cache available to use.
      */
@@ -102,6 +111,35 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
         get {
             return UTIL_PlatformCache.orgCache;
         }
+    }
+
+    /**
+     * @description Returns the organizations default currency code (i.e., "Corporate" or "Home" Currency)
+     */
+    private static String orgDefaultCurrencyCode;
+    public static String getOrgDefaultCurrency() {
+        if (orgDefaultCurrencyCode == null) {
+            if (UserInfo.isMultiCurrencyOrganization()) {
+                // First look to see if we've already retrieved/cached the org currency.
+                for (String currCode : cachedMapOfRatesByCurrencyCode.keySet()) {
+                    CurrencyData cd = cachedMapOfRatesByCurrencyCode.get(currCode);
+                    if (cd.isOrgDefault) {
+                        orgDefaultCurrencyCode = currCode;
+                        break;
+                    }
+                }
+                // If the default currency has not already been cached into the static map,
+                // Query it directly from the CurrencyType object and store in a static var
+                if (orgDefaultCurrencyCode == null) {
+                    String soql = 'SELECT IsoCode FROM CurrencyType WHERE IsCorporate = True LIMIT 1';
+                    SObject currObj = database.query(soql);
+                    orgDefaultCurrencyCode = (String) currObj.get('IsoCode');
+                }
+            } else {
+                orgDefaultCurrencyCode = '';
+            }
+        }
+        return orgDefaultCurrencyCode;
     }
 
     /** @description Store instance for Singleton pattern */
@@ -151,6 +189,7 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
     public interface Interface_x {
         Boolean isOrgCacheAvailable();
         void resetCurrencyCache();
+        Integer getCurrDecimalPlaces(String currCode);
         Map<String, UTIL_CurrencyCache.CurrencyData> getRateMapForCurrencies(List<String> currCodes);
     }
 
@@ -203,7 +242,7 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
         if (UserInfo.isMultiCurrencyOrganization()) {
             // If ACM is not enabled, query the standard rate table and create a single rate
             // instance per currency code for all currency codes with an effective date of 1/1/900.
-            String soql = 'SELECT IsoCode, ConversionRate FROM CurrencyType WHERE IsActive = True';
+            String soql = 'SELECT IsoCode, ConversionRate, IsCorporate, DecimalPlaces FROM CurrencyType WHERE IsActive = True';
             if (useDatedConversionRates) {
                 // If dated exchange rates are in affect, we still need to capture the 'default'
                 // standard rate to use in the specific scenario of determing the exchange rate
@@ -219,10 +258,24 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
                 }
 
                 currData.defaultRate = (Decimal)scr.get('ConversionRate');
+                currData.isOrgDefault = (Boolean)scr.get('IsCorporate');
+                currData.decimalPlaces = (Integer)scr.get('DecimalPlaces');
                 mapOfCurrencyDataByCurrencyCode.put(currCode, currData);
             }
         }
         return mapOfCurrencyDataByCurrencyCode;
+    }
+
+    /**
+     * @description Retrieve the number of decimal places for the specified currency. If the currency code has not
+     * already been queried and added to the static cache, do it here.
+     */
+    public Integer getCurrDecimalPlaces(String currCode) {
+        if (!cachedMapOfRatesByCurrencyCode.containsKey(currCode)) {
+            retrieveAndCacheExchangeRates(currCode);
+        }
+        CurrencyData cd = cachedMapOfRatesByCurrencyCode.get(currCode);
+        return cd.decimalPlaces;
     }
 
     /**
@@ -246,6 +299,8 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
         public List<Date> effectiveDates {get; set; }
         public List<Decimal> rates {get; set; }
         public Decimal defaultRate {get; set; }
+        public Boolean isOrgDefault {get; set;}
+        public Integer decimalPlaces {get; set;}
 
         public CurrencyData() {
             this.effectiveDates = new List<Date>();

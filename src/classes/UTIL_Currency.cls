@@ -94,18 +94,8 @@ public with sharing class UTIL_Currency implements UTIL_Currency.Interface_x {
     /**
      * @description Returns the organizations default currency code (i.e., "Corporate" or "Home" Currency)
      */
-    private static String orgDefaultCurrencyCode;
     public String getOrgDefaultCurrency() {
-        if (orgDefaultCurrencyCode == null) {
-            if (UserInfo.isMultiCurrencyOrganization()) {
-                String soql = 'SELECT IsoCode FROM CurrencyType WHERE IsCorporate = True LIMIT 1';
-                SObject currObj = database.query(soql);
-                orgDefaultCurrencyCode = (String)currObj.get('IsoCode');
-            } else {
-                orgDefaultCurrencyCode = '';
-            }
-        }
-        return orgDefaultCurrencyCode;
+        return UTIL_CurrencyCache.getOrgDefaultCurrency();
     }
 
     /**

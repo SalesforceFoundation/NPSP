@@ -122,6 +122,7 @@ private class UTIL_CurrencyCache_TEST {
         public List<Date> effectiveDatesReturn;
         public List<Decimal> effectiveRatesReturn;
         public Decimal defaultRate;
+        public String orgDefaultCurrencyReturn;
 
         public boolean isOrgCacheAvailable() {
             return isOrgCacheAvailableReturn;
@@ -142,6 +143,10 @@ private class UTIL_CurrencyCache_TEST {
 
             mapOfCurrencyDataByCurrencyCode.put(currCodes[0], currData);
             return mapOfCurrencyDataByCurrencyCode;
+        }
+
+        public Integer getCurrDecimalPlaces(String currCode) {
+            return 2;
         }
     }
 }

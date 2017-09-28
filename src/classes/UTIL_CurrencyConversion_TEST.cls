@@ -133,6 +133,9 @@ private class UTIL_CurrencyConversion_TEST {
             mapOfCurrencyDataByCurrencyCode.put(currCodes[0], currData);
             return mapOfCurrencyDataByCurrencyCode;
         }
+        public Integer getCurrDecimalPlaces(String currCode) {
+            return 2;
+        }
 
     }
 
