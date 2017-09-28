@@ -2,8 +2,7 @@ project:
     name: Cumulus
     package:
         name: Cumulus
-        name_managed: Nonprofit Success Pack
-        namespace: npsp
+        name_managed: Nonprofit Success Pack namespace: npsp
         api_version: 37.0
         install_class: STG_InstallScript
         uninstall_class: STG_UninstallScript
@@ -72,43 +71,14 @@ tasks:
         options:
             package_xml: lib/admin_profile.xml
 
-    browsertests_firefox:
-        description: Runs the Ruby/Watir browser tests in the browsertests folder using Firefox
-        class_path: cumulusci.tasks.command.SalesforceBrowserTest
-        options:
-            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber --format pretty --format junit --out ../junit -c features/ --tags ~@flaky --tags ~@chrome' 
-            dir: '.'
-            env:
-                SELENIUM_BROWSER: firefox
-
-    browsertests_chrome:
-        description: Runs the Ruby/Watir browser tests in the browsertests folder using Chrome
+    browsertests:
+        description: Runs the Ruby/Watir browser tests in the test/browser folder using Chrome
         class_path: cumulusci.tasks.command.SalesforceBrowserTest
         options:
             command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber --format pretty --format junit --out ../junit -c features/ --tags ~@firefox --tags ~@flaky'
             dir: '.'
             env:
-                SELENIUM_BROWSER: chrome
-
-    browsertests_unmanaged_firefox:
-        description: Runs the Ruby/Watir browser tests in the browsertests folder against unmanaged metadata in Firefox
-        class_path: cumulusci.tasks.command.SalesforceBrowserTest
-        options:
-            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber --format pretty --format junit --out ../junit -c features/ --tags ~@flaky --tags ~@chrome' 
-            dir: '.'
-            env:
                 SELENIUM_BROWSER: firefox
-                TARGET_ORG: unmanaged
-
-    browsertests_unmanaged_chrome:
-        description: Runs the Ruby/Watir browser tests in the browsertests folder against unmanaged metadata in Chrome
-        class_path: cumulusci.tasks.command.SalesforceBrowserTest
-        options:
-            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber --format pretty --format junit --out ../junit -c features/ --tags ~@firefox --tags ~@flaky'
-            dir: '.'
-            env:
-                SELENIUM_BROWSER: chrome
-                TARGET_ORG: unmanaged
 
     test_data_dev_org:
         description: 'Loads a test data set for most NPSP objects based on 100 Contacts that should fit into a scratch org or DE org'
@@ -160,78 +130,20 @@ tasks:
                 - Campaign
 
 flows:
-    browsertests_firefox:
+    browsertests:
         description: Runs the browser tests locally against a managed package in Firefox
         tasks:
             1:
-                task: download_browser_tests
-            2:
-                task: browsertests_firefox
+                task: browsertests
 
-    browsertests_chrome:
-        description: Runs the browser tests locally against a managed package in Chrome
+    ci_browsertests:
+        description: Runs the browser tests on Saucelabs in Chrome
         tasks:
             1:
-                task: download_browser_tests
-            2:
-                task: browsertests_chrome
-
-    browsertests_unmanaged_firefox:
-        description: Runs the browser tests via SauceLabs against the unmanaged metadata in Firefox
-        tasks:
-            1:
-                task: download_browser_tests
-            2:
-                task: browsertests_unmanaged_firefox
-
-    browsertests_unmanaged_chrome:
-        description: Runs the browser tests via SauceLabs against the unmanaged metadata in Chrome
-        tasks:
-            1:
-                task: download_browser_tests
-            2:
-                task: browsertests_unmanaged_chrome
-
-    ci_browsertests_firefox:
-        description: Runs the browser tests via SauceLabs against a managed package in Firefox
-        tasks:
-            1:
-                task: download_browser_tests
-            2:
-                task: browsertests_firefox
+                task: browsertests
                 options:
                     use_saucelabs: True
 
-    ci_browsertests_chrome:
-        description: Runs the browser tests via SauceLabs against a managed package in Chrome
-        tasks:
-            1:
-                task: download_browser_tests
-            2:
-                task: browsertests_chrome
-                options:
-                    use_saucelabs: True
-
-    ci_browsertests_unmanaged_firefox:
-        description: Runs the browser tests via SauceLabs against the unmanaged metadata in Firefox
-        tasks:
-            1:
-                task: download_browser_tests
-            2:
-                task: browsertests_unmanaged_firefox
-                options:
-                    use_saucelabs: True
-
-    ci_browsertests_unmanaged_chrome:
-        description: Runs the browser tests via SauceLabs against the unmanaged metadata in Chrome
-        tasks:
-            1:
-                task: download_browser_tests
-            2:
-                task: browsertests_unmanaged_chrome
-                options:
-                    use_saucelabs: True
-     
     dev_org:
         tasks:
             8:
@@ -300,6 +212,9 @@ flows:
 
 orgs:
     scratch:
+        dev_namespaced:
+            config_file: orgs/dev.json
+            namespaced: True
         beta_middlesuffix:
             config_file: orgs/beta_middlesuffix.json
         beta_multicurrency:
