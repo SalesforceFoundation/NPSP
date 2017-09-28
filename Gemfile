@@ -1,4 +1,5 @@
 # ruby=ruby-2.1.1
+ruby '2.2.8'
 
 source 'https://rubygems.org'
 
