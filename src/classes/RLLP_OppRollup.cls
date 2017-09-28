@@ -895,7 +895,7 @@ public without sharing class RLLP_OppRollup {
                     if (aggrResultObj.get(rollupName) != null) {
                         // Calculate amounts into correct currency only if the field is a Currency type field
                         Schema.DescribeFieldResult fld = UTIL_Describe.getFieldDescribe('Opportunity', udr.npo02__Source_Field__c);
-                        if (fld.getType() == Schema.Displaytype.Currency) {
+                        if (fld.getType() == Schema.Displaytype.Currency && RLLP_OppRollup_UTIL.isMultiCurrency()) {
                             obj.put(udr.npo02__Target_Field__c, RLLP_OppRollup_UTIL.ConvertFromCorporate((string) obj.get('CurrencyIsoCode'), (decimal) aggrResultObj.get(rollupName)));
                         } else {
                             obj.put(udr.npo02__Target_Field__c, aggrResultObj.get(rollupName));
