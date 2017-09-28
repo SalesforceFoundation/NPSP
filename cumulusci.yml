@@ -27,14 +27,6 @@ project:
         - github: https://github.com/SalesforceFoundation/Affiliations
 
 tasks:
-    download_browser_tests:
-        description: Downloads the browser tests from the NPSP-Browser-Tests Github repository.
-        class_path: cumulusci.tasks.util.DownloadZip
-        options:
-            url: 'https://github.com/SalesforceFoundation/NPSP-Browser-Tests/archive/master.zip'
-            dir: browser_tests
-            subfolder: NPSP-Browser-Tests-master
-
     download_ldv_tests:
         description: Downloads the NPSP-LDV-Tests repository
         class_path: cumulusci.tasks.util.DownloadZip
@@ -76,10 +68,10 @@ tasks:
         description: Runs the Ruby/Watir browser tests in the test/browser folder using Chrome
         class_path: cumulusci.tasks.command.SalesforceBrowserTest
         options:
-            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber --format pretty --format junit --out ../junit -c features/ --tags ~@firefox --tags ~@flaky'
+            command: 'cd test/browser; bundle exec cucumber --format pretty --format junit --out ../junit -c features/ --tags ~@firefox --tags ~@flaky'
             dir: '.'
             env:
-                SELENIUM_BROWSER: firefox
+                SELENIUM_BROWSER: chrome
 
     test_data_dev_org:
         description: 'Loads a test data set for most NPSP objects based on 100 Contacts that should fit into a scratch org or DE org'

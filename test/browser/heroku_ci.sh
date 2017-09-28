@@ -36,7 +36,7 @@ else
     exit_status=$?
     if [ "$exit_status" = "1" ]; then
         echo "Flow execution failed, failing test"
-        cci org scratch_delete browsertests_master
+        cci org scratch_delete browsertests_feature
         exit 1
     fi
 
