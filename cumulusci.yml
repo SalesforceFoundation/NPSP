@@ -61,12 +61,6 @@ tasks:
         options:
             path: dev_config/src_managed
 
-    deploy_dev_config_qa:
-        description: Deploys the post install configuration for an unmanaged DE org for qa, with test fields, layout and button changes to accommodate no namespace
-        class_path: cumulusci.tasks.salesforce.Deploy
-        options:
-            path: dev_config/src_qa
-
     deploy_dev_config_delete:
         description: Deploys the metadata deletions for the post install DE org config
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -274,15 +268,6 @@ flows:
                 task: deploy_dev_config_delete
             9:
                 task: deploy_dev_config
-
-    qa_config:
-        tasks:
-            1:
-                task: deploy_dev_config_qa
-            2:
-                task: update_admin_profile
-            3:
-                task: test_data_dev_org
 
     release_beta:
         tasks:
