@@ -5,7 +5,7 @@
 # master branch test
 if [ "$HEROKU_TEST_RUN_BRANCH" == "master" ]; then
     # Create scratch org config as default org
-    cci org scratch browsertests_classic browsertests_master --default
+    cci org scratch browsertest_classic browsertests_master --default
 
     # Install latest beta
     cci flow run ci_beta_install
@@ -21,7 +21,7 @@ if [ "$HEROKU_TEST_RUN_BRANCH" == "master" ]; then
     exit_status=$?
 
     # Delete the scratch org
-    cci org scratch_delete browsertests_master
+    cci org scratch_delete browsertest_master
     if [ "$exit_status" = "1" ]; then
         echo "Flow execution failed, failing test"
         exit 1
@@ -29,7 +29,7 @@ if [ "$HEROKU_TEST_RUN_BRANCH" == "master" ]; then
 # All other branches
 else
     # Create scratch org config as default org
-    cci org scratch browsertests_classic_namespaced browsertests_feature --default
+    cci org scratch browsertest_classic_namespaced browsertests_feature --default
 
     # Deploy unmanaged metadata
     cci flow run dev_org
@@ -45,7 +45,7 @@ else
     exit_status=$?
 
     # Delete the scratch org
-    cci org scratch_delete browsertests_master
+    cci org scratch_delete browsertest_feature
     if [ "$exit_status" = "1" ]; then
         echo "Flow execution failed, failing test"
         exit 1
