@@ -19,6 +19,10 @@ end
 
 Before do |scenario|
   if ENV['RUN_LOCAL']
+    if ENV['GOOGLE_CHROME_BIN']
+      # Handle alternate Google Chrome binary location on Heroku CI
+      Selenium::WebDriver::Chrome.driver_path = ENV['GOOGLE_CHROME_BIN']
+    end
     if ENV['SELENIUM_BROWSER']
       @browser = Watir::Browser.new :"#{ENV['SELENIUM_BROWSER']}", detach: true
     else

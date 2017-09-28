@@ -5,7 +5,7 @@
 # master branch test
 if [ "$HEROKU_TEST_RUN_BRANCH" == "master" ]; then
     # Create scratch org config as default org
-    cci org scratch dev browsertests_master --default
+    cci org scratch browsertests_classic browsertests_master --default
 
     # Install latest beta
     cci flow run ci_beta_install
@@ -29,7 +29,7 @@ if [ "$HEROKU_TEST_RUN_BRANCH" == "master" ]; then
 # All other branches
 else
     # Create scratch org config as default org
-    cci org scratch dev_namespaced browsertests_feature --default
+    cci org scratch browsertests_classic_namespaced browsertests_feature --default
 
     # Deploy unmanaged metadata
     cci flow run dev_org
