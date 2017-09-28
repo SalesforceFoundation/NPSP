@@ -1,4 +1,4 @@
-<apex:page standardController="Allocation__c" recordSetVar="allocations" extensions="ALLO_ManageAllocations_CTRL" title="Manage Allocations" tabStyle="Allocation__c" showHeader="true" sidebar="true" cache="false" >
+<apex:page standardController="Allocation__c" recordSetVar="allocations" extensions="ALLO_ManageAllocations_CTRL" title="Manage Allocations" tabStyle="Allocation__c" showHeader="true" sidebar="true" cache="false" action="{!getPageLoadValidationMessages}">
     <apex:slds />
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
@@ -154,9 +154,7 @@
                 parentAction="javascript:window.urlHome();" parentRecordName="{!objectName}"
                 parentRecordAction="/{!parentId}" header="{!pageTitle}" icon="custom_120" iconCategory="standard"
                 cancelAction="{!cancel}" saveAction="{!saveClose}" saveDisabled="{!opp<>null&&parentAmount==0}"/>
-            <div> 
-                <c:UTIL_PageMessages id="messages"/>
-            </div>
+            <c:UTIL_PageMessages />
             <div>
                 <apex:outputPanel id="theTable">
                 <table class="slds-table slds-table_bordered slds-table_cell-buffer" >

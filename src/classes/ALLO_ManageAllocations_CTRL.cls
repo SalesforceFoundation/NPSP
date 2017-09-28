@@ -112,9 +112,6 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             if (opp.Amount!=null) {
                 parentAmount = opp.Amount;
             }
-            if (parentAmount==0) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Warning, Label.alloCantAllocateNothing));
-            }
         } else if (parentId.getSObjectType() == Campaign.sObjectType) {
             cam = [SELECT Id, Name FROM Campaign WHERE Id = :parentId];
 
@@ -162,6 +159,15 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         keyPrefix = describe.getKeyPrefix();
         objectAPIName = describe.getName();
         objectLabelPlural = describe.getLabelPlural();
+    }
+
+    /*******************************************************************************************************
+    * @description Verify data conditions and add any necessary page messages that need to be rendered on load.
+    */
+    public void getPageLoadValidationMessages() {
+        if (parentAmount==0) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, Label.alloCantAllocateNothing));
+        }
     }
 
     /**
