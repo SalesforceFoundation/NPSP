@@ -5,6 +5,6 @@
       "default": true
     }
   ],
-  "namespace": "",
+  "namespace": "npsp",
   "sourceApiVersion": "37.0"
 }

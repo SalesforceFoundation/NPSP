@@ -21,6 +21,7 @@
     </layoutAssignments>
     <layoutAssignments>
         <layout>Opportunity-Donation Layout</layout>
+        <recordType>Opportunity.NPSP_Default</recordType>
     </layoutAssignments>
     <layoutAssignments>
         <layout>Opportunity-Donation Layout</layout>
