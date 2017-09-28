@@ -155,7 +155,7 @@
                 parentRecordAction="/{!parentId}" header="{!pageTitle}" icon="custom_120" iconCategory="standard"
                 cancelAction="{!cancel}" saveAction="{!saveClose}" saveDisabled="{!opp<>null&&parentAmount==0}"/>
             <div> 
-                <apex:pageMessages id="messages"/>
+                <c:UTIL_PageMessages id="messages"/>
             </div>
             <div>
                 <apex:outputPanel id="theTable">
