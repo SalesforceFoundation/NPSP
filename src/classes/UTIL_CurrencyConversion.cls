@@ -103,4 +103,29 @@ public class UTIL_CurrencyConversion {
         }
     }
 
+    /*******************************************************************************************************
+    * @description Converts an amount from the corporate currency to a given currency always using the
+    *   non-dated exchange rate exchange rate even if ACM is enabled in the org.
+    * @param ISO A string of the currency's iso code that we wish to convert the amount to.
+    * @param amt A decimal of the amount to convert.
+    * @return decimal The converted amount.
+    ********************************************************************************************************/
+    //do a conversion from amount in corporate currency to the currency specified by the ISO code
+    public static decimal convertFromCorporateUsingStandardRates(String toISO, Decimal amt) {
+        return convertAmountUsingStandardRates(UTIL_Currency.getInstance().getOrgDefaultCurrency(), toISO, amt);
+    }
+
+    /*******************************************************************************************************
+    * @description Converts an amount from any given currency to any other currency always using the
+    *   non-dated exchange rate exchange rate even if ACM is enabled in the org.
+    * @param fromISO A string of the currency's iso code of the amount we wish to convert.
+    * @param toISO A string of the currency's iso code that we wish to convert the amount to.
+    * @param amt A decimal of the amount to convert.
+    * @return decimal The converted amount.
+    ********************************************************************************************************/
+    public static decimal convertAmountUsingStandardRates(String fromISO, String toISO, Decimal amt) {
+        alwaysUseStandardCurrencyRate = true;
+        return UTIL_CurrencyConversion.convertAmount(amt, null, fromISO, toISO);
+    }
+
 }

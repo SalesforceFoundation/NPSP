@@ -203,14 +203,14 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
         if (ALLO_Multicurrency_TDTM.isMultiCurrency()) {
             for (sObject obj : objMap.values()) {
                 String allocCurrCode = (string)obj.get('CurrencyIsoCode');
-                obj.put('Total_Allocations__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate(allocCurrCode,(decimal)obj.get('Total_Allocations__c')));
-                obj.put('Total_Allocations_This_Year__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate(allocCurrCode,(decimal)obj.get('Total_Allocations_This_Year__c')));
-                obj.put('Total_Allocations_Last_Year__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate(allocCurrCode,(decimal)obj.get('Total_Allocations_Last_Year__c')));
-                obj.put('Total_Allocations_Two_Years_Ago__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate(allocCurrCode,(decimal)obj.get('Total_Allocations_Two_Years_Ago__c')));
-                obj.put('Smallest_Allocation__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate(allocCurrCode,(decimal)obj.get('Smallest_Allocation__c')));
-                obj.put('Largest_Allocation__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate(allocCurrCode,(decimal)obj.get('Largest_Allocation__c')));
-                obj.put('Average_Allocation__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate(allocCurrCode,(decimal)obj.get('Average_Allocation__c')));
-                obj.put('Total_Allocations_Last_N_Days__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate(allocCurrCode,(decimal)obj.get('Total_Allocations_Last_N_Days__c')));
+                obj.put('Total_Allocations__c', UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates(allocCurrCode,(decimal)obj.get('Total_Allocations__c')));
+                obj.put('Total_Allocations_This_Year__c', UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates(allocCurrCode,(decimal)obj.get('Total_Allocations_This_Year__c')));
+                obj.put('Total_Allocations_Last_Year__c', UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates(allocCurrCode,(decimal)obj.get('Total_Allocations_Last_Year__c')));
+                obj.put('Total_Allocations_Two_Years_Ago__c', UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates(allocCurrCode,(decimal)obj.get('Total_Allocations_Two_Years_Ago__c')));
+                obj.put('Smallest_Allocation__c', UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates(allocCurrCode,(decimal)obj.get('Smallest_Allocation__c')));
+                obj.put('Largest_Allocation__c', UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates(allocCurrCode,(decimal)obj.get('Largest_Allocation__c')));
+                obj.put('Average_Allocation__c', UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates(allocCurrCode,(decimal)obj.get('Average_Allocation__c')));
+                obj.put('Total_Allocations_Last_N_Days__c', UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates(allocCurrCode,(decimal)obj.get('Total_Allocations_Last_N_Days__c')));
             }
         }
     }

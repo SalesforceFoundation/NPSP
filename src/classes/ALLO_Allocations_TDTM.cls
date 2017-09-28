@@ -378,7 +378,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     //if this is a multicurrency org, recalculate the amount and set the CurrencyIsoCode
                     if (UserInfo.isMultiCurrencyOrganization()) {
                         if (allo.Amount__c!=null) {
-                            allo.Amount__c = ALLO_Multicurrency_TDTM.convertCurrency(
+                            allo.Amount__c = UTIL_CurrencyConversion.convertAmountUsingStandardRates(
                                 (string)allo.get('CurrencyIsoCode'),
                                 (string)opp.get('CurrencyIsoCode'),
                                 allo.Amount__c

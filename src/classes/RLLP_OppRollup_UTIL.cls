@@ -342,29 +342,6 @@ public without sharing class RLLP_OppRollup_UTIL {
         return multiCurrency;
     }
 
-    /*******************************************************************************************************
-    * @description Converts an amount from the corporate currency to a given currency.
-    * @param ISO A string of the currency's iso code that we wish to convert the amount to.
-    * @param amt A decimal of the amount to convert.
-    * @return decimal The converted amount.
-    ********************************************************************************************************/
-    //do a conversion from amount in corporate currency to the currency specified by the ISO code
-    public static decimal convertFromCorporate(String ISO,Decimal amt) {
-        return convertCurrency(currCorporate, ISO, amt);
-    }
-
-    /*******************************************************************************************************
-    * @description Converts an amount from any given currency to any other currency.
-    * @param fromISO A string of the currency's iso code of the amount we wish to convert.
-    * @param toISO A string of the currency's iso code that we wish to convert the amount to.
-    * @param amt A decimal of the amount to convert.
-    * @return decimal The converted amount.
-    ********************************************************************************************************/
-    public static decimal convertCurrency(String fromISO, String toISO, Decimal amt) {
-        UTIL_CurrencyConversion.alwaysUseStandardCurrencyRate = true;
-        return UTIL_CurrencyConversion.convertAmount(amt, null, fromISO, toISO);
-    }
-
     /*********************************************************************************************************
     * @description Retrieves the Opportunities CurrencyIsoCode related to the objects passed in
     * @param objectList The list of obects with rollup field sets to obtain the Id from.

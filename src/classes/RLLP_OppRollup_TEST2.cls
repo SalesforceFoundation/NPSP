@@ -409,8 +409,8 @@ public with sharing class RLLP_OppRollup_TEST2 {
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
         ));
         //exercise internal multicurrency helper methods, check currency conversion
-        decimal d = RLLP_OppRollup_UTIL.ConvertFromCorporate('USD', 55.00);
-        d = RLLP_OppRollup_UTIL.ConvertCurrency('USD', 'USD', 55.00);
+        decimal d = UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates('USD', 55.00);
+        d = UTIL_CurrencyConversion.convertAmountUsingStandardRates('USD', 'USD', 55.00);
 
         //create & insert second household member
         Contact Con = new contact(
@@ -473,8 +473,8 @@ public with sharing class RLLP_OppRollup_TEST2 {
         og.rollupAllContacts();
         og.rollupAllAccounts();
         boolean x = RLLP_OppRollup_UTIL.isMultiCurrency();
-        decimal y = RLLP_OppRollup_UTIL.ConvertFromCorporate('USD', 500.00);
-        decimal z = RLLP_OppRollup_UTIL.ConvertCurrency('USD', 'USD', 6565.54);
+        decimal y = UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates('USD', 500.00);
+        decimal z = UTIL_CurrencyConversion.convertAmountUsingStandardRates('USD', 'USD', 6565.54);
         test.stopTest();
 
         // UNDONE: THERE ARE NO ASSERTS!!!!

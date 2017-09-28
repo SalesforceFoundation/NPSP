@@ -128,7 +128,7 @@ public class ALLO_Multicurrency_TEST {
         Opportunity opp = new Opportunity(Name='success', Amount = 10, AccountID=acc.id, CampaignId=cam.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
         insert opp;
 
-        decimal convertedAmount = ALLO_Multicurrency_TDTM.convertCurrency((string)nonDefaultCurrencyType.get('IsoCode'), (string)defaultCurrencyType.get('IsoCode'), 5);
+        decimal convertedAmount = UTIL_CurrencyConversion.convertAmountUsingStandardRates((string)nonDefaultCurrencyType.get('IsoCode'), (string)defaultCurrencyType.get('IsoCode'), 5);
 
         queryAllo = database.query('SELECT Id, Amount__c, CurrencyIsoCode FROM Allocation__c WHERE Opportunity__c != null');
         system.assertEquals(1,queryAllo.size(), 'Opportunity allocation should be automatically created from the Campaign allocation.');
@@ -201,7 +201,7 @@ public class ALLO_Multicurrency_TEST {
                                                     Total_Allocations_Two_Years_Ago__c, Total_Number_of_Allocations__c FROM General_Accounting_Unit__c WHERE Id = :gau.id];
         system.debug('LookHere: queryGAU ' + queryGAU);
         
-        decimal convertedAmount = ALLO_Multicurrency_TDTM.convertCurrency((string)nonDefaultCurrencyType.get('IsoCode'), (string)defaultCurrencyType.get('IsoCode'), 8);
+        decimal convertedAmount = UTIL_CurrencyConversion.convertAmountUsingStandardRates((string)nonDefaultCurrencyType.get('IsoCode'), (string)defaultCurrencyType.get('IsoCode'), 8);
 
         system.assertEquals(8+convertedAmount, queryGAU[0].Total_Allocations__c, 'Total allocations should equal 16.');
         system.assertEquals(system.today(), queryGAU[0].Last_Allocation_Date__c, 'Last allocation should be today.');
