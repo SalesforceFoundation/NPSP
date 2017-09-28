@@ -1,6 +1,7 @@
 <apex:page standardController="Contact"
     extensions="CON_ContactMerge_CTRL"
     title="{!$Label.conMergePageTitle}"
+    tabStyle="Contact_Merge__tab"
     id="contactMergePage"
     recordSetVar="cons"
     showHeader="true"
