@@ -17,7 +17,7 @@ if [ "$HEROKU_TEST_RUN_BRANCH" == "master" ]; then
     fi
 
     # Run the browser tests
-    cci flow run browsertests -o browsertests__use_saucelabs True
+    cci flow run ci_browsertests
     exit_status=$?
 
     # Delete the scratch org
@@ -41,7 +41,7 @@ else
     fi
 
     # Run the browser tests
-    cci flow run browsertests -o browsertests__use_saucelabs True
+    cci flow run browsertests
     exit_status=$?
 
     # Delete the scratch org
