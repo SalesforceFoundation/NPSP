@@ -63,17 +63,17 @@
     <apex:attribute name="saveAndNewDisabled" type="Boolean" default="false"
         description="Whether the save and new button should be disabled, defaults to false."/>
 
-    <div class="slds-page-header" role="banner" id="header">
+    <div class="slds-page-header" role="banner" id="npspHeader">
         <div class="slds-grid">
             <div class="slds-col slds-col_padded">
                 <apex:outputPanel layout="none" rendered="{!showBreadcrumb}">
                     <nav role="navigation" class="slds-p-bottom_x-small">
                         <p id="bread-crumb-label" class="slds-assistive-text">{!$Label.lblYouAreHere}</p>
-                        <ol class="slds-breadcrumb slds-list_horizontal slds-wrap" aria-labelledby="bread-crumb-label" id="headerBreadcrumb">
-                            <li class="slds-breadcrumb__item slds-text-title_caps" id="parentEntity">
+                        <ol class="slds-breadcrumb slds-list_horizontal slds-wrap" aria-labelledby="bread-crumb-label" id="npspBreadcrumb">
+                            <li class="slds-breadcrumb__item slds-text-title_caps" id="npspParentEntity">
                                 <a href="{!parentAction}">{!parentEntityLabel}</a>
                             </li>
-                            <li class="slds-breadcrumb__item slds-text-title_caps" id="parentRecord">
+                            <li class="slds-breadcrumb__item slds-text-title_caps" id="npspParentRecord">
                                 <a href="{!parentRecordAction}">
                                     {!parentRecordName}
                                 </a>
@@ -82,8 +82,8 @@
                     </nav>
                 </apex:outputPanel>
 
-                <div class="slds-media slds-media_center slds-has-flexi-truncate" id="headerMedia">
-                    <apex:outputPanel layout="block" rendered="{!icon != '' && useNPSPicon == false}" styleClass="slds-media__figure" id="icon">
+                <div class="slds-media slds-media_center slds-has-flexi-truncate" id="npspMedia">
+                    <apex:outputPanel layout="block" rendered="{!icon != '' && useNPSPicon == false}" styleClass="slds-media__figure" id="pngIcon">
                         <span class="slds-icon_container slds-icon-{!iconCategory}-{!BLANKVALUE(iconContainer,LEFT(icon, FIND('_', icon)-1))}">
                             <img src="{!URLFOR($Asset.SLDS, 'assets/icons/'+iconCategory+'/'+icon+'.png')}" alt="{!iconCategory} Icon" height="32" width="32"/>
                         </span>
@@ -95,11 +95,11 @@
                     </apex:outputPanel>
 
 
-                    <apex:outputPanel layout="block" rendered="{!smallSubtitleFont == false}" styleClass="slds-media__body" id="headerTitle">
+                    <apex:outputPanel layout="block" rendered="{!smallSubtitleFont == false}" styleClass="slds-media__body" id="npspTitle">
                         <p class="slds-text-heading_label">{!headerLabel}</p>
                         <h1 class="slds-page-header__title slds-m-right_small slds-truncate slds-align-middle">{!header}</h1>
                     </apex:outputPanel>
-                    <apex:outputPanel layout="block" rendered="{!smallSubtitleFont == true}" styleClass="slds-media__body" id="headerTitleSmall">
+                    <apex:outputPanel layout="block" rendered="{!smallSubtitleFont == true}" styleClass="slds-media__body" id="npspTitleSmall">
                         <h3 class="slds-text-heading_medium slds-m-bottom_large">{!headerLabel}</h3>
                         <p>{!header}</p>
                     </apex:outputPanel>
@@ -107,7 +107,7 @@
 
             </div>
             <div class="slds-col slds-no-flex slds-align-middle">
-                <div class="slds-button-group" role="group" id="buttons">
+                <div class="slds-button-group" role="group" id="grpBTN">
                     <apex:commandButton id="cancelBTN" styleClass="slds-button slds-button_neutral" action="{!cancelAction}"
                         value="{!BLANKVALUE(cancelLabel,$Label.stgBtnCancel)}"  immediate="{!cancelImmediate}" disabled="{!cancelDisabled}"
                         rendered="{!showCancelBtn}" reRender="{!cancelReRender}"/>
