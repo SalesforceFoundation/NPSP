@@ -1832,7 +1832,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>pmtWizardWeek</name>
     </customLabels>
     <customLabels>
-        <label>Quelle date voulez-vous utiliser ?</label>
+        <label>Quelle date voulez-vous utiliser?</label>
         <name>pmtWizardWriteoffDate</name>
     </customLabels>
     <customLabels>
