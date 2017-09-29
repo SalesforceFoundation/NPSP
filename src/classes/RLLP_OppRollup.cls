@@ -817,37 +817,38 @@ public without sharing class RLLP_OppRollup {
     /*******************************************************************************************************
     * @description Method writes rollup fields from AggregateResults to an object needing rollups.
     * @param obj The object to roll up to.
-    * @param r The aggregate result object.
+    * @param aggrResultObj The aggregate result object.
     * @param opptyCurrencies Holds opportunity currency codes for multicurrency orgs.
     * @return void This method does updates directly and returns nothing.
     ********************************************************************************************************/
-    public static void updateRollupFromResult(sobject obj, sobject r, map<id, Opportunity> opptyCurrencies) {
+    public static void updateRollupFromResult(Sobject obj, Sobject aggrResultObj, Map<Id, Opportunity> opptyCurrencies) {
        // get the fiscal year, total amount, and opp count for this result row     
-        integer fy = (integer)(r.get('CalendarYr'));
-        decimal amt = (decimal)(r.get('TotalOppAmount'));
-        integer cnt = (integer)(r.get('NumberOfClosedOpps'));               
+        Integer fy = (integer)(aggrResultObj.get('CalendarYr'));
+        Decimal amt = (decimal)(aggrResultObj.get('TotalOppAmount'));
+        Integer cnt = (integer)(aggrResultObj.get('NumberOfClosedOpps'));
         
         // split the special field to get the last opp id and amount
-        string[] rcf = ((string)(r.get('RollupFieldset'))).split(';\\|;',-4);
-        decimal lastAmt = (rcf.size() > 1 && rcf[1] != '') ? decimal.valueOf(rcf[1]) : null;
+        String[] rcf = ((string)(aggrResultObj.get('RollupFieldset'))).split(';\\|;',-4);
+        Decimal lastAmt = (rcf.size() > 1 && rcf[1] != '') ? decimal.valueOf(rcf[1]) : null;
         
         // calculate amounts into correct currency if needed
         if(RLLP_OppRollup_UTIL.isMultiCurrency()){
             amt = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),amt);
             if(lastAmt != null && rcf.size() > 4 && rcf[4] != '')
-                lastAmt = RLLP_OppRollup_UTIL.ConvertCurrency((string)opptyCurrencies.get((Id)rcf[4]).get('CurrencyISOCode'),(string)obj.get('CurrencyIsoCode'),lastAmt);           
+                lastAmt = RLLP_OppRollup_UTIL.ConvertCurrency((string)opptyCurrencies.get((Id)rcf[4]).get('CurrencyISOCode'),(string)obj.get('CurrencyIsoCode'),lastAmt);
         }
         
         // check if this is an annual total or account total
         if (fy != null){
 
             // put the fiscal year total in the right fields
-            integer thisYear;
-            if (RLLP_OppRollup_UTIL.useFiscalYear)
+            Integer thisYear;
+            if (RLLP_OppRollup_UTIL.useFiscalYear) {
                 thisYear = RLLP_OppRollup_UTIL.getCurrentFY();
-            else
+            } else {
                 thisYear = system.today().year();
-            
+            }
+
             if (fy == thisYear){
                 obj.put('npo02__OppAmountThisYear__c', amt); 
                 obj.put('npo02__OppsClosedThisYear__c', cnt); 
@@ -859,38 +860,47 @@ public without sharing class RLLP_OppRollup {
             else if (fy == (thisYear - 2) ){
                 obj.put('npo02__OppAmount2YearsAgo__c', amt); 
                 obj.put('npo02__OppsClosed2YearsAgo__c', cnt); 
-            } 
-                
-        } 
-        else { 
+            }
+        } else {
             // fill in summary totals
             obj.put('npo02__TotalOppAmount__c', amt);
             obj.put('npo02__NumberOfClosedOpps__c', cnt);               
             obj.put('npo02__LastOppAmount__c', lastAmt);
-            obj.put('npo02__FirstCloseDate__c', r.get('FirstCloseDate')); //date
-            obj.put('npo02__LastCloseDate__c', r.get('LastCloseDate')); //date
+            obj.put('npo02__FirstCloseDate__c', aggrResultObj.get('FirstCloseDate')); //date
+            obj.put('npo02__LastCloseDate__c', aggrResultObj.get('LastCloseDate')); //date
             
             // calculate amounts into correct currency if needed
             if(RLLP_OppRollup_UTIL.isMultiCurrency()){
-               obj.put('npo02__AverageAmount__c', RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)r.get('AverageAmount'))); 
-               obj.put('npo02__SmallestAmount__c', RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)r.get('SmallestAmount'))); 
-               obj.put('npo02__LargestAmount__c', RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)r.get('LargestAmount'))); 
-            }
-            else{
-               obj.put('npo02__AverageAmount__c', (decimal)(r.get('AverageAmount'))); 
-               obj.put('npo02__SmallestAmount__c', (decimal)(r.get('SmallestAmount'))); 
-               obj.put('npo02__LargestAmount__c', (decimal)(r.get('LargestAmount'))); 
+               obj.put('npo02__AverageAmount__c', RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)aggrResultObj.get('AverageAmount')));
+               obj.put('npo02__SmallestAmount__c', RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)aggrResultObj.get('SmallestAmount')));
+               obj.put('npo02__LargestAmount__c', RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)aggrResultObj.get('LargestAmount')));
+            } else {
+               obj.put('npo02__AverageAmount__c', (decimal)(aggrResultObj.get('AverageAmount')));
+               obj.put('npo02__SmallestAmount__c', (decimal)(aggrResultObj.get('SmallestAmount')));
+               obj.put('npo02__LargestAmount__c', (decimal)(aggrResultObj.get('LargestAmount')));
             }
         }
         
-        //deal with user rollups
+        // Deal with user defined rollups
         if (RLLP_OppRollup_UTIL.urfsMap.size() > 0){
-            for (string s : RLLP_OppRollup_UTIL.urfsMap.keyset()){
-                if (obj.getSObjectType().getDescribe().getName() == RLLP_OppRollup_UTIL.urfsMap.get(s).npo02__Object_Name__c){
-                    npo02__User_Rollup_Field_Settings__c urfs = RLLP_OppRollup_UTIL.urfsMap.get(s);
-                    string x = urfs.Name;                   
-                    if (r.get(x) != null)
-                       obj.put(urfs.npo02__Target_Field__c, r.get(x));
+            // For each UDR
+            for (String s : RLLP_OppRollup_UTIL.urfsMap.keyset()){
+
+                // If the current rollup object matches the User Rollup Object
+                if (obj.getSObjectType().getDescribe().getName() == RLLP_OppRollup_UTIL.urfsMap.get(s).npo02__Object_Name__c) {
+                    npo02__User_Rollup_Field_Settings__c udr = RLLP_OppRollup_UTIL.urfsMap.get(s);
+                    String rollupName = udr.Name;
+
+                    // If there is an aggregate result for this UDR
+                    if (aggrResultObj.get(rollupName) != null) {
+                        // Calculate amounts into correct currency only if the field is a Currency type field
+                        Schema.DescribeFieldResult fld = UTIL_Describe.getFieldDescribe('Opportunity', udr.npo02__Source_Field__c);
+                        if (fld.getType() == Schema.Displaytype.Currency && RLLP_OppRollup_UTIL.isMultiCurrency()) {
+                            obj.put(udr.npo02__Target_Field__c, RLLP_OppRollup_UTIL.ConvertFromCorporate((string) obj.get('CurrencyIsoCode'), (decimal) aggrResultObj.get(rollupName)));
+                        } else {
+                            obj.put(udr.npo02__Target_Field__c, aggrResultObj.get(rollupName));
+                        }
+                    }
                 }
             }
         } 
