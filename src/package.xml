@@ -1324,6 +1324,7 @@
         <members>pmtWizardCreateSchedule</members>
         <members>pmtWizardFirstPaymentDate</members>
         <members>pmtWizardInterval</members>
+        <members>pmtWizardMonth</members>
         <members>pmtWizardMsgNoOppFound</members>
         <members>pmtWizardNoUnpaidAmount</members>
         <members>pmtWizardNoWriteoffAmount</members>
@@ -1337,8 +1338,10 @@
         <members>pmtWizardSubtitle</members>
         <members>pmtWizardToBeCreated</members>
         <members>pmtWizardWarning</members>
+        <members>pmtWizardWeek</members>
         <members>pmtWizardWriteoffDate</members>
         <members>pmtWizardWriteoffMessage</members>
+        <members>pmtWizardYear</members>
         <members>pscDeleteRow</members>
         <members>pscManageSoftCreditsAdd</members>
         <members>pscManageSoftCreditsAmount</members>
@@ -1982,6 +1985,7 @@
         <members>Level__c.LevelEdit</members>
         <members>Opportunity.BDE_Entry_FS_v2</members>
         <members>Opportunity.BDE_List_FS_v2</members>
+        <members>npe01__OppPayment__c.Payment_WizardFS</members>
         <name>FieldSet</name>
     </types>
     <types>
