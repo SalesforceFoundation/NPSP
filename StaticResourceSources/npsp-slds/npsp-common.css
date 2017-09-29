@@ -40,10 +40,11 @@ input.lookupInputSLDS {
     min-height: calc(1.875rem + (1px * 2));
     height: calc(1.875rem + (1px * 2)) !important;
 }
-.dateFixup span.dateFormat {
+span.dateFormat {
     position: absolute;
-    right: .75rem;
+    right: .01rem;
     line-height: 1.875rem;
+    color: transparent;
 }
 /* trick to display multiselect picklists as simple select, just add multipicklistSLDSFixup to the msp*/
 .multiSelectPicklistTable {
