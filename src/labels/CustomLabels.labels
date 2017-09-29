@@ -1220,6 +1220,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Allocations cannot have a negative percent.</value>
     </labels>
     <labels>
+        <fullName>alloObjectUnsupported</fullName>
+        <categories>Allocation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>alloObjectUnsupported</shortDescription>
+        <value>This button is only supported from a Campaign, Opportunity or Recurring Donation record.</value>
+    </labels>
+    <labels>
         <fullName>alloPercentExceed100</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>
