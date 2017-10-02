@@ -300,6 +300,10 @@
         <members>UTIL_CascadeDeleteLookups_TDTM</members>
         <members>UTIL_Currency</members>
         <members>UTIL_Currency_TEST</members>
+        <members>UTIL_CurrencyCache</members>
+        <members>UTIL_CurrencyCache_TEST</members>
+        <members>UTIL_CurrencyConversion</members>
+        <members>UTIL_CurrencyConversion_TEST</members>
         <members>UTIL_CustomSettingsFacade</members>
         <members>UTIL_CustomSettings_API</members>
         <members>UTIL_Debug</members>
@@ -314,6 +318,7 @@
         <members>UTIL_Namespace</members>
         <members>UTIL_Namespace_TEST</members>
         <members>UTIL_PageMessages_CTRL</members>
+        <members>UTIL_PlatformCache</members>
         <members>UTIL_Query</members>
         <members>UTIL_Query_TEST</members>
         <members>UTIL_RecordTypeSettingsUpdate</members>
@@ -885,6 +890,7 @@
         <members>npe4__Relationship_Settings__c.Enable_Custom_Field_Sync__c</members>
         <members>npo02__Household__c.Number_of_Household_Members__c</members>
         <members>npo02__Households_Settings__c.Matched_Donor_Role__c</members>
+        <members>npo02__Households_Settings__c.Use_Dated_Conversion_Rates__c</members>
         <name>CustomField</name>
     </types>
     <types>

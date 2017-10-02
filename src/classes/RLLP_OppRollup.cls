@@ -437,8 +437,9 @@ public without sharing class RLLP_OppRollup {
                 
                 Contact c = contactsToUpdate.get(cid);
 
-                if(RLLP_OppRollup_UTIL.isMultiCurrency())
-                    yrAmt = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)c.get('CurrencyIsoCode'),yrAmt);
+                if(RLLP_OppRollup_UTIL.isMultiCurrency()) {
+                    yrAmt = UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates((string)c.get('CurrencyIsoCode'),yrAmt);
+                }
 
                 if ((yrAmt > c.npo02__Best_Gift_Year_Total__c || c.npo02__Best_Gift_Year_Total__c==null ) && yr !=null){
                     c.npo02__Best_Gift_Year_Total__c = yrAmt;
@@ -815,9 +816,10 @@ public without sharing class RLLP_OppRollup {
         
         // calculate amounts into correct currency if needed
         if(RLLP_OppRollup_UTIL.isMultiCurrency()){
-            amt = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),amt);
-            if(lastAmt != null && rcf.size() > 4 && rcf[4] != '')
-                lastAmt = RLLP_OppRollup_UTIL.ConvertCurrency((string)opptyCurrencies.get((Id)rcf[4]).get('CurrencyISOCode'),(string)obj.get('CurrencyIsoCode'),lastAmt);           
+            amt = UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates((string)obj.get('CurrencyIsoCode'),amt);
+            if(lastAmt != null && rcf.size() > 4 && rcf[4] != '') {
+                lastAmt = UTIL_CurrencyConversion.convertAmountUsingStandardRates((string)opptyCurrencies.get((Id)rcf[4]).get('CurrencyISOCode'),(string)obj.get('CurrencyIsoCode'),lastAmt);
+            }
         }
         
         // check if this is an annual total or account total
@@ -854,9 +856,10 @@ public without sharing class RLLP_OppRollup {
             
             // calculate amounts into correct currency if needed
             if(RLLP_OppRollup_UTIL.isMultiCurrency()){
-               obj.put('npo02__AverageAmount__c', RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)r.get('AverageAmount'))); 
-               obj.put('npo02__SmallestAmount__c', RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)r.get('SmallestAmount'))); 
-               obj.put('npo02__LargestAmount__c', RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)r.get('LargestAmount'))); 
+                String toCurrCode = (string)obj.get('CurrencyIsoCode');
+                obj.put('npo02__AverageAmount__c', UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates(toCurrCode,(decimal)r.get('AverageAmount')));
+                obj.put('npo02__SmallestAmount__c', UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates(toCurrCode,(decimal)r.get('SmallestAmount')));
+                obj.put('npo02__LargestAmount__c', UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates(toCurrCode,(decimal)r.get('LargestAmount')));
             }
             else{
                obj.put('npo02__AverageAmount__c', (decimal)(r.get('AverageAmount'))); 
@@ -891,8 +894,9 @@ public without sharing class RLLP_OppRollup {
         integer cnt = (integer)(r.get('NumberOfClosedOpps'));               
         
         // calculate amounts into correct currency if needed
-        if(RLLP_OppRollup_UTIL.isMultiCurrency())
-           amt = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),amt);
+        if(RLLP_OppRollup_UTIL.isMultiCurrency()) {
+            amt = UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates((string)obj.get('CurrencyIsoCode'),amt);
+        }
         
         obj.put('npo02__OppAmountLastNDays__c', amt);               
         obj.put('npo02__OppsClosedLastNDays__c', cnt);
@@ -919,9 +923,10 @@ public without sharing class RLLP_OppRollup {
         string lastMemberOrigin = (rcf.size() > 3) ? rcf[3] : null;
         // calculate amounts into correct currency if needed
         if(RLLP_OppRollup_UTIL.isMultiCurrency()){
-           amt = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),amt);
-           if(lastAmt != null && rcf.size() > 4 && rcf[4] != '')
-               lastAmt = RLLP_OppRollup_UTIL.ConvertCurrency((string)opptyCurrencies.get((Id)rcf[4]).get('CurrencyISOCode'),(string)obj.get('CurrencyIsoCode'),lastAmt);           
+            amt = UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates((string)obj.get('CurrencyIsoCode'),amt);
+            if(lastAmt != null && rcf.size() > 4 && rcf[4] != '') {
+                lastAmt = UTIL_CurrencyConversion.convertAmountUsingStandardRates((string)opptyCurrencies.get((Id)rcf[4]).get('CurrencyISOCode'),(string)obj.get('CurrencyIsoCode'),lastAmt);
+            }
         }
 
         // fill in summary totals
@@ -948,7 +953,7 @@ public without sharing class RLLP_OppRollup {
         
         // calculate amounts into correct currency if needed
         if(RLLP_OppRollup_UTIL.isMultiCurrency())
-            amt = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),amt);
+            amt = UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates((string)obj.get('CurrencyIsoCode'),amt);
         
         // check if this is an annual total or account total
         if (fy != null){
@@ -989,7 +994,7 @@ public without sharing class RLLP_OppRollup {
         
         // calculate amounts into correct currency if needed
         if(RLLP_OppRollup_UTIL.isMultiCurrency())
-           amt = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),amt);
+           amt = UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates((string)obj.get('CurrencyIsoCode'),amt);
         
         obj.put('Soft_Credit_Last_N_Days__c', amt);               
     }

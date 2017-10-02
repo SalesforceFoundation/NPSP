@@ -36,14 +36,11 @@
 */
 public class ALLO_Multicurrency_TDTM extends TDTM_Runnable {
 
-    /** @description Boolean holds whether this org has multicurrency enabled. */
-    public static boolean multiCurrency;
-
     /** @description Map holds exchange rates to avoid multiple queries. */
     public static map<string, decimal> exchangeRates = new map<string,decimal>();
     
     /** @description This organization's default corporate currency. */
-    public static string currCorporate;
+    public static string currCorporate = UTIL_Currency.getInstance().getOrgDefaultCurrency();
 
     /** @description DmlWrapper to hold object changes. */
     public DmlWrapper wrapper = new DmlWrapper();
@@ -62,7 +59,7 @@ public class ALLO_Multicurrency_TDTM extends TDTM_Runnable {
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
         //if this is a multicurrency org, update child objects 
-        if (isMultiCurrency() && !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC)) {
+        if (UTIL_Currency.getInstance().isMultiCurrencyOrganization() && !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC)) {
             wrapper.objectsToUpdate.addAll((list<sObject>) updateAllocationCurrencyFromParent(newlist, oldlist));
 
             // Increment the recursion flag to prevent the allocation triggers from running,
@@ -159,62 +156,12 @@ public class ALLO_Multicurrency_TDTM extends TDTM_Runnable {
         return results;
     }
 
-    /*******************************************************************************************************
-    * @description Detects if this organization has multicurrency enabled, and populates class variables if 
-    * so.
-    * @return boolean Whether this org has multicurrency enabled.
-    ********************************************************************************************************/
-    public static boolean isMultiCurrency() {
-        if (multiCurrency==null) {
-
-            String queryExchangeRates = 'select IsoCode, ConversionRate, IsCorporate from CurrencyType';
-            SObjectType soCurrencyType = Schema.getGlobalDescribe().get('CurrencyType'); 
-
-            //are we in a multi-currency org?
-            if (userInfo.isMultiCurrencyOrganization() && soCurrencyType != null) {
-                multiCurrency = true;
-
-                //iterate over all the currencies in the org (inc. inactive ones as they may have been used previously)
-                //this allows us to put them in a map and use the ISO code as key and also set the corporate
-                for(sObject ct: Database.query(queryExchangeRates)){
-                    exchangeRates.put((string)ct.get('IsoCode'),(decimal)ct.get('ConversionRate'));
-                    if ((boolean)ct.get('IsCorporate'))
-                        currCorporate=(string)ct.get('IsoCode');
-                }
-            }
-            else
-                multiCurrency = false; 
-        }        
-        return multiCurrency;
+    /**
+     * @description Wrapper for the utility method to determine if multi-currency is enabled in the org
+     * The target utility class can be mocked for unit tests.
+     * @return True if multi-currency is enabled in the org
+     */
+    public static Boolean isMultiCurrency() {
+        return UTIL_Currency.getInstance().isMultiCurrencyOrganization();
     }
-
-    /*******************************************************************************************************
-    * @description Converts an amount from the corporate currency to a given currency.
-    * @param ISO A string of the currency's iso code that we wish to convert the amount to.
-    * @param amt A decimal of the amount to convert.
-    * @return decimal The converted amount.
-    ********************************************************************************************************/
-        //do a conversion from amount in corporate currency to the currency specified by the ISO code
-    public static decimal convertFromCorporate(String ISO,Decimal amt) {
-        if(currCorporate == ISO || currCorporate == null) // no need to convert
-            return amt;
-        else //return value to 2DP
-            return (amt * exchangeRates.get(ISO)).setScale(2,System.RoundingMode.UP) ;
-    }
-
-
-    /*******************************************************************************************************
-    * @description Converts an amount from any given currency to any other currency.
-    * @param fromISO A string of the currency's iso code of the amount we wish to convert.
-    * @param toISO A string of the currency's iso code that we wish to convert the amount to.
-    * @param amt A decimal of the amount to convert.
-    * @return decimal The converted amount.
-    ********************************************************************************************************/
-   public static decimal convertCurrency(String fromISO, String toISO, Decimal amt) {
-        if(fromISO == toISO) // no need to convert
-            return amt;
-        else //return value to 2DP
-            return ((amt / exchangeRates.get(fromISO)) * exchangeRates.get(toISO)).setScale(2,System.RoundingMode.UP) ;
-    }
-
 }
