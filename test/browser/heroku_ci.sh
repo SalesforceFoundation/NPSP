@@ -41,7 +41,7 @@ else
     fi
 
     # Run the browser tests
-    cci flow run browsertests
+    cci flow run ci_browsertests
     exit_status=$?
 
     # Delete the scratch org
