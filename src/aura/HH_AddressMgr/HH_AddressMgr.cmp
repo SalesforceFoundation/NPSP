@@ -71,7 +71,7 @@
                                         <div class="slds-tile slds-tile_board">
                                             <div class="slds-tile__detail" >
                                                 <!-- address -->
-                                                <div class="slds-text-body_small" >
+                                                <div class="slds-text-body_small" id="existingAdd">
                                                     <ui:outputText value="{!addr.MailingStreet__c + 
                                                         (addr.MailingStreet2__c != null ? '\n' + addr.MailingStreet2__c : '')}" /><br/>
                                                     <ui:outputText value="{!addr.MailingCity__c + (addr.MailingState__c != null ? ', ' : '') + addr.MailingState__c + ' ' + addr.MailingPostalCode__c + ' '}" /><br/>
