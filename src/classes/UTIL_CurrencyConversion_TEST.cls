@@ -100,9 +100,8 @@ private class UTIL_CurrencyConversion_TEST {
         // The exchange rate for 1/1/201- should be 1.75
         System.AssertEquals( 1.75, UTIL_CurrencyConversion.getExchangeRate(Date.newInstance(2010,1,1), 'XYZ', 'USD'));
 
-        // When this flag is set it should get the 'default' rate of 1.50
-        UTIL_CurrencyConversion.alwaysUseStandardCurrencyRate = true;
-        System.AssertEquals( 1.50, UTIL_CurrencyConversion.getExchangeRate(Date.Today(), 'XYZ', 'USD'));
+        // Convert from USD to XYZ. Should convert using the default rate of 1.50
+        System.AssertEquals( 1.50, UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates('XYZ', 1));
     }
 
     /**

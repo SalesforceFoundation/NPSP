@@ -60,7 +60,14 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
      * @return Exchange Rate
      */
     public static Decimal getEffectiveExchangeRate(String currCode, Date dt) {
+
         if (currCode != null) {
+
+            // If the target currency is the org default currency, then always return 1 as the exchange rate
+            if (currCode == UTIL_Currency.getInstance().getOrgDefaultCurrency()) {
+                return 1;
+            }
+
             // If the current static var cache does not have a value for the CurrencyCode
             // look in the Platform cache first (if available) and if not retrieve from the database.
             if (!cachedMapOfRatesByCurrencyCode.containsKey(currCode)) {

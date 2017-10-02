@@ -41,7 +41,7 @@ public class UTIL_CurrencyConversion {
      * are based on aggragate queries since those only use the standard (i.e., default rate) rather than
      * the dated exchange rate.
      */
-    public static Boolean alwaysUseStandardCurrencyRate = false;
+    private static Boolean forceConvertToUseOrgDefaultRate = false;
 
     private static final Integer RATE_DECIMAL_PLACES = 6;
 
@@ -62,7 +62,7 @@ public class UTIL_CurrencyConversion {
         }
 
         // Force the date to the default (1/1/1900) if this flag is set to true
-        if (alwaysUseStandardCurrencyRate == true) {
+        if (forceConvertToUseOrgDefaultRate == true) {
             dt = null;
         } else if (dt == null) {
             dt = Date.today();
@@ -124,8 +124,10 @@ public class UTIL_CurrencyConversion {
     * @return decimal The converted amount.
     ********************************************************************************************************/
     public static decimal convertAmountUsingStandardRates(String fromISO, String toISO, Decimal amt) {
-        alwaysUseStandardCurrencyRate = true;
-        return UTIL_CurrencyConversion.convertAmount(amt, null, fromISO, toISO);
+        forceConvertToUseOrgDefaultRate = true;
+        Decimal rtn = UTIL_CurrencyConversion.convertAmount(amt, null, fromISO, toISO);
+        forceConvertToUseOrgDefaultRate = false;
+        return rtn;
     }
 
 }

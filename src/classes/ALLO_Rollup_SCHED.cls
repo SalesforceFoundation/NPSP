@@ -198,8 +198,6 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
     * @return void This method modifies the objMap parameter if needed, and returns nothing.
     ********************************************************************************************************/
     public override void customFinalProcessing (map<id, sobject> objMap) {
-        // TODO: Fix the currency conversion logic here; though it'll probably all get stripped out anyway
-        // with CMT roll-ups
         if (ALLO_Multicurrency_TDTM.isMultiCurrency()) {
             for (sObject obj : objMap.values()) {
                 String allocCurrCode = (string)obj.get('CurrencyIsoCode');
