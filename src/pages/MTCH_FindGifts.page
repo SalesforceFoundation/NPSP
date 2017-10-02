@@ -113,7 +113,7 @@
             </div>
 
             <!-- DATA TABLE -->
-            <table class="slds-table slds-table_bordered">
+            <table class="slds-table slds-table_bordered" id="findGiftsTable">
                 <thead>
                     <tr class="slds-text-heading_label">
                         <th>{!$Label.mtchSelectCbxTitle}</th>
@@ -187,8 +187,8 @@
                         </div> <!-- /slds-modal__content -->
                         <div class="slds-modal__footer">
                             <div class="slds-x-small-buttons_horizontal">
-                                <button type="button" class="slds-button slds-button_neutral" data-dismiss="modal" data-target="searchPopup">{!$Label.stgBtnCancel}</button>
-                                <apex:commandButton styleClass="slds-button slds-button_neutral slds-button_brand" action="{!searchMore}" value="{!$Label.mtchBtnSearch}" />
+                                <button type="button" class="slds-button slds-button_neutral" data-dismiss="modal" data-target="searchPopup" id="cancelSearchBtn">{!$Label.stgBtnCancel}</button>
+                                <apex:commandButton styleClass="slds-button slds-button_neutral slds-button_brand" action="{!searchMore}" value="{!$Label.mtchBtnSearch}" id="searchBtn"/>
                             </div>
                         </div>
                     </div> <!-- /slds-modal__container -->

@@ -143,7 +143,7 @@
                                                     <span class="slds-badge slds-theme_{!statusTheme}">{!badgeText}</span>
                                                 </div>
                                             </div>
-                                            <div class="slds-tile__detail">
+                                            <div class="slds-tile__detail" id="batchInfo">
                                                 <p class="slds-text-body_small slds-truncate">{!strBatchStatus}</p>
                                                 <dl class="slds-dl_horizontal slds-text-body_small slds-m-top_x-small">
                                                     <dt class="slds-dl_horizontal__label slds-size_3-of-12">

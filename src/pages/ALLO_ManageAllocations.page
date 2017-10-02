@@ -1,4 +1,4 @@
-<apex:page standardController="Allocation__c" recordSetVar="allocations" extensions="ALLO_ManageAllocations_CTRL" title="Manage Allocations" tabStyle="Allocation__c" showHeader="true" sidebar="true" cache="false" >
+<apex:page standardController="Allocation__c" recordSetVar="allocations" extensions="ALLO_ManageAllocations_CTRL" title="Manage Allocations" tabStyle="Allocation__c" showHeader="true" sidebar="true" cache="false" action="{!getPageLoadValidationMessages}">
     <apex:slds />
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
@@ -8,7 +8,7 @@
     (function($) {
 
         var sumAmount;
-        
+
         var parentAmount = {!parentAmount};
         var decimalSeparator = "{!decimalSeparator}";
         var thousandsSeparator = "{!thousandsSeparator}";
@@ -71,10 +71,10 @@
                 $('#totalAmount').text(reformatCurrency(unallocated));
                 if (unallocated < 0) {
                     $('#totalAmount').css({ "color": "red", "font-weight": "bold" });
-                    $('[id$="saveCloseBTN"]').attr('disabled','disabled');
+                    $('[id$="saveBTN"]').attr('disabled','disabled');
                 } else {
                     $('#totalAmount').css({ "color": "black", "font-weight": "normal" });
-                    $('[id$="saveCloseBTN"]').removeAttr('disabled');
+                    $('[id$="saveBTN"]').removeAttr('disabled');
                 }
             } else {
                 $('#totalAmount').text(reformatCurrency((Math.round(sumAmount)/100).toFixed(2)));
@@ -153,10 +153,8 @@
             <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="{!objectLabelPlural}"
                 parentAction="javascript:window.urlHome();" parentRecordName="{!objectName}"
                 parentRecordAction="/{!parentId}" header="{!pageTitle}" icon="custom_120" iconCategory="standard"
-                cancelAction="{!cancel}" saveAction="{!saveClose}" saveDisabled="{!opp<>null&&parentAmount==0}"/>
-            <div> 
-                <apex:pageMessages id="messages"/>
-            </div>
+                cancelAction="{!cancel}" saveAction="{!saveClose}" saveDisabled="{!OR(NOT(isSupportedObject),(opp!=null&&parentAmount==0))}"/>
+            <c:UTIL_PageMessages />
             <div>
                 <apex:outputPanel id="theTable">
                 <table class="slds-table slds-table_bordered slds-table_cell-buffer" >

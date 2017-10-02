@@ -1006,6 +1006,7 @@
         <members>alloModifyCurrency</members>
         <members>alloNegativeAmount</members>
         <members>alloNegativePercent</members>
+        <members>alloObjectUnsupported</members>
         <members>alloPercentExceed100</members>
         <members>alloRemainder</members>
         <members>alloSingleParent</members>
