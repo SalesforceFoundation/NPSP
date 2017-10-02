@@ -112,6 +112,24 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     }
 
     /*******************************************************************************************************
+    * @description Deletes a contact, leaving empty Household Account, once the user has accepted to do so,
+    * after adding cascade deletion records for related opportunities and recurring donations. 
+    * Validates opportunities and adds error messages where appropriate.
+    * @return pageReference Redirects to the Contacts tab if the contact has been deleted, otherwise stays
+    * on the page and displays error messages.
+    */ 
+    public PageReference deleteContactOnly() {
+        shouldDeleteContactAlone = true;
+        try {
+            return deleteContact();
+        } catch (Exception ex){
+            if (!hasPageMessages)
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
+            return null;
+        }
+    }
+
+    /*******************************************************************************************************
     * @description Deletes a contact, after adding cascade deletion records for related opportunities and 
     * recurring donations. Validates opportunities and adds error messages where appropriate.
     * @return pageReference Redirects to the Contacts tab if the contact has been deleted, otherwise stays

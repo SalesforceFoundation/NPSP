@@ -951,6 +951,8 @@
         <members>CascadeDeletionError</members>
         <members>ClosedWonOpportunities</members>
         <members>ConfirmDeleteAccount</members>
+        <members>Delete_Account</members>
+        <members>Delete_Contact_Leave_Account</members>
         <members>EPAddDependentTask</members>
         <members>EPAddTask</members>
         <members>EPDeleteTask</members>
