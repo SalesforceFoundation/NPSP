@@ -153,22 +153,22 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @description Constructor for the wizard that initializes data structures
     */ 
     public PMT_PaymentWizard_CTRL() {
-        redirect = false;
-
+        this.redirect = this.removePaidPayments = false;
         if(ApexPages.currentPage().getParameters().get('wtype') == 'writeoff'){
             PaymentWriteoffWizard();
-            isWriteoffWizard = true;
-            isScheduleWizard = false;
+            this.isWriteoffWizard = true;
+            this.isScheduleWizard = false;
             
         }
         else if (ApexPages.currentPage().getParameters().get('wtype') == 'payment'){
             SetupPaymentWizard();
-            isWriteoffWizard = false;
-            isScheduleWizard = true;            
+            this.isWriteoffWizard = false;
+            this.isScheduleWizard = true;
         }
         else{           
             //error?
-        }       
+        }
+        getPageValidationMessages();
     }
     
     /*******************************************************************************************************
@@ -262,7 +262,13 @@ public with sharing class PMT_PaymentWizard_CTRL {
             decimal remainder = OppAmountFloat - (paymentAmount * numberOfPayments);
     
             // get the start date
-            date nextDate = samplePayment.npe01__Scheduled_Date__c;
+            Date nextDate;
+            if (samplePayment.npe01__Scheduled_Date__c != null) {
+                nextDate = samplePayment.npe01__Scheduled_Date__c;
+            } else {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR,System.Label.exceptionRequiredField + ' ' + System.Label.pmtWizardFirstPaymentDate));
+                return null;
+            }
             
             // Multicurrency support
             // James Melville 05/03/2011 Added to support multi-currency sfdc.  */
@@ -316,6 +322,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
             }
             
         }
+        getPageValidationMessages();
         return null;
     }
     
@@ -343,6 +350,28 @@ public with sharing class PMT_PaymentWizard_CTRL {
     		ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
     	}
         return null;
+    }
+
+    /*******************************************************************************************************
+    * @description Verify data conditions and add any necessary page messages that need to be rendered.
+    */
+    public void getPageValidationMessages() {
+        getPaymentsSettings();
+        if (paymentsSettings == null || paymentsSettings.npe01__Payments_Enabled__c == false) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardPaymentsDisabledTitle, System.Label.pmtWizardPaymentsDisabled));
+        } else {
+            if (!removePaidPayments && isScheduleWizard == true && currentOpp != null && haveAmount == false && isClosedLost == false) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardNoUnpaidAmount));
+            } else if (!removePaidPayments && isWriteoffWizard == true && currentOpp != null && haveAmount == false) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardNoWriteoffAmount));
+            }
+        }
+        if (currentOpp != null && isClosedLost == true) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardClosedLost));
+        }
+        if (currentOpp == null) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.pmtWizardMsgNoOppFound));
+        }
     }
 
     /*******************************************************************************************************
@@ -388,10 +417,24 @@ public with sharing class PMT_PaymentWizard_CTRL {
     */ 
     public List<SelectOption> getIntervalUnits() {
         List<SelectOption> options = new List<SelectOption>();
-        options.add(new SelectOption('Week','Week'));
-        options.add(new SelectOption('Month','Month'));
-        options.add(new SelectOption('Year','Year'));
+        options.add(new SelectOption('Week',System.Label.pmtWizardWeek));
+        options.add(new SelectOption('Month',System.Label.pmtWizardMonth));
+        options.add(new SelectOption('Year',System.Label.pmtWizardYear));
         return options;
+    }
+
+    /*******************************************************************************************************
+    * @description holds the list of FieldSetMembers from the appropriate field set.
+    * @return List<Schema.FieldSetMember>
+    */
+    public List<Schema.FieldSetMember> pmtFieldSet {
+        get {
+            if (pmtFieldSet == null) {
+                    pmtFieldSet = Schema.SObjectType.npe01__OppPayment__c.FieldSets.Payment_WizardFS.getFields();
+            }
+            return pmtFieldSet;
+        }
+        private set;
     }
 
     /*******************************************************************************************************

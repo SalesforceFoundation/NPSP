@@ -1,0 +1,59 @@
+<apex:component >
+    <apex:attribute name="field" type="String" description="The field to display." required="true"/>
+    <apex:attribute name="sObj" type="sObject" description="The sObject the field belongs to." required="true"/>
+    <apex:attribute name="sObjType" type="String" description="The sObject type." required="true"/>
+    <apex:attribute name="onchange" type="String"  default="" description="On change event."/>
+    <apex:attribute name="required" type="Boolean" default="false" description="When true marks the field as required, defaults to false." />
+    <!-- Action Support assumes onchange event and calling page has an action status component on the page -->
+    <apex:attribute name="actSup" type="Boolean" default="false" description="When true the input field will render action support, defaults to false." />
+    <apex:attribute name="actSupAction" type="ApexPages.Action" default="" description="Action for the onchange action support to fire." />
+    <apex:attribute name="actSupReRender" type="String" default="" description="Component id on the main page to rerender after onchange event." />
+    <apex:attribute name="actSupStatus" type="String" default="loading" description="The id of the action status on the main page to display when fired, defaults to loading." />
+    <apex:attribute name="actSupImmediate" type="Boolean" default="false" description="Sets immediate attribute on the action status, defaults to false" />
+
+    <!-- NOTE: When using a variable for determining readonly or field type in combination with conditionally rendering output panels, some field values do not save -->
+    <apex:variable var="ftype" value="{!$ObjectType[sObjType].fields[field].type}"/>
+
+    <apex:inputField id="inputX" required="{!required}" value="{!sObj[field]}" label=""
+        styleClass="{!CASE(ftype,
+                                'textarea', 'slds-textarea',
+                                'picklist', 'slds-select',
+                                'multipicklist', 'slds-select multipicklistSLDSFixup',
+                                'reference', IF(field=='RecordTypeId', 'slds-select', 'lookupInputSLDS ' + field),
+                                'slds-input')}">
+        <apex:actionSupport event="onchange" action="{!actSupAction}" reRender="{!actSupReRender}" rendered="{!actSup}" status="{!actSupStatus}" immediate="{!actSupImmediate}"/>
+    </apex:inputField>
+    <!-- Javascript will add the onchange event when needed and swap out the icon for lookup fields -->
+    <script type="text/javascript">
+        (function() {
+            var oc = '{!onchange}';
+            var ftype = '{!ftype}';
+            var field = '{!field}';
+            var input = document.getElementById("{!$Component.inputX}");
+
+            // Add onchange event only when needed
+            if (oc) input.setAttribute("onchange", oc);
+
+            // Swap out the search icon
+            if (ftype === 'reference' && field !== 'RecordTypeId') {
+                input.style.visibility = "";
+                var lkSpan = input.parentElement;
+                var lkLink = lkSpan.querySelector("a");
+                lkLink.style.visibility = "";
+                lkLink.className = "";
+                lkLink.innerHTML = "<svg aria-hidden=\"true\" class=\"slds-icon slds-input__icon slds-icon_x-small slds-icon-text-default\" viewBox=\"0 0 24 24\"><path  d=\"M22.9 20.9l-6.2-6.1c1.3-1.8 1.9-4 1.6-6.4-.6-3.9-3.8-7.1-7.8-7.4C5 .4.4 5 1 10.5c.3 4 3.5 7.3 7.4 7.8 2.4.3 4.6-.3 6.4-1.5l6.1 6.1c.3.3.7.3 1 0l.9-1c.3-.3.3-.7.1-1zM3.7 9.6c0-3.2 2.7-5.9 5.9-5.9s6 2.7 6 5.9-2.7 6-6 6-5.9-2.6-5.9-6z\"></path></svg>";
+            }
+            // Swap out the date icon
+            if (ftype === 'date' || ftype === 'datetime') {
+                input.style.visibility = "";
+                var lkSpan = input.parentElement;
+                var lkLink = lkSpan.querySelector("a");
+                lkLink.style.visibility = "";
+                lkLink.className = "";
+                lkLink.innerHTML = "<svg aria-hidden=\"true\" class=\"slds-icon slds-input__icon slds-icon_x-small slds-icon-text-default\" width=\"52\" height=\"52\" viewBox=\"0 0 52 52\"><path  d=\"m46.5 20h-41c-0.8 0-1.5 0.7-1.5 1.5v24.5c0 2.2 1.8 4 4 4h36c2.2 0 4-1.8 4-4v-24.5c0-0.8-0.7-1.5-1.5-1.5z m-27.5 22c0 0.6-0.4 1-1 1h-4c-0.6 0-1-0.4-1-1v-4c0-0.6 0.4-1 1-1h4c0.6 0 1 0.4 1 1v4z m0-10c0 0.6-0.4 1-1 1h-4c-0.6 0-1-0.4-1-1v-4c0-0.6 0.4-1 1-1h4c0.6 0 1 0.4 1 1v4z m10 10c0 0.6-0.4 1-1 1h-4c-0.6 0-1-0.4-1-1v-4c0-0.6 0.4-1 1-1h4c0.6 0 1 0.4 1 1v4z m0-10c0 0.6-0.4 1-1 1h-4c-0.6 0-1-0.4-1-1v-4c0-0.6 0.4-1 1-1h4c0.6 0 1 0.4 1 1v4z m10 10c0 0.6-0.4 1-1 1h-4c-0.6 0-1-0.4-1-1v-4c0-0.6 0.4-1 1-1h4c0.6 0 1 0.4 1 1v4z m0-10c0 0.6-0.4 1-1 1h-4c-0.6 0-1-0.4-1-1v-4c0-0.6 0.4-1 1-1h4c0.6 0 1 0.4 1 1v4z m5-25h-5v-2c0-1.6-1.3-3-3-3-1.6 0-3 1.3-3 3v2h-14v-2c0-1.6-1.3-3-3-3-1.6 0-3 1.3-3 3v2h-5c-2.2 0-4 1.8-4 4v2.5c0 0.8 0.7 1.5 1.5 1.5h41c0.8 0 1.5-0.7 1.5-1.5v-2.5c0-2.2-1.8-4-4-4z\"></path></svg>";
+            }
+        })();
+
+    </script>
+
+</apex:component>

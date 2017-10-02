@@ -21,6 +21,7 @@
     </layoutAssignments>
     <layoutAssignments>
         <layout>Opportunity-Donation Layout</layout>
+        <recordType>Opportunity.NPSP_Default</recordType>
     </layoutAssignments>
     <layoutAssignments>
         <layout>Opportunity-Donation Layout</layout>
@@ -95,6 +96,10 @@
     </tabVisibilities>
     <tabVisibilities>
         <tab>DataImport__c</tab>
+        <visibility>DefaultOn</visibility>
+    </tabVisibilities>
+    <tabVisibilities>
+        <tab>DataImportBatch__c</tab>
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
     <tabVisibilities>

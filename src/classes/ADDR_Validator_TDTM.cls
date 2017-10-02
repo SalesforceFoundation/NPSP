@@ -68,12 +68,14 @@ public class ADDR_Validator_TDTM extends TDTM_Runnable {
             recordsPreviouslyProcessed = true;
         }
 
-        if(!recordsPreviouslyProcessed) {
-            Addr_Verification_Settings__c settings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
-            if ((triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) &&
-               settings.enable_automatic_verification__c) {
+        if(!recordsPreviouslyProcessed && UTIL_CustomSettingsFacade.getAddressVerificationSettings().enable_automatic_verification__c) {
+            if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
                 for(SObject so : newList) {
                     Address__c address = (Address__c)so;
+                    //don't verify this address if it has already been verified
+                    if (address.Verified__c != null && address.Verified__c) {
+                        continue;
+                    }
                     if(!system.isFuture() && !system.isBatch()) {
                         address.Verification_Status__c = Label.Addr_Pending_Verification;
                     } else {
@@ -81,8 +83,7 @@ public class ADDR_Validator_TDTM extends TDTM_Runnable {
                     }
                 }
             }
-            if ((triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) &&
-               settings.enable_automatic_verification__c) {
+            if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                 if(!system.isFuture() && !system.isBatch()) {
                     ADDR_Validator.verifyRecordsFuture(new Map<Id, SObject>(newList).keyset());
                     // To support DML operations with more than 200 records, update a static list of Id's that
@@ -92,15 +93,8 @@ public class ADDR_Validator_TDTM extends TDTM_Runnable {
                     }
                 } else if(system.isFuture()) {
                     UTIL_Debug.debug('****ADDR_Validator_TDTM called from future, addresses not verified.');
-                    /*We don't want to log an error here. Instead, we'll just do a debug statement.
-                    ERR_Handler.processError(new ADDR_Validator_Exception('ADDR_Validator_TDTM called from future'),
-                                               ERR_Handler_API.Context.ADDR);*/
                 } else if(system.isBatch()) {
                     UTIL_Debug.debug('****ADDR_Validator_TDTM called from batch, addresses not verified.');
-                    /*We don't want to log an error here. Instead, we'll just do a debug statement.
-
-                    ERR_Handler.processError(new ADDR_Validator_Exception('ADDR_Validator_TDTM called from batch'), 
-                                               ERR_Handler_API.Context.ADDR);*/
                 }
             }
         }

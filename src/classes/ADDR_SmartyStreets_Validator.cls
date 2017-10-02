@@ -173,7 +173,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                    } else {
 	                        // more than one candidate means should mark as ambiguous
 	                        UTIL_Debug.debug('****Flagging address as NOT verified. Flagging it as ambiguous. Address ID: ' + av.Id);
-	                        av.Verified__c = false; 
+	                        av.Verified__c = true;
 	                        av.Ambiguous__c = true;
 	                        responseGroup.add(sr);
 	                    }

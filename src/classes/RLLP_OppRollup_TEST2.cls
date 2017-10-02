@@ -339,13 +339,13 @@ public with sharing class RLLP_OppRollup_TEST2 {
         testUserRollup1.Name = 'TestRollup8675309';
         testURFS.add(TestUserRollup1);
 
-        npo02__User_Rollup_Field_Settings__c TestUserRollup2 = new npo02__User_Rollup_Field_Settings__c();
+        npo02__User_Rollup_Field_Settings__c testUserRollup2 = new npo02__User_Rollup_Field_Settings__c();
         testUserRollup2.npo02__Target_Field__c = 'NumberOfEmployees'; 
         testUserRollup2.npo02__Source_Field__c = 'FiscalYear';
         testUserRollup2.npo02__Object_Name__c = 'Account'; 
         testUserRollup2.npo02__Field_Action__c = 'MAX';
         testUserRollup2.Name = 'TestRollup2';
-        testURFS.add(TestUserRollup2);
+        testURFS.add(testUserRollup2);
 
         npo02__User_Rollup_Field_Settings__c testUserRollup3 = new npo02__User_Rollup_Field_Settings__c();
         testUserRollup3.npo02__Target_Field__c = 'npo02__LastCloseDate__c'; 
@@ -353,8 +353,15 @@ public with sharing class RLLP_OppRollup_TEST2 {
         testUserRollup3.npo02__Object_Name__c = 'npo02__Household__c'; 
         testUserRollup3.npo02__Field_Action__c = 'MAX';
         testUserRollup3.Name = 'TestRollup3';
-        testURFS.add(TestUserRollup3);
+        testURFS.add(testUserRollup3);
 
+        npo02__User_Rollup_Field_Settings__c testUserRollup4 = new npo02__User_Rollup_Field_Settings__c();
+        testUserRollup4.npo02__Target_Field__c = 'AnnualRevenue';
+        testUserRollup4.npo02__Source_Field__c = 'Amount';
+        testUserRollup4.npo02__Object_Name__c = 'Account';
+        testUserRollup4.npo02__Field_Action__c = 'SUM';
+        testUserRollup4.Name = 'TestRollup4';
+        testURFS.add(testUserRollup4);
         insert testURFS; 
 
         Contact c = new Contact(LastName = 'Lastname', BirthDate = system.today().addDays(-4));
@@ -373,7 +380,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
             }
 
         map<string, npo02__User_Rollup_Field_Settings__c> urfsMap = UTIL_ListCustomSettingsFacade.getMapUserRollupFieldSettings();
-        system.assertEquals(3, urfsMap.keySet().size());                    
+        system.assertEquals(4, urfsMap.keySet().size());
 
         Test.StartTest();
         insert newOpp;

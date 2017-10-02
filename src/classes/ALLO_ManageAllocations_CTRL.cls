@@ -40,7 +40,6 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     public list<Allocation__c> listAllo {get;set;}
     /** @description If defaults are enabled, the default allocation is here, and not in listAllo. */
     public Allocation__c defaultAllo {get;set;}
-
     /** @description The number of allocations in listAllo. */
     public integer listAlloSize {
         get{
@@ -48,7 +47,14 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         }
         set;
     }
-
+    /** @description The set of allowed object types this page should be used with */
+    private Set<sObjectType> sObjTypesAllowed = new Set<sObjectType> {
+        Opportunity.sObjectType,
+        Campaign.sObjectType,
+        npe03__Recurring_Donation__c.sObjectType
+    };
+    /** @description The sObjectType of the record the button was called from */
+    private sObjectType sObjType;
     /** @description List of allocations to delete when the user clicks Save.*/
     public list<Allocation__c> listAlloForDelete = new list<Allocation__c>();
 
@@ -104,6 +110,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     public ALLO_ManageAllocations_CTRL(ApexPages.StandardSetController ssc) {
 
         parentId = ApexPages.currentPage().getParameters().get('id');
+        sObjType = parentId.getSObjectType();
         parentAmount = 0;
 
         String soql = 'SELECT Id, Name ';
@@ -123,6 +130,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             if (opp.Amount!=null) {
                 parentAmount = opp.Amount;
             }
+
             if (UserInfo.isMultiCurrencyOrganization()) {
                 this.parentCurrencyCode = (String)opp.get('CurrencyIsoCode');
             }
@@ -190,6 +198,24 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         keyPrefix = describe.getKeyPrefix();
         objectAPIName = describe.getName();
         objectLabelPlural = describe.getLabelPlural();
+    }
+
+    /*******************************************************************************************************
+    * @description Verify data conditions and add any necessary page messages that need to be rendered on load.
+    */
+    public void getPageLoadValidationMessages() {
+        if (parentAmount == 0 && sObjType == Opportunity.sObjectType) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, Label.alloCantAllocateNothing));
+        } else if (!getIsSupportedObject()) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, Label.alloObjectUnsupported));
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Verify the parent object is a supported sObject type for this page
+    */
+    public boolean getIsSupportedObject() {
+        return sObjTypesAllowed.contains(sObjType);
     }
 
     /**

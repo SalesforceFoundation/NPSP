@@ -1,0 +1,30 @@
+<apex:page standardController="DataImportBatch__c" extensions="BDI_BatchOverride_CTRL" showHeader="true" docType="html-5.0" standardStylesheets="true">
+
+    <apex:slds />
+    <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
+
+    <div class="slds">
+        <apex:form id="idForm" html-novalidate="novalidate">
+
+            <!-- PAGE HEADER -->
+            <c:UTIL_PageHeader headerLabel="{!$ObjectType.DataImportBatch__c.Label}"
+                               header="{!diBatch.Name}"
+                               icon="custom17_120" iconCategory="custom" iconContainer="custom18"
+                               saveAction="{!save}" saveReRender="idForm"
+                               cancelAction="{!cancel}"/>
+            <!-- /PAGE HEADER -->
+
+            <c:UTIL_PageMessages />
+            <c:UTIL_NavigateBack recordId="{!diBatch.Id}" redirect="{!redirect}"/>
+
+            <!-- BODY -->
+            <div class="slds-grid slds-m-around_medium" >
+                <div class="slds-size_3-of-5">
+                    <c:BDI_SettingsUI bdiBatch="{!diBatch}" editMode="true" showBatchOnlyFields="true" />
+                </div>
+            </div>
+            <!-- /BODY -->
+
+        </apex:form>
+    </div>
+</apex:page>
