@@ -1083,7 +1083,7 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloAmountOrPercent</shortDescription>
-        <value>Each allocation must have either an assigned amount or percent.</value>
+        <value>Each Allocation must have a value in either the Amount field or the Percent field.</value>
     </labels>
     <labels>
         <fullName>alloBatchCreateDefault</fullName>
@@ -1137,7 +1137,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloCantAllocateNothing</shortDescription>
-        <value>You can only create allocations for opportunities with a positive amount.</value>
+        <value>You can only create Allocations for Opportunities with a positive value in the Amount field.</value>
     </labels>
     <labels>
         <fullName>alloDefaultGAUMissing</fullName>
@@ -1209,7 +1209,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloNegativeAmount</shortDescription>
-        <value>Allocations cannot have a negative amount.</value>
+        <value>The Amount field on an Allocation must contain a positive value.</value>
     </labels>
     <labels>
         <fullName>alloNegativePercent</fullName>
@@ -1217,7 +1217,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloNegativePercent</shortDescription>
-        <value>Allocations cannot have a negative percent.</value>
+        <value>The Percent field on an Allocation must contain a positive value.</value>
     </labels>
     <labels>
         <fullName>alloObjectUnsupported</fullName>
@@ -1225,7 +1225,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>alloObjectUnsupported</shortDescription>
-        <value>This button is only supported from a Campaign, Opportunity or Recurring Donation record.</value>
+        <value>The Manage Allocations button is only supported from a Campaign, Opportunity or Recurring Donation record.</value>
     </labels>
     <labels>
         <fullName>alloPercentExceed100</fullName>
