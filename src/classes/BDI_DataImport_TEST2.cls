@@ -1539,5 +1539,22 @@ private with sharing class BDI_DataImport_TEST2 {
         }
         Test.stopTest();
     }
-    
+
+    /*********************************************************************************************************
+    * @description operation:
+    *    unit test for UniqueID handling
+    * verify:
+    *    method returns expected results for various types of fields.
+    **********************************************************************************************************/
+    static testMethod void testUniqueIdHandling() {
+        if (strTestOnly != '*' && strTestOnly != 'testUniqueIdHandling') return;
+
+        Test.startTest();
+        system.assertEquals('Contact1_Website__c', BDI_DataImportService.strDICustomIDField('Contact1', 'Website'));
+        system.assertEquals('Contact1_Foo__c', BDI_DataImportService.strDICustomIDField('Contact1', 'Foo__c'));
+        system.assertEquals('Contact1_Bar__c', BDI_DataImportService.strDICustomIDField('Contact1', 'npsp__Bar__c'));
+        system.assertEquals('Contact1_Baz__c', BDI_DataImportService.strDICustomIDField('Contact1', 'randomNS__Baz__c'));
+        Test.stopTest();
+    }
+
 }
