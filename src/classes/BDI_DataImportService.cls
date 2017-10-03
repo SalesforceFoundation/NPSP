@@ -993,7 +993,8 @@ global with sharing class BDI_DataImportService {
     *
     *   - custom field that is namespaced
     *       ns__UniqueId__c => Contact1_UniqueId__c
-    *       (yes, we assume that even if the object field is packaged, the DI field is not packaged)
+    *       Yes, we assume that even if the object field is packaged, the DI field is not packaged,
+    *       unless the namespace happens to be ours, in which case we'll return ns__Contact1_UniqueId__c
     *
     * Note that when running managed under the NPSP namespace, we don't need to add npsp__ in front of
     * the resultant field.  di.get(fieldname) works without the namespace.
@@ -1015,8 +1016,14 @@ global with sharing class BDI_DataImportService {
         // look for namespace
         Integer i = strCustomId.indexOf('__');
         if (i != -1 && i <> strCustomId.indexOf('__c')) {
-            // skip namespace if found
-            return strObjx + '_' + strCustomId.substring(i + 2);
+            // is it our namespace, in which case this is probably unmanaged npsp code,
+            // so any manual testing will need the namespace in the DI custom field.
+            if (strCustomId.left(i).equalsIgnoreCase(UTIL_Namespace.getNamespace())) {
+                return UTIL_Namespace.StrTokenNSPrefix(strObjx + '_' + strCustomId.substring(i + 2));
+            } else {
+                // skip namespace
+                return strObjx + '_' + strCustomId.substring(i + 2);
+            }
         }
 
         // custom fields without namespace
