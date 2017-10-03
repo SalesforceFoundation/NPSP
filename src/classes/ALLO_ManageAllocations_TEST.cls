@@ -214,6 +214,97 @@ private class ALLO_ManageAllocations_TEST {
                 'There should still be two Allocations per Installment Opportunity');
     }
 
+    /*******************************************************************************************************
+    * @description Runs manage allocations page on a general allocation and verifies an
+    * error is thrown when the page action to getPageLoadValidationmessages is called.
+    ********************************************************************************************************/
+    @isTest
+    private static void testUnsupportedObject() {
+        if (strTestOnly != '*' && strTestOnly != 'testUnsupportedObject') return;
+        setupSettings(null);
+
+        Account acc = new Account(Name='foo');
+        insert acc;
+        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'foo');
+        insert gau;
+
+        PageReference pageRef = Page.ALLO_ManageAllocations;
+        Test.setCurrentPage(pageRef);
+        ApexPages.currentPage().getParameters().put('id', gau.id);
+        ALLO_ManageAllocations_CTRL ctrl = new ALLO_ManageAllocations_CTRL(
+            new ApexPages.StandardSetController(new List<Allocation__c>())
+        );
+        ctrl.getPageLoadValidationMessages();
+        List<Apexpages.Message> msgs = ApexPages.getMessages();
+        Boolean errorFound = false;
+        for (Apexpages.Message msg : msgs){
+            if (msg.getDetail().contains(System.Label.alloObjectUnsupported)) errorFound = true;
+        }
+        System.assert(errorFound);
+    }
+
+    /*******************************************************************************************************
+    * @description Runs manage allocations page on an opportunity and verifies an
+    * error is not thrown when the page action to getPageLoadValidationmessages is called.
+    ********************************************************************************************************/
+    @isTest
+    private static void testSupportedObject() {
+        if (strTestOnly != '*' && strTestOnly != 'testUnsupportedObject') return;
+        setupSettings(null);
+
+        Account acc = new Account(Name='foo');
+        insert acc;
+        Opportunity opp = new Opportunity(Name='foo', Amount = 8, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
+        insert opp;
+        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'foo');
+        insert gau;
+
+        PageReference pageRef = Page.ALLO_ManageAllocations;
+        Test.setCurrentPage(pageRef);
+        ApexPages.currentPage().getParameters().put('id', opp.id);
+        ALLO_ManageAllocations_CTRL ctrl = new ALLO_ManageAllocations_CTRL(
+            new ApexPages.StandardSetController(new List<Allocation__c>())
+        );
+        ctrl.getPageLoadValidationMessages();
+        List<Apexpages.Message> msgs = ApexPages.getMessages();
+        Boolean errorFound = false;
+        for (Apexpages.Message msg : msgs){
+            if (msg.getDetail().contains(System.Label.alloObjectUnsupported)) errorFound = true;
+        }
+        System.assert(!errorFound);
+    }
+
+    /*******************************************************************************************************
+    * @description Runs manage allocations page on an opportunity with no amount and verifies an
+    * error is thrown when the page action to getPageLoadValidationmessages is called.
+    ********************************************************************************************************/
+    @isTest
+    private static void testOppNoAmount() {
+        if (strTestOnly != '*' && strTestOnly != 'testUnsupportedObject') return;
+        setupSettings(null);
+
+        Account acc = new Account(Name='foo');
+        insert acc;
+        Opportunity opp = new Opportunity(Name='foo', AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
+        insert opp;
+        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'foo');
+        insert gau;
+
+        PageReference pageRef = Page.ALLO_ManageAllocations;
+        Test.setCurrentPage(pageRef);
+        ApexPages.currentPage().getParameters().put('id', opp.id);
+        ALLO_ManageAllocations_CTRL ctrl = new ALLO_ManageAllocations_CTRL(
+            new ApexPages.StandardSetController(new List<Allocation__c>())
+        );
+        ctrl.getPageLoadValidationMessages();
+        List<Apexpages.Message> msgs = ApexPages.getMessages();
+        Boolean errorFound = false;
+        for (Apexpages.Message msg : msgs){
+            if (msg.getDetail().contains(System.Label.alloCantAllocateNothing)) errorFound = true;
+        }
+        System.assert(errorFound);
+    }
+
     /**
      * @description getCurrencySymbol() should return the appropriate currency
      * symbol as returned by UTIL_Currency

@@ -121,7 +121,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             soql += ', Amount FROM Opportunity WHERE Id = :parentId LIMIT 1';
             opp = database.query(soql);
 
-            pageTitle = Label.alloManageOppAllocations;
+            pageTitle = System.Label.alloManageOppAllocations;
             objectName = opp.Name;
 
             populateObjectParameters(Opportunity.sObjectType);
@@ -144,7 +144,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             soql += ' FROM Campaign WHERE Id = :parentId LIMIT 1';
             cam = database.query(soql);
 
-            pageTitle = Label.alloManageCampaignAllocations;
+            pageTitle = System.Label.alloManageCampaignAllocations;
             objectName = cam.Name;
             if (UserInfo.isMultiCurrencyOrganization()) {
                 this.parentCurrencyCode = (String)cam.get('CurrencyIsoCode');
@@ -159,7 +159,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             soql += ' FROM npe03__Recurring_Donation__c WHERE Id = :parentId LIMIT 1';
             rd = database.query(soql);
 
-            pageTitle = Label.alloManageRecurringDonationAllocations;
+            pageTitle = System.Label.alloManageRecurringDonationAllocations;
             objectName = rd.Name;
             if (UserInfo.isMultiCurrencyOrganization()) {
                 this.parentCurrencyCode = (String)rd.get('CurrencyIsoCode');
@@ -205,9 +205,9 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     */
     public void getPageLoadValidationMessages() {
         if (parentAmount == 0 && sObjType == Opportunity.sObjectType) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, Label.alloCantAllocateNothing));
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.alloCantAllocateNothing));
         } else if (!getIsSupportedObject()) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, Label.alloObjectUnsupported));
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.alloObjectUnsupported));
         }
     }
 
