@@ -308,7 +308,7 @@ private class ALLO_ManageAllocations_TEST {
         actualAllocationsById = new Map<Id, Allocation__c>([SELECT Percent__c, Amount__c FROM Allocation__c WHERE Campaign__c = :campaign.id]);
         System.assertEquals(3, actualAllocationsById.size(), 'New Allocations should be created: ' + actualAllocationsById.values());
     }
-    
+
     /*******************************************************************************************************
     * @description Runs manage allocations page on a general allocation and verifies an
     * error is thrown when the page action to getPageLoadValidationmessages is called.
@@ -323,13 +323,9 @@ private class ALLO_ManageAllocations_TEST {
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'foo');
         insert gau;
 
-        PageReference pageRef = Page.ALLO_ManageAllocations;
-        Test.setCurrentPage(pageRef);
-        ApexPages.currentPage().getParameters().put('id', gau.id);
-        ALLO_ManageAllocations_CTRL ctrl = new ALLO_ManageAllocations_CTRL(
-            new ApexPages.StandardSetController(new List<Allocation__c>())
-        );
+        ALLO_ManageAllocations_CTRL ctrl = setUpController(gau.Id);
         ctrl.getPageLoadValidationMessages();
+
         List<Apexpages.Message> msgs = ApexPages.getMessages();
         Boolean errorFound = false;
         for (Apexpages.Message msg : msgs){
@@ -354,13 +350,9 @@ private class ALLO_ManageAllocations_TEST {
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'foo');
         insert gau;
 
-        PageReference pageRef = Page.ALLO_ManageAllocations;
-        Test.setCurrentPage(pageRef);
-        ApexPages.currentPage().getParameters().put('id', opp.id);
-        ALLO_ManageAllocations_CTRL ctrl = new ALLO_ManageAllocations_CTRL(
-            new ApexPages.StandardSetController(new List<Allocation__c>())
-        );
+        ALLO_ManageAllocations_CTRL ctrl = setUpController(opp.Id);
         ctrl.getPageLoadValidationMessages();
+
         List<Apexpages.Message> msgs = ApexPages.getMessages();
         Boolean errorFound = false;
         for (Apexpages.Message msg : msgs){
@@ -385,13 +377,9 @@ private class ALLO_ManageAllocations_TEST {
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'foo');
         insert gau;
 
-        PageReference pageRef = Page.ALLO_ManageAllocations;
-        Test.setCurrentPage(pageRef);
-        ApexPages.currentPage().getParameters().put('id', opp.id);
-        ALLO_ManageAllocations_CTRL ctrl = new ALLO_ManageAllocations_CTRL(
-            new ApexPages.StandardSetController(new List<Allocation__c>())
-        );
+        ALLO_ManageAllocations_CTRL ctrl = setUpController(opp.Id);
         ctrl.getPageLoadValidationMessages();
+
         List<Apexpages.Message> msgs = ApexPages.getMessages();
         Boolean errorFound = false;
         for (Apexpages.Message msg : msgs){
