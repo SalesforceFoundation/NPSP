@@ -985,7 +985,7 @@ global with sharing class BDI_DataImportService {
     * the Data Import field we want to return will need to be different depending on the source.  There
     * are three cases:
     *
-    *   - Standard field (only used during testing, since no standard fields are uniqueid's)
+    *   - Standard field
     *       Website => Contact1_Website__c
     *
     *   - custom field
@@ -1010,7 +1010,11 @@ global with sharing class BDI_DataImportService {
 
         // handle standard fields
         if (!strCustomId.endsWith('__c')) {
-            return strObjx + '_' + strCustomId + '__c';
+            if (Test.isRunningTest()) {
+                return UTIL_Namespace.StrTokenNSPrefix(strObjx + '_' + strCustomId + '__c');
+            } else {
+                return strObjx + '_' + strCustomId + '__c';
+            }
         }
 
         // look for namespace

@@ -1550,7 +1550,8 @@ private with sharing class BDI_DataImport_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'testUniqueIdHandling') return;
 
         Test.startTest();
-        system.assertEquals('Contact1_Website__c', BDI_DataImportService.strDICustomIDField('Contact1', 'Website'));
+        system.assertEquals(UTIL_Namespace.StrTokenNSPrefix('Contact1_Website__c'),
+            BDI_DataImportService.strDICustomIDField('Contact1', 'Website'));
         system.assertEquals('Contact1_Foo__c', BDI_DataImportService.strDICustomIDField('Contact1', 'Foo__c'));
         system.assertEquals('Contact1_Bar__c', BDI_DataImportService.strDICustomIDField('Contact1', 'npsp__Bar__c'));
         system.assertEquals('Contact1_Baz__c', BDI_DataImportService.strDICustomIDField('Contact1', 'randomNS__Baz__c'));
