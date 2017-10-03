@@ -17,7 +17,8 @@ Given(/^I navigate to Contact Merge$/) do
 end
 
 Given(/^I navigate to Engagement Plan Template$/) do
-  @browser.goto($target_org_url + '/apex/EP_ManageEPTemplate')
+  on(NPSPMainPage).all_tabs_element.click
+  on(AllTabsPage).engage_plan_template_element.click
 end
 
 Given(/^I navigate to Engagement Plan for Contact$/) do
