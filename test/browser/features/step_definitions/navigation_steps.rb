@@ -3,9 +3,8 @@ Given(/^I navigate to Affiliations$/) do
 end
 
 Given(/^I navigate to Batch Data Entry page$/) do
-  on(NPSPMainPage).add_tab_element.click
-  on()
-  @browser.goto($target_org_url + '/apex/BDE_BatchEntry')
+  on(NPSPMainPage).all_tabs_element.click
+  on(AllTabsPage).batch_data_entry_element.click
 end
 
 Given(/^I navigate to Contacts$/) do
