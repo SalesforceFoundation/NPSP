@@ -83,14 +83,14 @@
                         </td>
                         <td>
                             <div class="slds-form-element__control slds-select_container">
-                                <apex:selectList styleClass="slds-select" value="{!credit.contactRole.Role}" size="1">
+                                <apex:selectList styleClass="slds-select" value="{!credit.contactRole.Role}" size="1" id="selectRole">
                                     <apex:selectOption itemValue="" itemLabel="{!$Label.stgLabelNone}" />
                                     <apex:selectOptions value="{!contactRoles}" />
                                 </apex:selectList>
                             </div>
                         </td>
                         <td>
-                            <apex:selectRadio border="0" html-rules="none" value="{!credit.fullCredit}">
+                            <apex:selectRadio border="0" html-rules="none" value="{!credit.fullCredit}" id="radioFullPart">
                                 <apex:selectOption itemValue="true" itemLabel="{!$Label.pscManageSoftCreditsFull}" />
                                 <apex:selectOption itemValue="false" itemLabel="{!$Label.pscManageSoftCreditsPartial}" />
                                 <apex:actionSupport action="{!checkFullCredit}" event="onchange" oncomplete="refresh();" reRender="amountField" />

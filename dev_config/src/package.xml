@@ -10,5 +10,9 @@
         <members>Opportunity</members>
         <name>CustomObject</name>
     </types>
-    <version>37.0</version>
+    <types>
+        <members>Nonprofit_CRM</members>
+        <name>CustomApplication</name>
+    </types>
+    <version>40.0</version>
 </Package>
