@@ -41,6 +41,9 @@ global without sharing class STG_InstallScript implements InstallHandler {
     * @return void
     */
     global void onInstall(InstallContext context) {
+
+        Boolean rethrowException = false;
+    	Savepoint sp = Database.setSavepoint(); 
         try { 
             database.executeBatch(new RD_InstallScript_BATCH(), 10); 
             //First install of Cumulus. NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
@@ -51,17 +54,27 @@ global without sharing class STG_InstallScript implements InstallHandler {
             } else if(context.isPush()) {
                 insertTdtmDefaults(null);
             }
+
             UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
+
+            rethrowException = true;
+
+            if (context.previousVersion() == null || context.previousVersion().compareTo(new Version(3, 79)) < 0) {
+                // update record type settings ONLY if upgrading from a version prior to 3.78
+                UTIL_RecordTypeSettingsUpdate.getInstance().updateSettings();
+            }
+
         } catch(Exception e) {
+    		Database.rollback(sp);
+
+            if (rethrowException) {
+                throw e;
+                return;
+            }
+
             sendEmailOnInstallError(e, context);
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
-            //We won't rethrow the exception, to avoid package failure installation due to install script error
-            return;
-        }
-        if (context.previousVersion() == null || context.previousVersion().compareTo(new Version(3, 79)) < 0) {
-            // update record type settings ONLY if upgrading from a version prior to 3.78
-            UTIL_RecordTypeSettingsUpdate.getInstance().updateSettings();
-        }
+        }        
     }
 
     /*******************************************************************************************************

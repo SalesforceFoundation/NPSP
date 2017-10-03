@@ -119,34 +119,62 @@ public with sharing class STG_InstallScript_TEST {
         //Create NPSP custom settings with all disable flags off
         setAllNpspFlags(false);
                
-        Test.testInstall(new STG_InstallScript(), null);
+        Test.testInstall(new STG_InstallScript(), null);        
         
-        List<Trigger_Handler__c> afterScriptConfig = [select Active__c, Asynchronous__c, Class__c, Load_Order__c, 
-            Object__c, Trigger_Action__c from Trigger_Handler__c];
-        
-        //Using the API class just to give it test coverage.      
-        List<Trigger_Handler__c> defaultConfig = TDTM_Config_API.getDefaultRecords();
-        
-        assertTriggerHandlersEqual(afterScriptConfig, defaultConfig);
+        verifyAllSettingsCreated();
     }
-    
-    private static void assertTriggerHandlersEqual(List<Trigger_Handler__c> afterScriptConfig, List<Trigger_Handler__c> defaultConfig) {
-        afterScriptConfig.sort();
-        defaultConfig.sort();
-        
-        System.assertEquals(defaultConfig.size(), afterScriptConfig.size(), 'Number of created trigger handlers should match the number of handlers in TDTM_DefaultConfig.');
-        for(Integer i = 0; i < defaultConfig.size(); i++) {
-            System.assertEquals(afterScriptConfig[i].Class__c, defaultConfig[i].Class__c);
-            System.assertEquals(afterScriptConfig[i].Load_Order__c, defaultConfig[i].Load_Order__c);
-            System.assertEquals(afterScriptConfig[i].Object__c, defaultConfig[i].Object__c);
-            System.assertEquals(afterScriptConfig[i].Active__c, defaultConfig[i].Active__c);
-            System.assertEquals(afterScriptConfig[i].Asynchronous__c, defaultConfig[i].Asynchronous__c);
-            //split and sort trigger actions so the test doesn't fail for different orders
-            List<String> afterTriggerAction = afterScriptConfig[i].Trigger_Action__c.split(';');
-            List<String> defaultTriggerAction = defaultConfig[i].Trigger_Action__c.split(';');
-            afterTriggerAction.sort();
-            defaultTriggerAction.sort();
-            System.assertEquals(afterTriggerAction, defaultTriggerAction);
+
+    /*********************************************************************************************************
+    @description 
+        Test onInstall rollback when an exception occurs 
+    verify:
+        The transaction is completely rolled back and there is no partial commit
+    **********************************************************************************************************/ 
+    private static testMethod void testOnInstallRollsBackAllDmlsOnError() {
+        if (strTestOnly != '*' && strTestOnly != 'testOnInstallRollsBackAllDmlsOnError') return;
+
+        UpdateSettingsMock mockUpdateSettings = new UpdateSettingsMock().throwException();
+        UTIL_RecordTypeSettingsUpdate.instance = mockUpdateSettings;
+
+        //deleteAllCustomSettings();
+        List<Trigger_Handler__c> triggerHandlers = getTriggerHandlers();
+        System.assertEquals(0, triggerHandlers.size(), 'No trigger handler should exist: ' + triggerHandlers);
+
+        Exception expectedException = null;
+        try {
+            Test.testInstall(new STG_InstallScript(), new Version(1,0), false);
+        } catch (Exception e) {
+            expectedException = e;
+        }
+
+        System.assertNotEquals(null, expectedException, 'An exception should be thrown');
+
+        triggerHandlers = getTriggerHandlers();
+        System.assertEquals(0, triggerHandlers.size(), 'No trigger handler should exist after failed install: ' + triggerHandlers);
+    }
+
+    /**
+     * @description Stub class to verify how many times updateSettings() method
+     * is called
+     */
+
+    public class STG_InstallException extends Exception {}
+
+    private class UpdateSettingsMock extends UTIL_RecordTypeSettingsUpdate {
+        public Integer runCount = 0;
+        public Boolean throwException = false;
+
+        public UpdateSettingsMock throwException() {
+            throwException = true;
+            return this;
+        }
+
+        public override void updateSettings() {
+            runCount++;
+
+            if (throwException) {
+                throw new STG_InstallException('Test Exception');
+            }
         }
     }
     
@@ -213,6 +241,29 @@ public with sharing class STG_InstallScript_TEST {
         assertNpspFlagsDeactivated();
     }
     
+    // Helpers
+    ////////////
+
+    private static void assertTriggerHandlersEqual(List<Trigger_Handler__c> afterScriptConfig, List<Trigger_Handler__c> defaultConfig) {
+        afterScriptConfig.sort();
+        defaultConfig.sort();
+        
+        System.assertEquals(defaultConfig.size(), afterScriptConfig.size(), 'Number of created trigger handlers should match the number of handlers in TDTM_DefaultConfig.');
+        for(Integer i = 0; i < defaultConfig.size(); i++) {
+            System.assertEquals(afterScriptConfig[i].Class__c, defaultConfig[i].Class__c);
+            System.assertEquals(afterScriptConfig[i].Load_Order__c, defaultConfig[i].Load_Order__c);
+            System.assertEquals(afterScriptConfig[i].Object__c, defaultConfig[i].Object__c);
+            System.assertEquals(afterScriptConfig[i].Active__c, defaultConfig[i].Active__c);
+            System.assertEquals(afterScriptConfig[i].Asynchronous__c, defaultConfig[i].Asynchronous__c);
+            //split and sort trigger actions so the test doesn't fail for different orders
+            List<String> afterTriggerAction = afterScriptConfig[i].Trigger_Action__c.split(';');
+            List<String> defaultTriggerAction = defaultConfig[i].Trigger_Action__c.split(';');
+            afterTriggerAction.sort();
+            defaultTriggerAction.sort();
+            System.assertEquals(afterTriggerAction, defaultTriggerAction);
+        }
+    }
+
     private static void setAllNpspFlags(Boolean flagValue) {
         npe01__Contacts_And_Orgs_Settings__c npe01Settings = UTIL_CustomSettingsFacade.getOrgContactsSettings();
         npe01Settings.npe01__DISABLE_IndividualAccounts_trigger__c = flagValue;
@@ -384,12 +435,16 @@ public with sharing class STG_InstallScript_TEST {
         insert handlers;
     }
     
-    public static void verifyAllSettingsCreated() {
-        List<Trigger_Handler__c> afterScriptConfig = [select Active__c, Asynchronous__c, Class__c, Load_Order__c, 
-            Object__c, Trigger_Action__c from Trigger_Handler__c];
-        
-        List<Trigger_Handler__c> defaultConfig = TDTM_DefaultConfig.getDefaultRecords();
-        
-        assertTriggerHandlersEqual(afterScriptConfig, defaultConfig);
+    public static void verifyAllSettingsCreated() {        
+        assertTriggerHandlersEqual(getTriggerHandlers(), TDTM_DefaultConfig.getDefaultRecords());
+    }
+
+    private static Trigger_Handler__c[] getTriggerHandlers() {
+        return [
+            SELECT 
+                Active__c, Asynchronous__c, Class__c, 
+                Load_Order__c, Object__c, Trigger_Action__c 
+            FROM Trigger_Handler__c
+        ];
     }
 }
