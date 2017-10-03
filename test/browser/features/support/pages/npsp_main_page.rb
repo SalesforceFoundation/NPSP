@@ -16,5 +16,6 @@ class NPSPMainPage
   div(:home_page_text, class: 'content')
   div(:npsp_home_page_text, class: 'slds-media__body')
   button(:new_recurring_donations_button, name: 'new')
+  img(:add_tab, title: 'All Tabs')
   select_list(:view_tabs, id: 'p1')
 end
