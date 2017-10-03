@@ -42,6 +42,7 @@ Given(/^I navigate to Household created$/) do
 end
 
 Given(/^I navigate to Manage Households UI$/) do
+  on(NPSPMainPage).all_tabs_element.click
   @browser.goto($target_org_url + '/apex/HH_ManageHHAccount?scontrolCaching=1&id=' + @account_id)
 end
 
