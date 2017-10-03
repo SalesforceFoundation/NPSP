@@ -248,7 +248,7 @@ public with sharing class MTCH_FindGifts_CTRL {
             }
         }
 
-    	Savepoint sp = Database.setSavepoint(); 
+        Savepoint sp = Database.setSavepoint(); 
         try {
             update potentialGifts;
             if (softCredits.size() > 0)
@@ -261,7 +261,7 @@ public with sharing class MTCH_FindGifts_CTRL {
             return true;
 
         } catch (Exception ex) {
-    		Database.rollback(sp);
+            Database.rollback(sp);
 
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
             return false;

@@ -39,6 +39,11 @@ public with sharing class STG_InstallScript_TEST {
     // if you only want to run one test in this class, fill in its name here.
     // if you want to run all tests, then use '*'
     private static string strTestOnly = '*';
+
+    /*******************************************************************************************************
+    * @description An exception class used in UTIL_RecordTypeSettingsUpdate Mock class
+    */
+    private class STG_InstallException extends Exception {}
     
     /** NPSP to TDTM test - to verify no exception is thrown if the custom settings don't exist **/
     public testmethod static void mappingsTest_runScriptNoCustomSettings() {
@@ -136,7 +141,6 @@ public with sharing class STG_InstallScript_TEST {
         UpdateSettingsMock mockUpdateSettings = new UpdateSettingsMock().throwException();
         UTIL_RecordTypeSettingsUpdate.instance = mockUpdateSettings;
 
-        //deleteAllCustomSettings();
         List<Trigger_Handler__c> triggerHandlers = getTriggerHandlers();
         System.assertEquals(0, triggerHandlers.size(), 'No trigger handler should exist: ' + triggerHandlers);
 
@@ -151,31 +155,6 @@ public with sharing class STG_InstallScript_TEST {
 
         triggerHandlers = getTriggerHandlers();
         System.assertEquals(0, triggerHandlers.size(), 'No trigger handler should exist after failed install: ' + triggerHandlers);
-    }
-
-    /**
-     * @description Stub class to verify how many times updateSettings() method
-     * is called
-     */
-
-    public class STG_InstallException extends Exception {}
-
-    private class UpdateSettingsMock extends UTIL_RecordTypeSettingsUpdate {
-        public Integer runCount = 0;
-        public Boolean throwException = false;
-
-        public UpdateSettingsMock throwException() {
-            throwException = true;
-            return this;
-        }
-
-        public override void updateSettings() {
-            runCount++;
-
-            if (throwException) {
-                throw new STG_InstallException('Test Exception');
-            }
-        }
     }
     
     /** NPSP to TDTM test - If it's the first time we install Cumulus and all the custom DISABLE flag were enabled **/
@@ -243,6 +222,42 @@ public with sharing class STG_InstallScript_TEST {
     
     // Helpers
     ////////////
+
+    /*******************************************************************************************************
+    * @description Mock for the UTIL_RecordTypeSettingsUpdate
+    */
+    private class UpdateSettingsMock extends UTIL_RecordTypeSettingsUpdate {
+        /*******************************************************************************************************
+        * @description updateSettings() execution counter
+        */
+        public Integer runCount = 0;
+        /*******************************************************************************************************
+        * @description Indicates if an exception should be thrown in updateSettings()
+        */
+        public Boolean throwException = false;
+    
+        /*******************************************************************************************************
+        * @description Sets throwException to true
+        * @return UpdateSettingsMock
+        */
+        public UpdateSettingsMock throwException() {
+            throwException = true;
+            return this;
+        }
+
+        /*******************************************************************************************************
+        * @description Called when UTIL_RecordTypeSettingsUpdate.updateSettings() method is supposed to be called.
+        * Updates counter of the method calls. Throws an exception if requested by the test.
+        * @return void
+        */
+        public override void updateSettings() {
+            runCount++;
+
+            if (throwException) {
+                throw new STG_InstallException('Test Exception');
+            }
+        }
+    }
 
     private static void assertTriggerHandlersEqual(List<Trigger_Handler__c> afterScriptConfig, List<Trigger_Handler__c> defaultConfig) {
         afterScriptConfig.sort();

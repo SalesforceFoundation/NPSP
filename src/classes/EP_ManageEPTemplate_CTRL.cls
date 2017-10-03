@@ -216,7 +216,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         Map<Id, Id> existingParentIdsByTaskId = new Map<Id, Id>();
         Id templateId = template.Id;
 
-    	Savepoint sp = Database.setSavepoint(); 
+        Savepoint sp = Database.setSavepoint(); 
         try {
             upsert template;
 
@@ -259,7 +259,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
             return source;
 
         } catch (Exception ex) {
-    		Database.rollback(sp);
+            Database.rollback(sp);
 
             //rollback new Template creation
             template.Id = templateId;

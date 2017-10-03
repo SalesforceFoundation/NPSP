@@ -132,7 +132,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
             opp.Acknowledgment_Status__c = label.sendAcknowledgmentFireStatus;
         }
 
-    	Savepoint sp = Database.setSavepoint(); 
+        Savepoint sp = Database.setSavepoint(); 
         try {
             update listOpp;
             
@@ -164,7 +164,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
             update listOppNotSent;
 
         } catch (Exception ex) {
-    		Database.rollback(sp);
+            Database.rollback(sp);
             
             // Since none of the records were sent, update the listOppNotSent collection
             // to contain a list of all the records that would have been processed.

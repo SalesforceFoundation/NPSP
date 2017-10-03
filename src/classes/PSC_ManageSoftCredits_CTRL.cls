@@ -269,7 +269,7 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
             return null;
         }
         
-    	Savepoint sp = Database.setSavepoint(); 
+        Savepoint sp = Database.setSavepoint(); 
         try {
             delete toDelete;
 
@@ -302,9 +302,9 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
             return pageRef;
 
         } catch (Exception ex) {
-    		Database.rollback(sp);
+            Database.rollback(sp);
 
-            // rollback Opportunity Contact Role and Partial Soft Credit changes done in the save()
+            // rollback Opportunity Contact Role and Partial Soft Credits
             for (Integer i = 0, size = softCredits.size(); i < size; i++) {
                 softCredits[i].contactRole = rollbackContactRole.get(i);
                 softCredits[i].partial = rollbackPartialSoftCredit.get(i);

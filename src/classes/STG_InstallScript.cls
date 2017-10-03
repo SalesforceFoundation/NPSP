@@ -41,11 +41,12 @@ global without sharing class STG_InstallScript implements InstallHandler {
     * @return void
     */
     global void onInstall(InstallContext context) {
-
         Boolean rethrowException = false;
-    	Savepoint sp = Database.setSavepoint(); 
+        Savepoint sp = Database.setSavepoint(); 
+        
         try { 
             database.executeBatch(new RD_InstallScript_BATCH(), 10); 
+            
             //First install of Cumulus. NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
             if(context.previousVersion() == null) {
                 runNewOrgScript();
@@ -65,7 +66,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
             }
 
         } catch(Exception e) {
-    		Database.rollback(sp);
+            Database.rollback(sp);
 
             if (rethrowException) {
                 throw e;

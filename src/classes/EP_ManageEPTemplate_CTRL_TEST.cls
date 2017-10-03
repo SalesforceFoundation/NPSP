@@ -210,13 +210,7 @@ private with sharing class EP_ManageEPTemplate_CTRL_TEST {
         ctrl.getTaskTree();
 
         System.assertEquals(3, ctrl.mapTaskWrappers.size(), 'Dependent task should be deleted');
-        for (String taskLevel : new String[] { '1', '2', '3' }) {
-            System.assert(
-                ctrl.mapTaskWrappers.containsKey(taskLevel), 
-                String.format('EP Task with level of "{0}" should exist', new String[] { taskLevel })
-            );
-        }
-
+        
         // Cause an error on update
         Id invalidId = Account.sObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
         ctrl.mapTaskWrappers.get('1').detail.put('Assigned_To__c', invalidId);

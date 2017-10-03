@@ -201,7 +201,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         }
         return currencySymbol;
     }
-
+    
     /** @description Adds an empty row to the bottom of the list and refreshes the page.*/
     public pageReference addRow() {
         Allocation__c allo = new Allocation__c();
@@ -247,7 +247,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             else listAlloForInsert.add(allo);
         }
 
-    	Savepoint sp = Database.setSavepoint(); 
+        Savepoint sp = Database.setSavepoint(); 
         try {
             if (!listAlloForDelete.isEmpty()) {
                 TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, false);
@@ -268,7 +268,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             
             return source;
         } catch (Exception e) {
-    		Database.rollback(sp);
+            Database.rollback(sp);
 
             ApexPages.addMessages(e);
             return null;

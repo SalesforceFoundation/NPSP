@@ -222,7 +222,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
             return null;
         }
 
-    	Savepoint sp = Database.setSavepoint(); 
+        Savepoint sp = Database.setSavepoint(); 
         try {
             apiTestResult = null;
                         
@@ -265,7 +265,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
             }
             
         } catch (Exception e) {
-    		Database.rollback(sp);
+            Database.rollback(sp);
 
             apiSettingsErrorMessage = Label.Settings_not_Saved + ': ' + e.getMessage();
         }

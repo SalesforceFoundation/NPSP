@@ -320,7 +320,7 @@ public with sharing class HH_Container_LCTRL {
         list<Contact> listUpdate = new list<Contact>();
         list<String> listStrFld = new list<String>(setUpdateableContactFields());
         
-    	Savepoint sp = Database.setSavepoint(); 
+        Savepoint sp = Database.setSavepoint(); 
         try {
             // check object permissions
             if (!Contact.sObjectType.getDescribe().isCreateable() || !Contact.sObjectType.getDescribe().isUpdateable()) {
@@ -359,7 +359,7 @@ public with sharing class HH_Container_LCTRL {
             update listUpdate;
 
         } catch (Exception ex) {
-    		Database.rollback(sp);
+            Database.rollback(sp);
 
             throw new AuraHandledException(ex.getMessage());
 
