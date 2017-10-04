@@ -212,8 +212,8 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
         for (Integer i = 0, size = softCredits.size(); i < size; i++) {
             SoftCredit sc = softCredits[i];
 
-            rollbackContactRole.put(i, sc.contactRole == null ? null : sc.contactRole.clone(true, true, false, false));
-            rollbackPartialSoftCredit.put(i, sc.partial == null ? null : sc.partial.clone(true, true, false, false));
+            rollbackContactRole.put(i, sc.contactRole == null ? null : sc.contactRole.clone(true, true, true, true));
+            rollbackPartialSoftCredit.put(i, sc.partial == null ? null : sc.partial.clone(true, true, true, true));
 
             if (sc.contactRole.ContactId != null) {
                 if (donors.containsKey(sc.contactRole.ContactId)) {

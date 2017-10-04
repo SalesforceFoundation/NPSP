@@ -41,6 +41,10 @@ global without sharing class STG_InstallScript implements InstallHandler {
     * @return void
     */
     global void onInstall(InstallContext context) {
+        // Certain install scripts should not cause package installation failure, 
+        // thus if an error occurs, the exception will not be re-thrown.
+        // Otherwise, if the flag is true, any exception thrown during the conversion process 
+        // will cause the complete installation to fail.
         Boolean rethrowException = false;
         Savepoint sp = Database.setSavepoint(); 
         
@@ -58,6 +62,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
 
             UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
 
+            // Stop the package installation process if an exception occurs for the subsequent install scripts
             rethrowException = true;
 
             if (context.previousVersion() == null || context.previousVersion().compareTo(new Version(3, 79)) < 0) {
@@ -70,7 +75,6 @@ global without sharing class STG_InstallScript implements InstallHandler {
 
             if (rethrowException) {
                 throw e;
-                return;
             }
 
             sendEmailOnInstallError(e, context);

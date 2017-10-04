@@ -91,6 +91,11 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
     // Helpers
     ////////////
 
+    /*********************************************************************************************************
+    * @description Create Opportunities and Opportunity Contact Roles
+    * @param oppCount Number of how many Opportunities should be created
+    * @return List<Opportunity> List of Opportunities
+    **********************************************************************************************************/
     private static List<Opportunity> setUpOpportunities(Integer oppCount) {
         Account account = new Account(Name = 'Test Company');
         insert account;
