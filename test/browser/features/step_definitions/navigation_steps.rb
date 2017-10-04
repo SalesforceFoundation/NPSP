@@ -214,7 +214,8 @@ When(/^I navigate to New Contact Donation Page$/) do
 end
 
 When(/^I navigate to NPSP Data Import/) do
-  @browser.goto($target_org_url + '/apex/BDI_DataImport')
+  on(NPSPMainPage).all_tabs_element.click
+  on(AllTabsPage).npsp_data_imports_element.click
 end
 
 When(/^I navigate to the Manage Allocations page$/) do
