@@ -8,4 +8,5 @@ class AllTabsPage
   img(:leads, title: 'Leads')
   img(:npsp_settings, title: 'NPSP Settings')
   img(:opportunities, title: 'Opportunities')
+  img(:payments, title: 'Payments')
 end

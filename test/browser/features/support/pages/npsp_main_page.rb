@@ -10,7 +10,7 @@ class NPSPMainPage
   a(:recurring_donations_link, text: 'Recurring Donations')
   #a(:npsp_data_imports_link, text: 'NPSP Data Imports')
   #a(:opportunities_link, text: 'Opportunities')
-  a(:payments_link, text: 'Payments')
+  #a(:payments_link, text: 'Payments')
   a(:contact_merge_link, text: 'Contact Merge')
   div(:home_page_text, class: 'content')
   div(:npsp_home_page_text, class: 'slds-media__body')

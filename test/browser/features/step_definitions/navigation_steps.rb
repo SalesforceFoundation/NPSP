@@ -87,7 +87,8 @@ Given(/^I navigate to Payment Wizard for that Opportunity$/) do
 end
 
 Given(/^I navigate to Payments$/) do
-  on(NPSPMainPage).payments_link_element.when_present(15).click
+  on(NPSPMainPage).all_tabs_element.click
+  on(AllTabsPage).payments_element.click
 end
 
 Given(/^I navigate to Recurring Donations$/) do
