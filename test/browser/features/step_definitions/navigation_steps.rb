@@ -34,7 +34,8 @@ Given(/^I navigate to first Contact created$/) do
 end
 
 When(/^I navigate to Getting Started/) do
-  @browser.goto($target_org_url + '/apex/NPSP_Resources')
+  on(NPSPMainPage).all_tabs_element.click
+  on(AllTabsPage).getting_started_element.click
 end
 
 Given(/^I navigate to Household created$/) do
@@ -67,7 +68,8 @@ Given(/^I navigate to Matching Donation for that Opportunity$/) do
 end
 
 Given(/^I navigate to NPSP Settings$/) do
-  @browser.goto($target_org_url + '/apex/STG_SettingsManager')
+  on(NPSPMainPage).all_tabs_element.click
+  on(AllTabsPage).npsp_settings_element.click
 end
 
 Given(/^I navigate to Opportunity$/) do
