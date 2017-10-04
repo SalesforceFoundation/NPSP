@@ -6,4 +6,5 @@ class AllTabsPage
   img(:engage_plan_template, title: 'Engagement Plan Templates')
   img(:getting_started, title: 'Getting Started')
   img(:npsp_settings, title: 'NPSP Settings')
+  img(:opportunities, title: 'Opportunities')
 end
