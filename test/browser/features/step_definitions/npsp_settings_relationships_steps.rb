@@ -57,7 +57,7 @@ end
 
 Then(/^Relationships settings should be saved$/) do
   on(NPSPRelationshipsSettingsPage) do |page|
-    page.page_reciprocal_method_element.when_present(15)
+    #page.page_reciprocal_method_element.when_present(15)
     expect(page.page_reciprocal_method_element.visible?).to be(true)
   end
 end
