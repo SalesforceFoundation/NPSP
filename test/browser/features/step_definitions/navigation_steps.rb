@@ -78,7 +78,8 @@ Given(/^I navigate to Opportunity$/) do
 end
 
 Given(/^I navigate to Leads$/) do
-  on(NPSPMainPage).leads_tab_element.click
+  on(NPSPMainPage).all_tabs_element.click
+  on(AllTabsPage).leads_element.click
 end
 
 Given(/^I navigate to Payment Wizard for that Opportunity$/) do
