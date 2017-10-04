@@ -1,4 +1,4 @@
-@smoketest
+@smoketest @flaky
 Feature: NPSP Engagement Plan
 
   Scenario: Create Engagement Plan Template in UI

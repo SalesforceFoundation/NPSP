@@ -1,3 +1,4 @@
+@flaky
 Feature: Contact Merge test
 
   Background:
@@ -7,7 +8,7 @@ Feature: Contact Merge test
     When I select the second Contact as the winning Contact
 
 
-  @smoketest @chrome
+  @smoketest @flaky
   Scenario: Contact Merge select and merge
     And I merge the contacts
     Then I should see "aaa2" in All Contacts

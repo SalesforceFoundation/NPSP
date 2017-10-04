@@ -3,7 +3,7 @@ Feature: NPSP Settings Donations
   Background:
     Given I navigate to NPSP Settings
 
-  @smoketest @reset_these_settings @chrome
+  @smoketest @reset_these_settings @chrome @flaky
   Scenario: Actually save Donations Batch Entry Settings
     Given I navigate to Settings Donations Batch Entry
     When I change Donations Batch Entry settings

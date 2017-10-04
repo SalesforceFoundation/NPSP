@@ -1,6 +1,6 @@
 Feature: Data Import page
 
-  @smoketest
+  @smoketest @flaky
   Scenario: Data Import New button
     When I navigate to the other NPSP Data Import
       And I click New

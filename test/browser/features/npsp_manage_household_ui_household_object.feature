@@ -3,6 +3,7 @@ Feature: Manage Household UI One-to-One
   Background:
    Given I create new Contacts with Household Object via the API
 
+  @flaky
   Scenario: Navigate to Manage Households UI and do basic checks
     When I navigate to Manage Households UI for Household Object
     Then I should see the Household Members section

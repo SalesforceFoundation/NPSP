@@ -5,7 +5,7 @@ Feature: NPSP Manage Allocations Page Test
       And I create a GAU named "first"
       And I create a GAU named "second"
 
-    @smoketest
+  @smoketest @flaky
   Scenario: Manage Allocations
     When I navigate to the Manage Allocations page
       And I add a row
@@ -16,18 +16,21 @@ Feature: NPSP Manage Allocations Page Test
       And Amount in the second row should be disabled
       And Save should be present
 
+  @flaky
   Scenario: Manage Allocations amount error
     When I navigate to the Manage Allocations page
       And I enter "1001" in the Amount for the first row for the first GAU
     Then I should see a remainder of "-1.00"
       And I should see the Save button disabled
 
+  @flaky
   Scenario: Manage Allocations percent error
     When I navigate to the Manage Allocations page
       And I enter "101" in the Percent for the first row for the first GAU
     Then I should see a remainder of "-10.00"
       And I should see the Save button disabled
 
+  @flaky
   Scenario: Manage Allocations GAU error
     When I navigate to the Manage Allocations page
     And I add a row
