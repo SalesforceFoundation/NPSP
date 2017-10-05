@@ -132,6 +132,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
             opp.Acknowledgment_Status__c = label.sendAcknowledgmentFireStatus;
         }
 
+        Savepoint sp = Database.setSavepoint(); 
         try {
             update listOpp;
             
@@ -161,9 +162,10 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
                 opp.Acknowledgment_Status__c = label.sendAcknowledgmentFailedStatus;
             }
             update listOppNotSent;
-            
-            return null;
+
         } catch (Exception ex) {
+            Database.rollback(sp);
+            
             // Since none of the records were sent, update the listOppNotSent collection
             // to contain a list of all the records that would have been processed.
             listOppNotSent = [select Id, Name from Opportunity where id in :listOpp];
@@ -172,7 +174,6 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
             // Make the error look more readable on the page
             ERR_ExceptionHandler.beautifyExceptionMessage(ex);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
-            return null;
         }
 
         return null;
