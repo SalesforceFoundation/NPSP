@@ -420,11 +420,11 @@ public with sharing class ADDR_Validator_TEST {
         sc.saveSettings();
         Test.stopTest();
         
-        System.assertEquals(null, sc.apiSettingsSaveMessage);
-        UTIL_Debug.debug('****Error message: ' + sc.apiSettingsErrorMessage);
-        System.assertEquals(true, sc.apiSettingsErrorMessage.contains('Auth ID cannot be blank'));
-        System.assertEquals(true, sc.apiSettingsErrorMessage.contains('Auth Token cannot be blank'));
+        System.assertEquals(null, sc.apiSettingsSaveMessage, 'Save message should be empty: ' + sc.apiSettingsSaveMessage);
+        System.assert(sc.apiSettingsErrorMessage.contains('Auth ID cannot be blank'), 'Error message should contain "Auth ID cannot be blank": ' + sc.apiSettingsErrorMessage);
+        System.assert(sc.apiSettingsErrorMessage.contains('Auth Token cannot be blank'), 'Error message should contain "Auth Token cannot be blank": ' + sc.apiSettingsErrorMessage);
     }
+
 
     static testMethod void dontValidatePreviouslyValidatedAddresses() {
         if (strTestOnly != '*' && strTestOnly != 'dontValidatePreviouslyValidatedAddresses') return;
