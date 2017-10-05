@@ -52,12 +52,12 @@ When(/^I click Save Relationships Affiliations Settings$/) do
   @these_settings = @these_settings.first
 
   sleep 1 #API CALL NEEDS TO PROPAGATE BEFORE CLICKING SAVE BUTTON
-  on(NPSPRecurringDonationsSettingsPage).save_button
+  on(NPSPRecurringDonationsSettingsPage).save_button_element.click
 end
 
 Then(/^Relationships settings should be saved$/) do
   on(NPSPRelationshipsSettingsPage) do |page|
-    #page.page_reciprocal_method_element.when_present(15)
+    page.page_reciprocal_method_element.when_present(15)
     expect(page.page_reciprocal_method_element.visible?).to be(true)
   end
 end

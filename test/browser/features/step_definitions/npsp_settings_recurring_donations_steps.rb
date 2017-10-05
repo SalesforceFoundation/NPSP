@@ -24,7 +24,7 @@ When(/^I click Save Recurring Donations Settings$/) do
   @these_settings = @these_settings.first
 
   sleep 1 #API CALL NEEDS TO PROPAGATE BEFORE CLICKING SAVE BUTTON
-  on(NPSPRecurringDonationsSettingsPage).save_button
+  on(NPSPRecurringDonationsSettingsPage).save_button_element.click
 end
 
 Then(/^Recurring Donations settings should be saved$/) do
