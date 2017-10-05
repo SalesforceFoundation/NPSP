@@ -18,12 +18,12 @@ end
 When(/^I delete two of the payments$/) do
   on(NPSPRecurringDonationsPage) do |page|
     page.wait_until do
-      page.delete_link_element.when_present(10)
+      page.delete_link_element.when_present(20)
     end
     page.delete_link
     @browser.alert.ok
     page.wait_until do
-      page.delete_link_element.when_present(10)
+      page.delete_link_element.when_present(20)
     end
     page.delete_link
     @browser.alert.ok

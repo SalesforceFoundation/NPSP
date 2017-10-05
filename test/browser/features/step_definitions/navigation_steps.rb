@@ -198,7 +198,7 @@ Given(/^I login the first time with oauth$/) do
 end
 
 When(/^I navigate to the other NPSP Data Import$/) do
-  on(NPSPMainPage).npsp_data_imports_link_element.when_present(15).click
+  on(NPSPMainPage).npsp_data_imports_link_element.when_present(30).click
 end
 
 When(/^I navigate to Copy Address page for the Contact$/) do

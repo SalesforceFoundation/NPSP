@@ -29,7 +29,7 @@ end
 
 Then(/^Recurring Donations settings should be saved$/) do
   on(NPSPRecurringDonationsSettingsPage) do |page|
-    page.page_opp_forecast_months_saved_element.when_present(15)
+    page.page_opp_forecast_months_saved_element.when_present(30)
     expect(page.page_opp_forecast_months_saved_element.visible?).to be(true)
     expect( page.page_opp_behavior_saved_element.visible?).to be(true)
   end

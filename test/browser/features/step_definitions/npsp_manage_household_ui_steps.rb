@@ -47,7 +47,7 @@ end
 
 When(/^I click Change on Household Address$/) do
   on(ManageHouseholdsPage) do |page|
-    page.spinner_element.when_not_present(10)
+    page.spinner_element.when_not_present(20)
     page.change_address_button_element.when_present.click
   end
 end
@@ -137,7 +137,7 @@ When(/^I type "([^"]*)" into search box$/) do |search_string|
   on(ManageHouseholdsPage) do |page|
     page.spinner_element.when_not_present
     page.spinner2_element.when_not_present
-    page.add_members_search_element.when_present(15).click #search box needs focus for Chrome
+    page.add_members_search_element.when_present(30).click #search box needs focus for Chrome
     number_of_backspaces = search_string.length
     number_of_backspaces.times do
       page.add_members_search_element.send_keys(:backspace)
@@ -148,7 +148,7 @@ end
 
 When(/^I type the random string into search box$/) do
   on(ManageHouseholdsPage) do |page|
-    page.add_members_search_element.wait_until_present(15)
+    page.add_members_search_element.wait_until_present(30)
     sleep 1
     page.add_members_search_element.click
     sleep 1
@@ -225,7 +225,7 @@ Then(/^I should see the Household Details section$/) do
 end
 
 Then(/^I should see the Household Members section$/) do
-  expect(on(ManageHouseholdsPage).household_members_section_element.when_present(15).visible?).to be(true)
+  expect(on(ManageHouseholdsPage).household_members_section_element.when_present(20).visible?).to be(true)
 end
 
 Then(/^I should see the Household Naming section$/) do

@@ -35,7 +35,7 @@ end
 
 When(/^I wait for the page to revert$/) do
   on(NPSPSettingsPage) do |page|
-    page.wait_until(15) do
+    page.wait_until(30) do
       page.loading_message_element.visible? == false
     end
   end

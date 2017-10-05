@@ -5,7 +5,7 @@ When(/^I change Donations Batch Entry settings$/) do
   step 'I wait for the page to revert'
 
   on(NPSPDonationsSettingsPage) do |page|
-    page.opp_naming_checkbox_element.when_present(15)
+    page.opp_naming_checkbox_element.when_present(30)
     page.uncheck_opp_naming_checkbox
   end
 end
@@ -28,7 +28,7 @@ end
 
 Then(/^Donations Batch Entry settings should be saved$/) do
   on(NPSPDonationsSettingsPage) do |page|
-    page.saved_opp_naming_checkbox_element.when_present(15)
+    page.saved_opp_naming_checkbox_element.when_present(30)
     expect(page.saved_opp_naming_checkbox_element.visible?).to be(true)
   end
 end

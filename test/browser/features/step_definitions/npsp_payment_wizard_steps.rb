@@ -11,7 +11,7 @@ When(/^I click Create Payments$/) do
 end
 
 When(/^I click on the ninth link to a Payment record$/) do
-  on(PaymentWizardPage).ninth_payment_link_element.when_present(10).click
+  on(PaymentWizardPage).ninth_payment_link_element.when_present(20).click
 end
 
 Then(/^I should see the Payment Wizard fields$/) do

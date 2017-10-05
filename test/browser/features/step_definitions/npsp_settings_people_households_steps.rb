@@ -74,7 +74,7 @@ end
 
 Then(/^my Household Naming Settings should be saved$/) do
   on(NPSPHouseholdsSettingsPage) do |page|
-    page.page_name_format_saved_element.when_present(15)
+    page.page_name_format_saved_element.when_present(30)
     expect(page.page_name_format_saved_element.visible?).to be(true)
   end
 end
