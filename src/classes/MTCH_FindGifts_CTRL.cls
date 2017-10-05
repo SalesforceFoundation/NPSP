@@ -194,46 +194,61 @@ public with sharing class MTCH_FindGifts_CTRL {
             from Partial_Soft_Credit__c where Opportunity__c = :opp.Id];
         
         for (Opportunity o : potentialGifts){
-            if (selection.get(o.Id) && o.Matching_Gift__c == null){
-                if (closedWonStages.contains(opp.StageName))
+            if (selection.get(o.Id) && o.Matching_Gift__c == null) {
+
+                if (closedWonStages.contains(opp.StageName)) {
                     o.Matching_Gift_Status__c = 'Received'; 
+                }
+
                 o.Matching_Gift__c = opp.Id;
-                if (o.Matching_Gift_Account__c == null)
+
+                if (o.Matching_Gift_Account__c == null) {
                     o.Matching_Gift_Account__c = opp.AccountId;
+                }
+
                 // if matching gift has Primary contact role, create partial soft credit
                 if (!o.OpportunityContactRoles.isEmpty()){
                     string role = UTIL_CustomSettingsFacade.getHouseholdsSettings().Matched_Donor_Role__c;
+
                     softCredits.add(new Partial_Soft_Credit__c(
                         Amount__c = o.Amount * matchingGiftPercent/100,
                         Contact__c = o.OpportunityContactRoles[0].ContactId,
                         Role_Name__c = role,
                         Opportunity__c = opp.Id
                     ));
-                    // now that PSC trigger handlers creates OCRs if needed, no need to create them here. 
+                    // now that PSC trigger handler creates OCRs if needed, no need to create them here. 
                 }
             }
+
             if (!selection.get(o.Id) && o.Matching_Gift__c != null){
                 o.Matching_Gift_Status__c = 'Potential';
                 o.Matching_Gift__c = null;
+
                 // remove existing partial soft credit...? How to identify them?
                 // how about if there is only 1 psc on the opp for this unmatched opp's primary contact, remove it.
                 if (listPSCExisting != null && !o.OpportunityContactRoles.isEmpty()) {
                     Partial_Soft_Credit__c pscDel;
                     integer cPsc = 0;
+
                     for (Partial_Soft_Credit__c psc : listPSCExisting) {
                         if (psc.Contact__c == o.OpportunityContactRoles[0].ContactId) {
                             cPsc++;
                             pscDel = psc;
                         }
                     }
+
                     if (pscDel != null && cPsc == 1) {
                         listPSCDelete.add(pscDel);
-                        if (pscDel.Contact_Role_ID__c != null)
+
+                        if (pscDel.Contact_Role_ID__c != null) {
                             listOCRDelete.add(new OpportunityContactRole(Id=pscDel.Contact_Role_ID__c));
+                        }
                     }
                 }
             }
         }
+
+        Savepoint sp = Database.setSavepoint(); 
         try {
             update potentialGifts;
             if (softCredits.size() > 0)
@@ -242,8 +257,12 @@ public with sharing class MTCH_FindGifts_CTRL {
                delete listPSCDelete;
             if (listOCRDelete.size() > 0)
                delete listOCRDelete;
+
             return true;
+
         } catch (Exception ex) {
+            Database.rollback(sp);
+
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
             return false;
         }

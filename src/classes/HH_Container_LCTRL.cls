@@ -313,18 +313,19 @@ public with sharing class HH_Container_LCTRL {
     */
     @AuraEnabled
     public static void upsertContacts(list<Contact> listCon) {
+        // Even though we are given a list of Contacts from the lightning component,
+        // apex seems to treat them as generic sObjects, and thus we can't do upsert.
+        // thus we will split the list into update and insert lists.
+        list<Contact> listInsert = new list<Contact>();
+        list<Contact> listUpdate = new list<Contact>();
+        list<String> listStrFld = new list<String>(setUpdateableContactFields());
+        
+        Savepoint sp = Database.setSavepoint(); 
         try {
             // check object permissions
             if (!Contact.sObjectType.getDescribe().isCreateable() || !Contact.sObjectType.getDescribe().isUpdateable()) {
                  throw new System.NoAccessException();    
             }
-
-            // Even though we are given a list of Contacts from the lightning component,
-            // apex seems to treat them as generic sObjects, and thus we can't do upsert.
-            // thus we will split the list into update and insert lists.
-            list<Contact> listInsert = new list<Contact>();
-            list<Contact> listUpdate = new list<Contact>();
-            list<String> listStrFld = new list<String>(setUpdateableContactFields());
             
             for (Contact con : listCon) {
                 Contact con2 = new Contact(Id=con.Id);
@@ -339,7 +340,6 @@ public with sharing class HH_Container_LCTRL {
                     listInsert.add(con2);
                 }
             }
-
             
             // avoid saving of contacts from updating household names
             // to avoid record lock errors.  let the household be responsible
@@ -349,15 +349,22 @@ public with sharing class HH_Container_LCTRL {
             // allow potential duplicates when rules to warn are turned on.
             Database.DMLOptions dml = new Database.DMLOptions();
             dml.DuplicateRuleHeader.AllowSave = true;
+
             list<Database.SaveResult> listSR = Database.insert(listInsert, dml);
             for (Database.SaveResult sr : listSR) {
                 if (!sr.isSuccess())
                     throw new DmlException(sr.getErrors()[0].getMessage());
             }
+
             update listUpdate;
-            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
+
         } catch (Exception ex) {
+            Database.rollback(sp);
+
             throw new AuraHandledException(ex.getMessage());
+
+        } finally {
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
         }
     }
 
@@ -400,10 +407,12 @@ public with sharing class HH_Container_LCTRL {
             // excluded from auto-naming!
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
             update hhCopy;
-            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
 
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
+            
+        } finally {
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
         }
     }
 

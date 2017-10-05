@@ -198,29 +198,35 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     /** @description Save method attempts to save the template, delete EP Tasks that have been removed, create and 
     * update EP Tasks. */
     public pageReference saveClose() {
+        //manual validation that the Name field is populated to avoid visualforce refresh issues when required attribute is set
+        if (String.isBlank(template.Name)) {
+            template.Name.addError(Label.NameRequired);
+            return null;
+        }
 
-        try {
-            //manual validation that the Name field is populated to avoid visualforce refresh issues when required attribute is set
-            if (String.isBlank(template.Name)) {
-                template.Name.addError(Label.NameRequired);
+        for (TaskWrapper wrapper : mapTaskWrappers.values()) {
+            if (String.isBlank(wrapper.detail.Name)) {
+                wrapper.detail.Name.addError(Label.NameRequired);
                 return null;
             }
+        }
 
+        List<Engagement_Plan_Task__c> tasksForInsert = new List<Engagement_Plan_Task__c>();
+        List<Engagement_Plan_Task__c> tasksForUpdate = new List<Engagement_Plan_Task__c>();
+        Map<Id, Id> existingParentIdsByTaskId = new Map<Id, Id>();
+        Id templateId = template.Id;
+
+        Savepoint sp = Database.setSavepoint(); 
+        try {
             upsert template;
 
             delete tasksToDelete;
-
-            list<Engagement_Plan_Task__c> tasksForInsert = new List<Engagement_Plan_Task__c>();
-            list<Engagement_Plan_Task__c> tasksForUpdate = new List<Engagement_Plan_Task__c>();
 
             //first, find and insert all EP Tasks without an Id
             for (TaskWrapper wrapper : mapTaskWrappers.values()) {
                 Engagement_Plan_Task__c epTask = wrapper.detail;
                 epTask.Engagement_Plan_Template__c = template.id;
-                if (String.isBlank(epTask.Name)) {
-                    epTask.Name.addError(Label.NameRequired);
-                    return null;
-                }
+
                 if (epTask.Id == null) {
                     tasksForInsert.add(epTask);
                 }
@@ -233,9 +239,13 @@ public with sharing class EP_ManageEPTemplate_CTRL {
             //then, fill out any parent lookups and update everything
             for (TaskWrapper wrapper : mapTaskWrappers.values()) {
                 Engagement_Plan_Task__c epTask = wrapper.detail;
+
+                existingParentIdsByTaskId.put(epTask.Id, epTask.Parent_Task__c);
+
                 if (epTask.Parent_Task__c == null && wrapper.parent != null) {
                     epTask.Parent_Task__c = wrapper.parent.detail.Id;
                 }
+
                 tasksForUpdate.add(epTask);
             }
 
@@ -247,7 +257,30 @@ public with sharing class EP_ManageEPTemplate_CTRL {
             source.setRedirect(true);
             source.getParameters().put('t',''+(System.currentTimeMillis()));
             return source;
+
         } catch (Exception ex) {
+            Database.rollback(sp);
+
+            //rollback new Template creation
+            template.Id = templateId;
+
+            //rollback Task insert
+            for (Engagement_Plan_Task__c task : tasksForInsert) {
+                task.Id = null;
+            }
+            //rollback Task Parent assignment
+            for (TaskWrapper wrapper : mapTaskWrappers.values()) {
+                Engagement_Plan_Task__c epTask = wrapper.detail;
+
+                Id existingParentId = epTask.Id == null
+                    ? null
+                    : existingParentIdsByTaskId.get(epTask.Id);
+
+                epTask.Parent_Task__c = existingParentId != null
+                    ? existingParentId
+                    : wrapper.parent != null ? wrapper.parent.detail.Id : null;
+            }
+
             ApexPages.addMessages(ex);
             return null;
         }
