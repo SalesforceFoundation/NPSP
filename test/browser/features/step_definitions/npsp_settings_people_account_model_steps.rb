@@ -53,7 +53,7 @@ Then(/^I should see the default Account Model settings on the page$/) do
 end
 
 Then(/^Account Model settings should be saved$/) do
-  expect(on(NPSPAccountModelSettingsPage).changed_account_model_element.when_present(15).visible?).to be(true)
+  expect(on(NPSPAccountModelSettingsPage).changed_account_model_element.when_present(30).visible?).to be(true)
 end
 
 Then(/^when I refresh the Account Model Settings page my Account Model changes should be visible$/) do

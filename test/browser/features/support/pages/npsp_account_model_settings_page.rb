@@ -5,4 +5,5 @@ class NPSPAccountModelSettingsPage
   span(:changed_account_model, text: 'Organization')
   select_list(:household_account_record_type, name: /slHHAR/)
   select_list(:one_to_one_record_type, name: /slOORT/)
+  button(:save_button, id: /saveCon/)
 end
