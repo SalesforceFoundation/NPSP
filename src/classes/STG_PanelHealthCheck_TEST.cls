@@ -213,4 +213,264 @@ public with sharing class STG_PanelHealthCheck_TEST {
         System.assertEquals(2, hc.listDR[0].strDetails.countMatches('<li>'),
                 'There should be two warning messages generated for this\n' + hc.listDR[0]);
     }
+
+    /*******************************************************************************************************
+    * @description verify that the health check test for verifying no missing payments succeeds when we
+    * have an opp with payments.
+    */ 
+    static testmethod void check() {
+
+        npe01__Contacts_And_Orgs_Settings__c PaymentsSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true));
+        
+        Account acc = new Account(name='my account');
+        insert acc;
+        Opportunity opp = new Opportunity(Name='my opp', StageName=UTIL_UnitTestData_TEST.getClosedWonStage(), 
+            CloseDate=system.Today(), Amount=100, AccountId=acc.Id);
+        insert opp;
+        system.assertEquals(1, [select count() from npe01__OppPayment__c]);
+        
+        STG_PanelHealthCheck_CTRL hc = new STG_PanelHealthCheck_CTRL();
+        system.assertEquals(0, hc.listDR.size());
+        
+        Test.startTest();
+        hc.verifyNoMissingOppPayments();
+        Test.stopTest();
+        
+        system.assertEquals(1, hc.listDR.size());
+        system.assertEquals(STG_PanelHealthCheck_CTRL.statusSuccess, hc.listDR[0].strStatus);
+    }
+
+    /*******************************************************************************************************
+    * @description In this test scenario, we set the a non default Household Record Type in the Contact And Orgs Settings.
+    *              This should create a Failed Detect Result the Test.
+    */ 
+    static testmethod void test_VerifyAccountDefaultRecordType_NonDefaultRT_In_SettingsHHRT() {
+        //Check if the Org has more than 1 Record Type for Account.
+        Schema.RecordTypeInfo accountDefaultRecordTypeInfo;
+        if(Account.SObjectType.getDescribe().getRecordTypeInfos().size() < 2) {
+            return;
+        }
+        //Get the Default Account RecordType for the current user.
+        for(Schema.RecordTypeInfo accountRecordTypeInfo : Account.SObjectType.getDescribe().getRecordTypeInfos()) {
+            if(accountRecordTypeInfo.isDefaultRecordTypeMapping() == false) {
+                accountDefaultRecordTypeInfo = accountRecordTypeInfo;
+                break;
+            }
+        }
+
+        //Set the non default Account Record in the HouseHold Model Custom Settings
+        npe01__Contacts_And_Orgs_Settings__c settings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c (npe01__HH_Account_RecordTypeID__c = accountDefaultRecordTypeInfo.getRecordTypeId())
+        );
+
+        //Run the Health Check to verify the Account default Record Type.
+        STG_PanelHealthCheck_CTRL panelHealthCheckController = new STG_PanelHealthCheck_CTRL();
+        panelHealthCheckController.verifyAccountDefaultRecordType();
+
+        //Confirm there is a Success Detect Result
+        System.assertEquals(1, panelHealthCheckController.listDR.size(), 'We should have 1 Detect Result');
+        System.assertEquals(Label.healthLabelAccountDefaultRT, panelHealthCheckController.listDR[0].strName);
+        System.assertEquals(STG_PanelHealthCheck_CTRL.statusSuccess, panelHealthCheckController.listDR[0].strStatus);
+        System.assertEquals(null, panelHealthCheckController.listDR[0].strDetails);
+        System.assertEquals(null, panelHealthCheckController.listDR[0].strSolution);
+    }
+
+    /*******************************************************************************************************
+    * @description In this test scenario, we set the a non default One To One Record Type in the Contact And Orgs Settings.
+    *              This should create a Failed Detect Result the Test.
+    */
+    static testmethod void test_VerifyAccountDefaultRecordType_NonDefaultRT_In_SettingsOneToOneRT() {
+        //Check if the Org has more than 1 Record Type for Account.
+        Schema.RecordTypeInfo accountDefaultRecordTypeInfo;
+        if(Account.SObjectType.getDescribe().getRecordTypeInfos().size() < 2) {
+            return;
+        }
+        //Get the Default Account RecordType for the current user.
+        for(Schema.RecordTypeInfo accountRecordTypeInfo : Account.SObjectType.getDescribe().getRecordTypeInfos()) {
+            if(accountRecordTypeInfo.isDefaultRecordTypeMapping() == false) {
+                accountDefaultRecordTypeInfo = accountRecordTypeInfo;
+                break;
+            }
+        }
+
+        //Set the non default Account Record in the One To One Model Custom Settings
+        npe01__Contacts_And_Orgs_Settings__c settings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c (npe01__One_to_One_RecordTypeID__c = accountDefaultRecordTypeInfo.getRecordTypeId())
+        );
+
+        //Run the Health Check to verify the Account default Record Type.
+        STG_PanelHealthCheck_CTRL panelHealthCheckController = new STG_PanelHealthCheck_CTRL();
+        panelHealthCheckController.verifyAccountDefaultRecordType();
+
+        //Confirm there is a Success Detect Result
+        System.assertEquals(1, panelHealthCheckController.listDR.size(), 'We should have 1 Detect Result');
+        System.assertEquals(Label.healthLabelAccountDefaultRT, panelHealthCheckController.listDR[0].strName);
+        System.assertEquals(STG_PanelHealthCheck_CTRL.statusSuccess, panelHealthCheckController.listDR[0].strStatus);
+        System.assertEquals(null, panelHealthCheckController.listDR[0].strDetails);
+        System.assertEquals(null, panelHealthCheckController.listDR[0].strSolution);
+    }
+
+    /*******************************************************************************************************
+    * @description In this test scenario, we set the Default Househod Record Type in the Contact And Orgs Settings.
+    *              This should create a Failed Detect Result the Test.
+    */ 
+    static testmethod void test_VerifyAccountDefaultRecordType_DefaultRT_In_SettingsHHRT() {
+        //Get the Default Account RecordType for the current user.
+        Schema.RecordTypeInfo accountDefaultRecordTypeInfo;
+        for(Schema.RecordTypeInfo accountRecordTypeInfo : Account.SObjectType.getDescribe().getRecordTypeInfos()) {
+            if(accountRecordTypeInfo.isDefaultRecordTypeMapping()) {
+                accountDefaultRecordTypeInfo = accountRecordTypeInfo;
+                break;
+            }
+        }
+
+        //Set the default Account Record in the HouseHold Model Custom Settings
+        npe01__Contacts_And_Orgs_Settings__c settings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c (npe01__HH_Account_RecordTypeID__c = accountDefaultRecordTypeInfo.getRecordTypeId())
+        );
+
+        //Run the Health Check to verify the Account default Record Type.
+        STG_PanelHealthCheck_CTRL panelHealthCheckController = new STG_PanelHealthCheck_CTRL();
+        panelHealthCheckController.verifyAccountDefaultRecordType();
+
+        //Confirm there is a Failed Detect Result
+        System.assertEquals(1, panelHealthCheckController.listDR.size(), 'We should have 1 Detect Result');
+        System.assertEquals(Label.healthLabelAccountDefaultRT, panelHealthCheckController.listDR[0].strName, 'The Dectect Result should be the one the');
+        System.assertEquals(STG_PanelHealthCheck_CTRL.statusError, panelHealthCheckController.listDR[0].strStatus);
+        System.assertEquals(Label.healthDetailsAccountDefaultRTIssue, panelHealthCheckController.listDR[0].strDetails);
+        System.assertEquals(
+            String.format(Label.healthDetailsAccountDefaultRTIssue, new List<String>{accountDefaultRecordTypeInfo.getName()}),
+            panelHealthCheckController.listDR[0].strSolution
+        );
+    }
+
+    /*******************************************************************************************************
+    * @description In this test scenario, we set the Default One To One Record Type in the Contact And Orgs Settings.
+    *              This should create a Failed Detect Result the Test.
+    */ 
+    static testmethod void test_VerifyAccountDefaultRecordType_DefaultRT_In_SettingsOneToOneRT() {
+        //Get the Default Account RecordType for the current user.
+        Schema.RecordTypeInfo accountDefaultRecordTypeInfo;
+        for(Schema.RecordTypeInfo accountRecordTypeInfo : Account.SObjectType.getDescribe().getRecordTypeInfos()) {
+            if(accountRecordTypeInfo.isDefaultRecordTypeMapping()) {
+                accountDefaultRecordTypeInfo = accountRecordTypeInfo;
+                break;
+            }
+        }
+
+        //Set the default Account Record in the One To One Model Custom Settings
+        npe01__Contacts_And_Orgs_Settings__c settings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c (npe01__One_to_One_RecordTypeID__c = accountDefaultRecordTypeInfo.getRecordTypeId())
+        );
+
+        //Run the Health Check to verify the Account default Record Type.
+        STG_PanelHealthCheck_CTRL panelHealthCheckController = new STG_PanelHealthCheck_CTRL();
+        panelHealthCheckController.verifyAccountDefaultRecordType();
+
+        //Confirm there is a Failed Detect Result
+        System.assertEquals(1, panelHealthCheckController.listDR.size(), 'We should have 1 Detect Result');
+        System.assertEquals(Label.healthLabelAccountDefaultRT, panelHealthCheckController.listDR[0].strName);
+        System.assertEquals(STG_PanelHealthCheck_CTRL.statusError, panelHealthCheckController.listDR[0].strStatus);
+        System.assertEquals(Label.healthDetailsAccountDefaultRTIssue, panelHealthCheckController.listDR[0].strDetails);
+        System.assertEquals(
+            String.format(Label.healthDetailsAccountDefaultRTIssue, new List<String>{accountDefaultRecordTypeInfo.getName()}),
+            panelHealthCheckController.listDR[0].strSolution
+        );
+    }
+
+    /*******************************************************************************************************
+    * @description In this test scenario, we set an Invalid value of Household Record Type in the opportunity And Orgs Settings.
+                   In this case, we use a opportunity Record Type as an invalid value for the One to One Record Type.
+    *              This should create a Failed Detect Result the Test.
+    */ 
+    static testmethod void test_VerifyAccountDefaultRecordType_InvalidRT_In_SettingsHHRT() {
+         //Get a random opportunity RecordType for the current user.
+        Schema.RecordTypeInfo opportunityRecordTypeInfo = Opportunity.SObjectType.getDescribe().getRecordTypeInfos()[0];
+
+        //Set the opportunity Record in the One To One Model Custom Settings
+        npe01__Contacts_And_Orgs_Settings__c settings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c (npe01__HH_Account_RecordTypeID__c = opportunityRecordTypeInfo.getRecordTypeId())
+        );
+
+       //Run the Health Check to verify the Account default Record Type.
+        STG_PanelHealthCheck_CTRL panelHealthCheckController = new STG_PanelHealthCheck_CTRL();
+        panelHealthCheckController.verifyAccountDefaultRecordType();
+
+        //Confirm there is a Failed Detect Result
+        System.assertEquals(1, panelHealthCheckController.listDR.size(), 'We should have 1 Detect Result');
+        System.assertEquals(Label.healthLabelAccountDefaultRT, panelHealthCheckController.listDR[0].strName);
+        System.assertEquals(STG_PanelHealthCheck_CTRL.statusError, panelHealthCheckController.listDR[0].strStatus);
+        System.assertEquals(Label.healthDetailsAccountDefaultRTInvalid, panelHealthCheckController.listDR[0].strDetails);
+        System.assertEquals(Label.healthSolutionAccountDefaultRTInvalid, panelHealthCheckController.listDR[0].strSolution);
+    }
+
+    /*******************************************************************************************************
+    * @description In this test scenario, we set an Invalid value of One To One Record Type in the Contact And Orgs Settings.
+                   In this case, we use a Contact Record Type as an invalid value for the One to One Record Type.
+    *              This should create a Failed Detect Result the Test.
+    */ 
+    static testmethod void test_VerifyAccountDefaultRecordType_InvalidRT_In_SettingsOneToOneRT() {
+        //Get a random Contact RecordType for the current user.
+        Schema.RecordTypeInfo opportunityRecordTypeInfo = Opportunity.SObjectType.getDescribe().getRecordTypeInfos()[0];
+
+        //Set the Contact Record in the One To One Model Custom Settings
+        npe01__Contacts_And_Orgs_Settings__c settings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c (npe01__One_to_One_RecordTypeID__c = opportunityRecordTypeInfo.getRecordTypeId())
+        );
+
+        //Run the Health Check to verify the Account default Record Type.
+        STG_PanelHealthCheck_CTRL panelHealthCheckController = new STG_PanelHealthCheck_CTRL();
+        panelHealthCheckController.verifyAccountDefaultRecordType();
+
+        //Confirm there is a Failed Detect Result
+        System.assertEquals(1, panelHealthCheckController.listDR.size(), 'We should have 1 Detect Result');
+        System.assertEquals(Label.healthLabelAccountDefaultRT, panelHealthCheckController.listDR[0].strName);
+        System.assertEquals(STG_PanelHealthCheck_CTRL.statusError, panelHealthCheckController.listDR[0].strStatus);
+        System.assertEquals(Label.healthDetailsAccountDefaultRTInvalid, panelHealthCheckController.listDR[0].strDetails);
+        System.assertEquals(Label.healthSolutionAccountDefaultRTInvalid, panelHealthCheckController.listDR[0].strSolution);
+    }
+
+    /*******************************************************************************************************
+    * @description In this test scenario, we set an Invalid ID of Household Record Type in the Contact And Orgs Settings.
+    *              This should create a Failed Detect Result the Test.
+    */ 
+    static testmethod void test_VerifyAccountDefaultRecordType_InvalidIDRT_In_SettingsHHRT() {
+        //Set the default Account Record in the One To One Model Custom Settings
+        npe01__Contacts_And_Orgs_Settings__c settings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c (npe01__HH_Account_RecordTypeID__c = 'NOT_AN_ID')
+        );
+
+        //Run the Health Check to verify the Account default Record Type.
+        STG_PanelHealthCheck_CTRL panelHealthCheckController = new STG_PanelHealthCheck_CTRL();
+        panelHealthCheckController.verifyAccountDefaultRecordType();
+
+        //Confirm there is a Failed Detect Result
+        System.assertEquals(1, panelHealthCheckController.listDR.size(), 'We should have 1 Detect Result');
+        System.assertEquals(Label.healthLabelAccountDefaultRT, panelHealthCheckController.listDR[0].strName);
+        System.assertEquals(STG_PanelHealthCheck_CTRL.statusError, panelHealthCheckController.listDR[0].strStatus);
+        System.assertEquals(true, String.isNotBlank(panelHealthCheckController.listDR[0].strDetails), 'A System.Exception should be thrown');
+        System.assertEquals(null, panelHealthCheckController.listDR[0].strSolution);
+    }
+
+    /*******************************************************************************************************
+    * @description In this test scenario, we set an Invalid ID of One To One Record Type in the Contact And Orgs Settings.
+    *              This should create a Failed Detect Result the Test.
+    */ 
+    static testmethod void test_VerifyAccountDefaultRecordType_InvalidIDRT_In_SettingsOneToOneRT() {
+        //Set the Contact Record in the One To One Model Custom Settings
+        npe01__Contacts_And_Orgs_Settings__c settings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c (npe01__One_to_One_RecordTypeID__c = 'NOT_AN_ID')
+        );
+
+        //Run the Health Check to verify the Account default Record Type.
+        STG_PanelHealthCheck_CTRL panelHealthCheckController = new STG_PanelHealthCheck_CTRL();
+        panelHealthCheckController.verifyAccountDefaultRecordType();
+
+        //Confirm there is a Failed Detect Result
+        System.assertEquals(1, panelHealthCheckController.listDR.size(), 'We should have 1 Detect Result');
+        System.assertEquals(STG_PanelHealthCheck_CTRL.statusError, panelHealthCheckController.listDR[0].strStatus);
+        System.assertEquals(true, String.isNotBlank(panelHealthCheckController.listDR[0].strDetails), 'A System.Exception should be thrown');
+        System.assertEquals(null, panelHealthCheckController.listDR[0].strSolution);
+    }
 }
