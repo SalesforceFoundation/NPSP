@@ -201,7 +201,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         }
         return currencySymbol;
     }
-
+    
     /** @description Adds an empty row to the bottom of the list and refreshes the page.*/
     public pageReference addRow() {
         Allocation__c allo = new Allocation__c();
@@ -234,11 +234,12 @@ public with sharing class ALLO_ManageAllocations_CTRL {
 
     /** @description Saves changes and returns user to parent object detail page.*/
     public pageReference saveClose() {
-        list<Allocation__c> listAlloForInsert = new list<Allocation__c>();
-        list<Allocation__c> listAlloForUpdate = new list<Allocation__c>();
         pageReference source = new pageReference('/'+parentId);
         source.setRedirect(true);
         source.getParameters().put('t',''+(System.currentTimeMillis()));
+        
+        list<Allocation__c> listAlloForInsert = new list<Allocation__c>();
+        list<Allocation__c> listAlloForUpdate = new list<Allocation__c>();
 
         //split into insert and update cases so we can reset recursion flags for each operation
         for (Allocation__c allo : listAllo) {
@@ -246,6 +247,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             else listAlloForInsert.add(allo);
         }
 
+        Savepoint sp = Database.setSavepoint(); 
         try {
             if (!listAlloForDelete.isEmpty()) {
                 TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, false);
@@ -266,6 +268,8 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             
             return source;
         } catch (Exception e) {
+            Database.rollback(sp);
+
             ApexPages.addMessages(e);
             return null;
         }

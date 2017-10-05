@@ -75,12 +75,7 @@ private class ALLO_ManageAllocations_TEST {
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='foo');
         insert gau;
 
-        PageReference pageRef = Page.ALLO_ManageAllocations;
-        Test.setCurrentPage(pageRef);
-        ApexPages.currentPage().getParameters().put('id', opp.id);
-        ALLO_ManageAllocations_CTRL ctrl = new ALLO_ManageAllocations_CTRL(
-            new ApexPages.StandardSetController(new List<Allocation__c>())
-        );
+        ALLO_ManageAllocations_CTRL ctrl = setUpController(opp.Id);
 
         system.assertEquals(1,ctrl.listAllo.size(),'The list of allocations should have a single empty allocation.');
         system.assertEquals(null,ctrl.listAllo[0].id,'The allocation should have no Id.');
@@ -111,8 +106,6 @@ private class ALLO_ManageAllocations_TEST {
         if (strTestOnly != '*' && strTestOnly != 'testCam') return;
         setupSettings(null);
         
-        Account acc = new Account(Name='foo');
-        insert acc;
         General_Accounting_Unit__c campaigngau = new General_Accounting_Unit__c(Name='foo');
         insert campaigngau;
         Campaign cam = new Campaign(Name='Foo', IsActive=true);
@@ -125,12 +118,7 @@ private class ALLO_ManageAllocations_TEST {
         alloForInsert.add(amountAllo);
         insert alloForInsert;
 
-        PageReference pageRef = Page.ALLO_ManageAllocations;
-        Test.setCurrentPage(pageRef);
-        ApexPages.currentPage().getParameters().put('id', cam.id);
-        ALLO_ManageAllocations_CTRL ctrl = new ALLO_ManageAllocations_CTRL(
-            new ApexPages.StandardSetController(new List<Allocation__c>())
-        );
+        ALLO_ManageAllocations_CTRL ctrl = setUpController(cam.Id);
 
         system.assertEquals(2,ctrl.listAllo.size(),'The list of allocations should have two current campaign allocations.');
 
@@ -185,12 +173,7 @@ private class ALLO_ManageAllocations_TEST {
         system.assertEquals(oppCnt * 2, [SELECT Count() FROM Allocation__c WHERE Opportunity__r.npe03__Recurring_Donation__c = :rd.Id],
             'There should be two Allocations per Installment Opportunity');
 
-        PageReference pageRef = Page.ALLO_ManageAllocations;
-        Test.setCurrentPage(pageRef);
-        ApexPages.currentPage().getParameters().put('id', rd.id);
-        ALLO_ManageAllocations_CTRL ctrl = new ALLO_ManageAllocations_CTRL(
-            new ApexPages.StandardSetController(new List<Allocation__c>())
-        );
+        ALLO_ManageAllocations_CTRL ctrl = setUpController(rd.Id);
 
         system.assertEquals(2,ctrl.listAllo.size(),'The list of allocations should have two current campaign allocations.');
 
@@ -214,6 +197,118 @@ private class ALLO_ManageAllocations_TEST {
                 'There should still be two Allocations per Installment Opportunity');
     }
 
+    /*********************************************************************************************************
+    @description 
+        Test save rollback when an exception occurs 
+    verify:
+        The transaction is completely rolled back and there is no partial commit
+    **********************************************************************************************************/ 
+    private static testMethod void testSaveRollsBackAllDmlsOnError() {
+        if (strTestOnly != '*' && strTestOnly != 'testSaveRollsBackAllDmlsOnError') return;
+
+        setupSettings(null);
+
+        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'gau');
+        Campaign campaign = new Campaign(Name = 'TestCampaign', IsActive = true);        
+        insert new sObject[] { gau, campaign };
+
+        Allocation__c[] allocations = new Allocation__c[]{
+            new Allocation__c(Campaign__c = campaign.Id, Amount__c = 100, General_Accounting_Unit__c = gau.Id),
+            new Allocation__c(Campaign__c = campaign.Id, Amount__c = 200, General_Accounting_Unit__c = gau.Id),
+            new Allocation__c(Campaign__c = campaign.Id, Amount__c = 300, General_Accounting_Unit__c = gau.Id)
+        };
+        insert allocations;
+
+        ALLO_ManageAllocations_CTRL ctrl = setUpController(campaign.Id);
+
+        System.assertEquals(allocations.size(), ctrl.listAllo.size(), 'Allocations in the controller should match existing records: ' + ctrl.listAllo);
+
+        //delete two Allocations
+        ctrl.rowNumber = 0;
+        ctrl.delRow();
+        ctrl.delRow();
+        System.assertEquals(1, ctrl.listAllo.size(), 'Two Allocations should be deleted: ' + ctrl.listAllo);
+
+        //update an Allocation
+        ctrl.listAllo[0].Amount__c = 1000;
+
+        //add a new Allocation
+        ctrl.rowNumber = 1;
+        ctrl.addRow();        
+        ctrl.listAllo[1].Percent__c = 200; //cause the Allocation insert to fail
+        ctrl.listAllo[1].General_Accounting_Unit__c = gau.id;
+
+        Test.startTest();
+        PageReference retPage = ctrl.saveClose();
+        Test.stopTest();
+
+        System.assertEquals(null, retPage, 'The return page on the error should be null');
+
+        Map<Id, Allocation__c> actualAllocationsById = new Map<Id, Allocation__c>([SELECT Percent__c, Amount__c FROM Allocation__c WHERE Campaign__c = :campaign.id]);
+        System.assertEquals(allocations.size(), actualAllocationsById.size(), 'The Allocations should be unchanged: ' + actualAllocationsById.values());
+
+        for (Allocation__c alloc : allocations) {
+            Allocation__c actual = actualAllocationsById.get(alloc.Id);
+
+            System.assertEquals(alloc.Amount__c, actual.Amount__c, 'Allocation Amount should be unchanged: ' + actual);
+        }
+    }
+
+    /*********************************************************************************************************
+    @description 
+        Test re-saving of Allocations after an error is fixed 
+    verify:
+        Records are saved as expected
+    **********************************************************************************************************/ 
+    private static testMethod void testResaveSucceedsWhenErrorIsFixed() {
+        if (strTestOnly != '*' && strTestOnly != 'testResaveSucceedsWhenErrorIsFixed') return;
+
+        setupSettings(null);
+
+        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'gau');
+        Campaign campaign = new Campaign(Name = 'TestCampaign', IsActive = true);        
+        insert new sObject[] { gau, campaign };
+
+        Allocation__c[] allocations = new Allocation__c[]{
+            new Allocation__c(Campaign__c = campaign.Id, Amount__c = 100, General_Accounting_Unit__c = gau.Id)
+        };
+        insert allocations;
+
+        ALLO_ManageAllocations_CTRL ctrl = setUpController(campaign.Id);
+
+        System.assertEquals(allocations.size(), ctrl.listAllo.size(), 'Allocations in the controller should match existing records: ' + ctrl.listAllo);
+
+        ctrl.listAllo[0].Amount__c = 1000;
+
+        ctrl.rowNumber = 0;
+        ctrl.addRow();   
+        ctrl.listAllo[1].Amount__c = 2000; 
+        ctrl.listAllo[1].General_Accounting_Unit__c = gau.id;
+
+        ctrl.rowNumber = 1;
+        ctrl.addRow();        
+        ctrl.listAllo[2].Percent__c = 200; //cause the Allocation insert to fail
+        ctrl.listAllo[2].General_Accounting_Unit__c = gau.id;
+
+        PageReference retPage = ctrl.saveClose();        
+        System.assertEquals(null, retPage, 'The return page on the error should be null');
+
+        Map<Id, Allocation__c> actualAllocationsById = new Map<Id, Allocation__c>([SELECT Percent__c, Amount__c FROM Allocation__c WHERE Campaign__c = :campaign.id]);
+        System.assertEquals(allocations.size(), actualAllocationsById.size(), 'The Allocations should be unchanged: ' + actualAllocationsById.values());
+
+        //fix the error
+        ctrl.listAllo[2].Percent__c = 20; 
+
+        Test.startTest();
+        retPage = ctrl.saveClose();
+        Test.stopTest();
+
+        System.assertNotEquals(null, retPage, 'The return page on success should be provided. Page messages: ' + ApexPages.getMessages());
+
+        actualAllocationsById = new Map<Id, Allocation__c>([SELECT Percent__c, Amount__c FROM Allocation__c WHERE Campaign__c = :campaign.id]);
+        System.assertEquals(3, actualAllocationsById.size(), 'New Allocations should be created: ' + actualAllocationsById.values());
+    }
+
     /*******************************************************************************************************
     * @description Runs manage allocations page on a general allocation and verifies an
     * error is thrown when the page action to getPageLoadValidationmessages is called.
@@ -228,13 +323,9 @@ private class ALLO_ManageAllocations_TEST {
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'foo');
         insert gau;
 
-        PageReference pageRef = Page.ALLO_ManageAllocations;
-        Test.setCurrentPage(pageRef);
-        ApexPages.currentPage().getParameters().put('id', gau.id);
-        ALLO_ManageAllocations_CTRL ctrl = new ALLO_ManageAllocations_CTRL(
-            new ApexPages.StandardSetController(new List<Allocation__c>())
-        );
+        ALLO_ManageAllocations_CTRL ctrl = setUpController(gau.Id);
         ctrl.getPageLoadValidationMessages();
+
         List<Apexpages.Message> msgs = ApexPages.getMessages();
         Boolean errorFound = false;
         for (Apexpages.Message msg : msgs){
@@ -259,13 +350,9 @@ private class ALLO_ManageAllocations_TEST {
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'foo');
         insert gau;
 
-        PageReference pageRef = Page.ALLO_ManageAllocations;
-        Test.setCurrentPage(pageRef);
-        ApexPages.currentPage().getParameters().put('id', opp.id);
-        ALLO_ManageAllocations_CTRL ctrl = new ALLO_ManageAllocations_CTRL(
-            new ApexPages.StandardSetController(new List<Allocation__c>())
-        );
+        ALLO_ManageAllocations_CTRL ctrl = setUpController(opp.Id);
         ctrl.getPageLoadValidationMessages();
+
         List<Apexpages.Message> msgs = ApexPages.getMessages();
         Boolean errorFound = false;
         for (Apexpages.Message msg : msgs){
@@ -290,13 +377,9 @@ private class ALLO_ManageAllocations_TEST {
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'foo');
         insert gau;
 
-        PageReference pageRef = Page.ALLO_ManageAllocations;
-        Test.setCurrentPage(pageRef);
-        ApexPages.currentPage().getParameters().put('id', opp.id);
-        ALLO_ManageAllocations_CTRL ctrl = new ALLO_ManageAllocations_CTRL(
-            new ApexPages.StandardSetController(new List<Allocation__c>())
-        );
+        ALLO_ManageAllocations_CTRL ctrl = setUpController(opp.Id);
         ctrl.getPageLoadValidationMessages();
+
         List<Apexpages.Message> msgs = ApexPages.getMessages();
         Boolean errorFound = false;
         for (Apexpages.Message msg : msgs){
@@ -350,5 +433,22 @@ private class ALLO_ManageAllocations_TEST {
         ALLO_ManageAllocations_CTRL controller = new ALLO_ManageAllocations_CTRL();
         system.AssertNotEquals(null, controller.getDecimalSeparator());
         system.AssertNotEquals(null, controller.getThousandsSeparator());
+    }
+
+    // Helpers
+    ///////////
+
+    /**
+     * @description Creates the Manage Allocations controller 
+     * @param Id An RD/Campaign/Opportunity Id
+     * @return ALLO_ManageAllocations_CTRL The controller
+     */
+    private static ALLO_ManageAllocations_CTRL setUpController(Id sobjId) {
+        Test.setCurrentPage(Page.ALLO_ManageAllocations);
+        ApexPages.currentPage().getParameters().put('id', sobjId);
+
+        return new ALLO_ManageAllocations_CTRL(
+            new ApexPages.StandardSetController(new List<Allocation__c>())
+        );
     }
 }
