@@ -144,15 +144,9 @@ public with sharing class BDI_SettingsUI_CTRL {
 
         Map<String, Schema.DescribeFieldResult> mapNameToDfr = UTIL_Describe.getAllFieldsDescribe(strObject);
         for (Schema.DescribeFieldResult dfr : mapNameToDfr.values()) {
-            // only allow custom fields that have no namespace
-            if (dfr.isCustom() && dfr.getName().countMatches('__') == 1) {
-                Schema.Displaytype dt = dfr.getType();
-                // only strings and numbers
-                if (dt == Schema.DisplayType.String ||
-                    dt == Schema.DisplayType.Integer ||
-                    dt == Schema.DisplayType.Double) {
-                    listSO.add(new SelectOption(dfr.getName(), dfr.getLabel()));
-                }
+            // only allow unique fields and externalId fields
+            if (dfr.isUnique() || dfr.isExternalId()) {
+                listSO.add(new SelectOption(dfr.getName(), dfr.getLabel()));
             }
         }
         return listSO;
