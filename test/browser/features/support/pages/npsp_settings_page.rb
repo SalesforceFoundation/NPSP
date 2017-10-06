@@ -18,7 +18,7 @@ class NPSPSettingsPage
   button(:edit_rel_button, id: /editRel/)
   button(:edit_opp_button, name: /pbOppNaming/)
   a(:households, text: 'Households')
-  span(:loading_message, class: 'loadingText')
+  span(:loading_message, id: 'divLoading')
   a(:opportunity_names, text: 'Opportunity Names')
   a(:people, text: 'People')
   table(:recip_settings_records_table, class: 'slds-table slds-table--bordered')

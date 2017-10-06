@@ -22,5 +22,5 @@ Feature: NPSP Settings People Account Model
   Scenario: Account Model save values
     When I set Household Account Record Type to "Organization"
       And I click Save Account Model Settings
-    Then Account Model settings should be saved
-      And when I refresh the Account Model Settings page my Account Model changes should be visible
+    Then Account Model save should be completed
+      And Account Model changes should be visible
