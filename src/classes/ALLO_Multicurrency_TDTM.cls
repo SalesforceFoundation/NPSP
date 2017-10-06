@@ -136,7 +136,7 @@ public class ALLO_Multicurrency_TDTM extends TDTM_Runnable {
 
             // If ACM is enabled in the Org and the custom settings is enabled to store the dated exchange rate
             // on the Allocation object, get the effective exchange rate to convert to the corporate currency
-            // and store on the Allocation record
+            // and store in a customer defined field on the Allocation record
             if (ALLO_Allocations_TDTM.storeDatedConversionRate && allo.Opportunity__c != null) {
                 Date oppCloseDate = (Date)mapIdToParentObject.get(ALLO_Allocations_TDTM.getParentId(allo)).get('CloseDate');
                 Decimal exchangeRate = UTIL_CurrencyConversion.getExchangeRate(oppCloseDate,

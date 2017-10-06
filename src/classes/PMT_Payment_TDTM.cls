@@ -118,8 +118,9 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
                     pmt.put('CurrencyIsoCode', oppCurrency);
                 }
 
-                // Get the applied dated exchange rate to convert the amount into the org default currency
-                // and store in a field on the Payment object
+                // If ACM is enabled in the Org and the custom settings is enabled to store the dated exchange rate,
+                // get the applied dated exchange rate to convert the amount into the org default currency
+                // and store in a customer defined field on the Payment object
                 if (storeDatedConversionRate && pmt.npe01__Payment_Date__c != null &&
                         (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate)) {
                     Decimal exchangeRate = UTIL_CurrencyConversion.getExchangeRate(pmt.npe01__Payment_Date__c,
@@ -133,7 +134,7 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
                             pmt.put(householdSettings.Field_for_Effective_Exchange_Rate__c, exchangeRate.format());
                         }
                     } catch (Exception ex) {
-                        // ignore the error if this field doesn't actually exist
+                        // ignore the error if this field doesn't actually exist.
                     }
                 }
             }

@@ -753,7 +753,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
         // If ACM is enabled in the Org and the custom settings is enabled to store the dated exchange rate
         // on the Allocation object, get the effective exchange rate to convert to the corporate currency
-        // and store on the Allocation record
+        // and store in a customer defined field on the Allocation record
         if (storeDatedConversionRate && defaultAllo.Opportunity__c != null) {
             Date oppCloseDate = opp.CloseDate;
             // To allow for testing, if the org isn't a true multi-currency org use the (mocked) corp currency code

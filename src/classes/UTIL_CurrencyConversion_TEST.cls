@@ -132,8 +132,8 @@ private class UTIL_CurrencyConversion_TEST {
         UtilCurrencyCacheMock mockcurrCache = new UtilCurrencyCacheMock();
         UTIL_CurrencyCache.instance = mockcurrCache;
         mockcurrCache.defaultRate = 1.23;
-        mockcurrCache.effectiveRatesReturn = new List<Decimal>{ 1.25 };
-        mockcurrCache.effectiveDatesReturn = new List<Date>{ Date.Today().addYears(-5) };
+        mockcurrCache.effectiveRatesReturn = new List<Decimal>{ 1.25, 1.27, 1.29 };
+        mockcurrCache.effectiveDatesReturn = new List<Date>{ Date.Today().addYears(-1), Date.Today().addYears(-2), Date.Today().addYears(-3) };
 
         // Enable for standard currency management in the mock
         UTIL_Currency_TEST.UtilCurrencyMock mockCurr = new UTIL_Currency_TEST.UtilCurrencyMock();
@@ -152,7 +152,7 @@ private class UTIL_CurrencyConversion_TEST {
                 Name = 'success',
                 Amount = 100,
                 AccountID = acc.id,
-                CloseDate = system.today(),
+                CloseDate = Date.Today().addYears(-2).addDays(30),
                 StageName = UTIL_UnitTestData_TEST.getClosedWonStage());
         if (nonDefaultCurrencyType != null) {
             opp.put('CurrencyIsoCode', (String) nonDefaultCurrencyType.get('IsoCode'));
@@ -163,9 +163,19 @@ private class UTIL_CurrencyConversion_TEST {
 
         // Can only test the result if multi-currency is enabled
         if (userInfo.isMultiCurrencyOrganization()) {
-            npe01__OppPayment__c pmt = [SELECT Id, npe01__Custom_Payment_Field__c FROM npe01__OppPayment__c LIMIT 1];
-            system.assertEquals('1.25', pmt.npe01__Custom_Payment_Field__c);
+            npe01__OppPayment__c pmt = [SELECT Id, npe01__Custom_Payment_Field__c, npe01__Payment_Date__c FROM npe01__OppPayment__c LIMIT 1];
+            system.assertEquals('1.27', pmt.npe01__Custom_Payment_Field__c,
+                    'The Custom_Payment_Field__c should have a value of 1.27');
+
+            // Update the payment date and test that the effective rate was updated accordingly
+            pmt.npe01__Payment_Date__c = Date.Today();
+            update pmt;
+
+            pmt = [SELECT Id, npe01__Custom_Payment_Field__c FROM npe01__OppPayment__c LIMIT 1];
+            system.assertEquals('1.25', pmt.npe01__Custom_Payment_Field__c,
+                    'The Custom_Payment_Field__c should have a value of 1.25');
         }
+
     }
 
     /**
@@ -203,8 +213,8 @@ private class UTIL_CurrencyConversion_TEST {
         UtilCurrencyCacheMock mockcurrCache = new UtilCurrencyCacheMock();
         UTIL_CurrencyCache.instance = mockcurrCache;
         mockcurrCache.defaultRate = 1.23;
-        mockcurrCache.effectiveRatesReturn = new List<Decimal>{ 1.25 };
-        mockcurrCache.effectiveDatesReturn = new List<Date>{ Date.Today().addYears(-5) };
+        mockcurrCache.effectiveRatesReturn = new List<Decimal>{ 1.25, 1.27, 1.29 };
+        mockcurrCache.effectiveDatesReturn = new List<Date>{ Date.Today().addYears(-1), Date.Today().addYears(-2), Date.Today().addYears(-3) };
 
         // Enable for standard currency management in the mock
         UTIL_Currency_TEST.UtilCurrencyMock mockCurr = new UTIL_Currency_TEST.UtilCurrencyMock();
@@ -236,7 +246,8 @@ private class UTIL_CurrencyConversion_TEST {
                 'Based on the mocked settings this should still return true');
 
         // There's nothing to actually assert here because there is no field available on the Allocation__c
-        // object to store the value in.
+        // object to store the value in. Leaving the code below in place in case there's ever a new field
+        // on the object that the value can be stored into for the test.
         /*if (userInfo.isMultiCurrencyOrganization()) {
             Allocation__c alloc = [SELECT Id, Some_Field_If_There_Was_One__c FROM Allocation__c LIMIT 1];
             system.assert(alloc.Some_Field_If_There_Was_One__c != null);
@@ -249,9 +260,9 @@ private class UTIL_CurrencyConversion_TEST {
      * parameters passed to methods.
      */
     public class UtilCurrencyCacheMock implements UTIL_CurrencyCache.Interface_x {
-        public List<Date> effectiveDatesReturn;
-        public List<Decimal> effectiveRatesReturn;
-        public Decimal defaultRate;
+        public List<Date> effectiveDatesReturn;     // List of dates in Descending date order
+        public List<Decimal> effectiveRatesReturn;  // List of rates matching to above dates
+        public Decimal defaultRate;                 // Default exchange rate for this currency when not using dated rates
 
         public boolean isOrgCacheAvailable() {
             return false;
