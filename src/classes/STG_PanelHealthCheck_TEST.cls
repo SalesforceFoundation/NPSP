@@ -215,35 +215,8 @@ public with sharing class STG_PanelHealthCheck_TEST {
     }
 
     /*******************************************************************************************************
-    * @description verify that the health check test for verifying no missing payments succeeds when we
-    * have an opp with payments.
-    */ 
-    static testmethod void check() {
-
-        npe01__Contacts_And_Orgs_Settings__c PaymentsSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-            new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true));
-        
-        Account acc = new Account(name='my account');
-        insert acc;
-        Opportunity opp = new Opportunity(Name='my opp', StageName=UTIL_UnitTestData_TEST.getClosedWonStage(), 
-            CloseDate=system.Today(), Amount=100, AccountId=acc.Id);
-        insert opp;
-        system.assertEquals(1, [select count() from npe01__OppPayment__c]);
-        
-        STG_PanelHealthCheck_CTRL hc = new STG_PanelHealthCheck_CTRL();
-        system.assertEquals(0, hc.listDR.size());
-        
-        Test.startTest();
-        hc.verifyNoMissingOppPayments();
-        Test.stopTest();
-        
-        system.assertEquals(1, hc.listDR.size());
-        system.assertEquals(STG_PanelHealthCheck_CTRL.statusSuccess, hc.listDR[0].strStatus);
-    }
-
-    /*******************************************************************************************************
     * @description In this test scenario, we set the a non default Household Record Type in the Contact And Orgs Settings.
-    *              This should create a Failed Detect Result the Test.
+    * This should create a Failed Detect Result the Test.
     */ 
     static testmethod void test_VerifyAccountDefaultRecordType_NonDefaultRT_In_SettingsHHRT() {
         //Check if the Org has more than 1 Record Type for Account.
@@ -278,7 +251,7 @@ public with sharing class STG_PanelHealthCheck_TEST {
 
     /*******************************************************************************************************
     * @description In this test scenario, we set the a non default One To One Record Type in the Contact And Orgs Settings.
-    *              This should create a Failed Detect Result the Test.
+    * This should create a Failed Detect Result the Test.
     */
     static testmethod void test_VerifyAccountDefaultRecordType_NonDefaultRT_In_SettingsOneToOneRT() {
         //Check if the Org has more than 1 Record Type for Account.
@@ -313,7 +286,7 @@ public with sharing class STG_PanelHealthCheck_TEST {
 
     /*******************************************************************************************************
     * @description In this test scenario, we set the Default Househod Record Type in the Contact And Orgs Settings.
-    *              This should create a Failed Detect Result the Test.
+    * This should create a Failed Detect Result the Test.
     */ 
     static testmethod void test_VerifyAccountDefaultRecordType_DefaultRT_In_SettingsHHRT() {
         //Get the Default Account RecordType for the current user.
@@ -347,7 +320,7 @@ public with sharing class STG_PanelHealthCheck_TEST {
 
     /*******************************************************************************************************
     * @description In this test scenario, we set the Default One To One Record Type in the Contact And Orgs Settings.
-    *              This should create a Failed Detect Result the Test.
+    * This should create a Failed Detect Result the Test.
     */ 
     static testmethod void test_VerifyAccountDefaultRecordType_DefaultRT_In_SettingsOneToOneRT() {
         //Get the Default Account RecordType for the current user.
@@ -381,8 +354,8 @@ public with sharing class STG_PanelHealthCheck_TEST {
 
     /*******************************************************************************************************
     * @description In this test scenario, we set an Invalid value of Household Record Type in the opportunity And Orgs Settings.
-                   In this case, we use a opportunity Record Type as an invalid value for the One to One Record Type.
-    *              This should create a Failed Detect Result the Test.
+    * In this case, we use a opportunity Record Type as an invalid value for the One to One Record Type.
+    * This should create a Failed Detect Result the Test.
     */ 
     static testmethod void test_VerifyAccountDefaultRecordType_InvalidRT_In_SettingsHHRT() {
          //Get a random opportunity RecordType for the current user.
@@ -407,8 +380,8 @@ public with sharing class STG_PanelHealthCheck_TEST {
 
     /*******************************************************************************************************
     * @description In this test scenario, we set an Invalid value of One To One Record Type in the Contact And Orgs Settings.
-                   In this case, we use a Contact Record Type as an invalid value for the One to One Record Type.
-    *              This should create a Failed Detect Result the Test.
+    * In this case, we use a Contact Record Type as an invalid value for the One to One Record Type.
+    * This should create a Failed Detect Result the Test.
     */ 
     static testmethod void test_VerifyAccountDefaultRecordType_InvalidRT_In_SettingsOneToOneRT() {
         //Get a random Contact RecordType for the current user.
@@ -433,7 +406,7 @@ public with sharing class STG_PanelHealthCheck_TEST {
 
     /*******************************************************************************************************
     * @description In this test scenario, we set an Invalid ID of Household Record Type in the Contact And Orgs Settings.
-    *              This should create a Failed Detect Result the Test.
+    * This should create a Failed Detect Result the Test.
     */ 
     static testmethod void test_VerifyAccountDefaultRecordType_InvalidIDRT_In_SettingsHHRT() {
         //Set the default Account Record in the One To One Model Custom Settings
@@ -455,7 +428,7 @@ public with sharing class STG_PanelHealthCheck_TEST {
 
     /*******************************************************************************************************
     * @description In this test scenario, we set an Invalid ID of One To One Record Type in the Contact And Orgs Settings.
-    *              This should create a Failed Detect Result the Test.
+    * This should create a Failed Detect Result the Test.
     */ 
     static testmethod void test_VerifyAccountDefaultRecordType_InvalidIDRT_In_SettingsOneToOneRT() {
         //Set the Contact Record in the One To One Model Custom Settings
