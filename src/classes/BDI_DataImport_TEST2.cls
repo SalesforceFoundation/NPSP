@@ -1539,5 +1539,35 @@ private with sharing class BDI_DataImport_TEST2 {
         }
         Test.stopTest();
     }
-    
+
+    /*********************************************************************************************************
+    * @description operation:
+    *    unit test for UniqueID handling
+    * verify:
+    *    method returns expected results for various types of fields.
+    **********************************************************************************************************/
+    static testMethod void testUniqueIdHandling() {
+        if (strTestOnly != '*' && strTestOnly != 'testUniqueIdHandling') return;
+
+        Test.startTest();
+
+        system.assertEquals(UTIL_Namespace.StrTokenNSPrefix('Contact1_Website__c'),
+            BDI_DataImportService.strDICustomIDField('Contact1', 'Website'));
+
+        system.assertEquals('Contact1_Foo__c', BDI_DataImportService.strDICustomIDField('Contact1', 'Foo__c'));
+
+        if (UTIL_Namespace.getNamespace().equalsIgnoreCase('npsp')) {
+            system.assertEquals('npsp__Contact1_Bar__c', BDI_DataImportService.strDICustomIDField('Contact1', 'npsp__Bar__c'));
+        } else {
+            system.assertEquals('Contact1_Bar__c', BDI_DataImportService.strDICustomIDField('Contact1', 'npsp__Bar__c'));
+        }
+
+        system.assertEquals('Contact1_Baz__c', BDI_DataImportService.strDICustomIDField('Contact1', 'randomNS__Baz__c'));
+
+        system.assertEquals(UTIL_Namespace.StrTokenNSPrefix('Contact1_Buz__c'),
+            BDI_DataImportService.strDICustomIDField('Contact1', UTIL_Namespace.StrTokenNSPrefix('Buz__c')));
+
+        Test.stopTest();
+    }
+
 }

@@ -195,16 +195,8 @@ global with sharing class BDI_DataImportService {
         // validate settings
         if (diSettings.Contact_Custom_Unique_ID__c != null) {
             // make sure c1 and c2 have the appropriately named field
-            string strFieldname = diSettings.Contact_Custom_Unique_ID__c;
-            string strContact1 = 'Contact1_' + strFieldname;
-            string strContact2 = 'Contact2_' + strFieldname;
-
-            // note that our tests have to use a standard Contact field that matches one of the DI custom fields,
-            // so we add __c and our potential namespace
-            if (Test.isRunningTest()) {
-                strContact1 = UTIL_Namespace.StrTokenNSPrefix('Contact1_' + strFieldname + '__c');
-                strContact2 = UTIL_Namespace.StrTokenNSPrefix('Contact2_' + strFieldname + '__c');
-            }
+            string strContact1 = strDIContactCustomIDField('Contact1', diSettings);
+            string strContact2 = strDIContactCustomIDField('Contact2', diSettings);
 
             if (!UTIL_Describe.isValidField(strDataImportObj, strContact1) ||
                 !UTIL_Describe.isValidField(strDataImportObj, strContact2)) {
@@ -215,16 +207,8 @@ global with sharing class BDI_DataImportService {
 
         if (diSettings.Account_Custom_Unique_ID__c != null) {
             // make sure a1 and a2 have the appropriately named field
-            string strFieldname = diSettings.Account_Custom_Unique_ID__c;
-            string strAccount1 = 'Account1_' + strFieldname;
-            string strAccount2 = 'Account2_' + strFieldname;
-
-            // note that our tests have to use a standard Account field that matches one of the DI custom fields,
-            // so we add __c and our potential namespace
-            if (Test.isRunningTest()) {
-                strAccount1 = UTIL_Namespace.StrTokenNSPrefix('Account1_' + strFieldname + '__c');
-                strAccount2 = UTIL_Namespace.StrTokenNSPrefix('Account2_' + strFieldname + '__c');
-            }
+            string strAccount1 = strDIAccountCustomIDField('Account1', diSettings);
+            string strAccount2 = strDIAccountCustomIDField('Account2', diSettings);
 
             if (!UTIL_Describe.isValidField(strDataImportObj, strAccount1) ||
                 !UTIL_Describe.isValidField(strDataImportObj, strAccount2)) {
@@ -986,13 +970,68 @@ global with sharing class BDI_DataImportService {
 
     /*******************************************************************************************************
     * @description returns the field name of the Contact CustomID field for contact1 or contact2 in the
-    * Data Import object.  Note that if tests are running, it assumes the field is a standard field on
-    * Contact and thus has no trailing __c, but needs to have the __c for accessing in the Data Import object.
-    * @param strCx  which contact to reference (contact1 or contact2)
+    * Data Import object.
+    * @param strCx  which contact to reference (Contact1 or Contact2)
+    * @param diSettings the settings object to read the setting from
     * @return string
     */
-    private string strDIContactCustomIDField(string strCx) {
-        return strCx + '_' + diSettings.Contact_Custom_Unique_ID__c + (test.isRunningTest() ? '__c' : '');
+    private static string strDIContactCustomIDField(string strCx, Data_Import_Settings__c diSettings) {
+        return strDICustomIDField(strCx, diSettings.Contact_Custom_Unique_ID__c);
+    }
+
+    /*******************************************************************************************************
+    * @description returns the field name of the Object's CustomID field in the
+    * Data Import object.  The format of the setting is the full path name to the field on Object.  But
+    * the Data Import field we want to return will need to be different depending on the source.  There
+    * are three cases:
+    *
+    *   - Standard field
+    *       Website => Contact1_Website__c
+    *
+    *   - custom field
+    *       myUniqueId => Contact1_myUniqueId__c
+    *
+    *   - custom field that is namespaced
+    *       ns__UniqueId__c => Contact1_UniqueId__c
+    *       Yes, we assume that even if the object field is packaged, the DI field is not packaged,
+    *       unless the namespace happens to be ours, in which case we'll return ns__Contact1_UniqueId__c
+    *
+    * Note that when running managed under the NPSP namespace, we don't need to add npsp__ in front of
+    * the resultant field.  di.get(fieldname) works without the namespace.
+    *
+    * @param strObjx  which object to reference (Contact1, Contact2, Account1, Account2)
+    * @param strCustomId the custom field from the object
+    * @return string
+    */
+    @TestVisible private static string strDICustomIDField(string strObjx, string strCustomId) {
+        if (strCustomId == null) {
+            return null;
+        }
+
+        // handle standard fields
+        if (!strCustomId.endsWith('__c')) {
+            if (Test.isRunningTest()) {
+                return UTIL_Namespace.StrTokenNSPrefix(strObjx + '_' + strCustomId + '__c');
+            } else {
+                return strObjx + '_' + strCustomId + '__c';
+            }
+        }
+
+        // look for namespace
+        Integer i = strCustomId.indexOf('__');
+        if (i != -1 && i <> strCustomId.indexOf('__c')) {
+            // is it our namespace, in which case this is probably unmanaged npsp code,
+            // so any manual testing will need the namespace in the DI custom field.
+            if (strCustomId.left(i).equalsIgnoreCase(UTIL_Namespace.getNamespace())) {
+                return UTIL_Namespace.StrTokenNSPrefix(strObjx + '_' + strCustomId.substring(i + 2));
+            } else {
+                // skip namespace
+                return strObjx + '_' + strCustomId.substring(i + 2);
+            }
+        }
+
+        // custom fields without namespace
+        return strObjx + '_' + strCustomId;
     }
 
     /*******************************************************************************************************
@@ -1037,7 +1076,7 @@ global with sharing class BDI_DataImportService {
             if (di.Contact1_Work_Phone__c != null)
                 setPhone.add(di.Contact1_Work_Phone__c);
             if (isCustomIDInContactMatchRules) {
-                object val = di.get(strDIContactCustomIDField('Contact1'));
+                object val = di.get(strDIContactCustomIDField('Contact1', diSettings));
                 if (val != null) {
                     if (isCustomIdInContactDatatypeString)
                         setCustomIDString.add(string.valueOf(val));
@@ -1068,7 +1107,7 @@ global with sharing class BDI_DataImportService {
             if (di.Contact2_Work_Phone__c != null)
                 setPhone.add(di.Contact2_Work_Phone__c);
             if (isCustomIDInContactMatchRules) {
-                object val = di.get(strDIContactCustomIDField('Contact2'));
+                object val = di.get(strDIContactCustomIDField('Contact2', diSettings));
                 if (val != null) {
                     if (isCustomIdInContactDatatypeString)
                         setCustomIDString.add(string.valueOf(val));
@@ -1461,7 +1500,7 @@ global with sharing class BDI_DataImportService {
         }
 
         // we need the Contact CustomId key to always be checked second when matching
-        if (isCustomIDInContactMatchRules && (strUniqueId = strNull(di.get(strDIContactCustomIDField(strCx)))) != '') {
+        if (isCustomIDInContactMatchRules && (strUniqueId = strNull(di.get(strDIContactCustomIDField(strCx, diSettings)))) != '') {
             if (!isCustomIdInContactDatatypeString) {
                 strUniqueId = string.valueOf(double.valueOf(strUniqueId));
             }
@@ -1727,14 +1766,14 @@ global with sharing class BDI_DataImportService {
     }
 
     /*******************************************************************************************************
-    * @description returns the field name of the Account CustomID field for account1 or account2 in the
-    * Data Import object.  Note that if tests are running, it assumes the field is a standard field on
-    * Account and thus has no trailing __c, but needs to have the __c for accessing in the Data Import object.
+    * @description returns the field name of the Account CustomID field for Account1 or Account2 in the
+    * Data Import object.
     * @param strAx  which account to reference (account1 or account2)
+    * @param diSettings the settings object to read the setting from
     * @return string
     */
-    private string strDIAccountCustomIDField(string strAx) {
-        return strAx + '_' + diSettings.Account_Custom_Unique_ID__c + (test.isRunningTest() ? '__c' : '');
+    private static string strDIAccountCustomIDField(string strAx, Data_Import_Settings__c diSettings) {
+        return strDICustomIDField(strAx, diSettings.Account_Custom_Unique_ID__c);
     }
 
     /*******************************************************************************************************
@@ -1802,7 +1841,7 @@ global with sharing class BDI_DataImportService {
         }
 
         // we need the Account CustomId key to always be checked second when matching
-        if (isCustomIDInAccountMatchRules && (strUniqueId = strNull(di.get(strDIAccountCustomIDField(strAx)))) != '') {
+        if (isCustomIDInAccountMatchRules && (strUniqueId = strNull(di.get(strDIAccountCustomIDField(strAx, diSettings)))) != '') {
             if (!isCustomIdInAccountDatatypeString) {
                 strUniqueId = string.valueOf(double.valueOf(strUniqueId));
             }
@@ -1854,7 +1893,7 @@ global with sharing class BDI_DataImportService {
             if (di.Account1_Name__c != null)
                 setName.add(di.Account1_Name__c);
             if (isCustomIDInAccountMatchRules) {
-                object val = di.get(strDIAccountCustomIDField('Account1'));
+                object val = di.get(strDIAccountCustomIDField('Account1', diSettings));
                 if (val != null) {
                     if (isCustomIdInAccountDatatypeString)
                         setCustomIDString.add(string.valueOf(val));
@@ -1868,7 +1907,7 @@ global with sharing class BDI_DataImportService {
             if (di.Account2_Name__c != null)
                 setName.add(di.Account2_Name__c);
             if (isCustomIDInAccountMatchRules) {
-                object val = di.get(strDIAccountCustomIDField('Account2'));
+                object val = di.get(strDIAccountCustomIDField('Account2', diSettings));
                 if (val != null) {
                     if (isCustomIdInAccountDatatypeString)
                         setCustomIDString.add(string.valueOf(val));
