@@ -1195,6 +1195,7 @@
         <members>healthPaymentAutoCloseStageValid</members>
         <members>healthSolutionAccOne2OneNoContacts</members>
         <members>healthSolutionAccountDefaultRTInvalid</members>
+        <members>healthSolutionAccountDefaultRTIssue</members>
         <members>healthSolutionAccountModel</members>
         <members>healthSolutionAccountRTIssue</members>
         <members>healthSolutionAutoRelFieldsMissing</members>
