@@ -106,8 +106,9 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         try {
             return deleteContact();
         } catch (Exception ex){
-            if (!hasPageMessages)
+            if (!hasPageMessages) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
+            }
             return null;
         }
     }
@@ -121,11 +122,15 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     */ 
     public PageReference deleteContactOnly() {
         shouldDeleteContactAlone = true;
+
         try {
             return deleteContact();
-        } catch (Exception ex){
-            if (!hasPageMessages)
+        } catch (Exception ex) {
+            shouldDeleteContactAlone = false;
+
+            if (!hasPageMessages) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
+            }
             return null;
         }
     }

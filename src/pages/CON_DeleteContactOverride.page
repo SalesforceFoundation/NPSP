@@ -16,10 +16,10 @@
                 <apex:outputLink target="_self" title="{!$Label.REL_Return_to_Contact}" value="/{!$CurrentPage.parameters.id}" styleClass="slds-button slds-button_neutral">
                     {!$Label.REL_Return_to_Contact}
                 </apex:outputLink>
-                <apex:commandButton value="{!$Label.Delete_Account}" action="{!deleteAccount}" rendered="{!NOT(shouldDeleteContactAlone)}" styleClass="slds-button slds-button_brand"/>
+                <apex:commandButton value="{!$Label.DeleteAccount}" action="{!deleteAccount}" styleClass="slds-button slds-button_brand"/>
             </div>
                 <div class="slds-p-around_small slds-text-body_small">
-                    <apex:commandLink value="{!$Label.Delete_Contact_Leave_Account}" action="{!deleteContactOnly}" />
+                    <apex:commandLink value="{!$Label.DeleteContactLeaveAccount}" action="{!deleteContactOnly}" />
                 </div>
         </apex:outputPanel>
         <apex:outputPanel rendered="{!sforceNav != null}">

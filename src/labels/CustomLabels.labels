@@ -612,14 +612,14 @@
         <value>{0} is the only Contact in the {1} Account. Deleting this Contact would leave an empty Account. Would you like to delete {1}, including {0}, instead?</value>
     </labels>
     <labels>
-        <fullName>Delete_Account</fullName>
+        <fullName>DeleteAccount</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Delete Account</shortDescription>
         <value>Delete Account</value>
     </labels>
     <labels>
-        <fullName>Delete_Contact_Leave_Account</fullName>
+        <fullName>DeleteContactLeaveAccount</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Delete Contact Leave Account</shortDescription>
