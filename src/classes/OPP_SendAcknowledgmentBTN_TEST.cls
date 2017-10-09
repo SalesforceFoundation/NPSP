@@ -35,43 +35,94 @@
 */
 @isTest
 public with sharing class OPP_SendAcknowledgmentBTN_TEST {
+    private static final String TO_BE_ACKNOWLEDGED_STATUS = 'To Be Acknowledged';
 
     /*********************************************************************************************************
     * @description Tests the controller for the Send Acknowledgment Button
     */
-    static testmethod void testBtnCTRL() {
-        Account testaccount = new Account(name='Test Company');
-        insert testaccount;
-        
-        Contact testcontact = new Contact(AccountID = testaccount.Id,FirstName = 'Test',LastName = 'Company',Email = 'Test.Company@example.com');
-        insert testcontact;
-        
-        Opportunity testoppty = new Opportunity(AccountId = testaccount.Id, Primary_Contact__c = testcontact.Id,
-            closedate = system.today(),amount = 100,name='Test Company Donation',StageName = 'Closed Won',
-            Acknowledgment_Status__c = 'To be Acknowledged');
-        insert testoppty;
-        
-        OpportunityContactRole testocr = new OpportunityContactRole (OpportunityId = testoppty.Id, ContactId = testcontact.Id, IsPrimary = true);
-        insert testocr;
-        
-        list<Opportunity> listOpp = new list<Opportunity>{testoppty};
+    static testmethod void testSendAcknowledgment() {        
+        list<Opportunity> listOpp = setUpOpportunities(1);
         ApexPages.StandardSetController sc = new ApexPages.StandardSetController(listOpp);
         sc.setSelected(listOpp);
-        OPP_SendAcknowledgmentBTN_CTRL btnCtrl = new OPP_SendAcknowledgmentBTN_CTRL(sc);
+        OPP_SendAcknowledgmentBTN_CTRL ctrl = new OPP_SendAcknowledgmentBTN_CTRL(sc);
         
-        test.startTest();
-        btnCtrl.SendAcknowledgment();
-        test.stopTest();
+        Test.startTest();
+        ctrl.SendAcknowledgment();
+        Test.stopTest();
         
         listOpp = [select Id, name, Acknowledgment_Status__c, Acknowledgment_Date__c from Opportunity];
         system.assertEquals(1, listOpp.size());
+
         // we don't know if the workflow is active or not.
         system.assert(listOpp[0].Acknowledgment_Status__c == label.sendAcknowledgmentFailedStatus ||
             listOpp[0].Acknowledgment_Status__c == label.sendAcknowledgmentSucceeded);            
-        system.assertNotEquals(null, btnCtrl.listOppNotSent);
-        system.assertNotEquals(btnCtrl.cSent, btnCtrl.cNotSent);
+        system.assertNotEquals(null, ctrl.listOppNotSent);
+        system.assertNotEquals(ctrl.cSent, ctrl.cNotSent);   
+    }
+
+    /*********************************************************************************************************
+    @description 
+        Test SendAcknowledgment() rollback when an exception occurs 
+    verify:
+        The transaction is completely rolled back and there is no partial commit
+    **********************************************************************************************************/ 
+    private static testMethod void testSendAcknowledgmentRollsBackAllDmlsOnError() { 
+        Test.setCurrentPage(Page.OPP_SendAcknowledgmentBTN);
+
+        List<Opportunity> opps = setUpOpportunities(2);
+        //fail an update
+        opps[0].Id = Opportunity.sObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
+
+        ApexPages.StandardSetController sc = new ApexPages.StandardSetController(opps);
+        sc.setSelected(opps);
+        OPP_SendAcknowledgmentBTN_CTRL ctrl = new OPP_SendAcknowledgmentBTN_CTRL(sc);
         
-            
+        Test.startTest();
+        ctrl.SendAcknowledgment();
+        Test.stopTest();
+
+        UTIL_UnitTestData_TEST.assertPageHasError('invalid cross reference');
+
+        for (Opportunity opp : [SELECT Acknowledgment_Status__c FROM Opportunity]) {
+            System.assertEquals(TO_BE_ACKNOWLEDGED_STATUS, opp.Acknowledgment_Status__c, 'The Acknowledgment Status should be unchanged');
+        }     
+    }
+
+    // Helpers
+    ////////////
+
+    /*********************************************************************************************************
+    * @description Create Opportunities and Opportunity Contact Roles
+    * @param oppCount Number of how many Opportunities should be created
+    * @return List<Opportunity> List of Opportunities
+    **********************************************************************************************************/
+    private static List<Opportunity> setUpOpportunities(Integer oppCount) {
+        Account account = new Account(Name = 'Test Company');
+        insert account;
+        
+        Contact contact = new Contact(AccountID = account.Id, FirstName = 'Test', LastName = 'Company', Email = 'Test.Company@example.com');
+        insert contact;
+        
+        List<Opportunity> opps = new List<Opportunity>();
+        Date today = system.today();
+        String closedWonStage = UTIL_UnitTestData_TEST.getClosedWonStage();
+
+        for (Integer i = 0; i < oppCount; i++) {
+            opps.add(new Opportunity(
+                AccountId = account.Id, Primary_Contact__c = contact.Id,
+                CloseDate = today, Amount = 100, Name = 'Test Company Donation', 
+                StageName = closedWonStage, Acknowledgment_Status__c = TO_BE_ACKNOWLEDGED_STATUS
+            ));
+        }
+        insert opps;  
+        
+        List<OpportunityContactRole> ocrs = new List<OpportunityContactRole>();
+        for (Opportunity opp : opps) {
+            ocrs.add(new OpportunityContactRole(OpportunityId = opp.Id, ContactId = contact.Id, IsPrimary = true));
+        }      
+        insert ocrs;
+        
+        return opps;
     }
 
 }

@@ -201,19 +201,30 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
         for (OpportunityContactRole ocr : [SELECT Id, ContactId, Contact.Name FROM OpportunityContactRole WHERE OpportunityId = :opp.Id AND IsPrimary = true]) {
             donors.put(ocr.ContactId, ocr.Contact.Name);
         }
+
         List<SObject> toDelete = listSoftCreditsForDelete;
         List<OpportunityContactRole> toUpsertContactRoles = new List<OpportunityContactRole>();
         List<Partial_Soft_Credit__c> toUpsertPartialCredits = new List<Partial_Soft_Credit__c>();
         List<SoftCredit> upsertedSoftCredits = new List<SoftCredit>();
-        for (SoftCredit sc : softCredits) {
+        Map<Integer, OpportunityContactRole> rollbackContactRole = new Map<Integer, OpportunityContactRole>();
+        Map<Integer, Partial_Soft_Credit__c> rollbackPartialSoftCredit = new Map<Integer, Partial_Soft_Credit__c>();        
+
+        for (Integer i = 0, size = softCredits.size(); i < size; i++) {
+            SoftCredit sc = softCredits[i];
+
+            rollbackContactRole.put(i, sc.contactRole == null ? null : sc.contactRole.clone(true, true, true, true));
+            rollbackPartialSoftCredit.put(i, sc.partial == null ? null : sc.partial.clone(true, true, true, true));
+
             if (sc.contactRole.ContactId != null) {
                 if (donors.containsKey(sc.contactRole.ContactId)) {
                     Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 
                         string.Format(Label.pscManageSoftCreditsInvalidContact, new String[]{donors.get(sc.contactRole.ContactId)})));
                     return null;
+
                 } else if (sc.partial.Amount__c == null) {
                     Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, Label.pscManageSoftCreditsAmountMissing));
                     return null;
+
                 } else if (sc.contactRole.Role == null) {
                     Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, Label.pscManageSoftCreditsRoleMissing));
                     return null;
@@ -221,44 +232,60 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
                 
                 if (sc.fullCredit || sc.partial.Amount__c == opp.Amount) {
                     sc.fullCredit = true; // to prevent the full amount case from creating a new psc!
-                    if (sc.partial.Id != null) 
+                    if (sc.partial.Id != null) {
                         toDelete.add(sc.partial);
+                    }
                     toUpsertContactRoles.add(sc.contactRole);
+
                 } else {
-                    if (sc.partial.Contact__c == null) 
+                    if (sc.partial.Contact__c == null) {
                         sc.partial.Contact__c = sc.contactRole.ContactId;
-                    else if (sc.partial.Contact__c != sc.contactRole.ContactId) {
+
+                    } else if (sc.partial.Contact__c != sc.contactRole.ContactId) {
                         toDelete.add(sc.partial);
                         sc.partial = new Partial_Soft_Credit__c(Contact__c = sc.contactRole.ContactId, Amount__c = sc.partial.Amount__c);
                     }
-                    if (sc.partial.Opportunity__c == null) 
+
+                    if (sc.partial.Opportunity__c == null) {
                         sc.partial.Opportunity__c = sc.contactRole.OpportunityId;
+                    }
                     sc.partial.Role_Name__c = sc.contactRole.Role;
                     toUpsertContactRoles.add(sc.contactRole);
                     upsertedSoftCredits.add(sc);
                 }
+
             } else {
-                if (sc.partial.Id != null) 
+                if (sc.partial.Id != null) {
                     toDelete.add(sc.partial);
-                if (sc.contactRole.Id != null && !sc.contactRole.IsPrimary) 
+                }
+                if (sc.contactRole.Id != null && !sc.contactRole.IsPrimary) {
                     toDelete.add(sc.contactRole);
+                }
             }
         }
+
         if (!allowTooManySoftCredits && getTotalSoftCreditAmount() > opp.Amount) {
             Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, Label.pscManageSoftCreditsReconcileFail));
             return null;
         }
         
+        Savepoint sp = Database.setSavepoint(); 
         try {
             delete toDelete;
+
             upsert toUpsertContactRoles;
+
             for (SoftCredit sc : upsertedSoftCredits) {
                 // full credits should not create a PSC
-                if (sc.fullCredit)
+                if (sc.fullCredit) {
                     continue;
+                }
+
                 sc.partial.Contact_Role_ID__c = sc.contactRole.Id;
-                if (!isAmount) 
+                if (!isAmount) {
                     sc.partial.Amount__c = convertPercentageToAmount(sc.partial.Amount__c);
+                }
+
                 toUpsertPartialCredits.add(sc.partial);
             }
             upsert toUpsertPartialCredits;
@@ -269,13 +296,20 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
                 }
             }
         
-            //no reason to do this, since we are redirecting back to the Opp.
-            //Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.CONFIRM, 'All soft credit records have been saved.'));
             PageReference pageRef = new PageReference('/'+opp.Id);
             pageRef.setRedirect(true);
             pageRef.getParameters().put('t',''+(System.currentTimeMillis()));
             return pageRef;
+
         } catch (Exception ex) {
+            Database.rollback(sp);
+
+            // rollback Opportunity Contact Role and Partial Soft Credits
+            for (Integer i = 0, size = softCredits.size(); i < size; i++) {
+                softCredits[i].contactRole = rollbackContactRole.get(i);
+                softCredits[i].partial = rollbackPartialSoftCredit.get(i);
+            }
+
             Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
         }
         return null;
