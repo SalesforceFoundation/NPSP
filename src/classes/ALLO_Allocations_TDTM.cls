@@ -51,7 +51,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     /** @description Set this to true only if ACM is enabled, in use, and there is a defined field to store the value in */
     public static final Boolean storeDatedConversionRate = UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled()
             && householdSettings.Use_Dated_Conversion_Rates__c == true
-            && householdSettings.Field_for_Effective_Exchange_Rate__c != null;
+            && householdSettings.Custom_Exchange_Rate_Field__c != null;
 
     /** @description The id of the default General Accounting Unit if default allocations are enabled */
     public static id idDefaultGAU = settings.Default__c;
@@ -761,7 +761,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             Decimal exchangeRate = UTIL_CurrencyConversion.getExchangeRate(oppCloseDate,
                     oppCurrCode, ALLO_Multicurrency_TDTM.currCorporate);
             try {
-                defaultAllo.put(householdSettings.Field_for_Effective_Exchange_Rate__c, exchangeRate);
+                defaultAllo.put(householdSettings.Custom_Exchange_Rate_Field__c, exchangeRate);
             } catch (Exception ex) {
                 // ignore the error if this field doesn't actually exist
             }

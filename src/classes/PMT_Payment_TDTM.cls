@@ -77,7 +77,7 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
         // Set this to true only if ACM is enabled, in use, and there is a defined field to store the value in
         Boolean storeDatedConversionRate = UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled()
                 && householdSettings.Use_Dated_Conversion_Rates__c == true
-                && householdSettings.Field_for_Effective_Exchange_Rate__c != null;
+                && householdSettings.Custom_Exchange_Rate_Field__c != null;
 
         DmlWrapper dmlWrapper = new DmlWrapper();
 
@@ -127,11 +127,11 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
                             oppCurrency, UTIL_Currency.getInstance().getOrgDefaultCurrency());
                     try {
                         if (Test.isRunningTest() == false) {
-                            pmt.put(householdSettings.Field_for_Effective_Exchange_Rate__c, exchangeRate);
+                            pmt.put(householdSettings.Custom_Exchange_Rate_Field__c, exchangeRate);
                         } else {
                             // To allow for testing this logic out, there are no free number fields to use on this
                             // object, so push the value into text field
-                            pmt.put(householdSettings.Field_for_Effective_Exchange_Rate__c, exchangeRate.format());
+                            pmt.put(householdSettings.Custom_Exchange_Rate_Field__c, exchangeRate.format());
                         }
                     } catch (Exception ex) {
                         // ignore the error if this field doesn't actually exist.

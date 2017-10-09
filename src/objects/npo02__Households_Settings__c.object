@@ -2,11 +2,10 @@
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <enableEnhancedLookup>false</enableEnhancedLookup>
     <fields>
-        <fullName>Field_for_Effective_Exchange_Rate__c</fullName>
+        <fullName>Custom_Exchange_Rate_Field__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>The API name of a field on both the OppPayment__c and Allocation__c objects where the exchange rate used for conversion is stored. Must refer to a Number field with 6+ decimals. 
-Only used if Advanced Currency Management is enabled in an organization.</inlineHelpText>
-        <label>Field for Effective Exchange Rate</label>
+        <inlineHelpText>The API name of a field, on both the OppPayment__c and Allocation__c objects, where the exchange rate is optionally stored. It must be a Number field with a minimum of 6 decimals. This field is used only if Advanced Currency Management is enabled.</inlineHelpText>
+        <label>Custom Exchange Rate Field</label>
         <length>43</length>
         <required>false</required>
         <trackTrending>false</trackTrending>

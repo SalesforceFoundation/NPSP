@@ -126,7 +126,7 @@ private class UTIL_CurrencyConversion_TEST {
         UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c(
                         Use_Dated_Conversion_Rates__c = True,
-                        Field_for_Effective_Exchange_Rate__c = 'npe01__Custom_Payment_Field__c')
+                        Custom_Exchange_Rate_Field__c = 'npe01__Custom_Payment_Field__c')
         );
 
         UtilCurrencyCacheMock mockcurrCache = new UtilCurrencyCacheMock();
@@ -207,7 +207,7 @@ private class UTIL_CurrencyConversion_TEST {
         UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c(
                         Use_Dated_Conversion_Rates__c = True,
-                        Field_for_Effective_Exchange_Rate__c = 'Not_a_real_field__c')
+                        Custom_Exchange_Rate_Field__c = 'Not_a_real_field__c')
         );
 
         UtilCurrencyCacheMock mockcurrCache = new UtilCurrencyCacheMock();

@@ -142,7 +142,7 @@ public class ALLO_Multicurrency_TDTM extends TDTM_Runnable {
                 Decimal exchangeRate = UTIL_CurrencyConversion.getExchangeRate(oppCloseDate,
                         parentCurrCode, currCorporate);
                 try {
-                    allo.put(ALLO_Allocations_TDTM.householdSettings.Field_for_Effective_Exchange_Rate__c, exchangeRate);
+                    allo.put(ALLO_Allocations_TDTM.householdSettings.Custom_Exchange_Rate_Field__c, exchangeRate);
                 } catch (Exception ex) {
                     // ignore the error if this field doesn't actually exist
                 }
