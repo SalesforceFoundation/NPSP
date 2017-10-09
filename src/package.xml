@@ -203,6 +203,7 @@
         <members>REL_Relationships_TEST</members>
         <members>REL_Utils</members>
         <members>RLLP_Definition</members>
+        <members>RLLP_Definition_SEL</members>
         <members>RLLP_Engine</members>
         <members>RLLP_Engine_TEST</members>
         <members>RLLP_Exclusion</members>
