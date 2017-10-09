@@ -241,6 +241,15 @@ public class UTIL_Describe {
     }
 
     /*******************************************************************************************************
+    * @description Gets a SObjectType token given the API name of that SObject.
+    * @param qualifiedAPIName The API name of an SObject.
+    * @return Schema.SObjectType The token for the object.
+    */
+    public static Schema.SObjectType getSObjectType(String qualifiedAPIName) {
+        return gd.get(qualifiedAPIName);
+    }
+
+    /*******************************************************************************************************
     * @description Returns field describe data
     * @param objectName the name of the object to look up
     * @param fieldName the name of the field to look up
@@ -346,7 +355,7 @@ public class UTIL_Describe {
     // utility to return a list of strings from a field set.
     public static list<string> listStrFromFieldSet(string strObject, string strFS) {
         list<string> listStrFields = new list<string>();
-        Schema.SObjectType targetType = Schema.getGlobalDescribe().get(strObject);
+        Schema.SObjectType targetType = gd.get(strObject);
         Schema.DescribeSObjectResult d = targetType.getDescribe(); 
         Schema.FieldSet fs = d.fieldSets.getMap().get(strFS); 
         if (fs == null) {
