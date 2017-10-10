@@ -16,15 +16,23 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Description__c</field>
+                <field>Filter_Group__c</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Required</behavior>
-                <field>Summary_Object__c</field>
+                <behavior>Edit</behavior>
+                <field>Amount_Object__c</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Required</behavior>
-                <field>Detail_Object__c</field>
+                <behavior>Edit</behavior>
+                <field>Amount_Field__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Date_Object__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Date_Field__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
@@ -36,7 +44,35 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Detail_Attribution_Field__c</field>
+                <field>Description__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Active__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Operation__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Integer__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Detail_Object__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Detail_Field__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Summary_Object__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Summary_Field__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -77,12 +113,6 @@
         <layoutColumns/>
         <style>CustomLinks</style>
     </layoutSections>
-    <relatedLists>
-        <fields>MasterLabel</fields>
-        <fields>DeveloperName</fields>
-        <fields>NamespacePrefix</fields>
-        <relatedList>Rollup_Field_Definition__mdt.Rollup_Definition__c</relatedList>
-    </relatedLists>
     <showEmailCheckbox>false</showEmailCheckbox>
     <showHighlightsPanel>false</showHighlightsPanel>
     <showInteractionLogPanel>false</showInteractionLogPanel>

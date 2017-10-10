@@ -61,6 +61,7 @@
         <members>BDI_DataImportCTRL_TEST</members>
         <members>BDI_DataImportDeleteBTN_CTRL</members>
         <members>BDI_DataImportDeleteBTN_TEST</members>
+        <members>BDI_DataImportService</members>
         <members>BDI_DataImport_API</members>
         <members>BDI_DataImport_BATCH</members>
         <members>BDI_DataImport_CTRL</members>
@@ -203,6 +204,7 @@
         <members>REL_Relationships_TEST</members>
         <members>REL_Utils</members>
         <members>RLLP_Definition</members>
+        <members>RLLP_Definition_SEL</members>
         <members>RLLP_Engine</members>
         <members>RLLP_Engine_TEST</members>
         <members>RLLP_Exclusion</members>
@@ -227,12 +229,12 @@
         <members>RLLP_OppRollup_UTIL</members>
         <members>RLLP_OppSoftCreditRollup_BATCH</members>
         <members>RLLP_Wrapper</members>
+        <members>RP_Constants</members>
         <members>RP_GettingStartedController</members>
         <members>RP_GettingStartedTest</members>
         <members>RP_GitHubClient</members>
         <members>RP_GitHubController</members>
         <members>RP_GitHubTest</members>
-        <members>RP_Constants</members>
         <members>RP_GitHubTestMock</members>
         <members>RP_HTTPClient</members>
         <members>RP_YoutubeClient</members>
@@ -307,11 +309,11 @@
         <members>UTIL_AbstractRollup_BATCH</members>
         <members>UTIL_CascadeDeleteLookups_TDTM</members>
         <members>UTIL_Currency</members>
-        <members>UTIL_Currency_TEST</members>
         <members>UTIL_CurrencyCache</members>
         <members>UTIL_CurrencyCache_TEST</members>
         <members>UTIL_CurrencyConversion</members>
         <members>UTIL_CurrencyConversion_TEST</members>
+        <members>UTIL_Currency_TEST</members>
         <members>UTIL_CustomSettingsFacade</members>
         <members>UTIL_CustomSettings_API</members>
         <members>UTIL_Debug</members>
@@ -340,7 +342,6 @@
         <members>UTIL_UnitTestData_TEST</members>
         <members>UTIL_Version_API</members>
         <members>UTIL_iSoqlListViewConsumer</members>
-        <members>BDI_DataImportService</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -871,25 +872,21 @@
         <members>Filter_Rule__mdt.Filter_Group__c</members>
         <members>Filter_Rule__mdt.Object__c</members>
         <members>Filter_Rule__mdt.Operator__c</members>
-        <members>Rollup_Definition__mdt.Attribution_Field__c</members>
-        <members>Rollup_Definition__mdt.Attribution_Object__c</members>
-        <members>Rollup_Definition__mdt.Description__c</members>
-        <members>Rollup_Definition__mdt.Detail_Attribution_Field__c</members>
-        <members>Rollup_Definition__mdt.Detail_Object__c</members>
-        <members>Rollup_Definition__mdt.Summary_Object__c</members>
-        <members>Rollup_Field_Definition__mdt.Amount_Field__c</members>
-        <members>Rollup_Field_Definition__mdt.Attribution_Field__c</members>
-        <members>Rollup_Field_Definition__mdt.Attribution_Object__c</members>
-        <members>Rollup_Field_Definition__mdt.Date_Field__c</members>
-        <members>Rollup_Field_Definition__mdt.Description__c</members>
-        <members>Rollup_Field_Definition__mdt.Detail_Attribution_Field__c</members>
-        <members>Rollup_Field_Definition__mdt.Detail_Field__c</members>
-        <members>Rollup_Field_Definition__mdt.Detail_Object__c</members>
-        <members>Rollup_Field_Definition__mdt.Filter_Group__c</members>
-        <members>Rollup_Field_Definition__mdt.Is_Active__c</members>
-        <members>Rollup_Field_Definition__mdt.Operation__c</members>
-        <members>Rollup_Field_Definition__mdt.Rollup_Definition__c</members>
-        <members>Rollup_Field_Definition__mdt.Years_Back__c</members>
+        <members>Rollup__mdt.Active__c</members>
+        <members>Rollup__mdt.Amount_Field__c</members>
+        <members>Rollup__mdt.Amount_Object__c</members>
+        <members>Rollup__mdt.Attribution_Field__c</members>
+        <members>Rollup__mdt.Attribution_Object__c</members>
+        <members>Rollup__mdt.Date_Field__c</members>
+        <members>Rollup__mdt.Date_Object__c</members>
+        <members>Rollup__mdt.Description__c</members>
+        <members>Rollup__mdt.Detail_Field__c</members>
+        <members>Rollup__mdt.Detail_Object__c</members>
+        <members>Rollup__mdt.Filter_Group__c</members>
+        <members>Rollup__mdt.Integer__c</members>
+        <members>Rollup__mdt.Operation__c</members>
+        <members>Rollup__mdt.Summary_Field__c</members>
+        <members>Rollup__mdt.Summary_Object__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Automatic_Campaign_Member_Management__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Non_Responded_Status__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Responded_Status__c</members>
@@ -1018,6 +1015,29 @@
         <members>REL_RECenter</members>
         <members>REL_Return_to_Contact</members>
         <members>REL_View_Contact_Record</members>
+        <members>RP_CustomerJourneyLinkLabel</members>
+        <members>RP_DeeperParagraph</members>
+        <members>RP_DeeperSubtitle</members>
+        <members>RP_GettingStarted</members>
+        <members>RP_GitHubSubtitle</members>
+        <members>RP_GitHubTitle</members>
+        <members>RP_NpspLinkLabel</members>
+        <members>RP_ProductNameLabel</members>
+        <members>RP_ReleaseGitHub</members>
+        <members>RP_ReleaseNotesLink</members>
+        <members>RP_Remote_Site_Settings_Deactivated</members>
+        <members>RP_SalesforceOrgLinkLabel</members>
+        <members>RP_SubTitle</members>
+        <members>RP_Title</members>
+        <members>RP_TrailheadLinkLabel</members>
+        <members>RP_TrailheadParagraph</members>
+        <members>RP_TrailheadSubtitle</members>
+        <members>RP_USParagraph</members>
+        <members>RP_UsHubLinkLabel</members>
+        <members>RP_UsSubtitle</members>
+        <members>RP_Videos</members>
+        <members>RP_WebinarLinkLabel</members>
+        <members>RP_YoutubeChannel</members>
         <members>RecurringDonationAccountAndContactError</members>
         <members>Saved</members>
         <members>Settings_not_Saved</members>
@@ -1307,10 +1327,10 @@
         <members>lblNoHHMergePermissions</members>
         <members>lblPostalCode</members>
         <members>lblProgress</members>
-        <members>lblStatus</members>
         <members>lblRequired</members>
         <members>lblSalutation</members>
         <members>lblState</members>
+        <members>lblStatus</members>
         <members>lblStreet</members>
         <members>lblYouAreHere</members>
         <members>leadConvertAccountName</members>
@@ -1408,29 +1428,6 @@
         <members>pscManageSoftCreditsType</members>
         <members>pscManageSoftCreditsUnaccounted</members>
         <members>pscManageSoftCreditsValidateTotals</members>
-        <members>RP_CustomerJourneyLinkLabel</members>
-        <members>RP_DeeperParagraph</members>
-        <members>RP_DeeperSubtitle</members>
-        <members>RP_GettingStarted</members>
-        <members>RP_GitHubSubtitle</members>
-        <members>RP_GitHubTitle</members>
-        <members>RP_NpspLinkLabel</members>
-        <members>RP_ProductNameLabel</members>
-        <members>RP_ReleaseGitHub</members>
-        <members>RP_ReleaseNotesLink</members>
-        <members>RP_Remote_Site_Settings_Deactivated</members>
-        <members>RP_SalesforceOrgLinkLabel</members>
-        <members>RP_SubTitle</members>
-        <members>RP_Title</members>
-        <members>RP_TrailheadLinkLabel</members>
-        <members>RP_TrailheadParagraph</members>
-        <members>RP_TrailheadSubtitle</members>
-        <members>RP_UsHubLinkLabel</members>
-        <members>RP_USParagraph</members>
-        <members>RP_UsSubtitle</members>
-        <members>RP_Videos</members>
-        <members>RP_WebinarLinkLabel</members>
-        <members>RP_YoutubeChannel</members>
         <members>sendAcknowledgmentFailedStatus</members>
         <members>sendAcknowledgmentFailureReasons</members>
         <members>sendAcknowledgmentFireStatus</members>
@@ -1745,8 +1742,7 @@
         <members>Trigger_Handler__c</members>
         <members>Filter_Group__mdt</members>
         <members>Filter_Rule__mdt</members>
-        <members>Rollup_Definition__mdt</members>
-        <members>Rollup_Field_Definition__mdt</members>
+        <members>Rollup__mdt</members>
         <name>CustomObject</name>
     </types>
     <types>
@@ -1967,18 +1963,12 @@
         <members>Filter_Rule__mdt-fr</members>
         <members>Filter_Rule__mdt-ja</members>
         <members>Filter_Rule__mdt-nl_NL</members>
-        <members>Rollup_Definition__mdt-de</members>
-        <members>Rollup_Definition__mdt-en_US</members>
-        <members>Rollup_Definition__mdt-es</members>
-        <members>Rollup_Definition__mdt-fr</members>
-        <members>Rollup_Definition__mdt-ja</members>
-        <members>Rollup_Definition__mdt-nl_NL</members>
-        <members>Rollup_Field_Definition__mdt-de</members>
-        <members>Rollup_Field_Definition__mdt-en_US</members>
-        <members>Rollup_Field_Definition__mdt-es</members>
-        <members>Rollup_Field_Definition__mdt-fr</members>
-        <members>Rollup_Field_Definition__mdt-ja</members>
-        <members>Rollup_Field_Definition__mdt-nl_NL</members>
+        <members>Rollup__mdt-de</members>
+        <members>Rollup__mdt-en_US</members>
+        <members>Rollup__mdt-es</members>
+        <members>Rollup__mdt-fr</members>
+        <members>Rollup__mdt-ja</members>
+        <members>Rollup__mdt-nl_NL</members>
         <members>npe01__Contacts_And_Orgs_Settings__c-de</members>
         <members>npe01__Contacts_And_Orgs_Settings__c-es</members>
         <members>npe01__Contacts_And_Orgs_Settings__c-fr</members>
@@ -2090,8 +2080,7 @@
         <members>Trigger_Handler__c-Trigger Handler Layout</members>
         <members>Filter_Group__mdt-Filter Group Layout</members>
         <members>Filter_Rule__mdt-Filter Rule Layout</members>
-        <members>Rollup_Definition__mdt-Rollup Definition Layout</members>
-        <members>Rollup_Field_Definition__mdt-Rollup Field Definition Layout</members>
+        <members>Rollup__mdt-Rollup Layout</members>
         <name>Layout</name>
     </types>
     <types>

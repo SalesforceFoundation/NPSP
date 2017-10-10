@@ -2,15 +2,23 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Rollup Field Definition --></value>
+        <value><!-- Rollup --></value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Rollup Field Definition --></value>
+        <value><!-- Rollup --></value>
     </caseValues>
+    <fields>
+        <label><!-- Active --></label>
+        <name>Active__c</name>
+    </fields>
     <fields>
         <label><!-- Amount Field --></label>
         <name>Amount_Field__c</name>
+    </fields>
+    <fields>
+        <label><!-- Amount Object --></label>
+        <name>Amount_Object__c</name>
     </fields>
     <fields>
         <label><!-- Attribution Field --></label>
@@ -25,12 +33,12 @@
         <name>Date_Field__c</name>
     </fields>
     <fields>
-        <label><!-- Description --></label>
-        <name>Description__c</name>
+        <label><!-- Date Object --></label>
+        <name>Date_Object__c</name>
     </fields>
     <fields>
-        <label><!-- Detail Attribution Field --></label>
-        <name>Detail_Attribution_Field__c</name>
+        <label><!-- Description --></label>
+        <name>Description__c</name>
     </fields>
     <fields>
         <label><!-- Detail Field --></label>
@@ -43,11 +51,11 @@
     <fields>
         <label><!-- Filter Group --></label>
         <name>Filter_Group__c</name>
-        <relationshipLabel><!-- Rollup Field Definitions --></relationshipLabel>
+        <relationshipLabel><!-- Rollups --></relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Is Active --></label>
-        <name>Is_Active__c</name>
+        <label><!-- Integer --></label>
+        <name>Integer__c</name>
     </fields>
     <fields>
         <label><!-- Operation --></label>
@@ -90,13 +98,13 @@
         </picklistValues>
     </fields>
     <fields>
-        <label><!-- Rollup Definition --></label>
-        <name>Rollup_Definition__c</name>
-        <relationshipLabel><!-- Rollup Field Definitions --></relationshipLabel>
+        <label><!-- Summary Field --></label>
+        <name>Summary_Field__c</name>
     </fields>
     <fields>
-        <label><!-- Years Back --></label>
-        <name>Years_Back__c</name>
+        <label><!-- Summary Object --></label>
+        <name>Summary_Object__c</name>
     </fields>
-    <gender><!-- Feminine --></gender>
+    <gender><!-- Masculine --></gender>
+    <startsWith><!-- Consonant --></startsWith>
 </CustomObjectTranslation>
