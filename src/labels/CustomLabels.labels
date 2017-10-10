@@ -2736,7 +2736,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>healthSolutionAccountDefaultRTIssue</shortDescription>
-        <value>The Record Type selected for the current Account Model should not be used as the default Account Record Type for any Profile in your org. Using the same Record Type could cause various data issues.</value>
+        <value>The Record Type selected for the current Account Model should not be used as the default Account Record Type for any Profile in this Salesforce organization. Using the same Record Type could cause various data issues.</value>
     </labels>
     <labels>
         <fullName>healthSolutionAccountModel</fullName>
