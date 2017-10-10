@@ -1102,6 +1102,8 @@
         <members>flsError</members>
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>
+        <members>healthDetailsAccountDefaultRTInvalid</members>
+        <members>healthDetailsAccountDefaultRTIssue</members>
         <members>healthDetailsAccountModel</members>
         <members>healthDetailsAccountProcessor</members>
         <members>healthDetailsAccountRTIssue</members>
@@ -1154,6 +1156,7 @@
         <members>healthDetailsUDFBadDatatypes</members>
         <members>healthDetailsValidRDCustomPeriod</members>
         <members>healthLabelAccountData</members>
+        <members>healthLabelAccountDefaultRT</members>
         <members>healthLabelAccountModelData</members>
         <members>healthLabelAccountRTIssueValid</members>
         <members>healthLabelAllTestsPassed</members>
@@ -1191,6 +1194,8 @@
         <members>healthPaymentAutoCloseStageMustBeActiveClosedWonOrBlank</members>
         <members>healthPaymentAutoCloseStageValid</members>
         <members>healthSolutionAccOne2OneNoContacts</members>
+        <members>healthSolutionAccountDefaultRTInvalid</members>
+        <members>healthSolutionAccountDefaultRTIssue</members>
         <members>healthSolutionAccountModel</members>
         <members>healthSolutionAccountRTIssue</members>
         <members>healthSolutionAutoRelFieldsMissing</members>
