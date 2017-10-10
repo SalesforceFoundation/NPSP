@@ -1993,7 +1993,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>healthDetailsAccountDefaultRTInvalid</shortDescription>
-        <value>The Record Type selected for the Account Model isn&apos;t valid.</value>
+        <value>The Record Type selected for the current Account Model isn&apos;t valid.</value>
     </labels>
     <labels>
         <fullName>healthDetailsAccountDefaultRTIssue</fullName>
@@ -2001,7 +2001,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>healthDetailsAccountDefaultRTIssue</shortDescription>
-        <value>The Record Type, {0}, is selected for the Account Model (in NPSP Settings) and is used as your profile&apos;&apos;s default Account Record Type.</value>
+        <value>The Record Type, {0}, is selected for the current Account Model (in NPSP Settings) and is used as your profile&apos;&apos;s default Account Record Type.</value>
     </labels>
     <labels>
         <fullName>healthDetailsAccountModel</fullName>
@@ -2736,7 +2736,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>healthSolutionAccountDefaultRTIssue</shortDescription>
-        <value>The Record Type selected for the Account Model should not be used as the default Account Record Type for any Profile in your org. Using the same Record Type could cause various data issues.</value>
+        <value>The Record Type selected for the current Account Model should not be used as the default Account Record Type for any Profile in your org. Using the same Record Type could cause various data issues.</value>
     </labels>
     <labels>
         <fullName>healthSolutionAccountModel</fullName>

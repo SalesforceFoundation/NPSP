@@ -321,7 +321,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
                         Label.healthLabelAccountDefaultRT, 
                         statusError, 
                         String.format(Label.healthDetailsAccountDefaultRTIssue, new List<String>{accountRecordTypeInfo.getName()}),
-                        String.format(Label.healthSolutionAccountDefaultRTIssue, new List<String>{accountRecordTypeInfo.getName()})
+                        Label.healthSolutionAccountDefaultRTIssue
                     );
                     return;
                 }

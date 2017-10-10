@@ -341,7 +341,7 @@ public with sharing class STG_PanelHealthCheck_TEST {
             panelHealthCheckController.listDR[0].strDetails
         );
         System.assertEquals(
-            String.format(Label.healthSolutionAccountDefaultRTIssue, new List<String>{accountDefaultRecordTypeInfo.getName()}),
+            Label.healthSolutionAccountDefaultRTIssue,
             panelHealthCheckController.listDR[0].strSolution
         );
     }
