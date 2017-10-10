@@ -2079,8 +2079,6 @@
         <members>Trigger_Handler__c-Trigger Handler Layout</members>
         <members>Filter_Group__mdt-Filter Group Layout</members>
         <members>Filter_Rule__mdt-Filter Rule Layout</members>
-        <members>Rollup_Definition__mdt-Rollup Definition Layout</members>
-        <members>Rollup_Field_Definition__mdt-Rollup Field Definition Layout</members>
         <members>Rollup__mdt-Rollup Layout</members>
         <name>Layout</name>
     </types>
