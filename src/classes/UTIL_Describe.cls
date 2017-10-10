@@ -355,6 +355,7 @@ public class UTIL_Describe {
     // utility to return a list of strings from a field set.
     public static list<string> listStrFromFieldSet(string strObject, string strFS) {
         list<string> listStrFields = new list<string>();
+        if (gd==null) gd = Schema.getGlobalDescribe();
         Schema.SObjectType targetType = gd.get(strObject);
         Schema.DescribeSObjectResult d = targetType.getDescribe(); 
         Schema.FieldSet fs = d.fieldSets.getMap().get(strFS); 
