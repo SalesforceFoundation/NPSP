@@ -274,7 +274,7 @@ public with sharing class STG_PanelHealthCheck_TEST {
 
         //Confirm there is a Success Detect Result
         System.assertEquals(1, panelHealthCheckController.listDR.size(), 'We should have 1 Detect Result');
-        System.assertEquals(Label.healthLabelAccountDefaultRT, panelHealthCheckController.listDR[0].strName);
+        System.assertEquals(System.Label.healthLabelAccountDefaultRT, panelHealthCheckController.listDR[0].strName);
         System.assertEquals(STG_PanelHealthCheck_CTRL.statusSuccess, panelHealthCheckController.listDR[0].strStatus);
         System.assertEquals(null, panelHealthCheckController.listDR[0].strDetails);
         System.assertEquals(null, panelHealthCheckController.listDR[0].strSolution);
@@ -334,14 +334,14 @@ public with sharing class STG_PanelHealthCheck_TEST {
 
         //Confirm there is a Failed Detect Result
         System.assertEquals(1, panelHealthCheckController.listDR.size(), 'We should have 1 Detect Result');
-        System.assertEquals(Label.healthLabelAccountDefaultRT, panelHealthCheckController.listDR[0].strName);
+        System.assertEquals(System.Label.healthLabelAccountDefaultRT, panelHealthCheckController.listDR[0].strName);
         System.assertEquals(STG_PanelHealthCheck_CTRL.statusError, panelHealthCheckController.listDR[0].strStatus);
         System.assertEquals(
-            String.format(Label.healthDetailsAccountDefaultRTIssue, new List<String>{accountDefaultRecordTypeInfo.getName()}),
+            String.format(System.Label.healthDetailsAccountDefaultRTIssue, new List<String>{accountDefaultRecordTypeInfo.getName()}),
             panelHealthCheckController.listDR[0].strDetails
         );
         System.assertEquals(
-            Label.healthSolutionAccountDefaultRTIssue,
+            System.Label.healthSolutionAccountDefaultRTIssue,
             panelHealthCheckController.listDR[0].strSolution
         );
     }
@@ -397,10 +397,10 @@ public with sharing class STG_PanelHealthCheck_TEST {
 
         //Confirm there is a Failed Detect Result
         System.assertEquals(1, panelHealthCheckController.listDR.size(), 'We should have 1 Detect Result');
-        System.assertEquals(Label.healthLabelAccountDefaultRT, panelHealthCheckController.listDR[0].strName);
+        System.assertEquals(System.Label.healthLabelAccountDefaultRT, panelHealthCheckController.listDR[0].strName);
         System.assertEquals(STG_PanelHealthCheck_CTRL.statusError, panelHealthCheckController.listDR[0].strStatus);
-        System.assertEquals(Label.healthDetailsAccountDefaultRTInvalid, panelHealthCheckController.listDR[0].strDetails);
-        System.assertEquals(Label.healthSolutionAccountDefaultRTInvalid, panelHealthCheckController.listDR[0].strSolution);
+        System.assertEquals(System.Label.healthDetailsAccountDefaultRTInvalid, panelHealthCheckController.listDR[0].strDetails);
+        System.assertEquals(System.Label.healthSolutionAccountDefaultRTInvalid, panelHealthCheckController.listDR[0].strSolution);
     }
 
     /*******************************************************************************************************
