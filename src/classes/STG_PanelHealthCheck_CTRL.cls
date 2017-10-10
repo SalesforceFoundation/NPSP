@@ -163,6 +163,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         verifyAccountModel(); 
         verifyAccountData();
         verifyAccountData2();
+        verifyAccountModelRecordType();
         verifyContactData();
         verifyNoOrphanedHouseholds();
         verifyNoOrphanedOne2OneAccounts();
@@ -287,6 +288,51 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         } catch (exception ex) {
             createDR(Label.healthLabelAccountModelData, statusError,  ex.getMessage(), null);                   
         }    
+    }
+
+    /*********************************************************************************************************
+    * @description Verifies HouseHold and One To One RecordTypes are not the default RecordType for the current User.
+    */
+    @TestVisible
+    private void verifyAccountModelRecordType() {
+        try {
+           
+            Id npspHouseholdRecordType = STG_Panel.stgService.stgCon.npe01__HH_Account_RecordTypeID__c;
+            Id npspOneToOneRecordType = STG_Panel.stgService.stgCon.npe01__One_to_One_RecordTypeID__c;
+            Map<Id,Schema.RecordTypeInfo> accountRecordTypeInfosById = UTIL_Describe.getObjectDescribe('Account').getRecordTypeInfosById();
+
+            //Check if the Household and the One To One Record Type in the Settings are valid. 
+            //This should never happen, unless the User manually updates the Account Model Record Type in the Custom Settings.
+            if (
+                (npspHouseholdRecordType != null && accountRecordTypeInfosById.keySet().contains(npspHouseholdRecordType) == false) ||
+                (npspOneToOneRecordType != null && accountRecordTypeInfosById.keySet().contains(npspOneToOneRecordType) == false)
+            ) {
+                createDR(Label.healthLabelAccountDefaultRT, statusError, Label.healthDetailsAccountDefaultRTInvalid, Label.healthSolutionAccountDefaultRTInvalid);
+                return;
+            }
+
+            //Check the Household and One To One Record Type in the Settings and create a failed test if it is the Default one on the Account.
+            for (Schema.RecordTypeInfo accountRecordTypeInfo : accountRecordTypeInfosById.values()) {
+                if (
+                    accountRecordTypeInfo.isDefaultRecordTypeMapping() &&
+                    (accountRecordTypeInfo.getRecordTypeId() == npspHouseholdRecordType || accountRecordTypeInfo.getRecordTypeId() == npspOneToOneRecordType)
+                ) {
+                    createDR(
+                        Label.healthLabelAccountDefaultRT, 
+                        statusError, 
+                        String.format(Label.healthDetailsAccountDefaultRTIssue, new List<String>{accountRecordTypeInfo.getName()}),
+                        Label.healthSolutionAccountDefaultRTIssue
+                    );
+                    return;
+                }
+            }
+
+            //Create a success test
+            createDR(Label.healthLabelAccountDefaultRT, statusSuccess, null, null);
+        }
+        catch(Exception ex) {
+            createDR(Label.healthLabelAccountDefaultRT, statusError,  ex.getMessage(), null); 
+        } 
     }
 
     /*********************************************************************************************************
