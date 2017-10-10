@@ -1988,6 +1988,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>There are {0} One-to-One Accounts who have no Contacts.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsAccountDefaultRTInvalid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthDetailsAccountDefaultRTInvalid</shortDescription>
+        <value>The Record Type selected for the current Account Model isn&apos;t valid.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsAccountDefaultRTIssue</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthDetailsAccountDefaultRTIssue</shortDescription>
+        <value>The Record Type, {0}, is selected for the current Account Model (in NPSP Settings) and is used as your profile&apos;&apos;s default Account Record Type.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsAccountModel</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -2403,6 +2419,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Account Data</value>
     </labels>
     <labels>
+        <fullName>healthLabelAccountDefaultRT</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthLabelAccountDefaultRT</shortDescription>
+        <value>Account Model Record Type</value>
+    </labels>
+    <labels>
         <fullName>healthLabelAccountModelData</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -2697,6 +2721,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>healthSolutionAccOne2OneNoContacts</shortDescription>
         <value>Consider deleting these unused One-to-One Accounts to save space.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionAccountDefaultRTInvalid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthSolutionAccountDefaultRTInvalid</shortDescription>
+        <value>Go to &lt;strong&gt;People | Account Model&lt;/strong&gt; and select a valid Record Type.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionAccountDefaultRTIssue</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthSolutionAccountDefaultRTIssue</shortDescription>
+        <value>The Record Type selected for the current Account Model should not be used as the default Account Record Type for any Profile in this Salesforce organization. Using the same Record Type could cause various data issues.</value>
     </labels>
     <labels>
         <fullName>healthSolutionAccountModel</fullName>
