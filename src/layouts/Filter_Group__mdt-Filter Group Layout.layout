@@ -63,7 +63,7 @@
         <fields>MasterLabel</fields>
         <fields>DeveloperName</fields>
         <fields>NamespacePrefix</fields>
-        <relatedList>Rollup_Field_Definition__mdt.Filter_Group__c</relatedList>
+        <relatedList>Rollup__mdt.Filter_Group__c</relatedList>
     </relatedLists>
     <showEmailCheckbox>false</showEmailCheckbox>
     <showHighlightsPanel>false</showHighlightsPanel>
