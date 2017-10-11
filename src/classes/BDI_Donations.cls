@@ -147,7 +147,9 @@ public class BDI_Donations {
         
         // call the extension to match against existing donations
         if (matchBehavior != BDI_DataImport_API.DoNotMatch) {
+            BDI_PerfLogger.PerfLog pl = bdi.perfLogger.newPerfLog('iMatchDonations.match');
             iMatchDonations.match(bdi, listDIDonations, mapDIIdToOpp, mapDIIdToPmt);
+            pl.stop();
         }
         
         // now go thru the new & existing donations and update them

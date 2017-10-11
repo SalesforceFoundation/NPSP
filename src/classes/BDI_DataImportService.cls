@@ -283,6 +283,11 @@ global with sharing class BDI_DataImportService {
     global Data_Import_Settings__c diSettings { get; private set; }
 
     /*******************************************************************************************************
+    * @description holds the performance logger object for tracking performance metrics during processing.
+    */
+    public BDI_PerfLogger perfLogger { get; private set; }
+
+    /*******************************************************************************************************
     * @description whether the firstname field is in our contact matching rules
     */
     private boolean isFirstnameInContactMatchRules {
@@ -439,6 +444,11 @@ global with sharing class BDI_DataImportService {
     * @return void
     */
     public void process(Id apexJobId, Data_Import_Settings__c diSettings, List<DataImport__c> listDI) {
+
+        // initialize our performance logger
+        perfLogger = new BDI_PerfLogger(listDI[0].NPSP_Data_Import_Batch__c, listDI.size());
+        BDI_PerfLogger.PerfLog pl;
+
         SavePoint sp = Database.setSavepoint();
 
         try {
@@ -453,24 +463,42 @@ global with sharing class BDI_DataImportService {
                 di.FailureInformation__c = null;
             }
 
+            pl = perfLogger.newPerfLog('importContactsAndHouseholds');
             importContactsAndHouseholds();
+            pl.stop();
 
+            pl = perfLogger.newPerfLog('importHouseholdAccountFields');
             importHouseholdAccountFields();
+            pl.stop();
 
+            pl = perfLogger.newPerfLog('importAccounts');
             importAccounts();
+            pl.stop();
 
+            pl = perfLogger.newPerfLog('importAddresses');
             importAddresses();
+            pl.stop();
 
+            pl = perfLogger.newPerfLog('importCampaigns');
             importCampaigns();
+            pl.stop();
 
+            pl = perfLogger.newPerfLog('importDonations');
             BDI_Donations bdiDonations = new BDI_Donations(this);
             bdiDonations.importDonations();
+            pl.stop();
 
+            pl = perfLogger.newPerfLog('importCampaignMembers');
             importCampaignMembers();
+            pl.stop();
 
+            pl = perfLogger.newPerfLog('updateDIStatuses');
             updateDIStatuses(apexJobId);
+            pl.stop();
 
+            pl = perfLogger.newPerfLog('customPostProcess');
             customPostProcess();
+            pl.stop();
 
         } catch (Exception e) {
             //UTIL_Debug.debug('****DJH Exception ' + e);
@@ -503,6 +531,9 @@ global with sharing class BDI_DataImportService {
             // unfortunately, we can't let the system think the batch failed, or
             // then it would rollback our setting of failure state in the DI records.
             // so we just return, and rely on our Data Import ui to notify the user.
+        } finally {
+            perfLogger.stop();
+            perfLogger.save();
         }
     }
 
@@ -717,7 +748,9 @@ global with sharing class BDI_DataImportService {
         verifyContactData();
 
         // try to match our existing contacts
+        BDI_PerfLogger.PerfLog pl = perfLogger.newPerfLog('matchExistingContacts');
         matchExistingContacts();
+        pl.stop();
 
         // handle multiple di's referring to the same existing contact
         set<string> setDIKeyUpsert = new set<string>();
@@ -1157,7 +1190,9 @@ global with sharing class BDI_DataImportService {
         strSoql += ')';
 
         //system.debug('****DJH about to soql contacts: ' + strSoql);
+        BDI_PerfLogger.PerfLog pl = perfLogger.newPerfLog('SOQL existing Contacts', BDI_PerfLogger.QUERY);
         list<Contact> listCon = database.query(strSoql);
+        pl.stop();
         //system.debug('****DJH potential existing contacts: ' + listCon);
 
         // put all potential contacts into our map
@@ -1630,7 +1665,9 @@ global with sharing class BDI_DataImportService {
     private void importAccounts() {
 
         // first, try to match our existing Accounts
+        BDI_PerfLogger.PerfLog pl = perfLogger.newPerfLog('matchExistingAccounts');
         matchExistingAccounts();
+        pl.stop();
 
         // handle multiple di's referring to the same existing account
         set<string> setDIKeyUpsert = new set<string>();
@@ -1930,7 +1967,10 @@ global with sharing class BDI_DataImportService {
             strSoql += ' or ' + diSettings.Account_Custom_Unique_ID__c + ' in :setCustomIDString';
         else if (isCustomIDInAccountMatchRules && !isCustomIdInAccountDatatypeString)
             strSoql += ' or ' + diSettings.Account_Custom_Unique_ID__c + ' in :setCustomIDNumber';
+
+        BDI_PerfLogger.PerfLog pl = perfLogger.newPerfLog('SOQL existing Accounts', BDI_PerfLogger.QUERY);
         list<Account> listAcc = database.query(strSoql);
+        pl.stop();
 
         // put all Accounts into our map
         for (Account acc : listAcc) {
@@ -1997,8 +2037,11 @@ global with sharing class BDI_DataImportService {
             if (con != null && con.AccountId != null)
                 setHHId.add(con.AccountId);
         }
+        BDI_PerfLogger.PerfLog pl = perfLogger.newPerfLog('SOQL existing Addresses', BDI_PerfLogger.QUERY);
         list<Address__c> listAddrExisting = [select Id, Household_Account__c, MailingStreet__c, MailingCity__c, MailingState__c,
             MailingPostalCode__c from Address__c where Household_Account__c in :setHHId];
+        pl.stop();
+
         map<String, Id> mapHHAddrKeyToId = new map<String, Id>();
         for (Address__c addr : listAddrExisting) {
             mapHHAddrKeyToId.put(strKeyOfAddr(addr), addr.Id);

@@ -323,6 +323,8 @@
         <members>UTIL_Version_API</members>
         <members>UTIL_iSoqlListViewConsumer</members>
         <members>BDI_DataImportService</members>
+        <members>BDI_PerfLogger</members>
+        <members>BDI_PerfData</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -1696,6 +1698,7 @@
         <members>Level__c</members>
         <members>Opportunity_Naming_Settings__c</members>
         <members>Partial_Soft_Credit__c</members>
+        <members>PerfLog__c</members>
         <members>Relationship_Sync_Excluded_Fields__c</members>
         <members>Schedulable__c</members>
         <members>Trigger_Handler__c</members>
@@ -2078,6 +2081,8 @@
     </types>
     <types>
         <members>NPSP_Health_Check</members>
+        <members>NPSP_Health_Check/BDISummaryAndThroughput</members>
+        <members>NPSP_Health_Check/BDIThroughput</members>
         <members>NPSP_Health_Check/Contacts_Without_Accounts</members>
         <members>NPSP_Health_Check/Empty_Household_Accounts</members>
         <members>NPSP_Health_Check/Empty_Household_Objects</members>

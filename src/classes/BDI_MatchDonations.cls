@@ -483,7 +483,9 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
             cFilter++;
         }
         strSoql += ') order by CloseDate ASC, CreatedDate ASC';
-        list<Opportunity> listOpp = database.query(strSoql); 
+        BDI_PerfLogger.PerfLog pl = bdi.perfLogger.newPerfLog('SOQL existing Opps', BDI_PerfLogger.QUERY);
+        list<Opportunity> listOpp = database.query(strSoql);
+        pl.stop();
         return listOpp;           
     }
     
