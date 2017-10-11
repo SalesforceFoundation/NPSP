@@ -78,6 +78,8 @@
         <members>CAM_CascadeDeleteLookups_TDTM</members>
         <members>CAM_CascadeDeleteLookups_TEST</members>
         <members>CAO_Constants</members>
+        <members>CMT_FilterRule_SEL</members>
+        <members>CMT_FilterRule_TEST</members>
         <members>CONV_Account_Conversion_BATCH</members>
         <members>CONV_Account_Conversion_BATCH_TEST</members>
         <members>CONV_Account_Conversion_CTRL</members>
@@ -515,6 +517,7 @@
         <members>Account.Membership_Span__c</members>
         <members>Account.Membership_Status__c</members>
         <members>Account.Number_of_Household_Members__c</members>
+        <members>Account.Number_of_Opportunities__c</members>
         <members>Activity.Engagement_Plan_Task__c</members>
         <members>Activity.Engagement_Plan__c</members>
         <members>Addr_Verification_Settings__c.Address_Verification_Endpoint__c</members>
@@ -904,7 +907,12 @@
         <members>npe03__Recurring_Donation__c.Always_Use_Last_Day_Of_Month__c</members>
         <members>npe4__Relationship_Settings__c.Enable_Custom_Field_Sync__c</members>
         <members>npo02__Household__c.Number_of_Household_Members__c</members>
+        <members>npo02__Households_Settings__c.Flexible_Rollups_Enabled__c</members>
         <members>npo02__Households_Settings__c.Matched_Donor_Role__c</members>
+        <members>npo02__Households_Settings__c.Rollups_Account_Batch_Size__c</members>
+        <members>npo02__Households_Settings__c.Rollups_Allocation_Batch_Size__c</members>
+        <members>npo02__Households_Settings__c.Rollups_Contact_Batch_Size__c</members>
+        <members>npo02__Households_Settings__c.Rollups_Limit_on_Attached_Opps_for_LDV__c</members>
         <members>npo02__Households_Settings__c.Use_Dated_Conversion_Rates__c</members>
         <name>CustomField</name>
     </types>
