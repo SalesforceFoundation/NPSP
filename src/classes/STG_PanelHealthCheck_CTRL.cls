@@ -307,7 +307,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
                 (npspHouseholdRecordType != null && accountRecordTypeInfosById.keySet().contains(npspHouseholdRecordType) == false) ||
                 (npspOneToOneRecordType != null && accountRecordTypeInfosById.keySet().contains(npspOneToOneRecordType) == false)
             ) {
-                createDR(Label.healthLabelAccountDefaultRT, statusError, Label.healthDetailsAccountDefaultRTInvalid, Label.healthSolutionAccountDefaultRTInvalid);
+                createDR(System.Label.healthLabelAccountDefaultRT, statusError, System.Label.healthDetailsAccountDefaultRTInvalid, System.Label.healthSolutionAccountDefaultRTInvalid);
                 return;
             }
 
@@ -318,20 +318,20 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
                     (accountRecordTypeInfo.getRecordTypeId() == npspHouseholdRecordType || accountRecordTypeInfo.getRecordTypeId() == npspOneToOneRecordType)
                 ) {
                     createDR(
-                        Label.healthLabelAccountDefaultRT, 
+                        System.Label.healthLabelAccountDefaultRT, 
                         statusError, 
-                        String.format(Label.healthDetailsAccountDefaultRTIssue, new List<String>{accountRecordTypeInfo.getName()}),
-                        Label.healthSolutionAccountDefaultRTIssue
+                        String.format(System.Label.healthDetailsAccountDefaultRTIssue, new List<String>{accountRecordTypeInfo.getName()}),
+                        System.Label.healthSolutionAccountDefaultRTIssue
                     );
                     return;
                 }
             }
 
             //Create a success test
-            createDR(Label.healthLabelAccountDefaultRT, statusSuccess, null, null);
+            createDR(System.Label.healthLabelAccountDefaultRT, statusSuccess, null, null);
         }
         catch(Exception ex) {
-            createDR(Label.healthLabelAccountDefaultRT, statusError,  ex.getMessage(), null); 
+            createDR(System.Label.healthLabelAccountDefaultRT, statusError,  ex.getMessage(), null); 
         } 
     }
 
