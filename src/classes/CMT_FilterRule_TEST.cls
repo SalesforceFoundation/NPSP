@@ -50,8 +50,16 @@ private class CMT_FilterRule_TEST {
             'There should be at least one Filter Group');
         System.AssertNotEquals(0, CMT_FilterRule_SEL.filterGroupsById().size(),
             'There should be at least one Filter Group');
+
+        // Test that a list of fields to query is returned
         String objName = CMT_FilterRule_SEL.cachedFilterRules[0].Object__c;
-        System.AssertNotEquals(0, CMT_FilterRule_SEL.getReferencedFieldsByObject(Schema.getGlobalDescribe().get(objName)).size(),
+        String queryFields = CMT_FilterRule_SEL.getReferencedFieldByObjectAsString(Schema.getGlobalDescribe().get(objName));
+        System.Assert(String.isNotEmpty(queryFields),
             'There should be at least one referenced field for the ' + objName + ' object in Filter_Rule__mdt');
+
+        // Test that a query can be built and executed, though it's likely there will be zero rows returned
+        // so don't attempt to validate the result.
+        String soql = 'SELECT Id,' + queryFields + ' FROM ' + objName + ' LIMIT 1';
+        List<SObject> test = database.query(soql);
     }
 }

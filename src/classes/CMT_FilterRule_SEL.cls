@@ -36,7 +36,8 @@
 public without sharing class CMT_FilterRule_SEL {
 
     /**
-     * Private static vars to cache the Custom Metadata Type records
+     * @description Private static vars to cache the Custom Metadata Type records.
+     * In terms of limits, these DO use up Query Rows, but NOT Queries.
      */
     @TestVisible
     private static final List<Filter_Group__mdt> cachedFilterGroups = [SELECT Id, MasterLabel, DeveloperName,
@@ -56,7 +57,7 @@ public without sharing class CMT_FilterRule_SEL {
      * @return Map<Id, List<Filter_Rule__mdt>>
      */
     public static Map<Id, List<Filter_Rule__mdt>> filterRulesByGroup() {
-        Map<Id, List<Filter_Rule__mdt>> response = new Map<Id, List<Filter_Rule__mdt>>();
+        Map<Id, List<Filter_Rule__mdt>> rulesByGroupId = new Map<Id, List<Filter_Rule__mdt>>();
         for (Filter_Group__mdt fg : cachedFilterGroups) {
             List<Filter_Rule__mdt> rules = new List<Filter_Rule__mdt>();
             for (Filter_Rule__mdt fr : cachedFilterRules) {
@@ -64,9 +65,9 @@ public without sharing class CMT_FilterRule_SEL {
                     rules.add(fr);
                 }
             }
-            response.put(fg.Id, rules);
+            rulesByGroupId.put(fg.Id, rules);
         }
-        return response;
+        return rulesByGroupId;
     }
 
     /**
@@ -74,11 +75,11 @@ public without sharing class CMT_FilterRule_SEL {
      * @return Map<Id, Filter_Group__mdt>
      */
     public static Map<Id, Filter_Group__mdt> filterGroupsById() {
-        Map<Id, Filter_Group__mdt> response = new Map<Id, Filter_Group__mdt>();
+        Map<Id, Filter_Group__mdt> filterGroupsById = new Map<Id, Filter_Group__mdt>();
         for (Filter_Group__mdt fg : cachedFilterGroups) {
-            response.put(fg.Id, fg);
+            filterGroupsById.put(fg.Id, fg);
         }
-        return response;
+        return filterGroupsById;
     }
 
     /**
@@ -100,5 +101,18 @@ public without sharing class CMT_FilterRule_SEL {
             }
         }
         return fields.values();
+    }
+
+    /**
+     * @description Returns a simple comma separated string list of field names to add to a SOQL Query
+     * @param objType The type of object to retrieve referenced fields for
+     * @return String list of fields to append to a SOQL query
+     */
+    public static String getReferencedFieldByObjectAsString(SObjectType objType) {
+        String soql = '';
+        for (DescribeFieldResult dfr : getReferencedFieldsByObject(objType)) {
+            soql += dfr.getName() + ',';
+        }
+        return soql.removeEnd(',');
     }
 }
