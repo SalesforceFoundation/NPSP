@@ -38,25 +38,42 @@ public without sharing class CMT_FilterRule_SEL {
     /**
      * @description Private static vars to cache the Custom Metadata Type records.
      * In terms of limits, these DO use up Query Rows, but NOT Queries.
+     * These are testVisibl to allow unit tests to mock the contents of these static vars
      */
     @TestVisible
-    private static final List<Filter_Group__mdt> cachedFilterGroups = [SELECT Id, MasterLabel, DeveloperName,
-            Is_Deleted__c, Description__c
-            FROM Filter_Group__mdt
-            WHERE Is_Deleted__c = false
-            ORDER BY MasterLabel];
+    private static List<Filter_Group__mdt> cachedFilterGroups {
+        get {
+            if (cachedFilterGroups == null) {
+                cachedFilterGroups = [SELECT Id, MasterLabel, DeveloperName, Is_Deleted__c, Description__c
+                        FROM Filter_Group__mdt
+                        WHERE Is_Deleted__c = false
+                        ORDER BY MasterLabel];
+            }
+            return cachedFilterGroups;
+        } private set;
+    }
+
     @TestVisible
-    private static final List<Filter_Rule__mdt> cachedFilterRules = [SELECT Id, MasterLabel, DeveloperName,
-            Filter_Group__c, Field__c, Object__c, Operator__c, Constant__c, Is_Deleted__c
-            FROM Filter_Rule__mdt
-            WHERE Is_Deleted__c = false
-            ORDER BY Filter_Group__c];
+    private static List<Filter_Rule__mdt> cachedFilterRules {
+        get {
+            if (cachedFilterRules == null) {
+                cachedFilterRules = [SELECT Id, MasterLabel, DeveloperName,
+                                Filter_Group__c, Field__r.QualifiedApiName, Object__r.QualifiedApiName,
+                                Operator__c, Constant__c, Is_Deleted__c
+                        FROM Filter_Rule__mdt
+                        WHERE Is_Deleted__c = false
+                        ORDER BY Filter_Group__c];
+            }
+            return cachedFilterRules;
+        }
+        private set;
+    }
 
     /**
      * @description Returns a map of List<FilterRule> by FilterGroupId
      * @return Map<Id, List<Filter_Rule__mdt>>
      */
-    public static Map<Id, List<Filter_Rule__mdt>> filterRulesByGroup() {
+    public static Map<Id, List<Filter_Rule__mdt>> getFilterRulesByGroup() {
         Map<Id, List<Filter_Rule__mdt>> rulesByGroupId = new Map<Id, List<Filter_Rule__mdt>>();
         for (Filter_Group__mdt fg : cachedFilterGroups) {
             List<Filter_Rule__mdt> rules = new List<Filter_Rule__mdt>();
@@ -74,7 +91,7 @@ public without sharing class CMT_FilterRule_SEL {
      * @description Returns a Map of Filter Group records by FilterGroupId
      * @return Map<Id, Filter_Group__mdt>
      */
-    public static Map<Id, Filter_Group__mdt> filterGroupsById() {
+    public static Map<Id, Filter_Group__mdt> getFilterGroupsById() {
         Map<Id, Filter_Group__mdt> filterGroupsById = new Map<Id, Filter_Group__mdt>();
         for (Filter_Group__mdt fg : cachedFilterGroups) {
             filterGroupsById.put(fg.Id, fg);
@@ -92,15 +109,14 @@ public without sharing class CMT_FilterRule_SEL {
     public static List<Schema.DescribeFieldResult> getReferencedFieldsByObject(SObjectType objType) {
         String objName = objType.getDescribe().getName();
         Map<String, Schema.DescribeFieldResult> allFields = UTIL_Describe.getAllFieldsDescribe(objName);
-        System.Debug(allFields);
-        Map<String, Schema.DescribeFieldResult> fields = new Map<String, Schema.DescribeFieldResult>();
+        Map<String, Schema.DescribeFieldResult> referencedFields = new Map<String, Schema.DescribeFieldResult>();
         for (Filter_Rule__mdt fr : cachedFilterRules) {
-            if (fr.Object__c == objName) {
-                String fldName = fr.Field__c.split('\\.')[1];
-                fields.put(fr.Field__c, allFields.get(fldName.toLowerCase()));
+            if (fr.Object__r.QualifiedApiName == objName) {
+                String fldName = fr.Field__r.QualifiedApiName;
+                referencedFields.put(fr.Field__c, allFields.get(fldName.toLowerCase()));
             }
         }
-        return fields.values();
+        return referencedFields.values();
     }
 
     /**

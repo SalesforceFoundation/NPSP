@@ -37,19 +37,52 @@
 private class CMT_FilterRule_TEST {
 
     /**
-     * @description It's not possible to create custom metadata type records through a Unit Test, so
-     * these tests will only run if there are actually records in the objects in the org.
+     * @description Because unit tests cannot actually insert Custom Metadata Types and there's no real way to know
+     * exactly what's in the CMT objects, we can use this method to mock the contents of the cached MDT queries
+     * for the unit tests
+     */
+    private static void mockFilterCMTValues() {
+        CMT_FilterRule_SEL.cachedFilterGroups = (List<Filter_Group__mdt>)JSON.deserialize(
+                '[{"attributes":{"type":"Filter_Group__mdt"},' +
+                '"Id":"000000000000000BBB","MasterLabel":"TEST",' +
+                '"DeveloperName":"TEST","Is_Deleted__c":false}]', List<Filter_Group__mdt>.class);
+
+        CMT_FilterRule_SEL.cachedFilterRules = (List<Filter_Rule__mdt>)JSON.deserialize('[' +
+                '{"attributes":{"type":"Filter_Rule__mdt"},' +
+                '"Id":"000000000000000CCC","MasterLabel":"Rule 2","DeveloperName":"Rule_2","Filter_Group__c":"000000000000000BBB",' +
+                '"Field__c":"Opportunity.IsWon","Object__c":"Opportunity","Operator__c":"Equals","Constant__c":"TRUE","Is_Deleted__c":false,' +
+                '"Field__r":{"attributes":{"type":"FieldDefinition","url":"/services/data/v41.0/sobjects/FieldDefinition/Opportunity.IsWon"},' +
+                '"Id":"000000000000000AAA","DurableId":"Opportunity.IsWon","QualifiedApiName":"IsWon"},"Object__r":{"attributes":{"type":"EntityDefinition","url":"/services/data/v41.0/sobjects/EntityDefinition/Opportunity"},' +
+                '"Id":"000000000000000AAA","DurableId":"Opportunity","QualifiedApiName":"Opportunity"}},' +
+                '{"attributes":{"type":"Filter_Rule__mdt"},' +
+                '"Id":"000000000000000DDD","MasterLabel":"Rule 3","DeveloperName":"Rule_3","Filter_Group__c":"000000000000000BBB",' +
+                '"Field__c":"Opportunity.CloseDate","Object__c":"Opportunity","Operator__c":"Equals","Constant__c":"THIS_YEAR","Is_Deleted__c":false,' +
+                '"Field__r":{"attributes":{"type":"FieldDefinition","url":"/services/data/v41.0/sobjects/FieldDefinition/Opportunity.CloseDate"},' +
+                '"Id":"000000000000000AAA","DurableId":"Opportunity.CloseDate","QualifiedApiName":"CloseDate"},"Object__r":{"attributes":{"type":"EntityDefinition","url":"/services/data/v41.0/sobjects/EntityDefinition/Opportunity"},' +
+                '"Id":"000000000000000AAA","DurableId":"Opportunity","QualifiedApiName":"Opportunity"}},' +
+                '{"attributes":{"type":"Filter_Rule__mdt"},' +
+                '"Id":"000000000000000EEE","MasterLabel":"Rule 1","DeveloperName":"Rule_1","Filter_Group__c":"000000000000000BBB",' +
+                '"Field__c":"Opportunity.IsClosed","Object__c":"Opportunity","Operator__c":"Equals","Constant__c":"TRUE","Is_Deleted__c":false,' +
+                '"Field__r":{"attributes":{"type":"FieldDefinition","url":"/services/data/v41.0/sobjects/FieldDefinition/Opportunity.IsClosed"},' +
+                '"Id":"000000000000000AAA","DurableId":"Opportunity.IsClosed","QualifiedApiName":"IsClosed"},"Object__r":{"attributes":{"type":"EntityDefinition","url":"/services/data/v41.0/sobjects/EntityDefinition/Opportunity"},' +
+                '"Id":"000000000000000AAA","DurableId":"Opportunity","QualifiedApiName":"Opportunity"}}]', List<Filter_Rule__mdt>.class);
+    }
+
+    /**
+     * @description Test the FilterGroup and FilterRule selector methods. Relies on hardcoded JSON deserialized
+     * MDT data for these tests.
      */
     static testMethod void test_CMT_Selectors() {
-        // If there are no CMT Filter Groups, just exit out.
-        if (CMT_FilterRule_SEL.cachedFilterGroups.size() == 0) {
-            return;
-        }
 
-        System.AssertNotEquals(0, CMT_FilterRule_SEL.filterRulesByGroup().size(),
-            'There should be at least one Filter Group');
-        System.AssertNotEquals(0, CMT_FilterRule_SEL.filterGroupsById().size(),
-            'There should be at least one Filter Group');
+        mockFilterCMTValues();
+
+        System.AssertEquals(1, CMT_FilterRule_SEL.getFilterGroupsById().size(), 'There should be one Filter Group');
+
+        Map<Id, List<Filter_Rule__mdt>> filterRulesByGroup = CMT_FilterRule_SEL.getFilterRulesByGroup();
+        Id filterGroupId = (new List<Id>(filterRulesByGroup.keySet()))[0];
+        List<Filter_Rule__mdt> filterRules =  filterRulesByGroup.get(filterGroupId);
+        System.AssertEquals(1, filterRulesByGroup.size(), 'There should be one Filter Group');
+        System.AssertEquals(3, filterRules.size(), 'There should be three Filter Rules in the Filter Group');
 
         // Test that a list of fields to query is returned
         String objName = CMT_FilterRule_SEL.cachedFilterRules[0].Object__c;
