@@ -838,6 +838,14 @@
         <members>Partial_Soft_Credit__c.Contact__c</members>
         <members>Partial_Soft_Credit__c.Opportunity__c</members>
         <members>Partial_Soft_Credit__c.Role_Name__c</members>
+        <members>Perf_Log__c.BDI_Batch__c</members>
+        <members>Perf_Log__c.Component__c</members>
+        <members>Perf_Log__c.Duration__c</members>
+        <members>Perf_Log__c.Label__c</members>
+        <members>Perf_Log__c.Log_Type__c</members>
+        <members>Perf_Log__c.Number_of_Records__c</members>
+        <members>Perf_Log__c.Parent_Duration__c</members>
+        <members>Perf_Log__c.PercentOfParent__c</members>
         <members>Schedulable__c.Active__c</members>
         <members>Schedulable__c.Class_Name__c</members>
         <members>Schedulable__c.Frequency__c</members>
