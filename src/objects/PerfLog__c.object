@@ -21,6 +21,10 @@
         <type>Default</type>
     </actionOverrides>
     <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
         <actionName>List</actionName>
         <type>Default</type>
     </actionOverrides>
@@ -99,25 +103,21 @@
         <fullName>Log_Type__c</fullName>
         <externalId>false</externalId>
         <label>Log Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Method</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Query</fullName>
+                <default>false</default>
+            </picklistValues>
+            <restrictedPicklist>true</restrictedPicklist>
+            <sorted>false</sorted>
+        </picklist>
         <required>true</required>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
-        <valueSet>
-            <restricted>true</restricted>
-            <valueSetDefinition>
-                <sorted>false</sorted>
-                <value>
-                    <fullName>Method</fullName>
-                    <default>false</default>
-                    <label>Method</label>
-                </value>
-                <value>
-                    <fullName>Query</fullName>
-                    <default>false</default>
-                    <label>Query</label>
-                </value>
-            </valueSetDefinition>
-        </valueSet>
     </fields>
     <fields>
         <fullName>Number_of_Records__c</fullName>
@@ -177,5 +177,4 @@
     <pluralLabel>Perf Logs</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
-    <visibility>Public</visibility>
 </CustomObject>
