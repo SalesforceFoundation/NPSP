@@ -55,7 +55,6 @@
     <filter>
         <criteriaItems>
             <column>PerfLog__c.Component__c</column>
-            <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>BDI</value>
         </criteriaItems>
