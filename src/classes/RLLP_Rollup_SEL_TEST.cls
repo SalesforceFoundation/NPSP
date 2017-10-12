@@ -53,23 +53,23 @@ private class RLLP_Rollup_SEL_TEST {
                     '"Amount_Object__c":"Opportunity","Date_Field__c":"Opportunity.CloseDate",' +
                     '"Date_Object__c":"Opportunity","Detail_Field__c":"Opportunity.AccountId","Detail_Object__c":"Opportunity",' +
                     '"Summary_Field__c":"Account.AnnualRevenue","Summary_Object__c":"Account",' +
-                    '"Filter_Group__r":{"attributes":{"type":"Filter_Group__mdt","url":"/services/data/v41.0/sobjects/Filter_Group__mdt/000000000000000A01"},' +
+                    '"Filter_Group__r":{"attributes":{"type":"Filter_Group__mdt","url":"/services/data/v40.0/sobjects/Filter_Group__mdt/000000000000000A01"},' +
                     '"Id":"000000000000000A01","MasterLabel":"ClosedWonOpportunities"},' +
-                    '"Amount_Field__r":{"attributes":{"type":"FieldDefinition","url":"/services/data/v41.0/sobjects/FieldDefinition/Opportunity.Amount"},' +
+                    '"Amount_Field__r":{"attributes":{"type":"FieldDefinition","url":"/services/data/v40.0/sobjects/FieldDefinition/Opportunity.Amount"},' +
                     '"Id":"000000000000000AAA","DurableId":"Opportunity.Amount","QualifiedApiName":"Amount"},' +
-                    '"Amount_Object__r":{"attributes":{"type":"EntityDefinition","url":"/services/data/v41.0/sobjects/EntityDefinition/Opportunity"},' +
+                    '"Amount_Object__r":{"attributes":{"type":"EntityDefinition","url":"/services/data/v40.0/sobjects/EntityDefinition/Opportunity"},' +
                     '"Id":"000000000000000AAA","DurableId":"Opportunity","QualifiedApiName":"Opportunity"},' +
-                    '"Date_Field__r":{"attributes":{"type":"FieldDefinition","url":"/services/data/v41.0/sobjects/FieldDefinition/Opportunity.CloseDate"},' +
+                    '"Date_Field__r":{"attributes":{"type":"FieldDefinition","url":"/services/data/v40.0/sobjects/FieldDefinition/Opportunity.CloseDate"},' +
                     '"Id":"000000000000000AAA","DurableId":"Opportunity.CloseDate","QualifiedApiName":"CloseDate"},' +
-                    '"Date_Object__r":{"attributes":{"type":"EntityDefinition","url":"/services/data/v41.0/sobjects/EntityDefinition/Opportunity"},' +
+                    '"Date_Object__r":{"attributes":{"type":"EntityDefinition","url":"/services/data/v40.0/sobjects/EntityDefinition/Opportunity"},' +
                     '"Id":"000000000000000AAA","DurableId":"Opportunity","QualifiedApiName":"Opportunity"},' +
-                    '"Detail_Field__r":{"attributes":{"type":"FieldDefinition","url":"/services/data/v41.0/sobjects/FieldDefinition/Opportunity.Amount"},' +
+                    '"Detail_Field__r":{"attributes":{"type":"FieldDefinition","url":"/services/data/v40.0/sobjects/FieldDefinition/Opportunity.Amount"},' +
                     '"Id":"000000000000000AAA","DurableId":"Opportunity.AccountId","QualifiedApiName":"AccountId"},' +
-                    '"Detail_Object__r":{"attributes":{"type":"EntityDefinition","url":"/services/data/v41.0/sobjects/EntityDefinition/Opportunity"},' +
+                    '"Detail_Object__r":{"attributes":{"type":"EntityDefinition","url":"/services/data/v40.0/sobjects/EntityDefinition/Opportunity"},' +
                     '"Id":"000000000000000AAA","DurableId":"Opportunity","QualifiedApiName":"Opportunity"},' +
-                    '"Summary_Field__r":{"attributes":{"type":"FieldDefinition","url":"/services/data/v41.0/sobjects/FieldDefinition/Account.AnnualRevenue"},' +
+                    '"Summary_Field__r":{"attributes":{"type":"FieldDefinition","url":"/services/data/v40.0/sobjects/FieldDefinition/Account.AnnualRevenue"},' +
                     '"Id":"000000000000000AAA","DurableId":"Account.AnnualRevenue","QualifiedApiName":"AnnualRevenue"},' +
-                    '"Summary_Object__r":{"attributes":{"type":"EntityDefinition","url":"/services/data/v41.0/sobjects/EntityDefinition/Account"},' +
+                    '"Summary_Object__r":{"attributes":{"type":"EntityDefinition","url":"/services/data/v40.0/sobjects/EntityDefinition/Account"},' +
                     '"Id":"000000000000000AAA","DurableId":"Account","QualifiedApiName":"Account"}}' +
                 ']', List<Rollup__mdt>.class);
 
@@ -85,16 +85,16 @@ private class RLLP_Rollup_SEL_TEST {
                 '{"attributes":{"type":"Filter_Rule__mdt"},"Id":"000000000000000B01","MasterLabel":"ClosedWon-Rule-1",' +
                     '"DeveloperName":"ClosedWon_Rule_1","Filter_Group__c":"000000000000000A01",' +
                     '"Field__c":"Opportunity.IsWon","Object__c":"Opportunity","Operator__c":"Equals","Constant__c":"True",' +
-                    '"Is_Deleted__c":false,"Field__r":{"attributes":{"type":"FieldDefinition","url":"/services/data/v41.0/sobjects/FieldDefinition/Opportunity.IsWon"},' +
+                    '"Is_Deleted__c":false,"Field__r":{"attributes":{"type":"FieldDefinition","url":"/services/data/v40.0/sobjects/FieldDefinition/Opportunity.IsWon"},' +
                     '"Id":"000000000000000AAA","DurableId":"Opportunity.IsWon","QualifiedApiName":"IsWon"},' +
-                    '"Object__r":{"attributes":{"type":"EntityDefinition","url":"/services/data/v41.0/sobjects/EntityDefinition/Opportunity"},' +
+                    '"Object__r":{"attributes":{"type":"EntityDefinition","url":"/services/data/v40.0/sobjects/EntityDefinition/Opportunity"},' +
                     '"Id":"000000000000000AAA","DurableId":"Opportunity","QualifiedApiName":"Opportunity"}},' +
                 '{"attributes":{"type":"Filter_Rule__mdt"},"Id":"000000000000000B02","MasterLabel":"ClosedWon-Rule-2",' +
                     '"DeveloperName":"ClosedWon_Rule_2","Filter_Group__c":"000000000000000A01",' +
                     '"Field__c":"Opportunity.IsClosed","Object__c":"Opportunity","Operator__c":"Equals","Constant__c":"True",' +
-                    '"Is_Deleted__c":false,"Field__r":{"attributes":{"type":"FieldDefinition","url":"/services/data/v41.0/sobjects/FieldDefinition/Opportunity.IsClosed"},' +
+                    '"Is_Deleted__c":false,"Field__r":{"attributes":{"type":"FieldDefinition","url":"/services/data/v40.0/sobjects/FieldDefinition/Opportunity.IsClosed"},' +
                     '"Id":"000000000000000AAA","DurableId":"Opportunity.IsClosed","QualifiedApiName":"IsClosed"},' +
-                    '"Object__r":{"attributes":{"type":"EntityDefinition","url":"/services/data/v41.0/sobjects/EntityDefinition/Opportunity"},' +
+                    '"Object__r":{"attributes":{"type":"EntityDefinition","url":"/services/data/v40.0/sobjects/EntityDefinition/Opportunity"},' +
                     '"Id":"000000000000000AAA","DurableId":"Opportunity","QualifiedApiName":"Opportunity"}}' +
                 ']', List<Filter_Rule__mdt>.class);
     }
@@ -103,7 +103,7 @@ private class RLLP_Rollup_SEL_TEST {
      * @description Test the Rollup selector methods. Relies on hardcoded JSON deserialized
      * MDT data for these tests.
      */
-    static testMethod void test_CMT_Selectors() {
+    static testMethod void test_Rollup_Selectors() {
 
         mockRollupCMTValues();
 
