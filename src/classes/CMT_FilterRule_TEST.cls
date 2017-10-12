@@ -86,7 +86,7 @@ private class CMT_FilterRule_TEST {
 
         // Test that a list of fields to query is returned
         String objName = CMT_FilterRule_SEL.cachedFilterRules[0].Object__c;
-        String queryFields = CMT_FilterRule_SEL.getReferencedFieldByObjectAsString(Schema.getGlobalDescribe().get(objName));
+        String queryFields = CMT_FilterRule_SEL.getReferencedFieldsByObjectAsString(Schema.getGlobalDescribe().get(objName));
         System.Assert(String.isNotEmpty(queryFields),
             'There should be at least one referenced field for the ' + objName + ' object in Filter_Rule__mdt');
 

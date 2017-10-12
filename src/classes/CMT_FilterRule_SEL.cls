@@ -38,7 +38,7 @@ public without sharing class CMT_FilterRule_SEL {
     /**
      * @description Private static vars to cache the Custom Metadata Type records.
      * In terms of limits, these DO use up Query Rows, but NOT Queries.
-     * These are testVisibl to allow unit tests to mock the contents of these static vars
+     * These are testVisible to allow unit tests to mock the contents of these static vars
      */
     @TestVisible
     private static List<Filter_Group__mdt> cachedFilterGroups {
@@ -124,7 +124,7 @@ public without sharing class CMT_FilterRule_SEL {
      * @param objType The type of object to retrieve referenced fields for
      * @return String list of fields to append to a SOQL query
      */
-    public static String getReferencedFieldByObjectAsString(SObjectType objType) {
+    public static String getReferencedFieldsByObjectAsString(SObjectType objType) {
         String soql = '';
         for (DescribeFieldResult dfr : getReferencedFieldsByObject(objType)) {
             soql += dfr.getName() + ',';

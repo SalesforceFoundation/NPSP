@@ -206,7 +206,6 @@
         <members>REL_Relationships_TEST</members>
         <members>REL_Utils</members>
         <members>RLLP_Definition</members>
-        <members>RLLP_Definition_SEL</members>
         <members>RLLP_Engine</members>
         <members>RLLP_Engine_TEST</members>
         <members>RLLP_Exclusion</members>
@@ -230,6 +229,8 @@
         <members>RLLP_OppRollup_TEST2</members>
         <members>RLLP_OppRollup_UTIL</members>
         <members>RLLP_OppSoftCreditRollup_BATCH</members>
+        <members>RLLP_Rollup_SEL</members>
+        <members>RLLP_Rollup_SEL_TEST</members>
         <members>RLLP_Wrapper</members>
         <members>RP_Constants</members>
         <members>RP_GettingStartedController</members>
