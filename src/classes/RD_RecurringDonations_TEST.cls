@@ -1103,12 +1103,17 @@ public class RD_RecurringDonations_TEST {
     // Helpers
     ////////////
 
+    /*********************************************************************************************************
+    * @description Retrieve Primary Opportunity Contact Roles for specified Recurring Donations
+    * @param rdIds Recurring Donation Ids
+    * @return List<OpportunityContactRole>
+    **********************************************************************************************************/
     private static List<OpportunityContactRole> getPrimaryOppContactRoles(Set<Id> rdIds) {
         List<OpportunityContactRole> ocrs = new List<OpportunityContactRole>([ 
             SELECT ContactId, OpportunityId, Role 
             FROM OpportunityContactRole 
             WHERE Opportunity.npe03__Recurring_Donation__c IN :rdIds AND 
-                isPrimary = true
+            isPrimary = true
         ]);
 
         return ocrs == null ? new List<OpportunityContactRole>() : ocrs;
