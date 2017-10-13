@@ -54,7 +54,7 @@ public with sharing class BDI_PerfData {
             Account_Custom_Unique_ID__c = null,
             Contact_Matching_Rule__c = 'Firstname,Lastname',
             Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' + UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
-            Donation_Matching_Behavior__c = BDI_DataImport_API.BestMatchOrCreate,
+            Donation_Matching_Behavior__c = BDI_DataImport_API.DoNotMatch,
             Donation_Date_Range__c = 3,
             Donation_Matching_Implementing_Class__c = null,
             Post_Process_Implementing_Class__c = null,
@@ -64,40 +64,41 @@ public with sharing class BDI_PerfData {
         return batch;
     }
 
-    public static void createDIRecords(ID batchId, Integer countRecords) {
+    public static void createDIRecords(ID batchId, Integer countRecords, Integer countOpps) {
 
 
         list<DataImport__c> listDI = new list<DataImport__c>();
         for (integer i = 1; i <= countRecords; i++) {
+            for (integer iOpp = 1; iOpp <= countOpps; iOpp++) {
+                DataImport__c di = new DataImport__c();
+                di.NPSP_Data_Import_Batch__c = batchId;
 
-            DataImport__c di = new DataImport__c();
-            di.NPSP_Data_Import_Batch__c = batchId;
+                di.Contact1_Firstname__c = 'x' + i;
+                di.Contact1_Lastname__c = 'X' + i;
+                di.Contact1_Personal_Email__c = 'x@x' + i + '.com';
 
-            di.Contact1_Firstname__c = 'x' + i;
-            di.Contact1_Lastname__c = 'X' + i;
-            di.Contact1_Personal_Email__c = 'x@x' + i + '.com';
+                di.Contact2_Firstname__c = 'xs' + i;
+                di.Contact2_Lastname__c = 'X' + i;
+                di.Contact2_Personal_Email__c = 'xs@x' + i + '.com';
 
-            di.Contact2_Firstname__c = 'xs' + i;
-            di.Contact2_Lastname__c = 'X' + i;
-            di.Contact2_Personal_Email__c = 'xs@x' + i + '.com';
+                di.Home_Street__c = 'ABC street apt#' + i;
+                di.Home_City__c = 'Seattle';
+                di.Home_State_Province__c = 'Washington';
+                di.Home_Zip_Postal_Code__c = '98005';
+                di.Home_Country__c = 'United States';
 
-            di.Home_Street__c = 'ABC street apt#' + i;
-            di.Home_City__c = 'Seattle';
-            di.Home_State_Province__c = 'Washington';
-            di.Home_Zip_Postal_Code__c = '98005';
-            di.Home_Country__c = 'United States';
+                di.Account1_Name__c = 'CompanyX' + i;
+                di.Account2_Name__c = 'CompanyXS' + i;
 
-            di.Account1_Name__c = 'CompanyX' + i;
-            di.Account2_Name__c = 'CompanyXS' + i;
+                di.Donation_Date__c = date.valueOf('2017-06-04');
+                di.Donation_Donor__c = 'Contact1';
+                di.Donation_Amount__c = 1000;
+                di.Payment_Method__c = 'check';
+                di.Donation_Stage__c = 'Pledged';
+                di.Donation_Campaign_Name__c = 'LDVTestCampaign';
 
-            di.Donation_Date__c = date.valueOf('2017-06-04');
-            di.Donation_Donor__c = 'Contact1';
-            di.Donation_Amount__c = 1000;
-            di.Payment_Method__c = 'check';
-            di.Donation_Stage__c = 'Closed Won';
-            di.Donation_Campaign_Name__c = 'LDVTestCampaign';
-
-            listDI.add(di);
+                listDI.add(di);
+            }
         }
         insert listDI;
     }

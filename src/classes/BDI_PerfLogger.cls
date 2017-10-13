@@ -97,6 +97,9 @@ public with sharing class BDI_PerfLogger {
         }
 
         public PerfLog__c prepare(Long durationParent) {
+            if (tmEnd == null) {
+                stop();
+            }
             pl.Duration__c = tmEnd - tmStart;
             pl.Parent_Duration__c = durationParent;
             return pl;
