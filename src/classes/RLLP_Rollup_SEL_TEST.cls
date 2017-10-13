@@ -44,7 +44,7 @@ private class RLLP_Rollup_SEL_TEST {
     private static void mockRollupCMTValues() {
 
         // Create a single Rollup
-        RLLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>)JSON.deserialize('[' +
+        String rollupsJSON = '[' +
                     '{"attributes":{"type":"Rollup__mdt"},' +
                     '"Id":"000000000000000C01","DeveloperName":"Household_Total_Donations_AllTime",' +
                     '"MasterLabel":"Total Opportunity Value to Household","Active__c":true,' +
@@ -71,17 +71,15 @@ private class RLLP_Rollup_SEL_TEST {
                     '"Id":"000000000000000AAA","DurableId":"Account.AnnualRevenue","QualifiedApiName":"AnnualRevenue"},' +
                     '"Summary_Object__r":{"attributes":{"type":"EntityDefinition","url":"/services/data/v40.0/sobjects/EntityDefinition/Account"},' +
                     '"Id":"000000000000000AAA","DurableId":"Account","QualifiedApiName":"Account"}}' +
-                ']', List<Rollup__mdt>.class);
+                ']';
 
         // Create a single Filter Group
-        CMT_FilterRule_SEL.cachedFilterGroups = (List<Filter_Group__mdt>)JSON.deserialize(
-                    '[{"attributes":{"type":"Filter_Group__mdt"},"Id":"000000000000000A01",' +
+        String filterGroupsJSON = '[{"attributes":{"type":"Filter_Group__mdt"},"Id":"000000000000000A01",' +
                     '"MasterLabel":"ClosedWonOpportunities",' +
                     '"DeveloperName":"ClosedWonOpportunities",' +
-                    '"Is_Deleted__c":false}]', List<Filter_Group__mdt>.class);
+                    '"Is_Deleted__c":false}]';
 
-        // Create 2 Filter Rules for the above Filter Group
-        CMT_FilterRule_SEL.cachedFilterRules = (List<Filter_Rule__mdt>)JSON.deserialize('[' +
+        String filterRulesJSON = '[' +
                 '{"attributes":{"type":"Filter_Rule__mdt"},"Id":"000000000000000B01","MasterLabel":"ClosedWon-Rule-1",' +
                     '"DeveloperName":"ClosedWon_Rule_1","Filter_Group__c":"000000000000000A01",' +
                     '"Field__c":"Opportunity.IsWon","Object__c":"Opportunity","Operator__c":"Equals","Constant__c":"True",' +
@@ -96,7 +94,17 @@ private class RLLP_Rollup_SEL_TEST {
                     '"Id":"000000000000000AAA","DurableId":"Opportunity.IsClosed","QualifiedApiName":"IsClosed"},' +
                     '"Object__r":{"attributes":{"type":"EntityDefinition","url":"/services/data/v40.0/sobjects/EntityDefinition/Opportunity"},' +
                     '"Id":"000000000000000AAA","DurableId":"Opportunity","QualifiedApiName":"Opportunity"}}' +
-                ']', List<Filter_Rule__mdt>.class);
+                ']';
+
+        CMT_FilterRule_SEL.cachedFilterGroups = (List<Filter_Group__mdt>)JSON.deserialize(
+                UTIL_Namespace.StrAllNSPrefix(filterGroupsJSON), List<Filter_Group__mdt>.class);
+
+        CMT_FilterRule_SEL.cachedFilterRules = (List<Filter_Rule__mdt>)JSON.deserialize(
+                UTIL_Namespace.StrAllNSPrefix(filterRulesJSON), List<Filter_Rule__mdt>.class);
+
+        // Create 2 Filter Rules for the above Filter Group
+        RLLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>)JSON.deserialize(
+                UTIL_Namespace.StrAllNSPrefix(rollupsJSON), List<Rollup__mdt>.class);
     }
 
     /**

@@ -42,12 +42,10 @@ private class CMT_FilterRule_TEST {
      * for the unit tests
      */
     private static void mockFilterCMTValues() {
-        CMT_FilterRule_SEL.cachedFilterGroups = (List<Filter_Group__mdt>)JSON.deserialize(
-                '[{"attributes":{"type":"Filter_Group__mdt"},' +
+        String filterGroupsJSON = '[{"attributes":{"type":"Filter_Group__mdt"},' +
                 '"Id":"000000000000000A01","MasterLabel":"TEST",' +
-                '"DeveloperName":"TEST","Is_Deleted__c":false}]', List<Filter_Group__mdt>.class);
-
-        CMT_FilterRule_SEL.cachedFilterRules = (List<Filter_Rule__mdt>)JSON.deserialize('[' +
+                '"DeveloperName":"TEST","Is_Deleted__c":false}]';
+        String filterRulesJSON = '[' +
                 '{"attributes":{"type":"Filter_Rule__mdt"},' +
                 '"Id":"000000000000000B02","MasterLabel":"Rule 2","DeveloperName":"Rule_2","Filter_Group__c":"000000000000000A01",' +
                 '"Field__c":"Opportunity.IsWon","Object__c":"Opportunity","Operator__c":"Equals","Constant__c":"TRUE","Is_Deleted__c":false,' +
@@ -68,7 +66,13 @@ private class CMT_FilterRule_TEST {
                 '"Field__r":{"attributes":{"type":"FieldDefinition","url":"/services/data/v41.0/sobjects/FieldDefinition/Opportunity.IsClosed"},' +
                 '"Id":"000000000000000AA3","DurableId":"Opportunity.IsClosed","QualifiedApiName":"IsClosed"},' +
                 '"Object__r":{"attributes":{"type":"EntityDefinition","url":"/services/data/v41.0/sobjects/EntityDefinition/Opportunity"},' +
-                '"Id":"000000000000000AA3","DurableId":"Opportunity","QualifiedApiName":"Opportunity"}}]', List<Filter_Rule__mdt>.class);
+                '"Id":"000000000000000AA3","DurableId":"Opportunity","QualifiedApiName":"Opportunity"}}]';
+
+        CMT_FilterRule_SEL.cachedFilterGroups = (List<Filter_Group__mdt>)JSON.deserialize(
+                UTIL_Namespace.StrAllNSPrefix(filterGroupsJSON), List<Filter_Group__mdt>.class);
+
+        CMT_FilterRule_SEL.cachedFilterRules = (List<Filter_Rule__mdt>)JSON.deserialize(
+                UTIL_Namespace.StrAllNSPrefix(filterRulesJSON), List<Filter_Rule__mdt>.class);
     }
 
     /**
