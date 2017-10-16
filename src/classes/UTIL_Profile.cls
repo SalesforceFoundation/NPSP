@@ -31,13 +31,13 @@
 * @author Salesforce.org
 * @date 2017
 * @group Utilities
-* @description Utility to Profiles in the Org
+* @description Utility for the Profiles in the Org
 */
 public with sharing class UTIL_Profile {
-	/** @description static instance of the current class (UTIL_Profile). It is used as the instance in a Singleton context*/
+    /** @description static instance of the current class (UTIL_Profile). It is used as the instance in a Singleton context*/
 	private static UTIL_Profile utilProfile;
 	/** @description Map of the Profiles grouped by Name*/
-	private Map<String,List<Profile>> profilesByName;
+	private Map<String, List<Profile>> profilesByName;
 
 	/*********************************************************************************************************
     * @description get the instance of the current class
@@ -55,11 +55,7 @@ public with sharing class UTIL_Profile {
     * The UTIL_Profile object needs to be constructed only from the static method getInstance
     */
 	private UTIL_Profile() {
-		List<Profile> profileRecords = [
-			SELECT Name
-			FROM Profile
-		];
-		profilesByName = getProfilesByName(profileRecords);
+		profilesByName = getProfilesByName();
 	}
 
 	/*********************************************************************************************************
@@ -71,17 +67,19 @@ public with sharing class UTIL_Profile {
 		if (profilesByName.containsKey(profileName) == false) {
 			return new Set<Id>();
 		}
-		return (new Map<Id,Profile>(profilesByName.get(profileName))).keySet();
+		return (new Map<Id, Profile>(profilesByName.get(profileName))).keySet();
 	}
 
 	/*********************************************************************************************************
     * @description Get a Map of Profiles, grouped by Name
-    * @param profileRecords List of the Profiles
-    * @return Map of Profiles, grouped by Name
+    * @return Map<String, List<Profile>> Map of  the Profiles grouped by Name
     */
-	private Map<String,List<Profile>> getProfilesByName(List<Profile> profileRecords) {
-		Map<String,List<Profile>> result = new Map<String,List<Profile>>();
-		for (Profile currentProfile :profileRecords) {
+	private Map<String, List<Profile>> getProfilesByName() {
+		Map<String, List<Profile>> result = new Map<String, List<Profile>>();
+		for (Profile currentProfile :[
+                SELECT Name
+                FROM Profile
+        ]) {
 			if (result.containsKey(currentProfile.Name) == false) {
 				result.put(currentProfile.Name, new List<Profile>());
 			}
