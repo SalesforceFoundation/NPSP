@@ -630,11 +630,12 @@ public class HH_HouseholdNaming_TEST {
 
     /*********************************************************************************************************
     @description
-        Test getHouseholdContacts() returns empty list on invalid Account/Household Ids input arg.
+        Test getHouseholdContacts() returns empty list on empty/null Account/Household Ids input arg.
     verify:
         An empty list is returned.
     **********************************************************************************************************/  
     private static testMethod void testGetHouseholdContactsReturnsEmptyList() {
+        // The private Contact should not be returned by the query
         insert new Contact(LastName = 'foo', npe01__Private__c = true);
         
         HH_HouseholdNaming hhNaming = new HH_HouseholdNaming();
@@ -650,6 +651,11 @@ public class HH_HouseholdNaming_TEST {
         hhIds.add(null);
         contacts = hhNaming.getHouseholdContacts(hhIds);
         System.assertEquals(0, contacts.size(), 'The Contact list should contain no record when Id list arg contains null: ' + contacts);
+
+        Id mockAccountId = Account.sObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
+        hhIds.add(mockAccountId);
+        contacts = hhNaming.getHouseholdContacts(hhIds);
+        System.assertEquals(0, contacts.size(), 'The Contact list should contain no record for Account without Contacts: ' + contacts);
     }
 
     /*********************************************************************************************************
