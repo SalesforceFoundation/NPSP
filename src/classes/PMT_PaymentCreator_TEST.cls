@@ -111,26 +111,23 @@ private with sharing class PMT_PaymentCreator_TEST {
         insert pmtWrittenOff;
         
         Test.startTest();
-        opp1.StageName = 'Closed Lost';
+        opp1.StageName = UTIL_UnitTestData_TEST.getClosedLostStage();
         update opp1;
         Test.stopTest();
         
         // look for the data
         //should be two, one paid, one written off for the balance 
         npe01__OppPayment__c[] opmtAll = [select id, npe01__payment_method__c, npe01__payment_amount__c, npe01__paid__c, npe01__written_off__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp1.Id];
-        system.assertEquals(2, opmtAll.size());
-        
-        //the single payment should be written off
-        npe01__OppPayment__c[] opmtOpen = [select id, npe01__payment_method__c, npe01__payment_amount__c, npe01__paid__c, npe01__written_off__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp1.Id and npe01__paid__c = false and npe01__written_off__c = false];
-        system.assertEquals(0, opmtOpen.size());
-        
+        system.assertEquals(3, opmtAll.size());
+                
         npe01__OppPayment__c[] opmtPaid = [select id, npe01__payment_method__c, npe01__payment_amount__c, npe01__paid__c, npe01__written_off__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp1.Id and npe01__paid__c = true and npe01__written_off__c = false];
         system.assertEquals(1, opmtPaid.size());
         system.assertEquals(50, opmtPaid[0].npe01__payment_amount__c);
         
-        npe01__OppPayment__c[] opmtWrittenOff = [select id, npe01__payment_method__c, npe01__payment_amount__c, npe01__paid__c, npe01__written_off__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp1.Id and npe01__paid__c = false and npe01__written_off__c = true];
-        system.assertEquals(1, opmtWrittenOff.size());
+        npe01__OppPayment__c[] opmtWrittenOff = [select id, npe01__payment_method__c, npe01__payment_amount__c, npe01__paid__c, npe01__written_off__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp1.Id and npe01__paid__c = false and npe01__written_off__c = true order by npe01__payment_amount__c];
+        system.assertEquals(2, opmtWrittenOff.size());
         system.assertEquals(50, opmtWrittenOff[0].npe01__payment_amount__c);       
+        system.assertEquals(50, opmtWrittenOff[1].npe01__payment_amount__c);       
     }
 
     /*********************************************************************************************************
@@ -138,7 +135,7 @@ private with sharing class PMT_PaymentCreator_TEST {
     operation:
         close an Opp as Lost that has an existing payment and a null amount
     verify:
-        payment is deleted, no infinite recursion takes place
+        payment is written off, no infinite recursion takes place
     **********************************************************************************************************/            
     static testMethod void nullAmount() {
         if (strTestOnly != '*' && strTestOnly != 'nullAmount') return;
@@ -162,14 +159,17 @@ private with sharing class PMT_PaymentCreator_TEST {
         insert opp;
 
         list<npe01__OppPayment__c> opmtAll = [select id, npe01__payment_method__c, npe01__payment_amount__c, npe01__paid__c, npe01__written_off__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp.Id];
-        system.assertEquals(1, opmtAll.size());
+        system.assertEquals(1, opmtAll.size(), 'Payment should exist.');
+        system.assert(!opmtAll[0].npe01__written_off__c,'Payment should not be written off.');
+        
 
         opp.Amount = null;
         opp.StageName = UTIL_UnitTestData_TEST.getClosedLostStage();
         update opp;
 
         opmtAll = [select id, npe01__payment_method__c, npe01__payment_amount__c, npe01__paid__c, npe01__written_off__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp.Id];
-        system.assertEquals(0, opmtAll.size());
+        system.assertEquals(1, opmtAll.size(), 'Payment should exist.');
+        system.assert(opmtAll[0].npe01__written_off__c,'Payment should be written off.');
 
     }
 
