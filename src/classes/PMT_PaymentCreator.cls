@@ -143,7 +143,6 @@ public class PMT_PaymentCreator {
             list<Opportunity> newOpps = newOppsMap.values();
             list<npe01__OppPayment__c> paymentsToInsert = new list<npe01__OppPayment__c>();
             list<npe01__OppPayment__c> paymentsToUpdate = new list<npe01__OppPayment__c>();
-            list<npe01__OppPayment__c> paymentsToDelete = new list<npe01__OppPayment__c>();
             list<Opportunity> updatedOpps = new list<Opportunity>();
             
             // James Melville Added to support multi-currency sfdc.  */
@@ -275,6 +274,7 @@ public class PMT_PaymentCreator {
                                 (thisOpp.npe01__OppPayment__r[0].npe01__Payment_Amount__c == oldOpp.Amount || thisOpp.npe01__OppPayment__r[0].npe01__Payment_Amount__c == thisOpp.Amount) &&
                                 thisOpp.npe01__OppPayment__r.size() == 1 &&
                                 thisOpp.npe01__OppPayment__r[0].npe01__paid__c == False &&
+                                //open opportunities only
                                 !thisOpp.isClosed && thisOpp.amount > 0 &&
                                 thisOpp.npe01__payments_made__c == 0) {
                             thisOpp.npe01__OppPayment__r[0].npe01__scheduled_date__c = thisOpp.closeDate;
@@ -297,6 +297,7 @@ public class PMT_PaymentCreator {
                                 (thisOpp.npe01__OppPayment__r[0].npe01__Payment_Amount__c == oldOpp.Amount || thisOpp.npe01__OppPayment__r[0].npe01__Payment_Amount__c == thisOpp.Amount) &&
                                 thisOpp.npe01__OppPayment__r.size() == 1 &&
                                 thisOpp.npe01__OppPayment__r[0].npe01__paid__c == False &&
+                                //closed/won opportunities only
                                 thisOpp.isClosed && thisOpp.isWon && thisOpp.amount > 0 &&
                                 thisOpp.npe01__payments_made__c == 0) {
                             thisOpp.npe01__OppPayment__r[0].npe01__payment_date__c = thisOpp.closeDate;
@@ -305,11 +306,13 @@ public class PMT_PaymentCreator {
                             paymentsToUpdate.add(thisOpp.npe01__OppPayment__r[0]);
                       
                         }
+                        //closed/lost opportunities only
                         else if ( thisOpp.isClosed && !thisOpp.isWon) {
                             
                             for(npe01__OppPayment__c thisPayment : thisOpp.npe01__OppPayment__r){
                                 if(thisPayment.npe01__Paid__c == False && thisPayment.npe01__Written_Off__c == False){
-                                    paymentsToDelete.add(thisPayment);
+                                    thisPayment.npe01__Written_Off__c = true;
+                                    paymentsToUpdate.add(thisPayment);
                                 }
                             }
                         }
@@ -343,8 +346,6 @@ public class PMT_PaymentCreator {
                 // update or delete payments     
                 if (!paymentsToUpdate.isEmpty())
                     dmlWrapper.objectsToUpdate.addAll((list<SObject>)paymentsToUpdate);
-                if (!paymentsToDelete.isEmpty())
-                    dmlWrapper.objectsToDelete.addAll((list<SObject>)paymentsToDelete);
                 if (!paymentsToInsert.isEmpty())
                     dmlWrapper.objectsToInsert.addAll((list<SObject>)paymentsToInsert);
             }
