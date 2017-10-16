@@ -162,7 +162,18 @@ public class PMT_PaymentCreator {
             list<npe01__OppPayment__c> paymentsToInsert = new list<npe01__OppPayment__c>();
             list<npe01__OppPayment__c> paymentsToUpdate = new list<npe01__OppPayment__c>();
             list<Opportunity> updatedOpps = new list<Opportunity>();
-            
+
+            // SOQL for Updated Opps and Related Payments.
+            // AfterUpdate => Queries for known fields and field in custom Payment Field Mappings.
+            // BeforeUpdate AND IsACMEnabled => Used to handle summing total payments when ACM is enabled in the org.
+            if (ta == TDTM_Runnable.Action.AfterUpdate || (isACMEnabled && ta == TDTM_Runnable.Action.BeforeUpdate)) {
+                String query = buildOppsQuery() + 'WHERE Id IN :newOpps';
+                updatedOpps = database.query(query);
+                if (isACMEnabled && ta == TDTM_Runnable.Action.BeforeUpdate) {
+                    newOppsMapRequeried = new Map<Id, Opportunity>((List<Opportunity>)(updatedOpps));
+                }
+            }
+
             if (TDTM_Runnable.Action.BeforeUpdate == ta) {
                 if (!String.isEmpty(ContactSettings.Payments_Auto_Close_Stage_Name__c)) {
                     String closedStageName = ContactSettings.Payments_Auto_Close_Stage_Name__c;
