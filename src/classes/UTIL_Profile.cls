@@ -31,7 +31,7 @@
 * @author Salesforce.org
 * @date 2017
 * @group Utilities
-* @description Utility for Profiles in the Org
+* @description Utility to Profiles in the Org
 */
 public with sharing class UTIL_Profile {
 	/** @description static instance of the current class (UTIL_Profile). It is used as the instance in a Singleton context*/
