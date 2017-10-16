@@ -347,10 +347,78 @@ public class HH_HouseholdNaming_TEST {
         system.assertequals('Test ' + system.label.npo02.HouseholdNameConnector + ' Jones ' + system.label.npo02.DefaultHouseholdName, hh.Name);
         system.assertequals('Jim ' + system.label.npo02.HouseholdNameConnector  + ' Joe Test ' + system.label.npo02.HouseholdNameConnector + ' John Jones', hh.npo02__Formal_greeting__c);
         system.assertequals('Jim, Joe ' + system.label.npo02.HouseholdNameConnector + ' John', hh.npo02__Informal_greeting__c);
-        
-        
     }  
 
+    /*********************************************************************************************************
+    @description
+        Test updateNames() updates Household names only for specified Accounts or Households. 
+        Contacts having either Account or Household null are not processed unless their 
+        Household/Account is in the updateNames() argument list.
+    verify:
+        Names for specified Account/Households are updated.
+    **********************************************************************************************************/  
+    private static testMethod void testUpdateNamesIsAppliedToSpecifiedHHsOnly() {
+        UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
+        UTIL_UnitTestData_TEST.setupHHNamingSettings();
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c(
+            npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR
+        ));
+
+        List<Account> accounts = buildHHAccounts(2);
+        insert accounts;
+
+        List<npo02__Household__c> hhs = buildHouseholds(2);
+        insert hhs;
+
+        List<Contact> contacts = new List<Contact>{
+            new Contact(FirstName = 'Alpha', LastName = 'A', AccountId = accounts[0].Id, npo02__Household__c = hhs[0].Id),
+            new Contact(FirstName = 'Beta', LastName = 'B', npo02__Household__c = hhs[1].Id),
+            new Contact(FirstName = 'Charlie', LastName = 'C', AccountId = accounts[1].Id),
+            new Contact(FirstName = 'Deleta', LastName = 'D', npe01__Private__c = true)
+        };
+
+        // Execute Contact insert in start/stopTest() to complete Household future jobs
+        Test.startTest();
+        insert contacts;
+        Test.stopTest();
+
+        List<Contact> actualContacts = getContactsOrderByFirstName();
+
+        Contact actual = actualContacts[0];
+        System.assertEquals(accounts[0].Name, actual.Account.Name, 'Account Name should be unchanged: ' + actual);
+
+        actual = actualContacts[1];
+        contacts[1].AccountId = actualContacts[1].AccountId; // get the new Account created by the Contact insert
+        System.assertEquals(buildDefaultHHName(contacts[1]), actual.Account.Name, 'Account Name should be default Household Name: ' + actual);
+        
+        actual = actualContacts[2];
+        System.assertEquals(accounts[1].Name, actual.Account.Name, 'Account Name should be unchanged: ' + actual);
+
+        actual = actualContacts[3];
+        System.assertEquals(null, actual.AccountId, 'Account should not be specified for a private Contact: ' + actual);
+
+        UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
+
+        HH_HouseholdNaming hhNaming = new HH_HouseholdNaming();
+        // Specify null argument -> ensure records with null Account or Household do not have names updated
+        List<Id> hhIds = new List<Id>{ contacts[0].AccountId, contacts[1].AccountId, null };
+
+        hhNaming.updateNames(hhIds);
+
+        actualContacts = getContactsOrderByFirstName();
+
+        // Verify Account names are changed for Accounts specified to the updateNames()
+        for (Integer i = 0; i <= 1; i++) {
+            actual = actualContacts[i];
+            System.assertEquals(buildFormattedHHName(contacts[i]), actual.Account.Name, 'Account Name should be formatted HH Name now: ' + actual);
+        }
+
+        // Verify Account names are not changed for Accounts not specified to the updateNames()
+        actual = actualContacts[2];
+        System.assertEquals(accounts[1].Name, actual.Account.Name, 'Account Name should be unchanged: ' + actual);
+        actual = actualContacts[3];
+        System.assertEquals(null, actual.AccountId, 'Account should not be specified for a private Contact: ' + actual);
+    }
     
     /*********************************************************************************************************
     * @description tests that case sensitive name changes on contacts update the Household name and greetings
@@ -558,5 +626,165 @@ public class HH_HouseholdNaming_TEST {
         UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
 
         System.assert(new HH_HouseholdNaming().isAutomaticNaming(), 'Automatic Household Naming should be turned on');
+    }
+
+    /*********************************************************************************************************
+    @description
+        Test getHouseholdContacts() returns empty list on invalid Account/Household Ids input arg.
+    verify:
+        An empty list is returned.
+    **********************************************************************************************************/  
+    private static testMethod void testGetHouseholdContactsReturnsEmptyList() {
+        insert new Contact(LastName = 'foo', npe01__Private__c = true);
+        
+        HH_HouseholdNaming hhNaming = new HH_HouseholdNaming();
+
+        List<Id> hhIds = null;
+        List<Contact> contacts = hhNaming.getHouseholdContacts(hhIds);
+        System.assertEquals(0, contacts.size(), 'The Contact list should contain no record for null Id list argument: ' + contacts);
+
+        hhIds = new List<Id>();
+        contacts = hhNaming.getHouseholdContacts(hhIds);
+        System.assertEquals(0, contacts.size(), 'The Contact list should contain no record for empty Id list arg: ' + contacts);
+        
+        hhIds.add(null);
+        contacts = hhNaming.getHouseholdContacts(hhIds);
+        System.assertEquals(0, contacts.size(), 'The Contact list should contain no record when Id list arg contains null: ' + contacts);
+    }
+
+    /*********************************************************************************************************
+    @description
+        Test getHouseholdContacts() returns data for specified Accounts/Households only.
+    verify:
+        Contacts for specified Accounts/Households are selected.
+        Contacts with null Account and not referencing the input Household are not selected.
+        Contacts with null Account and null Household are not selected.
+    **********************************************************************************************************/  
+    private static testMethod void testGetHouseholdContactsReturnsDataForSpecifiedHHOnly() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c(
+            npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR
+        ));   
+        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c(
+            npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR
+        ));       
+
+        List<Account> accounts = buildHHAccounts(3);
+        insert accounts;
+
+        List<npo02__Household__c> hhs = buildHouseholds(1);
+        insert hhs;
+
+        List<Contact> contacts = new List<Contact>{
+            new Contact(FirstName = 'Alpha', LastName = 'A', AccountId = accounts[0].Id),
+            new Contact(FirstName = 'Beta', LastName = 'B', AccountId = accounts[1].Id, npo02__Household__c = hhs[0].Id),
+            new Contact(FirstName = 'Charlie', LastName = 'C', AccountId = accounts[2].Id),
+            new Contact(FirstName = 'Delta', LastName = 'D', npe01__Private__c = true)
+        };
+
+        // Execute Contact insert in start/stopTest() to complete Household future jobs
+        Test.startTest();
+        insert contacts;
+        Test.stopTest();
+        
+        List<Contact> actualContacts = getContactsOrderByFirstName();
+        for (Integer i = 0; i < contacts.size(); i++) {
+            Contact actual = actualContacts[i];
+            System.assertEquals(contacts[i].npo02__Household__c, actual.npo02__Household__c, 'Household should be unchanged: ' + actual);
+            System.assertEquals(contacts[i].AccountId, actual.AccountId, 'Account should be unchanged: ' + actual);
+        }
+
+        HH_HouseholdNaming hhNaming = new HH_HouseholdNaming();
+
+        // Provide null Id to ensure records with null Account/Household are not selected unless
+        // their Household/Account is provided in the input Id list
+        List<Id> hhIds = new List<Id>{ accounts[0].Id, hhs[0].Id, null };
+        
+        List<Contact> hhContacts = hhNaming.getHouseholdContacts(hhIds);
+
+        Set<Id> hhContactIds = new Map<Id, Contact>(hhContacts).keySet();
+        Set<Id> expectedContactIds = new Set<Id>{ contacts[0].Id, contacts[1].Id };
+        System.assertEquals(expectedContactIds.size(), hhContactIds.size(), 'The Contact query should be correct: ' + hhContacts);
+        System.assert(expectedContactIds.containsAll(hhContactIds), 'Expected Contacts do not match returned list: ' + hhContacts);
+    }
+
+
+    // Helpers
+    ////////////
+
+    /*********************************************************************************************************
+    * @description Builds Household Account Type Accounts
+    * @param size Number of Accounts to build
+    * @return List<Account>
+    **********************************************************************************************************/
+    private static List<Account> buildHHAccounts(Integer size) {
+        return buildAccounts(size, CAO_Constants.HH_ACCOUNT_TYPE);
+    }
+
+    /*********************************************************************************************************
+    * @description Builds Accounts
+    * @param size Number of Accounts to build
+    * @param accountType Account Type
+    * @return List<Account>
+    **********************************************************************************************************/
+    private static List<Account> buildAccounts(Integer size, String accountType) {
+        List<Account> accounts = new List<Account>();
+        
+        for (Integer i = 0; i < size; i++) {
+            accounts.add(new Account(
+                Name = 'ACC' + i, 
+                npe01__SYSTEM_AccountType__c = accountType
+            ));
+        }
+
+        return accounts;
+    }
+
+    /*********************************************************************************************************
+    * @description Builds Households
+    * @param size Number of Households to build
+    * @return List<npo02__Household__c>
+    **********************************************************************************************************/
+    private static List<npo02__Household__c> buildHouseholds(Integer size) {
+        List<npo02__Household__c> hhs = new List<npo02__Household__c>();
+        
+        for (Integer i = 0; i < size; i++) {
+            hhs.add(new npo02__Household__c(
+                Name = 'HH' + i
+            ));
+        }
+        
+        return hhs;
+    }
+
+    /*********************************************************************************************************
+    * @description Retrieves Contacts ordered by First Name
+    * @return List<Contact>
+    **********************************************************************************************************/
+    private static List<Contact> getContactsOrderByFirstName() {
+        return [
+            SELECT FirstName, LastName, AccountId, 
+                Account.Name, npo02__Household__c, npo02__Household__r.Id, npo02__Household__r.Name, 
+                npo02__Household__r.npo02__Formal_Greeting__c, npo02__Household__r.npo02__Informal_Greeting__c
+            FROM Contact
+            ORDER BY FirstName
+        ];
+    }
+
+    /*********************************************************************************************************
+    * @description Builds default Household name based on the Contact's Last Name
+    * @param c Contact 
+    * @return String Default Household name
+    **********************************************************************************************************/
+    private static String buildDefaultHHName(Contact c) {
+        return c.LastName + ' ' + System.Label.npo02.DefaultHouseholdName;
+    }
+
+    /*********************************************************************************************************
+    * @description Builds Household name based on the Household Naming Format
+    * @param c Contact 
+    * @return String Formatted Household name
+    **********************************************************************************************************/
+    private static String buildFormattedHHName(Contact c) {
+        return String.format('{0} {1} Household', new String[] { c.FirstName, c.LastName });
     }
 }
