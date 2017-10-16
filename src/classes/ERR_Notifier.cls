@@ -37,6 +37,9 @@
 public class ERR_Notifier {
 
     public static NotificationOptions notificationOptions = new NotificationOptions();
+
+    //This is created only for Testing Purpose. It contains the number of email addresses.
+    @TestVisible private static Set<String> emailNotificationSendersList;
     
     /*******************************************************************************************************
     * @description Inner class with the 3 types of notification options: user, chatter group, and all system
@@ -74,11 +77,15 @@ public class ERR_Notifier {
                     for (User u : useremaillist)
                         sendList.add(u.email);
                 } else if(errorNotifRecipient == NotificationOptions.sysAdmins) {
-                    List<User> sysadminlist = [SELECT email FROM User WHERE User.Profile.Name = 'System Administrator' AND isActive = true];
-                    for (User u : sysadminlist) {
-                        sendList.add(u.email);
+                    Set<Id> systemAdminProfileIds = UTIL_Profile.getInstance().getProfileIds('System Administrator');
+                    if (systemAdminProfileIds.isEmpty() == false) {
+                        List<User> sysadminlist = [SELECT Email FROM User WHERE ProfileId IN :systemAdminProfileIds AND IsActive = true];
+                        for (User u : sysadminlist) {
+                            sendList.add(u.Email);
+                        }
                     }
                 }
+                emailNotificationSendersList = new Set<String>(sendList);
                 sendEmailNotifications(context, sendList);
             }
         }
