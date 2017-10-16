@@ -34,7 +34,7 @@
 * @description Unit Test for the Rollup Definition Custom Metadata Type object selector
 */
 @isTest
-private class RLLP_Rollup_SEL_TEST {
+public class RLLP_Rollup_SEL_TEST {
 
     /**
      * @description Because unit tests cannot actually insert Custom Metadata Types and there's no real way to know
@@ -43,68 +43,65 @@ private class RLLP_Rollup_SEL_TEST {
      */
     private static void mockRollupCMTValues() {
 
-        // Create a single Rollup
-        String rollupsJSON = '[' +
-                    '{"attributes":{"type":"Rollup__mdt"},' +
-                    '"Id":"000000000000000C01","DeveloperName":"Household_Total_Donations_AllTime",' +
-                    '"MasterLabel":"Total Opportunity Value to Household","Active__c":true,' +
-                    '"Description__c":"Total Opportunity Value to Household",' +
-                    '"Filter_Group__c":"000000000000000A01","Operation__c":"Sum","Amount_Field__c":"Opportunity.Amount",' +
-                    '"Amount_Object__c":"Opportunity","Date_Field__c":"Opportunity.CloseDate",' +
-                    '"Date_Object__c":"Opportunity","Detail_Field__c":"Opportunity.AccountId","Detail_Object__c":"Opportunity",' +
-                    '"Summary_Field__c":"Account.AnnualRevenue","Summary_Object__c":"Account",' +
-                    '"Filter_Group__r":{"attributes":{"type":"Filter_Group__mdt","url":"/services/data/v40.0/sobjects/Filter_Group__mdt/000000000000000A01"},' +
-                    '"Id":"000000000000000A01","MasterLabel":"ClosedWonOpportunities"},' +
-                    '"Amount_Field__r":{"attributes":{"type":"FieldDefinition","url":"/services/data/v40.0/sobjects/FieldDefinition/Opportunity.Amount"},' +
-                    '"Id":"000000000000000AAA","DurableId":"Opportunity.Amount","QualifiedApiName":"Amount"},' +
-                    '"Amount_Object__r":{"attributes":{"type":"EntityDefinition","url":"/services/data/v40.0/sobjects/EntityDefinition/Opportunity"},' +
-                    '"Id":"000000000000000AAA","DurableId":"Opportunity","QualifiedApiName":"Opportunity"},' +
-                    '"Date_Field__r":{"attributes":{"type":"FieldDefinition","url":"/services/data/v40.0/sobjects/FieldDefinition/Opportunity.CloseDate"},' +
-                    '"Id":"000000000000000AAA","DurableId":"Opportunity.CloseDate","QualifiedApiName":"CloseDate"},' +
-                    '"Date_Object__r":{"attributes":{"type":"EntityDefinition","url":"/services/data/v40.0/sobjects/EntityDefinition/Opportunity"},' +
-                    '"Id":"000000000000000AAA","DurableId":"Opportunity","QualifiedApiName":"Opportunity"},' +
-                    '"Detail_Field__r":{"attributes":{"type":"FieldDefinition","url":"/services/data/v40.0/sobjects/FieldDefinition/Opportunity.Amount"},' +
-                    '"Id":"000000000000000AAA","DurableId":"Opportunity.AccountId","QualifiedApiName":"AccountId"},' +
-                    '"Detail_Object__r":{"attributes":{"type":"EntityDefinition","url":"/services/data/v40.0/sobjects/EntityDefinition/Opportunity"},' +
-                    '"Id":"000000000000000AAA","DurableId":"Opportunity","QualifiedApiName":"Opportunity"},' +
-                    '"Summary_Field__r":{"attributes":{"type":"FieldDefinition","url":"/services/data/v40.0/sobjects/FieldDefinition/Account.AnnualRevenue"},' +
-                    '"Id":"000000000000000AAA","DurableId":"Account.AnnualRevenue","QualifiedApiName":"AnnualRevenue"},' +
-                    '"Summary_Object__r":{"attributes":{"type":"EntityDefinition","url":"/services/data/v40.0/sobjects/EntityDefinition/Account"},' +
-                    '"Id":"000000000000000AAA","DurableId":"Account","QualifiedApiName":"Account"}}' +
-                ']';
-
-        // Create a single Filter Group
-        String filterGroupsJSON = '[{"attributes":{"type":"Filter_Group__mdt"},"Id":"000000000000000A01",' +
-                    '"MasterLabel":"ClosedWonOpportunities",' +
-                    '"DeveloperName":"ClosedWonOpportunities",' +
-                    '"Is_Deleted__c":false}]';
+        // Create a Filter Group with 3 Filter Rules
+        String filterGroupId = CMT_UnitTestData_TEST.getNewRecordId();
+        String filterGroupsJSON = '[' + CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Group__mdt', 'TestFilterGroup',
+                filterGroupId, new List<CMT_UnitTestData_TEST.CMT_Field>{
+                        new CMT_UnitTestData_TEST.CMT_Field('Is_Deleted__c', CMT_UnitTestData_TEST.CMTFieldType.FldBoolean, False)
+                }) + ']';
 
         String filterRulesJSON = '[' +
-                '{"attributes":{"type":"Filter_Rule__mdt"},"Id":"000000000000000B01","MasterLabel":"ClosedWon-Rule-1",' +
-                    '"DeveloperName":"ClosedWon_Rule_1","Filter_Group__c":"000000000000000A01",' +
-                    '"Field__c":"Opportunity.IsWon","Object__c":"Opportunity","Operator__c":"Equals","Constant__c":"True",' +
-                    '"Is_Deleted__c":false,"Field__r":{"attributes":{"type":"FieldDefinition","url":"/services/data/v40.0/sobjects/FieldDefinition/Opportunity.IsWon"},' +
-                    '"Id":"000000000000000AAA","DurableId":"Opportunity.IsWon","QualifiedApiName":"IsWon"},' +
-                    '"Object__r":{"attributes":{"type":"EntityDefinition","url":"/services/data/v40.0/sobjects/EntityDefinition/Opportunity"},' +
-                    '"Id":"000000000000000AAA","DurableId":"Opportunity","QualifiedApiName":"Opportunity"}},' +
-                '{"attributes":{"type":"Filter_Rule__mdt"},"Id":"000000000000000B02","MasterLabel":"ClosedWon-Rule-2",' +
-                    '"DeveloperName":"ClosedWon_Rule_2","Filter_Group__c":"000000000000000A01",' +
-                    '"Field__c":"Opportunity.IsClosed","Object__c":"Opportunity","Operator__c":"Equals","Constant__c":"True",' +
-                    '"Is_Deleted__c":false,"Field__r":{"attributes":{"type":"FieldDefinition","url":"/services/data/v40.0/sobjects/FieldDefinition/Opportunity.IsClosed"},' +
-                    '"Id":"000000000000000AAA","DurableId":"Opportunity.IsClosed","QualifiedApiName":"IsClosed"},' +
-                    '"Object__r":{"attributes":{"type":"EntityDefinition","url":"/services/data/v40.0/sobjects/EntityDefinition/Opportunity"},' +
-                    '"Id":"000000000000000AAA","DurableId":"Opportunity","QualifiedApiName":"Opportunity"}}' +
+                CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Rule__mdt', 'TestRule1',
+                        CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
+                                new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId),
+                                new CMT_UnitTestData_TEST.CMT_Field('Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
+                                new CMT_UnitTestData_TEST.CMT_Field('Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.IsWon'),
+                                new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Equals'),
+                                new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'true')
+                        }) + ',' +
+                CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Rule__mdt', 'TestRule2',
+                        CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
+                                new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId),
+                                new CMT_UnitTestData_TEST.CMT_Field('Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
+                                new CMT_UnitTestData_TEST.CMT_Field('Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.IsClosed'),
+                                new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Equals'),
+                                new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'true')
+                        }) + ',' +
+                CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Rule__mdt', 'TestRule3',
+                        CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
+                                new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId),
+                                new CMT_UnitTestData_TEST.CMT_Field('Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
+                                new CMT_UnitTestData_TEST.CMT_Field('Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.CloseDate'),
+                                new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Equals'),
+                                new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'THIS_YEAR')
+                        }) +
                 ']';
 
         CMT_FilterRule_SEL.cachedFilterGroups = (List<Filter_Group__mdt>)JSON.deserialize(
-                UTIL_Namespace.StrAllNSPrefix(filterGroupsJSON), List<Filter_Group__mdt>.class);
+                filterGroupsJSON, List<Filter_Group__mdt>.class);
 
         CMT_FilterRule_SEL.cachedFilterRules = (List<Filter_Rule__mdt>)JSON.deserialize(
-                UTIL_Namespace.StrAllNSPrefix(filterRulesJSON), List<Filter_Rule__mdt>.class);
+                filterRulesJSON, List<Filter_Rule__mdt>.class);
 
-        // Create 2 Filter Rules for the above Filter Group
-        RLLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>)JSON.deserialize(
-                UTIL_Namespace.StrAllNSPrefix(rollupsJSON), List<Rollup__mdt>.class);
+
+        // Create a single Rollup that uses the above Filter Group
+        String rollupsJSON = '[' +
+                CMT_UnitTestData_TEST.buildCMTObjectJSON('Rollup__mdt', 'Household Total Donations All Time',
+                    CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
+                        new CMT_UnitTestData_TEST.CMT_Field('Description__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Household Total Donations All Time'),
+                        new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId),
+                        new CMT_UnitTestData_TEST.CMT_Field('Active__c', CMT_UnitTestData_TEST.CMTFieldType.FldBoolean, True),
+                        new CMT_UnitTestData_TEST.CMT_Field('Summary_Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Account'),
+                        new CMT_UnitTestData_TEST.CMT_Field('Summary_Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Account.AnnualRevenue'),
+                        new CMT_UnitTestData_TEST.CMT_Field('Detail_Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
+                        new CMT_UnitTestData_TEST.CMT_Field('Detail_Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.AccountId'),
+                        new CMT_UnitTestData_TEST.CMT_Field('Date_Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
+                        new CMT_UnitTestData_TEST.CMT_Field('Date_Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.CloseDate'),
+                        new CMT_UnitTestData_TEST.CMT_Field('Amount_Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
+                        new CMT_UnitTestData_TEST.CMT_Field('Amount_Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.Amount')
+                }) + ']';
+        RLLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(
+                rollupsJSON, List<Rollup__mdt>.class);
     }
 
     /**

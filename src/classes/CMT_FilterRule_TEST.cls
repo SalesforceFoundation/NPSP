@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2017
-* @group Selectors
+* @group Custom Metadata Types
 * @description Selector class for FilterGroups and FilterRule Custom Metadata Type objects
 */
 @isTest
@@ -42,37 +42,45 @@ private class CMT_FilterRule_TEST {
      * for the unit tests
      */
     private static void mockFilterCMTValues() {
-        String filterGroupsJSON = '[{"attributes":{"type":"Filter_Group__mdt"},' +
-                '"Id":"000000000000000A01","MasterLabel":"TEST",' +
-                '"DeveloperName":"TEST","Is_Deleted__c":false}]';
+
+        String filterGroupId = CMT_UnitTestData_TEST.getNewRecordId();
+        String filterGroupsJSON = '[' + CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Group__mdt', 'TestFilterGroup',
+                filterGroupId, new List<CMT_UnitTestData_TEST.CMT_Field>{
+                    new CMT_UnitTestData_TEST.CMT_Field('Is_Deleted__c', CMT_UnitTestData_TEST.CMTFieldType.FldBoolean, False)
+        }) + ']';
+
         String filterRulesJSON = '[' +
-                '{"attributes":{"type":"Filter_Rule__mdt"},' +
-                '"Id":"000000000000000B02","MasterLabel":"Rule 2","DeveloperName":"Rule_2","Filter_Group__c":"000000000000000A01",' +
-                '"Field__c":"Opportunity.IsWon","Object__c":"Opportunity","Operator__c":"Equals","Constant__c":"TRUE","Is_Deleted__c":false,' +
-                '"Field__r":{"attributes":{"type":"FieldDefinition","url":"/services/data/v41.0/sobjects/FieldDefinition/Opportunity.IsWon"},' +
-                '"Id":"000000000000000AA1","DurableId":"Opportunity.IsWon","QualifiedApiName":"IsWon"},' +
-                '"Object__r":{"attributes":{"type":"EntityDefinition","url":"/services/data/v41.0/sobjects/EntityDefinition/Opportunity"},' +
-                '"Id":"000000000000000AA1","DurableId":"Opportunity","QualifiedApiName":"Opportunity"}},' +
-                '{"attributes":{"type":"Filter_Rule__mdt"},' +
-                '"Id":"000000000000000B03","MasterLabel":"Rule 3","DeveloperName":"Rule_3","Filter_Group__c":"000000000000000A01",' +
-                '"Field__c":"Opportunity.CloseDate","Object__c":"Opportunity","Operator__c":"Equals","Constant__c":"THIS_YEAR","Is_Deleted__c":false,' +
-                '"Field__r":{"attributes":{"type":"FieldDefinition","url":"/services/data/v41.0/sobjects/FieldDefinition/Opportunity.CloseDate"},' +
-                '"Id":"000000000000000AA2","DurableId":"Opportunity.CloseDate","QualifiedApiName":"CloseDate"},' +
-                '"Object__r":{"attributes":{"type":"EntityDefinition","url":"/services/data/v41.0/sobjects/EntityDefinition/Opportunity"},' +
-                '"Id":"000000000000000AA2","DurableId":"Opportunity","QualifiedApiName":"Opportunity"}},' +
-                '{"attributes":{"type":"Filter_Rule__mdt"},' +
-                '"Id":"000000000000000B01","MasterLabel":"Rule 1","DeveloperName":"Rule_1","Filter_Group__c":"000000000000000A01",' +
-                '"Field__c":"Opportunity.IsClosed","Object__c":"Opportunity","Operator__c":"Equals","Constant__c":"TRUE","Is_Deleted__c":false,' +
-                '"Field__r":{"attributes":{"type":"FieldDefinition","url":"/services/data/v41.0/sobjects/FieldDefinition/Opportunity.IsClosed"},' +
-                '"Id":"000000000000000AA3","DurableId":"Opportunity.IsClosed","QualifiedApiName":"IsClosed"},' +
-                '"Object__r":{"attributes":{"type":"EntityDefinition","url":"/services/data/v41.0/sobjects/EntityDefinition/Opportunity"},' +
-                '"Id":"000000000000000AA3","DurableId":"Opportunity","QualifiedApiName":"Opportunity"}}]';
+                CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Rule__mdt', 'TestRule1',
+                        CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
+                            new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId),
+                            new CMT_UnitTestData_TEST.CMT_Field('Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
+                            new CMT_UnitTestData_TEST.CMT_Field('Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.IsWon'),
+                            new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Equals'),
+                            new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'true')
+                    }) + ',' +
+            CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Rule__mdt', 'TestRule2',
+                    CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
+                            new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId),
+                            new CMT_UnitTestData_TEST.CMT_Field('Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
+                            new CMT_UnitTestData_TEST.CMT_Field('Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.IsClosed'),
+                            new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Equals'),
+                            new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'true')
+                    }) + ',' +
+            CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Rule__mdt', 'TestRule3',
+                    CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
+                            new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId),
+                            new CMT_UnitTestData_TEST.CMT_Field('Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
+                            new CMT_UnitTestData_TEST.CMT_Field('Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.CloseDate'),
+                            new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Equals'),
+                            new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'THIS_YEAR')
+                    }) +
+                ']';
 
         CMT_FilterRule_SEL.cachedFilterGroups = (List<Filter_Group__mdt>)JSON.deserialize(
-                UTIL_Namespace.StrAllNSPrefix(filterGroupsJSON), List<Filter_Group__mdt>.class);
+                filterGroupsJSON, List<Filter_Group__mdt>.class);
 
         CMT_FilterRule_SEL.cachedFilterRules = (List<Filter_Rule__mdt>)JSON.deserialize(
-                UTIL_Namespace.StrAllNSPrefix(filterRulesJSON), List<Filter_Rule__mdt>.class);
+                filterRulesJSON, List<Filter_Rule__mdt>.class);
     }
 
     /**

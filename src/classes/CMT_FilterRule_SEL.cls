@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2017
-* @group Selectors
+* @group Custom Metadata Types
 * @description Selector class for FilterGroups and FilterRule Custom Metadata Type objects
 */
 public without sharing class CMT_FilterRule_SEL {

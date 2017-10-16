@@ -80,6 +80,7 @@
         <members>CAO_Constants</members>
         <members>CMT_FilterRule_SEL</members>
         <members>CMT_FilterRule_TEST</members>
+        <members>CMT_UnitTestData_TEST</members>
         <members>CONV_Account_Conversion_BATCH</members>
         <members>CONV_Account_Conversion_BATCH_TEST</members>
         <members>CONV_Account_Conversion_CTRL</members>
