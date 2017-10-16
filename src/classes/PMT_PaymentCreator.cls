@@ -158,23 +158,11 @@ public class PMT_PaymentCreator {
 
         if (ContactSettings != null && ContactSettings.npe01__Payments_Enabled__c == true){
             list<Opportunity> newOpps = newOppsMap.values();
-            list<Opportunity> updatedOpps = new list<Opportunity>();
             Map<Id, Opportunity> newOppsMapRequeried = new Map<Id, Opportunity>();
             list<npe01__OppPayment__c> paymentsToInsert = new list<npe01__OppPayment__c>();
             list<npe01__OppPayment__c> paymentsToUpdate = new list<npe01__OppPayment__c>();
-            list<npe01__OppPayment__c> paymentsToDelete = new list<npe01__OppPayment__c>();
-
-            // SOQL for Updated Opps and Related Payments.
-            // AfterUpdate => Queries for known fields and field in custom Payment Field Mappings.
-            // BeforeUpdate AND IsACMEnabled => Used to handle summing total payments when ACM is enabled in the org.
-            if (ta == TDTM_Runnable.Action.AfterUpdate || (isACMEnabled && ta == TDTM_Runnable.Action.BeforeUpdate)) {
-                String query = buildOppsQuery() + 'WHERE Id IN :newOpps';
-                updatedOpps = database.query(query);
-                if (isACMEnabled && ta == TDTM_Runnable.Action.BeforeUpdate) {
-                    newOppsMapRequeried = new Map<Id, Opportunity>((List<Opportunity>)(updatedOpps));
-                }
-            }
-
+            list<Opportunity> updatedOpps = new list<Opportunity>();
+            
             if (TDTM_Runnable.Action.BeforeUpdate == ta) {
                 if (!String.isEmpty(ContactSettings.Payments_Auto_Close_Stage_Name__c)) {
                     String closedStageName = ContactSettings.Payments_Auto_Close_Stage_Name__c;
@@ -280,6 +268,7 @@ public class PMT_PaymentCreator {
                                 (thisOpp.npe01__OppPayment__r[0].npe01__Payment_Amount__c == oldOpp.Amount || thisOpp.npe01__OppPayment__r[0].npe01__Payment_Amount__c == thisOpp.Amount) &&
                                 thisOpp.npe01__OppPayment__r.size() == 1 &&
                                 thisOpp.npe01__OppPayment__r[0].npe01__paid__c == False &&
+                                //open opportunities only
                                 !thisOpp.isClosed && thisOpp.amount > 0 &&
                                 totalPaymentsMade == 0) {
                             thisOpp.npe01__OppPayment__r[0].npe01__scheduled_date__c = thisOpp.closeDate;
@@ -302,6 +291,7 @@ public class PMT_PaymentCreator {
                                 (thisOpp.npe01__OppPayment__r[0].npe01__Payment_Amount__c == oldOpp.Amount || thisOpp.npe01__OppPayment__r[0].npe01__Payment_Amount__c == thisOpp.Amount) &&
                                 thisOpp.npe01__OppPayment__r.size() == 1 &&
                                 thisOpp.npe01__OppPayment__r[0].npe01__paid__c == False &&
+                                //closed/won opportunities only
                                 thisOpp.isClosed && thisOpp.isWon && thisOpp.amount > 0 &&
                                 totalPaymentsMade == 0) {
                             thisOpp.npe01__OppPayment__r[0].npe01__payment_date__c = thisOpp.closeDate;
@@ -310,11 +300,13 @@ public class PMT_PaymentCreator {
                             paymentsToUpdate.add(thisOpp.npe01__OppPayment__r[0]);
                       
                         }
+                        //closed/lost opportunities only
                         else if ( thisOpp.isClosed && !thisOpp.isWon) {
                             
                             for(npe01__OppPayment__c thisPayment : thisOpp.npe01__OppPayment__r){
                                 if(thisPayment.npe01__Paid__c == False && thisPayment.npe01__Written_Off__c == False){
-                                    paymentsToDelete.add(thisPayment);
+                                    thisPayment.npe01__Written_Off__c = true;
+                                    paymentsToUpdate.add(thisPayment);
                                 }
                             }
                         }
@@ -348,8 +340,6 @@ public class PMT_PaymentCreator {
                 // update or delete payments     
                 if (!paymentsToUpdate.isEmpty())
                     dmlWrapper.objectsToUpdate.addAll((list<SObject>)paymentsToUpdate);
-                if (!paymentsToDelete.isEmpty())
-                    dmlWrapper.objectsToDelete.addAll((list<SObject>)paymentsToDelete);
                 if (!paymentsToInsert.isEmpty())
                     dmlWrapper.objectsToInsert.addAll((list<SObject>)paymentsToInsert);
             }
