@@ -230,8 +230,8 @@
         <members>RLLP_OppRollup_TEST2</members>
         <members>RLLP_OppRollup_UTIL</members>
         <members>RLLP_OppSoftCreditRollup_BATCH</members>
-        <members>RLLP_Results_SEL</members>
-        <members>RLLP_Results_SEL_TEST</members>
+        <members>RLLP_Query_SEL</members>
+        <members>RLLP_Query_SEL_TEST</members>
         <members>RLLP_Rollup_SEL</members>
         <members>RLLP_Rollup_SEL_TEST</members>
         <members>RLLP_Wrapper</members>

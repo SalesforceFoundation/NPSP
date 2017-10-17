@@ -32,8 +32,8 @@
 * @date 2017
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups.htm
-* @description Selector class for Rollup relevant summary/target fields
-*/public class RLLP_Results_SEL {
+* @description Selector class for relevant summary/target fields for use by the Rollup Engine
+*/public class RLLP_Query_SEL {
 
     /**
      * @description For a given SObject, identify all referenced fields from the currently defined Rollups and
@@ -64,6 +64,38 @@
         String soql = 'SELECT ' + String.join(fieldsList, ',') + ' FROM ' + resultObject.getDescribe().getName();
 
         return soql;
+    }
+
+    /**
+     * @description For a given SObject and it's child objects, identify all referenced fields from the currently
+     * defined Rollups and and Filter Rules and build a SOQL statement that queries all these fields, as well as
+     * building child sub-queries with their referenced fields (excluding fields that the current User does not
+     * have permissions to access).
+     * @param detailObject ObjectType being queried
+     * @param childObjects ObjectType[] child objects to be included in the sub-query
+     * @return SOQL query WITHOUT a where clause
+     */
+    public static String getDetailsQuery(SObjectType detailObject, List<SObjectType> childObjects) {
+        // Get the main SOQL statement and parse out the FROM portion
+        String mainSoql = getResultsQuery(detailObject).split(' FROM ')[0];
+
+        // Get the query for each child object, change the FROM object to the relationship name, and append to the main query
+        for (SObjectType obj : childObjects) {
+            String relationshipName;
+            for (ChildRelationship cr : detailObject.getDescribe().getChildRelationships()) {
+                if (cr.childSObject == obj) {
+                    relationshipName = cr.getRelationshipName();
+                }
+            }
+            if (relationshipName != null) {
+                String childSoql = getResultsQuery(obj).split(' FROM ')[0];
+                mainSoql += ', (' + childSoql + ' FROM ' + relationshipName + ')';
+            }
+        }
+
+        // Append the main object back to the query and return it
+        mainSoql += ' FROM ' + detailObject.getDescribe().getName();
+        return mainSoql;
     }
 
 }

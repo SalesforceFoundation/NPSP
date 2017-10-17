@@ -34,7 +34,7 @@
 * @description Unit Test for the Rollup Results selector class
 */
 @isTest
-private class RLLP_Results_SEL_TEST {
+private class RLLP_Query_SEL_TEST {
 
     /**
      * @description Test that the Results Query Builder returns valid SOQL statements for the Opportunity and Account
@@ -46,13 +46,18 @@ private class RLLP_Results_SEL_TEST {
 
         Test.startTest();
 
-        String soql = RLLP_Results_SEL.getResultsQuery(Opportunity.SObjectType);
+        String soql = RLLP_Query_SEL.getResultsQuery(Opportunity.SObjectType);
         List<Opportunity> opps = database.query(soql);
         System.AssertEquals(0, opps.size(), 'There should be no results, but the query should work');
 
-        soql = RLLP_Results_SEL.getResultsQuery(Account.SObjectType);
+        soql = RLLP_Query_SEL.getResultsQuery(Account.SObjectType);
         List<Account> accts = database.query(soql);
         System.AssertEquals(0, accts.size(), 'There should be no results, but the query should work');
+
+        soql = RLLP_Query_SEL.getDetailsQuery(Opportunity.SObjectType, new List<SObjectType>{
+                npe01__OppPayment__c.SObjectType, Allocation__c.SObjectType, OpportunityContactRole.SObjectType});
+        List<Opportunity> opps2 = database.query(soql);
+        System.AssertEquals(0, opps2.size(), 'There should be no results, but the query should work');
     }
 
 }
