@@ -34,6 +34,8 @@
 * @description Utility for the Profiles in the Org
 */
 public with sharing class UTIL_Profile {
+    public static final String SYSTEM_ADMINISTRATOR = 'System Administrator';
+
     /** @description static instance of the current class (UTIL_Profile). It is used as the instance in a Singleton context*/
 	private static UTIL_Profile utilProfile;
 	/** @description Map of the Profiles grouped by Name*/
@@ -63,11 +65,12 @@ public with sharing class UTIL_Profile {
     * @param profileName Name of the Profiles to retrieve
     * @return Set of Profile Ids that have the input profile name
     */
-	public Set<Id> getProfileIds(String profileName) {
+	public List<Id> getProfileIds(String profileName) {
 		if (profilesByName.containsKey(profileName) == false) {
-			return new Set<Id>();
+			return new List<Id>();
 		}
-		return (new Map<Id, Profile>(profilesByName.get(profileName))).keySet();
+        Set<Id> profileIds = new Map<Id, Profile>(profilesByName.get(profileName)).keySet();
+		return new List<Id>(profileIds);
 	}
 
 	/*********************************************************************************************************
