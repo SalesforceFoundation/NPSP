@@ -8,6 +8,6 @@ Feature: Matching Donation test
     Then Matching Donation Opportunity Name should match "Matching Donation" plus the Contact Account Name
       And Account Name shoujld be the Account for the Contact created
       And Amount should be "1,000.00"
-      And Close Date should be "1/1/2020"
+      And Close Date should be "01/01/2020"
       And Stage should be "--None--"
       And Save button should be enabled

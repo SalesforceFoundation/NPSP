@@ -8,7 +8,6 @@ Feature: Manage Household UI One-to-One
     When I navigate to Manage Households UI for Household Object
     Then I should see the Household Members section
       And I should see the Add Members search field
-      And I should see the Household Naming section
       And I should see the Household Details section
 
   Scenario: Add Members to Household

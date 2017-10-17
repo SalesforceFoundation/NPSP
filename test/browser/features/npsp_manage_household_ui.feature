@@ -9,7 +9,6 @@ Feature: Manage Household UI
     When I navigate to Manage Households UI
     Then I should see the Household Members section
       And I should see the Add Members search field
-      And I should see the Household Naming section
       And I should see the Household Details section
       And I should see breadcrumbs for the account
 

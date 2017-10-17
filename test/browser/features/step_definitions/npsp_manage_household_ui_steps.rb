@@ -138,10 +138,7 @@ When(/^I type "([^"]*)" into search box$/) do |search_string|
     page.spinner_element.when_not_present
     page.spinner2_element.when_not_present
     page.add_members_search_element.when_present(30).click #search box needs focus for Chrome
-    number_of_backspaces = search_string.length
-    number_of_backspaces.times do
-      page.add_members_search_element.send_keys(:backspace)
-    end
+    page.add_members_search_element.clear
     page.add_members_search_element.when_present.send_keys search_string
   end
 end
@@ -226,10 +223,6 @@ end
 
 Then(/^I should see the Household Members section$/) do
   expect(on(ManageHouseholdsPage).household_members_section_element.when_present(20).visible?).to be(true)
-end
-
-Then(/^I should see the Household Naming section$/) do
-  expect(on(ManageHouseholdsPage).household_naming_element.when_present.visible?).to be(true)
 end
 
 Then(/^I should see the new address$/) do
