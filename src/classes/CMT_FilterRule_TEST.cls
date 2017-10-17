@@ -74,7 +74,16 @@ private class CMT_FilterRule_TEST {
                             new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Equals'),
                             new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'THIS_YEAR')
                     }) +
-                ']';
+                ',' +
+                CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Rule__mdt', 'TestRule4-OCR',
+                        CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
+                                new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId),
+                                new CMT_UnitTestData_TEST.CMT_Field('Field_OpportunityContactRole_Role__c', CMT_UnitTestData_TEST.CMTFieldType.FldBoolean, True),
+                                new CMT_UnitTestData_TEST.CMT_Field('Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
+                                new CMT_UnitTestData_TEST.CMT_Field('Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.Id'),
+                                new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Equals'),
+                                new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Solicitor')
+                        }) +                ']';
 
         CMT_FilterRule_SEL.cachedFilterGroups = (List<Filter_Group__mdt>)JSON.deserialize(
                 filterGroupsJSON, List<Filter_Group__mdt>.class);
@@ -97,7 +106,7 @@ private class CMT_FilterRule_TEST {
         Id filterGroupId = (new List<Id>(filterRulesByGroup.keySet()))[0];
         List<Filter_Rule__mdt> filterRules =  filterRulesByGroup.get(filterGroupId);
         System.AssertEquals(1, filterRulesByGroup.size(), 'There should be one Filter Group');
-        System.AssertEquals(3, filterRules.size(), 'There should be three Filter Rules in the Filter Group');
+        System.AssertEquals(4, filterRules.size(), 'There should be four Filter Rules in the Filter Group');
 
         // Test that a list of fields to query is returned
         String objName = CMT_FilterRule_SEL.cachedFilterRules[0].Object__c;
@@ -109,5 +118,9 @@ private class CMT_FilterRule_TEST {
         // so don't attempt to validate the result.
         String soql = 'SELECT Id,' + queryFields + ' FROM ' + objName + ' LIMIT 1';
         List<SObject> test = database.query(soql);
+
+        System.AssertEquals(1, CMT_FilterRule_SEL.getReferencedFieldsByObject(OpportunityContactRole.SObjectType).size(),
+                'There should be at least one referenced field for the OpportunityContactRole object in Filter_Rule__mdt');
+
     }
 }

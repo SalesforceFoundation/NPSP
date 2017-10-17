@@ -44,7 +44,7 @@ public without sharing class CMT_FilterRule_SEL {
     private static List<Filter_Group__mdt> cachedFilterGroups {
         get {
             if (cachedFilterGroups == null) {
-                cachedFilterGroups = [SELECT Id, MasterLabel, DeveloperName, Is_Deleted__c, Description__c
+                cachedFilterGroups = [SELECT Id, MasterLabel, DeveloperName, Description__c
                         FROM Filter_Group__mdt
                         WHERE Is_Deleted__c = false
                         ORDER BY MasterLabel];
@@ -59,7 +59,7 @@ public without sharing class CMT_FilterRule_SEL {
             if (cachedFilterRules == null) {
                 cachedFilterRules = [SELECT Id, MasterLabel, DeveloperName,
                                 Filter_Group__c, Field__r.QualifiedApiName, Object__r.QualifiedApiName,
-                                Operator__c, Constant__c, Is_Deleted__c
+                                Field_OpportunityContactRole_Role__c, Operator__c, Constant__c
                         FROM Filter_Rule__mdt
                         WHERE Is_Deleted__c = false
                         ORDER BY Filter_Group__c];
@@ -102,18 +102,35 @@ public without sharing class CMT_FilterRule_SEL {
     /**
      * @description Creates a list of all fields for a given object that are referenced in any way on an
      *  existing FilterRule. This list can be used when building a query of the needed fields to retrieve
-     *  for an object.
+     *  for an object. To handle filtering by OpportunityContactRole.Role, a custom field field for
+     *  Field_OpportunityContactRole_Role__c is used. If true, the logic below ignores the Object__c/Field__c
+     *  values in the record and instead uses OpportunityContactRole.Role. This is necessary because OCR
+     *  is not a supported object for the Object__c (Entity) lookup in CMT's. As a result, we need an alternative
+     *  method to know that the file rule should use the OCR.Role field value.
      * @param objType The type of object to retrieve referenced fields for
      * @return List<DescribeFieldResult>
      */
     public static List<Schema.DescribeFieldResult> getReferencedFieldsByObject(SObjectType objType) {
         String objName = objType.getDescribe().getName();
+        String ocrObjectName = OpportunityContactRole.SObjectType.getDescribe().getName();
+
+        // Get all field describes from the cache
         Map<String, Schema.DescribeFieldResult> allFields = UTIL_Describe.getAllFieldsDescribe(objName);
         Map<String, Schema.DescribeFieldResult> referencedFields = new Map<String, Schema.DescribeFieldResult>();
+
+        // For all filter rules (regardless of the filter group)
         for (Filter_Rule__mdt fr : cachedFilterRules) {
-            if (fr.Object__r.QualifiedApiName == objName) {
-                String fldName = fr.Field__r.QualifiedApiName;
-                referencedFields.put(fr.Field__c, allFields.get(fldName.toLowerCase()));
+            // Does the object match the requested object?
+            if ((fr.Field_OpportunityContactRole_Role__c == false && fr.Object__r.QualifiedApiName == objName) ||
+                    (fr.Field_OpportunityContactRole_Role__c == true && objName == ocrObjectName )) {
+                // Get the target field name (or replace it with OCR.Role) and add to the map of fields
+                if (fr.Field_OpportunityContactRole_Role__c == false) {
+                    String fldName = fr.Field__r.QualifiedApiName;
+                    referencedFields.put(fr.Field__c, allFields.get(fldName.toLowerCase()));
+                } else {
+                    String fldName = 'Role';
+                    referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
+                }
             }
         }
         return referencedFields.values();

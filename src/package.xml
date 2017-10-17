@@ -878,6 +878,7 @@
         <members>Filter_Group__mdt.Is_Deleted__c</members>
         <members>Filter_Rule__mdt.Constant__c</members>
         <members>Filter_Rule__mdt.Field__c</members>
+        <members>Filter_Rule__mdt.Field_OpportunityContactRole_Role__c</members>
         <members>Filter_Rule__mdt.Filter_Group__c</members>
         <members>Filter_Rule__mdt.Is_Deleted__c</members>
         <members>Filter_Rule__mdt.Object__c</members>
