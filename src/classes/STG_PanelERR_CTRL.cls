@@ -72,8 +72,13 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
                 if(Schema.SObjectType.User.isFeedEnabled())
                     listSOERRNotifOptions.add(new SelectOption(ERR_Notifier.NotificationOptions.chatterGroup, 'Chatter Group'));
                 listSOERRNotifOptions.add(new SelectOption(ERR_Notifier.NotificationOptions.sysAdmins, 'All Sys Admins'));
-                for (User u : [select Name, id from User where User.Profile.Name = 'System Administrator']) {
-                    listSOERRNotifOptions.add(new SelectOption(u.id, 'User: ' + u.Name));
+                List<Id> systemAdminProfileIds = UTIL_Profile.getInstance().getProfileIds(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+                for (User systemAdminUser : [
+                        SELECT Name, Id 
+                        FROM User
+                        WHERE ProfileId IN :systemAdminProfileIds
+                ]) {
+                    listSOERRNotifOptions.add(new SelectOption(systemAdminUser.Id, 'User: ' + systemAdminUser.Name));
                 }
             }
             return listSOERRNotifOptions;
