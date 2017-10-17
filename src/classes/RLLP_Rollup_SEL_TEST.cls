@@ -41,7 +41,7 @@ public class RLLP_Rollup_SEL_TEST {
      * exactly what's in the CMT objects, we can use this method to mock the contents of the cached MDT queries
      * for the unit tests
      */
-    private static void mockRollupCMTValues() {
+    public static void mockRollupCMTValues() {
 
         // Create a Filter Group with 3 Filter Rules
         String filterGroupId = CMT_UnitTestData_TEST.getNewRecordId();
