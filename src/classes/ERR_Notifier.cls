@@ -83,25 +83,26 @@ public class ERR_Notifier {
     }
 
     /*******************************************************************************************************
-    * @description Get the active System Admininstrators emails.
-    * @return List<String> list of active System Administrators emails
+    * @description Get the active System Administrators' emails.
+    * @return List<String> Emails
     */
     @TestVisible
     private static List<String> getSystemAdminEmails() {
-        Set<String> result = new Set<String>();
-        List<Id> systemAdminProfileIds = UTIL_Profile.getInstance().getProfileIds(UTIL_Profile.SYSTEM_ADMINISTRATOR);
-        if (systemAdminProfileIds.isEmpty() == false) {
-            for (User systemAdminRecipient : [
+        Set<String> emails = new Set<String>();
+        List<Id> sysAdminProfileIds = UTIL_Profile.getInstance().getProfileIds(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+
+        if (sysAdminProfileIds.isEmpty() == false) {
+            for (User usr : [
                     SELECT Email 
                     FROM User 
-                    WHERE ProfileId 
-                    IN :systemAdminProfileIds 
+                    WHERE ProfileId IN :sysAdminProfileIds 
                     AND IsActive = true
             ]) {
-                result.add(systemAdminRecipient.Email);
+                emails.add(usr.Email);
             }
         }
-        return new List<String>(result);
+
+        return new List<String>(emails);
     }
 
     /*******************************************************************************************************

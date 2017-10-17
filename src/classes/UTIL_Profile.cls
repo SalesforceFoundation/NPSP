@@ -31,63 +31,69 @@
 * @author Salesforce.org
 * @date 2017
 * @group Utilities
-* @description Utility for the Profiles in the Org
+* @description Utility for Profiles
 */
-public with sharing class UTIL_Profile {
+public class UTIL_Profile {
+    /** @description System Administrator Profile Name */
     public static final String SYSTEM_ADMINISTRATOR = 'System Administrator';
 
-    /** @description static instance of the current class (UTIL_Profile). It is used as the instance in a Singleton context*/
-	private static UTIL_Profile utilProfile;
-	/** @description Map of the Profiles grouped by Name*/
-	private Map<String, List<Profile>> profilesByName;
+    /** @description static instance of the current class (UTIL_Profile). It is used as the instance in a Singleton context */
+    private static UTIL_Profile utilProfile;
 
-	/*********************************************************************************************************
-    * @description get the instance of the current class
+    /** @description Map of the Profiles grouped by Name */
+    private Map<String, List<Profile>> profilesByName;
+
+    /*********************************************************************************************************
+    * @description Get the instance of the current class
     * @return UTIL_Profile The instance of the current class.
     */
-	public static UTIL_Profile getInstance() {
-		if (utilProfile == null) {
-			utilProfile = new UTIL_Profile();
-		}
-		return utilProfile;
-	}
+    public static UTIL_Profile getInstance() {
+        if (utilProfile == null) {
+            utilProfile = new UTIL_Profile();
+        }
+        return utilProfile;
+    }
 
-	/*********************************************************************************************************
-    * @description Constructor. The Constructor is private because we are using the Singleton Pattern.
-    * The UTIL_Profile object needs to be constructed only from the static method getInstance
+    /*********************************************************************************************************
+    * @description The Constructor, which is private because we are using the Singleton Pattern.
+    * The UTIL_Profile object needs to be constructed only from the static method getInstance()
     */
-	private UTIL_Profile() {
-		profilesByName = getProfilesByName();
-	}
+    private UTIL_Profile() {
+        profilesByName = getProfilesByName();
+    }
 
-	/*********************************************************************************************************
-    * @description Get the List of Profiles that have the input Name
-    * @param profileName Name of the Profiles to retrieve
-    * @return List of Profile Ids that have the input profile name
+    /*********************************************************************************************************
+    * @description Get Profile Ids for the specified Profile Name
+    * @param profileName Profile Name
+    * @return List<Id> List of Profile Ids
     */
-	public List<Id> getProfileIds(String profileName) {
-		if (profilesByName.containsKey(profileName) == false) {
-			return new List<Id>();
-		}
+    public List<Id> getProfileIds(String profileName) {
+        if (profilesByName.containsKey(profileName) == false) {
+            return new List<Id>();
+        }
+
         Set<Id> profileIds = new Map<Id, Profile>(profilesByName.get(profileName)).keySet();
-		return new List<Id>(profileIds);
-	}
+        return new List<Id>(profileIds);
+    }
 
-	/*********************************************************************************************************
-    * @description Get a Map of Profiles, grouped by Name
-    * @return Map<String, List<Profile>> Map of  the Profiles grouped by Name
+    /*********************************************************************************************************
+    * @description Build a Map of Profiles grouped by Name
+    * @return Map<String, List<Profile>> Map of Profiles grouped by Name
     */
-	private Map<String, List<Profile>> getProfilesByName() {
-		Map<String, List<Profile>> result = new Map<String, List<Profile>>();
-		for (Profile currentProfile :[
+    private Map<String, List<Profile>> getProfilesByName() {
+        Map<String, List<Profile>> result = new Map<String, List<Profile>>();
+
+        for (Profile currentProfile :[
                 SELECT Name
                 FROM Profile
         ]) {
-			if (result.containsKey(currentProfile.Name) == false) {
-				result.put(currentProfile.Name, new List<Profile>());
-			}
-			result.get(currentProfile.Name).add(currentProfile);
-		}
-		return result;
-	}
+            if (result.containsKey(currentProfile.Name) == false) {
+                result.put(currentProfile.Name, new List<Profile>());
+            }
+
+            result.get(currentProfile.Name).add(currentProfile);
+        }
+
+        return result;
+    }
 }

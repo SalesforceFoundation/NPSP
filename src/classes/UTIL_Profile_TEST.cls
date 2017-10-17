@@ -37,30 +37,29 @@
 private class UTIL_Profile_TEST {
 
 	/**************************************************************************************************************************
-    @description Test multiple calls of the method GetInstance() to make sure the UTIL_Profile instance is constructed only once.
-    verify: The query (Get Profiles) should run only once.
+    @description Test multiple calls of the method getInstance() to make sure the UTIL_Profile instance is constructed only once.
+    verify: The query should run only once.
     ***************************************************************************************************************************/   
     private static testMethod void testGetInstanceQueriesOnceOnMultipleCalls() {
-    	System.assertEquals(0, Limits.getQueries(), 'The query count should be 0 because no query has been run');
+    	System.assertEquals(0, Limits.getQueries(), 'The query count should be 0');
 
     	UTIL_Profile profileUtil = UTIL_Profile.getInstance();
-    	//The GetInstance calls the UTIL_Profile Constructor which contains a query on the Profile.
-    	System.assertNotEquals(null, profileUtil, 'The GetInstance should return an instance of UTIL_Profile');
-    	System.assertEquals(1, Limits.getQueries(), 'The query count should be 1 because the GetInstance constructs the UTIL_Profile');
+    	//The getInstance() executes a query on the Profile.
+    	System.assertNotEquals(null, profileUtil, 'The getInstance() should return an instance of UTIL_Profile');
+    	System.assertEquals(1, Limits.getQueries(), 'The query count should be 1 because the getInstance() constructs the UTIL_Profile');
 
     	profileUtil = UTIL_Profile.getInstance();
 
-    	//The GetInstance call the UTIL_Profile should not call UTIL_Profile the Constructor anymore.
-    	System.assertNotEquals(null, profileUtil, 'The GetInstance should have the same instance of UTIL_Profile');
-    	System.assertEquals(1, Limits.getQueries(), 'The query count should not change');
+    	//Verify the getInstance() does not execute the query again.
+    	System.assertNotEquals(null, profileUtil, 'The getInstance() should have the same instance of UTIL_Profile');
+    	System.assertEquals(1, Limits.getQueries(), 'The query count should not increase');
     }
 
     /**************************************************************************************************************************
-    @description Test the GetProfileIds with valid Profile name.
-    verify: GetProfileIds returns all Profile Ids for the specified Profile Name
+    @description Test the getProfileIds() with valid Profile name.
+    verify: getProfileIds() returns all Profile Ids for the specified Profile Name
     ***************************************************************************************************************************/   
     private static testMethod void testGetProfileIdsWithValidProfileName() {
-    	//Get all the Profiles in the Org, and group by Ids
     	Map<String, List<Profile>> orgProfilesByName = getProfilesByName();
 
     	Test.startTest();
@@ -69,39 +68,43 @@ private class UTIL_Profile_TEST {
 
     	System.assertNotEquals(null, profileUtil, 'The GetInstance should return an instance of UTIL_Profile');
 
-    	for (String currentProfileName : orgProfilesByName.keySet()) {
-    		//Confirm that the result returned by GetProfileIds is correct.
+    	for (String profileName : orgProfilesByName.keySet()) {
+            List<Id> profileIds = profileUtil.getProfileIds(profileName);
+            Set<Id> currentProfileIds = new Map<Id, Profile>(orgProfilesByName.get(profileName)).keySet();
+
     		System.assertEquals(
-    			orgProfilesByName.get(currentProfileName).size(), 
-    			profileUtil.getProfileIds(currentProfileName).size(),
-    			'The number of Profiles that have the Name ' + currentProfileName + ' should be equals to the profileUtil.getProfileIds ones'
+    			currentProfileIds.size(), 
+    			profileIds.size(),
+    			'The number of Profiles for ' + profileName + ' profile should be equal to the profileUtil.getProfileIds()'
     		);
-            Set<Id> currentProfileIds = new Set<Id>(profileUtil.getProfileIds(currentProfileName));
-    		for (Profile currentProfile : orgProfilesByName.get(currentProfileName)) {
-    			System.assert(currentProfileIds.contains(currentProfile.Id));
-    		}
+
+            System.assert(currentProfileIds.containsAll(profileIds), 'Expected and retrieved Profile Ids should be the same');
     	}
     }
 
     /**************************************************************************************************************************
-    @description Test the GetProfileIds with invalid Profile name.
-    verify: GetProfileIds returns zero Id
+    @description Test the getProfileIds() with invalid Profile name.
+    verify: getProfileIds() returns empty List
     ***************************************************************************************************************************/   
     private static testMethod void testGetProfileIdsWithInvalidProfileName() {
         Test.startTest();
         UTIL_Profile profileUtil = UTIL_Profile.getInstance();
         Test.stopTest();
 
-        System.assertNotEquals(null, profileUtil, 'The GetInstance should return an instance of UTIL_Profile');
-        System.assertEquals(0, profileUtil.getProfileIds('INVALID_PROFILE_NAME').size(), 'No profiles Ids should be returned');
+        System.assertNotEquals(null, profileUtil, 'The getInstance() should return an instance of UTIL_Profile');
+        System.assertEquals(0, profileUtil.getProfileIds('INVALID_PROFILE_NAME').size(), 'No profile Id should be returned');
     }
 
+    // Helpers
+    /////////////
+
     /*********************************************************************************************************
-    * @description Get a Map of all Profiles, grouped by Name
-    * @return Map<String, List<Profile>> of Profiles grouped by Name
+    * @description Get a Map of all Profiles grouped by Name
+    * @return Map<String, List<Profile>> Map of Profiles grouped by Name
     */
 	private static Map<String, List<Profile>> getProfilesByName() {
 		Map<String, List<Profile>> result = new Map<String,List<Profile>>();
+
 		for (Profile currentProfile :[
                 SELECT Name
                 FROM Profile
@@ -111,6 +114,7 @@ private class UTIL_Profile_TEST {
 			}
 			result.get(currentProfile.Name).add(currentProfile);
 		}
+
 		return result;
 	}
 }

@@ -31,41 +31,45 @@
 * @author Salesforce.org
 * @date 2017
 * @group ErrorHandling
-* @description Unit tests for UTIL_Profile class
+* @description Unit tests for ERR_Notifier class
 */
 @isTest
 private class ERR_Notifier_TEST {
 	
     /**************************************************************************************************************************
-    @description Test get System Administrator Users Emails
-    verify: The number of emails from ERR_Notifier is correct
+    @description Test retrieval of System Administrator Users' Emails
+    verify: Emails of System Administrator Users are retrieved
     ***************************************************************************************************************************/   
-    private static testMethod void testSetErrorNotificationToAllSysAdmins() {
+    private static testMethod void testGetSystemAdminEmails() {
         Test.startTest();
-        Set<String> recipientsEmails = new Set<String>(ERR_Notifier.getSystemAdminEmails());
+        Set<String> recipientEmails = new Set<String>(ERR_Notifier.getSystemAdminEmails());
         Test.stopTest();
 
-        Set<String> expectedSystemAdminEmails = getSystemAdminEmails();
-        System.assertEquals(expectedSystemAdminEmails.size(), recipientsEmails.size());
-        for (String sysAdminEmail : recipientsEmails) {
-            System.assert(expectedSystemAdminEmails.contains(sysAdminEmail));
-        }
+        Set<String> expectedEmails = getSystemAdminEmails();
+
+        System.assertEquals(expectedEmails.size(), recipientEmails.size(), 'Number of emails should match');
+        System.assert(expectedEmails.containsAll(recipientEmails), 'Expected and retrieved emails should be the same');
     }
 
+    // Helpers
+    ////////////
+
     /*********************************************************************************************************
-    * @description Get a List of All emails from Users
-    * @return Set<String> Set of Emails
+    * @description Get System Administrator User emails
+    * @return Set<String> Emails
     */
     private static Set<String> getSystemAdminEmails() {
         Set<String> result = new Set<String>();
-        for(User currentUser : [
+
+        for(User usr : [
                 SELECT Email
                 FROM User
                 WHERE Profile.Name = :UTIL_Profile.SYSTEM_ADMINISTRATOR
-                AND IsActive = TRUE
+                AND IsActive = true
         ]) {
-            result.add(currentUser.Email);
+            result.add(usr.Email);
         }
+
         return result;
     }
 }

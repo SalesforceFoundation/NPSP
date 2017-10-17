@@ -181,14 +181,11 @@ public with sharing class USER_UserService {
     * @return Id The Id of the System Administrator Profile.
     **********************************************************************************************************/
     private static Id retrieveSysAdminProfileId() {
-        Id sysAdminProfileId = null;
+        List<Id> sysAdminProfileIds = UTIL_Profile.getInstance().getProfileIds(UTIL_Profile.SYSTEM_ADMINISTRATOR);
 
-        List<Profile> sysAdminProfile = [SELECT Id FROM Profile WHERE Name = :UTIL_Profile.SYSTEM_ADMINISTRATOR];
-        if (!sysAdminProfile.isEmpty()) {
-            sysAdminProfileId = sysAdminProfile[0].Id;
-        }
-
-        return sysAdminProfileId;
+        return sysAdminProfileIds.isEmpty()
+            ? null
+            : sysAdminProfileIds[0];
     }
 
 
