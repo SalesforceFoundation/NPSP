@@ -37,8 +37,6 @@
 public class ERR_Notifier {
 
     public static NotificationOptions notificationOptions = new NotificationOptions();
-
-    @TestVisible private static Set<String> emailNotificationRecipients;
     
     /*******************************************************************************************************
     * @description Inner class with the 3 types of notification options: user, chatter group, and all system
@@ -76,23 +74,34 @@ public class ERR_Notifier {
                     for (User u : useremaillist)
                         sendList.add(u.email);
                 } else if(errorNotifRecipient == NotificationOptions.sysAdmins) {
-                    Set<Id> systemAdminProfileIds = UTIL_Profile.getInstance().getProfileIds('System Administrator');
-                    if (systemAdminProfileIds.isEmpty() == false) {
-                        for (User systemAdminRecipient : [
-                                SELECT Email 
-                                FROM User 
-                                WHERE ProfileId 
-                                IN :systemAdminProfileIds 
-                                AND IsActive = true
-                        ]) {
-                            sendList.add(systemAdminRecipient.Email);
-                        }
-                    }
+                    sendList.addAll(getSystemAdminEmails());
                 }
-                emailNotificationRecipients = new Set<String>(sendList);
+
                 sendEmailNotifications(context, sendList);
             }
         }
+    }
+
+    /*******************************************************************************************************
+    * @description Get the active System Admininstrators emails.
+    * @return Set<String> list of active System Administrators emails
+    */
+    @TestVisible
+    private static List<String> getSystemAdminEmails() {
+        Set<String> result = new Set<String>();
+        List<Id> systemAdminProfileIds = UTIL_Profile.getInstance().getProfileIds(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+        if (systemAdminProfileIds.isEmpty() == false) {
+            for (User systemAdminRecipient : [
+                    SELECT Email 
+                    FROM User 
+                    WHERE ProfileId 
+                    IN :systemAdminProfileIds 
+                    AND IsActive = true
+            ]) {
+                result.add(systemAdminRecipient.Email);
+            }
+        }
+        return new List<String>(result);
     }
 
     /*******************************************************************************************************

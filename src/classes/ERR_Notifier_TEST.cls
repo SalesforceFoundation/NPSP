@@ -36,42 +36,32 @@
 @isTest
 private class ERR_Notifier_TEST {
 	
-	/**************************************************************************************************************************
-    @description Test sending emails to all System Administrator Users
-    verify: The number emails list from ERR_Notifier is correct
+    /**************************************************************************************************************************
+    @description Test get System Administrator Users Emails
+    verify: The number of emails from ERR_Notifier is correct
     ***************************************************************************************************************************/   
     private static testMethod void testSetErrorNotificationToAllSysAdmins() {
-        UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(
-    		Error_Notifications_On__c = true, 
-        	Error_Notifications_To__c = ERR_Notifier.notificationOptions.sysAdmins, 
-        	Store_Errors_On__c = true
-        ));
-        Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings();
-        Database.insert(errorSettings, true);
-
         Test.startTest();
-        ERR_Notifier.sendErrorNotifications('');
+        Set<String> recipientsEmails = new Set<String>(ERR_Notifier.getSystemAdminEmails());
         Test.stopTest();
 
-        System.assert(ERR_Notifier.emailNotificationRecipients != null, 'The Email List should not be null');
-
         Set<String> expectedSystemAdminEmails = getSystemAdminEmails();
-        System.assertEquals(expectedSystemAdminEmails.size(), ERR_Notifier.emailNotificationRecipients.size());
-        for (String sysAdminEmail : ERR_Notifier.emailNotificationRecipients) {
+        System.assertEquals(expectedSystemAdminEmails.size(), recipientsEmails.size());
+        for (String sysAdminEmail : recipientsEmails) {
             System.assert(expectedSystemAdminEmails.contains(sysAdminEmail));
         }
     }
 
     /*********************************************************************************************************
     * @description Get a List of All emails from Users
-    * @return Set of Emails
+    * @return Set<String> Set of Emails
     */
     private static Set<String> getSystemAdminEmails() {
         Set<String> result = new Set<String>();
         for(User currentUser : [
                 SELECT Email
                 FROM User
-                WHERE Profile.Name = 'System Administrator'
+                WHERE Profile.Name = :UTIL_Profile.SYSTEM_ADMINISTRATOR
                 AND IsActive = TRUE
         ]) {
             result.add(currentUser.Email);
