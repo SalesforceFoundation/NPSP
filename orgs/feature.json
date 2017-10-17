@@ -1,6 +1,7 @@
 {
   "orgName": "NPSP - Feature Test Org",
   "edition": "Developer",
+  "hasSampleData": "true",
   "orgPreferences" : {
     "enabled": [
       "ChatterEnabled",
