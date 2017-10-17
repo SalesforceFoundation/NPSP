@@ -1,4 +1,4 @@
-When(/^I click Refresh Opportuniites$/) do
+When(/^I click Refresh Opportunities$/) do
   on(NPSPRecurringDonationsPage).refresh_button_element.when_present.click
 end
 

@@ -5,7 +5,7 @@ Feature: NPSP Manage Allocations Page Test
       And I create a GAU named "first"
       And I create a GAU named "second"
 
-  @smoketest @flaky
+  @flaky
   Scenario: Manage Allocations
     When I navigate to the Manage Allocations page
       And I add a row

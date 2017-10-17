@@ -44,6 +44,8 @@ Given(/^I navigate to Household created$/) do
 end
 
 Given(/^I navigate to Manage Households UI$/) do
+  # go to first account
+  # click on manage household
   @browser.goto($target_org_url + '/apex/HH_ManageHHAccount?scontrolCaching=1&id=' + @account_id)
 end
 
@@ -188,8 +190,8 @@ Given(/^I login the first time with oauth$/) do
   on(LoginPage) do |page|
     page.app_switcher_element.when_present.click
     begin
-      #WE ONLY NEED TO CLICK NPSP AFTER A FRESH INSTALL
-      #DON'T FAIL THE TEST IF NPSP IS ALREADY SELECTED
+      #CLICKS NPSP AFTER A FRESH INSTALL
+      #DO NOT FAIL THE TEST IF NPSP IS ALREADY SELECTED
       page.npsp_app_picker_element.when_present.click
     rescue
     end

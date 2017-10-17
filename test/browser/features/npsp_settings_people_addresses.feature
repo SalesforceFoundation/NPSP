@@ -4,7 +4,7 @@ Feature: NPSP Settings People Addresses
     Given I navigate to NPSP Settings
       And I navigate to Settings People Addresses
 
-    @smoketest
+  @smoketest
   Scenario: General Address Settings
     When I click Household Account Addresses Disabled
       And I click Organizational Account Addresses Enabled

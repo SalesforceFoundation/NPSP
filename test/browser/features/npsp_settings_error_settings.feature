@@ -1,6 +1,6 @@
 Feature: NPSP Settings Error Settings
 
-  @smoketest @reset_these_settings @flaky
+  @reset_these_settings @flaky
   Scenario: Actually save Error Settings
     Given I navigate to NPSP Settings
       And I navigate to System Tools Error Notifications

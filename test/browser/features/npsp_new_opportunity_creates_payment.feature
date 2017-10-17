@@ -1,7 +1,7 @@
 
 Feature: NPSP New Opportunity creates Payment record
 
-  @smoketest @flaky
+  @flaky
   Scenario: NPSP New Opportunity creates Payment record
     Given I navigate to Opportunity
     When I create a new Opportunity with name "aaa" and close date today and amount "100" and stage "Closed Won"

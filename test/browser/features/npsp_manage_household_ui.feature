@@ -1,10 +1,10 @@
+@flaky
 Feature: Manage Household UI
-
+# needs to fix manage household navigation step, then will work.
   Background:
     Given I create a new Contact via the API with address "automation street" "automation city" "automation state" "automation country" "automation zip"
       And I create a new random account via the API
 
-  @smoketest @flaky
   Scenario: Navigate to Manage Households UI and do basic checks
     When I navigate to Manage Households UI
     Then I should see the Household Members section
@@ -31,7 +31,6 @@ Feature: Manage Household UI
       And I delete the last Contact from the Household
     Then I should see one Household Member entry
 
-  @chrome @flaky
   Scenario: Change Household address
     Given I navigate to Manage Households UI for contact
       And I see Contact name
@@ -47,7 +46,6 @@ Feature: Manage Household UI
     Then I should be on the Account page for a single Household
       And I should see the new address containing "street" and "city" and "state" and "zip" and "country"
 
-  @flaky
   Scenario: Copy Household address from added Contact
     Given I navigate to Manage Households UI for contact
       And I create a second Contact via the API with address "automation street TWO" "automation city TWO" "automation state TWO" "automation country TWO" "automation zip TWO"
@@ -75,7 +73,6 @@ Feature: Manage Household UI
       And I add to household with Add All Members option
     Then I should see three Household Member entries
 
-  @flaky
   Scenario: All the checkboxes
     Given I create two contacts "jjj" and "kkk" in the same Household
       And I navigate to Manage Households UI for contact

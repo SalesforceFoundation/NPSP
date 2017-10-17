@@ -4,7 +4,7 @@ Feature: Payment wizard test
     Given I create a new Opportunity via the API with stage name "Qualification" and close date "2020-01-01" and amount "1000"
     When I navigate to Payment Wizard for that Opportunity
 
-  @smoketest @flaky
+  @flaky
   Scenario: Invoke default payment wizard
     When I click Calculate Payments
     Then I should see the Payment Wizard fields

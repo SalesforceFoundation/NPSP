@@ -1,6 +1,6 @@
 Feature: Matching Donation test
 
-  @smoketest @flaky
+  @flaky
   Scenario: Invoke Matching Donation
     Given I create two Opportunities to be matched
     When I navigate to Find Matching Gifts for the original Opportunity

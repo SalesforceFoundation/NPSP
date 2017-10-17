@@ -1,6 +1,6 @@
 Feature: New Contact Donation test
 
-  @smoketest @flaky
+  @flaky
   Scenario: New Contact Donation page
     Given I create a new Contact via the API
     When I navigate to New Contact Donation Page

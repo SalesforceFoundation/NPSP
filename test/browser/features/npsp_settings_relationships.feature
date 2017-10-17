@@ -3,7 +3,7 @@ Feature: NPSP Settings Relationships
   Background:
     Given I navigate to NPSP Settings
 
-  @smoketest @reset_these_settings @chrome @flaky
+ @reset_these_settings @chrome @flaky
   Scenario: Actually save Relationships Settings
     Given I navigate to Relationships Relationships
     When I change Relationships Reciprocal Method settings

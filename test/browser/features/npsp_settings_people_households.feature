@@ -21,14 +21,14 @@ Feature: NPSP Settings People Households
       And I wait for the page to revert
     Then I should see the original Household Settings on the page
 
-    Scenario: Smith Household real time example updates
-      When I set Household Name Format to "{!LastName} ({!{!FirstName}}) Household"
-        And I set Name Connector to "foo"
-      Then Examples for Household Name Format should reflect my changes
+  Scenario: Smith Household real time example updates
+    When I set Household Name Format to "{!LastName} ({!{!FirstName}}) Household"
+      And I set Name Connector to "foo"
+    Then Examples for Household Name Format should reflect my changes
 
-      @reset_these_settings
-    Scenario: Actually save Household Naming Settings
-      When I set Household Name Format to "{!{!FirstName}} {!LastName} Household"
-        And I click Save Household Naming Settings
-      Then my Household Naming Settings should be saved
-        And when I refresh the page my Household Naming Settings should be saved
+  @reset_these_settings
+  Scenario: Actually save Household Naming Settings
+    When I set Household Name Format to "{!{!FirstName}} {!LastName} Household"
+      And I click Save Household Naming Settings
+    Then my Household Naming Settings should be saved
+      And when I refresh the page my Household Naming Settings should be saved
