@@ -76,8 +76,9 @@ private class UTIL_Profile_TEST {
     			profileUtil.getProfileIds(currentProfileName).size(),
     			'The number of Profiles that have the Name ' + currentProfileName + ' should be equals to the profileUtil.getProfileIds ones'
     		);
+            Set<Id> currentProfileIds = new Set<Id>(profileUtil.getProfileIds(currentProfileName));
     		for (Profile currentProfile : orgProfilesByName.get(currentProfileName)) {
-    			System.assert(profileUtil.getProfileIds(currentProfileName).contains(currentProfile.Id));
+    			System.assert(currentProfileIds.contains(currentProfile.Id));
     		}
     	}
     }
