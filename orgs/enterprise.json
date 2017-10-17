@@ -1,6 +1,7 @@
 {
   "orgName": "NPSP - Enterprise Workspace",
   "edition": "Enterprise",
+  "hasSampleData": "true",
   "orgPreferences" : {
     "enabled": [
       "ChatterEnabled",
