@@ -63,7 +63,7 @@ public with sharing class UTIL_Profile {
 	/*********************************************************************************************************
     * @description Get the List of Profiles that have the input Name
     * @param profileName Name of the Profiles to retrieve
-    * @return Set of Profile Ids that have the input profile name
+    * @return List of Profile Ids that have the input profile name
     */
 	public List<Id> getProfileIds(String profileName) {
 		if (profilesByName.containsKey(profileName) == false) {

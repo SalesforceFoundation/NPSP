@@ -84,7 +84,7 @@ public class ERR_Notifier {
 
     /*******************************************************************************************************
     * @description Get the active System Admininstrators emails.
-    * @return Set<String> list of active System Administrators emails
+    * @return List<String> list of active System Administrators emails
     */
     @TestVisible
     private static List<String> getSystemAdminEmails() {
