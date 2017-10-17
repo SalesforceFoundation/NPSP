@@ -1,6 +1,7 @@
 {
   "orgName": "NPSP - Beta Org - MiddleSuffix",
   "edition": "Developer",
+  "hasSampleData": "true",
   "orgPreferences" : {
     "enabled": [
       "ChatterEnabled",
