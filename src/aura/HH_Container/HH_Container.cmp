@@ -144,7 +144,7 @@
                                 <label class="slds-checkbox">
                                     <ui:inputCheckbox aura:id="cbxAutoFormalGreeting" class="slds-checkbox"
                                         change="{!c.onCheck}" value="{!v.isAutoFormalGreeting}"/>
-                                    <span class="slds-checkbox_faux"></span>
+                                    <span class="slds-checkbox_faux" id="fauxCBAutoFormal"></span>
                                     <span class="slds-form-element__label" for="cbxAutoFormalGreeting">{!$Label.npo02.AutoFormalGreeting}</span>
                                 </label>
                             </div>
@@ -157,7 +157,7 @@
                                 <label class="slds-checkbox">
                                     <ui:inputCheckbox aura:id="cbxAutoInformalGreeting" class="slds-checkbox"
                                         change="{!c.onCheck}" value="{!v.isAutoInformalGreeting}"/>
-                                    <span class="slds-checkbox_faux"></span>
+                                    <span class="slds-checkbox_faux" id="fauxCBAutoInformal"></span>
                                     <span class="slds-form-element__label" for="cbxAutoInformalGreeting">{!$Label.npo02.AutoInformalGreeting}</span>
                                 </label>
                             </div>

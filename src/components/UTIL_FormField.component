@@ -21,9 +21,7 @@
     <apex:variable var="ftype" value="{!$ObjectType[sObjType].fields[field].type}"/>
     <!-- The fixup style class to apply to dependent and date fields -->
     <apex:variable var="fixup"
-        value="{!IF(dependent,
-                    IF(ftype=='picklist', ' dependentPicklistFixup', ' dependentMultiPicklistFixup'),
-                    IF(CONTAINS(ftype,'date'),' dateFixup', ''))}"/>
+        value="{!IF(dependent, IF(ftype=='picklist', ' dependentPicklistFixup', ' dependentMultiPicklistFixup'),'')}"/>
 
     <!-- The field label to be displayed -->
     <apex:variable var="label" value="{!$ObjectType[sObjType].fields[field].label}" rendered="{!labelOverride == ''}"/>

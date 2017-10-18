@@ -2,6 +2,7 @@
   "orgName": "NPSP - Beta Org - Multicurrency",
   "edition": "Developer",
   "features": "MultiCurrency",
+  "hasSampleData": "true",
   "orgPreferences" : {
     "enabled": [
       "ChatterEnabled",

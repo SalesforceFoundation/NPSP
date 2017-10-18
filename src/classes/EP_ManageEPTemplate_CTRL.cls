@@ -198,29 +198,35 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     /** @description Save method attempts to save the template, delete EP Tasks that have been removed, create and 
     * update EP Tasks. */
     public pageReference saveClose() {
+        //manual validation that the Name field is populated to avoid visualforce refresh issues when required attribute is set
+        if (String.isBlank(template.Name)) {
+            template.Name.addError(Label.NameRequired);
+            return null;
+        }
 
-        try {
-            //manual validation that the Name field is populated to avoid visualforce refresh issues when required attribute is set
-            if (String.isBlank(template.Name)) {
-                template.Name.addError(Label.NameRequired);
+        for (TaskWrapper wrapper : mapTaskWrappers.values()) {
+            if (String.isBlank(wrapper.detail.Name)) {
+                wrapper.detail.Name.addError(Label.NameRequired);
                 return null;
             }
+        }
 
+        List<Engagement_Plan_Task__c> tasksForInsert = new List<Engagement_Plan_Task__c>();
+        List<Engagement_Plan_Task__c> tasksForUpdate = new List<Engagement_Plan_Task__c>();
+        Map<Id, Id> existingParentIdsByTaskId = new Map<Id, Id>();
+        Id templateId = template.Id;
+
+        Savepoint sp = Database.setSavepoint(); 
+        try {
             upsert template;
 
             delete tasksToDelete;
-
-            list<Engagement_Plan_Task__c> tasksForInsert = new List<Engagement_Plan_Task__c>();
-            list<Engagement_Plan_Task__c> tasksForUpdate = new List<Engagement_Plan_Task__c>();
 
             //first, find and insert all EP Tasks without an Id
             for (TaskWrapper wrapper : mapTaskWrappers.values()) {
                 Engagement_Plan_Task__c epTask = wrapper.detail;
                 epTask.Engagement_Plan_Template__c = template.id;
-                if (String.isBlank(epTask.Name)) {
-                    epTask.Name.addError(Label.NameRequired);
-                    return null;
-                }
+
                 if (epTask.Id == null) {
                     tasksForInsert.add(epTask);
                 }
@@ -233,9 +239,13 @@ public with sharing class EP_ManageEPTemplate_CTRL {
             //then, fill out any parent lookups and update everything
             for (TaskWrapper wrapper : mapTaskWrappers.values()) {
                 Engagement_Plan_Task__c epTask = wrapper.detail;
+
+                existingParentIdsByTaskId.put(epTask.Id, epTask.Parent_Task__c);
+
                 if (epTask.Parent_Task__c == null && wrapper.parent != null) {
                     epTask.Parent_Task__c = wrapper.parent.detail.Id;
                 }
+
                 tasksForUpdate.add(epTask);
             }
 
@@ -247,7 +257,30 @@ public with sharing class EP_ManageEPTemplate_CTRL {
             source.setRedirect(true);
             source.getParameters().put('t',''+(System.currentTimeMillis()));
             return source;
+
         } catch (Exception ex) {
+            Database.rollback(sp);
+
+            //rollback new Template creation
+            template.Id = templateId;
+
+            //rollback Task insert
+            for (Engagement_Plan_Task__c task : tasksForInsert) {
+                task.Id = null;
+            }
+            //rollback Task Parent assignment
+            for (TaskWrapper wrapper : mapTaskWrappers.values()) {
+                Engagement_Plan_Task__c epTask = wrapper.detail;
+
+                Id existingParentId = epTask.Id == null
+                    ? null
+                    : existingParentIdsByTaskId.get(epTask.Id);
+
+                epTask.Parent_Task__c = existingParentId != null
+                    ? existingParentId
+                    : wrapper.parent != null ? wrapper.parent.detail.Id : null;
+            }
+
             ApexPages.addMessages(ex);
             return null;
         }
@@ -383,12 +416,13 @@ public with sharing class EP_ManageEPTemplate_CTRL {
 
         //add task button
         Component.Apex.OutputPanel buttonGridPanel = new Component.Apex.OutputPanel(styleClass='slds-grid', layout='block');
-        Component.Apex.OutputPanel buttonColPanel = new Component.Apex.OutputPanel(styleClass='slds-col slds-p-around--medium', layout='block');
+        Component.Apex.OutputPanel buttonColPanel = new Component.Apex.OutputPanel(styleClass='slds-col slds-p-around_medium', layout='block');
 
         Component.Apex.CommandButton addTaskButton = new Component.Apex.CommandButton(
-            styleClass = 'slds-button slds-button--brand slds-float--left',
+            styleClass = 'slds-button slds-button_brand slds-float_left',
             rerender = 'taskTree',
-            immediate = false
+            immediate = false,
+            id = 'btnAddTask'
         );
         addTaskButton.expressions.action = '{!addTask}';
         addTaskButton.expressions.value = '{!$Label.EPAddTask}';
@@ -417,35 +451,35 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         //number for looping through the available colors for the side bar
         Integer colorNumber = Math.mod(wrapper.level.countMatches('-'), sidebarColors.size());
 
-        Component.Apex.OutputPanel topLevelPanel = new Component.Apex.OutputPanel(styleClass='slds-m-left--medium slds-m-top--small', layout='block');
+        Component.Apex.OutputPanel topLevelPanel = new Component.Apex.OutputPanel(styleClass='slds-m-left_medium slds-m-top_small', layout='block');
         Component.Apex.OutputPanel formPanel = new Component.Apex.OutputPanel();
     
         //creates a box around the form with a label for the hierarchy level, and a color bar to more easily grock which level we're at
         Component.Apex.OutputText boxAndLabel = new Component.Apex.OutputText(value='<div aria-labelledby="task' + wrapper.level + 
-            '", class="slds-m-left--medium slds-m-top--small"><fieldset class="slds-box slds-theme--default slds-container--fluid '+
-            'slds-p-around--small", style="border-left: 6px solid ' + sidebarColors[colorNumber] + '"><legend id="task' + wrapper.level + '"' +
-            ' class="slds-text-heading--small">' + Schema.Sobjecttype.Task.getLabel() + ' ' + wrapper.level + 
+            '", class="slds-m-left_medium slds-m-top_small"><fieldset class="slds-box slds-theme_default slds-container_fluid '+
+            'slds-p-around_small", style="border-left: 6px solid ' + sidebarColors[colorNumber] + '"><legend id="task' + wrapper.level + '"' +
+            ' class="slds-text-heading_small">' + Schema.Sobjecttype.Task.getLabel() + ' ' + wrapper.level + 
             '</legend>', escape=false);
 
         Component.Apex.OutputPanel firstRow = new Component.Apex.OutputPanel(styleClass='slds-grid', layout='block');
         Component.Apex.OutputPanel secondRow = new Component.Apex.OutputPanel(styleClass='slds-grid', layout='block');
         Component.Apex.OutputPanel cardFooter = new Component.Apex.OutputPanel(styleClass='slds-grid', layout='block');
-        Component.Apex.OutputPanel buttonGroup = new Component.Apex.OutputPanel(styleClass='slds-button-group slds-p-top--large', layout='block');
+        Component.Apex.OutputPanel buttonGroup = new Component.Apex.OutputPanel(styleClass='slds-button-group slds-p-top_large', layout='block');
 
-        firstRow.childComponents.add(genericInputField(wrapper, accessString, 'Name', 'slds-col slds-size--1-of-4', true));
-        firstRow.childComponents.add(genericInputField(wrapper, accessString, 'Assigned_To__c', 'slds-col slds-size--1-of-4', false));
-        firstRow.childComponents.add(genericInputField(wrapper, accessString, 'Type__c', 'slds-col slds-size--1-of-4', false));
-        firstRow.childComponents.add(selectListInputPanel(wrapper, accessString, 'Priority__c', ' slds-col slds-size--1-of-4', 'slds-select','taskPriorityOptions', false));
+        firstRow.childComponents.add(genericInputField(wrapper, accessString, 'Name', 'slds-col slds-size_1-of-4', true));
+        firstRow.childComponents.add(genericInputField(wrapper, accessString, 'Assigned_To__c', 'slds-col slds-size_1-of-4', false));
+        firstRow.childComponents.add(genericInputField(wrapper, accessString, 'Type__c', 'slds-col slds-size_1-of-4', false));
+        firstRow.childComponents.add(selectListInputPanel(wrapper, accessString, 'Priority__c', ' slds-col slds-size_1-of-4', 'slds-select','taskPriorityOptions', false));
 
-        secondRow.childComponents.add(selectListInputPanel(wrapper, accessString, 'Status__c', ' slds-col slds-size--1-of-4', 'slds-select','taskStatusOptions', false));
-        secondRow.childComponents.add(genericInputField(wrapper, accessString, 'Send_Email__c', 'slds-col slds-size--1-of-8 slds-p-top--medium slds-p-left--medium', false));
-        secondRow.childComponents.add(genericInputField(wrapper, accessString, 'Reminder__c', 'slds-col slds-size--1-of-8 slds-p-top--medium', false));
-        secondRow.childComponents.add(selectListInputPanel(wrapper, accessString, 'Reminder_Time__c', ' slds-col slds-size--1-of-4', 'slds-select','reminderTimeOptions', false));
-        secondRow.childComponents.add(genericInputField(wrapper, accessString, 'Days_After__c', 'slds-col slds-size--1-of-4', false));
+        secondRow.childComponents.add(selectListInputPanel(wrapper, accessString, 'Status__c', ' slds-col slds-size_1-of-4', 'slds-select','taskStatusOptions', false));
+        secondRow.childComponents.add(genericInputField(wrapper, accessString, 'Send_Email__c', 'slds-col slds-size_1-of-8 slds-p-top_medium slds-p-left_medium', false));
+        secondRow.childComponents.add(genericInputField(wrapper, accessString, 'Reminder__c', 'slds-col slds-size_1-of-8 slds-p-top_medium', false));
+        secondRow.childComponents.add(selectListInputPanel(wrapper, accessString, 'Reminder_Time__c', ' slds-col slds-size_1-of-4', 'slds-select','reminderTimeOptions', false));
+        secondRow.childComponents.add(genericInputField(wrapper, accessString, 'Days_After__c', 'slds-col slds-size_1-of-4', false));
 
         Component.Apex.OutputText addDependentTaskButton = new Component.Apex.OutputText(
             value='<button onclick="addDependentTaskJS(\''+ wrapper.level +'\');return false;" '+ 
-            'class="slds-button slds-button--brand">' + Label.EPAddDependentTask + 
+            'class="slds-button slds-button_brand" id="btnAddDepTask">' + Label.EPAddDependentTask + 
             '<span class="slds-assistive-text"> ' + Label.EPTo + Schema.Sobjecttype.Task.getLabel() + ' ' + wrapper.level + 
             '</span></button>',
             escape=false
@@ -453,7 +487,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
          
         Component.Apex.OutputText deleteTaskButton = new Component.Apex.OutputText(
             value='<button onclick="deleteTaskJS(\''+ wrapper.level +'\');return false;" '+ 
-            'class="slds-button slds-button--destructive">' + Label.EPDeleteTask +
+            'class="slds-button slds-button_destructive" id="btnDelTask">' + Label.EPDeleteTask +
             '<span class="slds-assistive-text">' + wrapper.level + 
             '</span></button>',
             escape=false
@@ -462,7 +496,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         buttonGroup.childComponents.add(addDependentTaskButton);
         buttonGroup.childComponents.add(deleteTaskButton);
         cardFooter.childComponents.add(buttonGroup);
-        cardFooter.childComponents.add(commentsInputPanel(wrapper, accessString, 'Comments__c', 'slds-col slds-p-left--medium', 'slds-textarea', false));
+        cardFooter.childComponents.add(commentsInputPanel(wrapper, accessString, 'Comments__c', 'slds-col slds-p-left_medium', 'slds-textarea', false));
 
         topLevelPanel.childComponents.add(formPanel);
         formPanel.childComponents.add(boxAndLabel);
