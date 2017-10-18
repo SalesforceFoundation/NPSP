@@ -1083,7 +1083,7 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloAmountOrPercent</shortDescription>
-        <value>Each allocation must have either an assigned amount or percent.</value>
+        <value>Each Allocation must have a value in either the Amount field or the Percent field.</value>
     </labels>
     <labels>
         <fullName>alloBatchCreateDefault</fullName>
@@ -1137,7 +1137,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloCantAllocateNothing</shortDescription>
-        <value>You can only create allocations for opportunities with a positive amount.</value>
+        <value>You can only create Allocations for Opportunities with a positive value in the Amount field.</value>
     </labels>
     <labels>
         <fullName>alloDefaultGAUMissing</fullName>
@@ -1209,7 +1209,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloNegativeAmount</shortDescription>
-        <value>Allocations cannot have a negative amount.</value>
+        <value>The Amount field on an Allocation must contain a positive value.</value>
     </labels>
     <labels>
         <fullName>alloNegativePercent</fullName>
@@ -1217,7 +1217,15 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloNegativePercent</shortDescription>
-        <value>Allocations cannot have a negative percent.</value>
+        <value>The Percent field on an Allocation must contain a positive value.</value>
+    </labels>
+    <labels>
+        <fullName>alloObjectUnsupported</fullName>
+        <categories>Allocation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>alloObjectUnsupported</shortDescription>
+        <value>The Manage Allocations button is only supported from a Campaign, Opportunity or Recurring Donation record.</value>
     </labels>
     <labels>
         <fullName>alloPercentExceed100</fullName>
@@ -1980,6 +1988,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>There are {0} One-to-One Accounts who have no Contacts.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsAccountDefaultRTInvalid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthDetailsAccountDefaultRTInvalid</shortDescription>
+        <value>The Record Type selected for the current Account Model isn&apos;t valid.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsAccountDefaultRTIssue</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthDetailsAccountDefaultRTIssue</shortDescription>
+        <value>The Record Type, {0}, is selected for the current Account Model (in NPSP Settings) and is used as your profile&apos;&apos;s default Account Record Type.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsAccountModel</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -2395,6 +2419,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Account Data</value>
     </labels>
     <labels>
+        <fullName>healthLabelAccountDefaultRT</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthLabelAccountDefaultRT</shortDescription>
+        <value>Account Model Record Type</value>
+    </labels>
+    <labels>
         <fullName>healthLabelAccountModelData</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -2689,6 +2721,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>healthSolutionAccOne2OneNoContacts</shortDescription>
         <value>Consider deleting these unused One-to-One Accounts to save space.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionAccountDefaultRTInvalid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthSolutionAccountDefaultRTInvalid</shortDescription>
+        <value>Go to &lt;strong&gt;People | Account Model&lt;/strong&gt; and select a valid Record Type.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionAccountDefaultRTIssue</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthSolutionAccountDefaultRTIssue</shortDescription>
+        <value>The Record Type selected for the current Account Model should not be used as the default Account Record Type for any Profile in this Salesforce organization. Using the same Record Type could cause various data issues.</value>
     </labels>
     <labels>
         <fullName>healthSolutionAccountModel</fullName>
@@ -3759,6 +3807,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Interval</value>
     </labels>
     <labels>
+        <fullName>pmtWizardMonth</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pmtWizardMonth</shortDescription>
+        <value>Month</value>
+    </labels>
+    <labels>
         <fullName>pmtWizardMsgNoOppFound</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
@@ -3863,6 +3919,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Warning</value>
     </labels>
     <labels>
+        <fullName>pmtWizardWeek</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pmtWizardWeek</shortDescription>
+        <value>Week</value>
+    </labels>
+    <labels>
         <fullName>pmtWizardWriteoffDate</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
@@ -3877,6 +3941,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>pmtWizardWriteoffMessage</shortDescription>
         <value>You are preparing to write off {0} Payment(s) totaling {1}.</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardYear</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pmtWizardYear</shortDescription>
+        <value>Year</value>
     </labels>
     <labels>
         <fullName>pscDeleteRow</fullName>

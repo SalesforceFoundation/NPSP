@@ -1,6 +1,6 @@
 {
-  "orgName": "NPSP - Dev Workspace",
-  "edition": "Developer",
+  "orgName": "NPSP - Enterprise Workspace",
+  "edition": "Enterprise",
   "hasSampleData": "true",
   "orgPreferences" : {
     "enabled": [

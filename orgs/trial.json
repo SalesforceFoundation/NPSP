@@ -1,7 +1,6 @@
-{
-  "orgName": "NPSP - Dev Workspace",
-  "edition": "Developer",
-  "hasSampleData": "true",
+{  
+  "orgName": "NPSP - Trial Org",
+  "template": "0TT4100000843Oc",
   "orgPreferences" : {
     "enabled": [
       "ChatterEnabled",
