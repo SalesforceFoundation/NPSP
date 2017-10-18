@@ -68,7 +68,7 @@ tasks:
         description: Runs the Ruby/Watir browser tests in the test/browser folder using Chrome
         class_path: cumulusci.tasks.command.SalesforceBrowserTest
         options:
-            command: 'cd test/browser; bundle exec cucumber --format pretty --format junit --out ../junit -c features/ --tags ~@firefox --tags ~@flaky'
+            command: 'cd test/browser; bundle exec cucumber --format pretty --format junit --out ../junit -c features/ --tags ~@firefox --tags @smoketest'
             dir: '.'
             env:
                 SELENIUM_BROWSER: chrome
