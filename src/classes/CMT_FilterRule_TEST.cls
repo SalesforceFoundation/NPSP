@@ -109,14 +109,16 @@ private class CMT_FilterRule_TEST {
                 'There should be six valid operations for a Date field');
         System.AssertEquals(6, CMT_FilterRuleUI_SVC.getAvailableOperations('Opportunity', 'Amount').size(),
                 'There should be six valid operations for a Numeric field');
-        System.AssertEquals(2, CMT_FilterRuleUI_SVC.getAvailableOperations('Opportunity', 'AccountId').size(),
-                'There should be two valid operations for an Id field');
+        System.AssertEquals(4, CMT_FilterRuleUI_SVC.getAvailableOperations('Opportunity', 'AccountId').size(),
+                'There should be four valid operations for an Id field');
         System.AssertEquals(2, CMT_FilterRuleUI_SVC.getAvailableOperations('Opportunity', 'IsWon').size(),
                 'There should be two valid operations for a Boolean field');
-        System.AssertEquals(5, CMT_FilterRuleUI_SVC.getAvailableOperations('Opportunity', 'NextStep').size(),
-                'There should be five valid operations for a Text field');
-        System.AssertEquals(5, CMT_FilterRuleUI_SVC.getAvailableOperations('Opportunity', 'StageName').size(),
-                'There should be five valid operations for a picklist field');
+        System.AssertEquals(5, CMT_FilterRuleUI_SVC.getAvailableOperations('Opportunity', 'Description').size(),
+                'There should be five valid operations for a Textarea field');
+        System.AssertEquals(7, CMT_FilterRuleUI_SVC.getAvailableOperations('Opportunity', 'NextStep').size(),
+                'There should be seven valid operations for a Text field');
+        System.AssertEquals(7, CMT_FilterRuleUI_SVC.getAvailableOperations('Opportunity', 'StageName').size(),
+                'There should be seven valid operations for a picklist field');
 
         // Validate that fields are returned for the given SObject
         System.AssertNotEquals(0, CMT_FilterRuleUI_SVC.getAvailableFields(Opportunity.SObjectType).size());
