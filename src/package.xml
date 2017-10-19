@@ -775,6 +775,15 @@
         <members>Error__c.Posted_in_Chatter__c</members>
         <members>Error__c.Record_URL__c</members>
         <members>Error__c.Stack_Trace__c</members>
+        <members>Filter_Group__mdt.Description__c</members>
+        <members>Filter_Group__mdt.Is_Deleted__c</members>
+        <members>Filter_Rule__mdt.Constant__c</members>
+        <members>Filter_Rule__mdt.Field__c</members>
+        <members>Filter_Rule__mdt.Field_OpportunityContactRole_Role__c</members>
+        <members>Filter_Rule__mdt.Filter_Group__c</members>
+        <members>Filter_Rule__mdt.Is_Deleted__c</members>
+        <members>Filter_Rule__mdt.Object__c</members>
+        <members>Filter_Rule__mdt.Operator__c</members>
         <members>General_Accounting_Unit__c.Active__c</members>
         <members>General_Accounting_Unit__c.Average_Allocation__c</members>
         <members>General_Accounting_Unit__c.Description__c</members>
@@ -878,15 +887,6 @@
         <members>Trigger_Handler__c.Trigger_Action__c</members>
         <members>Trigger_Handler__c.User_Managed__c</members>
         <members>Trigger_Handler__c.Usernames_to_Exclude__c</members>
-        <members>Filter_Group__mdt.Description__c</members>
-        <members>Filter_Group__mdt.Is_Deleted__c</members>
-        <members>Filter_Rule__mdt.Constant__c</members>
-        <members>Filter_Rule__mdt.Field__c</members>
-        <members>Filter_Rule__mdt.Field_OpportunityContactRole_Role__c</members>
-        <members>Filter_Rule__mdt.Filter_Group__c</members>
-        <members>Filter_Rule__mdt.Is_Deleted__c</members>
-        <members>Filter_Rule__mdt.Object__c</members>
-        <members>Filter_Rule__mdt.Operator__c</members>
         <members>Rollup__mdt.Active__c</members>
         <members>Rollup__mdt.Amount_Field__c</members>
         <members>Rollup__mdt.Amount_Object__c</members>
@@ -1754,6 +1754,8 @@
         <members>Engagement_Plan__c</members>
         <members>Error_Settings__c</members>
         <members>Error__c</members>
+        <members>Filter_Group__mdt</members>
+        <members>Filter_Rule__mdt</members>
         <members>Fund__c</members>
         <members>General_Accounting_Unit__c</members>
         <members>Grant_Deadline__c</members>
@@ -1762,11 +1764,9 @@
         <members>Opportunity_Naming_Settings__c</members>
         <members>Partial_Soft_Credit__c</members>
         <members>Relationship_Sync_Excluded_Fields__c</members>
+        <members>Rollup__mdt</members>
         <members>Schedulable__c</members>
         <members>Trigger_Handler__c</members>
-        <members>Filter_Group__mdt</members>
-        <members>Filter_Rule__mdt</members>
-        <members>Rollup__mdt</members>
         <name>CustomObject</name>
     </types>
     <types>
@@ -1893,6 +1893,18 @@
         <members>Error__c-iw</members>
         <members>Error__c-ja</members>
         <members>Error__c-nl_NL</members>
+        <members>Filter_Group__mdt-de</members>
+        <members>Filter_Group__mdt-en_US</members>
+        <members>Filter_Group__mdt-es</members>
+        <members>Filter_Group__mdt-fr</members>
+        <members>Filter_Group__mdt-ja</members>
+        <members>Filter_Group__mdt-nl_NL</members>
+        <members>Filter_Rule__mdt-de</members>
+        <members>Filter_Rule__mdt-en_US</members>
+        <members>Filter_Rule__mdt-es</members>
+        <members>Filter_Rule__mdt-fr</members>
+        <members>Filter_Rule__mdt-ja</members>
+        <members>Filter_Rule__mdt-nl_NL</members>
         <members>Fund__c-de</members>
         <members>Fund__c-en_US</members>
         <members>Fund__c-es</members>
@@ -1961,6 +1973,12 @@
         <members>Relationship_Sync_Excluded_Fields__c-iw</members>
         <members>Relationship_Sync_Excluded_Fields__c-ja</members>
         <members>Relationship_Sync_Excluded_Fields__c-nl_NL</members>
+        <members>Rollup__mdt-de</members>
+        <members>Rollup__mdt-en_US</members>
+        <members>Rollup__mdt-es</members>
+        <members>Rollup__mdt-fr</members>
+        <members>Rollup__mdt-ja</members>
+        <members>Rollup__mdt-nl_NL</members>
         <members>Schedulable__c-de</members>
         <members>Schedulable__c-en_US</members>
         <members>Schedulable__c-es</members>
@@ -1975,24 +1993,6 @@
         <members>Trigger_Handler__c-iw</members>
         <members>Trigger_Handler__c-ja</members>
         <members>Trigger_Handler__c-nl_NL</members>
-        <members>Filter_Group__mdt-de</members>
-        <members>Filter_Group__mdt-en_US</members>
-        <members>Filter_Group__mdt-es</members>
-        <members>Filter_Group__mdt-fr</members>
-        <members>Filter_Group__mdt-ja</members>
-        <members>Filter_Group__mdt-nl_NL</members>
-        <members>Filter_Rule__mdt-de</members>
-        <members>Filter_Rule__mdt-en_US</members>
-        <members>Filter_Rule__mdt-es</members>
-        <members>Filter_Rule__mdt-fr</members>
-        <members>Filter_Rule__mdt-ja</members>
-        <members>Filter_Rule__mdt-nl_NL</members>
-        <members>Rollup__mdt-de</members>
-        <members>Rollup__mdt-en_US</members>
-        <members>Rollup__mdt-es</members>
-        <members>Rollup__mdt-fr</members>
-        <members>Rollup__mdt-ja</members>
-        <members>Rollup__mdt-nl_NL</members>
         <members>npe01__Contacts_And_Orgs_Settings__c-de</members>
         <members>npe01__Contacts_And_Orgs_Settings__c-es</members>
         <members>npe01__Contacts_And_Orgs_Settings__c-fr</members>
@@ -2089,6 +2089,8 @@
         <members>Engagement_Plan_Template__c-Engagement Plan Template Layout</members>
         <members>Engagement_Plan__c-Engagement Plan Layout</members>
         <members>Error__c-Error Layout</members>
+        <members>Filter_Group__mdt-Filter Group Layout</members>
+        <members>Filter_Rule__mdt-Filter Rule Layout</members>
         <members>Fund__c-Fund Layout</members>
         <members>General_Accounting_Unit__c-General Accounting Unit Layout</members>
         <members>Grant_Deadline__c-Grant Deadline Layout</members>
@@ -2100,11 +2102,9 @@
         <members>Opportunity-Matching Gift Layout</members>
         <members>Opportunity-Membership Layout</members>
         <members>Partial_Soft_Credit__c-Partial Soft Credit Layout</members>
+        <members>Rollup__mdt-Rollup Layout</members>
         <members>Schedulable__c-Schedulable Layout</members>
         <members>Trigger_Handler__c-Trigger Handler Layout</members>
-        <members>Filter_Group__mdt-Filter Group Layout</members>
-        <members>Filter_Rule__mdt-Filter Rule Layout</members>
-        <members>Rollup__mdt-Rollup Layout</members>
         <name>Layout</name>
     </types>
     <types>

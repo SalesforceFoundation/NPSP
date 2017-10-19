@@ -105,5 +105,20 @@
         <label><!-- Summary Object --></label>
         <name>Summary_Object__c</name>
     </fields>
+    <layouts>
+        <layout>Rollup Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- New Section --></label>
+            <section>New Section</section>
+        </sections>
+        <sections>
+            <label><!-- Rollup Details --></label>
+            <section>Rollup Details</section>
+        </sections>
+    </layouts>
     <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>

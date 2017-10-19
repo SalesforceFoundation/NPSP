@@ -45,6 +45,11 @@
         <name>Constant__c</name>
     </fields>
     <fields>
+        <help><!-- When checked, the Filter Rule will use the OpportunityContactRole.Role field value in the comparison. --></help>
+        <label><!-- OpportunityContactRole.Role --></label>
+        <name>Field_OpportunityContactRole_Role__c</name>
+    </fields>
+    <fields>
         <label><!-- Field --></label>
         <name>Field__c</name>
     </fields>
@@ -52,6 +57,10 @@
         <label><!-- Filter Group --></label>
         <name>Filter_Group__c</name>
         <relationshipLabel><!-- Filter Rules --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Deleted --></label>
+        <name>Is_Deleted__c</name>
     </fields>
     <fields>
         <label><!-- Object --></label>
@@ -106,4 +115,11 @@
         </picklistValues>
     </fields>
     <gender><!-- Neuter --></gender>
+    <layouts>
+        <layout>Filter Rule Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
 </CustomObjectTranslation>
