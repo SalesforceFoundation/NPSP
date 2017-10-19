@@ -77,4 +77,108 @@ public class CMT_FilterRuleEval_SVC {
         return true;
     }
 
+    /**
+     * @description Handle date and datetime comparisons when the comparison value is one of the defined constants
+     * @param fieldType The SoapType of the field to compare against
+     * @param fieldValue The value of the field to be compared
+     * @param compareValue The constant string to use for the comparison
+     * @return True if the comparison is successful
+     */
+    public static Boolean compareDateTypeWithConstant(SoapType fieldType, Object fieldValue, String compareValue,
+            CMT_FilterRule.FilterOperation operation) {
+
+        Date today = System.Today();
+        Boolean dateValueMatches = false;
+
+        // Simple comparison for a null field and/or a null comparison value
+        if (fieldValue == null) {
+            // If the field is null and we're comparing to any of the constant values (THIS_YEAR, etc.)
+            // then the result will always be false
+            return false;
+        }
+
+        // Create comparison date and/or year values based on the current date and the date constant
+        Integer compareYearValue;
+        Date compareStartDate, compareEndDate;
+
+        if (compareValue == 'THIS_YEAR') {
+            compareYearValue = today.year();
+        } else if (compareValue == 'LAST_YEAR') {
+            compareYearValue = today.year() - 1;
+        } else if (compareValue == 'TWO_YEARS_AGO') {
+            compareYearValue = today.year() - 2;
+
+        } else if (compareValue == 'TODAY') {
+            compareStartDate = today;
+            compareEndDate = today;
+        } else if (compareValue == 'YESTERDAY') {
+            compareStartDate = today.addDays(-1);
+            compareEndDate = today.addDays(-1);
+
+        } else if (compareValue == 'THIS_MONTH') {
+            compareStartDate = today.toStartOfMonth();
+            compareEndDate = compareStartDate.addMonths(1).addDays(-1);
+        } else if (compareValue == 'LAST_MONTH') {
+            compareStartDate = today.toStartOfMonth().addMonths(-1);
+            compareEndDate = compareStartDate.addMonths(1).addDays(-1);
+        } else if (compareValue == 'TWO_MONTHS_AGO') {
+            compareStartDate = today.toStartOfMonth().addMonths(-2);
+            compareEndDate = compareStartDate.addMonths(1).addDays(-1);
+
+        } else if (compareValue == 'THIS_WEEK') {
+            compareStartDate = today.toStartOfWeek();
+            compareEndDate = compareStartDate.addDays(7);
+        } else if (compareValue == 'LAST_WEEK') {
+            compareStartDate = today.toStartOfWeek().addDays(-7);
+            compareEndDate = compareStartDate.addDays(7);
+        } else if (compareValue == 'TWO_WEEKS_AGO') {
+            compareStartDate = today.toStartOfWeek().addDays(-14);
+            compareEndDate = compareStartDate.addDays(7);
+
+        }
+
+        // Get the appropriate date or year (integer) values from the field value based on the data type
+        Date fieldDateValue;
+        Integer fieldYearValue;
+
+        if (fieldType == SoapType.DATETIME) {
+            fieldDateValue = DateTime.valueOf(fieldValue).date();
+
+        } else if (fieldType == SoapType.DATE) {
+            fieldDateValue = Date.valueOf(fieldValue);
+        }
+        fieldYearValue = fieldDateValue.year();
+
+        // Compare the field to the year or start/end dates as appropriate
+        if (compareValue.contains('YEAR')) {
+            if (operation == CMT_FilterRule.FilterOperation.EQUALS) {
+                return fieldYearValue == compareYearValue;
+            } else if (operation == CMT_FilterRule.FilterOperation.NOT_EQUALS) {
+                return fieldYearValue != compareYearValue;
+            } else if (operation == CMT_FilterRule.FilterOperation.GREATER) {
+                return fieldYearValue > compareYearValue;
+            } else if (operation == CMT_FilterRule.FilterOperation.LESS) {
+                return fieldYearValue < compareYearValue;
+            } else if (operation == CMT_FilterRule.FilterOperation.GREATER_OR_EQUAL) {
+                return fieldYearValue >= compareYearValue;
+            } else if (operation == CMT_FilterRule.FilterOperation.LESS_OR_EQUAL) {
+                return fieldYearValue <= compareYearValue;
+            }
+        } else {
+            if (operation == CMT_FilterRule.FilterOperation.EQUALS) {
+                return (fieldDateValue >= compareStartDate && fieldDateValue <= compareEndDate);
+            } else if (operation == CMT_FilterRule.FilterOperation.NOT_EQUALS) {
+                return !(fieldDateValue >= compareStartDate && fieldDateValue <= compareEndDate);
+            } else if (operation == CMT_FilterRule.FilterOperation.GREATER) {
+                return fieldDateValue > compareEndDate;
+            } else if (operation == CMT_FilterRule.FilterOperation.LESS) {
+                return fieldDateValue < compareStartDate;
+            } else if (operation == CMT_FilterRule.FilterOperation.GREATER_OR_EQUAL) {
+                return fieldDateValue >= compareEndDate;
+            } else if (operation == CMT_FilterRule.FilterOperation.LESS_OR_EQUAL) {
+                return fieldDateValue <= compareStartDate;
+            }
+        }
+        return false;
+    }
 }

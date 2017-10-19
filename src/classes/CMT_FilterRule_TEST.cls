@@ -130,41 +130,41 @@ private class CMT_FilterRule_TEST {
      * expected value
      */
     static testMethod void test_DateConstantComparison() {
-        System.AssertEquals(true, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today(), 'TODAY', CMT_FilterRule.FilterOperation.EQUALS),
+        System.AssertEquals(true, CMT_FilterRuleEval_SVC.compareDateTypeWithConstant(SoapType.DATE, Date.Today(), 'TODAY', CMT_FilterRule.FilterOperation.EQUALS),
                 'A Date comparison for TODAY should return true');
-        System.AssertEquals(true, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today().addDays(-1), 'YESTERDAY', CMT_FilterRule.FilterOperation.EQUALS),
+        System.AssertEquals(true, CMT_FilterRuleEval_SVC.compareDateTypeWithConstant(SoapType.DATE, Date.Today().addDays(-1), 'YESTERDAY', CMT_FilterRule.FilterOperation.EQUALS),
                 'A Date comparison for YESTERDAY should return true');
-        System.AssertEquals(true, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today(), 'YESTERDAY', CMT_FilterRule.FilterOperation.GREATER),
+        System.AssertEquals(true, CMT_FilterRuleEval_SVC.compareDateTypeWithConstant(SoapType.DATE, Date.Today(), 'YESTERDAY', CMT_FilterRule.FilterOperation.GREATER),
                 'A Date comparison for YESTERDAY should return true');
 
-        System.AssertEquals(false, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today().addMonths(-1), 'TODAY', CMT_FilterRule.FilterOperation.EQUALS),
+        System.AssertEquals(false, CMT_FilterRuleEval_SVC.compareDateTypeWithConstant(SoapType.DATE, Date.Today().addMonths(-1), 'TODAY', CMT_FilterRule.FilterOperation.EQUALS),
                 'A Date comparison for TODAY should return false');
-        System.AssertEquals(false, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today().addDays(-3), 'YESTERDAY', CMT_FilterRule.FilterOperation.EQUALS),
+        System.AssertEquals(false, CMT_FilterRuleEval_SVC.compareDateTypeWithConstant(SoapType.DATE, Date.Today().addDays(-3), 'YESTERDAY', CMT_FilterRule.FilterOperation.EQUALS),
                 'A Date comparison for YESTERDAY should return false');
 
-        System.AssertEquals(true, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today(), 'THIS_WEEK', CMT_FilterRule.FilterOperation.EQUALS),
+        System.AssertEquals(true, CMT_FilterRuleEval_SVC.compareDateTypeWithConstant(SoapType.DATE, Date.Today(), 'THIS_WEEK', CMT_FilterRule.FilterOperation.EQUALS),
                 'A Date comparison for THIS_WEEK should return true');
-        System.AssertEquals(true, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today().toStartOfWeek().addDays(-1), 'LAST_WEEK', CMT_FilterRule.FilterOperation.EQUALS),
+        System.AssertEquals(true, CMT_FilterRuleEval_SVC.compareDateTypeWithConstant(SoapType.DATE, Date.Today().toStartOfWeek().addDays(-1), 'LAST_WEEK', CMT_FilterRule.FilterOperation.EQUALS),
                 'A Date comparison for LAST_WEEK should return true');
-        System.AssertEquals(true, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today().addMonths(1), 'THIS_WEEK', CMT_FilterRule.FilterOperation.GREATER),
+        System.AssertEquals(true, CMT_FilterRuleEval_SVC.compareDateTypeWithConstant(SoapType.DATE, Date.Today().addMonths(1), 'THIS_WEEK', CMT_FilterRule.FilterOperation.GREATER),
                 'A Date comparison for THIS_WEEK should return true');
-        System.AssertEquals(true, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today().addMonths(-1), 'LAST_WEEK', CMT_FilterRule.FilterOperation.LESS),
+        System.AssertEquals(true, CMT_FilterRuleEval_SVC.compareDateTypeWithConstant(SoapType.DATE, Date.Today().addMonths(-1), 'LAST_WEEK', CMT_FilterRule.FilterOperation.LESS),
                 'A Date comparison for LAST_WEEK should return true');
 
-        System.AssertEquals(true, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today(), 'THIS_MONTH', CMT_FilterRule.FilterOperation.EQUALS),
+        System.AssertEquals(true, CMT_FilterRuleEval_SVC.compareDateTypeWithConstant(SoapType.DATE, Date.Today(), 'THIS_MONTH', CMT_FilterRule.FilterOperation.EQUALS),
                 'A Date comparison for THIS_MONTH should return true');
-        System.AssertEquals(true, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today().addMonths(-1), 'LAST_MONTH', CMT_FilterRule.FilterOperation.EQUALS),
+        System.AssertEquals(true, CMT_FilterRuleEval_SVC.compareDateTypeWithConstant(SoapType.DATE, Date.Today().addMonths(-1), 'LAST_MONTH', CMT_FilterRule.FilterOperation.EQUALS),
                 'A Date comparison for LAST_MONTH should return true');
-        System.AssertEquals(true, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today().addMonths(-2), 'TWO_MONTHS_AGO', CMT_FilterRule.FilterOperation.EQUALS),
+        System.AssertEquals(true, CMT_FilterRuleEval_SVC.compareDateTypeWithConstant(SoapType.DATE, Date.Today().addMonths(-2), 'TWO_MONTHS_AGO', CMT_FilterRule.FilterOperation.EQUALS),
                 'A Date comparison for TWO_MONTHS_AGO should return true');
 
-        System.AssertEquals(true, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today(), 'THIS_YEAR', CMT_FilterRule.FilterOperation.EQUALS),
+        System.AssertEquals(true, CMT_FilterRuleEval_SVC.compareDateTypeWithConstant(SoapType.DATE, Date.Today(), 'THIS_YEAR', CMT_FilterRule.FilterOperation.EQUALS),
                 'A Date comparison for THIS_YEAR should return true');
-        System.AssertEquals(true, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today().addYears(-1), 'LAST_YEAR', CMT_FilterRule.FilterOperation.EQUALS),
+        System.AssertEquals(true, CMT_FilterRuleEval_SVC.compareDateTypeWithConstant(SoapType.DATE, Date.Today().addYears(-1), 'LAST_YEAR', CMT_FilterRule.FilterOperation.EQUALS),
                 'A Date comparison for LAST_YEAR should return true');
-        System.AssertEquals(true, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today(), 'LAST_YEAR', CMT_FilterRule.FilterOperation.GREATER_OR_EQUAL),
+        System.AssertEquals(true, CMT_FilterRuleEval_SVC.compareDateTypeWithConstant(SoapType.DATE, Date.Today(), 'LAST_YEAR', CMT_FilterRule.FilterOperation.GREATER_OR_EQUAL),
                 'A Date comparison for LAST_YEAR should return true');
-        System.AssertEquals(true, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATETIME, DateTime.Now().addYears(-2), 'TWO_YEARS_AGO', CMT_FilterRule.FilterOperation.EQUALS),
+        System.AssertEquals(true, CMT_FilterRuleEval_SVC.compareDateTypeWithConstant(SoapType.DATETIME, DateTime.Now().addYears(-2), 'TWO_YEARS_AGO', CMT_FilterRule.FilterOperation.EQUALS),
                 'A DateTime comparison for TWO_YEARS_AGO should return true');
     }
 
@@ -222,8 +222,10 @@ private class CMT_FilterRule_TEST {
         // Id field tests
         System.AssertEquals(false, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.AccountId, CMT_FilterRule.FilterOperation.EQUALS, badValue),
                 'A bad string value should be invalid for an Id field Equals operation');
-        System.AssertEquals(true, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.AccountId, CMT_FilterRule.FilterOperation.EQUALS, validId),
-                'An Id string value should be valid for a Id field Less operation');
+        System.AssertEquals(false, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.AccountId, CMT_FilterRule.FilterOperation.EQUALS, validId + ';' + badValue),
+                'An Id string value should be invalid for a Id field Equals operation with one bad Id');
+        System.AssertEquals(true, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.AccountId, CMT_FilterRule.FilterOperation.EQUALS, validId + ';' + validId),
+                'An Id string value should be valid for a Id field Equals operation with two Ids');
 
     }
 }

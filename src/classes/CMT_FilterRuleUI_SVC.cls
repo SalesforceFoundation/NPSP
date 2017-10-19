@@ -53,6 +53,8 @@ public class CMT_FilterRuleUI_SVC {
                 CMT_FilterRule.FilterOperation.STARTS_WITH => 'Starts With',
                 CMT_FilterRule.FilterOperation.CONTAINS => 'Contains',
                 CMT_FilterRule.FilterOperation.DOES_NOT_CONTAIN => 'Does Not Contain',
+                CMT_FilterRule.FilterOperation.IN_LIST => 'In',
+                CMT_FilterRule.FilterOperation.NOT_IN_LIST => 'Not In',
                 CMT_FilterRule.FilterOperation.IS_INCLUDED => 'Included',
                 CMT_FilterRule.FilterOperation.IS_NOT_INCLUDED => 'Not Included'
         };
@@ -89,9 +91,10 @@ public class CMT_FilterRuleUI_SVC {
             for (String fldName : fieldsForSort) {
                 DescribeFieldResult fld = allFields.get(fldName);
                 // Ignore fields that are not accessible, not an Id Lookup to another object,
-                // not deprecated, and not of type TIME or BLOB
+                // not deprecated, and not of type TIME, BLOB, LOCATION or ADDRESS
                 if (fld.isAccessible() && !fld.isIdLookup() && !fld.isDeprecatedAndHidden() &&
                         fld.getType() != DisplayType.TIME && fld.getType() != DisplayType.BASE64 &&
+                        fld.getType() != DisplayType.LOCATION && fld.getType() != DisplayType.ADDRESS &&
                         !ignoreTheseFields.contains(fld.getName()) &&
                         (category == 'Standard Fields' && !fld.isCustom()) || category == 'Custom Fields' && fld.isCustom()) {
                     options.add(new SelectOption(fld.getName(), fld.getLabel()));
@@ -111,15 +114,23 @@ public class CMT_FilterRuleUI_SVC {
         Schema.DisplayType fldType = UTIL_Describe.getFieldDisplaytype(objectName, fieldName);
 
         List<SelectOption> options = new List<SelectOption>();
-        if (fldType == Schema.DisplayType.BOOLEAN || fldType == Schema.DisplayType.Reference) {
+        if (fldType == Schema.DisplayType.BOOLEAN) {
 
             // Boolean fields only support Equals and Not Equals
-            options.add( new SelectOption(CMT_FilterRule.FilterOperation.EQUALS.name(), filterOps.get(CMT_FilterRule.FilterOperation.EQUALS) ));
-            options.add( new SelectOption(CMT_FilterRule.FilterOperation.NOT_EQUALS.name(), filterOps.get(CMT_FilterRule.FilterOperation.NOT_EQUALS) ));
+            options.add(new SelectOption(CMT_FilterRule.FilterOperation.EQUALS.name(), filterOps.get(CMT_FilterRule.FilterOperation.EQUALS)));
+            options.add(new SelectOption(CMT_FilterRule.FilterOperation.NOT_EQUALS.name(), filterOps.get(CMT_FilterRule.FilterOperation.NOT_EQUALS)));
+
+        } else if (fldType == Schema.DisplayType.Reference) {
+
+            // Id fields support Equals and Not Equals, IN and Not In
+            options.add(new SelectOption(CMT_FilterRule.FilterOperation.EQUALS.name(), filterOps.get(CMT_FilterRule.FilterOperation.EQUALS) ));
+            options.add(new SelectOption(CMT_FilterRule.FilterOperation.NOT_EQUALS.name(), filterOps.get(CMT_FilterRule.FilterOperation.NOT_EQUALS) ));
+            options.add(new SelectOption(CMT_FilterRule.FilterOperation.IN_LIST.name(), filterOps.get(CMT_FilterRule.FilterOperation.IN_LIST)));
+            options.add(new SelectOption(CMT_FilterRule.FilterOperation.NOT_IN_LIST.name(), filterOps.get(CMT_FilterRule.FilterOperation.NOT_IN_LIST)));
 
         } else if (fldType == Schema.DisplayType.DATE || fldType == Schema.DisplayType.DATETIME || fldType == Schema.DisplayType.TIME
-                || fldType == Schema.DisplayType.DOUBLE || fldType == Schema.DisplayType.INTEGER || fldType == Schema.DisplayType.CURRENCY
-                || fldType == Schema.DisplayType.PERCENT) {
+            || fldType == Schema.DisplayType.DOUBLE || fldType == Schema.DisplayType.INTEGER || fldType == Schema.DisplayType.CURRENCY
+            || fldType == Schema.DisplayType.PERCENT) {
 
             // Date, Time and Number fields support Equals, NotEquals, Greater, Less and variations of
             options.add( new SelectOption(CMT_FilterRule.FilterOperation.EQUALS.name(), filterOps.get(CMT_FilterRule.FilterOperation.EQUALS) ));
@@ -136,9 +147,15 @@ public class CMT_FilterRuleUI_SVC {
             options.add( new SelectOption(CMT_FilterRule.FilterOperation.STARTS_WITH.name(), filterOps.get(CMT_FilterRule.FilterOperation.STARTS_WITH) ));
             options.add( new SelectOption(CMT_FilterRule.FilterOperation.CONTAINS.name(), filterOps.get(CMT_FilterRule.FilterOperation.CONTAINS) ));
             options.add( new SelectOption(CMT_FilterRule.FilterOperation.DOES_NOT_CONTAIN.name(), filterOps.get(CMT_FilterRule.FilterOperation.DOES_NOT_CONTAIN) ));
+
+            // Multi-Select Pick-Lists use "Included" and "Not Included", while all other non-blob text fields
+            // can use "In" and "Not In"
             if (fldType == Schema.DisplayType.MULTIPICKLIST) {
                 options.add(new SelectOption(CMT_FilterRule.FilterOperation.IS_INCLUDED.name(), filterOps.get(CMT_FilterRule.FilterOperation.IS_INCLUDED)));
                 options.add(new SelectOption(CMT_FilterRule.FilterOperation.IS_NOT_INCLUDED.name(), filterOps.get(CMT_FilterRule.FilterOperation.IS_NOT_INCLUDED)));
+            } else if (fldType != Schema.DisplayType.TEXTAREA) {
+                options.add(new SelectOption(CMT_FilterRule.FilterOperation.IN_LIST.name(), filterOps.get(CMT_FilterRule.FilterOperation.IN_LIST)));
+                options.add(new SelectOption(CMT_FilterRule.FilterOperation.NOT_IN_LIST.name(), filterOps.get(CMT_FilterRule.FilterOperation.NOT_IN_LIST)));
             }
         }
 
@@ -215,7 +232,10 @@ public class CMT_FilterRuleUI_SVC {
 
         } else if (fldType == SoapType.ID) {
             try {
-                Id dblValue = Id.valueOf((String)value);
+                // Id's can be a single value or a semi-colon separated list of Id's
+                for (String v : value.split(';')) {
+                    Id dblValue = Id.valueOf(v);
+                }
                 return true;
             } catch (Exception ex) {
                 // The Id format is not recognized

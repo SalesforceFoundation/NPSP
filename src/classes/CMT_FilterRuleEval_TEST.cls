@@ -50,7 +50,8 @@ private class CMT_FilterRuleEval_TEST {
         filterGroupId3 = CMT_UnitTestData_TEST.getNewRecordId();
 
         String closedWonStage = UTIL_UnitTestData_TEST.getClosedWonStage();
-        String donationRTId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.sObjectType);
+        String donationRTId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.SObjectType);
+        String anotherId = UTIL_RecordTypes.getRecordTypeIdForMembershipTests(Opportunity.SObjectType);
 
         String filterGroupsJSON = '[' +
                 CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId1, 'Test Group 1') + ',' +
@@ -72,7 +73,7 @@ private class CMT_FilterRuleEval_TEST {
 
                 /*  FILTER RULES FOR FILTER GROUP 2 -- Opportunity with RecordTypeId, StageName and OCR.Role */
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group2.Rule1', 'Opportunity', 'StageName', 'Equals', closedWonStage) + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group2.Rule2', 'Opportunity', 'RecordTypeId', 'Equals', donationRTId) + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group2.Rule2', 'Opportunity', 'RecordTypeId', 'In_List', donationRTId + ';' + anotherId) + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group2.Rule3', 'Opportunity', 'Type', 'Equals', '') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group2.Rule4', 'Opportunity', 'NextStep', 'Contains', 'TEST') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group2.Rule5', 'Opportunity', 'Amount', 'Not_Equals', '') + ',' +
