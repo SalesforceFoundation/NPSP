@@ -78,6 +78,10 @@
         <members>CAM_CascadeDeleteLookups_TDTM</members>
         <members>CAM_CascadeDeleteLookups_TEST</members>
         <members>CAO_Constants</members>
+        <members>CMT_FilterRule</members>
+        <members>CMT_FilterRuleEval_SVC</members>
+        <members>CMT_FilterRuleEval_TEST</members>
+        <members>CMT_FilterRuleUI_SVC</members>
         <members>CMT_FilterRule_SEL</members>
         <members>CMT_FilterRule_TEST</members>
         <members>CMT_UnitTestData_TEST</members>

@@ -31,7 +31,7 @@
 * @author Salesforce.org
 * @date 2017
 * @group Custom Metadata Types
-* @description Selector class for FilterGroups and FilterRule Custom Metadata Type objects
+* @description Tests for CMT Filter Rule related actions
 */
 @isTest
 private class CMT_FilterRule_TEST {
@@ -73,17 +73,17 @@ private class CMT_FilterRule_TEST {
                             new CMT_UnitTestData_TEST.CMT_Field('Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.CloseDate'),
                             new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Equals'),
                             new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'THIS_YEAR')
+                    }) + ',' +
+            CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Rule__mdt', 'TestRule4-OCR',
+                    CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
+                            new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId),
+                            new CMT_UnitTestData_TEST.CMT_Field('Field_OpportunityContactRole_Role__c', CMT_UnitTestData_TEST.CMTFieldType.FldBoolean, True),
+                            new CMT_UnitTestData_TEST.CMT_Field('Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
+                            new CMT_UnitTestData_TEST.CMT_Field('Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.Id'),
+                            new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Equals'),
+                            new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Solicitor')
                     }) +
-                ',' +
-                CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Rule__mdt', 'TestRule4-OCR',
-                        CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
-                                new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId),
-                                new CMT_UnitTestData_TEST.CMT_Field('Field_OpportunityContactRole_Role__c', CMT_UnitTestData_TEST.CMTFieldType.FldBoolean, True),
-                                new CMT_UnitTestData_TEST.CMT_Field('Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.Id'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Equals'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Solicitor')
-                        }) +                ']';
+            ']';
 
         CMT_FilterRule_SEL.cachedFilterGroups = (List<Filter_Group__mdt>)JSON.deserialize(
                 filterGroupsJSON, List<Filter_Group__mdt>.class);
@@ -121,6 +121,141 @@ private class CMT_FilterRule_TEST {
 
         System.AssertEquals(1, CMT_FilterRule_SEL.getReferencedFieldsByObject(OpportunityContactRole.SObjectType).size(),
                 'There should be at least one referenced field for the OpportunityContactRole object in Filter_Rule__mdt');
+
+    }
+
+    /**
+     * @description Test various User Interface methods in the UI Service class
+     */
+    static testMethod void test_OperationMethods() {
+        mockFilterCMTValues();
+
+        test.startTest();
+
+        // Validate that the operation supporting methods retrieve and return the expected values
+        System.AssertEquals(CMT_FilterRule.FilterOperation.EQUALS, CMT_FilterRuleUI_SVC.getFilterOperationFromString('Equals'));
+        System.AssertEquals(CMT_FilterRuleUI_SVC.getFilterOperations().get(CMT_FilterRule.FilterOperation.EQUALS), 'Equals');
+
+        // Validate the available filter operations based on specific field types
+        System.AssertEquals(6, CMT_FilterRuleUI_SVC.getAvailableOperations('Opportunity', 'CloseDate').size(),
+                'There should be six valid operations for a Date field');
+        System.AssertEquals(6, CMT_FilterRuleUI_SVC.getAvailableOperations('Opportunity', 'Amount').size(),
+                'There should be six valid operations for a Numeric field');
+        System.AssertEquals(2, CMT_FilterRuleUI_SVC.getAvailableOperations('Opportunity', 'AccountId').size(),
+                'There should be two valid operations for an Id field');
+        System.AssertEquals(2, CMT_FilterRuleUI_SVC.getAvailableOperations('Opportunity', 'IsWon').size(),
+                'There should be two valid operations for a Boolean field');
+        System.AssertEquals(5, CMT_FilterRuleUI_SVC.getAvailableOperations('Opportunity', 'NextStep').size(),
+                'There should be five valid operations for a Text field');
+        System.AssertEquals(5, CMT_FilterRuleUI_SVC.getAvailableOperations('Opportunity', 'StageName').size(),
+                'There should be five valid operations for a picklist field');
+
+        // Validate that fields are returned for the given SObject
+        System.AssertNotEquals(0, CMT_FilterRuleUI_SVC.getAvailableFields(Opportunity.SObjectType).size());
+        System.AssertEquals(10, CMT_FilterRuleUI_SVC.getAvailableFields(OpportunityContactRole.SObjectType).size(),
+                'There should be exactly 10 available fields for the OpportunityContactRole object\n' +
+                CMT_FilterRuleUI_SVC.getAvailableFields(OpportunityContactRole.SObjectType));
+    }
+
+    /**
+     * @description Validate all of the date constant comparisons to ensure that each date constant matches the
+     * expected value
+     */
+    static testMethod void test_DateConstantComparison() {
+        System.AssertEquals(true, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today(), 'TODAY', CMT_FilterRule.FilterOperation.EQUALS),
+                'A Date comparison for TODAY should return true');
+        System.AssertEquals(true, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today().addDays(-1), 'YESTERDAY', CMT_FilterRule.FilterOperation.EQUALS),
+                'A Date comparison for YESTERDAY should return true');
+        System.AssertEquals(true, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today(), 'YESTERDAY', CMT_FilterRule.FilterOperation.GREATER),
+                'A Date comparison for YESTERDAY should return true');
+
+        System.AssertEquals(false, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today().addMonths(-1), 'TODAY', CMT_FilterRule.FilterOperation.EQUALS),
+                'A Date comparison for TODAY should return false');
+        System.AssertEquals(false, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today().addDays(-3), 'YESTERDAY', CMT_FilterRule.FilterOperation.EQUALS),
+                'A Date comparison for YESTERDAY should return false');
+
+        System.AssertEquals(true, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today(), 'THIS_WEEK', CMT_FilterRule.FilterOperation.EQUALS),
+                'A Date comparison for THIS_WEEK should return true');
+        System.AssertEquals(true, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today().toStartOfWeek().addDays(-1), 'LAST_WEEK', CMT_FilterRule.FilterOperation.EQUALS),
+                'A Date comparison for LAST_WEEK should return true');
+        System.AssertEquals(true, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today().addMonths(1), 'THIS_WEEK', CMT_FilterRule.FilterOperation.GREATER),
+                'A Date comparison for THIS_WEEK should return true');
+        System.AssertEquals(true, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today().addMonths(-1), 'LAST_WEEK', CMT_FilterRule.FilterOperation.LESS),
+                'A Date comparison for LAST_WEEK should return true');
+
+        System.AssertEquals(true, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today(), 'THIS_MONTH', CMT_FilterRule.FilterOperation.EQUALS),
+                'A Date comparison for THIS_MONTH should return true');
+        System.AssertEquals(true, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today().addMonths(-1), 'LAST_MONTH', CMT_FilterRule.FilterOperation.EQUALS),
+                'A Date comparison for LAST_MONTH should return true');
+        System.AssertEquals(true, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today().addMonths(-2), 'TWO_MONTHS_AGO', CMT_FilterRule.FilterOperation.EQUALS),
+                'A Date comparison for TWO_MONTHS_AGO should return true');
+
+        System.AssertEquals(true, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today(), 'THIS_YEAR', CMT_FilterRule.FilterOperation.EQUALS),
+                'A Date comparison for THIS_YEAR should return true');
+        System.AssertEquals(true, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today().addYears(-1), 'LAST_YEAR', CMT_FilterRule.FilterOperation.EQUALS),
+                'A Date comparison for LAST_YEAR should return true');
+        System.AssertEquals(true, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATE, Date.Today(), 'LAST_YEAR', CMT_FilterRule.FilterOperation.GREATER_OR_EQUAL),
+                'A Date comparison for LAST_YEAR should return true');
+        System.AssertEquals(true, CMT_FilterRule.compareDateTypeWithConstant(SoapType.DATETIME, DateTime.Now().addYears(-2), 'TWO_YEARS_AGO', CMT_FilterRule.FilterOperation.EQUALS),
+                'A DateTime comparison for TWO_YEARS_AGO should return true');
+    }
+
+    /**
+     * @description Validate the method that validates Filter Field+Operation+Value combinations that may be entered
+     * by the User in the Rollups UI
+     */
+    static testMethod void test_ValidateFilterOperations() {
+
+        System.AssertEquals(true, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.CloseDate, CMT_FilterRule.FilterOperation.EQUALS, null),
+            'A null value should be valid for a Date field Equals operation');
+        System.AssertEquals(false, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.CloseDate, CMT_FilterRule.FilterOperation.GREATER, null),
+            'A null value should be invalid for a Date field Greater operation');
+
+        String strValue = 'String Value';
+        String dtValue = DateTime.now().format('YYYY-MM-dd');
+        String dttmValue = DateTime.now().format('YYYY-MM-dd hh:mm:ss');
+        String boolValue = 'true';
+        String numValue = '100.23';
+        String badValue = 'XYX';
+        String validId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.SObjectType);
+
+        // Date field tests
+        System.AssertEquals(false, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.CloseDate, CMT_FilterRule.FilterOperation.EQUALS, badValue),
+            'A bad string value should be invalid for a Date field Equals operation');
+        System.AssertEquals(true, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.CloseDate, CMT_FilterRule.FilterOperation.LESS, dtValue),
+            'A date string value should be valid for a Date field Less operation');
+        System.AssertEquals(true, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.CloseDate, CMT_FilterRule.FilterOperation.LESS, 'TODAY'),
+            'A date constant value should be valid for a Date field Less operation');
+        System.AssertEquals(false, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.CloseDate, CMT_FilterRule.FilterOperation.GREATER, null),
+                'A null constant value should be invalid for a Date field Greaeter operation');
+
+        // DateTime field tests
+        System.AssertEquals(false, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.CreatedDate, CMT_FilterRule.FilterOperation.EQUALS, badValue),
+                'A bad string value should be invalid for a DateTime field Equals operation');
+        System.AssertEquals(true, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.CreatedDate, CMT_FilterRule.FilterOperation.LESS, dtValue),
+                'A date string value should be valid for a DateTime field Less operation');
+        System.AssertEquals(true, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.CreatedDate, CMT_FilterRule.FilterOperation.LESS, dttmValue),
+                'A datetime string value should be valid for a DateTime field Less operation');
+        System.AssertEquals(true, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.CreatedDate, CMT_FilterRule.FilterOperation.LESS, 'TODAY'),
+                'A date constant value should be valid for a DateTime field Less operation');
+
+        // Boolean field tests
+        System.AssertEquals(false, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.IsWon, CMT_FilterRule.FilterOperation.EQUALS, badValue),
+                'A bad string value should be invalid for a Boolean field Equals operation');
+        System.AssertEquals(true, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.IsWon, CMT_FilterRule.FilterOperation.EQUALS, boolValue),
+                'A boolean string value should be valid for a Boolean field Equals operation');
+
+        // Number field tests
+        System.AssertEquals(false, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.Amount, CMT_FilterRule.FilterOperation.EQUALS, badValue),
+                'A bad string value should be invalid for a Number field Equals operation');
+        System.AssertEquals(true, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.Amount, CMT_FilterRule.FilterOperation.LESS, numValue),
+                'A number string value should be valid for a Number field Less operation');
+
+        // Id field tests
+        System.AssertEquals(false, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.AccountId, CMT_FilterRule.FilterOperation.EQUALS, badValue),
+                'A bad string value should be invalid for an Id field Equals operation');
+        System.AssertEquals(true, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.AccountId, CMT_FilterRule.FilterOperation.EQUALS, validId),
+                'An Id string value should be valid for a Id field Less operation');
 
     }
 }
