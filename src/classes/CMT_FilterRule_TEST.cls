@@ -44,45 +44,13 @@ private class CMT_FilterRule_TEST {
     private static void mockFilterCMTValues() {
 
         String filterGroupId = CMT_UnitTestData_TEST.getNewRecordId();
-        String filterGroupsJSON = '[' + CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Group__mdt', 'TestFilterGroup',
-                filterGroupId, new List<CMT_UnitTestData_TEST.CMT_Field>{
-                    new CMT_UnitTestData_TEST.CMT_Field('Is_Deleted__c', CMT_UnitTestData_TEST.CMTFieldType.FldBoolean, False)
-        }) + ']';
+        String filterGroupsJSON = '[' + CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId, 'TestFilterGroup') + ']';
 
         String filterRulesJSON = '[' +
-                CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Rule__mdt', 'TestRule1',
-                        CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
-                            new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId),
-                            new CMT_UnitTestData_TEST.CMT_Field('Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
-                            new CMT_UnitTestData_TEST.CMT_Field('Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.IsWon'),
-                            new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Equals'),
-                            new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'true')
-                    }) + ',' +
-            CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Rule__mdt', 'TestRule2',
-                    CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
-                            new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId),
-                            new CMT_UnitTestData_TEST.CMT_Field('Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
-                            new CMT_UnitTestData_TEST.CMT_Field('Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.IsClosed'),
-                            new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Equals'),
-                            new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'true')
-                    }) + ',' +
-            CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Rule__mdt', 'TestRule3',
-                    CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
-                            new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId),
-                            new CMT_UnitTestData_TEST.CMT_Field('Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
-                            new CMT_UnitTestData_TEST.CMT_Field('Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.CloseDate'),
-                            new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Equals'),
-                            new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'THIS_YEAR')
-                    }) + ',' +
-            CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Rule__mdt', 'TestRule4-OCR',
-                    CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
-                            new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId),
-                            new CMT_UnitTestData_TEST.CMT_Field('Field_OpportunityContactRole_Role__c', CMT_UnitTestData_TEST.CMTFieldType.FldBoolean, True),
-                            new CMT_UnitTestData_TEST.CMT_Field('Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
-                            new CMT_UnitTestData_TEST.CMT_Field('Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.Id'),
-                            new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Equals'),
-                            new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Solicitor')
-                    }) +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId, 'TestRule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId, 'TestRule2', 'Opportunity', 'IsClosed', 'Equals', 'True') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId, 'TestRule3', 'Opportunity', 'CloseDate', 'Equals', 'THIS_YEAR') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId, 'TestRule4', 'OpportunityContactRole', 'Role', 'Equals', 'Solicitor') +
             ']';
 
         CMT_FilterRule_SEL.cachedFilterGroups = (List<Filter_Group__mdt>)JSON.deserialize(

@@ -53,146 +53,31 @@ private class CMT_FilterRuleEval_TEST {
         String donationRTId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.sObjectType);
 
         String filterGroupsJSON = '[' +
-                CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Group__mdt', 'Test Group 1', filterGroupId1,
-                        new List<CMT_UnitTestData_TEST.CMT_Field>{
-                        new CMT_UnitTestData_TEST.CMT_Field('Is_Deleted__c', CMT_UnitTestData_TEST.CMTFieldType.FldBoolean, False)
-                    }) + ',' +
-                CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Group__mdt', 'Test Group 2', filterGroupId2,
-                        new List<CMT_UnitTestData_TEST.CMT_Field>{
-                                new CMT_UnitTestData_TEST.CMT_Field('Is_Deleted__c', CMT_UnitTestData_TEST.CMTFieldType.FldBoolean, False)
-                    }) + ',' +
-                CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Group__mdt', 'Test Group 3', filterGroupId3,
-                        new List<CMT_UnitTestData_TEST.CMT_Field>{
-                                new CMT_UnitTestData_TEST.CMT_Field('Is_Deleted__c', CMT_UnitTestData_TEST.CMTFieldType.FldBoolean, False)
-                    }) +
-                ']';
+                CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId1, 'Test Group 1') + ',' +
+                CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId2, 'Test Group 2') + ',' +
+                CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId3, 'Test Group 3') +
+            ']';
 
         String filterRulesJSON = '[' +
             /*  FILTER RULES FOR FILTER GROUP 1 -- Opportunity only Boolean and Date fields */
-                CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Rule__mdt', 'Group1.TestRule1',
-                        CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
-                                new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId1),
-                                new CMT_UnitTestData_TEST.CMT_Field('Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.IsWon'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Equals'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'true')
-                        }) + ',' +
-                CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Rule__mdt', 'Group1.TestRule2',
-                        CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
-                                new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId1),
-                                new CMT_UnitTestData_TEST.CMT_Field('Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.StageName'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Equals'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, closedWonStage.toUpperCase())
-                        }) + ',' +
-                CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Rule__mdt', 'Group1.TestRule3',
-                        CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
-                                new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId1),
-                                new CMT_UnitTestData_TEST.CMT_Field('Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.CloseDate'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Equals'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'THIS_YEAR')
-                        }) + ',' +
-                CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Rule__mdt', 'Group1.TestRule4',
-                        CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
-                                new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId1),
-                                new CMT_UnitTestData_TEST.CMT_Field('Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.CloseDate'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Equals'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'THIS_MONTH')
-                        }) + ',' +
-                CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Rule__mdt', 'Group1.TestRule5',
-                        CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
-                                new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId1),
-                                new CMT_UnitTestData_TEST.CMT_Field('Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.CloseDate'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Not_Equals'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'LAST_YEAR')
-                        }) + ',' +
-                CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Rule__mdt', 'Group1.TestRule6',
-                        CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
-                                new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId1),
-                                new CMT_UnitTestData_TEST.CMT_Field('Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.Amount'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Greater'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, '0')
-                        }) + ',' +
-                CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Rule__mdt', 'Group1.TestRule7',
-                        CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
-                                new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId1),
-                                new CMT_UnitTestData_TEST.CMT_Field('Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.Primary_Contact__c'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Not_Equals'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, '')
-                        }) + ',' +
-                CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Rule__mdt', 'Group1.TestRule8',
-                        CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
-                                new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId1),
-                                new CMT_UnitTestData_TEST.CMT_Field('Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.StageName'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Contains'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, closedWonStage.right(3))
-                        }) + ',' +
-                CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Rule__mdt', 'Group1.TestRule9',
-                        CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
-                                new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId1),
-                                new CMT_UnitTestData_TEST.CMT_Field('Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.CreatedDate'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Equals'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, DateTime.Now().format('YYYY-MM-dd'))
-                        }) + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule2', 'Opportunity', 'StageName', 'Equals', closedWonStage.toUpperCase()) + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule3', 'Opportunity', 'StageName', 'Contains', closedWonStage.right(3)) + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule4', 'Opportunity', 'CloseDate', 'Equals', 'THIS_YEAR') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule5', 'Opportunity', 'CloseDate', 'Equals', 'THIS_MONTH') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule6', 'Opportunity', 'CloseDate', 'Not_Equals', 'LAST_YEAR') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule7', 'Opportunity', 'Amount', 'Greater', '0') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule8', 'Opportunity', 'Primary_Contact__c', 'Not_Equals', '') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule9', 'Opportunity', 'CreatedDate', 'Equals', DateTime.Now().format('YYYY-MM-dd')) + ',' +
 
                 /*  FILTER RULES FOR FILTER GROUP 2 -- Opportunity with RecordTypeId, StageName and OCR.Role */
-                CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Rule__mdt', 'Group2.TestRule1',
-                        CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
-                                new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId2),
-                                new CMT_UnitTestData_TEST.CMT_Field('Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.StageName'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Equals'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, closedWonStage)
-                        }) + ',' +
-                CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Rule__mdt', 'Group2.TestRule2',
-                        CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
-                                new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId2),
-                                new CMT_UnitTestData_TEST.CMT_Field('Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.RecordTypeId'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Equals'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, donationRTId)
-                        }) + ',' +
-                CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Rule__mdt', 'Group2.TestRule3',
-                        CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
-                                new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId2),
-                                new CMT_UnitTestData_TEST.CMT_Field('Field_OpportunityContactRole_Role__c', CMT_UnitTestData_TEST.CMTFieldType.FldBoolean, True),
-                                new CMT_UnitTestData_TEST.CMT_Field('Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.Id'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Equals'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Donor')
-                        }) + ',' +
-                CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Rule__mdt', 'Group2.TestRule4',
-                        CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
-                                new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId2),
-                                new CMT_UnitTestData_TEST.CMT_Field('Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.Type'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Equals'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, '')
-                        }) + ',' +
-                CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Rule__mdt', 'Group2.TestRule5',
-                        CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
-                                new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId2),
-                                new CMT_UnitTestData_TEST.CMT_Field('Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.NextStep'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Starts_With'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'TEST')
-                        }) + ',' +
-                CMT_UnitTestData_TEST.buildCMTObjectJSON('Filter_Rule__mdt', 'Group2.TestRule6',
-                        CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
-                                new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId2),
-                                new CMT_UnitTestData_TEST.CMT_Field('Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.Amount'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Operator__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Not_Equals'),
-                                new CMT_UnitTestData_TEST.CMT_Field('Constant__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, '')
-                        }) +
-                ']';
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group2.Rule1', 'Opportunity', 'StageName', 'Equals', closedWonStage) + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group2.Rule2', 'Opportunity', 'RecordTypeId', 'Equals', donationRTId) + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group2.Rule3', 'Opportunity', 'Type', 'Equals', '') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group2.Rule4', 'Opportunity', 'NextStep', 'Contains', 'TEST') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group2.Rule5', 'Opportunity', 'Amount', 'Not_Equals', '') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group2.Rule6', 'OpportunityContactRole', 'Role', 'Equals', 'Donor') +
+            ']';
 
         CMT_FilterRule_SEL.cachedFilterGroups = (List<Filter_Group__mdt>)JSON.deserialize(
                 filterGroupsJSON, List<Filter_Group__mdt>.class);

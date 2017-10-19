@@ -179,4 +179,55 @@ public class CMT_UnitTestData_TEST {
         }
     }
 
+    /**
+     * @description Helper to create a JSON string for a single Filter_Group__mdt record
+     * @param recordId
+     * @param recordLabel
+     * @return Filter_Group__mdt serialized JSON
+     */
+    public static String createFilterGroupRecord(String recordId, String recordLabel) {
+        if (recordId == null) {
+            recordId = getNewRecordId();
+        }
+        return buildCMTObjectJSON('Filter_Group__mdt', recordLabel, recordId,
+                new List<CMT_Field>{new CMT_Field('Is_Deleted__c', CMTFieldType.FldBoolean, False)}
+            );
+    }
+
+    /**
+     * @description Helper to create a JSON string for a single Filter_Rule__mdt record
+     * @param recordId
+     * @param groupId
+     * @param recordLabel
+     * @param objectName
+     * @param fieldName
+     * @param operator
+     * @param constant
+     * @return Filter_Rule__mdt serialized JSON
+     */
+    public static String createFilterRuleRecord(String recordId, String filterGroupId, String recordLabel,
+                                                String objectName, String fieldName, String operator, String constant) {
+        if (recordId == null) {
+            recordId = getNewRecordId();
+        }
+        Boolean ocrBasedRule = false;
+        if (objectName == 'OpportunityContactRole') {
+            // If the Object is OCR, then change the object and field for the Filter_Rule__mdt record
+            // and set the boolean flag to true to mimic how this type of data will actually be
+            // stored in the MDT object (because OpportunityContactRole is not a supported object)
+            ocrBasedRule = true;
+            objectName = 'Opportunity';
+            fieldName = 'Id';
+        }
+        return buildCMTObjectJSON('Filter_Rule__mdt', recordLabel, recordId,
+                new List<CMT_Field>{
+                    new CMT_Field('Filter_Group__c', CMTFieldType.FldText, filterGroupId),
+                    new CMT_Field('Object__c', CMTFieldType.FldEntity, objectName),
+                    new CMT_Field('Field__c', CMTFieldType.FldField, objectName + '.' + fieldName),
+                    new CMT_Field('Operator__c', CMTFieldType.FldText, operator),
+                    new CMT_Field('Constant__c', CMTFieldType.FldText, constant),
+                    new CMT_Field('Field_OpportunityContactRole_Role__c', CMTFieldType.FldBoolean, ocrBasedRule)
+                }
+            );
+    }
 }
