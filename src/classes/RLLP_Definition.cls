@@ -1,3 +1,6 @@
+/* ======================================================================================================= */
+/* **************                   THIS CLASS WILL BE REPLACED WITH A TBD CLASS            ************** */
+/* ======================================================================================================= */
 public with sharing abstract class RLLP_Definition {
     public Schema.SObjectType summaryObject;       //Contact or Account
     public Schema.SObjectType detailObject;        //Opportunity and Payment; TODO: special case payment for generating query and parsing everything

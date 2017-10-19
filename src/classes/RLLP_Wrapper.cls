@@ -1,3 +1,6 @@
+/* ======================================================================================================= */
+/* **************                   THIS CLASS WILL BE REPLACED WITH A TBD CLASS            ************** */
+/* ======================================================================================================= */
 public class RLLP_Wrapper {
     public RLLP_Definition definition;
     public List<RLLP_Operation> operations = new List<RLLP_Operation>();
