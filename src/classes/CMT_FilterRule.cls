@@ -72,12 +72,12 @@ public class CMT_FilterRule {
     private static final Map<SoapType, Type> converters = new Map<SoapType, Type>{
             SoapType.BOOLEAN    => CompareBooleans.class,
             SoapType.DOUBLE     => CompareDoubles.class,
+            SoapType.INTEGER    => CompareDoubles.class,
             SoapType.DATE       => CompareDates.class,
-            /*SoapType.TIME       => CompareTimes.class, -- Time is not a field type we can support yet */
             SoapType.DATETIME   => CompareDateTimes.class,
             SoapType.ID         => CompareIds.class,
-            SoapType.INTEGER    => CompareIntegers.class,
             SoapType.STRING     => CompareStrings.class
+            /*SoapType.TIME       => CompareTimes.class -- Time is not a field type we can support yet */
     };
 
     /**
@@ -205,7 +205,15 @@ public class CMT_FilterRule {
                 } else {
                     return false;
                 }
-            } else if (rule.operation == FilterOperation.EQUALS) {
+            }
+
+            // if the field is null and not comparing to null, then set the field value to zero
+            // so the rest of the comparisons work properly
+            if (fieldValue == null) {
+                fieldValue = 0;
+            }
+
+            if (rule.operation == FilterOperation.EQUALS) {
                 return fieldValue == compareValue;
             } else if (rule.operation == FilterOperation.NOT_EQUALS) {
                 return fieldValue != compareValue;
@@ -344,40 +352,6 @@ public class CMT_FilterRule {
                 }
             }
 
-            return false;
-        }
-    }
-
-    /**
-     * @description Compare implementation for an Integer data type
-     */
-    public class CompareIntegers implements ICompare {
-        public Boolean isIncluded(SObject record, CMT_FilterRule rule) {
-            Integer fieldValue = (record.get(rule.field) != null ? (Integer)record.get(rule.field) : null);
-            Integer compareValue = (String.isNotEmpty(rule.constant) ? Integer.valueOf(rule.constant) : null);
-
-            if (fieldValue == null && compareValue == null) {
-                // A null to null comparison is either Equals (true) or false for any other operation
-                if (rule.operation == FilterOperation.EQUALS) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else if (rule.operation == FilterOperation.EQUALS) {
-                return fieldValue == compareValue;
-            } else if (rule.operation == FilterOperation.NOT_EQUALS) {
-                return fieldValue != compareValue;
-            } else if (rule.operation == FilterOperation.GREATER) {
-                return fieldValue > compareValue;
-            } else if (rule.operation == FilterOperation.LESS) {
-                return fieldValue < compareValue;
-            } else if (rule.operation == FilterOperation.GREATER_OR_EQUAL) {
-                return fieldValue >= compareValue;
-            } else if (rule.operation == FilterOperation.LESS) {
-                return fieldValue < compareValue;
-            } else if (rule.operation == FilterOperation.LESS_OR_EQUAL) {
-                return fieldValue <= compareValue;
-            }
             return false;
         }
     }

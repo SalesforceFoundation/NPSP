@@ -87,8 +87,8 @@ private class CMT_FilterRuleEval_TEST {
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule5', 'Opportunity', 'Amount', 'Not_Equals', '') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule6', 'Opportunity', 'Amount', 'Less_Or_Equal', '1000000000') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule7', 'Opportunity', 'Amount', 'Greater_Or_Equal', '0') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule8', 'Opportunity', 'npe01__Number_of_Payments__c', 'Equals', '1') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule9', 'Opportunity', 'npe01__Number_of_Payments__c', 'Greater', '0') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule8', 'Opportunity', 'Recurring_Donation_Installment_Number__c', 'Not_Equals', '1') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule9', 'Opportunity', 'Recurring_Donation_Installment_Number__c', 'Greater_Or_Equal', '0') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule10', 'OpportunityContactRole', 'Role', 'In_List', 'Donor;Member') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule11', 'OpportunityContactRole', 'Role', 'Not_In_List', 'InvalidRole') +
             ']';
