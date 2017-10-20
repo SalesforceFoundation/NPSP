@@ -367,14 +367,10 @@ public class HH_HouseholdNaming_TEST {
         List<Account> accounts = buildHHAccounts(2);
         insert accounts;
 
-        List<npo02__Household__c> hhs = buildHouseholds(2);
-        insert hhs;
-
         List<Contact> contacts = new List<Contact>{
-            new Contact(FirstName = 'Alpha', LastName = 'A', AccountId = accounts[0].Id, npo02__Household__c = hhs[0].Id),
-            new Contact(FirstName = 'Beta', LastName = 'B', npo02__Household__c = hhs[1].Id),
-            new Contact(FirstName = 'Charlie', LastName = 'C', AccountId = accounts[1].Id),
-            new Contact(FirstName = 'Deleta', LastName = 'D', npe01__Private__c = true)
+            new Contact(FirstName = 'Alpha', LastName = 'A', AccountId = accounts[0].Id),
+            new Contact(FirstName = 'Beta', LastName = 'B', AccountId = accounts[1].Id),
+            new Contact(FirstName = 'Charlie', LastName = 'C', npe01__Private__c = true)
         };
 
         // Execute Contact insert in start/stopTest() to complete Household future jobs
@@ -386,37 +382,32 @@ public class HH_HouseholdNaming_TEST {
 
         Contact actual = actualContacts[0];
         System.assertEquals(accounts[0].Name, actual.Account.Name, 'Account Name should be unchanged: ' + actual);
-
-        actual = actualContacts[1];
-        contacts[1].AccountId = actualContacts[1].AccountId; // get the new Account created by the Contact insert
-        System.assertEquals(buildDefaultHHName(contacts[1]), actual.Account.Name, 'Account Name should be default Household Name: ' + actual);
         
-        actual = actualContacts[2];
+        actual = actualContacts[1];
         System.assertEquals(accounts[1].Name, actual.Account.Name, 'Account Name should be unchanged: ' + actual);
 
-        actual = actualContacts[3];
+        actual = actualContacts[2];
         System.assertEquals(null, actual.AccountId, 'Account should not be specified for a private Contact: ' + actual);
 
         UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
 
         HH_HouseholdNaming hhNaming = new HH_HouseholdNaming();
         // Specify null argument -> ensure records with null Account or Household do not have names updated
-        List<Id> hhIds = new List<Id>{ contacts[0].AccountId, contacts[1].AccountId, null };
+        List<Id> hhIds = new List<Id>{ contacts[0].AccountId, null };
 
         hhNaming.updateNames(hhIds);
 
         actualContacts = getContactsOrderByFirstName();
 
         // Verify Account names are changed for Accounts specified to the updateNames()
-        for (Integer i = 0; i <= 1; i++) {
-            actual = actualContacts[i];
-            System.assertEquals(buildFormattedHHName(contacts[i]), actual.Account.Name, 'Account Name should be formatted HH Name now: ' + actual);
-        }
+        actual = actualContacts[0];
+        System.assertEquals(buildFormattedHHName(contacts[0]), actual.Account.Name, 'Account Name should be formatted HH Name now: ' + actual);
 
         // Verify Account names are not changed for Accounts not specified to the updateNames()
-        actual = actualContacts[2];
+        actual = actualContacts[1];
         System.assertEquals(accounts[1].Name, actual.Account.Name, 'Account Name should be unchanged: ' + actual);
-        actual = actualContacts[3];
+        
+        actual = actualContacts[2];
         System.assertEquals(null, actual.AccountId, 'Account should not be specified for a private Contact: ' + actual);
     }
     
@@ -652,8 +643,7 @@ public class HH_HouseholdNaming_TEST {
         contacts = hhNaming.getHouseholdContacts(hhIds);
         System.assertEquals(0, contacts.size(), 'The Contact list should contain no record when Id list arg contains null: ' + contacts);
 
-        Id mockAccountId = Account.sObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
-        hhIds.add(mockAccountId);
+        hhIds.add(UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID);
         contacts = hhNaming.getHouseholdContacts(hhIds);
         System.assertEquals(0, contacts.size(), 'The Contact list should contain no record for Account without Contacts: ' + contacts);
     }
