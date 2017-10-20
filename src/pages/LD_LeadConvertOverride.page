@@ -162,7 +162,7 @@
 
 
                     <div class="slds-form-element">
-                        <c:UTIL_FormField sObjType="Lead" sObj="{!l}" field="Status" labelOverride="{!$Label.leadConvertStatus}" id="leadstatus" />
+                        <c:UTIL_FormField sObjType="Lead" sObj="{!l}" field="Status" labelOverride="{!$Label.leadConvertStatus}" id="leadstatus" required="true" />
                     </div>
                 </div>
             </div>
