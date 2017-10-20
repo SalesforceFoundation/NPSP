@@ -1,4 +1,4 @@
-<apex:component layout="none">
+<apex:component layout="none" id="util_formfield">
     <apex:attribute name="field" type="String" description="The field to display." required="true"/>
     <apex:attribute name="sObj" type="sObject" description="The sObject the field belongs to." required="true"/>
     <apex:attribute name="sObjType" type="String" description="The sObject type." required="true"/>
@@ -38,8 +38,8 @@
             <div class="{!'slds-form-element__control' + IF(ftype!='boolean', ' slds-has-divider_bottom slds-p-left_small','')}">
                 <!-- Blank space fixes issue where an empty span on read only fields were blank causing the line to shift when no value present -->
                 <apex:outputField id="outputX" value="{!sObj[field]}" styleClass="slds-form-element__static" rendered="{!ftype!='boolean'}">&nbsp;</apex:outputField>
-                <apex:outputPanel layout="{!IF(ftype=='boolean', 'inline', 'none')}" styleClass="{!IF(ftype=='boolean', 'slds-checkbox', '')}">
-                    <apex:outputLabel for="outputCB" styleClass="slds-checkbox__label" rendered="{!ftype=='boolean'}">
+                <apex:outputPanel layout="{!IF(ftype=='boolean', 'inline', 'none')}" styleClass="{!IF(ftype=='boolean', 'slds-checkbox', '')}" id="outerpanel">
+                    <apex:outputLabel for="outputCB" styleClass="slds-checkbox__label" rendered="{!ftype=='boolean'}" id="field-label-output">
                         <apex:inputCheckbox value="{!sObj[field]}" id="outputCB" disabled="true" rendered="{!ftype=='boolean'}" />
                         <span class="slds-checkbox_faux"></span>
                         <apex:outputPanel rendered="{!showLabel == true}" layout="none">
@@ -55,8 +55,8 @@
     <apex:outputPanel layout="block" styleClass="{!'slds-form-element ' + styleClass + fixup}" id="divInput"
         rendered="{!($ObjectType[sObjType].fields[field].updateable
                     || $ObjectType[sObjType].fields[field].createable && sObj['Id']=='') && $ObjectType[sObjType].fields[field].type != 'boolean'}">        
-        <apex:outputLabel for="inputX" styleClass="slds-form-element__label" rendered="{!showLabel == true && ftype!='boolean'}">
-            <apex:outputText rendered="{!required}">
+        <apex:outputLabel for="inputX" styleClass="slds-form-element__label" rendered="{!showLabel == true && ftype!='boolean'}" id="lblInputField">
+            <apex:outputText rendered="{!required}" id="lblInputFieldRequired">
                 <abbr class="slds-required" title="{!$Label.lblRequired}">*</abbr>
             </apex:outputText>
             <apex:outputText rendered="{!showLabel == true}" value="{!label}"/>
@@ -64,16 +64,16 @@
         <div class="slds-form-element__control">
             <c:UTIL_InputField field="{!field}" sObj="{!sObj}" sObjType="{!sObjType}" onchange="{!onchange}" actSupAction="{!actSupAction}"
                 actSupReRender="{!actSupReRender}" actSup="{!actSup}" actSupStatus="{!actSupStatus}" actSupImmediate="{!actSupImmediate}"
-                required="{!required}"/>
+                required="{!required}" id="inputx"/>
         </div>
     </apex:outputPanel>
 
     <!-- Updateable boolean fields need to have input within the label span. -->
-    <apex:outputPanel layout="block" styleClass="{!'slds-form-element ' + styleClass}" id="divCheckbox"
+    <apex:outputPanel layout="block" styleClass="{!'slds-form-element ' + styleClass}" id="divInputCheckbox"
         rendered="{!($ObjectType[sObjType].fields[field].updateable
                     || $ObjectType[sObjType].fields[field].createable && sObj['Id']=='') && $ObjectType[sObjType].fields[field].type == 'boolean'}">
         <div class="slds-form-element__control">
-            <apex:outputLabel styleClass="slds-checkbox" for="inputCB">
+            <apex:outputLabel styleClass="slds-checkbox" for="inputCB" id="lblCheckbox">
                 <apex:inputField id="inputCB" value="{!sObj[field]}" label="">
                     <apex:actionSupport event="onchange" action="{!actSupAction}" reRender="{!actSupReRender}" rendered="{!actSup}" status="{!actSupStatus}" immediate="{!actSupImmediate}"/>
                 </apex:inputField>
