@@ -1,6 +1,6 @@
 <apex:page standardController="Lead" extensions="LD_LeadConvertOverride_CTRL"
            title="{!$Label.leadConvertPageTitle} {!l.Name}"
-           standardStylesheets="true" docType="html-5.0">
+           standardStylesheets="true" docType="html-5.0" id="pg">
 
     <apex:slds />
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/modal.js')}"/>
@@ -162,7 +162,7 @@
 
 
                     <div class="slds-form-element">
-                        <c:UTIL_FormField sObjType="Lead" sObj="{!l}" field="Status" labelOverride="{!$Label.leadConvertStatus}" />
+                        <c:UTIL_FormField sObjType="Lead" sObj="{!l}" field="Status" labelOverride="{!$Label.leadConvertStatus}" id="leadstatus" />
                     </div>
                 </div>
             </div>
@@ -216,7 +216,7 @@
         // and filtering out any options that are not part of the converted status options
         function filterStatus() {
             var lcStatus = '{!lcStatuses}'; // Lead conversion statuses
-            var ldStatus = document.getElementById('{!$Component.pbEdit.ldStatus}'); // All lead statuses
+            var ldStatus = document.getElementById('{!$Component.pbEdit.leadstatus.util_formfield.inputx.util_inputfield.inputx}'); // All lead statuses
             var selected = ldStatus.value;
             for (var i=0; i<ldStatus.length; i++){
                 if (lcStatus.indexOf(ldStatus.options[i].value) < 0 ){
