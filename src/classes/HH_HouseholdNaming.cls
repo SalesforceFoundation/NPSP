@@ -67,6 +67,16 @@ public without sharing class HH_HouseholdNaming {
     */
     public void UpdateNames(list<id> hhids){
 
+        // for BDI performance
+        if (BDI_DataImportService.isDeferHHNaming) {
+            return;
+        }
+
+        BDI_PerfLogger.PerfLog pl;
+        if (BDI_DataImportService.perfLogger != null) {
+            pl = BDI_DataImportService.perfLogger.newPerfLog('UpdateNames', BDI_PerfLogger.METHOD);
+        }
+
         //we need this turned on to prevent recursive triggering on household creation
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
 
@@ -132,6 +142,7 @@ public without sharing class HH_HouseholdNaming {
         }
 
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
+        if (pl != null) pl.stop();
     }
 
 
@@ -233,11 +244,20 @@ public without sharing class HH_HouseholdNaming {
     * otherwise, an empty set
     */
     public Set<String> getHouseholdNamingContactFields() {
+
+        BDI_PerfLogger.PerfLog pl;
+        if (BDI_DataImportService.perfLogger != null) {
+            pl = BDI_DataImportService.perfLogger.newPerfLog('getHouseholdNamingContactFields', BDI_PerfLogger.METHOD);
+        }
+
+
         if (!isAutomaticNaming()) {
             return new Set<String>();
         }
     
         Set<String> fieldNames = iNaming.setHouseholdNameFieldsOnContact();
+
+        if (pl != null) pl.stop();
 
         return fieldNames == null ? new Set<String>() : fieldNames;
     }

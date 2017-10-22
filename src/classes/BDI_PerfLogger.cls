@@ -38,17 +38,17 @@ public with sharing class BDI_PerfLogger {
     public static final string METHOD = 'method';
     public static final string QUERY = 'query';
 
-    private List<PerfLog> perflogs;
     private Id batchId;
     private Integer countRecords;
     private Long tmStart;
     private Long tmEnd;
+    private Map<String, PerfLog> mapPerfLogByLabel;
 
     public BDI_PerfLogger(ID batchId, Integer countRecords) {
         tmStart = System.now().getTime();
-        perfLogs = new List<PerfLog>();
         this.batchId = batchId;
         this.countRecords = countRecords;
+        mapPerfLogByLabel = new Map<String, PerfLog>();
     }
 
     public void stop() {
@@ -60,15 +60,20 @@ public with sharing class BDI_PerfLogger {
     }
 
     public PerfLog newPerfLog(String label, String logType) {
-        PerfLog pl = new PerfLog('BDI', batchId, label, logType, countRecords);
-        perfLogs.add(pl);
+        // see if we already have a log for this label
+        PerfLog pl = mapPerfLogByLabel.get(label);
+        if (pl == null) {
+            pl = new PerfLog('BDI', batchId, label, logType, countRecords);
+            mapPerfLogByLabel.put(label, pl);
+        }
+        pl.start();
         return pl;
     }
 
     public void save() {
         Long duration = tmEnd - tmStart;
         List<PerfLog__c> listPL = new list<PerfLog__c>();
-        for (PerfLog pl : perfLogs) {
+        for (PerfLog pl : mapPerfLogByLabel.values()) {
             listPL.add(pl.prepare(duration));
         }
 
@@ -80,27 +85,36 @@ public with sharing class BDI_PerfLogger {
         private PerfLog__c pl;
         private Long tmStart;
         private Long tmEnd;
+        private Integer countCalls;
+        private long duration;
         private Long durationParent;
 
         PerfLog(String component, ID batchId, String label, String logType, Integer countRecords) {
             pl = new PerfLog__c();
-            tmStart = System.now().getTime();
             pl.Component__c = component;
             pl.BDI_Batch__c = batchId;
             pl.label__c = label;
             pl.Log_Type__c = logType;
             pl.Number_of_Records__c = countRecords;
+            countCalls = 0;
+            duration = 0;
         }
 
+        public void start() {
+            tmStart = System.now().getTime();
+            countCalls++;
+        }
         public void stop() {
             tmEnd = System.now().getTime();
+            duration += tmEnd - tmStart;
         }
 
         public PerfLog__c prepare(Long durationParent) {
             if (tmEnd == null) {
                 stop();
             }
-            pl.Duration__c = tmEnd - tmStart;
+            pl.Duration__c = duration;
+            pl.Number_of_Calls__c = countCalls;
             pl.Parent_Duration__c = durationParent;
             return pl;
         }

@@ -54,7 +54,7 @@ public with sharing class BDI_PerfData {
             Account_Custom_Unique_ID__c = null,
             Contact_Matching_Rule__c = 'Firstname,Lastname',
             Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' + UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
-            Donation_Matching_Behavior__c = BDI_DataImport_API.DoNotMatch,
+            Donation_Matching_Behavior__c = BDI_DataImport_API.BestMatchOrCreate,
             Donation_Date_Range__c = 3,
             Donation_Matching_Implementing_Class__c = null,
             Post_Process_Implementing_Class__c = null,
