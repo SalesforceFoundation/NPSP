@@ -844,6 +844,7 @@
         <members>PerfLog__c.Duration__c</members>
         <members>PerfLog__c.Label__c</members>
         <members>PerfLog__c.Log_Type__c</members>
+        <members>PerfLog__c.Number_of_Calls__c</members>
         <members>PerfLog__c.Number_of_Records__c</members>
         <members>PerfLog__c.Parent_Duration__c</members>
         <members>PerfLog__c.PercentOfParent__c</members>
