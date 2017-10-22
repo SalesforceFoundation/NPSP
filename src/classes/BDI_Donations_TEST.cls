@@ -108,13 +108,15 @@ public with sharing class BDI_Donations_TEST {
         // verify expected results
         list<Contact> listCon = [select Id, Name, AccountId, npo02__TotalOppAmount__c from Contact order by Firstname];
         system.assertEquals(2, listCon.size());
-        system.assertEquals(listOppT[0].Amount, listCon[0].npo02__TotalOppAmount__c);
-        system.assertEquals(listOppT[1].Amount, listCon[1].npo02__TotalOppAmount__c);
+        // we no longer run rollups, but we may add an option to allow it, so then we'll want to test these
+        //system.assertEquals(listOppT[0].Amount, listCon[0].npo02__TotalOppAmount__c);
+        //system.assertEquals(listOppT[1].Amount, listCon[1].npo02__TotalOppAmount__c);
         
         list<Account> listAcc = [select Id, Name, npo02__TotalOppAmount__c from Account order by Name];
         system.assertEquals(2, listAcc.size());
-        system.assertEquals(listOppT[0].Amount, listAcc[0].npo02__TotalOppAmount__c);
-        system.assertEquals(listOppT[1].Amount, listAcc[1].npo02__TotalOppAmount__c);
+        // we no longer run rollups, but we may add an option to allow it, so then we'll want to test these
+        //system.assertEquals(listOppT[0].Amount, listAcc[0].npo02__TotalOppAmount__c);
+        //system.assertEquals(listOppT[1].Amount, listAcc[1].npo02__TotalOppAmount__c);
         
         list<Opportunity> listOpp = [select Id, Name, Amount, StageName, isWon, isClosed, AccountId from Opportunity order by Name];
         system.assertEquals(2, listOpp.size());
@@ -183,13 +185,14 @@ public with sharing class BDI_Donations_TEST {
         // verify expected results
         list<Contact> listCon = [select Id, Name, AccountId, npo02__TotalOppAmount__c from Contact order by Firstname];
         system.assertEquals(2, listCon.size());
-        system.assertEquals(listOppT[0].Amount, listCon[0].npo02__TotalOppAmount__c);
-        system.assertEquals(listOppT[1].Amount, listCon[1].npo02__TotalOppAmount__c);
+        // we no longer run rollups, but we may add an option to allow it, so then we'll want to test these
+        //system.assertEquals(listOppT[0].Amount, listCon[0].npo02__TotalOppAmount__c);
+        //system.assertEquals(listOppT[1].Amount, listCon[1].npo02__TotalOppAmount__c);
         
         list<Account> listAcc = [select Id, Name, npo02__TotalOppAmount__c from Account order by Name];
         system.assertEquals(2, listAcc.size());
-        system.assertEquals(listOppT[0].Amount, listAcc[0].npo02__TotalOppAmount__c);
-        system.assertEquals(listOppT[1].Amount, listAcc[1].npo02__TotalOppAmount__c);
+        //system.assertEquals(listOppT[0].Amount, listAcc[0].npo02__TotalOppAmount__c);
+        //system.assertEquals(listOppT[1].Amount, listAcc[1].npo02__TotalOppAmount__c);
         
         list<Opportunity> listOpp = [select Id, Name, Amount, StageName, isWon, isClosed, AccountId from Opportunity order by Name];
         system.assertEquals(2, listOpp.size());
@@ -276,13 +279,14 @@ public with sharing class BDI_Donations_TEST {
         
         list<Contact> listCon = [select Id, Name, AccountId, npo02__TotalOppAmount__c from Contact order by Firstname];
         system.assertEquals(2, listCon.size());
-        system.assertEquals(0, listCon[0].npo02__TotalOppAmount__c);
-        system.assertEquals(listOppT[1].Amount, listCon[1].npo02__TotalOppAmount__c);
+        // we no longer run rollups, but we may add an option to allow it, so then we'll want to test these
+        //system.assertEquals(0, listCon[0].npo02__TotalOppAmount__c);
+        //system.assertEquals(listOppT[1].Amount, listCon[1].npo02__TotalOppAmount__c);
         
         list<Account> listAcc = [select Id, Name, npo02__TotalOppAmount__c from Account order by Id];
         system.assertEquals(2, listAcc.size());
-        system.assertEquals(0, listAcc[0].npo02__TotalOppAmount__c);
-        system.assertEquals(listOppT[1].Amount, listAcc[1].npo02__TotalOppAmount__c);
+        //system.assertEquals(0, listAcc[0].npo02__TotalOppAmount__c);
+        //system.assertEquals(listOppT[1].Amount, listAcc[1].npo02__TotalOppAmount__c);
         
         npe01__OppPayment__c pmt0 = [select Id, npe01__Payment_Amount__c, npe01__Payment_Method__c, npe01__Check_Reference_Number__c 
             from npe01__OppPayment__c where id = :listDI[0].PaymentImported__c];
@@ -359,13 +363,14 @@ public with sharing class BDI_Donations_TEST {
         // verify expected results
         list<Contact> listCon = [select Id, Name, AccountId, npo02__TotalOppAmount__c from Contact order by Firstname];
         system.assertEquals(2, listCon.size());
-        system.assertEquals(listOppT[0].Amount, listCon[0].npo02__TotalOppAmount__c);
-        system.assertEquals(listOppT[1].Amount * 2, listCon[1].npo02__TotalOppAmount__c);
+        // we no longer run rollups, but we may add an option to allow it, so then we'll want to test these
+        //system.assertEquals(listOppT[0].Amount, listCon[0].npo02__TotalOppAmount__c);
+        //system.assertEquals(listOppT[1].Amount * 2, listCon[1].npo02__TotalOppAmount__c);
         
         list<Account> listAcc = [select Id, Name, npo02__TotalOppAmount__c from Account order by npe01__One2OneContact__r.Firstname];
         system.assertEquals(2, listAcc.size());
-        system.assertEquals(listOppT[0].Amount, listAcc[0].npo02__TotalOppAmount__c);
-        system.assertEquals(listOppT[1].Amount * 2, listAcc[1].npo02__TotalOppAmount__c);
+        //system.assertEquals(listOppT[0].Amount, listAcc[0].npo02__TotalOppAmount__c);
+        //system.assertEquals(listOppT[1].Amount * 2, listAcc[1].npo02__TotalOppAmount__c);
         
         list<Opportunity> listOpp = [select Id, Name, Amount, StageName, isWon, isClosed, AccountId from Opportunity order by Name];
         system.assertEquals(3, listOpp.size());
