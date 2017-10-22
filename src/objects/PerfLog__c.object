@@ -120,6 +120,17 @@
         <type>Picklist</type>
     </fields>
     <fields>
+        <fullName>Number_of_Calls__c</fullName>
+        <externalId>false</externalId>
+        <label>Number of Calls</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Number_of_Records__c</fullName>
         <externalId>false</externalId>
         <label>Number of Records</label>
