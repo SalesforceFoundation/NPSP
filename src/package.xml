@@ -325,6 +325,7 @@
         <members>BDI_DataImportService</members>
         <members>BDI_PerfLogger</members>
         <members>BDI_PerfData</members>
+        <members>BDI_ContactService</members>
         <name>ApexClass</name>
     </types>
     <types>
