@@ -74,14 +74,35 @@ public class ERR_Notifier {
                     for (User u : useremaillist)
                         sendList.add(u.email);
                 } else if(errorNotifRecipient == NotificationOptions.sysAdmins) {
-                    List<User> sysadminlist = [SELECT email FROM User WHERE User.Profile.Name = 'System Administrator' AND isActive = true];
-                    for (User u : sysadminlist) {
-                        sendList.add(u.email);
-                    }
+                    sendList.addAll(getSystemAdminEmails());
                 }
+
                 sendEmailNotifications(context, sendList);
             }
         }
+    }
+
+    /*******************************************************************************************************
+    * @description Get the active System Administrators' emails.
+    * @return List<String> Emails
+    */
+    @TestVisible
+    private static List<String> getSystemAdminEmails() {
+        Set<String> emails = new Set<String>();
+        List<Id> sysAdminProfileIds = UTIL_Profile.getInstance().getProfileIds(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+
+        if (sysAdminProfileIds.isEmpty() == false) {
+            for (User usr : [
+                    SELECT Email 
+                    FROM User 
+                    WHERE ProfileId IN :sysAdminProfileIds 
+                    AND IsActive = true
+            ]) {
+                emails.add(usr.Email);
+            }
+        }
+
+        return new List<String>(emails);
     }
 
     /*******************************************************************************************************
