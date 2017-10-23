@@ -195,14 +195,14 @@ public with sharing class USER_UserService_TEST {
         List<User> newUsers = new List<User>();
 
         // Create new Users with SysAdmin Profile
-        Id sysAdminId = [SELECT Id FROM Profile WHERE Name = :USER_UserService.SYSTEM_ADMINISTRATOR][0].Id;
-        User newUserA = new User(LastName = 'TestSysAdminUserA', Email = 'test.sysAdminA@email.com', ProfileId = sysAdminId,
+        Id sysAdminProfileId = UTIL_Profile.getInstance().getProfileIds(UTIL_Profile.SYSTEM_ADMINISTRATOR)[0];
+        User newUserA = new User(LastName = 'TestSysAdminUserA', Email = 'test.sysAdminA@email.com', ProfileId = sysAdminProfileId,
                                     isActive = true, UserName = 'test.sysAdminA@email.com',
                                     Alias = 'tu093521', TimeZoneSidKey = 'America/Los_Angeles',
                                     LocaleSidKey = 'en_US', LanguageLocaleKey = 'en_US',
                                     EmailEncodingKey = 'ISO-8859-1');
 
-        User newUserB = new User(LastName = 'TestSysAdminUserB', Email = 'test.sysAdminB@email.com', ProfileId = sysAdminId,
+        User newUserB = new User(LastName = 'TestSysAdminUserB', Email = 'test.sysAdminB@email.com', ProfileId = sysAdminProfileId,
                                     isActive = false, UserName = 'test.sysAdminB@email.com',
                                     Alias = 'tu093522', TimeZoneSidKey = 'America/Los_Angeles',
                                     LocaleSidKey = 'en_US', LanguageLocaleKey = 'en_US',
