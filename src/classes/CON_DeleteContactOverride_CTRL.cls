@@ -90,7 +90,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
             //delete to remove the contact
             if (contactsInHousehold.size() == 1 && contactsInHousehold[0].get('ct') == 1) {
                 shouldDeleteContactAlone = false;
-            	ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, helpDeleteAccountInstead));
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, helpDeleteAccountInstead));
             }
         }
     }

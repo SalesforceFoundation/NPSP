@@ -615,14 +615,14 @@
         <fullName>DeleteAccount</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Delete Account</shortDescription>
+        <shortDescription>DeleteAccount</shortDescription>
         <value>Delete Account</value>
     </labels>
     <labels>
         <fullName>DeleteContactLeaveAccount</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Delete Contact Leave Account</shortDescription>
+        <shortDescription>DeleteContactLeaveAccount</shortDescription>
         <value>Delete Contact and Leave Empty Account</value>
     </labels>
     <labels>
