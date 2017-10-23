@@ -33,7 +33,7 @@
             </div>
             <!-- slds-tile -->
         </div>
-        <div class="slds-card__body slds-m-around_x-small slds-p-vertical_none">
+        <div class="slds-card__body slds-m-around_x-small slds-p-vertical_none" id="contactCard">
             <!-- address -->
             <div class="slds-text-body_small slds-m-bottom_small">
                 <ui:outputText value="{!v.contact.MailingStreet}" /><br/>
@@ -53,7 +53,7 @@
                                 <ui:inputCheckbox aura:id="Exclude_from_Household_Name__c"
                                     class="slds-checkbox" change="{!c.onCheck}"
                                     value="{!v.contact.Exclude_from_Household_Name__c }"/>
-                                <span class="slds-checkbox_faux"></span>
+                                <span class="slds-checkbox_faux" id="fauxCBExName"></span>
                                 <span class="slds-form-element__label" for="exHHName">{!$Label.c.lblHouseholdName} </span>
                             </label>
                         </div>
@@ -64,7 +64,7 @@
                                 <ui:inputCheckbox aura:id="Exclude_from_Household_Formal_Greeting__c"
                                     class="slds-checkbox" change="{!c.onCheck}"
                                     value="{!v.contact.Exclude_from_Household_Formal_Greeting__c }"/>
-                                <span class="slds-checkbox_faux"></span>
+                                <span class="slds-checkbox_faux" id="fauxCBFormal"></span>
                                 <span class="slds-form-element__label">{!$Label.c.lblFormalGreeting} </span>
                             </label>
                         </div>
@@ -75,7 +75,7 @@
                                 <ui:inputCheckbox aura:id="Exclude_from_Household_Informal_Greeting__c"
                                 class="slds-checkbox" change="{!c.onCheck}"
                                 value="{!v.contact.Exclude_from_Household_Informal_Greeting__c }"/>
-                                <span class="slds-checkbox_faux"></span>
+                                <span class="slds-checkbox_faux" id="fauxCBInformal"></span>
                                 <span class="slds-form-element__label">{!$Label.c.lblInformalGreeting} </span>
                             </label>
                         </div>

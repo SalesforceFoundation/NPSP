@@ -1,4 +1,4 @@
-<apex:component >
+<apex:component id="util_inputfield">
     <apex:attribute name="field" type="String" description="The field to display." required="true"/>
     <apex:attribute name="sObj" type="sObject" description="The sObject the field belongs to." required="true"/>
     <apex:attribute name="sObjType" type="String" description="The sObject type." required="true"/>

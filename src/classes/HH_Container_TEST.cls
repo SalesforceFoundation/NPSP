@@ -249,6 +249,55 @@ private class HH_Container_TEST {
     }
 
     /*********************************************************************************************************
+    @description 
+        Test upserContacts() rolls back DMLs when an exception occurs 
+    verify:
+        The transaction is completely rolled back and there is no partial commit
+    **********************************************************************************************************/ 
+    private static testMethod void testUpsertContactsRollsBackAllDmlsOnError() {
+        initTestData();
+
+        String existingConAFirstName = conA.FirstName;
+        String existingConOFirstName = conO.FirstName;
+
+        conA.FirstName = conA.FirstName + ' - Test Update';
+        conO.FirstName = conO.FirstName + ' - Test Update';
+        //fail update
+        conO.AccountId = Account.sObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
+        
+        List<Contact> contacts = new List<Contact>{ 
+            conA, 
+            conO, 
+            new Contact(FirstName = 'Foo', LastName = 'Bar') 
+        };
+
+        Exception expectedException = null;
+
+        Test.startTest();
+        try {
+            HH_Container_LCTRL.upsertContacts(contacts);
+        } catch (Exception e) {
+            System.assert(e.getMessage().contains('Script-thrown exception'), 'The exception message should be as expected: ' + e.getMessage());
+            expectedException = e;
+        }
+        Test.stopTest();
+
+        System.assertNotEquals(null, expectedException, 'An exception should be thrown');
+
+        Map<Id, Contact> actualContactsById = new Map<Id, Contact>([SELECT FirstName FROM Contact]);
+        System.assertEquals(2, actualContactsById.size(), 'No new Contact should be created');
+
+        Contact actual = actualContactsById.get(conA.Id);
+        System.assertNotEquals(null, actual, 'Contact A should exist');
+        System.assertEquals(existingConAFirstName, actual.FirstName, 'Contact A FirstName should be unchanged');
+
+        actual = actualContactsById.get(conO.Id);
+        System.assertNotEquals(null, actual, 'Contact O should exist');
+        System.assertEquals(existingConOFirstName, actual.FirstName, 'Contact O FirstName should be unchanged');
+
+    }
+
+    /*********************************************************************************************************
     * @description Tests updateHousehold()
     */
     public static testMethod void testUpdateHousehold() { 

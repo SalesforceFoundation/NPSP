@@ -1,6 +1,7 @@
 <apex:page standardController="Contact"
     extensions="CON_ContactMerge_CTRL"
     title="{!$Label.conMergePageTitle}"
+    tabStyle="Contact_Merge__tab"
     id="contactMergePage"
     recordSetVar="cons"
     showHeader="true"
@@ -153,7 +154,7 @@
                                             <td class="slds-row-select">
                                                 <label class="slds-checkbox">
                                                     <apex:inputCheckbox value="{!item.selected}"/>
-                                                    <span class="slds-checkbox_faux"></span>
+                                                    <span class="slds-checkbox_faux" id="fauxCBSelect"></span>
                                                     <span class="slds-form-element__label slds-assistive-text">
                                                         {!$Label.conMergeSelectContact} <apex:outputText value="{!item.con.Name}"/>
                                                     </span>
@@ -304,8 +305,8 @@
                             </div>
                             <div class="slds-modal__footer slds-theme_default">
                                 <div class="slds-x-small-buttons_horizontal">
-                                    <apex:commandButton action="{!mergeContacts}" value="{!$Label.conMergeBtnLabel}" styleClass="slds-button slds-button_destructive"/>
-                                    <button class="slds-button slds-button_neutral" data-dismiss="modal" data-target="merge_warning_modal">{!$Label.stgBtnCancel}</button>
+                                    <apex:commandButton action="{!mergeContacts}" value="{!$Label.conMergeBtnLabel}" styleClass="slds-button slds-button_destructive" id="mergeContacts"/>
+                                    <button class="slds-button slds-button_neutral" data-dismiss="modal" data-target="merge_warning_modal" id="btnCancel">{!$Label.stgBtnCancel}</button>
                                 </div>
                             </div>
                         </div>

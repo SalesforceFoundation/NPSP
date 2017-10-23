@@ -40,7 +40,6 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     public list<Allocation__c> listAllo {get;set;}
     /** @description If defaults are enabled, the default allocation is here, and not in listAllo. */
     public Allocation__c defaultAllo {get;set;}
-
     /** @description The number of allocations in listAllo. */
     public integer listAlloSize {
         get{
@@ -48,7 +47,14 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         }
         set;
     }
-
+    /** @description The set of allowed object types this page should be used with */
+    private Set<sObjectType> sObjTypesAllowed = new Set<sObjectType> {
+        Opportunity.sObjectType,
+        Campaign.sObjectType,
+        npe03__Recurring_Donation__c.sObjectType
+    };
+    /** @description The sObjectType of the record the button was called from */
+    private sObjectType sObjType;
     /** @description List of allocations to delete when the user clicks Save.*/
     public list<Allocation__c> listAlloForDelete = new list<Allocation__c>();
 
@@ -98,12 +104,13 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     public ALLO_ManageAllocations_CTRL(ApexPages.StandardSetController ssc) {
 
         parentId = ApexPages.currentPage().getParameters().get('id');
+        sObjType = parentId.getSObjectType();
         parentAmount = 0;
 
-        if (parentId.getSObjectType() == Opportunity.sObjectType) {
+        if (sObjType == Opportunity.sObjectType) {
             opp = [SELECT Id, Name, Amount FROM Opportunity WHERE Id = :parentId];
 
-            pageTitle = Label.alloManageOppAllocations;
+            pageTitle = System.Label.alloManageOppAllocations;
             objectName = opp.Name;
 
             populateObjectParameters(Opportunity.sObjectType);
@@ -112,21 +119,18 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             if (opp.Amount!=null) {
                 parentAmount = opp.Amount;
             }
-            if (parentAmount==0) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Warning, Label.alloCantAllocateNothing));
-            }
-        } else if (parentId.getSObjectType() == Campaign.sObjectType) {
+        } else if (sObjType == Campaign.sObjectType) {
             cam = [SELECT Id, Name FROM Campaign WHERE Id = :parentId];
 
-            pageTitle = Label.alloManageCampaignAllocations;
+            pageTitle = System.Label.alloManageCampaignAllocations;
             objectName = cam.Name;
 
             populateObjectParameters(Campaign.sObjectType);
 
-        } else if (parentId.getSObjectType() == npe03__Recurring_Donation__c.sObjectType) {
+        } else if (sObjType == npe03__Recurring_Donation__c.sObjectType) {
             rd = [SELECT Id, Name FROM npe03__Recurring_Donation__c WHERE Id = :parentId];
 
-            pageTitle = Label.alloManageRecurringDonationAllocations;
+            pageTitle = System.Label.alloManageRecurringDonationAllocations;
             objectName = rd.Name;
 
             populateObjectParameters(npe03__Recurring_Donation__c.sObjectType);
@@ -164,6 +168,24 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         objectLabelPlural = describe.getLabelPlural();
     }
 
+    /*******************************************************************************************************
+    * @description Verify data conditions and add any necessary page messages that need to be rendered on load.
+    */
+    public void getPageLoadValidationMessages() {
+        if (parentAmount == 0 && sObjType == Opportunity.sObjectType) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.alloCantAllocateNothing));
+        } else if (!getIsSupportedObject()) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.alloObjectUnsupported));
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Verify the parent object is a supported sObject type for this page
+    */
+    public boolean getIsSupportedObject() {
+        return sObjTypesAllowed.contains(sObjType);
+    }
+
     /**
      * @description Return the currency symbol appropriate for the current
      * user/org/record.  If the org is multi currency enabled, it will use the
@@ -179,7 +201,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         }
         return currencySymbol;
     }
-
+    
     /** @description Adds an empty row to the bottom of the list and refreshes the page.*/
     public pageReference addRow() {
         Allocation__c allo = new Allocation__c();
@@ -212,11 +234,12 @@ public with sharing class ALLO_ManageAllocations_CTRL {
 
     /** @description Saves changes and returns user to parent object detail page.*/
     public pageReference saveClose() {
-        list<Allocation__c> listAlloForInsert = new list<Allocation__c>();
-        list<Allocation__c> listAlloForUpdate = new list<Allocation__c>();
         pageReference source = new pageReference('/'+parentId);
         source.setRedirect(true);
         source.getParameters().put('t',''+(System.currentTimeMillis()));
+        
+        list<Allocation__c> listAlloForInsert = new list<Allocation__c>();
+        list<Allocation__c> listAlloForUpdate = new list<Allocation__c>();
 
         //split into insert and update cases so we can reset recursion flags for each operation
         for (Allocation__c allo : listAllo) {
@@ -224,6 +247,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             else listAlloForInsert.add(allo);
         }
 
+        Savepoint sp = Database.setSavepoint(); 
         try {
             if (!listAlloForDelete.isEmpty()) {
                 TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, false);
@@ -244,6 +268,8 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             
             return source;
         } catch (Exception e) {
+            Database.rollback(sp);
+
             ApexPages.addMessages(e);
             return null;
         }
