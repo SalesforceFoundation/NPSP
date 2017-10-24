@@ -654,7 +654,14 @@ global with sharing class BDI_DataImportService {
 
         // explicitly avoid updating unchecked booleans (since we can't tell the difference between null and false)
         if (val != null && val != false) {
-            objDst.put(mapDIFieldToDstField.get(strDIField), val);
+            String strDstField = mapDIFieldToDstField.get(strDIField);
+
+            // if values haven't changed, don't copy it and say the object was modified!
+            if (objDst.get(strDstField) == val) {
+                return false;
+            }
+
+            objDst.put(strDstField, val);
             return true;
         } else {
             return false;
@@ -693,6 +700,7 @@ global with sharing class BDI_DataImportService {
 
         // defer household naming until the end
         isDeferHHNaming = true;
+        Set<Id> setDIIdUpdated = new Set<Id>();
 
         // handle multiple di's referring to the same existing contact
         set<string> setDIKeyUpsert = new set<string>();
@@ -741,15 +749,16 @@ global with sharing class BDI_DataImportService {
             if (Test.isRunningTest() && con.LastName != null && con.LastName.startsWith('FailTest'))
                 con.LastName = null;
         }
-        //system.debug('****DJH about to upsert c1s: ' + listConUpsert);
-        list<Database.UpsertResult> listUR = database.upsert(listConUpsert, false);
-        //system.debug('****DJH after upsert c1s: ' + listConUpsert);
-        //system.debug('****DJH results: ' + listUR);
 
-        for (integer i = 0; i < listUR.size(); i++) {
-            Database.UpsertResult ur = listUR[i];
-            if (!ur.isSuccess()) {
-                LogBDIError(listDIUpsert[i], ur.getErrors()[0].getMessage(), 'Contact1ImportStatus__c');
+        if (listConUpsert.size() > 0) {
+            list<Database.UpsertResult> listUR = database.upsert(listConUpsert, false);
+            for (integer i = 0; i < listUR.size(); i++) {
+                Database.UpsertResult ur = listUR[i];
+                if (!ur.isSuccess()) {
+                    LogBDIError(listDIUpsert[i], ur.getErrors()[0].getMessage(), 'Contact1ImportStatus__c');
+                } else {
+                    setDIIdUpdated.add(listDIUpsert[i].Id);
+                }
             }
         }
 
@@ -825,14 +834,16 @@ global with sharing class BDI_DataImportService {
             if (Test.isRunningTest() && con.LastName != null && con.LastName.startsWith('FailTest'))
                 con.LastName = null;
         }
-        //system.debug('****DJH about to upsert c2s: ' + listConUpsert);
-        //system.debug('****DJH listDIUpsert: ' + listDIUpsert);
-        //system.debug('****DJH setDIKeyUpsert: ' + setDIKeyUpsert);
-        listUR = database.upsert(listConUpsert, false);
-        for (integer i = 0; i < listUR.size(); i++) {
-            Database.UpsertResult ur = listUR[i];
-            if (!ur.isSuccess()) {
-                LogBDIError(listDIUpsert[i], ur.getErrors()[0].getMessage(), 'Contact2ImportStatus__c');
+
+        if (listConUpsert.size() > 0) {
+            list<Database.UpsertResult> listUR = database.upsert(listConUpsert, false);
+            for (integer i = 0; i < listUR.size(); i++) {
+                Database.UpsertResult ur = listUR[i];
+                if (!ur.isSuccess()) {
+                    LogBDIError(listDIUpsert[i], ur.getErrors()[0].getMessage(), 'Contact2ImportStatus__c');
+                } else {
+                    setDIIdUpdated.add(listDIUpsert[i].Id);
+                }
             }
         }
 
@@ -847,8 +858,16 @@ global with sharing class BDI_DataImportService {
 
         // now update HH Names that we deferred
         isDeferHHNaming = false;
-        HH_HouseholdNaming hn = new HH_HouseholdNaming();
-        hn.UpdateNames(mapC1IdToHHId.values());
+        Set<Id> setHHId = new Set<Id>();
+        for (DataImport__c di : listDI) {
+            if (setDIIdUpdated.contains(di.Id)) {
+                setHHId.add(di.HouseholdAccountImported__c);
+            }
+        }
+        if (setHHId.size() > 0) {
+            HH_HouseholdNaming hn = new HH_HouseholdNaming();
+            hn.UpdateNames(new List<Id>(setHHId));
+        }
     }
 
     public static boolean isDeferHHNaming {
@@ -1299,6 +1318,9 @@ global with sharing class BDI_DataImportService {
         set<string> setCustomIDString = new set<string>();
         set<double> setCustomIDNumber = new set<double>();
         set<Id> setSFId = new set<Id>();
+        String a1CustomIDField = BDI_DataImportService.strDIContactCustomIDField('Account1', diSettings);
+        String a2CustomIDField = BDI_DataImportService.strDIContactCustomIDField('Account2', diSettings);
+
 
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
@@ -1311,7 +1333,7 @@ global with sharing class BDI_DataImportService {
             if (di.Account1_Name__c != null)
                 setName.add(di.Account1_Name__c);
             if (isCustomIDInAccountMatchRules) {
-                object val = di.get(strDIAccountCustomIDField('Account1', diSettings));
+                object val = di.get(a1CustomIDField);
                 if (val != null) {
                     if (isCustomIdInAccountDatatypeString)
                         setCustomIDString.add(string.valueOf(val));
@@ -1325,7 +1347,7 @@ global with sharing class BDI_DataImportService {
             if (di.Account2_Name__c != null)
                 setName.add(di.Account2_Name__c);
             if (isCustomIDInAccountMatchRules) {
-                object val = di.get(strDIAccountCustomIDField('Account2', diSettings));
+                object val = di.get(a2CustomIDField);
                 if (val != null) {
                     if (isCustomIdInAccountDatatypeString)
                         setCustomIDString.add(string.valueOf(val));
