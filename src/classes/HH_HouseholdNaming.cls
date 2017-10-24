@@ -70,14 +70,7 @@ public without sharing class HH_HouseholdNaming {
         //we need this turned on to prevent recursive triggering on household creation
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
 
-        //get all of the contacts and their associated households
-        //return them in the order of household and then household naming order
-        //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
-        string strSoql = strContactSelectStmtAllNamingFields;
-        string strHHId = UTIL_Namespace.StrTokenNSPrefix('HHId__c');
-        strSoql += ' WHERE (AccountId != null AND AccountId IN :hhids) OR (npo02__Household__c != null AND npo02__Household__c in :hhids) ' +
-            ' ORDER BY ' + strHHId + ', npo02__Household_Naming_Order__c ASC NULLS LAST, Primary_Contact__c DESC, CreatedDate ';
-        list<Contact> contactlist = Database.Query(strSoql);
+        list<Contact> contactlist = getHouseholdContacts(hhids);
 
         list<SObject> listHHObj = [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c from npo02__Household__c where id IN : hhids];
         list<SObject> listHHAcct = [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c from Account where id IN : hhids];
@@ -126,12 +119,38 @@ public without sharing class HH_HouseholdNaming {
         }
 
         if (!hhupdatelist.isEmpty()) {
-        	//Database.SaveResult[] listSR = Database.update(hhupdatelist, false);
         	// all or nothing, so errors not lost
         	update hhupdatelist;
         }
 
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
+    }
+
+    /*******************************************************************************************************
+    * @description Returns Contacts for specified Accounts or Households.
+    * Private Contacts or records not belonging to the specified Accounts/Households are not selected.
+    * @param hhIds The list of Household Id's (either Household__c or Account Id's)
+    * @return List<Contact>
+    */
+    @TestVisible
+    private List<Contact> getHouseholdContacts(List<Id> hhIds) {
+        Set<Id> queryHHIds = hhIds == null ? new Set<Id>() : new Set<Id>(hhIds);
+        queryHHIds.remove(null);
+
+        if (queryHHIds.isEmpty()) {
+            return new List<Contact>();
+        }
+
+        //get all of the contacts and their associated households
+        //return them in the order of household and then household naming order
+        //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
+        string strSoql = strContactSelectStmtAllNamingFields;
+        string strHHId = UTIL_Namespace.StrTokenNSPrefix('HHId__c');
+        
+        strSoql += ' WHERE AccountId IN :queryHHIds OR npo02__Household__c IN :queryHHIds ' +
+            ' ORDER BY ' + strHHId + ', npo02__Household_Naming_Order__c ASC NULLS LAST, Primary_Contact__c DESC, CreatedDate ';
+        
+        return Database.Query(strSoql);
     }
 
 

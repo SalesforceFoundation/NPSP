@@ -36,6 +36,9 @@
 
 @isTest
 public class UTIL_UnitTestData_TEST { 
+    /** @description A mock Account Id .*/
+    public static final String MOCK_ACCOUNT_ID = Account.sObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
+    
     static final String PROFILE_STANDARD_USER = 'Standard User';
 
 // create data for use in unit tests
