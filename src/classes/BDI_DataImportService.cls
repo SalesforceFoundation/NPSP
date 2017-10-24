@@ -1106,12 +1106,14 @@ global with sharing class BDI_DataImportService {
             if (Test.isRunningTest() && acc.Name != null && acc.Name.startsWith('FailTest'))
                 acc.Name = null;
         }
-        //upsert listAccUpsert;
-        list<Database.UpsertResult> listUR = database.upsert(listAccUpsert, false);
-        for (integer i = 0; i < listUR.size(); i++) {
-            Database.UpsertResult ur = listUR[i];
-            if (!ur.isSuccess()) {
-                LogBDIError(listDIUpsert[i], ur.getErrors()[0].getMessage(), 'Account1ImportStatus__c');
+
+        if (listAccUpsert.size() > 0) {
+            list<Database.UpsertResult> listUR = database.upsert(listAccUpsert, false);
+            for (integer i = 0; i < listUR.size(); i++) {
+                Database.UpsertResult ur = listUR[i];
+                if (!ur.isSuccess()) {
+                    LogBDIError(listDIUpsert[i], ur.getErrors()[0].getMessage(), 'Account1ImportStatus__c');
+                }
             }
         }
 
@@ -1127,10 +1129,11 @@ global with sharing class BDI_DataImportService {
             // set c1's primary affilation
             if (di.Account1Imported__c != null) {
                 Contact c1 = ContactFromDi(di, 1);
-                if (c1 != null) {
+                if (c1 != null && c1.Primary_Affiliation__c != di.Account1Imported__c) {
                     c1.Primary_Affiliation__c = di.Account1Imported__c;
-                    if (mapConIdToConUpdate.get(c1.Id) == null)
+                    if (mapConIdToConUpdate.get(c1.Id) == null) {
                         mapConIdToConUpdate.put(c1.Id, c1);
+                    }
                 }
             }
         }
@@ -1170,12 +1173,14 @@ global with sharing class BDI_DataImportService {
             if (Test.isRunningTest() && acc.Name != null && acc.Name.startsWith('FailTest'))
                 acc.Name = null;
         }
-        //upsert listAccUpsert;
-        listUR = database.upsert(listAccUpsert, false);
-        for (integer i = 0; i < listUR.size(); i++) {
-            Database.UpsertResult ur = listUR[i];
-            if (!ur.isSuccess()) {
-                LogBDIError(listDIUpsert[i], ur.getErrors()[0].getMessage(), 'Account2ImportStatus__c');
+
+        if (listAccUpsert.size() > 0) {
+            list<Database.UpsertResult> listUR = database.upsert(listAccUpsert, false);
+            for (integer i = 0; i < listUR.size(); i++) {
+                Database.UpsertResult ur = listUR[i];
+                if (!ur.isSuccess()) {
+                    LogBDIError(listDIUpsert[i], ur.getErrors()[0].getMessage(), 'Account2ImportStatus__c');
+                }
             }
         }
 
@@ -1190,16 +1195,19 @@ global with sharing class BDI_DataImportService {
             // set c2's primary affilation
             if (di.Account2Imported__c != null) {
                 Contact c2 = ContactFromDi(di, 2);
-                if (c2 != null) {
+                if (c2 != null && c2.Primary_Affiliation__c != di.Account2Imported__c) {
                     c2.Primary_Affiliation__c = di.Account2Imported__c;
-                    if (mapConIdToConUpdate.get(c2.Id) == null)
+                    if (mapConIdToConUpdate.get(c2.Id) == null) {
                         mapConIdToConUpdate.put(c2.Id, c2);
+                    }
                 }
             }
         }
 
         // now update the Contacts to create their Affiliations
-        update mapConIdToConUpdate.values();
+        if (mapConIdToConUpdate.size() > 0) {
+            update mapConIdToConUpdate.values();
+        }
     }
 
     /*******************************************************************************************************
