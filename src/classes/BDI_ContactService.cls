@@ -215,6 +215,7 @@ public with sharing class BDI_ContactService {
         }
 
         String strSoql = 'SELECT Id, Firstname, Lastname, AccountId, Account.npe01__SYSTEM_AccountType__c, ';
+        strSoql += UTIL_Namespace.StrTokenNSPrefix('Primary_Affiliation__c') + ', ';
         if (isCustomIDInContactMatchRules) {
             strSoql += bdi.diSettings.Contact_Custom_Unique_ID__c + ', ';
         }
