@@ -73,6 +73,9 @@
         <field>PerfLog__c.Number_of_Records__c</field>
     </columns>
     <columns>
+        <field>PerfLog__c.Number_of_Calls__c</field>
+    </columns>
+    <columns>
         <field>PerfLog__c.Parent_Duration__c</field>
     </columns>
     <columns>
@@ -114,7 +117,7 @@
     </params>
     <reportType>CustomEntity$PerfLog__c@PerfLog__c.BDI_Batch__c</reportType>
     <scope>organization</scope>
-    <showDetails>false</showDetails>
+    <showDetails>true</showDetails>
     <sortColumn>PerfLog__c.PercentOfParent__c</sortColumn>
     <sortOrder>Desc</sortOrder>
     <timeFrameFilter>
