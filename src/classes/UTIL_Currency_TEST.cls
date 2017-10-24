@@ -132,7 +132,7 @@ public class UTIL_Currency_TEST {
      */
     @isTest
     private static void testGetCurrencySymbolQueriesForCodeIfMultiCurrency() {
-        Id recordId = Account.sObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
+        Id recordId = UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID;
         UTIL_Currency actual = new UTIL_Currency();
         UtilCurrencyMock mock = new UtilCurrencyMock();
         mock.isMultiCurrencyOrganizationReturn = true;
@@ -161,7 +161,6 @@ public class UTIL_Currency_TEST {
      */
     @isTest
     private static void testGetCurrencySymbolReturnsDefaultCurrencySymbolIfSingleCurrency() {
-        Id recordId = Account.sObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
         UTIL_Currency actual = new UTIL_Currency();
         UtilCurrencyMock mock = new UtilCurrencyMock();
         mock.isMultiCurrencyOrganizationReturn = false;
@@ -170,7 +169,7 @@ public class UTIL_Currency_TEST {
 
         System.assertEquals(
             '$',
-            actual.getCurrencySymbol(recordId)
+            actual.getCurrencySymbol(UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID)
         );
     }
 
@@ -180,11 +179,9 @@ public class UTIL_Currency_TEST {
      */
     @isTest
     private static void testGetCurrencyIsoCodeQueryBuildsCorrectQuery() {
-        Id recordId = Account.sObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
-
         System.assertEquals(
             'SELECT CurrencyIsoCode FROM Account WHERE Id = \'001000000000001AAA\' LIMIT 1',
-            UTIL_Currency.getInstance().getCurrencyIsoCodeQuery(recordId)
+            UTIL_Currency.getInstance().getCurrencyIsoCodeQuery(UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID)
         );
     }
 
