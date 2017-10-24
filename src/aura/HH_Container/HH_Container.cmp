@@ -54,7 +54,7 @@
                 <div class="slds-grid">
                     <div class="slds-col">
                         <nav role="navigation" class="slds-p-bottom_x-small">
-                            <p id="bread-crumb-label" class="slds-assistive-text">You are here:</p>
+                            <p id="bread-crumb-label" class="slds-assistive-text">{!$Label.c.lblYouAreHere}</p>
                             <ol class="slds-breadcrumb slds-list_horizontal" aria-labelledby="bread-crumb-label">
                                 <li class="slds-breadcrumb__item slds-text-heading_label"><a href="{!'/' + v.hhTypePrefix}">{!$Label.c.lblHousehold}</a></li>
                                 <li class="slds-breadcrumb__item slds-text-heading_label"><a href="{!'/' + v.hhId}">{!v.hh.Name}</a></li>
@@ -125,7 +125,7 @@
                     <div class="slds-form_stacked" style="width:80%" >
 
                         <ui:inputText value="{!v.hh.Name}" aura:id="txtHHName" class="slds-input" required="true"
-                            label="Household Name" labelClass="slds-form-element__label" change="{!c.onTextChange}" />
+                            label="{!$Label.c.lblHouseholdName}" labelClass="slds-form-element__label" change="{!c.onTextChange}" />
                         <div class="slds-form-element slds-m-bottom_medium">
                             <div class="slds-form-element__control">
                                 <label class="slds-checkbox">
@@ -138,7 +138,7 @@
                         </div>
 
                         <ui:inputText value="{!v.hh.npo02__Formal_Greeting__c}" aura:id="txtFormalGreeting" class="slds-input"
-                            label="Formal Greeting" labelClass="slds-form-element__label" change="{!c.onTextChange}" />
+                            label="{!$Label.c.lblFormalGreeting}" labelClass="slds-form-element__label" change="{!c.onTextChange}" />
                         <div class="slds-form-element slds-m-bottom_medium">
                             <div class="slds-form-element__control">
                                 <label class="slds-checkbox">
@@ -151,7 +151,7 @@
                         </div>
 
                         <ui:inputText value="{!v.hh.npo02__Informal_Greeting__c}" aura:id="txtInformalGreeting" class="slds-input"
-                            label="Informal Greeting" labelClass="slds-form-element__label" change="{!c.onTextChange}" />
+                            label="{!$Label.c.lblInformalGreeting}" labelClass="slds-form-element__label" change="{!c.onTextChange}" />
                         <div class="slds-form-element">
                             <div class="slds-form-element__control">
                                 <label class="slds-checkbox">
