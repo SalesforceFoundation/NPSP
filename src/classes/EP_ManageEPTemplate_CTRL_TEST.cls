@@ -212,8 +212,7 @@ private with sharing class EP_ManageEPTemplate_CTRL_TEST {
         System.assertEquals(3, ctrl.mapTaskWrappers.size(), 'Dependent task should be deleted');
         
         // Cause an error on update
-        Id invalidId = Account.sObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
-        ctrl.mapTaskWrappers.get('1').detail.put('Assigned_To__c', invalidId);
+        ctrl.mapTaskWrappers.get('1').detail.put('Assigned_To__c', UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID);
 
         Test.startTest();
         PageReference retPage = ctrl.saveClose();
@@ -252,8 +251,7 @@ private with sharing class EP_ManageEPTemplate_CTRL_TEST {
 
         // Cause an error on update
         Id parentTaskId = ctrl.mapTaskWrappers.get('1').detail.Parent_Task__c;
-        Id invalidId = Account.sObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
-        ctrl.mapTaskWrappers.get('1').detail.Parent_Task__c = invalidId;
+        ctrl.mapTaskWrappers.get('1').detail.Parent_Task__c = UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID;
 
         ctrl.addTask();
         ctrl.getTaskTree();
