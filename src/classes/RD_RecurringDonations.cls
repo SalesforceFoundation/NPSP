@@ -628,23 +628,31 @@ public class RD_RecurringDonations {
     * @param oppIds The list of Opportunity Id's to create OCRS for
     * @return void
     */ 
-    public static void oppContactRoles( Set<Id> oppIds ){
+    public static void oppContactRoles(Set<Id> oppIds) {
         List<OpportunityContactRole> contactRoleInserts = new List<OpportunityContactRole>();
-        map <String,Id> contactOppToContactRole = new Map <String,Id> ();
+        Map<String, Id> contactOppToContactRole = new Map<String, Id>();
             
-        Opportunity[] oppsFromRecurringDontaions = [select id, npe03__Recurring_Donation__c,npe03__Recurring_Donation__r.npe03__Contact__c from Opportunity where Id IN :oppIds AND npe03__Recurring_Donation__r.npe03__Contact__c!=null];
+        Opportunity[] oppsFromRecurringDonations = [
+            SELECT id, npe03__Recurring_Donation__c, npe03__Recurring_Donation__r.npe03__Contact__c 
+            FROM Opportunity 
+            WHERE Id IN :oppIds AND 
+            npe03__Recurring_Donation__r.npe03__Contact__c != null
+        ];
         
-        if(oppsFromRecurringDontaions.size()>0){
-            // query for OppConRoles where primary=true and OppID in arg set
-            OpportunityContactRole[] conRoles = [select Id,OpportunityId, ContactId From OpportunityContactRole WHERE IsPrimary = true AND Opportunity.Id IN :oppIds ];
+        if (!oppsFromRecurringDonations.isEmpty()) {
             String uniqueConRole = '';
-            // now loop through the results and build the map
-            for (OpportunityContactRole thisCR : conRoles) {
+
+            for (OpportunityContactRole thisCR : [
+                SELECT Id, OpportunityId, ContactId 
+                FROM OpportunityContactRole 
+                WHERE IsPrimary = true AND 
+                OpportunityId IN :oppIds 
+            ]) {
                 uniqueConRole = string.valueOf(thisCR.OpportunityId) + string.valueOf(thisCR.ContactId);
                 contactOppToContactRole.put(uniqueConRole , thisCR.Id );
             }
                 
-            for (Opportunity createdOpp : oppsFromRecurringDontaions) {
+            for (Opportunity createdOpp : oppsFromRecurringDonations) {
               
                 OpportunityContactRole ocr = new OpportunityContactRole();
                 ocr.OpportunityId = createdOpp.Id;
@@ -652,12 +660,11 @@ public class RD_RecurringDonations {
                 ocr.IsPrimary = true;
                 
                 uniqueConRole = string.valueOf(createdOpp.Id)+string.valueOf(createdOpp.npe03__Recurring_Donation__r.npe03__Contact__c);
-                if(contactOppToContactRole.get(uniqueConRole)==null){
+                if (contactOppToContactRole.get(uniqueConRole) == null) {
                     ocr.ContactId = createdOpp.npe03__Recurring_Donation__r.npe03__Contact__c;
                     contactRoleInserts.add(ocr);
-                    if ( contactRoleInserts.size() == 100 )
-                    {
-                        //Database.SaveResult[] osr = Database.insert(contactRoleInserts, false);
+
+                    if (contactRoleInserts.size() == 100) {
                         // all or nothing so errors not lost
                         insert contactRoleInserts;
                         contactRoleInserts.clear();
@@ -665,9 +672,7 @@ public class RD_RecurringDonations {
                 }
             }
         }
-        if ( contactRoleInserts.size() > 0 )
-        {
-            //Database.SaveResult[] osr = Database.insert(contactRoleInserts, false);
+        if (!contactRoleInserts.isEmpty()) {
             // all or nothing so errors not lost
             insert contactRoleInserts;
         }
