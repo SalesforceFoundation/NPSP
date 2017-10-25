@@ -263,7 +263,7 @@ private class HH_Container_TEST {
         conA.FirstName = conA.FirstName + ' - Test Update';
         conO.FirstName = conO.FirstName + ' - Test Update';
         //fail update
-        conO.AccountId = Account.sObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
+        conO.AccountId = UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID;
         
         List<Contact> contacts = new List<Contact>{ 
             conA, 
