@@ -498,6 +498,7 @@
             $A.get("$Label.npsp.lblFindOrAddContact");
             $A.get("$Label.npsp.lblFindInContacts");
             $A.get("$Label.npsp.lblNoHHMergePermissions");
+            $A.get("$Label.npsp.lblYouAreHere");
         } catch (e) {}
     },
 
