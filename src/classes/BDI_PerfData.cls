@@ -55,7 +55,7 @@ public with sharing class BDI_PerfData {
             Contact_Matching_Rule__c = 'Firstname,Lastname,Email',
             Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' + UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c'),
             Donation_Matching_Behavior__c = BDI_DataImport_API.BestMatchOrCreate,
-            Donation_Date_Range__c = 99,
+            Donation_Date_Range__c = 3,
             Donation_Matching_Implementing_Class__c = null,
             Post_Process_Implementing_Class__c = null,
             Process_Using_Scheduled_Job__c = false
@@ -108,7 +108,7 @@ public with sharing class BDI_PerfData {
             from npe03__Recurring_Donation__c
             WHERE npe03__Contact__c <> null and
                 npe03__Installment_Amount__c = 100 and npe03__Next_Payment_Date__c >= 2016-01-01 and npe03__Next_Payment_Date__c < 2016-12-30
-                limit 1000];
+                order by Id limit 1500];
         list<Id> listId = new list<Id>();
 
         for (npe03__Recurring_Donation__c rd : listRD) {
@@ -116,7 +116,7 @@ public with sharing class BDI_PerfData {
         }
 
         list<Contact> listCon = [select Id, Firstname, Lastname, Email, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry
-            from Contact where Id in :listID];
+            from Contact where Id in :listID Order by Id limit 1000];
 
         return (listCon);
     }
@@ -135,8 +135,6 @@ public with sharing class BDI_PerfData {
                 di.Contact1_Lastname__c = con.LastName;
                 di.Contact1_Personal_Email__c = con.Email;
 
-                /*
-
                 di.Home_Street__c = con.MailingStreet;
                 di.Home_City__c = con.MailingCity;
                 di.Home_State_Province__c = con.MailingState;
@@ -144,7 +142,7 @@ public with sharing class BDI_PerfData {
                 di.Home_Country__c = con.MailingCountry;
 
                 di.Account1_Name__c = 'LDVCompany' + i;
-                di.Account2_Name__c = 'LDVCompanyS' + i;
+                //di.Account2_Name__c = 'LDVCompanyS' + i;
 
                 di.Donation_Date__c = date.valueOf('2016-07-01');
                 di.Donation_Donor__c = 'Contact1';
@@ -152,7 +150,6 @@ public with sharing class BDI_PerfData {
                 di.Payment_Method__c = 'check';
                 di.Donation_Stage__c = 'Pledged';
                 di.Donation_Campaign_Name__c = 'LDVTestCampaign';
-                */
 
                 listDI.add(di);
             }

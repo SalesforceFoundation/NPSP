@@ -429,6 +429,9 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
         setOppFields.add('CloseDate');
         setOppFields.add('npe01__Number_of_Payments__c');
         setOppFields.add('Account.npe01__SYSTEMIsIndividual__c');
+
+        // need to include any Opp fields we may update, so we can compare against them
+        setOppFields.addAll(mapDIFieldToOppField.values());
         
         // the set of Payment fields for our soql
         set<String> setPmtFields = new set<String>();
@@ -440,20 +443,10 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
         setPmtFields.add('npe01__Payment_Date__c');
         setPmtFields.add('npe01__Scheduled_Date__c');
         setPmtFields.add('npe01__Written_Off__c');
-        
-        // add the match fields
-        for (String strField : listMatchFields) {
-            String strOppField = mapDIFieldToOppField.get(strField);
-            if (strOppField != null) {
-                setOppFields.add(strOppField);
-            } else {
-                String strPmtField = mapDIFieldToPmtField.get(strField);
-                if (strPmtField != null) {
-                    setPmtFields.add(strPmtField);
-                }
-            }
-        }
-        
+
+        // need to include any Pmt fields we may update, so we can compare against them
+        setPmtFields.addAll(mapDIFieldToPmtField.values());
+
         // now query for all Open Opportunities from these Contacts or Accounts
         integer cFilter = 0;
         string strSoql = 'select ' + string.join(new list<String>(setOppFields), ',');

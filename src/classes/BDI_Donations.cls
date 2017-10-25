@@ -450,11 +450,10 @@ public class BDI_Donations {
 
         // query for the new payments for these new Opps
         map<Id, npe01__OppPayment__c> mapOppIdToPayment = new map<Id, npe01__OppPayment__c>();
-        for (npe01__OppPayment__c pmt : [select Id, npe01__Opportunity__c from npe01__OppPayment__c 
-                where npe01__Opportunity__c in :listOppId]) {
+        for (npe01__OppPayment__c pmt : database.query(strSoqlForPayments())) {
             mapOppIdToPayment.put(pmt.npe01__Opportunity__c, pmt);
         }
-        
+
         // store the Payments into our shared map and update their DI record
         for (DataImport__c di : listDIDonations) {
             // skip di's that already have an error
@@ -472,10 +471,29 @@ public class BDI_Donations {
     }
 
     /*******************************************************************************************************
+    * @description returns the soql to use for querying Payments
+    * @return String the soql string
+    */
+    private String strSoqlForPayments() {
+    // the set of Payment fields for our soql
+    set<String> setPmtFields = new set<String>();
+    setPmtFields.add('Id');
+    setPmtFields.add('npe01__Opportunity__c');
+
+    // need to include any Pmt fields we may update, so we can compare against them
+    setPmtFields.addAll(mapDIFieldToPmtField.values());
+
+    String strSoql = 'SELECT ' + string.join(new list<String>(setPmtFields), ',');
+    strSoql += ' FROM npe01__OppPayment__c WHERE npe01__Opportunity__c in :listOppId';
+
+    return strSoql;
+    }
+
+    /*******************************************************************************************************
     * @description Updates any fields on payment objects created for the Data Import opportunities.
     * @param listDIDonations The DI Records that have donations to import
     * @return void
-    */ 
+    */
     public void updatePayments(list<DataImport__c> listDIDonations) {
 
         list<npe01__OppPayment__c> listPmtUpdate = new list<npe01__OppPayment__c>();
