@@ -127,6 +127,7 @@
         <members>ERR_Handler_CTRL_TEST</members>
         <members>ERR_Handler_TEST</members>
         <members>ERR_Notifier</members>
+        <members>ERR_Notifier_TEST</members>
         <members>ERR_ParentAccountUpdater2_TEST</members>
         <members>ERR_ParentAccountUpdater_TEST</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
@@ -339,6 +340,8 @@
         <members>UTIL_Namespace_TEST</members>
         <members>UTIL_PageMessages_CTRL</members>
         <members>UTIL_PlatformCache</members>
+        <members>UTIL_Profile</members>
+        <members>UTIL_Profile_TEST</members>
         <members>UTIL_Query</members>
         <members>UTIL_Query_TEST</members>
         <members>UTIL_RecordTypeSettingsUpdate</members>

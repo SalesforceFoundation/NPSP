@@ -403,7 +403,7 @@ private class ALLO_ManageAllocations_TEST {
 
         ALLO_ManageAllocations_CTRL controller = new ALLO_ManageAllocations_CTRL();
         controller.parentCurrencyCode = 'FOO';
-        controller.parentId = Account.sObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
+        controller.parentId = UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID;
 
         System.assertEquals(
             'FOO',

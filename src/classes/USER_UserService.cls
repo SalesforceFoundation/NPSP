@@ -35,7 +35,6 @@
 * @description Service Class to handle actions on the User object.
 */
 public with sharing class USER_UserService {
-    public static final String SYSTEM_ADMINISTRATOR = 'System Administrator';
     public static final String OBJECT_ID_PREFIX_USER = '005';
     public static final String ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS = 'All Sys Admins';
     public static final String JOB_TYPE_SCHEDULED_APEX = '7';
@@ -182,14 +181,11 @@ public with sharing class USER_UserService {
     * @return Id The Id of the System Administrator Profile.
     **********************************************************************************************************/
     private static Id retrieveSysAdminProfileId() {
-        Id sysAdminProfileId = null;
+        List<Id> sysAdminProfileIds = UTIL_Profile.getInstance().getProfileIds(UTIL_Profile.SYSTEM_ADMINISTRATOR);
 
-        List<Profile> sysAdminProfile = [SELECT Id FROM Profile WHERE Name = :SYSTEM_ADMINISTRATOR];
-        if (!sysAdminProfile.isEmpty()) {
-            sysAdminProfileId = sysAdminProfile[0].Id;
-        }
-
-        return sysAdminProfileId;
+        return sysAdminProfileIds.isEmpty()
+            ? null
+            : sysAdminProfileIds[0];
     }
 
 
