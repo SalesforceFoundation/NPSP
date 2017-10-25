@@ -609,7 +609,21 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>ConfirmDeleteAccount</shortDescription>
-        <value>{0} is the only contact in the {1} account. Deleting this contact would leave an empty account. Would you like to delete {1} instead?</value>
+        <value>{0} is the only Contact in the {1} Account. Deleting this Contact would leave an empty Account. Would you like to delete {1}, including {0}, instead?</value>
+    </labels>
+    <labels>
+        <fullName>DeleteAccount</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DeleteAccount</shortDescription>
+        <value>Delete Account</value>
+    </labels>
+    <labels>
+        <fullName>DeleteContactLeaveAccount</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DeleteContactLeaveAccount</shortDescription>
+        <value>Delete Contact and Leave Empty Account</value>
     </labels>
     <labels>
         <fullName>EPAddDependentTask</fullName>

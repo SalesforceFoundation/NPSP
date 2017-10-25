@@ -90,6 +90,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
             //delete to remove the contact
             if (contactsInHousehold.size() == 1 && contactsInHousehold[0].get('ct') == 1) {
                 shouldDeleteContactAlone = false;
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, helpDeleteAccountInstead));
             }
         }
     }
@@ -105,8 +106,31 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         try {
             return deleteContact();
         } catch (Exception ex){
-            if (!hasPageMessages)
+            if (!hasPageMessages) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
+            }
+            return null;
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Deletes a contact, leaving empty Household Account, once the user has accepted to do so,
+    * after adding cascade deletion records for related opportunities and recurring donations. 
+    * Validates opportunities and adds error messages where appropriate.
+    * @return pageReference Redirects to the Contacts tab if the contact has been deleted, otherwise stays
+    * on the page and displays error messages.
+    */ 
+    public PageReference deleteContactOnly() {
+        shouldDeleteContactAlone = true;
+
+        try {
+            return deleteContact();
+        } catch (Exception ex) {
+            shouldDeleteContactAlone = false;
+
+            if (!hasPageMessages) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
+            }
             return null;
         }
     }
@@ -189,7 +213,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     * @description Returns a redirect enabled PageReference for the return URL
     * @return pageReference The PageReference with redirect enabled.
     */ 
-    private PageReference getRedirect() {
+    public PageReference getRedirect() {
         PageReference redirect = new PageReference(retURL);
         redirect.setRedirect(true);
         return redirect;

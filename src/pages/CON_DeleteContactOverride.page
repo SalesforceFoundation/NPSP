@@ -2,15 +2,22 @@
     <apex:slds />
     <apex:form styleClass="slds">
         <apex:outputPanel rendered="{!sforceNav == null}">
-            <c:UTIL_PageMessages />
-            <div class="slds-p-around_medium">
-                <apex:outputText value="{!helpDeleteAccountInstead}" rendered="{!NOT(shouldDeleteContactAlone)}" styleClass="slds-text-body_regular"/>
-            </div>
-            <div class="slds-button-group">
-                <apex:outputLink target="_self" title="{!$Label.REL_Return_to_Contact}" value="/{!$CurrentPage.parameters.id}" styleClass="slds-button slds-button_brand">
+            <!-- PAGE HEADER -->
+            <c:UTIL_PageHeader headerLabel="{!$ObjectType.Contact.Label}"
+                               header="{!Contact.Name}"
+                               icon="contact_120" iconCategory="standard"
+                               showSaveBtn="false" cancelLabel="{!$Label.bdiBtnClose}"
+                               cancelAction="{!getRedirect}" cancelReRender="vfForm"/>
+            
+            <!-- PAGE MESSAGE -->
+            <c:UTIL_PageMessages allowClose="false"/>
+            
+            <div class="slds-p-around_small">
+                <apex:commandButton value="{!$Label.DeleteContactLeaveAccount}" action="{!deleteContactOnly}" styleClass="slds-button slds-button_neutral"/>
+                <apex:outputLink target="_self" title="{!$Label.REL_Return_to_Contact}" value="/{!$CurrentPage.parameters.id}" styleClass="slds-button slds-button_neutral">
                     {!$Label.REL_Return_to_Contact}
                 </apex:outputLink>
-                <apex:commandButton value="Delete Account" action="{!deleteAccount}" rendered="{!NOT(shouldDeleteContactAlone)}" disabled="{!hasPageMessages}" styleClass="slds-button slds-button_destructive"/>
+                <apex:commandButton value="{!$Label.DeleteAccount}" action="{!deleteAccount}" styleClass="slds-button slds-button_brand"/>
             </div>
         </apex:outputPanel>
         <apex:outputPanel rendered="{!sforceNav != null}">
