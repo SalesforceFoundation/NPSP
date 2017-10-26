@@ -35,11 +35,10 @@
 */
 public with sharing class BDI_ContactService {
 
-    private Map<Id, Contact> mapDIIdToC1;
-    private Map<Id, Contact> mapDIIdToC2;
-    private Map<String, Contact> mapDIKeyToContact;
-    private BDI_DataImportService bdi;
-
+    /*******************************************************************************************************
+    * @description Constructor, that initializes various maps
+    * @param bdi The data import service instance that invokes us
+    */
     public BDI_ContactService(BDI_DataImportService bdi) {
         this.bdi = bdi;
         mapDIIdToC1 = new Map<Id, Contact>();
@@ -48,83 +47,359 @@ public with sharing class BDI_ContactService {
     }
 
     /*******************************************************************************************************
+    * @description cached map of to get Contact1 for a DI
+    */
+    private Map<Id, Contact> mapDIIdToC1;
+
+    /*******************************************************************************************************
+    * @description cached map of to get Contact2 for a DI
+    */
+    private Map<Id, Contact> mapDIIdToC2;
+
+    /*******************************************************************************************************
+    * @description map that holds multiple DIKeys for each Contact
+    */
+    private Map<String, Contact> mapDIKeyToContact;
+
+    /*******************************************************************************************************
+    * @description the data import service we are invoked from
+    */
+    private BDI_DataImportService bdi;
+
+    /*******************************************************************************************************
+    * @description map of DI Fieldnames for Contact1 to Contact fieldnames
+    */
+    private Map<String, String> mapDIFieldToC1Field {
+        get {
+            if (mapDIFieldToC1Field == null) {
+                mapDIFieldToC1Field = BDI_DataImportService.mapFieldsForDIObject('Contact1', 'Contact', BDI_DataImportService.listStrDataImportFields);
+            }
+            return mapDIFieldToC1Field;
+        }
+        set;
+    }
+
+    /*******************************************************************************************************
+    * @description map of DI Fieldnames for Contact2 to Contact fieldnames
+    */
+    private Map<String, String> mapDIFieldToC2Field {
+        get {
+            if (mapDIFieldToC2Field == null) {
+                mapDIFieldToC2Field = BDI_DataImportService.mapFieldsForDIObject('Contact2', 'Contact', BDI_DataImportService.listStrDataImportFields);
+            }
+            return mapDIFieldToC2Field;
+        }
+        set;
+    }
+
+    /*******************************************************************************************************
+    * @description handles importing or updating Contact1 and Contact2, creating their Household if none
+    * exists. at completion, appropriate contact and household account lookups will be populated.
+    * @return void
+    */
+    public void importContactsAndHouseholds() {
+
+        // first, validate any required fields on contacts
+        verifyContactData();
+
+        // try to match our existing contacts
+        BDI_PerfLogger.PerfLog pl = BDI_DataImportService.perfLogger.newPerfLog('matchExistingContacts');
+        matchExistingContacts();
+        pl.stop();
+
+        // defer household naming until the end
+        HH_HouseholdNaming.disableHouseholdNaming(true);
+        Set<Id> setDIIdUpdated = new Set<Id>();
+
+        // handle multiple di's referring to the same existing contact
+        set<string> setDIKeyUpsert = new set<string>();
+        list<Contact> listConUpsert = new list<Contact>();
+        list<DataImport__c> listDIUpsert = new list<DataImport__c>();
+
+        // create/update our c1's
+        for (DataImport__c di : bdi.listDI) {
+            // skip di's that already have an error
+            if (di.Status__c == label.bdiFailed)
+                continue;
+            Contact con = ContactFromDi(di, 1);
+            if (con == null)
+                continue;
+
+            boolean isModified = false;
+
+            // potentially set c1's household if provided
+            if (di.HouseholdAccountImported__c != null && di.HouseholdAccountImported__c != con.AccountId) {
+                con.AccountId = di.HouseholdAccountImported__c;
+                isModified = true;
+            }
+
+            // copy over all fields with data
+            for (string strDIField : mapDIFieldToC1Field.keySet()) {
+                if (BDI_DataImportService.isCopiedDIField(di, strDIField, con, mapDIFieldToC1Field)) {
+                    isModified = true;
+                }
+            }
+
+            if (isModified) {
+                boolean isAlreadyAdded = false;
+                // add all dikeys for the contact to make sure we don't try to upsert the contact twice
+                for (string dikey : listDiKeyContact(con)) {
+                    if (!setDIKeyUpsert.add(diKey))
+                        isAlreadyAdded = true;
+                }
+                if (!isAlreadyAdded) {
+                    listConUpsert.add(con);
+                    listDIUpsert.add(di);
+                }
+            }
+
+            // testing error handling
+            if (Test.isRunningTest() && con.LastName != null && con.LastName.startsWith('FailTest'))
+                con.LastName = null;
+        }
+
+        if (listConUpsert.size() > 0) {
+            list<Database.UpsertResult> listUR = database.upsert(listConUpsert, false);
+            for (integer i = 0; i < listUR.size(); i++) {
+                Database.UpsertResult ur = listUR[i];
+                if (!ur.isSuccess()) {
+                    bdi.LogBDIError(listDIUpsert[i], ur.getErrors()[0].getMessage(), 'Contact1ImportStatus__c');
+                } else {
+                    setDIIdUpdated.add(listDIUpsert[i].Id);
+                }
+            }
+        }
+
+        // update each DI with its new contact1 ID
+        // also get all our C1 Id's in a set for further use
+        set<Id> setC1Id = new set<Id>();
+        for (DataImport__c di : bdi.listDI) {
+            if (di.Contact1Imported__c == null) {
+                Contact con = ContactFromDi(di, 1);
+                if (con != null)
+                    di.Contact1Imported__c = con.Id;
+            }
+            setC1Id.add(di.Contact1Imported__c);
+        }
+
+        // get the Household Accounts for C1's
+        map<Id, Id> mapC1IdToHHId = new map<Id, Id>();
+        for (Contact con : [select Id, AccountId from Contact where Id in :setC1Id]) {
+            mapC1IdToHHId.put(con.Id, con.AccountId);
+        }
+        // store it back in C1 and the DI for later use
+        for (DataImport__c di : bdi.listDI) {
+            if (di.Contact1Imported__c != null) {
+                Id HHId = mapC1IdToHHId.get(di.Contact1Imported__c);
+                if (HHId != null) {
+                    Contact con = ContactFromDi(di, 1);
+                    con.AccountId = HHId;
+                    di.HouseholdAccountImported__c = HHId;
+                }
+            }
+        }
+
+        // now create our c2's
+        setDIKeyUpsert.clear();
+        listConUpsert.clear();
+        listDIUpsert.clear();
+        for (DataImport__c di : bdi.listDI) {
+            // skip di's that already have an error
+            if (di.Status__c == label.bdiFailed)
+                continue;
+            Contact con = ContactFromDi(di, 2);
+            if (con == null)
+                continue;
+
+            boolean isModified = false;
+
+            // set c2's household to match c1
+            if (con.AccountId != mapC1IdToHHId.get(di.Contact1Imported__c)) {
+                con.AccountId = mapC1IdToHHId.get(di.Contact1Imported__c);
+                isModified = true;
+            }
+
+            // copy over all fields with data
+            for (string strDIField : mapDIFieldToC2Field.keySet()) {
+                if (BDI_DataImportService.isCopiedDIField(di, strDIField, con, mapDIFieldToC2Field)) {
+                    isModified = true;
+                }
+            }
+            if (isModified) {
+                boolean isAlreadyAdded = false;
+                // add all dikeys for the contact to make sure we don't try to upsert the contact twice
+                for (string dikey : listDiKeyContact(con)) {
+                    if (!setDIKeyUpsert.add(diKey))
+                        isAlreadyAdded = true;
+                }
+                if (!isAlreadyAdded) {
+                    listConUpsert.add(con);
+                    listDIUpsert.add(di);
+                }
+            }
+            // testing error handling
+            if (Test.isRunningTest() && con.LastName != null && con.LastName.startsWith('FailTest'))
+                con.LastName = null;
+        }
+
+        if (listConUpsert.size() > 0) {
+            list<Database.UpsertResult> listUR = database.upsert(listConUpsert, false);
+            for (integer i = 0; i < listUR.size(); i++) {
+                Database.UpsertResult ur = listUR[i];
+                if (!ur.isSuccess()) {
+                    bdi.LogBDIError(listDIUpsert[i], ur.getErrors()[0].getMessage(), 'Contact2ImportStatus__c');
+                } else {
+                    setDIIdUpdated.add(listDIUpsert[i].Id);
+                }
+            }
+        }
+
+        // update each DI with its new contact2 ID
+        for (DataImport__c di: bdi.listDI) {
+            if (di.Contact2Imported__c == null) {
+                Contact con = ContactFromDi(di, 2);
+                if (con != null)
+                    di.Contact2Imported__c = con.Id;
+            }
+        }
+
+        // now update HH Names that we deferred
+        HH_HouseholdNaming.disableHouseholdNaming(false);
+        Set<Id> setHHId = new Set<Id>();
+        for (DataImport__c di : bdi.listDI) {
+            if (setDIIdUpdated.contains(di.Id)) {
+                setHHId.add(di.HouseholdAccountImported__c);
+            }
+        }
+        if (setHHId.size() > 0) {
+            HH_HouseholdNaming hn = new HH_HouseholdNaming();
+            hn.UpdateNames(new List<Id>(setHHId));
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description for every di with C1 or C2 data, make sure they have a lastname (unless SFId provided).
+    * @return void
+    */
+    private void verifyContactData() {
+        for (DataImport__c di: bdi.listDI) {
+            if (isContactSpecified(di, 'Contact1') && di.Contact1_Lastname__c == null && di.Contact1Imported__c == null) {
+                bdi.LogBDIError(di, label.bdiErrorInvalidLastname, 'Contact1ImportStatus__c');
+                continue;
+            }
+            if (isContactSpecified(di, 'Contact2') && di.Contact2_Lastname__c == null && di.Contact2Imported__c == null) {
+                di.Contact2_Lastname__c = di.Contact1_Lastname__c;
+                if (di.Contact2_Lastname__c == null && di.Contact1Imported__c == null)
+                    bdi.LogBDIError(di, label.bdiErrorInvalidLastname, 'Contact2ImportStatus__c');
+            }
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description looks to see if any of the dikey fields for the Contact are specified.
+    * @param di the Data Import record
+    * @param strCx specifies which contact's fields to look at; either Contact1 or Contact2
+    * @return Boolean true if any of the contact's dikey fields are not empty
+    */
+    private boolean isContactSpecified(DataImport__c di, string strCx) {
+        return di.get(strCx + 'Imported__c') != null ||
+            di.get(strCx + '_Firstname__c') != null ||
+            di.get(strCx + '_Lastname__c') != null ||
+            di.get(strCx + '_Personal_Email__c') != null ||
+            di.get(strCx + '_Work_Email__c') != null ||
+            di.get(strCx + '_Alternate_Email__c') != null ||
+            di.get(strCx + '_Home_Phone__c') != null ||
+            di.get(strCx + '_Mobile_Phone__c') != null ||
+            di.get(strCx + '_Other_Phone__c') != null ||
+            di.get(strCx + '_Work_Phone__c') != null;
+    }
+
+    /*******************************************************************************************************
     * @description looks for existing contacts that match C1 or C2, and if found, updates their Id's in
     * the DI's.  if not found, creates a new contact object for that DI.
     * @return void
     */
-    public void matchExistingContacts() {
+    private void matchExistingContacts() {
 
         loadCandidateContacts();
 
-        Set<Id> setHHId = new Set<Id>();
-
-
         // first we process c1's
+        associateDIsWithMatchedOrNewContacts('Contact1');
+
+        // before we process c2's, we want to add some "looser" keys
+        // for any c2's to match against existing household members just by firstname
+        addHouseholdMemberDIKeys();
+
+        // now process c2's
+        associateDIsWithMatchedOrNewContacts('Contact2');
+    }
+
+    /*******************************************************************************************************
+    * @description for each DI, finds its matching Contact, or creates a new Contact, and updates our map.
+    * @param strCx Contact1 or Contact2
+    * @return void
+    */
+    private void associateDIsWithMatchedOrNewContacts(String strCx) {
+        Integer iCx = strCx == 'Contact1' ? 1 : 2;
+
         for (DataImport__c di : bdi.listDI) {
             // skip di's that already have an error
             if (di.Status__c == label.bdiFailed)
                 continue;
-            list<string> listDiKey = listDIKeyC1(di);
+            list<string> listDiKey = listDIKeyCx(di, strCx);
             Contact con = ContactFromDiKeys(listDiKey);
             if (con != null) {
                 if (con.Id != null && con.AccountId != null && con.Account.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
-                    bdi.LogBDIError(di, label.bdiErrorNonHHAccountContact, 'Contact1ImportStatus__c');
+                    bdi.LogBDIError(di, label.bdiErrorNonHHAccountContact, strCx + 'ImportStatus__c');
                     continue;
                 }
-                di.Contact1Imported__c = con.id;
-                di.Contact1ImportStatus__c = label.bdiMatched;
-                // remember all the existing household accounts, so we can query for and add "looser" keys for c2
-                if (con.AccountId != null) {
-                    setHHId.add(con.AccountId);
-                    if (di.HouseholdAccountImported__c == null)
+                di.put(strCx + 'Imported__c', con.id);
+                di.put(strCx + 'ImportStatus__c', label.bdiMatched);
+                if (con.AccountId != null && di.HouseholdAccountImported__c == null) {
                         di.HouseholdAccountImported__c = con.AccountId;
                 }
             } else if (listDiKey.size() > 0) {
                 con = new Contact();
-                di.Contact1ImportStatus__c = label.bdiCreated;
-                di.Contact1_Preferred_Email__c = strPreferredEmail(di, 1);
-                di.Contact1_Preferred_Phone__c = strPreferredPhone(di, 1);
-            }
+                di.put(strCx + 'ImportStatus__c', label.bdiCreated);
+                di.put(strCx + '_Preferred_Email__c', strPreferredEmail(di, iCx));
+                di.put(strCx + '_Preferred_Phone__c', strPreferredPhone(di, iCx));
 
-            // associate the Contact and its dikeys with the di
-            setContactForDi(con, di, listDiKey, 1);
-        }
-
-        // before we process c2's, we want to add some "looser" keys
-        // for any c2's to match against existing household members just by firstname
-        list<Contact> listHHContacts = [select Id, Firstname, Lastname, AccountId, Account.npe01__SYSTEM_AccountType__c
-        from Contact where AccountId in :setHHId];
-        for (Contact con : listHHContacts) {
-            mapDIKeyToContact.put(con.Firstname + '|' + con.AccountId, con);
-        }
-
-        // now process c2's
-        for (DataImport__c di : bdi.listDI) {
-            // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
-                continue;
-            list<string> listDiKey = listDiKeyC2(di);
-            Contact con = ContactFromDiKeys(listDiKey);
-            if (con != null) {
-                if (con.Id != null && con.AccountId != null && con.Account.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
-                    bdi.LogBDIError(di, label.bdiErrorNonHHAccountContact, 'Contact2ImportStatus__c');
-                    continue;
-                }
-                di.Contact2Imported__c = con.id;
-                di.Contact2ImportStatus__c = label.bdiMatched;
-            } else if (listDiKey.size() > 0) {
-                con = new Contact();
-                di.Contact2ImportStatus__c = label.bdiCreated;
-                di.Contact2_Preferred_Email__c = strPreferredEmail(di, 2);
-                di.Contact2_Preferred_Phone__c = strPreferredPhone(di, 2);
-                // if no lastname specified, we need to get it from c1 (which may only be implicit via Contact1_Imported)
-                if (di.Contact2_Lastname__c == null) {
+                // if no lastname specified for c2, we need to get it from c1 (which may only be implicit via Contact1_Imported)
+                if (strCx == 'Contact2' && di.Contact2_Lastname__c == null) {
                     Contact con1 = ContactFromDi(di, 1);
                     di.Contact2_Lastname__c = con1.Lastname;
                 }
             }
+
             // associate the Contact and its dikeys with the di
-            setContactForDi(con, di, listDiKey, 2);
+            setContactForDi(con, di, listDiKey, iCx);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description for each DI, finds its matching Contact, or creates a new Contact, and updates our map.
+    * @param strCx Contact1 or Contact2
+    * @return void
+    */
+    private void addHouseholdMemberDIKeys() {
+        // before we process c2's, we want to add some "looser" keys
+        // for any c2's to match against existing household members just by firstname
+        Set<Id> setHHId = new Set<Id>();
+        for (DataImport__c di : bdi.listDI) {
+            // skip di's that already have an error
+            if (di.Status__c == label.bdiFailed)
+                continue;
+            Contact con = ContactFromDi(di, 1);
+            if (con != null && con.AccountId != null) {
+                setHHId.add(con.AccountId);
+            }
+        }
+
+        list<Contact> listHHContacts = [SELECT Id, Firstname, Lastname, AccountId,
+            Account.npe01__SYSTEM_AccountType__c
+            FROM Contact WHERE AccountId IN :setHHId];
+        for (Contact con : listHHContacts) {
+            mapDIKeyToContact.put(con.Firstname + '|' + con.AccountId, con);
         }
     }
 
@@ -214,13 +489,15 @@ public with sharing class BDI_ContactService {
             }
         }
 
-        String strSoql = 'SELECT Id, Firstname, Lastname, AccountId, Account.npe01__SYSTEM_AccountType__c, ';
-        strSoql += UTIL_Namespace.StrTokenNSPrefix('Primary_Affiliation__c') + ', ';
-        if (isCustomIDInContactMatchRules) {
-            strSoql += bdi.diSettings.Contact_Custom_Unique_ID__c + ', ';
-        }
-        strSoql += ' Email, npe01__AlternateEmail__c, npe01__HomeEmail__c, npe01__WorkEmail__c, ';
-        strSoql += ' Phone, HomePhone, MobilePhone, OtherPhone, npo02__Formula_HouseholdPhone__c, npe01__WorkPhone__c ';
+        Set<String> setContactFields = new Set<String> {
+            'Id', 'Firstname', 'Lastname', 'AccountId', 'Account.npe01__SYSTEM_AccountType__c',
+            UTIL_Namespace.StrTokenNSPrefix('Primary_Affiliation__c'),
+            'Email', 'npe01__AlternateEmail__c', 'npe01__HomeEmail__c', 'npe01__WorkEmail__c',
+            'Phone', 'HomePhone', 'MobilePhone', 'OtherPhone', 'npo02__Formula_HouseholdPhone__c', 'npe01__WorkPhone__c' };
+        setContactFields.addAll(mapDIFieldToC1Field.values());
+        setContactFields.addAll(mapDIFieldToC2Field.values());
+
+        String strSoql = 'SELECT ' + string.join(new list<String>(setContactFields), ',');
         strSoql += ' FROM Contact WHERE ';
 
         if (setSFId.size() > 0) {
@@ -362,7 +639,7 @@ public with sharing class BDI_ContactService {
     * @param con the Contact
     * @return List<string> a list of diKeys
     */
-    public list<string> listDiKeyContact(Contact con) {
+    private list<string> listDiKeyContact(Contact con) {
         if (con == null)
             return null;
 
@@ -681,7 +958,6 @@ public with sharing class BDI_ContactService {
         for (string diKey : listDiKey) {
             mapDIKeyToContact.put(diKey, con);
         }
-
     }
 
     /*******************************************************************************************************
