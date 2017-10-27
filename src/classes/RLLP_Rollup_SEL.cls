@@ -31,7 +31,7 @@
 * @author Salesforce.org
 * @date 2017
 * @group Rollups
-* @group-content ../../ApexDocContent/Rollups.htm
+* @group-content ../../ApexDocContent/Rollups2.htm
 * @description Selector class for Rollup definition custom metadata.
 */
 public class RLLP_Rollup_SEL {

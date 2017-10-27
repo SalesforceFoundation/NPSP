@@ -41,6 +41,11 @@ public class CMT_FilterRuleEval_SVC {
     private static Map<Id, List<CMT_FilterRule>> mapOfFilterRulesByGroupId = new Map<Id, List<CMT_FilterRule>>();
 
     /**
+     * @description Static cache of filter group eval results by a concatenation of detail row Ids
+     */
+    private static Map<String, Boolean> cachedFilterEvalResults = new Map<String, Boolean>();
+
+    /**
      * @description For a given SObject detail record and possibly a related related record, evaluate the
      * record(s) against the FilterRules in the specified FilterGroupId.
      * @param detailRows A collection of SObject records to be processed.
@@ -48,6 +53,16 @@ public class CMT_FilterRuleEval_SVC {
      * @return True if the record passed the rule or False if it failed the rule.
      */
     public static Boolean evaluateFilterGroup(List<SObject> detailRows, Id filterGroupId) {
+
+        // Build a unique key of a concatenation of the Id's of all the detail rows.
+        String cacheKey = filterGroupId + '.';
+        for (SObject record : detailRows) {
+            cacheKey += (String)record.get('Id');
+        }
+        // If this set of detail rows has already been evaluated for this filter group, return the cached result
+        if (cachedFilterEvalResults.containsKey(cacheKey)) {
+            return cachedFilterEvalResults.get(cacheKey);
+        }
 
         // If the Rules within the Filter Group have not already been instantiated, retrieve them
         // and save the list of instantiated rules into the static map
@@ -67,6 +82,7 @@ public class CMT_FilterRuleEval_SVC {
                 if (objType == rule.getObjectType()) {
                     if (!rule.isIncluded(record)) {
                         // No reason to continue if any one rule for any one record fails the evaluation
+                        cachedFilterEvalResults.put(cacheKey, false);
                         return false;
                     }
                 }
@@ -74,6 +90,7 @@ public class CMT_FilterRuleEval_SVC {
         }
 
         // if make it all the way through the rules for all records without any exclusions, then it passes
+        cachedFilterEvalResults.put(cacheKey, true);
         return true;
     }
 

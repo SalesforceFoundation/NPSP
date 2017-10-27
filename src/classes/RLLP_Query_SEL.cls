@@ -31,7 +31,7 @@
 * @author Salesforce.org
 * @date 2017
 * @group Rollups
-* @group-content ../../ApexDocContent/Rollups.htm
+* @group-content ../../ApexDocContent/Rollups2.htm
 * @description Selector class for relevant summary/target fields for use by the Rollup Engine
 */public class RLLP_Query_SEL {
 
