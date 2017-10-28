@@ -56,15 +56,19 @@
         rendered="{!($ObjectType[sObjType].fields[field].updateable
                     || $ObjectType[sObjType].fields[field].createable && sObj['Id']=='') && $ObjectType[sObjType].fields[field].type != 'boolean'}">        
         <apex:outputLabel for="inputX" styleClass="slds-form-element__label" rendered="{!showLabel == true && ftype!='boolean'}" id="lblInputField">
-            <apex:outputText rendered="{!required}" id="lblInputFieldRequired">
+            <apex:outputText rendered="{!required || NOT($ObjectType[sObjType].fields[field].nillable)}" id="lblInputFieldRequired">
                 <abbr class="slds-required" title="{!$Label.lblRequired}">*</abbr>
             </apex:outputText>
             <apex:outputText rendered="{!showLabel == true}" value="{!label}"/>
         </apex:outputLabel>
         <div class="slds-form-element__control">
-            <c:UTIL_InputField field="{!field}" sObj="{!sObj}" sObjType="{!sObjType}" onchange="{!onchange}" actSupAction="{!actSupAction}"
-                actSupReRender="{!actSupReRender}" actSup="{!actSup}" actSupStatus="{!actSupStatus}" actSupImmediate="{!actSupImmediate}"
-                required="{!required}" id="inputx"/>
+            <c:UTIL_InputField field="{!field}" sObj="{!sObj}" sObjType="{!sObjType}" 
+                onchange="{!onchange}" actSupAction="{!actSupAction}"
+                actSupReRender="{!actSupReRender}" actSup="{!actSup}" 
+                actSupStatus="{!actSupStatus}" actSupImmediate="{!actSupImmediate}"
+                required="{!required || NOT($ObjectType[sObjType].fields[field].nillable)}" 
+                id="inputx"
+            />
         </div>
     </apex:outputPanel>
 
