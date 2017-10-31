@@ -167,6 +167,9 @@ flows:
                 options:
                     use_saucelabs: True
 
+    config_npsp_settings:
+        description:  NPSP settings object must be initialized for tests
+
     dev_org:
         tasks:
             8:

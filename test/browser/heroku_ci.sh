@@ -29,7 +29,7 @@ if [ "$HEROKU_TEST_RUN_BRANCH" == "master" ]; then
 # All other branches
 else
     # Create scratch org config as default org
-    cci org scratch browsertest_classic_namespaced browsertests_feature --default
+    cci org scratch browsertest_classic browsertests_feature --default
 
     # Deploy unmanaged metadata
     cci flow run dev_org
