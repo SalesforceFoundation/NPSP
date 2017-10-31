@@ -41,7 +41,6 @@ Runs from a custom button on the Campaign record. Supports both the Classic and 
     <filter>
         <criteriaItems>
             <column>CAMPAIGN_ID</column>
-            <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>000000000000000</value>
         </criteriaItems>
