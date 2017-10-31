@@ -2036,7 +2036,6 @@
         <members>Opportunity-Matching Gift Layout</members>
         <members>Opportunity-Membership Layout</members>
         <members>Partial_Soft_Credit__c-Partial Soft Credit Layout</members>
-        <members>PerfLog__c-Perf Log Layout</members>
         <members>Schedulable__c-Schedulable Layout</members>
         <members>Trigger_Handler__c-Trigger Handler Layout</members>
         <name>Layout</name>
