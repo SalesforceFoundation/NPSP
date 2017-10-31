@@ -47,7 +47,6 @@ Runs from a custom button on the Campaign record. Supports both the Classic and 
         </criteriaItems>
         <criteriaItems>
             <column>MEMBER_STATUS</column>
-            <isUnlocked>false</isUnlocked>
             <operator>notContain</operator>
             <value>Duplicate</value>
         </criteriaItems>
