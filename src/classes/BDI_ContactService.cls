@@ -404,8 +404,10 @@ public with sharing class BDI_ContactService {
         // filter on Name (plus Id and UniqueId) if both First and Last are included in the criteria.
         // unfortunately, if middlename or suffix is enabled, we can't use the Name index; it won't
         // match against 'firstname lastname' if the Contact has a middlename or suffix, and there
-        // currently seems to be a bug in core that soql'ing on Name = 'firstname middlename lastname suffix'
+        // currently is a bug in core that soql'ing on Name = 'firstname middlename lastname suffix'
         // fails to match, even though the Name field returns that full string.
+        // known issue salesforce has Won't Fixed:
+        // https://success.salesforce.com/issues_view?id=a1p30000000eQRxAAM
         Boolean filterOnlyByName =
                 isFirstnameInContactMatchRules &&
                 isLastnameInContactMatchRules &&
@@ -536,62 +538,21 @@ public with sharing class BDI_ContactService {
     private String getContactNameFromDi(DataImport__c di, Integer iCon) {
         String strCx = UTIL_Namespace.StrTokenNSPrefix('Contact' + string.valueOf(iCon));
         String firstname = (String)di.get(strCx + '_Firstname__c');
-        String middlename = getMiddleName(di, strCx);
         String lastname = (String)di.get(strCx + '_Lastname__c');
-        String suffix = getNameSuffix(di, strCx);
+
+        // note that we don't try to support middlename and suffix due to known
+        // salesforce won't fix issue: https://success.salesforce.com/issues_view?id=a1p30000000eQRxAAM
+        // String middlename = getMiddleName(di, strCx);
+        // String suffix = getNameSuffix(di, strCx);
 
         String fullname = '';
         if (firstname != null) {
             fullname += firstname + ' ';
         }
-        if (middlename != null) {
-            fullname += middlename + ' ';
-        }
         if (lastname != null) {
             fullname += lastname;
         }
-        if (suffix != null) {
-            fullname += ' ' + suffix;
-        }
         return (fullname);
-    }
-
-    /*******************************************************************************************************
-    * @description returns the Contact's Middlename from the DI record for the specified Contact
-    * @param di the Data Import record
-    * @param strCx specifies which contact, eg Contact1 or Contact2
-    * @return String the Middlename specified in the DI record for the Contact, or null if Middlenames
-    * are not enabled, or not specified in the DI record.
-    */
-    private String getMiddleName(DataImport__c di, String strCx) {
-        if (UTIL_Describe.isMiddleNameEnabled()) {
-            // we can't assume the DI contains a middlename field, thus the try/catch
-            try {
-                return (String)di.get(strCx + '_Middlename__c');
-            } catch (Exception ex) {
-                return null;
-            }
-        }
-        return null;
-    }
-
-    /*******************************************************************************************************
-    * @description returns the Contact's Name Suffix from the DI record for the specified Contact
-    * @param di the Data Import record
-    * @param strCx specifies which contact, eg Contact1 or Contact2
-    * @return String the Suffix specified in the DI record for the Contact, or null if Suffixes
-    * are not enabled, or not specified in the DI record.
-    */
-    private String getNameSuffix(DataImport__c di, String strCx) {
-        if (UTIL_Describe.isNameSuffixEnabled()) {
-            // we can't assume the DI contains a suffix field, thus the try/catch
-            try {
-                return (String)di.get(strCx + '_Suffix__c');
-            } catch (Exception ex) {
-                return null;
-            }
-        }
-        return null;
     }
 
     /*******************************************************************************************************
