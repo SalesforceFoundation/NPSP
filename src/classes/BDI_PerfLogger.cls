@@ -33,92 +33,67 @@
 * @group Batch Data Import
 * @description Performance Analysis Logging class for the Batch Data Importer.
 */
-public with sharing class BDI_PerfLogger {
+public with sharing class BDI_PerfLogger extends UTIL_PerfLogger {
 
-    public static final string METHOD = 'method';
-    public static final string QUERY = 'query';
-
+    public static final string METHOD = UTIL_PerfLogger.METHOD;
+    public static final string QUERY = UTIL_PerfLogger.QUERY;
     private Id batchId;
-    private Integer countRecords;
-    private Long tmStart;
-    private Long tmEnd;
-    private Map<String, PerfLog> mapPerfLogByLabel;
 
+    /*******************************************************************************************************
+    * @description constructor, that starts the logger's timer for the given Batch
+    * @param batchId the NPSP Data Import batch to be analyzed
+    * @param countRecords the number of records that will be analyzed
+    */
     public BDI_PerfLogger(ID batchId, Integer countRecords) {
-        tmStart = System.now().getTime();
+        super(countRecords);
         this.batchId = batchId;
-        this.countRecords = countRecords;
-        mapPerfLogByLabel = new Map<String, PerfLog>();
     }
 
-    public void stop() {
-        tmEnd = System.now().getTime();
+    /*******************************************************************************************************
+    * @description override-able factory for create a new PerfLog class, thus allowing us to create a new
+    * BDI_PerfLogger.PerfLog
+    * @return UTIL_PerfLogger.PerfLog, a newly constructed PerfLog (BDI subclass)
+    */
+    public override UTIL_PerfLogger.PerfLog perfLogFactory() {
+        return new PerfLog();
     }
 
+    /*******************************************************************************************************
+    * @description creates or updates an existing METHOD PerfLog for the supplied label, and starts its timer.
+    * @param label the label for the new PerfLog (typically a method name)
+    * @return PerfLog, a new or updated PerfLog
+    */
     public PerfLog newPerfLog(String label) {
         return newPerfLog(label, METHOD);
     }
 
+    /*******************************************************************************************************
+    * @description creates or updates an existing PerfLog for the supplied label, and starts its timer.
+    * @param label the label for the new PerfLog (typically a method name)
+    * @param logType the type of Log, either METHOD or QUERY
+    * @return PerfLog, a new or updated PerfLog
+    */
     public PerfLog newPerfLog(String label, String logType) {
-        // see if we already have a log for this label
-        PerfLog pl = mapPerfLogByLabel.get(label);
-        if (pl == null) {
-            pl = new PerfLog('BDI', batchId, label, logType, countRecords);
-            mapPerfLogByLabel.put(label, pl);
+        Perflog pl = (PerfLog)super.newPerfLog('BDI', label, logType);
+        SObject sobj = pl.getPerfLogSObject();
+        if (sobj != null) {
+            sobj.put('BDI_Batch__c', batchId);
         }
-        pl.start();
         return pl;
     }
 
-    public void save() {
-        Long duration = tmEnd - tmStart;
-        List<PerfLog__c> listPL = new list<PerfLog__c>();
-        for (PerfLog pl : mapPerfLogByLabel.values()) {
-            listPL.add(pl.prepare(duration));
-        }
+    /*******************************************************************************************************
+    * @description BDI's subclass of a specific PerfLog record.  while this subclass adds no additional
+    * members or methods, it allows BDI code to use a BDI_PerfLogger, and not know or care about the
+    * superclass UTIL_PerfLogger.
+    */
+    public with sharing class PerfLog extends UTIL_PerfLogger.PerfLog {
 
-        insert listPL;
-    }
-
-    public with sharing class PerfLog {
-
-        private PerfLog__c pl;
-        private Long tmStart;
-        private Long tmEnd;
-        private Integer countCalls;
-        private long duration;
-        private Long durationParent;
-
-        PerfLog(String component, ID batchId, String label, String logType, Integer countRecords) {
-            pl = new PerfLog__c();
-            pl.Component__c = component;
-            pl.BDI_Batch__c = batchId;
-            pl.label__c = label;
-            pl.Log_Type__c = logType;
-            pl.Number_of_Records__c = countRecords;
-            countCalls = 0;
-            duration = 0;
-        }
-
-        public void start() {
-            tmStart = System.now().getTime();
-            countCalls++;
-        }
-        public void stop() {
-            tmEnd = System.now().getTime();
-            duration += tmEnd - tmStart;
-        }
-
-        public PerfLog__c prepare(Long durationParent) {
-            if (tmEnd == null) {
-                stop();
-            }
-            pl.Duration__c = duration;
-            pl.Number_of_Calls__c = countCalls;
-            pl.Parent_Duration__c = durationParent;
-            return pl;
+        /*******************************************************************************************************
+        * @description constructor
+        */
+        public PerfLog() {
+            super();
         }
     }
-
-
 }
