@@ -122,6 +122,16 @@
                     <label>Does Not Contain</label>
                 </value>
                 <value>
+                    <fullName>In List</fullName>
+                    <default>false</default>
+                    <label>In List</label>
+                </value>
+                <value>
+                    <fullName>Not In List</fullName>
+                    <default>false</default>
+                    <label>Not In List</label>
+                </value>
+                <value>
                     <fullName>Is Included</fullName>
                     <default>false</default>
                     <label>Is Included</label>

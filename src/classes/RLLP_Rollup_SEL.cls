@@ -46,12 +46,13 @@ public class RLLP_Rollup_SEL {
         get {
             if (cachedRollups == null) {
                 cachedRollups = [
-                        SELECT Id, DeveloperName, MasterLabel, Active__c,
+                        SELECT Id, DeveloperName, MasterLabel, Active__c, Use_Fiscal_Year__c,
                                 Description__c, Filter_Group__c, Filter_Group__r.MasterLabel, Operation__c, Integer__c,
                                 Amount_Field__r.QualifiedApiName, Amount_Object__r.QualifiedApiName,
                                 Attribution_Field__r.QualifiedApiName, Attribution_Object__r.QualifiedApiName,
                                 Date_Field__r.QualifiedApiName, Date_Object__r.QualifiedApiName,
                                 Detail_Field__r.QualifiedApiName, Detail_Object__r.QualifiedApiName,
+                                Result_Field__r.QualifiedApiName, Result_Object__r.QualifiedApiName,
                                 Summary_Field__r.QualifiedApiName, Summary_Object__r.QualifiedApiName
                         FROM Rollup__mdt
                         ORDER BY Summary_Object__c];

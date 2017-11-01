@@ -28,11 +28,11 @@
         <label>New Section</label>
         <layoutColumns>
             <layoutItems>
-                <behavior>Edit</behavior>
+                <behavior>Required</behavior>
                 <field>Operation__c</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Edit</behavior>
+                <behavior>Required</behavior>
                 <field>Filter_Group__c</field>
             </layoutItems>
         </layoutColumns>
@@ -40,6 +40,10 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Integer__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Use_Fiscal_Year__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
@@ -55,11 +59,11 @@
         <label>Rollup Details</label>
         <layoutColumns>
             <layoutItems>
-                <behavior>Edit</behavior>
+                <behavior>Required</behavior>
                 <field>Summary_Object__c</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Edit</behavior>
+                <behavior>Required</behavior>
                 <field>Detail_Object__c</field>
             </layoutItems>
             <layoutItems>
@@ -74,14 +78,18 @@
                 <behavior>Edit</behavior>
                 <field>Date_Object__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Result_Object__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
-                <behavior>Edit</behavior>
+                <behavior>Required</behavior>
                 <field>Summary_Field__c</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Edit</behavior>
+                <behavior>Required</behavior>
                 <field>Detail_Field__c</field>
             </layoutItems>
             <layoutItems>
@@ -95,6 +103,10 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Date_Field__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Result_Field__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>

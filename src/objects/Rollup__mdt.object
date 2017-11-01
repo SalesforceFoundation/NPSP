@@ -131,6 +131,7 @@
     </fields>
     <fields>
         <fullName>Integer__c</fullName>
+        <description>Integer value to indicate how many years ago or days back to roll-up for</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
         <label>Integer</label>
@@ -200,6 +201,33 @@
         </valueSet>
     </fields>
     <fields>
+        <fullName>Result_Field__c</fullName>
+        <description>In cases where a roll-up returns a &quot;Single Result&quot;, such as the Max CloseDate or Maximum Donation Amount, or even a specific OpportunityId - this represents the field from the Detail object to use to retrieve that value from. It will generally match the field type of the Summary Field (i.e., where the value will be stored)</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <label>Result Field</label>
+        <metadataRelationshipControllingField>Rollup__mdt.Result_Object__c</metadataRelationshipControllingField>
+        <referenceTo>FieldDefinition</referenceTo>
+        <relationshipLabel>Rollups3</relationshipLabel>
+        <relationshipName>Rollups3</relationshipName>
+        <required>false</required>
+        <type>MetadataRelationship</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Result_Object__c</fullName>
+        <description>In cases where a roll-up returns a &quot;Single Result&quot;, such as the Max CloseDate or Maximum Donation Amount, or even a specific OpportunityId - this represents the field from the Detail object to use to retrieve that value from. It will generally match the field type of the Summary Field (i.e., where the value will be stored)</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <label>Result Object</label>
+        <referenceTo>EntityDefinition</referenceTo>
+        <relationshipLabel>Rollups5</relationshipLabel>
+        <relationshipName>Rollups5</relationshipName>
+        <required>false</required>
+        <type>MetadataRelationship</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Summary_Field__c</fullName>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
@@ -223,6 +251,15 @@
         <required>false</required>
         <type>MetadataRelationship</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Use_Fiscal_Year__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Checkbox to indicate that Fiscal Year is to be used instead of Calendar year</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <label>Use Fiscal Year</label>
+        <type>Checkbox</type>
     </fields>
     <label>Rollup</label>
     <pluralLabel>Rollups</pluralLabel>

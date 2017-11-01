@@ -79,17 +79,28 @@
         // Get the main SOQL statement and parse out the FROM portion
         String mainSoql = getResultsQuery(detailObject).split(' FROM ')[0];
 
-        // Get the query for each child object, change the FROM object to the relationship name, and append to the main query
-        for (SObjectType obj : childObjects) {
-            String relationshipName;
-            for (ChildRelationship cr : detailObject.getDescribe().getChildRelationships()) {
-                if (cr.childSObject == obj) {
-                    relationshipName = cr.getRelationshipName();
+        if (detailObject != OpportunityContactRole.SObjectType && detailObject != npe01__OppPayment__c.SObjectType) {
+            // Get the query for each child object, change the FROM object to the relationship name, and append to the main query
+            for (SObjectType obj : childObjects) {
+                String relationshipName;
+                for (ChildRelationship cr : detailObject.getDescribe().getChildRelationships()) {
+                    if (cr.childSObject == obj) {
+                        relationshipName = cr.getRelationshipName();
+                    }
+                }
+                if (relationshipName != null) {
+                    String childSoql = getResultsQuery(obj).split(' FROM ')[0];
+                    mainSoql += ', (' + childSoql + ' FROM ' + relationshipName + ')';
                 }
             }
-            if (relationshipName != null) {
-                String childSoql = getResultsQuery(obj).split(' FROM ')[0];
-                mainSoql += ', (' + childSoql + ' FROM ' + relationshipName + ')';
+
+        } else {
+            // If the detailObject is OCR or Payment, then rather than include a sub-query for the child objets
+            // we'll include foreignkey references to the Opportunity object
+
+            String oppParentField = (detailObject == OpportunityContactRole.SObjectType ? 'Opportunity' : 'npe01__Opportunity__r');
+            for (Schema.DescribeFieldResult oppField : CMT_FilterRule_SEL.getReferencedFieldsByObject(Opportunity.SObjectType)) {
+                mainSoql += ',' + oppParentField + '.' + oppField.getName();
             }
         }
 
