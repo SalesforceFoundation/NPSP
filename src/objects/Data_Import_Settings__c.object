@@ -129,6 +129,15 @@
         <type>Text</type>
         <unique>false</unique>
     </fields>
+    <fields>
+        <fullName>Run_Opportunity_Rollups_while_Processing__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>When checked, NPSP will update donor statistics when donations are processed.  If unchecked, NPSP will defer this slower operation until the nightly rollup batches run.</inlineHelpText>
+        <label>Run Opportunity Rollups while Processing</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
     <label>Data Import Settings</label>
     <visibility>Public</visibility>
 </CustomObject>

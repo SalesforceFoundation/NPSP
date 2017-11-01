@@ -116,6 +116,7 @@ global with sharing class BDI_DataImportService {
             Donation_Matching_Implementing_Class__c = diBatch.Donation_Matching_Implementing_Class__c,
             Donation_Matching_Rule__c = diBatch.Donation_Matching_Rule__c,
             Donation_Date_Range__c = diBatch.Donation_Date_Range__c,
+            Run_Opportunity_Rollups_while_Processing__c = diBatch.Run_Opportunity_Rollups_while_Processing__c,
             Post_Process_Implementing_Class__c = diBatch.Post_Process_Implementing_Class__c
         );
     }
@@ -135,6 +136,7 @@ global with sharing class BDI_DataImportService {
             Donation_Matching_Implementing_Class__c = diSettings.Donation_Matching_Implementing_Class__c,
             Donation_Matching_Rule__c = diSettings.Donation_Matching_Rule__c,
             Donation_Date_Range__c = diSettings.Donation_Date_Range__c,
+            Run_Opportunity_Rollups_while_Processing__c = diSettings.Run_Opportunity_Rollups_while_Processing__c,
             Post_Process_Implementing_Class__c = diSettings.Post_Process_Implementing_Class__c
         );
     }
@@ -669,20 +671,20 @@ global with sharing class BDI_DataImportService {
     }
 
     /*******************************************************************************************************
-    * @description disables the Opportunity trigger handler that invokes rollups
+    * @description disables the Opportunity trigger handler that invokes rollups (unless settings say
+    * otherwise!)
     * @return void
     */
     private void disableAllOppRollups() {
-        List<Trigger_Handler__c> handlers = TDTM_Config_API.getCachedRecords();
-        for (Trigger_Handler__c th : handlers) {
-            if (th.Object__c == 'Opportunity' && th.Class__c == 'RLLP_OppRollup_TDTM') {
-                th.Active__c = false;
+        if (!diSettings.Run_Opportunity_Rollups_while_Processing__c) {
+            List<Trigger_Handler__c> handlers = TDTM_Config_API.getCachedRecords();
+            for (Trigger_Handler__c th : handlers) {
+                if (th.Object__c == 'Opportunity' && th.Class__c == 'RLLP_OppRollup_TDTM') {
+                    th.Active__c = false;
+                }
             }
         }
     }
-
-    //********************************************* CONTACTS & HOUSEHOLDS ************************************************
-
 
     /*******************************************************************************************************
     * @description Imports any custom fields specified for Household Accounts
