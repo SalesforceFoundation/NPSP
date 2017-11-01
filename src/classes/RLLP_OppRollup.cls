@@ -52,11 +52,6 @@ public without sharing class RLLP_OppRollup {
     * @return void This method does updates directly and returns nothing.
     ********************************************************************************************************/
     public void rollupForOppTrigger( map<id, Opportunity> newOpps, map<id, Opportunity> oldOpps ) {
-        BDI_PerfLogger.PerfLog pl;
-        if (BDI_DataImportService.perfLogger != null) {
-            pl = BDI_DataImportService.perfLogger.newPerfLog('rollupForOppTrigger', BDI_PerfLogger.METHOD);
-        }
-
         //opp ids for contact/hh querying
         set<id> contactRequerySet = new set<id>();        
         //opp ids for Account querying
@@ -114,9 +109,7 @@ public without sharing class RLLP_OppRollup {
             else        	
                 RLLP_OppRollup.rollupContactsandHouseholdsForTriggerFuture(contactRequerySet);                        
         }
-
-        if (pl != null) pl.stop();
-    }       
+    }
     
     /*******************************************************************************************************
     * @description Future wrapper method for updating contacts and households from a set of opportunity IDs.
