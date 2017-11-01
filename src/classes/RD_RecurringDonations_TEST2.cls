@@ -1015,7 +1015,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
 
 
         test.startTest();
-        Test.testInstall(new STG_InstallScript(), new Version(3,39), true);
+        Test.testInstall(new STG_InstallScript(), null, true);
         test.stopTest();
 
         queryopp = [SELECT Id, Recurring_Donation_Installment_Number__c FROM Opportunity ORDER BY CloseDate];
