@@ -52,7 +52,7 @@ Runs from a custom button on the Campaign record. Supports both the Classic and 
         <language>en_US</language>
     </filter>
     <format>Tabular</format>
-    <name>NPSP Campaign Household Mailing List</name>
+    <name>NPSP Campaign Household Mailing List V2</name>
     <params>
         <name>scopeid</name>
         <value></value>
