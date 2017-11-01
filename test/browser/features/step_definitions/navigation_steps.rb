@@ -189,13 +189,7 @@ end
 Given(/^I login the first time with oauth$/) do
   on(LoginPage) do |page|
     page.app_switcher_element.when_present.click
-    begin
-      #CLICKS NPSP AFTER A FRESH INSTALL
-      #DO NOT FAIL THE TEST IF NPSP IS ALREADY SELECTED
-      page.npsp_app_picker_element.when_present.click
-    rescue
-    end
-    page.app_switcher_element.when_present.click
+    page.npsp_app_picker_element.when_present.click
   end
 end
 
