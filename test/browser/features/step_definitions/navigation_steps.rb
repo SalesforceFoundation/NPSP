@@ -101,10 +101,6 @@ Given(/^I navigate to Relationship Viewer for the Primary Contact$/) do
   @browser.goto($target_org_url + '/apex/REL_RelationshipsViewer?id=' + @array_of_contacts[0])
 end
 
-Given(/^I navigate to the Account Conversions page$/) do
-  @browser.goto($target_org_url + "/apex/#{$object_namespace}CONV_Account_Conversion")
-end
-
 Given(/^I navigate to Recurring Donations Recurring Donations$/) do
   on(NPSPSettingsPage) do |page|
     page.recurring_donations_element.when_present(10).click
