@@ -162,7 +162,7 @@ global class CONV_Account_Conversion_BATCH implements Database.Batchable<SObject
                 hh2Account.put(hh.id, a);
             }
 
-            Database.insert(hh2Account.values(), true);
+            UTIL_DMLService.insertRecords(hh2Account.values(), true);
 
             //save the contact giving amount to determine the primary contact
             Map<Id, Double> conGiving = new Map<Id, Double>();
@@ -241,8 +241,8 @@ global class CONV_Account_Conversion_BATCH implements Database.Batchable<SObject
                 a.Number_of_Household_Members__c = hhMemberCount.get(a.Id);
             }
 
-            Database.update(consForUpdate, true);
-            Database.update(hh2Account.values(), true);
+            UTIL_DMLService.updateRecords(consForUpdate, true);
+            UTIL_DMLService.updateRecords(hh2Account.values(), true);
 
             /***************************************************************/
             /** Porting all existing opportunities to the new hh accounts **/
@@ -256,7 +256,7 @@ global class CONV_Account_Conversion_BATCH implements Database.Batchable<SObject
                 oppsForUpdate.add(o);
             }
             if (!oppsForUpdate.isEmpty())
-                Database.update(oppsForUpdate, true);
+                UTIL_DMLService.updateRecords(oppsForUpdate, true);
 
             /******************************************************************************/
             /** Moving any activities and tasks from the Household object to the Account **/
@@ -268,7 +268,7 @@ global class CONV_Account_Conversion_BATCH implements Database.Batchable<SObject
             for (Task t : tasksForUpdate)
                 t.WhatId = hh2Account.get(t.WhatId).Id;
 
-            Database.update(tasksForUpdate, true);
+            UTIL_DMLService.updateRecords(tasksForUpdate, true);
 
             /**********************************************************************/
             /** Address Mapping from existing Contacts to new Household Accounts **/
@@ -501,9 +501,9 @@ global class CONV_Account_Conversion_BATCH implements Database.Batchable<SObject
             }//close for hh account addresses disabled
             
 
-            if (consForUpdate.size() > 0) Database.update(consForUpdate, true);
-            if (addressesForInsert.values().size() > 0) Database.insert(addressesForInsert.values(), true);
-            if (hhAccountsForUpdate.size() > 0) Database.update(hhAccountsForUpdate, true);
+            if (consForUpdate.size() > 0) UTIL_DMLService.updateRecords(consForUpdate, true);
+            if (addressesForInsert.values().size() > 0) UTIL_DMLService.insertRecords(addressesForInsert.values(), true);
+            if (hhAccountsForUpdate.size() > 0) UTIL_DMLService.updateRecords(hhAccountsForUpdate, true);
 
             consForUpdate.clear();
             hhAccountsForUpdate.clear();
@@ -552,8 +552,8 @@ global class CONV_Account_Conversion_BATCH implements Database.Batchable<SObject
             }
 
             //update the contacts with the correct address lookup
-            if (consForUpdate.size() > 0) Database.update(consForUpdate, true);
-            if (hhAccountsForUpdate.size() > 0) Database.update(hhAccountsForUpdate, true);
+            if (consForUpdate.size() > 0) UTIL_DMLService.updateRecords(consForUpdate, true);
+            if (hhAccountsForUpdate.size() > 0) UTIL_DMLService.updateRecords(hhAccountsForUpdate, true);
 
         //rollback the entire transaction on any failure, DML or otherwise
         }catch (Exception e){

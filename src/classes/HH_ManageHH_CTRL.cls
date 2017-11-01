@@ -116,12 +116,12 @@ public with sharing class HH_ManageHH_CTRL {
         if (hhId == null) {
             hh = new npo02__Household__c();
             hh.put('Name', Label.npo02.DefaultHouseholdName);    // name will get fixed up when we update the contact
-            insert hh;
+            UTIL_DMLService.insertRecord(hh, true);
             hhId = hh.Id;
             
             if (contactId != null) {
                 Contact con = new Contact(Id = contactId, npo02__Household__c = hhId);
-                update con;
+                UTIL_DMLService.updateRecord(con, true);
             }
         }
         return null;
@@ -164,7 +164,7 @@ public with sharing class HH_ManageHH_CTRL {
     */
     public PageReference save() {
         try {
-            update hh;
+            UTIL_DMLService.updateRecord(hh, true);
         } catch (Exception ex) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, ex.getMessage()));
         }        

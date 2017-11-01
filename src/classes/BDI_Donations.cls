@@ -184,7 +184,7 @@ public class BDI_Donations {
         }
         
         // insert our new Opps
-        list<Database.SaveResult> listSR = database.insert(listOppInsert, false);
+        list<Database.SaveResult> listSR = UTIL_DMLService.insertRecords(listOppInsert, false);
         for (integer i = 0; i < listSR.size(); i++) {
             Database.SaveResult sr = listSR[i];
             if (!sr.isSuccess()) {

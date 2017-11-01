@@ -726,9 +726,7 @@ public with sharing class CON_ContactMerge_CTRL {
             
             System.SavePoint sp = Database.setSavepoint();
             try {
-                Database.DMLOptions dml = new Database.DMLOptions();
-                dml.DuplicateRuleHeader.AllowSave = true;
-                Database.SaveResult sr = Database.update(master, dml);
+                Database.SaveResult sr = UTIL_DMLService.updateRecord(master);
                 if (!sr.isSuccess()) {
                     string strErr = label.npe01.Contact_Merge_Error_Merge_Failed + ' Error: ';
                     for (Database.Error err : sr.getErrors()) {

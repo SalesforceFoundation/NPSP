@@ -116,7 +116,7 @@ public with sharing class BDE_BatchEntry_CTRL {
         //no defaults yet loaded, create one
         if (bdec == null){
             bdec = new Batch_Data_Entry_Settings__c();
-            insert bdec;
+            UTIL_DMLService.insertRecord(bdec, true);
         }     
         
         BDE_BatchDataEntry bde = new BDE_BatchDataEntry(objname);                
@@ -372,7 +372,7 @@ public with sharing class BDE_BatchEntry_CTRL {
                         currentItem.sobj.put('Name', currentItem.createName());
                 }
                 
-                update currentItem.sobj;
+                UTIL_DMLService.updateRecord(currentItem.sobj, true);
             } else {         
                     if(currentItem.sobj.getSObjectType() == Opportunity.Sobjecttype){
                         currentItem.sobj.put('npe01__Contact_ID_for_Role__c', currentItem.npspocr.ContactID);
@@ -392,10 +392,10 @@ public with sharing class BDE_BatchEntry_CTRL {
                             //if (!test.isRunningTest())  DJH: OK to assume Opportunity has batch__c
                                 currentItem.sobj.put(batchLookupField, batch.Id);
                             
-                            insert currentItem.sobj;                                
+                            UTIL_DMLService.insertRecord(currentItem.sobj, true);
                     }
                     else {
-                            insert currentItem.sobj; 
+                            UTIL_DMLService.insertRecord(currentItem.sobj, true);
                             itemList.add(0, currentItem);
                     }                        
             }

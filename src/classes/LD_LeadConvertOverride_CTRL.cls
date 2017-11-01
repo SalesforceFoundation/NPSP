@@ -424,9 +424,9 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                     ID rtIdAcccount = ACCT_IndividualAccounts_TDTM.rtIdForNewAccount();
                     if (rtIdAcccount != null) 
                         myAccount.put('RecordTypeID', rtIdAcccount);
-                    myAccount.npe01__SYSTEMISINDIVIDUAL__c = true;
-                    myAccount.npe01__One2OneContact__c = con.Id;
-                    update myAccount;
+                        myAccount.npe01__SYSTEMISINDIVIDUAL__c = true;
+                        myAccount.npe01__One2OneContact__c = con.Id;
+                        UTIL_DMLService.updateRecord(myAccount, true);
                     }
 
 	            // see if we need to create a household object for this contact (1:1 & bucket only)
@@ -434,7 +434,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 	                if (hs.npo02__Household_Rules__c == HH_Households.ALL_PROCESSOR || 
 	                   hs.npo02__Household_Rules__c == HH_Households.ALL_INDIVIDUALS_PROCESSOR) {
 	                    HH_Households_TDTM.insertHousehold(new list<Contact>{con}, true, null);
-	                    update con;
+	                    UTIL_DMLService.updateRecord(con, true);
 	                }
 	            }
 	            
@@ -446,7 +446,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 		            addr.Latest_Start_Date__c = system.today();
 		            addr.Latest_End_Date__c = null;
 		            ADDR_Addresses_TDTM.copyAddressStdSObjAddr(con, 'Mailing', addr, null);
-		            insert addr;         
+		            UTIL_DMLService.insertRecord(addr, true);
 	            }
             }
 
@@ -476,7 +476,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                     OpportunityContactRole ocr = ocrList[0];
                     ocr.IsPrimary = true;
                     ocr.Role = ContactsSettings.npe01__Opportunity_Contact_Role_Default_role__c; 
-                    update ocr;
+                    UTIL_DMLService.updateRecord(ocr, true);
                 }
 
 	        }
@@ -500,7 +500,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 );
                 //copy address from temporary address__c record, handles state and country picklists if enabled
                 ADDR_Addresses_TDTM.copyAddressAddrSObj(tempAddr,acc,'Billing',null);
-                update acc;
+                UTIL_DMLService.updateRecord(acc, true);
             }   
             // handle the optional Affiliation to a new or existing Account.
             ID afflAccId = null;
@@ -510,7 +510,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 );
                 //copy address from temporary address__c record, handles state and country picklists if enabled
                 ADDR_Addresses_TDTM.copyAddressAddrSObj(tempAddr,acc,'Billing',null);
-                insert acc;
+                UTIL_DMLService.insertRecord(acc, true);
                 afflAccId = acc.Id;
             } else if (strAfflAccountId != null && strAfflAccountId != '') {
             	afflAccId = strAfflAccountId;
@@ -534,13 +534,14 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             	}
                 String oppName = convertedOpp.Name;
 
-            	update convertedOpp;
+                UTIL_DMLService.updateRecord(convertedOpp, true);
 
                 // refresh opportunity names after update. if no opportunity names are defined, keeps original name
                 OPP_OpportunityNaming.refreshOppNames(new List<Opportunity>{convertedOpp});
                 // update Opportunity again if refreshed name is different
-                if (convertedOpp.Name != oppName)
-                    update convertedOpp;
+                if (convertedOpp.Name != oppName) {
+                    UTIL_DMLService.updateRecord(convertedOpp, true);
+                }
             }
             
 	        // redirect

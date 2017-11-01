@@ -479,7 +479,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             individual.npe01__SYSTEMISINDIVIDUAL__c = true;
             //individual.Type = CAO_Constants.BUCKET_ORGANIZATION_TYPE;
             individual.npe01__SYSTEM_AccountType__c = CAO_Constants.BUCKET_ORGANIZATION_TYPE;
-            insert individual;
+            UTIL_DMLService.insertRecord(individual, true);
 
             for(Contact c : contacts)
             {
@@ -587,7 +587,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             // because we need to get the new AccountID's into the Contacts.
 
             // identify the specific records that had the problem, and don't fail the whole batch
-            List<Database.SaveResult> insertResults = Database.insert(accountInserts, false);
+            List<Database.SaveResult> insertResults = UTIL_DMLService.insertRecords(accountInserts, false);
             for (integer i = 0; i < insertResults.size(); i++) {
                 Database.SaveResult sr = insertResults[i];
                 if (!sr.isSuccess()) {
@@ -787,7 +787,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         if (listOpp.size() > 0) {
             // since our rollup code isn't using dmlWrapper, some callers want us to commit now
             if (dmlWrapper == null)
-                update listOpp;
+                UTIL_DMLService.updateRecords(listOpp, true);
             else
                 dmlWrapper.objectsToUpdate.addAll((list<SObject>)listOpp);
         }
