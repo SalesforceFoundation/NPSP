@@ -1,7 +1,7 @@
 class NPSPBDEPage
   include PageObject
 
-  text_field(:batch_name, index: 1)
+  text_field(:batch_name, id: 'j_id0:j_id18:j_id19:j_id21:j_id22:0:j_id23')
   text_field(:company, class: 'sticky-Company')
   span(:company_pin_button, class: 'ui-button-text', text: 'Toggle', index: 1)
   select_list(:data_type_select, name: /objectSelect/)

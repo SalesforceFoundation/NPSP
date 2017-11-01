@@ -31,7 +31,7 @@ Then(/^Batch Name should contain "([^"]*)"$/) do |batch_type|
       page.new_batch_button_element.exist? == false
       page.batch_name_element.visible? == true
     end
-  expect(page.batch_name).to match batch_type
+  expect(page.batch_name).to include batch_type
   end
 end
 
