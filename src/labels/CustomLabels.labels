@@ -3060,7 +3060,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>hhCmpDedupeNoReport</shortDescription>
-        <value>Could not find report. Create a report with the Report Unique Name of  &apos;NPSP_Campaign_Household_Mailing_List&apos;. NOTE: Report type should be Campaigns with Contacts. Filter for Member Status does not contain &apos;Duplicate&apos;.</value>
+        <value>Could not find the report. Create a report and save it with the Report Unique Name of &apos;NPSP_Campaign_Household_Mailing_List_V2&apos;. Use the Campaigns with Contacts report type and add filters for CampaignId equals blank and Member Status does not contain &apos;Duplicate&apos;.</value>
     </labels>
     <labels>
         <fullName>hhCmpDedupeStatus</fullName>
@@ -4785,7 +4785,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHHMailingListReport</shortDescription>
-        <value>The Household Mailing List Report deduplicates a Campaign that contains multiple Contacts from the same household in order to help prevent sending multiples of the same mailing to the same address. NPSP includes a report you can select called &quot;NPSP Campaign Household Mailing List.&quot; If that report has been renamed or deleted, select a report that uses the Campaigns with Contacts report type, with a filter for: Member Status does not contain &quot;Duplicate&quot;.</value>
+        <value>The Household Mailing List Report deduplicates a Campaign that contains multiple Contacts from the same household in order to help prevent sending multiples of the same mailing to the same address. NPSP includes a report you can select called &quot;NPSP Campaign Household Mailing List V2.&quot; If that report has been renamed or deleted, select a report that uses the Campaigns with Contacts report type, with a filter for: Member Status does not contain &quot;Duplicate&quot;.</value>
     </labels>
     <labels>
         <fullName>stgHelpHHNameFormat</fullName>
