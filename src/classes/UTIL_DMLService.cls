@@ -299,8 +299,6 @@ public with sharing class UTIL_DMLService {
     * @return Boolean
     **********************************************************************************************************/
     private static Boolean retrieveRespectDuplicateRuleSettings() {
-        System.debug('>>>> UTIL_CustomSettingsFacade.getErrorSettings(): ' + UTIL_CustomSettingsFacade.getErrorSettings());
-        System.debug('>>>> UTIL_CustomSettingsFacade.getErrorSettings().Respect_Duplicate_Rule_Settings__c: ' + UTIL_CustomSettingsFacade.getErrorSettings().Respect_Duplicate_Rule_Settings__c);
         return UTIL_CustomSettingsFacade.getErrorSettings().Respect_Duplicate_Rule_Settings__c;
     }    
 
