@@ -328,7 +328,12 @@ public with sharing virtual class STG_Panel {
             if (listSOMailingReportIds == null) {
                 listSOMailingReportIds = new list<SelectOption>();
                 listSOMailingReportIds.add(new SelectOption('', Label.stgLabelNone));
-                for (Report rpt : [select Id, Name from Report where Name like '%mail%']) {
+                for (Report rpt : [SELECT Id, Name, DeveloperName, NamespacePrefix FROM Report WHERE Name LIKE '%mail%']) {
+                    if (rpt.NamespacePrefix == 'npo02' && rpt.DeveloperName == 'NPSP_Campaign_Household_Mailing_List') {
+                        // The original report included in the Households package is no longer compatible with
+                        // the Household Mailing List button so exclude it from this picklist.
+                        continue;
+                    }
                     listSOMailingReportIds.add(new SelectOption(rpt.Id, rpt.Name));
                 }
             }
