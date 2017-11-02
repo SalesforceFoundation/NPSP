@@ -32,6 +32,7 @@
 
                 <apex:commandButton value="{!$Label.DeleteAccount}" id="delAccountBtn"
                     action="{!deleteAccount}" 
+                    rendered="{!NOT(shouldDeleteContactAlone)}" 
                     rerender="delForm"
                     styleClass="slds-button slds-button_brand"
                 />
