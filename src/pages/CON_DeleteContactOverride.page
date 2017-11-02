@@ -44,11 +44,9 @@
                     var sforceNav = '{!sforceNav}';
                     if (sforceNav === 'back') {
                         sforce.one.back(true);
-                    } else if (sforceNav === 'home') {
+                    } else {
                         sforce.one.navigateToURL('one.app#/sObject/Contact/home', true);
-                    } else {                  
-                        sforce.one.navigateToSObject(sforceNav);
-                    }
+                    } 
                 })();
             </script>
         </apex:outputPanel>
