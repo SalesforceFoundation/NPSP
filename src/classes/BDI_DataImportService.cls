@@ -47,15 +47,15 @@ global with sharing class BDI_DataImportService {
     }
 
     /*******************************************************************************************************
-    * @description constructs the soql string to run a Data Import process with or without a Batch.
+    * @description constructs the soql String to run a Data Import process with or without a Batch.
     * @param batchId an optional DataImportBatch to scope the records to
-    * @return String the soql string
+    * @return String the soql String
     */
     public static String strSoqlForBatchProcess(ID batchId) {
         String strSoql;
 
         // construct or SOQL for the batch
-        strSoql = 'SELECT ' + string.join(listStrDataImportFields, ',');
+        strSoql = 'SELECT ' + String.join(listStrDataImportFields, ',');
         strSoql += ' FROM ' + UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
         strSoql += ' WHERE Status__c <> \'' + label.bdiImported + '\' ';
 
@@ -77,11 +77,11 @@ global with sharing class BDI_DataImportService {
     */
     private static DataImportBatch__c loadBatch(ID batchId) {
 
-        list<DataImportBatch__c> listDIBatch = BDI_DataImportBatch_SEL.selectByIds(new Set<Id>{batchId});
+        List<DataImportBatch__c> listDIBatch = BDI_DataImportBatch_SEL.selectByIds(new Set<Id>{batchId});
         if (listDIBatch.size() == 1) {
             return listDIBatch[0];
         } else {
-            throw(new BDIException(string.format(Label.bdiInvalidBatchId, new string[]{batchId})));
+            throw(new BDIException(String.format(Label.bdiInvalidBatchId, new String[]{batchId})));
         }
     }
 
@@ -162,8 +162,8 @@ global with sharing class BDI_DataImportService {
     */
     public static void validateSettings(Data_Import_Settings__c diSettings) {
 
-        string strSettingsObj = UTIL_Namespace.StrTokenNSPrefix('Data_Import_Settings__c');
-        string strDataImportObj = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
+        String strSettingsObj = UTIL_Namespace.StrTokenNSPrefix('Data_Import_Settings__c');
+        String strDataImportObj = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
 
         // validate matching rules
         if (diSettings.Donation_Matching_Behavior__c != null &&
@@ -175,13 +175,13 @@ global with sharing class BDI_DataImportService {
         // validate Batch Process Size
         if (diSettings.Batch_Size__c == null || diSettings.Batch_Size__c < 0) {
             throw(new BDIException(String.format(Label.bdiPositiveNumber,
-                new list<String>{UTIL_Describe.getFieldLabelSafe(strSettingsObj, UTIL_Namespace.StrTokenNSPrefix('Batch_Size__c'))})));
+                new List<String>{UTIL_Describe.getFieldLabelSafe(strSettingsObj, UTIL_Namespace.StrTokenNSPrefix('Batch_Size__c'))})));
         }
 
         // validate Donation Date Range
         if (diSettings.Donation_Date_Range__c < 0) {
-            throw(new BDIException(string.format(Label.bdiPositiveNumber,
-                new list<String>{UTIL_Describe.getFieldLabelSafe(strSettingsObj, UTIL_Namespace.StrTokenNSPrefix('Donation_Date_Range__c'))})));
+            throw(new BDIException(String.format(Label.bdiPositiveNumber,
+                new List<String>{UTIL_Describe.getFieldLabelSafe(strSettingsObj, UTIL_Namespace.StrTokenNSPrefix('Donation_Date_Range__c'))})));
         }
 
         // validate donation implementing class by instantiating it
@@ -197,30 +197,30 @@ global with sharing class BDI_DataImportService {
         // validate settings
         if (diSettings.Contact_Custom_Unique_ID__c != null) {
             // make sure c1 and c2 have the appropriately named field
-            string strContact1 = strDIContactCustomIDField('Contact1', diSettings);
-            string strContact2 = strDIContactCustomIDField('Contact2', diSettings);
+            String strContact1 = strDIContactCustomIDField('Contact1', diSettings);
+            String strContact2 = strDIContactCustomIDField('Contact2', diSettings);
 
             if (!UTIL_Describe.isValidField(strDataImportObj, strContact1) ||
                 !UTIL_Describe.isValidField(strDataImportObj, strContact2)) {
-                throw(new BDIException(string.format(Label.bdiContactCustomIdError,
-                    new string[]{diSettings.Contact_Custom_Unique_ID__c, strContact1, strContact2})));
+                throw(new BDIException(String.format(Label.bdiContactCustomIdError,
+                    new String[]{diSettings.Contact_Custom_Unique_ID__c, strContact1, strContact2})));
             }
         }
 
         if (diSettings.Account_Custom_Unique_ID__c != null) {
             // make sure a1 and a2 have the appropriately named field
-            string strAccount1 = strDIAccountCustomIDField('Account1', diSettings);
-            string strAccount2 = strDIAccountCustomIDField('Account2', diSettings);
+            String strAccount1 = strDIAccountCustomIDField('Account1', diSettings);
+            String strAccount2 = strDIAccountCustomIDField('Account2', diSettings);
 
             if (!UTIL_Describe.isValidField(strDataImportObj, strAccount1) ||
                 !UTIL_Describe.isValidField(strDataImportObj, strAccount2)) {
-                throw(new BDIException(string.format(Label.bdiAccountCustomIdError,
-                    new string[]{diSettings.Account_Custom_Unique_ID__c, strAccount1, strAccount2})));
+                throw(new BDIException(String.format(Label.bdiAccountCustomIdError,
+                    new String[]{diSettings.Account_Custom_Unique_ID__c, strAccount1, strAccount2})));
             }
         }
 
         // make sure they have specified a valid Donation Matching Behavior
-        set<String> setDMBehavior = new set<String> {
+        Set<String> setDMBehavior = new Set<String> {
             BDI_DataImport_API.DoNotMatch,
             BDI_DataImport_API.RequireNoMatch,
             BDI_DataImport_API.RequireExactMatch,
@@ -268,15 +268,15 @@ global with sharing class BDI_DataImportService {
     * @description maps to keep track of the objects we will create.
     * all are indexed by the object's matching key or the di.Id
     */
-    //public map<string, Contact> mapDIKeyToContact = new map<string, Contact>();
-    public map<string, Account> mapDIKeyToAccount = new map<string, Account>();
-    private map<Id, Address__c> mapDIIdToAddr = new map<Id, Address__c>();
-    public map<string, Id> mapStrNameToCampaignId = new map<string, Id>();
+    //public Map<String, Contact> mapDIKeyToContact = new Map<String, Contact>();
+    public Map<String, Account> mapDIKeyToAccount = new Map<String, Account>();
+    private Map<Id, Address__c> mapDIIdToAddr = new Map<Id, Address__c>();
+    public Map<String, Id> mapStrNameToCampaignId = new Map<String, Id>();
 
     /*******************************************************************************************************
     * @description holds the list of DataImport records we are currently processing
     */
-    global list<DataImport__c> listDI;
+    global List<DataImport__c> listDI;
 
     /*******************************************************************************************************
     * @description holds the data import settings to use for this batch.  these may be either from
@@ -299,7 +299,7 @@ global with sharing class BDI_DataImportService {
     */
     private boolean isCustomIdInAccountMatchRules {
         get {
-            string str = diSettings.Account_Custom_Unique_ID__c;
+            String str = diSettings.Account_Custom_Unique_ID__c;
             if (str == null || str == '')
                 return false;
             return true;
@@ -307,7 +307,7 @@ global with sharing class BDI_DataImportService {
     }
 
     /*******************************************************************************************************
-    * @description whether the Account Custom Uniue ID field is a string datatype
+    * @description whether the Account Custom Uniue ID field is a String datatype
     */
     private boolean isCustomIdInAccountDatatypeString {
         get {
@@ -329,20 +329,20 @@ global with sharing class BDI_DataImportService {
     }
 
     /*******************************************************************************************************
-    * @description coerces an object to a string value
+    * @description coerces an object to a String value
     * @param obj an Object
-    * @return String either the string value or an empty string ''
+    * @return String either the String value or an empty String ''
     */
-    public string strNull(Object obj) {
-        return strNull(string.valueOf(obj));
+    public String strNull(Object obj) {
+        return strNull(String.valueOf(obj));
     }
 
     /*******************************************************************************************************
-    * @description handles null strings to always return a valid string or empty string
-    * @param str a string or null
-    * @return String either the string value or an empty string ''
+    * @description handles null Strings to always return a valid String or empty String
+    * @param str a String or null
+    * @return String either the String value or an empty String ''
     */
-    public string strNull(string str) {
+    public String strNull(String str) {
         if (str == null)
             return '';
         else
@@ -444,7 +444,7 @@ global with sharing class BDI_DataImportService {
 
             // update all the di's with errors with the error state.
             // those di's without specific errors will get the exception's error
-            list<DataImport__c> listDIError = new list<DataImport__c>();
+            List<DataImport__c> listDIError = new List<DataImport__c>();
             for (DataImport__c di : listDI) {
                 listDIError.add(new DataImport__c(
                     Id = di.Id,
@@ -538,7 +538,7 @@ global with sharing class BDI_DataImportService {
                 return classInstance;
             }
         }
-        throw new BDIException(String.format(Label.bdiErrorInvalidIMatchDonations, new list<String>{strClass, strInterface}));
+        throw new BDIException(String.format(Label.bdiErrorInvalidIMatchDonations, new List<String>{strClass, strInterface}));
     }
 
     /*******************************************************************************************************
@@ -548,7 +548,7 @@ global with sharing class BDI_DataImportService {
     * @param strStatusField the developer name of an additional status field to save the error message in
     * @return void
     */
-    public void LogBDIError(DataImport__c di, string strError, string strStatusField) {
+    public void LogBDIError(DataImport__c di, String strError, String strStatusField) {
         //system.debug('****DJH: LogBDIError di: ' + di + ' strError: ' + strError + ' field: ' + strStatusField);
         di.Status__c = label.bdiFailed;
         di.FailureInformation__c = strError;
@@ -559,11 +559,11 @@ global with sharing class BDI_DataImportService {
     /*******************************************************************************************************
     * @description list of all the fields in the Data Import object
     */
-    global static list<string> listStrDataImportFields {
+    global static List<String> listStrDataImportFields {
         get {
             if (listStrDataImportFields == null) {
                 Map<String, Schema.SObjectField> mapS = Schema.SObjectType.DataImport__c.fields.getMap();
-                listStrDataImportFields = new list<string>();
+                listStrDataImportFields = new List<String>();
                 listStrDataImportFields.addAll(mapS.keySet());
             }
             return listStrDataImportFields;
@@ -592,22 +592,22 @@ global with sharing class BDI_DataImportService {
     * @param strObj the bdi object we care about (Contact1, Contact2, Account1, etc)
     * @param strBaseObj the underlying object the bdi object is (ie, Contact, Account, etc)
     * @param listStrDIFields the DataImport fields to consider
-    * @return map<String, String> a map of DataImport fields to underlying object fields (eg, Donation_Amount__c => Amount)
+    * @return Map<String, String> a map of DataImport fields to underlying object fields (eg, Donation_Amount__c => Amount)
     */
-    global static map<string, string> mapFieldsForDIObject(string strObj, string strBaseObj, list<string> listStrDIFields) {
-        map<string, string> mapDIFieldToObjField = new map<string, string>();
-        for (string strF : listStrDIFields) {
+    global static Map<String, String> mapFieldsForDIObject(String strObj, String strBaseObj, List<String> listStrDIFields) {
+        Map<String, String> mapDIFieldToObjField = new Map<String, String>();
+        for (String strF : listStrDIFields) {
             DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), strF);
-            string strHelpText = dfr.getInlineHelpText();
+            String strHelpText = dfr.getInlineHelpText();
             if (strHelpText != null && strHelpText != '') {
-                list<string> strParts = strHelpText.split('\\.', 2);
+                List<String> strParts = strHelpText.split('\\.', 2);
                 if (strParts.size() == 2 && strParts[0] == strObj && strParts[1] != '') {
-                    string strField = strParts[1];
+                    String strField = strParts[1];
                     //if we aren't in the npsp namespace, remove those tokens from help text
                     //also removes tokens from actual detected namespace, if we happen to be
                     //in a non-npsp namespace
                     if (UTIL_Namespace.getNamespace() != 'npsp') {
-                        string strFieldOld = strField;
+                        String strFieldOld = strField;
                         strField = UTIL_Namespace.StrTokenRemoveNSPrefix(strField);
 
                         //if we have a detected namespace, and removed a namespace from the current field
@@ -628,7 +628,7 @@ global with sharing class BDI_DataImportService {
                             dfr == null ||
                             !dfr.isCreateable() ||
                             (!isAuditField && !dfr.isUpdateable())) {
-                                throw (new flsException(string.format(label.flsError, new string[]{
+                                throw (new flsException(String.format(label.flsError, new String[]{
                                     strBaseObj + '.' + strField
                                 })));
                         }
@@ -650,7 +650,7 @@ global with sharing class BDI_DataImportService {
     * @param mapDIFieldToDstField The field map from a DI field to the destination field
     * @return boolean True if copied, False is not copied.
     */
-    public static boolean isCopiedDIField(DataImport__c di, String strDIField, SObject objDst, map<string, string> mapDIFieldToDstField) {
+    public static boolean isCopiedDIField(DataImport__c di, String strDIField, SObject objDst, Map<String, String> mapDIFieldToDstField) {
 
         Object val = di.get(strDIField);
 
@@ -693,16 +693,16 @@ global with sharing class BDI_DataImportService {
     private void importHouseholdAccountFields() {
 
         // get our mapping of household custom fields
-        map<string, string> mapDIFieldToHHField = mapFieldsForDIObject('Household', 'Account', listStrDataImportFields);
+        Map<String, String> mapDIFieldToHHField = mapFieldsForDIObject('Household', 'Account', listStrDataImportFields);
 
         // bail out if no custom fields
         if (mapDIFieldToHHField.size() == 0)
             return;
 
         // holds the Households that need updating
-        list<Account> listAccHHUpdate = new list<Account>();
-        set<Id> setHHIdUpdate = new set<Id>();
-        list<DataImport__c> listDIUpdate = new list<DataImport__c>();
+        List<Account> listAccHHUpdate = new List<Account>();
+        Set<Id> setHHIdUpdate = new Set<Id>();
+        List<DataImport__c> listDIUpdate = new List<DataImport__c>();
 
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
@@ -713,7 +713,7 @@ global with sharing class BDI_DataImportService {
 
             boolean isModified = false;
             Account accHH = new Account(Id=di.HouseholdAccountImported__c);
-            for (string strDIField : mapDIFieldToHHField.keySet()) {
+            for (String strDIField : mapDIFieldToHHField.keySet()) {
                 if (isCopiedDIField(di, strDIField, accHH, mapDIFieldToHHField)) {
                     isModified = true;
                 }
@@ -727,7 +727,7 @@ global with sharing class BDI_DataImportService {
         }
 
         //UTIL_Debug.debug('****DJH about to upsert household Accounts: ' + listAccHHUpdate);
-        list<Database.UpsertResult> listUR = database.upsert(listAccHHUpdate, false);
+        List<Database.UpsertResult> listUR = database.upsert(listAccHHUpdate, false);
         for (integer i = 0; i < listUR.size(); i++) {
             Database.UpsertResult ur = listUR[i];
             if (!ur.isSuccess()) {
@@ -741,9 +741,9 @@ global with sharing class BDI_DataImportService {
     * Data Import object.
     * @param strCx  which contact to reference (Contact1 or Contact2)
     * @param diSettings the settings object to read the setting from
-    * @return string
+    * @return String
     */
-    public static string strDIContactCustomIDField(string strCx, Data_Import_Settings__c diSettings) {
+    public static String strDIContactCustomIDField(String strCx, Data_Import_Settings__c diSettings) {
         return strDICustomIDField(strCx, diSettings.Contact_Custom_Unique_ID__c);
     }
 
@@ -769,9 +769,9 @@ global with sharing class BDI_DataImportService {
     *
     * @param strObjx  which object to reference (Contact1, Contact2, Account1, Account2)
     * @param strCustomId the custom field from the object
-    * @return string
+    * @return String
     */
-    @TestVisible private static string strDICustomIDField(string strObjx, string strCustomId) {
+    @TestVisible private static String strDICustomIDField(String strObjx, String strCustomId) {
         if (strCustomId == null) {
             return null;
         }
@@ -791,10 +791,10 @@ global with sharing class BDI_DataImportService {
             // is it our namespace, in which case this is probably unmanaged npsp code,
             // so any manual testing will need the namespace in the DI custom field.
             if (strCustomId.left(i).equalsIgnoreCase(UTIL_Namespace.getNamespace())) {
-                return UTIL_Namespace.StrTokenNSPrefix(strObjx + '_' + strCustomId.substring(i + 2));
+                return UTIL_Namespace.StrTokenNSPrefix(strObjx + '_' + strCustomId.subString(i + 2));
             } else {
                 // skip namespace
-                return strObjx + '_' + strCustomId.substring(i + 2);
+                return strObjx + '_' + strCustomId.subString(i + 2);
             }
         }
 
@@ -826,12 +826,12 @@ global with sharing class BDI_DataImportService {
         pl.stop();
 
         // handle multiple di's referring to the same existing account
-        set<string> setDIKeyUpsert = new set<string>();
-        list<Account> listAccUpsert = new list<Account>();
-        list<DataImport__c> listDIUpsert = new list<DataImport__c>();
+        Set<String> setDIKeyUpsert = new Set<String>();
+        List<Account> listAccUpsert = new List<Account>();
+        List<DataImport__c> listDIUpsert = new List<DataImport__c>();
 
         // create/update our A1's
-        map<string, string> mapDIFieldToA1Field = mapFieldsForDIObject('Account1', 'Account', listStrDataImportFields);
+        Map<String, String> mapDIFieldToA1Field = mapFieldsForDIObject('Account1', 'Account', listStrDataImportFields);
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
             if (di.Status__c == label.bdiFailed)
@@ -842,14 +842,14 @@ global with sharing class BDI_DataImportService {
                 continue;
 
             boolean isModified = false;
-            for (string strDIField : mapDIFieldToA1Field.keySet()) {
+            for (String strDIField : mapDIFieldToA1Field.keySet()) {
                 if (isCopiedDIField(di, strDIField, acc, mapDIFieldToA1Field)) {
                     isModified = true;
                 }
             }
             if (isModified) {
                 boolean isAlreadyAdded = false;
-                for (string diKey : listDiKeyA1(di)) {
+                for (String diKey : listDiKeyA1(di)) {
                     if (!setDIKeyUpsert.add(diKey))
                         isAlreadyAdded = true;
                 }
@@ -864,7 +864,7 @@ global with sharing class BDI_DataImportService {
         }
 
         if (listAccUpsert.size() > 0) {
-            list<Database.UpsertResult> listUR = database.upsert(listAccUpsert, false);
+            List<Database.UpsertResult> listUR = database.upsert(listAccUpsert, false);
             for (integer i = 0; i < listUR.size(); i++) {
                 Database.UpsertResult ur = listUR[i];
                 if (!ur.isSuccess()) {
@@ -875,7 +875,7 @@ global with sharing class BDI_DataImportService {
 
         // update each DI with its new Account1 ID
         // and set contact's primary affiliations
-        map<Id, Contact> mapConIdToConUpdate = new map<Id, Contact>();
+        Map<Id, Contact> mapConIdToConUpdate = new Map<Id, Contact>();
         for (DataImport__c di: listDI) {
             if (di.Account1Imported__c == null) {
                 Account acc = AccountFromDi(di, 1);
@@ -895,7 +895,7 @@ global with sharing class BDI_DataImportService {
         }
 
         // create/update our A2's
-        map<string, string> mapDIFieldToA2Field = mapFieldsForDIObject('Account2', 'Account', listStrDataImportFields);
+        Map<String, String> mapDIFieldToA2Field = mapFieldsForDIObject('Account2', 'Account', listStrDataImportFields);
         listAccUpsert.clear();
         listDIUpsert.clear();
         setDIKeyUpsert.clear();
@@ -909,14 +909,14 @@ global with sharing class BDI_DataImportService {
                 continue;
 
             boolean isModified = false;
-            for (string strDIField : mapDIFieldToA2Field.keySet()) {
+            for (String strDIField : mapDIFieldToA2Field.keySet()) {
                 if (isCopiedDIField(di, strDIField, acc, mapDIFieldToA2Field)) {
                     isModified = true;
                 }
             }
             if (isModified) {
                 boolean isAlreadyAdded = false;
-                for (string diKey : listDiKeyA2(di)) {
+                for (String diKey : listDiKeyA2(di)) {
                     if (!setDIKeyUpsert.add(diKey))
                         isAlreadyAdded = true;
                 }
@@ -931,7 +931,7 @@ global with sharing class BDI_DataImportService {
         }
 
         if (listAccUpsert.size() > 0) {
-            list<Database.UpsertResult> listUR = database.upsert(listAccUpsert, false);
+            List<Database.UpsertResult> listUR = database.upsert(listAccUpsert, false);
             for (integer i = 0; i < listUR.size(); i++) {
                 Database.UpsertResult ur = listUR[i];
                 if (!ur.isSuccess()) {
@@ -971,22 +971,22 @@ global with sharing class BDI_DataImportService {
     * Data Import object.
     * @param strAx  which account to reference (account1 or account2)
     * @param diSettings the settings object to read the setting from
-    * @return string
+    * @return String
     */
-    private static string strDIAccountCustomIDField(string strAx, Data_Import_Settings__c diSettings) {
+    private static String strDIAccountCustomIDField(String strAx, Data_Import_Settings__c diSettings) {
         return strDICustomIDField(strAx, diSettings.Account_Custom_Unique_ID__c);
     }
 
     /*******************************************************************************************************
     * @description return all the diKeys for a given Account
     * @param acc the Account
-    * @return List<string> a list of diKeys
+    * @return List<String> a list of diKeys
     */
-    private list<string> listDiKeyAccount(Account acc) {
+    private List<String> listDiKeyAccount(Account acc) {
         if (acc == null)
             return null;
 
-        list<string> listDiKey = new list<string>();
+        List<String> listDiKey = new List<String>();
 
         // we need any Account SFId key to always be checked first when matching
         if (acc.Id != null) {
@@ -994,10 +994,10 @@ global with sharing class BDI_DataImportService {
         }
 
         // we need the Account CustomId key to always be checked second when matching
-        string strUniqueId = '';
+        String strUniqueId = '';
         if (isCustomIDInAccountMatchRules && (strUniqueId = strNull(acc.get(diSettings.Account_Custom_Unique_ID__c))) != '') {
             if (!isCustomIdInAccountDatatypeString) {
-                strUniqueId = string.valueOf(double.valueOf(strUniqueId));
+                strUniqueId = String.valueOf(double.valueOf(strUniqueId));
             }
             listDiKey.add(strUniqueId);
         }
@@ -1010,18 +1010,18 @@ global with sharing class BDI_DataImportService {
     /*******************************************************************************************************
     * @description return the dikeys for Account1 in the given di.
     * @param di the Data Import record
-    * @return list<string> the diKeys for the account
+    * @return List<String> the diKeys for the account
     */
-    private list<string> listDiKeyA1(DataImport__c di) {
+    private List<String> listDiKeyA1(DataImport__c di) {
         return listDiKeyAx(di, 'Account1');
     }
 
     /*******************************************************************************************************
     * @description return the dikeys for Account2 in the given di.
     * @param di the Data Import record
-    * @return list<string> the diKeys for the account
+    * @return List<String> the diKeys for the account
     */
-    private list<string> listDiKeyA2(DataImport__c di) {
+    private List<String> listDiKeyA2(DataImport__c di) {
         return listDIKeyAx(di, 'Account2');
     }
 
@@ -1029,13 +1029,13 @@ global with sharing class BDI_DataImportService {
     * @description return the dikeys for specified Account in the given di.
     * @param di the Data Import record
     * @param strAx specifies which Account, eg Account1 or Account2
-    * @return list<string> the diKeys for the Account
+    * @return List<String> the diKeys for the Account
     */
-    private list<string> listDiKeyAx(DataImport__c di, string strAx) {
-        list<string> listDiKey = new list<string>();
+    private List<String> listDiKeyAx(DataImport__c di, String strAx) {
+        List<String> listDiKey = new List<String>();
 
         // we need the Account Lookup key to always be checked first when matching
-        string strUniqueId = '';
+        String strUniqueId = '';
         if ((strUniqueId = strNull(di.get(strAx + 'Imported__c'))) != '') {
             listDiKey.add(strUniqueId);
             strUniqueId = '';
@@ -1044,14 +1044,14 @@ global with sharing class BDI_DataImportService {
         // we need the Account CustomId key to always be checked second when matching
         if (isCustomIDInAccountMatchRules && (strUniqueId = strNull(di.get(strDIAccountCustomIDField(strAx, diSettings)))) != '') {
             if (!isCustomIdInAccountDatatypeString) {
-                strUniqueId = string.valueOf(double.valueOf(strUniqueId));
+                strUniqueId = String.valueOf(double.valueOf(strUniqueId));
             }
             listDiKey.add(strUniqueId);
         }
 
         // now create any other dikeys
-        string strName;
-        if ((strName = string.valueOf(di.get(strAx + '_Name__c'))) != null)
+        String strName;
+        if ((strName = String.valueOf(di.get(strAx + '_Name__c'))) != null)
             listDiKey.add(strName + '|' + strUniqueId);
         return listDiKey;
     }
@@ -1063,7 +1063,7 @@ global with sharing class BDI_DataImportService {
     * @return Account the found Account
     */
     global Account AccountFromDi(DataImport__c di, integer iAcc) {
-        for (string diKey : listDiKeyAx(di, iAcc == 1 ? 'Account1' : 'Account2')) {
+        for (String diKey : listDiKeyAx(di, iAcc == 1 ? 'Account1' : 'Account2')) {
             Account acc = mapDIKeyToAccount.get(diKey);
             if (acc != null)
                 return acc;
@@ -1078,10 +1078,10 @@ global with sharing class BDI_DataImportService {
     */
     private void matchExistingAccounts() {
 
-        set<string> setName = new set<string>();
-        set<string> setCustomIDString = new set<string>();
-        set<double> setCustomIDNumber = new set<double>();
-        set<Id> setSFId = new set<Id>();
+        Set<String> setName = new Set<String>();
+        Set<String> setCustomIDString = new Set<String>();
+        Set<double> setCustomIDNumber = new Set<double>();
+        Set<Id> setSFId = new Set<Id>();
         String a1CustomIDField = BDI_DataImportService.strDIAccountCustomIDField('Account1', diSettings);
         String a2CustomIDField = BDI_DataImportService.strDIAccountCustomIDField('Account2', diSettings);
 
@@ -1100,7 +1100,7 @@ global with sharing class BDI_DataImportService {
                 object val = di.get(a1CustomIDField);
                 if (val != null) {
                     if (isCustomIdInAccountDatatypeString)
-                        setCustomIDString.add(string.valueOf(val));
+                        setCustomIDString.add(String.valueOf(val));
                     else
                         setCustomIDNumber.add(double.valueOf(val));
                 }
@@ -1114,7 +1114,7 @@ global with sharing class BDI_DataImportService {
                 object val = di.get(a2CustomIDField);
                 if (val != null) {
                     if (isCustomIdInAccountDatatypeString)
-                        setCustomIDString.add(string.valueOf(val));
+                        setCustomIDString.add(String.valueOf(val));
                     else
                         setCustomIDNumber.add(double.valueOf(val));
                 }
@@ -1122,7 +1122,7 @@ global with sharing class BDI_DataImportService {
         }
 
 
-        string strSoql = 'Select Id, ';
+        String strSoql = 'Select Id, ';
         if (isCustomIDInAccountMatchRules)
             strSoql += diSettings.Account_Custom_Unique_ID__c + ', ';
         strSoql += 'Name from Account where ';
@@ -1136,12 +1136,12 @@ global with sharing class BDI_DataImportService {
             strSoql += ' or ' + diSettings.Account_Custom_Unique_ID__c + ' in :setCustomIDNumber';
 
         BDI_PerfLogger.PerfLog pl = perfLogger.newPerfLog('SOQL existing Accounts', BDI_PerfLogger.QUERY);
-        list<Account> listAcc = database.query(strSoql);
+        List<Account> listAcc = database.query(strSoql);
         pl.stop();
 
         // put all Accounts into our map
         for (Account acc : listAcc) {
-            for (string diKey : listDiKeyAccount(acc))
+            for (String diKey : listDiKeyAccount(acc))
                 mapDIKeyToAccount.put(dikey, acc);
         }
 
@@ -1151,7 +1151,7 @@ global with sharing class BDI_DataImportService {
                 continue;
 
             Account acc = AccountFromDi(di, 1);
-            list<string> listDiKey = listDiKeyA1(di);
+            List<String> listDiKey = listDiKeyA1(di);
             if (acc != null) {
                 di.Account1Imported__c = acc.id;
                 di.Account1ImportStatus__c = label.bdiMatched;
@@ -1160,7 +1160,7 @@ global with sharing class BDI_DataImportService {
                 di.Account1ImportStatus__c = label.bdiCreated;
             }
             // make sure all dikeys for that account are in the map
-            for (string diKey : listDiKey)
+            for (String diKey : listDiKey)
                 mapDIKeyToAccount.put(diKey, acc);
 
             acc = AccountFromDi(di, 2);
@@ -1173,7 +1173,7 @@ global with sharing class BDI_DataImportService {
                 di.Account2ImportStatus__c = label.bdiCreated;
             }
             // make sure all dikeys for that account are in the map
-            for (string diKey : listDiKey)
+            for (String diKey : listDiKey)
                 mapDIKeyToAccount.put(diKey, acc);
         }
     }
@@ -1195,7 +1195,7 @@ global with sharing class BDI_DataImportService {
 
         // only create Home Address if it doesn't already exist on the Household.
         // so we need to get all the households, and then get all their addresses.
-        set<Id> setHHId = new set<Id>();
+        Set<Id> setHHId = new Set<Id>();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
             if (di.Status__c == label.bdiFailed)
@@ -1205,19 +1205,19 @@ global with sharing class BDI_DataImportService {
                 setHHId.add(con.AccountId);
         }
         BDI_PerfLogger.PerfLog pl = perfLogger.newPerfLog('SOQL existing Addresses', BDI_PerfLogger.QUERY);
-        list<Address__c> listAddrExisting = [select Id, Household_Account__c, MailingStreet__c, MailingCity__c, MailingState__c,
+        List<Address__c> listAddrExisting = [select Id, Household_Account__c, MailingStreet__c, MailingCity__c, MailingState__c,
             MailingPostalCode__c from Address__c where Household_Account__c in :setHHId];
         pl.stop();
 
-        map<String, Id> mapHHAddrKeyToId = new map<String, Id>();
+        Map<String, Id> mapHHAddrKeyToId = new Map<String, Id>();
         for (Address__c addr : listAddrExisting) {
             mapHHAddrKeyToId.put(strKeyOfAddr(addr), addr.Id);
         }
 
-        map<string, string> mapDIFieldToAddrField = mapFieldsForDIObject('Address', UTIL_Namespace.StrTokenNSPrefix('Address__c'), listStrDataImportFields);
-        list<Address__c> listAddrInsert = new list<Address__c>();
-        list<DataImport__c> listDIInsert = new list<DataImport__c>();
-        map<String, Address__c> mapHHAddrKeyToAddrNew = new map<String, Address__c>();
+        Map<String, String> mapDIFieldToAddrField = mapFieldsForDIObject('Address', UTIL_Namespace.StrTokenNSPrefix('Address__c'), listStrDataImportFields);
+        List<Address__c> listAddrInsert = new List<Address__c>();
+        List<DataImport__c> listDIInsert = new List<DataImport__c>();
+        Map<String, Address__c> mapHHAddrKeyToAddrNew = new Map<String, Address__c>();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
             if (di.Status__c == label.bdiFailed)
@@ -1229,7 +1229,7 @@ global with sharing class BDI_DataImportService {
             addr.Default_Address__c = true;
             addr.Household_Account__c = (con != null ? con.AccountId : null);
             boolean isEmpty = true;
-            for (string strDIField : mapDIFieldToAddrField.keySet()) {
+            for (String strDIField : mapDIFieldToAddrField.keySet()) {
                 if (isCopiedDIField(di, strDIField, addr, mapDIFieldToAddrField)) {
                     isEmpty = false;
                 }
@@ -1297,7 +1297,7 @@ global with sharing class BDI_DataImportService {
     * @param addr the Address
     * @return String the key for the Address
     */
-    private static string strKeyOfAddr(Address__c addr) {
+    private static String strKeyOfAddr(Address__c addr) {
         return addr.Household_Account__c + addr.MailingStreet__c + addr.MailingCity__c + addr.MailingState__c + addr.MailingPostalCode__c;
     }
 
@@ -1308,16 +1308,16 @@ global with sharing class BDI_DataImportService {
     private void importAddressesAsAddressFields() {
 
         // track the contacts and hh accounts to update
-        set<Id> setIdUpdate = new set<Id>();
-        list<Contact> listCon1Update = new list<Contact>();
-        list<Contact> listCon2Update = new list<Contact>();
-        list<Account> listAccUpdate = new list<Account>();
-        list<DataImport__c> listCon1Di = new list<DataImport__c>();
-        list<DataImport__c> listCon2Di = new list<DataImport__c>();
-        list<DataImport__c> listAccDi = new list<DataImport__c>();
+        Set<Id> setIdUpdate = new Set<Id>();
+        List<Contact> listCon1Update = new List<Contact>();
+        List<Contact> listCon2Update = new List<Contact>();
+        List<Account> listAccUpdate = new List<Account>();
+        List<DataImport__c> listCon1Di = new List<DataImport__c>();
+        List<DataImport__c> listCon2Di = new List<DataImport__c>();
+        List<DataImport__c> listAccDi = new List<DataImport__c>();
 
         // first get our Household Accounts
-        set<Id> setHHId = new set<Id>();
+        Set<Id> setHHId = new Set<Id>();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
             if (di.Status__c == label.bdiFailed)
@@ -1325,7 +1325,7 @@ global with sharing class BDI_DataImportService {
             if (di.HouseholdAccountImported__c != null)
                 setHHId.add(di.HouseholdAccountImported__c);
         }
-        map<Id, Account> mapHHIdToAcc = new map<Id, Account>([select Id, BillingStreet, BillingCity,
+        Map<Id, Account> mapHHIdToAcc = new Map<Id, Account>([select Id, BillingStreet, BillingCity,
             BillingState, BillingPostalCode, BillingCountry from Account where Id in :setHHId]);
 
         // now update home address on the contacts and hh account
@@ -1377,7 +1377,7 @@ global with sharing class BDI_DataImportService {
         }
 
         // now update the objects
-        list<Database.UpsertResult> listUR = database.upsert(listCon1Update, false);
+        List<Database.UpsertResult> listUR = database.upsert(listCon1Update, false);
         for (integer i = 0; i < listUR.size(); i++) {
             Database.UpsertResult ur = listUR[i];
             if (!ur.isSuccess()) {
@@ -1411,7 +1411,7 @@ global with sharing class BDI_DataImportService {
     private void importCampaigns() {
 
         // need to find all the Campaigns that we might need
-        set<string> setStrCampaign = new set<string>();
+        Set<String> setStrCampaign = new Set<String>();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
             if (di.Status__c == label.bdiFailed)
@@ -1426,14 +1426,14 @@ global with sharing class BDI_DataImportService {
         }
 
         // create any new campaigns
-        list<Campaign> listCmpNew = new list<Campaign>();
-        list<DataImport__c> listDINew = new list<DataImport__c>();
+        List<Campaign> listCmpNew = new List<Campaign>();
+        List<DataImport__c> listDINew = new List<DataImport__c>();
         setStrCampaign.clear();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
             if (di.Status__c == label.bdiFailed)
                 continue;
-            string strName = di.Donation_Campaign_Name__c;
+            String strName = di.Donation_Campaign_Name__c;
             Campaign cmp;
             if (strName != null && setStrCampaign.add(strName)) {
                 if (mapStrNameToCampaignId.get(strName) == null) {
@@ -1446,7 +1446,7 @@ global with sharing class BDI_DataImportService {
                 cmp.Name = null;
         }
         //insert listCmpNew;
-        list<Database.UpsertResult> listUR = database.upsert(listCmpNew, false);
+        List<Database.UpsertResult> listUR = database.upsert(listCmpNew, false);
         for (integer i = 0; i < listUR.size(); i++) {
             Database.UpsertResult ur = listUR[i];
             if (!ur.isSuccess()) {
@@ -1468,9 +1468,9 @@ global with sharing class BDI_DataImportService {
     * @return void
     */
     private void importCampaignMembers() {
-        list<string> newCmContactIds = new list<string>();
-        list<string> listCampaignIds = new list<string>();
-        list<string> listCmStatues = new list<string>();
+        List<String> newCmContactIds = new List<String>();
+        List<String> listCampaignIds = new List<String>();
+        List<String> listCmStatues = new List<String>();
         // loop over the dis contacts and find existing cms or new cms to create (if they have a campaign)
         for (DataImport__c di : listDI) {
             // skip that already have an error
@@ -1480,7 +1480,7 @@ global with sharing class BDI_DataImportService {
             if (di.Donation_Campaign_Name__c != null && di.DonationImported__c == null) {
                 // assume errors would have already been thrown
                 Id idCmp = mapStrNameToCampaignId.get(di.Donation_Campaign_Name__c);
-                string diStatus = String.isBlank(di.Campaign_Member_Status__c) ? Label.campaignMemberStatusDefault : di.Campaign_Member_Status__c;
+                String diStatus = String.isBlank(di.Campaign_Member_Status__c) ? Label.campaignMemberStatusDefault : di.Campaign_Member_Status__c;
 
                 if (di.Contact1Imported__c != null) {
                     newCmContactIds.add(di.Contact1Imported__c);
