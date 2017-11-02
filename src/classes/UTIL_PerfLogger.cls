@@ -48,7 +48,7 @@ public virtual with sharing class UTIL_PerfLogger {
     * @param countRecords the number of records that will be analyzed
     */
     public UTIL_PerfLogger(Integer countRecords) {
-        tmStart = System.now().getTime();
+        tmStart = System.currentTimeMillis();
         this.countRecords = countRecords;
         mapPerfLogByComponentLabel = new Map<String, PerfLog>();
     }
@@ -58,7 +58,7 @@ public virtual with sharing class UTIL_PerfLogger {
     * @return void
     */
     public void stop() {
-        tmEnd = System.now().getTime();
+        tmEnd = System.currentTimeMillis();
     }
 
     /*******************************************************************************************************
@@ -195,7 +195,7 @@ public virtual with sharing class UTIL_PerfLogger {
         * @return void
         */
         public void start() {
-            tmStart = System.now().getTime();
+            tmStart = System.currentTimeMillis();
             countCalls++;
         }
 
@@ -204,7 +204,7 @@ public virtual with sharing class UTIL_PerfLogger {
         * @return void
         */
         public void stop() {
-            tmEnd = System.now().getTime();
+            tmEnd = System.currentTimeMillis();
             duration += tmEnd - tmStart;
         }
 
