@@ -85,8 +85,12 @@ public class RLLP_Rollup_SEL_TEST {
         System.AssertEquals(1, RLLP_Rollup_SEL.getRollupsByFilterGroup().size(),
                 'There should be 1 filter group that has rollups');
 
-        System.AssertEquals(3, RLLP_Rollup_SEL.getReferencedFieldsByObject(Opportunity.SObjectType).size(),
-                'There should be 3 Opportunity fields referenced across the rollup');
+        Integer expectedFldCount = 3;
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            expectedFldCount++;
+        }
+        System.AssertEquals(expectedFldCount, RLLP_Rollup_SEL.getReferencedFieldsByObject(Opportunity.SObjectType).size(),
+                'There should be ' + expectedFldCount + ' Opportunity fields referenced across the rollup');
 
         // Test that a list of fields to query is returned
         String queryFields = RLLP_Rollup_SEL.getReferencedFieldsByObjectAsString(Opportunity.SObjectType);

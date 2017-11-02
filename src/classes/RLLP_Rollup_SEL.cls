@@ -150,6 +150,10 @@ public class RLLP_Rollup_SEL {
                 }
             }
         }
+        // Always include the CurrencyIsoCode field if it's available for the object
+        if (UserInfo.isMultiCurrencyOrganization() && allFields.containsKey('currencyisocode')) {
+            referencedFields.put('CurrencyIsoCode', allFields.get('currencyisocode'));
+        }
         return referencedFields.values();
     }
 
