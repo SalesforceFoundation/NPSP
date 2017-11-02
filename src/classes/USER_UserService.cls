@@ -212,12 +212,36 @@ public with sharing class USER_UserService {
     **********************************************************************************************************/
     public static pageReference getHomePageReference() {
         PageReference ref;
-        if (UserInfo.getUiThemeDisplayed() == 'Theme4d') {
+        if (isUserRunningLightning() || isUserRunningMobile()) {
             ref = new PageReference('/one/one.app#/home');
         } else {
             ref = new PageReference('/home/home.jsp');
         }
         ref.setRedirect(true);
         return ref;
+    }
+
+    /*********************************************************************************************************
+    * @description Returns true if the User is currently running the Lightning Experience UI
+    * @return True or False
+    **********************************************************************************************************/
+    public static Boolean isUserRunningLightning() {
+        return (UserInfo.getUiThemeDisplayed() == 'Theme4d');
+    }
+
+    /*********************************************************************************************************
+    * @description Returns true if the User is currently running the Salesforce1 Mobile UI
+    * @return True or False
+    **********************************************************************************************************/
+    public static Boolean isUserRunningMobile() {
+        return (UserInfo.getUiThemeDisplayed() == 'Theme4t');
+    }
+
+    /*********************************************************************************************************
+    * @description Returns the relative target URL string for a Lightning Experience SObject (including reports)
+    * @return Relative URL
+    **********************************************************************************************************/
+    public static String getLightningBaseURL(String targetId) {
+        return '/one/one.app#/sObject/' + targetId + '/view';
     }
 }
