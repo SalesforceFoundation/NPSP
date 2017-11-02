@@ -38,21 +38,42 @@
 * Also cascade deletes a Contact's Opportunities, and provides validation if any are closed/won or attributed to an organization.
 */
 public with sharing class CON_DeleteContactOverride_CTRL {
+    /** @description Contact home page. */
+    private static final String CONTACT_HOME = '/003/o';
+    /** @description LEx navigation value to go back. */
+    private static final String LEX_BACK = 'back';
+    /** @description LEx navigation value to go to Contact Home. */
+    private static final String LEX_HOME = 'home';
 
     /** @description The contact record the user is attempting to delete. */
     private Contact queryContact;
     /** @description The id of the contact's account. */
     private String accountId;
     /** @description The return URL. */
+    @TestVisible
     private String retURL;
+    /** @description The URL to be navigated to on Cancel. It is not provided every time (as it was the case for cancelUrl). */
+    @TestVisible
+    private String failRetUrl;
     /** @description for LEx and SF1 set navigation instructions for JS - navigate back if only del contact and not from contact */ 
     public String sforceNav {get; private set;}
-    /** @description Boolean that is set to true if user theme is LEx or SF1 */ 
-    private Boolean sforceUser;
-    /** @description Formatted string prompting the user to delete the account instead. */
-    public String helpDeleteAccountInstead {get;set;}
+
+    /** @description Boolean that is set to true if user theme is LEx or SF1 */
+    @TestVisible 
+    private Boolean sforceUser {
+        get {
+            return sforceUser = sforceUser == null 
+                ? UserInfo.getUiThemeDisplayed().contains('Theme4')
+                : sforceUser;
+        }
+        set;
+    }
+
     /** @description Flag to tell the page which operation we're doing. */
     public Boolean shouldDeleteContactAlone {get;set;}
+    /** @description Flag indicating if only this Contact should be deleted while leaving empty Account. */
+    private Boolean isDeleteContactLeaveAccount = false;
+    
     /** @description Boolean for disabling the account deletion button if there are errors preventing deletion. */
     public Boolean hasPageMessages {
         get {
@@ -66,19 +87,9 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     * account should be deleted.
     */ 
     public CON_DeleteContactOverride_CTRL(ApexPages.StandardController stdController) {
-        sforceUser = UserInfo.getUiThemeDisplayed().contains('Theme4');
-        // In LEx and SF1 the returl param name differs from classic
-        String param = sforceUser ? 'vfRetURLInSFX' : 'returl';
-        retURL = ApexPages.currentPage().getParameters().get(param);
-
-        //if we don't have a return URL, go back to Contacts home.
-        if (String.isBlank(retURL)) {
-            retURL = '/003/o';
-        }
+        setNavigationParams(ApexPages.currentPage().getParameters());
 
         queryContact = [SELECT Id, Name, AccountId, Account.Name, Account.npe01__SYSTEMIsIndividual__c FROM Contact WHERE Id = :stdController.getId()];
-
-        helpDeleteAccountInstead = String.format(Label.ConfirmDeleteAccount, new List<String>{queryContact.Name, queryContact.Account.Name});
 
         shouldDeleteContactAlone = true;
 
@@ -90,9 +101,30 @@ public with sharing class CON_DeleteContactOverride_CTRL {
             //delete to remove the contact
             if (contactsInHousehold.size() == 1 && contactsInHousehold[0].get('ct') == 1) {
                 shouldDeleteContactAlone = false;
+
+                String helpDeleteAccountInstead = String.format(Label.ConfirmDeleteAccount, new List<String>{queryContact.Name, queryContact.Account.Name});
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, helpDeleteAccountInstead));
             }
         }
+    }
+
+    /*******************************************************************************************************
+    * @description Determines if the page is used in LEx or Classic.
+    * Retrieves retUrl and failRetUrl values from the page params.
+    * @return void
+    */ 
+    @TestVisible 
+    private void setNavigationParams(Map<String, String> params) {
+        // In LEx and SF1 the returl param name differs from classic
+        String param = sforceUser ? 'vfRetURLInSFX' : 'retURL';
+        retURL = params.get(param);
+
+        //if we don't have a return URL, go back to Contacts home.
+        if (String.isBlank(retURL)) {
+            retURL = CONTACT_HOME;
+        }
+
+        failRetUrl = params.get('failRetURL');
     }
 
     /*******************************************************************************************************
@@ -121,12 +153,12 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     * on the page and displays error messages.
     */ 
     public PageReference deleteContactOnly() {
-        shouldDeleteContactAlone = true;
+        isDeleteContactLeaveAccount = true;
 
         try {
             return deleteContact();
         } catch (Exception ex) {
-            shouldDeleteContactAlone = false;
+            isDeleteContactLeaveAccount = false;
 
             if (!hasPageMessages) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
@@ -142,7 +174,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     * on the page and displays error messages.
     */ 
     public PageReference deleteContact() {
-        if (shouldDeleteContactAlone) {
+        if (isDeleteContactOnly()) {
             //add cascades with validation that we can't include all the time
             //this is because contact merge runs before delete triggers with no way to differentiate from standard delete
             List<UTIL_CascadeDeleteLookups_TDTM.Cascade> contactCascades = new List<UTIL_CascadeDeleteLookups_TDTM.Cascade>{
@@ -156,13 +188,21 @@ public with sharing class CON_DeleteContactOverride_CTRL {
             delete queryContact;
 
             if (sforceUser) {
-                sforceNav = returl.contains(queryContact.Id) ? 'home' : 'back';
+                sforceNav = retURL.contains(queryContact.Id) ? LEX_HOME : LEX_BACK;
                 return null;
             } else {
                 return getRedirect();
             }
         }
         return null;
+    }
+
+    /*******************************************************************************************************
+    * @description Determines if only this Contact can be deleted.
+    * @return Boolean
+    */ 
+    private Boolean isDeleteContactOnly() {
+        return shouldDeleteContactAlone || isDeleteContactLeaveAccount;
     }
 
     /*******************************************************************************************************
@@ -196,25 +236,49 @@ public with sharing class CON_DeleteContactOverride_CTRL {
             return null;
         }
 
-        //if we were returning to the account we just deleted, go back to contacts home
-        if (retURL.contains(accountId.substring(0,15))) {
-            retURL = '/003/o';
-        }
-
         if (sforceUser) {
-            sforceNav = 'home';
+            sforceNav = LEX_HOME;
             return null;
+
         } else {
+            //if we were returning to the account we just deleted, go back to contacts home
+            if (retURL.contains(accountId.substring(0,15))) {
+                retURL = CONTACT_HOME;
+            }
             return getRedirect();
         }
     }
 
     /*******************************************************************************************************
-    * @description Returns a redirect enabled PageReference for the return URL
-    * @return pageReference The PageReference with redirect enabled.
+    * @description Returns redirect PageReference based on failRetUrl or retUrl for Classic.
+    * Returns a value to navigate back for LEx.
+    * @return PageReference 
     */ 
-    public PageReference getRedirect() {
-        PageReference redirect = new PageReference(retURL);
+    public PageReference onCancel() {
+        if (sforceUser) {
+            sforceNav = LEX_BACK;
+            return null;
+
+        } else {
+            String url = String.isNotBlank(failRetUrl) ? failRetUrl : retURL;
+            return getRedirect(url);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Returns a redirect enabled PageReference for the return URL
+    * @return PageReference The PageReference with redirect enabled.
+    */ 
+    private PageReference getRedirect() {
+        return getRedirect(retUrl);
+    }
+
+    /*******************************************************************************************************
+    * @description Returns a redirect enabled PageReference for a URL
+    * @return PageReference The PageReference with redirect enabled.
+    */ 
+    private PageReference getRedirect(String url) {
+        PageReference redirect = new PageReference(url);
         redirect.setRedirect(true);
         return redirect;
     }

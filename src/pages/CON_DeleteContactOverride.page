@@ -1,33 +1,53 @@
-<apex:page standardController="Contact" extensions="CON_DeleteContactOverride_CTRL" action="{!processDelete}">
+<apex:page standardController="Contact" extensions="CON_DeleteContactOverride_CTRL" action="{!processDelete}" id="delContactPage">
     <apex:slds />
-    <apex:form styleClass="slds">
-        <apex:outputPanel rendered="{!sforceNav == null}">
+    <apex:form styleClass="slds" id="delForm">
+        <apex:outputPanel rendered="{!sforceNav == null}" id="display">
             <!-- PAGE HEADER -->
             <c:UTIL_PageHeader headerLabel="{!$ObjectType.Contact.Label}"
-                               header="{!Contact.Name}"
-                               icon="contact_120" iconCategory="standard"
-                               showSaveBtn="false" cancelLabel="{!$Label.bdiBtnClose}"
-                               cancelAction="{!getRedirect}" cancelReRender="vfForm"/>
-            
+                header="{!Contact.Name}"
+                icon="contact_120" iconCategory="standard"
+                showSaveBtn="false" 
+                cancelLabel="{!$Label.bdiBtnClose}"
+                cancelAction="{!onCancel}"
+                cancelReRender="delForm"
+            />
+
             <!-- PAGE MESSAGE -->
-            <c:UTIL_PageMessages allowClose="false"/>
+            <c:UTIL_PageMessages allowClose="false" id="msgs"/>
             
-            <div class="slds-p-around_small">
-                <apex:commandButton value="{!$Label.DeleteContactLeaveAccount}" action="{!deleteContactOnly}" styleClass="slds-button slds-button_neutral"/>
-                <apex:outputLink target="_self" title="{!$Label.REL_Return_to_Contact}" value="/{!$CurrentPage.parameters.id}" styleClass="slds-button slds-button_neutral">
-                    {!$Label.REL_Return_to_Contact}
+            <div class="slds-p-around_small" id="btnDiv">
+                <apex:commandButton value="{!$Label.DeleteContactLeaveAccount}" id="delContactOnlyBtn"
+                    action="{!deleteContactOnly}" 
+                    rendered="{!NOT(shouldDeleteContactAlone)}" 
+                    rerender="delForm"
+                    styleClass="slds-button slds-button_neutral"
+                />
+
+                <apex:outputLink target="_self" id="viewContactLink"
+                    title="{!$Label.REL_View_Contact_Record}" 
+                    value="/{!$CurrentPage.parameters.id}" 
+                    styleClass="slds-button slds-button_neutral {!IF(shouldDeleteContactAlone, 'slds-m-right_x-small', '')}">
+                    {!$Label.REL_View_Contact_Record}
                 </apex:outputLink>
-                <apex:commandButton value="{!$Label.DeleteAccount}" action="{!deleteAccount}" styleClass="slds-button slds-button_brand"/>
+
+                <apex:commandButton value="{!$Label.DeleteAccount}" id="delAccountBtn"
+                    action="{!deleteAccount}" 
+                    rerender="delForm"
+                    styleClass="slds-button slds-button_brand"
+                />
             </div>
         </apex:outputPanel>
-        <apex:outputPanel rendered="{!sforceNav != null}">
+
+        <apex:outputPanel rendered="{!sforceNav != null}" id="navigator">
             <script type="text/javascript">
                 (function() {
                     var sforceNav = '{!sforceNav}';
                     if (sforceNav === 'back') {
                         sforce.one.back(true);
-                    } else {
+                    } else if (sforceNav === 'home') {
                         sforce.one.navigateToURL('one.app#/sObject/Contact/home', true);
+                    } else {                  
+                        sforce.one.navigateToSObject(sforceNav);
                     }
                 })();
             </script>
