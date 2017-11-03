@@ -112,45 +112,67 @@ public class ALLO_Multicurrency_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description For a list of allocations, set the currency based on the parent object.
+    * @description For a list of allocations, set the currency based on the parent object, and if the setting
+    *   has been configured when ACM is enabled also store the applied dated exchange rate on the record.
     * @param listAllo The list of allocations. 
     * @return void This method modifies the list of allocations directly and returns nothing.
     ********************************************************************************************************/
-    public static void updateAllocationCurrency(list<Allocation__c> listAllo) {
-        map<id,string> mapIdToISO = new map<id,string>();
+    public static void updateAllocationCurrency(List<Allocation__c> listAllo) {
+        Map<Id,SObject> mapIdToParentObject = new Map<Id,SObject>();
 
-        //collect parent Ids
+        // collect parent Ids
+        Set<Id> parentIds = new Set<Id>();
         for (Allocation__c allo : listAllo) {
-            mapIdToISO.put(ALLO_Allocations_TDTM.getParentId(allo),null);
+            parentIds.add(ALLO_Allocations_TDTM.getParentId(allo));
         }
 
-        //get iso codes of parents
-        mapIdToISO = getISOFromIdSet(mapIdToISO.keySet());
+        // Get parent SObject (with IsoCode)
+        mapIdToParentObject = getParentFromIdSet(parentIds);
 
-        //update allocation ISO code to match parent
         for (Allocation__c allo : listAllo) {
-            allo.put('CurrencyIsoCode',mapIdToISO.get(ALLO_Allocations_TDTM.getParentId(allo)));
+            // Update allocation ISO code to match parent
+            String parentCurrCode = (String)mapIdToParentObject.get(ALLO_Allocations_TDTM.getParentId(allo)).get('CurrencyIsoCode');
+            allo.put('CurrencyIsoCode', parentCurrCode);
+
+            // If ACM is enabled in the Org and the custom settings is enabled to store the dated exchange rate
+            // on the Allocation object, get the effective exchange rate to convert to the corporate currency
+            // and store in a customer defined field on the Allocation record
+            if (ALLO_Allocations_TDTM.storeDatedConversionRate && allo.Opportunity__c != null) {
+                Date oppCloseDate = (Date)mapIdToParentObject.get(ALLO_Allocations_TDTM.getParentId(allo)).get('CloseDate');
+                Decimal exchangeRate = UTIL_CurrencyConversion.getExchangeRate(oppCloseDate,
+                        parentCurrCode, currCorporate);
+                try {
+                    allo.put(ALLO_Allocations_TDTM.householdSettings.Custom_Exchange_Rate_Field__c, exchangeRate);
+                } catch (Exception ex) {
+                    // ignore the error if this field doesn't actually exist
+                }
+            }
         }
     }
 
     /*******************************************************************************************************
     * @description For any set of ids of any sObject, gets the sObject's currency code.
     * @param setId A set of ids of any sObjects.
-    * @return map<id,string> A map from the id of the object to the object's currency code string.
+    * @return Map<Id,SObject> A map from the Id of the object to the parent SObject with the currency code
+    *   and optionally the CloseDate
     ********************************************************************************************************/
-    public static map<id,string> getISOFromIdSet (set<id> setId) {
-        map<id,string> results = new map<id,string>();
-        set<string> parentTypes = new set<string>();
+    private static Map<Id,SObject> getParentFromIdSet (Set<Id> setId) {
+        Map<Id,SObject> results = new Map<Id,SObject>();
+        Set<string> parentTypes = new Set<string>();
 
         //get parent object names for query
-        for (id thisId : setId)
+        for (Id thisId : setId)
             parentTypes.add(thisId.getSObjectType().getDescribe().getName());
 
         //query for ISO codes, fill out map
         for (string parent : parentTypes) {
-            string query = 'SELECT Id, CurrencyIsoCode FROM ' + parent + ' WHERE Id IN :setId';
+            string query = 'SELECT Id, CurrencyIsoCode';
+            if (parent == 'Opportunity') {
+                query += ', CloseDate';
+            }
+            query += ' FROM ' + parent + ' WHERE Id IN :setId';
             for (sObject sobj : database.query(query))
-                results.put((id)sobj.get('id'),(string)sobj.get('CurrencyIsoCode'));
+                results.put((Id)sobj.get('Id'),sobj);
         }
 
         return results;

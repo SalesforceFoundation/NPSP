@@ -36,6 +36,9 @@
 */
 public class PMT_Payment_TDTM extends TDTM_Runnable {
 
+    /** @description Retrieve and cache the household settings the first time this class is loaded only */
+    private static final npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+
     /*******************************************************************************************************
     * @description Trigger Handler on on Opportunity or Payment related to the Paymetn object
     * @param newlist the list of Opportunity or Payments from trigger new.
@@ -70,6 +73,11 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
         if (!UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
             return null;
         }
+
+        // Set this to true only if ACM is enabled, in use, and there is a defined field to store the value in
+        Boolean storeDatedConversionRate = UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled()
+                && householdSettings.Use_Dated_Conversion_Rates__c == true
+                && householdSettings.Custom_Exchange_Rate_Field__c != null;
 
         DmlWrapper dmlWrapper = new DmlWrapper();
 
@@ -108,6 +116,26 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
                 } else if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
                     // Otherwise default the Payment CurrencyIsoCode to the value from the parent Opportunity
                     pmt.put('CurrencyIsoCode', oppCurrency);
+                }
+
+                // If ACM is enabled in the Org and the custom settings is enabled to store the dated exchange rate,
+                // get the applied dated exchange rate to convert the amount into the org default currency
+                // and store in a customer defined field on the Payment object
+                if (storeDatedConversionRate && pmt.npe01__Payment_Date__c != null &&
+                        (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate)) {
+                    Decimal exchangeRate = UTIL_CurrencyConversion.getExchangeRate(pmt.npe01__Payment_Date__c,
+                            oppCurrency, UTIL_Currency.getInstance().getOrgDefaultCurrency());
+                    try {
+                        if (Test.isRunningTest() == false) {
+                            pmt.put(householdSettings.Custom_Exchange_Rate_Field__c, exchangeRate);
+                        } else {
+                            // To allow for testing this logic out, there are no free number fields to use on this
+                            // object, so push the value into text field
+                            pmt.put(householdSettings.Custom_Exchange_Rate_Field__c, exchangeRate.format());
+                        }
+                    } catch (Exception ex) {
+                        // ignore the error if this field doesn't actually exist.
+                    }
                 }
             }
         }
