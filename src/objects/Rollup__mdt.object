@@ -188,12 +188,12 @@
                     <label>Last</label>
                 </value>
                 <value>
-                    <fullName>Years Donated</fullName>
+                    <fullName>Years_Donated</fullName>
                     <default>false</default>
                     <label>Years Donated</label>
                 </value>
                 <value>
-                    <fullName>Donor Streak</fullName>
+                    <fullName>Donor_Streak</fullName>
                     <default>false</default>
                     <label>Donor Streak</label>
                 </value>
