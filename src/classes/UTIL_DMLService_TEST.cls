@@ -32,12 +32,18 @@
 * @author Salesforce.org
 * @date 2017
 * @group Utilities
-* @description Service Class to handle DML actions.
+* @description Test class for the UTIL_DMLService class.
 */
 
 @isTest
 public with sharing class UTIL_DMLService_TEST {
     
+    private static final Integer NUMBER_OF_RECORDS_ZERO = 0;
+    private static final Integer NUMBER_OF_RECORDS_ONE = 1;
+    private static final Integer NUMBER_OF_RECORDS_TWO = 2;
+    private static final Integer NUMBER_OF_RECORDS_THREE = 3;
+
+
     /*********************************************************************************************************
     * @description If you only want to run a single test in this class, fill in its name here.
     * If you want to run all tests, then use '*'
@@ -66,9 +72,7 @@ public with sharing class UTIL_DMLService_TEST {
         List<Contact> retrievedContacts = [SELECT Id, FirstName, LastName, AccountId 
                                            FROM Contact];
 
-        if (!retrievedContacts.isEmpty()) {
-            System.assertEquals(con.FirstName, retrievedContacts[0].FirstName);
-        }
+        System.assertEquals(false, retrievedContacts.isEmpty());
     }
 
 
@@ -94,10 +98,7 @@ public with sharing class UTIL_DMLService_TEST {
         List<Contact> retrievedContacts = [SELECT Id, FirstName, LastName, AccountId 
                                            FROM Contact];
 
-        if (!retrievedContacts.isEmpty()) {
-            System.assertEquals(contacts[0].FirstName, retrievedContacts[0].FirstName);
-            System.assertEquals(contacts[1].FirstName, retrievedContacts[1].FirstName);
-        }
+        System.assertEquals(NUMBER_OF_RECORDS_TWO, retrievedContacts.size());
     }
 
 
@@ -122,26 +123,52 @@ public with sharing class UTIL_DMLService_TEST {
         List<Contact> retrievedContacts = [SELECT Id, FirstName, LastName, AccountId 
                                            FROM Contact];
 
-        if (!retrievedContacts.isEmpty()) {
-            System.assertEquals(con.FirstName, retrievedContacts[0].FirstName);
-        }
+        System.assertEquals(false, retrievedContacts.isEmpty());
     }
 
 
     /*********************************************************************************************************
     * @description Tests insert of a List of records with specified optAllOrNone value and default DMLOptions settings.
     * verify:
-    *   Records inserted
+    *   Records not inserted
     * @return void
     **********************************************************************************************************/
-    private static testMethod void testRecordsInsertWithAllOrNone() {
+    private static testMethod void testRecordsInsertWithAllOrNoneTrue() {
         if (strTestOnly != '*' && strTestOnly != 'testRecordsInsertWithAllOrNone') return;
         
         Account acct = new Account(Name = 'DMLOptionsAccount');
         insert acct;
 
         List<Contact> contacts = new List<Contact> { new Contact(FirstName = 'Blue', LastName = 'Cloud', AccountId = acct.Id),
-                                                        new Contact(FirstName = 'Astro', LastName = 'Cloud', AccountId = acct.Id) };
+                                                        new Contact(FirstName = 'Astro', AccountId = acct.Id) };
+                         
+        try {
+            Test.startTest();
+            UTIL_DMLService.insertRecords(contacts, true);
+            Test.stopTest();
+        } catch (DmlException e) {}
+        
+        List<Contact> retrievedContacts = [SELECT Id, FirstName, LastName, AccountId 
+                                           FROM Contact];
+
+        System.assertEquals(NUMBER_OF_RECORDS_ZERO, retrievedContacts.size());
+    }
+
+
+    /*********************************************************************************************************
+    * @description Tests insert of a List of records with specified optAllOrNone value and default DMLOptions settings.
+    * verify:
+    *   One record inserted
+    * @return void
+    **********************************************************************************************************/
+    private static testMethod void testRecordsInsertWithAllOrNoneFalse() {
+        if (strTestOnly != '*' && strTestOnly != 'testRecordsInsertWithAllOrNone') return;
+        
+        Account acct = new Account(Name = 'DMLOptionsAccount');
+        insert acct;
+
+        List<Contact> contacts = new List<Contact> { new Contact(FirstName = 'Blue', LastName = 'Cloud', AccountId = acct.Id),
+                                                        new Contact(FirstName = 'Astro', AccountId = acct.Id) };
                          
         Test.startTest();
         UTIL_DMLService.insertRecords(contacts, false);
@@ -150,10 +177,7 @@ public with sharing class UTIL_DMLService_TEST {
         List<Contact> retrievedContacts = [SELECT Id, FirstName, LastName, AccountId 
                                            FROM Contact];
 
-        if (!retrievedContacts.isEmpty()) {
-            System.assertEquals(contacts[0].FirstName, retrievedContacts[0].FirstName);
-            System.assertEquals(contacts[1].FirstName, retrievedContacts[1].FirstName);
-        }
+        System.assertEquals(NUMBER_OF_RECORDS_ONE, retrievedContacts.size());
     }
 
 
@@ -178,9 +202,7 @@ public with sharing class UTIL_DMLService_TEST {
         List<Contact> retrievedContacts = [SELECT Id, FirstName, LastName, AccountId 
                                            FROM Contact];
 
-        if (!retrievedContacts.isEmpty()) {
-            System.assertEquals(con.FirstName, retrievedContacts[0].FirstName);
-        }
+        System.assertEquals(false, retrievedContacts.isEmpty());
     }
 
 
@@ -206,66 +228,7 @@ public with sharing class UTIL_DMLService_TEST {
         List<Contact> retrievedContacts = [SELECT Id, FirstName, LastName, AccountId 
                                            FROM Contact];
 
-        if (!retrievedContacts.isEmpty()) {
-            System.assertEquals(contacts[0].FirstName, retrievedContacts[0].FirstName);
-            System.assertEquals(contacts[1].FirstName, retrievedContacts[1].FirstName);
-        }
-    }
-
-
-    /*********************************************************************************************************
-    * @description Tests insert of a record with specified optAllOrNone and DMLOptions values.
-    * verify:
-    *   Record inserted
-    * @return void
-    **********************************************************************************************************/
-    private static testMethod void testRecordInsertWithAllOrNoneAndDMLOptions() {
-        if (strTestOnly != '*' && strTestOnly != 'testRecordInsertWithAllOrNoneAndDMLOptions') return;
-        
-        Account acct = new Account(Name = 'DMLOptionsAccount');
-        insert acct;
-
-        Contact con = new Contact(FirstName = 'Blue', LastName = 'Cloud', AccountId = acct.Id); 
-                 
-        Test.startTest();
-        UTIL_DMLService.insertRecord(con, false, new Database.DMLOptions());
-        Test.stopTest();
-
-        List<Contact> retrievedContacts = [SELECT Id, FirstName, LastName, AccountId 
-                                           FROM Contact];
-
-        if (!retrievedContacts.isEmpty()) {
-            System.assertEquals(con.FirstName, retrievedContacts[0].FirstName);
-        }
-    }
-
-
-    /*********************************************************************************************************
-    * @description Tests insert of a List of records with specified optAllOrNone and DMLOptions values.
-    * verify:
-    *   Records inserted
-    * @return void
-    **********************************************************************************************************/
-    private static testMethod void testRecordsInserttWithAllOrNoneAndDMLOptions() {
-        if (strTestOnly != '*' && strTestOnly != 'testRecordsInserttWithAllOrNoneAndDMLOptions') return;
-        
-        Account acct = new Account(Name = 'DMLOptionsAccount');
-        insert acct;
-
-        List<Contact> contacts = new List<Contact> { new Contact(FirstName = 'Blue', LastName = 'Cloud', AccountId = acct.Id),
-                                                        new Contact(FirstName = 'Astro', LastName = 'Cloud', AccountId = acct.Id) };
-                         
-        Test.startTest();
-        UTIL_DMLService.insertRecords(contacts, false, new Database.DMLOptions());
-        Test.stopTest();
-
-        List<Contact> retrievedContacts = [SELECT Id, FirstName, LastName, AccountId 
-                                           FROM Contact];
-
-        if (!retrievedContacts.isEmpty()) {
-            System.assertEquals(contacts[0].FirstName, retrievedContacts[0].FirstName);
-            System.assertEquals(contacts[1].FirstName, retrievedContacts[1].FirstName);
-        }
+        System.assertEquals(NUMBER_OF_RECORDS_TWO, retrievedContacts.size());
     }
 
 
@@ -290,9 +253,7 @@ public with sharing class UTIL_DMLService_TEST {
         List<Contact> retrievedInsertedContacts = [SELECT Id, FirstName, LastName, AccountId 
                                                    FROM Contact];
 
-        if (!retrievedInsertedContacts.isEmpty()) {
-            System.assertEquals(con.FirstName, retrievedInsertedContacts[0].FirstName);
-        }
+        System.assertEquals(false, retrievedInsertedContacts.isEmpty());
 
         con.FirstName = 'Cloudy';
         UTIL_DMLService.updateRecord(con);
@@ -300,9 +261,8 @@ public with sharing class UTIL_DMLService_TEST {
         List<Contact> retrieveUpdatedContacts = [SELECT Id, FirstName, LastName, AccountId 
                                                  FROM Contact];
 
-        if (!retrieveUpdatedContacts.isEmpty()) {
-            System.assertEquals(con.FirstName, retrieveUpdatedContacts[0].FirstName);
-        }
+        System.assertEquals(false, retrieveUpdatedContacts.isEmpty());
+        System.assertEquals(con.FirstName, retrieveUpdatedContacts[0].FirstName);
     }
 
 
@@ -328,10 +288,7 @@ public with sharing class UTIL_DMLService_TEST {
         List<Contact> retrievedInsertedContacts = [SELECT Id, FirstName, LastName, AccountId 
                                                    FROM Contact];
 
-        if (!retrievedInsertedContacts.isEmpty()) {
-            System.assertEquals(contacts[0].FirstName, retrievedInsertedContacts[0].FirstName);
-            System.assertEquals(contacts[1].FirstName, retrievedInsertedContacts[1].FirstName);
-        }
+        System.assertEquals(false, retrievedInsertedContacts.isEmpty());
 
         contacts[0].FirstName = 'Cloudy';
         contacts[0].FirstName = 'Cody';
@@ -340,10 +297,9 @@ public with sharing class UTIL_DMLService_TEST {
         List<Contact> retrieveUpdatedContacts = [SELECT Id, FirstName, LastName, AccountId 
                                                  FROM Contact];
 
-        if (!retrieveUpdatedContacts.isEmpty()) {
-            System.assertEquals(contacts[0].FirstName, retrieveUpdatedContacts[0].FirstName);
-            System.assertEquals(contacts[1].FirstName, retrieveUpdatedContacts[1].FirstName);
-        }
+        System.assertEquals(false, retrieveUpdatedContacts.isEmpty());
+        System.assertEquals(contacts[0].FirstName, retrieveUpdatedContacts[0].FirstName);
+        System.assertEquals(contacts[1].FirstName, retrieveUpdatedContacts[1].FirstName);
     }
 
 
@@ -368,9 +324,7 @@ public with sharing class UTIL_DMLService_TEST {
         List<Contact> retrievedInsertedContacts = [SELECT Id, FirstName, LastName, AccountId 
                                                    FROM Contact];
 
-        if (!retrievedInsertedContacts.isEmpty()) {
-            System.assertEquals(con.FirstName, retrievedInsertedContacts[0].FirstName);
-        }
+        System.assertEquals(false, retrievedInsertedContacts.isEmpty());
 
         con.FirstName = 'Cloudy';
         UTIL_DMLService.updateRecord(con, false);
@@ -378,9 +332,8 @@ public with sharing class UTIL_DMLService_TEST {
         List<Contact> retrieveUpdatedContacts = [SELECT Id, FirstName, LastName, AccountId 
                                                  FROM Contact];
 
-        if (!retrieveUpdatedContacts.isEmpty()) {
-            System.assertEquals(con.FirstName, retrieveUpdatedContacts[0].FirstName);
-        }
+        System.assertEquals(false, retrieveUpdatedContacts.isEmpty());
+        System.assertEquals(con.FirstName, retrieveUpdatedContacts[0].FirstName);
     }
 
 
@@ -406,10 +359,7 @@ public with sharing class UTIL_DMLService_TEST {
         List<Contact> retrievedInsertedContacts = [SELECT Id, FirstName, LastName, AccountId 
                                                    FROM Contact];
 
-        if (!retrievedInsertedContacts.isEmpty()) {
-            System.assertEquals(contacts[0].FirstName, retrievedInsertedContacts[0].FirstName);
-            System.assertEquals(contacts[1].FirstName, retrievedInsertedContacts[1].FirstName);
-        }
+        System.assertEquals(false, retrievedInsertedContacts.isEmpty());
 
         contacts[0].FirstName = 'Cloudy';
         contacts[0].FirstName = 'Cody';
@@ -418,10 +368,9 @@ public with sharing class UTIL_DMLService_TEST {
         List<Contact> retrieveUpdatedContacts = [SELECT Id, FirstName, LastName, AccountId 
                                                  FROM Contact];
 
-        if (!retrieveUpdatedContacts.isEmpty()) {
-            System.assertEquals(contacts[0].FirstName, retrieveUpdatedContacts[0].FirstName);
-            System.assertEquals(contacts[1].FirstName, retrieveUpdatedContacts[1].FirstName);
-        }
+        System.assertEquals(false, retrieveUpdatedContacts.isEmpty());
+        System.assertEquals(contacts[0].FirstName, retrieveUpdatedContacts[0].FirstName);
+        System.assertEquals(contacts[1].FirstName, retrieveUpdatedContacts[1].FirstName);
     }
 
 
@@ -446,9 +395,7 @@ public with sharing class UTIL_DMLService_TEST {
         List<Contact> retrievedInsertedContacts = [SELECT Id, FirstName, LastName, AccountId 
                                                    FROM Contact];
 
-        if (!retrievedInsertedContacts.isEmpty()) {
-            System.assertEquals(con.FirstName, retrievedInsertedContacts[0].FirstName);
-        }
+        System.assertEquals(false, retrievedInsertedContacts.isEmpty());
 
         con.FirstName = 'Cloudy';
         UTIL_DMLService.updateRecord(con, new Database.DMLOptions());
@@ -456,9 +403,8 @@ public with sharing class UTIL_DMLService_TEST {
         List<Contact> retrieveUpdatedContacts = [SELECT Id, FirstName, LastName, AccountId 
                                                  FROM Contact];
 
-        if (!retrieveUpdatedContacts.isEmpty()) {
-            System.assertEquals(con.FirstName, retrieveUpdatedContacts[0].FirstName);
-        }
+        System.assertEquals(false, retrieveUpdatedContacts.isEmpty());
+        System.assertEquals(con.FirstName, retrieveUpdatedContacts[0].FirstName);
     }
 
 
@@ -484,10 +430,7 @@ public with sharing class UTIL_DMLService_TEST {
         List<Contact> retrievedInsertedContacts = [SELECT Id, FirstName, LastName, AccountId 
                                                    FROM Contact];
 
-        if (!retrievedInsertedContacts.isEmpty()) {
-            System.assertEquals(contacts[0].FirstName, retrievedInsertedContacts[0].FirstName);
-            System.assertEquals(contacts[1].FirstName, retrievedInsertedContacts[1].FirstName);
-        }
+        System.assertEquals(false, retrievedInsertedContacts.isEmpty());
 
         contacts[0].FirstName = 'Cloudy';
         contacts[0].FirstName = 'Cody';
@@ -496,96 +439,17 @@ public with sharing class UTIL_DMLService_TEST {
         List<Contact> retrieveUpdatedContacts = [SELECT Id, FirstName, LastName, AccountId 
                                                  FROM Contact];
 
-        if (!retrieveUpdatedContacts.isEmpty()) {
-            System.assertEquals(contacts[0].FirstName, retrieveUpdatedContacts[0].FirstName);
-            System.assertEquals(contacts[1].FirstName, retrieveUpdatedContacts[1].FirstName);
-        }
-    }
-    
-
-    /*********************************************************************************************************
-    * @description Tests update of a record with specified optAllOrNone and DMLOptions values.
-    * verify:
-    *   Record updated
-    * @return void
-    **********************************************************************************************************/
-    private static testMethod void testRecordUpdateWithAllOrNoneAndDMLOptions() {
-        if (strTestOnly != '*' && strTestOnly != 'testRecordUpdateWithAllOrNoneAndDMLOptions') return;
-        
-        Account acct = new Account(Name = 'DMLOptionsAccount');
-        insert acct;
-
-        Contact con = new Contact(FirstName = 'Blue', LastName = 'Cloud', AccountId = acct.Id); 
-                 
-        Test.startTest();
-        UTIL_DMLService.insertRecord(con);
-        Test.stopTest();
-
-        List<Contact> retrievedInsertedContacts = [SELECT Id, FirstName, LastName, AccountId 
-                                                   FROM Contact];
-
-        if (!retrievedInsertedContacts.isEmpty()) {
-            System.assertEquals(con.FirstName, retrievedInsertedContacts[0].FirstName);
-        }
-
-        con.FirstName = 'Cloudy';
-        UTIL_DMLService.updateRecord(con, false, new Database.DMLOptions());
-
-        List<Contact> retrieveUpdatedContacts = [SELECT Id, FirstName, LastName, AccountId 
-                                                 FROM Contact];
-
-        if (!retrieveUpdatedContacts.isEmpty()) {
-            System.assertEquals(con.FirstName, retrieveUpdatedContacts[0].FirstName);
-        }
+        System.assertEquals(false, retrieveUpdatedContacts.isEmpty());
+        System.assertEquals(contacts[0].FirstName, retrieveUpdatedContacts[0].FirstName);
+        System.assertEquals(contacts[1].FirstName, retrieveUpdatedContacts[1].FirstName);
     }
 
-
-    /*********************************************************************************************************
-    * @description Tests update of a List of records with specified optAllOrNone and DMLOptions values.
-    * verify:
-    *   Records updated
-    * @return void
-    **********************************************************************************************************/
-    private static testMethod void testRecordsUpdatetWithAllOrNoneAndDMLOptions() {
-        if (strTestOnly != '*' && strTestOnly != 'testRecordsUpdatetWithAllOrNoneAndDMLOptions') return;
-        
-        Account acct = new Account(Name = 'DMLOptionsAccount');
-        insert acct;
-
-        List<Contact> contacts = new List<Contact> { new Contact(FirstName = 'Blue', LastName = 'Cloud', AccountId = acct.Id),
-                                                     new Contact(FirstName = 'Astro', LastName = 'Cloud', AccountId = acct.Id) };
-                         
-        Test.startTest();
-        UTIL_DMLService.insertRecords(contacts, false, new Database.DMLOptions());
-        Test.stopTest();
-
-        List<Contact> retrievedInsertedContacts = [SELECT Id, FirstName, LastName, AccountId 
-                                                   FROM Contact];
-                                                   
-        if (!retrievedInsertedContacts.isEmpty()) {
-            System.assertEquals(contacts[0].FirstName, retrievedInsertedContacts[0].FirstName);
-            System.assertEquals(contacts[1].FirstName, retrievedInsertedContacts[1].FirstName);
-        }
-
-        contacts[0].FirstName = 'Cloudy';
-        contacts[0].FirstName = 'Cody';
-        UTIL_DMLService.updateRecords(contacts, false, new Database.DMLOptions());
-
-        List<Contact> retrieveUpdatedContacts = [SELECT Id, FirstName, LastName, AccountId 
-                                                 FROM Contact];
-
-        if (!retrieveUpdatedContacts.isEmpty()) {
-            System.assertEquals(contacts[0].FirstName, retrieveUpdatedContacts[0].FirstName);
-            System.assertEquals(contacts[1].FirstName, retrieveUpdatedContacts[1].FirstName);
-        }
-    }
-    
 
     /*********************************************************************************************************
     * @description Tests the NPSP Setting Respect Duplicate Rule Settings for duplicate Accounts
     *   set to false 
     * verify:
-    *   
+    *   Duplicate Accounts detected and allowed when the Respect Duplicate Rule Setting set to true.
     * @return void
     **********************************************************************************************************/
     private static testMethod void testRespectDuplicateRuleSettingsForAccounts() {
@@ -593,7 +457,7 @@ public with sharing class UTIL_DMLService_TEST {
         
         UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(Respect_Duplicate_Rule_Settings__c = false));
         Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings();
-        UTIL_DMLService.insertRecord(errorSettings, true);
+        UTIL_DMLService.insertRecord(errorSettings);
         
         Account acct = new Account(Name='Blue Cloud', BillingCity='San Francisco');
         UTIL_DMLService.insertRecord(acct);
@@ -601,29 +465,31 @@ public with sharing class UTIL_DMLService_TEST {
         if (!retrievedAccts.isEmpty()) {
             System.assertEquals('Blue Cloud', retrievedAccts[0].Name);
         }
-        
+
         Account dupeAcct = new Account(Name='Blue Cloud', BillingCity='San Francisco');
-        Database.SaveResult sr = UTIL_DMLService.insertRecord(dupeAcct);
-        if (!sr.isSuccess()) {
-            for (Database.Error duplicateError : sr.getErrors()) {
-                System.assertEquals('DUPLICATES_DETECTED', String.valueOf(duplicateError.getStatusCode()));
+        try {
+            Database.SaveResult sr = UTIL_DMLService.insertRecord(dupeAcct);
+            if (!sr.isSuccess()) {
+                for (Database.Error duplicateError : sr.getErrors()) {
+                    System.assertEquals('DUPLICATES_DETECTED', String.valueOf(duplicateError.getStatusCode()));
+                }
             }
-        } 
+        } catch (DmlException e) {}
 
         errorSettings.Respect_Duplicate_Rule_Settings__c = true;
-        UTIL_DMLService.updateRecord(errorSettings, true);
+        UTIL_DMLService.updateRecord(errorSettings);
          
         UTIL_DMLService.insertRecord(dupeAcct);
         retrievedAccts = [SELECT Id, Name FROM Account];
         if (!retrievedAccts.isEmpty()) {
-            System.assertEquals(2, retrievedAccts.size());
+            System.assertEquals(NUMBER_OF_RECORDS_TWO, retrievedAccts.size());
         }
     
         Account dupeAcctUpdate = new Account(Name='Blue Cloud Update', BillingCity='San Francisco');
         UTIL_DMLService.insertRecord(dupeAcctUpdate);
         retrievedAccts = [SELECT Id, Name FROM Account];
         if (!retrievedAccts.isEmpty()) {
-            System.assertEquals(3, retrievedAccts.size());
+            System.assertEquals(NUMBER_OF_RECORDS_THREE, retrievedAccts.size());
         }
 
         dupeAcctUpdate.Name = 'Blue Cloud';
@@ -636,12 +502,11 @@ public with sharing class UTIL_DMLService_TEST {
     }
 
 
-
     /*********************************************************************************************************
     * @description Tests the NPSP Setting Respect Duplicate Rule Settings for duplicate Contacts
     *   Records To Be Saved set to true 
     * verify:
-    *   Records inserted
+    *    Duplicate Contacts detected and allowed when the Respect Duplicate Rule Setting set to true
     * @return void
     **********************************************************************************************************/
     private static testMethod void testRespectDuplicateRuleSettingsForContacts() {
@@ -649,7 +514,7 @@ public with sharing class UTIL_DMLService_TEST {
         
         UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(Respect_Duplicate_Rule_Settings__c = false));
         Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings();
-        UTIL_DMLService.insertRecord(errorSettings, true);
+        UTIL_DMLService.insertRecord(errorSettings);
         
         Account acct = new Account(Name='Blue Cloud', BillingCity='San Francisco');
         UTIL_DMLService.insertRecord(acct);
@@ -662,27 +527,29 @@ public with sharing class UTIL_DMLService_TEST {
         }
         
         Contact dupeContact = new Contact(FirstName='Blue',LastName='Cloud', Email='blue@cloud.com', AccountId=acct.Id);
-        Database.SaveResult sr = UTIL_DMLService.insertRecord(dupeContact);
-        if (!sr.isSuccess()) {
-            for (Database.Error duplicateError : sr.getErrors()) {
-                System.assertEquals('DUPLICATES_DETECTED', String.valueOf(duplicateError.getStatusCode()));
+        try {
+            Database.SaveResult sr = UTIL_DMLService.insertRecord(dupeContact);
+            if (!sr.isSuccess()) {
+                for (Database.Error duplicateError : sr.getErrors()) {
+                    System.assertEquals('DUPLICATES_DETECTED', String.valueOf(duplicateError.getStatusCode()));
+                }
             }
-        } 
+        } catch (DmlException e) {}
 
         errorSettings.Respect_Duplicate_Rule_Settings__c = true;
-        UTIL_DMLService.updateRecord(errorSettings, true);
+        UTIL_DMLService.updateRecord(errorSettings);
          
         UTIL_DMLService.insertRecord(dupeContact);
         retrievedContacts = [SELECT Id, FirstName FROM Contact];
         if (!retrievedContacts.isEmpty()) {
-            System.assertEquals(2, retrievedContacts.size());
+            System.assertEquals(NUMBER_OF_RECORDS_TWO, retrievedContacts.size());
         }
     
         Contact dupeContactUpdate = new Contact(FirstName='Blue Update',LastName='Cloud', Email='blue@cloud.com', AccountId=acct.Id);
         UTIL_DMLService.insertRecord(dupeContactUpdate);
         retrievedContacts = [SELECT Id, FirstName FROM Contact];
         if (!retrievedContacts.isEmpty()) {
-            System.assertEquals(3, retrievedContacts.size());
+            System.assertEquals(NUMBER_OF_RECORDS_THREE, retrievedContacts.size());
         }
 
         dupeContactUpdate.FirstName = 'Blue';
@@ -692,8 +559,7 @@ public with sharing class UTIL_DMLService_TEST {
         for(Contact eachCon : retrievedContacts) {
             System.assertEquals('Blue', eachCon.FirstName);
         }
-    
     }
-    
+
 
 }

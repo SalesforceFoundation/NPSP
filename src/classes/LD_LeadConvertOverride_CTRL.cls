@@ -426,7 +426,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                         myAccount.put('RecordTypeID', rtIdAcccount);
                         myAccount.npe01__SYSTEMISINDIVIDUAL__c = true;
                         myAccount.npe01__One2OneContact__c = con.Id;
-                        UTIL_DMLService.updateRecord(myAccount, true);
+                        UTIL_DMLService.updateRecord(myAccount);
                     }
 
 	            // see if we need to create a household object for this contact (1:1 & bucket only)
@@ -434,7 +434,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 	                if (hs.npo02__Household_Rules__c == HH_Households.ALL_PROCESSOR || 
 	                   hs.npo02__Household_Rules__c == HH_Households.ALL_INDIVIDUALS_PROCESSOR) {
 	                    HH_Households_TDTM.insertHousehold(new list<Contact>{con}, true, null);
-	                    UTIL_DMLService.updateRecord(con, true);
+	                    UTIL_DMLService.updateRecord(con);
 	                }
 	            }
 	            
@@ -446,7 +446,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 		            addr.Latest_Start_Date__c = system.today();
 		            addr.Latest_End_Date__c = null;
 		            ADDR_Addresses_TDTM.copyAddressStdSObjAddr(con, 'Mailing', addr, null);
-		            UTIL_DMLService.insertRecord(addr, true);
+		            UTIL_DMLService.insertRecord(addr);
 	            }
             }
 
@@ -476,7 +476,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                     OpportunityContactRole ocr = ocrList[0];
                     ocr.IsPrimary = true;
                     ocr.Role = ContactsSettings.npe01__Opportunity_Contact_Role_Default_role__c; 
-                    UTIL_DMLService.updateRecord(ocr, true);
+                    UTIL_DMLService.updateRecord(ocr);
                 }
 
 	        }
@@ -500,7 +500,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 );
                 //copy address from temporary address__c record, handles state and country picklists if enabled
                 ADDR_Addresses_TDTM.copyAddressAddrSObj(tempAddr,acc,'Billing',null);
-                UTIL_DMLService.updateRecord(acc, true);
+                UTIL_DMLService.updateRecord(acc);
             }   
             // handle the optional Affiliation to a new or existing Account.
             ID afflAccId = null;
@@ -510,7 +510,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 );
                 //copy address from temporary address__c record, handles state and country picklists if enabled
                 ADDR_Addresses_TDTM.copyAddressAddrSObj(tempAddr,acc,'Billing',null);
-                UTIL_DMLService.insertRecord(acc, true);
+                UTIL_DMLService.insertRecord(acc);
                 afflAccId = acc.Id;
             } else if (strAfflAccountId != null && strAfflAccountId != '') {
             	afflAccId = strAfflAccountId;
@@ -534,13 +534,13 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             	}
                 String oppName = convertedOpp.Name;
 
-                UTIL_DMLService.updateRecord(convertedOpp, true);
+                UTIL_DMLService.updateRecord(convertedOpp);
 
                 // refresh opportunity names after update. if no opportunity names are defined, keeps original name
                 OPP_OpportunityNaming.refreshOppNames(new List<Opportunity>{convertedOpp});
                 // update Opportunity again if refreshed name is different
                 if (convertedOpp.Name != oppName) {
-                    UTIL_DMLService.updateRecord(convertedOpp, true);
+                    UTIL_DMLService.updateRecord(convertedOpp);
                 }
             }
             

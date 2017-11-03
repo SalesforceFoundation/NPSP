@@ -258,7 +258,7 @@ global with sharing class BDI_DataImportService {
             diBatch.Last_Processed_On__c = System.now();
             diBatch.Records_Successfully_Processed__c = cRecordsSucceeded;
             diBatch.Records_Failed__c = cRecordsFailed;
-            UTIL_DMLService.updateRecord(diBatch, true);
+            UTIL_DMLService.updateRecord(diBatch);
         }
     }
 
@@ -498,7 +498,7 @@ global with sharing class BDI_DataImportService {
                 ));
             }
 
-            UTIL_DMLService.updateRecords(listDIError, true);
+            UTIL_DMLService.updateRecords(listDIError);
 
             // unfortunately, we can't let the system think the batch failed, or
             // then it would rollback our setting of failure state in the DI records.
@@ -543,7 +543,7 @@ global with sharing class BDI_DataImportService {
         }
 
         //UTIL_Debug.debug('****DJH final update to listDI: ' + listDI);
-        UTIL_DMLService.updateRecords(listDI, true);
+        UTIL_DMLService.updateRecords(listDI);
     }
 
     /*******************************************************************************************************
@@ -1762,7 +1762,7 @@ global with sharing class BDI_DataImportService {
         }
 
         // now update the Contacts to create their Affiliations
-        UTIL_DMLService.updateRecords(mapConIdToConUpdate.values(), true);
+        UTIL_DMLService.updateRecords(mapConIdToConUpdate.values());
     }
 
     /*******************************************************************************************************
@@ -2057,7 +2057,7 @@ global with sharing class BDI_DataImportService {
         // two prong strategy! if any address object fails to save, do one
         // address record at a time, so we can log the failing address with the correct bdi record.
         try  {
-            UTIL_DMLService.insertRecords(listAddrInsert, true);
+            UTIL_DMLService.insertRecords(listAddrInsert);
         } catch (exception ex) {
             for (integer i = 0; i < listAddrInsert.size(); i++) {
                 Database.SaveResult sr = UTIL_DMLService.insertRecord(listAddrInsert[i], false);

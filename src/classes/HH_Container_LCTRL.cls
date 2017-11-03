@@ -347,13 +347,15 @@ public with sharing class HH_Container_LCTRL {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
             
             // allow potential duplicates when rules to warn are turned on.
-            List<Database.SaveResult> listSR = UTIL_DMLService.insertRecords(listInsert);
+            Database.DMLOptions dml = new Database.DMLOptions();
+            dml.DuplicateRuleHeader.AllowSave = true;
+            List<Database.SaveResult> listSR = UTIL_DMLService.insertRecords(listInsert, dml);
             for (Database.SaveResult sr : listSR) {
                 if (!sr.isSuccess())
                     throw new DmlException(sr.getErrors()[0].getMessage());
             }
 
-            UTIL_DMLService.updateRecords(listUpdate, true);
+            UTIL_DMLService.updateRecords(listUpdate);
 
         } catch (Exception ex) {
             Database.rollback(sp);
@@ -403,7 +405,7 @@ public with sharing class HH_Container_LCTRL {
             // would think the user updated the name from what it was, and thus it should be
             // excluded from auto-naming!
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
-            UTIL_DMLService.updateRecord(hhCopy, true);
+            UTIL_DMLService.updateRecord(hhCopy);
 
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());

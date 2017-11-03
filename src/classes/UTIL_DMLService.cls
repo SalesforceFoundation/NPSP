@@ -36,7 +36,7 @@
 */
 
 public with sharing class UTIL_DMLService {
-    public static final Boolean ALL_OR_NONE_FALSE = false;
+    public static final Boolean ALL_OR_NONE_TRUE = true;
     
 
     /*********************************************************************************************************
@@ -48,7 +48,7 @@ public with sharing class UTIL_DMLService {
     public static Database.SaveResult insertRecord(sObject recordToInsert) {
         Database.DMLOptions dmlOptions = new Database.DMLOptions();
         
-        dmlOptions.optAllOrNone = ALL_OR_NONE_FALSE;
+        dmlOptions.optAllOrNone = ALL_OR_NONE_TRUE;
         dmlOptions.DuplicateRuleHeader.AllowSave = retrieveRespectDuplicateRuleSettings();
 
         return Database.insert(recordToInsert, dmlOptions);
@@ -64,7 +64,7 @@ public with sharing class UTIL_DMLService {
     public static List<Database.SaveResult> insertRecords(List<sObject> recordsToInsert) {
         Database.DMLOptions dmlOptions = new Database.DMLOptions();
         
-        dmlOptions.optAllOrNone = ALL_OR_NONE_FALSE;
+        dmlOptions.optAllOrNone = ALL_OR_NONE_TRUE;
         dmlOptions.DuplicateRuleHeader.AllowSave = retrieveRespectDuplicateRuleSettings();
 
         return Database.insert(recordsToInsert, dmlOptions);
@@ -113,7 +113,6 @@ public with sharing class UTIL_DMLService {
     * @return Database.SaveResult
     **********************************************************************************************************/
     public static Database.SaveResult insertRecord(sObject recordToInsert, Database.DMLOptions dmlOptions) {
-        dmlOptions.optAllOrNone = ALL_OR_NONE_FALSE;
         dmlOptions.DuplicateRuleHeader.AllowSave = retrieveRespectDuplicateRuleSettings();
 
         return Database.insert(recordToInsert, dmlOptions);
@@ -128,39 +127,6 @@ public with sharing class UTIL_DMLService {
     * @return List<Database.SaveResult>
     **********************************************************************************************************/
     public static List<Database.SaveResult> insertRecords(List<sObject> recordsToInsert, Database.DMLOptions dmlOptions) {
-        dmlOptions.optAllOrNone = ALL_OR_NONE_FALSE;
-        dmlOptions.DuplicateRuleHeader.AllowSave = retrieveRespectDuplicateRuleSettings();
-
-        return Database.insert(recordsToInsert, dmlOptions);
-    }
-
-
-    /*********************************************************************************************************
-    * @description Wraps the Database class insert method and sets the DMLOptions optAllOrNone accordingly 
-    *   and defaults DuplicateRuleHeader.AllowSave to true.
-    * @param recordToInsert The sObject to add to the org.
-    * @param allOrNone The optional parameter that specifies whether the operation allows partial success.
-    * @param dmlOptions The optional parameter that specifies additional data for the transaction.
-    * @return Database.SaveResult
-    **********************************************************************************************************/
-    public static Database.SaveResult insertRecord(sObject recordToInsert, Boolean allOrNone, Database.DMLOptions dmlOptions) {
-        dmlOptions.optAllOrNone = allOrNone;
-        dmlOptions.DuplicateRuleHeader.AllowSave = retrieveRespectDuplicateRuleSettings();
-
-        return Database.insert(recordToInsert, dmlOptions);
-    }
-
-
-    /*********************************************************************************************************
-    * @description Wraps the Database class insert method and sets the DMLOptions optAllOrNone accordingly 
-    *   and defaults DuplicateRuleHeader.AllowSave to true.
-    * @param recordsToInsert The sObjects to add to the org.
-    * @param allOrNone The optional parameter that specifies whether the operation allows partial success.
-    * @param dmlOptions The optional parameter that specifies additional data for the transaction.
-    * @return List<Database.SaveResult>
-    **********************************************************************************************************/
-    public static List<Database.SaveResult> insertRecords(List<sObject> recordsToInsert, Boolean allOrNone, Database.DMLOptions dmlOptions) {
-        dmlOptions.optAllOrNone = allOrNone;
         dmlOptions.DuplicateRuleHeader.AllowSave = retrieveRespectDuplicateRuleSettings();
 
         return Database.insert(recordsToInsert, dmlOptions);
@@ -170,127 +136,94 @@ public with sharing class UTIL_DMLService {
     /*********************************************************************************************************
     * @description Wraps the Database class update method and defaults the DMLOptions optAllOrNone to false 
     *   and DuplicateRuleHeader.AllowSave to true.
-    * @param recordToInsert The sObject to update in the org.
+    * @param recordToUpdate The sObject to update in the org.
     * @return Database.SaveResult
     **********************************************************************************************************/
-    public static Database.SaveResult updateRecord(sObject recordToInsert) {
+    public static Database.SaveResult updateRecord(sObject recordToUpdate) {
         Database.DMLOptions dmlOptions = new Database.DMLOptions();
         
-        dmlOptions.optAllOrNone = ALL_OR_NONE_FALSE;
+        dmlOptions.optAllOrNone = ALL_OR_NONE_TRUE;
         dmlOptions.DuplicateRuleHeader.AllowSave = retrieveRespectDuplicateRuleSettings();
 
-        return Database.update(recordToInsert, dmlOptions);
+        return Database.update(recordToUpdate, dmlOptions);
     }
 
 
     /*********************************************************************************************************
     * @description Wraps the Database class update method and defaults the DMLOptions optAllOrNone to false 
     *   and DuplicateRuleHeader.AllowSave to true.
-    * @param recordsToInsert The sObjects to update in the org.
+    * @param recordsToUpdate The sObjects to update in the org.
     * @return List<Database.SaveResult>
     **********************************************************************************************************/
-    public static List<Database.SaveResult> updateRecords(List<sObject> recordsToInsert) {
+    public static List<Database.SaveResult> updateRecords(List<sObject> recordsToUpdate) {
         Database.DMLOptions dmlOptions = new Database.DMLOptions();
         
-        dmlOptions.optAllOrNone = ALL_OR_NONE_FALSE;
+        dmlOptions.optAllOrNone = ALL_OR_NONE_TRUE;
         dmlOptions.DuplicateRuleHeader.AllowSave = retrieveRespectDuplicateRuleSettings();
 
-        return Database.update(recordsToInsert, dmlOptions);
+        return Database.update(recordsToUpdate, dmlOptions);
     }
 
 
     /*********************************************************************************************************
     * @description Wraps the Database class update method and sets the DMLOptions optAllOrNone accordingly 
     *   and defaults DuplicateRuleHeader.AllowSave to true.
-    * @param recordToInsert The sObject to update in the org.
+    * @param recordToUpdate The sObject to update in the org.
     * @param allOrNone The optional parameter that specifies whether the operation allows partial success.
     * @return Database.SaveResult
     **********************************************************************************************************/
-    public static Database.SaveResult updateRecord(sObject recordToInsert, Boolean allOrNone) {
-        Database.DMLOptions dmlOptions = new Database.DMLOptions();
-        
-        dmlOptions.optAllOrNone = allOrNone;
-        dmlOptions.DuplicateRuleHeader.AllowSave = retrieveRespectDuplicateRuleSettings();
-
-        return Database.update(recordToInsert, dmlOptions);
-    }
-
-
-    /*********************************************************************************************************
-    * @description Wraps the Database class update method and sets the DMLOptions optAllOrNone accordingly 
-    *   and defaults DuplicateRuleHeader.AllowSave to true.
-    * @param recordsToInsert The sObjects to update in the org.
-    * @param allOrNone The optional parameter that specifies whether the operation allows partial success.
-    * @return List<Database.SaveResult>
-    **********************************************************************************************************/
-    public static List<Database.SaveResult> updateRecords(List<sObject> recordsToInsert, Boolean allOrNone) {
+    public static Database.SaveResult updateRecord(sObject recordToUpdate, Boolean allOrNone) {
         Database.DMLOptions dmlOptions = new Database.DMLOptions();
         
         dmlOptions.optAllOrNone = allOrNone;
         dmlOptions.DuplicateRuleHeader.AllowSave = retrieveRespectDuplicateRuleSettings();
 
-        return Database.update(recordsToInsert, dmlOptions);
+        return Database.update(recordToUpdate, dmlOptions);
     }
 
 
     /*********************************************************************************************************
     * @description Wraps the Database class update method and sets the DMLOptions optAllOrNone accordingly 
     *   and defaults DuplicateRuleHeader.AllowSave to true.
-    * @param recordToInsert The sObject to update in the org.
-    * @param dmlOptions The optional parameter that specifies additional data for the transaction.
-    * @return Database.SaveResult
-    **********************************************************************************************************/
-    public static Database.SaveResult updateRecord(sObject recordToInsert, Database.DMLOptions dmlOptions) {
-        dmlOptions.optAllOrNone = ALL_OR_NONE_FALSE;
-        dmlOptions.DuplicateRuleHeader.AllowSave = retrieveRespectDuplicateRuleSettings();
-
-        return Database.update(recordToInsert, dmlOptions);
-    }
-
-
-    /*********************************************************************************************************
-    * @description Wraps the Database class update method and sets the DMLOptions optAllOrNone accordingly 
-    *   and defaults DuplicateRuleHeader.AllowSave to true.
-    * @param recordsToInsert The sObjects to update in the org.
-    * @param dmlOptions The optional parameter that specifies additional data for the transaction.
+    * @param recordsToUpdate The sObjects to update in the org.
+    * @param allOrNone The optional parameter that specifies whether the operation allows partial success.
     * @return List<Database.SaveResult>
     **********************************************************************************************************/
-    public static List<Database.SaveResult> updateRecords(List<sObject> recordsToInsert, Database.DMLOptions dmlOptions) {
-        dmlOptions.optAllOrNone = ALL_OR_NONE_FALSE;
-        dmlOptions.DuplicateRuleHeader.AllowSave = retrieveRespectDuplicateRuleSettings();
-
-        return Database.update(recordsToInsert, dmlOptions);
-    }
-
-    /*********************************************************************************************************
-    * @description Wraps the Database class update method and sets the DMLOptions optAllOrNone accordingly 
-    *   and defaults DuplicateRuleHeader.AllowSave to true.
-    * @param recordToInsert The sObject to update in the org.
-    * @param allOrNone The optional parameter that specifies whether the operation allows partial success.
-    * @param dmlOptions The optional parameter that specifies additional data for the transaction.
-    * @return Database.SaveResult
-    **********************************************************************************************************/
-    public static Database.SaveResult updateRecord(sObject recordToInsert, Boolean allOrNone, Database.DMLOptions dmlOptions) {
+    public static List<Database.SaveResult> updateRecords(List<sObject> recordsToUpdate, Boolean allOrNone) {
+        Database.DMLOptions dmlOptions = new Database.DMLOptions();
+        
         dmlOptions.optAllOrNone = allOrNone;
         dmlOptions.DuplicateRuleHeader.AllowSave = retrieveRespectDuplicateRuleSettings();
 
-        return Database.update(recordToInsert, dmlOptions);
+        return Database.update(recordsToUpdate, dmlOptions);
     }
 
 
     /*********************************************************************************************************
     * @description Wraps the Database class update method and sets the DMLOptions optAllOrNone accordingly 
     *   and defaults DuplicateRuleHeader.AllowSave to true.
-    * @param recordsToInsert The sObjects to update in the org.
-    * @param allOrNone The optional parameter that specifies whether the operation allows partial success.
+    * @param recordToUpdate The sObject to update in the org.
+    * @param dmlOptions The optional parameter that specifies additional data for the transaction.
+    * @return Database.SaveResult
+    **********************************************************************************************************/
+    public static Database.SaveResult updateRecord(sObject recordToUpdate, Database.DMLOptions dmlOptions) {
+        dmlOptions.DuplicateRuleHeader.AllowSave = retrieveRespectDuplicateRuleSettings();
+
+        return Database.update(recordToUpdate, dmlOptions);
+    }
+
+
+    /*********************************************************************************************************
+    * @description Wraps the Database class update method and sets the DMLOptions optAllOrNone accordingly 
+    *   and defaults DuplicateRuleHeader.AllowSave to true.
+    * @param recordsToUpdate The sObjects to update in the org.
     * @param dmlOptions The optional parameter that specifies additional data for the transaction.
     * @return List<Database.SaveResult>
     **********************************************************************************************************/
-    public static List<Database.SaveResult> updateRecords(List<sObject> recordsToInsert, Boolean allOrNone, Database.DMLOptions dmlOptions) {
-        dmlOptions.optAllOrNone = allOrNone;
+    public static List<Database.SaveResult> updateRecords(List<sObject> recordsToUpdate, Database.DMLOptions dmlOptions) {
         dmlOptions.DuplicateRuleHeader.AllowSave = retrieveRespectDuplicateRuleSettings();
 
-        return Database.update(recordsToInsert, dmlOptions);
+        return Database.update(recordsToUpdate, dmlOptions);
     }
 
 

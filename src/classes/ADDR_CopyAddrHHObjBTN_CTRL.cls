@@ -138,7 +138,7 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
                 
                 if (sr.isSuccess()){
                     resulttext = system.label.npo02.AddressCopySuccess;
-                    if (n != null) UTIL_DMLService.insertRecord(n, true);
+                    if (n != null) UTIL_DMLService.insertRecord(n);
                     redirectPage = true;                    
                 }
                 else{
@@ -192,8 +192,8 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
             }
     
             try{
-                UTIL_DMLService.updateRecords(constoupdate, true);
-                UTIL_DMLService.insertRecords(notestoinsert, true);
+                UTIL_DMLService.updateRecords(constoupdate);
+                UTIL_DMLService.insertRecords(notestoinsert);
                 redirectPage = true;            
             }
             

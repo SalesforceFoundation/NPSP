@@ -5328,7 +5328,7 @@ This process may take some time, but you can close this page and the process wil
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>stgHelpRespectDuplicateRuleSettings</shortDescription>
+        <shortDescription>Respect the settings on a Duplicate Rule that control allowing duplicates.</shortDescription>
         <value>Respect the settings on a Duplicate Rule that control whether duplicate records are allowed.
 To check your existing settings, go to Duplicate Rules under Setup. For any rule, when the Action On Create or Action On Edit fields are set to &quot;Allow,&quot; duplicates will be saved.</value>
     </labels>

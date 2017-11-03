@@ -479,7 +479,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             individual.npe01__SYSTEMISINDIVIDUAL__c = true;
             //individual.Type = CAO_Constants.BUCKET_ORGANIZATION_TYPE;
             individual.npe01__SYSTEM_AccountType__c = CAO_Constants.BUCKET_ORGANIZATION_TYPE;
-            UTIL_DMLService.insertRecord(individual, true);
+            UTIL_DMLService.insertRecord(individual);
 
             for(Contact c : contacts)
             {
@@ -787,7 +787,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         if (listOpp.size() > 0) {
             // since our rollup code isn't using dmlWrapper, some callers want us to commit now
             if (dmlWrapper == null)
-                UTIL_DMLService.updateRecords(listOpp, true);
+                UTIL_DMLService.updateRecords(listOpp);
             else
                 dmlWrapper.objectsToUpdate.addAll((list<SObject>)listOpp);
         }

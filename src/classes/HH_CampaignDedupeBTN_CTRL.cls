@@ -106,7 +106,7 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
 	        //this dml need to be done by the action method        
 	        if (updateSettingsWithID){
 	            hs.npo02__Household_Mailing_List_ID__c = CampaignMailingListReportId;
-	            UTIL_DMLService.updateRecord(hs, true);
+	            UTIL_DMLService.updateRecord(hs);
 	        }
 	        
 	        if (!haveReportID){
@@ -275,9 +275,9 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
         integer returnsize = 0;
         Savepoint sp = Database.setSavepoint();
         try{
-            if (!newStatuses.isEmpty()) UTIL_DMLService.insertRecords(newStatuses, true);
+            if (!newStatuses.isEmpty()) UTIL_DMLService.insertRecords(newStatuses);
             if (!dupeMembers.isEmpty()){
-                 UTIL_DMLService.updateRecords(dupeMembers, true);
+                 UTIL_DMLService.updateRecords(dupeMembers);
                  returnsize = dupeMembers.size();                
             }
         }            
