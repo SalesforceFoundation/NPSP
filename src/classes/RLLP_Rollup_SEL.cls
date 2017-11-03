@@ -49,7 +49,7 @@ public class RLLP_Rollup_SEL {
                         SELECT Id, DeveloperName, MasterLabel, Active__c, Use_Fiscal_Year__c,
                                 Description__c, Filter_Group__c, Filter_Group__r.MasterLabel, Operation__c, Integer__c,
                                 Amount_Field__r.QualifiedApiName, Amount_Object__r.QualifiedApiName,
-                                Attribution_Field__r.QualifiedApiName, Attribution_Object__r.QualifiedApiName,
+                                Use_OCR_for_Attribution_Object__c,
                                 Date_Field__r.QualifiedApiName, Date_Object__r.QualifiedApiName,
                                 Detail_Field__r.QualifiedApiName, Detail_Object__r.QualifiedApiName,
                                 Result_Field__r.QualifiedApiName, Result_Object__r.QualifiedApiName,
@@ -136,16 +136,18 @@ public class RLLP_Rollup_SEL {
                     String fldName = rollup.Detail_Field__r.QualifiedApiName;
                     referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
                 }
-                if (rollup.Attribution_Object__r.QualifiedApiName == objName) {
-                    String fldName = rollup.Attribution_Field__r.QualifiedApiName;
-                    referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
-                }
                 if (rollup.Amount_Object__r.QualifiedApiName == objName) {
                     String fldName = rollup.Amount_Field__r.QualifiedApiName;
                     referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
                 }
                 if (rollup.Date_Object__r.QualifiedApiName == objName) {
                     String fldName = rollup.Date_Field__r.QualifiedApiName;
+                    referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
+                }
+                if (rollup.Use_OCR_for_Attribution_Object__c == true && objName == 'OpportunityContactRole') {
+                    String fldName = 'Role';
+                    referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
+                    fldName = 'ContactId';
                     referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
                 }
             }

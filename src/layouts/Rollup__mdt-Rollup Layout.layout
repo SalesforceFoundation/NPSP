@@ -68,10 +68,6 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Attribution_Object__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
                 <field>Amount_Object__c</field>
             </layoutItems>
             <layoutItems>
@@ -94,10 +90,6 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Attribution_Field__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
                 <field>Amount_Field__c</field>
             </layoutItems>
             <layoutItems>
@@ -107,6 +99,10 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Result_Field__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Use_OCR_for_Attribution_Object__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
