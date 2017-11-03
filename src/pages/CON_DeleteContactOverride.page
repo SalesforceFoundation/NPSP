@@ -16,21 +16,24 @@
             <c:UTIL_PageMessages allowClose="false" id="msgs"/>
             
             <div class="slds-p-around_small" id="btnDiv">
-                <apex:commandButton value="{!$Label.DeleteContactLeaveAccount}" id="delContactOnlyBtn"
+                <apex:commandButton value="{!$Label.DeleteContactLeaveAccount}"
+                    id="delContactOnlyBtn"
                     action="{!deleteContactOnly}" 
                     rendered="{!NOT(shouldDeleteContactAlone)}" 
                     rerender="delForm"
                     styleClass="slds-button slds-button_neutral"
                 />
 
-                <apex:outputLink target="_self" id="viewContactLink"
+                <apex:outputLink target="_self"
+                    id="viewContactLink"
                     title="{!$Label.REL_View_Contact_Record}" 
                     value="/{!$CurrentPage.parameters.id}" 
                     styleClass="slds-button slds-button_neutral {!IF(shouldDeleteContactAlone, 'slds-m-right_x-small', '')}">
                     {!$Label.REL_View_Contact_Record}
                 </apex:outputLink>
 
-                <apex:commandButton value="{!$Label.DeleteAccount}" id="delAccountBtn"
+                <apex:commandButton value="{!$Label.DeleteAccount}"
+                    id="delAccountBtn"
                     action="{!deleteAccount}" 
                     rendered="{!NOT(shouldDeleteContactAlone)}" 
                     rerender="delForm"
