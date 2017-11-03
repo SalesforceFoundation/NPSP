@@ -3,7 +3,7 @@
     <apex:attribute name="sObj" type="sObject" description="The sObject the field belongs to." required="true"/>
     <apex:attribute name="sObjType" type="String" description="The sObject type." required="true"/>
     <apex:attribute name="onchange" type="String"  default="" description="On change event."/>
-    <apex:attribute name="required" type="Boolean" default="" description="When true marks the field as required, otherwise, the field is marked as required based on isNillable()." />
+    <apex:attribute name="required" type="Boolean" default="" description="When true marks the field as required, otherwise, the field is marked as required based on 'nillable' value." />
     <apex:attribute name="styleClass" type="String" default="" description="The style to apply to the outer form element." />
     <apex:attribute name="labelOverride" type="String" default="" description="Override the standard field label with this text" />
     <apex:attribute name="showLabel" type="Boolean" default="true" description="When false, hide the field label" />
