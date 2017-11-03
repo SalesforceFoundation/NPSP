@@ -102,7 +102,8 @@ public class CMT_FilterRule {
             this.field = UTIL_Describe.getFieldDescribe('OpportunityContactRole', 'Role').getSObjectField();
         }
         this.constant = filterRule.Constant__c;
-        this.operation = CMT_FilterRuleUI_SVC.getFilterOperationFromString(filterRule.Operator__c);
+        String fixedOperator = filterRule.Operator__c.replaceAll(' ', '_');
+        this.operation = CMT_FilterRuleUI_SVC.getFilterOperationFromString(fixedOperator);
         // If the field is a datetime type, and the constant is a date format (YYYY-DD-MM) then use
         // DATE comparison class rather than the date time comparison class
         if (field.getDescribe().getSOAPType() == SoapType.DATETIME && constant != null &&
