@@ -21,14 +21,6 @@
         <name>Amount_Object__c</name>
     </fields>
     <fields>
-        <label><!-- Attribution Field --></label>
-        <name>Attribution_Field__c</name>
-    </fields>
-    <fields>
-        <label><!-- Attribution Object --></label>
-        <name>Attribution_Object__c</name>
-    </fields>
-    <fields>
         <label><!-- Date Field --></label>
         <name>Date_Field__c</name>
     </fields>

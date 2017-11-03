@@ -34,31 +34,6 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Attribution_Field__c</fullName>
-        <externalId>false</externalId>
-        <fieldManageability>DeveloperControlled</fieldManageability>
-        <label>Attribution Field</label>
-        <metadataRelationshipControllingField>Rollup__mdt.Attribution_Object__c</metadataRelationshipControllingField>
-        <referenceTo>FieldDefinition</referenceTo>
-        <relationshipLabel>Rollups</relationshipLabel>
-        <relationshipName>Rollups</relationshipName>
-        <required>false</required>
-        <type>MetadataRelationship</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Attribution_Object__c</fullName>
-        <externalId>false</externalId>
-        <fieldManageability>DeveloperControlled</fieldManageability>
-        <label>Attribution Object</label>
-        <referenceTo>EntityDefinition</referenceTo>
-        <relationshipLabel>Rollups2</relationshipLabel>
-        <relationshipName>Rollups2</relationshipName>
-        <required>false</required>
-        <type>MetadataRelationship</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
         <fullName>Date_Field__c</fullName>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
