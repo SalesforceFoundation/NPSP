@@ -36,6 +36,19 @@
 */
 @isTest
 private class CON_DeleteContactOverride_TEST {
+    /** @description Contact home page. */
+    private static final String CONTACT_HOME = '/003/o';
+    /** @description LEx navigation value to go back. */
+    private static final String LEX_BACK = 'back';
+    /** @description LEx navigation value to go to Contact Home. */
+    private static final String LEX_HOME = 'home';
+    /** @description LEx RetURL parameter. */
+    private static final String PARAM_RETURL_LEX = 'vfRetURLInSFX';
+    /** @description RetURL parameter. */
+    private static final String PARAM_RETURL = 'retURL';
+    /** @description Cancel RetURL parameter. */
+    private static final String PARAM_RETURL_FAIL = 'failRetURL';
+
     /*********************************************************************************************************
     * @description if you only want to run one test in this class, fill in its name here.
     * if you want to run all tests, then use '*'
@@ -51,7 +64,7 @@ private class CON_DeleteContactOverride_TEST {
         Contact con = new Contact(LastName='foo');
         insert con;
 
-        list<Contact> queryCon = [SELECT Id, AccountId, Account.npe01__SYSTEMIsIndividual__c FROM Contact WHERE Id = :con.id];
+        list<Contact> queryCon = getContactList(con.Id);
         system.assertNotEquals(null, queryCon[0].AccountId, 'The contact should have an auto-created household.');
         system.assert(queryCon[0].Account.npe01__SYSTEMIsIndividual__c, 'The household should have the system flag set.');
 
@@ -63,12 +76,12 @@ private class CON_DeleteContactOverride_TEST {
         ctrl.processDelete();
         test.stopTest();
 
-        list<account> queryAcc = [SELECT Id, isDeleted FROM Account WHERE id = :querycon[0].AccountId ALL ROWS];
+        list<account> queryAcc = getAccountListAllRows(queryCon[0].AccountId);
         
         system.assertEquals(1,queryAcc.size(),'There should be one account.');
         system.assertEquals(false, queryacc[0].isDeleted,'Deleted flag should not be set.');
 
-        queryCon = [SELECT Id, isDeleted FROM Contact WHERE id = :con.id ALL ROWS];
+        queryCon = getContactListAllRows(con.id);
 
         system.assertEquals(1,queryCon.size(),'There should be one deleted contact.');
         system.assert(queryCon[0].isDeleted,'Deleted flag should be set.');
@@ -90,7 +103,7 @@ private class CON_DeleteContactOverride_TEST {
         Contact con = new Contact(LastName='foo');
         insert con;
         
-        list<Contact> queryCon = [SELECT Id, AccountId, Account.npe01__SYSTEMIsIndividual__c FROM Contact WHERE Id = :con.id];
+        list<Contact> queryCon = getContactList(con.Id);
         system.assertNotEquals(null, queryCon[0].AccountId, 'The contact should have an auto-created household.');
         system.assert(queryCon[0].Account.npe01__SYSTEMIsIndividual__c, 'The household should have the system flag set.');
 
@@ -100,12 +113,12 @@ private class CON_DeleteContactOverride_TEST {
         ctrl.deleteAccount();
         test.stopTest();
 
-        list<account> queryAcc = [SELECT Id, isDeleted FROM Account WHERE id = :querycon[0].AccountId ALL ROWS];
+        list<account> queryAcc = getAccountListAllRows(queryCon[0].AccountId);
         
         system.assertEquals(1,queryAcc.size(),'There should be one deleted account.');
         system.assert(queryacc[0].isDeleted,'Deleted flag should be set.');
 
-        queryCon = [SELECT Id, isDeleted FROM Contact WHERE id = :con.id ALL ROWS];
+        queryCon = getContactListAllRows(con.id);
 
         system.assertEquals(1,queryCon.size(),'There should be one deleted contact.');
         system.assert(queryCon[0].isDeleted,'Deleted flag should be set.');
@@ -121,7 +134,7 @@ private class CON_DeleteContactOverride_TEST {
         Contact con = new Contact(LastName='foo');
         insert con;
         
-        list<Contact> queryCon = [SELECT Id, AccountId, Account.npe01__SYSTEMIsIndividual__c FROM Contact WHERE Id = :con.id];
+        list<Contact> queryCon = getContactList(con.Id);
         system.assertNotEquals(null, queryCon[0].AccountId, 'The contact should have an auto-created household.');
         system.assert(queryCon[0].Account.npe01__SYSTEMIsIndividual__c, 'The household should have the system flag set.');
 
@@ -131,15 +144,224 @@ private class CON_DeleteContactOverride_TEST {
         ctrl.deleteAccount();
         test.stopTest();
 
-        list<account> queryAcc = [SELECT Id, isDeleted FROM Account WHERE id = :querycon[0].AccountId ALL ROWS];
+        list<account> queryAcc = getAccountListAllRows(queryCon[0].AccountId);
         
         system.assertEquals(1,queryAcc.size(),'There should be one deleted account.');
         system.assert(queryacc[0].isDeleted,'Deleted flag should be set.');
 
-        queryCon = [SELECT Id, isDeleted FROM Contact WHERE id = :con.id ALL ROWS];
+        queryCon = getContactListAllRows(con.Id);
 
         system.assertEquals(1,queryCon.size(),'There should be one deleted contact.');
         system.assert(queryCon[0].isDeleted,'Deleted flag should be set.');
 
+    }
+
+    /*********************************************************************************************************
+    @description 
+        Test Contact Delete page navigation parameters are set based on passed in Apex page parameters
+    verify:
+        The following properties are set:
+        - Property to indicate if LEx or Classic is used,
+        - Return URL
+        - Fail (or Cancel) URL
+    **********************************************************************************************************/ 
+    private static testMethod void testNavigationParametersAreSetInConstructor() {
+        if (strTestOnly != '*' && strTestOnly != 'testNavigationParametersAreSetInConstructor') return;
+
+        Contact con = new Contact(LastName = 'foo');
+        insert con;
+
+        Test.setCurrentPage(Page.CON_DeleteContactOverride); 
+
+        String retUrl = 'foo/o';
+        ApexPages.currentPage().getParameters().put(PARAM_RETURL, retUrl);
+
+        String vfRetURLInSFX = 'test/o';
+        ApexPages.currentPage().getParameters().put(PARAM_RETURL_LEX, vfRetURLInSFX);
+
+        String failRetUrl = 'bar/o';
+        ApexPages.currentPage().getParameters().put(PARAM_RETURL_FAIL, failRetUrl);
+
+        CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
+        
+        String expectedRetUrl = ctrl.sforceUser ? vfRetURLInSFX : retUrl;
+        System.assertEquals(expectedRetUrl, ctrl.retUrl, 'Return URL should be set');
+        System.assertEquals(failRetUrl, ctrl.failRetUrl, 'Cancel URL should be set');
+    }
+
+    /*********************************************************************************************************
+    @description 
+        Test RetURL is set to Contact Home page if it is not provided in the page params
+    verify:
+        Return URL property is set to Contact Home
+    **********************************************************************************************************/ 
+    private static testMethod void testRetUrlIsContactHomeIfNotProvided() {
+        if (strTestOnly != '*' && strTestOnly != 'testRetUrlIsContactHomeIfNotProvided') return;
+
+        Contact con = new Contact(LastName = 'foo');
+        insert con;
+   
+        CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
+    
+        Map<String, String> params = new Map<String, String>{
+            PARAM_RETURL_FAIL => 'foo/o'
+        };
+        ctrl.setNavigationParams(params);
+        
+        System.assertEquals(CONTACT_HOME, ctrl.retUrl, 'Return URL should be Contact Home page');
+        System.assertEquals(params.get(PARAM_RETURL_FAIL), ctrl.failRetUrl, 'Cancel URL should be set');
+    }
+
+    /*********************************************************************************************************
+    @description 
+        Test RetURL 
+    verify:
+        Controller retUrl is retURL page param for Classic. 
+        Controller retUrl is vfRetURLInSFX page param for LEx.
+    **********************************************************************************************************/ 
+    private static testMethod void testRetUrlForClassicAndLex() {
+        if (strTestOnly != '*' && strTestOnly != 'testRetUrlForClassicAndLex') return;
+
+        Contact con = new Contact(LastName = 'foo');
+        insert con;
+   
+        CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
+    
+        Map<String, String> params = new Map<String, String>{
+            PARAM_RETURL => 'foo/o',
+            PARAM_RETURL_LEX => 'bar/o'
+        };
+
+        ctrl.sforceUser = false;
+        ctrl.setNavigationParams(params);        
+        System.assertEquals(params.get(PARAM_RETURL), ctrl.retUrl, 'Return URL should be retURL page param for Classic');
+
+        ctrl.sforceUser = true;
+        ctrl.setNavigationParams(params);        
+        System.assertEquals(params.get(PARAM_RETURL_LEX), ctrl.retUrl, 'Return URL should be vfRetURLInSFX page param for LEx');
+    }
+
+    /*********************************************************************************************************
+    @description 
+        Test onCancel navigation
+    verify:
+        Cancel action navigates to failRetURL or retURL for Classic. 
+        Cancel action sets sfoceNav to "back" when in LEx.
+    **********************************************************************************************************/ 
+    private static testMethod void testOnCancel() {
+        if (strTestOnly != '*' && strTestOnly != 'testOnCancel') return;
+
+        Contact con = new Contact(LastName = 'foo');
+        insert con;
+   
+        CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
+    
+        Map<String, String> params = new Map<String, String>{
+            PARAM_RETURL => '006/o',
+            PARAM_RETURL_FAIL => '001/o'
+        };
+
+        ctrl.sforceUser = false;
+        ctrl.setNavigationParams(params);     
+        PageReference cancelPage = ctrl.onCancel(); 
+        System.assertNotEquals(null, cancelPage, 'Cancel page should be returned for Classic');  
+        System.assertEquals(params.get(PARAM_RETURL_FAIL), cancelPage.getUrl(), 'Cancel page should be navigate failRetURL for Classic');
+        System.assertEquals(null, ctrl.sforceNav, 'Controller sforceNav should be null for Classic');
+
+        params.remove(PARAM_RETURL_FAIL);
+        ctrl.setNavigationParams(params);     
+        cancelPage = ctrl.onCancel(); 
+        System.assertNotEquals(null, cancelPage, 'Cancel page should be returned for Classic');  
+        System.assertEquals(params.get(PARAM_RETURL), cancelPage.getUrl(), 'Cancel page should be navigate retURL for Classic');
+        System.assert(cancelPage.getRedirect(), 'The Cancel page should redirect');
+
+        ctrl.sforceUser = true;
+        ctrl.setNavigationParams(params);  
+        cancelPage = ctrl.onCancel();         
+        System.assertEquals(null, cancelPage, 'Cancel page should be null for LEx');
+        System.assertEquals(LEX_BACK, ctrl.sforceNav, 'Controller sforceNav should be "back" for LEx');
+    }
+
+    /*********************************************************************************************************
+    @description 
+        Test Contact deletion and leaving empty Account
+    verify:
+        The Contact is deleted.
+        The Account is not deleted. 
+    **********************************************************************************************************/ 
+    private static testMethod void testDeleteContactAndLeaveEmptyAccount() {
+        if (strTestOnly != '*' && strTestOnly != 'testDeleteContactAndLeaveEmptyAccount') return;
+
+        Contact con = new Contact(LastName = 'foo');
+        insert con;
+        
+        CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
+
+        con = getContactList(con.Id)[0];
+        System.assertNotEquals(null, con.AccountId, 'The Contact should have an auto-created household.');
+
+        Map<String, String> params = new Map<String, String>{
+            PARAM_RETURL_LEX => '/' + con.Id
+        };
+        ctrl.sforceUser = true;
+        ctrl.setNavigationParams(params);   
+        System.assertEquals(null, ctrl.sforceNav, 'Controller sforceNav should be null before an action');
+  
+        PageReference retPage = ctrl.deleteContactOnly();
+        System.assertEquals(null, retPage, 'Return page should be null for LEx');
+        System.assertEquals(LEX_HOME, ctrl.sforceNav, 'Controller sforceNav should be Contact home when retUrl contains Contact Id');
+ 
+        List<Account> accounts = getAccountListAllRows(con.AccountId);
+        System.assertEquals(1, accounts.size(), 'The Account should be retrieved from DB.');
+        System.assert(!accounts[0].isDeleted, 'The Account should not be deleted');
+
+        con = getContactListAllRows(con.id)[0];
+        System.assertNotEquals(null, con, 'The Contact should be retrieved from DB.');
+        System.assert(con.isDeleted, 'The Contact should be deleted');
+    }
+        
+
+    // Helpers
+    ///////////
+
+    /*********************************************************************************************************
+    * @description Get Contact
+    * @param contactId A Contact Id
+    * @return List<Contact> Return the Contact in the List
+    **********************************************************************************************************/
+    private static List<Contact> getContactList(Id contactId) {
+        return [
+            SELECT Id, AccountId, Account.npe01__SYSTEMIsIndividual__c 
+            FROM Contact 
+            WHERE Id = :contactId
+        ];
+    }
+
+    /*********************************************************************************************************
+    * @description Get Contact regardless if it is deleted
+    * @param contactId A Contact Id
+    * @return List<Contact> Return the Contact in the List
+    **********************************************************************************************************/
+    private static List<Contact> getContactListAllRows(Id contactId) {
+        return [
+            SELECT Id, isDeleted 
+            FROM Contact 
+            WHERE Id = :contactId
+            ALL ROWS
+        ];
+    }
+
+    /*********************************************************************************************************
+    * @description Get Account
+    * @param accountId An Account Id
+    * @return List<Account> Return the Account in the List
+    **********************************************************************************************************/
+    private static List<Account> getAccountListAllRows(Id accountId) {
+        return [
+            SELECT Id, isDeleted 
+            FROM Account 
+            WHERE Id = :accountId 
+            ALL ROWS
+        ];
     }
 }
