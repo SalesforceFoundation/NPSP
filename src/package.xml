@@ -1017,6 +1017,8 @@
         <members>CascadeDeletionError</members>
         <members>ClosedWonOpportunities</members>
         <members>ConfirmDeleteAccount</members>
+        <members>DeleteAccount</members>
+        <members>DeleteContactLeaveAccount</members>
         <members>EPAddDependentTask</members>
         <members>EPAddTask</members>
         <members>EPDeleteTask</members>
