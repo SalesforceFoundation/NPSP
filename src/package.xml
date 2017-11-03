@@ -781,8 +781,8 @@
         <members>Filter_Group__mdt.Description__c</members>
         <members>Filter_Group__mdt.Is_Deleted__c</members>
         <members>Filter_Rule__mdt.Constant__c</members>
-        <members>Filter_Rule__mdt.Field__c</members>
         <members>Filter_Rule__mdt.Field_OpportunityContactRole_Role__c</members>
+        <members>Filter_Rule__mdt.Field__c</members>
         <members>Filter_Rule__mdt.Filter_Group__c</members>
         <members>Filter_Rule__mdt.Is_Deleted__c</members>
         <members>Filter_Rule__mdt.Object__c</members>
@@ -893,8 +893,6 @@
         <members>Rollup__mdt.Active__c</members>
         <members>Rollup__mdt.Amount_Field__c</members>
         <members>Rollup__mdt.Amount_Object__c</members>
-        <members>Rollup__mdt.Attribution_Field__c</members>
-        <members>Rollup__mdt.Attribution_Object__c</members>
         <members>Rollup__mdt.Date_Field__c</members>
         <members>Rollup__mdt.Date_Object__c</members>
         <members>Rollup__mdt.Description__c</members>
@@ -908,6 +906,7 @@
         <members>Rollup__mdt.Summary_Field__c</members>
         <members>Rollup__mdt.Summary_Object__c</members>
         <members>Rollup__mdt.Use_Fiscal_Year__c</members>
+        <members>Rollup__mdt.Use_OCR_for_Attribution_Object__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Automatic_Campaign_Member_Management__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Non_Responded_Status__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Responded_Status__c</members>
