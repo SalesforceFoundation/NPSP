@@ -85,7 +85,6 @@
         <fields>Summary_Object__c</fields>
         <fields>Summary_Field__c</fields>
         <fields>Detail_Object__c</fields>
-        <fields>Attribution_Object__c</fields>
         <relatedList>Rollup__mdt.Filter_Group__c</relatedList>
         <sortField>Summary_Object__c</sortField>
         <sortOrder>Asc</sortOrder>
