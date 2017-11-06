@@ -44,7 +44,6 @@ public class RLLP_OppContactRollup_BATCH implements Database.Batchable<SObject>,
     ********************************************************************************************************/
     public void execute(SchedulableContext context) {
         try {
-            system.debug('Batch in execute ' + RLLP_OppRollup_UTIL.BATCH_SIZE);
             Database.executeBatch(new RLLP_OppContactRollup_BATCH(), RLLP_OppRollup_UTIL.BATCH_SIZE);
         } catch(Exception e) {
             ERR_Handler.processError(e, ERR_Handler_API.Context.RLLP);
