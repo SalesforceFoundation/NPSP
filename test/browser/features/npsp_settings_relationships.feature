@@ -3,7 +3,7 @@ Feature: NPSP Settings Relationships
   Background:
     Given I navigate to NPSP Settings
 
- @reset_these_settings @chrome @flaky
+  @flaky
   Scenario: Actually save Relationships Settings
     Given I navigate to Relationships Relationships
     When I change Relationships Reciprocal Method settings
@@ -11,7 +11,7 @@ Feature: NPSP Settings Relationships
     Then Relationships settings should be saved
       And when I refresh the Relationships Relationships page my changes should be visible
 
-  @smoketest @reset_these_settings @chrome
+  @flaky
   Scenario: Actually save Relationships Settings Affiliations
     Given I navigate to Relationships Affiliations
     When I change Relationships Affiliations settings

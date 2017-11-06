@@ -1,6 +1,6 @@
 Feature: Relationship Viewer test
 
-  @smoketest
+  @flaky
   Scenario: Invoke Relationship Viewer
     Given I create a new Contact via the API
       And I create a new Contact via the API
