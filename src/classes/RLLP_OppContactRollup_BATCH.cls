@@ -36,11 +36,15 @@
 */
 public class RLLP_OppContactRollup_BATCH implements Database.Batchable<SObject>, Schedulable {
 
+    /** @description Instantiates RLLP_OppRollup_UTIL */
+    RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+
     /*******************************************************************************************************
     * @description Schedulable execute method executes this batch job.
     ********************************************************************************************************/
     public void execute(SchedulableContext context) {
         try {
+            system.debug('Batch in execute ' + RLLP_OppRollup_UTIL.BATCH_SIZE);
             Database.executeBatch(new RLLP_OppContactRollup_BATCH(), RLLP_OppRollup_UTIL.BATCH_SIZE);
         } catch(Exception e) {
             ERR_Handler.processError(e, ERR_Handler_API.Context.RLLP);
@@ -48,10 +52,12 @@ public class RLLP_OppContactRollup_BATCH implements Database.Batchable<SObject>,
     }
     
     /*******************************************************************************************************
-    * @description Batch start method, instantiates RLLP_OppRollup_UTIL and builds query for contact rollups.
+    * @description Batch start method and builds query for contact rollups.
     ********************************************************************************************************/
     public database.Querylocator start(Database.BatchableContext bc) {
+        system.debug('Before oppRullupUtil ' + RLLP_OppRollup_UTIL.BATCH_SIZE);
         RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+        system.debug('After oppRullupUtil ' + RLLP_OppRollup_UTIL.BATCH_SIZE);
         return Database.getQueryLocator(oppRollupUtil.buildContactQuery());      
     }
     

@@ -35,7 +35,10 @@
 * @description Batch class for opportunity account rollups. 
 */
 public class RLLP_OppAccRollup_BATCH implements Database.Batchable<SObject>, Schedulable {
-        
+
+    /** @description Instantiates RLLP_OppRollup_UTIL */
+    RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+
     /*******************************************************************************************************
     * @description Schedulable execute method executes this batch job.
     ********************************************************************************************************/
@@ -48,10 +51,9 @@ public class RLLP_OppAccRollup_BATCH implements Database.Batchable<SObject>, Sch
     }
     
     /*******************************************************************************************************
-    * @description Batch start method, instantiates RLLP_OppRollup_UTIL and builds query for account rollups.
+    * @description Batch start method and builds query for account rollups.
     ********************************************************************************************************/
     public database.Querylocator start(Database.BatchableContext bc) {
-        RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
         String acctQuery = oppRollupUtil.buildAccountQuery();        
         return Database.getQueryLocator(acctQuery);
     }
