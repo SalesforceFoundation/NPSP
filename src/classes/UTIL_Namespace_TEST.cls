@@ -77,6 +77,8 @@ public with sharing class UTIL_Namespace_TEST {
         str = Label.Addr_Settings_Test_Response_Title;
         str = Label.Addr_Settings_Test_Title;
         str = Label.Addr_Verification_Batch_Status;
+        str = System.Label.DeleteAccount;
+        str = System.Label.DeleteContactLeaveAccount;
         str = Label.stgHHNameRefreshTitle;
         str = Label.stgLabelAfflSettings;
         str = Label.stgLabelBDESettings;

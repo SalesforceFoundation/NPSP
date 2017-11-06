@@ -215,5 +215,16 @@ public with sharing class USER_UserService_TEST {
         return newUsers;
     }
 
+    /*********************************************************************************************************
+    * @description Tests lightning experience methods
+    * @return void
+    **********************************************************************************************************/
+    private static testMethod void testLEX() {
 
+        if (USER_UserService.isUserRunningLightning()) {
+            System.assertEquals(true, USER_UserService.isUserRunningLightning());
+        }
+        System.assertEquals(false, USER_UserService.isUserRunningMobile());
+        System.assertNotEquals(null, USER_UserService.getLightningBaseURL('Test'));
+    }
 }
