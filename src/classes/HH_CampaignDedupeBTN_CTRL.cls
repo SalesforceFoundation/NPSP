@@ -38,7 +38,7 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
     //HH campagin deduplication. Based on base classes by Evan Callahan and Kevin Bromer
     
     private Campaign campaign;
-    private string CampaignMailingListReportId;
+    private string campaignMailingListReportId;
     private boolean haveReportID;  
     private npo02__Households_Settings__c hs;
 
@@ -55,8 +55,8 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
     //we get settings in the constructor, but if we don't have a report ID and query for it,
     //we want to update the old settings with the new report ID, but we can't do it in the consturctor
     //so we inform our action method to perform the update
-    private boolean updateSettingsWithID = false; 
-  
+    private boolean updateSettingsWithID = false;
+
     /*******************************************************************************************************
     * @description Constructor
     * @param controller StandardController to a Campaign
@@ -64,24 +64,25 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
     public HH_CampaignDedupeBTN_CTRL(ApexPages.StandardController controller){   
         
         hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
-        CampaignMailingListReportId = hs.npo02__Household_Mailing_List_ID__c;
+        campaignMailingListReportId = hs.npo02__Household_Mailing_List_ID__c;
         haveReportID = true; 
       
         campaign = (Campaign)controller.getRecord();
         PageReference pageRef = new PageReference('/' + campaign.id);
         returnURL = pageref.getUrl();
         
-        if ((CampaignMailingListReportId == null) || (CampaignMailingListReportId == '')){   
+        if ((campaignMailingListReportId == null) || (campaignMailingListReportId == '')){
             //try looking it up by name...
             Report r = new Report();
-            try{r = [select id from Report where DeveloperName = 'NPSP_Campaign_Household_Mailing_List'];}
-            catch(QueryException e){
+            try{
+                r = [select id from Report where DeveloperName = 'NPSP_Campaign_Household_Mailing_List_V2'];
+            } catch(QueryException e){
                 haveReportID = false;
                 showmsg(e.getMessage(), ApexPages.Severity.ERROR);
             }
             
             if(haveReportID){
-                CampaignMailingListReportId = r.id;
+                campaignMailingListReportId = r.id;
                 haveReportID = true;
                 updateSettingsWithID = true;                                
             }                
@@ -95,50 +96,55 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
     * @return PageReference url to the Report if successful, this page if an error.
     ********************************************************************************************************/
     public PageReference RunReport(){
-    	Savepoint sp = Database.setSavepoint();
-    	try {
-	        string ActiveID = campaign.id;
-	        ActiveID = ActiveID.substring(0,15);
-	        string newPageUrl = '';
-	        integer dupsmarked;
-	        boolean redirectpage = false;
-	        
-	        //this dml need to be done by the action method        
-	        if (updateSettingsWithID){
-	            hs.npo02__Household_Mailing_List_ID__c = CampaignMailingListReportId;
-	            update hs;
-	        }
-	        
-	        if (!haveReportID){
-	            showMsg(Label.hhCmpDedupeNoReport, ApexPages.Severity.ERROR);
-	        }
-	        
-	        else{
-	            dupsmarked = MarkDuplicates();
-                newPageURL = '/' + CampaignMailingListReportId + '?retURL=/' + ActiveID + '&scopeid_lkid=' + ActiveID + 
-                    '&scope=one&scopeid=' + EncodingUtil.urlEncode(Campaign.Name, 'UTF-8');
-	            if (dupsmarked == -1) {
-	                showMsg(Label.hhCmpDedupeBatchMessage, ApexPages.Severity.INFO);
-	                reportURL = newPageURL;	            	
-	            } else {
-	            	redirectpage = true;
-	            }
-	        }
-	        
-	        if (redirectPage){
-	            PageReference pageref = new PageReference(newPageURL);
-	            pageRef.setRedirect(true);
-	            return pageRef;
-	        }        
-	        else{
-	            return null;
-	        }
-    	} catch(Exception e) {
-    		Database.rollback(sp);
-    		ERR_Handler.processError(e, ERR_Handler_API.Context.HH);
-    		ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
-    		return null;
-    	}
+        Savepoint sp = Database.setSavepoint();
+        try {
+            string ActiveID = campaign.id;
+            ActiveID = ActiveID.substring(0,15);
+            string newPageUrl = '';
+            integer dupsmarked;
+            boolean redirectpage = false;
+
+            //this dml need to be done by the action method
+            if (updateSettingsWithID){
+                hs.npo02__Household_Mailing_List_ID__c = campaignMailingListReportId;
+                update hs;
+            }
+
+            if (!haveReportID){
+                showMsg(System.Label.hhCmpDedupeNoReport, ApexPages.Severity.ERROR);
+            }
+
+            else{
+                dupsmarked = MarkDuplicates();
+
+                if (USER_UserService.isUserRunningLightning()) {
+                    newPageUrl = USER_UserService.getLightningBaseURL(campaignMailingListReportId) + '?fv0=' + ActiveID;
+                } else {
+                    newPageUrl = '/' + campaignMailingListReportId + '?retURL=/' + ActiveID + '&pv0=' + ActiveID;
+                }
+
+                if (dupsmarked == -1) {
+                    showMsg(System.Label.hhCmpDedupeBatchMessage, ApexPages.Severity.INFO);
+                    reportURL = newPageURL;
+                } else {
+                    redirectpage = true;
+                }
+            }
+
+            if (redirectPage){
+                PageReference pageref = new PageReference(newPageURL);
+                pageRef.setRedirect(true);
+                return pageRef;
+            }
+            else{
+                return null;
+            }
+        } catch(Exception e) {
+            Database.rollback(sp);
+            ERR_Handler.processError(e, ERR_Handler_API.Context.HH);
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+            return null;
+        }
     }
 
     /*******************************************************************************************************
@@ -149,11 +155,11 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
         string strSoql = strSoqlDedupe();
         
         if (campaign.NumberOfContacts > 10000) {
-        	MarkDuplicatesBatch(strSoql);
-        	return -1;
+            MarkDuplicatesBatch(strSoql);
+            return -1;
         } else {       
-	        list<CampaignMember> listCM = database.query(strSoql);
-	        return MarkDuplicatesFromList(campaign.Id, listCM);
+            list<CampaignMember> listCM = database.query(strSoql);
+            return MarkDuplicatesFromList(campaign.Id, listCM);
         }   
     }
 
@@ -187,7 +193,7 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
     ********************************************************************************************************/
     public static integer MarkDuplicatesFromList(ID campaignId, list<CampaignMember> listCM) {
 
-        final string DUPETEXT = Label.hhCmpDedupeStatus;
+        final string DUPETEXT = System.Label.hhCmpDedupeStatus;
         
         //check for the Household Duplicate status values we need
         Map<string, boolean> StatusLabels = new Map<string, boolean>();

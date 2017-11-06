@@ -48,11 +48,11 @@ global without sharing class STG_InstallScript implements InstallHandler {
         Boolean rethrowException = false;
         Savepoint sp = Database.setSavepoint(); 
         
-        try { 
-            database.executeBatch(new RD_InstallScript_BATCH(), 10); 
-            
+        try {             
             //First install of Cumulus. NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
             if(context.previousVersion() == null) {
+                //only run recurring donations counter script on fresh installs; this also covers upgrades from v2
+                database.executeBatch(new RD_InstallScript_BATCH(), 10); 
                 runNewOrgScript();
             } else if(context.isUpgrade()) {
                 insertTdtmDefaults(null);
@@ -68,6 +68,11 @@ global without sharing class STG_InstallScript implements InstallHandler {
             if (context.previousVersion() == null || context.previousVersion().compareTo(new Version(3, 79)) < 0) {
                 // update record type settings ONLY if upgrading from a version prior to 3.78
                 UTIL_RecordTypeSettingsUpdate.getInstance().updateSettings();
+            }
+
+            if (context.previousVersion() == null || context.previousVersion().compareTo(new Version(3, 112)) < 0) {
+                // update campaign list report settings ONLY if the field is blank or upgrading from a version prior to 3.112
+                updateCampaignListReport();
             }
 
         } catch(Exception e) {
@@ -93,6 +98,26 @@ global without sharing class STG_InstallScript implements InstallHandler {
         Map<String, Boolean> existingTriggerConfig = getExistingNpspTriggerConfig(npspToCumulusMap);        
         //Setup the new configuration
         setupTdtmConfig(npspToCumulusMap, existingTriggerConfig);
+    }
+
+    /*******************************************************************************************************
+    * @description NPSP Version 3.112 changed the report distributed and used for the Campaign Household Mailing
+    * List report launched by the HH_CampaignDedupeBTN VF page (from a custom button). The old report previously
+    * installed as part of the Households package is not Lightning compatible, requiring a new report.
+    * @return void
+    */
+    private void updateCampaignListReport() {
+        npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+        Report r;
+        try{
+            r = [SELECT Id FROM Report WHERE DeveloperName = 'NPSP_Campaign_Household_Mailing_List_V2'];
+        } catch(QueryException e) {
+            // Ignore this error
+        }
+        if (r != null && hs.npo02__Household_Mailing_List_ID__c != r.Id) {
+            hs.npo02__Household_Mailing_List_ID__c = r.Id;
+            update hs;
+        }
     }
 
     private Map<String, Boolean> getExistingNpspTriggerConfig(Map<String, String> npspToCumulusMap) {

@@ -609,7 +609,21 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>ConfirmDeleteAccount</shortDescription>
-        <value>{0} is the only contact in the {1} account. Deleting this contact would leave an empty account. Would you like to delete {1} instead?</value>
+        <value>{0} is the only Contact in the {1} Account. Deleting this Contact would leave an empty Account. Would you like to delete {1}, including {0}, instead?</value>
+    </labels>
+    <labels>
+        <fullName>DeleteAccount</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DeleteAccount</shortDescription>
+        <value>Delete Account</value>
+    </labels>
+    <labels>
+        <fullName>DeleteContactLeaveAccount</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DeleteContactLeaveAccount</shortDescription>
+        <value>Delete Contact and Leave Empty Account</value>
     </labels>
     <labels>
         <fullName>EPAddDependentTask</fullName>
@@ -3046,7 +3060,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>hhCmpDedupeNoReport</shortDescription>
-        <value>Could not find report. Create a report with the Report Unique Name of  &apos;NPSP_Campaign_Household_Mailing_List&apos;. NOTE: Report type should be Campaigns with Contacts. Filter for Member Status does not contain &apos;Duplicate&apos;.</value>
+        <value>Could not find the report. Create a report and save it with the Report Unique Name of &apos;NPSP_Campaign_Household_Mailing_List_V2&apos;. Use the Campaigns with Contacts report type and add filters for CampaignId equals blank and Member Status does not contain &apos;Duplicate&apos;.</value>
     </labels>
     <labels>
         <fullName>hhCmpDedupeStatus</fullName>
@@ -4771,7 +4785,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHHMailingListReport</shortDescription>
-        <value>The Household Mailing List Report deduplicates a Campaign that contains multiple Contacts from the same household in order to help prevent sending multiples of the same mailing to the same address. NPSP includes a report you can select called &quot;NPSP Campaign Household Mailing List.&quot; If that report has been renamed or deleted, select a report that uses the Campaigns with Contacts report type, with a filter for: Member Status does not contain &quot;Duplicate&quot;.</value>
+        <value>The Household Mailing List Report deduplicates a Campaign that contains multiple Contacts from the same household in order to help prevent sending multiples of the same mailing to the same address. NPSP includes a report you can select called &quot;NPSP Campaign Household Mailing List V2.&quot; If that report has been renamed or deleted, select a report that uses the Campaigns with Contacts report type, with a filter for: Member Status does not contain &quot;Duplicate&quot;.</value>
     </labels>
     <labels>
         <fullName>stgHelpHHNameFormat</fullName>
