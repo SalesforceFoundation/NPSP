@@ -129,6 +129,16 @@
         <type>Text</type>
         <unique>false</unique>
     </fields>
+    <fields>
+        <fullName>Run_Opportunity_Rollups_while_Processing__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>When checked, NPSP calculates donor statistics when donations are processed. If unchecked, donor statistics are calculated during the default nightly Scheduled Job. Note that selecting this checkbox may slow down processing of this batch.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>When checked, NPSP calculates donor statistics when donations are processed. If unchecked, donor statistics are calculated during the default nightly Scheduled Job. Note that selecting this checkbox may slow down processing of this batch.</inlineHelpText>
+        <label>Calculate Donation Rollups with Batch</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
     <label>Data Import Settings</label>
     <visibility>Public</visibility>
 </CustomObject>

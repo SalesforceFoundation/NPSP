@@ -108,8 +108,8 @@ public without sharing class RLLP_OppRollup {
                 RLLP_OppRollup.rollupContactsandHouseholdsForTrigger(contactRequerySet);                        
             else        	
                 RLLP_OppRollup.rollupContactsandHouseholdsForTriggerFuture(contactRequerySet);                        
-        }            
-    }       
+        }
+    }
     
     /*******************************************************************************************************
     * @description Future wrapper method for updating contacts and households from a set of opportunity IDs.
