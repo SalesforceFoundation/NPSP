@@ -98,6 +98,7 @@ public with sharing class BDI_Donations_TEST {
         diSettings.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
         diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
+        diSettings.Run_Opportunity_Rollups_while_Processing__c = true;
           
         //run batch data import
         Test.StartTest();
@@ -173,7 +174,8 @@ public with sharing class BDI_Donations_TEST {
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
         // make sure we support matching by Id even when no match specified.
         diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.RequireNoMatch;
-          
+        diSettings.Run_Opportunity_Rollups_while_Processing__c = true;
+
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
@@ -261,7 +263,8 @@ public with sharing class BDI_Donations_TEST {
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
         // make sure we support matching by Id even when no match specified.
         diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.RequireNoMatch;
-          
+        diSettings.Run_Opportunity_Rollups_while_Processing__c = true;
+
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
@@ -349,7 +352,8 @@ public with sharing class BDI_Donations_TEST {
         diSettings.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
             UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
         diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
-          
+        diSettings.Run_Opportunity_Rollups_while_Processing__c = true;
+
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
