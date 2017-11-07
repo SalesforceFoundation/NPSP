@@ -192,6 +192,21 @@
             </div>
         </div>
 
+        <apex:outputPanel layout="block" styleClass="slds-form slds-form_stacked slds-m-left_large slds-p-top_x-small " >
+            <div class="slds-form-element">
+                <label class="slds-form-element__label">
+                    <apex:outputLabel for="fldOppRollups">
+                            {!$ObjectType.DataImportBatch__c.Fields.Run_Opportunity_Rollups_while_Processing__c.Label}
+                    </apex:outputLabel>
+                </label>
+                <c:UTIL_Tooltip tooltip="{!$ObjectType.DataImportBatch__c.Fields.Run_Opportunity_Rollups_while_Processing__c.InlineHelpText}" />
+                <div class="slds-form-element__control">
+                    <apex:inputField id="fldOppRollups" value="{!diBatch.Run_Opportunity_Rollups_while_Processing__c}" styleClass="slds-checkbox" rendered="{!isEditMode}" />
+                    <apex:outputField id="fldOppRollupsRO" value="{!diBatch.Run_Opportunity_Rollups_while_Processing__c}" styleClass="slds-checkbox" rendered="{!isReadOnlyMode}"/>
+                </div>
+            </div>
+        </apex:outputPanel>
+
         <div class="slds-section slds-is-open slds-p-around_xx-small slds-theme_shade">
             <h4 class="slds-section__title slds-m-left_small ">
                 <span class="slds-truncate slds-p-horizontal_small" title="Section Title">{!$Label.bdiSettingsSectionExtensibility}</span>
