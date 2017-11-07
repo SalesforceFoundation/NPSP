@@ -35,7 +35,10 @@
 * @description Batch class for opportunity household rollups. 
 */
 public class RLLP_OppHouseholdRollup_BATCH implements Database.Batchable<SObject>, Schedulable {
-    
+
+    /** @description Instantiates RLLP_OppRollup_UTIL */
+    RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+
     /*******************************************************************************************************
     * @description Schedulable execute method executes this batch job.
     ********************************************************************************************************/
@@ -48,10 +51,9 @@ public class RLLP_OppHouseholdRollup_BATCH implements Database.Batchable<SObject
     }
     
     /*******************************************************************************************************
-    * @description Batch start method, instantiates RLLP_OppRollup_UTIL and builds query for household rollups.
+    * @description Batch start method and builds query for household rollups.
     ********************************************************************************************************/
     public database.Querylocator start(Database.BatchableContext bc) {
-        RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();     
         return Database.getQueryLocator(oppRollupUtil.buildHouseholdQuery()); 
     }
     
