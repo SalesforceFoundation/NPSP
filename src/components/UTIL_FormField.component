@@ -22,10 +22,6 @@
     <!-- The fixup style class to apply to dependent and date fields -->
     <apex:variable var="fixup"
         value="{!IF(dependent, IF(ftype=='picklist', ' dependentPicklistFixup', ' dependentMultiPicklistFixup'),'')}"/>
-    <!-- Determine if the field will be marked as required -->
-    <apex:variable var="isRequired"
-        value="{!IF(required == true, true, NOT($ObjectType[sObjType].fields[field].nillable))}"
-    />
     <!-- The field label to be displayed -->
     <apex:variable var="label" value="{!$ObjectType[sObjType].fields[field].label}" rendered="{!labelOverride == ''}"/>
     <apex:variable var="label" value="{!labelOverride}" rendered="{!labelOverride != ''}"/>
@@ -59,7 +55,7 @@
         rendered="{!($ObjectType[sObjType].fields[field].updateable
                     || $ObjectType[sObjType].fields[field].createable && sObj['Id']=='') && $ObjectType[sObjType].fields[field].type != 'boolean'}">        
         <apex:outputLabel for="inputX" styleClass="slds-form-element__label" rendered="{!showLabel == true && ftype!='boolean'}" id="lblInputField">
-            <apex:outputText rendered="{!isRequired}" id="lblInputFieldRequired">
+            <apex:outputText rendered="{!IF(required == true, true, NOT($ObjectType[sObjType].fields[field].nillable))}" id="lblInputFieldRequired">
                 <abbr class="slds-required" title="{!$Label.lblRequired}">*</abbr>
             </apex:outputText>
             <apex:outputText rendered="{!showLabel == true}" value="{!label}"/>
@@ -69,7 +65,7 @@
                 onchange="{!onchange}" actSupAction="{!actSupAction}"
                 actSupReRender="{!actSupReRender}" actSup="{!actSup}" 
                 actSupStatus="{!actSupStatus}" actSupImmediate="{!actSupImmediate}"
-                required="{!isRequired}" 
+                required="{!IF(required == true, true, NOT($ObjectType[sObjType].fields[field].nillable))}" 
                 id="inputx"
             />
         </div>
