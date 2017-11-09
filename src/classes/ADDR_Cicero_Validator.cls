@@ -197,13 +197,15 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
                             if (district.district_type == 'STATE_LOWER')
                                 addr.State_Lower_District__c = district.district_id;
                         }
-                    
-                        addr.MailingStreet__c = candidate.match_addr.split(',')[0].trim();
-                        addr.MailingCity__c = candidate.match_city;
-                        addr.MailingState__c = candidate.match_region;
-                        addr.MailingPostalCode__c = candidate.match_postal;
-                        if (!String.isBlank(lastFourPostalDigits)) {
-                            addr.MailingPostalCode__c += '-' + lastFourPostalDigits;
+
+                        if(!settings.Prevent_Address_Override__c){
+                            addr.MailingStreet__c = candidate.match_addr.split(',')[0].trim();
+                            addr.MailingCity__c = candidate.match_city;
+                            addr.MailingState__c = candidate.match_region;
+                            addr.MailingPostalCode__c = candidate.match_postal;
+                            if (!String.isBlank(lastFourPostalDigits)) {
+                                addr.MailingPostalCode__c += '-' + lastFourPostalDigits;
+                            }
                         }
                         addr.County_Name__c  = candidate.match_subregion;
 

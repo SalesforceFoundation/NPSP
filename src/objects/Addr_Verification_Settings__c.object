@@ -60,6 +60,16 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>Prevent_Address_Override__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Prevent Address Override Checkbox</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Prevents user&apos;s address from being standardized and overwritten with the address verified by the Cicero API.</inlineHelpText>
+        <label>Prevent Address Override</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Reject_Ambiguous_Addresses__c</fullName>
         <defaultValue>false</defaultValue>
         <description>Reject Ambiguous Addresses</description>
