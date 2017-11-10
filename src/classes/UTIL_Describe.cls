@@ -462,13 +462,32 @@ public class UTIL_Describe {
         }
     }
 
+    private static Boolean isMiddleNameEnabled { get; set; }
+
     /** @description returns true if the MiddleName field is enabled in this org */
     public static Boolean isMiddleNameEnabled() {
-        if (!fieldTokens.containsKey('Contact')) {
-            fieldTokens.put('Contact', Contact.sObjectType.getDescribe().fields.getMap());
-            fieldDescribes.put('Contact', new Map<String, Schema.DescribeFieldResult>());
+        if (isMiddleNameEnabled == null) {
+            if (!fieldTokens.containsKey('Contact')) {
+                fieldTokens.put('Contact', Contact.sObjectType.getDescribe().fields.getMap());
+                fieldDescribes.put('Contact', new Map<String, Schema.DescribeFieldResult>());
+            }
+            isMiddleNameEnabled = fieldTokens.get('Contact').containsKey('middlename');
         }
-        return fieldTokens.get('Contact').containsKey('middlename');
+        return isMiddleNameEnabled;
+    }
+
+    private static Boolean isNameSuffixEnabled { get; set; }
+
+    /** @description returns true if the Suffix field is enabled in this org */
+    public static Boolean isNameSuffixEnabled() {
+        if (isNameSuffixEnabled == null) {
+            if (!fieldTokens.containsKey('Contact')) {
+                fieldTokens.put('Contact', Contact.sObjectType.getDescribe().fields.getMap());
+                fieldDescribes.put('Contact', new Map<String, Schema.DescribeFieldResult>());
+            }
+            isNameSuffixEnabled = fieldTokens.get('Contact').containsKey('suffix');
+        }
+        return isNameSuffixEnabled;
     }
 
     /** @description our exception object for Field Level & Object Security errors. */

@@ -341,8 +341,8 @@ public with sharing class BDI_DataImport_TEST {
         listDI = [select Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c, 
             Contact2Imported__c, Contact2ImportStatus__c from DataImport__c];
         system.assertEquals(1, listDI.size());
-        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
-        system.assertEquals(listDI[0].Contact2Imported__c, null);
+        system.assertEquals(null, listDI[0].Contact1Imported__c);
+        system.assertEquals(null, listDI[0].Contact2Imported__c);
         system.assertEquals(null, listDI[0].HouseholdAccountImported__c);
         system.assertEquals(label.bdiErrorNonHHAccountContact, listDI[0].Contact1ImportStatus__c);
         system.assertEquals(null, listDI[0].Contact2ImportStatus__c);     
@@ -956,15 +956,17 @@ public with sharing class BDI_DataImport_TEST {
         system.assertNotEquals(null, listCon[1].AccountId);
         system.assertNotEquals(null, listCon[2].AccountId);
         system.assertNotEquals(null, listCon[3].AccountId);
-        system.assertEquals(100, listCon[0].npo02__TotalOppAmount__c);
+
+        // we no longer run rollups, unless the setting is specified
+        system.assertEquals(0, listCon[0].npo02__TotalOppAmount__c);
         system.assertEquals(0, listCon[1].npo02__TotalOppAmount__c);
-        system.assertEquals(200, listCon[2].npo02__TotalOppAmount__c);
+        system.assertEquals(0, listCon[2].npo02__TotalOppAmount__c);
         system.assertEquals(0, listCon[3].npo02__TotalOppAmount__c);
         
         list<Account> listAcc = [select Id, Name, npo02__TotalOppAmount__c from Account order by Name];
         system.assertEquals(2, listAcc.size());
-        system.assertEquals(100, listAcc[0].npo02__TotalOppAmount__c);
-        system.assertEquals(200, listAcc[1].npo02__TotalOppAmount__c);
+        system.assertEquals(0, listAcc[0].npo02__TotalOppAmount__c);
+        system.assertEquals(0, listAcc[1].npo02__TotalOppAmount__c);
         
         list<Opportunity> listOpp = [select Id, Name, Amount, AccountId from Opportunity order by Name];
         system.assertEquals(2, listOpp.size());
@@ -1031,8 +1033,9 @@ public with sharing class BDI_DataImport_TEST {
         // verify expected results        
         list<Account> listAcc = [select Id, Name, npo02__TotalOppAmount__c from Account order by Name];
         system.assertEquals(2, listAcc.size());
-        system.assertEquals(100, listAcc[0].npo02__TotalOppAmount__c);
-        system.assertEquals(200, listAcc[1].npo02__TotalOppAmount__c);
+        // we no longer run rollups, unless the setting is specified
+        system.assertEquals(0, listAcc[0].npo02__TotalOppAmount__c);
+        system.assertEquals(0, listAcc[1].npo02__TotalOppAmount__c);
         
         list<Opportunity> listOpp = [select Id, Name, Amount, AccountId from Opportunity order by Name];
         system.assertEquals(2, listOpp.size());
@@ -1096,8 +1099,9 @@ public with sharing class BDI_DataImport_TEST {
         
         list<Account> listAcc = [select Id, Name, npo02__TotalOppAmount__c from Account order by Name];
         system.assertEquals(2, listAcc.size());
-        system.assertEquals(100, listAcc[0].npo02__TotalOppAmount__c);
-        system.assertEquals(200, listAcc[1].npo02__TotalOppAmount__c);
+        // we no longer run rollups, unless the setting is specified
+        system.assertEquals(0, listAcc[0].npo02__TotalOppAmount__c);
+        system.assertEquals(0, listAcc[1].npo02__TotalOppAmount__c);
         
         list<Opportunity> listOpp = [select Id, Name, Amount, AccountId, CampaignId from Opportunity order by Name];
         system.assertEquals(2, listOpp.size());
@@ -1193,7 +1197,8 @@ public with sharing class BDI_DataImport_TEST {
         // verify expected results        
         list<Account> listAcc = [select Id, Name, npo02__TotalOppAmount__c from Account order by Name];
         system.assertEquals(2, listAcc.size());
-        system.assertEquals(100, listAcc[0].npo02__TotalOppAmount__c);
+        // we no longer run rollups, unless the setting is specified
+        system.assertEquals(0, listAcc[0].npo02__TotalOppAmount__c);
         system.assertEquals(0, listAcc[1].npo02__TotalOppAmount__c);
         
         list<Opportunity> listOpp = [select Id, Name, Amount, AccountId from Opportunity order by Name];

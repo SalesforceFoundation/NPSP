@@ -67,6 +67,11 @@ public without sharing class HH_HouseholdNaming {
     */
     public void UpdateNames(list<id> hhids){
 
+        // for Batch Data Import performance
+        if (isHouseholdNamingDisabled) {
+            return;
+        }
+
         //we need this turned on to prevent recursive triggering on household creation
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
 
@@ -199,6 +204,19 @@ public without sharing class HH_HouseholdNaming {
     }
 
     /*******************************************************************************************************
+    * @description turns off household naming in the current execution context.  provided for other
+    * components, like Batch Data Import, to momentarily turn off the household naming logic.  there is no
+    * direct way to do that by disabling TDTM trigger handlers, or using existing static flags.
+    * @param disable True to disable, False to enable
+    * @return void
+    */
+    public static void disableHouseholdNaming(boolean disable) {
+        isHouseholdNamingDisabled = disable;
+    }
+    private static boolean isHouseholdNamingDisabled = false;
+
+
+    /*******************************************************************************************************
     * @description returns the Household Name for the list of Contacts
     * @param ContactList the list of Contacts in the same Household
     * @return string
@@ -252,12 +270,12 @@ public without sharing class HH_HouseholdNaming {
     * otherwise, an empty set
     */
     public Set<String> getHouseholdNamingContactFields() {
+
         if (!isAutomaticNaming()) {
             return new Set<String>();
         }
     
         Set<String> fieldNames = iNaming.setHouseholdNameFieldsOnContact();
-
         return fieldNames == null ? new Set<String>() : fieldNames;
     }
 

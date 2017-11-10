@@ -56,6 +56,13 @@ global class TDTM_Config_API {
     * that is not committed to the database.
     */
     global static List<Trigger_Handler__c> getCachedRecords() {
-        return TDTM_ObjectDataGateway.listTH; 
+        // need to handle scenario where this is called before any DML has occurred that would set the
+        // initial defaults records (ie, in tests).
+        if (Test.isRunningTest() && TDTM_ObjectDataGateway.listTH.isEmpty()) {
+            insert getDefaultRecords();
+            // reset listTH to null so it will get refilled in the correct sort order
+            TDTM_ObjectDataGateway.listTH = null;
+        }
+        return TDTM_ObjectDataGateway.listTH;
     }
 }
