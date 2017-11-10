@@ -15,8 +15,7 @@
                 <field>DeveloperName</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Required</behavior>
-                <field>Filter_Group__c</field>
+                <emptySpace>true</emptySpace>
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
@@ -24,25 +23,31 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>Field__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Required</behavior>
                 <field>Operator__c</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Required</behavior>
-                <field>Constant__c</field>
+                <behavior>Edit</behavior>
+                <field>Field_OpportunityContactRole_Role__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
-                <behavior>Edit</behavior>
-                <field>IsProtected</field>
+                <behavior>Required</behavior>
+                <field>Filter_Group__c</field>
+            </layoutItems>
+            <layoutItems>
+                <emptySpace>true</emptySpace>
+            </layoutItems>
+            <layoutItems>
+                <emptySpace>true</emptySpace>
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>NamespacePrefix</field>
+                <field>Field__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Required</behavior>
+                <field>Constant__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
@@ -57,19 +62,34 @@
                 <behavior>Readonly</behavior>
                 <field>CreatedById</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>IsProtected</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Required</behavior>
+                <field>NamespacePrefix</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
                 <field>LastModifiedById</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Is_Deleted__c</field>
+            </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
     </layoutSections>
     <layoutSections>
-        <customLabel>false</customLabel>
+        <customLabel>true</customLabel>
         <detailHeading>false</detailHeading>
         <editHeading>false</editHeading>
+        <label>Custom Links</label>
+        <layoutColumns/>
+        <layoutColumns/>
         <layoutColumns/>
         <style>CustomLinks</style>
     </layoutSections>
@@ -78,4 +98,10 @@
     <showInteractionLogPanel>false</showInteractionLogPanel>
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
+    <summaryLayout>
+        <masterLabel>00h6A000000UNEn</masterLabel>
+        <sizeX>4</sizeX>
+        <sizeY>0</sizeY>
+        <summaryLayoutStyle>Default</summaryLayoutStyle>
+    </summaryLayout>
 </Layout>

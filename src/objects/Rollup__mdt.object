@@ -34,31 +34,6 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Attribution_Field__c</fullName>
-        <externalId>false</externalId>
-        <fieldManageability>DeveloperControlled</fieldManageability>
-        <label>Attribution Field</label>
-        <metadataRelationshipControllingField>Rollup__mdt.Attribution_Object__c</metadataRelationshipControllingField>
-        <referenceTo>FieldDefinition</referenceTo>
-        <relationshipLabel>Rollups</relationshipLabel>
-        <relationshipName>Rollups</relationshipName>
-        <required>false</required>
-        <type>MetadataRelationship</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Attribution_Object__c</fullName>
-        <externalId>false</externalId>
-        <fieldManageability>DeveloperControlled</fieldManageability>
-        <label>Attribution Object</label>
-        <referenceTo>EntityDefinition</referenceTo>
-        <relationshipLabel>Rollups2</relationshipLabel>
-        <relationshipName>Rollups2</relationshipName>
-        <required>false</required>
-        <type>MetadataRelationship</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
         <fullName>Date_Field__c</fullName>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
@@ -131,6 +106,7 @@
     </fields>
     <fields>
         <fullName>Integer__c</fullName>
+        <description>Integer value to indicate how many years ago or days back to roll-up for</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
         <label>Integer</label>
@@ -187,17 +163,44 @@
                     <label>Last</label>
                 </value>
                 <value>
-                    <fullName>Years Donated</fullName>
+                    <fullName>Years_Donated</fullName>
                     <default>false</default>
                     <label>Years Donated</label>
                 </value>
                 <value>
-                    <fullName>Donor Streak</fullName>
+                    <fullName>Donor_Streak</fullName>
                     <default>false</default>
                     <label>Donor Streak</label>
                 </value>
             </valueSetDefinition>
         </valueSet>
+    </fields>
+    <fields>
+        <fullName>Result_Field__c</fullName>
+        <description>In cases where a roll-up returns a &quot;Single Result&quot;, such as the Max CloseDate or Maximum Donation Amount, or even a specific OpportunityId - this represents the field from the Detail object to use to retrieve that value from. It will generally match the field type of the Summary Field (i.e., where the value will be stored)</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <label>Result Field</label>
+        <metadataRelationshipControllingField>Rollup__mdt.Result_Object__c</metadataRelationshipControllingField>
+        <referenceTo>FieldDefinition</referenceTo>
+        <relationshipLabel>Rollups3</relationshipLabel>
+        <relationshipName>Rollups3</relationshipName>
+        <required>false</required>
+        <type>MetadataRelationship</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Result_Object__c</fullName>
+        <description>In cases where a roll-up returns a &quot;Single Result&quot;, such as the Max CloseDate or Maximum Donation Amount, or even a specific OpportunityId - this represents the field from the Detail object to use to retrieve that value from. It will generally match the field type of the Summary Field (i.e., where the value will be stored)</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <label>Result Object</label>
+        <referenceTo>EntityDefinition</referenceTo>
+        <relationshipLabel>Rollups5</relationshipLabel>
+        <relationshipName>Rollups5</relationshipName>
+        <required>false</required>
+        <type>MetadataRelationship</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Summary_Field__c</fullName>
@@ -223,6 +226,25 @@
         <required>false</required>
         <type>MetadataRelationship</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Use_Fiscal_Year__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Checkbox to indicate that Fiscal Year is to be used instead of Calendar year</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <label>Use Fiscal Year</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Use_OCR_for_Attribution_Object__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>This is necessary because OCR is still a second class object in Salesforce, meaning that it&apos;s not supported as a value in any Object entity reference field. This field is used behind the scenes by the UI and roll-up engine. The User will not actually see this field in the Filter Rule custom setup UI, but it&apos;s used to indicate that the Rollup is related to OCR and/or Partial Soft Credits</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>When checked, the engine will use the OpportunityContactRole.Role field value in the rollup logic</inlineHelpText>
+        <label>Use OCR or PSC for Attribution Object</label>
+        <type>Checkbox</type>
     </fields>
     <label>Rollup</label>
     <pluralLabel>Rollups</pluralLabel>

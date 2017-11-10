@@ -1,3 +1,6 @@
+/* ======================================================================================================= */
+/* ************** THIS CLASS HAS BEEN REPLACED BY CMT_FilterRule and CMT_FilterRuleEval_SVC ************** */
+/* ======================================================================================================= */
 public class RLLP_Exclusion {
     //can we make the constant for exclusion a field reference? Like a custom settings name for our existing settings based stuff?
     //the other option is to do a migration when they switch on new rollups by copying the values into the new CMT fields

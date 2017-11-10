@@ -11,6 +11,16 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Field_OpportunityContactRole_Role__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>This is necessary because OCR is still a second class object in Salesforce, meaning that it&apos;s not supported as a value in the Object__c entity reference field. This field is used behind the scenes by the UI and roll-up engine. The User will not actually see this field in the Filter Rule custom setup UI.</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>When checked, the Filter Rule will use the OpportunityContactRole.Role field value in the comparison.</inlineHelpText>
+        <label>OpportunityContactRole.Role</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Field__c</fullName>
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
@@ -34,6 +44,14 @@
         <required>true</required>
         <type>MetadataRelationship</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Is_Deleted__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <label>Deleted</label>
+        <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>Object__c</fullName>
@@ -64,7 +82,7 @@
                     <label>Equals</label>
                 </value>
                 <value>
-                    <fullName>Not Equals</fullName>
+                    <fullName>Not_Equals</fullName>
                     <default>false</default>
                     <label>Not Equals</label>
                 </value>
@@ -79,17 +97,17 @@
                     <label>Less</label>
                 </value>
                 <value>
-                    <fullName>Greater or Equal</fullName>
+                    <fullName>Greater_or_Equal</fullName>
                     <default>false</default>
                     <label>Greater or Equal</label>
                 </value>
                 <value>
-                    <fullName>Less or Equal</fullName>
+                    <fullName>Less_or_Equal</fullName>
                     <default>false</default>
                     <label>Less or Equal</label>
                 </value>
                 <value>
-                    <fullName>Starts With</fullName>
+                    <fullName>Starts_With</fullName>
                     <default>false</default>
                     <label>Starts With</label>
                 </value>
@@ -99,17 +117,27 @@
                     <label>Contains</label>
                 </value>
                 <value>
-                    <fullName>Does Not Contain</fullName>
+                    <fullName>Does_Not_Contain</fullName>
                     <default>false</default>
                     <label>Does Not Contain</label>
                 </value>
                 <value>
-                    <fullName>Is Included</fullName>
+                    <fullName>In_List</fullName>
+                    <default>false</default>
+                    <label>In List</label>
+                </value>
+                <value>
+                    <fullName>Not_In_List</fullName>
+                    <default>false</default>
+                    <label>Not In List</label>
+                </value>
+                <value>
+                    <fullName>Is_Included</fullName>
                     <default>false</default>
                     <label>Is Included</label>
                 </value>
                 <value>
-                    <fullName>Is Not Included</fullName>
+                    <fullName>Is_Not_Included</fullName>
                     <default>false</default>
                     <label>Is Not Included</label>
                 </value>

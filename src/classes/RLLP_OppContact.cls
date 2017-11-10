@@ -1,3 +1,6 @@
+/* ======================================================================================================= */
+/* **************                   THIS CLASS NEEDS TO BE UPDATED OR REPLACED              ************** */
+/* ======================================================================================================= */
 public with sharing class RLLP_OppContact extends RLLP_Definition {
 //method to take a list of Opportunities
 //method to take a list of Accounts

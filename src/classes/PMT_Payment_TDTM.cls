@@ -148,8 +148,7 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
             npe01__Contacts_And_Orgs_Settings__c ContactSettings = UTIL_CustomSettingsFacade.getContactsSettings();
             String closedStageName = ContactSettings.Payments_Auto_Close_Stage_Name__c;
 
-            // TODO: Update when merge with full Multi-Currency support branch
-            Boolean isACMEnabled = true; // UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled();
+            Boolean isACMEnabled = UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled();
             if (isACMEnabled && !String.isEmpty(closedStageName)) {
                 // Loop through all the queried Opps with the subquery on payments
                 for (Opportunity opp : mapOfOpps.values()) {
