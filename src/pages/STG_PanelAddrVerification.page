@@ -26,9 +26,9 @@
             }
 
             if(selection=='Cicero'){
-                j$('[id$=iPreventAddressOverrideDiv]').show();
+                j$('[id$=iPreventAddressOverwriteDiv]').show();
             } else {
-                j$('[id$=iPreventAddressOverrideDiv]').hide();
+                j$('[id$=iPreventAddressOverwriteDiv]').hide();
             }
         }
 
@@ -171,14 +171,14 @@
                         </apex:outputPanel>
                     </div>
                 </div>
-                <div id="iPreventAddressOverrideDiv" class="slds-form-element">
-                    <apex:outputLabel value="{!$ObjectType.Addr_Verification_Settings__c.fields.Prevent_Address_Override__c.Label}" for="iPrevent_Address_Override__c"
+                <div id="iPreventAddressOverwriteDiv" class="slds-form-element">
+                    <apex:outputLabel value="{!$ObjectType.Addr_Verification_Settings__c.fields.Prevent_Address_Overwrite__c.Label}" for="iPrevent_Address_Overwrite__c"
                                       styleClass="slds-form-element__label"/>
                     <div class="slds-form-element__control">
-                        <apex:inputCheckbox value="{!addrVerifsettings.Prevent_Address_Override__c}" rendered="{!isEditMode}" id="iPrevent_Address_Override__c" html-aria-describedby="{!$Component.iPrevent_Address_Override__cHelp}" styleClass="slds-checkbox"/>
-                        <apex:inputCheckbox value="{!addrVerifsettings.Prevent_Address_Override__c}" rendered="{!isReadOnlyMode}" disabled="true" id="iPrevent_Address_Override__c0" html-aria-describedby="{!$Component.iPrevent_Address_Override__cHelp}" styleClass="slds-checkbox"/>
-                        <apex:outputPanel id="iPrevent_Address_Override__cHelp" layout="block">
-                            <apex:outputText value="{!$ObjectType.Addr_Verification_Settings__c.fields.Prevent_Address_Override__c.inlineHelpText}" styleClass="slds-form-element__help" />
+                        <apex:inputCheckbox value="{!addrVerifsettings.Prevent_Address_Overwrite__c}" rendered="{!isEditMode}" id="iPrevent_Address_Overwrite__c" html-aria-describedby="{!$Component.iPrevent_Address_Overwrite__cHelp}" styleClass="slds-checkbox"/>
+                        <apex:inputCheckbox value="{!addrVerifsettings.Prevent_Address_Overwrite__c}" rendered="{!isReadOnlyMode}" disabled="true" id="iPrevent_Address_Overwrite__c0" html-aria-describedby="{!$Component.iPrevent_Address_Overwrite__cHelp}" styleClass="slds-checkbox"/>
+                        <apex:outputPanel id="iPrevent_Address_Overwrite__cHelp" layout="block">
+                            <apex:outputText value="{!$ObjectType.Addr_Verification_Settings__c.fields.Prevent_Address_Overwrite__c.inlineHelpText}" styleClass="slds-form-element__help" />
                         </apex:outputPanel>
                     </div>
                 </div>
