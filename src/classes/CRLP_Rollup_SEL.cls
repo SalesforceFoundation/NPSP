@@ -34,7 +34,7 @@
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Selector class for Rollup definition custom metadata.
 */
-public class RLLP_Rollup_SEL {
+public class CRLP_Rollup_SEL {
 
     /**
      * @description Private static var to cache the Custom Metadata Type records.
@@ -49,7 +49,7 @@ public class RLLP_Rollup_SEL {
                         SELECT Id, DeveloperName, MasterLabel, Active__c, Use_Fiscal_Year__c,
                                 Description__c, Filter_Group__c, Filter_Group__r.MasterLabel, Operation__c, Integer__c,
                                 Amount_Field__r.QualifiedApiName, Amount_Object__r.QualifiedApiName,
-                                Use_OCR_for_Attribution_Object__c,
+                                Use_OCR_for_Attribution_Object__c, Yearly_Operation_Type__c,
                                 Date_Field__r.QualifiedApiName, Date_Object__r.QualifiedApiName,
                                 Detail_Field__r.QualifiedApiName, Detail_Object__r.QualifiedApiName,
                                 Result_Field__r.QualifiedApiName, Result_Object__r.QualifiedApiName,

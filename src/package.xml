@@ -54,6 +54,7 @@
         <members>BDE_BatchEntry_TEST</members>
         <members>BDI_BatchOverride_CTRL</members>
         <members>BDI_BatchOverride_TEST</members>
+        <members>BDI_ContactService</members>
         <members>BDI_DataImportAPI_TEST</members>
         <members>BDI_DataImportBatch_SCHED</members>
         <members>BDI_DataImportBatch_SEL</members>
@@ -72,6 +73,8 @@
         <members>BDI_IMatchDonations</members>
         <members>BDI_IPostProcess</members>
         <members>BDI_MatchDonations</members>
+        <members>BDI_PerfLogger</members>
+        <members>BDI_PerfLogger_TEST</members>
         <members>BDI_PostProcess_TEST</members>
         <members>BDI_SettingsUI_CTRL</members>
         <members>BDI_SettingsUI_TEST</members>
@@ -79,11 +82,13 @@
         <members>CAM_CascadeDeleteLookups_TEST</members>
         <members>CAO_Constants</members>
         <members>CMT_FilterRule</members>
-        <members>CMT_FilterRuleEval_SVC</members>
-        <members>CMT_FilterRuleEval_TEST</members>
+        <members>CMT_FilterRuleEvaluation_SVC</members>
+        <members>CMT_FilterRuleEvaluation_TEST</members>
         <members>CMT_FilterRuleUI_SVC</members>
         <members>CMT_FilterRule_SEL</members>
         <members>CMT_FilterRule_TEST</members>
+        <members>CMT_MetadataAPI</members>
+        <members>CMT_MetadataAPI_TEST</members>
         <members>CMT_UnitTestData_TEST</members>
         <members>CONV_Account_Conversion_BATCH</members>
         <members>CONV_Account_Conversion_BATCH_TEST</members>
@@ -104,6 +109,19 @@
         <members>CON_DeleteContactOverride_TEST</members>
         <members>CON_DoNotContact_TDTM</members>
         <members>CON_DoNotContact_TEST</members>
+        <members>CRLP_FiscalYears</members>
+        <members>CRLP_FiscalYears_TEST</members>
+        <members>CRLP_Operation</members>
+        <members>CRLP_Operation_SVC</members>
+        <members>CRLP_Operation_TEST</members>
+        <members>CRLP_Query_SEL</members>
+        <members>CRLP_Query_SEL_TEST</members>
+        <members>CRLP_Rollup</members>
+        <members>CRLP_RollupAccount_SVC</members>
+        <members>CRLP_Rollup_SEL</members>
+        <members>CRLP_Rollup_SEL_TEST</members>
+        <members>CRLP_Rollup_SVC</members>
+        <members>CRLP_VRollupHandler</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
         <members>EP_EngagementPlanTaskValidation_TEST</members>
         <members>EP_EngagementPlans_TDTM</members>
@@ -211,20 +229,8 @@
         <members>REL_Relationships_TDTM</members>
         <members>REL_Relationships_TEST</members>
         <members>REL_Utils</members>
-        <members>RLLP_Definition</members>
-        <members>RLLP_Engine</members>
-        <members>RLLP_Engine_TEST</members>
-        <members>RLLP_Exclusion</members>
-        <members>RLLP_FiscalYears</members>
-        <members>RLLP_Operation</members>
         <members>RLLP_OppAccRollup_BATCH</members>
-        <members>RLLP_OppAccount</members>
-        <members>RLLP_OppAccount_BATCH</members>
-        <members>RLLP_OppAccount_TEST</members>
-        <members>RLLP_OppContact</members>
         <members>RLLP_OppContactRollup_BATCH</members>
-        <members>RLLP_OppContactSoftCredit</members>
-        <members>RLLP_OppContact_TEST</members>
         <members>RLLP_OppHouseholdRollup_BATCH</members>
         <members>RLLP_OppPartialSoftCreditRollup</members>
         <members>RLLP_OppPartialSoftCreditRollup_TEST</members>
@@ -235,11 +241,6 @@
         <members>RLLP_OppRollup_TEST2</members>
         <members>RLLP_OppRollup_UTIL</members>
         <members>RLLP_OppSoftCreditRollup_BATCH</members>
-        <members>RLLP_Query_SEL</members>
-        <members>RLLP_Query_SEL_TEST</members>
-        <members>RLLP_Rollup_SEL</members>
-        <members>RLLP_Rollup_SEL_TEST</members>
-        <members>RLLP_Wrapper</members>
         <members>RP_Constants</members>
         <members>RP_GettingStartedController</members>
         <members>RP_GettingStartedTest</members>
@@ -339,6 +340,8 @@
         <members>UTIL_Namespace</members>
         <members>UTIL_Namespace_TEST</members>
         <members>UTIL_PageMessages_CTRL</members>
+        <members>UTIL_PerfLogger</members>
+        <members>UTIL_PerfLogger_TEST</members>
         <members>UTIL_PlatformCache</members>
         <members>UTIL_Profile</members>
         <members>UTIL_Profile_TEST</members>
@@ -355,12 +358,6 @@
         <members>UTIL_UnitTestData_TEST</members>
         <members>UTIL_Version_API</members>
         <members>UTIL_iSoqlListViewConsumer</members>
-        <members>BDI_DataImportService</members>
-        <members>BDI_PerfLogger</members>
-        <members>BDI_ContactService</members>
-        <members>UTIL_PerfLogger</members>
-        <members>UTIL_PerfLogger_TEST</members>
-        <members>BDI_PerfLogger_TEST</members>
         <name>ApexClass</name>
     </types>
     <types>

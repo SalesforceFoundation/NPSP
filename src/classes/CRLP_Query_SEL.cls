@@ -33,7 +33,7 @@
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Selector class for relevant summary/target fields for use by the Rollup Engine
-*/public class RLLP_Query_SEL {
+*/public class CRLP_Query_SEL {
 
     /**
      * @description For a given SObject, identify all referenced fields from the currently defined Rollups and
@@ -47,7 +47,7 @@
         // Start by getting all the fields referenced by any Filter Group or active Rollup
         List<Schema.DescribeFieldResult> allFieldsToQuery = new List<DescribeFieldResult>();
         allFieldsToQuery.addAll(CMT_FilterRule_SEL.getReferencedFieldsByObject(resultObject));
-        allFieldsToQuery.addAll(RLLP_Rollup_SEL.getReferencedFieldsByObject(resultObject));
+        allFieldsToQuery.addAll(CRLP_Rollup_SEL.getReferencedFieldsByObject(resultObject));
 
         // Loop through the FieldDescribeResults list and add each field that is accessible to the current user
         // to the Set of strings (enforcing uniqueness)

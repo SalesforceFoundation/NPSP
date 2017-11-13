@@ -34,7 +34,7 @@
 * @description Unit Test for the Rollup Definition Custom Metadata Type object selector
 */
 @isTest
-public class RLLP_Rollup_SEL_TEST {
+public class CRLP_Rollup_SEL_TEST {
 
     /**
      * @description Because unit tests cannot actually insert Custom Metadata Types and there's no real way to know
@@ -64,7 +64,7 @@ public class RLLP_Rollup_SEL_TEST {
                         new CMT_UnitTestData_TEST.CMT_Field('Amount_Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
                         new CMT_UnitTestData_TEST.CMT_Field('Amount_Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.Amount')
                 }) + ']';
-        RLLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(
+        CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(
                 rollupsJSON, List<Rollup__mdt>.class);
     }
 
@@ -76,24 +76,24 @@ public class RLLP_Rollup_SEL_TEST {
 
         mockRollupCMTValues();
 
-        System.AssertEquals(1, RLLP_Rollup_SEL.getRollupDefinitions().size(), 'There should be 1 rollup definition');
+        System.AssertEquals(1, CRLP_Rollup_SEL.getRollupDefinitions().size(), 'There should be 1 rollup definition');
 
-        System.AssertEquals(1, RLLP_Rollup_SEL.getRollupsByDetailType().get(Opportunity.SObjectType).size(),
+        System.AssertEquals(1, CRLP_Rollup_SEL.getRollupsByDetailType().get(Opportunity.SObjectType).size(),
                 'There should be 1 rollup for the Opportunity detail object');
-        System.AssertEquals(1, RLLP_Rollup_SEL.getRollupsBySummaryType().get(Account.SObjectType).size(),
+        System.AssertEquals(1, CRLP_Rollup_SEL.getRollupsBySummaryType().get(Account.SObjectType).size(),
                 'There should be 1 rollup for the Account summary object');
-        System.AssertEquals(1, RLLP_Rollup_SEL.getRollupsByFilterGroup().size(),
+        System.AssertEquals(1, CRLP_Rollup_SEL.getRollupsByFilterGroup().size(),
                 'There should be 1 filter group that has rollups');
 
         Integer expectedFldCount = 3;
         if (UserInfo.isMultiCurrencyOrganization()) {
             expectedFldCount++;
         }
-        System.AssertEquals(expectedFldCount, RLLP_Rollup_SEL.getReferencedFieldsByObject(Opportunity.SObjectType).size(),
+        System.AssertEquals(expectedFldCount, CRLP_Rollup_SEL.getReferencedFieldsByObject(Opportunity.SObjectType).size(),
                 'There should be ' + expectedFldCount + ' Opportunity fields referenced across the rollup');
 
         // Test that a list of fields to query is returned
-        String queryFields = RLLP_Rollup_SEL.getReferencedFieldsByObjectAsString(Opportunity.SObjectType);
+        String queryFields = CRLP_Rollup_SEL.getReferencedFieldsByObjectAsString(Opportunity.SObjectType);
         System.Assert(String.isNotEmpty(queryFields),
                 'There should be at least one referenced field for the Opportunity object in Rollup__mdt');
 

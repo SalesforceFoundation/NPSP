@@ -33,7 +33,13 @@
 * @group CMT Filter Rules
 * @description Service class to handle evaluating CMT Filter Rules (i.e., all Rules within a specified Filter Group)
 */
-public class CMT_FilterRuleEval_SVC {
+public class CMT_FilterRuleEvaluation_SVC {
+
+    /**
+     * @description Create an instance of the FiscalYear service class with UseFiscalYear set to true
+     * to use when handling Fiscal_Year constant operations
+     */
+    private static CRLP_FiscalYears fiscalYear = new CRLP_FiscalYears(true);
 
     /**
      * @description Static map of instantiated Filter_Rule__mdt by FilterGroupId
@@ -118,37 +124,44 @@ public class CMT_FilterRuleEval_SVC {
         Integer compareYearValue;
         Date compareStartDate, compareEndDate;
 
-        if (compareValue == 'THIS_YEAR') {
+        if (compareValue == CMT_FilterRule.DateFilterConstant.THIS_YEAR.name()) {
             compareYearValue = today.year();
-        } else if (compareValue == 'LAST_YEAR') {
-            compareYearValue = today.year() - 1;
-        } else if (compareValue == 'TWO_YEARS_AGO') {
+        } else if (compareValue == CMT_FilterRule.DateFilterConstant.LAST_YEAR.name()) {
+            compareYearValue =  today.year() - 1;
+        } else if (compareValue == CMT_FilterRule.DateFilterConstant.TWO_YEARS_AGO.name()) {
             compareYearValue = today.year() - 2;
 
-        } else if (compareValue == 'TODAY') {
+        } else if (compareValue == CMT_FilterRule.DateFilterConstant.THIS_FISCAL_YEAR.name()) {
+            compareYearValue = fiscalYear.getYear(today);
+        } else if (compareValue == CMT_FilterRule.DateFilterConstant.LAST_FISCAL_YEAR.name()) {
+            compareYearValue = fiscalYear.getYear(today) - 1;
+        } else if (compareValue == CMT_FilterRule.DateFilterConstant.TWO_FISCAL_YEARS_AGO.name()) {
+            compareYearValue = fiscalYear.getYear(today) - 2;
+
+        } else if (compareValue == CMT_FilterRule.DateFilterConstant.TODAY.name()) {
             compareStartDate = today;
             compareEndDate = today;
-        } else if (compareValue == 'YESTERDAY') {
+        } else if (compareValue == CMT_FilterRule.DateFilterConstant.YESTERDAY.name()) {
             compareStartDate = today.addDays(-1);
             compareEndDate = today.addDays(-1);
 
-        } else if (compareValue == 'THIS_MONTH') {
+        } else if (compareValue == CMT_FilterRule.DateFilterConstant.THIS_MONTH.name()) {
             compareStartDate = today.toStartOfMonth();
             compareEndDate = compareStartDate.addMonths(1).addDays(-1);
-        } else if (compareValue == 'LAST_MONTH') {
+        } else if (compareValue == CMT_FilterRule.DateFilterConstant.LAST_MONTH.name()) {
             compareStartDate = today.toStartOfMonth().addMonths(-1);
             compareEndDate = compareStartDate.addMonths(1).addDays(-1);
-        } else if (compareValue == 'TWO_MONTHS_AGO') {
+        } else if (compareValue == CMT_FilterRule.DateFilterConstant.TWO_MONTHS_AGO.name()) {
             compareStartDate = today.toStartOfMonth().addMonths(-2);
             compareEndDate = compareStartDate.addMonths(1).addDays(-1);
 
-        } else if (compareValue == 'THIS_WEEK') {
+        } else if (compareValue == CMT_FilterRule.DateFilterConstant.THIS_WEEK.name()) {
             compareStartDate = today.toStartOfWeek();
             compareEndDate = compareStartDate.addDays(7);
-        } else if (compareValue == 'LAST_WEEK') {
+        } else if (compareValue == CMT_FilterRule.DateFilterConstant.LAST_WEEK.name()) {
             compareStartDate = today.toStartOfWeek().addDays(-7);
             compareEndDate = compareStartDate.addDays(7);
-        } else if (compareValue == 'TWO_WEEKS_AGO') {
+        } else if (compareValue == CMT_FilterRule.DateFilterConstant.TWO_WEEKS_AGO.name()) {
             compareStartDate = today.toStartOfWeek().addDays(-14);
             compareEndDate = compareStartDate.addDays(7);
 

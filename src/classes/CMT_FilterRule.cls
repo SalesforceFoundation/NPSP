@@ -55,16 +55,30 @@ public class CMT_FilterRule {
         IS_NOT_INCLUDED
     }
 
+    public Enum DateFilterConstant {
+        TODAY, YESTERDAY,
+        THIS_YEAR, LAST_YEAR, TWO_YEARS_AGO,
+        THIS_FISCAL_YEAR, LAST_FISCAL_YEAR, TWO_FISCAL_YEARS_AGO,
+        THIS_MONTH, LAST_MONTH, TWO_MONTHS_AGO,
+        THIS_WEEK, LAST_WEEK, TWO_WEEKS_AGO
+    }
+
     /**
-     * @description Date type filter rules supports a defined set of specific constants that roughtly mimic
+     * @description Date type filter rules supports a defined set of specific constants that roughly mimic
      * what Salesforce native supports
      */
-    public static final Set<String> validDateConstants = new Set<String>{
-            'TODAY', 'YESTERDAY',
-            'THIS_YEAR', 'LAST_YEAR', 'TWO_YEARS_AGO',
-            'THIS_MONTH', 'LAST_MONTH', 'TWO_MONTHS_AGO',
-            'THIS_WEEK', 'LAST_WEEK', 'TWO_WEEKS_AGO'
-    };
+    public static Set<String> validDateConstants {
+        get {
+            if (validDateConstants == null) {
+                validDateConstants = new Set<String>();
+                for (DateFilterConstant f : DateFilterConstant.values()) {
+                    validDateConstants.add(f.name());
+                }
+            }
+            return validDateConstants;
+
+        }
+    }
 
     /**
      * @description Convert each SoapType (for a field) into the appropriate custom Comparison class
@@ -259,7 +273,7 @@ public class CMT_FilterRule {
                     return false;
                 }
             } else if (dateConstant != null) {
-                return CMT_FilterRuleEval_SVC.compareDateTypeWithConstant(SoapType.DATE, fieldValue, dateConstant, rule.operation);
+                return CMT_FilterRuleEvaluation_SVC.compareDateTypeWithConstant(SoapType.DATE, fieldValue, dateConstant, rule.operation);
             } else if (rule.operation == FilterOperation.EQUALS) {
                 return fieldValue.isSameDay(compareValue); // fieldValue == compareValue;
             } else if (rule.operation == FilterOperation.NOT_EQUALS) {
@@ -297,7 +311,7 @@ public class CMT_FilterRule {
                     return false;
                 }
             } else if (dateConstant != null) {
-                return CMT_FilterRuleEval_SVC.compareDateTypeWithConstant(SoapType.DATETIME, fieldValue, dateConstant, rule.operation);
+                return CMT_FilterRuleEvaluation_SVC.compareDateTypeWithConstant(SoapType.DATETIME, fieldValue, dateConstant, rule.operation);
             } else if (rule.operation == FilterOperation.EQUALS) {
                 return fieldValue == compareValue;
             } else if (rule.operation == FilterOperation.NOT_EQUALS) {
@@ -360,7 +374,6 @@ public class CMT_FilterRule {
 
     /**
      * @description Compare implementation for a String data type
-     * TODO Finalize the Included and NotIncluded operations
      */
     public class CompareStrings implements ICompare {
         public Boolean isIncluded(SObject record, CMT_FilterRule rule) {
