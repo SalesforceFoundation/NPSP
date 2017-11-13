@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Cumulus</fullName>
     <types>
@@ -54,6 +54,7 @@
         <members>BDE_BatchEntry_TEST</members>
         <members>BDI_BatchOverride_CTRL</members>
         <members>BDI_BatchOverride_TEST</members>
+        <members>BDI_ContactService</members>
         <members>BDI_DataImportAPI_TEST</members>
         <members>BDI_DataImportBatch_SCHED</members>
         <members>BDI_DataImportBatch_SEL</members>
@@ -61,6 +62,7 @@
         <members>BDI_DataImportCTRL_TEST</members>
         <members>BDI_DataImportDeleteBTN_CTRL</members>
         <members>BDI_DataImportDeleteBTN_TEST</members>
+        <members>BDI_DataImportService</members>
         <members>BDI_DataImport_API</members>
         <members>BDI_DataImport_BATCH</members>
         <members>BDI_DataImport_CTRL</members>
@@ -71,6 +73,8 @@
         <members>BDI_IMatchDonations</members>
         <members>BDI_IPostProcess</members>
         <members>BDI_MatchDonations</members>
+        <members>BDI_PerfLogger</members>
+        <members>BDI_PerfLogger_TEST</members>
         <members>BDI_PostProcess_TEST</members>
         <members>BDI_SettingsUI_CTRL</members>
         <members>BDI_SettingsUI_TEST</members>
@@ -130,10 +134,10 @@
         <members>HH_Container_TEST</members>
         <members>HH_HHObject_TDTM</members>
         <members>HH_HouseholdNaming</members>
-        <members>HH_HouseholdNaming_BATCH</members>
-        <members>HH_HouseholdNaming_TEST</members>
         <members>HH_HouseholdNamingSettingValidator</members>
         <members>HH_HouseholdNamingSettingValidator_TEST</members>
+        <members>HH_HouseholdNaming_BATCH</members>
+        <members>HH_HouseholdNaming_TEST</members>
         <members>HH_Households</members>
         <members>HH_Households_TDTM</members>
         <members>HH_Households_TEST</members>
@@ -215,12 +219,12 @@
         <members>RLLP_OppRollup_TEST2</members>
         <members>RLLP_OppRollup_UTIL</members>
         <members>RLLP_OppSoftCreditRollup_BATCH</members>
+        <members>RP_Constants</members>
         <members>RP_GettingStartedController</members>
         <members>RP_GettingStartedTest</members>
         <members>RP_GitHubClient</members>
         <members>RP_GitHubController</members>
         <members>RP_GitHubTest</members>
-        <members>RP_Constants</members>
         <members>RP_GitHubTestMock</members>
         <members>RP_HTTPClient</members>
         <members>RP_YoutubeClient</members>
@@ -277,8 +281,8 @@
         <members>STG_UninstallScript_TEST</members>
         <members>TDTM_Config_API</members>
         <members>TDTM_Config_API_Test</members>
-        <members>TDTM_DefaultConfig</members>
         <members>TDTM_DMLgt200_TEST</members>
+        <members>TDTM_DefaultConfig</members>
         <members>TDTM_ObjectDataGateway</members>
         <members>TDTM_ProcessControl</members>
         <members>TDTM_Runnable</members>
@@ -310,6 +314,8 @@
         <members>UTIL_Namespace</members>
         <members>UTIL_Namespace_TEST</members>
         <members>UTIL_PageMessages_CTRL</members>
+        <members>UTIL_PerfLogger</members>
+        <members>UTIL_PerfLogger_TEST</members>
         <members>UTIL_Profile</members>
         <members>UTIL_Profile_TEST</members>
         <members>UTIL_Query</members>
@@ -325,12 +331,6 @@
         <members>UTIL_UnitTestData_TEST</members>
         <members>UTIL_Version_API</members>
         <members>UTIL_iSoqlListViewConsumer</members>
-        <members>BDI_DataImportService</members>
-        <members>BDI_PerfLogger</members>
-        <members>BDI_ContactService</members>
-        <members>UTIL_PerfLogger</members>
-        <members>UTIL_PerfLogger_TEST</members>
-        <members>BDI_PerfLogger_TEST</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -511,6 +511,7 @@
         <members>Addr_Verification_Settings__c.Auth_Token__c</members>
         <members>Addr_Verification_Settings__c.Class__c</members>
         <members>Addr_Verification_Settings__c.Enable_Automatic_Verification__c</members>
+        <members>Addr_Verification_Settings__c.Prevent_Address_Overwrite__c</members>
         <members>Addr_Verification_Settings__c.Reject_Ambiguous_Addresses__c</members>
         <members>Addr_Verification_Settings__c.Timeout__c</members>
         <members>Addr_Verification_Settings__c.Using_SmartyStreets__c</members>
@@ -986,6 +987,29 @@
         <members>REL_RECenter</members>
         <members>REL_Return_to_Contact</members>
         <members>REL_View_Contact_Record</members>
+        <members>RP_CustomerJourneyLinkLabel</members>
+        <members>RP_DeeperParagraph</members>
+        <members>RP_DeeperSubtitle</members>
+        <members>RP_GettingStarted</members>
+        <members>RP_GitHubSubtitle</members>
+        <members>RP_GitHubTitle</members>
+        <members>RP_NpspLinkLabel</members>
+        <members>RP_ProductNameLabel</members>
+        <members>RP_ReleaseGitHub</members>
+        <members>RP_ReleaseNotesLink</members>
+        <members>RP_Remote_Site_Settings_Deactivated</members>
+        <members>RP_SalesforceOrgLinkLabel</members>
+        <members>RP_SubTitle</members>
+        <members>RP_Title</members>
+        <members>RP_TrailheadLinkLabel</members>
+        <members>RP_TrailheadParagraph</members>
+        <members>RP_TrailheadSubtitle</members>
+        <members>RP_USParagraph</members>
+        <members>RP_UsHubLinkLabel</members>
+        <members>RP_UsSubtitle</members>
+        <members>RP_Videos</members>
+        <members>RP_WebinarLinkLabel</members>
+        <members>RP_YoutubeChannel</members>
         <members>RecurringDonationAccountAndContactError</members>
         <members>Saved</members>
         <members>Settings_not_Saved</members>
@@ -1280,10 +1304,10 @@
         <members>lblNoHHMergePermissions</members>
         <members>lblPostalCode</members>
         <members>lblProgress</members>
-        <members>lblStatus</members>
         <members>lblRequired</members>
         <members>lblSalutation</members>
         <members>lblState</members>
+        <members>lblStatus</members>
         <members>lblStreet</members>
         <members>lblYouAreHere</members>
         <members>leadConvertAccountName</members>
@@ -1381,29 +1405,6 @@
         <members>pscManageSoftCreditsType</members>
         <members>pscManageSoftCreditsUnaccounted</members>
         <members>pscManageSoftCreditsValidateTotals</members>
-        <members>RP_CustomerJourneyLinkLabel</members>
-        <members>RP_DeeperParagraph</members>
-        <members>RP_DeeperSubtitle</members>
-        <members>RP_GettingStarted</members>
-        <members>RP_GitHubSubtitle</members>
-        <members>RP_GitHubTitle</members>
-        <members>RP_NpspLinkLabel</members>
-        <members>RP_ProductNameLabel</members>
-        <members>RP_ReleaseGitHub</members>
-        <members>RP_ReleaseNotesLink</members>
-        <members>RP_Remote_Site_Settings_Deactivated</members>
-        <members>RP_SalesforceOrgLinkLabel</members>
-        <members>RP_SubTitle</members>
-        <members>RP_Title</members>
-        <members>RP_TrailheadLinkLabel</members>
-        <members>RP_TrailheadParagraph</members>
-        <members>RP_TrailheadSubtitle</members>
-        <members>RP_UsHubLinkLabel</members>
-        <members>RP_USParagraph</members>
-        <members>RP_UsSubtitle</members>
-        <members>RP_Videos</members>
-        <members>RP_WebinarLinkLabel</members>
-        <members>RP_YoutubeChannel</members>
         <members>sendAcknowledgmentFailedStatus</members>
         <members>sendAcknowledgmentFailureReasons</members>
         <members>sendAcknowledgmentFireStatus</members>
