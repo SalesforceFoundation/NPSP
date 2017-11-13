@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Cumulus</fullName>
     <types>
@@ -54,6 +54,7 @@
         <members>BDE_BatchEntry_TEST</members>
         <members>BDI_BatchOverride_CTRL</members>
         <members>BDI_BatchOverride_TEST</members>
+        <members>BDI_ContactService</members>
         <members>BDI_DataImportAPI_TEST</members>
         <members>BDI_DataImportBatch_SCHED</members>
         <members>BDI_DataImportBatch_SEL</members>
@@ -72,6 +73,8 @@
         <members>BDI_IMatchDonations</members>
         <members>BDI_IPostProcess</members>
         <members>BDI_MatchDonations</members>
+        <members>BDI_PerfLogger</members>
+        <members>BDI_PerfLogger_TEST</members>
         <members>BDI_PostProcess_TEST</members>
         <members>BDI_SettingsUI_CTRL</members>
         <members>BDI_SettingsUI_TEST</members>
@@ -340,6 +343,8 @@
         <members>UTIL_Namespace_TEST</members>
         <members>UTIL_PageMessages_CTRL</members>
         <members>UTIL_PlatformCache</members>
+        <members>UTIL_PerfLogger</members>
+        <members>UTIL_PerfLogger_TEST</members>
         <members>UTIL_Profile</members>
         <members>UTIL_Profile_TEST</members>
         <members>UTIL_Query</members>
@@ -355,12 +360,6 @@
         <members>UTIL_UnitTestData_TEST</members>
         <members>UTIL_Version_API</members>
         <members>UTIL_iSoqlListViewConsumer</members>
-        <members>BDI_DataImportService</members>
-        <members>BDI_PerfLogger</members>
-        <members>BDI_ContactService</members>
-        <members>UTIL_PerfLogger</members>
-        <members>UTIL_PerfLogger_TEST</members>
-        <members>BDI_PerfLogger_TEST</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -542,6 +541,7 @@
         <members>Addr_Verification_Settings__c.Auth_Token__c</members>
         <members>Addr_Verification_Settings__c.Class__c</members>
         <members>Addr_Verification_Settings__c.Enable_Automatic_Verification__c</members>
+        <members>Addr_Verification_Settings__c.Prevent_Address_Overwrite__c</members>
         <members>Addr_Verification_Settings__c.Reject_Ambiguous_Addresses__c</members>
         <members>Addr_Verification_Settings__c.Timeout__c</members>
         <members>Addr_Verification_Settings__c.Using_SmartyStreets__c</members>
@@ -2249,5 +2249,5 @@
         <members>Opportunity.Opportunity Email Acknowledgment</members>
         <name>WorkflowRule</name>
     </types>
-    <version>39.0</version>
+    <version>37.0</version>
 </Package>
