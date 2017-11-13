@@ -38,6 +38,8 @@ public without sharing class RLLP_OppRollup_UTIL {
 
     /*** Settings ***/
 
+    /** @description Set to true if the new Customizable Rollups Engine is enabled (i.e., DON'T USE THIS CLASS) */
+    public static Boolean customizableRollupEngineEnabled = false;
     /** @description Set to true if fiscal year should be used. */    
     public static boolean useFiscalYear = false;
     /** @description Set of Opportunity record types to exclue from Account Rollups. */
@@ -179,18 +181,19 @@ public without sharing class RLLP_OppRollup_UTIL {
     /*********************************************************************************************************
     * @description Constructor runs setupRollupVars and setupUserRollupVars.
     */
-	public RLLP_OppRollup_UTIL(){
-	    // setup households settings
-	    setupRollupVars(UTIL_CustomSettingsFacade.getHouseholdsSettings());
-	    // setup user rollups
-	    setupUserRollupVars();
-	}
+    public RLLP_OppRollup_UTIL(){
+        // setup households settings
+        setupRollupVars(UTIL_CustomSettingsFacade.getHouseholdsSettings());
+        // setup user rollups
+        setupUserRollupVars();
+    }
+
     /*********************************************************************************************************
     * @description Configures and sets up static variables for OppRollups settings based on custom settings.
     * @param household_settings custom household settings.
     */
     public static void setupRollupVars(npo02__Households_Settings__c household_settings){
-        
+
         if (household_settings.npo02__Excluded_Contact_Opp_Rectypes__c != null) {
             recordTypesToExcludeCons = new Set<Id>((List<Id>)household_settings.npo02__Excluded_Contact_Opp_Rectypes__c.split(';'));
         }
@@ -209,7 +212,7 @@ public without sharing class RLLP_OppRollup_UTIL {
         if (household_settings.npo02__Soft_Credit_Roles__c != null){
             softCreditRoles = new set<string>(household_Settings.npo02__Soft_Credit_Roles__c.split(';'));
         }
-        
+
         if (household_settings.npo02__Rollup_N_Day_Value__c == null){
             household_settings.npo02__Rollup_N_Day_Value__c = 365;
         }
@@ -221,17 +224,23 @@ public without sharing class RLLP_OppRollup_UTIL {
             List<SObject> fySettings = new List<SObject>();
             fySettings = Database.query(fyQuery);
             integer hasCustomFYRecord = fySettings.size();
-                
+
             //if org has customFY records, disable FY settings
-            if (hasCustomFYRecord > 0 && !household_settings.npo02__Force_Fiscal_Year__c)
+            if (hasCustomFYRecord > 0 && !household_settings.npo02__Force_Fiscal_Year__c) {
                 useFiscalYear = false;
-            else
+            } else {
                 useFiscalYear = true;
-        }        
-        
-        if (household_settings.npo02__Batch_Size__c != null)
+            }
+        }
+
+        if (household_settings.npo02__Batch_Size__c != null) {
             BATCH_SIZE = household_settings.npo02__Batch_Size__c.intValue();
-        
+        }
+
+        // If the new Customizable Rollup Engine is enabled, then all of the legacy NPSP
+        // rollups are disabled.
+        customizableRollupEngineEnabled = (household_settings.Customizable_Rollups_Enabled__c == true);
+
         //set the static var
         hh_settings = household_settings;
     }
