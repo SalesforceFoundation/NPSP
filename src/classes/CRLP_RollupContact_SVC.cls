@@ -103,8 +103,9 @@ public class CRLP_RollupContact_SVC extends CRLP_VRollupHandler {
         String conQuery = CRLP_Query_SEL.getResultsQuery(Contact.SObjectType) + ' WHERE Id = :conId LIMIT 1';
         Contact c = database.query(conQuery);
 
+        // Contact Hard Credit is based on Opportunity.Primary_Contact__c
         String detailsQuery = CRLP_Query_SEL.getDetailsQuery(Opportunity.SObjectType, new List<SObjectType>{ npe01__OppPayment__c.SObjectType });
-        detailsQuery += ' WHERE Id IN (SELECT OpportunityId FROM OpportunityContactRole WHERE ContactId = :conId) ' +
+        detailsQuery += ' WHERE Primary_Contact__c = :conId ' +
                 ' ORDER BY AccountId, CloseDate ';
         List<Opportunity> details = database.query(detailsQuery);
 
