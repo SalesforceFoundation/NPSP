@@ -54,6 +54,8 @@ public with sharing class UTIL_Namespace_TEST {
             system.assertEquals('foo_bar_baz__c', UTIL_Namespace.StrAllNSPrefix('foo_bar_baz__c'));
             system.assertEquals('select foo__c, bar, baz1__c, biz_buz__c from Contact', UTIL_Namespace.StrAllNSPrefix('select foo__c, bar, baz1__c, biz_buz__c from Contact'));           
         }
+        system.assertEquals('npe01__foo__c', UTIL_Namespace.StrTokenRemoveNSPrefix('npe01__foo__c'));
+        system.assertEquals('npe5__foo__c', UTIL_Namespace.StrTokenRemoveNSPrefix('npe5__foo__c'));
         system.assertEquals('foo__c', UTIL_Namespace.StrTokenRemoveNSPrefix('npsp__foo__c'));
         system.assertEquals('foo_npsp__c', UTIL_Namespace.StrTokenRemoveNSPrefix('foo_npsp__c'));
     }               
