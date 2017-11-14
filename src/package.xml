@@ -119,6 +119,8 @@
         <members>CRLP_Rollup</members>
         <members>CRLP_RollupAccount_SVC</members>
         <members>CRLP_RollupAccount_TEST</members>
+        <members>CRLP_RollupContact_SVC</members>
+        <members>CRLP_RollupContact_TEST</members>
         <members>CRLP_Rollup_SEL</members>
         <members>CRLP_Rollup_SEL_TEST</members>
         <members>CRLP_Rollup_SVC</members>

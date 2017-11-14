@@ -261,6 +261,8 @@ public class CMT_UnitTestData_TEST {
      *
      * @return
      */
+    // Create a Rollup__mdt record to roll up from the Opportunity to the Account object
+    // ==========================================================================================
     public static String createRollupRecordOppToAccount(String recordLabel, String filterGroupId,
                     String summaryObjectField, CRLP_Operation.RollupType operation, String detailObjectField,
                     CRLP_Operation.YearlyOperationType yearlyOperation, Integer intValue) {
@@ -269,6 +271,8 @@ public class CMT_UnitTestData_TEST {
             'Opportunity', detailObjectField, yearlyOperation, intValue, false);
     }
 
+    // Create a Rollup__mdt record to roll up from the Opportunity to the Contact object
+    // ==========================================================================================
     public static String createRollupRecordOppToContact(String recordLabel, String filterGroupId,
             String summaryObjectField, CRLP_Operation.RollupType operation, String detailObjectField,
             CRLP_Operation.YearlyOperationType yearlyOperation, Integer intValue) {
@@ -277,20 +281,8 @@ public class CMT_UnitTestData_TEST {
                 'Opportunity', detailObjectField, yearlyOperation, intValue, false);
     }
 
-
-    /**
-     * @description Helper to create a JSON string for a single Rollup__mdt record specifically for an Account
-     * rollup from the Payment object.
-     * @param recordLabel
-     * @param filterGroupId
-     * @param summaryObjectField
-     * @param operation
-     * @param detailObjectField
-     * @param yearlyOperation
-     * @param intValue
-     *
-     * @return
-     */
+    // Create a Rollup__mdt record to roll up from the Payment to the Account object
+    // ==========================================================================================
     public static String createRollupRecordPaymentToAccount(String recordLabel, String filterGroupId,
             String summaryObjectField, CRLP_Operation.RollupType operation, String detailObjectField,
             CRLP_Operation.YearlyOperationType yearlyOperation, Integer intValue) {
@@ -299,6 +291,19 @@ public class CMT_UnitTestData_TEST {
                 'npe01__OppPayment__c', detailObjectField, yearlyOperation, intValue, false);
     }
 
+    // Create a Rollup__mdt record to roll up from the Payment to the Contact object
+    // ==========================================================================================
+    public static String createRollupRecordPaymentToContact(String recordLabel, String filterGroupId,
+            String summaryObjectField, CRLP_Operation.RollupType operation, String detailObjectField,
+            CRLP_Operation.YearlyOperationType yearlyOperation, Integer intValue) {
+
+        return createRollupRecord(recordLabel, filterGroupId, 'Contact', summaryObjectField, operation,
+                'npe01__OppPayment__c', detailObjectField, yearlyOperation, intValue, false);
+    }
+
+    // ==========================================================================================
+    // Primary method to create a new Rollup__mdt record
+    // ==========================================================================================
     public static String createRollupRecord(String recordLabel, String filterGroupId,
                     String summaryObjectName, String summaryObjectField, CRLP_Operation.RollupType operation,
                     String detailObjectName, String detailObjectField,
