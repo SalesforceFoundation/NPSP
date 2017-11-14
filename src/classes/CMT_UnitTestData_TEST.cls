@@ -154,7 +154,7 @@ public class CMT_UnitTestData_TEST {
                 theValue = ((Double)fldValue).format();
             }
             String fieldJSON = String.format(fldTemplate, new List<String>{
-                    this.fldName, theValue
+                fixedFieldName, theValue
             });
 
             // If there is a related object (ex: Opportunity.IsWon), then the 'field JSON' will need to include
@@ -240,7 +240,7 @@ public class CMT_UnitTestData_TEST {
                 new List<CMT_Field>{
                     new CMT_Field('Filter_Group__c', CMTFieldType.FldText, filterGroupId),
                     new CMT_Field('Object__c', CMTFieldType.FldEntity, objectName),
-                    new CMT_Field('Field__c', CMTFieldType.FldField, objectName + '.' + fieldName),
+                    new CMT_Field('Field__c', CMTFieldType.FldField, objectName + '.' + fixNamespace(fieldName)),
                     new CMT_Field('Operator__c', CMTFieldType.FldText, operator),
                     new CMT_Field('Constant__c', CMTFieldType.FldText, constant),
                     new CMT_Field('Field_OpportunityContactRole_Role__c', CMTFieldType.FldBoolean, ocrBasedRule)
@@ -316,7 +316,7 @@ public class CMT_UnitTestData_TEST {
                     new CMT_Field('Active__c', CMTFieldType.FldBoolean, True),
                     new CMT_Field('Use_Fiscal_Year__c', CMTFieldType.FldBoolean, useFiscalYear),
                     new CMT_Field('Summary_Object__c', CMTFieldType.FldEntity, summaryObjectName),
-                    new CMT_Field('Summary_Field__c', CMTFieldType.FldField, summaryObjectName + '.' + summaryObjectField),
+                    new CMT_Field('Summary_Field__c', CMTFieldType.FldField, summaryObjectName + '.' + fixNamespace(summaryObjectField)),
                     new CMT_Field('Detail_Object__c', CMTFieldType.FldEntity, detailObjectName),
                     new CMT_Field('Date_Object__c', CMTFieldType.FldEntity, 'Opportunity'),
                     new CMT_Field('Date_Field__c', CMTFieldType.FldField, 'Opportunity.CloseDate'),
@@ -328,7 +328,7 @@ public class CMT_UnitTestData_TEST {
             fields.add(new CMT_Field('Integer__c', CMTFieldType.FldNumber, intValue));
         }
         if (String.isNotEmpty(detailObjectField)) {
-            fields.add(new CMT_Field('Detail_Field__c', CMTFieldType.FldField, detailObjectName + '.' + detailObjectField));
+            fields.add(new CMT_Field('Detail_Field__c', CMTFieldType.FldField, detailObjectName + '.' + fixNamespace(detailObjectField)));
         }
         return buildCMTObjectJSON('Rollup__mdt', recordLabel, recordId, fields);
     }
