@@ -142,6 +142,7 @@ public without sharing class CMT_FilterRule_SEL {
         if (UserInfo.isMultiCurrencyOrganization() && allFields.containsKey('currencyisocode')) {
             referencedFields.put('CurrencyIsoCode', allFields.get('currencyisocode'));
         }
+        CRLP_Rollup_SEL.validateReferencedFields(referencedFields, objName);
         return referencedFields.values();
     }
 

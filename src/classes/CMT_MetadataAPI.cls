@@ -71,11 +71,11 @@ public class CMT_MetadataAPI {
 
         CMT_MetadataAPI.upsertCustomMetadata(MetadataObject.Filter_Rule, 'Rule_4', 'Rule 4: OCR.Role',
                 new Map<String,Object>{
-                    'Filter_Group__c' => 'm016A000000YXdG',
-                    'Operation__c' => 'Equals',
+                    'Filter_Group__c' => 'ClosedWonOpps',
+                    'Operator__c' => 'Equals',
                     'Constant__c' => 'Solicitor',
-                    'Object__c' => SObjectType.OpportunityContactRole.getName(),
-                    'Field__c' => SObjectType.OpportunityContactRole.Fields.Role.getName()
+                    'Object__c' => SObjectType.Account.getName(),
+                    'Field__c' => SObjectType.Account.Fields.npo02__TotalOppAmount__c.getName()
             });
 
         Id jobId = CMT_MetadataAPI.commitPendingOperations();

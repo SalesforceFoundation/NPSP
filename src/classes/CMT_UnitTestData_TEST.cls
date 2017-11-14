@@ -72,7 +72,7 @@ public class CMT_UnitTestData_TEST {
                 '"Id":"{1}","MasterLabel":"{2}","DeveloperName":"{3}",';
 
         String record = String.format(templateString, new List<String>{
-                cmtType, recordId, labelName, labelName.replace(' ', '_')
+                fixNamespace(cmtType), recordId, labelName, labelName.replace(' ', '_')
         });
 
         // Append each field
@@ -85,8 +85,7 @@ public class CMT_UnitTestData_TEST {
         // Add the opening and closing curly brackets
         record = '{' + record.removeEnd(',').replaceAll('~!', '{').replaceAll('!~', '}') + '}';
 
-        // Fix all field references for the npsp namespace.
-        return UTIL_Namespace.StrAllNSPrefix(record);
+        return record;
     }
 
     /**
@@ -141,6 +140,7 @@ public class CMT_UnitTestData_TEST {
         public String getFieldJSON() {
             String fldTemplate;
             String theValue;
+            String fixedFieldName = fixNamespace(this.fldName);
 
             // Handle the basic field conversion
             if (this.fieldType == CMTFieldType.FldText || this.fieldType == CMTFieldType.FldEntity || this.fieldType == CMTFieldType.FldField) {
@@ -162,6 +162,9 @@ public class CMT_UnitTestData_TEST {
             if ( this.fieldType == CMTFieldType.FldEntity || this.fieldType == CMTFieldType.FldField) {
                 String entityType = (this.fieldType == CMTFieldType.FldEntity ? 'EntityDefinition' : 'FieldDefinition');
 
+                String fixedObjectName = fixNamespace(this.relatedObject);
+                fixedFieldName = fixedFieldName.replace('__c', '__r');
+
                 // List<String>{ dummyId, fldName, objName, foreignFldName, entityType } // '000000','Field__r','Opportunity','IsWon'
                 String compountFieldTemplate = '"{1}":~!"attributes":' +
                         '~!"type":"{4}","url":"/services/data/v40.0/sobjects/{4}/{2}.{3}"!~,' +
@@ -170,9 +173,8 @@ public class CMT_UnitTestData_TEST {
                         '"QualifiedApiName":"{3}"' +
                         '!~,';
                 String dummyId = '000000000000000AAA';
-                fldName = this.fldName.replace('__c', '__r');
                 fieldJSON += ',' + String.format(compountFieldTemplate, new List<String>{
-                        dummyId, this.fldName, this.relatedObject, (String)this.fldValue, entityType });
+                        dummyId, fixedFieldName, fixedObjectName, (String)this.fldValue, entityType });
             }
 
             return fieldJSON.removeEnd(',');
@@ -192,6 +194,21 @@ public class CMT_UnitTestData_TEST {
         return buildCMTObjectJSON('Filter_Group__mdt', recordLabel, recordId,
                 new List<CMT_Field>{new CMT_Field('Is_Deleted__c', CMTFieldType.FldBoolean, False)}
             );
+    }
+
+    /**
+     * @description Prefixes the package namespace to custom fields/objects only if they do not already have
+     * a namespace. Needed because making a single call to StrAllNSPrefix() could not handle the many variations
+     * of namespace options that might exist within a single large string.
+     * @param val
+     * @return namespace+val
+     */
+    private static String fixNamespace(String val) {
+        List<String> parts = val.split('__');
+        if (parts.size() == 2) {
+            return UTIL_Namespace.StrAllNSPrefix(val);
+        }
+        return val;
     }
 
     /**
@@ -251,6 +268,15 @@ public class CMT_UnitTestData_TEST {
         return createRollupRecord(recordLabel, filterGroupId, 'Account', summaryObjectField, operation,
             'Opportunity', detailObjectField, yearlyOperation, intValue, false, null, null);
     }
+
+    public static String createRollupRecordOppToContact(String recordLabel, String filterGroupId,
+            String summaryObjectField, String operation, String detailObjectField,
+            String yearlyOperation, Integer intValue) {
+
+        return createRollupRecord(recordLabel, filterGroupId, 'Contact', summaryObjectField, operation,
+                'Opportunity', detailObjectField, yearlyOperation, intValue, false, null, null);
+    }
+
 
     /**
      * @description Helper to create a JSON string for a single Rollup__mdt record specifically for an Account

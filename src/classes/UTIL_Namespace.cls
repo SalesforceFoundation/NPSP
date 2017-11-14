@@ -106,7 +106,7 @@ public class UTIL_Namespace {
     ********************************************************************************************************/
     public static string StrAllNSPrefix(string str) {
         if (getNamespace() == '') return str;
-        Pattern pat = Pattern.Compile('(?!npe4__|npo02__|npe03__|npe01__|npe5__)[a-zA-z0-9]*__(?:c|r|mdt)');
+        Pattern pat = Pattern.Compile('[a-zA-z0-9]*__(?:c|r|mdt)');
         Matcher match = pat.matcher(str);
         return match.replaceAll(getNamespace()+'__$0');
     }

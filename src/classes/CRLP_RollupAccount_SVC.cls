@@ -32,7 +32,7 @@
 * @date 2017
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
-* @description Rollup Services unique to the Account rollups from Opportunity and/or Opportunity+Payments
+* @description Rollup Services unique to the Account rollups from Opportunity and Opportunity+Payments
 */
 public class CRLP_RollupAccount_SVC extends CRLP_VRollupHandler {
 
