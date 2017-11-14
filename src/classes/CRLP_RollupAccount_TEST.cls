@@ -42,13 +42,20 @@ private class CRLP_RollupAccount_TEST {
     private static void mockRollupCMTValues() {
 
         // Create a single Filter Group (no need for filter rules here)
-        String filterGroupId = CMT_UnitTestData_TEST.getNewRecordId();
+        String filterGroupId1 = CMT_UnitTestData_TEST.getNewRecordId();
+        String filterGroupId2 = CMT_UnitTestData_TEST.getNewRecordId();
 
         // Extremely simple Filter Rule for IsWon only
-        String filterGroupsJSON = '[' + CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId, 'TestFilterGroup') + ']';
+        String filterGroupsJSON = '[' +
+                CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId1, 'TestFilterGroup1-IsWon+Paid') + ',' +
+                CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId2, 'TestFilterGroup2-IsWon+WrittenOff') +
+            ']';
         String filterRulesJSON = '[' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId, 'Group1.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') +
-                ']';
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule2', 'npe01__OppPayment__c', 'npe01__Paid__c', 'Equals', 'True') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule2', 'npe01__OppPayment__c', 'npe01__Written_Off__c', 'Equals', 'True') +
+            ']';
 
         // Deserialize the filter group and filter rule to use for the tests
         CMT_FilterRule_SEL.cachedFilterGroups = (List<Filter_Group__mdt>)JSON.deserialize(filterGroupsJSON, List<Filter_Group__mdt>.class);
@@ -56,36 +63,48 @@ private class CRLP_RollupAccount_TEST {
 
         // Create a single Rollup that uses the above Filter Group
         String rollupsJSON = '[' +
-                CMT_UnitTestData_TEST.createRollupRecordOppToAccount('Household Total Donations All Time', filterGroupId,
+                CMT_UnitTestData_TEST.createRollupRecordOppToAccount('Household Total Donations All Time', filterGroupId1,
                         'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.SUM.name(), 'AccountId',
                         CRLP_Operation.YearlyOperationType.ALL_TIME.name(), 0) + ',' +
 
-                CMT_UnitTestData_TEST.createRollupRecordOppToAccount('Average Total Donations All Time', filterGroupId,
+                CMT_UnitTestData_TEST.createRollupRecordOppToAccount('Average Total Donations All Time', filterGroupId1,
                         'npo02__AverageAmount__c', CRLP_Operation.RollupType.AVERAGE.name(), 'AccountId',
                         CRLP_Operation.YearlyOperationType.ALL_TIME.name(), 0) + ',' +
 
-                CMT_UnitTestData_TEST.createRollupRecordOppToAccount('Household Total Donations Last 2 Years', filterGroupId,
+                CMT_UnitTestData_TEST.createRollupRecordOppToAccount('Household Total Donations Last 2 Years', filterGroupId1,
                         'npo02__OppAmount2YearsAgo__c', CRLP_Operation.RollupType.SUM.name(), 'AccountId',
                         CRLP_Operation.YearlyOperationType.YEARS_BACK.name(), 2) + ',' +
 
-                CMT_UnitTestData_TEST.createRollupRecordOppToAccount('Max Donation All Time', filterGroupId,
+                CMT_UnitTestData_TEST.createRollupRecordOppToAccount('Max Donation All Time', filterGroupId1,
                         'npo02__LargestAmount__c', CRLP_Operation.RollupType.LARGEST.name(), 'AccountId',
                         CRLP_Operation.YearlyOperationType.ALL_TIME.name(), 0) + ',' +
 
-                CMT_UnitTestData_TEST.createRollupRecordOppToAccount('Years Donated', filterGroupId,
+                CMT_UnitTestData_TEST.createRollupRecordOppToAccount('Years Donated', filterGroupId1,
                         'Description', CRLP_Operation.RollupType.YEARS_DONATED.name(), 'AccountId',
                         CRLP_Operation.YearlyOperationType.ALL_TIME.name(), 0) + ',' +
 
-                CMT_UnitTestData_TEST.createRollupRecordOppToAccount('Current Donation Streak', filterGroupId,
-                        'npo02__LastMembershipAmount__c', CRLP_Operation.RollupType.CURRENT_STREAK.name(), 'AccountId',
-                        CRLP_Operation.YearlyOperationType.ALL_TIME.name(), 0) + ',' +
+                CMT_UnitTestData_TEST.createRollupRecordOppToAccount('Current Donation Streak', filterGroupId1,
+                        'npo02__NumberOfMembershipOpps__c', CRLP_Operation.RollupType.CURRENT_STREAK.name(), 'AccountId',
+                        null, 0) + ',' +
 
-                CMT_UnitTestData_TEST.createRollupRecordOppToAccount('Best Year', filterGroupId,
+                CMT_UnitTestData_TEST.createRollupRecordOppToAccount('Best Year', filterGroupId1,
                         'npo02__Best_Gift_Year__c', CRLP_Operation.RollupType.BEST_YEAR.name(), 'AccountId',
+                        null, 0) + ',' +
+
+                /* Using SingleResult operation to get the last gift date */
+                CMT_UnitTestData_TEST.createRollupRecord('Last Gift Date', filterGroupId1,
+                        'Account', 'npo02__LastCloseDate__c', CRLP_Operation.RollupType.LAST.name(),
+                        'Opportunity', 'AccountId',
+                        CRLP_Operation.YearlyOperationType.ALL_TIME.name(), 0, false,
+                        'Opportunity', 'CloseDate') + ',' +
+
+                /* Payment Rollups for Total Paid and Total Written Off - using a field that can hold the value */
+                CMT_UnitTestData_TEST.createRollupRecordPaymentToAccount('Total Payments', filterGroupId1,
+                        'AnnualRevenue', CRLP_Operation.RollupType.SUM.name(), 'npe01__Payment_Amount__c',
                         CRLP_Operation.YearlyOperationType.ALL_TIME.name(), 0) + ',' +
 
-                CMT_UnitTestData_TEST.createRollupRecordPaymentToAccount('Total Payments', filterGroupId,
-                        'AnnualRevenue', CRLP_Operation.RollupType.SUM.name(), 'npe01__Payment_Amount__c',
+                CMT_UnitTestData_TEST.createRollupRecordPaymentToAccount('Total Writeoffs', filterGroupId2,
+                        'npo02__LastMembershipAmount__c', CRLP_Operation.RollupType.SUM.name(), 'npe01__Payment_Amount__c',
                         CRLP_Operation.YearlyOperationType.ALL_TIME.name(), 0) +
 
                 ']';
@@ -122,10 +141,14 @@ private class CRLP_RollupAccount_TEST {
         List<Opportunity> opps = new List<Opportunity>();
         Date closeDate = Date.Today().addMonths(-100);
         Decimal totalDonations = 0, totalLast2Years = 0;
+        Decimal maxAmt = 1000;
+        Decimal baseAmt = 100;
+        Integer cnt = 100;
         String bestGiftYear;
         Set<String> donationYears = new Set<String>();
-        for (Integer n=0; n<100; n++) {
-            Decimal amt = (n==50 ? 1000 : 100);
+        Date lastCloseDate;
+        for (Integer n=0; n<cnt; n++) {
+            Decimal amt = (n==50 ? maxAmt : baseAmt);
             opps.add(new Opportunity (
                     Name = 'Test Opp ' + c.FirstName + ' ' + c.LastName,
                     Amount = amt,
@@ -140,23 +163,37 @@ private class CRLP_RollupAccount_TEST {
             }
             String donationYr = closeDate.addMonths(n).year().format().replace(',','');
             donationYears.add(donationYr);
-            if (amt == 1000) {
+            if (amt == maxAmt) {
                 bestGiftYear = donationYr;
             }
+            lastCloseDate = closeDate.addMonths(n);
         }
 
         // create one closed opportunity to ensure it's not included in our rollups
         opps.add(new Opportunity (
                 Name = 'Test Opp ' + c.FirstName + ' ' + c.LastName,
                 Amount = 500,
-                CloseDate = Date.Today().addDays(-120),
+                CloseDate = Date.Today().addDays(1),
                 StageName = UTIL_UnitTestData_TEST.getClosedLostStage(),
                 Primary_Contact__c = c.Id,
                 RecordTypeId = rtId
         ));
         insert opps;
 
-        system.assertEquals(100, [SELECT Count() FROM npe01__OppPayment__c WHERE npe01__Opportunity__r.IsWon = true],
+        // Mark two payments as written off; though only one should be rolled up
+        npe01__OppPayment__c pmt1 = [SELECT npe01__Written_Off__c, npe01__Paid__c FROM npe01__OppPayment__c
+            WHERE npe01__Opportunity__r.IsWon = false LIMIT 1];
+        pmt1.npe01__Written_Off__c = true;
+        pmt1.npe01__Paid__c = false;
+
+        npe01__OppPayment__c pmt2 = [SELECT npe01__Written_Off__c, npe01__Paid__c FROM npe01__OppPayment__c
+            WHERE npe01__Opportunity__r.IsWon = true LIMIT 1];
+        pmt2.npe01__Written_Off__c = true;
+        pmt2.npe01__Paid__c = false;
+
+        update new List<npe01__OppPayment__c>{ pmt1, pmt2 };
+
+        system.assertEquals(cnt, [SELECT Count() FROM npe01__OppPayment__c WHERE npe01__Opportunity__r.IsWon = true],
             'There should be 100 payment records on closed won opps');
 
         Test.startTest();
@@ -165,17 +202,22 @@ private class CRLP_RollupAccount_TEST {
         CRLP_RollupAccount_SVC.rollupSingleAccount(acctId);
 
         // Query the Account with all the target fields specified in the rollups
-        String acctQuery = CRLP_Query_SEL.getResultsQuery(Account.SObjectType);
-        acctQuery += ' WHERE Id = :acctId LIMIT 1';
+        String acctQuery = CRLP_Query_SEL.getResultsQuery(Account.SObjectType) + ' WHERE Id = :acctId LIMIT 1';
         Account a = database.query(acctQuery);
 
-        System.assertEquals(1000, a.npo02__LargestAmount__c);
+        // Basic rollup asserts using existing NPSP rollup fields.
+        System.assertEquals(maxAmt, a.npo02__LargestAmount__c);
+        System.assertEquals(lastCloseDate, a.npo02__LastCloseDate__c);
         System.assertEquals(totalDonations, a.npo02__TotalOppAmount__c);
-        System.assertEquals((totalDonations / 100), a.npo02__AverageAmount__c);
-        System.assertEquals(totalDonations, a.AnnualRevenue, 'Total Payments should match total donations');
+        System.assertEquals((totalDonations / cnt), a.npo02__AverageAmount__c);
         System.assertEquals(totalLast2Years, a.npo02__OppAmount2YearsAgo__c);
         System.assertEquals(bestGiftYear, a.npo02__Best_Gift_Year__c);
-        System.assertEquals(donationYears.size(), a.npo02__LastMembershipAmount__c, 'The current streak should be all the years');
+
+        // These 4 use other fields on the Account object since there are no NPSP related fields to store the values in
+        System.assertEquals(totalDonations - baseAmt, a.AnnualRevenue,
+                'Total Payments should match total donations less $100 because one payment has been marked as written off');
+        System.assertEquals(baseAmt, a.npo02__LastMembershipAmount__c, 'The Amount written off does not match');
+        System.assertEquals(donationYears.size(), a.npo02__NumberOfMembershipOpps__c, 'The current streak should be all the years');
         System.assertEquals(donationYears.size(), a.Description.split(';').size(), 'The list of donated years should match');
     }
 }

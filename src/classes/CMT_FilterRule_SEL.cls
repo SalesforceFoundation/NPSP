@@ -126,7 +126,12 @@ public without sharing class CMT_FilterRule_SEL {
                 // Get the target field name (or replace it with OCR.Role) and add to the map of fields
                 if (fr.Field_OpportunityContactRole_Role__c == false) {
                     String fldName = fr.Field__r.QualifiedApiName;
-                    referencedFields.put(fr.Field__c, allFields.get(fldName.toLowerCase()));
+                    if (allFields.containsKey(fldName.toLowerCase())) {
+                        referencedFields.put(fr.Field__c, allFields.get(fldName.toLowerCase()));
+                    } else {
+                        // TODO Handle fields not found
+                        system.assert(false, '>> Field ' + fldName + ' not found in allFields collection for ' + objName);
+                    }
                 } else {
                     String fldName = 'Role';
                     referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));

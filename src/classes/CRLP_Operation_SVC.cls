@@ -113,6 +113,9 @@ instance until ready to be written to the Sobject.
                 Object resultVal = s.get(rollup.resultFieldName);
                 CRLP_Operation.RollupType operation = CRLP_Operation.getRollupTypeFromString(firstRollup.Operation__c.replaceAll(' ', '_'));
 
+                /*System.debug(LoggingLevel.ERROR, '>> ResultField Operation: ' + rollup.resultFieldName + ' ' + operation +
+                    ' for ' + resultVal + ' // maxDate=' + rollup.maxDate + ', dateValue=' + dateValue);*/
+
                 if (operation == CRLP_Operation.RollupType.FIRST && dateValue < rollup.minDate) {
                     // Operation = FIRST (always based on a date)
                     setResultFieldValue(rollup.resultFieldType, resultVal, rollup);
@@ -121,14 +124,17 @@ instance until ready to be written to the Sobject.
                     // Operation = LAST (always based on a date)
                     setResultFieldValue(rollup.resultFieldType, resultVal, rollup);
 
-
                 } else if (operation == CRLP_Operation.RollupType.SMALLEST && amountValue < rollup.minValue) {
                     // Operation = LARGEST (always based on an amount)
                     setResultFieldValue(rollup.resultFieldType, resultVal, rollup);
 
-
                 } else if (operation == CRLP_Operation.RollupType.LARGEST && amountValue > rollup.maxValue) {
                     // Operation = SMALLEST (always based on an amount)
+                    setResultFieldValue(rollup.resultFieldType, resultVal, rollup);
+
+                } else if ((operation == CRLP_Operation.RollupType.LAST || operation == CRLP_Operation.RollupType.FIRST)
+                        && (rollup.minDate == null || rollup.maxDate == null)) {
+                    // If the Min/Max fields are null, then the value is alway both the First and Last date.
                     setResultFieldValue(rollup.resultFieldType, resultVal, rollup);
                 }
             }
@@ -149,10 +155,10 @@ instance until ready to be written to the Sobject.
             // Set the First/Last Date values
             if (dateValue != null) {
                 theYear = fiscalYrs.getYear(dateValue).format().replace(',','');
-                if (rollup.minDate > dateValue) {
+                if (rollup.minDate == null || rollup.minDate > dateValue) {
                     rollup.minDate = dateValue;
                 }
-                if (rollup.maxDate < dateValue) {
+                if (rollup.maxDate == null || rollup.maxDate < dateValue) {
                     rollup.maxDate = dateValue;
                 }
             }

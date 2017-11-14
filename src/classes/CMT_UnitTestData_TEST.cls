@@ -249,7 +249,7 @@ public class CMT_UnitTestData_TEST {
                     String yearlyOperation, Integer intValue) {
 
         return createRollupRecord(recordLabel, filterGroupId, 'Account', summaryObjectField, operation,
-            'Opportunity', detailObjectField, yearlyOperation, intValue);
+            'Opportunity', detailObjectField, yearlyOperation, intValue, false, null, null);
     }
 
     /**
@@ -270,23 +270,21 @@ public class CMT_UnitTestData_TEST {
             String yearlyOperation, Integer intValue) {
 
         return createRollupRecord(recordLabel, filterGroupId, 'Account', summaryObjectField, operation,
-                'npe01__OppPayment__c', detailObjectField, yearlyOperation, intValue);
+                'npe01__OppPayment__c', detailObjectField, yearlyOperation, intValue, false, null, null);
     }
 
     public static String createRollupRecord(String recordLabel, String filterGroupId,
                     String summaryObjectName, String summaryObjectField, String operation,
                     String detailObjectName, String detailObjectField,
-                    String yearlyOperation, Integer intValue) {
+                    String yearlyOperation, Integer intValue, Boolean useFiscalYear,
+                    String resultObjectName, String resultFieldName) {
 
         String recordId = getNewRecordId();
-        return buildCMTObjectJSON('Rollup__mdt', recordLabel, recordId,
-                new List<CMT_Field>{
+        List<CMT_Field> fields = new List<CMT_Field>{
                     new CMT_Field('Filter_Group__c', CMTFieldType.FldText, filterGroupId),
                     new CMT_Field('Operation__c', CMTFieldType.FldText, operation),
                     new CMT_Field('Active__c', CMTFieldType.FldBoolean, True),
-                    new CMT_Field('Use_Fiscal_Year__c', CMTFieldType.FldBoolean, False),
-                    new CMT_Field('Yearly_Operation_Type__c', CMTFieldType.FldText, yearlyOperation),
-                    new CMT_Field('Integer__c', CMTFieldType.FldNumber, intValue),
+                    new CMT_Field('Use_Fiscal_Year__c', CMTFieldType.FldBoolean, useFiscalYear),
                     new CMT_Field('Summary_Object__c', CMTFieldType.FldEntity, summaryObjectName),
                     new CMT_Field('Summary_Field__c', CMTFieldType.FldField, summaryObjectName + '.' + summaryObjectField),
                     new CMT_Field('Detail_Object__c', CMTFieldType.FldEntity, detailObjectName),
@@ -295,7 +293,15 @@ public class CMT_UnitTestData_TEST {
                     new CMT_Field('Date_Field__c', CMTFieldType.FldField, 'Opportunity.CloseDate'),
                     new CMT_Field('Amount_Object__c', CMTFieldType.FldEntity, 'Opportunity'),
                     new CMT_Field('Amount_Field__c', CMTFieldType.FldField, 'Opportunity.Amount')
-                }
-        );
+                };
+        if (yearlyOperation != null) {
+            fields.add(new CMT_Field('Yearly_Operation_Type__c', CMTFieldType.FldText, yearlyOperation));
+            fields.add(new CMT_Field('Integer__c', CMTFieldType.FldNumber, intValue));
+        }
+        if (resultObjectName != null) {
+            fields.add(new CMT_Field('Result_Object__c', CMTFieldType.FldEntity, resultObjectName));
+            fields.add(new CMT_Field('Result_Field__c', CMTFieldType.FldField, resultObjectName + '.' + resultFieldName));
+        }
+        return buildCMTObjectJSON('Rollup__mdt', recordLabel, recordId, fields);
     }
 }
