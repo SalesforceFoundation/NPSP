@@ -46,6 +46,9 @@
 //TBD making this class global so managed package users can add lookup cascade deletions
 public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
 
+    @TestVisible private static final String PLAIN_TEXT_CHILD_RECORDS_FORMAT = '{1} ({0})';
+    @TestVisible private static final String HTML_TEXT_CHILD_RECORDS_FORMAT = '<li><a href="#" onclick="window.open(\'\'/{0}\'\', \'\'\'\');return false;" target="_blank">{1}</a></li>';
+
     /*******************************************************************************************************
     * @description Contains information for performing a cascade deletion.
     * All that is needed to perform cascade deletion is the object name and the relationship to the parent
@@ -232,7 +235,7 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
                 for (String errType : cc.errors.get(parentId).keySet()) {
                     String childRecords = (USER_UserService.isUserRunningLightning() || USER_UserService.isUserRunningMobile()) ?
                         getPlainTextChildRecords(cc.children, cc.errors.get(parentId).get(errType)) :
-                        getHTMLChildRecords(cc.children, cc.errors.get(parentId).get(errType));
+                        getHTMLTextChildRecords(cc.children, cc.errors.get(parentId).get(errType));
 
                     error += ' ' + errType + ': ' + childRecords;
                 }
@@ -250,12 +253,12 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
     * @return String An HTML string with links to the child records.
     ********************************************************************************************************/
     @TestVisible
-    private String getHTMLChildRecords(Map<Id, SObject> childRecords, List<Id> records) {
+    private String getHTMLTextChildRecords(Map<Id, SObject> childRecords, List<Id> records) {
         List<String> results = new List<String>{'<ul>'};
         String nameField = (String)UTIL_Describe.getNameField(records[0].getSobjectType().getDescribe().getName());
         for (Id recId : records) {
             String childName = (String) childRecords.get(recId).get(nameField);
-            results.add('<li><a href="#" onclick="window.open(\'/' + recId + '\', \'\');return false;" target="_blank">' + childName + '</a></li>');
+            results.add(String.format(HTML_TEXT_CHILD_RECORDS_FORMAT, new List<String>{recId, childName}));
         }
         results.add('</ul>');
         return String.join(results,'');
@@ -273,7 +276,7 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
         String nameField = (String) UTIL_Describe.getNameField(records[0].getSobjectType().getDescribe().getName());
         for (Id recId : records) {
             String childName = (String) childRecords.get(recId).get(nameField);
-            results.add(childName + ' (' + recId + ')');
+            results.add(String.format(PLAIN_TEXT_CHILD_RECORDS_FORMAT, new List<String>{recId, childName}));
         }
         return String.join(results,', ');
     }
