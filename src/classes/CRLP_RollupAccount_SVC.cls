@@ -94,4 +94,32 @@ public class CRLP_RollupAccount_SVC extends CRLP_VRollupHandler {
             }
         }
     }
+
+    /**
+     * @description
+     * // TODO -- NOT SURE WHETHER THIS METHOD WILL BE KEPT YET; MIGHT BE AN ENTRY POINT FOR A BUTTON ON THE ACCOUNT
+     * @param acctId
+     */
+    public static void rollupSingleAccount(Id acctId) {
+        String acctQuery = CRLP_Query_SEL.getResultsQuery(Account.SObjectType);
+        acctQuery += ' WHERE Id = :acctId LIMIT 1';
+        Account a = database.query(acctQuery);
+
+        String detailsQuery = CRLP_Query_SEL.getDetailsQuery(Opportunity.SObjectType, new List<SObjectType>{ npe01__OppPayment__c.SObjectType });
+        detailsQuery += ' WHERE AccountID = :acctId';
+        List<Opportunity> details = database.query(detailsQuery);
+
+        CRLP_RollupAccount_SVC handler = new CRLP_RollupAccount_SVC(acctId);
+        handler.setCurrencyCode(null);
+        handler.processRollups(details);
+
+        Account updatedAcct = (Account)handler.getPopulatedSObject();
+        System.debug(LoggingLevel.ERROR, '> Rollups.count=' + handler.rollups.size());
+        if (CRLP_Rollup_SVC.resultsNeedUpdate(a, updatedAcct, handler.rollups)) {
+            database.update(updatedAcct);
+        } else {
+            System.Debug(LoggingLevel.ERROR, '*** NO UPDATE IS NEEDED FOR ' + acctId + ' ***');
+        }
+    }
+
 }

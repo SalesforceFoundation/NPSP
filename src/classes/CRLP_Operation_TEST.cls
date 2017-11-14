@@ -55,11 +55,4 @@ private class CRLP_Operation_TEST {
         System.assertEquals(CRLP_Operation.RollupType.SUM, CRLP_Operation.getRollupTypeFromString('Sum'));
     }
 
-    // TODO Build this unit test
-    static testMethod void test_OperationRollupService() {
-        // Create a Rollup__mdt record
-        // Create some test data
-        // Instantiate a CRLP_Rollup instance with one or more Rollup__mdt records
-        // call CRLP_Operation_SVC.doRollupOperation(CRLP_Rollup, List<Sobject>)
-    }
 }

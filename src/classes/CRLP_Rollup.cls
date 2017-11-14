@@ -117,7 +117,9 @@ public class CRLP_Rollup {
         this.theSum = this.minValue = this.maxValue = 0;
         this.dateValue = this.minDate = this.maxDate = null;
         this.dateTimeValue = this.minDateTime = this.maxDateTime = null;
-        this.minByYear = this.maxByYear = this.sumByYear = new Map<String, Double>();
+        this.minByYear = new Map<String, Double>();
+        this.maxByYear = new Map<String, Double>();
+        this.sumByYear = new Map<String, Double>();
         this.countByYear = new Map<String, Integer>();
     }
 
@@ -140,7 +142,7 @@ public class CRLP_Rollup {
     public Boolean isRollupInSameGroup(Rollup__mdt otherMdtRollup) {
         Set<String> matchingFields = new Set<String>{
                 'Filter_Group__c','Detail_Field__c', 'Use_OCR_for_Attribution_Object__c', 'Result_Field__c',
-                'Date_Field__c', 'Amount_Field__c', 'Use_Fiscal_Year__c'
+                'Date_Field__c', 'Amount_Field__c', 'Use_Fiscal_Year__c', 'Yearly_Operation_Type__c'
         };
         if (this.rollupsMdt == null) {
             return true;
@@ -174,10 +176,11 @@ public class CRLP_Rollup {
         // Instantiate this with the first Rollup__mdt record. All records have the same
         // value in the Use_Fiscal_Year__c field.
         fiscalYrs = new CRLP_FiscalYears(this.useFiscalYear);
+        UTIL_Debug.debug('> Rollup=' + this);
 
         // Get the rolled up value for each Rollup__mdt record
         for (Rollup__mdt r : this.rollupsMdt) {
-            UTIL_Debug.debug('Rollup__mdt=' + r);
+            UTIL_Debug.debug('  > Rollup__mdt=' + r);
 
             Schema.DescribeFieldResult targetField = CRLP_Rollup_SVC.getSobjectFieldFromRollup(r.Summary_Object__r.QualifiedApiName, r.Summary_Field__r.QualifiedApiName);
             rtnValues.put(targetField.getName(), determineRollupValue(r, targetField));
@@ -207,8 +210,8 @@ public class CRLP_Rollup {
         if (useYearsBackValue == true) {
             Integer startYear = fiscalYrs.getYear(Date.Today());
             // Loop through the number of years back starting from the current year (calendar or fiscal)
-            for (Integer y=startYear; y >= startYear-this.yearsBack; y--) {
-                String yrString = y.format().replace(',','');
+            for (Integer yr=startYear; yr > startYear - r.Integer__c; yr--) {
+                String yrString = yr.format().replace(',','');
                 // If the map of sums by year include the specified year, then get the Sum/Min/Max
                 if (sumByYear.containsKey(yrString)) {
                     sumForSpecifiedYears += sumByYear.get(yrString);
