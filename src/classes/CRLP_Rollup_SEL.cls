@@ -52,7 +52,6 @@ public class CRLP_Rollup_SEL {
                                 Use_OCR_for_Attribution_Object__c, Yearly_Operation_Type__c,
                                 Date_Field__r.QualifiedApiName, Date_Object__r.QualifiedApiName,
                                 Detail_Field__r.QualifiedApiName, Detail_Object__r.QualifiedApiName,
-                                Result_Field__r.QualifiedApiName, Result_Object__r.QualifiedApiName,
                                 Summary_Field__r.QualifiedApiName, Summary_Object__r.QualifiedApiName
                         FROM Rollup__mdt
                         ORDER BY Summary_Object__c];
@@ -132,15 +131,15 @@ public class CRLP_Rollup_SEL {
                     String fldName = rollup.Summary_Field__r.QualifiedApiName;
                     referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
                 }
-                if (rollup.Detail_Object__r.QualifiedApiName == objName) {
+                if (rollup.Detail_Object__r.QualifiedApiName == objName && rollup.Detail_Field__c != null) {
                     String fldName = rollup.Detail_Field__r.QualifiedApiName;
                     referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
                 }
-                if (rollup.Amount_Object__r.QualifiedApiName == objName) {
+                if (rollup.Amount_Object__r.QualifiedApiName == objName && rollup.Amount_Field__r != null) {
                     String fldName = rollup.Amount_Field__r.QualifiedApiName;
                     referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
                 }
-                if (rollup.Date_Object__r.QualifiedApiName == objName) {
+                if (rollup.Date_Object__r.QualifiedApiName == objName && rollup.Date_Field__r != null) {
                     String fldName = rollup.Date_Field__r.QualifiedApiName;
                     referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
                 }

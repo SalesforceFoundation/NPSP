@@ -910,8 +910,6 @@
         <members>Rollup__mdt.Filter_Group__c</members>
         <members>Rollup__mdt.Integer__c</members>
         <members>Rollup__mdt.Operation__c</members>
-        <members>Rollup__mdt.Result_Field__c</members>
-        <members>Rollup__mdt.Result_Object__c</members>
         <members>Rollup__mdt.Summary_Field__c</members>
         <members>Rollup__mdt.Summary_Object__c</members>
         <members>Rollup__mdt.Use_Fiscal_Year__c</members>

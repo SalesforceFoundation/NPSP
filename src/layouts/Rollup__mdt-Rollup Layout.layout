@@ -84,10 +84,6 @@
                 <behavior>Edit</behavior>
                 <field>Date_Object__c</field>
             </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>Result_Object__c</field>
-            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
@@ -95,7 +91,7 @@
                 <field>Summary_Field__c</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Required</behavior>
+                <behavior>Edit</behavior>
                 <field>Detail_Field__c</field>
             </layoutItems>
             <layoutItems>
@@ -105,10 +101,6 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Date_Field__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>Result_Field__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>

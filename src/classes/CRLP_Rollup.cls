@@ -84,15 +84,14 @@ public class CRLP_Rollup {
             this.rollupsMdt = new List<Rollup__mdt>();
 
             // Field and Object details
-            DescribeFieldResult resultField = CRLP_Rollup_SVC.getSobjectFieldFromRollup(rollupMdt.Result_Object__r.QualifiedApiName, rollupMdt.Result_Field__r.QualifiedApiName);
-            if (resultField !=  null) {
-                this.resultFieldType = resultField.getSoapType();
-                this.resultFieldName = resultField.getName();
-            }
             this.amountObject = rollupMdt.Amount_Object__r.QualifiedApiName;
             this.dateObject = rollupMdt.Date_Object__r.QualifiedApiName;
             this.detailObject = rollupMdt.Detail_Object__r.QualifiedApiName;
-            this.resultObject = rollupMdt.Result_Object__r.QualifiedApiName;
+            if (rollupMdt.Detail_Field__c !=  null) {
+                DescribeFieldResult resultField = CRLP_Rollup_SVC.getSobjectFieldFromRollup(detailObject, rollupMdt.Detail_Field__r.QualifiedApiName);
+                this.resultFieldType = resultField.getSoapType();
+                this.resultFieldName = resultField.getName();
+            }
 
             // Year and Date/Day related details
             this.useFiscalYear = rollupMdt.Use_Fiscal_Year__c;
@@ -141,7 +140,7 @@ public class CRLP_Rollup {
      */
     public Boolean isRollupInSameGroup(Rollup__mdt otherMdtRollup) {
         Set<String> matchingFields = new Set<String>{
-                'Filter_Group__c','Detail_Field__c', 'Use_OCR_for_Attribution_Object__c', 'Result_Field__c',
+                'Filter_Group__c','Detail_Field__c', 'Use_OCR_for_Attribution_Object__c',
                 'Date_Field__c', 'Amount_Field__c', 'Use_Fiscal_Year__c', 'Yearly_Operation_Type__c'
         };
         if (this.rollupsMdt == null) {
@@ -180,8 +179,6 @@ public class CRLP_Rollup {
 
         // Get the rolled up value for each Rollup__mdt record
         for (Rollup__mdt r : this.rollupsMdt) {
-            UTIL_Debug.debug('  > Rollup__mdt=' + r);
-
             Schema.DescribeFieldResult targetField = CRLP_Rollup_SVC.getSobjectFieldFromRollup(r.Summary_Object__r.QualifiedApiName, r.Summary_Field__r.QualifiedApiName);
             rtnValues.put(targetField.getName(), determineRollupValue(r, targetField));
         }
@@ -225,7 +222,7 @@ public class CRLP_Rollup {
         // ================================================================
         // Simple ResultField types
         // ================================================================
-        if (this.resultFieldType != null) {
+        /*if (this.resultFieldType != null) {
             if (this.resultFieldType == SoapType.DATE) {
                 resultValue = this.dateValue;
             } else if (this.resultFieldType == SoapType.DATETIME) {
@@ -235,12 +232,12 @@ public class CRLP_Rollup {
             } else {
                 resultValue = this.textValue;
             }
-        }
+        }*/
 
         // ================================================================
         // First/Last Donation Date or DateTime
         // ================================================================
-        else if (fldType == SoapType.DATE && operation == CRLP_Operation.RollupType.FIRST) {
+        if (fldType == SoapType.DATE && operation == CRLP_Operation.RollupType.FIRST) {
             resultValue = minDate;
         } else if (fldType == SoapType.DATE && operation == CRLP_Operation.RollupType.LAST) {
             resultValue = maxDate;

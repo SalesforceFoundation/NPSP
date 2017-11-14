@@ -64,48 +64,47 @@ private class CRLP_RollupAccount_TEST {
         // Create a single Rollup that uses the above Filter Group
         String rollupsJSON = '[' +
                 CMT_UnitTestData_TEST.createRollupRecordOppToAccount('Household Total Donations All Time', filterGroupId1,
-                        'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.SUM.name(), 'AccountId',
-                        CRLP_Operation.YearlyOperationType.ALL_TIME.name(), 0) + ',' +
+                        'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.SUM, 'Amount',
+                        CRLP_Operation.YearlyOperationType.ALL_TIME, 0) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecordOppToAccount('Average Total Donations All Time', filterGroupId1,
-                        'npo02__AverageAmount__c', CRLP_Operation.RollupType.AVERAGE.name(), 'AccountId',
-                        CRLP_Operation.YearlyOperationType.ALL_TIME.name(), 0) + ',' +
+                        'npo02__AverageAmount__c', CRLP_Operation.RollupType.AVERAGE, 'Amount',
+                        CRLP_Operation.YearlyOperationType.ALL_TIME, 0) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecordOppToAccount('Household Total Donations Last 2 Years', filterGroupId1,
-                        'npo02__OppAmount2YearsAgo__c', CRLP_Operation.RollupType.SUM.name(), 'AccountId',
-                        CRLP_Operation.YearlyOperationType.YEARS_BACK.name(), 2) + ',' +
+                        'npo02__OppAmount2YearsAgo__c', CRLP_Operation.RollupType.SUM, 'Amount',
+                        CRLP_Operation.YearlyOperationType.YEARS_BACK, 2) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecordOppToAccount('Max Donation All Time', filterGroupId1,
-                        'npo02__LargestAmount__c', CRLP_Operation.RollupType.LARGEST.name(), 'AccountId',
-                        CRLP_Operation.YearlyOperationType.ALL_TIME.name(), 0) + ',' +
+                        'npo02__LargestAmount__c', CRLP_Operation.RollupType.LARGEST, 'Amount',
+                        CRLP_Operation.YearlyOperationType.ALL_TIME, 0) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecordOppToAccount('Years Donated', filterGroupId1,
-                        'Description', CRLP_Operation.RollupType.YEARS_DONATED.name(), 'AccountId',
-                        CRLP_Operation.YearlyOperationType.ALL_TIME.name(), 0) + ',' +
+                        'Description', CRLP_Operation.RollupType.YEARS_DONATED, '',
+                        CRLP_Operation.YearlyOperationType.ALL_TIME, 0) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecordOppToAccount('Current Donation Streak', filterGroupId1,
-                        'npo02__NumberOfMembershipOpps__c', CRLP_Operation.RollupType.CURRENT_STREAK.name(), 'AccountId',
+                        'npo02__NumberOfMembershipOpps__c', CRLP_Operation.RollupType.CURRENT_STREAK, '',
                         null, 0) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecordOppToAccount('Best Year', filterGroupId1,
-                        'npo02__Best_Gift_Year__c', CRLP_Operation.RollupType.BEST_YEAR.name(), 'AccountId',
+                        'npo02__Best_Gift_Year__c', CRLP_Operation.RollupType.BEST_YEAR, '',
                         null, 0) + ',' +
 
                 /* Using SingleResult operation to get the last gift date */
                 CMT_UnitTestData_TEST.createRollupRecord('Last Gift Date', filterGroupId1,
-                        'Account', 'npo02__LastCloseDate__c', CRLP_Operation.RollupType.LAST.name(),
-                        'Opportunity', 'AccountId',
-                        CRLP_Operation.YearlyOperationType.ALL_TIME.name(), 0, false,
-                        'Opportunity', 'CloseDate') + ',' +
+                        'Account', 'npo02__LastCloseDate__c', CRLP_Operation.RollupType.LAST,
+                        'Opportunity', 'CloseDate',
+                        CRLP_Operation.YearlyOperationType.ALL_TIME, 0, false) + ',' +
 
                 /* Payment Rollups for Total Paid and Total Written Off - using a field that can hold the value */
                 CMT_UnitTestData_TEST.createRollupRecordPaymentToAccount('Total Payments', filterGroupId1,
-                        'AnnualRevenue', CRLP_Operation.RollupType.SUM.name(), 'npe01__Payment_Amount__c',
-                        CRLP_Operation.YearlyOperationType.ALL_TIME.name(), 0) + ',' +
+                        'AnnualRevenue', CRLP_Operation.RollupType.SUM, 'npe01__Payment_Amount__c',
+                        CRLP_Operation.YearlyOperationType.ALL_TIME, 0) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecordPaymentToAccount('Total Writeoffs', filterGroupId2,
-                        'npo02__LastMembershipAmount__c', CRLP_Operation.RollupType.SUM.name(), 'npe01__Payment_Amount__c',
-                        CRLP_Operation.YearlyOperationType.ALL_TIME.name(), 0) +
+                        'npo02__LastMembershipAmount__c', CRLP_Operation.RollupType.SUM, 'npe01__Payment_Amount__c',
+                        CRLP_Operation.YearlyOperationType.ALL_TIME, 0) +
 
                 ']';
 
@@ -206,11 +205,11 @@ private class CRLP_RollupAccount_TEST {
         Account a = database.query(acctQuery);
 
         // Basic rollup asserts using existing NPSP rollup fields.
-        System.assertEquals(maxAmt, a.npo02__LargestAmount__c);
-        System.assertEquals(lastCloseDate, a.npo02__LastCloseDate__c);
         System.assertEquals(totalDonations, a.npo02__TotalOppAmount__c);
         System.assertEquals((totalDonations / cnt), a.npo02__AverageAmount__c);
         System.assertEquals(totalLast2Years, a.npo02__OppAmount2YearsAgo__c);
+        System.assertEquals(lastCloseDate, a.npo02__LastCloseDate__c);
+        System.assertEquals(maxAmt, a.npo02__LargestAmount__c);
         System.assertEquals(bestGiftYear, a.npo02__Best_Gift_Year__c);
 
         // These 4 use other fields on the Account object since there are no NPSP related fields to store the values in

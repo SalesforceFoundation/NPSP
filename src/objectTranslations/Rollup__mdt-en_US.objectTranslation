@@ -90,14 +90,6 @@
         </picklistValues>
     </fields>
     <fields>
-        <label><!-- Result Field --></label>
-        <name>Result_Field__c</name>
-    </fields>
-    <fields>
-        <label><!-- Result Object --></label>
-        <name>Result_Object__c</name>
-    </fields>
-    <fields>
         <label><!-- Summary Field --></label>
         <name>Summary_Field__c</name>
     </fields>
