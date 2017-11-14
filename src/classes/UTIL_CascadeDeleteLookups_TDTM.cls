@@ -230,7 +230,11 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
 
                 String error = String.format(Label.CascadeDeletionError, new List<String>{parentName}) + '<br/><br/>';
                 for (String errType : cc.errors.get(parentId).keySet()) {
-                    error += ' ' + errType + ': ' + getErrorLinks(cc,cc.errors.get(parentId).get(errType));
+                    String childRecords = (USER_UserService.isUserRunningLightning() || USER_UserService.isUserRunningMobile()) ?
+                        getPlainTextChildRecords(cc.children, cc.errors.get(parentId).get(errType)) :
+                        getHTMLChildRecords(cc.children, cc.errors.get(parentId).get(errType));
+
+                    error += ' ' + errType + ': ' + childRecords;
                 }
                 //don't escape error message with HTML links
                 parent.addError(error, false);
@@ -239,22 +243,39 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description Creates a list of the child records preventing deletion, with html links to those records
+    * @description get a list of the child records preventing deletion, with html links to those records
     * with the record's name.
     * @param cc The Cascade these records belong to.
     * @param records The child records preventing deletion.
     * @return String An HTML string with links to the child records.
     ********************************************************************************************************/
-    private String getErrorLinks(Cascade cc, List<Id> records) {
+    @TestVisible
+    private String getHTMLChildRecords(Map<Id, SObject> childRecords, List<Id> records) {
         List<String> results = new List<String>{'<ul>'};
         String nameField = (String)UTIL_Describe.getNameField(records[0].getSobjectType().getDescribe().getName());
         for (Id recId : records) {
-            String childName = (String)cc.children.get(recId).get(nameField);
-            String htmlLink = '<li><a href="#" onclick="window.open(\'/'+recId+'\', \'\');return false;" target="_blank">' + childName + '</a></li>';
-            results.add(htmlLink);
+            String childName = (String) childRecords.get(recId).get(nameField);
+            results.add('<li><a href="#" onclick="window.open(\'/' + recId + '\', \'\');return false;" target="_blank">' + childName + '</a></li>');
         }
         results.add('</ul>');
         return String.join(results,'');
+    }
+
+    /*******************************************************************************************************
+    * @description get a Plain Text list of the child records preventing deletion
+    * @param cc The Cascade these records belong to.
+    * @param records The child records preventing deletion.
+    * @return String Plain text list of the child records.
+    ********************************************************************************************************/
+    @TestVisible
+    private String getPlainTextChildRecords(Map<Id, SObject> childRecords, List<Id> records) {
+        List<String> results = new List<String>();
+        String nameField = (String) UTIL_Describe.getNameField(records[0].getSobjectType().getDescribe().getName());
+        for (Id recId : records) {
+            String childName = (String) childRecords.get(recId).get(nameField);
+            results.add(childName + ' (' + recId + ')');
+        }
+        return String.join(results,', ');
     }
 
     /*******************************************************************************************************
