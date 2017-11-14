@@ -172,7 +172,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
                             av.Congressional_District__c = sr.metadata.congressional_district;
                         } else {
                             // more than one candidate means should mark as ambiguous
-                            UTIL_Debug.debug('****Flagging address as NOT verified. Flagging it as ambiguous. Address ID: ' + av.Id);
+                            UTIL_Debug.debug('****Flagging address as ambiguous. Address ID: ' + av.Id);
                             av.Verified__c = true;
                             av.Ambiguous__c = true;
                             responseGroup.add(sr);
@@ -183,8 +183,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
                     }
                 }
                 for (Address__c av : avList) {             
-                    if (av.API_Response__c == null && !String.isBlank(settings.Auth_ID__c) && 
-                    !String.isBlank(settings.Auth_Token__c) && (settings.Class__c == 'ADDR_SmartyStreets_Validator')) {   
+                    if (av.API_Response__c == null) {   
                         av.Verified__c = true;
                         av.API_Response__c = Label.Address_Not_Found;
                         av.Verification_Status__c = Label.Address_Not_Found;
@@ -227,7 +226,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
                 ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(settings);
                 List<ADDR_SmartyStreets_Gateway.ZipResponse> responses = la.verifyZips(zrList);
                 UTIL_Debug.debug('****Gateway responses: ' + JSON.serializePretty(responses));
-                if (responses != null && !responses.isEmpty()) {
+                if (responses != null) {
                     if(responses.size() == avList.size()) {
                         for (integer i = 0; i < responses.size(); i++) {
                             ADDR_SmartyStreets_Gateway.ZipResponse sr = responses[i];
@@ -236,6 +235,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
                             // look for an error
                             if (sr.status != null && sr.reason != null) {
                                 UTIL_Debug.debug('****Error found. Reason: ' + sr.reason);
+                                av.Verified__c = true;
                                 av.API_Response__c = sr.reason;
                             // if there is any response, serialize it and fill in location with first location value
                             } else if (sr.zipcodes != null) {
@@ -254,8 +254,10 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
                                 }
         
                                 // if there is exactly one zip, fill in zip
-                                if (sr.zipcodes.size() == 1)
+                                if (sr.zipcodes.size() == 1) {
+                                    av.Verified__c = true;
                                     av.MailingPostalCode__c = sr.zipcodes[0].zipcode;
+                                }
                             }
                         }
                     } else {
