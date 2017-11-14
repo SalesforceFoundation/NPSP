@@ -344,6 +344,8 @@
         <members>UTIL_PerfLogger</members>
         <members>UTIL_PerfLogger_TEST</members>
         <members>UTIL_PlatformCache</members>
+        <members>UTIL_PerfLogger</members>
+        <members>UTIL_PerfLogger_TEST</members>
         <members>UTIL_Profile</members>
         <members>UTIL_Profile_TEST</members>
         <members>UTIL_Query</members>
@@ -540,6 +542,7 @@
         <members>Addr_Verification_Settings__c.Auth_Token__c</members>
         <members>Addr_Verification_Settings__c.Class__c</members>
         <members>Addr_Verification_Settings__c.Enable_Automatic_Verification__c</members>
+        <members>Addr_Verification_Settings__c.Prevent_Address_Overwrite__c</members>
         <members>Addr_Verification_Settings__c.Reject_Ambiguous_Addresses__c</members>
         <members>Addr_Verification_Settings__c.Timeout__c</members>
         <members>Addr_Verification_Settings__c.Using_SmartyStreets__c</members>
