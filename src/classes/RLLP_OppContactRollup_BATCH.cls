@@ -56,7 +56,8 @@ public class RLLP_OppContactRollup_BATCH implements Database.Batchable<SObject>,
     * @description Batch start method and builds query for contact rollups.
     ********************************************************************************************************/
     public database.Querylocator start(Database.BatchableContext bc) {
-        return Database.getQueryLocator(oppRollupUtil.buildContactQuery());      
+        RLLP_OppRollup_UTIL.setupUserRollupVars();
+        return Database.getQueryLocator(oppRollupUtil.buildContactQuery());
     }
     
     /*******************************************************************************************************
