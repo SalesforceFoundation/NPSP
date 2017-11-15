@@ -255,16 +255,15 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
     * @description get a list of the child records preventing deletion, with html links to those records
-    * with the record's name.
-    * @param cc The Cascade these records belong to.
-    * @param records The child records preventing deletion.
+    * @param childRecords The cascade children records.
+    * @param recordIds The child records preventing deletion.
     * @return String An HTML string with links to the child records.
     ********************************************************************************************************/
     @TestVisible
-    private String getHTMLTextChildRecords(Map<Id, SObject> childRecords, List<Id> records) {
+    private String getHTMLTextChildRecords(Map<Id, SObject> childRecords, List<Id> recordIds) {
         List<String> results = new List<String>{'<ul>'};
-        String nameField = (String)UTIL_Describe.getNameField(records[0].getSobjectType().getDescribe().getName());
-        for (Id recId : records) {
+        String nameField = (String)UTIL_Describe.getNameField(recordIds[0].getSobjectType().getDescribe().getName());
+        for (Id recId : recordIds) {
             String childName = (String) childRecords.get(recId).get(nameField);
             results.add(String.format(HTML_TEXT_CHILD_RECORDS_FORMAT, new List<String>{recId, childName}));
         }
@@ -274,15 +273,15 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
     * @description get a Plain Text list of the child records preventing deletion
-    * @param cc The Cascade these records belong to.
-    * @param records The child records preventing deletion.
+    * @param childRecords The cascade children records.
+    * @param recordIds The child records preventing deletion.
     * @return String Plain text list of the child records.
     ********************************************************************************************************/
     @TestVisible
-    private String getPlainTextChildRecords(Map<Id, SObject> childRecords, List<Id> records) {
+    private String getPlainTextChildRecords(Map<Id, SObject> childRecords, List<Id> recordIds) {
         List<String> results = new List<String>();
-        String nameField = (String) UTIL_Describe.getNameField(records[0].getSobjectType().getDescribe().getName());
-        for (Id recId : records) {
+        String nameField = (String) UTIL_Describe.getNameField(recordIds[0].getSobjectType().getDescribe().getName());
+        for (Id recId : recordIds) {
             String childName = (String) childRecords.get(recId).get(nameField);
             results.add(childName);
         }
