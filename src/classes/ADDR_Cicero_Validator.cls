@@ -196,23 +196,14 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
 
                             if (district.district_type == 'STATE_LOWER')
                                 addr.State_Lower_District__c = district.district_id;
-
-                            if (district.district_type == 'LOCAL')
-                                addr.Administrative_Area__c = district.district_id;
                         }
-
-                        if(!settings.Prevent_Address_Overwrite__c){
-                            addr.MailingStreet__c = candidate.match_addr.split(',')[0].trim();
-                            addr.MailingCity__c = candidate.match_city;
-                            addr.MailingState__c = candidate.match_region;
-                            addr.MailingPostalCode__c = candidate.match_postal;
-                            if (!String.isBlank(lastFourPostalDigits)) {
-                                addr.MailingPostalCode__c += '-' + lastFourPostalDigits;
-                            }
-                        } else {
-                            if(String.isBlank(addr.MailingCity__c)) addr.MailingCity__c = candidate.match_city;
-                            if(String.isBlank(addr.MailingState__c)) addr.MailingState__c = candidate.match_region;
-                            if(String.isBlank(addr.MailingPostalCode__c)) addr.MailingPostalCode__c = candidate.match_postal;
+                    
+                        addr.MailingStreet__c = candidate.match_addr.split(',')[0].trim();
+                        addr.MailingCity__c = candidate.match_city;
+                        addr.MailingState__c = candidate.match_region;
+                        addr.MailingPostalCode__c = candidate.match_postal;
+                        if (!String.isBlank(lastFourPostalDigits)) {
+                            addr.MailingPostalCode__c += '-' + lastFourPostalDigits;
                         }
                         addr.County_Name__c  = candidate.match_subregion;
 
