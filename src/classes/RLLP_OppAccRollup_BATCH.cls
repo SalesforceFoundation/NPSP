@@ -54,7 +54,8 @@ public class RLLP_OppAccRollup_BATCH implements Database.Batchable<SObject>, Sch
     * @description Batch start method and builds query for account rollups.
     ********************************************************************************************************/
     public database.Querylocator start(Database.BatchableContext bc) {
-        String acctQuery = oppRollupUtil.buildAccountQuery();        
+        RLLP_OppRollup_UTIL.setupUserRollupVars();
+        String acctQuery = oppRollupUtil.buildAccountQuery();
         return Database.getQueryLocator(acctQuery);
     }
     
