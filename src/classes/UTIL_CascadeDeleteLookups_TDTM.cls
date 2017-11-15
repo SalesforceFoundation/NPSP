@@ -254,7 +254,7 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description get a list of the child records preventing deletion, with html links to those records
+    * @description Get a list of the child records preventing deletion, with html links to those records
     * @param childRecords The cascade children records.
     * @param recordIds The child records preventing deletion.
     * @return String An HTML string with links to the child records.
@@ -272,7 +272,7 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description get a Plain Text list of the child records preventing deletion
+    * @description Get a Plain Text list of the child records preventing deletion
     * @param childRecords The cascade children records.
     * @param recordIds The child records preventing deletion.
     * @return String Plain text list of the child records.

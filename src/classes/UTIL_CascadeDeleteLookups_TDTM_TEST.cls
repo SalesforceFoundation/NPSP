@@ -50,19 +50,22 @@ private class UTIL_CascadeDeleteLookups_TDTM_TEST {
         Map<Id,Account> testAccountsMap = new Map<Id,Account>(testAccounts);
 
         UTIL_CascadeDeleteLookups_TDTM cascadeDeleteLookupsTDTM = new CascadeDeleteLookupsMock();
-        String cascadeDeleteChildRecordPlainTexts = cascadeDeleteLookupsTDTM.getPlainTextChildRecords(testAccountsMap, new List<Id>(testAccountsMap.keySet()));
-        String cascadeDeleteChildRecordHTMLTexts = cascadeDeleteLookupsTDTM.getHTMLTextChildRecords(testAccountsMap, new List<Id>(testAccountsMap.keySet()));
+        String cascadeDeleteChildRecordPlainText = cascadeDeleteLookupsTDTM.getPlainTextChildRecords(testAccountsMap, new List<Id>(testAccountsMap.keySet()));
+        String cascadeDeleteChildRecordHTMLText = cascadeDeleteLookupsTDTM.getHTMLTextChildRecords(testAccountsMap, new List<Id>(testAccountsMap.keySet()));
 
-        List<String> expectedChildRecordsPlainTexts = new List<String>();
-        List<String> expectedChildRecordsHTMLTexts = new List<String>();
-        expectedChildRecordsHTMLTexts.add('<ul>');
+        List<String> expectedChildRecordsPlainText = new List<String>();
+        List<String> expectedChildRecordsHTMLText = new List<String>();
+        expectedChildRecordsHTMLText.add('<ul>');
         for (Account testAccount :testAccounts) {
-            expectedChildRecordsPlainTexts.add(testAccount.Name);
-            expectedChildRecordsHTMLTexts.add(String.format(UTIL_CascadeDeleteLookups_TDTM.HTML_TEXT_CHILD_RECORDS_FORMAT, new List<String>{testAccount.Id, testAccount.Name}));
+            expectedChildRecordsPlainText.add(testAccount.Name);
+            expectedChildRecordsHTMLText.add(String.format(
+                UTIL_CascadeDeleteLookups_TDTM.HTML_TEXT_CHILD_RECORDS_FORMAT, 
+                new List<String>{testAccount.Id, testAccount.Name}
+            ));
         }
-        expectedChildRecordsHTMLTexts.add('</ul>');
-        System.assertEquals(String.join(expectedChildRecordsPlainTexts,', '), cascadeDeleteChildRecordPlainTexts);
-        System.assertEquals(String.join(expectedChildRecordsHTMLTexts,''), cascadeDeleteChildRecordHTMLTexts);
+        expectedChildRecordsHTMLText.add('</ul>');
+        System.assertEquals(String.join(expectedChildRecordsPlainText,', '), cascadeDeleteChildRecordPlainText);
+        System.assertEquals(String.join(expectedChildRecordsHTMLText,''), cascadeDeleteChildRecordHTMLText);
     }
 
     /*******************************************************************************************************
