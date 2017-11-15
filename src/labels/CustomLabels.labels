@@ -593,7 +593,15 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>CascadeDeletionError</shortDescription>
-        <value>Your attempt to delete {0} could not be completed because it is associated with the following records. Delete or re-associate these records and then try deleting {0} again.</value>
+        <value>You can&apos;&apos;t delete {0} because it&apos;&apos;s associated with the following records. Delete or re-associate these records and then try again.&lt;br/&gt;&lt;br/&gt;{1}</value>
+    </labels>
+    <labels>
+        <fullName>CascadeDeletionErrorLightning</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CascadeDeletionErrorLightning</shortDescription>
+        <value>You can&apos;&apos;t delete {0} because it&apos;&apos;s associated with these records: {1}. Delete or re-associate these records and then try again.</value>
     </labels>
     <labels>
         <fullName>ClosedWonOpportunities</fullName>
