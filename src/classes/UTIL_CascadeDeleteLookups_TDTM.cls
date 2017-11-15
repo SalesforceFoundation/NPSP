@@ -46,7 +46,6 @@
 //TBD making this class global so managed package users can add lookup cascade deletions
 public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
 
-    @TestVisible private static final String PLAIN_TEXT_CHILD_RECORDS_FORMAT = '{1} ({0})';
     @TestVisible private static final String HTML_TEXT_CHILD_RECORDS_FORMAT = '<li><a href="#" onclick="window.open(\'\'/{0}\'\', \'\'\'\');return false;" target="_blank">{1}</a></li>';
 
     /*******************************************************************************************************
@@ -231,16 +230,21 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
                     }
                 }
 
-                String error = String.format(Label.CascadeDeletionError, new List<String>{parentName}) + '<br/><br/>';
-                for (String errType : cc.errors.get(parentId).keySet()) {
-                    String childRecords = (USER_UserService.isUserRunningLightning() || USER_UserService.isUserRunningMobile()) ?
-                        getPlainTextChildRecords(cc.children, cc.errors.get(parentId).get(errType)) :
-                        getHTMLTextChildRecords(cc.children, cc.errors.get(parentId).get(errType));
-
-                    error += ' ' + errType + ': ' + childRecords;
+                List<String> errorTypeWithChildRecords = new List<String>();
+                for (String errorType : cc.errors.get(parentId).keySet()) {
+                    if (USER_UserService.isUserRunningLightning() || USER_UserService.isUserRunningMobile()) {
+                        errorTypeWithChildRecords.add(errorType + ' (' + getPlainTextChildRecords(cc.children, cc.errors.get(parentId).get(errorType)) + ')');
+                    }
+                    else {
+                        errorTypeWithChildRecords.add(errorType + ':' + getHTMLTextChildRecords(cc.children, cc.errors.get(parentId).get(errorType)));
+                    }
                 }
-                //don't escape error message with HTML links
-                parent.addError(error, false);
+                
+                String errorMessage = (USER_UserService.isUserRunningLightning() || USER_UserService.isUserRunningMobile()) ?
+                    String.format(Label.CascadeDeletionErrorLightning, new List<String>{parentName, String.join(errorTypeWithChildRecords, ',')}) :
+                    String.format(Label.CascadeDeletionError, new List<String>{parentName, String.join(errorTypeWithChildRecords, '')});
+
+                parent.addError(errorMessage, false);
             }
         }
     }
@@ -276,7 +280,7 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
         String nameField = (String) UTIL_Describe.getNameField(records[0].getSobjectType().getDescribe().getName());
         for (Id recId : records) {
             String childName = (String) childRecords.get(recId).get(nameField);
-            results.add(String.format(PLAIN_TEXT_CHILD_RECORDS_FORMAT, new List<String>{recId, childName}));
+            results.add(childName);
         }
         return String.join(results,', ');
     }

@@ -57,7 +57,7 @@ private class UTIL_CascadeDeleteLookups_TDTM_TEST {
         List<String> expectedChildRecordsHTMLTexts = new List<String>();
         expectedChildRecordsHTMLTexts.add('<ul>');
         for (Account testAccount :testAccounts) {
-            expectedChildRecordsPlainTexts.add(String.format(UTIL_CascadeDeleteLookups_TDTM.PLAIN_TEXT_CHILD_RECORDS_FORMAT, new List<String>{testAccount.Id, testAccount.Name}));
+            expectedChildRecordsPlainTexts.add(testAccount.Name);
             expectedChildRecordsHTMLTexts.add(String.format(UTIL_CascadeDeleteLookups_TDTM.HTML_TEXT_CHILD_RECORDS_FORMAT, new List<String>{testAccount.Id, testAccount.Name}));
         }
         expectedChildRecordsHTMLTexts.add('</ul>');
