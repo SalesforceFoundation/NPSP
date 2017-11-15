@@ -93,7 +93,7 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
      */
     public CRLP_VRollupHandler(Id objectId, List<CRLP_Rollup> rollups) {
         this.objectId = objectId;
-        this.currCode = currCode;
+        this.rollups.clear();
     }
 
     /**

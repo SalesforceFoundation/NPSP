@@ -77,8 +77,8 @@ instance until ready to be written to the Sobject.
             // operations have to be limited to the specified date range based on the value in daysAgo
             // Due to the large variation of possible combinations, Rollups for DAYS_AGO YearlyOperation
             // types cannot be combined with other rollups of different types/days.
-            if (rollup.yearlyOperation == CRLP_Operation.YearlyOperationType.DAYS_AGO.name()) {
-                if (dateValue == null || dateValue.daysBetween(Date.Today()) > rollup.daysAgo) {
+            if (rollup.yearlyOperation == CRLP_Operation.YearlyOperationType.DAYS_BACK.name()) {
+                if (dateValue == null || dateValue.daysBetween(Date.Today()) > rollup.daysBack) {
                     return;
                 }
             }

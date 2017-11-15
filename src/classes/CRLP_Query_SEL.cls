@@ -79,7 +79,8 @@
         // Get the main SOQL statement and parse out the FROM portion
         String mainSoql = getResultsQuery(detailObject).split(' FROM ')[0];
 
-        if (detailObject != OpportunityContactRole.SObjectType && detailObject != npe01__OppPayment__c.SObjectType) {
+        // Is the primary detail object NOT the OCR or Allocation object?
+        if (detailObject != OpportunityContactRole.SObjectType && detailObject != Allocation__c.SObjectType) {
             // Get the query for each child object, change the FROM object to the relationship name, and append to the main query
             for (SObjectType obj : childObjects) {
                 String relationshipName;
@@ -95,12 +96,22 @@
             }
 
         } else {
-            // If the detailObject is OCR or Payment, then rather than include a sub-query for the child objets
+            // If the detailObject is OCR or Allocation, then rather than include a sub-query for the child objects
             // we'll include foreignkey references to the Opportunity object
 
-            String oppParentField = (detailObject == OpportunityContactRole.SObjectType ? 'Opportunity' : 'npe01__Opportunity__r');
-            for (Schema.DescribeFieldResult oppField : CMT_FilterRule_SEL.getReferencedFieldsByObject(Opportunity.SObjectType)) {
+            String oppParentField = (detailObject == OpportunityContactRole.SObjectType
+                    ? 'Opportunity' : UTIL_Namespace.StrAllNSPrefix('Opportunity__r'));
+
+            // Find all the Opportunity fields referenced by these rollups and related filters
+            List<Schema.DescribeFieldResult> allFieldsToQuery = new List<DescribeFieldResult>();
+            allFieldsToQuery.addAll(CMT_FilterRule_SEL.getReferencedFieldsByObject(Opportunity.SObjectType));
+            allFieldsToQuery.addAll(CRLP_Rollup_SEL.getReferencedFieldsByObject(Opportunity.SObjectType));
+
+            for (Schema.DescribeFieldResult oppField : allFieldsToQuery) {
                 mainSoql += ',' + oppParentField + '.' + oppField.getName();
+            }
+            if (detailObject == Allocation__c.SObjectType) {
+                mainSoql += ',' + UTIL_Namespace.StrAllNSPrefix('General_Accounting_Unit__c');
             }
         }
 

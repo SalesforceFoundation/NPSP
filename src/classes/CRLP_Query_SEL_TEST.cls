@@ -58,6 +58,11 @@ private class CRLP_Query_SEL_TEST {
                 npe01__OppPayment__c.SObjectType, Allocation__c.SObjectType, OpportunityContactRole.SObjectType});
         List<Opportunity> opps2 = database.query(soql);
         System.AssertEquals(0, opps2.size(), 'There should be no results, but the query should work');
+
+        soql = CRLP_Query_SEL.getDetailsQuery(Allocation__c.SObjectType, new List<SObjectType>());
+        List<Allocation__c> allocs = database.query(soql);
+        System.AssertEquals(0, allocs.size(), 'There should be no results, but the query should work');
+
     }
 
 }

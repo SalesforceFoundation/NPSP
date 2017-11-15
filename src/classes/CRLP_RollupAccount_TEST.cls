@@ -73,7 +73,7 @@ private class CRLP_RollupAccount_TEST {
 
                 CMT_UnitTestData_TEST.createRollupRecordOppToAccount('Household Total Donations Last 2 Years', filterGroupId1,
                         'npo02__OppAmount2YearsAgo__c', CRLP_Operation.RollupType.SUM, 'Amount',
-                        CRLP_Operation.YearlyOperationType.YEARS_BACK, 2) + ',' +
+                        CRLP_Operation.YearlyOperationType.YEARS_AGO, 2) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecordOppToAccount('Max Donation All Time', filterGroupId1,
                         'npo02__LargestAmount__c', CRLP_Operation.RollupType.LARGEST, 'Amount',
@@ -139,7 +139,7 @@ private class CRLP_RollupAccount_TEST {
 
         List<Opportunity> opps = new List<Opportunity>();
         Date closeDate = Date.Today().addMonths(-100);
-        Decimal totalDonations = 0, totalLast2Years = 0;
+        Decimal totalDonations = 0, total2YearsAgo = 0;
         Decimal maxAmt = 1000;
         Decimal baseAmt = 100;
         Integer cnt = 100;
@@ -157,8 +157,8 @@ private class CRLP_RollupAccount_TEST {
                     RecordTypeId = rtId
             ));
             totalDonations += amt;
-            if (closeDate.addMonths(n).year() >= Date.Today().addYears(-1).year()) {
-                totalLast2Years += amt;
+            if (closeDate.addMonths(n).year() == Date.Today().addYears(-2).year()) {
+                total2YearsAgo += amt;
             }
             String donationYr = closeDate.addMonths(n).year().format().replace(',','');
             donationYears.add(donationYr);
@@ -207,7 +207,7 @@ private class CRLP_RollupAccount_TEST {
         // Basic rollup asserts using existing NPSP rollup fields.
         System.assertEquals(totalDonations, a.npo02__TotalOppAmount__c);
         System.assertEquals((totalDonations / cnt), a.npo02__AverageAmount__c);
-        System.assertEquals(totalLast2Years, a.npo02__OppAmount2YearsAgo__c);
+        System.assertEquals(total2YearsAgo, a.npo02__OppAmount2YearsAgo__c);
         System.assertEquals(lastCloseDate, a.npo02__LastCloseDate__c);
         System.assertEquals(maxAmt, a.npo02__LargestAmount__c);
         System.assertEquals(bestGiftYear, a.npo02__Best_Gift_Year__c);

@@ -52,8 +52,8 @@ public class CRLP_Operation {
 
     public enum YearlyOperationType {
         ALL_TIME,
-        YEARS_BACK,
-        DAYS_AGO
+        YEARS_AGO,
+        DAYS_BACK
     }
 
     /**
@@ -90,8 +90,8 @@ public class CRLP_Operation {
                 rollupOperation == CRLP_Operation.RollupType.COUNT.name() ||
                 rollupOperation == CRLP_Operation.RollupType.LARGEST.name() ||
                 rollupOperation == CRLP_Operation.RollupType.SMALLEST.name()) {
-            options.add(new SelectOption(YearlyOperationType.YEARS_BACK.name(), 'Years Back'));
-            options.add(new SelectOption(YearlyOperationType.DAYS_AGO.name(), 'Days Ago'));
+            options.add(new SelectOption(YearlyOperationType.YEARS_AGO.name(), 'Years Ago'));
+            options.add(new SelectOption(YearlyOperationType.DAYS_BACK.name(), 'Days Back'));
         }
         return options;
     }

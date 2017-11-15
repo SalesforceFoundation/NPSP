@@ -237,9 +237,9 @@
                     <label>All Time</label>
                 </value>
                 <value>
-                    <fullName>Yearly</fullName>
+                    <fullName>Years_Ago</fullName>
                     <default>false</default>
-                    <label>Yearly</label>
+                    <label>Years Ago</label>
                 </value>
                 <value>
                     <fullName>Days_Back</fullName>

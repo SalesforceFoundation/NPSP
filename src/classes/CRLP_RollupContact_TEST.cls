@@ -74,7 +74,7 @@ private class CRLP_RollupContact_TEST {
 
                 CMT_UnitTestData_TEST.createRollupRecordOppToContact('Donor Donations Last 2 Years', filterGroupId1,
                         'npo02__OppAmount2YearsAgo__c', CRLP_Operation.RollupType.SUM, 'Amount',
-                        CRLP_Operation.YearlyOperationType.YEARS_BACK, 2) + ',' +
+                        CRLP_Operation.YearlyOperationType.YEARS_AGO, 2) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecordOppToContact('Max Donation All Time', filterGroupId1,
                         'npo02__LargestAmount__c', CRLP_Operation.RollupType.LARGEST, 'Amount',
@@ -141,7 +141,7 @@ private class CRLP_RollupContact_TEST {
 
         List<Opportunity> opps = new List<Opportunity>();
         Date closeDate = Date.Today().addMonths(-100);
-        Decimal totalDonations = 0, totalLast2Years = 0;
+        Decimal totalDonations = 0, total2YearsAgo = 0;
         Decimal maxAmt = 1000;
         Decimal baseAmt = 100;
         Integer cnt = 100;
@@ -159,8 +159,8 @@ private class CRLP_RollupContact_TEST {
                     RecordTypeId = rtId
             ));
             totalDonations += amt;
-            if (closeDate.addMonths(n).year() >= Date.Today().addYears(-1).year()) {
-                totalLast2Years += amt;
+            if (closeDate.addMonths(n).year() == Date.Today().addYears(-2).year()) {
+                total2YearsAgo += amt;
             }
             String donationYr = closeDate.addMonths(n).year().format().replace(',','');
             donationYears.add(donationYr);
@@ -213,10 +213,10 @@ private class CRLP_RollupContact_TEST {
         System.assertEquals(lastCloseDate, c.npo02__LastCloseDate__c);
         System.assertEquals(totalDonations, c.npo02__TotalOppAmount__c);
         System.assertEquals((totalDonations / cnt), c.npo02__AverageAmount__c);
-        System.assertEquals(totalLast2Years, c.npo02__OppAmount2YearsAgo__c);
+        System.assertEquals(total2YearsAgo, c.npo02__OppAmount2YearsAgo__c);
         System.assertEquals(bestGiftYear, c.npo02__Best_Gift_Year__c);
 
-        // These 4 use other fields on the Account object since there are no NPSP related fields to store the values in
+        // These 4 use other fields on the Contact object since there are no NPSP related fields to store the values in
         System.assertEquals(totalDonations - baseAmt, c.First_Soft_Credit_Amount__c,
                 'Total Payments should match total donations less $100 because one payment has been marked as written off');
         System.assertEquals(baseAmt, c.npo02__LastMembershipAmount__c, 'The Amount written off does not match');
