@@ -239,10 +239,14 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
                         errorTypeWithChildRecords.add(errorType + ':' + getHTMLTextChildRecords(cc.children, cc.errors.get(parentId).get(errorType)));
                     }
                 }
-                
-                String errorMessage = (USER_UserService.isUserRunningLightning() || USER_UserService.isUserRunningMobile()) ?
-                    String.format(Label.CascadeDeletionErrorLightning, new List<String>{parentName, String.join(errorTypeWithChildRecords, ',')}) :
-                    String.format(Label.CascadeDeletionError, new List<String>{parentName, String.join(errorTypeWithChildRecords, '')});
+
+                String errorMessage = '';
+                if (USER_UserService.isUserRunningLightning() || USER_UserService.isUserRunningMobile()) {
+                    errorMessage = String.format(Label.CascadeDeletionErrorLightning, new List<String>{parentName, String.join(errorTypeWithChildRecords, ',')});
+                }
+                else {
+                    errorMessage = String.format(Label.CascadeDeletionError, new List<String>{parentName, String.join(errorTypeWithChildRecords, '')});
+                }
 
                 parent.addError(errorMessage, false);
             }
