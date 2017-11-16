@@ -42,6 +42,7 @@ public with sharing class UTIL_DMLService_TEST {
     private static final Integer NUMBER_OF_RECORDS_ONE = 1;
     private static final Integer NUMBER_OF_RECORDS_TWO = 2;
     private static final Integer NUMBER_OF_RECORDS_THREE = 3;
+    private static final String ERROR_STATUS_CODE_DUPLICATES_DETECTED = 'DUPLICATES_DETECTED';
 
 
     /*********************************************************************************************************
@@ -454,43 +455,42 @@ public with sharing class UTIL_DMLService_TEST {
     **********************************************************************************************************/
     private static testMethod void testRespectDuplicateRuleSettingsForAccounts() {
         if (strTestOnly != '*' && strTestOnly != 'testRespectDuplicateRuleSettingsForAccounts') return;
-        
+
         UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(Respect_Duplicate_Rule_Settings__c = false));
         Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings();
         UTIL_DMLService.insertRecord(errorSettings);
-        
+
         Account acct = new Account(Name='Blue Cloud', BillingCity='San Francisco');
         UTIL_DMLService.insertRecord(acct);
         List<Account> retrievedAccts = [SELECT Id, Name FROM Account];
-        if (!retrievedAccts.isEmpty()) {
-            System.assertEquals('Blue Cloud', retrievedAccts[0].Name);
-        }
+        System.assertEquals('Blue Cloud', retrievedAccts[0].Name);
 
         Account dupeAcct = new Account(Name='Blue Cloud', BillingCity='San Francisco');
-        try {
-            Database.SaveResult sr = UTIL_DMLService.insertRecord(dupeAcct);
-            if (!sr.isSuccess()) {
-                for (Database.Error duplicateError : sr.getErrors()) {
-                    System.assertEquals('DUPLICATES_DETECTED', String.valueOf(duplicateError.getStatusCode()));
-                }
+        Database.SaveResult sr = UTIL_DMLService.insertRecord(dupeAcct, false); // AllOrNone flag set to false to check if the Duplicate Rule's Action is set to Block. 
+        if (!sr.isSuccess()) {
+            for (Database.Error duplicateError : sr.getErrors()) {
+                System.assertEquals(ERROR_STATUS_CODE_DUPLICATES_DETECTED, String.valueOf(duplicateError.getStatusCode()));
+                Datacloud.DuplicateResult duplicateResult = ((Database.DuplicateError)duplicateError).getDuplicateResult();
+                // If isAllowSave is false, the running Org has the Duplicate Rule's Action set to Block so end test.
+                if (!duplicateResult.isAllowSave()) return;
             }
-        } catch (DmlException e) {}
+        }
+
+        retrievedAccts = [SELECT Id, Name FROM Account];
+        System.assertEquals(NUMBER_OF_RECORDS_ONE, retrievedAccts.size());
 
         errorSettings.Respect_Duplicate_Rule_Settings__c = true;
         UTIL_DMLService.updateRecord(errorSettings);
-         
+
         UTIL_DMLService.insertRecord(dupeAcct);
+
         retrievedAccts = [SELECT Id, Name FROM Account];
-        if (!retrievedAccts.isEmpty()) {
-            System.assertEquals(NUMBER_OF_RECORDS_TWO, retrievedAccts.size());
-        }
-    
+        System.assertEquals(NUMBER_OF_RECORDS_TWO, retrievedAccts.size());
+
         Account dupeAcctUpdate = new Account(Name='Blue Cloud Update', BillingCity='San Francisco');
         UTIL_DMLService.insertRecord(dupeAcctUpdate);
         retrievedAccts = [SELECT Id, Name FROM Account];
-        if (!retrievedAccts.isEmpty()) {
-            System.assertEquals(NUMBER_OF_RECORDS_THREE, retrievedAccts.size());
-        }
+        System.assertEquals(NUMBER_OF_RECORDS_THREE, retrievedAccts.size());
 
         dupeAcctUpdate.Name = 'Blue Cloud';
         UTIL_DMLService.updateRecord(dupeAcctUpdate);
@@ -511,46 +511,44 @@ public with sharing class UTIL_DMLService_TEST {
     **********************************************************************************************************/
     private static testMethod void testRespectDuplicateRuleSettingsForContacts() {
         if (strTestOnly != '*' && strTestOnly != 'testRespectDuplicateRuleSettingsForContacts') return;
-        
+
         UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(Respect_Duplicate_Rule_Settings__c = false));
         Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings();
         UTIL_DMLService.insertRecord(errorSettings);
-        
+
         Account acct = new Account(Name='Blue Cloud', BillingCity='San Francisco');
         UTIL_DMLService.insertRecord(acct);
         Contact con = new Contact(FirstName='Blue',LastName='Cloud', Email='blue@cloud.com', AccountId=acct.Id);
         UTIL_DMLService.insertRecord(con);
 
         List<Contact> retrievedContacts = [SELECT Id, FirstName FROM Contact];
-        if (!retrievedContacts.isEmpty()) {
-            System.assertEquals('Blue', retrievedContacts[0].FirstName);
-        }
-        
+        System.assertEquals('Blue', retrievedContacts[0].FirstName);
+
         Contact dupeContact = new Contact(FirstName='Blue',LastName='Cloud', Email='blue@cloud.com', AccountId=acct.Id);
-        try {
-            Database.SaveResult sr = UTIL_DMLService.insertRecord(dupeContact);
-            if (!sr.isSuccess()) {
-                for (Database.Error duplicateError : sr.getErrors()) {
-                    System.assertEquals('DUPLICATES_DETECTED', String.valueOf(duplicateError.getStatusCode()));
-                }
+        Database.SaveResult sr = UTIL_DMLService.insertRecord(dupeContact, false); // AllOrNone flag set to false to check if the Duplicate Rule's Action is set to Block. 
+        if (!sr.isSuccess()) {
+            for (Database.Error duplicateError : sr.getErrors()) {
+                System.assertEquals(ERROR_STATUS_CODE_DUPLICATES_DETECTED, String.valueOf(duplicateError.getStatusCode()));
+                Datacloud.DuplicateResult duplicateResult = ((Database.DuplicateError)duplicateError).getDuplicateResult();
+                // If isAllowSave is false, the running Org has the Duplicate Rule Action set to Block so end test.
+                if (!duplicateResult.isAllowSave()) return;
             }
-        } catch (DmlException e) {}
+        }
+
+        retrievedContacts = [SELECT Id, FirstName FROM Contact];
+        System.assertEquals(NUMBER_OF_RECORDS_ONE, retrievedContacts.size());
 
         errorSettings.Respect_Duplicate_Rule_Settings__c = true;
         UTIL_DMLService.updateRecord(errorSettings);
-         
+
         UTIL_DMLService.insertRecord(dupeContact);
         retrievedContacts = [SELECT Id, FirstName FROM Contact];
-        if (!retrievedContacts.isEmpty()) {
-            System.assertEquals(NUMBER_OF_RECORDS_TWO, retrievedContacts.size());
-        }
-    
+        System.assertEquals(NUMBER_OF_RECORDS_TWO, retrievedContacts.size());
+
         Contact dupeContactUpdate = new Contact(FirstName='Blue Update',LastName='Cloud', Email='blue@cloud.com', AccountId=acct.Id);
         UTIL_DMLService.insertRecord(dupeContactUpdate);
         retrievedContacts = [SELECT Id, FirstName FROM Contact];
-        if (!retrievedContacts.isEmpty()) {
-            System.assertEquals(NUMBER_OF_RECORDS_THREE, retrievedContacts.size());
-        }
+        System.assertEquals(NUMBER_OF_RECORDS_THREE, retrievedContacts.size());
 
         dupeContactUpdate.FirstName = 'Blue';
         UTIL_DMLService.updateRecord(dupeContactUpdate);

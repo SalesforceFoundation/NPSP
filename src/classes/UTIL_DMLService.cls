@@ -113,7 +113,9 @@ public with sharing class UTIL_DMLService {
     * @return Database.SaveResult
     **********************************************************************************************************/
     public static Database.SaveResult insertRecord(sObject recordToInsert, Database.DMLOptions dmlOptions) {
-        dmlOptions.DuplicateRuleHeader.AllowSave = retrieveRespectDuplicateRuleSettings();
+        if (!useAllowSaveProperty(dmlOptions)) {
+            dmlOptions.DuplicateRuleHeader.AllowSave = retrieveRespectDuplicateRuleSettings();
+        }
 
         return Database.insert(recordToInsert, dmlOptions);
     }
@@ -127,7 +129,9 @@ public with sharing class UTIL_DMLService {
     * @return List<Database.SaveResult>
     **********************************************************************************************************/
     public static List<Database.SaveResult> insertRecords(List<sObject> recordsToInsert, Database.DMLOptions dmlOptions) {
-        dmlOptions.DuplicateRuleHeader.AllowSave = retrieveRespectDuplicateRuleSettings();
+        if (!useAllowSaveProperty(dmlOptions)) {
+            dmlOptions.DuplicateRuleHeader.AllowSave = retrieveRespectDuplicateRuleSettings();
+        }
 
         return Database.insert(recordsToInsert, dmlOptions);
     }
@@ -207,7 +211,9 @@ public with sharing class UTIL_DMLService {
     * @return Database.SaveResult
     **********************************************************************************************************/
     public static Database.SaveResult updateRecord(sObject recordToUpdate, Database.DMLOptions dmlOptions) {
-        dmlOptions.DuplicateRuleHeader.AllowSave = retrieveRespectDuplicateRuleSettings();
+        if (!useAllowSaveProperty(dmlOptions)) {
+            dmlOptions.DuplicateRuleHeader.AllowSave = retrieveRespectDuplicateRuleSettings();
+        }
 
         return Database.update(recordToUpdate, dmlOptions);
     }
@@ -221,9 +227,20 @@ public with sharing class UTIL_DMLService {
     * @return List<Database.SaveResult>
     **********************************************************************************************************/
     public static List<Database.SaveResult> updateRecords(List<sObject> recordsToUpdate, Database.DMLOptions dmlOptions) {
-        dmlOptions.DuplicateRuleHeader.AllowSave = retrieveRespectDuplicateRuleSettings();
+        if (!useAllowSaveProperty(dmlOptions)) {
+            dmlOptions.DuplicateRuleHeader.AllowSave = retrieveRespectDuplicateRuleSettings();
+        }
 
         return Database.update(recordsToUpdate, dmlOptions);
+    }
+
+
+    /*********************************************************************************************************
+    * @description Checks if the Allow Save property is set and uses it accordingly.
+    * @return Boolean
+    **********************************************************************************************************/
+    private static Boolean useAllowSaveProperty(Database.DMLOptions dmlOptions) {
+        return (dmlOptions.DuplicateRuleHeader.AllowSave != null);
     }
 
 
