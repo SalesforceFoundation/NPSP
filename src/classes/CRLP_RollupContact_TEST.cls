@@ -64,48 +64,48 @@ private class CRLP_RollupContact_TEST {
 
         // Create a single Rollup that uses the above Filter Group
         String rollupsJSON = '[' +
-                CMT_UnitTestData_TEST.createRollupRecordOppToContact('Donor Total Donations All Time', filterGroupId1,
-                        'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.SUM, 'Amount',
-                        CRLP_Operation.YearlyOperationType.ALL_TIME, 0) + ',' +
+                CMT_UnitTestData_TEST.createRollupRecord('Donor Total Donations All Time', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                        'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.SUM, 'Amount') + ',' +
 
-                CMT_UnitTestData_TEST.createRollupRecordOppToContact('Average Donations All Time', filterGroupId1,
-                        'npo02__AverageAmount__c', CRLP_Operation.RollupType.AVERAGE, 'Amount',
-                        CRLP_Operation.YearlyOperationType.ALL_TIME, 0) + ',' +
+                CMT_UnitTestData_TEST.createRollupRecord('Average Donations All Time', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                        'npo02__AverageAmount__c', CRLP_Operation.RollupType.AVERAGE, 'Amount') + ',' +
 
-                CMT_UnitTestData_TEST.createRollupRecordOppToContact('Donor Donations Last 2 Years', filterGroupId1,
+                CMT_UnitTestData_TEST.createRollupRecord('Donor Donations Last 2 Years', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
                         'npo02__OppAmount2YearsAgo__c', CRLP_Operation.RollupType.SUM, 'Amount',
                         CRLP_Operation.YearlyOperationType.YEARS_AGO, 2) + ',' +
 
-                CMT_UnitTestData_TEST.createRollupRecordOppToContact('Max Donation All Time', filterGroupId1,
-                        'npo02__LargestAmount__c', CRLP_Operation.RollupType.LARGEST, 'Amount',
-                        CRLP_Operation.YearlyOperationType.ALL_TIME, 0) + ',' +
+                CMT_UnitTestData_TEST.createRollupRecord('Max Donation All Time', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                        'npo02__LargestAmount__c', CRLP_Operation.RollupType.LARGEST, 'Amount') + ',' +
 
-                CMT_UnitTestData_TEST.createRollupRecordOppToContact('Years Donated', filterGroupId1,
-                        'Description', CRLP_Operation.RollupType.YEARS_DONATED, '',
-                        CRLP_Operation.YearlyOperationType.ALL_TIME, 0) + ',' +
+                CMT_UnitTestData_TEST.createRollupRecord('Years Donated', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                        'Description', CRLP_Operation.RollupType.YEARS_DONATED, '') + ',' +
 
-                CMT_UnitTestData_TEST.createRollupRecordOppToContact('Current Donation Streak', filterGroupId1,
-                        'npo02__NumberOfMembershipOpps__c', CRLP_Operation.RollupType.CURRENT_STREAK, '',
-                        null, 0) + ',' +
+                CMT_UnitTestData_TEST.createRollupRecord('Current Donation Streak', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                        'npo02__NumberOfMembershipOpps__c', CRLP_Operation.RollupType.CURRENT_STREAK, '') + ',' +
 
-                CMT_UnitTestData_TEST.createRollupRecordOppToContact('Best Year', filterGroupId1,
-                        'npo02__Best_Gift_Year__c', CRLP_Operation.RollupType.BEST_YEAR, '',
-                        null, 0) + ',' +
+                CMT_UnitTestData_TEST.createRollupRecord('Best Year', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                        'npo02__Best_Gift_Year__c', CRLP_Operation.RollupType.BEST_YEAR, '') + ',' +
 
                 /* Using SingleResult operation to get the last gift date */
                 CMT_UnitTestData_TEST.createRollupRecord('Last Gift Date', filterGroupId1,
-                        'Contact', 'npo02__LastCloseDate__c', CRLP_Operation.RollupType.LAST,
-                        'Opportunity', 'CloseDate',
-                        CRLP_Operation.YearlyOperationType.ALL_TIME, 0, false) + ',' +
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                        'npo02__LastCloseDate__c', CRLP_Operation.RollupType.LAST, 'CloseDate') + ',' +
 
                 /* Payment Rollups for Total Paid and Total Written Off - using a field that can hold the value */
-                CMT_UnitTestData_TEST.createRollupRecordPaymentToContact('Total Payments', filterGroupId1,
-                        'First_Soft_Credit_Amount__c', CRLP_Operation.RollupType.SUM, 'npe01__Payment_Amount__c',
-                        CRLP_Operation.YearlyOperationType.ALL_TIME, 0) + ',' +
+                CMT_UnitTestData_TEST.createRollupRecord('Total Payments', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.PmtToContact,
+                        'First_Soft_Credit_Amount__c', CRLP_Operation.RollupType.SUM, 'npe01__Payment_Amount__c') + ',' +
 
-                CMT_UnitTestData_TEST.createRollupRecordPaymentToContact('Total Writeoffs', filterGroupId2,
-                        'npo02__LastMembershipAmount__c', CRLP_Operation.RollupType.SUM, 'npe01__Payment_Amount__c',
-                        CRLP_Operation.YearlyOperationType.ALL_TIME, 0) +
+                CMT_UnitTestData_TEST.createRollupRecord('Total Writeoffs', filterGroupId2,
+                        CMT_UnitTestData_TEST.RollupRecordType.PmtToContact,
+                        'npo02__LastMembershipAmount__c', CRLP_Operation.RollupType.SUM, 'npe01__Payment_Amount__c') +
 
                 ']';
 
@@ -209,9 +209,9 @@ private class CRLP_RollupContact_TEST {
         c = database.query(conQuery);
 
         // Basic rollup asserts using existing NPSP rollup fields.
+        System.assertEquals(totalDonations, c.npo02__TotalOppAmount__c);
         System.assertEquals(maxAmt, c.npo02__LargestAmount__c);
         System.assertEquals(lastCloseDate, c.npo02__LastCloseDate__c);
-        System.assertEquals(totalDonations, c.npo02__TotalOppAmount__c);
         System.assertEquals((totalDonations / cnt), c.npo02__AverageAmount__c);
         System.assertEquals(total2YearsAgo, c.npo02__OppAmount2YearsAgo__c);
         System.assertEquals(bestGiftYear, c.npo02__Best_Gift_Year__c);
