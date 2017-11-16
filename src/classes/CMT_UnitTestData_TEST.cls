@@ -405,22 +405,26 @@ public class CMT_UnitTestData_TEST {
                 new CMT_Field('Active__c', CMTFieldType.FldBoolean, True),
                 new CMT_Field('Summary_Object__c', CMTFieldType.FldEntity, summaryObjectName),
                 new CMT_Field('Summary_Field__c', CMTFieldType.FldField, summaryObjectName + '.' + fixNamespace(summaryObjectField)),
-                new CMT_Field('Detail_Object__c', CMTFieldType.FldEntity, detailObjectName)
+                new CMT_Field('Detail_Object__c', CMTFieldType.FldEntity, fixNamespace(detailObjectName))
         };
 
         if (((String)parms.get('Detail')).contains('\\.')) {
             fields.add(new CMT_Field('Detail_Field__c', CMTFieldType.FldField, ((String)parms.get('Detail')).split('\\.')[1]));
         }
         if (parms.get('Amount') != null) {
-            fields.add(new CMT_Field('Amount_Object__c', CMTFieldType.FldEntity, ((String)parms.get('Amount')).split('\\.')[0]));
-            fields.add(new CMT_Field('Amount_Field__c', CMTFieldType.FldField, (String)parms.get('Amount')));
+            String amtObjectName = ((String)parms.get('Amount')).split('\\.')[0];
+            String amtObjectField = ((String)parms.get('Amount')).split('\\.')[1];
+            fields.add(new CMT_Field('Amount_Object__c', CMTFieldType.FldEntity, fixNamespace(amtObjectName)));
+            fields.add(new CMT_Field('Amount_Field__c', CMTFieldType.FldField, fixNamespace(amtObjectName) + '.' + fixNamespace(amtObjectField)));
         } else {
             fields.add(new CMT_Field('Amount_Object__c', CMTFieldType.FldEntity, 'Opportunity'));
             fields.add(new CMT_Field('Amount_Field__c', CMTFieldType.FldField, 'Opportunity.Amount'));
         }
         if (parms.get('Date') != null) {
-            fields.add(new CMT_Field('Date_Object__c', CMTFieldType.FldEntity, ((String)parms.get('Date')).split('\\.')[0]));
-            fields.add(new CMT_Field('Date_Field__c', CMTFieldType.FldField, (String)parms.get('Date')));
+            String dateObjectName = ((String)parms.get('Date')).split('\\.')[0];
+            String dateObjectField = ((String)parms.get('Date')).split('\\.')[1];
+            fields.add(new CMT_Field('Date_Object__c', CMTFieldType.FldEntity, fixNamespace(dateObjectName)));
+            fields.add(new CMT_Field('Date_Field__c', CMTFieldType.FldField, fixNamespace(dateObjectName) + '.' + fixNamespace(dateObjectField)));
         } else {
             fields.add(new CMT_Field('Date_Object__c', CMTFieldType.FldEntity, 'Opportunity'));
             fields.add(new CMT_Field('Date_Field__c', CMTFieldType.FldField, 'Opportunity.CloseDate'));
