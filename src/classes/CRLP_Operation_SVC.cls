@@ -46,121 +46,129 @@ instance until ready to be written to the Sobject.
 
     /**
      * @description Perform the rollup operation based on the details in the CRLP_Rollup_SVC.Rollup instance
-     * against the specific SObjects in the details collection
+     * against the passed  SObjects
      * @param rollup Instance of CRLP_Rollup_SVC.Rollup with the Rollup Definition details and counter/sum vars.
      * This var is passed by reference and modified directly. There is no method return.
-     * @param details The Detail and Attribution SObjects
+     * @param opp Opportunity SObject. All Roll-ups operate against Opportunity even if the Detail object is
+     * Payment, Allocation, OCR or PSC.
+     * @param detailSObject Secondary detail Sobject (Payment, Allocation, etc.); or Opportunity if the detil
+     * object is Opportunity.
      */
-    public static void doRollupOperation(CRLP_Rollup rollup, List<SObject> details) {
+    public static void doRollupOperation(CRLP_Rollup rollup, Opportunity oppSObject, SObject detailSObject) {
 
         CRLP_FiscalYears fiscalYrs = new CRLP_FiscalYears(rollup.useFiscalYear);
         Rollup__mdt firstRollup = rollup.rollupsMdt[0];
         String dateField = firstRollup.Date_Field__r.QualifiedApiName;
         String amtField = firstRollup.Amount_Field__r.QualifiedApiName;
 
-        for (SObject s : details) {
-            Date dateValue, resultFieldDate;
-            Datetime resultFieldDateTime;
-            Double amountValue = 0, resultFieldAmount = 0;
-            String resultFieldText;
+        Date dateValue, resultFieldDate;
+        Datetime resultFieldDateTime;
+        Double amountValue = 0, resultFieldAmount = 0;
+        String resultFieldText;
 
-            String objName = s.getSObjectType().getDescribe().getName();
+        String objName = detailSObject.getSObjectType().getDescribe().getName();
 
-            // Get the date value (there should always be a date)
-            if (rollup.dateObject == objName) {
-                if (s.get(dateField) != null) {
-                    dateValue = (Date) s.get(dateField);
-                }
+        // Get the Date value from the appropriate object. There should always be a date!
+        SObject dateSObject = detailSObject;
+        if (rollup.dateObject != objName && UTIL_Describe.getSObjectType(rollup.dateObject) == Opportunity.SObjectType) {
+            dateSObject = oppSObject;
+        }
+        if (dateSObject.get(dateField) != null) {
+            dateValue = (Date) dateSObject.get(dateField);
+        }
+
+        // For Yearly Operations ... When working with DAYS_AGO, all of the Sum/Largest/Smallest
+        // operations have to be limited to the specified date range based on the value in daysAgo
+        // Due to the large variation of possible combinations, Rollups for DAYS_AGO YearlyOperation
+        // types cannot be combined with other rollups of different types/days.
+        if (rollup.yearlyOperation == CRLP_Operation.YearlyOperationType.DAYS_BACK.name()) {
+            if (dateValue == null || dateValue.daysBetween(Date.Today()) > rollup.daysBack) {
+                return;
             }
+        }
 
-            // For Yearly Operations ... When working with DAYS_AGO, all of the Sum/Largest/Smallest
-            // operations have to be limited to the specified date range based on the value in daysAgo
-            // Due to the large variation of possible combinations, Rollups for DAYS_AGO YearlyOperation
-            // types cannot be combined with other rollups of different types/days.
-            if (rollup.yearlyOperation == CRLP_Operation.YearlyOperationType.DAYS_BACK.name()) {
-                if (dateValue == null || dateValue.daysBetween(Date.Today()) > rollup.daysBack) {
-                    return;
+        // Get the Amount value from the appropriate object
+        SObject amtSObject = detailSObject;
+        if (rollup.AmountObject != objName && UTIL_Describe.getSObjectType(rollup.dateObject) == Opportunity.SObjectType) {
+            amtSObject = oppSObject;
+        }
+        if (amtSObject.get(amtField) != null) {
+            amountValue = (Double) amtSObject.get(amtField);
+        }
+
+        // If the amount is not null or zero, then convert to the Account currency as required
+        if (amountValue != null && amountValue != 0) {
+            // If multi currency is enabled in the organization, convert the Amount value to the
+            // summary objects currency.
+            if (UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
+                // Convert the Amount to the currency of the target record
+                String fromCurr = rollup.currCode; // default just in case there's an issue getting the detail record currency
+                try {
+                    fromCurr = (String) detailSObject.get('CurrencyIsoCode');
+                } catch (Exception ex) {
                 }
+                amountValue = UTIL_CurrencyConversion.convertAmount(amountValue, dateValue, fromCurr, rollup.currCode);
             }
+        }
 
-            // Get the Amount value and convert as required
-            if (rollup.AmountObject == objName) {
-                if (s.get(amtField) != null) {
-                    amountValue = (Double) s.get(amtField);
+        // Increment the overall counter
+        rollup.theCount++;
 
-                    // If multi currency is enabled in the organization, convert the Amount value to the
-                    // summary objects currency.
-                    if (UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
-                        // Convert the Amount to the currency of the target record
-                        String fromCurr = rollup.currCode; // default just in case there's an issue getting the detail record currency
-                        try {
-                            fromCurr = (String) s.get('CurrencyIsoCode');
-                        } catch (Exception ex) {
-                        }
-                        amountValue = UTIL_CurrencyConversion.convertAmount(amountValue, dateValue, fromCurr, rollup.currCode);
-                    }
-                }
+        // If there is a result field retrieve it's value and convert as required
+        // There is only one Rollup__mdt record when a Result Object/Field is involved.
+        // Single Results of this nature are limited to an Operation type of First, Last, Largest or Smallest only
+        if (rollup.resultFieldType != null && rollup.resultObject == objName) {
+
+            Object resultVal = detailSObject.get(rollup.resultFieldName);
+            CRLP_Operation.RollupType operation = CRLP_Operation.getRollupTypeFromString(firstRollup.Operation__c.replaceAll(' ', '_'));
+
+            /*System.debug(LoggingLevel.ERROR, '>> ResultField Operation: ' + rollup.resultFieldName + ' ' + operation +
+                ' for ' + resultVal + ' // maxDate=' + rollup.maxDate + ', dateValue=' + dateValue);*/
+
+            if (operation == CRLP_Operation.RollupType.FIRST && dateValue < rollup.minDate) {
+                // Operation = FIRST (always based on a date)
+                setResultFieldValue(rollup.resultFieldType, resultVal, rollup);
+
+            } else if (operation == CRLP_Operation.RollupType.LAST && dateValue > rollup.maxDate) {
+                // Operation = LAST (always based on a date)
+                setResultFieldValue(rollup.resultFieldType, resultVal, rollup);
+
+            } else if (operation == CRLP_Operation.RollupType.SMALLEST && amountValue < rollup.minValue) {
+                // Operation = LARGEST (always based on an amount)
+                setResultFieldValue(rollup.resultFieldType, resultVal, rollup);
+
+            } else if (operation == CRLP_Operation.RollupType.LARGEST && amountValue > rollup.maxValue) {
+                // Operation = SMALLEST (always based on an amount)
+                setResultFieldValue(rollup.resultFieldType, resultVal, rollup);
+
+            } else if ((operation == CRLP_Operation.RollupType.LAST || operation == CRLP_Operation.RollupType.FIRST)
+                    && (rollup.minDate == null || rollup.maxDate == null)) {
+                // If the Min/Max fields are null, then the value is alway both the First and Last date.
+                setResultFieldValue(rollup.resultFieldType, resultVal, rollup);
             }
+        }
 
-            // Increment the overall counter
-            rollup.theCount++;
-
-            // If there is a result field retrieve it's value and convert as required
-            // There is only one Rollup__mdt record when a Result Object/Field is involved.
-            // Single Results of this nature are limited to an Operation type of First, Last, Largest or Smallest only
-            if (rollup.resultFieldType != null && rollup.resultObject == objName) {
-
-                Object resultVal = s.get(rollup.resultFieldName);
-                CRLP_Operation.RollupType operation = CRLP_Operation.getRollupTypeFromString(firstRollup.Operation__c.replaceAll(' ', '_'));
-
-                /*System.debug(LoggingLevel.ERROR, '>> ResultField Operation: ' + rollup.resultFieldName + ' ' + operation +
-                    ' for ' + resultVal + ' // maxDate=' + rollup.maxDate + ', dateValue=' + dateValue);*/
-
-                if (operation == CRLP_Operation.RollupType.FIRST && dateValue < rollup.minDate) {
-                    // Operation = FIRST (always based on a date)
-                    setResultFieldValue(rollup.resultFieldType, resultVal, rollup);
-
-                } else if (operation == CRLP_Operation.RollupType.LAST && dateValue > rollup.maxDate) {
-                    // Operation = LAST (always based on a date)
-                    setResultFieldValue(rollup.resultFieldType, resultVal, rollup);
-
-                } else if (operation == CRLP_Operation.RollupType.SMALLEST && amountValue < rollup.minValue) {
-                    // Operation = LARGEST (always based on an amount)
-                    setResultFieldValue(rollup.resultFieldType, resultVal, rollup);
-
-                } else if (operation == CRLP_Operation.RollupType.LARGEST && amountValue > rollup.maxValue) {
-                    // Operation = SMALLEST (always based on an amount)
-                    setResultFieldValue(rollup.resultFieldType, resultVal, rollup);
-
-                } else if ((operation == CRLP_Operation.RollupType.LAST || operation == CRLP_Operation.RollupType.FIRST)
-                        && (rollup.minDate == null || rollup.maxDate == null)) {
-                    // If the Min/Max fields are null, then the value is alway both the First and Last date.
-                    setResultFieldValue(rollup.resultFieldType, resultVal, rollup);
-                }
+        // Set the Largest/Smallest Amount values
+        if (amountValue != null) {
+            rollup.theSum += amountValue;
+            if (rollup.minValue > amountValue) {
+                rollup.minValue = amountValue;
             }
-
-            // Set the Largest/Smallest Amount values
-            if (amountValue != null) {
-                rollup.theSum += amountValue;
-                if (rollup.minValue > amountValue) {
-                    rollup.minValue = amountValue;
-                }
-                if (rollup.maxValue < amountValue) {
-                    rollup.maxValue = amountValue;
-                }
+            if (rollup.maxValue < amountValue) {
+                rollup.maxValue = amountValue;
             }
+        }
 
-            String theYear;
+        String theYear;
 
-            // Set the First/Last Date values
-            if (dateValue != null) {
-                theYear = fiscalYrs.getYear(dateValue).format().replace(',','');
-                if (rollup.minDate == null || rollup.minDate > dateValue) {
-                    rollup.minDate = dateValue;
-                }
-                if (rollup.maxDate == null || rollup.maxDate < dateValue) {
-                    rollup.maxDate = dateValue;
-                }
+        // Set the First/Last Date values
+        if (dateValue != null) {
+            theYear = fiscalYrs.getYear(dateValue).format().replace(',','');
+            if (rollup.minDate == null || rollup.minDate > dateValue) {
+                rollup.minDate = dateValue;
+            }
+            if (rollup.maxDate == null || rollup.maxDate < dateValue) {
+                rollup.maxDate = dateValue;
             }
 
             if (rollup.sumByYear.containsKey(theYear)) {

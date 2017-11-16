@@ -73,21 +73,18 @@ public class CRLP_RollupAccount_SVC extends CRLP_VRollupHandler {
 
                 // Process rollups that are coming from the Opportunity only (not from Payment)
                 if (rollup.detailObject == oppObjectName) { 
-                    List<SObject> detailRows = new List<SObject>{ opp };
-
                     // Does this row pass the evaluation?
-                    if (CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(detailRows, filterGroupId)) {
+                    if (CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{ opp }, filterGroupId)) {
                         // YES -- now need to do the actual rollup!
-                        CRLP_Operation_SVC.doRollupOperation(rollup, detailRows);
+                        CRLP_Operation_SVC.doRollupOperation(rollup, opp, opp);
                     }
 
                 } else if (rollup.detailObject == pmtObjectName) {
                     // Process rollups from the Payment to the Account
 
                     for (npe01__OppPayment__c pmt : opp.npe01__OppPayment__r) {
-                        List<SObject> detailRows = new List<SObject>{ opp, pmt };
-                        if (CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(detailRows, filterGroupId)) {
-                            CRLP_Operation_SVC.doRollupOperation(rollup, detailRows);
+                        if (CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{ opp, pmt }, filterGroupId)) {
+                            CRLP_Operation_SVC.doRollupOperation(rollup, opp, pmt);
                         }
                     }
                 }

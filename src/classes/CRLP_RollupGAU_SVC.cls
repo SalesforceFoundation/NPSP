@@ -32,23 +32,23 @@
 * @date 2017
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
-* @description Rollup Services unique to the Contact rollups from Opportunity and Opportunity+Payments
+* @description Rollup Services unique to the GUA rollups from Allocations
 */
-public class CRLP_RollupContact_SVC extends CRLP_VRollupHandler {
+public class CRLP_RollupGAU_SVC extends CRLP_VRollupHandler {
     /**
      * @description Constructor: For a given summary object, prepopulates the rollupResults map by rollupId,
      * filtering the rollups to those from the Opportunity and/or OppPayment objects. Partial Soft Credits
      * are handled by a different service class.
-     * @param contactId The Id of the Summary Contact record being rolled up to
+     * @param accountId The Id of the Summary Account record being rolled up to
      */
-    public CRLP_RollupContact_SVC(Id contactId) {
-        super(contactId);
-        for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(Contact.SObjectType)) {
-            if (r.Detail_Object__r.QualifiedApiName == oppObjectName
-                    || r.Detail_Object__r.QualifiedApiName == pmtObjectName) {
-                addRollupDefinition(r);
-            }
+    public CRLP_RollupGAU_SVC(Id gauId) {
+        super(gauId);
+        for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(General_Accounting_Unit__c.SObjectType)) {
+            addRollupDefinition(r);
         }
+    }
+    public CRLP_RollupGAU_SVC(Id gauId, List<CRLP_Rollup> rollups) {
+        super(gauId);
     }
 
     /**
@@ -62,32 +62,24 @@ public class CRLP_RollupContact_SVC extends CRLP_VRollupHandler {
      * @return none
      */
     public override void processRollups(List<SObject> details) {
-        // This service class is specific to Rollups from the Opportunity (or Opp+Payment) to the Account object
+        // This service class is specific to Rollups from the Allocation to the GAU object
 
         for (Sobject s : details) {
 
-            Opportunity opp = (Opportunity)s;
+            Allocation__c alloc = (Allocation__c)s;
+            Opportunity opp = (Opportunity)alloc.getSObject('Opportunity__r');
             for (CRLP_Rollup rollup : this.rollups) {
                 Id filterGroupId = rollup.rollupsMdt[0].Filter_Group__c;
 
                 // Process rollups that are coming from the Opportunity only (not from Payment)
-                if (rollup.detailObject == oppObjectName) {
+                List<SObject> detailRows = new List<SObject>{ opp, alloc };
 
-                    // Does this row pass the evaluation?
-                    if (CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{ opp }, filterGroupId)) {
-                        // YES -- now need to do the actual rollup!
-                        CRLP_Operation_SVC.doRollupOperation(rollup, opp, opp);
-                    }
-
-                } else if (rollup.detailObject == pmtObjectName) {
-                    // Process rollups from the Payment to the Account
-
-                    for (npe01__OppPayment__c pmt : opp.npe01__OppPayment__r) {
-                        if (CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{ opp, pmt }, filterGroupId)) {
-                            CRLP_Operation_SVC.doRollupOperation(rollup, opp, pmt);
-                        }
-                    }
+                // Does this row pass the evaluation?
+                if (CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(detailRows, filterGroupId)) {
+                    // YES -- now need to do the actual rollup!
+                    CRLP_Operation_SVC.doRollupOperation(rollup, opp, alloc);
                 }
+
             }
         }
     }
@@ -95,28 +87,17 @@ public class CRLP_RollupContact_SVC extends CRLP_VRollupHandler {
     /**
      * @description
      * // TODO -- NOT SURE WHETHER THIS METHOD WILL BE KEPT YET; MIGHT BE AN ENTRY POINT FOR A BUTTON ON THE ACCOUNT
-     * @param conId
+     * @param acctId
      */
-    public static void rollupSingleContact(Id conId) {
-        String conQuery = CRLP_Query_SEL.getResultsQuery(Contact.SObjectType) + ' WHERE Id = :conId LIMIT 1';
-        Contact c = database.query(conQuery);
-
-        // Contact Hard Credit is based on Opportunity.Primary_Contact__c
-        String detailsQuery = CRLP_Query_SEL.getDetailsQuery(Opportunity.SObjectType, new List<SObjectType>{ npe01__OppPayment__c.SObjectType });
-        detailsQuery += ' WHERE Primary_Contact__c = :conId ' +
-                ' ORDER BY AccountId, CloseDate ';
-        List<Opportunity> details = database.query(detailsQuery);
-
-        CRLP_RollupContact_SVC handler = new CRLP_RollupContact_SVC(conId);
-        handler.setCurrencyCode(null);
-        handler.processRollups(details);
-
-        Contact updatedContact = (Contact)handler.getPopulatedSObject();
-        System.debug(LoggingLevel.ERROR, '> Rollups.count=' + handler.rollups.size());
-        if (CRLP_Rollup_SVC.resultsNeedUpdate(c, updatedContact, handler.rollups)) {
-            database.update(updatedContact);
+    public static void rollupSingleGAU(Id gauId) {
+        CRLP_RollupGAU_BATCH batchHander = new CRLP_RollupGAU_BATCH();
+        String query = CRLP_Query_SEL.getDetailsQuery(Allocation__c.SObjectType, new List<SObjectType>()) +
+                ' WHERE General_Accounting_Unit__c = :gauId AND Opportunity__c != null LIMIT 49500';
+        List<General_Accounting_Unit__c> gausToUpdate = batchHander.processBatchOfAllocations(Database.query(query));
+        if (gausToUpdate.size() > 0) {
+            database.update(gausToUpdate);
         } else {
-            System.Debug(LoggingLevel.ERROR, '*** NO UPDATE IS NEEDED FOR ' + conId + ' ***');
+            System.Debug(LoggingLevel.ERROR, '*** NO UPDATE IS NEEDED FOR ' + gauId + ' ***');
         }
     }
 

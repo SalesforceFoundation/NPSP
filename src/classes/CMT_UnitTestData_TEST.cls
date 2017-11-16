@@ -383,6 +383,15 @@ public class CMT_UnitTestData_TEST {
             parms.put('Amount', getDetailObject.get(rollupType) + '.' + detailField);
             parms.put('Date', getDetailObject.get(rollupType) + '.npe01__Payment_Date__c');
             parms.put('Detail', getDetailObject.get(rollupType));
+        } else if (rollupType == RollupRecordType.GAU) {
+            String detailField;
+            if (((String)parms.get('Detail')).contains('\\.')) {
+                detailField = ((String)parms.get('Detail')).split('\\.')[1];
+            } else {
+                detailField = 'Amount__c';
+            }
+            parms.put('Amount', getDetailObject.get(rollupType) + '.' + detailField);
+            parms.put('Detail', getDetailObject.get(rollupType));
         }
 
         String recordId = getNewRecordId();
