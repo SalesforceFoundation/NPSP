@@ -403,8 +403,8 @@ public class CMT_UnitTestData_TEST {
                 new CMT_Field('Filter_Group__c', CMTFieldType.FldText, filterGroupId),
                 new CMT_Field('Operation__c', CMTFieldType.FldText, operation.name()),
                 new CMT_Field('Active__c', CMTFieldType.FldBoolean, True),
-                new CMT_Field('Summary_Object__c', CMTFieldType.FldEntity, summaryObjectName),
-                new CMT_Field('Summary_Field__c', CMTFieldType.FldField, summaryObjectName + '.' + fixNamespace(summaryObjectField)),
+                new CMT_Field('Summary_Object__c', CMTFieldType.FldEntity, fixNamespace(summaryObjectName)),
+                new CMT_Field('Summary_Field__c', CMTFieldType.FldField, fixNamespace(summaryObjectName) + '.' + fixNamespace(summaryObjectField)),
                 new CMT_Field('Detail_Object__c', CMTFieldType.FldEntity, fixNamespace(detailObjectName))
         };
 
