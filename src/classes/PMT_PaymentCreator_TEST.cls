@@ -215,7 +215,7 @@ private with sharing class PMT_PaymentCreator_TEST {
             AccountId = testAccount.Id,
             CloseDate = Date.today(), 
             Amount = null,
-            StageName = isOpportunityClosed ? UTIL_UnitTestData_TEST.getClosedLostStage() : UTIL_UnitTestData_TEST.getOpenStage()
+            StageName = isOpportunityClosed ? UTIL_UnitTestData_TEST.getClosedWonStage() : UTIL_UnitTestData_TEST.getOpenStage()
         );
         insert testOpportunity;
 
@@ -226,7 +226,7 @@ private with sharing class PMT_PaymentCreator_TEST {
             WHERE npe01__Opportunity__c = :testOpportunity.Id
         ]);
 
-        //Run the process to test, by updating the Amount to a value and the StageName to Open.
+        //Run the process to test, by updating the Amount to a value
         Test.startTest();
         testOpportunity.Amount = 10;
         update testOpportunity;
@@ -244,9 +244,58 @@ private with sharing class PMT_PaymentCreator_TEST {
         for (String firstCreatedPaymentId : firstCreatedPayments.keySet()) {
             allCreatedPayments.remove(firstCreatedPaymentId);
         }
+        System.assertEquals(1, allCreatedPayments.size());
         System.assertEquals(isOpportunityClosed, allCreatedPayments.values()[0].npe01__Paid__c,'the Payment created should be paid.');
         System.assertEquals(testOpportunity.CloseDate, allCreatedPayments.values()[0].npe01__Scheduled_Date__c);
         System.assertEquals(testOpportunity.Amount, allCreatedPayments.values()[0].npe01__Payment_Amount__c);
+    }
+
+    /*********************************************************************************************************
+    * @description
+    operation:
+        Update a Closed Lost Opportunity Amount from null to a value
+    verify:
+        No payment should be created because the opportunity is closed lost.
+    **********************************************************************************************************/            
+    static testMethod void testClosedLostOpportunity_UpdateAmountFromNullToValue() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true)
+        );
+        
+        // create test data
+        Account testAccount = new Account(
+            Name = 'Test_Account'
+        );
+        insert testAccount;
+        Opportunity testOpportunity = new Opportunity(
+            Name = 'TestOpp',
+            AccountId = testAccount.Id,
+            CloseDate = Date.today(),
+            Amount = null,
+            StageName = UTIL_UnitTestData_TEST.getClosedLostStage()
+        );
+        insert testOpportunity;
+
+        //Cache the payments created
+        Map<Id, npe01__OppPayment__c> firstCreatedPayments = new Map<Id, npe01__OppPayment__c>([
+            SELECT Id, npe01__Paid__c, npe01__Scheduled_Date__c, npe01__Payment_Amount__c 
+            FROM npe01__OppPayment__c 
+            WHERE npe01__Opportunity__c = :testOpportunity.Id
+        ]);
+
+        //Run the process to test, by updating the Amount to a value
+        Test.startTest();
+        testOpportunity.Amount = 10;
+        update testOpportunity;
+        Test.stopTest();
+
+
+        Map<Id, npe01__OppPayment__c> allCreatedPayments = new Map<Id, npe01__OppPayment__c>([
+            SELECT Id, npe01__Paid__c, npe01__Scheduled_Date__c, npe01__Payment_Amount__c 
+            FROM npe01__OppPayment__c 
+            WHERE npe01__Opportunity__c = :testOpportunity.Id
+        ]);
+        System.assert(firstCreatedPayments.size() == allCreatedPayments.size(), 'No payment should be created because the opportunity is Closed Lost');
     }
 
     /*********************************************************************************************************

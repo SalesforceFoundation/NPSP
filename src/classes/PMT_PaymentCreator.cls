@@ -319,7 +319,12 @@ public class PMT_PaymentCreator {
                     }
                     
                     // we may need to add payments if the open opp amount has been changed from $0
-                    else if (thisOpp.Amount != 0 && thisOpp.Amount != null && (oldOpp.Amount == 0 || oldOpp.Amount == null ) && !isNoPaymentForOpp(thisOpp)) {
+                    else if (
+                            thisOpp.Amount != 0 && thisOpp.Amount != null &&
+                            (thisOpp.IsClosed == false || thisOpp.IsWon == true) &&
+                            (oldOpp.Amount == 0 || oldOpp.Amount == null ) && 
+                            isNoPaymentForOpp(thisOpp) == false
+                        ) {
                         npe01__oppPayment__c opportunityPayment = new npe01__oppPayment__c(
                             npe01__Opportunity__c = thisOpp.Id,
                             npe01__Paid__c = thisOpp.IsClosed,
