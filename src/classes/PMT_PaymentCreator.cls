@@ -319,29 +319,28 @@ public class PMT_PaymentCreator {
                     }
                     
                     // we may need to add payments if the open opp amount has been changed from $0
-                    else if (thisOpp.Amount != 0 && thisOpp.Amount != null && (oldOpp.Amount == 0 || oldOpp.Amount == null ) 
-                        && !thisOpp.isClosed && !isNoPaymentForOpp(thisOpp)){
-                        npe01__oppPayment__c op = new npe01__oppPayment__c(
-                            npe01__opportunity__c = thisOpp.id,
-                            npe01__Paid__c = false,
+                    else if (thisOpp.Amount != 0 && thisOpp.Amount != null && (oldOpp.Amount == 0 || oldOpp.Amount == null ) && !isNoPaymentForOpp(thisOpp)) {
+                        npe01__oppPayment__c opportunityPayment = new npe01__oppPayment__c(
+                            npe01__Opportunity__c = thisOpp.Id,
+                            npe01__Paid__c = thisOpp.IsClosed,
                             npe01__Scheduled_Date__c = thisOpp.CloseDate,
                             npe01__Payment_Amount__c = thisOpp.Amount
                         );                                
                                 
                         //in multicurrency SFDC set the payment currency field to equal to the opp currency
                         if(PaymentCurrencyField != null && OppCurrencyField != null)
-                            op.put(PaymentCurrencyField, thisOpp.get(OppCurrencyField));
+                            opportunityPayment.put(PaymentCurrencyField, thisOpp.get(OppCurrencyField));
                             
                         if (paymentMappings.size() > 0){
                             for (string s : paymentMappings.keyset()){
                                 npe01__Payment_Field_Mapping_Settings__c pfms = paymentMappings.get(s);
                                 string x = pfms.npe01__Opportunity_Field__c;
                                 if (thisOpp.get(x) != null)
-                                    op.put(pfms.npe01__Payment_Field__c, thisOpp.get(x));
+                                    opportunityPayment.put(pfms.npe01__Payment_Field__c, thisOpp.get(x));
                             }
                         }   
-                        paymentsToInsert.add(op);                                              
-                    }   
+                        paymentsToInsert.add(opportunityPayment);                                              
+                    }
                 }
                 // update or delete payments     
                 if (!paymentsToUpdate.isEmpty())

@@ -176,6 +176,82 @@ private with sharing class PMT_PaymentCreator_TEST {
     /*********************************************************************************************************
     * @description
     operation:
+        Update a Closed Won Opportunity Amount from null to a value
+    verify:
+        An unpaid payment should be created
+    **********************************************************************************************************/            
+    static testMethod void testClosedWonOpportunity_UpdateAmountFromNullToValue() {
+        testOpportunity_UpdateAmountFromNullToValue(true);
+    }
+
+    /*********************************************************************************************************
+    * @description
+    operation:
+        Update an Open Opportunity Amount from null to a value
+    verify:
+        An unpaid payment should be created
+    **********************************************************************************************************/            
+    static testMethod void testOpenOpportunity_UpdateAmountFromNullToValue() {
+        testOpportunity_UpdateAmountFromNullToValue(false);
+    }
+
+    /*********************************************************************************************************
+    * @description Test the update of an Opportunity Amount from null to a value
+    * @param isOpportunityClosed Should the test opportunity be closed or open
+    * @return void
+    */
+    private static void testOpportunity_UpdateAmountFromNullToValue(Boolean isOpportunityClosed) {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true)
+        );
+        
+        // create test data
+        Account testAccount = new Account(
+            Name = 'Test_Account'
+        );
+        insert testAccount;
+        Opportunity testOpportunity = new Opportunity(
+            Name = 'TestOpp',
+            AccountId = testAccount.Id,
+            CloseDate = Date.today(), 
+            Amount = null,
+            StageName = isOpportunityClosed ? UTIL_UnitTestData_TEST.getClosedLostStage() : UTIL_UnitTestData_TEST.getOpenStage()
+        );
+        insert testOpportunity;
+
+        //Cache the payments created
+        Map<Id, npe01__OppPayment__c> firstCreatedPayments = new Map<Id, npe01__OppPayment__c>([
+            SELECT Id, npe01__Paid__c, npe01__Scheduled_Date__c, npe01__Payment_Amount__c 
+            FROM npe01__OppPayment__c 
+            WHERE npe01__Opportunity__c = :testOpportunity.Id
+        ]);
+
+        //Run the process to test, by updating the Amount to a value and the StageName to Open.
+        Test.startTest();
+        testOpportunity.Amount = 10;
+        update testOpportunity;
+        Test.stopTest();
+
+
+        Map<Id, npe01__OppPayment__c> allCreatedPayments = new Map<Id, npe01__OppPayment__c>([
+            SELECT Id, npe01__Paid__c, npe01__Scheduled_Date__c, npe01__Payment_Amount__c 
+            FROM npe01__OppPayment__c 
+            WHERE npe01__Opportunity__c = :testOpportunity.Id
+        ]);
+        System.assert(firstCreatedPayments.size() + 1 == allCreatedPayments.size(), 'new payment should be created.');
+        
+        //Confirm the new Payment created is the one we expect
+        for (String firstCreatedPaymentId : firstCreatedPayments.keySet()) {
+            allCreatedPayments.remove(firstCreatedPaymentId);
+        }
+        System.assertEquals(isOpportunityClosed, allCreatedPayments.values()[0].npe01__Paid__c,'the Payment created should be paid.');
+        System.assertEquals(testOpportunity.CloseDate, allCreatedPayments.values()[0].npe01__Scheduled_Date__c);
+        System.assertEquals(testOpportunity.Amount, allCreatedPayments.values()[0].npe01__Payment_Amount__c);
+    }
+
+    /*********************************************************************************************************
+    * @description
+    operation:
         create an Opp whose Type value is NOT excluded in settings from creating payments
     verify:
         no payment created
