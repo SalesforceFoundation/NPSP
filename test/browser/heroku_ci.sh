@@ -21,7 +21,7 @@ if [ "$HEROKU_TEST_RUN_BRANCH" == "master" ]; then
     exit_status=$?
 
     # Delete the scratch org
-    cci org scratch_delete browsertest_master
+    cci org scratch_delete browsertests_master
     if [ "$exit_status" = "1" ]; then
         echo "Flow execution failed, failing test"
         exit 1
@@ -45,7 +45,7 @@ else
     exit_status=$?
 
     # Delete the scratch org
-    cci org scratch_delete browsertest_feature
+    cci org scratch_delete browsertests_feature
     if [ "$exit_status" = "1" ]; then
         echo "Flow execution failed, failing test"
         exit 1
