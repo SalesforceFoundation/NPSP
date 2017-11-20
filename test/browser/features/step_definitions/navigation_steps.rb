@@ -184,8 +184,12 @@ end
 
 Given(/^I login the first time with oauth$/) do
   on(LoginPage) do |page|
-    page.app_switcher_element.when_present.click
-    page.npsp_app_picker_element.when_present.click
+    label = page.app_switcher_element.text()
+    puts label
+    if label == 'Sales'
+      page.app_switcher_element.when_present.click
+      page.npsp_app_picker_element.when_present.click
+    end
   end
 end
 
