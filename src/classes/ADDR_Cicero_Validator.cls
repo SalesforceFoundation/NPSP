@@ -209,10 +209,6 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
                             if (!String.isBlank(lastFourPostalDigits)) {
                                 addr.MailingPostalCode__c += '-' + lastFourPostalDigits;
                             }
-                        } else {
-                            if(String.isBlank(addr.MailingCity__c)) addr.MailingCity__c = candidate.match_city;
-                            if(String.isBlank(addr.MailingState__c)) addr.MailingState__c = candidate.match_region;
-                            if(String.isBlank(addr.MailingPostalCode__c)) addr.MailingPostalCode__c = candidate.match_postal;
                         }
                         addr.County_Name__c  = candidate.match_subregion;
 
