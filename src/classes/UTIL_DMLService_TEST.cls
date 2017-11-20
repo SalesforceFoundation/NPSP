@@ -447,6 +447,140 @@ public with sharing class UTIL_DMLService_TEST {
 
 
     /*********************************************************************************************************
+    * @description Tests upsert of a record by wrapping Database.upsert(...).
+    * verify:
+    *   Record upserted
+    * @return void
+    **********************************************************************************************************/
+    private static testMethod void testRecordUpsertWithDefaults() {
+        if (strTestOnly != '*' && strTestOnly != 'testRecordUpsertWithDefaults') return;
+
+        Account acct = new Account(Name = 'UpsertedAccount');
+        Test.startTest();
+        UTIL_DMLService.upsertRecord(acct);
+        Test.stopTest();
+
+        List<Account> retrievedUpsertedAccount = [SELECT Id, Name
+                                                  FROM Account];
+
+        System.assertEquals(false, retrievedUpsertedAccount.isEmpty());
+
+        acct.Name = 'Cloudy';
+        UTIL_DMLService.upsertRecord(acct);
+
+        retrievedUpsertedAccount = [SELECT Id, Name
+                                    FROM Account];
+
+        System.assertEquals(acct.Name, retrievedUpsertedAccount[0].Name);
+    }
+
+
+    /*********************************************************************************************************
+    * @description Tests upsert of a List of records by wrapping Database.upsert(...).
+    * verify:
+    *   Records upserted
+    * @return void
+    **********************************************************************************************************/
+    private static testMethod void testRecordsUpsertWithDefaults() {
+        if (strTestOnly != '*' && strTestOnly != 'testRecordsUpsertWithDefaults') return;
+
+        Account acct = new Account(Name = 'UpsertedAccount');
+        insert acct;
+
+        List<Contact> contacts = new List<Contact> { new Contact(FirstName = 'Blue', LastName = 'Cloud', AccountId = acct.Id),
+                                                     new Contact(FirstName = 'Astro', LastName = 'Cloud', AccountId = acct.Id) };
+
+        Test.startTest();
+        UTIL_DMLService.upsertRecords(contacts);
+        Test.stopTest();
+
+        List<Contact> retrievedUpsertedContacts = [SELECT Id, FirstName, LastName, AccountId
+                                                   FROM Contact];
+
+        System.assertEquals(false, retrievedUpsertedContacts.isEmpty());
+
+        contacts[0].FirstName = 'Cloudy';
+        contacts[0].FirstName = 'Cody';
+        UTIL_DMLService.upsertRecords(contacts);
+
+        retrievedUpsertedContacts = [SELECT Id, FirstName, LastName, AccountId
+                                     FROM Contact];
+
+        System.assertEquals(contacts[0].FirstName, retrievedUpsertedContacts[0].FirstName);
+        System.assertEquals(contacts[1].FirstName, retrievedUpsertedContacts[1].FirstName);
+    }
+
+
+    /*********************************************************************************************************
+    * @description Tests upsert of a record with specified allOrNone value.
+    * verify:
+    *   Record upserted
+    * @return void
+    **********************************************************************************************************/
+    private static testMethod void testRecordUpsertWithAllOrNone() {
+        if (strTestOnly != '*' && strTestOnly != 'testRecordUpsertWithAllOrNone') return;
+
+        Account acct = new Account(Name = 'UpsertedAccount');
+        insert acct;
+
+        Contact con = new Contact(FirstName = 'Blue', LastName = 'Cloud', AccountId = acct.Id);
+
+        Test.startTest();
+        UTIL_DMLService.upsertRecord(con, false);
+        Test.stopTest();
+
+        List<Contact> retrievedUpsertedContacts = [SELECT Id, FirstName, LastName, AccountId
+                                                   FROM Contact];
+
+        System.assertEquals(false, retrievedUpsertedContacts.isEmpty());
+
+        con.FirstName = 'Cloudy';
+        UTIL_DMLService.upsertRecord(con, false);
+
+        retrievedUpsertedContacts = [SELECT Id, FirstName, LastName, AccountId
+                                     FROM Contact];
+
+        System.assertEquals(con.FirstName, retrievedUpsertedContacts[0].FirstName);
+    }
+
+
+    /*********************************************************************************************************
+    * @description Tests upsert of a List of records with specified allOrNone value.
+    * verify:
+    *   Records upserted
+    * @return void
+    **********************************************************************************************************/
+    private static testMethod void testRecordsUpsertWithAllOrNone() {
+        if (strTestOnly != '*' && strTestOnly != 'testRecordsUpsertWithAllOrNone') return;
+
+        Account acct = new Account(Name = 'UpsertedAccount');
+        insert acct;
+
+        List<Contact> contacts = new List<Contact> { new Contact(FirstName = 'Blue', LastName = 'Cloud', AccountId = acct.Id),
+                                                     new Contact(FirstName = 'Astro', LastName = 'Cloud', AccountId = acct.Id) };
+
+        Test.startTest();
+        UTIL_DMLService.upsertRecords(contacts, false);
+        Test.stopTest();
+
+        List<Contact> retrievedUpsertedContacts = [SELECT Id, FirstName, LastName, AccountId
+                                                   FROM Contact];
+
+        System.assertEquals(false, retrievedUpsertedContacts.isEmpty());
+
+        contacts[0].FirstName = 'Cloudy';
+        contacts[0].FirstName = 'Cody';
+        UTIL_DMLService.upsertRecords(contacts, false);
+
+        retrievedUpsertedContacts = [SELECT Id, FirstName, LastName, AccountId
+                                     FROM Contact];
+
+        System.assertEquals(contacts[0].FirstName, retrievedUpsertedContacts[0].FirstName);
+        System.assertEquals(contacts[1].FirstName, retrievedUpsertedContacts[1].FirstName);
+    }
+
+
+    /*********************************************************************************************************
     * @description Tests the NPSP Setting Respect Duplicate Rule Settings for duplicate Accounts
     *   set to false 
     * verify:

@@ -422,12 +422,13 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 if (!CAO_Constants.isBucketModel()) {
                     // change its recordtype if specified in settings
                     ID rtIdAcccount = ACCT_IndividualAccounts_TDTM.rtIdForNewAccount();
-                    if (rtIdAcccount != null) 
+                    if (rtIdAcccount != null) {
                         myAccount.put('RecordTypeID', rtIdAcccount);
-                        myAccount.npe01__SYSTEMISINDIVIDUAL__c = true;
-                        myAccount.npe01__One2OneContact__c = con.Id;
-                        UTIL_DMLService.updateRecord(myAccount);
                     }
+                    myAccount.npe01__SYSTEMISINDIVIDUAL__c = true;
+                    myAccount.npe01__One2OneContact__c = con.Id;
+                    UTIL_DMLService.updateRecord(myAccount);
+                }
 
 	            // see if we need to create a household object for this contact (1:1 & bucket only)
 	            if (!CAO_Constants.isHHAccountModel() && con.npo02__Household__c == null) {

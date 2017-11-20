@@ -236,6 +236,48 @@ public with sharing class UTIL_DMLService {
 
 
     /*********************************************************************************************************
+    * @description Wraps the Database class upsert method.
+    * @param recordToUpsert The sObject to upsert in the org.
+    * @return Database.UpsertResult
+    **********************************************************************************************************/
+    public static Database.UpsertResult upsertRecord(sObject recordToUpsert) {
+        return Database.upsert(recordToUpsert);
+    }
+
+
+    /*********************************************************************************************************
+    * @description Wraps the Database class upsert method.
+    * @param recordsToUpsert The sObjects to upsert in the org.
+    * @return List<Database.UpsertResult>
+    **********************************************************************************************************/
+    public static List<Database.UpsertResult> upsertRecords(List<sObject> recordsToUpsert) {
+        return Database.upsert(recordsToUpsert);
+    }
+
+
+    /*********************************************************************************************************
+    * @description Wraps the Database class upsert method and sets the flag to allow partial commits.
+    * @param recordToUpsert The sObject to upsert in the org.
+    * @param allOrNone The optional parameter that specifies whether the operation allows partial success.
+    * @return Database.UpsertResult
+    **********************************************************************************************************/
+    public static Database.UpsertResult upsertRecord(sObject recordToUpsert, Boolean allOrNone) {
+        return Database.upsert(recordToUpsert, allOrNone);
+    }
+
+
+    /*********************************************************************************************************
+    * @description Wraps the Database class upsert method and sets the flag to allow partial commits.
+    * @param recordsToUpsert The sObjects to upsert in the org.
+    * @param allOrNone The optional parameter that specifies whether the operation allows partial success.
+    * @return List<Database.UpsertResult>
+    **********************************************************************************************************/
+    public static List<Database.UpsertResult> upsertRecords(List<sObject> recordsToUpsert, Boolean allOrNone) {
+        return Database.upsert(recordsToUpsert, allOrNone);
+    }
+
+
+    /*********************************************************************************************************
     * @description Checks if the Allow Save property is set and uses it accordingly.
     * @return Boolean
     **********************************************************************************************************/
