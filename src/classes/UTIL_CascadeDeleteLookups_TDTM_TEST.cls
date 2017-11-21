@@ -37,10 +37,10 @@
 private class UTIL_CascadeDeleteLookups_TDTM_TEST {
 
     /**************************************************************************************************************************
-    @description Test of the Plain/HTML Text list of the child records
-    verify: The text returned by the function has the html/Plain Text
+    @description Test of the function that returns the Plain Text. The text contains a list of the child records
+    verify: The text returned by the function has the Plain Text
     ***************************************************************************************************************************/   
-    private static testMethod void testGetHTMLAndPlainTextChildRecords() {
+    private static testMethod void testGetPlainTextChildRecords() {
         List<Account> testAccounts = new List<Account>{
             new Account(name='TEST_ACCOUNT_1'),
             new Account(name='TEST_ACCOUNT_2')
@@ -51,20 +51,41 @@ private class UTIL_CascadeDeleteLookups_TDTM_TEST {
 
         UTIL_CascadeDeleteLookups_TDTM cascadeDeleteLookupsTDTM = new CascadeDeleteLookupsMock();
         String cascadeDeleteChildRecordPlainText = cascadeDeleteLookupsTDTM.getPlainTextChildRecords(testAccountsMap, new List<Id>(testAccountsMap.keySet()));
-        String cascadeDeleteChildRecordHTMLText = cascadeDeleteLookupsTDTM.getHTMLTextChildRecords(testAccountsMap, new List<Id>(testAccountsMap.keySet()));
 
         List<String> expectedChildRecordsPlainText = new List<String>();
+        for (Account testAccount :testAccounts) {
+            expectedChildRecordsPlainText.add(testAccount.Name);
+        }
+
+        System.assertEquals(String.join(expectedChildRecordsPlainText,', '), cascadeDeleteChildRecordPlainText);
+    }
+
+    /**************************************************************************************************************************
+    @description Test of the function that returns the HTML text. The text contains a list of the child records
+    verify: The text returned by the function has the HTML Text
+    ***************************************************************************************************************************/   
+    private static testMethod void testGetHTMLTextChildRecords() {
+        List<Account> testAccounts = new List<Account>{
+            new Account(name='TEST_ACCOUNT_1'),
+            new Account(name='TEST_ACCOUNT_2')
+        };
+        insert testAccounts;
+
+        Map<Id,Account> testAccountsMap = new Map<Id,Account>(testAccounts);
+
+        UTIL_CascadeDeleteLookups_TDTM cascadeDeleteLookupsTDTM = new CascadeDeleteLookupsMock();
+        String cascadeDeleteChildRecordHTMLText = cascadeDeleteLookupsTDTM.getHTMLTextChildRecords(testAccountsMap, new List<Id>(testAccountsMap.keySet()));
+
         List<String> expectedChildRecordsHTMLText = new List<String>();
         expectedChildRecordsHTMLText.add('<ul>');
         for (Account testAccount :testAccounts) {
-            expectedChildRecordsPlainText.add(testAccount.Name);
             expectedChildRecordsHTMLText.add(String.format(
                 UTIL_CascadeDeleteLookups_TDTM.HTML_TEXT_CHILD_RECORDS_FORMAT, 
                 new List<String>{testAccount.Id, testAccount.Name}
             ));
         }
         expectedChildRecordsHTMLText.add('</ul>');
-        System.assertEquals(String.join(expectedChildRecordsPlainText,', '), cascadeDeleteChildRecordPlainText);
+
         System.assertEquals(String.join(expectedChildRecordsHTMLText,''), cascadeDeleteChildRecordHTMLText);
     }
 

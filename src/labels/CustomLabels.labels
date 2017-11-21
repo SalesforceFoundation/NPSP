@@ -592,7 +592,7 @@
         <categories>Error</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>CascadeDeletionError</shortDescription>
+        <shortDescription>Cascade Deletion Error Message In Classic</shortDescription>
         <value>You can&apos;&apos;t delete {0} because it&apos;&apos;s associated with the following records. Delete or re-associate these records and then try again.&lt;br/&gt;&lt;br/&gt;{1}</value>
     </labels>
     <labels>
@@ -600,7 +600,7 @@
         <categories>Error</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>CascadeDeletionErrorLightning</shortDescription>
+        <shortDescription>Cascade Deletion Error Message In Lightning Experience</shortDescription>
         <value>You can&apos;&apos;t delete {0} because it&apos;&apos;s associated with these records: {1}. Delete or re-associate these records and then try again.</value>
     </labels>
     <labels>
