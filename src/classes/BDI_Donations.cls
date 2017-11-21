@@ -186,7 +186,7 @@ public class BDI_Donations {
         }
         
         // insert our new Opps
-        list<Database.SaveResult> listSR = database.insert(listOppInsert, false);
+        list<Database.SaveResult> listSR = UTIL_DMLService.insertRecords(listOppInsert, false);
         for (integer i = 0; i < listSR.size(); i++) {
             Database.SaveResult sr = listSR[i];
             if (!sr.isSuccess()) {
@@ -198,7 +198,7 @@ public class BDI_Donations {
         }
         
         // update our matched Opps
-        listSR = database.update(listOppUpdate, false);
+        listSR = UTIL_DMLService.updateRecords(listOppUpdate, false);
         for (integer i = 0; i < listSR.size(); i++) {
             Database.SaveResult sr = listSR[i];
             if (!sr.isSuccess()) {
@@ -520,7 +520,7 @@ public class BDI_Donations {
                 }
             }
         }
-        list<Database.SaveResult> listSR = database.update(listPmtUpdate, false);
+        list<Database.SaveResult> listSR = UTIL_DMLService.updateRecords(listPmtUpdate, false);
         for (integer i = 0; i < listSR.size(); i++) {
             Database.SaveResult sr = listSR[i];
             if (!sr.isSuccess()) {

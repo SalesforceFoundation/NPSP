@@ -261,7 +261,7 @@ global with sharing class BDI_DataImportService {
             diBatch.Last_Processed_On__c = System.now();
             diBatch.Records_Successfully_Processed__c = cRecordsSucceeded;
             diBatch.Records_Failed__c = cRecordsFailed;
-            update diBatch;
+            UTIL_DMLService.updateRecord(diBatch);
         }
     }
 
@@ -455,7 +455,7 @@ global with sharing class BDI_DataImportService {
                 ));
             }
 
-            update listDIError;
+            UTIL_DMLService.updateRecords(listDIError);
 
             // unfortunately, we can't let the system think the batch failed, or
             // then it would rollback our setting of failure state in the DI records.
@@ -502,8 +502,7 @@ global with sharing class BDI_DataImportService {
                 di.Account2ImportStatus__c = null;
         }
 
-        //UTIL_Debug.debug('****DJH final update to listDI: ' + listDI);
-        update listDI;
+        UTIL_DMLService.updateRecords(listDI);
     }
 
     /*******************************************************************************************************
@@ -728,7 +727,7 @@ global with sharing class BDI_DataImportService {
         }
 
         //UTIL_Debug.debug('****DJH about to upsert household Accounts: ' + listAccHHUpdate);
-        List<Database.UpsertResult> listUR = database.upsert(listAccHHUpdate, false);
+        List<Database.UpsertResult> listUR = UTIL_DMLService.upsertRecords(listAccHHUpdate, false);
         for (integer i = 0; i < listUR.size(); i++) {
             Database.UpsertResult ur = listUR[i];
             if (!ur.isSuccess()) {
@@ -961,7 +960,7 @@ global with sharing class BDI_DataImportService {
 
         // now update the Contacts to create their Affiliations
         if (mapConIdToConUpdate.size() > 0) {
-            update mapConIdToConUpdate.values();
+            UTIL_DMLService.updateRecords(mapConIdToConUpdate.values());
         }
     }
 
@@ -1301,10 +1300,10 @@ global with sharing class BDI_DataImportService {
         // two prong strategy! if any address object fails to save, do one
         // address record at a time, so we can log the failing address with the correct bdi record.
         try  {
-            insert listAddrInsert;
+            UTIL_DMLService.insertRecords(listAddrInsert);
         } catch (exception ex) {
             for (integer i = 0; i < listAddrInsert.size(); i++) {
-                Database.SaveResult sr = database.insert(listAddrInsert[i], false);
+                Database.SaveResult sr = UTIL_DMLService.insertRecord(listAddrInsert[i], false);
                 if (!sr.isSuccess()) {
                     LogBDIError(listDIInsert[i], sr.getErrors()[0].getMessage(), 'HomeAddressImportStatus__c');
                 }
@@ -1411,21 +1410,21 @@ global with sharing class BDI_DataImportService {
         }
 
         // now update the objects
-        List<Database.UpsertResult> listUR = database.upsert(listCon1Update, false);
+        List<Database.UpsertResult> listUR = UTIL_DMLService.upsertRecords(listCon1Update, false);
         for (integer i = 0; i < listUR.size(); i++) {
             Database.UpsertResult ur = listUR[i];
             if (!ur.isSuccess()) {
                 LogBDIError(listCon1Di[i], ur.getErrors()[0].getMessage(), 'Contact1ImportStatus__c');
             }
         }
-        listUR = database.upsert(listCon2Update, false);
+        listUR = UTIL_DMLService.upsertRecords(listCon2Update, false);
         for (integer i = 0; i < listUR.size(); i++) {
             Database.UpsertResult ur = listUR[i];
             if (!ur.isSuccess()) {
                 LogBDIError(listCon2Di[i], ur.getErrors()[0].getMessage(), 'Contact2ImportStatus__c');
             }
         }
-        listUR = database.upsert(listAccUpdate, false);
+        listUR = UTIL_DMLService.upsertRecords(listAccUpdate, false);
         for (integer i = 0; i < listUR.size(); i++) {
             Database.UpsertResult ur = listUR[i];
             if (!ur.isSuccess()) {
@@ -1480,7 +1479,7 @@ global with sharing class BDI_DataImportService {
                 cmp.Name = null;
         }
         //insert listCmpNew;
-        List<Database.UpsertResult> listUR = database.upsert(listCmpNew, false);
+        List<Database.UpsertResult> listUR = UTIL_DMLService.upsertRecords(listCmpNew, false);
         for (integer i = 0; i < listUR.size(); i++) {
             Database.UpsertResult ur = listUR[i];
             if (!ur.isSuccess()) {

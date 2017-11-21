@@ -373,7 +373,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
             // ideally, we'd do this all with dmlWrapper.  But since we
             // need to update the contact's hhId, we can't defer creating the HH's.
             
-            Database.SaveResult[] lsr = Database.insert(householdInserts, false);
+            Database.SaveResult[] lsr = UTIL_DMLService.insertRecords(householdInserts, false);
                        
             Integer i = 0;
             for (Contact c : contacts)

@@ -143,7 +143,7 @@ public class CON_AddToCampaign {
             }
         }
 
-        insert listStatusForInsert;
+        UTIL_DMLService.insertRecords(listStatusForInsert);
     }
         
     /*******************************************************************************************************
