@@ -70,6 +70,16 @@ To view these jobs, search for Scheduled Jobs in Salesforce Setup.</description>
         <type>TextArea</type>
     </fields>
     <fields>
+        <fullName>Respect_Duplicate_Rule_Settings__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Ensures that the &quot;Allow&quot; setting (on the Duplicate Rule) is respected when duplicates are identified.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Respect the settings on a Duplicate Rule that control whether duplicate records are allowed. To check existing settings, go to Duplicate Rules under Setup. When the Action On Create or Action On Edit fields are set to &quot;Allow,&quot; duplicates will be saved.</inlineHelpText>
+        <label>Respect Duplicate Rule Settings</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Store_Errors_On__c</fullName>
         <defaultValue>true</defaultValue>
         <description>Flag that indicates whether errors are going to be stored in the database.</description>
