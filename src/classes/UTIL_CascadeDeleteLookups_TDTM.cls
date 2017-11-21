@@ -46,6 +46,8 @@
 //TBD making this class global so managed package users can add lookup cascade deletions
 public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
 
+    @TestVisible private static final String HTML_TEXT_CHILD_RECORDS_FORMAT = '<li><a href="#" onclick="window.open(\'\'/{0}\'\', \'\'\'\');return false;" target="_blank">{1}</a></li>';
+
     /*******************************************************************************************************
     * @description Contains information for performing a cascade deletion.
     * All that is needed to perform cascade deletion is the object name and the relationship to the parent
@@ -213,9 +215,9 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
     ********************************************************************************************************/
     private void processDeletionErrors(String parentObjectName){
         String parentNameField = UTIL_Describe.getNameField(parentObjectName);
-        for (Cascade cc : getCascades()) {
-            for (Id parentId : cc.errors.keySet()) {
-                SObject parent = cc.parents.get(parentId);
+        for (Cascade cascadeDeletion : getCascades()) {
+            for (Id parentId : cascadeDeletion.errors.keySet()) {
+                SObject parent = cascadeDeletion.parents.get(parentId);
 
                 String parentName = (String)parent.get(parentNameField);
 
@@ -228,33 +230,69 @@ public abstract class UTIL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
                     }
                 }
 
-                String error = String.format(Label.CascadeDeletionError, new List<String>{parentName}) + '<br/><br/>';
-                for (String errType : cc.errors.get(parentId).keySet()) {
-                    error += ' ' + errType + ': ' + getErrorLinks(cc,cc.errors.get(parentId).get(errType));
+                List<String> errorTypeWithChildRecords = new List<String>();
+                for (String errorType : cascadeDeletion.errors.get(parentId).keySet()) {
+                    if (USER_UserService.isUserRunningLightning() || USER_UserService.isUserRunningMobile()) {
+                        errorTypeWithChildRecords.add(errorType + ' (' + getPlainTextChildRecords(cascadeDeletion.children, cascadeDeletion.errors.get(parentId).get(errorType)) + ')');
+                    }
+                    else {
+                        errorTypeWithChildRecords.add(errorType + ':' + getHTMLTextChildRecords(cascadeDeletion.children, cascadeDeletion.errors.get(parentId).get(errorType)));
+                    }
                 }
-                //don't escape error message with HTML links
-                parent.addError(error, false);
+
+                parent.addError(getErrorMessage(parentName, errorTypeWithChildRecords), false);
             }
         }
     }
 
     /*******************************************************************************************************
-    * @description Creates a list of the child records preventing deletion, with html links to those records
-    * with the record's name.
-    * @param cc The Cascade these records belong to.
-    * @param records The child records preventing deletion.
-    * @return String An HTML string with links to the child records.
+    * @description Returns an HTML list of the child records preventing deletion, with links to those records.
+    * @param childRecords The queried child records stash for deletion
+    * @param recordIds The child records preventing deletion.
+    * @return String An HTML text that contains a list of the child records.
     ********************************************************************************************************/
-    private String getErrorLinks(Cascade cc, List<Id> records) {
+    @TestVisible
+    private String getHTMLTextChildRecords(Map<Id, SObject> childRecords, List<Id> recordIds) {
         List<String> results = new List<String>{'<ul>'};
-        String nameField = (String)UTIL_Describe.getNameField(records[0].getSobjectType().getDescribe().getName());
-        for (Id recId : records) {
-            String childName = (String)cc.children.get(recId).get(nameField);
-            String htmlLink = '<li><a href="#" onclick="window.open(\'/'+recId+'\', \'\');return false;" target="_blank">' + childName + '</a></li>';
-            results.add(htmlLink);
+        String nameField = (String)UTIL_Describe.getNameField(recordIds[0].getSobjectType().getDescribe().getName());
+        for (Id recId : recordIds) {
+            String childName = (String) childRecords.get(recId).get(nameField);
+            results.add(String.format(HTML_TEXT_CHILD_RECORDS_FORMAT, new List<String>{recId, childName}));
         }
         results.add('</ul>');
         return String.join(results,'');
+    }
+
+    /*******************************************************************************************************
+    * @description Returns a Plain Text list of the child records preventing deletion.
+    * @param childRecords The queried child records stash for deletion
+    * @param recordIds The child records preventing deletion.
+    * @return String Plain text that contains a list of the child records.
+    ********************************************************************************************************/
+    @TestVisible
+    private String getPlainTextChildRecords(Map<Id, SObject> childRecords, List<Id> recordIds) {
+        List<String> results = new List<String>();
+        String nameField = (String) UTIL_Describe.getNameField(recordIds[0].getSobjectType().getDescribe().getName());
+        for (Id recId : recordIds) {
+            String childName = (String) childRecords.get(recId).get(nameField);
+            results.add(childName);
+        }
+        return String.join(results,', ');
+    }
+
+    /*******************************************************************************************************
+    * @description Returns the error message
+    * @param parentName The name of the record that is being deleted
+    * @param errorTypeWithChildRecords List of Plain or HTML Text, that contains a list of child records
+    * @return String The error message to show.
+    ********************************************************************************************************/
+    private String getErrorMessage(String parentName, List<String> errorTypeWithChildRecords) {
+        if (USER_UserService.isUserRunningLightning() || USER_UserService.isUserRunningMobile()) {
+            return String.format(Label.CascadeDeletionErrorLightning, new List<String>{parentName, String.join(errorTypeWithChildRecords, ',')});
+        }
+        else {
+            return String.format(Label.CascadeDeletionError, new List<String>{parentName, String.join(errorTypeWithChildRecords, '')});
+        }
     }
 
     /*******************************************************************************************************

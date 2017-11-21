@@ -298,6 +298,7 @@
         <members>USER_UserService_TEST</members>
         <members>UTIL_AbstractRollup_BATCH</members>
         <members>UTIL_CascadeDeleteLookups_TDTM</members>
+        <members>UTIL_CascadeDeleteLookups_TDTM_TEST</members>
         <members>UTIL_Currency</members>
         <members>UTIL_Currency_TEST</members>
         <members>UTIL_CustomSettingsFacade</members>
@@ -963,6 +964,7 @@
         <members>CONV_What_This_Tool_Does</members>
         <members>CampaignMemberStatusOmit</members>
         <members>CascadeDeletionError</members>
+        <members>CascadeDeletionErrorLightning</members>
         <members>ClosedWonOpportunities</members>
         <members>ConfirmDeleteAccount</members>
         <members>DeleteAccount</members>
