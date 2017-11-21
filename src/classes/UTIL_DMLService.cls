@@ -241,6 +241,7 @@ public with sharing class UTIL_DMLService {
     * @return Database.UpsertResult
     **********************************************************************************************************/
     public static Database.UpsertResult upsertRecord(sObject recordToUpsert) {
+        // AllowSave handling not added because Database.upsert(...) does not support Database.DMLOptions
         return Database.upsert(recordToUpsert);
     }
 
@@ -251,6 +252,7 @@ public with sharing class UTIL_DMLService {
     * @return List<Database.UpsertResult>
     **********************************************************************************************************/
     public static List<Database.UpsertResult> upsertRecords(List<sObject> recordsToUpsert) {
+        // AllowSave handling not added because Database.upsert(...) does not support Database.DMLOptions
         return Database.upsert(recordsToUpsert);
     }
 
@@ -262,6 +264,7 @@ public with sharing class UTIL_DMLService {
     * @return Database.UpsertResult
     **********************************************************************************************************/
     public static Database.UpsertResult upsertRecord(sObject recordToUpsert, Boolean allOrNone) {
+        // AllowSave handling not added because Database.upsert(...) does not support Database.DMLOptions
         return Database.upsert(recordToUpsert, allOrNone);
     }
 
@@ -273,6 +276,7 @@ public with sharing class UTIL_DMLService {
     * @return List<Database.UpsertResult>
     **********************************************************************************************************/
     public static List<Database.UpsertResult> upsertRecords(List<sObject> recordsToUpsert, Boolean allOrNone) {
+        // AllowSave handling not added because Database.upsert(...) does not support Database.DMLOptions
         return Database.upsert(recordsToUpsert, allOrNone);
     }
 

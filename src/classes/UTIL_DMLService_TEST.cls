@@ -608,10 +608,11 @@ public with sharing class UTIL_DMLService_TEST {
                 // If isAllowSave is false, the running Org has the Duplicate Rule's Action set to Block so end test.
                 if (!duplicateResult.isAllowSave()) return;
             }
+        } else {
+            // If the dupeAcct was successfully saved, the running Org may have Duplicate Rules deactivated so end test.
+            retrievedAccts = [SELECT Id, Name FROM Account];
+            if (retrievedAccts.size() == NUMBER_OF_RECORDS_TWO) return;
         }
-
-        retrievedAccts = [SELECT Id, Name FROM Account];
-        System.assertEquals(NUMBER_OF_RECORDS_ONE, retrievedAccts.size());
 
         errorSettings.Respect_Duplicate_Rule_Settings__c = true;
         UTIL_DMLService.updateRecord(errorSettings);
@@ -667,10 +668,11 @@ public with sharing class UTIL_DMLService_TEST {
                 // If isAllowSave is false, the running Org has the Duplicate Rule Action set to Block so end test.
                 if (!duplicateResult.isAllowSave()) return;
             }
+        } else {
+            // If the dupeContact was successfully saved, the running Org may have Duplicate Rules deactivated so end test.
+            retrievedContacts = [SELECT Id, FirstName FROM Contact];
+            if (retrievedContacts.size() == NUMBER_OF_RECORDS_TWO) return;
         }
-
-        retrievedContacts = [SELECT Id, FirstName FROM Contact];
-        System.assertEquals(NUMBER_OF_RECORDS_ONE, retrievedContacts.size());
 
         errorSettings.Respect_Duplicate_Rule_Settings__c = true;
         UTIL_DMLService.updateRecord(errorSettings);
