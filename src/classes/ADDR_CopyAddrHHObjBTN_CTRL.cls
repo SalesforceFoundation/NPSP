@@ -134,11 +134,11 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
                 h.npo02__MailingCity__c = c.MailingCity;
                 h.npo02__MailingCountry__c = c.MailingCountry; 
             
-                Database.Saveresult sr = Database.update(h, false);
+                Database.Saveresult sr = UTIL_DMLService.updateRecord(h, false);
                 
                 if (sr.isSuccess()){
                     resulttext = system.label.npo02.AddressCopySuccess;
-                    if (n != null) insert n;
+                    if (n != null) UTIL_DMLService.insertRecord(n);
                     redirectPage = true;                    
                 }
                 else{
@@ -192,8 +192,8 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
             }
     
             try{
-                update constoupdate;   
-                insert notestoinsert;
+                UTIL_DMLService.updateRecords(constoupdate);
+                UTIL_DMLService.insertRecords(notestoinsert);
                 redirectPage = true;            
             }
             

@@ -163,11 +163,11 @@ public class CON_ContactMerge {
             
         //set the account to null and mark private so that trigger won't reset the Account
         if (winningAccountId!=null && winnerAccountIsOneToOne){         
-            update winnerMakePrivate;           
+            UTIL_DMLService.updateRecord(winnerMakePrivate);
         }
         
         if(losersMakePrivate.size()>0){
-            update losersMakePrivate;
+            UTIL_DMLService.updateRecords(losersMakePrivate);
         }
 
         merge winnerMakePrivate losers;
@@ -176,7 +176,7 @@ public class CON_ContactMerge {
         if (winnerAccountIsOneToOne){
             winnerMakePrivate.AccountId = winningAccountId;
             winnerMakePrivate.npe01__Private__c = false;
-            update winnerMakePrivate;
+            UTIL_DMLService.updateRecord(winnerMakePrivate);
         }       
         
         UTIL_Debug.debug('loserAccountsToBeDeleted: ' + loserAccountsToBeDeleted);

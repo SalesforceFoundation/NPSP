@@ -338,6 +338,8 @@
         <members>UTIL_Debug</members>
         <members>UTIL_Describe</members>
         <members>UTIL_Describe_TEST</members>
+        <members>UTIL_DMLService</members>
+        <members>UTIL_DMLService_TEST</members>
         <members>UTIL_IScheduled</members>
         <members>UTIL_JobProgress_CTRL</members>
         <members>UTIL_JobProgress_CTRL_TEST</members>
@@ -783,6 +785,7 @@
         <members>Error_Settings__c.Enable_Debug__c</members>
         <members>Error_Settings__c.Error_Notifications_On__c</members>
         <members>Error_Settings__c.Error_Notifications_To__c</members>
+        <members>Error_Settings__c.Respect_Duplicate_Rule_Settings__c</members>
         <members>Error_Settings__c.Store_Errors_On__c</members>
         <members>Error__c.Context_Type__c</members>
         <members>Error__c.Datetime__c</members>
@@ -1616,6 +1619,7 @@
         <members>stgHelpRelReciprocalName</members>
         <members>stgHelpRelReciprocalNeutral</members>
         <members>stgHelpRelSyncFields</members>
+        <members>stgHelpRespectDuplicateRuleSettings</members>
         <members>stgHelpReviewErrorLog</members>
         <members>stgHelpRollupBatchSize</members>
         <members>stgHelpRollupExcludeAccountOppRT</members>
