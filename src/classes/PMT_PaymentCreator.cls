@@ -147,9 +147,9 @@ public class PMT_PaymentCreator {
             
             // James Melville Added to support multi-currency sfdc.  */
             // CurrencyIsoCode doesn't exist in non-multi-currency orgs
-            SObjectField OppCurrencyField = Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode');
-            SObjectField PaymentCurrencyField = Schema.sObjectType.npe01__OppPayment__c.fields.getMap().get('CurrencyIsoCode');    
-            SObjectField OppRecordTypeId = Schema.sObjectType.Opportunity.fields.getMap().get('RecordTypeId');
+            SObjectField oppCurrencyField = Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode');
+            SObjectField paymentCurrencyField = Schema.sObjectType.npe01__OppPayment__c.fields.getMap().get('CurrencyIsoCode');    
+            SObjectField oppRecordTypeId = Schema.sObjectType.Opportunity.fields.getMap().get('RecordTypeId');
 
             if (TDTM_Runnable.Action.BeforeUpdate == ta) {
                 if (!String.isEmpty(ContactSettings.Payments_Auto_Close_Stage_Name__c)) {
@@ -168,7 +168,7 @@ public class PMT_PaymentCreator {
             if (ta == TDTM_Runnable.Action.AfterUpdate){
                 String soqlStatement = '';
                 soqlStatement += 'select id, CloseDate, Amount, isClosed, isWon, npe01__Do_Not_Automatically_Create_Payment__c, Type, ';
-                if (OppRecordTypeId != null)
+                if (oppRecordTypeId != null)
                     soqlStatement += 'RecordTypeId, ';
                 for (string s : paymentMappings.keyset()) {
                     npe01__Payment_Field_Mapping_Settings__c pfms = paymentMappings.get(s);
@@ -176,7 +176,7 @@ public class PMT_PaymentCreator {
                         soqlStatement += pfms.npe01__Opportunity_Field__c + ', ';
                     }   
                 }
-                if (OppCurrencyField!=null)
+                if (oppCurrencyField!=null)
                     soqlStatement += 'CurrencyIsoCode, ';
                 soqlStatement += 'npe01__payments_made__c, ';
                 string soqlSub = '(SELECT id, npe01__Paid__c, npe01__Payment_Amount__c, npe01__Payment_Date__c, npe01__Written_Off__c, ';
@@ -207,8 +207,8 @@ public class PMT_PaymentCreator {
                                 );
                                 
                                 //in multicurrency SFDC set the payment currency field to equal to the opp currency
-                                if(PaymentCurrencyField != null && OppCurrencyField != null)
-                                    op.put(PaymentCurrencyField, thisOpp.get(OppCurrencyField));
+                                if(paymentCurrencyField != null && oppCurrencyField != null)
+                                    op.put(paymentCurrencyField, thisOpp.get(oppCurrencyField));
                                 
                                 op.npe01__payment_amount__c = thisOpp.amount;
                             
@@ -320,31 +320,13 @@ public class PMT_PaymentCreator {
                     
                     // we may need to add payments if the open opp amount has been changed from $0
                     else if (
-                            thisOpp.Amount != 0 && thisOpp.Amount != null &&
+                            thisOpp.Amount != null && thisOpp.Amount != 0 && 
                             (thisOpp.IsClosed == false || thisOpp.IsWon == true) &&
-                            (oldOpp.Amount == 0 || oldOpp.Amount == null ) && 
+                            (oldOpp.Amount == 0 || oldOpp.Amount == null) && 
                             isNoPaymentForOpp(thisOpp) == false
                         ) {
-                        npe01__oppPayment__c opportunityPayment = new npe01__oppPayment__c(
-                            npe01__Opportunity__c = thisOpp.Id,
-                            npe01__Paid__c = thisOpp.IsClosed,
-                            npe01__Scheduled_Date__c = thisOpp.CloseDate,
-                            npe01__Payment_Amount__c = thisOpp.Amount
-                        );                                
-                                
-                        //in multicurrency SFDC set the payment currency field to equal to the opp currency
-                        if(PaymentCurrencyField != null && OppCurrencyField != null)
-                            opportunityPayment.put(PaymentCurrencyField, thisOpp.get(OppCurrencyField));
-                            
-                        if (paymentMappings.size() > 0){
-                            for (string s : paymentMappings.keyset()){
-                                npe01__Payment_Field_Mapping_Settings__c pfms = paymentMappings.get(s);
-                                string x = pfms.npe01__Opportunity_Field__c;
-                                if (thisOpp.get(x) != null)
-                                    opportunityPayment.put(pfms.npe01__Payment_Field__c, thisOpp.get(x));
-                            }
-                        }   
-                        paymentsToInsert.add(opportunityPayment);                                              
+                        
+                        paymentsToInsert.add(createOpportunityPayment(thisOpp, paymentCurrencyField, oppCurrencyField));                                              
                     }
                 }
                 // update or delete payments     
@@ -354,6 +336,38 @@ public class PMT_PaymentCreator {
                     dmlWrapper.objectsToInsert.addAll((list<SObject>)paymentsToInsert);
             }
         }
+    }
+
+    /**
+     * @description Creates a Payment for the input Opportunity
+     * @param newOpportunity the new value of the updated Opportunity
+     * @param paymentCurrencyField The Payment Object Currency Field
+     * @param oppCurrencyField The Opportunity Object Currency Field
+     * @return npe01__OppPayment__c The Opportunity Payment created
+     */
+    private npe01__OppPayment__c createOpportunityPayment(Opportunity newOpportunity, SObjectField paymentCurrencyField, SObjectField oppCurrencyField) {
+        npe01__OppPayment__c opportunityPayment = new npe01__OppPayment__c(
+            npe01__Opportunity__c = newOpportunity.Id,
+            npe01__Paid__c = newOpportunity.IsClosed,
+            npe01__Scheduled_Date__c = newOpportunity.CloseDate,
+            npe01__Payment_Amount__c = newOpportunity.Amount
+        );                                
+                
+        //in multicurrency SFDC set the payment currency field to equal to the opp currency
+        if (paymentCurrencyField != null && oppCurrencyField != null) {
+            opportunityPayment.put(paymentCurrencyField, newOpportunity.get(oppCurrencyField));
+        }
+        
+        for (npe01__Payment_Field_Mapping_Settings__c paymentMapping : paymentMappings.values()) {
+            if (newOpportunity.get(paymentMapping.npe01__Opportunity_Field__c) != null) {
+                opportunityPayment.put(
+                    paymentMapping.npe01__Payment_Field__c, 
+                    newOpportunity.get(paymentMapping.npe01__Opportunity_Field__c)
+                );
+            }
+        }
+
+        return opportunityPayment;
     }
 
     /**

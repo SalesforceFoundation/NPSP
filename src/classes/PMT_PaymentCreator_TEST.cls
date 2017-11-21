@@ -178,50 +178,15 @@ private with sharing class PMT_PaymentCreator_TEST {
     operation:
         Update a Closed Won Opportunity Amount from null to a value
     verify:
-        An unpaid payment should be created
+        A paid payment should be created
     **********************************************************************************************************/            
     static testMethod void testClosedWonOpportunity_UpdateAmountFromNullToValue() {
-        testOpportunity_UpdateAmountFromNullToValue(true);
-    }
-
-    /*********************************************************************************************************
-    * @description
-    operation:
-        Update an Open Opportunity Amount from null to a value
-    verify:
-        An unpaid payment should be created
-    **********************************************************************************************************/            
-    static testMethod void testOpenOpportunity_UpdateAmountFromNullToValue() {
-        testOpportunity_UpdateAmountFromNullToValue(false);
-    }
-
-    /*********************************************************************************************************
-    * @description Test the update of an Opportunity Amount from null to a value
-    * @param isOpportunityClosed Should the test opportunity be closed or open
-    * @return void
-    */
-    private static void testOpportunity_UpdateAmountFromNullToValue(Boolean isOpportunityClosed) {
-        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-            new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true)
-        );
-        
-        // create test data
-        Account testAccount = new Account(
-            Name = 'Test_Account'
-        );
-        insert testAccount;
-        Opportunity testOpportunity = new Opportunity(
-            Name = 'TestOpp',
-            AccountId = testAccount.Id,
-            CloseDate = Date.today(), 
+        Opportunity testOpportunity = createTestOpportunity(new Opportunity(
             Amount = null,
-            StageName = isOpportunityClosed ? UTIL_UnitTestData_TEST.getClosedWonStage() : UTIL_UnitTestData_TEST.getOpenStage()
-        );
-        insert testOpportunity;
-
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
+        ));
         System.assertEquals(0, [SELECT Id FROM npe01__OppPayment__c WHERE npe01__Opportunity__c = :testOpportunity.Id].size());
         
-        //Run the process to test, by updating the Amount to a value
         Test.startTest();
         testOpportunity.Amount = 10;
         update testOpportunity;
@@ -232,12 +197,104 @@ private with sharing class PMT_PaymentCreator_TEST {
             FROM npe01__OppPayment__c 
             WHERE npe01__Opportunity__c = :testOpportunity.Id
         ];
+
         System.assertEquals(1, createdPayments.size(), 'new payment should be created.');
-        
-        //Confirm the new Payment created is the one we expect
-        System.assertEquals(isOpportunityClosed, createdPayments[0].npe01__Paid__c);
         System.assertEquals(testOpportunity.CloseDate, createdPayments[0].npe01__Scheduled_Date__c);
         System.assertEquals(testOpportunity.Amount, createdPayments[0].npe01__Payment_Amount__c);
+        System.assertEquals(true, createdPayments[0].npe01__Paid__c);
+    }
+
+    /*********************************************************************************************************
+    * @description
+    operation:
+        Update a Closed Won Opportunity Amount from zero to a value
+    verify:
+        A paid payment should be created
+    **********************************************************************************************************/            
+    static testMethod void testClosedWonOpportunity_UpdateAmountFromZeroToValue() {
+        Opportunity testOpportunity = createTestOpportunity(new Opportunity(
+            Amount = 0,
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
+        ));
+        System.assertEquals(0, [SELECT Id FROM npe01__OppPayment__c WHERE npe01__Opportunity__c = :testOpportunity.Id].size());
+        
+        Test.startTest();
+        testOpportunity.Amount = 10;
+        update testOpportunity;
+        Test.stopTest();
+
+        List<npe01__OppPayment__c> createdPayments = [
+            SELECT Id, npe01__Paid__c, npe01__Scheduled_Date__c, npe01__Payment_Amount__c 
+            FROM npe01__OppPayment__c 
+            WHERE npe01__Opportunity__c = :testOpportunity.Id
+        ];
+
+        System.assertEquals(1, createdPayments.size(), 'new payment should be created.');
+        System.assertEquals(testOpportunity.CloseDate, createdPayments[0].npe01__Scheduled_Date__c);
+        System.assertEquals(testOpportunity.Amount, createdPayments[0].npe01__Payment_Amount__c);
+        System.assertEquals(true, createdPayments[0].npe01__Paid__c);
+    }
+
+    /*********************************************************************************************************
+    * @description
+    operation:
+        Update an Open Opportunity Amount from null to a value
+    verify:
+        An unpaid payment should be created
+    **********************************************************************************************************/            
+    static testMethod void testOpenOpportunity_UpdateAmountFromNullToValue() {
+        Opportunity testOpportunity = createTestOpportunity(new Opportunity(
+            Amount = null,
+            StageName = UTIL_UnitTestData_TEST.getOpenStage()
+        ));
+        System.assertEquals(0, [SELECT Id FROM npe01__OppPayment__c WHERE npe01__Opportunity__c = :testOpportunity.Id].size());
+        
+        Test.startTest();
+        testOpportunity.Amount = 10;
+        update testOpportunity;
+        Test.stopTest();
+
+        List<npe01__OppPayment__c> createdPayments = [
+            SELECT Id, npe01__Paid__c, npe01__Scheduled_Date__c, npe01__Payment_Amount__c 
+            FROM npe01__OppPayment__c 
+            WHERE npe01__Opportunity__c = :testOpportunity.Id
+        ];
+        
+        System.assertEquals(1, createdPayments.size(), 'new payment should be created.');
+        System.assertEquals(testOpportunity.CloseDate, createdPayments[0].npe01__Scheduled_Date__c);
+        System.assertEquals(testOpportunity.Amount, createdPayments[0].npe01__Payment_Amount__c);
+        System.assertEquals(false, createdPayments[0].npe01__Paid__c);
+    }
+
+    /*********************************************************************************************************
+    * @description
+    operation:
+        Update an Open Opportunity Amount from zero to a value
+    verify:
+        An unpaid payment should be created
+    **********************************************************************************************************/            
+    static testMethod void testOpenOpportunity_UpdateAmountFromZeroToValue() {
+        Opportunity testOpportunity = createTestOpportunity(new Opportunity(
+            Amount = 0,
+            StageName = UTIL_UnitTestData_TEST.getOpenStage()
+        ));
+        System.assertEquals(0, [SELECT Id FROM npe01__OppPayment__c WHERE npe01__Opportunity__c = :testOpportunity.Id].size());
+        
+        Test.startTest();
+        testOpportunity.Amount = 10;
+        update testOpportunity;
+        Test.stopTest();
+
+        List<npe01__OppPayment__c> createdPayments = [
+            SELECT Id, npe01__Paid__c, npe01__Scheduled_Date__c, npe01__Payment_Amount__c 
+            FROM npe01__OppPayment__c 
+            WHERE npe01__Opportunity__c = :testOpportunity.Id
+        ];
+        
+        System.assertEquals(1, createdPayments.size(), 'new payment should be created.');
+        System.assertEquals(testOpportunity.CloseDate, createdPayments[0].npe01__Scheduled_Date__c);
+        System.assertEquals(testOpportunity.Amount, createdPayments[0].npe01__Payment_Amount__c);
+        System.assertEquals(false, createdPayments[0].npe01__Paid__c);
     }
 
     /*********************************************************************************************************
@@ -248,27 +305,13 @@ private with sharing class PMT_PaymentCreator_TEST {
         No payment should be created because the opportunity is closed lost.
     **********************************************************************************************************/            
     static testMethod void testClosedLostOpportunity_UpdateAmountFromNullToValue() {
-        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-            new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true)
-        );
-        
-        // create test data
-        Account testAccount = new Account(
-            Name = 'Test_Account'
-        );
-        insert testAccount;
-        Opportunity testOpportunity = new Opportunity(
-            Name = 'TestOpp',
-            AccountId = testAccount.Id,
-            CloseDate = Date.today(),
+        Opportunity testOpportunity = createTestOpportunity(new Opportunity(
             Amount = null,
             StageName = UTIL_UnitTestData_TEST.getClosedLostStage()
-        );
-        insert testOpportunity;
+        ));
 
         System.assertEquals(0, [SELECT Id FROM npe01__OppPayment__c WHERE npe01__Opportunity__c = :testOpportunity.Id].size());
         
-        //Run the process to test, by updating the Amount to a value
         Test.startTest();
         testOpportunity.Amount = 10;
         update testOpportunity;
@@ -280,6 +323,58 @@ private with sharing class PMT_PaymentCreator_TEST {
             WHERE npe01__Opportunity__c = :testOpportunity.Id
         ];
         System.assertEquals(0, createdPayments.size(), 'No payment should be created because the opportunity is Closed Lost');
+    }
+
+    /*********************************************************************************************************
+    * @description
+    operation:
+        Update a Closed Lost Opportunity Amount from zero to a value
+    verify:
+        No payment should be created because the opportunity is closed lost.
+    **********************************************************************************************************/            
+    static testMethod void testClosedLostOpportunity_UpdateAmountFromZeroToValue() {
+        Opportunity testOpportunity = createTestOpportunity(new Opportunity(
+            Amount = 0,
+            StageName = UTIL_UnitTestData_TEST.getClosedLostStage()
+        ));
+
+        System.assertEquals(0, [SELECT Id FROM npe01__OppPayment__c WHERE npe01__Opportunity__c = :testOpportunity.Id].size());
+        
+        Test.startTest();
+        testOpportunity.Amount = 10;
+        update testOpportunity;
+        Test.stopTest();
+
+        List<npe01__OppPayment__c> createdPayments = [
+            SELECT Id, npe01__Paid__c, npe01__Scheduled_Date__c, npe01__Payment_Amount__c 
+            FROM npe01__OppPayment__c 
+            WHERE npe01__Opportunity__c = :testOpportunity.Id
+        ];
+        System.assertEquals(0, createdPayments.size(), 'No payment should be created because the opportunity is Closed Lost');
+    }
+
+    /*********************************************************************************************************
+    * @description Creates a Test Opportunity
+    * @param testOpportunity Initial value (Amount and Stage) of the test opportunity
+    * @return Opportunity The Test Opportunity created.
+    */
+    private static Opportunity createTestOpportunity(Opportunity testOpportunity) {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true)
+        );
+        
+        // create test data
+        Account testAccount = new Account(
+            Name = 'Test_Account'
+        );
+        insert testAccount;
+
+        testOpportunity.Name = 'TestOpportunity';
+        testOpportunity.AccountId = testAccount.Id;
+        testOpportunity.CloseDate = Date.today();
+        insert testOpportunity;
+
+        return testOpportunity;
     }
 
     /*********************************************************************************************************
