@@ -222,7 +222,7 @@ public with sharing class BDI_ContactService {
         }
 
         if (listConUpsert.size() > 0) {
-            List<Database.UpsertResult> listUR = database.upsert(listConUpsert, false);
+            List<Database.UpsertResult> listUR = UTIL_DMLService.upsertRecords(listConUpsert, false);
             for (integer i = 0; i < listUR.size(); i++) {
                 Database.UpsertResult ur = listUR[i];
                 if (!ur.isSuccess()) {

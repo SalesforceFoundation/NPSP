@@ -98,7 +98,7 @@ public with sharing class BDI_BatchOverride_CTRL {
     public PageReference save() {
         try {
             BDI_DataImportService.validateSettings(diBatch);
-            upsert diBatch;
+            UTIL_DMLService.upsertRecord(diBatch);
             redirect = true;
         } catch (Exception ex) {
             ApexPages.addMessages(ex);
