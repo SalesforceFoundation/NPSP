@@ -155,6 +155,7 @@ global with sharing class BDI_DataImportService {
         // defer all other validation to the actual settings
         validateSettings(diSettingsFromDiBatch(diBatch));
     }
+
     /*******************************************************************************************************
     * @description validates the data import settings.  Used by UI as well as at runtime by the batch.
     * throws an exception if there are any invalid settings.
@@ -830,7 +831,6 @@ global with sharing class BDI_DataImportService {
         List<DataImport__c> listDIUpsert = new List<DataImport__c>();
 
         // create/update our A1's
-        Map<String, String> mapDIFieldToA1Field = mapFieldsForDIObject('Account1', 'Account', listStrDataImportFields);
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
             if (di.Status__c == label.bdiFailed)
@@ -894,7 +894,6 @@ global with sharing class BDI_DataImportService {
         }
 
         // create/update our A2's
-        Map<String, String> mapDIFieldToA2Field = mapFieldsForDIObject('Account2', 'Account', listStrDataImportFields);
         listAccUpsert.clear();
         listDIUpsert.clear();
         setDIKeyUpsert.clear();
@@ -1121,18 +1120,16 @@ global with sharing class BDI_DataImportService {
         }
 
 
-        String strSoql = 'Select Id, ';
-        if (isCustomIDInAccountMatchRules)
-            strSoql += diSettings.Account_Custom_Unique_ID__c + ', ';
-        strSoql += 'Name from Account where ';
+        String strSoql = getSoqlSelectForAccount();
+        strSoql += ' WHERE ';
         if (setSFId.size() > 0) {
-            strSoql += ' (Id in :setSFId) or ';
+            strSoql += ' (Id IN :setSFId) OR ';
         }
-        strSoql += 'Name in :setName';
+        strSoql += 'Name IN :setName';
         if (isCustomIDInAccountMatchRules && isCustomIdInAccountDatatypeString)
-            strSoql += ' or ' + diSettings.Account_Custom_Unique_ID__c + ' in :setCustomIDString';
+            strSoql += ' OR ' + diSettings.Account_Custom_Unique_ID__c + ' IN :setCustomIDString';
         else if (isCustomIDInAccountMatchRules && !isCustomIdInAccountDatatypeString)
-            strSoql += ' or ' + diSettings.Account_Custom_Unique_ID__c + ' in :setCustomIDNumber';
+            strSoql += ' OR ' + diSettings.Account_Custom_Unique_ID__c + ' IN :setCustomIDNumber';
 
         BDI_PerfLogger.PerfLog pl = perfLogger.newPerfLog('SOQL existing Accounts', BDI_PerfLogger.QUERY);
         List<Account> listAcc = database.query(strSoql);
@@ -1175,6 +1172,43 @@ global with sharing class BDI_DataImportService {
             for (String diKey : listDiKey)
                 mapDIKeyToAccount.put(diKey, acc);
         }
+    }
+
+    /*******************************************************************************************************
+    * @description provides the soql String for selecting all necessary fields from Account.
+    * @return String the soql ('SELECT ... FROM Account')
+    */
+    private String getSoqlSelectForAccount() {
+        Set<String> setAccountFields = new Set<String> {'Id', 'Name'};
+            setAccountFields.addAll(mapDIFieldToA1Field.values());
+            setAccountFields.addAll(mapDIFieldToA2Field.values());
+        return 'SELECT ' + String.join(new List<String>(setAccountFields), ',') + ' FROM Account ';
+    }
+
+    /*******************************************************************************************************
+    * @description map of DI Fieldnames for Account1 to Account fieldnames
+    */
+    private Map<String, String> mapDIFieldToA1Field {
+        get {
+            if (mapDIFieldToA1Field == null) {
+                mapDIFieldToA1Field = BDI_DataImportService.mapFieldsForDIObject('Account1', 'Account', BDI_DataImportService.listStrDataImportFields);
+            }
+            return mapDIFieldToA1Field;
+        }
+        set;
+    }
+
+    /*******************************************************************************************************
+    * @description map of DI Fieldnames for Account2 to Account fieldnames
+    */
+    private Map<String, String> mapDIFieldToA2Field {
+        get {
+            if (mapDIFieldToA2Field == null) {
+                mapDIFieldToA2Field = BDI_DataImportService.mapFieldsForDIObject('Account2', 'Account', BDI_DataImportService.listStrDataImportFields);
+            }
+            return mapDIFieldToA2Field;
+        }
+        set;
     }
 
     //********************************************* ADDRESSES ************************************************
