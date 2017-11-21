@@ -176,10 +176,10 @@ public with sharing class BDI_DataImport_CTRL {
 
             // update the correct object (batch vs custom settings)
             if (isTrueBatch) {
-                upsert diBatch;
+                UTIL_DMLService.upsertRecord(diBatch);
             } else {
                 diSettingsT.Id = diSettings.Id;
-                upsert diSettingsT;
+                UTIL_DMLService.upsertRecord(diSettingsT);
                 diSettings = diSettingsT;
             }
             isEditMode = false;
