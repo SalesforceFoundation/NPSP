@@ -322,7 +322,7 @@ public class PMT_PaymentCreator {
                     else if (
                             thisOpp.Amount != null && thisOpp.Amount != 0 && 
                             (thisOpp.IsClosed == false || thisOpp.IsWon == true) &&
-                            (oldOpp.Amount == 0 || oldOpp.Amount == null) && 
+                            (oldOpp.Amount == null || oldOpp.Amount == 0) && 
                             isNoPaymentForOpp(thisOpp) == false
                         ) {
                         
