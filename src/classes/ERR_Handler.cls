@@ -172,14 +172,14 @@ public class ERR_Handler {
     */
     public static void processErrors(List<Error__c> errorRecords, String context) {
     	
-    	if(errorRecords != null && errorRecords.size() > 0) {
-	    	if(ApexPages.currentPage() != null) {
+        if (errorRecords != null && errorRecords.size() > 0) {
+            if (ApexPages.currentPage() != null) {
 	            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, errorRecords[0].Full_Message__c));
 	    	}
 	                
-	    	if(UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
-	    	   UTIL_Debug.debug('**** Storing errorRecords: ' + errorRecords);
-	    	   Database.insert(errorRecords, false);
+            if (UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
+                UTIL_Debug.debug('**** Storing errorRecords: ' + errorRecords);
+                Database.insert(errorRecords, false);
 	    	}
 	    	//ERR_Notifier takes care of checking the settings itself.
 	        ERR_Notifier.sendErrorNotifications(context);

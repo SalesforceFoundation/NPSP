@@ -561,6 +561,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         es.Error_Notifications_To__c = ERR_Notifier.NotificationOptions.sysAdmins;
         es.Disable_Error_Handling__c = false;
         es.Enable_Debug__c = false;
+        es.Respect_Duplicate_Rule_Settings__c = false;
     }
     
     private static void configBDESettings(Batch_Data_Entry_Settings__c bds) {
@@ -733,6 +734,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         errorSettings.Error_Notifications_On__c = mySettings.Error_Notifications_On__c;   
         errorSettings.Error_Notifications_To__c = mySettings.Error_Notifications_To__c;
         errorSettings.Store_Errors_On__c = mySettings.Store_Errors_On__c;
+        errorSettings.Respect_Duplicate_Rule_Settings__c = mySettings.Respect_Duplicate_Rule_Settings__c;
         orgErrorSettings = errorSettings;
         return errorSettings;  
     }
