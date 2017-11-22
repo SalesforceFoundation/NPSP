@@ -176,33 +176,6 @@
         </valueSet>
     </fields>
     <fields>
-        <fullName>Result_Field__c</fullName>
-        <description>In cases where a roll-up returns a &quot;Single Result&quot;, such as the Max CloseDate or Maximum Donation Amount, or even a specific OpportunityId - this represents the field from the Detail object to use to retrieve that value from. It will generally match the field type of the Summary Field (i.e., where the value will be stored)</description>
-        <externalId>false</externalId>
-        <fieldManageability>DeveloperControlled</fieldManageability>
-        <label>Result Field</label>
-        <metadataRelationshipControllingField>Rollup__mdt.Result_Object__c</metadataRelationshipControllingField>
-        <referenceTo>FieldDefinition</referenceTo>
-        <relationshipLabel>Rollups3</relationshipLabel>
-        <relationshipName>Rollups3</relationshipName>
-        <required>false</required>
-        <type>MetadataRelationship</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Result_Object__c</fullName>
-        <description>In cases where a roll-up returns a &quot;Single Result&quot;, such as the Max CloseDate or Maximum Donation Amount, or even a specific OpportunityId - this represents the field from the Detail object to use to retrieve that value from. It will generally match the field type of the Summary Field (i.e., where the value will be stored)</description>
-        <externalId>false</externalId>
-        <fieldManageability>DeveloperControlled</fieldManageability>
-        <label>Result Object</label>
-        <referenceTo>EntityDefinition</referenceTo>
-        <relationshipLabel>Rollups5</relationshipLabel>
-        <relationshipName>Rollups5</relationshipName>
-        <required>false</required>
-        <type>MetadataRelationship</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
         <fullName>Summary_Field__c</fullName>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
@@ -245,6 +218,36 @@
         <inlineHelpText>When checked, the engine will use the OpportunityContactRole.Role field value in the rollup logic</inlineHelpText>
         <label>Use OCR or PSC for Attribution Object</label>
         <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Yearly_Operation_Type__c</fullName>
+        <description>Related to the Integer__c field. The value in that field represents the number of Years to sum or the number of days back to sum amounts for.</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <label>Yearly Operation Type</label>
+        <required>false</required>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>All_Time</fullName>
+                    <default>true</default>
+                    <label>All Time</label>
+                </value>
+                <value>
+                    <fullName>Years_Ago</fullName>
+                    <default>false</default>
+                    <label>Years Ago</label>
+                </value>
+                <value>
+                    <fullName>Days_Back</fullName>
+                    <default>false</default>
+                    <label>Days Back</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
     </fields>
     <label>Rollup</label>
     <pluralLabel>Rollups</pluralLabel>

@@ -30,34 +30,29 @@
 /**
 * @author Salesforce.org
 * @date 2017
-* @group Selectors
-* @description Unit Test for the Rollup Results selector class
+* @group Customizable Rollups Operations Services
+* @description Unit Test for the Rollup Operation Services Classes
 */
 @isTest
-private class RLLP_Query_SEL_TEST {
+private class CRLP_Operation_TEST {
 
     /**
-     * @description Test that the Results Query Builder returns valid SOQL statements for the Opportunity and Account
-     * objects.
+     * @description Test the static utility methods in the CRLP_Operation class
      */
-    static testMethod void test_ResultsQueryBuilder() {
-        // Create mock instances of the CMT objects to use for the tests
-        RLLP_Rollup_SEL_TEST.mockRollupCMTValues();
-
-        Test.startTest();
-
-        String soql = RLLP_Query_SEL.getResultsQuery(Opportunity.SObjectType);
-        List<Opportunity> opps = database.query(soql);
-        System.AssertEquals(0, opps.size(), 'There should be no results, but the query should work');
-
-        soql = RLLP_Query_SEL.getResultsQuery(Account.SObjectType);
-        List<Account> accts = database.query(soql);
-        System.AssertEquals(0, accts.size(), 'There should be no results, but the query should work');
-
-        soql = RLLP_Query_SEL.getDetailsQuery(Opportunity.SObjectType, new List<SObjectType>{
-                npe01__OppPayment__c.SObjectType, Allocation__c.SObjectType, OpportunityContactRole.SObjectType});
-        List<Opportunity> opps2 = database.query(soql);
-        System.AssertEquals(0, opps2.size(), 'There should be no results, but the query should work');
+    static testMethod void test_static_methods() {
+        System.assertNotEquals(0, CRLP_Operation.getRollupOperationTypes().size(),
+            'There should be whole bunch of Rollup Operations');
+        System.assertEquals(1, CRLP_Operation.getAvailableYearlyOperationTypes(CRLP_Operation.RollupType.BEST_YEAR.name()).size(),
+            'Only AllTime should be valid for a BestYear operation');
+        System.assertEquals(3, CRLP_Operation.getAvailableYearlyOperationTypes(CRLP_Operation.RollupType.SUM.name()).size(),
+                'All YearlyOperation types should be valid for a Sum operation');
+        System.assertEquals(1, CRLP_Operation.getAvailableFieldTypesForDetailField(CRLP_Operation.RollupType.SUM).size(),
+                'The Sum Operation Type is only valid for Double type fields');
+        System.assertEquals(1, CRLP_Operation.getAvailableFieldTypesForDetailField(CRLP_Operation.RollupType.YEARS_DONATED).size(),
+                'The YearsDonated Operation Type is only valid for Date type fields');
+        System.assertEquals(1, CRLP_Operation.getAvailableFieldTypesForDetailField(CRLP_Operation.RollupType.YEARS_DONATED).size(),
+                'The YearsDonated Operation Type is only valid for Date type fields');
+        System.assertEquals(CRLP_Operation.RollupType.SUM, CRLP_Operation.getRollupTypeFromString('Sum'));
     }
 
 }

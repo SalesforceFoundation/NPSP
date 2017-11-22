@@ -72,7 +72,7 @@ public class CMT_UnitTestData_TEST {
                 '"Id":"{1}","MasterLabel":"{2}","DeveloperName":"{3}",';
 
         String record = String.format(templateString, new List<String>{
-                cmtType, recordId, labelName, labelName.replace(' ', '_')
+                fixNamespace(cmtType), recordId, labelName, labelName.replace(' ', '_')
         });
 
         // Append each field
@@ -85,8 +85,7 @@ public class CMT_UnitTestData_TEST {
         // Add the opening and closing curly brackets
         record = '{' + record.removeEnd(',').replaceAll('~!', '{').replaceAll('!~', '}') + '}';
 
-        // Fix all field references for the npsp namespace.
-        return UTIL_Namespace.StrAllNSPrefix(record);
+        return record;
     }
 
     /**
@@ -141,6 +140,7 @@ public class CMT_UnitTestData_TEST {
         public String getFieldJSON() {
             String fldTemplate;
             String theValue;
+            String fixedFieldName = fixNamespace(this.fldName);
 
             // Handle the basic field conversion
             if (this.fieldType == CMTFieldType.FldText || this.fieldType == CMTFieldType.FldEntity || this.fieldType == CMTFieldType.FldField) {
@@ -154,13 +154,16 @@ public class CMT_UnitTestData_TEST {
                 theValue = ((Double)fldValue).format();
             }
             String fieldJSON = String.format(fldTemplate, new List<String>{
-                    this.fldName, theValue
+                fixedFieldName, theValue
             });
 
             // If there is a related object (ex: Opportunity.IsWon), then the 'field JSON' will need to include
             // the compound field data as well
             if ( this.fieldType == CMTFieldType.FldEntity || this.fieldType == CMTFieldType.FldField) {
                 String entityType = (this.fieldType == CMTFieldType.FldEntity ? 'EntityDefinition' : 'FieldDefinition');
+
+                String fixedObjectName = fixNamespace(this.relatedObject);
+                fixedFieldName = fixedFieldName.replace('__c', '__r');
 
                 // List<String>{ dummyId, fldName, objName, foreignFldName, entityType } // '000000','Field__r','Opportunity','IsWon'
                 String compountFieldTemplate = '"{1}":~!"attributes":' +
@@ -170,14 +173,32 @@ public class CMT_UnitTestData_TEST {
                         '"QualifiedApiName":"{3}"' +
                         '!~,';
                 String dummyId = '000000000000000AAA';
-                fldName = this.fldName.replace('__c', '__r');
                 fieldJSON += ',' + String.format(compountFieldTemplate, new List<String>{
-                        dummyId, this.fldName, this.relatedObject, (String)this.fldValue, entityType });
+                        dummyId, fixedFieldName, fixedObjectName, (String)this.fldValue, entityType });
             }
 
             return fieldJSON.removeEnd(',');
         }
     }
+
+    /**
+     * @description Prefixes the package namespace to custom fields/objects only if they do not already have
+     * a namespace. Needed because making a single call to StrAllNSPrefix() could not handle the many variations
+     * of namespace options that might exist within a single large string.
+     * @param val
+     * @return namespace+val
+     */
+    private static String fixNamespace(String val) {
+        List<String> parts = val.split('__');
+        if (parts.size() == 2) {
+            return UTIL_Namespace.StrAllNSPrefix(val);
+        }
+        return val;
+    }
+
+    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // FILTER_GROUP__MDT CREATION METHODS
+    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     /**
      * @description Helper to create a JSON string for a single Filter_Group__mdt record
@@ -193,6 +214,10 @@ public class CMT_UnitTestData_TEST {
                 new List<CMT_Field>{new CMT_Field('Is_Deleted__c', CMTFieldType.FldBoolean, False)}
             );
     }
+
+    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // FILTER_RULE__MDT CREATION METHODS
+    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     /**
      * @description Helper to create a JSON string for a single Filter_Rule__mdt record
@@ -223,11 +248,198 @@ public class CMT_UnitTestData_TEST {
                 new List<CMT_Field>{
                     new CMT_Field('Filter_Group__c', CMTFieldType.FldText, filterGroupId),
                     new CMT_Field('Object__c', CMTFieldType.FldEntity, objectName),
-                    new CMT_Field('Field__c', CMTFieldType.FldField, objectName + '.' + fieldName),
+                    new CMT_Field('Field__c', CMTFieldType.FldField, objectName + '.' + fixNamespace(fieldName)),
                     new CMT_Field('Operator__c', CMTFieldType.FldText, operator),
                     new CMT_Field('Constant__c', CMTFieldType.FldText, constant),
                     new CMT_Field('Field_OpportunityContactRole_Role__c', CMTFieldType.FldBoolean, ocrBasedRule)
                 }
             );
+    }
+
+    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // ROLLUP__MDT CREATION METHODS
+    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    /**
+     * @description Enum of the supported rollup types to simplify creating the test records. By using an Enum
+     * such as OppToAccount, the call to create the Rollup__mdt record doesn't need to pass the Summary and
+     * Detail object names since they're automatically set based on the RollupRecordType enum.
+     */
+    public Enum RollupRecordType {
+        OppToAcct, OppToContact, PmtToAcct, PmtToContact, GAU
+    }
+    /**
+     * @description Convert the Enum to a Summary Object name
+     */
+    private static final Map<RollupRecordType, String> getSummaryObject = new Map<CMT_UnitTestData_TEST.RollupRecordType, String>{
+            RollupRecordType.OppToAcct => 'Account',
+            RollupRecordType.OppToContact => 'Contact',
+            RollupRecordType.PmtToAcct => 'Account',
+            RollupRecordType.PmtToContact => 'Contact',
+            RollupRecordType.GAU => 'General_Accounting_Unit__c'
+    };
+    /**
+     * @description Convert the Enum to a Detail Object name
+     */
+    private static final Map<RollupRecordType, String> getDetailObject = new Map<CMT_UnitTestData_TEST.RollupRecordType, String>{
+            RollupRecordType.OppToAcct => 'Opportunity',
+            RollupRecordType.OppToContact => 'Opportunity',
+            RollupRecordType.PmtToAcct => 'npe01__OppPayment__c',
+            RollupRecordType.PmtToContact => 'npe01__OppPayment__c',
+            RollupRecordType.GAU => 'Allocation__c'
+    };
+
+    /**
+     * @description Create a Rollup__mdt record. Simplest method passing only the necessary information
+     * @param recordLabel
+     * @param filterGroupId
+     * @param rollupType
+     * @param summField
+     * @param operation
+     * @param detailField
+     * @return JSON String for a Rollup__mdt record
+     */
+    public static String createRollupRecord(String recordLabel, String filterGroupId, RollupRecordType rollupType,
+            String summField, CRLP_Operation.RollupType operation, String detailField) {
+
+        return createRollupRecord(recordLabel, filterGroupId, rollupType, new Map<String, Object>{
+                'Operation' => operation,
+                'Summary' => getSummaryObject.get(rollupType) + '.' + summField,
+                'Detail' => getDetailObject.get(rollupType) + (!String.isEmpty(detailField) ? '.' + detailField : '')
+            }
+        );
+    }
+
+    /**
+     * @description Create a Rollup__mdt record. Overload to include a Yearly Operation Type
+     * @return JSON String for a Rollup__mdt record
+     */
+    public static String createRollupRecord(String recordLabel, String filterGroupId, RollupRecordType rollupType,
+            String summField, CRLP_Operation.RollupType operation, String detailField,
+            CRLP_Operation.YearlyOperationType yearlyOperation, Integer intValue) {
+
+        return createRollupRecord(recordLabel, filterGroupId, rollupType, new Map<String, Object>{
+                'Operation' => operation,
+                'Summary' => getSummaryObject.get(rollupType) + '.' + summField,
+                'Detail' => getDetailObject.get(rollupType) + (!String.isEmpty(detailField) ? '.' + detailField : ''),
+                'Yearly' => yearlyOperation,
+                'Integer' => intValue
+            }
+        );
+    }
+
+    /**
+     * @description Create a Rollup__mdt record. Overload to include a Yearly Operation Type and UseFiscalYear val
+     * @return JSON String for a Rollup__mdt record
+     */
+    public static String createRollupRecord(String recordLabel, String filterGroupId, RollupRecordType rollupType,
+            String summField, CRLP_Operation.RollupType operation, String detailField,
+            CRLP_Operation.YearlyOperationType yearlyOperation, Integer intValue, Boolean useFiscalYear) {
+
+        return createRollupRecord(recordLabel, filterGroupId, rollupType, new Map<String, Object>{
+                'Operation' => operation,
+                'Summary' => getSummaryObject.get(rollupType) + '.' + summField,
+                'Detail' => getDetailObject.get(rollupType) + (!String.isEmpty(detailField) ? '.' + detailField : ''),
+                'Yearly' => yearlyOperation,
+                'Integer' => intValue,
+                'UseFiscal' => useFiscalYear
+            }
+        );
+    }
+
+    /*
+    ====== Parameter Map Structure =====
+    new Map<String, Object>{
+        'Operation' => SUM                  // Required as a CRLP_Operation.RollupType
+        'Summary' => 'Account.Field',       // Required as Object.Field
+        'Detail' => 'Opportunity[.Field]',  // The Object portion is required, the field portion is optional
+        'Amount' => 'Opportunity.Amount',   // Defaults to Opportunity.Amount if not provided
+        'Date' => 'Opportunity.CloseDate',  // Defaults to Opportunity.CloseDAte if not provided
+        'UseFiscal' => False,               // Optional, defaults to false
+        'Integer' => 0,                     // Optional, defaults to null
+        'Yearly' = YEARS_AGO                // Optional, defaults to null
+        'OCR' = True                        // Optional, defaults to false
+    };
+    */
+
+    /**
+     * @description Internal method to build a Rollup__mdt record
+     *
+     * @param recordLabel
+     * @param filterGroupId
+     * @param parms
+     * @return
+     */
+    private static String createRollupRecord(String recordLabel, String filterGroupId, RollupRecordType rollupType, Map<String, Object> parms) {
+
+        // If the Rollup Type is from Payment, then shift the objects to the Payment object rather than date
+        if (rollupType == RollupRecordType.PmtToContact || rollupType == RollupRecordType.PmtToAcct) {
+            String detailField;
+            if (((String)parms.get('Detail')).contains('\\.')) {
+                detailField = ((String)parms.get('Detail')).split('\\.')[1];
+            } else {
+                detailField = 'npe01__Payment_Amount__c';
+            }
+            parms.put('Amount', getDetailObject.get(rollupType) + '.' + detailField);
+            parms.put('Date', getDetailObject.get(rollupType) + '.npe01__Payment_Date__c');
+            parms.put('Detail', getDetailObject.get(rollupType));
+        } else if (rollupType == RollupRecordType.GAU) {
+            String detailField;
+            if (((String)parms.get('Detail')).contains('\\.')) {
+                detailField = ((String)parms.get('Detail')).split('\\.')[1];
+            } else {
+                detailField = 'Amount__c';
+            }
+            parms.put('Amount', getDetailObject.get(rollupType) + '.' + detailField);
+            parms.put('Detail', getDetailObject.get(rollupType));
+        }
+
+        String recordId = getNewRecordId();
+        String summaryObjectName = ((String)parms.get('Summary')).split('\\.')[0];
+        String summaryObjectField = ((String)parms.get('Summary')).split('\\.')[1];
+        String detailObjectName = ((String)parms.get('Detail')).split('\\.')[0];
+        CRLP_Operation.RollupType operation = (CRLP_Operation.RollupType)parms.get('Operation');
+        List<CMT_Field> fields = new List<CMT_Field>{
+                new CMT_Field('Filter_Group__c', CMTFieldType.FldText, filterGroupId),
+                new CMT_Field('Operation__c', CMTFieldType.FldText, operation.name()),
+                new CMT_Field('Active__c', CMTFieldType.FldBoolean, True),
+                new CMT_Field('Summary_Object__c', CMTFieldType.FldEntity, fixNamespace(summaryObjectName)),
+                new CMT_Field('Summary_Field__c', CMTFieldType.FldField, fixNamespace(summaryObjectName) + '.' + fixNamespace(summaryObjectField)),
+                new CMT_Field('Detail_Object__c', CMTFieldType.FldEntity, fixNamespace(detailObjectName))
+        };
+
+        if (((String)parms.get('Detail')).contains('\\.')) {
+            fields.add(new CMT_Field('Detail_Field__c', CMTFieldType.FldField, ((String)parms.get('Detail')).split('\\.')[1]));
+        }
+        if (parms.get('Amount') != null) {
+            String amtObjectName = ((String)parms.get('Amount')).split('\\.')[0];
+            String amtObjectField = ((String)parms.get('Amount')).split('\\.')[1];
+            fields.add(new CMT_Field('Amount_Object__c', CMTFieldType.FldEntity, fixNamespace(amtObjectName)));
+            fields.add(new CMT_Field('Amount_Field__c', CMTFieldType.FldField, fixNamespace(amtObjectName) + '.' + fixNamespace(amtObjectField)));
+        } else {
+            fields.add(new CMT_Field('Amount_Object__c', CMTFieldType.FldEntity, 'Opportunity'));
+            fields.add(new CMT_Field('Amount_Field__c', CMTFieldType.FldField, 'Opportunity.Amount'));
+        }
+        if (parms.get('Date') != null) {
+            String dateObjectName = ((String)parms.get('Date')).split('\\.')[0];
+            String dateObjectField = ((String)parms.get('Date')).split('\\.')[1];
+            fields.add(new CMT_Field('Date_Object__c', CMTFieldType.FldEntity, fixNamespace(dateObjectName)));
+            fields.add(new CMT_Field('Date_Field__c', CMTFieldType.FldField, fixNamespace(dateObjectName) + '.' + fixNamespace(dateObjectField)));
+        } else {
+            fields.add(new CMT_Field('Date_Object__c', CMTFieldType.FldEntity, 'Opportunity'));
+            fields.add(new CMT_Field('Date_Field__c', CMTFieldType.FldField, 'Opportunity.CloseDate'));
+        }
+        if (parms.get('Yearly') != null) {
+            fields.add(new CMT_Field('Yearly_Operation_Type__c', CMTFieldType.FldText, ((CRLP_Operation.YearlyOperationType)parms.get('Yearly')).name()));
+            fields.add(new CMT_Field('Integer__c', CMTFieldType.FldNumber, parms.get('Integer')));
+        }
+        if (parms.get('UseFiscal') != null) {
+            fields.add(new CMT_Field('Use_Fiscal_Year__c', CMTFieldType.FldBoolean, (Boolean)parms.get('UseFiscal')));
+        }
+        if (parms.get('OCR') != null) {
+            fields.add(new CMT_Field('Use_OCR_for_Attribution_Object__c', CMTFieldType.FldBoolean, (Boolean)parms.get('OCR')));
+        }
+
+        return buildCMTObjectJSON('Rollup__mdt', recordLabel, recordId, fields);
     }
 }

@@ -34,7 +34,7 @@
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Selector class for Rollup definition custom metadata.
 */
-public class RLLP_Rollup_SEL {
+public class CRLP_Rollup_SEL {
 
     /**
      * @description Private static var to cache the Custom Metadata Type records.
@@ -49,10 +49,9 @@ public class RLLP_Rollup_SEL {
                         SELECT Id, DeveloperName, MasterLabel, Active__c, Use_Fiscal_Year__c,
                                 Description__c, Filter_Group__c, Filter_Group__r.MasterLabel, Operation__c, Integer__c,
                                 Amount_Field__r.QualifiedApiName, Amount_Object__r.QualifiedApiName,
-                                Use_OCR_for_Attribution_Object__c,
+                                Use_OCR_for_Attribution_Object__c, Yearly_Operation_Type__c,
                                 Date_Field__r.QualifiedApiName, Date_Object__r.QualifiedApiName,
                                 Detail_Field__r.QualifiedApiName, Detail_Object__r.QualifiedApiName,
-                                Result_Field__r.QualifiedApiName, Result_Object__r.QualifiedApiName,
                                 Summary_Field__r.QualifiedApiName, Summary_Object__r.QualifiedApiName
                         FROM Rollup__mdt
                         ORDER BY Summary_Object__c];
@@ -132,15 +131,15 @@ public class RLLP_Rollup_SEL {
                     String fldName = rollup.Summary_Field__r.QualifiedApiName;
                     referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
                 }
-                if (rollup.Detail_Object__r.QualifiedApiName == objName) {
+                if (rollup.Detail_Object__r.QualifiedApiName == objName && rollup.Detail_Field__c != null) {
                     String fldName = rollup.Detail_Field__r.QualifiedApiName;
                     referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
                 }
-                if (rollup.Amount_Object__r.QualifiedApiName == objName) {
+                if (rollup.Amount_Object__r.QualifiedApiName == objName && rollup.Amount_Field__r != null) {
                     String fldName = rollup.Amount_Field__r.QualifiedApiName;
                     referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
                 }
-                if (rollup.Date_Object__r.QualifiedApiName == objName) {
+                if (rollup.Date_Object__r.QualifiedApiName == objName && rollup.Date_Field__r != null) {
                     String fldName = rollup.Date_Field__r.QualifiedApiName;
                     referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
                 }
@@ -156,7 +155,22 @@ public class RLLP_Rollup_SEL {
         if (UserInfo.isMultiCurrencyOrganization() && allFields.containsKey('currencyisocode')) {
             referencedFields.put('CurrencyIsoCode', allFields.get('currencyisocode'));
         }
+        validateReferencedFields(referencedFields, objName);
         return referencedFields.values();
+    }
+
+    /**
+     * @description If the field describe for a given field is null, assert a false to allow for debugging
+     * TODO Should this just do an Assert(false) for unit testing or should this throw an exception/log an error?
+     * @param referencedFields Map<String, DescribeFieldResult>
+     * @param objName Object Name
+     */
+    public static void validateReferencedFields(Map<String, Schema.DescribeFieldResult> referencedFields, String objName) {
+        for (String fld : referencedFields.keySet()) {
+            if (referencedFields.get(fld) == null) {
+                system.assert(false, '>> Field ' + fld + ' not found in allFields collection for ' + objName);
+            }
+        }
     }
 
     /**

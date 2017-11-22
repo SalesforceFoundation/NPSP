@@ -41,8 +41,10 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
     ********************************************************************************************************/
     public void execute(SchedulableContext context) {
         try {
-            ALLO_Rollup_SCHED rollup = new ALLO_Rollup_SCHED(RLLP_OppRollup_UTIL.BATCH_SIZE);
-            rollup.runRollups();
+            if (customizableRollupEngineEnabled == false) {
+                ALLO_Rollup_SCHED rollup = new ALLO_Rollup_SCHED(RLLP_OppRollup_UTIL.BATCH_SIZE);
+                rollup.runRollups();
+            }
         } catch(Exception e) {
             ERR_Handler.processError(e, ERR_Handler_API.Context.ALLO);
         }
@@ -105,6 +107,9 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
         string strExcludeOppRecTypesQuery = '';
         string strExcludeOppTypesQuery = '';
 
+        // Instantiate the Fiscal Year utility
+        CRLP_FiscalYears fiscalYrs = new CRLP_FiscalYears(alloSettings.Use_Fiscal_Year_for_Rollups__c);
+
         //build string of opp rec type names for query
         if (alloSettings.Excluded_Opp_RecTypes__c != null) {
             strExcludeOppRecTypesQuery = 'AND Opportunity__r.RecordTypeId NOT IN ' + convertToQueryListFormat(alloSettings.Excluded_Opp_Rectypes__c);
@@ -132,7 +137,7 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
             'MAX(Opportunity__r.CloseDate)' => UTIL_Namespace.StrTokenNSPrefix('Last_Allocation_Date__c')
         };
         
-        Integer currentYear = alloSettings.Use_Fiscal_Year_for_Rollups__c ? RLLP_OppRollup_UTIL.getCurrentFY() : System.today().year();
+        Integer currentYear = fiscalYrs.getYear(Date.Today());
 
         rs.subgroupExpression = strFiscalOrCalendarYear+'(Opportunity__r.CloseDate)';
         rs.subgroupValueToParentFieldnameMap = new map<string, map<object, string>> {

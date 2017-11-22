@@ -40,7 +40,8 @@ public class CMT_FilterRuleUI_SVC {
     // ============================================================================================
 
     /**
-     * @description Converts the enum strings into friendly strings for the pick-lists.
+     * @description Converts the enum strings into friendly strings for the pick-lists. The Enum value
+     * and the String label should exactly match the picklist values in the Filter_Rule__mdt.Operation__c field
      */
     public static Map<CMT_FilterRule.FilterOperation, String> getFilterOperations() {
         return new Map<CMT_FilterRule.FilterOperation, String>{

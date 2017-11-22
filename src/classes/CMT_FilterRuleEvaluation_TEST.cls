@@ -34,7 +34,7 @@
 * @description Tests for CMT Filter Rule related actions
 */
 @isTest
-private class CMT_FilterRuleEval_TEST {
+private class CMT_FilterRuleEvaluation_TEST {
 
     private static Id filterGroupId1, filterGroupId2, filterGroupId3;
 
@@ -133,14 +133,14 @@ private class CMT_FilterRuleEval_TEST {
         System.AssertEquals(1, [SELECT Count() FROM OpportunityContactRole]);
 
         // Query the Opportunity and the child OCR and Payment records to use in the evaluation
-        String soql = RLLP_Query_SEL.getDetailsQuery(Opportunity.SObjectType,
+        String soql = CRLP_Query_SEL.getDetailsQuery(Opportunity.SObjectType,
                 new List<SObjectType>{OpportunityContactRole.SObjectType, npe01__OppPayment__c.SObjectType});
         o = database.query(soql);
 
         Test.startTest();
 
-        System.AssertEquals(True, CMT_FilterRuleEval_SVC.evaluateFilterGroup(new List<SObject>{o}, filterGroupId1));
-        System.AssertEquals(True, CMT_FilterRuleEval_SVC.evaluateFilterGroup(
+        System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{o}, filterGroupId1));
+        System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(
                 new List<SObject>{o, o.OpportunityContactRoles[0]}, filterGroupId2));
 
         // TODO Add more tests
