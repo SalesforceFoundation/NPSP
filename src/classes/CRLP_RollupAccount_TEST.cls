@@ -36,6 +36,10 @@
 @isTest
 private class CRLP_RollupAccount_TEST {
 
+    private Enum TestType {
+        TestStandard, TestQueueuable, TestBatch, TestLDV
+    }
+
     /**
      * @description Create Rollup__mdt records to test rolling up from the Opp and Payment objects to the Account
      */
@@ -112,11 +116,21 @@ private class CRLP_RollupAccount_TEST {
         CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
     }
 
+    static testMethod void test_Rollups_Queueable() {
+        testRollupsServices(TestType.TestQueueuable);
+    }
+    static testMethod void test_Rollups_Batch() {
+        testRollupsServices(TestType.TestBatch);
+    }
+    static testMethod void test_Rollups_Standard() {
+        testRollupsServices(TestType.TestStandard);
+    }
+
     /**
      * @description Test some simple rollups from the Opportunity/Payment object to the Account
      * TODO Add many more rollup variations to this
      */
-    static testMethod void test_OperationRollupService() {
+    private static void testRollupsServices(TestType tt) {
 
         // Start by enabling Customizable Rollups (which disables all legacy rollup operations)
         UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
@@ -201,10 +215,16 @@ private class CRLP_RollupAccount_TEST {
                                 WHERE npe01__Paid__c = true AND npe01__Opportunity__r.IsWon = true])[0].get('Amt'),
                 'There should be 1 written off payment record on a closed won opp');
 
-        Test.startTest();
-
         // Now test the rollups to the Account from the Opportunity
-        CRLP_RollupAccount_SVC.rollupSingleAccount(acctId);
+        Test.startTest();
+        if (tt == TestType.TestStandard) {
+            CRLP_Rollup_BATCH_SVC.startRollupsForNonLDV(new List<Id>{acctId}, true);
+        } else if (tt == TestType.TestBatch) {
+            database.executeBatch(new CRLP_Rollup_BATCH(new List<Id>{acctId}));
+        } else if (tt == TestType.TestQueueuable) {
+            System.enqueueJob(new CRLP_RollupQueueable((new List<Id>{acctId})));
+        }
+        Test.stopTest();
 
         // Query the Account with all the target fields specified in the rollups
         String acctQuery = CRLP_Query_SEL.getResultsQuery(Account.SObjectType) + ' WHERE Id = :acctId LIMIT 1';

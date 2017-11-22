@@ -36,6 +36,10 @@
 @isTest
 private class CRLP_RollupGAU_TEST {
 
+    private Enum TestType {
+        TestLDV
+    }
+
     /**
      * @description Create Rollup__mdt records to test rolling up from the Opp and Payment objects to the Account
      */
@@ -98,11 +102,15 @@ private class CRLP_RollupGAU_TEST {
         CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
     }
 
+    static testMethod void test_Rollups_BatchLDV() {
+        testRollupsServices(TestType.TestLDV);
+    }
+
     /**
      * @description Test some simple rollups from the Opportunity/Payment object to the Account
      * TODO Add many more rollup variations to this
      */
-    static testMethod void test_OperationRollupService() {
+    private static void testRollupsServices(TestType tt) {
 
         // create two GAU's
         General_Accounting_Unit__c defaultGau1 = new General_Accounting_Unit__c(Name='GAU #1');
@@ -184,10 +192,12 @@ private class CRLP_RollupGAU_TEST {
                 'There should be 200 Allocation records on closed won opps');
 
         Id gauId = defaultGau1.Id;
-        Test.startTest();
 
-        // Now test the rollups to the Account from the Opportunity
-        CRLP_RollupGAU_SVC.rollupSingleGAU(gauId);
+        // Now test the rollups to the GAU from the Allocation using the LDV Batch Job
+        // since this is the only rollup method that supports allocations
+        Test.startTest();
+        database.executeBatch(new CRLP_Rollup_BATCH_LDV(new List<Id>{ defaultGau1.Id, defaultGau2.Id } ));
+        Test.stopTest();
 
         // Query the Account with all the target fields specified in the rollups
         String gauQuery = CRLP_Query_SEL.getResultsQuery(General_Accounting_Unit__c.SObjectType) + ' WHERE Id = :gauId LIMIT 1';

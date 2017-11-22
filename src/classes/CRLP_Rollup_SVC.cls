@@ -35,8 +35,7 @@
 * @description Service class for general rollup operations. Includes the interface for the per-rollup-type
 *   handler service classes.
 *
-*   This class should pertain only to service operations shared across the rollup engine; it should not include
-*   service methods need to ?
+*   This class should pertain only to service operations shared across the rollup engine.
 */
 public class CRLP_Rollup_SVC {
 
@@ -45,6 +44,8 @@ public class CRLP_Rollup_SVC {
      */
     public interface IRollupHandler {
         void processRollups(List<SObject> details);
+        void setRecordId(Id objectId);
+        void setRollupsList(List<CRLP_Rollup> rollups);
         SObject getPopulatedSObject();
     }
 
@@ -116,5 +117,38 @@ public class CRLP_Rollup_SVC {
             }
         }
         return hasValueChanged;
+    }
+
+    /**
+     * @description Called by Update triggers to determine if a rollup recalculation is required for a given record
+     * @param newRecord
+     * @param oldRecord
+     * @return Boolean
+     */
+    public static Boolean isRollupRecalcNeeded(SObject newRecord, SObject oldRecord) {
+
+        if (oldRecord == null) {
+            return true;
+        }
+
+        SObjectType objType = newRecord.getSObjectType();
+
+        // Start by getting all the fields referenced by any Filter Group or active Rollup
+        List<Schema.DescribeFieldResult> fieldsToCompare = new List<DescribeFieldResult>();
+        fieldsToCompare.addAll(CMT_FilterRule_SEL.getReferencedFieldsByObject(objType));
+        fieldsToCompare.addAll(CRLP_Rollup_SEL.getReferencedFieldsByObject(objType));
+
+        // Loop through the FieldDescribeResults list and compare the value of each field between the
+        // old and new objects.
+        Boolean changed = false;
+        for (DescribeFieldResult dfr : fieldsToCompare) {
+            Object oldVal = oldRecord.get(dfr.name);
+            Object newVal = newRecord.get(dfr.name);
+            if (oldVal != newVal) {
+                changed = true;
+                break;
+            }
+        }
+        return changed;
     }
 }

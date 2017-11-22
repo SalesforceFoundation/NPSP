@@ -55,6 +55,16 @@
         for (DescribeFieldResult dfr : allFieldsToQuery) {
             if (dfr.isAccessible()) {
                 queryFields.add(dfr.getName());
+                // Special conditions
+                if (dfr.getName() == 'RecordTypeId') {
+                    queryFields.add('RecordType.DeveloperName');
+                } else if (dfr.getName() == 'OwnerId') {
+                    queryFields.add('Owner.Alias');
+                } else if (dfr.getName() == 'CreatedById') {
+                    queryFields.add('CreatedBy.Alias');
+                } else if (dfr.getName() == 'LastModifiedById') {
+                    queryFields.add('LastModifiedBy.Alias');
+                }
             }
         }
         // Convert the Set to the List to support String.Join()
@@ -103,7 +113,7 @@
                     ? 'Opportunity' : UTIL_Namespace.StrAllNSPrefix('Opportunity__r'));
 
             // Find all the Opportunity fields referenced by these rollups and related filters
-            List<Schema.DescribeFieldResult> allFieldsToQuery = new List<DescribeFieldResult>();
+            Set<Schema.DescribeFieldResult> allFieldsToQuery = new Set<DescribeFieldResult>();
             allFieldsToQuery.addAll(CMT_FilterRule_SEL.getReferencedFieldsByObject(Opportunity.SObjectType));
             allFieldsToQuery.addAll(CRLP_Rollup_SEL.getReferencedFieldsByObject(Opportunity.SObjectType));
 

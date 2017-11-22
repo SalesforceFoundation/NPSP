@@ -35,22 +35,18 @@
 * @description Rollup Services unique to the GUA rollups from Allocations
 */
 public class CRLP_RollupGAU_SVC extends CRLP_VRollupHandler {
+
+    public CRLP_RollupGAU_SVC() { }    // default constructor
+
     /**
-     * @description Constructor: For a given summary object, prepopulates the rollupResults map by rollupId,
-     * filtering the rollups to those from the Opportunity and/or OppPayment objects. Partial Soft Credits
-     * are handled by a different service class.
-     * @param accountId The Id of the Summary Account record being rolled up to
+     * @description Called by the setRecordId() method in the parent (super) class, this configures the
+     * CRLP_Rollup object instances that are used to do the actual rollup work for the target Account record.
      */
-    public CRLP_RollupGAU_SVC(Id gauId) {
-        super(gauId);
+    public override void initRollup() {
         for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(General_Accounting_Unit__c.SObjectType)) {
             addRollupDefinition(r);
         }
     }
-    public CRLP_RollupGAU_SVC(Id gauId, List<CRLP_Rollup> rollups) {
-        super(gauId);
-    }
-
     /**
      * @description Primary action method. Called for each record of summaryObject with a list of the detail objects
      * being rolled-up to that summary object. The instance of this class was instantiated with the Summary object.
@@ -81,23 +77,6 @@ public class CRLP_RollupGAU_SVC extends CRLP_VRollupHandler {
                 }
 
             }
-        }
-    }
-
-    /**
-     * @description
-     * // TODO -- NOT SURE WHETHER THIS METHOD WILL BE KEPT YET; MIGHT BE AN ENTRY POINT FOR A BUTTON ON THE ACCOUNT
-     * @param acctId
-     */
-    public static void rollupSingleGAU(Id gauId) {
-        CRLP_RollupGAU_BATCH batchHander = new CRLP_RollupGAU_BATCH();
-        String query = CRLP_Query_SEL.getDetailsQuery(Allocation__c.SObjectType, new List<SObjectType>()) +
-                ' WHERE General_Accounting_Unit__c = :gauId AND Opportunity__c != null LIMIT 49500';
-        List<General_Accounting_Unit__c> gausToUpdate = batchHander.processBatchOfAllocations(Database.query(query));
-        if (gausToUpdate.size() > 0) {
-            database.update(gausToUpdate);
-        } else {
-            System.Debug(LoggingLevel.ERROR, '*** NO UPDATE IS NEEDED FOR ' + gauId + ' ***');
         }
     }
 

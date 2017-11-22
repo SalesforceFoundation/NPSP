@@ -31,10 +31,14 @@
 * @author Salesforce.org
 * @date 2017
 * @group Customizable Rollups Operations Services
-* @description Unit Test for the Opportunity/Payment to Account Rollups
+* @description Unit Test for the Opportunity/Payment to Contact Rollups
 */
 @isTest
 private class CRLP_RollupContact_TEST {
+
+    private Enum TestType {
+        TestStandard, TestQueueuable, TestBatch, TestLDV
+    }
 
     /**
      * @description Create Rollup__mdt records to test rolling up from the Opp and Payment objects to the Account
@@ -49,14 +53,14 @@ private class CRLP_RollupContact_TEST {
         String filterGroupsJSON = '[' +
                 CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId1, 'TestFilterGroup1-IsWon+Paid') + ',' +
                 CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId2, 'TestFilterGroup2-IsWon+WrittenOff') +
-            ']';
+                ']';
         String filterRulesJSON = '[' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule2', 'npe01__OppPayment__c', 'npe01__Paid__c', 'Equals', 'True') + ',' +
 
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule2', 'npe01__OppPayment__c', 'npe01__Written_Off__c', 'Equals', 'True') +
-            ']';
+                ']';
 
         // Deserialize the filter group and filter rule to use for the tests
         CMT_FilterRule_SEL.cachedFilterGroups = (List<Filter_Group__mdt>)JSON.deserialize(filterGroupsJSON, List<Filter_Group__mdt>.class);
@@ -113,11 +117,21 @@ private class CRLP_RollupContact_TEST {
         CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
     }
 
+    static testMethod void test_Rollups_Queueable() {
+        testRollupsServices(TestType.TestQueueuable);
+    }
+    static testMethod void test_Rollups_Batch() {
+        testRollupsServices(TestType.TestBatch);
+    }
+    static testMethod void test_Rollups_Standard() {
+        testRollupsServices(TestType.TestStandard);
+    }
+
     /**
      * @description Test some simple rollups from the Opportunity/Payment object to the Contact
      * TODO Add many more rollup variations to this
      */
-    static testMethod void test_OperationRollupService() {
+    private static void testRollupsServices(TestType tt) {
 
         // Start by enabling Customizable Rollups (which disables all legacy rollup operations)
         UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
@@ -199,10 +213,16 @@ private class CRLP_RollupContact_TEST {
         system.assertEquals(cnt, [SELECT Count() FROM OpportunityContactRole WHERE Opportunity.IsWon = true],
                 'There should be 100 OCR records on closed won opps');
 
-        Test.startTest();
-
         // Now test the rollups to the Account from the Opportunity
-        CRLP_RollupContact_SVC.rollupSingleContact(conId);
+        Test.startTest();
+        if (tt == TestType.TestStandard) {
+            CRLP_Rollup_BATCH_SVC.startRollupsForNonLDV(new List<Id>{conId}, true);
+        } else if (tt == TestType.TestBatch) {
+            database.executeBatch(new CRLP_Rollup_BATCH(Contact.SObjectType));
+        } else if (tt == TestType.TestQueueuable) {
+            System.enqueueJob(new CRLP_RollupQueueable((new List<Id>{conId})));
+        }
+        Test.stopTest();
 
         // Query the Account with all the target fields specified in the rollups
         String conQuery = CRLP_Query_SEL.getResultsQuery(Contact.SObjectType) + ' WHERE Id = :conId LIMIT 1';

@@ -282,7 +282,7 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
             retrieveAndCacheExchangeRates(currCode);
         }
         CurrencyData cd = cachedMapOfRatesByCurrencyCode.get(currCode);
-        return cd.decimalPlaces;
+        return (cd != null ? cd.decimalPlaces : 2); // in case there is no data found for the specified currency
     }
 
     /**
