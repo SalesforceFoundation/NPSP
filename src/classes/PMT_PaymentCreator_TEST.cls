@@ -178,7 +178,7 @@ private with sharing class PMT_PaymentCreator_TEST {
     operation:
         Update a Closed Won Opportunity Amount from null to a value
     verify:
-        A paid payment should be created
+        A paid payment should be created. The Payment Date is equal to the related Opportunity Closed Date.
     **********************************************************************************************************/            
     static testMethod void testClosedWonOpportunity_UpdateAmountFromNullToValue() {
         Opportunity testOpportunity = createTestOpportunity(new Opportunity(
@@ -193,13 +193,13 @@ private with sharing class PMT_PaymentCreator_TEST {
         Test.stopTest();
 
         List<npe01__OppPayment__c> createdPayments = [
-            SELECT Id, npe01__Paid__c, npe01__Scheduled_Date__c, npe01__Payment_Amount__c 
+            SELECT Id, npe01__Paid__c, npe01__Payment_Amount__c, npe01__Payment_Date__c
             FROM npe01__OppPayment__c 
             WHERE npe01__Opportunity__c = :testOpportunity.Id
         ];
 
         System.assertEquals(1, createdPayments.size(), 'new payment should be created.');
-        System.assertEquals(testOpportunity.CloseDate, createdPayments[0].npe01__Scheduled_Date__c);
+        System.assertEquals(testOpportunity.CloseDate, createdPayments[0].npe01__Payment_Date__c);
         System.assertEquals(testOpportunity.Amount, createdPayments[0].npe01__Payment_Amount__c);
         System.assertEquals(true, createdPayments[0].npe01__Paid__c);
     }
@@ -209,7 +209,7 @@ private with sharing class PMT_PaymentCreator_TEST {
     operation:
         Update a Closed Won Opportunity Amount from zero to a value
     verify:
-        A paid payment should be created
+        A paid payment should be created. The Payment Date is equal to the related Opportunity Closed Date.
     **********************************************************************************************************/            
     static testMethod void testClosedWonOpportunity_UpdateAmountFromZeroToValue() {
         Opportunity testOpportunity = createTestOpportunity(new Opportunity(
@@ -224,13 +224,13 @@ private with sharing class PMT_PaymentCreator_TEST {
         Test.stopTest();
 
         List<npe01__OppPayment__c> createdPayments = [
-            SELECT Id, npe01__Paid__c, npe01__Scheduled_Date__c, npe01__Payment_Amount__c 
+            SELECT Id, npe01__Paid__c, npe01__Payment_Date__c, npe01__Payment_Amount__c 
             FROM npe01__OppPayment__c 
             WHERE npe01__Opportunity__c = :testOpportunity.Id
         ];
 
         System.assertEquals(1, createdPayments.size(), 'new payment should be created.');
-        System.assertEquals(testOpportunity.CloseDate, createdPayments[0].npe01__Scheduled_Date__c);
+        System.assertEquals(testOpportunity.CloseDate, createdPayments[0].npe01__Payment_Date__c);
         System.assertEquals(testOpportunity.Amount, createdPayments[0].npe01__Payment_Amount__c);
         System.assertEquals(true, createdPayments[0].npe01__Paid__c);
     }
@@ -240,7 +240,7 @@ private with sharing class PMT_PaymentCreator_TEST {
     operation:
         Update an Open Opportunity Amount from null to a value
     verify:
-        An unpaid payment should be created
+        An unpaid payment should be created. The Payment Scheduled Date is equal to the related Opportunity Closed Date.
     **********************************************************************************************************/            
     static testMethod void testOpenOpportunity_UpdateAmountFromNullToValue() {
         Opportunity testOpportunity = createTestOpportunity(new Opportunity(
@@ -271,7 +271,7 @@ private with sharing class PMT_PaymentCreator_TEST {
     operation:
         Update an Open Opportunity Amount from zero to a value
     verify:
-        An unpaid payment should be created
+        An unpaid payment should be created. The Payment Scheduled Date is equal to the related Opportunity Closed Date.
     **********************************************************************************************************/            
     static testMethod void testOpenOpportunity_UpdateAmountFromZeroToValue() {
         Opportunity testOpportunity = createTestOpportunity(new Opportunity(
