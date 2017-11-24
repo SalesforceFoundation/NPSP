@@ -72,7 +72,7 @@ public class CMT_UnitTestData_TEST {
                 '"Id":"{1}","MasterLabel":"{2}","DeveloperName":"{3}",';
 
         String record = String.format(templateString, new List<String>{
-                fixNamespace(cmtType), recordId, labelName, labelName.replace(' ', '_')
+                UTIL_Namespace.StrAllNSPrefix(cmtType), recordId, labelName, labelName.replace(' ', '_')
         });
 
         // Append each field
@@ -140,7 +140,7 @@ public class CMT_UnitTestData_TEST {
         public String getFieldJSON() {
             String fldTemplate;
             String theValue;
-            String fixedFieldName = fixNamespace(this.fldName);
+            String fixedFieldName = UTIL_Namespace.StrAllNSPrefix(this.fldName);
 
             // Handle the basic field conversion
             if (this.fieldType == CMTFieldType.FldText || this.fieldType == CMTFieldType.FldEntity || this.fieldType == CMTFieldType.FldField) {
@@ -162,7 +162,7 @@ public class CMT_UnitTestData_TEST {
             if ( this.fieldType == CMTFieldType.FldEntity || this.fieldType == CMTFieldType.FldField) {
                 String entityType = (this.fieldType == CMTFieldType.FldEntity ? 'EntityDefinition' : 'FieldDefinition');
 
-                String fixedObjectName = fixNamespace(this.relatedObject);
+                String fixedObjectName = UTIL_Namespace.StrAllNSPrefix(this.relatedObject);
                 fixedFieldName = fixedFieldName.replace('__c', '__r');
 
                 // List<String>{ dummyId, fldName, objName, foreignFldName, entityType } // '000000','Field__r','Opportunity','IsWon'
@@ -179,21 +179,6 @@ public class CMT_UnitTestData_TEST {
 
             return fieldJSON.removeEnd(',');
         }
-    }
-
-    /**
-     * @description Prefixes the package namespace to custom fields/objects only if they do not already have
-     * a namespace. Needed because making a single call to StrAllNSPrefix() could not handle the many variations
-     * of namespace options that might exist within a single large string.
-     * @param val
-     * @return namespace+val
-     */
-    private static String fixNamespace(String val) {
-        List<String> parts = val.split('__');
-        if (parts.size() == 2) {
-            return UTIL_Namespace.StrAllNSPrefix(val);
-        }
-        return val;
     }
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -248,7 +233,7 @@ public class CMT_UnitTestData_TEST {
                 new List<CMT_Field>{
                     new CMT_Field('Filter_Group__c', CMTFieldType.FldText, filterGroupId),
                     new CMT_Field('Object__c', CMTFieldType.FldEntity, objectName),
-                    new CMT_Field('Field__c', CMTFieldType.FldField, objectName + '.' + fixNamespace(fieldName)),
+                    new CMT_Field('Field__c', CMTFieldType.FldField, objectName + '.' + UTIL_Namespace.StrAllNSPrefix(fieldName)),
                     new CMT_Field('Operator__c', CMTFieldType.FldText, operator),
                     new CMT_Field('Constant__c', CMTFieldType.FldText, constant),
                     new CMT_Field('Field_OpportunityContactRole_Role__c', CMTFieldType.FldBoolean, ocrBasedRule)
@@ -403,9 +388,9 @@ public class CMT_UnitTestData_TEST {
                 new CMT_Field('Filter_Group__c', CMTFieldType.FldText, filterGroupId),
                 new CMT_Field('Operation__c', CMTFieldType.FldText, operation.name()),
                 new CMT_Field('Active__c', CMTFieldType.FldBoolean, True),
-                new CMT_Field('Summary_Object__c', CMTFieldType.FldEntity, fixNamespace(summaryObjectName)),
-                new CMT_Field('Summary_Field__c', CMTFieldType.FldField, fixNamespace(summaryObjectName) + '.' + fixNamespace(summaryObjectField)),
-                new CMT_Field('Detail_Object__c', CMTFieldType.FldEntity, fixNamespace(detailObjectName))
+                new CMT_Field('Summary_Object__c', CMTFieldType.FldEntity, UTIL_Namespace.StrAllNSPrefix(summaryObjectName)),
+                new CMT_Field('Summary_Field__c', CMTFieldType.FldField, UTIL_Namespace.StrAllNSPrefix(summaryObjectName) + '.' + UTIL_Namespace.StrAllNSPrefix(summaryObjectField)),
+                new CMT_Field('Detail_Object__c', CMTFieldType.FldEntity, UTIL_Namespace.StrAllNSPrefix(detailObjectName))
         };
 
         if (((String)parms.get('Detail')).contains('\\.')) {
@@ -414,8 +399,8 @@ public class CMT_UnitTestData_TEST {
         if (parms.get('Amount') != null) {
             String amtObjectName = ((String)parms.get('Amount')).split('\\.')[0];
             String amtObjectField = ((String)parms.get('Amount')).split('\\.')[1];
-            fields.add(new CMT_Field('Amount_Object__c', CMTFieldType.FldEntity, fixNamespace(amtObjectName)));
-            fields.add(new CMT_Field('Amount_Field__c', CMTFieldType.FldField, fixNamespace(amtObjectName) + '.' + fixNamespace(amtObjectField)));
+            fields.add(new CMT_Field('Amount_Object__c', CMTFieldType.FldEntity, UTIL_Namespace.StrAllNSPrefix(amtObjectName)));
+            fields.add(new CMT_Field('Amount_Field__c', CMTFieldType.FldField, UTIL_Namespace.StrAllNSPrefix(amtObjectName) + '.' + UTIL_Namespace.StrAllNSPrefix(amtObjectField)));
         } else {
             fields.add(new CMT_Field('Amount_Object__c', CMTFieldType.FldEntity, 'Opportunity'));
             fields.add(new CMT_Field('Amount_Field__c', CMTFieldType.FldField, 'Opportunity.Amount'));
@@ -423,8 +408,8 @@ public class CMT_UnitTestData_TEST {
         if (parms.get('Date') != null) {
             String dateObjectName = ((String)parms.get('Date')).split('\\.')[0];
             String dateObjectField = ((String)parms.get('Date')).split('\\.')[1];
-            fields.add(new CMT_Field('Date_Object__c', CMTFieldType.FldEntity, fixNamespace(dateObjectName)));
-            fields.add(new CMT_Field('Date_Field__c', CMTFieldType.FldField, fixNamespace(dateObjectName) + '.' + fixNamespace(dateObjectField)));
+            fields.add(new CMT_Field('Date_Object__c', CMTFieldType.FldEntity, UTIL_Namespace.StrAllNSPrefix(dateObjectName)));
+            fields.add(new CMT_Field('Date_Field__c', CMTFieldType.FldField, UTIL_Namespace.StrAllNSPrefix(dateObjectName) + '.' + UTIL_Namespace.StrAllNSPrefix(dateObjectField)));
         } else {
             fields.add(new CMT_Field('Date_Object__c', CMTFieldType.FldEntity, 'Opportunity'));
             fields.add(new CMT_Field('Date_Field__c', CMTFieldType.FldField, 'Opportunity.CloseDate'));

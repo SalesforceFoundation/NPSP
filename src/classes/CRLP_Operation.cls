@@ -36,6 +36,9 @@
 */
 public class CRLP_Operation {
 
+    /**
+     * @description Enum of valid Rollup Operation Types supported by the Customizable Rollups Engine
+     */
     public enum RollupType {
         COUNT,
         SUM,
@@ -50,6 +53,9 @@ public class CRLP_Operation {
         BEST_YEAR_TOTAL
     }
 
+    /**
+     * @description Enum of valid Yearly Operation Types supported by the Customizable Rollups Engine
+     */
     public enum YearlyOperationType {
         ALL_TIME,
         YEARS_AGO,
@@ -75,6 +81,8 @@ public class CRLP_Operation {
                 CRLP_Operation.RollupType.BEST_YEAR_TOTAL => 'Best Year Total'
         };
     }
+    /** @description Inverse of the getRollupOperationTypes map to use for quick lookups */
+    private static Map<String, CRLP_Operation.RollupType> rollupOperationTypesByName;
 
     /**
      * @description Yearly Operations for YearsBack and DaysAgo are only supported for the Count, Sum,
@@ -102,12 +110,17 @@ public class CRLP_Operation {
      * @return CRLP_Operation.RollupType enum
      */
     public static CRLP_Operation.RollupType getRollupTypeFromString(String operation) {
-        for (CRLP_Operation.RollupType rt : getRollupOperationTypes().keySet()) {
-            if (rt.name() == operation) {
-                return rt;
+        if (rollupOperationTypesByName == null) {
+            rollupOperationTypesByName = new Map<String, CRLP_Operation.RollupType>();
+            for (CRLP_Operation.RollupType rt : getRollupOperationTypes().keySet()) {
+                // Need multiple revisions of the same operation type to ensure the map.get() returns a value.
+                rollupOperationTypesByName.put(getRollupOperationTypes().get(rt), rt);
+                rollupOperationTypesByName.put(getRollupOperationTypes().get(rt).toUpperCase(), rt);
+                rollupOperationTypesByName.put(getRollupOperationTypes().get(rt).toUpperCase().replace(' ', '_'), rt);
             }
         }
-        return null;
+        system.assert(rollupOperationTypesByName.containsKey(operation), operation);
+        return rollupOperationTypesByName.get(operation);
     }
 
     /**
