@@ -79,7 +79,9 @@ public class CRLP_RollupScheduler implements Schedulable {
                 // For Account & Contact rollups, only execute the batch job if there is at least one Account
                 // record with the minimum number of attached Opportunities.
                 Integer maxRelatedOppsForNonLDVMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonLDVMode();
-                hasLDVAccounts = [SELECT Count() FROM Account WHERE Number_of_Opportunities__c > :maxRelatedOppsForNonLDVMode] > 0;
+                // TODO Is this query properly optimized for selectivity??
+                hasLDVAccounts = [SELECT Count() FROM Account
+                                    WHERE Number_of_Opportunities__c > :maxRelatedOppsForNonLDVMode LIMIT 1] > 0;
             }
             // If there is at least one LDV Account to roll up, execute this batch job
             if (hasLDVAccounts) {

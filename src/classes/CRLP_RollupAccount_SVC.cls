@@ -43,10 +43,12 @@ public class CRLP_RollupAccount_SVC extends CRLP_VRollupHandler {
      * CRLP_Rollup object instances that are used to do the actual rollup work for the target Account record.
      */
     public override void initRollup() {
-        for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(Account.SObjectType)) {
-            if (r.Detail_Object__r.QualifiedApiName == oppObjectName
-                    || r.Detail_Object__r.QualifiedApiName == pmtObjectName) {
-                addRollupDefinition(r);
+        if (CRLP_Rollup_SEL.getRollupsBySummaryType().containsKey(Account.SObjectType)) {
+            for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(Account.SObjectType)) {
+                if (r.Detail_Object__r.QualifiedApiName == oppObjectName
+                        || r.Detail_Object__r.QualifiedApiName == pmtObjectName) {
+                    addRollupDefinition(r);
+                }
             }
         }
     }

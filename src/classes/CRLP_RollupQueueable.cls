@@ -33,23 +33,22 @@
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Service class for Queueable (ASynchronous) roll-up operations on any supported Object.
-* Basically hands control off to the CRLP_Rollup_SVC.doRollupWork() method.
+* Basically hands control off to the CRLP_RollupProcessor_SVC.startRollupProcess() method.
 */
 public class CRLP_RollupQueueable implements System.Queueable {
 
-    // TODO -- THIS NEEDS TO HANDLE GETTING EITHER PARENT OR CHILD (OPP/PAYMENT) RECORD IDS
-    // For now it only accepts Parent record Ids
-    private List<Id> recordIds;
+    private List<Id> summaryRecordIds;
+
     /**
      * @description Constructor
      * @param recordIds List<Id> list of Summary Record Id's to roll up for
      */
-    public CRLP_RollupQueueable(List<Id> recordIds) {
-        this.recordIds = recordIds;
+    public CRLP_RollupQueueable(List<Id> summaryRecordIds) {
+        this.summaryRecordIds = summaryRecordIds;
     }
 
     public void execute(QueueableContext qc) {
-        SObjectType objType = recordIds[0].getSobjectType();
+        SObjectType objType = summaryRecordIds[0].getSobjectType();
 
         CRLP_RollupProcessor_SVC.ProcessingOptions options = new CRLP_RollupProcessor_SVC.ProcessingOptions();
         options.mode = CRLP_RollupProcessor_SVC.ProcessingMode.NonLDV;
@@ -61,7 +60,7 @@ public class CRLP_RollupQueueable implements System.Queueable {
         }
 
         // Query the parent records
-        Set<Id> parentIds = new Set<Id>(this.recordIds);
+        Set<Id> parentIds = new Set<Id>(this.summaryRecordIds);
         String soql = CRLP_Query_SEL.getResultsQuery(objType) + ' WHERE Id IN :parentIds';
         List<SObject> summaryRecords = database.query(soql);
 

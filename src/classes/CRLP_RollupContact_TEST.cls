@@ -124,12 +124,20 @@ private class CRLP_RollupContact_TEST {
     static testMethod void test_Rollups_Batch() {
         testRollupsServices(TestType.TestBatch);
     }
-    /*static testMethod void test_Rollups_Trigger() {
+    static testMethod void test_Rollups_BatchLDV() {
+        testRollupsServices(TestType.TestLDV);
+    }
+    static testMethod void test_Rollups_Trigger() {
         testRollupsServices(TestType.TestTrigger);
-    }*/
+    }
 
     /**
-     * @description Test some simple rollups from the Opportunity/Payment object to the Contact
+     * @description Test some simple rollups from the Opportunity/Payment object to the Contact using
+     * four different methods:
+     * 1. Trigger based rollup
+     * 2. Call a Queueuable method directly (simulates clicking a button to recalculate)
+     * 3. Nightly Batch Job
+     * 4. Nightly LDV Batch Job
      */
     private static void testRollupsServices(TestType tt) {
 
@@ -138,12 +146,22 @@ private class CRLP_RollupContact_TEST {
                 new npo02__Households_Settings__c (
                         npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                         Customizable_Rollups_Enabled__c = true,
-                        Rollups_Limit_on_Attached_Opps_for_LDV__c = 150,
+                        Rollups_Limit_on_Attached_Opps_for_LDV__c = (tt == TestType.TestLDV ? 50 : 200),
+                        Rollups_LDV_Batch_Size__c = 200,
+                        Rollups_Account_Batch_Size__c = 20,
                         Rollups_Contact_Batch_Size__c = 20
                 ));
 
         // Create the test data
         mockRollupCMTValues();
+
+        // Disable all legacy rollup triggers
+        UTIL_UnitTestData_TEST.disableRollupTriggers();
+
+        if (tt != TestType.TestTrigger) {
+            // disable customizable rollup triggers to test the Batch & Queueuable logic
+            UTIL_UnitTestData_TEST.disableCustomizableRollupTriggers();
+        }
 
         // Insert a dummy Contact and 100 Opportunity records
         Contact c = new Contact(LastName = 'UNITTEST', FirstName = 'TEST');
@@ -218,10 +236,12 @@ private class CRLP_RollupContact_TEST {
         // Now test the rollups to the Account from the Opportunity
         Test.startTest();
         if (tt == TestType.TestTrigger) {
-//            CRLP_RollupProcessor_SVC.startRollupsForNonLDV(new List<Id>{conId}, true);
-            return;
+            // No need to execute anything special here. If the triggers worked as expected, then
+            // the data will be rolled up automatically upon the stopTest().
         } else if (tt == TestType.TestBatch) {
             database.executeBatch(new CRLP_Rollup_BATCH(Contact.SObjectType));
+        } else if (tt == TestType.TestLDV) {
+            database.executeBatch(new CRLP_Rollup_BATCH_LDV(Contact.SObjectType));
         } else if (tt == TestType.TestQueueuable) {
             System.enqueueJob(new CRLP_RollupQueueable((new List<Id>{conId})));
         }

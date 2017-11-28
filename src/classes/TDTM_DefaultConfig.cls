@@ -323,6 +323,21 @@ public without sharing class TDTM_DefaultConfig {
               Class__c = 'RD_CascadeDeleteLookups_TDTM', Load_Order__c = 1, Object__c = 'npe03__Recurring_Donation__c',
               Trigger_Action__c = 'BeforeDelete;AfterDelete;AfterUndelete'));
 
+        // Customizable Rollups on Opportunity
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+                Class__c = 'CRLP_Rollup_TDTM', Load_Order__c = 4, Object__c = 'Opportunity',
+                Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete;AfterUndelete'));
+
+        // Customizable Rollups on Payment
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+                Class__c = 'CRLP_Rollup_TDTM', Load_Order__c = 2, Object__c = 'npe01__OppPayment__c',
+                Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete;AfterUndelete'));
+
+        // Customizable Rollups on Allocation
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+                Class__c = 'CRLP_Rollup_TDTM', Load_Order__c = 2, Object__c = 'Allocation__c',
+                Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete;AfterUndelete'));
+
         return handlers;
     }
 

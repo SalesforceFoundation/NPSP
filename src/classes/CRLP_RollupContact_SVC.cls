@@ -46,10 +46,12 @@ public class CRLP_RollupContact_SVC extends CRLP_VRollupHandler {
      * are handled by a different service class.
      */
     public override void initRollup() {
-        for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(Contact.SObjectType)) {
-            if (r.Detail_Object__r.QualifiedApiName == oppObjectName
-                    || r.Detail_Object__r.QualifiedApiName == pmtObjectName) {
-                addRollupDefinition(r);
+        if (CRLP_Rollup_SEL.getRollupsBySummaryType().containsKey(Contact.SObjectType)) {
+            for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(Contact.SObjectType)) {
+                if (r.Detail_Object__r.QualifiedApiName == oppObjectName
+                        || r.Detail_Object__r.QualifiedApiName == pmtObjectName) {
+                    addRollupDefinition(r);
+                }
             }
         }
     }

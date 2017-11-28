@@ -1,15 +1,46 @@
-/**
- * Created by smithmichael on 11/27/17.
- */
+/*
+    Copyright (c) 2017, Salesforce.org
+    All rights reserved.
 
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Salesforce.org nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+*/
+/**
+* @author Salesforce.org
+* @date 2017
+* @group Customizable Rollups Operations Services
+* @description Unit Test for the Customizable Rollups Scheduler class
+*/
 @isTest
 private class CRLP_RollupScheduler_TEST {
 
     /**
-     * @description Tests if System Administrator is the owner of Scheduled Jobs and calls the methods that
-     *              log an error and send an email.
+     * @description Test that when Customizable Rollups is enabled, the correct number of jobs are scheduled for
+     * the CRLP_RollupScheduler class.
      */
-    static testMethod void test_scheduleCRLPJobs() {
+    static testMethod void test_schedule_CRLPJobs() {
 
         // Enable Customizable Rollups
         UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
@@ -31,12 +62,30 @@ private class CRLP_RollupScheduler_TEST {
 
         Test.startTest();
         UTIL_MasterSchedulableHelper.setScheduledJobs();
-        Test.stopTest();
 
-        System.assert([SELECT count() FROM AsyncApexJob
-            WHERE JobType = 'ScheduledApex' AND ApexClass.Name = 'CRLP_RollupScheduler'] > 0,
-            'There should be multiple jobs scheduled using the CRLP_RollupScheduler interface\n' +
-                    JSON.serializePretty([SELECT Id, ApexClass.name FROM AsyncApexJob
-                    WHERE JobType = 'ScheduledApex']));
+        // Count the number of jobs using the CRLP_RollupScheduler class
+        Integer jobCount = 0;
+        for (String jobName : UTIL_MasterSchedulableHelper.defaultScheduledJobs.keySet()) {
+            if (UTIL_MasterSchedulableHelper.defaultScheduledJobs.get(jobName)[1] == 'CRLP_RollupScheduler') {
+                jobCount++;
+            }
+        }
+        System.assertNotEquals(0, jobCount, 'There should be more than one default job for CRLP_RollupScheduler');
+
+        // Verify that the correct number of jobs has been scheduled
+        System.assertEquals(jobCount, [SELECT count() FROM AsyncApexJob
+            WHERE JobType = 'ScheduledApex' AND ApexClass.Name = 'CRLP_RollupScheduler'],
+            'There should be multiple jobs scheduled using the CRLP_RollupScheduler interface');
+
+        // Reset the defaultScheduledJobs collection
+        UTIL_MasterSchedulableHelper.defaultScheduledJobs = null;
+
+        // Turn off Customizable Rollups
+        UTIL_CustomSettingsFacade.getHouseholdsSettings().Customizable_Rollups_Enabled__c = false;
+        UTIL_MasterSchedulableHelper.setScheduledJobs();
+
+        System.assertEquals(0, [SELECT count() FROM AsyncApexJob
+        WHERE JobType = 'ScheduledApex' AND ApexClass.Name = 'CRLP_RollupScheduler' AND Status != 'Aborted'],
+                'There should be zero jobs scheduled using the CRLP_RollupScheduler interface');
     }
 }

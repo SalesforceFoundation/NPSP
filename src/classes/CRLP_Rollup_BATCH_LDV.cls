@@ -36,8 +36,6 @@
 */
 public class CRLP_Rollup_BATCH_LDV implements Database.Batchable<SObject>, Database.Stateful {
 
-    private static final Integer MAX_RELATED_OPPS = 500;
-
     /*******************************************************************************************************
     * @description Stateful collection of Rollups to process
     */
@@ -74,27 +72,31 @@ public class CRLP_Rollup_BATCH_LDV implements Database.Batchable<SObject>, Datab
     * @return database.Querylocator
     */
     public database.Querylocator start(Database.BatchableContext bc) {
+        Integer maxRelatedOppsForNonLDVMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonLDVMode();
 
         // Build a query string for the specified Summary object.
         SObjectType detailObjectType;
         String keyField;
+        List<SObjectType> childObjects = new List<SObjectType>();
         if (this.summaryObjectType == General_Accounting_Unit__c.SObjectType) {
             detailObjectType = Allocation__c.SObjectType;
             keyField = SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();
         } else if (this.summaryObjectType == Account.SObjectType) {
             detailObjectType = Opportunity.SObjectType;
+            childObjects.add(npe01__OppPayment__c.SObjectType);
             keyField = SObjectType.Opportunity.fields.AccountId.getName();
         } else if (this.summaryObjectType == Contact.SObjectType) {
             detailObjectType = Opportunity.SObjectType;
+            childObjects.add(npe01__OppPayment__c.SObjectType);
             keyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
         }
-        String query = CRLP_Query_SEL.getDetailsQuery(detailObjectType, new List<SObjectType>()) + ' WHERE ';
+        String query = CRLP_Query_SEL.getDetailsQuery(detailObjectType, childObjects) + ' WHERE ';
 
         // Add necessary filters to limit the LDV batch job to only the records that should be processed as LDV
         if (this.summaryObjectType == General_Accounting_Unit__c.SObjectType) {
             query += ' ' + SObjectType.Allocation__c.fields.Opportunity__c.getName() + ' != null ';
         } else if (detailObjectType == Opportunity.SObjectType) {
-            query += 'Account.' + SObjectType.Account.fields.Number_of_Opportunities__c.getName() + ' >= :MAX_RELATED_OPPS';
+            query += 'Account.' + SObjectType.Account.fields.Number_of_Opportunities__c.getName() + ' >= :maxRelatedOppsForNonLDVMode';
         }
         if (this.recordIds != null && this.recordIds.size() > 0) {
             query += ' AND ' + keyField + ' IN :recordIds';
@@ -113,7 +115,8 @@ public class CRLP_Rollup_BATCH_LDV implements Database.Batchable<SObject>, Datab
     * @param bc BatchableContext passed by the system call
     * @param scope List of Detail (Allocation or Opportunity) records
     */
-    public void execute(Database.BatchableContext bc, List<Allocation__c> detailRecords) {
+    public void execute(Database.BatchableContext bc, List<SObject> detailRecords) {
+
         // Build the processing options instance
         CRLP_RollupProcessor_SVC.ProcessingOptions options = createOptionsInstance();
 
