@@ -35,6 +35,8 @@
 * @description Main logic class for rollups of opportunities to the Accounts, Contacts, and Households.
 */
 public without sharing class RLLP_OppRollup {
+
+    public Id batchId;
     
     /** @description Constructor gets settings and sets up variables. */
     public RLLP_OppRollup(){
@@ -363,7 +365,18 @@ public without sharing class RLLP_OppRollup {
             }
         }         
 
-        update accountsToUpdate.values();     
+        //update accountsToUpdate.values();
+        /**Randi - Changes for Accounts - can I pass in account type?
+        * */
+        List<Database.SaveResult> srList = Database.update(accountsToUpdate.values(), false);
+
+        if(system.isBatch()) {
+            ERR_Handler.Errors errorResult = ERR_Handler.getBatchErrors(srList, accountsToUpdate.values(), batchId);
+            if (errorResult.errorsExist) {
+                ERR_Handler.processErrors(errorResult.errorRecords, 'Batch');
+            }
+        }
+
     }    
     
     /*******************************************************************************************************
@@ -524,8 +537,20 @@ public without sharing class RLLP_OppRollup {
                 }
             }                
         }
+        //Randi - this can be added once Joy's changes are merged
+        //UTIL_DMLService.updateRecords(contactsToUpdate.values());
 
-        update contactsToUpdate.values();
+        /**Randi - Changes for Contacts - can I pass in contact type?
+        * */
+
+        List<Database.SaveResult> srList = Database.update(contactsToUpdate.values(), false);
+
+        if(system.isBatch()) {
+            ERR_Handler.Errors errorResult = ERR_Handler.getBatchErrors(srList, contactsToUpdate.values(), batchId);
+            if (errorResult.errorsExist) {
+                ERR_Handler.processErrors(errorResult.errorRecords, 'Batch');
+            }
+        }
     }    
     
     /*******************************************************************************************************
@@ -686,8 +711,15 @@ public without sharing class RLLP_OppRollup {
                 }
             }                
         }
-        
-        update householdsToUpdate.values();
+
+        List<Database.SaveResult> srList = Database.update(householdsToUpdate.values(), false);
+
+        if(system.isBatch()) {
+            ERR_Handler.Errors errorResult = ERR_Handler.getBatchErrors(srList, householdsToUpdate.values(), batchId);
+            if (errorResult.errorsExist) {
+                ERR_Handler.processErrors(errorResult.errorRecords, 'Batch');
+            }
+        }
     }  
     
     /*******************************************************************************************************

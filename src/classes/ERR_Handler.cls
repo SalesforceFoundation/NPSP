@@ -104,7 +104,7 @@ public class ERR_Handler {
     *
     * @param dmlResults The results of a single DML operation performed using the Database class.
     * @param sObjects The records the DML operation was performed on.
-    * @return Errors The erros that occurred during the DML operation perfored using the Database class.
+    * @return Errors The errors that occurred during the DML operation performed using the Database class.
     */    
     public static Errors getErrors(List<Object> dmlResults, List<SObject> sObjects) {    	
     	Errors errors = new Errors();
@@ -128,7 +128,7 @@ public class ERR_Handler {
 	                errors.errorRecords.add(err);
 	                
 	                //We cannot use addError on the record here, because if we do, the whole transaction will be rolled back, and 
-	                //no error record will be saved,or error notification sent.
+	                //no error record will be saved, or error notification sent.
 	                
 	                //Displaying an error message to the user
 	                if(ApexPages.currentPage() != null)
@@ -138,7 +138,71 @@ public class ERR_Handler {
     	}
     	return errors;
     }
-        
+
+	/*******************************************************************************************************
+    * @description Processes the results of a batch of DML operations performed using the Database class to determine
+    *              if errors occurred. It does not store errors or send error email notifications. These operations
+    *              should be performed after the rollback.
+    *
+    * @param dmlResults The results of a DML batch operation performed using the Database class.
+    * @param sObjects The records the DML operation was performed on.
+    * @return Errors The errors with a single list that occurred during a batch DML operation performed using the Database class.
+    */
+	public static Errors getBatchErrors(List<Object> dmlResults, List<SObject> sObjects, Id batchId) {
+		Errors errors = new Errors();
+		List<String> errorsFound = new List<String>();
+
+		if(dmlResults != null) {
+			for(Integer i=0; i<dmlResults.size(); i++) {
+				Boolean isSuccess = true;
+				if(dmlResults[i] instanceof Database.SaveResult) {
+					isSuccess = ((Database.SaveResult)dmlResults[i]).isSuccess();
+				} else if(dmlResults[i] instanceof Database.DeleteResult) {
+					isSuccess = ((Database.DeleteResult)dmlResults[i]).isSuccess();
+				} else if(dmlResults[i] instanceof Database.UndeleteResult) {
+					isSuccess = ((Database.UndeleteResult)dmlResults[i]).isSuccess();
+				}
+
+				if(!isSuccess) {
+					List<Database.Error> errList = new List<Database.Error>();
+					String errMessage = sObjects[i].getSObjectType().getDescribe().getName() + ' ID' + sObjects[i].Id + ' was unable to save because of the following error(s): ';
+
+					//TODO: need to check for the type of save result... again. Make this prettier.
+
+					if(dmlResults[i] instanceof Database.SaveResult) {
+						errList = ((Database.SaveResult)dmlResults[i]).getErrors();
+					} else if(dmlResults[i] instanceof Database.DeleteResult) {
+						errList = ((Database.DeleteResult)dmlResults[i]).getErrors();
+					} else if(dmlResults[i] instanceof Database.UndeleteResult) {
+						errList = ((Database.UndeleteResult)dmlResults[i]).getErrors();
+					}
+
+					for(Database.Error err : errList) {
+						errMessage += err.getStatusCode() + ': ' + err.getMessage();
+					}
+					errMessage += '. ';
+					errorsFound.add(errMessage);
+				}
+			}
+			if(errorsFound.size() > 0){
+				String errorMessage = 'These records have failed to update in Batch Job ' + batchId + '. ';
+				errors.errorsExist = true;
+
+				for(Integer i=0; i<errorsFound.size(); i++) {
+					errorMessage += i + ': ' + errorsFound[i] + '. ';
+				}
+
+				Error__c err = createBatchError(errorMessage);
+				// Randi - is this necessary? what does this do.
+				errors.errorRecords.add(err);
+
+				//We cannot use addError on the record here, because if we do, the whole transaction will be rolled back, and
+				//no error record will be saved, or error notification sent.
+			}
+		}
+		return errors;
+	}
+
     /*******************************************************************************************************
     * @description Creates an error record from an exception, stores it in the database (if enabled), and sends error
     *              notifications (if enabled).
@@ -147,23 +211,23 @@ public class ERR_Handler {
     * @param e Exception to create error record from.
     * @return context The context the exception was raised on.
     */
-    public static void processError(Exception e, ERR_Handler_API.Context context) {     
-        processError(e, context.name());   
+    public static void processError(Exception e, ERR_Handler_API.Context context) {
+        processError(e, context.name());
     }
-    
+
     /*******************************************************************************************************
     * @description Creates an error record from an exception, stores it in the database (if enabled), and sends error
     *              notifications (if enabled).
     * @param e Exception to create error record from.
     * @return context The context the exception was raised on.
     */
-    public static void processError(Exception e, String context) {     
-        if(e != null) {         
+    public static void processError(Exception e, String context) {
+        if(e != null) {
             Error__c error = createError(e);
             processErrors(new Error__c[]{error}, context);
-        }   
+        }
     }
-    
+
     /*******************************************************************************************************
     * @description Stores errors in the database (if enabled), and sends error notifications (if enabled).
     * @param errorRecords The errors to store.
@@ -171,21 +235,21 @@ public class ERR_Handler {
     * @return void
     */
     public static void processErrors(List<Error__c> errorRecords, String context) {
-    	
-        if (errorRecords != null && errorRecords.size() > 0) {
-            if (ApexPages.currentPage() != null) {
+
+    	if(errorRecords != null && errorRecords.size() > 0) {
+	    	if(ApexPages.currentPage() != null) {
 	            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, errorRecords[0].Full_Message__c));
 	    	}
-	                
-            if (UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
-                UTIL_Debug.debug('**** Storing errorRecords: ' + errorRecords);
-                Database.insert(errorRecords, false);
+
+	    	if(UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
+	    	   UTIL_Debug.debug('**** Storing errorRecords: ' + errorRecords);
+	    	   Database.insert(errorRecords, false);
 	    	}
 	    	//ERR_Notifier takes care of checking the settings itself.
 	        ERR_Notifier.sendErrorNotifications(context);
     	}
     }
-    
+
     /*******************************************************************************************************
     * @description Creates an error record from an exception.
     * @param e Exception to create error record from.
@@ -193,7 +257,7 @@ public class ERR_Handler {
     */
 	private static Error__c createError(Exception e) {
 		Error__c error = new Error__c();
-		error.Datetime__c = System.now();        
+		error.Datetime__c = System.now();
 		error.Error_Type__c = e.getTypeName();
 		error.Full_Message__c = e.getMessage();
 		//Putting it into a local string to see if that helps storing the stack trace when we
@@ -212,22 +276,22 @@ public class ERR_Handler {
 
     /*******************************************************************************************************
     * @description Creates an error record from the result of a DML operation performed through the Database class.
-    * @param result The result of the Database DML operation. It cannot be more specific than Object, because the result of 
+    * @param result The result of the Database DML operation. It cannot be more specific than Object, because the result of
     *               the different DML operations that the Database class can perform don't have a common parent.
     * @param objectType The name of the type of object that caused the error.
-    * @param objId The id of the record that caused the error. 
+    * @param objId The id of the record that caused the error.
     * @return The error record.
     */
     private static Error__c createError(Object result, string objectType, id objId) {
     	Error__c error = new Error__c();
         error.Datetime__c = System.now();
         error.Object_Type__c = objectType;
-        
+
     	if(result instanceof Database.SaveResult) {
     		Database.SaveResult saveResult = (Database.SaveResult) result;
     		error.Record_URL__c = getRecordURL(saveResult.getId(), objId);
 	        error.Error_Type__c = getStatusCode(saveResult.getErrors()[0].getStatusCode());
-	        error.Full_Message__c = saveResult.getErrors()[0].getMessage();	
+	        error.Full_Message__c = saveResult.getErrors()[0].getMessage();
     	} else if(result instanceof Database.DeleteResult) {
     		Database.DeleteResult deleteResult = (Database.DeleteResult) result;
             error.Record_URL__c = getRecordURL(deleteResult.getId(), objId);
@@ -239,10 +303,29 @@ public class ERR_Handler {
             error.Error_Type__c = getStatusCode(undeleteResult.getErrors()[0].getStatusCode());
             error.Full_Message__c = undeleteResult.getErrors()[0].getMessage();
     	}
-    
+
         UTIL_Debug.debug('**** createError() returns error: ' + error);
         return error;
     }
+
+	/*******************************************************************************************************
+	* @description Creates a single error record from the result of a batch DML operation performed through the Database class.
+	* @param result The result of the Database DML operation. It cannot be more specific than Object, because the result of
+	*               the different DML operations that the Database class can perform don't have a common parent.
+	* @param objectType The name of the type of object that caused the error.
+	* @param objId The id of the record that caused the error.
+	* @return The error record.
+	*/
+	private static Error__c createBatchError(String message) {
+		Error__c error = new Error__c();
+		error.Datetime__c = System.now();
+		error.Full_Message__c = message;
+
+		// Randi - can we get the object type?
+
+		UTIL_Debug.debug('**** createBatchError() returns error: ' + error);
+		return error;
+	}
     
     /*******************************************************************************************************
     * @description Returns the URL of a record, if available.
