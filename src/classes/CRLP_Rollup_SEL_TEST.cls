@@ -58,7 +58,7 @@ public class CRLP_Rollup_SEL_TEST {
                         new CMT_UnitTestData_TEST.CMT_Field('Summary_Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Account'),
                         new CMT_UnitTestData_TEST.CMT_Field('Summary_Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Account.AnnualRevenue'),
                         new CMT_UnitTestData_TEST.CMT_Field('Detail_Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
-                        new CMT_UnitTestData_TEST.CMT_Field('Detail_Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.AccountId'),
+                        /*new CMT_UnitTestData_TEST.CMT_Field('Detail_Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.AccountId'),*/
                         new CMT_UnitTestData_TEST.CMT_Field('Date_Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
                         new CMT_UnitTestData_TEST.CMT_Field('Date_Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.CloseDate'),
                         new CMT_UnitTestData_TEST.CMT_Field('Amount_Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
@@ -85,12 +85,13 @@ public class CRLP_Rollup_SEL_TEST {
         System.AssertEquals(1, CRLP_Rollup_SEL.getRollupsByFilterGroup().size(),
                 'There should be 1 filter group that has rollups');
 
-        Integer expectedFldCount = 3;
+        Integer expectedFldCount = 4;   // the 2 fields above PLUS the AccountID and PrimaryContactId fields
         if (UserInfo.isMultiCurrencyOrganization()) {
             expectedFldCount++;
         }
         System.AssertEquals(expectedFldCount, CRLP_Rollup_SEL.getReferencedFieldsByObject(Opportunity.SObjectType).size(),
-                'There should be ' + expectedFldCount + ' Opportunity fields referenced across the rollup');
+                'There should be ' + expectedFldCount + ' Opportunity fields referenced across the rollup\n' +
+                CRLP_Rollup_SEL.getReferencedFieldsByObjectAsString(Opportunity.SObjectType));
 
         // Test that a list of fields to query is returned
         String queryFields = CRLP_Rollup_SEL.getReferencedFieldsByObjectAsString(Opportunity.SObjectType);

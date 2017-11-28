@@ -139,7 +139,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         }
         return relationshipsSettings;
     }
-    
+
     /*******************************************************************************************************
     * @description Returns the default Affiliations settings. 
     * @return npe5__Affiliations_Settings__c Custom settings record for Affiliations configuration. At the org level, 
@@ -484,22 +484,22 @@ public without sharing class UTIL_CustomSettingsFacade {
         
         for(Schema.PicklistEntry pe : P){
             if (pe.isDefaultValue()){
-                if(pe.getValue() == HH_Households.ALL_PROCESSOR){
+                if (pe.getValue() == HH_Households.ALL_PROCESSOR){
                     oldProcessor = HH_Households.ALL_PROCESSOR;
-                } else if(pe.getValue() == HH_Households.ALL_INDIVIDUALS_PROCESSOR){
+                } else if (pe.getValue() == HH_Households.ALL_INDIVIDUALS_PROCESSOR){
                     oldProcessor = HH_Households.ALL_INDIVIDUALS_PROCESSOR;
-                } else if(pe.getValue() == HH_Households.NO_HOUSEHOLDS_PROCESSOR){
+                } else if (pe.getValue() == HH_Households.NO_HOUSEHOLDS_PROCESSOR){
                     oldProcessor = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
                 }
                 break;
             }
         }
         //set them up with their old setting in the new settings object
-        if(oldProcessor == HH_Households.ALL_PROCESSOR){
+        if (oldProcessor == HH_Households.ALL_PROCESSOR){
             hs.npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR;
-        } else if(oldProcessor == HH_Households.ALL_INDIVIDUALS_PROCESSOR){
+        } else if (oldProcessor == HH_Households.ALL_INDIVIDUALS_PROCESSOR){
             hs.npo02__Household_Rules__c = HH_Households.ALL_INDIVIDUALS_PROCESSOR;
-        } else if(oldProcessor == HH_Households.NO_HOUSEHOLDS_PROCESSOR){
+        } else if (oldProcessor == HH_Households.NO_HOUSEHOLDS_PROCESSOR){
             hs.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
         } else {
             hs.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
@@ -524,11 +524,19 @@ public without sharing class UTIL_CustomSettingsFacade {
         hs.npo02__Soft_Credit_Roles__c = 'Matched Donor;Soft Credit;Household Member';
         hs.Matched_Donor_Role__c = 'Matched Donor';
         hs.npo02__Household_Contact_Roles_On__c = true;
+
+        // New default settings for the Customizable Rollups engine
         hs.Customizable_Rollups_Enabled__c = false;
-                
+        hs.Rollups_Limit_on_Attached_Opps_for_LDV__c = 500;
+        hs.Rollups_LDV_Batch_Size__c = 600;
+        hs.Rollups_Account_Batch_Size__c = 200;
+        hs.Rollups_Contact_Batch_Size__c = 200;
+        hs.Rollups_Allocation_Batch_Size__c = 1000;
+
         // new HH Account model overrides having HH objects
-        if (contactsSettings != null && contactsSettings.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR)
+        if (contactsSettings != null && contactsSettings.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
             hs.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
+        }
     }
     
     private static void configRecurringDonationsSettings(npe03__Recurring_Donations_Settings__c rds) {
@@ -646,7 +654,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         orgContactsSettings = contactsSettings;
         return contactsSettings;
     }
-    
+
     /*******************************************************************************************************
     * @description Creates instance of settings to use in tests. It does not insert it, but all other methods will see these settings
     * as the configured settings.
@@ -654,9 +662,10 @@ public without sharing class UTIL_CustomSettingsFacade {
     * @return npo02__Households_Settings__c The configured settings.
     **/
     public static npo02__Households_Settings__c getHouseholdsSettingsForTests(npo02__Households_Settings__c mySettings) {
-        if(householdsSettings == null)
+        if(householdsSettings == null) {
             householdsSettings = new npo02__Households_Settings__c();
-            
+        }
+
         //create our own based on what's passed in from the test
         householdsSettings.npo02__Household_Rules__c = mySettings.npo02__Household_Rules__c;
         householdsSettings.npo02__Household_Contact_Roles_On__c = mySettings.npo02__Household_Contact_Roles_On__c;
@@ -680,14 +689,21 @@ public without sharing class UTIL_CustomSettingsFacade {
         householdsSettings.npo02__Schedule_Job_Limit__c = 25;
         householdsSettings.Use_Dated_Conversion_Rates__c = mySettings.Use_Dated_Conversion_Rates__c;
         householdsSettings.Custom_Exchange_Rate_Field__c = mySettings.Custom_Exchange_Rate_Field__c;
+        // Customizable Rollups Settings
         householdsSettings.Customizable_Rollups_Enabled__c = mySettings.Customizable_Rollups_Enabled__c;
+        householdsSettings.Rollups_Account_Batch_Size__c = mySettings.Rollups_Account_Batch_Size__c;
+        householdsSettings.Rollups_Contact_Batch_Size__c = mySettings.Rollups_Contact_Batch_Size__c;
+        householdsSettings.Rollups_Allocation_Batch_Size__c = mySettings.Rollups_Allocation_Batch_Size__c;
+        householdsSettings.Rollups_Limit_on_Attached_Opps_for_LDV__c = mySettings.Rollups_Limit_on_Attached_Opps_for_LDV__c;
+        householdsSettings.Rollups_LDV_Batch_Size__c  = mySettings.Rollups_LDV_Batch_Size__c;
+
         orgHouseholdsSettings = householdsSettings;
  
         // if the caller explicitly is testing Household objects, make sure we have HH Accounts turned off.
         if (householdsSettings != null && householdsSettings.npo02__Household_Rules__c != HH_Households.NO_HOUSEHOLDS_PROCESSOR) {
             if (contactsSettings != null && contactsSettings.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
                 contactsSettings.npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR;
-            }   
+            }
         }
         return householdsSettings;
     }

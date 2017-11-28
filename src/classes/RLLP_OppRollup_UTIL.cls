@@ -191,11 +191,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     */
     public static Boolean customizableRollupEngineEnabled {
         get {
-            if (customizableRollupEngineEnabled == null) {
-                npo02__Households_Settings__c household_settings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
-                customizableRollupEngineEnabled = (household_settings.Customizable_Rollups_Enabled__c == true);
-            }
-            return customizableRollupEngineEnabled;
+            return CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled;
         } private set;
     }
 

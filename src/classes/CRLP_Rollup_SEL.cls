@@ -155,6 +155,14 @@ public class CRLP_Rollup_SEL {
         if (UserInfo.isMultiCurrencyOrganization() && allFields.containsKey('currencyisocode')) {
             referencedFields.put('CurrencyIsoCode', allFields.get('currencyisocode'));
         }
+        // Always add the AccountId and PrimaryContactId for the Opportunity object
+        if (objType == Opportunity.SObjectType) {
+            String fldName = SObjectType.Opportunity.fields.AccountId.getName();
+            referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
+            fldName = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
+            referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
+        }
+
         validateReferencedFields(referencedFields, objName);
         return referencedFields.values();
     }

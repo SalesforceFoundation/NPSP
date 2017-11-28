@@ -123,12 +123,15 @@
         <members>CRLP_RollupContact_TEST</members>
         <members>CRLP_RollupGAU_SVC</members>
         <members>CRLP_RollupGAU_TEST</members>
+        <members>CRLP_RollupProcessor_SVC</members>
         <members>CRLP_RollupQueueable</members>
+        <members>CRLP_RollupScheduler</members>
+        <members>CRLP_RollupScheduler_TEST</members>
         <members>CRLP_Rollup_BATCH</members>
-        <members>CRLP_Rollup_BATCH_SVC</members>
         <members>CRLP_Rollup_BATCH_LDV</members>
         <members>CRLP_Rollup_SEL</members>
         <members>CRLP_Rollup_SEL_TEST</members>
+        <members>CRLP_Rollup_TDTM</members>
         <members>CRLP_Rollup_SVC</members>
         <members>CRLP_VRollupHandler</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
@@ -950,6 +953,7 @@
         <members>npo02__Households_Settings__c.Rollups_Account_Batch_Size__c</members>
         <members>npo02__Households_Settings__c.Rollups_Allocation_Batch_Size__c</members>
         <members>npo02__Households_Settings__c.Rollups_Contact_Batch_Size__c</members>
+        <members>npo02__Households_Settings__c.Rollups_LDV_Batch_Size__c</members>
         <members>npo02__Households_Settings__c.Rollups_Limit_on_Attached_Opps_for_LDV__c</members>
         <members>npo02__Households_Settings__c.Use_Dated_Conversion_Rates__c</members>
         <name>CustomField</name>

@@ -37,7 +37,7 @@
 private class CRLP_RollupAccount_TEST {
 
     private Enum TestType {
-        TestStandard, TestQueueuable, TestBatch, TestLDV
+        TestTrigger, TestQueueuable, TestBatch, TestLDV
     }
 
     /**
@@ -66,6 +66,7 @@ private class CRLP_RollupAccount_TEST {
         CMT_FilterRule_SEL.cachedFilterRules = (List<Filter_Rule__mdt>)JSON.deserialize(filterRulesJSON, List<Filter_Rule__mdt>.class);
 
         // Create a single Rollup that uses the above Filter Group
+        // TODO Add many more rollup variations to this
         String rollupsJSON = '[' +
                 CMT_UnitTestData_TEST.createRollupRecord('Household Total Donations All Time', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
@@ -122,13 +123,12 @@ private class CRLP_RollupAccount_TEST {
     static testMethod void test_Rollups_Batch() {
         testRollupsServices(TestType.TestBatch);
     }
-    static testMethod void test_Rollups_Standard() {
-        testRollupsServices(TestType.TestStandard);
-    }
+    /*static testMethod void test_Rollups_Trigger() {
+        testRollupsServices(TestType.TestTrigger);
+    }*/
 
     /**
      * @description Test some simple rollups from the Opportunity/Payment object to the Account
-     * TODO Add many more rollup variations to this
      */
     private static void testRollupsServices(TestType tt) {
 
@@ -136,7 +136,9 @@ private class CRLP_RollupAccount_TEST {
         UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                         npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
-                        Customizable_Rollups_Enabled__c = true
+                        Customizable_Rollups_Enabled__c = true,
+                        Rollups_Limit_on_Attached_Opps_for_LDV__c = 150,
+                        Rollups_Account_Batch_Size__c = 20
                 ));
 
         // Create the test data
@@ -217,8 +219,9 @@ private class CRLP_RollupAccount_TEST {
 
         // Now test the rollups to the Account from the Opportunity
         Test.startTest();
-        if (tt == TestType.TestStandard) {
-            CRLP_Rollup_BATCH_SVC.startRollupsForNonLDV(new List<Id>{acctId}, true);
+        if (tt == TestType.TestTrigger) {
+//            CRLP_RollupProcessor_SVC.startRollupsForNonLDV(new List<Id>{acctId}, true);
+            return;
         } else if (tt == TestType.TestBatch) {
             database.executeBatch(new CRLP_Rollup_BATCH(new List<Id>{acctId}));
         } else if (tt == TestType.TestQueueuable) {

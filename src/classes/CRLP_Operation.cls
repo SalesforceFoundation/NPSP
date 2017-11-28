@@ -119,7 +119,6 @@ public class CRLP_Operation {
                 rollupOperationTypesByName.put(getRollupOperationTypes().get(rt).toUpperCase().replace(' ', '_'), rt);
             }
         }
-        system.assert(rollupOperationTypesByName.containsKey(operation), operation);
         return rollupOperationTypesByName.get(operation);
     }
 

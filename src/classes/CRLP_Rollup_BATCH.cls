@@ -36,9 +36,7 @@
 */
 public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.Stateful {
 
-    private static final Integer MAX_RELATED_OPPS = 500;
-
-    private SObjectType batchObjectType;
+    private SObjectType summaryObjectType;
     private List<Id> recordIds;
     private Map<Id, String> errors;
 
@@ -46,7 +44,7 @@ public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.
     * @description Constructs the class, sets the properties
     */
     public CRLP_Rollup_BATCH(SObjectType objType) {
-        this.batchObjectType = objType;
+        this.summaryObjectType = objType;
         this.errors = new Map<Id, String>();
     }
 
@@ -54,7 +52,7 @@ public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.
     * @description Constructs the class, sets the properties
     */
     public CRLP_Rollup_BATCH(List<Id> recordIds) {
-        this.batchObjectType = recordIds[0].getSobjectType();
+        this.summaryObjectType = recordIds[0].getSobjectType();
         this.recordIds = recordIds;
         this.errors = new Map<Id, String>();
     }
@@ -65,11 +63,13 @@ public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.
     * @return database.Querylocator
     */
     public database.Querylocator start(Database.BatchableContext bc) {
+        Integer maxRelatedOppsForNonLDVMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonLDVMode();
+
         // Build a query string of the Allocation__c object. By default this query will include all Opportunity
         // fields referred to by any rollup against the Allocation object.
-        String query = CRLP_Query_SEL.getResultsQuery(this.batchObjectType) +
-            ' WHERE ' + (this.batchObjectType == Contact.SObjectType ? 'Account.' : '') +
-            UTIL_Namespace.StrAllNSPrefix('Number_of_Opportunities__c') + ' < :MAX_RELATED_OPPS';
+        String query = CRLP_Query_SEL.getResultsQuery(this.summaryObjectType) +
+            ' WHERE ' + (this.summaryObjectType == Contact.SObjectType ? 'Account.' : '') +
+            UTIL_Namespace.StrAllNSPrefix('Number_of_Opportunities__c') + ' < :maxRelatedOppsForNonLDVMode';
         if (this.recordIds != null && this.recordIds.size() > 0) {
             query += ' AND Id IN :recordIds';
         }
@@ -82,12 +82,35 @@ public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.
     * @param bc BatchableContext passed by the system call
     * @param scope List of Summary records
     */
-    public void execute(Database.BatchableContext bc, List<SObject> scope) {
-        CRLP_Rollup_BATCH_SVC.startRollupsForNonLDV(scope, true);
+    public void execute(Database.BatchableContext bc, List<SObject> summaryRecords) {
+
+        // Get the detail records for the current set of Summary Records
+        List<SObject> detailsRecords = CRLP_RollupProcessor_SVC.getDetailRecordsFromParentRecords(summaryRecords);
+
+        // Build the processing options instance
+        CRLP_RollupProcessor_SVC.ProcessingOptions options = new CRLP_RollupProcessor_SVC.ProcessingOptions();
+        options.mode = CRLP_RollupProcessor_SVC.ProcessingMode.NonLDV;
+        options.parentObjType = this.summaryObjectType;
+        if (this.summaryObjectType == Account.SObjectType) {
+            options.parentKeyField = SObjectType.Opportunity.fields.AccountId.getName();
+        } else if (this.summaryObjectType == Contact.SObjectType) {
+            options.parentKeyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
+        }
+
+        // Call the method to do the actual rollups. This returns only records that require updating
+        List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailsRecords, options);
+
+        // Handle dml on the records
+        Map<Id, String> dmlErrors = CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
+        this.errors.putAll(dmlErrors);
     }
 
+    /********************************************************************************************************
+     * @description Log any captured DML errors.
+     */
     public void finish(Database.BatchableContext bc) {
-
+        // Log DML errors
+        CRLP_RollupProcessor_SVC.logDmlErrors(this.errors);
     }
 
 }

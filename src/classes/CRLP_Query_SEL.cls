@@ -89,7 +89,7 @@
         // Get the main SOQL statement and parse out the FROM portion
         String mainSoql = getResultsQuery(detailObject).split(' FROM ')[0];
 
-        // Is the primary detail object NOT the OCR or Allocation object?
+        // Is the primary detail object NOT the OCR or Allocation object (must be Opportunity)
         if (detailObject != OpportunityContactRole.SObjectType && detailObject != Allocation__c.SObjectType) {
             // Get the query for each child object, change the FROM object to the relationship name, and append to the main query
             for (SObjectType obj : childObjects) {
@@ -130,4 +130,55 @@
         return mainSoql;
     }
 
+    /**
+     * @description Build a complete SOQL query string from a set of Summary Record Ids, including the requried
+     * child objects and filtered by the parent record id's
+     * @param summaryRecordIds Set<Id>
+     * @return SOQL
+     */
+    public static String getFullDetailsQueryForSummaryRecords(Set<Id> summaryRecordIds) {
+        SObjectType objType = (new List<Id>(summaryRecordIds))[0].getSobjectType();
+        SObjectType mainObject;
+        String detailKeyField;
+        List<SObjectType> childObjects = new List<SObjectType>();
+
+        // The specific set of 'detail' records is fixed based on the target summary object.
+        if (objType == Account.SObjectType) {
+            // Opportunity and Payment to Account
+            mainObject = Opportunity.SObjectType;
+            childObjects.add(npe01__OppPayment__c.SObjectType);
+            detailKeyField = SObjectType.Opportunity.fields.AccountId.getName();
+
+        } else if (objType == Contact.SObjectType) {
+            // Opportunity and Payment to Contact
+            mainObject = Opportunity.SObjectType;
+            childObjects.add(npe01__OppPayment__c.SObjectType);
+            detailKeyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
+
+        } else if (objType == General_Accounting_Unit__c.SObjectType) {
+            // Allocation to GAU
+            mainObject = Allocation__c.SObjectType;
+            detailKeyField = SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();
+
+        } else if (objType == OpportunityContactRole.SObjectType) {
+            // TODO OpportunityContactRole TBD
+
+        }
+
+        // Get the base query
+        String detailsQuery = CRLP_Query_SEL.getDetailsQuery(mainObject, childObjects);
+
+        // Add the appropriate filtering
+        detailsQuery += ' WHERE ' + detailKeyField + ' IN :summaryRecordIds';
+        if (objType == General_Accounting_Unit__c.SObjectType) {
+            // In the specific case of the Allocation to GAU roll-up, explicitly filter out any
+            // Allocation__c records where the Opportunity__c field is null.
+            detailsQuery += ' AND ' + SObjectType.Allocation__c.fields.Opportunity__c.getName() + ' != null';
+        }
+
+        // to avoid any governor limit issues, even in testing, limit the query to under 50K
+        detailsQuery += ' LIMIT 49500';
+
+        return detailsQuery;
+    }
 }

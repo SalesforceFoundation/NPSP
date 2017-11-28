@@ -2,15 +2,6 @@
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <enableEnhancedLookup>false</enableEnhancedLookup>
     <fields>
-        <fullName>Customizable_Rollups_Enabled__c</fullName>
-        <defaultValue>false</defaultValue>
-        <externalId>false</externalId>
-        <inlineHelpText>Check this box to enable the new NPSP Customizable Roll-Up Engine</inlineHelpText>
-        <label>Customizable Roll-Ups Enabled</label>
-        <trackTrending>false</trackTrending>
-        <type>Checkbox</type>
-    </fields>
-    <fields>
         <fullName>Custom_Exchange_Rate_Field__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>The API name of a field, on both the OppPayment__c and Allocation__c objects, where the exchange rate is optionally stored. It must be a Number field with a minimum of 6 decimals. This field is used only if Advanced Currency Management is enabled.</inlineHelpText>
@@ -20,6 +11,15 @@
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Customizable_Rollups_Enabled__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>Check this box to enable the new NPSP Customizable Roll-Up Engine</inlineHelpText>
+        <label>Customizable Roll-Ups Enabled</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>Matched_Donor_Role__c</fullName>
@@ -35,6 +35,8 @@
     </fields>
     <fields>
         <fullName>Rollups_Account_Batch_Size__c</fullName>
+        <defaultValue>200</defaultValue>
+        <description>Only used by the new Customizable Rollups engine</description>
         <externalId>false</externalId>
         <inlineHelpText>Number of records per batch to process when recalculating donor roll-ups to the Account object</inlineHelpText>
         <label>Rollups: Account Batch Size</label>
@@ -47,6 +49,8 @@
     </fields>
     <fields>
         <fullName>Rollups_Allocation_Batch_Size__c</fullName>
+        <defaultValue>1000</defaultValue>
+        <description>Only used by the new Customizable Rollups engine</description>
         <externalId>false</externalId>
         <inlineHelpText>Number of records per batch to process when recalculating donor roll-ups to the Allocation object</inlineHelpText>
         <label>Rollups: Allocation Batch Size</label>
@@ -59,6 +63,8 @@
     </fields>
     <fields>
         <fullName>Rollups_Contact_Batch_Size__c</fullName>
+        <defaultValue>200</defaultValue>
+        <description>Only used by the new Customizable Rollups engine</description>
         <externalId>false</externalId>
         <inlineHelpText>Number of records per batch to process when recalculating donor roll-ups to the Contact object</inlineHelpText>
         <label>Rollups: Contact Batch Size</label>
@@ -70,7 +76,23 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Rollups_LDV_Batch_Size__c</fullName>
+        <defaultValue>600</defaultValue>
+        <description>Only used by the new Customizable Rollups engine</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Number of records per batch to process when recalculating donor roll-ups to the Account &amp; Contact object using the LDV Method</inlineHelpText>
+        <label>Rollups: Account/Contact LDV Batch Size</label>
+        <precision>6</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Rollups_Limit_on_Attached_Opps_for_LDV__c</fullName>
+        <defaultValue>500</defaultValue>
+        <description>Only used by the new Customizable Rollups engine</description>
         <externalId>false</externalId>
         <inlineHelpText>The maximum number of attached Opportunities on an Account allowed in the non-LDV Roll-up Recalculation Batch Jobs. An account with more than this number of attached Opportunities will always be rolled up using the LDV Roll-Up Engine.</inlineHelpText>
         <label>Rollups: Limit on Attached Opps for LDV</label>

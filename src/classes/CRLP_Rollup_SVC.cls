@@ -33,9 +33,10 @@
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Service class for general rollup operations. Includes the interface for the per-rollup-type
-*   handler service classes.
-*
-*   This class should pertain only to service operations shared across the rollup engine.
+* handler service classes.
+* This class Service Class is limited to generic Service Methods used throughout the entire scope of the
+* Customizable Rollups engine. Methods that are specific to data operations (Triggers, Batch, and Queueables)
+* are stored in the CRLP_RollupProcessor_SVC class.
 */
 public class CRLP_Rollup_SVC {
 
@@ -119,36 +120,50 @@ public class CRLP_Rollup_SVC {
         return hasValueChanged;
     }
 
+    /** @description HouseholdSettings record that defines specific Customizable Rollups settings */
+    private static final npo02__Households_Settings__c household_settings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+
     /**
-     * @description Called by Update triggers to determine if a rollup recalculation is required for a given record
-     * @param newRecord
-     * @param oldRecord
-     * @return Boolean
-     */
-    public static Boolean isRollupRecalcNeeded(SObject newRecord, SObject oldRecord) {
-
-        if (oldRecord == null) {
-            return true;
-        }
-
-        SObjectType objType = newRecord.getSObjectType();
-
-        // Start by getting all the fields referenced by any Filter Group or active Rollup
-        List<Schema.DescribeFieldResult> fieldsToCompare = new List<DescribeFieldResult>();
-        fieldsToCompare.addAll(CMT_FilterRule_SEL.getReferencedFieldsByObject(objType));
-        fieldsToCompare.addAll(CRLP_Rollup_SEL.getReferencedFieldsByObject(objType));
-
-        // Loop through the FieldDescribeResults list and compare the value of each field between the
-        // old and new objects.
-        Boolean changed = false;
-        for (DescribeFieldResult dfr : fieldsToCompare) {
-            Object oldVal = oldRecord.get(dfr.name);
-            Object newVal = newRecord.get(dfr.name);
-            if (oldVal != newVal) {
-                changed = true;
-                break;
-            }
-        }
-        return changed;
+    * @description Returns true if the new Customizable Rollups Engine is enabled (i.e., Do Not Run Legacy Rollups)
+    */
+    public static Boolean isCustomizableRollupEngineEnabled {
+        get {
+            return (household_settings.Customizable_Rollups_Enabled__c == true);
+        } private set;
     }
+
+    /**
+     * @description Return the batch size to use for standard (non-LDV) batch roll-up operations
+     * @param objType SObjectType of the Summary object
+     * @return Integer value
+     */
+    public static Integer getBatchSize(SObjectType objType) {
+        if (objType == Account.SObjectType) {
+            return household_settings.Rollups_Account_Batch_Size__c.intValue();
+        } else if (objType == Contact.SObjectType) {
+            return household_settings.Rollups_Contact_Batch_Size__c.intValue();
+        } else if (objType == Allocation__c.SObjectType) {
+            return household_settings.Rollups_Allocation_Batch_Size__c.intValue();
+        }
+        return 200;
+    }
+
+    /**
+     * @description Return the batch size to use for LDV batch roll-up operations
+     * @param objType SObjectType of the Summary object
+     * @return Integer value
+     */
+    public static Integer getLDVBatchSize(SObjectType objType) {
+        return household_settings.Rollups_LDV_Batch_Size__c.intValue();
+    }
+
+    /**
+     * @description Get the setting that defines the max number of attached Opportunities an Account can
+     * have before it's considered an LDV data scenario.
+     * @return Integer value
+     */
+    public static Integer getMaxRelatedOppsForNonLDVMode() {
+        return household_settings.Rollups_Limit_on_Attached_Opps_for_LDV__c.intValue();
+    }
+
 }

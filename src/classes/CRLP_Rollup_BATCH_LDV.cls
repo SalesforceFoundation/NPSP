@@ -42,8 +42,8 @@ public class CRLP_Rollup_BATCH_LDV implements Database.Batchable<SObject>, Datab
     * @description Stateful collection of Rollups to process
     */
     public List<CRLP_Rollup> statefulRollups;
-    public Id currentRecordId;
-    private SObjectType batchObjectType;
+    public Id currentParentRecordId;
+    private SObjectType summaryObjectType;
     private List<Id> recordIds;
     private Map<Id, String> errors;
 
@@ -51,7 +51,7 @@ public class CRLP_Rollup_BATCH_LDV implements Database.Batchable<SObject>, Datab
     * @description Constructs the class, sets the properties
     */
     public CRLP_Rollup_BATCH_LDV(SObjectType objType) {
-        this.batchObjectType = objType;
+        this.summaryObjectType = objType;
 
         // Init the stateful rollups collection
         this.statefulRollups = new List<CRLP_Rollup>();
@@ -62,15 +62,14 @@ public class CRLP_Rollup_BATCH_LDV implements Database.Batchable<SObject>, Datab
     * @description Constructs the class, sets the properties
     */
     public CRLP_Rollup_BATCH_LDV(List<Id> recordIds) {
-        this.batchObjectType = recordIds[0].getSobjectType();
+        this.summaryObjectType = recordIds[0].getSobjectType();
         this.recordIds = recordIds;
         this.statefulRollups = new List<CRLP_Rollup>();
         this.errors = new Map<Id, String>();
     }
 
     /*******************************************************************************************************
-    * @description Query all Allocation records for the rollups. Using Allocations as the primary object to
-    * fully support LDV orgs and data skew scenarios.
+    * @description Build a query of Detail records based on the specified Summary Object Type.
     * @param bc BatchableContext passed by the system call
     * @return database.Querylocator
     */
@@ -79,20 +78,20 @@ public class CRLP_Rollup_BATCH_LDV implements Database.Batchable<SObject>, Datab
         // Build a query string for the specified Summary object.
         SObjectType detailObjectType;
         String keyField;
-        if (this.batchObjectType == General_Accounting_Unit__c.SObjectType) {
+        if (this.summaryObjectType == General_Accounting_Unit__c.SObjectType) {
             detailObjectType = Allocation__c.SObjectType;
             keyField = SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();
-        } else if (this.batchObjectType == Account.SObjectType) {
+        } else if (this.summaryObjectType == Account.SObjectType) {
             detailObjectType = Opportunity.SObjectType;
             keyField = SObjectType.Opportunity.fields.AccountId.getName();
-        } else if (this.batchObjectType == Contact.SObjectType) {
+        } else if (this.summaryObjectType == Contact.SObjectType) {
             detailObjectType = Opportunity.SObjectType;
             keyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
         }
         String query = CRLP_Query_SEL.getDetailsQuery(detailObjectType, new List<SObjectType>()) + ' WHERE ';
 
         // Add necessary filters to limit the LDV batch job to only the records that should be processed as LDV
-        if (this.batchObjectType == General_Accounting_Unit__c.SObjectType) {
+        if (this.summaryObjectType == General_Accounting_Unit__c.SObjectType) {
             query += ' ' + SObjectType.Allocation__c.fields.Opportunity__c.getName() + ' != null ';
         } else if (detailObjectType == Opportunity.SObjectType) {
             query += 'Account.' + SObjectType.Account.fields.Number_of_Opportunities__c.getName() + ' >= :MAX_RELATED_OPPS';
@@ -100,6 +99,7 @@ public class CRLP_Rollup_BATCH_LDV implements Database.Batchable<SObject>, Datab
         if (this.recordIds != null && this.recordIds.size() > 0) {
             query += ' AND ' + keyField + ' IN :recordIds';
         }
+        query += ' ORDER BY ' + keyField + ', CreatedDate ASC';
         UTIL_Debug.debug(LoggingLevel.WARN, '>> LDV Batch Query =' + query);
 
         // TODO Review the above query to ensure it's fully selective. Could consider using RecurringDonation = Null ...
@@ -107,33 +107,85 @@ public class CRLP_Rollup_BATCH_LDV implements Database.Batchable<SObject>, Datab
     }
 
     /*******************************************************************************************************
-    * @description Handle each group of Allocation records to roll-up. A Stateful collection of CRLP_Rollup
-    * instances is used to allow for potentially more than 50k Allocation records attached to a single GAU.
+    * @description Handle each group of Detail records to roll-up (i.e., LDV mode). A Stateful collection of
+    * CRLP_Rollup instances is used to accumulate the rolled up values by Parent Id across multiple calls to this
+    * exection() method with more and more detailsRecords for the same parent.
     * @param bc BatchableContext passed by the system call
-    * @param scope List of Allocation__c records
-    * // TODO DON'T LIKE THE FACT THAT A SINGLE SUMMARY RECORD MAY BE UPDATED MANY TIMES IN LDV MODE
+    * @param scope List of Detail (Allocation or Opportunity) records
     */
-    public void execute(Database.BatchableContext bc, List<Allocation__c> scope) {
-        // Use this flag to tell batch items that aren't the LAST item to not write the last record
-        // in that scope. Instead hold onto those rollups in the stateful var for the next batch iteration
-        // to handle. Example: A single GAU may have 10000 Allocation records. If the batch job batch size
-        // is only 500 records, this will prevent that GAU from being updated 20 times as all the related
-        // Allocation records has rolled up through this method. The update will not happen until the GauId
-        // changes on the Allocation records being processed.
-        Boolean isLastBatchItem = CRLP_Rollup_BATCH_SVC.isLastBatchItem(bc.getJobId());
+    public void execute(Database.BatchableContext bc, List<Allocation__c> detailRecords) {
+        // Build the processing options instance
+        CRLP_RollupProcessor_SVC.ProcessingOptions options = createOptionsInstance();
 
-        CRLP_Rollup_BATCH_SVC.ldvCurrentParentId = this.currentRecordId;
-        List<General_Accounting_Unit__c> gausToUpdate = CRLP_Rollup_BATCH_SVC.startRollupsForLDV(scope,
-                General_Accounting_Unit__c.SObjectType, 'General_Accounting_Unit__c', this.statefulRollups);
-        this.currentRecordId = CRLP_Rollup_BATCH_SVC.ldvCurrentParentId;
-        if (gausToUpdate.size() > 0) {
-            // TODO Implement AllOrNothing logic
-            database.update(gausToUpdate);
+        // Get all parent records to be processed by this batch iteration, being sure to include the
+        // last parent id processed by the previous batch
+        Set<Id> parentIds = CRLP_RollupProcessor_SVC.getParentIdsFromDetailRecords(detailRecords, options.parentKeyField);
+        if (this.currentParentRecordId != null) {
+            parentIds.add(this.currentParentRecordId);
         }
+        // Get the Summary (target) records for the current set of Detail Records
+        String soql = CRLP_Query_SEL.getResultsQuery(options.parentObjType) + ' WHERE Id IN :parentIds';
+        List<SObject> summaryRecords = database.query(soql);
+
+        // Call the method to do the actual rollups. This returns only records that require updating
+        List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailRecords, options);
+
+        // Save Rollups collection and the last parent record id processed in stateful vars
+        this.currentParentRecordId = CRLP_RollupProcessor_SVC.getLastProcesssedParentId();
+        this.statefulRollups = options.rollups;
+
+        // Handle dml on the records to be updated
+        Map<Id, String> dmlErrors = CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
+        this.errors.putAll(dmlErrors);
     }
 
+    /********************************************************************************************************
+     * @description Called when all processing is complete for the batch job. Since this job is working from the
+     * Detail object, there will be one parent record to finish the update for.
+     * Log any captured DML errors.
+     */
     public void finish(Database.BatchableContext bc) {
 
+        // Handle the final parent record in the LDV job
+        if (this.currentParentRecordId != null && this.statefulRollups.size() > 0) {
+            // Build the processing options instance
+            CRLP_RollupProcessor_SVC.ProcessingOptions options = createOptionsInstance();
+
+            // Get the Summary (target) records for the final record to be processed
+            Set<Id> parentIds = new Set<Id>{ this.currentParentRecordId };
+            String soql = CRLP_Query_SEL.getResultsQuery(options.parentObjType) + ' WHERE Id IN :parentIds LIMIT 1';
+            SObject parent = database.query(soql);
+
+            // Call the method to do the actual rollup on this last remaining record, which is basically
+            // just to return the updated record
+            SObject updatedRecord = CRLP_RollupProcessor_SVC.completeRollupForParent(parent, new List<SObject>(), options);
+
+            // Handle dml on the records to be updated
+            Map<Id, String> dmlErrors = CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(new List<SObject>{updatedRecord});
+            this.errors.putAll(dmlErrors);
+        }
+
+        // Log DML errors
+        CRLP_RollupProcessor_SVC.logDmlErrors(this.errors);
     }
 
+    /********************************************************************************************************
+     * @description Create an instance of the CRLP_RollupProcessor_SVC.ProcessingOptions class to use with the
+     * CRLP_RollupProcessor_SVC.startRollupProcess() calls.
+     * @return CRLP_RollupProcessor_SVC.ProcessingOptions
+     */
+    private CRLP_RollupProcessor_SVC.ProcessingOptions createOptionsInstance() {
+        CRLP_RollupProcessor_SVC.ProcessingOptions options = new CRLP_RollupProcessor_SVC.ProcessingOptions();
+        options.mode = CRLP_RollupProcessor_SVC.ProcessingMode.LDV;
+        options.parentObjType = this.summaryObjectType;
+        if (this.summaryObjectType == Account.SObjectType) {
+            options.parentKeyField = SObjectType.Opportunity.fields.AccountId.getName();
+        } else if (this.summaryObjectType == Contact.SObjectType) {
+            options.parentKeyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
+        } else if (this.summaryObjectType == General_Accounting_Unit__c.SObjectType) {
+            options.parentKeyField = SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();
+        }
+        options.rollups = this.statefulRollups;
+        return options;
+    }
 }

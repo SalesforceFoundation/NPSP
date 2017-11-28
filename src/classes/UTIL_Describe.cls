@@ -246,6 +246,7 @@ public class UTIL_Describe {
     * @return Schema.SObjectType The token for the object.
     */
     public static Schema.SObjectType getSObjectType(String qualifiedAPIName) {
+        if (gd==null) gd = Schema.getGlobalDescribe();
         return gd.get(qualifiedAPIName);
     }
 

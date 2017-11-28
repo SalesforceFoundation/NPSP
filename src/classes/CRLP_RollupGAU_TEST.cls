@@ -66,6 +66,7 @@ private class CRLP_RollupGAU_TEST {
         CMT_FilterRule_SEL.cachedFilterRules = (List<Filter_Rule__mdt>)JSON.deserialize(filterRulesJSON, List<Filter_Rule__mdt>.class);
 
         // Create a single Rollup that uses the above Filter Group
+        // TODO Add many more rollup variations to this
         String rollupsJSON = '[' +
                 CMT_UnitTestData_TEST.createRollupRecord('Household Total Allocations All Time', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.GAU,
@@ -108,7 +109,6 @@ private class CRLP_RollupGAU_TEST {
 
     /**
      * @description Test some simple rollups from the Opportunity/Payment object to the Account
-     * TODO Add many more rollup variations to this
      */
     private static void testRollupsServices(TestType tt) {
 
@@ -126,11 +126,16 @@ private class CRLP_RollupGAU_TEST {
         allocs.add(new Allocation__c(Campaign__c=cam.id, Percent__c = 50, General_Accounting_Unit__c = defaultGau2.id));
         insert allocs;
 
-
         // Start by enabling Customizable Rollups (which disables all legacy rollup operations)
         UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
-                        npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, Customizable_Rollups_Enabled__c = true)
+                        npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                        Customizable_Rollups_Enabled__c = true,
+                        Rollups_Limit_on_Attached_Opps_for_LDV__c = 150,
+                        Rollups_Account_Batch_Size__c = 20,
+                        Rollups_Allocation_Batch_Size__c = 20,
+                        Rollups_LDV_Batch_Size__c = 100
+                )
         );
 
         // Create the test data

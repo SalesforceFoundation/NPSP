@@ -37,12 +37,45 @@
 */
 public class CRLP_RollupQueueable implements System.Queueable {
 
+    // TODO -- THIS NEEDS TO HANDLE GETTING EITHER PARENT OR CHILD (OPP/PAYMENT) RECORD IDS
+    // For now it only accepts Parent record Ids
     private List<Id> recordIds;
+    /**
+     * @description Constructor
+     * @param recordIds List<Id> list of Summary Record Id's to roll up for
+     */
     public CRLP_RollupQueueable(List<Id> recordIds) {
         this.recordIds = recordIds;
     }
 
     public void execute(QueueableContext qc) {
-        CRLP_Rollup_BATCH_SVC.startRollupsForNonLDV(this.recordIds, true);
+        SObjectType objType = recordIds[0].getSobjectType();
+
+        CRLP_RollupProcessor_SVC.ProcessingOptions options = new CRLP_RollupProcessor_SVC.ProcessingOptions();
+        options.mode = CRLP_RollupProcessor_SVC.ProcessingMode.NonLDV;
+        options.parentObjType = objType;
+        if (objType == Account.SObjectType) {
+            options.parentKeyField = SObjectType.Opportunity.fields.AccountId.getName();
+        } else if (objType == Contact.SObjectType) {
+            options.parentKeyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
+        }
+
+        // Query the parent records
+        Set<Id> parentIds = new Set<Id>(this.recordIds);
+        String soql = CRLP_Query_SEL.getResultsQuery(objType) + ' WHERE Id IN :parentIds';
+        List<SObject> summaryRecords = database.query(soql);
+
+        // Get the detail records for the current set of Summary Records
+        List<SObject> detailsRecords = CRLP_RollupProcessor_SVC.getDetailRecordsFromParentRecords(summaryRecords);
+
+
+        // Call the method to do the actual rollups. This returns only records that require updating
+        List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailsRecords, options);
+
+        // DML and capture any returned DML errors into a Map by Summary Record Id
+        Map<Id, String> dmlErrors = CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
+
+        // Log DML errors
+        CRLP_RollupProcessor_SVC.logDmlErrors(dmlErrors);
     }
 }
