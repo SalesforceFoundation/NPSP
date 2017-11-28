@@ -250,7 +250,7 @@ private with sharing class PMT_PaymentCreator_TEST {
         System.assertEquals(testOpportunitiesCount, createdPayments.size(), testOpportunitiesCount + ' new payments should be created.');
         for (npe01__OppPayment__c createdPayment : createdPayments) {
             Opportunity paymentOpportunity = createdTestOpportunities.get(createdPayment.npe01__Opportunity__c);
-            System.assert(paymentOpportunity != null);
+            System.assertNotEquals(null, paymentOpportunity);
             System.assertEquals(paymentOpportunity.CloseDate, createdPayment.npe01__Payment_Date__c);
             System.assertEquals(paymentOpportunity.Amount, createdPayment.npe01__Payment_Amount__c);
             System.assertEquals(true, createdPayment.npe01__Paid__c);
@@ -292,7 +292,7 @@ private with sharing class PMT_PaymentCreator_TEST {
         System.assertEquals(testOpportunitiesCount, createdPayments.size(), testOpportunitiesCount + ' new payments should be created.');
         for (npe01__OppPayment__c createdPayment : createdPayments) {
             Opportunity paymentOpportunity = createdTestOpportunities.get(createdPayment.npe01__Opportunity__c);
-            System.assert(paymentOpportunity != null);
+            System.assertNotEquals(null, paymentOpportunity);
             System.assertEquals(paymentOpportunity.CloseDate, createdPayment.npe01__Scheduled_Date__c);
             System.assertEquals(paymentOpportunity.Amount, createdPayment.npe01__Payment_Amount__c);
             System.assertEquals(false, createdPayment.npe01__Paid__c);
@@ -334,7 +334,7 @@ private with sharing class PMT_PaymentCreator_TEST {
         System.assertEquals(testOpportunitiesCount, createdPayments.size(), testOpportunitiesCount + ' new payments should be created.');
         for (npe01__OppPayment__c createdPayment : createdPayments) {
             Opportunity paymentOpportunity = createdTestOpportunities.get(createdPayment.npe01__Opportunity__c);
-            System.assert(paymentOpportunity != null);
+            System.assertNotEquals(null, paymentOpportunity);
             System.assertEquals(paymentOpportunity.CloseDate, createdPayment.npe01__Scheduled_Date__c);
             System.assertEquals(paymentOpportunity.Amount, createdPayment.npe01__Payment_Amount__c);
             System.assertEquals(false, createdPayment.npe01__Paid__c);
