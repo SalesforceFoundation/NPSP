@@ -354,8 +354,7 @@ public class PMT_PaymentCreator {
 
         if (opportunityPayment.npe01__Paid__c) {
             opportunityPayment.npe01__Payment_Date__c = newOpportunity.CloseDate;
-        }
-        else {
+        } else {
             opportunityPayment.npe01__Scheduled_Date__c = newOpportunity.CloseDate;
         }
                 

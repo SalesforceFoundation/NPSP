@@ -208,7 +208,7 @@ private with sharing class PMT_PaymentCreator_TEST {
         System.assertEquals(testOpportunitiesCount, createdPayments.size(), testOpportunitiesCount + ' new payments should be created.');
         for (npe01__OppPayment__c createdPayment : createdPayments) {
             Opportunity paymentOpportunity = createdTestOpportunities.get(createdPayment.npe01__Opportunity__c);
-            System.assert(paymentOpportunity != null);
+            System.assertNotEquals(null, paymentOpportunity);
             System.assertEquals(paymentOpportunity.CloseDate, createdPayment.npe01__Payment_Date__c);
             System.assertEquals(paymentOpportunity.Amount, createdPayment.npe01__Payment_Amount__c);
             System.assertEquals(true, createdPayment.npe01__Paid__c);
@@ -344,9 +344,9 @@ private with sharing class PMT_PaymentCreator_TEST {
     /*********************************************************************************************************
     * @description
     operation:
-        Update a List of Closed Lost Opportunities Amount from null to a value
+        Update a list of Closed Lost Opportunities Amount from null to a value
     verify:
-        No payment should be created because the opportunities are closed lost.
+        No payment should be created because the Opportunities are Closed Lost.
     **********************************************************************************************************/
     static testMethod void testClosedLostOpportunity_UpdateAmountFromNullToValue() {
         List<Opportunity> testOpportunities = new List<Opportunity>();
@@ -375,9 +375,9 @@ private with sharing class PMT_PaymentCreator_TEST {
     /*********************************************************************************************************
     * @description
     operation:
-        Update a List of Closed Lost Opportunities Amount from zero to a value
+        Update a list of Closed Lost Opportunities Amount from zero to a value
     verify:
-        No payment should be created because the opportunities are closed lost.
+        No payment should be created because the Opportunities are Closed Lost.
     **********************************************************************************************************/
     static testMethod void testClosedLostOpportunity_UpdateAmountFromZeroToValue() {
         List<Opportunity> testOpportunities = new List<Opportunity>();
@@ -405,8 +405,8 @@ private with sharing class PMT_PaymentCreator_TEST {
 
     /*********************************************************************************************************
     * @description Creates Test Opportunities
-    * @param testOpportunities The test opportunities with initial value (Amount and Stage)
-    * @return Map<Id, Opportunity> The Test Opportunities created.
+    * @param testOpportunities The test Opportunities with initial value (Amount and Stage)
+    * @return Map<Id, Opportunity> The test Opportunities created.
     */
     private static Map<Id, Opportunity> createTestOpportunities(List<Opportunity> testOpportunities) {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(
@@ -429,8 +429,8 @@ private with sharing class PMT_PaymentCreator_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Gets the list of created payments.
-    * @param testOpportunitiesIds The Id of test opportunities.
+    * @description Gets the list of created Payments.
+    * @param testOpportunitiesIds The Ids of test Opportunities.
     * @return List<npe01__OppPayment__c> The list of Payments created.
     */
     private static List<npe01__OppPayment__c> getCreatedPayments(Set<Id> testOpportunitiesId) {
