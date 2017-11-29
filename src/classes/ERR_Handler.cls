@@ -140,60 +140,45 @@ public class ERR_Handler {
     }
 
 	/*******************************************************************************************************
-    * @description Processes the results of a batch of DML operations performed using the Database class to determine
-    *              if errors occurred. It does not store errors or send error email notifications. These operations
-    *              should be performed after the rollback.
+    * @description Processes the results of a group DML operations caused by a batch, future, or queued job and performed
+    * 				using the Database class to determine if errors occurred. It does not store errors or send error email
+    * 				notifications. These operations should be performed after the rollback.
     *
     * @param dmlResults The results of a DML batch operation performed using the Database class.
     * @param sObjects The records the DML operation was performed on.
     * @return Errors The errors with a single list that occurred during a batch DML operation performed using the Database class.
     */
-	public static Errors getBatchErrors(List<Object> dmlResults, List<SObject> sObjects, Id batchId) {
+	public static Errors getJobErrors(List<Object> dmlResults, List<SObject> sObjects) {
 		Errors errors = new Errors();
 		List<String> errorsFound = new List<String>();
 
 		if(dmlResults != null) {
 			for(Integer i=0; i<dmlResults.size(); i++) {
-				Boolean isSuccess = true;
-				if(dmlResults[i] instanceof Database.SaveResult) {
-					isSuccess = ((Database.SaveResult)dmlResults[i]).isSuccess();
-				} else if(dmlResults[i] instanceof Database.DeleteResult) {
-					isSuccess = ((Database.DeleteResult)dmlResults[i]).isSuccess();
-				} else if(dmlResults[i] instanceof Database.UndeleteResult) {
-					isSuccess = ((Database.UndeleteResult)dmlResults[i]).isSuccess();
-				}
+
+				Boolean isSuccess = isDmlSuccess(dmlResults[i]);
 
 				if(!isSuccess) {
-					List<Database.Error> errList = new List<Database.Error>();
-					String errMessage = sObjects[i].getSObjectType().getDescribe().getName() + ' ID' + sObjects[i].Id + ' was unable to save because of the following error(s): ';
-
-					//TODO: need to check for the type of save result... again. Make this prettier.
-
-					if(dmlResults[i] instanceof Database.SaveResult) {
-						errList = ((Database.SaveResult)dmlResults[i]).getErrors();
-					} else if(dmlResults[i] instanceof Database.DeleteResult) {
-						errList = ((Database.DeleteResult)dmlResults[i]).getErrors();
-					} else if(dmlResults[i] instanceof Database.UndeleteResult) {
-						errList = ((Database.UndeleteResult)dmlResults[i]).getErrors();
-					}
+					List<Database.Error> errList = getDmlResultErrors(dmlResults[i]);
+					Integer totalErrors = 0;
+					String errDetailsMessage = '';
 
 					for(Database.Error err : errList) {
-						errMessage += err.getStatusCode() + ': ' + err.getMessage();
+						totalErrors++;
+						//TODO: add in the beautify message function and test
+						//errDetailsMessage += err.getStatusCode() + ': ' + ERR_ExceptionHandler.beautifyExceptionMessage(err.getMessage()) + ' ';
+						errDetailsMessage += err.getStatusCode() + ': ' + err.getMessage() + ' ';
 					}
-					errMessage += '. ';
-					errorsFound.add(errMessage);
+
+					String fullObjectErrMessage = 'There were ' + totalErrors + ' errors saving to object ' + sObjects[i].Id + '. ' + errDetailsMessage;
+
+					errorsFound.add(fullObjectErrMessage);
 				}
 			}
 			if(errorsFound.size() > 0){
-				String errorMessage = 'These records have failed to update in Batch Job ' + batchId + '. ';
+				String errorMessage = String.join(errorsFound, '\n* ');
 				errors.errorsExist = true;
 
-				for(Integer i=0; i<errorsFound.size(); i++) {
-					errorMessage += i + ': ' + errorsFound[i] + '. ';
-				}
-
-				Error__c err = createBatchError(errorMessage);
-				// Randi - is this necessary? what does this do.
+				Error__c err = createJobError(errorMessage);
 				errors.errorRecords.add(err);
 
 				//We cannot use addError on the record here, because if we do, the whole transaction will be rolled back, and
@@ -203,13 +188,53 @@ public class ERR_Handler {
 		return errors;
 	}
 
+	/*******************************************************************************************************
+    * @description Checks if a given DML operation has succeeded depending on the type of DML result.
+    * @param dmlResults
+    * @return isSuccess Returns true if all DML operations passed successfull; returns false if there was a DML exception.
+    */
+	public static boolean isDmlSuccess(Object dmlResults) {
+		Boolean isSuccess = true;
+
+		if(dmlResults instanceof Database.SaveResult) {
+			isSuccess = ((Database.SaveResult)dmlResults).isSuccess();
+		} else if(dmlResults instanceof Database.DeleteResult) {
+			isSuccess = ((Database.DeleteResult)dmlResults).isSuccess();
+		} else if(dmlResults instanceof Database.UndeleteResult) {
+			isSuccess = ((Database.UndeleteResult)dmlResults).isSuccess();
+		}
+
+		return isSuccess;
+
+	}
+
+	/*******************************************************************************************************
+    * @description Retrieves errors from a DML operation depending on the type of DML result.
+    * @param dmlResults
+    * @return isSuccess Returns true if all DML operations passed successfull; returns false if there was a DML exception.
+    */
+	public static List<Database.Error> getDmlResultErrors(Object dmlResults) {
+		List<Database.Error> errList = new List<Database.Error>();
+
+		if(dmlResults instanceof Database.SaveResult) {
+			errList = ((Database.SaveResult)dmlResults).getErrors();
+		} else if(dmlResults instanceof Database.DeleteResult) {
+			errList = ((Database.DeleteResult)dmlResults).getErrors();
+		} else if(dmlResults instanceof Database.UndeleteResult) {
+			errList = ((Database.UndeleteResult)dmlResults).getErrors();
+		}
+
+		return errList;
+
+	}
+
     /*******************************************************************************************************
     * @description Creates an error record from an exception, stores it in the database (if enabled), and sends error
     *              notifications (if enabled).
                    This method should be used from inside the NPSP package, instead of the same one with that same name
                    that takes a String instead of an Enum as the second parameter.
     * @param e Exception to create error record from.
-    * @return context The context the exception was raised on.
+    * @param context The context the exception was raised on.
     */
     public static void processError(Exception e, ERR_Handler_API.Context context) {
         processError(e, context.name());
@@ -219,7 +244,7 @@ public class ERR_Handler {
     * @description Creates an error record from an exception, stores it in the database (if enabled), and sends error
     *              notifications (if enabled).
     * @param e Exception to create error record from.
-    * @return context The context the exception was raised on.
+    * @param context The context the exception was raised on.
     */
     public static void processError(Exception e, String context) {
         if(e != null) {
@@ -309,19 +334,14 @@ public class ERR_Handler {
     }
 
 	/*******************************************************************************************************
-	* @description Creates a single error record from the result of a batch DML operation performed through the Database class.
-	* @param result The result of the Database DML operation. It cannot be more specific than Object, because the result of
-	*               the different DML operations that the Database class can perform don't have a common parent.
-	* @param objectType The name of the type of object that caused the error.
-	* @param objId The id of the record that caused the error.
+	* @description Creates a single error record from a Database class DML operation in a batch, future or queued job.
+	* @param message The full message of all the errors for a given job and compiled IDs.
 	* @return The error record.
 	*/
-	private static Error__c createBatchError(String message) {
+	private static Error__c createJobError(String message) {
 		Error__c error = new Error__c();
 		error.Datetime__c = System.now();
 		error.Full_Message__c = message;
-
-		// Randi - can we get the object type?
 
 		UTIL_Debug.debug('**** createBatchError() returns error: ' + error);
 		return error;

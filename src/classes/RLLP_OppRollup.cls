@@ -35,8 +35,6 @@
 * @description Main logic class for rollups of opportunities to the Accounts, Contacts, and Households.
 */
 public without sharing class RLLP_OppRollup {
-
-    public Id batchId;
     
     /** @description Constructor gets settings and sets up variables. */
     public RLLP_OppRollup(){
@@ -370,11 +368,9 @@ public without sharing class RLLP_OppRollup {
         * */
         List<Database.SaveResult> srList = Database.update(accountsToUpdate.values(), false);
 
-        if(system.isBatch()) {
-            ERR_Handler.Errors errorResult = ERR_Handler.getBatchErrors(srList, accountsToUpdate.values(), batchId);
-            if (errorResult.errorsExist) {
-                ERR_Handler.processErrors(errorResult.errorRecords, 'Batch');
-            }
+        ERR_Handler.Errors errorResult = ERR_Handler.getJobErrors(srList, accountsToUpdate.values());
+        if (errorResult.errorsExist) {
+            ERR_Handler.processErrors(errorResult.errorRecords, 'Jobs');
         }
 
     }    
@@ -540,16 +536,14 @@ public without sharing class RLLP_OppRollup {
         //Randi - this can be added once Joy's changes are merged
         //UTIL_DMLService.updateRecords(contactsToUpdate.values());
 
-        /**Randi - Changes for Contacts - can I pass in contact type?
+        /**Randi -
         * */
 
         List<Database.SaveResult> srList = Database.update(contactsToUpdate.values(), false);
 
-        if(system.isBatch()) {
-            ERR_Handler.Errors errorResult = ERR_Handler.getBatchErrors(srList, contactsToUpdate.values(), batchId);
-            if (errorResult.errorsExist) {
-                ERR_Handler.processErrors(errorResult.errorRecords, 'Batch');
-            }
+        ERR_Handler.Errors errorResult = ERR_Handler.getJobErrors(srList, contactsToUpdate.values());
+        if (errorResult.errorsExist) {
+            ERR_Handler.processErrors(errorResult.errorRecords, 'Jobs');
         }
     }    
     
@@ -714,11 +708,9 @@ public without sharing class RLLP_OppRollup {
 
         List<Database.SaveResult> srList = Database.update(householdsToUpdate.values(), false);
 
-        if(system.isBatch()) {
-            ERR_Handler.Errors errorResult = ERR_Handler.getBatchErrors(srList, householdsToUpdate.values(), batchId);
-            if (errorResult.errorsExist) {
-                ERR_Handler.processErrors(errorResult.errorRecords, 'Batch');
-            }
+        ERR_Handler.Errors errorResult = ERR_Handler.getJobErrors(srList, householdsToUpdate.values());
+        if (errorResult.errorsExist) {
+            ERR_Handler.processErrors(errorResult.errorRecords, 'Jobs');
         }
     }  
     

@@ -68,7 +68,6 @@ public class RLLP_OppContactRollup_BATCH implements Database.Batchable<SObject>,
         // but if we were to log it, and then propagate the exception, the transaction will 
         // get rolled back, and the logging will be erased!
         RLLP_OppRollup oppRoller = new RLLP_OppRollup();
-        oppRoller.batchId = bc.getJobId();
         oppRoller.RollupContacts(new Map<id, Contact>((List<Contact>)result));
     }
 
