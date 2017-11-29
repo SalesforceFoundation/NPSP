@@ -13,7 +13,7 @@ When(/^I create a Task and a Subtask$/) do
 end
 
 When(/^I save my EPT$/) do
-  on(EPTPage).save_button
+  on(EPTPage).save_button_element.click
 end
 
 Then(/^my EPT should exist$/) do
