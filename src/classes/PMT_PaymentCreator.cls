@@ -222,7 +222,6 @@ public class PMT_PaymentCreator {
                                         }
                                 }
                             }
-                        }
 
                         if (thisOpp.IsClosed && thisOpp.IsWon){
                             op.npe01__paid__c = true;
