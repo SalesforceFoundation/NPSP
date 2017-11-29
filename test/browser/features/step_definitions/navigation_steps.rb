@@ -19,7 +19,8 @@ end
 
 Given(/^I navigate to Engagement Plan Template$/) do
   on(NPSPMainPage).all_tabs_element.click
-  on(AllTabsPage).engage_plan_template_element.click
+  on(AllTabsPage).engage_plan_template_element.when_present(10).click
+  on(EPTMPage).new_element.click
 end
 
 Given(/^I navigate to Engagement Plan for Contact$/) do
