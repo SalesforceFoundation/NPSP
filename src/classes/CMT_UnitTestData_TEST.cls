@@ -360,7 +360,7 @@ public class CMT_UnitTestData_TEST {
         // If the Rollup Type is from Payment, then shift the objects to the Payment object rather than date
         if (rollupType == RollupRecordType.PmtToContact || rollupType == RollupRecordType.PmtToAcct) {
             String detailField;
-            if (((String)parms.get('Detail')).contains('\\.')) {
+            if (((String)parms.get('Detail')).contains('.')) {
                 detailField = ((String)parms.get('Detail')).split('\\.')[1];
             } else {
                 detailField = 'npe01__Payment_Amount__c';
@@ -370,7 +370,7 @@ public class CMT_UnitTestData_TEST {
             parms.put('Detail', getDetailObject.get(rollupType));
         } else if (rollupType == RollupRecordType.GAU) {
             String detailField;
-            if (((String)parms.get('Detail')).contains('\\.')) {
+            if (((String)parms.get('Detail')).contains('.')) {
                 detailField = ((String)parms.get('Detail')).split('\\.')[1];
             } else {
                 detailField = 'Amount__c';
@@ -393,8 +393,9 @@ public class CMT_UnitTestData_TEST {
                 new CMT_Field('Detail_Object__c', CMTFieldType.FldEntity, UTIL_Namespace.StrAllNSPrefix(detailObjectName))
         };
 
-        if (((String)parms.get('Detail')).contains('\\.')) {
-            fields.add(new CMT_Field('Detail_Field__c', CMTFieldType.FldField, ((String)parms.get('Detail')).split('\\.')[1]));
+        if (((String)parms.get('Detail')).contains('.')) {
+            String detailObjectField = ((String)parms.get('Detail')).split('\\.')[1];
+            fields.add(new CMT_Field('Detail_Field__c', CMTFieldType.FldField, UTIL_Namespace.StrAllNSPrefix(detailObjectName) + '.' + UTIL_Namespace.StrAllNSPrefix(detailObjectField)));
         }
         if (parms.get('Amount') != null) {
             String amtObjectName = ((String)parms.get('Amount')).split('\\.')[0];

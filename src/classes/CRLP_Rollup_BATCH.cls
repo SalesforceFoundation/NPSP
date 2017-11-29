@@ -64,14 +64,20 @@ public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.
     */
     public database.Querylocator start(Database.BatchableContext bc) {
         Integer maxRelatedOppsForNonLDVMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonLDVMode();
+        String fldRelatedOpps = (this.summaryObjectType == Contact.SObjectType ? 'Account.' : '') +
+                UTIL_Namespace.StrAllNSPrefix('Number_of_Opportunities__c');
 
-        // Build a query string of the Allocation__c object. By default this query will include all Opportunity
-        // fields referred to by any rollup against the Allocation object.
+        // Build a query string of the target Summary object.
         String query = CRLP_Query_SEL.getResultsQuery(this.summaryObjectType) +
-            ' WHERE ' + (this.summaryObjectType == Contact.SObjectType ? 'Account.' : '') +
-            UTIL_Namespace.StrAllNSPrefix('Number_of_Opportunities__c') + ' < :maxRelatedOppsForNonLDVMode';
+            ' WHERE ' + fldRelatedOpps + ' < :maxRelatedOppsForNonLDVMode';
+
+        // Add additional query filters as needed
         if (this.recordIds != null && this.recordIds.size() > 0) {
             query += ' AND Id IN :recordIds';
+        } else if (this.summaryObjectType == Account.SObjectType) {
+            // If the Summary Object is the Account, then filter on Accounts that have at least a single
+            // Opportunity attached. This is helpful to reduce the overall query size.
+            query += ' AND ' + fldRelatedOpps + ' > 0';
         }
 
         return Database.getQueryLocator(query);

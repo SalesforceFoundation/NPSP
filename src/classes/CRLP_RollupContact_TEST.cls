@@ -98,6 +98,10 @@ private class CRLP_RollupContact_TEST {
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
                         'npo02__Best_Gift_Year__c', CRLP_Operation.RollupType.BEST_YEAR, '') + ',' +
 
+                CMT_UnitTestData_TEST.createRollupRecord('Custom Result Field Test', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                        'Department', CRLP_Operation.RollupType.FIRST, 'Type') + ',' +
+
                 /* Using SingleResult operation to get the last gift date */
                 CMT_UnitTestData_TEST.createRollupRecord('Last Gift Date', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
@@ -116,6 +120,7 @@ private class CRLP_RollupContact_TEST {
 
         // Deserialize the rollups to use for testing
         CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
+
     }
 
     static testMethod void test_Rollups_Queueable() {
@@ -190,7 +195,8 @@ private class CRLP_RollupContact_TEST {
                     CloseDate = closeDate.addMonths(n),
                     StageName = closedStage,
                     Primary_Contact__c = conId,
-                    RecordTypeId = rtId
+                    RecordTypeId = rtId,
+                    Type = 'New'
             ));
             totalDonations += amt;
             if (closeDate.addMonths(n).year() == Date.Today().addYears(-2).year()) {
@@ -258,6 +264,7 @@ private class CRLP_RollupContact_TEST {
         System.assertEquals((totalDonations / cnt), c.npo02__AverageAmount__c);
         System.assertEquals(total2YearsAgo, c.npo02__OppAmount2YearsAgo__c);
         System.assertEquals(bestGiftYear, c.npo02__Best_Gift_Year__c);
+        System.assertEquals('New', c.Department);
 
         // These 4 use other fields on the Contact object since there are no NPSP related fields to store the values in
         System.assertEquals(totalDonations - baseAmt, c.First_Soft_Credit_Amount__c,

@@ -81,7 +81,7 @@ public class CRLP_RollupScheduler implements Schedulable {
                 Integer maxRelatedOppsForNonLDVMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonLDVMode();
                 // TODO Is this query properly optimized for selectivity??
                 hasLDVAccounts = [SELECT Count() FROM Account
-                                    WHERE Number_of_Opportunities__c > :maxRelatedOppsForNonLDVMode LIMIT 1] > 0;
+                                    WHERE Number_of_Opportunities__c >= :maxRelatedOppsForNonLDVMode LIMIT 1] > 0;
             }
             // If there is at least one LDV Account to roll up, execute this batch job
             if (hasLDVAccounts) {

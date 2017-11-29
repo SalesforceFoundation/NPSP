@@ -55,7 +55,7 @@ public class CRLP_Rollup_SVC {
      * @param rollup fully qualified api field name (Object.Field)
      * @return DescribeFieldResult
      */
-    public static Schema.DescribeFieldResult getSobjectFieldFromRollup(String objName, String fldName) {
+    public static Schema.DescribeFieldResult getSObjectFieldDescribe(String objName, String fldName) {
         if (fldName  != null) {
             return UTIL_Describe.getAllFieldsDescribe(objName).get(fldName.toLowerCase());
         } else {
@@ -97,7 +97,7 @@ public class CRLP_Rollup_SVC {
         Boolean hasValueChanged = false;
         for (CRLP_Rollup rollup : rollups) {
             for (Rollup__mdt r : rollup.rollupsMdt) {
-                Schema.DescribeFieldResult summaryField = getSobjectFieldFromRollup(r.Summary_Object__r.QualifiedApiName, r.Summary_Field__r.QualifiedApiName);
+                Schema.DescribeFieldResult summaryField = getSObjectFieldDescribe(r.Summary_Object__r.QualifiedApiName, r.Summary_Field__r.QualifiedApiName);
                 Object origValue = originalObject.get(summaryField.getName());
                 Object newValue = updatedObject.get(summaryField.getName());
                 if (origValue != newValue) {

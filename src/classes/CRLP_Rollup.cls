@@ -48,7 +48,6 @@ public class CRLP_Rollup {
     public String detailObject;
     public String amountObject;
     public String dateObject;
-    public String resultObject;
     public String currCode;     // The currency code of the target (summary) object
     public String yearlyOperation;
     public Integer daysBack;
@@ -88,7 +87,7 @@ public class CRLP_Rollup {
             this.dateObject = rollupMdt.Date_Object__r.QualifiedApiName;
             this.detailObject = rollupMdt.Detail_Object__r.QualifiedApiName;
             if (rollupMdt.Detail_Field__c !=  null) {
-                DescribeFieldResult resultField = CRLP_Rollup_SVC.getSobjectFieldFromRollup(detailObject, rollupMdt.Detail_Field__r.QualifiedApiName);
+                DescribeFieldResult resultField = CRLP_Rollup_SVC.getSObjectFieldDescribe(detailObject, rollupMdt.Detail_Field__r.QualifiedApiName);
                 this.resultFieldType = resultField.getSoapType();
                 this.resultFieldName = resultField.getName();
             }
@@ -179,7 +178,7 @@ public class CRLP_Rollup {
 
         // Get the rolled up value for each Rollup__mdt record
         for (Rollup__mdt r : this.rollupsMdt) {
-            Schema.DescribeFieldResult targetField = CRLP_Rollup_SVC.getSobjectFieldFromRollup(r.Summary_Object__r.QualifiedApiName, r.Summary_Field__r.QualifiedApiName);
+            Schema.DescribeFieldResult targetField = CRLP_Rollup_SVC.getSObjectFieldDescribe(r.Summary_Object__r.QualifiedApiName, r.Summary_Field__r.QualifiedApiName);
             rtnValues.put(targetField.getName(), determineRollupValue(r, targetField));
         }
 

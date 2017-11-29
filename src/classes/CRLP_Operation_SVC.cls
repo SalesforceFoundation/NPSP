@@ -117,7 +117,7 @@ instance until ready to be written to the Sobject.
         // If there is a result field retrieve it's value and convert as required
         // There is only one Rollup__mdt record when a Result Object/Field is involved.
         // Single Results of this nature are limited to an Operation type of First, Last, Largest or Smallest only
-        if (rollup.resultFieldType != null && rollup.resultObject == objName) {
+        if (rollup.resultFieldType != null && rollup.detailObject == objName) {
 
             Object resultVal = detailSObject.get(rollup.resultFieldName);
             CRLP_Operation.RollupType operation = CRLP_Operation.getRollupTypeFromString(firstRollup.Operation__c.replaceAll(' ', '_'));
