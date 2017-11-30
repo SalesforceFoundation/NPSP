@@ -51,9 +51,11 @@ global class ERR_Handler_API {
 	    /* @description Contacts context. */
 	    CON, 
 	    /* @description Account Conversion context. */
-	    CONV, 
-	    /* @description Households context. */
-	    HH, 
+	    CONV,
+		/* @description Customizable Rollups context. */
+		CRLP,
+		/* @description Households context. */
+	    HH,
 	    /* @description Lead Conversion context. */
 	    LD, 
         /* @description Level context. */

@@ -206,7 +206,7 @@ instance until ready to be written to the Sobject.
         } else if (resultFieldType == SoapType.ID) {
             rollup.idValue = (Id) resultVal;
         } else {
-            rollup.textValue = (String) resultVal;
+            rollup.textValue = String.valueOf(resultVal);
         }
     }
 }

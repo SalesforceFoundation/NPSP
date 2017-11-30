@@ -38,14 +38,12 @@ public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.
 
     private SObjectType summaryObjectType;
     private List<Id> recordIds;
-    private Map<Id, String> errors;
 
     /*******************************************************************************************************
     * @description Constructs the class, sets the properties
     */
     public CRLP_Rollup_BATCH(SObjectType objType) {
         this.summaryObjectType = objType;
-        this.errors = new Map<Id, String>();
     }
 
     /*******************************************************************************************************
@@ -54,7 +52,6 @@ public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.
     public CRLP_Rollup_BATCH(List<Id> recordIds) {
         this.summaryObjectType = recordIds[0].getSobjectType();
         this.recordIds = recordIds;
-        this.errors = new Map<Id, String>();
     }
 
     /*******************************************************************************************************
@@ -106,17 +103,13 @@ public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.
         // Call the method to do the actual rollups. This returns only records that require updating
         List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailsRecords, options);
 
-        // Handle dml on the records
-        Map<Id, String> dmlErrors = CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
-        this.errors.putAll(dmlErrors);
+        CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
     }
 
     /********************************************************************************************************
-     * @description Log any captured DML errors.
+     * @description
      */
     public void finish(Database.BatchableContext bc) {
-        // Log DML errors
-        CRLP_RollupProcessor_SVC.logDmlErrors(this.errors);
     }
 
 }
