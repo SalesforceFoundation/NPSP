@@ -354,14 +354,9 @@ public class PMT_PaymentCreator {
         npe01__OppPayment__c opportunityPayment = new npe01__OppPayment__c(
             npe01__Opportunity__c = newOpportunity.Id,
             npe01__Paid__c = newOpportunity.IsClosed,
+            npe01__Scheduled_Date__c = newOpportunity.CloseDate,
             npe01__Payment_Amount__c = newOpportunity.Amount
-        );
-
-        if (opportunityPayment.npe01__Paid__c) {
-            opportunityPayment.npe01__Payment_Date__c = newOpportunity.CloseDate;
-        } else {
-            opportunityPayment.npe01__Scheduled_Date__c = newOpportunity.CloseDate;
-        }
+        );                                
                 
         //in multicurrency SFDC set the payment currency field to equal to the opp currency
         if (paymentCurrencyField != null && oppCurrencyField != null) {
