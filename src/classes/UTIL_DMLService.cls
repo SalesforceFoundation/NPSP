@@ -35,7 +35,7 @@
 * @description Service Class to handle DML actions.
 */
 
-public with sharing class UTIL_DMLService {
+public class UTIL_DMLService {
     public static final Boolean ALL_OR_NONE_TRUE = true;
     
 
