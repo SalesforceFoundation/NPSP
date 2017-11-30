@@ -176,9 +176,6 @@
             detailsQuery += ' AND ' + SObjectType.Allocation__c.fields.Opportunity__c.getName() + ' != null';
         }
 
-        // to avoid any governor limit issues, even in testing, limit the query to under 50K
-        detailsQuery += ' LIMIT 49500';
-
         return detailsQuery;
     }
 }
