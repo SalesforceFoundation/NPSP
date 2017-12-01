@@ -189,17 +189,11 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
                             if (district.district_type == 'NATIONAL_LOWER') {
                                 addr.Congressional_District__c = district.district_id;
                                 addr.MailingCountry__c = district.country;
-                            }
-
-                            if (district.district_type == 'STATE_UPPER') {
+                            } else if (district.district_type == 'STATE_UPPER') {
                                 addr.State_Upper_District__c = district.district_id;
-                            }
-
-                            if (district.district_type == 'STATE_LOWER') {
+                            } else if (district.district_type == 'STATE_LOWER') {
                                 addr.State_Lower_District__c = district.district_id;
-                            }
-
-                            if (district.district_type == 'LOCAL' && district.subtype != 'COUNTY') {
+                            } else if (district.district_type == 'LOCAL' && district.subtype != 'COUNTY') {
                                 addr.Administrative_Area__c = district.district_id;
                             }
                         }
