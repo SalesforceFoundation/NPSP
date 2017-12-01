@@ -92,6 +92,9 @@ public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.
     * @param scope List of Summary records
     */
     public void execute(Database.BatchableContext bc, List<SObject> summaryRecords) {
+
+        // TODO - Disable all NPSP triggers for performance
+
         try {
             // Get the detail records for the current set of Summary Records
             List<SObject> detailsRecords = CRLP_RollupProcessor_SVC.getDetailRecordsFromParentRecords(summaryRecords);

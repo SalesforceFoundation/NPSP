@@ -205,6 +205,8 @@ instance until ready to be written to the Sobject.
             rollup.dateTimeValue = (DateTime) resultVal;
         } else if (resultFieldType == SoapType.ID) {
             rollup.idValue = (Id) resultVal;
+        } else if (resultFieldType == SoapType.DOUBLE) {
+            rollup.numValue = Double.valueOf(resultVal);
         } else {
             rollup.textValue = String.valueOf(resultVal);
         }

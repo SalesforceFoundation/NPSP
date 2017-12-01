@@ -67,6 +67,7 @@ public class CRLP_Rollup {
     // against the Opportunity.Amount, but the ResultField might pull in Opportunity.Id or any field from the
     // Opportunity object.
     public String textValue;
+    public Decimal numValue;
     public Id idValue;
     public Date dateValue;
     public DateTime dateTimeValue;
@@ -111,6 +112,7 @@ public class CRLP_Rollup {
     public void resetValues() {
         this.theCount = 0;
         this.textValue = null;
+        this.numValue = 0;
         this.idValue = null;
         this.theSum = this.minValue = this.maxValue = 0;
         this.dateValue = this.minDate = this.maxDate = null;
@@ -249,7 +251,11 @@ public class CRLP_Rollup {
         // This could be an Id or pretty much any other field that can be stored as 'text'
         // ================================================================
         else if (operation == CRLP_Operation.RollupType.FIRST || operation == CRLP_Operation.RollupType.LAST) {
-            resultValue = textValue;
+            if (fldType == SoapType.DOUBLE) {
+                resultValue = numValue;
+            } else {
+                resultValue = textValue;
+            }
         }
 
         // ================================================================
