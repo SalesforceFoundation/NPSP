@@ -60,24 +60,30 @@ public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.
     * @return database.Querylocator
     */
     public database.Querylocator start(Database.BatchableContext bc) {
-        Integer maxRelatedOppsForNonLDVMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonLDVMode();
-        String fldRelatedOpps = (this.summaryObjectType == Contact.SObjectType ? 'Account.' : '') +
-                UTIL_Namespace.StrAllNSPrefix('Number_of_Opportunities__c');
+        try {
+            Integer maxRelatedOppsForNonLDVMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonLDVMode();
+            String fldRelatedOppsCnt = (this.summaryObjectType == Contact.SObjectType ? 'Account.' : '') +
+                    UTIL_Namespace.StrAllNSPrefix('Number_of_Opportunities__c');
 
-        // Build a query string of the target Summary object.
-        String query = CRLP_Query_SEL.getResultsQuery(this.summaryObjectType) +
-            ' WHERE ' + fldRelatedOpps + ' < :maxRelatedOppsForNonLDVMode';
+            // Build a query string of the target Summary object.
+            String query = CRLP_Query_SEL.getResultsQuery(this.summaryObjectType) +
+                    ' WHERE ' + fldRelatedOppsCnt + ' < :maxRelatedOppsForNonLDVMode';
 
-        // Add additional query filters as needed
-        if (this.recordIds != null && this.recordIds.size() > 0) {
-            query += ' AND Id IN :recordIds';
-        } else if (this.summaryObjectType == Account.SObjectType) {
-            // If the Summary Object is the Account, then filter on Accounts that have at least a single
-            // Opportunity attached. This is helpful to reduce the overall query size.
-            query += ' AND ' + fldRelatedOpps + ' > 0';
+            // Add additional query filters as needed
+            if (this.recordIds != null && this.recordIds.size() > 0) {
+                query += ' AND Id IN :recordIds';
+            } else if (this.summaryObjectType == Account.SObjectType) {
+                // If the Summary Object is the Account, then filter on Accounts that have at least a single
+                // Opportunity attached. This is helpful to reduce the overall query size.
+                query += ' AND ' + fldRelatedOppsCnt + ' > 0';
+            }
+
+            return Database.getQueryLocator(query);
+        } catch (Exception ex) {
+            // TODO Not 100% sure we want to keep this, but for now it's needed to capture any unexpected errors in the processing logic
+            ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
         }
-
-        return Database.getQueryLocator(query);
+        return null;
     }
 
     /*******************************************************************************************************
@@ -86,24 +92,28 @@ public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.
     * @param scope List of Summary records
     */
     public void execute(Database.BatchableContext bc, List<SObject> summaryRecords) {
+        try {
+            // Get the detail records for the current set of Summary Records
+            List<SObject> detailsRecords = CRLP_RollupProcessor_SVC.getDetailRecordsFromParentRecords(summaryRecords);
 
-        // Get the detail records for the current set of Summary Records
-        List<SObject> detailsRecords = CRLP_RollupProcessor_SVC.getDetailRecordsFromParentRecords(summaryRecords);
+            // Build the processing options instance
+            CRLP_RollupProcessor_SVC.ProcessingOptions options = new CRLP_RollupProcessor_SVC.ProcessingOptions();
+            options.mode = CRLP_RollupProcessor_SVC.ProcessingMode.NonLDV;
+            options.parentObjType = this.summaryObjectType;
+            if (this.summaryObjectType == Account.SObjectType) {
+                options.parentKeyField = SObjectType.Opportunity.fields.AccountId.getName();
+            } else if (this.summaryObjectType == Contact.SObjectType) {
+                options.parentKeyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
+            }
 
-        // Build the processing options instance
-        CRLP_RollupProcessor_SVC.ProcessingOptions options = new CRLP_RollupProcessor_SVC.ProcessingOptions();
-        options.mode = CRLP_RollupProcessor_SVC.ProcessingMode.NonLDV;
-        options.parentObjType = this.summaryObjectType;
-        if (this.summaryObjectType == Account.SObjectType) {
-            options.parentKeyField = SObjectType.Opportunity.fields.AccountId.getName();
-        } else if (this.summaryObjectType == Contact.SObjectType) {
-            options.parentKeyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
+            // Call the method to do the actual rollups. This returns only records that require updating
+            List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailsRecords, options);
+
+            CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
+        } catch (Exception ex) {
+            // TODO Not 100% sure we want to keep this, but for now it's needed to capture any unexpected errors in the processing logic
+            ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
         }
-
-        // Call the method to do the actual rollups. This returns only records that require updating
-        List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailsRecords, options);
-
-        CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
     }
 
     /********************************************************************************************************
