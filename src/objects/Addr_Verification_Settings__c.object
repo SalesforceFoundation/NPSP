@@ -64,7 +64,7 @@
         <defaultValue>false</defaultValue>
         <description>Prevent Address Overwrite Checkbox</description>
         <externalId>false</externalId>
-        <inlineHelpText>Prevents the Cicero API from overwriting Addresses during verification. If an Address field is blank, Cicero updates it.</inlineHelpText>
+        <inlineHelpText>Prevents the Cicero API from overwriting Addresses during verification.</inlineHelpText>
         <label>Prevent Address Overwrite</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
