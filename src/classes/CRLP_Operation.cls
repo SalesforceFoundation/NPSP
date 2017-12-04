@@ -114,7 +114,9 @@ public class CRLP_Operation {
             rollupOperationTypesByName = new Map<String, CRLP_Operation.RollupType>();
             for (CRLP_Operation.RollupType rt : getRollupOperationTypes().keySet()) {
                 // Need multiple revisions of the same operation type to ensure the map.get() returns a value.
+                // Example: Best_Year != BEST_YEAR != 'Best Year' -- as a result all variations needed as the Map key
                 rollupOperationTypesByName.put(getRollupOperationTypes().get(rt), rt);
+                rollupOperationTypesByName.put(getRollupOperationTypes().get(rt).replace(' ', '_'), rt);
                 rollupOperationTypesByName.put(getRollupOperationTypes().get(rt).toUpperCase(), rt);
                 rollupOperationTypesByName.put(getRollupOperationTypes().get(rt).toUpperCase().replace(' ', '_'), rt);
             }

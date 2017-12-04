@@ -52,6 +52,7 @@ private class CMT_FilterRuleEvaluation_TEST {
         String closedWonStage = UTIL_UnitTestData_TEST.getClosedWonStage();
         String donationRTId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.SObjectType);
         String anotherId = UTIL_RecordTypes.getRecordTypeIdForMembershipTests(Opportunity.SObjectType);
+        RecordType rtDonation = [SELECT DeveloperName FROM RecordType WHERE Id = :donationRTId LIMIT 1];
 
         String filterGroupsJSON = '[' +
                 CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId1, 'Test Group 1') + ',' +
@@ -79,9 +80,11 @@ private class CMT_FilterRuleEvaluation_TEST {
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule16', 'Opportunity', 'CreatedDate', 'Less', DateTime.Now().addDays(2).format('YYYY-MM-dd hh:mm:ssZ')) + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule17', 'Opportunity', 'CreatedDate', 'Greater', 'YESTERDAY') + ',' +
 
-                /*  FILTER RULES FOR FILTER GROUP 2 -- Opportunity with RecordTypeId, StageName, OCR.Role, Amount */
+                /*  FILTER RULES FOR FILTER GROUP 2 -- Opportunity with RecordTypeId, RecordType.DeveloperName, StageName, OCR.Role, Amount */
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule1', 'Opportunity', 'IsWon', 'Not_Equals', 'False') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule2', 'Opportunity', 'RecordTypeId', 'In_List', donationRTId + ';' + anotherId) + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule2', 'Opportunity', 'RecordTypeId', 'In_List', rtDonation.DeveloperName) + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule2', 'Opportunity', 'RecordTypeId', 'Equals', rtDonation.DeveloperName) + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group1.Rule3', 'Opportunity', 'Primary_Contact__c', 'Not_Equals', '') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule4', 'Opportunity', 'Amount', 'Greater', '0') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule5', 'Opportunity', 'Amount', 'Not_Equals', '') + ',' +
