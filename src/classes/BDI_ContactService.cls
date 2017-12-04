@@ -359,9 +359,9 @@ public with sharing class BDI_ContactService {
             }
         }
 
-        List<Contact> listHHContacts = [SELECT Id, Firstname, Lastname, AccountId,
-            Account.npe01__SYSTEM_AccountType__c
-            FROM Contact WHERE AccountId IN :setHHId];
+        String strSoql = getSoqlSelectForContact();
+        strSoql += ' WHERE AccountId IN :setHHId';
+        List<Contact> listHHContacts = database.query(strSoql);
         for (Contact con : listHHContacts) {
             mapDIKeyToContact.put(con.Firstname + '|' + con.AccountId, con);
         }
