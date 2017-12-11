@@ -125,7 +125,7 @@ public without sharing class HH_HouseholdNaming {
 
         if (!hhupdatelist.isEmpty()) {
         	// all or nothing, so errors not lost
-        	update hhupdatelist;
+            UTIL_DMLService.updateRecords(hhupdatelist);
         }
 
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);

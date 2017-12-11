@@ -60,10 +60,10 @@ public class ERR_Handler_TEST {
 	    	insert chatterGroup;
 	    	chatterGroupId = chatterGroup.Id;
 	    	UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(Error_Notifications_On__c = true, 
-	    	  Error_Notifications_To__c = chatterGroup.Id, Store_Errors_On__c = true));
+            Error_Notifications_To__c = chatterGroup.Id, Store_Errors_On__c = true, Respect_Duplicate_Rule_Settings__c = true));
     	} else {
     		UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(Error_Notifications_On__c = true, 
-    		  Error_Notifications_To__c = null, Store_Errors_On__c = true));
+            Error_Notifications_To__c = null, Store_Errors_On__c = true, Respect_Duplicate_Rule_Settings__c = true));
     	}
     }
     /*******************************************************************************************************
@@ -80,7 +80,7 @@ public class ERR_Handler_TEST {
         
         User user = UTIL_UnitTestData_TEST.CreateNewUserForTests(System.now().getTime() + '@testerson.com');
         UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(Error_Notifications_On__c = true, 
-            Error_Notifications_To__c = user.Id, Store_Errors_On__c = true));
+            Error_Notifications_To__c = user.Id, Store_Errors_On__c = true, Respect_Duplicate_Rule_Settings__c = true));
     }
 
     /**
@@ -210,7 +210,7 @@ public class ERR_Handler_TEST {
         User u = UTIL_UnitTestData_TEST.createNewInactiveUserForTests(un);
 
         UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(Error_Notifications_On__c = true, 
-            Error_Notifications_To__c = u.Id, Store_Errors_On__c = true));
+            Error_Notifications_To__c = u.Id, Store_Errors_On__c = true, Respect_Duplicate_Rule_Settings__c = true));
  
         Test.startTest();
 

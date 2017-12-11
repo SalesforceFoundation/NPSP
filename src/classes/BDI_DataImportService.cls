@@ -155,6 +155,7 @@ global with sharing class BDI_DataImportService {
         // defer all other validation to the actual settings
         validateSettings(diSettingsFromDiBatch(diBatch));
     }
+
     /*******************************************************************************************************
     * @description validates the data import settings.  Used by UI as well as at runtime by the batch.
     * throws an exception if there are any invalid settings.
@@ -260,7 +261,7 @@ global with sharing class BDI_DataImportService {
             diBatch.Last_Processed_On__c = System.now();
             diBatch.Records_Successfully_Processed__c = cRecordsSucceeded;
             diBatch.Records_Failed__c = cRecordsFailed;
-            update diBatch;
+            UTIL_DMLService.updateRecord(diBatch);
         }
     }
 
@@ -454,7 +455,7 @@ global with sharing class BDI_DataImportService {
                 ));
             }
 
-            update listDIError;
+            UTIL_DMLService.updateRecords(listDIError);
 
             // unfortunately, we can't let the system think the batch failed, or
             // then it would rollback our setting of failure state in the DI records.
@@ -501,8 +502,7 @@ global with sharing class BDI_DataImportService {
                 di.Account2ImportStatus__c = null;
         }
 
-        //UTIL_Debug.debug('****DJH final update to listDI: ' + listDI);
-        update listDI;
+        UTIL_DMLService.updateRecords(listDI);
     }
 
     /*******************************************************************************************************
@@ -727,7 +727,7 @@ global with sharing class BDI_DataImportService {
         }
 
         //UTIL_Debug.debug('****DJH about to upsert household Accounts: ' + listAccHHUpdate);
-        List<Database.UpsertResult> listUR = database.upsert(listAccHHUpdate, false);
+        List<Database.UpsertResult> listUR = UTIL_DMLService.upsertRecords(listAccHHUpdate, false);
         for (integer i = 0; i < listUR.size(); i++) {
             Database.UpsertResult ur = listUR[i];
             if (!ur.isSuccess()) {
@@ -831,7 +831,6 @@ global with sharing class BDI_DataImportService {
         List<DataImport__c> listDIUpsert = new List<DataImport__c>();
 
         // create/update our A1's
-        Map<String, String> mapDIFieldToA1Field = mapFieldsForDIObject('Account1', 'Account', listStrDataImportFields);
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
             if (di.Status__c == label.bdiFailed)
@@ -895,7 +894,6 @@ global with sharing class BDI_DataImportService {
         }
 
         // create/update our A2's
-        Map<String, String> mapDIFieldToA2Field = mapFieldsForDIObject('Account2', 'Account', listStrDataImportFields);
         listAccUpsert.clear();
         listDIUpsert.clear();
         setDIKeyUpsert.clear();
@@ -962,7 +960,7 @@ global with sharing class BDI_DataImportService {
 
         // now update the Contacts to create their Affiliations
         if (mapConIdToConUpdate.size() > 0) {
-            update mapConIdToConUpdate.values();
+            UTIL_DMLService.updateRecords(mapConIdToConUpdate.values());
         }
     }
 
@@ -1122,18 +1120,16 @@ global with sharing class BDI_DataImportService {
         }
 
 
-        String strSoql = 'Select Id, ';
-        if (isCustomIDInAccountMatchRules)
-            strSoql += diSettings.Account_Custom_Unique_ID__c + ', ';
-        strSoql += 'Name from Account where ';
+        String strSoql = getSoqlSelectForAccount();
+        strSoql += ' WHERE ';
         if (setSFId.size() > 0) {
-            strSoql += ' (Id in :setSFId) or ';
+            strSoql += ' (Id IN :setSFId) OR ';
         }
-        strSoql += 'Name in :setName';
+        strSoql += 'Name IN :setName';
         if (isCustomIDInAccountMatchRules && isCustomIdInAccountDatatypeString)
-            strSoql += ' or ' + diSettings.Account_Custom_Unique_ID__c + ' in :setCustomIDString';
+            strSoql += ' OR ' + diSettings.Account_Custom_Unique_ID__c + ' IN :setCustomIDString';
         else if (isCustomIDInAccountMatchRules && !isCustomIdInAccountDatatypeString)
-            strSoql += ' or ' + diSettings.Account_Custom_Unique_ID__c + ' in :setCustomIDNumber';
+            strSoql += ' OR ' + diSettings.Account_Custom_Unique_ID__c + ' IN :setCustomIDNumber';
 
         BDI_PerfLogger.PerfLog pl = perfLogger.newPerfLog('SOQL existing Accounts', BDI_PerfLogger.QUERY);
         List<Account> listAcc = database.query(strSoql);
@@ -1176,6 +1172,43 @@ global with sharing class BDI_DataImportService {
             for (String diKey : listDiKey)
                 mapDIKeyToAccount.put(diKey, acc);
         }
+    }
+
+    /*******************************************************************************************************
+    * @description provides the soql String for selecting all necessary fields from Account.
+    * @return String the soql ('SELECT ... FROM Account')
+    */
+    private String getSoqlSelectForAccount() {
+        Set<String> setAccountFields = new Set<String> {'Id', 'Name'};
+            setAccountFields.addAll(mapDIFieldToA1Field.values());
+            setAccountFields.addAll(mapDIFieldToA2Field.values());
+        return 'SELECT ' + String.join(new List<String>(setAccountFields), ',') + ' FROM Account ';
+    }
+
+    /*******************************************************************************************************
+    * @description map of DI Fieldnames for Account1 to Account fieldnames
+    */
+    private Map<String, String> mapDIFieldToA1Field {
+        get {
+            if (mapDIFieldToA1Field == null) {
+                mapDIFieldToA1Field = BDI_DataImportService.mapFieldsForDIObject('Account1', 'Account', BDI_DataImportService.listStrDataImportFields);
+            }
+            return mapDIFieldToA1Field;
+        }
+        set;
+    }
+
+    /*******************************************************************************************************
+    * @description map of DI Fieldnames for Account2 to Account fieldnames
+    */
+    private Map<String, String> mapDIFieldToA2Field {
+        get {
+            if (mapDIFieldToA2Field == null) {
+                mapDIFieldToA2Field = BDI_DataImportService.mapFieldsForDIObject('Account2', 'Account', BDI_DataImportService.listStrDataImportFields);
+            }
+            return mapDIFieldToA2Field;
+        }
+        set;
     }
 
     //********************************************* ADDRESSES ************************************************
@@ -1267,10 +1300,10 @@ global with sharing class BDI_DataImportService {
         // two prong strategy! if any address object fails to save, do one
         // address record at a time, so we can log the failing address with the correct bdi record.
         try  {
-            insert listAddrInsert;
+            UTIL_DMLService.insertRecords(listAddrInsert);
         } catch (exception ex) {
             for (integer i = 0; i < listAddrInsert.size(); i++) {
-                Database.SaveResult sr = database.insert(listAddrInsert[i], false);
+                Database.SaveResult sr = UTIL_DMLService.insertRecord(listAddrInsert[i], false);
                 if (!sr.isSuccess()) {
                     LogBDIError(listDIInsert[i], sr.getErrors()[0].getMessage(), 'HomeAddressImportStatus__c');
                 }
@@ -1377,21 +1410,21 @@ global with sharing class BDI_DataImportService {
         }
 
         // now update the objects
-        List<Database.UpsertResult> listUR = database.upsert(listCon1Update, false);
+        List<Database.UpsertResult> listUR = UTIL_DMLService.upsertRecords(listCon1Update, false);
         for (integer i = 0; i < listUR.size(); i++) {
             Database.UpsertResult ur = listUR[i];
             if (!ur.isSuccess()) {
                 LogBDIError(listCon1Di[i], ur.getErrors()[0].getMessage(), 'Contact1ImportStatus__c');
             }
         }
-        listUR = database.upsert(listCon2Update, false);
+        listUR = UTIL_DMLService.upsertRecords(listCon2Update, false);
         for (integer i = 0; i < listUR.size(); i++) {
             Database.UpsertResult ur = listUR[i];
             if (!ur.isSuccess()) {
                 LogBDIError(listCon2Di[i], ur.getErrors()[0].getMessage(), 'Contact2ImportStatus__c');
             }
         }
-        listUR = database.upsert(listAccUpdate, false);
+        listUR = UTIL_DMLService.upsertRecords(listAccUpdate, false);
         for (integer i = 0; i < listUR.size(); i++) {
             Database.UpsertResult ur = listUR[i];
             if (!ur.isSuccess()) {
@@ -1446,7 +1479,7 @@ global with sharing class BDI_DataImportService {
                 cmp.Name = null;
         }
         //insert listCmpNew;
-        List<Database.UpsertResult> listUR = database.upsert(listCmpNew, false);
+        List<Database.UpsertResult> listUR = UTIL_DMLService.upsertRecords(listCmpNew, false);
         for (integer i = 0; i < listUR.size(); i++) {
             Database.UpsertResult ur = listUR[i];
             if (!ur.isSuccess()) {

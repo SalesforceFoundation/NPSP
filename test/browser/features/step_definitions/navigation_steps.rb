@@ -19,7 +19,8 @@ end
 
 Given(/^I navigate to Engagement Plan Template$/) do
   on(NPSPMainPage).all_tabs_element.click
-  on(AllTabsPage).engage_plan_template_element.click
+  on(AllTabsPage).engage_plan_template_element.when_present(10).click
+  on(EPTMPage).new_element.click
 end
 
 Given(/^I navigate to Engagement Plan for Contact$/) do
@@ -184,8 +185,12 @@ end
 
 Given(/^I login the first time with oauth$/) do
   on(LoginPage) do |page|
-    page.app_switcher_element.when_present.click
-    page.npsp_app_picker_element.when_present.click
+    label = page.app_switcher_element.text()
+    puts label
+    if label == 'Sales'
+      page.app_switcher_element.when_present.click
+      page.npsp_app_picker_element.when_present.click
+    end
   end
 end
 

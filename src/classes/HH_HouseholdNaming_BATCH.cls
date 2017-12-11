@@ -168,7 +168,7 @@ public class HH_HouseholdNaming_BATCH implements Database.Batchable<SObject> {
             if (updatelist.size() > 0)
                 //Database.Saveresult[] sr = database.update(updatelist, false);
                 // all or nothing so errors not lost.
-                update updatelist;
+                UTIL_DMLService.updateRecords(updatelist);
         }
         
         //No error handling necessary, because the only place this is called from is the widget that displays the batch

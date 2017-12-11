@@ -189,16 +189,13 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
                             if (district.district_type == 'NATIONAL_LOWER') {
                                 addr.Congressional_District__c = district.district_id;
                                 addr.MailingCountry__c = district.country;
-                            }
-
-                            if (district.district_type == 'STATE_UPPER')
+                            } else if (district.district_type == 'STATE_UPPER') {
                                 addr.State_Upper_District__c = district.district_id;
-
-                            if (district.district_type == 'STATE_LOWER')
+                            } else if (district.district_type == 'STATE_LOWER') {
                                 addr.State_Lower_District__c = district.district_id;
-
-                            if (district.district_type == 'LOCAL')
+                            } else if (district.district_type == 'LOCAL' && district.subtype != 'COUNTY') {
                                 addr.Administrative_Area__c = district.district_id;
+                            }
                         }
 
                         if(!settings.Prevent_Address_Overwrite__c){
@@ -209,10 +206,6 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
                             if (!String.isBlank(lastFourPostalDigits)) {
                                 addr.MailingPostalCode__c += '-' + lastFourPostalDigits;
                             }
-                        } else {
-                            if(String.isBlank(addr.MailingCity__c)) addr.MailingCity__c = candidate.match_city;
-                            if(String.isBlank(addr.MailingState__c)) addr.MailingState__c = candidate.match_region;
-                            if(String.isBlank(addr.MailingPostalCode__c)) addr.MailingPostalCode__c = candidate.match_postal;
                         }
                         addr.County_Name__c  = candidate.match_subregion;
 
