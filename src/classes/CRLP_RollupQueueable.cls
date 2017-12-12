@@ -51,7 +51,7 @@ public class CRLP_RollupQueueable implements System.Queueable {
         try {
             runRollupsForIds(this.summaryRecordIds);
         }  catch (Exception ex) {
-            ex.setMessage(ex.getMessage() + '\n\nRollups State: \n' + CRLP_RollupProcessor_SVC.getCurrentRollupState());
+//            ex.setMessage(ex.getMessage() + '\n\nRollups State: \n' + CRLP_RollupProcessor_SVC.getCurrentRollupState());
             ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
         }
     }
