@@ -60,7 +60,13 @@ public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.
     * @return database.Querylocator
     */
     public database.Querylocator start(Database.BatchableContext bc) {
+
         try {
+            if (CRLP_Rollup_SVC.hasActiveRollupsForSObject(this.summaryObjectType) == false) {
+                // If there are no active rollups for the object type, then just return null to skip the entire job
+                return null;
+            }
+
             Integer maxRelatedOppsForNonLDVMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonLDVMode();
             String fldRelatedOppsCnt = (this.summaryObjectType == Contact.SObjectType ? 'Account.' : '') +
                     UTIL_Namespace.StrAllNSPrefix('Number_of_Opportunities__c');
@@ -118,7 +124,7 @@ public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.
     }
 
     /********************************************************************************************************
-     * @description
+     * @description nothing to do here
      */
     public void finish(Database.BatchableContext bc) {
     }

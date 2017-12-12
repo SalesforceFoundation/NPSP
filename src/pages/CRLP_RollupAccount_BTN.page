@@ -6,7 +6,7 @@
             <c:UTIL_PageHeader showBreadcrumb="false" parentEntityLabel="{! $ObjectType.Account.Label }"
                                parentAction="/A01" parentRecordName="{!$ObjectType.Account.Name }"
                                parentRecordAction="/{!Account.Id}" header="Recalculate Roll-Ups"
-                               icon="campaign_120" iconCategory="standard"
+                               icon="account_120" iconCategory="standard"
                                showSaveBtn="false" showCancelBtn="true"
                                cancelLabel="Return" cancelAction="/{!Account.Id}"
                                rendered="{!hasError == true}" />

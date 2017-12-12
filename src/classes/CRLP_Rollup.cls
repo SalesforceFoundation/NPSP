@@ -154,14 +154,12 @@ public class CRLP_Rollup {
         // types cannot be combined with other rollups of different types/days.
         if (this.yearlyOperation == CRLP_Operation.YearlyOperationType.DAYS_BACK.name()
                 && this.daysBack != otherMdtRollup.Integer__c) {
-            System.debug(LoggingLevel.ERROR, '> Field Difference in YearlyOperations.DayBack.Integer');
             return false;
         }
 
         Rollup__mdt rollupItem = this.rollupsMdt[0];
         for (String fld : matchingFields) {
             if (rollupItem.get(fld) != otherMdtRollup.get(fld)) {
-                System.debug(LoggingLevel.ERROR, '> Field Difference in ' + fld);
                 return false;
             }
         }

@@ -36,10 +36,13 @@
 @isTest
 private class CRLP_Rollup_SVC_TEST {
 
+    /**
+     * @description Simple tests for static methods to retrieve customizable rollup settings
+     */
     static testMethod void test_get_batch_sizes() {
         // Start by enabling Customizable Rollups (which disables all legacy rollup operations)
         UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
-                new npo02__Households_Settings__c (
+                new npo02__Households_Settings__c(
                         npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                         Customizable_Rollups_Enabled__c = true,
                         Rollups_Limit_on_Attached_Opps_for_LDV__c = 200,
@@ -54,5 +57,74 @@ private class CRLP_Rollup_SVC_TEST {
         system.assertEquals(200, CRLP_Rollup_SVC.getMaxRelatedOppsForNonLDVMode());
         system.assertEquals(true, CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled);
         system.assertNotEquals(null, CRLP_Rollup_SVC.getSObjectFieldDescribe('Account', 'Name'));
+    }
+
+    /**
+     * @description Test the CRLP_Rollup_TDTM.isRollupRecalcNeeded() method against various versions of
+     * changed and similar SObjects
+     */
+    static testMethod void test_isRecalcNeeded() {
+
+        // Dummy Rollups CMT data to work with
+        String filterGroupId1 = CMT_UnitTestData_TEST.getNewRecordId();
+        String rollupsJSON = '[' +
+                CMT_UnitTestData_TEST.createRollupRecord('Numberic Field', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                        'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.SUM, 'Amount') + ',' +
+
+                CMT_UnitTestData_TEST.createRollupRecord('String Field', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                        'BillingState', CRLP_Operation.RollupType.AVERAGE, 'Amount') + ',' +
+
+                CMT_UnitTestData_TEST.createRollupRecord('Date Field', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                        'npo02__FirstCloseDate__c', CRLP_Operation.RollupType.AVERAGE, 'Amount') + ',' +
+
+                CMT_UnitTestData_TEST.createRollupRecord('Id Field', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                        'ParentId', CRLP_Operation.RollupType.AVERAGE, 'Amount') +
+
+                ']';
+
+        // Deserialize the rollups to use for testing
+        CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
+
+        // Create two test Account records
+        Account a1 = new Account(Name = 'UNITTEST');
+        insert a1;
+        Account a2 = new Account(Name = 'UNITTEST');
+        insert a2;
+        Id a1Id = a1.Id, a2Id = a2.Id;
+
+        Test.startTest();
+
+        // Requery these with the needed fields
+        String acctQuery = CRLP_Query_SEL.getResultsQuery(Account.SObjectType);
+        a1 = database.query(acctQuery + ' WHERE Id = :a1Id LIMIT 1');
+        a2 = database.query(acctQuery + ' WHERE Id = :a2Id LIMIT 1');
+
+        system.assertEquals(false, CRLP_Rollup_TDTM.isRollupRecalcNeeded(a1, a2), 'Objects should be identical');
+
+        // Change fields on one of the object instances and validate that the method detects the changed field
+        a1.npo02__TotalOppAmount__c = 1000;
+        system.assertEquals(true, CRLP_Rollup_TDTM.isRollupRecalcNeeded(a1, a2), 'Number Field Value Changed!');
+        a1.npo02__TotalOppAmount__c = a2.npo02__TotalOppAmount__c;
+
+        a1.npo02__FirstCloseDate__c = Date.today();
+        system.assertEquals(true, CRLP_Rollup_TDTM.isRollupRecalcNeeded(a1, a2), 'Date Field Value Changed!');
+        a1.npo02__FirstCloseDate__c = a2.npo02__FirstCloseDate__c;
+
+        a1.BillingState = 'NJ';
+        system.assertEquals(true, CRLP_Rollup_TDTM.isRollupRecalcNeeded(a1, a2), 'String Field Value Changed!');
+        a1.BillingState = a2.BillingState;
+
+        a1.ParentId = a2.Id;
+        system.assertEquals(true, CRLP_Rollup_TDTM.isRollupRecalcNeeded(a1, a2), 'Id Field Value Changed!');
+        a1.ParentId = a2.ParentId;
+
+        // Change fields that are not referenced by the rollups to ensure that these aren't recognized as requiring a recalc
+        a1.Description = 'This is field that doesn\'t matter';
+        a2.Description = 'This field should be ignored';
+        system.assertEquals(false, CRLP_Rollup_TDTM.isRollupRecalcNeeded(a1, a2), 'Objects should be identical again');
     }
 }

@@ -1,3 +1,16 @@
-<apex:page standardController="General_Accounting_Unit__c" extensions="ALLO_RollupBTN_CTRL" action="{!buttonClick}" >
-	<c:UTIL_NavigateBack recordId="{!General_Accounting_Unit__c.Id}" redirect="true"/>
+<apex:page standardController="General_Accounting_Unit__c" extensions="CRLP_RecalculateBTN_CTRL" action="{!buttonClick}" >
+    <apex:slds />
+    <div class="slds">
+        <apex:form id="pgHeader">
+            <c:UTIL_PageHeader showBreadcrumb="false" parentEntityLabel="{! $ObjectType.General_Accounting_Unit__c.Label }"
+                               parentRecordName="{!$ObjectType.General_Accounting_Unit__c.Name }"
+                               parentRecordAction="/{!General_Accounting_Unit__c.Id}" header="Recalculate Roll-Ups"
+                               icon="custom87_120" iconCategory="standard"
+                               showSaveBtn="false" showCancelBtn="true"
+                               cancelLabel="Return" cancelAction="/{!General_Accounting_Unit__c.Id}"
+                               rendered="{!hasError == true}" />
+        </apex:form>
+        <c:UTIL_PageMessages />
+    </div>
+    <c:UTIL_NavigateBack recordId="{!General_Accounting_Unit__c.Id}" redirect="true" rendered="{!hasError == false}"/>
 </apex:page>

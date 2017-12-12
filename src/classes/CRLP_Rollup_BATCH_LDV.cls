@@ -32,7 +32,10 @@
 * @date 2017
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
-* @description Customizable Rollups Batch for LDV-type Rollups
+* @description Customizable Rollups Batch for LDV-type Rollups where the detail object has to be the primary object
+*  queried in the batch job. Rollups are kept in a stateful collection of CRLP_Rollup instances to allow a rollup
+*  for any given parent Account/Contact/GAU to be carried over multiple batch iterations. Generally this job is run
+*  with a higher batch size than the standard CRLP_Rollup_BATCH job.
 */
 public class CRLP_Rollup_BATCH_LDV implements Database.Batchable<SObject>, Database.Stateful {
 
@@ -72,6 +75,11 @@ public class CRLP_Rollup_BATCH_LDV implements Database.Batchable<SObject>, Datab
         Integer maxRelatedOppsForNonLDVMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonLDVMode();
 
         try {
+            if (CRLP_Rollup_SVC.hasActiveRollupsForSObject(this.summaryObjectType) == false) {
+                // If there are no active rollups for the object type, then just return null to skip the entire job
+                return null;
+            }
+
             // Build a query string for the specified Summary object.
             SObjectType detailObjectType;
             String keyField;

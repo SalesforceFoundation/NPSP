@@ -32,7 +32,7 @@
 * @date 2017
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
-* @description Controller Extension for the recalculate button/action on the Account and Contact objects
+* @description Controller Extension for the recalculate button/action on the Account, Contact, and GAU objects
 *
 */
 public with sharing class CRLP_RecalculateBTN_CTRL {
@@ -78,9 +78,12 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
             if (this.objType == Account.SObjectType) {
                 Account a = [SELECT Number_of_Opportunities__c FROM Account WHERE Id = :recordId LIMIT 1];
                 numOpps = a.Number_of_Opportunities__c;
-            } else {
+            } else if (this.objType == Contact.SObjectType) {
                 Contact c = [SELECT Account.Number_of_Opportunities__c FROM Contact WHERE Id = :recordId LIMIT 1];
                 numOpps = c.Account.Number_of_Opportunities__c;
+            } else {
+                // GAU's
+                numOpps = 1000000;  // always want to run these in LDV mode
             }
             if (numOpps < CRLP_Rollup_SVC.getMaxRelatedOppsForNonLDVMode()) {
                 System.enqueueJob(new CRLP_RollupQueueable(new List<Id>{ recordId }));
@@ -94,6 +97,10 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
 
         } else if (this.objType == Account.SObjectType) {
             RLLP_OppRollup.rollupAccountsFuture(new Set<Id>{ recordId });
+
+        } else if (this.objType == General_Accounting_Unit__c.SObjectType) {
+            ALLO_Rollup_SCHED rollup = new ALLO_Rollup_SCHED(recordId);
+            rollup.runRollups();
         }
         return null;
     }

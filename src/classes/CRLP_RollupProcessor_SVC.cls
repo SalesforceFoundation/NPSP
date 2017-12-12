@@ -184,10 +184,10 @@ public class CRLP_RollupProcessor_SVC {
     /**
      * @description For a given Parent (Summary) record, and set of detail records, complete the rollup of the
      * details to the parent. The List<CRLP_Rollup> collection in ProcessingOptions is used for the actual rollup
-     * accumulations.
+     * accumulations. This method is called by all of the entry points for Rollup Calculations -- Batch, LDV, Queueable
      * @param parent Summary SObject record
      * @param details list of Detail SObject records for a given parent Summary record
-     * @param options ProcessingOptions. Contains List<CRLP_Rollup> rollup instances provided by the Batch class.
+     * @param options ProcessingOptions. Contains List<CRLP_Rollup> rollup instances provided by calling class.
      * @return an updated Summary SObject (regardless of whether it actually requires updating or not)
      */
     public static SObject completeRollupForParent(SObject parent, List<SObject> detailRecords, ProcessingOptions options) {
@@ -272,6 +272,7 @@ public class CRLP_RollupProcessor_SVC {
             Error__c error = new Error__c();
             error.Datetime__c = System.now();
             error.Error_Type__c = 'Rollups DML';
+            error.Context_Type__c = ERR_Handler_API.Context.CRLP.name();
             error.Full_Message__c = errMessage;
             error.Object_Type__c = objTypeName;
             insert error;

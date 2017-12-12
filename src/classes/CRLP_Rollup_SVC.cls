@@ -166,4 +166,19 @@ public class CRLP_Rollup_SVC {
         return household_settings.Rollups_Limit_on_Attached_Opps_for_LDV__c.intValue();
     }
 
+    /**
+     * @description Are there active Rollup Definition records for the provided SObject?
+     * @param SObjectType
+     * @return True or False
+     */
+    public static Boolean hasActiveRollupsForSObject(SObjectType sObj) {
+        try {
+            for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(sObj)) {
+                if (r.Active__c == true) {
+                    return true;
+                }
+            }
+        } catch (Exception ex){ }
+        return false;
+    }
 }

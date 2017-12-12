@@ -119,6 +119,16 @@
 
             for (Schema.DescribeFieldResult oppField : allFieldsToQuery) {
                 mainSoql += ',' + oppParentField + '.' + oppField.getName();
+                // Special conditions
+                if (oppField.getName() == 'RecordTypeId') {
+                    mainSoql += ',' + oppParentField + '.' + 'RecordType.DeveloperName';
+                } else if (oppField.getName() == 'OwnerId') {
+                    mainSoql += ',' + oppParentField + '.' + 'Owner.Alias';
+                } else if (oppField.getName() == 'CreatedById') {
+                    mainSoql += ',' + oppParentField + '.' + 'CreatedBy.Alias';
+                } else if (oppField.getName() == 'LastModifiedById') {
+                    mainSoql += ',' + oppParentField + '.' + 'LastModifiedBy.Alias';
+                }
             }
             if (detailObject == Allocation__c.SObjectType) {
                 mainSoql += ',' + UTIL_Namespace.StrAllNSPrefix('General_Accounting_Unit__c');
