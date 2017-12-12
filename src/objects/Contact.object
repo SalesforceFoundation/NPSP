@@ -1808,4 +1808,15 @@
         <protected>false</protected>
         <requireRowSelection>true</requireRowSelection>
     </webLinks>
+    <webLinks>
+        <fullName>Recalculate_Rollups</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Recalculate Rollups</masterLabel>
+        <openType>sidebar</openType>
+        <page>CRLP_RollupContact_BTN</page>
+        <protected>false</protected>
+    </webLinks>
 </CustomObject>

@@ -92,8 +92,8 @@ public without sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGa
     public static list<Trigger_Handler__c> listTH {
         get {
             if (listTH == null) {
-                listTH =  [select Asynchronous__c, Class__c, Load_Order__c, Object__c, Active__c, Usernames_to_Exclude__c, 
-                    Trigger_Action__c from Trigger_Handler__c order by Load_Order__c];
+                listTH =  [SELECT Asynchronous__c, Class__c, Load_Order__c, Object__c, Active__c, Usernames_to_Exclude__c,
+                    Trigger_Action__c, User_Managed__c FROM Trigger_Handler__c ORDER BY Load_Order__c];
             }
             return listTH;
         }

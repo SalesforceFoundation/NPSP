@@ -86,8 +86,6 @@ public class CRLP_RollupProcessor_SVC {
             mapOfDetailsByParentId.get(parentId).add(dtl);
         }
 
-        Type handlerClass = getHanderClassType(summaryRecords[0].getSobjectType());
-
         if (summaryRecords == null) {
             Set<Id> parentIds = mapOfDetailsByParentId.keySet();
             String soql = CRLP_Query_SEL.getResultsQuery(options.parentObjType) + ' WHERE Id IN :parentIds';
@@ -210,7 +208,10 @@ public class CRLP_RollupProcessor_SVC {
             handler.setRollupsList(options.rollups);
         }
 
-        handler.processRollups(detailRecords);
+        // Don't both calling the processRollups() method if there are no details to roll up
+        if (detailRecords != null && !detailRecords.isEmpty()) {
+            handler.processRollups(detailRecords);
+        }
 
         // Save the rollup from the Handler instance into the processing options instance
         options.rollups = handler.rollups;
@@ -226,10 +227,25 @@ public class CRLP_RollupProcessor_SVC {
     public static void updateChangedRecordsWithLogging(List<SObject> recordsToUpdate) {
         Map<Id,String> dmlErrors = new Map<Id, String>();
 
+        if (recordsToUpdate.isEmpty()) {
+            return;
+        }
+
+        // Disable non-User Managed TDTM triggers before the DML operation to improve performance when
+        // writing changes to rollups to the target objects.
+        String targetSObject = recordsToUpdate[0].getSObjectType().getDescribe().getName();
+        for (Trigger_Handler__c th : TDTM_Config_API.getCachedRecords()) {
+            if (th.User_Managed__c == false && th.Object__c == targetSObject) {
+                th.Active__c = false;
+            }
+        }
+
+        // Ibitiate the DML operation with allOrNone set to false (don't fail the entire batch if one record fails)
         List<Database.SaveResult> srs = UTIL_DMLService.updateRecords(recordsToUpdate, false);
         for(Integer i=0; i<srs.size(); i++) {
             Database.SaveResult sr = srs[i];
             if (!sr.isSuccess()) {
+                // Capture the error message and record Id of the failed record
                 Id recordId = recordsToUpdate[i].Id;
                 dmlErrors.put(recordId, ERR_ExceptionHandler.beautifyExceptionMessage(sr.getErrors()[0].getMessage()));
             }

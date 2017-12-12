@@ -1,0 +1,17 @@
+<apex:page standardController="Account" extensions="CRLP_RecalculateBTN_CTRL" action="{!buttonClick}" >
+
+    <apex:slds />
+    <div class="slds">
+        <apex:form id="pgHeader">
+            <c:UTIL_PageHeader showBreadcrumb="false" parentEntityLabel="{! $ObjectType.Account.Label }"
+                               parentAction="/A01" parentRecordName="{!$ObjectType.Account.Name }"
+                               parentRecordAction="/{!Account.Id}" header="Recalculate Roll-Ups"
+                               icon="campaign_120" iconCategory="standard"
+                               showSaveBtn="false" showCancelBtn="true"
+                               cancelLabel="Return" cancelAction="/{!Account.Id}"
+                               rendered="{!hasError == true}" />
+        </apex:form>
+        <c:UTIL_PageMessages />
+    </div>
+    <c:UTIL_NavigateBack recordId="{!Account.Id}" redirect="true" rendered="{!hasError == false}"/>
+</apex:page>

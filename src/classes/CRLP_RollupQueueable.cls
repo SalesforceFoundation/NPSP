@@ -49,33 +49,38 @@ public class CRLP_RollupQueueable implements System.Queueable {
 
     public void execute(QueueableContext qc) {
         try {
-            SObjectType objType = summaryRecordIds[0].getSobjectType();
-
-            CRLP_RollupProcessor_SVC.ProcessingOptions options = new CRLP_RollupProcessor_SVC.ProcessingOptions();
-            options.mode = CRLP_RollupProcessor_SVC.ProcessingMode.NonLDV;
-            options.parentObjType = objType;
-            if (objType == Account.SObjectType) {
-                options.parentKeyField = SObjectType.Opportunity.fields.AccountId.getName();
-            } else if (objType == Contact.SObjectType) {
-                options.parentKeyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
-            }
-
-            // Query the parent records
-            Set<Id> parentIds = new Set<Id>(this.summaryRecordIds);
-            String soql = CRLP_Query_SEL.getResultsQuery(objType) + ' WHERE Id IN :parentIds';
-            List<SObject> summaryRecords = database.query(soql);
-
-            // Get the detail records for the current set of Summary Records
-            List<SObject> detailsRecords = CRLP_RollupProcessor_SVC.getDetailRecordsFromParentRecords(summaryRecords);
-
-
-            // Call the method to do the actual rollups. This returns only records that require updating
-            List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailsRecords, options);
-
-            // DML and capture any returned DML errors into a Map by Summary Record Id
-            CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
+            runRollupsForIds(this.summaryRecordIds);
         }  catch (Exception ex) {
+            ex.setMessage(ex.getMessage() + '\n\nRollups State: \n' + CRLP_RollupProcessor_SVC.getCurrentRollupState());
             ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
         }
+    }
+
+    public static void runRollupsForIds(List<Id> summaryRecordIds) {
+        SObjectType objType = summaryRecordIds[0].getSobjectType();
+
+        CRLP_RollupProcessor_SVC.ProcessingOptions options = new CRLP_RollupProcessor_SVC.ProcessingOptions();
+        options.mode = CRLP_RollupProcessor_SVC.ProcessingMode.NonLDV;
+        options.parentObjType = objType;
+        if (objType == Account.SObjectType) {
+            options.parentKeyField = SObjectType.Opportunity.fields.AccountId.getName();
+        } else if (objType == Contact.SObjectType) {
+            options.parentKeyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
+        }
+
+        // Query the parent records
+        Set<Id> parentIds = new Set<Id>(summaryRecordIds);
+        String soql = CRLP_Query_SEL.getResultsQuery(objType) + ' WHERE Id IN :parentIds';
+        List<SObject> summaryRecords = database.query(soql);
+
+        // Get the detail records for the current set of Summary Records
+        List<SObject> detailsRecords = CRLP_RollupProcessor_SVC.getDetailRecordsFromParentRecords(summaryRecords);
+
+
+        // Call the method to do the actual rollups. This returns only records that require updating
+        List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailsRecords, options);
+
+        // DML and capture any returned DML errors into a Map by Summary Record Id
+        CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
     }
 }

@@ -116,6 +116,7 @@
         <members>CRLP_Operation_TEST</members>
         <members>CRLP_Query_SEL</members>
         <members>CRLP_Query_SEL_TEST</members>
+        <members>CRLP_RecalculateBTN_CTRL</members>
         <members>CRLP_Rollup</members>
         <members>CRLP_RollupAccount_SVC</members>
         <members>CRLP_RollupAccount_TEST</members>
@@ -410,6 +411,8 @@
         <members>CONV_Account_Conversion</members>
         <members>CON_ContactMerge</members>
         <members>CON_DeleteContactOverride</members>
+        <members>CRLP_RollupAccount_BTN</members>
+        <members>CRLP_RollupContact_BTN</members>
         <members>EP_ManageEPTemplate</members>
         <members>HH_CampaignDedupeBTN</members>
         <members>HH_ManageHH</members>
@@ -2236,9 +2239,11 @@
     </types>
     <types>
         <members>Account.Manage_Household</members>
+        <members>Account.Recalculate_Rollups</members>
         <members>Address__c.Verify_Address</members>
         <members>Allocation__c.Manage_Allocations</members>
         <members>Contact.Merge_Contacts</members>
+        <members>Contact.Recalculate_Rollups</members>
         <members>DataImportBatch__c.Process_Batch</members>
         <members>DataImport__c.Delete_All_Data_Import_Records</members>
         <members>DataImport__c.Delete_Imported_Data_Import_Records</members>

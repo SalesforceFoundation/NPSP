@@ -51,28 +51,30 @@ public class CRLP_Rollup {
     public String currCode;     // The currency code of the target (summary) object
     public String yearlyOperation;
     public Integer daysBack;
-    public Integer yearsAgo;
 
     // Basic counter vars
-    public Integer theCount;
-    public Decimal theSum;
-    public Decimal maxValue;
-    public Decimal minValue;
-    public Date maxDate;
-    public Date minDate;
-    public DateTime maxDateTime;
-    public DateTime minDateTime;
+    public Integer theCount;        // count, average
+    public Decimal theSum;          // sum, average
+    public Decimal maxValue;        // smallest/largest
+    public Decimal minValue;        // smallest/largest
+    public Date maxDate;            // first/last
+    public Date minDate;            // first/last
+    public DateTime maxDateTime;    // first/last
+    public DateTime minDateTime;    // first/last
 
     // Vars to handle using a different field for the summary. For example, might have Largest as the Operation
     // against the Opportunity.Amount, but the ResultField might pull in Opportunity.Id or any field from the
     // Opportunity object.
-    public String textValue;
-    public Decimal numValue;
-    public Id idValue;
+    // Using Two-dimensional array to store first/last values for all the various data types. For example,
+    // might have a rollup of "Id of the first donation", "Amount of the last donation",
+    // or "{some text field} from first donation"
+    public String[] textValue;
+    public Decimal[] numValue;
+    public Id[] idValue;
     public Date dateValue;
     public DateTime dateTimeValue;
 
-    // Track the sum and counts of donations for each year to use for BestYear, etc.
+    // Maps of rolled up stats by year; where the map key is the year (fiscal or calendar) from the specified date field
     public Map<String, Double> sumByYear;
     public Map<String, Double> minByYear;
     public Map<String, Double> maxByYear;
@@ -98,8 +100,6 @@ public class CRLP_Rollup {
             this.yearlyOperation = rollupMdt.Yearly_Operation_Type__c;
             if (this.yearlyOperation == CRLP_Operation.YearlyOperationType.DAYS_BACK.name()) {
                 this.daysBack = Integer.valueOf(rollupMdt.Integer__c);
-            } else if (this.yearlyOperation == CRLP_Operation.YearlyOperationType.YEARS_AGO.name()) {
-                this.yearsAgo = Integer.valueOf(rollupMdt.Integer__c);
             }
 
             // Clear all the counter values
@@ -111,16 +111,18 @@ public class CRLP_Rollup {
     /** @description Reset all counter vars to 0/null */
     public void resetValues() {
         this.theCount = 0;
-        this.textValue = null;
-        this.numValue = 0;
-        this.idValue = null;
         this.theSum = this.minValue = this.maxValue = 0;
         this.dateValue = this.minDate = this.maxDate = null;
         this.dateTimeValue = this.minDateTime = this.maxDateTime = null;
+
         this.minByYear = new Map<String, Double>();
         this.maxByYear = new Map<String, Double>();
         this.sumByYear = new Map<String, Double>();
         this.countByYear = new Map<String, Integer>();
+
+        this.textValue = new List<String>{ null, null };
+        this.numValue = new List<Decimal>{ 0, 0 };
+        this.idValue = new List<Id>{ null, null };
     }
 
     /**
@@ -148,7 +150,7 @@ public class CRLP_Rollup {
             return true;
         }
 
-        // Due to the large variation of possible combinations, Rollups for DAYS_AGO YearlyOperation
+        // Due to the large variation of possible combinations, Rollups for DAYS_BACK YearlyOperation
         // types cannot be combined with other rollups of different types/days.
         if (this.yearlyOperation == CRLP_Operation.YearlyOperationType.DAYS_BACK.name()
                 && this.daysBack != otherMdtRollup.Integer__c) {
@@ -207,7 +209,7 @@ public class CRLP_Rollup {
         Boolean useYearsAgoValue = ( this.yearlyOperation == CRLP_Operation.YearlyOperationType.YEARS_AGO.name());
         if (useYearsAgoValue == true) {
             // Find the data for the specified number of years back.
-            Integer getThisYear = (this.useFiscalYear ? fiscalYrs.getYear(Date.Today()) : Date.Today().Year()) - this.yearsAgo;
+            Integer getThisYear = (this.useFiscalYear ? fiscalYrs.getYear(Date.Today()) : Date.Today().Year()) - r.Integer__c.intValue();
             String yrString = getThisYear.format().replace(',','');
             // If the map of sums by year include the specified year, then get the Sum/Min/Max
             if (sumByYear.containsKey(yrString)) {
@@ -247,14 +249,16 @@ public class CRLP_Rollup {
         }
 
         // ================================================================
-        // First/Last of some value not of a Date or DateTime type
+        // First/Last of some value not of a Date or DateTime type,such as "Last Gift Amount"
         // This could be an Id or pretty much any other field that can be stored as 'text'
         // ================================================================
         else if (operation == CRLP_Operation.RollupType.FIRST || operation == CRLP_Operation.RollupType.LAST) {
             if (fldType == SoapType.DOUBLE) {
-                resultValue = numValue;
+                resultValue = numValue[(operation == CRLP_Operation.RollupType.FIRST ? 0 : 1)];
+            } else if (fldType == SoapType.ID) {
+                resultValue = idValue[(operation == CRLP_Operation.RollupType.FIRST ? 0 : 1)];
             } else {
-                resultValue = textValue;
+                resultValue = textValue[(operation == CRLP_Operation.RollupType.FIRST ? 0 : 1)];
             }
         }
 
@@ -268,10 +272,12 @@ public class CRLP_Rollup {
                 resultValue = sumForSpecifiedYear;
             }
         } else if (fldType == SoapType.DOUBLE && operation == CRLP_Operation.RollupType.AVERAGE) {
-            if (useYearsAgoValue == false) {
+            if (useYearsAgoValue == false && theCount != 0) {
                 resultValue = theSum.divide(theCount, 2, RoundingMode.HALF_UP);
-            } else {
+            } else if (countForSpecifiedYear != 0) {
                 resultValue = sumForSpecifiedYear.divide(countForSpecifiedYear, 2, RoundingMode.HALF_UP);
+            } else {
+                resultValue = 0;
             }
         } else if (fldType == SoapType.DOUBLE && operation == CRLP_Operation.RollupType.SMALLEST) {
             if (useYearsAgoValue == false) {

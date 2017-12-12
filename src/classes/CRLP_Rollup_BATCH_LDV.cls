@@ -120,8 +120,6 @@ public class CRLP_Rollup_BATCH_LDV implements Database.Batchable<SObject>, Datab
     */
     public void execute(Database.BatchableContext bc, List<SObject> detailRecords) {
 
-        // TODO - Disable all NPSP triggers for performance
-
         try {
             // Build the processing options instance
             CRLP_RollupProcessor_SVC.ProcessingOptions options = createOptionsInstance();
