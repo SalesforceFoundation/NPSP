@@ -62,11 +62,6 @@ public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.
     public database.Querylocator start(Database.BatchableContext bc) {
 
         try {
-            if (CRLP_Rollup_SVC.hasActiveRollupsForSObject(this.summaryObjectType) == false) {
-                // If there are no active rollups for the object type, then just return null to skip the entire job
-                return null;
-            }
-
             Integer maxRelatedOppsForNonLDVMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonLDVMode();
             String fldRelatedOppsCnt = (this.summaryObjectType == Contact.SObjectType ? 'Account.' : '') +
                     UTIL_Namespace.StrAllNSPrefix('Number_of_Opportunities__c');
@@ -84,12 +79,20 @@ public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.
                 query += ' AND ' + fldRelatedOppsCnt + ' > 0';
             }
 
+            if (CRLP_Rollup_SVC.hasActiveRollupsForSObject(this.summaryObjectType) == false) {
+                // If there are no active rollups for the object type, then force the query to return zero records.
+                // This is needed because can't return null as a valid iterator.
+                query += ' LIMIT 0';
+            }
+
             return Database.getQueryLocator(query);
+
         } catch (Exception ex) {
             // TODO Not 100% sure we want to keep this, but for now it's needed to capture any unexpected errors in the processing logic
             ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
         }
-        return null;
+
+        return Database.getQueryLocator([SELECT Id FROM Account LIMIT 0]); // return a generic empty data set rather than null
     }
 
     /*******************************************************************************************************

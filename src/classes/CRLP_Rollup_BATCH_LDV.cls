@@ -75,11 +75,6 @@ public class CRLP_Rollup_BATCH_LDV implements Database.Batchable<SObject>, Datab
         Integer maxRelatedOppsForNonLDVMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonLDVMode();
 
         try {
-            if (CRLP_Rollup_SVC.hasActiveRollupsForSObject(this.summaryObjectType) == false) {
-                // If there are no active rollups for the object type, then just return null to skip the entire job
-                return null;
-            }
-
             // Build a query string for the specified Summary object.
             SObjectType detailObjectType;
             String keyField;
@@ -108,15 +103,24 @@ public class CRLP_Rollup_BATCH_LDV implements Database.Batchable<SObject>, Datab
                 query += ' AND ' + keyField + ' IN :recordIds';
             }
             query += ' ORDER BY ' + keyField + ', CreatedDate ASC';
+
+            if (CRLP_Rollup_SVC.hasActiveRollupsForSObject(this.summaryObjectType) == false) {
+                // If there are no active rollups for the object type, then force the query to return zero records.
+                // This is needed because can't return null as a valid iterator.
+                query += ' LIMIT 0';
+            }
+
             UTIL_Debug.debug(LoggingLevel.WARN, '>> LDV Batch Query =' + query);
 
             // TODO Review the above query to ensure it's fully selective. Could consider using RecurringDonation = Null ...
             return Database.getQueryLocator(query);
+
         } catch (Exception ex) {
             // TODO Not 100% sure we want to keep this, but for now it's needed to capture any unexpected errors in the processing logic
             ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
         }
-        return null;
+
+        return Database.getQueryLocator([SELECT Id FROM Account LIMIT 0]); // return a generic empty data set rather than null
     }
 
     /*******************************************************************************************************
