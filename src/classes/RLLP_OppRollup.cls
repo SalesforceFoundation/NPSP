@@ -363,7 +363,6 @@ public without sharing class RLLP_OppRollup {
             }
         }         
 
-        //update accountsToUpdate.values();
         /**Randi - Changes for Accounts - can I pass in account type?
         * */
         List<Database.SaveResult> srList = Database.update(accountsToUpdate.values(), false);
@@ -533,11 +532,6 @@ public without sharing class RLLP_OppRollup {
                 }
             }                
         }
-        //Randi - this can be added once Joy's changes are merged
-        //UTIL_DMLService.updateRecords(contactsToUpdate.values());
-
-        /**Randi -
-        * */
 
         List<Database.SaveResult> srList = Database.update(contactsToUpdate.values(), false);
 

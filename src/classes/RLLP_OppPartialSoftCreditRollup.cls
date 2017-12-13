@@ -161,7 +161,13 @@ public class RLLP_OppPartialSoftCreditRollup {
                 toUpdate.add(newC);
             }
         }
-        update toUpdate;
+        //update toUpdate;
+        List<Database.SaveResult> srList = Database.update(toUpdate, false);
+
+        ERR_Handler.Errors errorResult = ERR_Handler.getJobErrors(srList, toUpdate);
+        if (errorResult.errorsExist) {
+            ERR_Handler.processErrors(errorResult.errorRecords, 'Jobs');
+        }
     }
     
     /*******************************************************************************************************

@@ -164,9 +164,13 @@ public class ERR_Handler {
 
 					for(Database.Error err : errList) {
 						totalErrors++;
-						//TODO: add in the beautify message function and test
-						//errDetailsMessage += err.getStatusCode() + ': ' + ERR_ExceptionHandler.beautifyExceptionMessage(err.getMessage()) + ' ';
-						errDetailsMessage += err.getStatusCode() + ': ' + err.getMessage() + ' ';
+						errDetailsMessage += err.getStatusCode() + ': ' + ERR_ExceptionHandler.beautifyExceptionMessage(err.getMessage());
+
+						if(errDetailsMessage.endsWith('.')){
+							errDetailsMessage += ' ';
+						} else if(!errDetailsMessage.endsWith('. ')){
+							errDetailsMessage += '. ';
+						}
 					}
 
 					String fullObjectErrMessage = 'There were ' + totalErrors + ' errors saving to object ' + sObjects[i].Id + '. ' + errDetailsMessage;
@@ -191,7 +195,7 @@ public class ERR_Handler {
 	/*******************************************************************************************************
     * @description Checks if a given DML operation has succeeded depending on the type of DML result.
     * @param dmlResults
-    * @return isSuccess Returns true if all DML operations passed successfull; returns false if there was a DML exception.
+    * @return isSuccess Returns true if all DML operations passed successful; returns false if there was a DML exception.
     */
 	public static boolean isDmlSuccess(Object dmlResults) {
 		Boolean isSuccess = true;
@@ -211,7 +215,7 @@ public class ERR_Handler {
 	/*******************************************************************************************************
     * @description Retrieves errors from a DML operation depending on the type of DML result.
     * @param dmlResults
-    * @return isSuccess Returns true if all DML operations passed successfull; returns false if there was a DML exception.
+    * @return isSuccess Returns true if all DML operations passed successful; returns false if there was a DML exception.
     */
 	public static List<Database.Error> getDmlResultErrors(Object dmlResults) {
 		List<Database.Error> errList = new List<Database.Error>();
@@ -342,6 +346,7 @@ public class ERR_Handler {
 		Error__c error = new Error__c();
 		error.Datetime__c = System.now();
 		error.Full_Message__c = message;
+		error.Error_Type__c = 'Job Error';
 
 		UTIL_Debug.debug('**** createBatchError() returns error: ' + error);
 		return error;
