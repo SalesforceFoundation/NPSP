@@ -363,13 +363,11 @@ public without sharing class RLLP_OppRollup {
             }
         }         
 
-        /**Randi - Changes for Accounts - can I pass in account type?
-        * */
         List<Database.SaveResult> srList = Database.update(accountsToUpdate.values(), false);
 
         ERR_Handler.Errors errorResult = ERR_Handler.getJobErrors(srList, accountsToUpdate.values());
         if (errorResult.errorsExist) {
-            ERR_Handler.processErrors(errorResult.errorRecords, 'Jobs');
+            ERR_Handler.processErrors(errorResult.errorRecords, ERR_Handler_API.Context.RLLP.name());
         }
 
     }    
@@ -537,7 +535,7 @@ public without sharing class RLLP_OppRollup {
 
         ERR_Handler.Errors errorResult = ERR_Handler.getJobErrors(srList, contactsToUpdate.values());
         if (errorResult.errorsExist) {
-            ERR_Handler.processErrors(errorResult.errorRecords, 'Jobs');
+            ERR_Handler.processErrors(errorResult.errorRecords, ERR_Handler_API.Context.RLLP.name());
         }
     }    
     
@@ -704,7 +702,7 @@ public without sharing class RLLP_OppRollup {
 
         ERR_Handler.Errors errorResult = ERR_Handler.getJobErrors(srList, householdsToUpdate.values());
         if (errorResult.errorsExist) {
-            ERR_Handler.processErrors(errorResult.errorRecords, 'Jobs');
+            ERR_Handler.processErrors(errorResult.errorRecords, ERR_Handler_API.Context.RLLP.name());
         }
     }  
     

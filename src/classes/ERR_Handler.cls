@@ -83,7 +83,7 @@ public class ERR_Handler {
     	Errors deleteErrors = getErrors(deleteResults, deletedObjects);  //Delete
     	Errors undeleteErrors= getErrors(undeleteResults, undeletedObjects);  //Undelete
     	
-    	if(insertErrors.errorsExist || updateErrors.errorsExist || deleteErrors.errorsExist || undeleteErrors.errorsExist) {
+    	if (insertErrors.errorsExist || updateErrors.errorsExist || deleteErrors.errorsExist || undeleteErrors.errorsExist) {
     		errors.errorsExist = true;
     		errors.errorRecords.addAll(insertErrors.errorRecords);
     		errors.errorRecords.addAll(updateErrors.errorRecords);
@@ -109,30 +109,30 @@ public class ERR_Handler {
     public static Errors getErrors(List<Object> dmlResults, List<SObject> sObjects) {    	
     	Errors errors = new Errors();
     	
-    	if(dmlResults != null) {	
-	    	for(Integer i=0; i<dmlResults.size(); i++) {
+    	if (dmlResults != null) {
+	    	for (Integer i=0; i<dmlResults.size(); i++) {
 	        	Boolean isSuccess = true;
-	        	if(dmlResults[i] instanceof Database.SaveResult) {
+	        	if (dmlResults[i] instanceof Database.SaveResult) {
 	        		isSuccess = ((Database.SaveResult)dmlResults[i]).isSuccess();
-	        	} else if(dmlResults[i] instanceof Database.DeleteResult) {
+	        	} else if (dmlResults[i] instanceof Database.DeleteResult) {
 	        		isSuccess = ((Database.DeleteResult)dmlResults[i]).isSuccess();
-	        	} else if(dmlResults[i] instanceof Database.UndeleteResult) {
+	        	} else if (dmlResults[i] instanceof Database.UndeleteResult) {
 	        		isSuccess = ((Database.UndeleteResult)dmlResults[i]).isSuccess();
 	        	}
-	        	
-	        	if(!isSuccess) {
+
+	        	if (!isSuccess) {
 	        		errors.errorsExist = true;
-	        		
+
 	        		//Creating error object
 	        		Error__c err = createError(dmlResults[i], sObjects[i].getSObjectType().getDescribe().getName(), sObjects[i].Id);
 	                errors.errorRecords.add(err);
-	                
-	                //We cannot use addError on the record here, because if we do, the whole transaction will be rolled back, and 
+
+	                //We cannot use addError on the record here, because if we do, the whole transaction will be rolled back, and
 	                //no error record will be saved, or error notification sent.
-	                
+
 	                //Displaying an error message to the user
 	                if(ApexPages.currentPage() != null)
-	                   ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, err.Full_Message__c)); 	                
+	                   ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, err.Full_Message__c));
 	        	}
 	        }
     	}
@@ -152,23 +152,23 @@ public class ERR_Handler {
 		Errors errors = new Errors();
 		List<String> errorsFound = new List<String>();
 
-		if(dmlResults != null) {
-			for(Integer i=0; i<dmlResults.size(); i++) {
+		if (dmlResults != null) {
+			for (Integer i=0; i<dmlResults.size(); i++) {
 
 				Boolean isSuccess = isDmlSuccess(dmlResults[i]);
 
-				if(!isSuccess) {
+				if (!isSuccess) {
 					List<Database.Error> errList = getDmlResultErrors(dmlResults[i]);
 					Integer totalErrors = 0;
 					String errDetailsMessage = '';
 
-					for(Database.Error err : errList) {
+					for (Database.Error err : errList) {
 						totalErrors++;
 						errDetailsMessage += err.getStatusCode() + ': ' + ERR_ExceptionHandler.beautifyExceptionMessage(err.getMessage());
 
-						if(errDetailsMessage.endsWith('.')){
+						if (errDetailsMessage.endsWith('.')){
 							errDetailsMessage += ' ';
-						} else if(!errDetailsMessage.endsWith('. ')){
+						} else if (!errDetailsMessage.endsWith('. ')){
 							errDetailsMessage += '. ';
 						}
 					}
@@ -178,7 +178,7 @@ public class ERR_Handler {
 					errorsFound.add(fullObjectErrMessage);
 				}
 			}
-			if(errorsFound.size() > 0){
+			if (errorsFound.size() > 0){
 				String errorMessage = String.join(errorsFound, '\n* ');
 				errors.errorsExist = true;
 
@@ -194,38 +194,26 @@ public class ERR_Handler {
 
 	/*******************************************************************************************************
     * @description Checks if a given DML operation has succeeded depending on the type of DML result.
-    * @param dmlResults
-    * @return isSuccess Returns true if all DML operations passed successful; returns false if there was a DML exception.
+    * @param dmlResult
     */
-	public static boolean isDmlSuccess(Object dmlResults) {
-		Boolean isSuccess = true;
-
-		if(dmlResults instanceof Database.SaveResult) {
-			isSuccess = ((Database.SaveResult)dmlResults).isSuccess();
-		} else if(dmlResults instanceof Database.DeleteResult) {
-			isSuccess = ((Database.DeleteResult)dmlResults).isSuccess();
-		} else if(dmlResults instanceof Database.UndeleteResult) {
-			isSuccess = ((Database.UndeleteResult)dmlResults).isSuccess();
-		}
-
-		return isSuccess;
-
+	public static boolean isDmlSuccess(Object dmlResult) {
+        return getDmlResultErrors(dmlResult).size() == 0;
 	}
 
 	/*******************************************************************************************************
     * @description Retrieves errors from a DML operation depending on the type of DML result.
-    * @param dmlResults
+    * @param dmlResult
     * @return isSuccess Returns true if all DML operations passed successful; returns false if there was a DML exception.
     */
-	public static List<Database.Error> getDmlResultErrors(Object dmlResults) {
+	public static List<Database.Error> getDmlResultErrors(Object dmlResult) {
 		List<Database.Error> errList = new List<Database.Error>();
 
-		if(dmlResults instanceof Database.SaveResult) {
-			errList = ((Database.SaveResult)dmlResults).getErrors();
-		} else if(dmlResults instanceof Database.DeleteResult) {
-			errList = ((Database.DeleteResult)dmlResults).getErrors();
-		} else if(dmlResults instanceof Database.UndeleteResult) {
-			errList = ((Database.UndeleteResult)dmlResults).getErrors();
+		if (dmlResult instanceof Database.SaveResult) {
+			errList = ((Database.SaveResult)dmlResult).getErrors();
+		} else if (dmlResult instanceof Database.DeleteResult) {
+			errList = ((Database.DeleteResult)dmlResult).getErrors();
+		} else if (dmlResult instanceof Database.UndeleteResult) {
+			errList = ((Database.UndeleteResult)dmlResult).getErrors();
 		}
 
 		return errList;
@@ -251,7 +239,7 @@ public class ERR_Handler {
     * @param context The context the exception was raised on.
     */
     public static void processError(Exception e, String context) {
-        if(e != null) {
+        if (e != null) {
             Error__c error = createError(e);
             processErrors(new Error__c[]{error}, context);
         }
@@ -265,12 +253,12 @@ public class ERR_Handler {
     */
     public static void processErrors(List<Error__c> errorRecords, String context) {
 
-    	if(errorRecords != null && errorRecords.size() > 0) {
-	    	if(ApexPages.currentPage() != null) {
+    	if (errorRecords != null && errorRecords.size() > 0) {
+	    	if (ApexPages.currentPage() != null) {
 	            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, errorRecords[0].Full_Message__c));
 	    	}
 
-	    	if(UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
+	    	if (UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
 	    	   UTIL_Debug.debug('**** Storing errorRecords: ' + errorRecords);
 	    	   Database.insert(errorRecords, false);
 	    	}
@@ -294,7 +282,7 @@ public class ERR_Handler {
 		String stackTrace = e.getStackTraceString();
 		UTIL_Debug.debug('****Stack trace: ' + stackTrace);
 		String message;
-		if(String.isBlank(stackTrace) || stackTrace == '('+UTIL_Namespace.getNamespace()+')' || stackTrace == UTIL_Namespace.getNamespace()) {
+		if (String.isBlank(stackTrace) || stackTrace == '('+UTIL_Namespace.getNamespace()+')' || stackTrace == UTIL_Namespace.getNamespace()) {
 			message = 'No stacktrace available at the time of saving the record. ';
 		} else {
 			message = 'Stacktrace available at the time of saving the record - ';
@@ -316,17 +304,17 @@ public class ERR_Handler {
         error.Datetime__c = System.now();
         error.Object_Type__c = objectType;
 
-    	if(result instanceof Database.SaveResult) {
+    	if (result instanceof Database.SaveResult) {
     		Database.SaveResult saveResult = (Database.SaveResult) result;
     		error.Record_URL__c = getRecordURL(saveResult.getId(), objId);
 	        error.Error_Type__c = getStatusCode(saveResult.getErrors()[0].getStatusCode());
 	        error.Full_Message__c = saveResult.getErrors()[0].getMessage();
-    	} else if(result instanceof Database.DeleteResult) {
+    	} else if (result instanceof Database.DeleteResult) {
     		Database.DeleteResult deleteResult = (Database.DeleteResult) result;
             error.Record_URL__c = getRecordURL(deleteResult.getId(), objId);
             error.Error_Type__c = getStatusCode(deleteResult.getErrors()[0].getStatusCode());
             error.Full_Message__c = deleteResult.getErrors()[0].getMessage();
-    	} else if(result instanceof Database.UndeleteResult) {
+    	} else if (result instanceof Database.UndeleteResult) {
     		Database.UndeleteResult undeleteResult = (Database.UndeleteResult) result;
             error.Record_URL__c = getRecordURL(undeleteResult.getId(), objId);
             error.Error_Type__c = getStatusCode(undeleteResult.getErrors()[0].getStatusCode());
