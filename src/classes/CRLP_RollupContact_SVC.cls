@@ -70,6 +70,7 @@ public class CRLP_RollupContact_SVC extends CRLP_VRollupHandler {
         // This service class is specific to Rollups from the Opportunity (or Opp+Payment) to the Account object
 
         for (Sobject s : details) {
+            CRLP_Debug_UTIL.setCurrentRollupState('ProcessRollups for : ' + s.Id);
 
             Opportunity opp = (Opportunity)s;
             for (CRLP_Rollup rollup : this.rollups) {

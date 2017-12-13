@@ -128,7 +128,9 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
         this.record = CRLP_Rollup_SVC.createEmptyResultObject(this.objectId, this.rollups);
         for (CRLP_Rollup rollup : this.rollups) {
             Map<String,Object> results = rollup.getFinalValues();
+            CRLP_Debug_UTIL.setCurrentRollupState(CRLP_Debug_UTIL.getRollupCurrentValues(rollup));
             for (String fld : results.keySet()) {
+                CRLP_Debug_UTIL.setCurrentRollupState('   ' + fld + ' = ' + results.get(fld));
                 this.record.put(fld, results.get(fld));
             }
         }

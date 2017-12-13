@@ -56,6 +56,10 @@ instance until ready to be written to the Sobject.
      */
     public static void doRollupOperation(CRLP_Rollup rollup, Opportunity oppSObject, SObject detailSObject) {
 
+        String objName = detailSObject.getSObjectType().getDescribe().getName();
+
+        CRLP_Debug_UTIL.setCurrentRollupState('doRollupOperation() for ' + oppSObject.Id + ' ' + objName, rollup);
+
         CRLP_FiscalYears fiscalYrs = new CRLP_FiscalYears(rollup.useFiscalYear);
         Rollup__mdt firstRollup = rollup.rollupsMdt[0];
         String dateField = firstRollup.Date_Field__r.QualifiedApiName;
@@ -65,8 +69,6 @@ instance until ready to be written to the Sobject.
         Datetime resultFieldDateTime;
         Double amountValue = 0, resultFieldAmount = 0;
         String resultFieldText;
-
-        String objName = detailSObject.getSObjectType().getDescribe().getName();
 
         // Get the Date value from the appropriate object. There should always be a date!
         SObject dateSObject = detailSObject;

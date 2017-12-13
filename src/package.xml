@@ -108,6 +108,7 @@
         <members>CON_DeleteContactOverride_TEST</members>
         <members>CON_DoNotContact_TDTM</members>
         <members>CON_DoNotContact_TEST</members>
+        <members>CRLP_Debug_UTIL</members>
         <members>CRLP_FiscalYears</members>
         <members>CRLP_FiscalYears_TEST</members>
         <members>CRLP_Operation</members>

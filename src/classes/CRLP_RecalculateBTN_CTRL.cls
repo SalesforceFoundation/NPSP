@@ -32,7 +32,7 @@
 * @date 2017
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
-* @description Controller Extension for the recalculate button/action on the Account, Contact, and GAU objects
+* @description Controller Extension for the recalculate button on the Account, Contact, and GAU objects
 *
 */
 public with sharing class CRLP_RecalculateBTN_CTRL {
@@ -66,7 +66,6 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
      * legacy rollups future jobs.
      */
     public PageReference buttonClick() {
-        // Queue up the appropriate ASync process based on whether the Customizable Rollups engine is enabled or not
         if (hasError == true || recordId == null) {
             // do nothing if there is no record id or there is a permissions error
 
@@ -85,6 +84,7 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
                 // GAU's
                 numOpps = 1000000;  // always want to run these in LDV mode
             }
+
             if (numOpps < CRLP_Rollup_SVC.getMaxRelatedOppsForNonLDVMode()) {
                 System.enqueueJob(new CRLP_RollupQueueable(new List<Id>{ recordId }));
             } else {
@@ -92,15 +92,18 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
                 Database.executeBatch(new CRLP_Rollup_BATCH_LDV(new List<Id>{ recordId }), batchSize);
             }
 
-        } else if (this.objType == Contact.SObjectType) {
-            RLLP_OppRollup.rollupContactsFuture(new Set<Id>{ recordId });
+        } else {
+            // Legacy Roll-Ups - async action
+            if (this.objType == Contact.SObjectType) {
+                RLLP_OppRollup.rollupContactsFuture(new Set<Id>{ recordId });
 
-        } else if (this.objType == Account.SObjectType) {
-            RLLP_OppRollup.rollupAccountsFuture(new Set<Id>{ recordId });
+            } else if (this.objType == Account.SObjectType) {
+                RLLP_OppRollup.rollupAccountsFuture(new Set<Id>{ recordId });
 
-        } else if (this.objType == General_Accounting_Unit__c.SObjectType) {
-            ALLO_Rollup_SCHED rollup = new ALLO_Rollup_SCHED(recordId);
-            rollup.runRollups();
+            } else if (this.objType == General_Accounting_Unit__c.SObjectType) {
+                ALLO_Rollup_SCHED rollup = new ALLO_Rollup_SCHED(recordId);
+                rollup.runRollups();
+            }
         }
         return null;
     }

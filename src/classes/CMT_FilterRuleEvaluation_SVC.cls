@@ -82,6 +82,8 @@ public class CMT_FilterRuleEvaluation_SVC {
 
         List<CMT_FilterRule> rulesToEvaluate = mapOfFilterRulesByGroupId.get(filterGroupId);
 
+        CRLP_Debug_UTIL.setCurrentRollupState('Evaluate Filter Group for ' + cacheKey + ' against ' + filterGroupId);
+
         for (SObject record : detailRows) {
             SObjectType objType = record.getSObjectType();
             for (CMT_FilterRule rule : rulesToEvaluate) {

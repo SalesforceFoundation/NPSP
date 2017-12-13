@@ -199,6 +199,10 @@ public class CRLP_Rollup {
 
         CRLP_Operation.RollupType operation = CRLP_Operation.getRollupTypeFromString(r.Operation__c.replaceAll(' ', '_'));
 
+        CRLP_Debug_UTIL.setCurrentRollupState(' - determineRollupValue: ' + targetField.getName() +
+                '/' + fldType + ' for ' + operation);
+
+
         // ================================================================
         // Yearly Operation Type - Get the Sum/Min/Max for the specified number of years back to use
         // in the later logic to determine the values to return for this rollup.
@@ -216,6 +220,7 @@ public class CRLP_Rollup {
                 maxForSpecifiedYear += minByYear.get(yrString);
                 countForSpecifiedYear += countByYear.get(yrString);
             }
+            CRLP_Debug_UTIL.amendLastCurrentRollupState('Yr=' + yrString + ' / Sum=' + sumForSpecifiedYear);
         }
 
         // ================================================================
@@ -314,7 +319,7 @@ public class CRLP_Rollup {
             } else {
                 if (bestYr == null || fldType == SoapType.STRING) {
                     resultValue = bestYr;
-                } else if (fldType == SoapType.DOUBLE) {
+                } else /*if (fldType == SoapType.DOUBLE)*/ {
                     resultValue = Integer.valueOf(bestYr);
                 }
             }
@@ -355,6 +360,7 @@ public class CRLP_Rollup {
             resultValue = streakLength;
         }
 
+        CRLP_Debug_UTIL.amendLastCurrentRollupState('==> ' + resultValue);
         return resultValue;
     }
 }

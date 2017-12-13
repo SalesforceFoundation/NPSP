@@ -89,6 +89,7 @@ public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.
 
         } catch (Exception ex) {
             // TODO Not 100% sure we want to keep this, but for now it's needed to capture any unexpected errors in the processing logic
+            ex.setMessage(ex.getMessage() + '\n\nRollups State:\n' + CRLP_Debug_UTIL.getCurrentRollupState());
             ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
         }
 
@@ -122,6 +123,7 @@ public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.
             CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
         } catch (Exception ex) {
             // TODO Not 100% sure we want to keep this, but for now it's needed to capture any unexpected errors in the processing logic
+            ex.setMessage(ex.getMessage() + '\n\nRollups State:\n' + CRLP_Debug_UTIL.getCurrentRollupState());
             ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
         }
     }

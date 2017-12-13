@@ -108,6 +108,7 @@ public class CRLP_RollupProcessor_SVC {
             if (CRLP_Rollup_SVC.resultsNeedUpdate(parent, updatedRecord, options.rollups)) {
                 recordsToUpdate.put(parentId, updatedRecord);
             }
+            CRLP_Debug_UTIL.clearCurrentRollupState();
         }
 
         // When running in LDV mode, the last ParentId process should NOT be updated yet (in the batch iteration).
@@ -195,6 +196,7 @@ public class CRLP_RollupProcessor_SVC {
         // has changed or not.
 
         Type handlerClass = getHanderClassType(parent.getSobjectType());
+        CRLP_Debug_UTIL.setCurrentRollupState('Instantiate Handler Class: ' + handlerClass.getName() + ' for ' + parent.Id);
         CRLP_VRollupHandler handler = (CRLP_VRollupHandler) handlerClass.newInstance();
 
         if (UserInfo.isMultiCurrencyOrganization()) {
@@ -205,6 +207,7 @@ public class CRLP_RollupProcessor_SVC {
 
         // In LDV Mode, pass in the stateful rollups collection.
         if (options.mode == ProcessingMode.LDV && options.rollups != null && options.rollups.size() > 0) {
+            CRLP_Debug_UTIL.setCurrentRollupState('Set stateful rollups collection in Handler Class');
             handler.setRollupsList(options.rollups);
         }
 
@@ -275,6 +278,8 @@ public class CRLP_RollupProcessor_SVC {
             error.Context_Type__c = ERR_Handler_API.Context.CRLP.name();
             error.Full_Message__c = errMessage;
             error.Object_Type__c = objTypeName;
+            // TODO - Remove this after debugging code is removed
+            error.Stack_Trace__c = CRLP_Debug_UTIL.getCurrentRollupState();
             insert error;
 
         }
