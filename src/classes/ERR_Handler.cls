@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2014, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -15,29 +15,29 @@
       from this software without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 
 /**
 * @author Salesforce.org
 * @date 2014
-* @description Helps determine if errors occurred during the DML operations performed during the transaction, and with 
+* @description Helps determine if errors occurred during the DML operations performed during the transaction, and with
 * the necessary storing and notification of these errors.
 * @group ErrorHandling
 * @group-content ../../ApexDocContent/ErrorHandling.htm
 */
 public class ERR_Handler {
-    
+
     /*******************************************************************************************************
     * @description Inner class that groups the result of processing the result of multiple DML operations performed
     *              using the Database class.
@@ -52,10 +52,10 @@ public class ERR_Handler {
         */
     	public List<Error__c> errorRecords = new List<Error__c>();
     }
-    
-    
+
+
     /*******************************************************************************************************
-    * @description Processes the result of multiple DML operations performed using the Database class, to determine 
+    * @description Processes the result of multiple DML operations performed using the Database class, to determine
     *              if errors occurred. It does not store errors or send error email notifications. These operations
     *              should be performed after the rollback.
     *
@@ -71,18 +71,18 @@ public class ERR_Handler {
     * @return Errors Combined result of all the DML operations.
     */
     public static Errors getErrors(
-    List<Database.SaveResult> insertResults, List<Database.SaveResult> updateResults, 
-    List<Database.DeleteResult> deleteResults, List<Database.UndeleteResult> undeleteResults, 
-    List<SObject> insertedObjects, List<SObject> updatedObjects, 
+    List<Database.SaveResult> insertResults, List<Database.SaveResult> updateResults,
+    List<Database.DeleteResult> deleteResults, List<Database.UndeleteResult> undeleteResults,
+    List<SObject> insertedObjects, List<SObject> updatedObjects,
     List<SObject> deletedObjects, List<SObject> undeletedObjects) {
-                    
+
         Errors errors = new Errors();
-        	
+
     	Errors insertErrors = getErrors(insertResults, insertedObjects);  //Insert
     	Errors updateErrors = getErrors(updateResults, updatedObjects);  //Update
     	Errors deleteErrors = getErrors(deleteResults, deletedObjects);  //Delete
     	Errors undeleteErrors= getErrors(undeleteResults, undeletedObjects);  //Undelete
-    	
+
     	if (insertErrors.errorsExist || updateErrors.errorsExist || deleteErrors.errorsExist || undeleteErrors.errorsExist) {
     		errors.errorsExist = true;
     		errors.errorRecords.addAll(insertErrors.errorRecords);
@@ -90,25 +90,25 @@ public class ERR_Handler {
     		errors.errorRecords.addAll(deleteErrors.errorRecords);
     		errors.errorRecords.addAll(undeleteErrors.errorRecords);
     	}
-    	
-    	// We do NOT want to try to store errors or send error email notifications here. We want to be able to 
+
+    	// We do NOT want to try to store errors or send error email notifications here. We want to be able to
     	//manually do that after the rollback.
- 
+
     	return errors;
     }
 
     /*******************************************************************************************************
-    * @description Processes the results of a single DML operation performed using the Database class to determine 
+    * @description Processes the results of a single DML operation performed using the Database class to determine
     *              if errors occurred. It does not store errors or send error email notifications. These operations
     *              should be performed after the rollback.
     *
     * @param dmlResults The results of a single DML operation performed using the Database class.
     * @param sObjects The records the DML operation was performed on.
     * @return Errors The errors that occurred during the DML operation performed using the Database class.
-    */    
-    public static Errors getErrors(List<Object> dmlResults, List<SObject> sObjects) {    	
+    */
+    public static Errors getErrors(List<Object> dmlResults, List<SObject> sObjects) {
     	Errors errors = new Errors();
-    	
+
     	if (dmlResults != null) {
 	    	for (Integer i=0; i<dmlResults.size(); i++) {
 	        	Boolean isSuccess = true;
@@ -182,7 +182,11 @@ public class ERR_Handler {
 				String errorMessage = String.join(errorsFound, '\n* ');
 				errors.errorsExist = true;
 
-				Error__c err = createJobError(errorMessage);
+                String objectType = sObjects[1].getSObjectType().getDescribe().getName();
+                Boolean match = areObjectsSameType(sObjects, objectType);
+
+                Error__c err = match ? createJobError(errorMessage, objectType): createJobError(errorMessage);
+
 				errors.errorRecords.add(err);
 
 				//We cannot use addError on the record here, because if we do, the whole transaction will be rolled back, and
@@ -219,6 +223,20 @@ public class ERR_Handler {
 		return errList;
 
 	}
+
+    public static Boolean areObjectsSameType(List<SObject> sObjects, String firstObjectType){
+        Boolean match = true;
+
+        for (sObject s: sObjects){
+            String nextObjectType = s.getSObjectType().getDescribe().getName();
+            if (firstObjectType != nextObjectType){
+                match = false;
+            }
+        }
+
+        return match;
+
+    }
 
     /*******************************************************************************************************
     * @description Creates an error record from an exception, stores it in the database (if enabled), and sends error
@@ -328,17 +346,34 @@ public class ERR_Handler {
 	/*******************************************************************************************************
 	* @description Creates a single error record from a Database class DML operation in a batch, future or queued job.
 	* @param message The full message of all the errors for a given job and compiled IDs.
+	* @param objectType The type of all records in the job, only to be passed in if they all match.
 	* @return The error record.
 	*/
-	private static Error__c createJobError(String message) {
+	private static Error__c createJobError(String message, string objectType) {
 		Error__c error = new Error__c();
 		error.Datetime__c = System.now();
 		error.Full_Message__c = message;
 		error.Error_Type__c = 'Job Error';
+        error.Object_Type__c = objectType;
 
 		UTIL_Debug.debug('**** createBatchError() returns error: ' + error);
 		return error;
 	}
+
+    /*******************************************************************************************************
+	* @description Creates a single error record from a Database class DML operation in a batch, future or queued job.
+	* @param message The full message of all the errors for a given job and compiled IDs.
+	* @return The error record.
+	*/
+    private static Error__c createJobError(String message) {
+        Error__c error = new Error__c();
+        error.Datetime__c = System.now();
+        error.Full_Message__c = message;
+        error.Error_Type__c = 'Job Error';
+
+        UTIL_Debug.debug('**** createBatchError() returns error: ' + error);
+        return error;
+    }
     
     /*******************************************************************************************************
     * @description Returns the URL of a record, if available.
