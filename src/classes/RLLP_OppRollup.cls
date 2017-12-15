@@ -363,12 +363,7 @@ public without sharing class RLLP_OppRollup {
             }
         }         
 
-        List<Database.SaveResult> srList = Database.update(accountsToUpdate.values(), false);
-
-        ERR_Handler.Errors errorResult = ERR_Handler.getJobErrors(srList, accountsToUpdate.values());
-        if (errorResult.errorsExist) {
-            ERR_Handler.processErrors(errorResult.errorRecords, ERR_Handler_API.Context.RLLP.name());
-        }
+        UTIL_DMLService.updateRecordBatchAndLogErrors(accountsToUpdate.values(), ERR_Handler_API.Context.RLLP.name());
 
     }    
     
@@ -531,12 +526,7 @@ public without sharing class RLLP_OppRollup {
             }                
         }
 
-        List<Database.SaveResult> srList = Database.update(contactsToUpdate.values(), false);
-
-        ERR_Handler.Errors errorResult = ERR_Handler.getJobErrors(srList, contactsToUpdate.values());
-        if (errorResult.errorsExist) {
-            ERR_Handler.processErrors(errorResult.errorRecords, ERR_Handler_API.Context.RLLP.name());
-        }
+        UTIL_DMLService.updateRecordBatchAndLogErrors(contactsToUpdate.values(), ERR_Handler_API.Context.RLLP.name());
     }    
     
     /*******************************************************************************************************
@@ -698,12 +688,7 @@ public without sharing class RLLP_OppRollup {
             }                
         }
 
-        List<Database.SaveResult> srList = Database.update(householdsToUpdate.values(), false);
-
-        ERR_Handler.Errors errorResult = ERR_Handler.getJobErrors(srList, householdsToUpdate.values());
-        if (errorResult.errorsExist) {
-            ERR_Handler.processErrors(errorResult.errorRecords, ERR_Handler_API.Context.RLLP.name());
-        }
+        UTIL_DMLService.updateRecordBatchAndLogErrors(householdsToUpdate.values(), ERR_Handler_API.Context.RLLP.name());
     }  
     
     /*******************************************************************************************************

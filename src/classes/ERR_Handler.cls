@@ -148,7 +148,7 @@ public class ERR_Handler {
     * @param sObjects The records the DML operation was performed on.
     * @return Errors The errors with a single list that occurred during a batch DML operation performed using the Database class.
     */
-    public static Errors getJobErrors(List<Object> dmlResults, List<SObject> sObjects) {
+    public static Errors getJobErrors(List<Object> dmlResults, List<SObject> sObjects, string context) {
         Errors errors = new Errors();
         List<String> errorsFound = new List<String>();
 
@@ -159,33 +159,25 @@ public class ERR_Handler {
 
                 if (!isSuccess) {
                     List<Database.Error> errList = getDmlResultErrors(dmlResults[i]);
-                    Integer totalErrors = 0;
-                    String errDetailsMessage = '';
+                    List<String> errDetailsMessage = new List<String>();
 
                     for (Database.Error err : errList) {
-                        totalErrors++;
-                        errDetailsMessage += err.getStatusCode() + ': ' + ERR_ExceptionHandler.beautifyExceptionMessage(err.getMessage());
-
-                        if (errDetailsMessage.endsWith('.')){
-                            errDetailsMessage += ' ';
-                        } else if (!errDetailsMessage.endsWith('. ')){
-                            errDetailsMessage += '. ';
-                        }
+                        errDetailsMessage.add(err.getStatusCode() + '- ' + ERR_ExceptionHandler.beautifyExceptionMessage(err.getMessage()));
                     }
 
-                    String fullObjectErrMessage = 'There were ' + totalErrors + ' errors saving to object ' + sObjects[i].Id + '. ' + errDetailsMessage;
+                    String fullObjectErrMessage = sObjects[i].Id + ': ' + String.join(errDetailsMessage, '; ');
 
                     errorsFound.add(fullObjectErrMessage);
                 }
             }
             if (errorsFound.size() > 0){
-                String errorMessage = String.join(errorsFound, '\n* ');
+                String errorMessage = 'There were one more errors updating or inserting the following records: ' + '\n* ' + String.join(errorsFound, '\n* ');
                 errors.errorsExist = true;
 
                 String objectType = sObjects[0].getSObjectType().getDescribe().getName();
                 Boolean match = areSObjectsSameType(sObjects);
 
-                Error__c err = match ? createJobError(errorMessage, objectType): createJobError(errorMessage);
+                Error__c err = match ? createJobError(errorMessage, context, objectType): createJobError(errorMessage, context);
 
                 errors.errorRecords.add(err);
 
@@ -198,7 +190,7 @@ public class ERR_Handler {
 
     /*******************************************************************************************************
     * @description Checks if a given DML operation has succeeded depending on the type of DML result.
-    * @param dmlResult
+    * @param dmlResult The results of a DML batch operation performed using the Database class.
     */
     public static boolean isDmlSuccess(Object dmlResult) {
         return getDmlResultErrors(dmlResult).size() == 0;
@@ -206,7 +198,7 @@ public class ERR_Handler {
 
     /*******************************************************************************************************
     * @description Retrieves errors from a DML operation depending on the type of DML result.
-    * @param dmlResult
+    * @param dmlResult The result of a DML batch operation performed using the Database class.
     * @return isSuccess Returns true if all DML operations passed successful; returns false if there was a DML exception.
     */
     public static List<Database.Error> getDmlResultErrors(Object dmlResult) {
@@ -223,15 +215,21 @@ public class ERR_Handler {
         return errList;
 
     }
-
+    /*******************************************************************************************************
+    * @description Retrieves errors from a DML operation depending on the type of DML result.
+    * @param sObjects List of generic sObjects
+    * @return match Returns true if all objects are the same sObject type.
+    */
     public static Boolean areSObjectsSameType(List<SObject> sObjects){
         Boolean match = true;
+
         Schema.SObjectType firstSObjectType = sObjects[0].getSObjectType();
 
         for (sObject s: sObjects){
             Schema.SObjectType nextSObjectType = s.getSObjectType();
             if (firstSObjectType != nextSObjectType){
                 match = false;
+                break;
             }
         }
 
@@ -350,12 +348,13 @@ public class ERR_Handler {
     * @param objectType The type of all records in the job, only to be passed in if they all match.
     * @return The error record.
     */
-    private static Error__c createJobError(String message, string objectType) {
+    private static Error__c createJobError(String message, String context, String objectType) {
         Error__c error = new Error__c();
         error.Datetime__c = System.now();
         error.Full_Message__c = message;
         error.Error_Type__c = 'Job Error';
         error.Object_Type__c = objectType;
+        error.Context_Type__c = context;
 
         UTIL_Debug.debug('**** createBatchError() returns error: ' + error);
         return error;
@@ -366,11 +365,12 @@ public class ERR_Handler {
     * @param message The full message of all the errors for a given job and compiled IDs.
     * @return The error record.
     */
-    private static Error__c createJobError(String message) {
+    private static Error__c createJobError(String message, String context) {
         Error__c error = new Error__c();
         error.Datetime__c = System.now();
         error.Full_Message__c = message;
         error.Error_Type__c = 'Job Error';
+        error.Context_Type__c = context;
 
         UTIL_Debug.debug('**** createBatchError() returns error: ' + error);
         return error;
