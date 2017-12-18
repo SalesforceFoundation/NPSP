@@ -1546,6 +1546,62 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>When Donation matching is enabled, you must select one or more fields in Donation Matching Rule.</value>
     </labels>
     <labels>
+        <fullName>bdiDryRunBeginButton</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>button label for begin Dry Run</shortDescription>
+        <value>Begin Dry Run</value>
+    </labels>
+    <labels>
+        <fullName>bdiDryRunError</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DI Status that the record has an error from Dry Run</shortDescription>
+        <value>Dry Run - Error</value>
+    </labels>
+    <labels>
+        <fullName>bdiDryRunMatched</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DI Object Status that it was matched in Dry Run</shortDescription>
+        <value>Dry Run - Matched</value>
+    </labels>
+    <labels>
+        <fullName>bdiDryRunNoMatch</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DI Object Status that it was not matched in Dry Run</shortDescription>
+        <value>Dry Run - Not Matched</value>
+    </labels>
+    <labels>
+        <fullName>bdiDryRunRecordsError</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>progress field label</shortDescription>
+        <value>Records with errors</value>
+    </labels>
+    <labels>
+        <fullName>bdiDryRunRecordsValidated</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>label on progress widget during Dry Run</shortDescription>
+        <value>Records validated</value>
+    </labels>
+    <labels>
+        <fullName>bdiDryRunValidated</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DI Status that the record went thru Dry Run</shortDescription>
+        <value>Dry Run - Validated</value>
+    </labels>
+    <labels>
         <fullName>bdiErrorBatchNameRequired</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
