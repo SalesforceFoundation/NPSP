@@ -41,15 +41,15 @@ public class CRLP_RollupContact_SVC extends CRLP_VRollupHandler {
     /**
      * @description Called by the setRecordId() method in the parent (super) class, this configures the
      * CRLP_Rollup object instances that are used to do the actual rollup work for the target Contact record.
-     * For a given summary object, prepopulates the rollupResults map by rollupId,
+     * For the given summary object, pre-populates the rollupResults map by rollupId,
      * filtering the rollups to those from the Opportunity and/or OppPayment objects. Partial Soft Credits
      * are handled by a different service class.
      */
     public override void initRollup() {
         if (CRLP_Rollup_SEL.getRollupsBySummaryType().containsKey(Contact.SObjectType)) {
             for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(Contact.SObjectType)) {
-                if (r.Detail_Object__r.QualifiedApiName == oppObjectName
-                        || r.Detail_Object__r.QualifiedApiName == pmtObjectName) {
+                if ((r.Detail_Object__r.QualifiedApiName == oppObjectName || r.Detail_Object__r.QualifiedApiName == pmtObjectName)
+                        && r.Amount_Object__r.QualifiedApiName != pscObjectName) {
                     addRollupDefinition(r);
                 }
             }
