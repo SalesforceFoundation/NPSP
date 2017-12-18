@@ -13,11 +13,13 @@ public class CRLP_Debug_UTIL {
     }
 
     public static void setCurrentRollupState(String state) {
+        UTIL_Debug.debug('===== setCurrentRollupState(' + state + ')');
         currentRollupState.add(state);
     }
 
     public static void amendLastCurrentRollupState(String state) {
         String lastStateVal = currentRollupState[currentRollupState.size()-1];
+        UTIL_Debug.debug('===== setCurrentRollupState(' + lastStateVal + ' ' + state + ')');
         currentRollupState[currentRollupState.size()-1] = lastStateVal + ' ' + state;
     }
 

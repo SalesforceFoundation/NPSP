@@ -49,6 +49,7 @@ public class CMT_FilterRuleEvaluation_SVC {
     /**
      * @description Static cache of filter group eval results by a concatenation of detail row Ids
      */
+    @TestVisible
     private static Map<String, Boolean> cachedFilterEvalResults = new Map<String, Boolean>();
 
     /**

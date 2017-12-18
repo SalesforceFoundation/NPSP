@@ -154,7 +154,11 @@ public class CRLP_Rollup_SVC {
      * @return Integer value
      */
     public static Integer getLDVBatchSize(SObjectType objType) {
-        return household_settings.Rollups_LDV_Batch_Size__c.intValue();
+        if (objType == General_Accounting_Unit__c.SObjectType) {
+            return household_settings.Rollups_Allocation_Batch_Size__c.intValue();
+        } else {
+            return household_settings.Rollups_LDV_Batch_Size__c.intValue();
+        }
     }
 
     /**

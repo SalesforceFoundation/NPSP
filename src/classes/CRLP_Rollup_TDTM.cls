@@ -110,6 +110,7 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
                 break;
             }
         }
+
         return changed;
     }
 
@@ -155,7 +156,8 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
                 }
             }
 
-            if (!accountIds.isEmpty()) {
+            // Don't submit the batch job when unit tests are running
+            if (!Test.isRunningTest() && !accountIds.isEmpty()) {
                 Integer batchSize = CRLP_Rollup_SVC.getLDVBatchSize(General_Accounting_Unit__c.SObjectType);
                 Database.executeBatch(new CRLP_Rollup_BATCH_LDV(gauIds), batchSize);
             }
@@ -172,13 +174,28 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
                 }
             }
 
-            // Account Rollup
-            if (!accountIds.isEmpty()) {
-                System.enqueueJob(new CRLP_RollupQueueable(accountIds));
-            }
-            // Contact Rollup
-            if (!contactIds.isEmpty()) {
-                System.enqueueJob(new CRLP_RollupQueueable(contactIds));
+
+
+            if (!Test.isRunningTest() && accountIds.size() + contactIds.size() < 3) {
+                List<List<Id>> queueOfSummaryIds = new List<List<Id>>();
+                queueOfSummaryIds.add(accountIds);
+                queueOfSummaryIds.add(contactIds);
+
+                // Since can't queue up two jobs at the same time, pass in a list of a list of Id's to roll-up
+                // The queueable job will pop the list of Id's off the stack and process them in serial.
+                if (!queueOfSummaryIds.isEmpty()) {
+                    System.enqueueJob(new CRLP_RollupQueueable(queueOfSummaryIds));
+                }
+            } else if (Test.isRunningTest()) {
+
+                // Unit Tests will not run chained queueable processes. As a result, submit these individually
+                // to execute immediately
+                if (!accountIds.isEmpty()) {
+                    CRLP_RollupQueueable.runRollupsForIds(accountIds);
+                }
+                if (!contactIds.isEmpty()) {
+                    CRLP_RollupQueueable.runRollupsForIds(contactIds);
+                }
             }
         }
     }

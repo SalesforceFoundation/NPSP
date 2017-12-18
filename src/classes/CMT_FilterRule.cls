@@ -340,7 +340,6 @@ public class CMT_FilterRule {
                 // IN and NOT-IN only works with standard text and simple picklist fields
                 // It checks to see if the field value is in the liste of entered value(s)
                 String compareValue = String.isBlank(rule.constant) ? '' : String.valueOf(rule.constant);
-                System.debug(LoggingLevel.ERROR, 'compareValue=' + compareValue);
 
                 List<String> selectedValues = compareValue.split(';');
                 Boolean found = false;

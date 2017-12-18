@@ -228,10 +228,15 @@ private class CRLP_RollupContact_TEST {
         pmt1.npe01__Paid__c = false;
 
         npe01__OppPayment__c pmt2 = [SELECT npe01__Written_Off__c, npe01__Paid__c FROM npe01__OppPayment__c
-        WHERE npe01__Opportunity__r.IsWon = true LIMIT 1];
+        WHERE npe01__Opportunity__r.IsWon = true AND npe01__Written_Off__c = false AND Id != :pmt1.Id LIMIT 1];
         pmt2.npe01__Written_Off__c = true;
         pmt2.npe01__Paid__c = false;
 
+        Test.startTest();
+
+        // Because data is being modified by the above, any cached filter evaluations are now invalid
+        // so before issuing the DML against the payment records, clear any cached eval results
+        CMT_FilterRuleEvaluation_SVC.cachedFilterEvalResults.clear();
         update new List<npe01__OppPayment__c>{ pmt1, pmt2 };
 
         system.assertEquals(cnt, [SELECT Count() FROM npe01__OppPayment__c WHERE npe01__Opportunity__r.IsWon = true],
@@ -240,7 +245,6 @@ private class CRLP_RollupContact_TEST {
                 'There should be 100 OCR records on closed won opps');
 
         // Now test the rollups to the Account from the Opportunity
-        Test.startTest();
         if (tt == TestType.TestTrigger) {
             // No need to execute anything special here. If the triggers worked as expected, then
             // the data will be rolled up automatically upon the stopTest().
