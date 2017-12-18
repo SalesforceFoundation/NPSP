@@ -66,18 +66,32 @@ global with sharing class BDI_DataImport_API {
     /*******************************************************************************************************
     * @description Imports all DataImport records that have not been previously imported.
     * Their status is changed to imported, once the process finishes.
-    * @param batchId optional batch to scope processing to.
-    * @return ID The ID of the batch job that performs the data import.
+    * @param listbatchId the batch(es) to scope processing to.  Can be a list containing a null Id for all
+    * records not referenced by any Batch.
+    * @return list<ProcessDataImportBatchesResult> a list of Result classes
     */
     @InvocableMethod(label='processDataImportBatches' description='starts the batch processing of a list of DataImport batches')
     global static list<ProcessDataImportBatchesResult> processDataImportBatches(list<ID> listBatchId) {
+
+        return processDataImportBatches(listBatchId, false);
+    }
+
+    /*******************************************************************************************************
+    * @description Processes all DataImport records that have not been previously imported in either
+    * Trial Mode, or for actual Commit. Their status is updated, once the process finishes.
+    * @param listbatchId the batch(es) to scope processing to.  Can be a list containing a null Id for all
+    * records not referenced by any Batch.
+    * @param isDryRun whether to run in Dry Run mode or commit records.
+    * @return list<ProcessDataImportBatchesResult> a list of Result classes
+    */
+    global static list<ProcessDataImportBatchesResult> processDataImportBatches(list<ID> listBatchId, Boolean isDryRun) {
 
         list<ProcessDataImportBatchesResult> listResult = new list<ProcessDataImportBatchesResult>();
 
         Savepoint sp = Database.setSavepoint();
         for (ID batchId : listBatchId) {
             try {
-                BDI_DataImport_BATCH batch = new BDI_DataImport_BATCH(batchId);
+                BDI_DataImport_BATCH batch = new BDI_DataImport_BATCH(batchId, isDryRun);
                 listResult.add(new ProcessDataImportBatchesResult(Database.executeBatch(batch, integer.valueOf(batch.diSettings.Batch_Size__c))));
             } catch (exception ex) {
                 Database.rollback(sp);

@@ -107,6 +107,10 @@ public with sharing class BDI_ContactService {
         matchExistingContacts();
         pl.stop();
 
+        if (bdi.isDryRun) {
+            return;
+        }
+
         // defer household naming until the end
         HH_HouseholdNaming.disableHouseholdNaming(true);
 
@@ -318,13 +322,13 @@ public with sharing class BDI_ContactService {
                     continue;
                 }
                 di.put(strCx + 'Imported__c', con.id);
-                di.put(strCx + 'ImportStatus__c', label.bdiMatched);
+                di.put(strCx + 'ImportStatus__c', con.id != null ? bdi.statusMatchedExisting() : bdi.statusMatchedNew());
                 if (con.AccountId != null && di.HouseholdAccountImported__c == null) {
                         di.HouseholdAccountImported__c = con.AccountId;
                 }
             } else if (listDiKey.size() > 0) {
                 con = new Contact();
-                di.put(strCx + 'ImportStatus__c', label.bdiCreated);
+                di.put(strCx + 'ImportStatus__c', bdi.statusCreatedNew());
                 di.put(strCx + '_Preferred_Email__c', strPreferredEmail(di, iCx));
                 di.put(strCx + '_Preferred_Phone__c', strPreferredPhone(di, iCx));
 
