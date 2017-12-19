@@ -174,27 +174,31 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
                 }
             }
 
+            // Execute the roll-ups in real-time instead of asynchronously in the following cases:
+            // - Currently in a Unit Test with only a couple of summary objects (unit tests do not support chaining)
+            // - Called from a Batch Job, @Future or Queueable context
+            //  || System.isBatch() || System.isFuture() || System.isQueueable()
+            Integer numTotalSummaryObjects = accountIds.size() + contactIds.size();
+            if ((Test.isRunningTest() && numTotalSummaryObjects < 3)) {
+                // Immediate execution
+                if (!accountIds.isEmpty()) {
+                    CRLP_RollupQueueable.runRollupsForIds(accountIds);
+                }
+                if (!contactIds.isEmpty()) {
+                    CRLP_RollupQueueable.runRollupsForIds(contactIds);
+                }
 
+            } else  {
+                // Queueable execution using chained queuable executions for each type of summary object
 
-            if (!Test.isRunningTest() && accountIds.size() + contactIds.size() < 3) {
                 List<List<Id>> queueOfSummaryIds = new List<List<Id>>();
                 queueOfSummaryIds.add(accountIds);
                 queueOfSummaryIds.add(contactIds);
 
                 // Since can't queue up two jobs at the same time, pass in a list of a list of Id's to roll-up
                 // The queueable job will pop the list of Id's off the stack and process them in serial.
-                if (!queueOfSummaryIds.isEmpty()) {
+                if (!queueOfSummaryIds.isEmpty() && Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
                     System.enqueueJob(new CRLP_RollupQueueable(queueOfSummaryIds));
-                }
-            } else if (Test.isRunningTest()) {
-
-                // Unit Tests will not run chained queueable processes. As a result, submit these individually
-                // to execute immediately
-                if (!accountIds.isEmpty()) {
-                    CRLP_RollupQueueable.runRollupsForIds(accountIds);
-                }
-                if (!contactIds.isEmpty()) {
-                    CRLP_RollupQueueable.runRollupsForIds(contactIds);
                 }
             }
         }

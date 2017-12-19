@@ -136,14 +136,14 @@ public class CRLP_Rollup {
 
     /**
      * @description Determine if the passed Rollup__mdt record has the identical key properties to this
-     * Rollup instance: FilterGroup, UseFiscalYear, Detail Field, Use_OCR_for_Attribution_Object__c Field,
+     * Rollup instance: FilterGroup, UseFiscalYear, Summary Object, Detail Field,
      * Amount Field and Date Field.
      * @param Rollup__mdt
      * @return True or False
      */
     public Boolean isRollupInSameGroup(Rollup__mdt otherMdtRollup) {
         Set<String> matchingFields = new Set<String>{
-                'Filter_Group__c','Detail_Field__c', 'Use_OCR_for_Attribution_Object__c',
+                'Filter_Group__c','Summary_Object__c','Detail_Field__c',
                 'Date_Field__c', 'Amount_Field__c', 'Use_Fiscal_Year__c', 'Yearly_Operation_Type__c'
         };
         if (this.rollupsMdt == null) {

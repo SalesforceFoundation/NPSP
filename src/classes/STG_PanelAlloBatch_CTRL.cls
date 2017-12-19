@@ -46,9 +46,14 @@ public with sharing class STG_PanelAlloBatch_CTRL extends STG_Panel {
     public PageReference runBatch() {
         isRunningBatch = true;
 
-        // run batch rollup
-        ALLO_Rollup_SCHED rollup = new ALLO_Rollup_SCHED();
-        rollup.runRollups();        
+        if (!CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
+            // run legacy batch rollup
+            ALLO_Rollup_SCHED rollup = new ALLO_Rollup_SCHED();
+            rollup.runRollups();
+        } else {
+            Integer batchSizeLDV = CRLP_Rollup_SVC.getLDVBatchSize(General_Accounting_Unit__c.SObjectType);
+            Database.executeBatch(new CRLP_Rollup_BATCH_LDV(General_Accounting_Unit__c.SObjectType), batchSizeLDV);
+        }
         return null;
     }
 

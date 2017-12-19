@@ -73,9 +73,10 @@ private class CRLP_RollupScheduler_TEST {
         System.assertNotEquals(0, jobCount, 'There should be more than one default job for CRLP_RollupScheduler');
 
         // Verify that the correct number of jobs has been scheduled
-        System.assertEquals(jobCount, [SELECT count() FROM AsyncApexJob
-            WHERE JobType = 'ScheduledApex' AND ApexClass.Name = 'CRLP_RollupScheduler'],
-            'There should be multiple jobs scheduled using the CRLP_RollupScheduler interface');
+        List<AsyncApexJob> scheduledJobs = [SELECT Id, JobType, Status, ApexClass.Name FROM AsyncApexJob
+                                WHERE JobType = 'ScheduledApex' AND Status != 'Aborted' AND ApexClass.Name = 'CRLP_RollupScheduler'];
+        System.assertEquals(jobCount, scheduledJobs.size(),
+            'There should be ' + jobCount + ' jobs scheduled using the CRLP_RollupScheduler interface');
 
         // Reset the defaultScheduledJobs collection
         UTIL_MasterSchedulableHelper.defaultScheduledJobs = null;

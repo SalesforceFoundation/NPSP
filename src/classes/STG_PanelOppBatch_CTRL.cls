@@ -33,13 +33,16 @@
 * @group Settings
 * @description Controller for the Batch Opp Rollups panel.
 */
-public with sharing class STG_PanelOppBatch_CTRL extends STG_Panel { 
+public with sharing class STG_PanelOppBatch_CTRL extends STG_Panel {
+
+    public Integer numJobSubmitted { get; private set; }
 
     /*********************************************************************************************************
     * @description The panel's constructor 
     */
     public STG_PanelOppBatch_CTRL() {
-        isRunningBatch = false;
+        this.isRunningBatch = false;
+        this.numJobSubmitted = 0;
     }
     
     /*********************************************************************************************************
@@ -59,9 +62,30 @@ public with sharing class STG_PanelOppBatch_CTRL extends STG_Panel {
     public PageReference runBatch() {
         isRunningBatch = true;
 
-        // run batch rollup
-        RLLP_OppRollup rg = new RLLP_OppRollup();
-        rg.rollupAll();        
+        if (!CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
+            // run legacy batch rollups
+            RLLP_OppRollup rg = new RLLP_OppRollup();
+            rg.rollupAll();
+        } else {
+            Integer batchSizeAcct = CRLP_Rollup_SVC.getBatchSize(Account.SObjectType);
+            Integer batchSizeCntct = CRLP_Rollup_SVC.getBatchSize(Contact.SObjectType);
+
+            Database.executeBatch(new CRLP_Rollup_BATCH(Account.SObjectType), batchSizeAcct);
+            Database.executeBatch(new CRLP_Rollup_BATCH(Contact.SObjectType), batchSizeCntct);
+            this.numJobSubmitted = 2;
+
+            Integer maxRelatedOppsForNonLDVMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonLDVMode();
+            Boolean hasLDVAccounts = [SELECT Count() FROM Account WHERE Number_of_Opportunities__c >= :maxRelatedOppsForNonLDVMode LIMIT 1] > 0;
+
+            // If there is at least one LDV Account to roll up, execute this batch job
+            if (hasLDVAccounts) {
+                batchSizeAcct = CRLP_Rollup_SVC.getLDVBatchSize(Account.SObjectType);
+                batchSizeCntct = CRLP_Rollup_SVC.getLDVBatchSize(Contact.SObjectType);
+                Database.executeBatch(new CRLP_Rollup_BATCH_LDV(Account.SObjectType), batchSizeAcct);
+                Database.executeBatch(new CRLP_Rollup_BATCH_LDV(Contact.SObjectType), batchSizeCntct);
+                this.numJobSubmitted += 2;
+            }
+        }
         return null;
     }
 
