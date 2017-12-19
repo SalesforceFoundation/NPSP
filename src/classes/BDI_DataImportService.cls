@@ -764,6 +764,7 @@ global with sharing class BDI_DataImportService {
     */
     private void importHouseholdAccountFields() {
 
+        // there is no work to do in Dry Run.
         if (isDryRun) {
             return;
         }
@@ -901,6 +902,7 @@ global with sharing class BDI_DataImportService {
         matchExistingAccounts();
         pl.stop();
 
+        // done matching for Dry Run.
         if (isDryRun) {
             return;
         }
@@ -1379,6 +1381,7 @@ global with sharing class BDI_DataImportService {
             }
         }
 
+        // done matching for Dry Run
         if (isDryRun) {
             return;
         }
@@ -1426,6 +1429,7 @@ global with sharing class BDI_DataImportService {
     */
     private void importAddressesAsAddressFields() {
 
+        // there is no work to do in Dry Run.
         if (isDryRun) {
             return;
         }
@@ -1597,9 +1601,16 @@ global with sharing class BDI_DataImportService {
     * @return void
     */
     private void importCampaignMembers() {
+
+        // there is no work to do in Dry Run.
+        if (isDryRun) {
+            return;
+        }
+
         List<String> newCmContactIds = new List<String>();
         List<String> listCampaignIds = new List<String>();
         List<String> listCmStatues = new List<String>();
+
         // loop over the dis contacts and find existing cms or new cms to create (if they have a campaign)
         for (DataImport__c di : listDI) {
             // skip that already have an error

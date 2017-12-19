@@ -665,6 +665,75 @@ public with sharing class BDI_DryRun_TEST {
 
     /*********************************************************************************************************
     * @description operation:
+    *    process existing contacts with existing matched by Id Payment through Dry Run mode
+    * verify:
+    *    no objects created
+    *    Statuses updated appropriately
+    **********************************************************************************************************/
+    static testMethod void manyDIExistingC1ContactExistingMatchedByIdPayments() {
+
+        // existing contacts
+        List<Contact> listConExisting = new List<Contact>();
+        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@foo.com'));
+        listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@foo.com'));
+        insert listConExisting;
+
+        // existing opps
+        List<Opportunity> listOppExisting = UTIL_UnitTestData_TEST.OppsForContactList(listConExisting, null,
+            UTIL_unitTestData_TEST.getOpenStage(), System.today(), 100, null, null);
+        insert listOppExisting;
+
+        // find auto-created payments
+        List<npe01__OppPayment__c> listPaymentExisting = [SELECT Id FROM npe01__OppPayment__c ORDER BY npe01__Opportunity__c];
+        system.assertEquals(2, listPaymentExisting.size());
+
+        List<DataImport__c> listDI = new List<DataImport__c>();
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com',
+            Donation_Amount__c=100, Donation_Date__c=System.today(), PaymentImported__c=listPaymentExisting[0].Id));
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c2', Contact1_Lastname__c='C2', Contact1_Work_Email__c='c2@foo.com',
+            Donation_Amount__c=100, Donation_Date__c=System.today(), PaymentImported__c=listPaymentExisting[1].Id));
+        insert listDI;
+
+        // set the specified settings
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+        diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.BestMatchOrCreate;
+
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(null, true);
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+
+        // verify expected results
+        List<Contact> listCon = [select Id, Name from Contact];
+        system.assertEquals(2, listCon.size());
+        List<Opportunity> listOpp = [SELECT Id, Name FROM Opportunity];
+        system.assertEquals(2, listOpp.size());
+
+        listDI = [select Status__c, Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c,
+            PaymentImportStatus__c, PaymentImported__c, Payment_Possible_Matches__c,
+            DonationImportStatus__c, DonationImported__c, Donation_Possible_Matches__c from DataImport__c order by Id];
+        system.assertEquals(2, listDI.size());
+        for (DataImport__c di : listDI) {
+            system.assertEquals(label.bdiDryRunValidated, di.Status__c);
+            system.assertNotEquals(null, di.Contact1Imported__c);
+            system.assertNotEquals(null, di.HouseholdAccountImported__c);
+            system.assertEquals(label.bdiDryRunMatched, di.Contact1ImportStatus__c);
+
+            system.assertNotEquals(null, di.DonationImported__c);
+            system.assertEquals(null, di.Donation_Possible_Matches__c);
+            system.assertEquals(label.bdiDryRunMatchedId, di.DonationImportStatus__c);
+
+            system.assertNotEquals(null, di.PaymentImported__c);
+            system.assertEquals(null, di.Payment_Possible_Matches__c);
+            system.assertEquals(label.bdiDryRunMatchedId, di.PaymentImportStatus__c);
+        }
+    }
+
+    /*********************************************************************************************************
+    * @description operation:
     *    process existing contacts with existing best matched Donations through Dry Run mode
     * verify:
     *    no objects created
