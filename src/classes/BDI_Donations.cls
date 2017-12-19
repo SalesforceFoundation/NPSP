@@ -184,6 +184,11 @@ public class BDI_Donations {
             if (Test.isRunningTest() && opp.Name != null && opp.Name.startsWith('FailTest'))
                 opp.Name = null;
         }
+
+        if (bdi.isDryRun) {
+            setDryRunDonationStatuses(listDIDonations);
+            return;
+        }
         
         // insert our new Opps
         list<Database.SaveResult> listSR = UTIL_DMLService.insertRecords(listOppInsert, false);
@@ -341,88 +346,132 @@ public class BDI_Donations {
     * @return Opportunity A new or existing Opportunity. Null if there was an error.
     */ 
     private Opportunity prepareOppForUpdateInsert(DataImport__c di) {        
-            Opportunity opp = mapDIIdToOpp.get(di.Id);
-            string strOppName;
-            
-            // if there is no opp matched, create one for it
-            boolean isNew = (opp == null);
-            if (isNew) {
-                opp = new Opportunity();
-                mapDIIdToOpp.put(di.Id, opp);
-                if (di.Donation_Donor__c == 'Account1') {
-                    Account acc = bdi.AccountFromDi(di, 1);
-                    opp.accountId = acc.Id;    
-                    strOppName = acc.Name;            
-                } else { // we can assume it's for Contact1
-                    Contact con = bdi.ContactFromDi(di, 1);
-                    opp.npe01__Contact_Id_for_Role__c = con.Id;
-                    opp.Primary_Contact__c = con.Id;
-                    opp.Primary_Contact_Campaign_Member_Status__c = di.Campaign_Member_Status__c;
-                    opp.AccountId = con.AccountId;
-                    strOppName = con.Firstname + ' ' + con.Lastname;
-                }
+        Opportunity opp = mapDIIdToOpp.get(di.Id);
+        string strOppName;
+
+        // if there is no opp matched, create one for it
+        boolean isNew = (opp == null);
+        if (isNew) {
+            opp = new Opportunity();
+            mapDIIdToOpp.put(di.Id, opp);
+            if (di.Donation_Donor__c == 'Account1') {
+                Account acc = bdi.AccountFromDi(di, 1);
+                opp.accountId = acc.Id;
+                strOppName = acc.Name;
+            } else { // we can assume it's for Contact1
+                Contact con = bdi.ContactFromDi(di, 1);
+                opp.npe01__Contact_Id_for_Role__c = con.Id;
+                opp.Primary_Contact__c = con.Id;
+                opp.Primary_Contact_Campaign_Member_Status__c = di.Campaign_Member_Status__c;
+                opp.AccountId = con.AccountId;
+                strOppName = con.Firstname + ' ' + con.Lastname;
             }
-            
-            if (di.Donation_Record_Type_Name__c != null) {
-                Id idRt = UTIL_RecordTypes.GetRecordTypeId(Opportunity.sObjectType, di.Donation_Record_Type_Name__c);
-                if (idRt == null) {
-                    bdi.LogBDIError(di, label.bdiErrorInvalidOppRTName, 'DonationImportStatus__c');
-                    return null;
-                }
-                opp.RecordTypeId = idRt;
-                strOppName += ' ' + di.Donation_Record_Type_Name__c;
-            } else {
-                strOppName += ' ' + label.bdiDonation;
+        }
+
+        if (di.Donation_Record_Type_Name__c != null) {
+            Id idRt = UTIL_RecordTypes.GetRecordTypeId(Opportunity.sObjectType, di.Donation_Record_Type_Name__c);
+            if (idRt == null) {
+                bdi.LogBDIError(di, label.bdiErrorInvalidOppRTName, 'DonationImportStatus__c');
+                return null;
             }
-            
-            if (di.Donation_Campaign_Name__c != null) {
-                Id idCmp = bdi.mapStrNameToCampaignId.get(di.Donation_Campaign_Name__c);
-                if (idCmp == null) {
-                    bdi.LogBDIError(di, label.bdiErrorInvalidCampaignName, 'DonationImportStatus__c');
-                    return null;
-                }
-                opp.CampaignId = idCmp;
-            }
-            
-            if (di.Donation_Date__c == null) {
-                if (isNew) {
-                    di.Donation_Date__c = system.today();
-                } else {
-                    di.Donation_Date__c = opp.CloseDate;
-                }
-            }
-            
-            if (di.Donation_Name__c == null) {
-                if (isNew) {
-                    di.Donation_Name__c = strOppName + ' ' + di.Donation_Date__c.format();
-                } else {
-                    di.Donation_Name__c = opp.Name;
-                }
-            } 
-            
-            if (di.Donation_Stage__c == null && defaultClosedWonStage != '' && di.PaymentImported__c == null) {
-                di.Donation_Stage__c = defaultClosedWonStage;
-            }
-            
-            // now copy over all the data to the Opp
-            for (string strDIField : mapDIFieldToOppField.keySet()) {
-                // skip recordtype which we special cased above
-                if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c').toLowercase()) {
-                    continue;
-                }
-                // only honor Stage if we aren't updating its payment
-                if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Stage__c').toLowercase() && di.PaymentImported__c != null) {
-                    continue;
-                }
-                // only honor Amount if we aren't updating its payment
-                if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c').toLowercase() && di.PaymentImported__c != null) {
-                    continue;
-                }
-                BDI_DataImportService.isCopiedDIField(di, strDIField, opp, mapDIFieldToOppField);
-            }
-            
-            // the Opp is ready!
+            opp.RecordTypeId = idRt;
+            strOppName += ' ' + di.Donation_Record_Type_Name__c;
+        } else {
+            strOppName += ' ' + label.bdiDonation;
+        }
+
+        // in Dry Run, we don't save campaigns, nor do we try to validate that all of the
+        // updates to the object would succeed, so we should bail out now. (we didn't just bail
+        // out at the beginning, so we would do the record type validation).
+        if (bdi.isDryRun) {
             return opp;
+        }
+
+        if (di.Donation_Campaign_Name__c != null) {
+            Id idCmp = bdi.mapStrNameToCampaignId.get(di.Donation_Campaign_Name__c);
+            if (idCmp == null) {
+                bdi.LogBDIError(di, label.bdiErrorInvalidCampaignName, 'DonationImportStatus__c');
+                return null;
+            }
+            opp.CampaignId = idCmp;
+        }
+
+        if (di.Donation_Date__c == null) {
+            if (isNew) {
+                di.Donation_Date__c = system.today();
+            } else {
+                di.Donation_Date__c = opp.CloseDate;
+            }
+        }
+
+        if (di.Donation_Name__c == null) {
+            if (isNew) {
+                di.Donation_Name__c = strOppName + ' ' + di.Donation_Date__c.format();
+            } else {
+                di.Donation_Name__c = opp.Name;
+            }
+        }
+
+        if (di.Donation_Stage__c == null && defaultClosedWonStage != '' && di.PaymentImported__c == null) {
+            di.Donation_Stage__c = defaultClosedWonStage;
+        }
+
+        // now copy over all the data to the Opp
+        for (string strDIField : mapDIFieldToOppField.keySet()) {
+            // skip recordtype which we special cased above
+            if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c').toLowercase()) {
+                continue;
+            }
+            // only honor Stage if we aren't updating its payment
+            if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Stage__c').toLowercase() && di.PaymentImported__c != null) {
+                continue;
+            }
+            // only honor Amount if we aren't updating its payment
+            if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c').toLowercase() && di.PaymentImported__c != null) {
+                continue;
+            }
+            BDI_DataImportService.isCopiedDIField(di, strDIField, opp, mapDIFieldToOppField);
+        }
+
+        // the Opp is ready!
+        return opp;
+    }
+
+    /*******************************************************************************************************
+    * @description Updates the Donation Status in the provided donations to the Dry Run appropriate Status.
+    * @param listDIDonations The DI Records that have donations to import
+    * @return void
+    */
+    private void setDryRunDonationStatuses(list<DataImport__c> listDIDonations) {
+
+        for (DataImport__c di : listDIDonations) {
+
+            // opps
+            if (di.DonationImportStatus__c == label.bdiFailed) {
+                di.DonationImportStatus__c = bdi.statusDIFailed();
+            } else if (di.DonationImportStatus__c == label.bdiMatched) {
+                di.DonationImportStatus__c = bdi.statusMatchedExisting();
+            } else if (di.DonationImportStatus__c == label.bdiMatchedBest) {
+                di.DonationImportStatus__c = bdi.statusMatchedBest();
+            } else if (di.DonationImportStatus__c == label.bdiMatchedId) {
+                di.DonationImportStatus__c = bdi.statusMatchedById();
+            } else if (di.DonationImportStatus__c == label.bdiMatchedNone) {
+                di.DonationImportStatus__c = bdi.statusMatchedNone();
+            }
+
+            // payments
+            if (di.PaymentImportStatus__c == label.bdiFailed) {
+                di.PaymentImportStatus__c = bdi.statusDIFailed();
+            } else if (di.PaymentImportStatus__c == label.bdiMatched) {
+                di.PaymentImportStatus__c = bdi.statusMatchedExisting();
+            } else if (di.PaymentImportStatus__c == label.bdiMatchedBest) {
+                di.PaymentImportStatus__c = bdi.statusMatchedBest();
+            } else if (di.PaymentImportStatus__c == label.bdiMatchedId) {
+                di.PaymentImportStatus__c = bdi.statusMatchedById();
+            } else if (di.PaymentImportStatus__c == label.bdiMatchedNone) {
+                di.PaymentImportStatus__c = bdi.statusMatchedNone();
+            }
+        }
     }
 
     /*******************************************************************************************************

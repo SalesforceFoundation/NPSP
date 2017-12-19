@@ -366,6 +366,30 @@ global with sharing class BDI_DataImportService {
     }
 
     /*******************************************************************************************************
+    * @description label to use for matched best records (donations), taking into account if in Dry Run
+    * @return String
+    */
+    public String statusMatchedBest() {
+        return isDryRun ? label.bdiDryRunMatchedBest : label.bdiMatchedBest;
+    }
+
+    /*******************************************************************************************************
+    * @description label to use for matched by Id (donations), taking into account if in Dry Run
+    * @return String
+    */
+    public String statusMatchedById() {
+        return isDryRun ? label.bdiDryRunMatchedId : label.bdiMatchedId;
+    }
+
+    /*******************************************************************************************************
+    * @description label to use for matched none (donations), taking into account if in Dry Run
+    * @return String
+    */
+    public String statusMatchedNone() {
+        return isDryRun ? label.bdiDryRunNoMatch : label.bdiMatchedNone;
+    }
+
+    /*******************************************************************************************************
     * @description label to use for matches to new records going to be created, taking into account if in Dry Run
     * @return String
     */
@@ -533,12 +557,9 @@ global with sharing class BDI_DataImportService {
             // household since it later shows up in C2, location, we can't be assured that the
             // contact's original household account is the same (and valid). Thus we must fixup
             // all Household Account Id lookups in our di records.
-            if (di.Status__c == statusDISuccess()) {
-                Contact c1 = ContactFromDi(di, 1);
-                if (c1 != null)
-                    di.HouseholdAccountImported__c = c1.AccountId;
-            } else {
-                di.HouseholdAccountImported__c = null;
+            Contact c1 = ContactFromDi(di, 1);
+            if (c1 != null) {
+                di.HouseholdAccountImported__c = c1.AccountId;
             }
 
             // our matching marks non-matches with created, assuming they will get created
@@ -1511,6 +1532,12 @@ global with sharing class BDI_DataImportService {
     * @return void
     */
     private void importCampaigns() {
+
+        // since we don't currently fill in a campaign lookup or status on the DI record,
+        // there is no work to do in Dry Run.
+        if (isDryRun) {
+            return;
+        }
 
         // need to find all the Campaigns that we might need
         Set<String> setStrCampaign = new Set<String>();

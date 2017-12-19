@@ -1570,6 +1570,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Dry Run - Matched</value>
     </labels>
     <labels>
+        <fullName>bdiDryRunMatchedBest</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>status on a bdi object to specify it was matched from an ambiguous set in Dry Rn</shortDescription>
+        <value>Dry Run - Best Match Used</value>
+    </labels>
+    <labels>
+        <fullName>bdiDryRunMatchedId</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BDI status when matching an object by its Salesforce ID in Dry Run</shortDescription>
+        <value>Dry Run - Matched by Id</value>
+    </labels>
+    <labels>
         <fullName>bdiDryRunNoMatch</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>

@@ -1089,6 +1089,8 @@
         <members>bdiDryRunBeginButton</members>
         <members>bdiDryRunError</members>
         <members>bdiDryRunMatched</members>
+        <members>bdiDryRunMatchedBest</members>
+        <members>bdiDryRunMatchedId</members>
         <members>bdiDryRunNoMatch</members>
         <members>bdiDryRunRecordsError</members>
         <members>bdiDryRunRecordsValidated</members>
