@@ -150,6 +150,11 @@ private class CRLP_RollupAccount_TEST {
                         Rollups_Account_Batch_Size__c = 20,
                         Rollups_Contact_Batch_Size__c = 20
                 ));
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c(
+                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor',
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                npe01__Payments_Enabled__c = true
+        ));
 
         // Create the test data
         mockRollupCMTValues();

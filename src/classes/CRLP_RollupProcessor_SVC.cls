@@ -128,7 +128,7 @@ public class CRLP_RollupProcessor_SVC {
      * @param objType Summary Object Type
      * @return ApexClassType
      */
-    private static Type getHanderClassType(SObjectType objType) {
+    private static Type getHanderClassType(SObjectType objType, SObjectType detailObjType) {
         Type handlerClass;
         if (objType == Account.SObjectType) {
             // Opportunity and Payment to Account
@@ -195,7 +195,7 @@ public class CRLP_RollupProcessor_SVC {
         // The Parent record Id has changed, so initiate the rollup and determine if the Summary record
         // has changed or not.
 
-        Type handlerClass = getHanderClassType(parent.getSobjectType());
+        Type handlerClass = getHanderClassType(parent.getSobjectType(), (!detailRecords.isEmpty() ? detailRecords[0].getSObjectType() : null));
         CRLP_Debug_UTIL.setCurrentRollupState('Instantiate Handler Class: ' + handlerClass.getName() + ' for ' + parent.Id);
         CRLP_VRollupHandler handler = (CRLP_VRollupHandler) handlerClass.newInstance();
 
@@ -214,6 +214,7 @@ public class CRLP_RollupProcessor_SVC {
         // Don't both calling the processRollups() method if there are no details to roll up
         if (detailRecords != null && !detailRecords.isEmpty()) {
             handler.processRollups(detailRecords);
+//            handler.setOpportunityMap(new Map<Id, Opportunity>());
         }
 
         // Save the rollup from the Handler instance into the processing options instance

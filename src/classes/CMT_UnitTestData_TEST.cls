@@ -220,23 +220,13 @@ public class CMT_UnitTestData_TEST {
         if (recordId == null) {
             recordId = getNewRecordId();
         }
-        Boolean ocrBasedRule = false;
-        if (objectName == 'OpportunityContactRole') {
-            // If the Object is OCR, then change the object and field for the Filter_Rule__mdt record
-            // and set the boolean flag to true to mimic how this type of data will actually be
-            // stored in the MDT object (because OpportunityContactRole is not a supported object)
-            ocrBasedRule = true;
-            objectName = 'Opportunity';
-            fieldName = 'Id';
-        }
         return buildCMTObjectJSON('Filter_Rule__mdt', recordLabel, recordId,
                 new List<CMT_Field>{
                     new CMT_Field('Filter_Group__c', CMTFieldType.FldText, filterGroupId),
                     new CMT_Field('Object__c', CMTFieldType.FldEntity, objectName),
                     new CMT_Field('Field__c', CMTFieldType.FldField, objectName + '.' + UTIL_Namespace.StrAllNSPrefix(fieldName)),
                     new CMT_Field('Operator__c', CMTFieldType.FldText, operator),
-                    new CMT_Field('Constant__c', CMTFieldType.FldText, constant),
-                    new CMT_Field('Field_OpportunityContactRole_Role__c', CMTFieldType.FldBoolean, ocrBasedRule)
+                    new CMT_Field('Constant__c', CMTFieldType.FldText, constant)
                 }
             );
     }
@@ -251,7 +241,7 @@ public class CMT_UnitTestData_TEST {
      * Detail object names since they're automatically set based on the RollupRecordType enum.
      */
     public Enum RollupRecordType {
-        OppToAcct, OppToContact, PmtToAcct, PmtToContact, GAU
+        OppToAcct, OppToContact, PmtToAcct, PmtToContact, GAU, SoftCreditToContact, SoftCreditToAccount
     }
     /**
      * @description Convert the Enum to a Summary Object name
@@ -261,7 +251,9 @@ public class CMT_UnitTestData_TEST {
             RollupRecordType.OppToContact => 'Contact',
             RollupRecordType.PmtToAcct => 'Account',
             RollupRecordType.PmtToContact => 'Contact',
-            RollupRecordType.GAU => 'General_Accounting_Unit__c'
+            RollupRecordType.GAU => 'General_Accounting_Unit__c',
+            RollupRecordType.SoftCreditToContact => 'Contact',
+            RollupRecordType.SoftCreditToAccount => 'Account'
     };
     /**
      * @description Convert the Enum to a Detail Object name
@@ -271,7 +263,10 @@ public class CMT_UnitTestData_TEST {
             RollupRecordType.OppToContact => 'Opportunity',
             RollupRecordType.PmtToAcct => 'npe01__OppPayment__c',
             RollupRecordType.PmtToContact => 'npe01__OppPayment__c',
-            RollupRecordType.GAU => 'Allocation__c'
+            RollupRecordType.GAU => 'Allocation__c',
+            RollupRecordType.SoftCreditToContact => 'Partial_Soft_Credit__c',
+            RollupRecordType.SoftCreditToAccount => 'Partial_Soft_Credit__c'
+
     };
 
     /**
@@ -343,7 +338,6 @@ public class CMT_UnitTestData_TEST {
         'UseFiscal' => False,               // Optional, defaults to false
         'Integer' => 0,                     // Optional, defaults to null
         'Yearly' = YEARS_AGO                // Optional, defaults to null
-        'OCR' = True                        // Optional, defaults to false
     };
     */
 
@@ -368,6 +362,7 @@ public class CMT_UnitTestData_TEST {
             parms.put('Amount', getDetailObject.get(rollupType) + '.' + detailField);
             parms.put('Date', getDetailObject.get(rollupType) + '.npe01__Payment_Date__c');
             parms.put('Detail', getDetailObject.get(rollupType));
+
         } else if (rollupType == RollupRecordType.GAU) {
             String detailField;
             if (((String)parms.get('Detail')).contains('.')) {
@@ -377,6 +372,20 @@ public class CMT_UnitTestData_TEST {
             }
             parms.put('Amount', getDetailObject.get(rollupType) + '.' + detailField);
             parms.put('Detail', getDetailObject.get(rollupType));
+
+        } else if (rollupType == RollupRecordType.SoftCreditToAccount || rollupType == RollupRecordType.SoftCreditToContact) {
+
+            String detailField;
+            if (((String)parms.get('Detail')).contains('.')) {
+                detailField = ((String)parms.get('Detail')).split('\\.')[1];
+            } else {
+                detailField = 'Amount__c';
+            }
+
+            if (detailField == 'CloseDate') {
+                parms.put('Detail', 'Opportunity.CloseDate');
+            }
+            parms.put('Amount', getDetailObject.get(rollupType) + '.Amount__c');
         }
 
         String recordId = getNewRecordId();
@@ -421,9 +430,6 @@ public class CMT_UnitTestData_TEST {
         }
         if (parms.get('UseFiscal') != null) {
             fields.add(new CMT_Field('Use_Fiscal_Year__c', CMTFieldType.FldBoolean, (Boolean)parms.get('UseFiscal')));
-        }
-        if (parms.get('OCR') != null) {
-            fields.add(new CMT_Field('Use_OCR_for_Attribution_Object__c', CMTFieldType.FldBoolean, (Boolean)parms.get('OCR')));
         }
 
         return buildCMTObjectJSON('Rollup__mdt', recordLabel, recordId, fields);

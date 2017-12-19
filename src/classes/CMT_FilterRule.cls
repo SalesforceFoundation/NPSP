@@ -112,14 +112,8 @@ public class CMT_FilterRule {
      */
     public CMT_FilterRule(Filter_Rule__mdt filterRule) {
 
-        if (filterRule.Field_OpportunityContactRole_Role__c == false) {
-            this.objectType = UTIL_Describe.getObjectDescribe(filterRule.Object__r.QualifiedApiName).getSObjectType();
-            this.field = UTIL_Describe.getFieldDescribe(filterRule.Object__r.QualifiedApiName, filterRule.Field__r.QualifiedApiName).getSObjectField();
-        } else {
-            // Alternate method to handle the OpportunityContactRole object
-            this.objectType = OpportunityContactRole.SObjectType;
-            this.field = UTIL_Describe.getFieldDescribe('OpportunityContactRole', 'Role').getSObjectField();
-        }
+        this.objectType = UTIL_Describe.getObjectDescribe(filterRule.Object__r.QualifiedApiName).getSObjectType();
+        this.field = UTIL_Describe.getFieldDescribe(filterRule.Object__r.QualifiedApiName, filterRule.Field__r.QualifiedApiName).getSObjectField();
         this.constant = filterRule.Constant__c;
         String fixedOperator = filterRule.Operator__c.replaceAll(' ', '_');
         this.operation = CMT_FilterRuleUI_SVC.getFilterOperationFromString(fixedOperator);

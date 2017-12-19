@@ -101,11 +101,6 @@
         <label><!-- Use Fiscal Year --></label>
         <name>Use_Fiscal_Year__c</name>
     </fields>
-    <fields>
-        <help><!-- When checked, the engine will use the OpportunityContactRole.Role field value in the rollup logic --></help>
-        <label><!-- Use OCR or PSC for Attribution Object --></label>
-        <name>Use_OCR_for_Attribution_Object__c</name>
-    </fields>
     <layouts>
         <layout>Rollup Layout</layout>
         <sections>

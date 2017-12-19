@@ -50,7 +50,7 @@ private class CMT_FilterRule_TEST {
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId, 'TestRule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId, 'TestRule2', 'Opportunity', 'IsClosed', 'Equals', 'True') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId, 'TestRule3', 'Opportunity', 'CloseDate', 'Equals', 'THIS_YEAR') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId, 'TestRule4', 'OpportunityContactRole', 'Role', 'Equals', 'Solicitor') +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId, 'TestRule4', 'Partial_Soft_Credit__c', 'Role_Name__c', 'In_List', 'Donor;Member') +
             ']';
 
         CMT_FilterRule_SEL.cachedFilterGroups = (List<Filter_Group__mdt>)JSON.deserialize(
@@ -87,8 +87,8 @@ private class CMT_FilterRule_TEST {
         String soql = 'SELECT Id,' + queryFields + ' FROM ' + objName + ' LIMIT 1';
         List<SObject> test = database.query(soql);
 
-        System.AssertEquals(1, CMT_FilterRule_SEL.getReferencedFieldsByObject(OpportunityContactRole.SObjectType).size(),
-                'There should be at least one referenced field for the OpportunityContactRole object in Filter_Rule__mdt');
+        System.AssertEquals(1, CMT_FilterRule_SEL.getReferencedFieldsByObject(Partial_Soft_Credit__c.SObjectType).size(),
+                'There should be at least one referenced field for the Partial_Soft_Credit object in Filter_Rule__mdt');
 
     }
 
