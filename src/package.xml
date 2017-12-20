@@ -1094,6 +1094,7 @@
         <members>bdiDryRunNoMatch</members>
         <members>bdiDryRunRecordsError</members>
         <members>bdiDryRunRecordsValidated</members>
+        <members>bdiDryRunTitle</members>
         <members>bdiDryRunValidated</members>
         <members>bdiErrorBatchNameRequired</members>
         <members>bdiErrorDonationLookupMatch</members>

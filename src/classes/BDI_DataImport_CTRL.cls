@@ -43,6 +43,11 @@ public with sharing class BDI_DataImport_CTRL {
     public Boolean batchRunning { get; set; }
 
     /*******************************************************************************************************
+    * @description is the batch currently running in Dry Run mode
+    */
+    public Boolean isDryRun { get; set; }
+
+    /*******************************************************************************************************
     * @description the job Id of the currently running batch
     */
     private ID apexJobId;
@@ -68,6 +73,7 @@ public with sharing class BDI_DataImport_CTRL {
     */
     public BDI_DataImport_CTRL() {
         batchRunning = false;
+        isDryRun = false;
         apexJobId = null;
         dtStart = null;
         isEditMode = false;
@@ -236,6 +242,29 @@ public with sharing class BDI_DataImport_CTRL {
         return null;
     }
 
+    /*********************************************************************************************************
+    * @description starts the batch job to process data in Dry Run mode
+    * @return null
+    */
+    public PageReference startDryRun() {
+
+        dtStart = system.now();
+        try {
+            list<BDI_DataImport_API.ProcessDataImportBatchesResult> listResults =
+                BDI_DataImport_API.processDataImportBatches(new list<Id>{diBatch.Id}, true);
+            apexJobId = listResults[0].apexJobId;
+            if (apexJobId != null) {
+                batchRunning = true;
+                isDryRun = true;
+            }
+        } catch (Exception ex) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
+            batchRunning = false;
+            isDryRun = false;
+        }
+        return null;
+    }
+
     /*******************************************************************************************************
     * @description our exception object for BDI errors.
     */
@@ -286,7 +315,8 @@ public with sharing class BDI_DataImport_CTRL {
     public integer crecImported {
         get {
             if (apexJobId != null) {
-                crecImported = [select count() from DataImport__c where Status__c = :label.bdiImported and ApexJobId__c = :apexJobId];
+                String status = isDryRun ? label.bdiDryRunValidated : label.bdiImported;
+                crecImported = [select count() from DataImport__c where Status__c = :status and ApexJobId__c = :apexJobId];
                 return crecImported;
             }
             return null;
@@ -300,7 +330,8 @@ public with sharing class BDI_DataImport_CTRL {
     public integer crecFailed {
         get {
             if (apexJobId != null) {
-                crecFailed = [select count() from DataImport__c where Status__c = :label.bdiFailed and ApexJobId__c = :apexJobId];
+                String status = isDryRun ? label.bdiDryRunError : label.bdiFailed;
+                crecFailed = [select count() from DataImport__c where Status__c = :status and ApexJobId__c = :apexJobId];
                 return crecFailed;
             }
             return null;

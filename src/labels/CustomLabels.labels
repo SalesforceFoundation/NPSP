@@ -1610,6 +1610,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Records validated</value>
     </labels>
     <labels>
+        <fullName>bdiDryRunTitle</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>title on the progress indicator during dry run mode</shortDescription>
+        <value>NPSP Data Importer - Dry Run</value>
+    </labels>
+    <labels>
         <fullName>bdiDryRunValidated</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
