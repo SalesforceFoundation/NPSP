@@ -268,4 +268,77 @@ public with sharing class BDI_DataImportAPI_TEST {
         }
     }
 
+    /*********************************************************************************************************
+    * @description operation
+    *     import di records directly without using a batch process
+    * verify:
+    *     only the provided di records processed
+    *     other di records left alone
+    **********************************************************************************************************/
+    static testMethod void processRecordsImport() {
+        // DI's to process
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(newDI(null, 'c1', 'C1'));
+        listDI.add(newDI(null, 'c2', 'C2'));
+        listDI.add(newDI(null, 'c3', 'C3'));
+        insert listDI;
+
+        // DI's to be left alone
+        list<DataImport__c> listDI2 = new list<DataImport__c>();
+        listDI2.add(newDI(null, 'c4', 'C4'));
+        listDI2.add(newDI(null, 'c5', 'C5'));
+        insert listDI2;
+
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Contact_Matching_Rule__c = 'Firstname,Lastname,Phone';
+
+        //run data import
+        Test.startTest();
+        BDI_DataImport_API.processDataImportRecords(diSettings, listDI, false);
+        Test.stopTest();
+
+        // verify expected results
+        list<Contact> listCon = [select Id, Name from Contact];
+        system.assertEquals(3, listCon.size());
+
+        listDI = [SELECT Id FROM DataImport__c WHERE Status__c = :label.bdiImported];
+        system.assertEquals(3, listDI.size());
+    }
+
+    /*********************************************************************************************************
+    * @description operation
+    *     Dry Run di records directly without using a batch process
+    * verify:
+    *     only the provided di records processed
+    *     other di records left alone
+    **********************************************************************************************************/
+    static testMethod void processRecordsDryRun() {
+        // DI's to process
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(newDI(null, 'c1', 'C1'));
+        listDI.add(newDI(null, 'c2', 'C2'));
+        listDI.add(newDI(null, 'c3', 'C3'));
+        insert listDI;
+
+        // DI's to be left alone
+        list<DataImport__c> listDI2 = new list<DataImport__c>();
+        listDI2.add(newDI(null, 'c4', 'C4'));
+        listDI2.add(newDI(null, 'c5', 'C5'));
+        insert listDI2;
+
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Contact_Matching_Rule__c = 'Firstname,Lastname,Phone';
+
+        //run data import
+        Test.startTest();
+        BDI_DataImport_API.processDataImportRecords(diSettings, listDI, true);
+        Test.stopTest();
+
+        // verify expected results
+        list<Contact> listCon = [select Id, Name from Contact];
+        system.assertEquals(0, listCon.size());
+
+        listDI = [SELECT Id FROM DataImport__c WHERE Status__c = :label.bdiDryRunValidated];
+        system.assertEquals(3, listDI.size());
+    }
 }

@@ -78,7 +78,7 @@ global with sharing class BDI_DataImport_API {
 
     /*******************************************************************************************************
     * @description Processes all DataImport records that have not been previously imported in either
-    * Trial Mode, or for actual Commit. Their status is updated, once the process finishes.
+    * Dry Run Mode, or for actual Commit. Their status is updated, once the process finishes.
     * @param listbatchId the batch(es) to scope processing to.  Can be a list containing a null Id for all
     * records not referenced by any Batch.
     * @param isDryRun whether to run in Dry Run mode or commit records.
@@ -100,6 +100,18 @@ global with sharing class BDI_DataImport_API {
             }
         }
         return listResult;
+    }
+
+    /*******************************************************************************************************
+    * @description Process the provided list of DataImport records
+    * @param diSettings the settings to control processing behavior
+    * @param listDI a list of Data Import records to process
+    * @param isDryRun whether to process in Dry Run mode or commit records.
+    * @return void
+    */
+    global static void processDataImportRecords(Data_Import_Settings__c diSettings, List<DataImport__c> listDI, Boolean isDryRun) {
+        BDI_DataImportService bdi = new BDI_DataImportService(isDryRun);
+        bdi.process(null, diSettings, listDI);
     }
 
     /*******************************************************************************************************
