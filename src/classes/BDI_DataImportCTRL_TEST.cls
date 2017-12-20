@@ -63,7 +63,6 @@ private with sharing class BDI_DataImportCTRL_TEST {
         BDI_DataImport_CTRL ctrl = new BDI_DataImport_CTRL();
         ctrl.preload();
 
-        system.assertEquals(2, ctrl.crecToProcess);
         system.assertEquals(false, ctrl.isBatchJobCompleted);
         system.assertEquals(null, ctrl.crecProcessed);
         system.assertEquals(null, ctrl.crecImported);
@@ -79,7 +78,6 @@ private with sharing class BDI_DataImportCTRL_TEST {
         system.assertEquals(2, ctrl.crecProcessed);
         system.assertEquals(2, ctrl.crecImported);
         system.assertEquals(0, ctrl.crecFailed);
-        system.assertEquals(0, ctrl.crecToProcess);
         system.assertNotEquals(null, ctrl.close());
 
         // verify expected results
@@ -110,6 +108,76 @@ private with sharing class BDI_DataImportCTRL_TEST {
         system.assertEquals(label.bdiCreated, listDI[0].Contact2ImportStatus__c);
         system.assertEquals(label.bdiCreated, listDI[1].Contact1ImportStatus__c);
         system.assertEquals(label.bdiCreated, listDI[1].Contact2ImportStatus__c);
+    }
+
+    /*********************************************************************************************************
+    * @description operation:
+    *    run data import through Dry Run mode from the visualforce page
+    * verify:
+    *    all code tested in controller
+    **********************************************************************************************************/
+    static testMethod void testBDIDryRun() {
+
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(BDI_DataImport_TEST.newDI('c1', 'C1', 'c2', 'C2'));
+        listDI.add(BDI_DataImport_TEST.newDI('c3', 'C3', 'c4', 'C4'));
+        listDI[0].Account1_Name__c = 'A1';
+        listDI[0].Donation_Amount__c = 100;
+        listDI[1].Donation_Amount__c = 200;
+        insert listDI;
+
+        Test.startTest();
+
+        // create the page
+        Test.setCurrentPage(Page.BDI_DataImport);
+
+        // instantiate the controller
+        BDI_DataImport_CTRL ctrl = new BDI_DataImport_CTRL();
+        ctrl.preload();
+
+        system.assertEquals(false, ctrl.isBatchJobCompleted);
+        system.assertEquals(null, ctrl.crecProcessed);
+        system.assertEquals(null, ctrl.crecImported);
+        system.assertEquals(null, ctrl.crecFailed);
+
+        ctrl.startDryRun();
+        Test.stopTest();
+
+        system.assertEquals(true, ctrl.isBatchJobCompleted);
+        system.assertEquals(100, ctrl.percentComplete);
+        system.assertEquals(null, ctrl.strTimeSpent);
+        system.assertNotEquals(null, ctrl.aaj);
+        system.assertEquals(2, ctrl.crecProcessed);
+        system.assertEquals(2, ctrl.crecImported);
+        system.assertEquals(0, ctrl.crecFailed);
+        system.assertNotEquals(null, ctrl.close());
+
+        // verify expected results
+        list<Contact> listCon = [select Id, Name from Contact order by Name];
+        system.assertEquals(0, listCon.size());
+
+        list<Account> listAcc = [select Id, Name from Account order by Name];
+        system.assertEquals(0, listAcc.size());
+
+        list<Opportunity> listOpp = [select Id, Name, Amount, AccountId from Opportunity order by Name];
+        system.assertEquals(0, listOpp.size());
+
+        listDI = [
+            select Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c,
+                Contact2Imported__c, Contact2ImportStatus__c
+            from DataImport__c
+        ];
+        system.assertEquals(2, listDI.size());
+        system.assertEquals(null, listDI[0].Contact1Imported__c);
+        system.assertEquals(null, listDI[0].Contact2Imported__c);
+        system.assertEquals(null, listDI[1].Contact1Imported__c);
+        system.assertEquals(null, listDI[1].Contact2Imported__c);
+        system.assertEquals(null, listDI[0].HouseholdAccountImported__c);
+        system.assertEquals(null, listDI[1].HouseholdAccountImported__c);
+        system.assertEquals(label.bdiDryRunNoMatch, listDI[0].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiDryRunNoMatch, listDI[0].Contact2ImportStatus__c);
+        system.assertEquals(label.bdiDryRunNoMatch, listDI[1].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiDryRunNoMatch, listDI[1].Contact2ImportStatus__c);
     }
 
     /*********************************************************************************************************
