@@ -2284,7 +2284,6 @@
         <members>Rollup.Contact_SoftCredit_First_Amount</members>
         <members>Rollup.Contact_Best_Gift_Year_Total</members>
         <members>Rollup.Contact_Average_Gift</members>
-        <members>Rollup.Account_Largest_Opportunity_Id</members>
         <members>Rollup.Contact_Total_Gifts_Two_Years_Ago</members>
         <members>Rollup.Account_Count_Gifts_Last_365_Days</members>
         <members>Rollup.Contact_Last_Gift_Date</members>
@@ -2293,7 +2292,6 @@
         <members>Rollup.Account_Count_Gifts_This_Year</members>
         <members>Rollup.Account_Last_Gift_Date</members>
         <members>Rollup.Contact_SoftCredit_Count_Last_N_Days</members>
-        <members>Rollup.Account_Total_Payments_This_Year</members>
         <members>Rollup.Account_Count_All_Gifts</members>
         <members>Rollup.Account_Total_Gifts_Last_365_Days</members>
         <members>Rollup.Contact_Total_Gifts_This_Year</members>
