@@ -64,6 +64,7 @@ private with sharing class BDI_DataImportCTRL_TEST {
         ctrl.preload();
 
         system.assertEquals(false, ctrl.isBatchJobCompleted);
+        system.assertEquals(2, ctrl.crecToProcess);
         system.assertEquals(null, ctrl.crecProcessed);
         system.assertEquals(null, ctrl.crecImported);
         system.assertEquals(null, ctrl.crecFailed);
@@ -78,6 +79,7 @@ private with sharing class BDI_DataImportCTRL_TEST {
         system.assertEquals(2, ctrl.crecProcessed);
         system.assertEquals(2, ctrl.crecImported);
         system.assertEquals(0, ctrl.crecFailed);
+        system.assertEquals(0, ctrl.crecToProcess);
         system.assertNotEquals(null, ctrl.close());
 
         // verify expected results
@@ -136,6 +138,7 @@ private with sharing class BDI_DataImportCTRL_TEST {
         ctrl.preload();
 
         system.assertEquals(false, ctrl.isBatchJobCompleted);
+        system.assertEquals(2, ctrl.crecToProcess);
         system.assertEquals(null, ctrl.crecProcessed);
         system.assertEquals(null, ctrl.crecImported);
         system.assertEquals(null, ctrl.crecFailed);
@@ -150,6 +153,7 @@ private with sharing class BDI_DataImportCTRL_TEST {
         system.assertEquals(2, ctrl.crecProcessed);
         system.assertEquals(2, ctrl.crecImported);
         system.assertEquals(0, ctrl.crecFailed);
+        system.assertEquals(2, ctrl.crecToProcess);  // since the 2 records still aren't imported.
         system.assertNotEquals(null, ctrl.close());
 
         // verify expected results

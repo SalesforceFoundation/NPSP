@@ -340,6 +340,20 @@ public with sharing class BDI_DataImport_CTRL {
     }
 
     /*******************************************************************************************************
+    * @description the number of records to process at the beginning of the job.  it does not reflect
+    * how many are left to process, since validated and failed records would get counted, and you
+    * can't tell if they were already processed or not.
+    */
+    public integer crecToProcess {
+        get {
+            crecToProcess = [select count() from DataImport__c where Status__c <> :label.bdiImported and
+            NPSP_Data_Import_Batch__c = :diBatch.Id];
+            return crecToProcess;
+        }
+        set;
+    }
+
+    /*******************************************************************************************************
     * @description whether the batch job has completed processing
     */
     public boolean isBatchJobCompleted {
