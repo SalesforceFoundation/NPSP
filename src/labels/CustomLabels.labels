@@ -1591,7 +1591,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>DI Object Status that it was not matched in Dry Run</shortDescription>
-        <value>Dry Run - Not Matched</value>
+        <value>Dry Run - Matched None</value>
     </labels>
     <labels>
         <fullName>bdiDryRunRecordsError</fullName>
