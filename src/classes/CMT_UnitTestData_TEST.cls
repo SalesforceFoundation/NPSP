@@ -223,8 +223,8 @@ public class CMT_UnitTestData_TEST {
         return buildCMTObjectJSON('Filter_Rule__mdt', recordLabel, recordId,
                 new List<CMT_Field>{
                     new CMT_Field('Filter_Group__c', CMTFieldType.FldText, filterGroupId),
-                    new CMT_Field('Object__c', CMTFieldType.FldEntity, objectName),
-                    new CMT_Field('Field__c', CMTFieldType.FldField, objectName + '.' + UTIL_Namespace.StrAllNSPrefix(fieldName)),
+                    new CMT_Field('Object__c', CMTFieldType.FldEntity, UTIL_Namespace.StrAllNSPrefix(objectName)),
+                    new CMT_Field('Field__c', CMTFieldType.FldField, UTIL_Namespace.StrAllNSPrefix(objectName) + '.' + UTIL_Namespace.StrAllNSPrefix(fieldName)),
                     new CMT_Field('Operator__c', CMTFieldType.FldText, operator),
                     new CMT_Field('Constant__c', CMTFieldType.FldText, constant)
                 }
