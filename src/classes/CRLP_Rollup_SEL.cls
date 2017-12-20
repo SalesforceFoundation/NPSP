@@ -155,19 +155,27 @@ public class CRLP_Rollup_SEL {
         if (UserInfo.isMultiCurrencyOrganization() && allFields.containsKey('currencyisocode')) {
             referencedFields.put('CurrencyIsoCode', allFields.get('currencyisocode'));
         }
+        // Always add the AccountId and PrimaryContactId for the Opportunity object
+        if (objType == Opportunity.SObjectType) {
+            String fldName = SObjectType.Opportunity.fields.AccountId.getName();
+            referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
+            fldName = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
+            referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
+        }
+
         validateReferencedFields(referencedFields, objName);
         return referencedFields.values();
     }
 
     /**
      * @description If the field describe for a given field is null, assert a false to allow for debugging
-     * TODO Should this just do an Assert(false) for unit testing or should this throw an exception/log an error?
      * @param referencedFields Map<String, DescribeFieldResult>
      * @param objName Object Name
      */
     public static void validateReferencedFields(Map<String, Schema.DescribeFieldResult> referencedFields, String objName) {
         for (String fld : referencedFields.keySet()) {
             if (referencedFields.get(fld) == null) {
+                // TODO Should this just do an Assert(false) for unit testing or should this throw an exception/log an error?
                 system.assert(false, '>> Field ' + fld + ' not found in allFields collection for ' + objName);
             }
         }

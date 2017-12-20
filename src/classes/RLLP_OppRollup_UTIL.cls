@@ -38,9 +38,7 @@ public without sharing class RLLP_OppRollup_UTIL {
 
     /*** Settings ***/
 
-    /** @description Set to true if the new Customizable Rollups Engine is enabled (i.e., DON'T USE THIS CLASS) */
-    public static Boolean customizableRollupEngineEnabled = false;
-    /** @description Set to true if fiscal year should be used. */    
+    /** @description Set to true if fiscal year should be used. */
     public static boolean useFiscalYear = false;
     /** @description Set of Opportunity record types to exclue from Account Rollups. */
     public static set<id> recordTypesToExcludeAccts = new set<id>();
@@ -186,6 +184,15 @@ public without sharing class RLLP_OppRollup_UTIL {
         setupRollupVars(UTIL_CustomSettingsFacade.getHouseholdsSettings());
         // setup user rollups
         setupUserRollupVars();
+    }
+
+    /*********************************************************************************************************
+    * @description Set to true if the new Customizable Rollups Engine is enabled (i.e., Do Not Run Legacy Rollups)
+    */
+    public static Boolean customizableRollupEngineEnabled {
+        get {
+            return CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled;
+        } private set;
     }
 
     /*********************************************************************************************************

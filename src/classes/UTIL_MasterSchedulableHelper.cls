@@ -58,25 +58,70 @@ public without sharing class UTIL_MasterSchedulableHelper {
         }
     }
 
-    /*******************************************************************************************************
-    * @description This map contains all necessary information for scheduling default NPSP jobs:
-    * Job name as key, and a list containing the cron expression for that job and its class name.
-    */
-    public static Map<String, List<String>> defaultScheduledJobs = new Map<String, List<String>>{
-        'NPSP 00 - Error Processing'                => new List<String>{'0 0 * * * ?',  'ERR_AsyncErrors_SCHED'},
-        'NPSP 01 - Opportunity Account Rollups'     => new List<String>{'0 0 23 ? * *', 'RLLP_OppAccRollup_BATCH'},
-        'NPSP 02 - Opportunity Contact Rollups'     => new List<String>{'0 0 23 ? * *', 'RLLP_OppContactRollup_BATCH'},
-        'NPSP 03 - Opportunity Household Rollups'   => new List<String>{'0 0 23 ? * *', 'RLLP_OppHouseholdRollup_BATCH'},
-        'NPSP 04 - Opportunity Soft Credit Rollups' => new List<String>{'0 0 23 ? * *', 'RLLP_OppSoftCreditRollup_BATCH'},
-        'NPSP 05 - GAU Allocation Rollups'          => new List<String>{'0 0 23 ? * *', 'ALLO_Rollup_SCHED'},
-        'NPSP 06 - Recurring Donation Updates'      => new List<String>{'0 0 23 ? * *', 'RD_RecurringDonations_BATCH'},
-        'NPSP 07 - Seasonal Address Updates'        => new List<String>{'0 0 23 ? * *', 'ADDR_Seasonal_SCHED'},
-        'NPSP 08 - Level Assignment Updates'        => new List<String>{'0 0 4 ? * *',  'LVL_LevelAssign_SCHED'},
-        'NPSP 09 - Data Import Batch Processing'    => new List<String>{'0 0 22 ? * *', 'BDI_DataImportBatch_SCHED'}
-    };
+    @testVisible
+    private static List<String> jobsToAbort = new List<String>();
 
     /*******************************************************************************************************
-    * @description Schedules all NPSP jobs that are not already scheduled.
+    * @description This map contains all necessary information for scheduling default NPSP jobs:
+    * Job name as key, and a list containing the cron expression for that job and its class name. Also builds
+    * a collection of jobsToAbort - a list of job names that if exist should be aborted.
+    */
+    @testVisible
+    public static Map<String, List<String>> defaultScheduledJobs {
+        get {
+            if (defaultScheduledJobs == null) {
+                jobsToAbort.clear();
+                defaultScheduledJobs = new Map<String, List<String>>{
+                    'NPSP 00 - Error Processing'                => new List<String>{'0 0 * * * ?',  'ERR_AsyncErrors_SCHED'},
+                    'NPSP 06 - Recurring Donation Updates'      => new List<String>{'0 0 23 ? * *', 'RD_RecurringDonations_BATCH'},
+                    'NPSP 07 - Seasonal Address Updates'        => new List<String>{'0 0 23 ? * *', 'ADDR_Seasonal_SCHED'},
+                    'NPSP 08 - Level Assignment Updates'        => new List<String>{'0 0 4 ? * *',  'LVL_LevelAssign_SCHED'},
+                    'NPSP 09 - Data Import Batch Processing'    => new List<String>{'0 0 22 ? * *', 'BDI_DataImportBatch_SCHED'}
+                };
+                if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
+                    // When the Customizable Rollups Engine is enabled, the actual rollup job target classes change, but
+                    // keep the naming similar and stagger the job start times slightly. Include a 3rd list item for the
+                    // primary SObject to use when instantiating the scheduler
+                    // TODO Discuss the staggered schedule. Thee main concern is SoftCredit job overlapping with the main jobs
+                    defaultScheduledJobs.put('NPSP 01 - Opportunity Account Rollups (New)', new List<String>{'0 0 23 ? * *', 'CRLP_RollupScheduler', 'Account'});
+                    defaultScheduledJobs.put('NPSP 02 - Opportunity Contact Rollups (New)', new List<String>{'0 10 23 ? * *', 'CRLP_RollupScheduler', 'Contact'});
+                    defaultScheduledJobs.put('NPSP 03A - Opportunity Account Rollups LDV (New)', new List<String>{'0 20 23 ? * *', 'CRLP_RollupScheduler', 'Account'});
+                    defaultScheduledJobs.put('NPSP 03B - Opportunity Contact Rollups LDV (New)', new List<String>{'0 30 23 ? * *', 'CRLP_RollupScheduler', 'Contact'});
+                    // TODO Finalize SoftCredit rollups
+                    // defaultScheduledJobs.put('NPSP 04 - Opportunity Soft Credit Rollups (New)', new List<String>{'0 50 23 ? * *', 'CRLP_RollupScheduler', 'TODO'});
+                    defaultScheduledJobs.put('NPSP 05 - GAU Allocation Rollups LDV (New)', new List<String>{'0 0 23 ? * *', 'CRLP_RollupScheduler', SObjectType.General_Accounting_Unit__c.getName()});
+
+                    // The following jobs should be aborted if the Customizable Rollups jobs are being enabled
+                    jobsToAbort.add('NPSP 01 - Opportunity Account Rollups');
+                    jobsToAbort.add('NPSP 02 - Opportunity Contact Rollups');
+                    jobsToAbort.add('NPSP 03 - Opportunity Household Rollups');
+                    jobsToAbort.add('NPSP 04 - Opportunity Soft Credit Rollups');
+                    jobsToAbort.add('NPSP 05 - GAU Allocation Rollups');
+
+                } else {
+                    // Legacy Rollups Engine jobs are enabled
+                    defaultScheduledJobs.put('NPSP 01 - Opportunity Account Rollups', new List<String>{'0 0 23 ? * *', 'RLLP_OppAccRollup_BATCH'});
+                    defaultScheduledJobs.put('NPSP 02 - Opportunity Contact Rollups', new List<String>{'0 0 23 ? * *', 'RLLP_OppContactRollup_BATCH'});
+                    defaultScheduledJobs.put('NPSP 03 - Opportunity Household Rollups', new List<String>{'0 0 23 ? * *', 'RLLP_OppHouseholdRollup_BATCH'});
+                    defaultScheduledJobs.put('NPSP 04 - Opportunity Soft Credit Rollups', new List<String>{'0 0 23 ? * *', 'RLLP_OppSoftCreditRollup_BATCH'});
+                    defaultScheduledJobs.put('NPSP 05 - GAU Allocation Rollups', new List<String>{'0 0 23 ? * *', 'ALLO_Rollup_SCHED'});
+
+                    // The following jobs should be aborted if the Customizable Rollups jobs are NOT enabled
+                    jobsToAbort.add('NPSP 01 - Opportunity Account Rollups (New)');
+                    jobsToAbort.add('NPSP 02 - Opportunity Contact Rollups (New)');
+                    jobsToAbort.add('NPSP 03A - Opportunity Account Rollups LDV (New)');
+                    jobsToAbort.add('NPSP 03B - Opportunity Contact Rollups LDV (New)');
+                    jobsToAbort.add('NPSP 04 - Opportunity Soft Credit Rollups (New)');
+                    jobsToAbort.add('NPSP 05 - GAU Allocation Rollups LDV (New)');
+                }
+            }
+            return defaultScheduledJobs;
+        } private set;
+    }
+
+    /*******************************************************************************************************
+    * @description Schedules all NPSP jobs that are not already scheduled, and abort any jobs that need to be
+    * aborted (where User is inactive or where listed in the jobsToAbort collection).
     * @return void
     */
     public static void setScheduledJobs() {
@@ -84,7 +129,8 @@ public without sharing class UTIL_MasterSchedulableHelper {
         Map<String, CronTrigger> scheduledJobs = new Map<String, CronTrigger>();
         
         //query for all scheduled apex
-        for (CronTrigger ct : [SELECT Id, CronExpression, CronJobDetail.Name, CreatedBy.Name, CreatedBy.IsActive FROM CronTrigger WHERE CronJobDetail.JobType = '7']) {
+        for (CronTrigger ct : [SELECT Id, CronExpression, CronJobDetail.Name, CreatedBy.Name, CreatedBy.IsActive
+                FROM CronTrigger WHERE CronJobDetail.JobType = '7']) {
             scheduledJobs.put(ct.CronJobDetail.Name, ct);
         }
 
@@ -95,7 +141,7 @@ public without sharing class UTIL_MasterSchedulableHelper {
                     createJob(jobName);
                 }
             } else {
-                //if it's already scheduled, but the ghost user or an inactve user scheduled it, 
+                //if it's already scheduled, but the ghost user or an inactive user scheduled it,
                 //then abort and reschedule
                 CronTrigger currentJob = scheduledJobs.get(jobName);
                 if (currentJob.CreatedBy.Name == 'Nonprofit Success Pack' || !currentJob.CreatedBy.isActive) {
@@ -108,6 +154,15 @@ public without sharing class UTIL_MasterSchedulableHelper {
                 }
             }
         }
+
+        // Abort Jobs that need to be aborted. For example, if switching from the Legacy Rollups to the new
+        // Customizable Rollups engine, the old rollup jobs need to be aborted. Same if the reverse is done.
+        for (String jobName : jobsToAbort) {
+            if (scheduledJobs.containsKey(jobName)) {
+                CronTrigger currentJob = scheduledJobs.get(jobName);
+                System.abortJob(currentJob.Id);
+            }
+        }
     }
 
     /*******************************************************************************************************
@@ -117,9 +172,19 @@ public without sharing class UTIL_MasterSchedulableHelper {
     private static void createJob(String jobName) {
         String cronExpression = defaultScheduledJobs.get(jobName)[0];
         String className = defaultScheduledJobs.get(jobName)[1];
-    
+
         try {
-            Schedulable classInstance = (Schedulable)Type.forName(className).newInstance();
+            Schedulable classInstance;
+            if (className != 'CRLP_RollupScheduler') {
+                classInstance = (Schedulable) Type.forName(className).newInstance();
+            } else {
+                // The Customizable Rollups engine scheduler class needs to have parameters passed into the
+                // class instantiation. This is not possible using Type.forName().newInstance().
+                String objName = defaultScheduledJobs.get(jobName)[2];
+                SObjectType objType = UTIL_Describe.getSObjectType(objName);
+                Boolean isLDV = jobName.contains('LDV');
+                classInstance = new CRLP_RollupScheduler(isLDV, objType);
+            }
             System.schedule(jobName, cronExpression, classInstance);
         } catch (Exception ex) {
             ERR_Handler.processError(ex, ERR_Handler_API.Context.STTG);

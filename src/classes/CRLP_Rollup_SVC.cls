@@ -33,10 +33,10 @@
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Service class for general rollup operations. Includes the interface for the per-rollup-type
-*   handler service classes.
-*
-*   This class should pertain only to service operations shared across the rollup engine; it should not include
-*   service methods need to ?
+* handler service classes.
+* This class Service Class is limited to generic Service Methods used throughout the entire scope of the
+* Customizable Rollups engine. Methods that are specific to data operations (Triggers, Batch, and Queueables)
+* are stored in the CRLP_RollupProcessor_SVC class.
 */
 public class CRLP_Rollup_SVC {
 
@@ -45,6 +45,8 @@ public class CRLP_Rollup_SVC {
      */
     public interface IRollupHandler {
         void processRollups(List<SObject> details);
+        void setRecordId(Id objectId);
+        void setRollupsList(List<CRLP_Rollup> rollups);
         SObject getPopulatedSObject();
     }
 
@@ -53,7 +55,7 @@ public class CRLP_Rollup_SVC {
      * @param rollup fully qualified api field name (Object.Field)
      * @return DescribeFieldResult
      */
-    public static Schema.DescribeFieldResult getSobjectFieldFromRollup(String objName, String fldName) {
+    public static Schema.DescribeFieldResult getSObjectFieldDescribe(String objName, String fldName) {
         if (fldName  != null) {
             return UTIL_Describe.getAllFieldsDescribe(objName).get(fldName.toLowerCase());
         } else {
@@ -95,7 +97,7 @@ public class CRLP_Rollup_SVC {
         Boolean hasValueChanged = false;
         for (CRLP_Rollup rollup : rollups) {
             for (Rollup__mdt r : rollup.rollupsMdt) {
-                Schema.DescribeFieldResult summaryField = getSobjectFieldFromRollup(r.Summary_Object__r.QualifiedApiName, r.Summary_Field__r.QualifiedApiName);
+                Schema.DescribeFieldResult summaryField = getSObjectFieldDescribe(r.Summary_Object__r.QualifiedApiName, r.Summary_Field__r.QualifiedApiName);
                 Object origValue = originalObject.get(summaryField.getName());
                 Object newValue = updatedObject.get(summaryField.getName());
                 if (origValue != newValue) {
@@ -116,5 +118,67 @@ public class CRLP_Rollup_SVC {
             }
         }
         return hasValueChanged;
+    }
+
+    /** @description HouseholdSettings record that defines specific Customizable Rollups settings */
+    private static final npo02__Households_Settings__c household_settings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+
+    /**
+    * @description Returns true if the new Customizable Rollups Engine is enabled (i.e., Do Not Run Legacy Rollups)
+    */
+    public static Boolean isCustomizableRollupEngineEnabled {
+        get {
+            return (household_settings.Customizable_Rollups_Enabled__c == true);
+        } private set;
+    }
+
+    /**
+     * @description Return the batch size to use for standard (non-LDV) batch roll-up operations
+     * @param objType SObjectType of the Summary object
+     * @return Integer value
+     */
+    public static Integer getBatchSize(SObjectType objType) {
+        if (objType == Account.SObjectType) {
+            return household_settings.Rollups_Account_Batch_Size__c.intValue();
+        } else if (objType == Contact.SObjectType) {
+            return household_settings.Rollups_Contact_Batch_Size__c.intValue();
+        } else if (objType == Allocation__c.SObjectType) {
+            return household_settings.Rollups_Allocation_Batch_Size__c.intValue();
+        }
+        return 200;
+    }
+
+    /**
+     * @description Return the batch size to use for LDV batch roll-up operations
+     * @param objType SObjectType of the Summary object
+     * @return Integer value
+     */
+    public static Integer getLDVBatchSize(SObjectType objType) {
+        return household_settings.Rollups_LDV_Batch_Size__c.intValue();
+    }
+
+    /**
+     * @description Get the setting that defines the max number of attached Opportunities an Account can
+     * have before it's considered an LDV data scenario.
+     * @return Integer value
+     */
+    public static Integer getMaxRelatedOppsForNonLDVMode() {
+        return household_settings.Rollups_Limit_on_Attached_Opps_for_LDV__c.intValue();
+    }
+
+    /**
+     * @description Are there active Rollup Definition records for the provided SObject?
+     * @param SObjectType
+     * @return True or False
+     */
+    public static Boolean hasActiveRollupsForSObject(SObjectType sObj) {
+        try {
+            for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(sObj)) {
+                if (r.Active__c == true) {
+                    return true;
+                }
+            }
+        } catch (Exception ex){ }
+        return false;
     }
 }

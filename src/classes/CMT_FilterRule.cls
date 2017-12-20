@@ -64,6 +64,11 @@ public class CMT_FilterRule {
     }
 
     /**
+     * @description 3 character prefix for Record Type Id's. Used to determine the comparison type for record types.
+     */
+    private static final String recordTypeIdPrefix = SObjectType.RecordType.getKeyPrefix();
+
+    /**
      * @description Date type filter rules supports a defined set of specific constants that roughly mimic
      * what Salesforce native supports
      */
@@ -76,7 +81,6 @@ public class CMT_FilterRule {
                 }
             }
             return validDateConstants;
-
         }
     }
 
@@ -103,10 +107,11 @@ public class CMT_FilterRule {
     protected String constant;
 
     /**
-     * @description Constructor
+     * @description Constructor - Instantiate the the appropriate comparison interface class based on the Field SoapType
      * @param filterRule
      */
     public CMT_FilterRule(Filter_Rule__mdt filterRule) {
+
         if (filterRule.Field_OpportunityContactRole_Role__c == false) {
             this.objectType = UTIL_Describe.getObjectDescribe(filterRule.Object__r.QualifiedApiName).getSObjectType();
             this.field = UTIL_Describe.getFieldDescribe(filterRule.Object__r.QualifiedApiName, filterRule.Field__r.QualifiedApiName).getSObjectField();
@@ -118,34 +123,19 @@ public class CMT_FilterRule {
         this.constant = filterRule.Constant__c;
         String fixedOperator = filterRule.Operator__c.replaceAll(' ', '_');
         this.operation = CMT_FilterRuleUI_SVC.getFilterOperationFromString(fixedOperator);
-        // If the field is a datetime type, and the constant is a date format (YYYY-DD-MM) then use
-        // DATE comparison class rather than the date time comparison class
+
         if (field.getDescribe().getSOAPType() == SoapType.DATETIME && constant != null &&
                 constant.length() == 10 && !CMT_FilterRule.validDateConstants.contains(constant)) {
-            this.compare = (ICompare) converters.get(SoapType.DATE).newInstance();
-        } else {
-            this.compare = (ICompare) converters.get(field.getDescribe().getSOAPType()).newInstance();
-        }
-    }
+            // If the field is a datetime type, and the constant is a date format (YYYY-DD-MM) then use
+            // DATE comparison class rather than the date time comparison class
 
-    /**
-     * @description TODO Alternate Constructor?
-     * @param objectType
-     * @param field
-     * @param operation
-     * @param constant
-     */
-    public CMT_FilterRule(Schema.SObjectType objectType, Schema.SObjectField field, FilterOperation operation, String constant) {
-        this.objectType = objectType;
-        this.field = field;
-        this.operation = operation;
-        this.constant = constant;
-
-        // If the field is a datetime type, and the constant is a date format (YYYY-DD-MM) then use
-        // DATE comparison class rather than the date time comparison class
-        if (field.getDescribe().getSOAPType() == SoapType.DATETIME && constant != null &&
-                constant.length() == 10 && !CMT_FilterRule.validDateConstants.contains(constant)) {
             this.compare = (ICompare) converters.get(SoapType.DATE).newInstance();
+
+        } else if (filterRule.Field__r.QualifiedApiName == 'RecordTypeId' && !filterRule.Constant__c.contains(recordTypeIdPrefix)) {
+            // If the field is the RecordTypeId AND the value is not an Id, then treat it as Text
+            // using RecordType.DeveloperName values
+            this.compare = (ICompare) converters.get(SoapType.STRING).newInstance();
+
         } else {
             this.compare = (ICompare) converters.get(field.getDescribe().getSOAPType()).newInstance();
         }
@@ -379,6 +369,12 @@ public class CMT_FilterRule {
         public Boolean isIncluded(SObject record, CMT_FilterRule rule) {
             String fieldValue = (record.get(rule.field) != null ? (String)record.get(rule.field) : null);
             String compareValue = (String.isNotEmpty(rule.constant) ? String.valueOf(rule.constant) : null);
+
+            // If the field is the RecordTypeId AND the value is not an Id, then treat it as Text
+            // using RecordType.DeveloperName values
+            if (rule.field.getDescribe().getName() == 'RecordTypeId' && !compareValue.contains(recordTypeIdPrefix)) {
+                fieldValue = (String)record.getSObject('RecordType').get('DeveloperName');
+            }
 
             if (fieldValue == null && compareValue == null) {
                 // A null to null comparison is either Equals (true) or false for any other operation

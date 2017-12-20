@@ -36,6 +36,10 @@
 @isTest
 private class CRLP_RollupGAU_TEST {
 
+    private Enum TestType {
+        TestLDV
+    }
+
     /**
      * @description Create Rollup__mdt records to test rolling up from the Opp and Payment objects to the Account
      */
@@ -62,6 +66,7 @@ private class CRLP_RollupGAU_TEST {
         CMT_FilterRule_SEL.cachedFilterRules = (List<Filter_Rule__mdt>)JSON.deserialize(filterRulesJSON, List<Filter_Rule__mdt>.class);
 
         // Create a single Rollup that uses the above Filter Group
+        // TODO Add many more rollup variations to this
         String rollupsJSON = '[' +
                 CMT_UnitTestData_TEST.createRollupRecord('Household Total Allocations All Time', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.GAU,
@@ -98,11 +103,14 @@ private class CRLP_RollupGAU_TEST {
         CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
     }
 
+    static testMethod void test_Rollups_BatchLDV() {
+        testRollupsServices(TestType.TestLDV);
+    }
+
     /**
      * @description Test some simple rollups from the Opportunity/Payment object to the Account
-     * TODO Add many more rollup variations to this
      */
-    static testMethod void test_OperationRollupService() {
+    private static void testRollupsServices(TestType tt) {
 
         // create two GAU's
         General_Accounting_Unit__c defaultGau1 = new General_Accounting_Unit__c(Name='GAU #1');
@@ -118,11 +126,16 @@ private class CRLP_RollupGAU_TEST {
         allocs.add(new Allocation__c(Campaign__c=cam.id, Percent__c = 50, General_Accounting_Unit__c = defaultGau2.id));
         insert allocs;
 
-
         // Start by enabling Customizable Rollups (which disables all legacy rollup operations)
         UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
-                        npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, Customizable_Rollups_Enabled__c = true)
+                        npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                        Customizable_Rollups_Enabled__c = true,
+                        Rollups_Limit_on_Attached_Opps_for_LDV__c = 150,
+                        Rollups_Account_Batch_Size__c = 20,
+                        Rollups_Allocation_Batch_Size__c = 20,
+                        Rollups_LDV_Batch_Size__c = 100
+                )
         );
 
         // Create the test data
@@ -184,10 +197,12 @@ private class CRLP_RollupGAU_TEST {
                 'There should be 200 Allocation records on closed won opps');
 
         Id gauId = defaultGau1.Id;
-        Test.startTest();
 
-        // Now test the rollups to the Account from the Opportunity
-        CRLP_RollupGAU_SVC.rollupSingleGAU(gauId);
+        // Now test the rollups to the GAU from the Allocation using the LDV Batch Job
+        // since this is the only rollup method that supports allocations
+        Test.startTest();
+        database.executeBatch(new CRLP_Rollup_BATCH_LDV(new List<Id>{ defaultGau1.Id, defaultGau2.Id } ));
+        Test.stopTest();
 
         // Query the Account with all the target fields specified in the rollups
         String gauQuery = CRLP_Query_SEL.getResultsQuery(General_Accounting_Unit__c.SObjectType) + ' WHERE Id = :gauId LIMIT 1';

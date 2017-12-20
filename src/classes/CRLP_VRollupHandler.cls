@@ -75,36 +75,50 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
     * filtering the rollups to those from the Opportunity and/or OppPayment objects. Partial Soft Credits
     * are handled by a different service class.
     * Logic is implemented by the class that extends this virtual class
-    * @param objectId The Id of the Summary record being rolled up to
     */
     public CRLP_VRollupHandler() { }    // default constructor
 
-    /* @description This method is always overriden by classes that implement this Virtual class */
-    public CRLP_VRollupHandler(Id objectId) {
-        this.objectId = objectId;
-        this.rollups.clear();
-    }
-
     /**
-     * @description Overloaded constructor that accepts a list of Rollup instances. This constructor
-     * is used when instantiating a new handler service to process a new set of detail records.
-     * @param objectId
-     * @param rollups
-     */
-    public CRLP_VRollupHandler(Id objectId, List<CRLP_Rollup> rollups) {
-        this.objectId = objectId;
-        this.rollups.clear();
-    }
-
-    /**
-     * @description Will be implemented by the class that extends this class
+     * @description These will be implemented by the class that extends this class
      * Logic is implemented by the class that extends this virtual class
      */
+    public virtual void initRollup() { }
     public virtual void processRollups(List<SObject> details) { }
 
     // ===================================================================================================
     // Class methods that are NOT overriden by classes that extend this class.
     // ===================================================================================================
+
+    /**
+     * @description Since this class can't be instantiated with a constructor that passes parameters, the
+     * constructor accepts no parms, and this method is called with the record Id
+     * @param objectId Id of the 'Summary' record being rolled up to
+     */
+    public void setRecordId(Id objectId) {
+        this.objectId = objectId;
+        this.rollups.clear();
+        // This will call the method in the class that extends this class, not the empty virtual method below.
+        initRollup();
+    }
+
+    /**
+     * @description Rather than recreate the collection of Rollups to use, this sets the collection to a saved list of
+     * CRLP_Rollup objects (used when a rollup for a single Id requires more than a single batch iteration).
+     * @param rollups List<CRLP_Rollup>. If not provided, this collection is built by the class that extends
+     * the VRollupHandler class.
+     */
+    public void setRollupsList(List<CRLP_Rollup> rollups) {
+        this.rollups = rollups;
+    }
+
+    /**
+     * @description Set the currency code of the target (Summary) record. This will be used for converting the
+     * detail record amount values to the currency of the target record.
+     * @param currencyIsoCode
+     */
+    public void setCurrencyCode(String currCode) {
+        this.currCode = currCode;
+    }
 
     /**
      * @description Returns the SObject being rolled up with all target rollup fields filled with a value,
@@ -129,15 +143,6 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
         for (CRLP_Rollup r : this.rollups) {
             r.resetValues();
         }
-    }
-
-    /**
-     * @description Set the currency code of the target (Summary) record. This will be used for converting the
-     * detail record amount values to the currency of the target record.
-     * @param currencyIsoCode
-     */
-    public void setCurrencyCode(String currCode) {
-        this.currCode = currCode;
     }
 
     /**

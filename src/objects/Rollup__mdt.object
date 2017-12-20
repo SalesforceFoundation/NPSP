@@ -172,6 +172,16 @@
                     <default>false</default>
                     <label>Donor Streak</label>
                 </value>
+                <value>
+                    <fullName>Best_Year</fullName>
+                    <default>false</default>
+                    <label>Best Year</label>
+                </value>
+                <value>
+                    <fullName>Best_Year_Total</fullName>
+                    <default>false</default>
+                    <label>Best Year Total</label>
+                </value>
             </valueSetDefinition>
         </valueSet>
     </fields>

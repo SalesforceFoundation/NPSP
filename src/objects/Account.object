@@ -1037,4 +1037,15 @@ IF(NOT(ISNULL($Setup.npo02__Households_Settings__c.npo02__Membership_Grace_Perio
         <page>HH_ManageHHAccount</page>
         <protected>false</protected>
     </webLinks>
+    <webLinks>
+        <fullName>Recalculate_Rollups</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Recalculate Rollups</masterLabel>
+        <openType>sidebar</openType>
+        <page>CRLP_RollupAccount_BTN</page>
+        <protected>false</protected>
+    </webLinks>
 </CustomObject>

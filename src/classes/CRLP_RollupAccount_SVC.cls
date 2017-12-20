@@ -32,22 +32,23 @@
 * @date 2017
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
-* @description Rollup Services unique to the Account rollups from Opportunity and Opportunity+Payments
+* @description Rollup Services unique to the Account roll-ups from Opportunity and Payment objects
 */
 public class CRLP_RollupAccount_SVC extends CRLP_VRollupHandler {
 
+    public CRLP_RollupAccount_SVC() { }    // default constructor
+
     /**
-     * @description Constructor: For a given summary object, prepopulates the rollupResults map by rollupId,
-     * filtering the rollups to those from the Opportunity and/or OppPayment objects. Partial Soft Credits
-     * are handled by a different service class.
-     * @param accountId The Id of the Summary Account record being rolled up to
+     * @description Called by the setRecordId() method in the parent (super) class, this configures the
+     * CRLP_Rollup object instances that are used to do the actual rollup work for the target Account record.
      */
-    public CRLP_RollupAccount_SVC(Id accountId) {
-        super(accountId);
-        for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(Account.SObjectType)) {
-            if (r.Detail_Object__r.QualifiedApiName == oppObjectName
-                    || r.Detail_Object__r.QualifiedApiName == pmtObjectName) {
-                addRollupDefinition(r);
+    public override void initRollup() {
+        if (CRLP_Rollup_SEL.getRollupsBySummaryType().containsKey(Account.SObjectType)) {
+            for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(Account.SObjectType)) {
+                if (r.Detail_Object__r.QualifiedApiName == oppObjectName
+                        || r.Detail_Object__r.QualifiedApiName == pmtObjectName) {
+                    addRollupDefinition(r);
+                }
             }
         }
     }
@@ -89,33 +90,6 @@ public class CRLP_RollupAccount_SVC extends CRLP_VRollupHandler {
                     }
                 }
             }
-        }
-    }
-
-    /**
-     * @description
-     * // TODO -- NOT SURE WHETHER THIS METHOD WILL BE KEPT YET; MIGHT BE AN ENTRY POINT FOR A BUTTON ON THE ACCOUNT
-     * @param acctId
-     */
-    public static void rollupSingleAccount(Id acctId) {
-        String acctQuery = CRLP_Query_SEL.getResultsQuery(Account.SObjectType);
-        acctQuery += ' WHERE Id = :acctId LIMIT 1';
-        Account a = database.query(acctQuery);
-
-        String detailsQuery = CRLP_Query_SEL.getDetailsQuery(Opportunity.SObjectType, new List<SObjectType>{ npe01__OppPayment__c.SObjectType });
-        detailsQuery += ' WHERE AccountID = :acctId';
-        List<Opportunity> details = database.query(detailsQuery);
-
-        CRLP_RollupAccount_SVC handler = new CRLP_RollupAccount_SVC(acctId);
-        handler.setCurrencyCode(null);
-        handler.processRollups(details);
-
-        Account updatedAcct = (Account)handler.getPopulatedSObject();
-        System.debug(LoggingLevel.ERROR, '> Rollups.count=' + handler.rollups.size());
-        if (CRLP_Rollup_SVC.resultsNeedUpdate(a, updatedAcct, handler.rollups)) {
-            database.update(updatedAcct);
-        } else {
-            System.Debug(LoggingLevel.ERROR, '*** NO UPDATE IS NEEDED FOR ' + acctId + ' ***');
         }
     }
 

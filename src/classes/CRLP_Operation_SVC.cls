@@ -117,41 +117,35 @@ instance until ready to be written to the Sobject.
         // If there is a result field retrieve it's value and convert as required
         // There is only one Rollup__mdt record when a Result Object/Field is involved.
         // Single Results of this nature are limited to an Operation type of First, Last, Largest or Smallest only
-        if (rollup.resultFieldType != null && rollup.resultObject == objName) {
+        if (rollup.resultFieldType != null && rollup.detailObject == objName) {
 
             Object resultVal = detailSObject.get(rollup.resultFieldName);
-            CRLP_Operation.RollupType operation = CRLP_Operation.getRollupTypeFromString(firstRollup.Operation__c.replaceAll(' ', '_'));
+            for (Rollup__mdt r : rollup.rollupsMdt) {
+                CRLP_Operation.RollupType operation = CRLP_Operation.getRollupTypeFromString(r.Operation__c.replaceAll(' ', '_'));
+                if (operation == CRLP_Operation.RollupType.FIRST && (dateValue < rollup.minDate || rollup.minDate == null)) {
+                    // Operation = FIRST (always based on a date)
+                    setResultFieldValue(rollup.resultFieldType, resultVal, rollup, operation);
 
-            /*System.debug(LoggingLevel.ERROR, '>> ResultField Operation: ' + rollup.resultFieldName + ' ' + operation +
-                ' for ' + resultVal + ' // maxDate=' + rollup.maxDate + ', dateValue=' + dateValue);*/
+                } else if (operation == CRLP_Operation.RollupType.LAST && (dateValue > rollup.maxDate || rollup.maxDate == null)) {
+                    // Operation = LAST (always based on a date)
+                    setResultFieldValue(rollup.resultFieldType, resultVal, rollup, operation);
 
-            if (operation == CRLP_Operation.RollupType.FIRST && dateValue < rollup.minDate) {
-                // Operation = FIRST (always based on a date)
-                setResultFieldValue(rollup.resultFieldType, resultVal, rollup);
+                } else if (operation == CRLP_Operation.RollupType.SMALLEST && (amountValue < rollup.minValue || rollup.minValue == 0)) {
+                    // Operation = SMALLEST (always based on an amount)
+                    setResultFieldValue(rollup.resultFieldType, resultVal, rollup, operation);
 
-            } else if (operation == CRLP_Operation.RollupType.LAST && dateValue > rollup.maxDate) {
-                // Operation = LAST (always based on a date)
-                setResultFieldValue(rollup.resultFieldType, resultVal, rollup);
+                } else if (operation == CRLP_Operation.RollupType.LARGEST && amountValue > rollup.maxValue) {
+                    // Operation = LARGEST (always based on an amount)
+                    setResultFieldValue(rollup.resultFieldType, resultVal, rollup, operation);
 
-            } else if (operation == CRLP_Operation.RollupType.SMALLEST && amountValue < rollup.minValue) {
-                // Operation = LARGEST (always based on an amount)
-                setResultFieldValue(rollup.resultFieldType, resultVal, rollup);
-
-            } else if (operation == CRLP_Operation.RollupType.LARGEST && amountValue > rollup.maxValue) {
-                // Operation = SMALLEST (always based on an amount)
-                setResultFieldValue(rollup.resultFieldType, resultVal, rollup);
-
-            } else if ((operation == CRLP_Operation.RollupType.LAST || operation == CRLP_Operation.RollupType.FIRST)
-                    && (rollup.minDate == null || rollup.maxDate == null)) {
-                // If the Min/Max fields are null, then the value is alway both the First and Last date.
-                setResultFieldValue(rollup.resultFieldType, resultVal, rollup);
+                }
             }
         }
 
         // Set the Largest/Smallest Amount values
         if (amountValue != null) {
             rollup.theSum += amountValue;
-            if (rollup.minValue > amountValue) {
+            if (rollup.minValue > amountValue || rollup.minValue == 0) {
                 rollup.minValue = amountValue;
             }
             if (rollup.maxValue < amountValue) {
@@ -196,7 +190,7 @@ instance until ready to be written to the Sobject.
      * @param resultVal Object (the data)
      * @param rollup CRLP_Rollup instance
      */
-    private static void setResultFieldValue(SoapType resultFieldType, Object resultVal, CRLP_Rollup rollup) {
+    private static void setResultFieldValue(SoapType resultFieldType, Object resultVal, CRLP_Rollup rollup, CRLP_Operation.RollupType operation) {
         if (resultVal == null) {
             // do nothing
         } else if (resultFieldType == SoapType.DATE) {
@@ -204,9 +198,11 @@ instance until ready to be written to the Sobject.
         } else if (resultFieldType == SoapType.DATETIME) {
             rollup.dateTimeValue = (DateTime) resultVal;
         } else if (resultFieldType == SoapType.ID) {
-            rollup.idValue = (Id) resultVal;
+            rollup.idValue[(operation == CRLP_Operation.RollupType.FIRST ? 0 : 1)] = (Id) resultVal;
+        } else if (resultFieldType == SoapType.DOUBLE) {
+            rollup.numValue[(operation == CRLP_Operation.RollupType.FIRST ? 0 : 1)] = Double.valueOf(resultVal);
         } else {
-            rollup.textValue = (String) resultVal;
+            rollup.textValue[(operation == CRLP_Operation.RollupType.FIRST ? 0 : 1)] = String.valueOf(resultVal);
         }
     }
 }

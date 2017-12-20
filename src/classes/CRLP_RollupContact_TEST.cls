@@ -31,10 +31,14 @@
 * @author Salesforce.org
 * @date 2017
 * @group Customizable Rollups Operations Services
-* @description Unit Test for the Opportunity/Payment to Account Rollups
+* @description Unit Test for the Opportunity/Payment to Contact Rollups
 */
 @isTest
 private class CRLP_RollupContact_TEST {
+
+    private Enum TestType {
+        TestTrigger, TestQueueuable, TestBatch, TestLDV
+    }
 
     /**
      * @description Create Rollup__mdt records to test rolling up from the Opp and Payment objects to the Account
@@ -49,20 +53,21 @@ private class CRLP_RollupContact_TEST {
         String filterGroupsJSON = '[' +
                 CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId1, 'TestFilterGroup1-IsWon+Paid') + ',' +
                 CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId2, 'TestFilterGroup2-IsWon+WrittenOff') +
-            ']';
+                ']';
         String filterRulesJSON = '[' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule2', 'npe01__OppPayment__c', 'npe01__Paid__c', 'Equals', 'True') + ',' +
 
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule2', 'npe01__OppPayment__c', 'npe01__Written_Off__c', 'Equals', 'True') +
-            ']';
+                ']';
 
         // Deserialize the filter group and filter rule to use for the tests
         CMT_FilterRule_SEL.cachedFilterGroups = (List<Filter_Group__mdt>)JSON.deserialize(filterGroupsJSON, List<Filter_Group__mdt>.class);
         CMT_FilterRule_SEL.cachedFilterRules = (List<Filter_Rule__mdt>)JSON.deserialize(filterRulesJSON, List<Filter_Rule__mdt>.class);
 
         // Create a single Rollup that uses the above Filter Group
+        // TODO Add many more rollup variations to this
         String rollupsJSON = '[' +
                 CMT_UnitTestData_TEST.createRollupRecord('Donor Total Donations All Time', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
@@ -93,6 +98,10 @@ private class CRLP_RollupContact_TEST {
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
                         'npo02__Best_Gift_Year__c', CRLP_Operation.RollupType.BEST_YEAR, '') + ',' +
 
+                CMT_UnitTestData_TEST.createRollupRecord('Custom Result Field Test', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                        'Department', CRLP_Operation.RollupType.FIRST, 'Type') + ',' +
+
                 /* Using SingleResult operation to get the last gift date */
                 CMT_UnitTestData_TEST.createRollupRecord('Last Gift Date', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
@@ -111,23 +120,53 @@ private class CRLP_RollupContact_TEST {
 
         // Deserialize the rollups to use for testing
         CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
+
+    }
+
+    static testMethod void test_Rollups_Queueable() {
+        testRollupsServices(TestType.TestQueueuable);
+    }
+    static testMethod void test_Rollups_Batch() {
+        testRollupsServices(TestType.TestBatch);
+    }
+    static testMethod void test_Rollups_BatchLDV() {
+        testRollupsServices(TestType.TestLDV);
+    }
+    static testMethod void test_Rollups_Trigger() {
+        testRollupsServices(TestType.TestTrigger);
     }
 
     /**
-     * @description Test some simple rollups from the Opportunity/Payment object to the Contact
-     * TODO Add many more rollup variations to this
+     * @description Test some simple rollups from the Opportunity/Payment object to the Contact using
+     * four different methods:
+     * 1. Trigger based rollup
+     * 2. Call a Queueuable method directly (simulates clicking a button to recalculate)
+     * 3. Nightly Batch Job
+     * 4. Nightly LDV Batch Job
      */
-    static testMethod void test_OperationRollupService() {
+    private static void testRollupsServices(TestType tt) {
 
         // Start by enabling Customizable Rollups (which disables all legacy rollup operations)
         UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                         npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
-                        Customizable_Rollups_Enabled__c = true
+                        Customizable_Rollups_Enabled__c = true,
+                        Rollups_Limit_on_Attached_Opps_for_LDV__c = (tt == TestType.TestLDV ? 50 : 200),
+                        Rollups_LDV_Batch_Size__c = 200,
+                        Rollups_Account_Batch_Size__c = 20,
+                        Rollups_Contact_Batch_Size__c = 20
                 ));
 
         // Create the test data
         mockRollupCMTValues();
+
+        // Disable all legacy rollup triggers
+        UTIL_UnitTestData_TEST.disableRollupTriggers();
+
+        if (tt != TestType.TestTrigger) {
+            // disable customizable rollup triggers to test the Batch & Queueuable logic
+            UTIL_UnitTestData_TEST.disableCustomizableRollupTriggers();
+        }
 
         // Insert a dummy Contact and 100 Opportunity records
         Contact c = new Contact(LastName = 'UNITTEST', FirstName = 'TEST');
@@ -156,7 +195,8 @@ private class CRLP_RollupContact_TEST {
                     CloseDate = closeDate.addMonths(n),
                     StageName = closedStage,
                     Primary_Contact__c = conId,
-                    RecordTypeId = rtId
+                    RecordTypeId = rtId,
+                    Type = 'New'
             ));
             totalDonations += amt;
             if (closeDate.addMonths(n).year() == Date.Today().addYears(-2).year()) {
@@ -199,10 +239,19 @@ private class CRLP_RollupContact_TEST {
         system.assertEquals(cnt, [SELECT Count() FROM OpportunityContactRole WHERE Opportunity.IsWon = true],
                 'There should be 100 OCR records on closed won opps');
 
-        Test.startTest();
-
         // Now test the rollups to the Account from the Opportunity
-        CRLP_RollupContact_SVC.rollupSingleContact(conId);
+        Test.startTest();
+        if (tt == TestType.TestTrigger) {
+            // No need to execute anything special here. If the triggers worked as expected, then
+            // the data will be rolled up automatically upon the stopTest().
+        } else if (tt == TestType.TestBatch) {
+            database.executeBatch(new CRLP_Rollup_BATCH(Contact.SObjectType));
+        } else if (tt == TestType.TestLDV) {
+            database.executeBatch(new CRLP_Rollup_BATCH_LDV(Contact.SObjectType));
+        } else if (tt == TestType.TestQueueuable) {
+            System.enqueueJob(new CRLP_RollupQueueable((new List<Id>{conId})));
+        }
+        Test.stopTest();
 
         // Query the Account with all the target fields specified in the rollups
         String conQuery = CRLP_Query_SEL.getResultsQuery(Contact.SObjectType) + ' WHERE Id = :conId LIMIT 1';
@@ -215,6 +264,7 @@ private class CRLP_RollupContact_TEST {
         System.assertEquals((totalDonations / cnt), c.npo02__AverageAmount__c);
         System.assertEquals(total2YearsAgo, c.npo02__OppAmount2YearsAgo__c);
         System.assertEquals(bestGiftYear, c.npo02__Best_Gift_Year__c);
+        System.assertEquals('New', c.Department);
 
         // These 4 use other fields on the Contact object since there are no NPSP related fields to store the values in
         System.assertEquals(totalDonations - baseAmt, c.First_Soft_Credit_Amount__c,

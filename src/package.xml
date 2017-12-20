@@ -45,7 +45,6 @@
         <members>ALLO_ManageAllocations_TEST</members>
         <members>ALLO_Multicurrency_TDTM</members>
         <members>ALLO_Multicurrency_TEST</members>
-        <members>ALLO_RollupBTN_CTRL</members>
         <members>ALLO_Rollup_SCHED</members>
         <members>ALLO_Rollup_TEST</members>
         <members>BDE_BatchDataEntry</members>
@@ -116,17 +115,26 @@
         <members>CRLP_Operation_TEST</members>
         <members>CRLP_Query_SEL</members>
         <members>CRLP_Query_SEL_TEST</members>
+        <members>CRLP_RecalculateBTN_CTRL</members>
+        <members>CRLP_RecalculateBTN_TEST</members>
         <members>CRLP_Rollup</members>
         <members>CRLP_RollupAccount_SVC</members>
         <members>CRLP_RollupAccount_TEST</members>
         <members>CRLP_RollupContact_SVC</members>
         <members>CRLP_RollupContact_TEST</members>
-        <members>CRLP_RollupGAU_BATCH</members>
         <members>CRLP_RollupGAU_SVC</members>
         <members>CRLP_RollupGAU_TEST</members>
+        <members>CRLP_RollupProcessor_SVC</members>
+        <members>CRLP_RollupQueueable</members>
+        <members>CRLP_RollupScheduler</members>
+        <members>CRLP_RollupScheduler_TEST</members>
+        <members>CRLP_Rollup_BATCH</members>
+        <members>CRLP_Rollup_BATCH_LDV</members>
         <members>CRLP_Rollup_SEL</members>
         <members>CRLP_Rollup_SEL_TEST</members>
+        <members>CRLP_Rollup_TDTM</members>
         <members>CRLP_Rollup_SVC</members>
+        <members>CRLP_Rollup_SVC_TEST</members>
         <members>CRLP_VRollupHandler</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
         <members>EP_EngagementPlanTaskValidation_TEST</members>
@@ -403,6 +411,8 @@
         <members>CONV_Account_Conversion</members>
         <members>CON_ContactMerge</members>
         <members>CON_DeleteContactOverride</members>
+        <members>CRLP_RollupAccount_BTN</members>
+        <members>CRLP_RollupContact_BTN</members>
         <members>EP_ManageEPTemplate</members>
         <members>HH_CampaignDedupeBTN</members>
         <members>HH_ManageHH</members>
@@ -947,6 +957,7 @@
         <members>npo02__Households_Settings__c.Rollups_Account_Batch_Size__c</members>
         <members>npo02__Households_Settings__c.Rollups_Allocation_Batch_Size__c</members>
         <members>npo02__Households_Settings__c.Rollups_Contact_Batch_Size__c</members>
+        <members>npo02__Households_Settings__c.Rollups_LDV_Batch_Size__c</members>
         <members>npo02__Households_Settings__c.Rollups_Limit_on_Attached_Opps_for_LDV__c</members>
         <members>npo02__Households_Settings__c.Use_Dated_Conversion_Rates__c</members>
         <name>CustomField</name>
@@ -2228,9 +2239,11 @@
     </types>
     <types>
         <members>Account.Manage_Household</members>
+        <members>Account.Recalculate_Rollups</members>
         <members>Address__c.Verify_Address</members>
         <members>Allocation__c.Manage_Allocations</members>
         <members>Contact.Merge_Contacts</members>
+        <members>Contact.Recalculate_Rollups</members>
         <members>DataImportBatch__c.Process_Batch</members>
         <members>DataImport__c.Delete_All_Data_Import_Records</members>
         <members>DataImport__c.Delete_Imported_Data_Import_Records</members>
