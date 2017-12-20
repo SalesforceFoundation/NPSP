@@ -340,18 +340,6 @@ public with sharing class BDI_DataImport_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description the number of records remaining to process for the batch job
-    */
-    public integer crecToProcess {
-        get {
-            crecToProcess = [select count() from DataImport__c where Status__c <> :label.bdiImported and
-                NPSP_Data_Import_Batch__c = :diBatch.Id];
-            return crecToProcess;
-        }
-        set;
-    }
-
-    /*******************************************************************************************************
     * @description whether the batch job has completed processing
     */
     public boolean isBatchJobCompleted {
