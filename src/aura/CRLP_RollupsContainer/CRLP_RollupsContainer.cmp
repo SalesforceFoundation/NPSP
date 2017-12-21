@@ -1,0 +1,44 @@
+<!--
+ - Created by randi.wilson on 12/20/17.
+ -->
+
+<aura:component description="CRLP_RollupGrid" implements="force:appHostable, flexipage:availableForAllPageTypes" access="GLOBAL">
+
+    <div class="slds-grid_vertical-stretch">
+        <div class="slds-container--large">
+            <div class="slds-p-around--large">
+                <lightning:breadcrumbs>
+                    <!--TODO: Update this to be more dynamic check with weird formatting-->
+                    <!--<a href="/apex/STG_SettingsManager"><lightning:icon size="x-small" class="slds-icon" iconName="utility:back" alternativeText="Back"/></a>-->
+                    <lightning:breadcrumb label="Back to NPSP Settings" href="/apex/STG_SettingsManager"/>
+                </lightning:breadcrumbs>
+            </div>
+            <!--TODO: add custom label + -->
+            <div class="slds-p-around--large">
+                <h1 class="slds-page-header__title" title="Customizable Summary Rollups">Customizable Summary Rollups</h1>
+            </div>
+
+            <div class="slds-p-around--large">
+                <!--TODO:add onChange function + fix padding-->
+                <lightning:layout horizontalAlign="spread">
+                    <lightning:layoutItem flexibility="auto">
+                        <lightning:select name="selectObject" label="Select Rollup Type" variant="label-hidden">
+                            <option value="All">Select All</option>
+                            <option value="Account">Account</option>
+                            <option value="Contact">Contact</option>
+                            <option value="GAU">GAU</option>
+                        </lightning:select>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem flexibility="auto">
+                        <lightning:buttonGroup >
+                            <lightning:button label="New Rollup"/>
+                            <lightning:button label="View Filter Groups"/>
+                        </lightning:buttonGroup>
+                    </lightning:layoutItem>
+                </lightning:layout>
+
+            </div>
+
+        </div>
+    </div>
+</aura:component>

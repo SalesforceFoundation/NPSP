@@ -1,0 +1,27 @@
+<!--
+ - Created by randi.wilson on 12/21/17.
+ -->
+
+<apex:page standardStylesheets="false" applyBodyTag="false" id="CRLP_Setup" showHeader="true" sideBar="false">
+
+    <apex:slds />
+    <apex:includeLightning/>
+
+    <div class="slds-scope">
+
+        <div id="gridWrapperCmp">
+        </div>
+
+    </div>
+    <script>
+        $Lightning.use("c:CRLP_RollupApp", function() {
+            $Lightning.createComponent("c:CRLP_RollupsContainer",
+                    {},
+                    "gridWrapperCmp",
+                    function() {
+                        console.log("HelloWorld component loaded");
+                    }
+            );
+        });
+    </script>
+</apex:page>
