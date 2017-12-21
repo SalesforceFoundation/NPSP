@@ -112,11 +112,11 @@ public class CRLP_Rollup_BATCH_LDV implements Database.Batchable<SObject>, Datab
 
             UTIL_Debug.debug(LoggingLevel.WARN, '>> LDV Batch Query =' + query);
 
-            // TODO Review the above query to ensure it's fully selective. Could consider using RecurringDonation = Null ...
             return Database.getQueryLocator(query);
 
         } catch (Exception ex) {
             // TODO Not 100% sure we want to keep this, but for now it's needed to capture any unexpected errors in the processing logic
+            ex.setMessage(ex.getMessage() + '\n\nQuery:\n' + query);
             ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
         }
 
@@ -177,9 +177,7 @@ public class CRLP_Rollup_BATCH_LDV implements Database.Batchable<SObject>, Datab
                 CRLP_RollupProcessor_SVC.ProcessingOptions options = createOptionsInstance();
 
                 // Get the Summary (target) records for the final record to be processed
-                Set<Id> parentIds = new Set<Id>{
-                        this.currentParentRecordId
-                };
+                Set<Id> parentIds = new Set<Id>{ this.currentParentRecordId };
                 String soql = CRLP_Query_SEL.getResultsQuery(options.parentObjType) + ' WHERE Id IN :parentIds LIMIT 1';
                 SObject parent = database.query(soql);
 
@@ -206,12 +204,17 @@ public class CRLP_Rollup_BATCH_LDV implements Database.Batchable<SObject>, Datab
         CRLP_RollupProcessor_SVC.ProcessingOptions options = new CRLP_RollupProcessor_SVC.ProcessingOptions();
         options.mode = CRLP_RollupProcessor_SVC.ProcessingMode.LDV;
         options.parentObjType = this.summaryObjectType;
+        options.detailObjType = Opportunity.SObjectType;
         if (this.summaryObjectType == Account.SObjectType) {
             options.parentKeyField = SObjectType.Opportunity.fields.AccountId.getName();
         } else if (this.summaryObjectType == Contact.SObjectType) {
             options.parentKeyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
         } else if (this.summaryObjectType == General_Accounting_Unit__c.SObjectType) {
             options.parentKeyField = SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();
+            options.detailObjType = Allocation__c.SObjectType;
+        /*} else if (this.summaryObjectType == OpportunityContactRole.SObjectType) {
+            options.parentKeyField = SObjectType.OpportunityContactRole.fields.OpportunityId.getName();
+            options.detailObjType = Partial_Soft_Credit__c.SObjectType;*/
         }
         options.rollups = this.statefulRollups;
         return options;

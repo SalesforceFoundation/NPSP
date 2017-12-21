@@ -47,6 +47,7 @@ public class CRLP_RollupProcessor_SVC {
     public class ProcessingOptions {
         public ProcessingMode mode = ProcessingMode.NonLDV;  // default to non-ldv mode
         public SObjectType parentObjType;
+        public SObjectType detailObjType;   // Needed when working with Soft Credits to have a way to know what the detail object is
         public String parentKeyField;       // Needed
         public List<CRLP_Rollup> rollups;   // Stateful rollups collection for LDV Mode
     }
@@ -76,10 +77,24 @@ public class CRLP_RollupProcessor_SVC {
      */
     public static List<SObject> startRollupProcess(List<SObject> summaryRecords, List<SObject> detailRecords, ProcessingOptions options) {
 
+        // The parentKeyField field may be have dot-notation (ex: Contact__r.AccountId)
+        // If this is the case, need to parse out the two components to use
+        String parentObjectField, parentKeyField = options.parentKeyField;
+        if (parentKeyField.contains('.')) {
+            parentObjectField = parentKeyField.split('\\.')[0];
+            parentKeyField = parentKeyField.split('\\.')[1];
+        }
+
         // Convert the details list into a Map of details by ParentId
         Map<Id, List<SObject>> mapOfDetailsByParentId = new Map<Id, List<SObject>>();
         for (SObject dtl : detailRecords) {
-            Id parentId = (Id) dtl.get(options.parentKeyField);
+            // Is there a parent object to retrieve?
+            SObject dtlRecord = dtl;
+            if (parentObjectField != null) {
+                dtlRecord = dtl.getSObject(parentObjectField);
+            }
+
+            Id parentId = (Id) dtlRecord.get(options.parentKeyField);
             if (!mapOfDetailsByParentId.containsKey(parentId)) {
                 mapOfDetailsByParentId.put(parentId, new List<SObject>());
             }
@@ -128,23 +143,19 @@ public class CRLP_RollupProcessor_SVC {
      * @param objType Summary Object Type
      * @return ApexClassType
      */
-    private static Type getHanderClassType(SObjectType objType, SObjectType detailObjType) {
+    private static Type getHanderClassType(SObjectType summObjType, SObjectType detailObjType) {
         Type handlerClass;
         if (objType == Account.SObjectType) {
             // Opportunity and Payment to Account
             handlerClass = CRLP_RollupAccount_SVC.class;
 
-        } else if (objType == Contact.SObjectType) {
+        } else if (summObjType == Contact.SObjectType) {
             // Opportunity and Payment  to Contact
             handlerClass = CRLP_RollupContact_SVC.class;
 
-        } else if (objType == General_Accounting_Unit__c.SObjectType) {
+        } else if (summObjType == General_Accounting_Unit__c.SObjectType) {
             // Allocation to GeneralAccountingUnit
             handlerClass = CRLP_RollupGAU_SVC.class;
-
-        } else if (objType == OpportunityContactRole.SObjectType) {
-            // TODO OpportunityContactRole to Account & Contact
-            // handlerClass = TBD;
 
         }
         return handlerClass;
@@ -174,9 +185,20 @@ public class CRLP_RollupProcessor_SVC {
      */
     public static Set<Id> getParentIdsFromDetailRecords(List<SObject> detailRecords, String parentKeyField) {
         Set<Id> parentIds = new Set<Id>();
+        // If the parentKeyField is something like Contact.AccountId, then have to retrieve the parent SObject
+        // first and then get the field value.
+        String parentObjectField;
+        if (parentKeyField.contains('.')) {
+            parentObjectField = parentKeyField.split('\\.')[0];
+            parentKeyField = parentKeyField.split('\\.')[1];
+        }
         for (SObject dtl : detailRecords) {
-            if (dtl.get(parentKeyField) != null) {
-                parentIds.add((Id)dtl.get(parentKeyField));
+            SObject dtlRecord = dtl;
+            if (parentObjectField != null) {
+                dtlRecord = dtl.getSObject(parentObjectField);
+            }
+            if (dtlRecord.get(parentKeyField) != null) {
+                parentIds.add((Id)dtlRecord.get(parentKeyField));
             }
         }
         return parentIds;
@@ -195,7 +217,7 @@ public class CRLP_RollupProcessor_SVC {
         // The Parent record Id has changed, so initiate the rollup and determine if the Summary record
         // has changed or not.
 
-        Type handlerClass = getHanderClassType(parent.getSobjectType(), (!detailRecords.isEmpty() ? detailRecords[0].getSObjectType() : null));
+        Type handlerClass = getHanderClassType(parent.getSobjectType(), options.detailObjType);
         CRLP_Debug_UTIL.setCurrentRollupState('Instantiate Handler Class: ' + handlerClass.getName() + ' for ' + parent.Id);
         CRLP_VRollupHandler handler = (CRLP_VRollupHandler) handlerClass.newInstance();
 
@@ -214,7 +236,6 @@ public class CRLP_RollupProcessor_SVC {
         // Don't both calling the processRollups() method if there are no details to roll up
         if (detailRecords != null && !detailRecords.isEmpty()) {
             handler.processRollups(detailRecords);
-//            handler.setOpportunityMap(new Map<Id, Opportunity>());
         }
 
         // Save the rollup from the Handler instance into the processing options instance

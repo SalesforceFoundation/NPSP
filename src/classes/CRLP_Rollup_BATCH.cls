@@ -111,6 +111,7 @@ public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.
             CRLP_RollupProcessor_SVC.ProcessingOptions options = new CRLP_RollupProcessor_SVC.ProcessingOptions();
             options.mode = CRLP_RollupProcessor_SVC.ProcessingMode.NonLDV;
             options.parentObjType = this.summaryObjectType;
+            options.detailObjType = Opportunity.SObjectType;
             if (this.summaryObjectType == Account.SObjectType) {
                 options.parentKeyField = SObjectType.Opportunity.fields.AccountId.getName();
             } else if (this.summaryObjectType == Contact.SObjectType) {
