@@ -32,10 +32,9 @@
 * @date 2017
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
-* @description Customizable Rollups Batch for LDV-type Rollups where the detail object has to be the primary object
-*  queried in the batch job. Rollups are kept in a stateful collection of CRLP_Rollup instances to allow a rollup
-*  for any given parent Account/Contact/GAU to be carried over multiple batch iterations. Generally this job is run
-*  with a higher batch size than the standard CRLP_Rollup_BATCH job.
+* @description Soft Credits rollup to the Account and Contacts object using OpportunityContactRole as the base
+*  LDV style query. Stateful vars are used to hold rollups of the Account and Contact across multiple batch
+*  iterations.
 */
 public class CRLP_Rollup_BATCH_PSC_LDV implements Database.Batchable<SObject>, Database.Stateful {
 
