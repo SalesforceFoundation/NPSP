@@ -123,7 +123,7 @@ instance until ready to be written to the Sobject.
 
             Object resultVal = detailSObject.get(rollup.resultFieldName);
             for (Rollup__mdt r : rollup.rollupsMdt) {
-                CRLP_Operation.RollupType operation = CRLP_Operation.getRollupTypeFromString(r.Operation__c.replaceAll(' ', '_'));
+                CRLP_Operation.RollupType operation = CRLP_Operation.getRollupTypeFromString(r.Operation__c);
                 if (operation == CRLP_Operation.RollupType.FIRST && (dateValue < rollup.minDate || rollup.minDate == null)) {
                     // Operation = FIRST (always based on a date)
                     setResultFieldValue(rollup.resultFieldType, resultVal, rollup, operation);

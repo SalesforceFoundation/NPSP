@@ -80,8 +80,7 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
             } else if (this.objType == Contact.SObjectType) {
                 Contact c = [SELECT Account.Number_of_Opportunities__c FROM Contact WHERE Id = :recordId LIMIT 1];
                 numOpps = c.Account.Number_of_Opportunities__c;
-            } else {
-                // GAU's
+            } else if (this.objType == General_Accounting_Unit__c.SObjectType) {
                 numOpps = 1000000;  // always want to run these in LDV mode
             }
 

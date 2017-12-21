@@ -197,7 +197,7 @@ public class CRLP_Rollup {
         SoapType fldType = targetField.getSoapType();
         Object resultValue;
 
-        CRLP_Operation.RollupType operation = CRLP_Operation.getRollupTypeFromString(r.Operation__c.replaceAll(' ', '_'));
+        CRLP_Operation.RollupType operation = CRLP_Operation.getRollupTypeFromString(r.Operation__c);
 
         CRLP_Debug_UTIL.setCurrentRollupState(' - determineRollupValue: ' + targetField.getName() +
                 '/' + fldType + ' for ' + operation);
