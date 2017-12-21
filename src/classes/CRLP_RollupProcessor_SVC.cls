@@ -50,6 +50,7 @@ public class CRLP_RollupProcessor_SVC {
         public SObjectType detailObjType;   // Needed when working with Soft Credits to have a way to know what the detail object is
         public String parentKeyField;       // Needed
         public List<CRLP_Rollup> rollups;   // Stateful rollups collection for LDV Mode
+        public Boolean preventDupeOppsInRollup = false; // Used with Account Soft Credit rollups
     }
 
     /**
@@ -64,6 +65,29 @@ public class CRLP_RollupProcessor_SVC {
      */
     public static Id getLastProcesssedParentId() {
         return lastParentIdProcessed;
+    }
+
+    /**
+     * @description When ProcessingOptions.preventDupeOppsInRollup is set to true, this var is used to hold a list
+     * of Opportunity Id's that have been rolled up to a given Account. The data is retained in a stateful var
+     * in the batch job to support scenarios where a given Account's rollups straddle multiple batch operations
+     */
+    private static Set<Id> setOfProcessedOppIds;
+
+    /** @description Returns the list of Opp Id's processed for the last Account record. Only used with Soft Credits
+     * to Account
+     * @return Set of Opp Id's processed
+     */
+    public static Set<Id> getProcessedOppIds() {
+        return setOfProcessedOppIds;
+    }
+
+    /** @description Sets the list of Opp Id's processed for the last Account record. Only used with Soft Credits
+     * to Account
+     * @param Set of Opp Id's processed
+     */
+    public static void setProcessedOppIds(Set<Id> oppIds) {
+        setOfProcessedOppIds = oppIds;
     }
 
     /**
@@ -140,12 +164,16 @@ public class CRLP_RollupProcessor_SVC {
     /**
      * @description Returns the Type of the appropriate CRLP_RollupXXXX_SVC class to use for handling the
      * rollups based on the SObjectType of the Summary object
-     * @param objType Summary Object Type
+     * @param summObjType Summary Object Type
+     * @param detailObjType Detail Object Type
      * @return ApexClassType
      */
     private static Type getHanderClassType(SObjectType summObjType, SObjectType detailObjType) {
         Type handlerClass;
-        if (objType == Account.SObjectType) {
+        if (detailObjType == Partial_Soft_Credit__c.SObjectType) {
+//            handlerClass = CRLP_RollupSoftCredit_SVC.class;
+
+        } else if (summObjType == Account.SObjectType) {
             // Opportunity and Payment to Account
             handlerClass = CRLP_RollupAccount_SVC.class;
 
