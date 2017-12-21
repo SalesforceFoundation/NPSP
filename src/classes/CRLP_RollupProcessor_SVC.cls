@@ -72,7 +72,7 @@ public class CRLP_RollupProcessor_SVC {
      * of Opportunity Id's that have been rolled up to a given Account. The data is retained in a stateful var
      * in the batch job to support scenarios where a given Account's rollups straddle multiple batch operations
      */
-    private static Set<Id> setOfProcessedOppIds;
+    private static Set<Id> setOfProcessedOppIds = new Set<Id>();
 
     /** @description Returns the list of Opp Id's processed for the last Account record. Only used with Soft Credits
      * to Account
@@ -95,7 +95,7 @@ public class CRLP_RollupProcessor_SVC {
      * as well as from queuable jobs (via a trigger operation). Accepts a collection of summary OR detail records
      * and a ProcessingOptions object instance that defines the parameters to use for the rollup work.
      * @param summaryRecords Summary Records
-     * @param detailRecords Deatil Records for the related Summary Records
+     * @param detailRecords Detail Records for the related Summary Records
      * @param options ProcessingOptions
      * @return List<SObject> Records that require updating.
      */
@@ -118,7 +118,7 @@ public class CRLP_RollupProcessor_SVC {
                 dtlRecord = dtl.getSObject(parentObjectField);
             }
 
-            Id parentId = (Id) dtlRecord.get(options.parentKeyField);
+            Id parentId = (Id) dtlRecord.get(parentKeyField);
             if (!mapOfDetailsByParentId.containsKey(parentId)) {
                 mapOfDetailsByParentId.put(parentId, new List<SObject>());
             }
@@ -136,13 +136,30 @@ public class CRLP_RollupProcessor_SVC {
         for (SObject parent : summaryRecords) {
             Id parentId = (Id) parent.get('Id');
 
-            // Clear the list of stateful rollups anytime the parent Id changes
+            // Clear the list of stateful rollups any time the parent Id changes
             if (options.mode == ProcessingMode.LDV && lastParentIdProcessed != parentId) {
                 options.rollups.clear();
                 lastParentIdProcessed = parentId;
+                setOfProcessedOppIds.clear();
             }
 
             List<SObject> detailsForParent = mapOfDetailsByParentId.get(parentId);
+
+            // When PreventDupesInRollup is true, ensure the list of Opps in the detailsForParent
+            // collection is unique by Opportunity Id
+            if (options.preventDupeOppsInRollup && detailRecords != null && !detailRecords.isEmpty()
+                        && detailRecords[0].getSObjectType() == Partial_Soft_Credit__c.SObjectType) {
+                List<SObject> prunedOpps = new List<SObject>();
+                for (SObject s : detailRecords) {
+                    Id dtlId = (Id)s.get(Partial_Soft_Credit__c.Opportunity__c);
+                    if (!setOfProcessedOppIds.contains(dtlId)) {
+                        prunedOpps.add(s);
+                        setOfProcessedOppIds.add(dtlId);
+                    }
+                }
+                detailsForParent = prunedOpps;
+            }
+
             SObject updatedRecord = completeRollupForParent(parent, detailsForParent, options);
             if (CRLP_Rollup_SVC.resultsNeedUpdate(parent, updatedRecord, options.rollups)) {
                 recordsToUpdate.put(parentId, updatedRecord);
@@ -171,7 +188,7 @@ public class CRLP_RollupProcessor_SVC {
     private static Type getHanderClassType(SObjectType summObjType, SObjectType detailObjType) {
         Type handlerClass;
         if (detailObjType == Partial_Soft_Credit__c.SObjectType) {
-//            handlerClass = CRLP_RollupSoftCredit_SVC.class;
+            handlerClass = CRLP_RollupSoftCredit_SVC.class;
 
         } else if (summObjType == Account.SObjectType) {
             // Opportunity and Payment to Account

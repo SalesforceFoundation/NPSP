@@ -123,6 +123,8 @@
         <members>CRLP_RollupAccount_TEST</members>
         <members>CRLP_RollupContact_SVC</members>
         <members>CRLP_RollupContact_TEST</members>
+        <members>CRLP_RollupSoftCredit_SVC</members>
+        <members>CRLP_RollupSoftCredit_TEST</members>
         <members>CRLP_RollupGAU_SVC</members>
         <members>CRLP_RollupGAU_TEST</members>
         <members>CRLP_RollupProcessor_SVC</members>
@@ -131,6 +133,7 @@
         <members>CRLP_RollupScheduler_TEST</members>
         <members>CRLP_Rollup_BATCH</members>
         <members>CRLP_Rollup_BATCH_LDV</members>
+        <members>CRLP_Rollup_BATCH_PSC_LDV</members>
         <members>CRLP_Rollup_SEL</members>
         <members>CRLP_Rollup_SEL_TEST</members>
         <members>CRLP_Rollup_TDTM</members>

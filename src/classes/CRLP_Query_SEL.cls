@@ -80,6 +80,10 @@
                     queryFields.add('CreatedBy.Alias');
                 } else if (dfr.getName() == 'LastModifiedById') {
                     queryFields.add('LastModifiedBy.Alias');
+                } else if (dfr.getName() == 'ContactId') {
+                    queryFields.add('Contact.AccountId');
+                } else if (dfr.getName() == UTIL_Namespace.StrAllNSPrefix('Contact__c')) {
+                    queryFields.add(UTIL_Namespace.StrAllNSPrefix('Contact__r') + '.AccountId');
                 }
             }
         }
@@ -121,7 +125,6 @@
             if (detailObject == Allocation__c.SObjectType) {
                 mainSoql += ',' + SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();
             }
-
 
         } else {
             // ====================================================================================================

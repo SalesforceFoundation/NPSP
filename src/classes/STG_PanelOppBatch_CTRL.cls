@@ -85,6 +85,10 @@ public with sharing class STG_PanelOppBatch_CTRL extends STG_Panel {
                 Database.executeBatch(new CRLP_Rollup_BATCH_LDV(Contact.SObjectType), batchSizeCntct);
                 this.numJobSubmitted += 2;
             }
+
+            Database.executeBatch(new CRLP_Rollup_BATCH_PSC_LDV(), CRLP_Rollup_SVC.getLDVBatchSize(Partial_Soft_Credit__c.SObjectType));
+            this.numJobSubmitted++;
+
         }
         return null;
     }
